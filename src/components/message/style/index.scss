@@ -1,0 +1,131 @@
+@import "../../style/index";
+
+.fr-message {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: $z-index-message;
+  line-height: 1;
+
+  @media (min-width: $md) {
+    & {
+      top: 48px;
+    }
+
+    &_cont {
+      top: 0 !important;
+      transform: translate(-50%, 0) !important;
+    }
+  }
+
+  &_cont {
+    pointer-events: none;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 86vw;
+    max-width: 320px; // 兼容PC
+    //pointer-events: none;
+  }
+
+  &_item {
+    padding: 0 6px;
+    margin: 0 auto;
+    font-size: $fs-14;
+    overflow: hidden;
+  }
+
+  &_item-cont {
+    user-select: none;
+    pointer-events: all;
+    position: relative;
+    background: #fff;
+    padding: 10px 24px;
+    display: inline-block;
+    border-radius: $border-radius;
+    box-shadow: $shadow-2;
+    word-break: break-all;
+    overflow: hidden;
+    color: $b-primary;
+    margin: 2px 0;
+
+    .fr-svg-icon {
+      font-size: 50px;
+      vertical-align: middle;
+      margin-bottom: 8px;
+    }
+
+    &.__loading {
+      padding: 8px 16px;
+      height: 51px;
+    }
+
+    &.__notification {
+      .fr-svg-icon {
+        font-size: 66px;
+      }
+
+      width: 300px;
+      padding: 24px;
+      user-select: auto;
+      pointer-events: auto;
+    }
+  }
+
+  &_process {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    //height: 1px;
+    //background-color: $b-title;
+    //transform: scaleY(0.8);
+    border-bottom: 1px $b-second solid;
+  }
+
+  &_loading {
+    display: inline-block;
+    margin-right: 4px;
+
+    .fr-spin {
+      vertical-align: middle;
+    }
+
+    & + span {
+      vertical-align: sub;
+    }
+  }
+
+  &_close {
+    position: absolute;
+    right: 6px;
+    top: 6px;
+    cursor: pointer;
+    &:hover {
+      font-weight: $fw-600;
+    }
+  }
+
+  &_notification {
+    &_title {
+      font-size: $fs-20;
+      //font-weight: bold;
+      margin-bottom: 8px;
+      color: $b-title;
+    }
+
+    &_desc {
+      color: $b-second;
+      line-height: $line-height-base;
+    }
+
+    &_foot {
+      text-align: center;
+      margin-bottom: -8px;
+      margin-top: 12px;
+    }
+  }
+}
+

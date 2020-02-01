@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "baseUrl": "../",
+    "paths": {
+      "@lxjx/blink-ui/lib/*": [
+        "./src/components/*"
+      ]
+    },
+    "target": "es5",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+
+    "declaration": true,
+    "outDir": "../lib",
+
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "jsx": "react",
+    "strictPropertyInitialization": false
+  },
+  "include": [
+    "../src/components/**/*"
+  ],
+  "exclude": [
+    "../src/components/*/demo/**",
+    "../src/components/*/style/index.ts",
+    "lib"
+  ]
+}

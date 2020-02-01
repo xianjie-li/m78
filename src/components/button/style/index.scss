@@ -1,0 +1,235 @@
+@import "../../style/index";
+
+.fr-btn {
+  position: relative;
+  display: inline-block;
+  appearance: none;
+  font-weight: 400;
+  vertical-align: middle;
+  user-select: none;
+  border: none;
+  padding: 8px 16px;
+  font-size: $font-size;
+  line-height: 1;
+  border-radius: 2px;
+  cursor: pointer;
+  box-shadow: $shadow-1;
+  background-color: #fff;
+  color: $b-primary;
+  text-align: center;
+  /* fix: 修复safari下overflow失效的问题 */
+  transform: translate3d(0,0,0);
+
+  // 微调图标位置
+  .fr-icon {
+    position: relative;
+    top: -0.06em;
+    font-size: 1em;
+    margin-right: 8px;
+    transform: scale(1.4);
+  }
+
+  &__link {
+    @include full;
+    position: absolute;
+  }
+
+  @include ellipsis-x;
+
+  &:hover,
+  &:focus {
+    text-decoration: none;
+    outline: 0;
+  }
+
+  // 非disabled的情况下hover及focus的样式
+  &:not(:disabled):hover, &:not(:disabled):focus {
+    box-shadow: $shadow-2;
+  }
+
+  // 禁用
+  &:disabled,
+  &[disabled] {
+    cursor: not-allowed;
+    background: scale_color(#fff, $lightness: -5%);
+    color: $b-disable;
+    box-shadow: $shadow-1 !important;
+  }
+
+  & + & {
+    margin-left: 8px;
+  }
+  // 大小
+  &.__large {
+    padding: 10px 24px;
+    font-size: 18px;
+  }
+
+  &.__small {
+    padding: 6px 8px;
+    font-size: 14px;
+  }
+
+  &.__mini {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+
+  // 块按钮
+  &.__block {
+    display: block;
+    width: 100%;
+    padding: 10px 0;
+    max-width: $sm;
+    margin: 0 auto;
+
+
+    &.__large {
+      padding: 12px 0;
+    }
+
+    &.__small {
+      padding: 8px 0;
+    }
+
+    & + & {
+      margin: 16px auto 0;
+    }
+  }
+
+  // 圆形按钮
+  &.__circle, &.__icon {
+    width: 46px;
+    height: 46px;
+    line-height: 46px;
+    padding: 0 !important;
+    border-radius: 50%;
+    overflow: hidden !important;
+
+    &.__large {
+      width: 54px;
+      height: 54px;
+      line-height: 54px;
+    }
+
+    &.__small {
+      width: 38px;
+      height: 38px;
+      line-height: 38px;
+    }
+  }
+
+  // 图标按钮
+  &.__icon {
+    box-shadow: none !important;
+    background: transparent !important;
+
+    &:focus {
+      font-weight: bold;
+    }
+
+    .fr-icon {
+      font-size: 1.8em;
+      transform: scale(1);
+      margin-right: 0;
+    }
+
+    &.__large .fr-icon{
+      font-size: 2em;
+    }
+
+    &.__small .fr-icon{
+      font-size: 1.4em;
+    }
+  }
+
+  // link按钮
+  &.__link {
+    padding: 4px;
+    box-shadow: none !important;
+    background: transparent !important;
+    &:focus {
+      text-shadow: 2px 2px 10px currentColor;
+    }
+  }
+
+  // link按钮和icon按钮禁用样式
+  &.__icon, &.__link {
+
+    &:disabled,
+    &[disabled] {
+      opacity: 0.5;
+    }
+  }
+}
+
+/**
+  * 生成按钮
+  * $name: 主题名
+  * $color: 主题色
+  */
+@mixin btn($name, $main-color) {
+  // 基础样式
+  .fr-btn.__#{$name} {
+    color: #fff;
+    background-color: $main-color;
+
+    // 单独配置背景色 - 去掉聚焦时的高亮，加深阴影即可
+    //&:not(:disabled):hover, &:not(:disabled):focus {
+    //  //background-color: scale_color($main-color, $lightness: 30%);
+    //}
+  }
+
+  .fr-btn.__#{$name}.__icon {
+    color: $main-color;
+  }
+
+  .fr-btn.__#{$name}.__link {
+    color: $main-color;
+  }
+
+  // 边框按钮
+  .fr-btn.__#{$name}.__outline {
+    color: $main-color;
+    background-color: transparent;
+    background-image: none;
+    border: 1px solid $main-color;
+    box-shadow: $shadow-1;
+    padding: 7px 15px;
+
+    // 单独配置背景色和颜色
+    &:not(:disabled):hover, &:not(:disabled):focus  {
+      color: #fff;
+      background-color: $main-color;
+      border: 1px solid transparent;
+    }
+
+    /* 修复边框按钮的大小，使其与普通按钮一致 */
+    &.__large {
+      padding: 9px 23px;
+    }
+
+    &.__small {
+      padding: 5px 7px;
+    }
+
+    &.__mini {
+      padding: 3px 8px;
+      font-size: 12px;
+    }
+  }
+
+  // 彩色按钮禁用
+  &.__#{$name}:disabled,
+  &.__#{$name}[disabled] {
+    cursor: not-allowed;
+    background-color: scale_color($main-color, $lightness: 60%);
+    box-shadow: $shadow-1;
+  }
+}
+
+@include btn(primary, $color);
+@include btn(blue, $blue-6);
+@include btn(green, $green-6);
+@include btn(red, $red-6);
+@include btn(yellow, $yellow-6);

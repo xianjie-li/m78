@@ -1,0 +1,14 @@
+@import "~style-base/var";
+
+// 用于在某个部件处于相同色调的背景下时对其进行高亮强调
+$stress-shadow-w: -1px -1px 2px #fff, 1px 1px 2px #fff, 1px -1px 2px #fff, -1px 1px 2px #fff;
+$stress-shadow-b: -1px -1px 2px #666, 1px 1px 2px #666, 1px -1px 2px #666, -1px 1px 2px #666;
+
+/* Mixin & function */
+@mixin full{
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+}
+

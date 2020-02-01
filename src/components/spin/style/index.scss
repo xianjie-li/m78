@@ -1,0 +1,123 @@
+@import "../../style/index";
+
+.fr-spin {
+  display: inline-flex;
+  align-items: center;
+  flex-direction: column;
+  line-height: 1;
+  vertical-align: middle;
+  margin: 0 8px;
+  font-size: 22px;
+
+  &.__inline {
+    flex-direction: row;
+    .fr-spin_text {
+      margin-left: 8px;
+      margin-top: 0;
+    }
+  }
+
+  &.__full {
+    @include full;
+
+    justify-content: center;
+    position: absolute;
+    background-color: $w-primary;
+    margin: 0;
+    z-index: $z-index-tooltip;
+  }
+
+  &.__dark {
+    background-color: $b-primary;
+    .fr-spin_text {
+      color: $w-title;
+    }
+  }
+
+  &.__small {
+    font-size: 18px;
+  }
+
+  &.__large {
+    font-size: 26px;
+  }
+}
+
+.fr-spin_text {
+  font-size: $fs-14;
+  color: $b-second;
+  margin-left: 0;
+  margin-top: 8px;
+  user-select: none;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.fr-spin_circle {
+  display: inline-block;
+  position: relative;
+  width: 1.6em;
+  height: 1.6em;
+  border: 0.19em solid #eee;
+  border-radius: 50%;
+  text-align: center;
+}
+
+.fr-spin_circle-item {
+  display: inline-block;
+  position: absolute;
+  left: -0.2em;
+  top: -0.2em;
+  right: -0.2em;
+  bottom: -0.2em;
+  content: "";
+  border-radius: 50%;
+  border: 0.2em solid transparent;
+  transform-origin: center center;
+
+  &:nth-child(1) {
+      border-color: $red-6 transparent transparent transparent;
+      animation: fr-spin 1s infinite cubic-bezier(0, 0, 0.24, 0.9);
+  }
+
+  &:nth-child(2) {
+    border-color: $yellow-6 transparent transparent transparent;
+    animation: fr-spin 1s infinite cubic-bezier(0, 0, 0.24, 0.7);
+  }
+
+  &:nth-child(3) {
+      border-color: $green-6 transparent transparent transparent;
+      animation: fr-spin 1s infinite cubic-bezier(0, 0, 0.24, 0.5);
+  }
+
+  &:nth-child(4) {
+    border-color: $blue-6 transparent transparent transparent;
+    animation: fr-spin 1s infinite cubic-bezier(0, 0, 0.24, 0.3);
+  }
+}
+
+.fr-spin_ellipsis {
+  position: absolute;
+  &::after {
+    content: '';
+    display: inline-block;
+    animation: fr-spin_ellipsis 1s infinite;
+  }
+}
+
+@keyframes fr-spin_ellipsis {
+  0% {
+    content: '';
+  }
+  33% {
+    content: '.';
+  }
+  66% {
+    content: '..';
+  }
+  100% {
+    content: '...';
+  }
+}

@@ -1,0 +1,41 @@
+@import "../../style/index";
+
+body {
+  touch-action: none;
+}
+
+/* 遮罩 */
+.fr-mask {
+  position: fixed;
+  background-color: rgba(255, 255, 255, 0.75);
+  z-index: $z-index;
+  @include full;
+}
+
+.fr-mask-b {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: $z-index;
+  @include full;
+}
+
+/* 1px 线 */
+.fr-hb-t, .fr-hb-b {
+  &:before {
+    position: absolute;
+    content: '';
+    height: 1px;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: $b-border;
+    transform: scaleY(0.5);
+  }
+}
+
+.fr-hb-b {
+  &:before {
+    top: unset;
+    bottom: 0;
+  }
+}
