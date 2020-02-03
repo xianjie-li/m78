@@ -1,0 +1,59 @@
+@import "../../style/index";
+
+.fr-drawer {
+  position: fixed;
+  z-index: $z-index-drawer;
+  background-color: #fff;
+  padding: 12px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: auto;
+
+  &_mask.__inside {
+    position: absolute;
+  }
+
+  &_close {
+    font-weight: bold;
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    font-size: 24px;
+    z-index: 1;
+  }
+
+  &.__left, &.__right {
+    max-width: 55%;
+    top: 0;
+    bottom: 0;
+  }
+
+  &.__left {
+    right: auto;
+  }
+
+  &.__right {
+    right: 0;
+    left: auto;
+  }
+
+  &.__top, &.__bottom {
+    max-height: 55%;
+    right: 0;
+    left: 0;
+  }
+
+  &.__top {
+    top: 0;
+    bottom: auto;
+  }
+
+  &.__full-screen {
+    @include full;
+  }
+
+  &.__inside {
+    position: absolute;
+  }
+}

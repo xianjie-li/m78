@@ -67,7 +67,7 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(({
   autoplay = 0,
   style,
   className,
-  wheel = true,
+  wheel = false,
   drag = true,
 }, ref) => {
   // 格式化children为适合loop的格式，后面一律以loopValid决定是否开启了loop

@@ -12,7 +12,7 @@ export default {
   doc: {
     title: 'flicker',
     desc: '完全使用hooks编写的轻量组件库',
-    logo: '../public/logo.png',
+    // logo: '../public/logo.png',
     locales: [['zh-CN', '中文']],
     include: [],
   },

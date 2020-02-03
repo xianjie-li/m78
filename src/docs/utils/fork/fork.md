@@ -1,12 +1,12 @@
 ---
-title: Fork
+title: Fork - 条件渲染
 group:
     title: 工具
     path: /utils
     order: 1
 ---
 
-# Fork
+# Fork 条件渲染
 
 用于规范和简化某些需要进行条件渲染的场景
 
@@ -23,7 +23,7 @@ group:
 <code src="./fork-demo-toggle.tsx" />
 
 ## Switch
-根据条件渲染或卸载内部的组件
+搭配If或Toggle使用，类似react-router的Switch，只渲染内部的第一个prop.when为true的If，当没有任何一个If的when为true时，匹配第一个不包含when的If
 
 <code src="./fork-demo-switch.tsx" />
 

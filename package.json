@@ -10,6 +10,9 @@
     "typecheck": "tsc --noEmit",
     "dev": "father-doc dev"
   },
+  "files": [
+    "lib"
+  ],
   "resolutions": {
     "remark": "11.0.2"
   },
@@ -58,6 +61,7 @@
     "css-loader": "^3.2.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-eslint-comments": "^3.1.2",
     "eslint-plugin-import": "^2.20.0",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.18.0",
@@ -76,8 +80,5 @@
     "webpack": "^4.39.2",
     "webpack-bundle-analyzer": "^3.4.1",
     "webpack-cli": "^3.3.7"
-  },
-  "files": [
-    "lib"
-  ]
+  }
 }

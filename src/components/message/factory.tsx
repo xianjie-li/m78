@@ -1,11 +1,11 @@
 import React from 'react';
 
 import Message, { MessageWrap } from './message';
-import createRenderApi, { ReactRenderApiProps, ReactRenderApiExtraProps } from '@lxjx/react-render-api';
+import createRenderApi, { ReactRenderApiProps } from '@lxjx/react-render-api';
 
 import { MessageProps } from './type';
 
-export type MessageOption = Omit<MessageProps & ReactRenderApiExtraProps, keyof ReactRenderApiProps>;
+export type MessageOption = Omit<MessageProps, keyof ReactRenderApiProps>;
 
 /* ##### 创建api实例 ##### */
 const messageApi = createRenderApi<MessageOption>(Message, {

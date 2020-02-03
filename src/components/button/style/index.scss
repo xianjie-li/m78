@@ -145,9 +145,10 @@
 
   // link按钮
   &.__link {
-    padding: 4px;
+    padding: 6px 8px;
     box-shadow: none !important;
     background: transparent !important;
+    font-size: inherit;
     &:focus {
       text-shadow: 2px 2px 10px currentColor;
     }
