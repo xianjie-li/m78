@@ -1,0 +1,42 @@
+@import "../../style/index";
+
+.fr-empty {
+  padding: 16px;
+  text-align: center;
+
+  &.__small {
+    .fr-empty_icon {
+      height: 48px;
+    }
+
+    .fr-empty_desc, .fr-empty_actions {
+      font-size: $fs-12;
+    }
+  }
+
+  &.__large {
+    .fr-empty_icon {
+      height: 80px;
+    }
+
+    .fr-empty_desc, .fr-empty_actions {
+      font-size: $fs-16;
+    }
+  }
+
+  &_icon {
+    height: 64px;
+    width: auto;
+  }
+
+  &_desc {
+    color: $b-second;
+    font-size: $fs-14;
+    margin-top: 8px;
+  }
+
+  &_actions {
+    margin-top: 8px;
+    font-size: $fs-14;
+  }
+}

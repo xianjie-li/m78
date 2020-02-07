@@ -1,0 +1,17 @@
+@import "../../style/index";
+
+.fr-viewer {
+  user-select: none;
+  display: inline-block;
+  touch-action: none;
+
+  &_cont {
+    cursor: grab;
+    transform-origin: center center;
+    will-change: transform;
+
+    img {
+      user-select: none;
+    }
+  }
+}

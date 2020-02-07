@@ -10,11 +10,11 @@ interface MessageApi extends Message {
   notify: typeof notify;
 }
 
-const message: MessageApi = _messageApi as MessageApi;
-
-message.tips = tips;
-message.loading = loading;
-message.notify = notify;
+const message: MessageApi = Object.assign(_messageApi, {
+  tips,
+  loading,
+  notify,
+});
 
 export * from './factory';
 export * from './type';

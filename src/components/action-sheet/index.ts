@@ -17,9 +17,7 @@ interface ActionSheetWithApi extends ActionSheet {
   api: typeof actionSheetApi;
 }
 
-const ActionSheet: ActionSheetWithApi = _ActionSheet as ActionSheetWithApi;
-
-ActionSheet.api = actionSheetApi;
+const ActionSheet: ActionSheetWithApi = Object.assign(_ActionSheet, { api: actionSheetApi });
 
 export * from './type';
 export default ActionSheet;

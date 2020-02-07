@@ -40,4 +40,5 @@ export const svgIconMap = {
   notFound: 'icon-icon-test2',
   serverError: 'icon-icon-test3',
   notAuth: 'icon-icon-test1',
+  empty: 'icon-empty',
 };

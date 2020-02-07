@@ -20,13 +20,15 @@ group:
 
 ## Props
 ```tsx | pure
-interface MaskProps extends ComponentBaseProps, ReactRenderApiProps {
+export interface MaskProps extends ComponentBaseProps, ReactRenderApiProps {
   /** 是否显示mask */
   mask?: boolean;
   /** 是否允许点击mask进行关闭 */
   maskClosable?: boolean;
-  /** 当传入onRemove时，会对其进行代理，当show为false在指定延迟内调用onRemove */
+  /** 800 | 当传入onRemove时，会对其进行代理，当show为false在指定延迟内调用onRemove */
   onRemoveDelay?: number;
+  /** 360 | 默认会在mask出现时锁定body的滚动条防止页面抖动，此延迟用于恢复滚动条的延迟时间(应该根据动画时间给出一个合理的时间) */
+  unlockDelay?: number;
   /** 是否以portal模式挂载到body下指定元素下 */
   portal?: boolean;
   /** 传递给Portal */

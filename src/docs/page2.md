@@ -2,7 +2,7 @@
 title: page2
 order: 9
 group:
-    path: 
+    path:
 ---
 
 ## page2

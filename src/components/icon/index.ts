@@ -1,15 +1,13 @@
 import './style';
 import InternalIcon, { SvgIcon } from './icon';
 
-type IconType = typeof InternalIcon;
+type InternalIconType = typeof InternalIcon;
 
-interface Icon extends IconType {
+interface Icon extends InternalIconType {
   SvgIcon: typeof SvgIcon;
 }
 
-const Icon: Icon = InternalIcon as Icon;
-
-Icon.SvgIcon = SvgIcon;
+const Icon: Icon = Object.assign(InternalIcon, { SvgIcon });
 
 export * from './type';
 export * from './iconMap';

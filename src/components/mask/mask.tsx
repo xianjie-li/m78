@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { useUpdateEffect, useLockBodyScroll } from 'react-use';
+import { useUpdateEffect, useToggle } from 'react-use';
+import { useLockBodyScroll } from '@lxjx/hooks';
 import { Transition } from '@lxjx/react-transition-spring';
 
 import Portal from '@lxjx/flicker/lib/portal';
@@ -15,8 +16,10 @@ export interface MaskProps extends ComponentBaseProps, ReactRenderApiProps {
   mask?: boolean;
   /** 是否允许点击mask进行关闭 */
   maskClosable?: boolean;
-  /** 当传入onRemove时，会对其进行代理，当show为false在指定延迟内调用onRemove */
+  /** 800 | 当传入onRemove时，会对其进行代理，当show为false在指定延迟内调用onRemove */
   onRemoveDelay?: number;
+  /** 360 | 默认会在mask出现时锁定body的滚动条防止页面抖动，此延迟用于恢复滚动条的延迟时间(应该根据动画时间给出一个合理的时间) */
+  unlockDelay?: number;
   /** 是否以portal模式挂载到body下指定元素下 */
   portal?: boolean;
   /** 传递给Portal */
@@ -38,6 +41,7 @@ const Mask: React.FC<MaskProps> = ({
   onClose,
   onRemove,
   onRemoveDelay = 800,
+  unlockDelay = 360,
   portal = true,
   className,
   style,
@@ -45,11 +49,18 @@ const Mask: React.FC<MaskProps> = ({
   namespace,
   dark,
 }) => {
-  useLockBodyScroll(show);
+  const [lock, toggleLock] = useToggle(show);
+  useLockBodyScroll(lock);
 
   useUpdateEffect(function removeInstance() {
     if (!show && onRemove) {
       setTimeout(onRemove!, onRemoveDelay);
+    }
+    if (show) toggleLock(true);
+    if (!show) {
+      setTimeout(() => {
+        toggleLock(false);
+      }, unlockDelay);
     }
     // eslint-disable-next-line
   }, [show]);

@@ -2,7 +2,7 @@
 title: 主页
 order: 10
 group:
-    path: 
+    path:
 ---
 
 ## 主页
