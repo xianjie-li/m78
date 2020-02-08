@@ -1409,10 +1409,10 @@
     react "^16.11.0"
     react-use "^13.6.3"
 
-"@lxjx/hooks@^0.5.11":
-  version "0.5.11"
-  resolved "https://registry.npm.taobao.org/@lxjx/hooks/download/@lxjx/hooks-0.5.11.tgz#b8e0ee1ddad75fdf1e0b5e462307b640b0458549"
-  integrity sha1-uODuHdrXX98eC15GIwe2QLBFhUk=
+"@lxjx/hooks@^0.5.12":
+  version "0.5.12"
+  resolved "https://registry.npm.taobao.org/@lxjx/hooks/download/@lxjx/hooks-0.5.12.tgz#6a952a7d7b02d3411d45c6ac5812adb29127377d"
+  integrity sha1-apUqfXsC00EdRcasWBKtspEnN30=
   dependencies:
     "@babel/runtime" "^7.6.3"
     "@lxjx/utils" "^1.0.10"
@@ -1420,7 +1420,7 @@
     "@types/react-router-dom" "^5.1.3"
     query-string "^6.9.0"
     react-router-dom "^5.1.2"
-    react-use "^13.17.0"
+    react-use "^13.6.3"
     utility-types "^3.10.0"
 
 "@lxjx/react-render-api@^0.3.8":
@@ -12980,7 +12980,7 @@ react-use-gesture@^6.0.14:
   resolved "https://registry.npm.taobao.org/react-use-gesture/download/react-use-gesture-6.0.14.tgz#ab2d35ef72a5fb6060a6160eb12568c276f8a4b1"
   integrity sha1-qy0173Kl+2BgphYOsSVownb4pLE=
 
-react-use@^13.17.0, react-use@^13.6.3, react-use@^13.8.0:
+react-use@^13.6.3, react-use@^13.8.0:
   version "13.21.0"
   resolved "https://registry.npm.taobao.org/react-use/download/react-use-13.21.0.tgz#9dd689264d0cd6eca31512099c43e769850b14eb"
   integrity sha1-ndaJJk0M1uyjFRIJnEPnaYULFOs=

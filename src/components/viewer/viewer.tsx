@@ -1,4 +1,4 @@
-import React, { useImperativeHandle } from 'react';
+import React, { useImperativeHandle, useRef } from 'react';
 import { useMeasure } from 'react-use';
 import { animated, useSpring, interpolate, config } from 'react-spring';
 import { useGesture } from 'react-use-gesture';
@@ -8,8 +8,14 @@ import { useSelf } from '@lxjx/hooks';
 export interface ViewerProps {
   /** 任何react可渲染的东西 */
   children: React.ReactNode;
-  /** 禁用任何手势或实例方法 */
+  /** false | 禁用任何手势或实例方法 */
   disabled?: boolean;
+  /** 传入一个dom元素或一个ref对象用于限制可拖动的范围, 默认拖动范围为当前元素宽高值 * 缩放比 */
+  bound?: React.MutableRefObject<Element> | Element;
+  /** true | 单独开启关闭某一类事件 */
+  drag?: boolean;
+  pinch?: boolean;
+  wheel?: boolean;
 }
 
 export interface ViewerRef {
@@ -50,11 +56,18 @@ const initSpring = {
 const Viewer = React.forwardRef<ViewerRef, ViewerProps>(({
   children,
   disabled = false,
+  bound,
+  drag = true,
+  pinch = true,
+  wheel = true,
 }, ref) => {
   const [wrap, { width, height }] = useMeasure();
+  const innerWrap = useRef<HTMLDivElement>(null!);
+
   const [sp, set] = useSpring(() => (initSpring));
   const self = useSelf({
     ...initSpring,
+    /* 这三个开关只作用于组件内部，不与prop上的同名属性相关, 因为某些情况下需要在不触发组件render的情况下更改状态 */
     drag: true,
     pinch: true,
     wheel: true,
@@ -72,14 +85,35 @@ const Viewer = React.forwardRef<ViewerRef, ViewerProps>(({
   const bind = useGesture({
     onDrag({ delta: [offsetX, offsetY] }) {
       if (!self.drag) return;
-      self.x += offsetX;
-      self.y += offsetY;
 
-      const boundX = width * self.scale;
-      const boundY = height * self.scale;
+      let boundX;
+      let boundXMax;
+      let boundY;
+      let boundYMax;
 
-      self.x = _clamp(self.x, -boundX, boundX);
-      self.y = _clamp(self.y, -boundX, boundY);
+      if (bound) {
+        let boundNode;
+        if ('getBoundingClientRect' in bound) {
+          boundNode = bound;
+        } else {
+          boundNode = bound.current;
+        }
+
+        const bound1 = boundNode.getBoundingClientRect();
+        const bound2 = innerWrap.current.getBoundingClientRect();
+        boundY = -(bound2.top - bound1.top);
+        boundYMax = -(bound2.bottom - bound1.bottom);
+        boundX = -(bound2.left - bound1.left);
+        boundXMax = -(bound2.right - bound1.right);
+      } else {
+        boundXMax = width * self.scale;
+        boundX = -boundXMax;
+        boundYMax = height * self.scale;
+        boundY = -boundYMax;
+      }
+
+      self.x = _clamp(self.x + offsetX, boundX, boundXMax);
+      self.y = _clamp(self.y + offsetY, boundY, boundYMax);
 
       set({ x: self.x, y: self.y, config: { mass: 3, tension: 350, friction: 40 } });
     },
@@ -98,6 +132,9 @@ const Viewer = React.forwardRef<ViewerRef, ViewerProps>(({
     },
   }, {
     enabled: !disabled,
+    drag,
+    pinch,
+    wheel,
   });
 
   function getScale(direct: number, value: number): number {
@@ -138,21 +175,23 @@ const Viewer = React.forwardRef<ViewerRef, ViewerProps>(({
   }
 
   return (
-    <div ref={wrap} className="fr-viewer">
-      <animated.div
-        {...bind()}
-        className="fr-viewer_cont"
-        style={{
-          transform: interpolate(
-            //  @ts-ignore
-            [sp.x, sp.y, sp.scale, sp.rotateZ],
-            //  @ts-ignore
-            (x, y, scale, rotateZ) => `translate3d(${x}px, ${y}px, 0px) scale(${scale}) rotateZ(${rotateZ}deg)`,
-          ),
-        }}
-      >
-        {children}
-      </animated.div>
+    <div ref={wrap} className="fr-viewer" id="t-inner">
+      <div ref={innerWrap}> {/* useMeasure目前不能取到实际的ref，这里需要获取到wrap的bound信息 */}
+        <animated.div
+          {...bind()}
+          className="fr-viewer_cont"
+          style={{
+            transform: interpolate(
+              //  @ts-ignore
+              [sp.x, sp.y, sp.scale, sp.rotateZ],
+              //  @ts-ignore
+              (x, y, scale, rotateZ) => `translate3d(${x}px, ${y}px, 0px) scale(${scale}) rotateZ(${rotateZ}deg)`,
+            ),
+          }}
+        >
+          {children}
+        </animated.div>
+      </div>
     </div>
   );
 });
