@@ -1,6 +1,6 @@
 {
   "name": "@lxjx/flicker",
-  "version": "0.0.2-alpha",
+  "version": "0.0.4-alpha",
   "types": "./lib",
   "license": "MIT",
   "scripts": {
