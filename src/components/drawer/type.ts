@@ -1,5 +1,5 @@
 import { ReactRenderApiProps } from '@lxjx/react-render-api';
-import { ComponentBaseProps } from '@/components/types/types';
+import { ComponentBaseProps } from '../types/types';
 
 export interface DrawerProps extends ComponentBaseProps, ReactRenderApiProps {
   /** 是否显示关闭按钮 */

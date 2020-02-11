@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentBaseProps } from '@/components/types/types';
+import { ComponentBaseProps } from '../types/types';
 
 export interface SpinProps extends ComponentBaseProps {
   /** 大小 */

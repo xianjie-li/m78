@@ -1,6 +1,6 @@
 import { iconMap, svgIconMap } from './iconMap';
 
-import { ComponentBasePropsWithAny } from '@/components/types/types';
+import { ComponentBasePropsWithAny } from '../types/types';
 
 export type IconTypes = keyof typeof iconMap;
 

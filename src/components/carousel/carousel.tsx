@@ -6,7 +6,7 @@ import _clamp from 'lodash/clamp';
 
 import cls from 'classnames';
 
-import { ComponentBaseProps } from '@/components/types/types';
+import { ComponentBaseProps } from '../types/types';
 
 export interface CarouselProps extends ComponentBaseProps {
   /** 子元素，必须为多个直接子元素或子元素数组 */

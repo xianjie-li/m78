@@ -9,7 +9,7 @@ import Portal from '@lxjx/flicker/lib/portal';
 import cls from 'classnames';
 
 import { ReactRenderApiProps } from '@lxjx/react-render-api';
-import { ComponentBaseProps } from '@/components/types/types';
+import { ComponentBaseProps } from '../types/types';
 
 export interface MaskProps extends ComponentBaseProps, ReactRenderApiProps {
   /** 是否显示mask */

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentBasePropsWithAny } from '@/components/types/types';
+import { ComponentBasePropsWithAny } from '../types/types';
 
 export interface ButtonProps
   extends

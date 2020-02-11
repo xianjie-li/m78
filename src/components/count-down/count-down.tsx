@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { getDateCountDown } from '@lxjx/utils';
 import { useSelf } from '@lxjx/hooks';
 import { dumpFn } from '@lxjx/flicker/lib/util';
-import { ComponentBaseProps } from '@/components/types/types';
+import { ComponentBaseProps } from '../types/types';
 
 import cls from 'classnames';
 
