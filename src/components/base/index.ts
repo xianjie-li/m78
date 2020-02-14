@@ -1,4 +1,4 @@
-import './style';
+import '@lxjx/flicker/lib/base/style';
 
 /* 点击效果 */
 import ClickEffect from '@lxjx/fr-click-effect';

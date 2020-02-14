@@ -1,4 +1,4 @@
-import './style';
+import '@lxjx/flicker/lib/icon/style';
 import InternalIcon, { SvgIcon } from './icon';
 
 type InternalIconType = typeof InternalIcon;

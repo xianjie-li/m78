@@ -1,4 +1,4 @@
-import './style';
+import '@lxjx/flicker/lib/message/style';
 
 import _messageApi, { tips, loading, notify } from './factory';
 

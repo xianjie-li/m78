@@ -1,4 +1,4 @@
-import './style';
+import '@lxjx/flicker/lib/list/style';
 import List from './list';
 
 export * from './list';
