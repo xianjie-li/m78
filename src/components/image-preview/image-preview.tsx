@@ -2,17 +2,19 @@ import React, { useEffect, useRef } from 'react';
 import { useLockBodyScroll, useSelf } from '@lxjx/hooks';
 import { useDrag } from 'react-use-gesture';
 import { useSetState, useToggle, useUpdateEffect } from 'react-use';
+import _clamp from 'lodash/clamp';
 import cls from 'classnames';
 
 import Carousel, { CarouselRef } from '@lxjx/flicker/lib/carousel';
 import Viewer, { ViewerRef } from '@lxjx/flicker/lib/viewer';
-import { If } from '@lxjx/flicker/lib/fork';
+import Picture from '@lxjx/flicker/lib/picture';
 import Icon from '@lxjx/flicker/lib/icon';
+import { If } from '@lxjx/flicker/lib/fork';
+import Portal from '@lxjx/flicker/lib/portal';
+import { stopPropagation } from '@lxjx/flicker/lib/util';
 
 import createRenderApi, { ReactRenderApiProps } from '@lxjx/react-render-api';
 import { Transition } from '@lxjx/react-transition-spring';
-import Portal from '@lxjx/flicker/lib/portal';
-import { stopPropagation } from '@lxjx/flicker/lib/util';
 
 export interface ImagePreviewProps extends ReactRenderApiProps {
   /** 图片数据 */
@@ -21,6 +23,7 @@ export interface ImagePreviewProps extends ReactRenderApiProps {
   page?: number;
 }
 
+/* 禁用内部图片的拖动 */
 const disabledDrag = (event: React.DragEvent) => event.preventDefault();
 
 const _ImagePreview: React.FC<ImagePreviewProps> = ({
@@ -36,7 +39,7 @@ const _ImagePreview: React.FC<ImagePreviewProps> = ({
   /* 锁定滚动条 + 防止页面抖动 */
   const [lock, toggleLock] = useToggle(!!show);
   useLockBodyScroll(lock);
-  useUpdateEffect(function removeInstance() {
+  useUpdateEffect(() => {
     if (show) toggleLock(true);
     if (!show) {
       setTimeout(() => {
@@ -54,7 +57,7 @@ const _ImagePreview: React.FC<ImagePreviewProps> = ({
   }>({
     /** 存每一个Viewer的实例 */
     viewers: {},
-    currentPage: page,
+    currentPage: calcPage(page),
   });
 
   const [state, setState] = useSetState({
@@ -72,7 +75,8 @@ const _ImagePreview: React.FC<ImagePreviewProps> = ({
   }, [show]);
 
   useEffect(function initPageChange() {
-    carousel.current && carousel.current.goTo(page, true);
+    carousel.current && carousel.current.goTo(calcPage(page), true);
+    // eslint-disable-next-line
   }, [page]);
 
   const bindDrag = useDrag(({ time, first, last, memo, movement: [x], direction: [direct] }) => {
@@ -131,7 +135,11 @@ const _ImagePreview: React.FC<ImagePreviewProps> = ({
     const cViewer = getCurrentViewer();
     if (!cViewer || first) return;
     cViewer.reset();
-    self.currentPage = currentPage;
+    self.currentPage = calcPage(currentPage);
+  }
+
+  function calcPage(cPage: number) {
+    return _clamp(cPage, 0, images.length - 1);
   }
 
   function getCurrentViewer() {
@@ -165,12 +173,17 @@ const _ImagePreview: React.FC<ImagePreviewProps> = ({
           wheel={false}
           drag={false}
           loop={false}
+          forceNumberControl
           onChange={onChange}
         >
           {images.map((item, key) => (
             <div key={key} className="fr-image-preview_img-wrap">
               <Viewer ref={viewer => (self.viewers[key] = viewer!)}>
-                <img {...stopPropagation} onDragStart={disabledDrag} src={item.img} alt="图片加载失败" className="fr-image-preview_img" />
+                <span>
+                  <If when={self.currentPage >= key - 1 && self.currentPage <= key + 1}>
+                    <Picture {...stopPropagation} src={item.img} alt="图片加载失败" className="fr-image-preview_img" imgProps={{ onDragStart: disabledDrag }} />
+                  </If>
+                </span>
               </Viewer>
             </div>
           ))}

@@ -3,6 +3,7 @@ title: ImagePreview - 图片浏览
 group:
     title: 展示组件
     path: /view
+    order: 9000
 ---
 
 # ImagePreview  图片浏览

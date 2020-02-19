@@ -26,10 +26,16 @@ const copyList = libKeys.map((key) => ({
   from: path.resolve(__dirname, '../src/components/', key, './style/'),
   to: path.resolve(__dirname, '../lib/', key + '/style/'),
 }));
-copyList.push({
-  from: path.resolve(__dirname, '../src/components/style/'),
-  to: path.resolve(__dirname, '../lib/style/'),
-});
+/* 额外复制的内容 */
+copyList.push(
+  {
+    from: path.resolve(__dirname, '../src/components/style/'),
+    to: path.resolve(__dirname, '../lib/style/'),
+  }, {
+    from: path.resolve(__dirname, '../src/components/assets/'),
+    to: path.resolve(__dirname, '../lib/assets/'),
+  }
+);
 
 module.exports = {
   context: path.resolve(__dirname),

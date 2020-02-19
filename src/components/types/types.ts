@@ -16,4 +16,6 @@ export type AnyObject = {
   [key: string]: any;
 }
 
+export type AnyFunction = (...args: Array<any>) => any;
+
 export type PlainFn = () => void;

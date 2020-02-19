@@ -3,6 +3,7 @@ title: Mask - 遮罩
 group:
     title: 反馈
     path: /utils
+    order: 7000
 ---
 
 # Mask 遮罩
@@ -20,7 +21,7 @@ group:
 
 ## Props
 ```tsx | pure
-export interface MaskProps extends ComponentBaseProps, ReactRenderApiProps {
+interface MaskProps extends ComponentBaseProps, ReactRenderApiProps {
   /** 是否显示mask */
   mask?: boolean;
   /** 是否允许点击mask进行关闭 */
@@ -29,10 +30,8 @@ export interface MaskProps extends ComponentBaseProps, ReactRenderApiProps {
   onRemoveDelay?: number;
   /** 360 | 默认会在mask出现时锁定body的滚动条防止页面抖动，此延迟用于恢复滚动条的延迟时间(应该根据动画时间给出一个合理的时间) */
   unlockDelay?: number;
-  /** 是否以portal模式挂载到body下指定元素下 */
+  /** true | 是否以portal模式挂载到body下指定元素下 */
   portal?: boolean;
-  /** 传递给Portal */
-  namespace?: string;
   /** 黑色主题 */
   dark?: boolean;
 }

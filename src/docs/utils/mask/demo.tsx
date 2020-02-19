@@ -12,14 +12,20 @@ interface MaskDemo extends ReactRenderApiProps {
   children: React.ReactNode;
 }
 
-const style: React.CSSProperties = {
+const box: React.CSSProperties = {
   position: 'fixed',
   left: '50%',
   top: '50%',
-  backgroundColor: '#333',
-  zIndex: 11,
-  color: '#fff',
-  padding: 32,
+  width: 240,
+  height: 240,
+  margin: '-120px 0 0 -120px',
+  zIndex: 100,
+  lineHeight: '240px',
+  textAlign: 'center',
+  border: '4px solid #fb6161',
+  boxShadow: '0 0 0 6px #61fbf6',
+  borderRadius: 2,
+  backgroundColor: '#fff',
   transition: 'transform 0.3s',
 };
 
@@ -32,14 +38,12 @@ const outStyle: React.CSSProperties = {
 };
 
 const MaskDemo: React.FC<MaskDemo> = ({
-  show,
-  onClose,
-  onRemove,
   children,
+  ...props
 }) => {
   return (
-    <Mask show={show} onClose={onClose} onRemove={onRemove}>
-      <div style={{ ...style, ...(show ? inStyle : outStyle) }}>{children}</div>
+    <Mask {...props}>
+      <div style={{ ...box, ...(props.show ? inStyle : outStyle) }}>{children}</div>
     </Mask>
   );
 };

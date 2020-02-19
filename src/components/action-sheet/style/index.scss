@@ -1,9 +1,10 @@
 @import "../../style/index";
 
 .fr-action-sheet_wrap {
-  background-color: transparent;
-  padding: 0;
+  background-color: transparent !important;
+  padding: 0 !important;
   max-height: 78% !important;
+  pointer-events: none;
 }
 
 .fr-action-sheet {
@@ -15,6 +16,7 @@
   background-color: $component-background;
   overflow: hidden;
   max-width: $sm;
+  pointer-events: auto;
 
   &.__custom {
     .fr-action-sheet_item-cont {

@@ -1,0 +1,8 @@
+## 样式
+1. 在组件入口通过`import '@lxjx/flicker/lib/<componentName>/style';`引入组件样式
+2. 对应组件的目录下引入css, 如果其他组件依赖了`../../base/style`, 其实是可以不引入的
+```ts
+import '../../base/style';
+import './index.scss';
+```
+3. 没有style的组件统一需要创建 style/index.ts style/index.js 文件，防止在使用webpack按需加载插件的时候报错

@@ -3,7 +3,7 @@ title: Empty - 空状态
 group:
     title: 展示组件
     path: /view
-    order: 1
+    order: 8000
 ---
 
 # Empty 空状态

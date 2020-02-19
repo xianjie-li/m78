@@ -3,6 +3,7 @@ title: Message - 消息提醒
 group:
     title: 反馈
     path: /feedback
+    order: 8000
 ---
 
 # Message 消息提醒

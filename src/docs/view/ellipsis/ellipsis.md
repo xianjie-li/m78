@@ -3,6 +3,7 @@ title: Ellipsis - 超出隐藏
 group:
     title: 展示组件
     path: /view
+    order: 9000
 ---
 
 # Ellipsis 超出隐藏

@@ -3,7 +3,7 @@ title: Carousel - 轮播
 group:
     title: 展示组件
     path: /view
-    order: 1
+    order: 9000
 ---
 
 # Carousel 轮播

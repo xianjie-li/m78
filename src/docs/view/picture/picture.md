@@ -3,6 +3,7 @@ title: Picture - 图片
 group:
     title: 展示组件
     path: /view
+    order: 9000
 ---
 
 # Picture 图片
@@ -17,7 +18,7 @@ group:
 ## API
 **`props`**
 ```tsx | pure
-interface PictureProps extends ComponentBaseProps {
+interface PictureProps extends ComponentBaseProps, React.PropsWithoutRef<JSX.IntrinsicElements['span']> {
   /** 图片的地址 */
   src?: string;
   /** 同 img alt */
@@ -28,6 +29,8 @@ interface PictureProps extends ComponentBaseProps {
   imgClassName?: string;
   /** 挂载到生成的img上的style */
   imgStyle?: React.CSSProperties;
+  /** 默认提供了imgClassName、imgStyle、alt、src几个最常用的参数，其他需要直接传递给图片的props通过此项传递 */
+  imgProps?: React.PropsWithRef<JSX.IntrinsicElements['img']>;
 }
 ```
 

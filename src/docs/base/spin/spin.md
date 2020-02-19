@@ -3,7 +3,7 @@ title: Spin - 加载中
 group:
     title: 基础组件
     path: /base
-    order: 0
+    order: 10000
 ---
 
 <!-- 样式 -->

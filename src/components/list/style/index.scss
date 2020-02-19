@@ -259,7 +259,7 @@
     max-width: 2em;
     margin-left: 4px;
     @include emptyNone;
-    z-index: 100;
+    z-index: 98;
 
     .fr-icon {
       font-size: 20px;
@@ -309,7 +309,7 @@
   &_sub-title {
     position: relative;
     padding: 24px 16px 12px;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 600;
     color: $b-primary;
   }

@@ -3,7 +3,7 @@ title: Button - 按钮
 group:
     title: 基础组件
     path: /base
-    order: 1
+    order: 10000
 ---
 
 

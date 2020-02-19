@@ -3,6 +3,7 @@ title: Viewer - 查看器
 group:
     title: 展示组件
     path: /view
+    order: 9000
 ---
 
 # Viewer 查看器

@@ -1,2 +1,2 @@
-import '../../drawer/style';
+import '../../base/style';
 import './index.scss';

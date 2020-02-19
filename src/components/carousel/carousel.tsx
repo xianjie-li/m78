@@ -23,6 +23,8 @@ export interface CarouselProps extends ComponentBaseProps {
   initPage?: number;
   /** true | 是否开启分页控制和计数器，在横向滚动时，当滚动项总数大于7，计数器会自动更换为数字数据器，纵向模式下计数器永远为图形计数器 */
   control?: boolean;
+  /** 强制使用number计数器 */
+  forceNumberControl?: boolean;
   /** 页码改变时触发，在mounted时也会触发，并且会传入first=true */
   onChange?: (currentPage: number, first?: boolean) => void;
   /** 自动轮播 */
@@ -62,6 +64,7 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(({
   width: _width,
   loop = true,
   control = true,
+  forceNumberControl = false,
   initPage = 0,
   onChange,
   autoplay = 0,
@@ -270,7 +273,7 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(({
       </animated.div>
       {control && (
         <div className="fr-carousel_ctrl">
-          {(_children.length < 7 || vertical)
+          {((_children.length < 7 || vertical) && !forceNumberControl)
             ? children.map((v, i) => {
               const show = loopValid ? i < children.length - 2 : true;
               return (show && (

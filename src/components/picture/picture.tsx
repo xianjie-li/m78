@@ -8,8 +8,7 @@ import { useSetState } from '@lxjx/hooks';
 
 import cls from 'classnames';
 
-
-interface PictureProps extends ComponentBaseProps {
+interface PictureProps extends ComponentBaseProps, React.PropsWithoutRef<JSX.IntrinsicElements['span']> {
   /** 图片的地址 */
   src?: string;
   /** 同 img alt */
@@ -20,6 +19,8 @@ interface PictureProps extends ComponentBaseProps {
   imgClassName?: string;
   /** 挂载到生成的img上的style */
   imgStyle?: React.CSSProperties;
+  /** 默认提供了imgClassName、imgStyle、alt、src几个最常用的参数，其他需要直接传递给图片的props通过此项传递 */
+  imgProps?: React.PropsWithRef<JSX.IntrinsicElements['img']>;
 }
 
 const Picture: React.FC<PictureProps> = ({
@@ -30,6 +31,8 @@ const Picture: React.FC<PictureProps> = ({
   errorImg,
   className,
   style,
+  imgProps,
+  ...props
 }) => {
   const wrap = useRef<HTMLSpanElement>(null!);
   const cvs = useRef<HTMLCanvasElement>(null!);
@@ -102,8 +105,8 @@ const Picture: React.FC<PictureProps> = ({
   }
 
   return (
-    <span ref={wrap} className={cls('fr-picture', className)} style={style}>
-      {!state.error && <img alt={alt} src={src} className={imgClassName} style={imgStyle} />}
+    <span {...props} ref={wrap} className={cls('fr-picture', className)} style={style}>
+      {!state.error && <img {...imgProps} alt={alt} src={src} className={imgClassName} style={imgStyle} />}
       {state.error && (
         _errorImg
           ? <img src={_errorImg} alt="" />
