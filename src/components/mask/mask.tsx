@@ -71,7 +71,7 @@ const Mask: React.FC<MaskProps> = ({
             onClick={maskClosable ? onClose : undefined}
             toggle={show}
             type="fade"
-            className={cls(dark ? 'fr-mask-b' : 'fr-mask')}
+            className={cls('fr-mask-node', dark ? 'fr-mask-b' : 'fr-mask')}
             style={style}
             mountOnEnter
             unmountOnExit

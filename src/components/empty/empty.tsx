@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import Icon from '@lxjx/flicker/lib/icon';
 import config from '@lxjx/flicker/lib/config';
@@ -34,12 +33,6 @@ const Empty: React.FC<EmptyProps> = ({
       <div className="fr-empty_actions">{children}</div>
     </div>
   );
-};
-
-Empty.propTypes = {
-  desc: PropTypes.node,
-  children: PropTypes.node,
-  size: PropTypes.oneOf(['small', 'large']),
 };
 
 export default Empty;

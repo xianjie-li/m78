@@ -11,7 +11,9 @@
   overflow: auto;
 
   &_mask.__inside {
-    position: absolute;
+    .fr-mask-node {
+      position: absolute;
+    }
   }
 
   &_close {
