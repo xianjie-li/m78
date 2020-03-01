@@ -70,7 +70,7 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(({
   autoplay = 0,
   style,
   className,
-  wheel = false,
+  wheel = true,
   drag = true,
 }, ref) => {
   // 格式化children为适合loop的格式，后面一律以loopValid决定是否开启了loop
@@ -104,11 +104,11 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(({
   useEffect(function childChange() {
     page.current = loopValid ? initPage + 1 : initPage;
     goTo(page.current, true);
-    /* 暂时解决图片的拖动问题 */
-    Array.from(innerWrap.current.querySelectorAll('img'))
-      .forEach(item => {
-        item.setAttribute('draggable', 'false');
-      });
+    /* 解决图片的拖动问题 */
+    // Array.from(innerWrap.current.querySelectorAll('img'))
+    //   .forEach(item => {
+    //     item.setAttribute('draggable', 'false');
+    //   });
     // eslint-disable-next-line
   }, [children.length]);
 
@@ -129,7 +129,10 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(({
 
   const bind = useGesture({
     onDrag({ event, down, movement: [xMove, yMove], direction: [xDirect, yDirect], cancel, first }) {
+      console.log(event);
       event?.stopPropagation();
+      event?.preventDefault();
+
       const move = vertical ? yMove : xMove;
       const distance = Math.abs(move);
       const direct = vertical ? yDirect : xDirect;
@@ -156,7 +159,8 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(({
       });
     },
     // eslint-disable-next-line
-    onWheel({ memo, direction: [directX, directY], time }) {
+    onWheel({ event, memo, direction: [directX, directY], time }) {
+      event?.preventDefault();
       if (memo) return;
       directY < 0 ? prev() : next();
       stopAutoPlay();
@@ -166,9 +170,13 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(({
       hovering && stopAutoPlay();
     },
   }, {
+    domTarget: innerWrap,
     wheel,
     drag,
+    event: { passive: false },
   });
+
+  useEffect(bind, [bind]);
 
   /** 跳转至上一页 */
   function prev() {
@@ -244,7 +252,6 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(({
     >
       <animated.div
         className="fr-carousel_wrap"
-        {...bind()}
         ref={innerWrap}
         style={{
           transform: spProp.offset.interpolate(_offset => {
@@ -272,7 +279,7 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(({
         })}
       </animated.div>
       {control && (
-        <div className="fr-carousel_ctrl">
+        <div className="fr-carousel_ctrl fr-stress">
           {((_children.length < 7 || vertical) && !forceNumberControl)
             ? children.map((v, i) => {
               const show = loopValid ? i < children.length - 2 : true;

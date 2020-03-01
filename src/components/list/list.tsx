@@ -78,21 +78,20 @@ const Item: React.FC<ListItemProps> = ({
   const hasEffect = !isForm && !disabled && (arrow || props.onClick || effect);
   const itemStyle = column > 1 ? { width: `${100 / column}%` } : {};
 
-  return (
-    // eslint-disable-next-line jsx-a11y/label-has-associated-control
-    <label
-      className={cls(
-        'fr-list_item __md',
-        className,
-        status && `__${status}`,
-        {
-          __disabled: disabled,
-          'fr-effect': hasEffect,
-        },
-      )}
-      style={{ ...itemStyle, ...style }}
-      {...props}
-    >
+  return React.createElement(isForm ? 'label' : 'div', {
+    className: cls(
+      'fr-list_item __md',
+      className,
+      status && `__${status}`,
+      {
+        __disabled: disabled,
+        'fr-effect': hasEffect,
+      },
+    ),
+    style: { ...itemStyle, ...style },
+    ...props,
+  }, (
+    <>
       <div className={cls('fr-list_left', leftAlign && `__${leftAlign}`)}>{left}</div>
       <div className="fr-list_cont">
         <div className="fr-list_cont-left">
@@ -141,8 +140,8 @@ const Item: React.FC<ListItemProps> = ({
           <div className="fr-list_extra-second">{footRight}</div>
         </div>
       </If>
-    </label>
-  );
+    </>
+  ));
 };
 
 type List = typeof _List;

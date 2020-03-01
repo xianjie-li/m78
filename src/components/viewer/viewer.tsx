@@ -1,4 +1,4 @@
-import React, { useImperativeHandle, useRef } from 'react';
+import React, { useEffect, useImperativeHandle, useRef } from 'react';
 import { useMeasure } from 'react-use';
 import { animated, useSpring, interpolate, config } from 'react-spring';
 import { useGesture } from 'react-use-gesture';
@@ -63,6 +63,7 @@ const Viewer = React.forwardRef<ViewerRef, ViewerProps>(({
 }, ref) => {
   const [wrap, { width, height }] = useMeasure();
   const innerWrap = useRef<HTMLDivElement>(null!);
+  const eventEl = useRef<HTMLDivElement>(null!);
 
   const [sp, set] = useSpring(() => (initSpring));
   const self = useSelf({
@@ -83,7 +84,8 @@ const Viewer = React.forwardRef<ViewerRef, ViewerProps>(({
   }));
 
   const bind = useGesture({
-    onDrag({ delta: [offsetX, offsetY] }) {
+    onDrag({ event, delta: [offsetX, offsetY] }) {
+      event?.preventDefault();
       if (!self.drag) return;
 
       let boundX;
@@ -126,7 +128,8 @@ const Viewer = React.forwardRef<ViewerRef, ViewerProps>(({
     },
     onWheelStart: disableDrag,
     onWheelEnd: enableDrag,
-    onWheel({ direction: [, direct] }) {
+    onWheel({ event, direction: [, direct] }) {
+      event?.preventDefault();
       self.scale = getScale(direct, 0.16);
       set({ scale: self.scale, config: config.stiff });
     },
@@ -135,7 +138,11 @@ const Viewer = React.forwardRef<ViewerRef, ViewerProps>(({
     drag,
     pinch,
     wheel,
+    domTarget: eventEl,
+    event: { passive: false },
   });
+
+  useEffect(bind, [bind]);
 
   function getScale(direct: number, value: number): number {
     const diff = direct > 0 ? +value : -value;
@@ -178,7 +185,7 @@ const Viewer = React.forwardRef<ViewerRef, ViewerProps>(({
     <div ref={wrap} className="fr-viewer" id="t-inner">
       <div ref={innerWrap}> {/* useMeasure目前不能取到实际的ref，这里需要获取到wrap的bound信息 */}
         <animated.div
-          {...bind()}
+          ref={eventEl}
           className="fr-viewer_cont"
           style={{
             transform: interpolate(
