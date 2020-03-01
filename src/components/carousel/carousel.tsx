@@ -129,7 +129,6 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(({
 
   const bind = useGesture({
     onDrag({ event, down, movement: [xMove, yMove], direction: [xDirect, yDirect], cancel, first }) {
-      console.log(event);
       event?.stopPropagation();
       event?.preventDefault();
 
