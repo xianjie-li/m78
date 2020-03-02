@@ -1,0 +1,143 @@
+@import "../../style/index";
+
+@keyframes #{$prefix}-spin-reverse {
+  0% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.fr-scroll {
+  position: relative;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  height: 100%;
+  width: 100%;
+  will-change: auto;
+
+  &_wrap {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    .fr-svg-icon {
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+    }
+
+    .fr-svg-icon.__animation {
+      animation: fr-spin-reverse 0.8s infinite linear !important;
+    }
+  }
+
+  &_icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 6px;
+    background-color: #fff;
+    font-size: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 1px solid $b-border;
+    line-height: 1;
+    box-shadow: 0 0 4px $b-disable;
+    z-index: $z-index;
+    will-change: auto;
+  }
+
+  &_pulldown-wrap {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    width: 100%;
+    transform: translateY(-104%); /* 加上阴影的距离 */
+    z-index: $z-index;
+  }
+
+  &_tips {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 8px;
+    background-color: $w-mask;
+    box-shadow: $shadow-1;
+    z-index: $z-index;
+    text-align: center;
+    color: $color;
+    pointer-events: none;
+    border-top: 1px solid $b-border;
+    border-left: 1px solid $b-border;
+    border-right: 1px solid $b-border;
+
+    &.__fail {
+      color: $color-error;
+    }
+  }
+
+  &_pullup-wrap {
+    position: relative;
+    height: 56px;
+    padding: 14px 12px 0;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  &_no-data {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    &::after, &::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 1px;
+      background-color: $b-border;
+      top: 50%;
+      transform: scaleY(0.5);
+    }
+
+    &::before {
+      left: -120%;
+    }
+
+    &::after {
+      left: 120%;
+    }
+  }
+
+  &_error {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    > span {
+      color: $color;
+    }
+  }
+
+  &_tip-base {
+    color: $b-second;
+    font-size: 14px;
+    display: inline-block;
+  }
+
+  &_loadmore {
+    width: 100%;
+    padding-bottom: 16px; // 增大点击区域
+  }
+
+  &_scroll-top {
+    position: absolute;
+    right: 0;
+    bottom: 60px;
+    z-index: $z-index;
+    padding: 0 12px;
+    font-weight: bold;
+  }
+}
