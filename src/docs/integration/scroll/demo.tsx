@@ -23,10 +23,6 @@ const Demo = () => {
   const [data, set2] = React.useState(0);
   const scrollRef = React.useRef<ScrollRef>(null!);
 
-  React.useEffect(() => {
-    scrollRef.current.triggerPullUp(true);
-  }, []);
-
   return (
     <div>
       <Scroll
@@ -45,7 +41,7 @@ const Demo = () => {
         pullUp={toggle3}
         onPullUp={async (pullUpFinish) => {
           await getData(true);
-          const num = Math.random() > 0.7 ? 0 : 30;
+          const num = Math.random() > 0.8 ? 0 : 30;
           const err = Math.random() > 0.9;
           pullUpFinish(num, err);
           !err && set2(prev => prev + num);

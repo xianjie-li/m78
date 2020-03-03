@@ -18,6 +18,8 @@ import _debounce from 'lodash/debounce';
 
 import cls from 'classnames';
 
+import { ComponentBaseProps } from '../types/types';
+
 export interface ScrollRef {
   /** 结束下拉刷新，将刷新是否成功作为第一个参数传入, 默认成功 */
   pullDownFinish(isSuccess?: boolean): void;
@@ -42,7 +44,7 @@ export interface ScrollRef {
   el: HTMLDivElement;
 }
 
-export interface ScrollProps {
+export interface ScrollProps extends ComponentBaseProps {
   /** 下拉刷新开关, 默认关闭 */
   pullDown?: boolean;
   /** 下拉刷新触发回调 */
@@ -63,10 +65,6 @@ export interface ScrollProps {
   hasData?: boolean;
   /** 是否显示返回顶部 */
   backTop?: boolean;
-  /** 包裹组件样式 */
-  style?: React.CSSProperties;
-  /** 包裹组件的类名 */
-  className?: string;
 
   children: React.ReactNode;
 }
@@ -99,12 +97,12 @@ const Scroll = React.forwardRef<ScrollRef, ScrollProps>(({
     throttleTime,
   });
 
-
   /* 实例属性 */
   const self = useSelf({
     pullDownTimer: 0, // 提示框需要延迟关闭，存储timer返回
     pullUpTimer: 0, // 提示框需要延迟关闭，存储timer返回
     loadCount: 0, // 加载总次数, 每次请求后递增, 在为0时不会渲染"没有数据"节点
+    pullUpTriggerFlag: false, // 标记用于在同一次进入触底区域只会触发一次touchBottom
   });
 
   /* 状态 */
@@ -122,6 +120,12 @@ const Scroll = React.forwardRef<ScrollRef, ScrollProps>(({
 
   /* 下拉刷新提示器控制 */
   const [spPullDown, set] = useSpring(() => ({ y: 0, over: 0, scroll: 1, config: config.stiff }));
+
+  /* 进行初始化的pullDown调用 */
+  useEffect(() => {
+    touchBottom(true);
+    // eslint-disable-next-line
+  }, []);
 
   /* 禁用一些默认事件，如、qq 微信 ios 的顶部下拉 */
   useEffect(function preventDefault() {
@@ -144,6 +148,7 @@ const Scroll = React.forwardRef<ScrollRef, ScrollProps>(({
       dataLength: undefined, // 也重置上拉状态
       pullUpHasError: false,
     });
+    scrollHelps.set({ y: 0 });
     resetPullDown();
     resetPullDownStatus();
   };
@@ -268,7 +273,11 @@ const Scroll = React.forwardRef<ScrollRef, ScrollProps>(({
       if (!pullUp) return;
       const elHeight = yMax - threshold;
       if (elHeight - scrollTop <= 0) {
-        touchBottom(); /* TODO: 滚动位置变更导致多次触发滚动 */
+        if (self.pullUpTriggerFlag) return;
+        self.pullUpTriggerFlag = true;
+        touchBottom();
+      } else {
+        self.pullUpTriggerFlag = false;
       }
     },
   }, {

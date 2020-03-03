@@ -8,7 +8,8 @@
     "build": "webpack --config ./build/webpack.lib.js && tsc --emitDeclarationOnly -p ./build/lib.config.json",
     "lint": "eslint ./",
     "typecheck": "tsc --noEmit",
-    "dev": "father-doc dev"
+    "dev": "father-doc dev",
+    "ddev": "dumi dev"
   },
   "files": [
     "lib"
@@ -58,13 +59,13 @@
     "copy-webpack-plugin": "^5.0.4",
     "css-loader": "^3.2.0",
     "eslint": "^6.8.0",
+    "father-doc": "1.0.0-alpha.16",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-eslint-comments": "^3.1.2",
     "eslint-plugin-import": "^2.20.0",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.18.0",
     "eslint-plugin-react-hooks": "^2.3.0",
-    "father-doc": "1.0.0-alpha.16",
     "file-loader": "^4.2.0",
     "glob": "^7.1.4",
     "mini-css-extract-plugin": "^0.8.0",
