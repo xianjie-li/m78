@@ -20,6 +20,9 @@ export default () => <span />
 一组预设的按钮
 
 ## 颜色
+
+包含**默认** + **功能色** + **主题色** 等配色按钮
+
 <code src="./button-demo-color.tsx" />
 
 ## 禁用

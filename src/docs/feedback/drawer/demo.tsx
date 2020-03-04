@@ -9,17 +9,18 @@ const Demo = () => {
   const [state, set] = React.useState({
     show: false,
     direction: 'left',
-    fullScreen: false,
-    inside: false,
   });
+
+  const [fullScreenShow, setFullScreen] = React.useState(false);
+  const [insideShow, setInsideShow] = React.useState(false);
 
   function close() {
     set(prev => ({
       direction: prev.direction,
       show: false,
-      fullScreen: false,
-      inside: false,
     }));
+    setFullScreen(false);
+    setInsideShow(false);
   }
 
   return (
@@ -33,10 +34,32 @@ const Demo = () => {
     }}
     >
       <Drawer
-        fullScreen={state.fullScreen}
-        inside={state.inside}
         direction={state.direction as any}
         show={state.show}
+        onClose={close}
+      >
+        <div>
+          {Array.from({ length: 6 }).map((v, k) => (
+            <p key={k}>content {k + 1} Lorem ipsum dolor sit amet</p>
+          ))}
+        </div>
+      </Drawer>
+      <Drawer
+        fullScreen
+        direction="bottom"
+        show={fullScreenShow}
+        onClose={close}
+      >
+        <div>
+          {Array.from({ length: 6 }).map((v, k) => (
+            <p key={k}>content {k + 1} Lorem ipsum dolor sit amet</p>
+          ))}
+        </div>
+      </Drawer>
+      <Drawer
+        inside
+        direction="right"
+        show={insideShow}
         onClose={close}
       >
         <div>
@@ -51,8 +74,8 @@ const Demo = () => {
       <Button onClick={() => set(prev => ({ ...prev, direction: 'bottom', show: !prev.show }))}>bottom</Button>
 
       <div className="mt-16">
-        <Button onClick={() => set(prev => ({ ...prev, fullScreen: !prev.fullScreen, show: !prev.show }))}>全屏</Button>
-        <Button onClick={() => set(prev => ({ ...prev, inside: !prev.inside, show: !prev.show }))}>容器模式</Button>
+        <Button onClick={() => setFullScreen(prev => !prev)}>全屏</Button>
+        <Button onClick={() => setInsideShow(prev => !prev)}>容器模式</Button>
       </div>
     </div>
   );

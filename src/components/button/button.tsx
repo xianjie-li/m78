@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import Spin from '@lxjx/flicker/lib/spin';
 import '@lxjx/flicker/lib/base';
+import { isArray, isFunction } from '@lxjx/utils';
 
 import cls from 'classnames';
 
@@ -12,6 +13,40 @@ const sizeMap = {
   small: 14,
   mini: 12,
 };
+
+/* 该函数用于遍历Button的children，当存在Icon和SvgIcon时(非函数匹配, 函数组件name能就会添加)，为其添加适当边距并返回 */
+function formatChildren(children: React.ReactNode) {
+  if (isArray(children)) {
+    return children.map((child, index) => {
+      /* 这里直接匹配函数name是为了防止仅使用Button组件而需要导入Icon组件 */
+      if (React.isValidElement(child) && isFunction(child.type) && (child.type.name === 'Icon' || child.type.name === 'SvgIcon')) {
+        let injectStyle: React.CSSProperties = { marginLeft: 8, marginRight: 8 };
+
+        if (index === 0) {
+          injectStyle = { marginRight: 8 };
+        }
+
+        if (index === children.length - 1) {
+          injectStyle = { marginLeft: 8 };
+        }
+
+        const newStyle = { ...child.props.style, ...injectStyle };
+
+        return React.cloneElement(child, { style: newStyle, key: index });
+      }
+      return child;
+    });
+  }
+
+  return children;
+}
+
+/*
+* large 38
+* default 30
+* small 26
+* mini 20
+* */
 
 const Button: React.FC<ButtonProps> = ({
   size,
@@ -30,7 +65,6 @@ const Button: React.FC<ButtonProps> = ({
   href,
   ...props
 }) => {
-
   const classNames = cls(
     className,
     'fr-btn',
@@ -50,6 +84,8 @@ const Button: React.FC<ButtonProps> = ({
     },
   );
 
+  const newChildren = useMemo(() => formatChildren(children), [children]);
+
   return (
     <button
       type="button"
@@ -65,7 +101,7 @@ const Button: React.FC<ButtonProps> = ({
         full
         text=""
       />
-      <span>{ children }</span>
+      <span>{newChildren}</span>
     </button>
   );
 };

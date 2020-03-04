@@ -1,13 +1,14 @@
 import React from 'react';
 import Button from '@lxjx/flicker/lib/button';
 import Icon from '@lxjx/flicker/lib/icon';
+import Message from '@lxjx/flicker/lib/message';
 import '@lxjx/flicker/lib/button/style';
 import '@lxjx/flicker/lib/icon/style';
-
 
 const ButtonDemoColor = () => {
   return (
     <div>
+      <div>纯图标按钮</div>
       <Button icon>
         <Icon type="tag" />
       </Button>
@@ -28,6 +29,7 @@ const ButtonDemoColor = () => {
       </Button>
 
       <div className="mt-16">
+        <div className="mb-16">文字图标混排</div>
         <Button>
           <Icon type="tag" />按钮
         </Button>
@@ -43,6 +45,16 @@ const ButtonDemoColor = () => {
         <Button color="yellow">
           <Icon type="zoomIn" />按钮
         </Button>
+      </div>
+
+      <div className="mt-16">
+        当检测到children包含Icon组件和SvgIcon时(仅函数名匹配，防止单独使用Button时增加打包体积)，会自动为其添加适当的边距
+
+        <div className="mt-16">
+          <Button color="primary" onClick={() => Message.tips({ type: 'success', content: '恭喜您成功脱发一根!' })}>
+            <Icon type="swapLeft" />点我<Icon type="bell" />脱发<Icon type="swapRight" />
+          </Button>
+        </div>
       </div>
     </div>
   );

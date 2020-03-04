@@ -82,8 +82,9 @@ const Demo = () => {
         </List.Item>
         <List.Item
           title="出生年月"
-          footLeft="信息文本信息文本信息文本信息文本"
+          footLeft="不让你输入"
           status="warning"
+          disabled
           require
         >
           <input type="text" placeholder="点击输入" style={inpStyle} />

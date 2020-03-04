@@ -32,7 +32,7 @@ function loadingTest() {
 }
 
 function notifyTest() {
-  const [res, id] = message.notify({
+  const [res, id] = message({
     title: '标题标题',
     desc: '描述描述描述描述描述描述描述，描述描述描述描述描述描述描述描述描述描述描述，描述描述描述描述描述',
     // @ts-ignore

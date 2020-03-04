@@ -82,11 +82,6 @@ const Demo = () => {
               setShow4(false);
             },
           }, {
-            text: '取消',
-            onClick() {
-              setShow4(false);
-            },
-          }, {
             text: '确认',
             color: 'blue',
             onClick() {

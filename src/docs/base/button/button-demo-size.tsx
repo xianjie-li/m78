@@ -15,7 +15,7 @@ const ButtonDemoColor = () => {
         <Button color="red">default</Button>
         <Button color="green" size="small">small</Button>
         <Button color="yellow" size="mini">mini</Button>
-        <Button color="yellow" size="mini" outline>badge</Button>
+        <Button color="primary" size="mini" outline>badge</Button>
       </div>
     </div>
   );
