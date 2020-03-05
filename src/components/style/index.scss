@@ -1,3 +1,17 @@
 @import "~style-base/var";
 
 $shallow-shadow: 0 1px 3px rgba(26,26,26,.1);
+
+@mixin effect-font {
+  cursor: pointer;
+  font-weight: 400;
+
+  &:hover {
+    font-weight: bold;
+  }
+
+  &:active {
+    font-weight: 600;
+    opacity: 0.6;
+  }
+}

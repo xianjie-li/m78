@@ -1,13 +1,13 @@
 @import "../../style/index";
 
 .fr-btn {
+  appearance: none;
   position: relative;
   /* 退级 */
   display: inline-block;
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  appearance: none;
   font-weight: 400;
   vertical-align: middle;
   user-select: none;
@@ -25,10 +25,14 @@
   /* fix: 修复safari下overflow失效的问题 */
   transform: translate3d(0,0,0);
 
-  // 微调图标位置
+  >span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .fr-icon {
     position: relative;
-    top: -0.03em;
     font-size: 1em;
     transform: scale(1.4);
   }
@@ -89,39 +93,32 @@
     max-width: $sm;
     margin: 0 auto;
 
-
-    &.__large {
-
-    }
-
-    &.__small {
-      //padding: 8px 0;
-    }
-
     & + & {
       margin: 16px auto 0;
     }
   }
 
-  // 圆形按钮
+  // 圆形按钮 (比按钮大4px)
   &.__circle, &.__icon {
-    width: 46px;
-    height: 46px;
-    line-height: 46px;
+    width: 34px;
+    height: 34px;
     padding: 0 !important;
     border-radius: 50%;
     overflow: hidden !important;
 
     &.__large {
-      width: 54px;
-      height: 54px;
-      line-height: 54px;
+      width: 44px;
+      height: 44px;
     }
 
     &.__small {
-      width: 38px;
-      height: 38px;
-      line-height: 38px;
+      width: 28px;
+      height: 28px;
+    }
+
+    &.__mini {
+      width: 22px;
+      height: 22px;
     }
   }
 
@@ -135,17 +132,21 @@
     }
 
     .fr-icon {
-      font-size: 1.8em;
+      font-size: 24px;
       transform: scale(1);
       margin-right: 0;
     }
 
     &.__large .fr-icon{
-      font-size: 2em;
+      font-size: 30px;
     }
 
     &.__small .fr-icon{
-      font-size: 1.4em;
+      font-size: 18px;
+    }
+
+    &.__mini .fr-icon{
+      font-size: 14px;
     }
   }
 

@@ -27,6 +27,18 @@ const ButtonDemoColor = () => {
       <Button color="red" icon>
         李
       </Button>
+      <Button color="red" icon size="large">
+        <Icon type="setting" />
+      </Button>
+      <Button color="blue" icon>
+        <Icon type="setting" />
+      </Button>
+      <Button color="green" icon size="small">
+        <Icon type="setting" />
+      </Button>
+      <Button color="yellow" icon size="mini">
+        <Icon type="setting" />
+      </Button>
 
       <div className="mt-16">
         <div className="mb-16">文字图标混排</div>
