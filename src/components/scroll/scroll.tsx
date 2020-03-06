@@ -378,7 +378,6 @@ const Scroll = React.forwardRef<ScrollRef, ScrollProps>(({
       <Transition className="fr-scroll_scroll-top" type="slideRight" toggle={state.toTopShow} alpha={false}>
         <Button
           circle
-          size="small"
           onClick={() => {
             scrollTo(0);
           }}

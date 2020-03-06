@@ -11,4 +11,5 @@ const Icon: Icon = Object.assign(InternalIcon, { SvgIcon });
 
 export * from './type';
 export * from './iconMap';
+export { SvgIcon };
 export default Icon;
