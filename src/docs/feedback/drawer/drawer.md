@@ -8,10 +8,9 @@ group:
 
 # Drawer 抽屉
 
-用于对用户操作进行反馈
+与Modal类似，在不跳转页面的情况下向用户展示一组内容
 
 ## 基础示例
-message组件基于render-api实现，包含轻提示、加载中、消息框三种用法
 
 <code src="./demo.tsx" />
 

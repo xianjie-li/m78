@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import '@lxjx/flicker/lib/base';
 import ShowFromMouse from '@lxjx/flicker/lib/show-from-mouse';
@@ -8,6 +8,7 @@ import { config } from 'react-spring';
 import Icon from '@lxjx/flicker/lib/icon';
 import Spin from '@lxjx/flicker/lib/spin';
 import { dumpFn } from '@lxjx/flicker/lib/util';
+import { useZIndex } from '@lxjx/flicker/lib/hooks';
 
 import createRenderApi, {
   ReactRenderApiProps,
@@ -15,6 +16,7 @@ import createRenderApi, {
 
 import cls from 'classnames';
 import { ComponentBaseProps } from '../types/types';
+
 
 export interface ModalProps extends ReactRenderApiProps, ComponentBaseProps {
   /** 启用响应式按钮，按钮会根据底部的宽度平分剩余宽度 */
@@ -84,6 +86,9 @@ const _Modal: React.FC<ModalProps> = ({
   content,
   namespace,
 }) => {
+  const [zIndex, diff] = useZIndex('modal_zIndex', 1800, !!show);
+  const dpr = useMemo(() => window.devicePixelRatio || 1, []);
+
   function renderDefaultFooter() {
     return (
       <>
@@ -117,7 +122,18 @@ const _Modal: React.FC<ModalProps> = ({
   }
 
   return (
-    <ShowFromMouse namespace={namespace} mask={mask} maskClosable={loading ? false : maskClosable} contClassName={cls('fr-modal', className)} contStyle={{ ...style, maxWidth, padding: content ? 0 : '' }} show={show} onRemove={onRemove} onClose={onClose}>
+    <ShowFromMouse
+      namespace={namespace}
+      mask={mask}
+      maskClosable={loading ? false : maskClosable}
+      style={{ zIndex, top: diff * 20 / dpr, left: diff * 20 / dpr }}
+      contClassName={cls('fr-modal', className)}
+      className="fr-modal_wrap"
+      contStyle={{ ...style, maxWidth, padding: content ? 0 : '' }}
+      show={show}
+      onRemove={onRemove}
+      onClose={onClose}
+    >
       {status && (
         <div className="fr-modal_status-warp">
           <Transition className="fr-modal_status" alpha={false} toggle={show} type="slideLeft" config={config.slow}>
@@ -125,7 +141,11 @@ const _Modal: React.FC<ModalProps> = ({
           </Transition>
         </div>
       )}
-      {closeIcon && <Icon type="close" className="fr-modal_close-icon" onClick={() => onClose()} />}
+      {closeIcon && (
+        <Button icon className="fr-modal_close-icon" onClick={() => onClose()} size="small">
+          <Icon type="close" />
+        </Button>
+      )}
       <Spin full show={loading} text="请稍后" />
       {content || renderDefault()}
     </ShowFromMouse>

@@ -36,7 +36,7 @@
     "react-spring": "^8.0.27",
     "react-use": "^13.8.0",
     "react-use-gesture": "^6.0.14",
-    "style-base": "^1.0.7"
+    "style-base": "^1.0.10"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
@@ -59,13 +59,13 @@
     "copy-webpack-plugin": "^5.0.4",
     "css-loader": "^3.2.0",
     "eslint": "^6.8.0",
-    "father-doc": "1.0.0-alpha.16",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-eslint-comments": "^3.1.2",
     "eslint-plugin-import": "^2.20.0",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.18.0",
     "eslint-plugin-react-hooks": "^2.3.0",
+    "father-doc": "1.0.0-alpha.16",
     "file-loader": "^4.2.0",
     "glob": "^7.1.4",
     "mini-css-extract-plugin": "^0.8.0",

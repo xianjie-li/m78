@@ -72,7 +72,6 @@ const Mask: React.FC<MaskProps> = ({
             toggle={show}
             type="fade"
             className={cls('fr-mask-node', dark ? 'fr-mask-b' : 'fr-mask')}
-            style={style}
             mountOnEnter
             unmountOnExit
           />

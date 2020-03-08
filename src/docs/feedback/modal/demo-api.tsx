@@ -3,8 +3,19 @@ import React from 'react';
 import Modal from '@lxjx/flicker/lib/modal';
 import Button from '@lxjx/flicker/lib/button';
 
-const Demo = () => {
+function mult() {
+  for (let i = 0; i < 6; i++) {
+    const [refs, id] = Modal.api({
+      title: i + '通过api来调用modal',
+      mask: false,
+      onConfirm() {
+        refs.close(id);
+      },
+    });
+  }
+}
 
+const Demo = () => {
   return (
     <div>
       <Button
@@ -27,6 +38,7 @@ const Demo = () => {
         }}
       >编程式调用
       </Button>
+      <Button onClick={mult}>打开一组窗口</Button>
     </div>
   );
 };

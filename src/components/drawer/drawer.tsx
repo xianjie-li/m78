@@ -30,7 +30,15 @@ const Drawer: React.FC<DrawerProps> = ({
 
   function render() {
     return (
-      <Mask namespace={namespace} show={show} onClose={close} onRemove={onRemove} portal={!inside} dark className={cls('fr-drawer_mask', { __inside: inside })}>
+      <Mask
+        namespace={namespace}
+        show={show}
+        onClose={close}
+        onRemove={onRemove}
+        portal={!inside}
+        dark
+        className={cls('fr-drawer_mask', { __inside: inside })}
+      >
         <Transition
           {...props}
           className={cls(

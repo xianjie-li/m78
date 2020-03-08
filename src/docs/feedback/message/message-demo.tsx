@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import message from '@lxjx/flicker/lib/message';
 import '@lxjx/flicker/lib/message/style';
 
@@ -13,11 +13,15 @@ const type = [
 ];
 
 function messageTest() {
-  message.tips({
-    content: '提示',
-    duration: Math.floor(Math.random() * 5000) + 500,
-    // @ts-ignore
-    type: type[Math.floor(Math.random() * 4)],
+  setTimeout(() => {
+    const [ref, id] = message.tips({
+      content: '提示',
+      duration: Math.floor(Math.random() * 5000) + 500,
+      // @ts-ignore
+      type: type[Math.floor(Math.random() * 4)],
+    });
+
+    console.log(111, ref, id);
   });
 }
 
@@ -39,6 +43,10 @@ function notifyTest() {
 }
 
 const Demo = () => {
+  useEffect(() => {
+    // messageTest();
+  }, []);
+
   return (
     <div>
       <Button onClick={messageTest}>message</Button>

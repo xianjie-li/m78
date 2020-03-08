@@ -12,12 +12,18 @@
   overflow: auto;
   min-height: 50px;
 
+  &_wrap {
+    transition: $animation-duration-slow left, $animation-duration-base top;
+    &:hover {
+      z-index: 9999 !important;
+    }
+  }
+
   &_close-icon {
-    position: absolute;
+    position: absolute !important;
     right: 12px;
     top: 12px;
     cursor: pointer;
-    font-size: 20px;
     text-shadow: $stress-shadow-w;
 
     &:hover {

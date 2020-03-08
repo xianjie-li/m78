@@ -16,9 +16,9 @@ const Demo = () => {
     <div>
       <div>
         <Button onClick={() => setShow(p => !p)}>show </Button>
-        <Button onClick={() => setShow2(p => !p)}>flex按钮</Button>
         <Button onClick={() => setShow3(p => !p)}>无遮罩层</Button>
         <Button onClick={() => setShow4(p => !p)}>自定义按钮</Button>
+        <Button onClick={() => setShow2(p => !p)}>flex按钮</Button>
       </div>
 
       <Modal
@@ -74,6 +74,7 @@ const Demo = () => {
         title="自定义按钮"
         status="warning"
         show={show4}
+        mask={false}
         btns={[
           {
             text: '删除',
