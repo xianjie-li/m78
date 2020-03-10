@@ -11,6 +11,10 @@ const Demo = () => {
     direction: 'left',
   });
 
+  const [show1, set1] = React.useState(false);
+  const [show2, set2] = React.useState(false);
+  const [show3, set3] = React.useState(false);
+
   const [fullScreenShow, setFullScreen] = React.useState(false);
   const [insideShow, setInsideShow] = React.useState(false);
 
@@ -33,6 +37,7 @@ const Demo = () => {
       padding: 16,
     }}
     >
+      {/* 方向 */}
       <Drawer
         direction={state.direction as any}
         show={state.show}
@@ -44,6 +49,8 @@ const Demo = () => {
           ))}
         </div>
       </Drawer>
+
+      {/* 全屏模式 */}
       <Drawer
         fullScreen
         direction="bottom"
@@ -56,11 +63,50 @@ const Demo = () => {
           ))}
         </div>
       </Drawer>
+
+      {/* 容器模式 */}
       <Drawer
         inside
         direction="right"
         show={insideShow}
         onClose={close}
+      >
+        <div>
+          {Array.from({ length: 6 }).map((v, k) => (
+            <p key={k}>content {k + 1} Lorem ipsum dolor sit amet</p>
+          ))}
+        </div>
+      </Drawer>
+
+      {/* 多层 */}
+      <Drawer
+        direction="right"
+        show={show1}
+        onClose={() => set1(false)}
+      >
+        <div>
+          <Button onClick={() => set2(true)}>第二层</Button>
+          {Array.from({ length: 6 }).map((v, k) => (
+            <p key={k}>content {k + 1} Lorem ipsum dolor sit amet</p>
+          ))}
+        </div>
+      </Drawer>
+      <Drawer
+        direction="right"
+        show={show2}
+        onClose={() => set2(false)}
+      >
+        <div>
+          <Button onClick={() => set3(true)}>第三层</Button>
+          {Array.from({ length: 6 }).map((v, k) => (
+            <p key={k}>content {k + 1} Lorem ipsum dolor sit amet</p>
+          ))}
+        </div>
+      </Drawer>
+      <Drawer
+        direction="right"
+        show={show3}
+        onClose={() => set3(false)}
       >
         <div>
           {Array.from({ length: 6 }).map((v, k) => (
@@ -76,6 +122,7 @@ const Demo = () => {
       <div className="mt-16">
         <Button onClick={() => setFullScreen(prev => !prev)}>全屏</Button>
         <Button onClick={() => setInsideShow(prev => !prev)}>容器模式</Button>
+        <Button onClick={() => set1(true)}>多层Drawer</Button>
       </div>
     </div>
   );

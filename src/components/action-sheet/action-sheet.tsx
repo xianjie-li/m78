@@ -68,7 +68,7 @@ const ActionSheet: React.FC<ActionSheetProps> = (props) => {
   }
 
   return (
-    <Drawer namespace={namespace} className="fr-action-sheet_wrap" show={show} onRemove={onRemove} onClose={close}>
+    <Drawer namespace={namespace} className="fr-action-sheet_wrap" show={show} onRemove={onRemove} onClose={close} style={{ boxShadow: 'none' }}>
       <div className={cls('fr-action-sheet', { __custom: !!children })}>
         <div className="fr-action-sheet_item fr-effect __md __title __disabled">
           <If when={isConfirm}>

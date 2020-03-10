@@ -1,1 +1,9 @@
 @import "../../style/index";
+
+.fr-mask {
+  &_inner {
+    /* 即使在更高的层级下，依然会触发低层级的mask点击？通过下面两行修复 */
+    position: fixed;
+    z-index: $z-index;
+  }
+}

@@ -14,7 +14,9 @@ import { ComponentBaseProps } from '../types/types';
 export interface MaskProps extends ComponentBaseProps, ReactRenderApiProps {
   /** 是否显示mask */
   mask?: boolean;
-  /** 是否允许点击mask进行关闭 */
+  /** true | 对mask进行可见性隐藏, 仍然触发事件 */
+  visible?: boolean;
+  /** true | 是否允许点击mask进行关闭 */
   maskClosable?: boolean;
   /** 800 | 当传入onRemove时，会对其进行代理，当show为false在指定延迟内调用onRemove */
   onRemoveDelay?: number;
@@ -34,6 +36,7 @@ export interface MaskProps extends ComponentBaseProps, ReactRenderApiProps {
  *  */
 const Mask: React.FC<MaskProps> = ({
   mask = true,
+  visible = true,
   maskClosable = true,
   show = false,
   onClose,
@@ -65,16 +68,18 @@ const Mask: React.FC<MaskProps> = ({
 
   function render() {
     return (
-      <div className={cls('fr-mask-wrap', className)} style={style}>
+      <div className={cls('fr-mask_wrap', className)} style={style}>
         {mask && (
-          <Transition
-            onClick={maskClosable ? onClose : undefined}
-            toggle={show}
-            type="fade"
-            className={cls('fr-mask-node', dark ? 'fr-mask-b' : 'fr-mask')}
-            mountOnEnter
-            unmountOnExit
-          />
+          <div className="fr-mask_inner" style={{ opacity: visible ? 1 : 0 }}>
+            <Transition
+              onClick={maskClosable ? onClose : undefined}
+              toggle={show}
+              type="fade"
+              className={cls('fr-mask-node', dark ? 'fr-mask-b' : 'fr-mask')}
+              mountOnEnter
+              unmountOnExit
+            />
+          </div>
         )}
         {children}
       </div>

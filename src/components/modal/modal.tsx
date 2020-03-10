@@ -8,7 +8,7 @@ import { config } from 'react-spring';
 import Icon from '@lxjx/flicker/lib/icon';
 import Spin from '@lxjx/flicker/lib/spin';
 import { dumpFn } from '@lxjx/flicker/lib/util';
-import { useZIndex } from '@lxjx/flicker/lib/hooks';
+import { useSame } from '@lxjx/flicker/lib/hooks';
 
 import createRenderApi, {
   ReactRenderApiProps,
@@ -59,6 +59,8 @@ export interface ModalProps extends ReactRenderApiProps, ComponentBaseProps {
   footerClassName?: string;
 }
 
+const zIndex = 1800;
+
 const _Modal: React.FC<ModalProps> = ({
   show,
   onRemove = dumpFn,
@@ -86,7 +88,16 @@ const _Modal: React.FC<ModalProps> = ({
   content,
   namespace,
 }) => {
-  const [zIndex, diff] = useZIndex('modal_zIndex', 1800, !!show);
+  const [cIndex, instances] = useSame('fr_modal_metas', !!show, {
+    mask,
+  });
+  const nowZIndex = cIndex === -1 ? zIndex : cIndex + zIndex;
+
+  // 当前实例之前所有实例组成的数组
+  const beforeInstance = instances.slice(0, cIndex);
+  // 在该实例之前是否有任意一个实例包含mask
+  const beforeHasMask = beforeInstance.some(item => item.meta.mask);
+
   const dpr = useMemo(() => window.devicePixelRatio || 1, []);
 
   function renderDefaultFooter() {
@@ -125,8 +136,9 @@ const _Modal: React.FC<ModalProps> = ({
     <ShowFromMouse
       namespace={namespace}
       mask={mask}
+      visible={!beforeHasMask}
       maskClosable={loading ? false : maskClosable}
-      style={{ zIndex, top: diff * 20 / dpr, left: diff * 20 / dpr }}
+      style={{ zIndex: nowZIndex, top: cIndex * 20 / dpr, left: cIndex * 20 / dpr }}
       contClassName={cls('fr-modal', className)}
       className="fr-modal_wrap"
       contStyle={{ ...style, maxWidth, padding: content ? 0 : '' }}
