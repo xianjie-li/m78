@@ -16,8 +16,6 @@
     border: 2px solid $b-border;
     border-radius: $border-radius;
     color: $b-border;
-    outline: 1px dashed currentColor;
-    outline-offset: -6px;
   }
 
   &.__info &_wrap {
@@ -35,7 +33,7 @@
     color: $color-success;
   }
 
-  &.__warning &_wrap {
+  &.__warn &_wrap {
     border: 2px solid currentColor;
     color: $color-warn;
   }
@@ -45,9 +43,14 @@
     top: 0;
     left: 0;
     right: 0;
-    border: none;
     max-width: 100%;
     z-index: $z-index;
+
+    .fr-notice-bar_wrap {
+      outline: none;
+      border: none;
+      box-shadow: $shadow-1;
+    }
   }
 
   &_left {

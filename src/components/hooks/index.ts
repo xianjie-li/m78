@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 import { createRandString, isArray } from '@lxjx/utils';
 import { useUpdateEffect, useUpdate } from 'react-use';
 import { useCustomEvent } from '@lxjx/hooks';
@@ -112,4 +112,13 @@ export function useSame<Meta = any>(key: string, dep: boolean, meta?: Meta) {
   }, [sameMap[key]?.length]);
 
   return [cIndex, sameMap[key], id] as [number, Array<Item<Meta>>, string];
+}
+
+
+export function usePrev<T = any>(value: T) {
+  const ref = useRef<T>();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
 }

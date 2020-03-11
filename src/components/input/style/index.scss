@@ -1,0 +1,80 @@
+@import "../../style/index";
+
+.fr-input {
+  appearance: none;
+  display: inline-block;
+  width: 100%;
+  outline: none;
+  border: none;
+  color: #000000;
+  background-color: transparent;
+
+  &:disabled {
+    color: $b-disable;
+    cursor: not-allowed;
+  }
+
+  @include placeholder;
+
+  &_wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    height: 36px;
+    width: 100%;
+    border: 1px solid $b-border;
+    border-radius: $border-radius;
+    padding: 0 10px;
+    font-size: 16px;
+    line-height: 1;
+    transition:
+      $animation-duration-base box-shadow,
+      $animation-duration-base border-color;
+
+    &:not(.__disabled):hover {
+      border-color: $color;
+    }
+
+    &:not(.__disabled):active {
+      border-color: $color;
+      box-shadow: 0 0 0 3px rgba($color, 0.5);
+    }
+
+    &.__readonly {
+      border-style: dashed;
+    }
+
+    &.__focus {
+      border-color: $color;
+      box-shadow: 0 0 0 3px rgba($color, 0.2);
+    }
+
+    &.__disabled {
+      background-color: $grey-4;
+      cursor: not-allowed;
+      border-style: dashed;
+    }
+  }
+
+  &_label {
+    line-height: 1;
+    position: absolute;
+    left: 40px;
+    top: -12px;
+    background-color: #fff;
+    font-size: 14px;
+    padding: 0 8px;
+  }
+
+  &_prefix, &_suffix {
+    user-select: none;
+  }
+
+  &_prefix {
+    margin-right: 6px;
+  }
+
+  &_suffix {
+    margin-left: 6px;
+  }
+}
