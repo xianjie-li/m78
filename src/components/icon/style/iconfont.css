@@ -1,4 +1,12 @@
 
+.icon-eye:before {
+  content: "\e78f";
+}
+
+.icon-eye-close:before {
+  content: "\e8ff";
+}
+
 .icon-check-circle:before {
   content: "\e77d";
 }

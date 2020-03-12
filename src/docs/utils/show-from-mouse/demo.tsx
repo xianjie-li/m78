@@ -19,6 +19,7 @@ const box: React.CSSProperties = {
   boxShadow: '0 0 0 6px #61fbf6',
   borderRadius: 2,
   backgroundColor: '#fff',
+  zIndex: 1001,
 };
 
 const Demo = () => {

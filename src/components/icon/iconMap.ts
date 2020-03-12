@@ -30,6 +30,8 @@ export const iconMap = {
   info: 'icon-info-circle',
   error: 'icon-close-circle',
   success: 'icon-check-circle',
+  eye: 'icon-eye',
+  eyeClose: 'icon-eye-close',
 };
 
 export const svgIconMap = {

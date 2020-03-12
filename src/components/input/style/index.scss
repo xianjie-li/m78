@@ -1,5 +1,7 @@
 @import "../../style/index";
 
+$unitSpace: 8px;
+
 .fr-input {
   appearance: none;
   display: inline-block;
@@ -35,7 +37,7 @@
       border-color: $color;
     }
 
-    &:not(.__disabled):active {
+    &:not(.__disabled):not(.__readonly):active {
       border-color: $color;
       box-shadow: 0 0 0 3px rgba($color, 0.5);
     }
@@ -56,6 +58,28 @@
     }
   }
 
+
+  &_loading {
+    font-size: 14px !important;
+    margin: 0;
+    margin-left: $unitSpace;
+  }
+
+  &_icon {
+    font-size: 18px;
+    cursor: pointer;
+    margin-left: $unitSpace;
+    color: $b-second;
+
+    &:hover {
+      color: $b-primary;
+    }
+
+    &:active {
+      color: $b-title;
+    }
+  }
+
   &_label {
     line-height: 1;
     position: absolute;
@@ -71,10 +95,10 @@
   }
 
   &_prefix {
-    margin-right: 6px;
+    margin-right: $unitSpace;
   }
 
   &_suffix {
-    margin-left: 6px;
+    margin-left: $unitSpace;
   }
 }

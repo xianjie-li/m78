@@ -19,7 +19,6 @@ const box: React.CSSProperties = {
   width: 240,
   height: 240,
   margin: '-120px 0 0 -120px',
-  zIndex: 100,
   lineHeight: '240px',
   textAlign: 'center',
   border: '4px solid #fb6161',
@@ -27,6 +26,7 @@ const box: React.CSSProperties = {
   borderRadius: 2,
   backgroundColor: '#fff',
   transition: 'transform 0.3s',
+  zIndex: 1001,
 };
 
 const inStyle: React.CSSProperties = {
