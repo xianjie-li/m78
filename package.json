@@ -1,6 +1,6 @@
 {
   "name": "@lxjx/flicker",
-  "version": "0.0.8-alpha",
+  "version": "0.0.9-alpha",
   "types": "./lib",
   "license": "MIT",
   "scripts": {
@@ -24,7 +24,7 @@
   "dependencies": {
     "@babel/runtime": "^7.7.2",
     "@lxjx/fr-click-effect": "^1.0.2",
-    "@lxjx/hooks": "^0.7.2",
+    "@lxjx/hooks": "^0.9.0",
     "@lxjx/react-render-api": "^0.3.8",
     "@lxjx/react-transition-spring": "^1.0.9",
     "@lxjx/utils": "^1.1.7",

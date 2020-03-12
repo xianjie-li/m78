@@ -9,7 +9,7 @@ import _capitalize from 'lodash/capitalize';
 import cls from 'classnames';
 
 import { DrawerProps } from './type';
-import { useSame } from '@lxjx/flicker/lib/hooks';
+import { useSame } from '@lxjx/hooks';
 
 const zIndex = 1400;
 

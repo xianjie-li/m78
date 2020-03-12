@@ -1403,10 +1403,10 @@
     react "^16.11.0"
     react-use "^13.6.3"
 
-"@lxjx/hooks@^0.7.2":
-  version "0.7.2"
-  resolved "https://registry.npm.taobao.org/@lxjx/hooks/download/@lxjx/hooks-0.7.2.tgz#0df59753c4a61522fa165ca4b26d320af3ee54a9"
-  integrity sha1-DfWXU8SmFSL6Flyksm0yCvPuVKk=
+"@lxjx/hooks@^0.9.0":
+  version "0.9.0"
+  resolved "https://registry.npmjs.org/@lxjx/hooks/-/hooks-0.9.0.tgz#c88c3027497dc674f9c9b16dd7c37c793959fb2c"
+  integrity sha512-yso/IplBQT+8VVLi9u93MsWy287O1XaIQoKGzbjZ36XFGVZd76lefIDugeCUirHrCHVpZQMheT5J2d90M/vLLw==
   dependencies:
     "@babel/runtime" "^7.6.3"
     "@lxjx/utils" "^1.1.7"

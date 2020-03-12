@@ -8,7 +8,7 @@ import { config } from 'react-spring';
 import Icon from '@lxjx/flicker/lib/icon';
 import Spin from '@lxjx/flicker/lib/spin';
 import { dumpFn } from '@lxjx/flicker/lib/util';
-import { useSame } from '@lxjx/flicker/lib/hooks';
+import { useSame } from '@lxjx/hooks';
 
 import createRenderApi, {
   ReactRenderApiProps,

@@ -5,12 +5,14 @@ import Button from '@lxjx/flicker/lib/button';
 
 function mult(mask = true) {
   for (let i = 0; i < 6; i++) {
-    const [refs, id] = Modal.api({
-      title: i + '通过api来调用modal',
-      mask,
-      onConfirm() {
-        refs.close(id);
-      },
+    setTimeout(() => {
+      const [refs, id] = Modal.api({
+        title: i + '通过api来调用modal',
+        mask,
+        onConfirm() {
+          refs.close(id);
+        },
+      });
     });
   }
 }
