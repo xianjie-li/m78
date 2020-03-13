@@ -2,7 +2,27 @@
 
 $unitSpace: 8px;
 
+/* 生成状态色配置 */
+@mixin statusColor($_color_) {
+  border-color: $_color_;
+
+  &.__focus {
+    box-shadow: 0 0 0 3px rgba($_color_, 0.2);
+  }
+
+  &:not(.__disabled):hover {
+    border-color: $_color_;
+  }
+
+  &:not(.__disabled):not(.__readonly):active {
+    border-color: $_color_;
+    box-shadow: 0 0 0 3px rgba($_color_, 0.5);
+  }
+}
+
 .fr-input {
+  position: relative;
+  flex: 1;
   appearance: none;
   display: inline-block;
   width: 100%;
@@ -10,6 +30,11 @@ $unitSpace: 8px;
   border: none;
   color: #000000;
   background-color: transparent;
+  @include ellipsis-x;
+
+  &:not([type=file]) {
+    top: -1px; /* 视觉居中 */
+  }
 
   &:disabled {
     color: $b-disable;
@@ -29,10 +54,12 @@ $unitSpace: 8px;
     padding: 0 10px;
     font-size: 16px;
     line-height: 1;
+    overflow: hidden;
     transition:
       $animation-duration-base box-shadow,
       $animation-duration-base border-color;
 
+    /* 各种状态的处理 */
     &:not(.__disabled):hover {
       border-color: $color;
     }
@@ -56,8 +83,83 @@ $unitSpace: 8px;
       cursor: not-allowed;
       border-style: dashed;
     }
-  }
 
+    /* 尺寸 */
+    &.__small {
+      height: 28px;
+      font-size: 14px;
+      .fr-input_suffix, .fr-input_prefix {
+        font-size: 12px;
+      }
+    }
+
+    &.__large {
+      height: 50px;
+      font-size: 20px;
+
+      .fr-input_suffix, .fr-input_prefix {
+        font-size: 16px;
+      }
+    }
+
+    &.__big {
+      height: 70px;
+      font-size: 28px;
+
+      .fr-input {
+        letter-spacing: 2px;
+      }
+
+      .fr-input_suffix, .fr-input_prefix {
+        font-size: 24px;
+      }
+    }
+
+    /* 状态色 */
+    &.__info {
+      @include statusColor($color-info);
+    }
+
+    &.__success {
+      @include statusColor($color-success);
+    }
+
+    &.__warn {
+      @include statusColor($color-warn);
+    }
+
+    &.__error {
+      @include statusColor($color-error);
+    }
+
+    &.__not-border, &.__underline {
+      border-color: transparent !important;
+      border-radius: 0;
+      border-bottom-width: 2px;
+
+    }
+
+    &.__underline {
+      border-bottom-color: $color !important;
+
+      &.__info {
+        border-bottom-color: $color-info !important;
+      }
+
+      &.__success {
+        border-bottom-color: $color-success !important;
+      }
+
+      &.__warn {
+        border-bottom-color: $color-warn !important;
+      }
+
+      &.__error {
+        border-bottom-color: $color-error !important;
+      }
+
+    }
+  }
 
   &_loading {
     font-size: 14px !important;
@@ -80,6 +182,13 @@ $unitSpace: 8px;
     }
   }
 
+  &_search-icon {
+    .fr-icon {
+      font-size: 24px !important;
+    }
+    margin-left: $unitSpace - 4; /* 按钮原本就有空白，稍微减少不至于突兀 */
+  }
+
   &_label {
     line-height: 1;
     position: absolute;
@@ -92,6 +201,9 @@ $unitSpace: 8px;
 
   &_prefix, &_suffix {
     user-select: none;
+    white-space: nowrap;
+    font-size: 14px;
+    color: $grey-8;
   }
 
   &_prefix {

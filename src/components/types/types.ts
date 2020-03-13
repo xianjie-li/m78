@@ -12,6 +12,10 @@ export interface ComponentBaseProps {
   style?: React.CSSProperties;
 }
 
+export type Status = 'info' | 'success' | 'warn' | 'error';
+
+export type Size = 'large' | 'small';
+
 export type AnyObject = {
   [key: string]: any;
 }

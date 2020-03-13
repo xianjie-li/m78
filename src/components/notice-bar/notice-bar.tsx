@@ -6,6 +6,7 @@ import { useFormState, formStateMap } from '@lxjx/hooks';
 import Icon from '@lxjx/flicker/lib/icon';
 import { If } from '@lxjx/flicker/lib/fork';
 import Button from '@lxjx/flicker/lib/button';
+import { Status } from '../types/types';
 
 import cls from 'classnames';
 
@@ -21,7 +22,7 @@ export interface NoticeBarProps {
   /** 详细说明文本 */
   desc?: React.ReactNode;
   /** 状态 */
-  status?: 'success' | 'info' | 'warn' | 'error';
+  status?: Status;
   /** 定位到元素最顶部 */
   fixedTop?: boolean;
   /** 替换右侧关闭图标的内容 */
