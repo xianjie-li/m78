@@ -6,7 +6,7 @@ import Icon from '@lxjx/flicker/lib/icon';
 
 const Demo = () => {
   return (
-    <div style={{ maxWidth: 600 }}>
+    <div>
       <div className="mt-16">
         <Input placeholder="自动获取焦点" autoFocus />
       </div>
@@ -20,7 +20,7 @@ const Demo = () => {
         <Input placeholder="任意合法的ReactNode" prefix="邮箱" suffix="@qq.com" />
       </div>
       <div className="mt-16">
-        <Input placeholder="清除按钮" />
+        <Input placeholder="清除按钮" format="phone" maxLength={13} />
       </div>
       <div className="mt-16">
         <Input placeholder="一段密码" type="password" />
@@ -59,13 +59,13 @@ const Demo = () => {
         <Input placeholder="我超大" size="large" suffix="是整整齐齐" />
       </div>
       <div className="mt-16">
-        <Input placeholder="做人，最要紧的是开心" size="big" />
+        <Input placeholder="请输入商品金额" type="number" size="big" prefix="￥" format="money" />
       </div>
       <div className="mt-16">
-        <Input placeholder="无边框" suffix="右侧" notBorder />
+        <Input placeholder="无边框" notBorder />
       </div>
       <div className="mt-16">
-        <Input placeholder="下边框" suffix="右侧" underline status="error" />
+        <Input placeholder="下边框" underline status="error" />
       </div>
     </div>
   );

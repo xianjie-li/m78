@@ -1447,6 +1447,13 @@
   dependencies:
     "@babel/runtime" "^7.7.6"
 
+"@lxjx/utils@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.npm.taobao.org/@lxjx/utils/download/@lxjx/utils-1.2.0.tgz#35798edb5f6831b4cdaf75e3b9fa768b812f0f42"
+  integrity sha1-NXmO219oMbTNr3Xjufp2i4EvD0I=
+  dependencies:
+    "@babel/runtime" "^7.7.6"
+
 "@mapbox/rehype-prism@^0.3.1":
   version "0.3.1"
   resolved "https://registry.npm.taobao.org/@mapbox/rehype-prism/download/@mapbox/rehype-prism-0.3.1.tgz#538e38737df0d0d1462beabf9ceae88fce4035a5"

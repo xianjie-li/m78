@@ -27,7 +27,7 @@
     "@lxjx/hooks": "^0.9.0",
     "@lxjx/react-render-api": "^0.3.8",
     "@lxjx/react-transition-spring": "^1.0.9",
-    "@lxjx/utils": "^1.1.7",
+    "@lxjx/utils": "^1.2.0",
     "@types/react": "^16.9.22",
     "@types/react-dom": "^16.9.5",
     "classnames": "^2.2.6",

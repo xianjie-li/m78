@@ -8,10 +8,18 @@ group:
 
 # Input 输入框
 
-最基础的输入单元
+最基础、最重要的输入单元
 
 ## 示例
 <code src="./demo.tsx" />
+
+## 格式化输入
+
+### 美化输入
+<code src="./demo-format.tsx" />
+
+### 限制输入
+<code src="./demo-format-parser.tsx" />
 
 ## props
 ```tsx | pure
