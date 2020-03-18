@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useToggle } from 'react-use';
 
-import ShowFromMouse from '@lxjx/flicker/lib/show-from-mouse';
+import ShowFromMouse from '@lxjx/fr/lib/show-from-mouse';
 
-import Button from '@lxjx/flicker/lib/button';
+import Button from '@lxjx/fr/lib/button';
 
 const fixedStyle: React.CSSProperties = {
   position: 'fixed',

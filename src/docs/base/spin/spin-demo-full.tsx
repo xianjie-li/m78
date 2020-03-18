@@ -1,6 +1,6 @@
 import React from 'react';
-import Spin from '@lxjx/flicker/lib/spin';
-import '@lxjx/flicker/lib/spin/style';
+import Spin from '@lxjx/fr/lib/spin';
+import '@lxjx/fr/lib/spin/style';
 
 const IconDemo = () => {
   const [show, setShow] = React.useState(true);

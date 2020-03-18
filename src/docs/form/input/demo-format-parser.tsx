@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Input from '@lxjx/flicker/lib/input';
+import Input from '@lxjx/fr/lib/input';
 
 const Demo2 = () => {
   return (
@@ -16,6 +16,9 @@ const Demo2 = () => {
       </div>
       <div className="mt-16">
         <Input placeholder="不超过11位, 能够正确识别format等额外填入的字符" format="phone" maxLength={11} />
+      </div>
+      <div className="mt-16">
+        <Input placeholder="最小为5，最大为100" min={5} max={100} />
       </div>
     </div>
   );

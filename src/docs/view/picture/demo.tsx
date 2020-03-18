@@ -1,8 +1,8 @@
 import React from 'react';
-import Picture from '@lxjx/flicker/lib/picture';
-import '@lxjx/flicker/lib/picture/style';
+import Picture from '@lxjx/fr/lib/picture';
+import '@lxjx/fr/lib/picture/style';
 
-import Config from '@lxjx/flicker/lib/config';
+import Config from '@lxjx/fr/lib/config';
 
 import img1 from '@/src/mock/img/1.jpg';
 import img2 from '@/src/mock/img/2.jpg';

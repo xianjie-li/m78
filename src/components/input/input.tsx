@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
-import Icon from '@lxjx/flicker/lib/icon';
-import Spin from '@lxjx/flicker/lib/spin';
-import Button from '@lxjx/flicker/lib/button';
-import { If } from '@lxjx/flicker/lib/fork';
-import { dumpFn } from '@lxjx/flicker/lib/util';
+import Icon from '@lxjx/fr/lib/icon';
+import Spin from '@lxjx/fr/lib/spin';
+import Button from '@lxjx/fr/lib/button';
+import { If } from '@lxjx/fr/lib/fork';
+import { dumpFn } from '@lxjx/fr/lib/util';
 import { isNumber, formatString, validateFormatString } from '@lxjx/utils';
 
 import cls from 'classnames';
@@ -13,84 +13,7 @@ import { InputProps } from './type';
 import { useFormState, useDerivedStateFromProps } from '@lxjx/hooks';
 import { TransitionBase } from '@lxjx/react-transition-spring';
 
-/* 内置format */
-type BuildInPatterns = {
-  [key in NonNullable<InputProps['format']>]: {
-    pattern: string;
-    delimiter?: string;
-    lastRepeat?: boolean;
-    repeat?: boolean;
-  };
-};
-
-const buildInPattern: BuildInPatterns = {
-  phone: {
-    delimiter: ' ',
-    pattern: '3,4',
-    lastRepeat: true,
-  },
-  idCard: {
-    delimiter: ' ',
-    pattern: '3,3,4',
-    lastRepeat: true,
-  },
-  money: {
-    delimiter: '\'',
-    pattern: '5,3',
-    lastRepeat: true,
-  },
-  bankCard: {
-    delimiter: ' ',
-    pattern: '3,4',
-    lastRepeat: true,
-  },
-};
-
-/* money format需要单独处理小数点 */
-function formatMoney(moneyStr = '', delimiter = '\'') {
-  const dotIndex = moneyStr.indexOf('.');
-
-  if (dotIndex === -1) return moneyStr;
-
-  const first = moneyStr.slice(0, dotIndex - 1);
-  // 移除小数点前一位以及以后所有的delimiter
-  const last = moneyStr.slice(dotIndex - 1).replace(new RegExp(delimiter, 'g'), '');
-
-  return first + last;
-}
-
-/* 处理 type=number */
-function parserNumber(value = '') {
-  value = value.replace(/[^(0-9|.)]/g, '');
-  // 去首位点
-  if (value[0] === '.') {
-    value = value.slice(1);
-  }
-  // 去1个以上的点
-  const matchDot = value.match(/(\.)/g);
-  if (matchDot && matchDot.length > 1) {
-    const firstDotInd = value.indexOf('.');
-    const firstStr = value.slice(0, firstDotInd + 1);
-    const lastStr = value.slice(firstDotInd + 1).replace('.', '');
-    value = firstStr + lastStr;
-  }
-  return value;
-}
-
-/* 处理 type=integer */
-function parserInteger(value = '') {
-  return value.replace(/[\D]/g, '');
-}
-
-/* 处理 type=general */
-function parserGeneral(value = '') {
-  return value.replace(/[\W]/g, '');
-}
-
-/* 处理 maxLength */
-function parserLength(value = '', maxLength: number) {
-  return value.slice(0, maxLength);
-}
+import { buildInPattern, formatMoney, parserNumber, parserInteger, parserGeneral, parserLength, parserThan } from './utils';
 
 const Input: React.FC<InputProps> = (_props) => {
   const {
@@ -105,8 +28,6 @@ const Input: React.FC<InputProps> = (_props) => {
     /* 组件props */
     size,
     allowClear = true,
-    search = false,
-    onSearch = dumpFn,
     onFocus = dumpFn,
     onBlur = dumpFn,
     onKeyDown = dumpFn,
@@ -114,8 +35,6 @@ const Input: React.FC<InputProps> = (_props) => {
     value: _value,
     defaultValue: _defaultValue,
     onChange: _onChange,
-    prefix,
-    suffix,
     status,
     notBorder,
     underline,
@@ -127,12 +46,22 @@ const Input: React.FC<InputProps> = (_props) => {
     formatter: _formatter,
     parser: _parser,
     maxLength,
+    min,
+    max,
+    search = false,
+    onSearch = dumpFn,
+    prefix,
+    suffix,
+    textArea,
+    autoSize = true,
+    charCount = false,
     ...props
   } = _props;
 
+  // eslint
   dumpFn(_value, _defaultValue, _onChange);
 
-  // format配置不允许改变
+  // format相关配置, 不允许改变
   const formatArg = useMemo(() => {
     // 有预设优先用预设
     if (format && buildInPattern[format]) {
@@ -145,20 +74,26 @@ const Input: React.FC<InputProps> = (_props) => {
     return [formatPattern, { delimiter: formatDelimiter, repeat: formatRepeat, lastRepeat: formatLastRepeat }] as const;
     // eslint-disable-next-line
   }, []);
+  // 对format类型进行缓存
+  // eslint-disable-next-line
   const memoFormat = useMemo(() => format, []);
 
   const [value, setValue] = useFormState(_props, '');
 
+  // textarea的高度 用于设置了autoSize时动态调整高度
+  const [textAreaHeight, setTextAreaHeight] = useState('');
+
   /* 各种态，active和hover通过css处理, 部分状态需要由内部接管方便在用户之外进行一些状态操作 */
   const [focus, setFocus] = useState(false);
-  const [disabled, setDisabled] = useDerivedStateFromProps(_disabled);
-  const [readonly, setReadonly] = useDerivedStateFromProps(_readOnly);
-  const [loading, setLoading] = useDerivedStateFromProps(_loading);
-  const [blockLoading, setBlockLoading] = useDerivedStateFromProps(_blockLoading);
+  const [disabled] = useDerivedStateFromProps(_disabled);
+  const [readonly] = useDerivedStateFromProps(_readOnly);
+  const [loading] = useDerivedStateFromProps(_loading);
+  const [blockLoading] = useDerivedStateFromProps(_blockLoading);
 
   /* 其他 */
   const [type, setType] = useDerivedStateFromProps(_type);
 
+  // 对一些配置进行type的类型优化
   useEffect(() => {
     if (memoFormat === 'money') {
       setType('number');
@@ -166,11 +101,37 @@ const Input: React.FC<InputProps> = (_props) => {
     // eslint-disable-next-line
   }, [memoFormat]);
 
-  /* input的ref */
+  useEffect(() => {
+    if ((type !== 'number' && type !== 'integer') && (isNumber(min) || isNumber(max))) {
+      setType('number');
+    }
+    // eslint-disable-next-line
+  }, [min, max]);
+
+  /* 指向input的ref */
   const input = useRef<HTMLInputElement>(null!);
 
+  /* 启用了formatArg时，对其格式化，否则返回原value */
   // eslint-disable-next-line
   let inputValue = useMemo(() => (formatArg ? formatString(value, ...formatArg) : value), [value]);
+
+  /* 实现textarea autoSize */
+  const cloneText = useRef<any>();
+
+  useEffect(() => {
+    if (textArea && autoSize) {
+      cloneText.current = input.current.cloneNode();
+      cloneText.current.style.position = 'absolute';
+      cloneText.current.style.visibility = 'hidden';
+
+      const parent = input.current.parentNode;
+
+      if (parent) {
+        parent.appendChild(cloneText.current);
+      }
+    }
+    // eslint-disable-next-line
+  }, []);
 
   function focusHandle() {
     if (disabled || readonly) return;
@@ -186,7 +147,7 @@ const Input: React.FC<InputProps> = (_props) => {
   function keyDownHandle(e: React.KeyboardEvent<HTMLInputElement>) {
     onKeyDown(e);
     if (e.keyCode === 13) {
-      input.current.blur();
+      // input.current.blur();
       searchHandle();
       onPressEnter(e);
     }
@@ -200,9 +161,7 @@ const Input: React.FC<InputProps> = (_props) => {
   /* 处理input的change */
   function changeHandle({ target }: React.ChangeEvent<HTMLInputElement>) {
     /* TODO: parser会打断输入法 */
-    // // @ts-ignore
     // const inputType = nativeEvent.inputType;
-    // // @ts-ignore
     // const isComposing = nativeEvent.isComposing;
     // console.log(inputType, isComposing, nativeEvent);
     // // 对兼容inputType/isComposing API的浏览器进行混合输入处理，防止输入法操作被打断
@@ -219,17 +178,21 @@ const Input: React.FC<InputProps> = (_props) => {
     // 浏览器支持且存在formatArg配置或传入parser时，还原光标位置
     if (typeof saveSelectInd === 'number' && target.setSelectionRange && (formatArg || typeof _parser === 'function')) {
       setTimeout(() => {
-        const diff = target.value.length - oldValueLength;
+        const diff = target.value.length - oldValueLength; // 基于新值计算差异长度，还原位置需要减去此差值
         target.setSelectionRange(saveSelectInd + diff, saveSelectInd + diff);
       });
     }
+
+    calcTextHeight();
   }
 
   /* 清空输入框 */
   function clearHandle() {
     setValue('');
     setTimeout(() => {
+      // 清空后、触发搜索，并且在autoSize启用时时更新高度
       searchHandle();
+      calcTextHeight();
     });
     input.current.focus();
   }
@@ -239,6 +202,14 @@ const Input: React.FC<InputProps> = (_props) => {
     onSearch(input.current.value);
   }
 
+  function calcTextHeight() {
+    if (!textArea || !autoSize || !cloneText.current) return;
+    const el = input.current;
+    cloneText.current.value = el.value;
+    setTextAreaHeight(`${cloneText.current.scrollHeight}px`);
+  }
+
+  /* 提交value前的预处理函数 */
   function parser(val: string) {
     // 在启用了format时，需要在设置值之前移除掉所有的delimiter
     let newValue = formatArg ? val.replace(new RegExp(formatArg?.[1]?.delimiter!, 'g'), '') : val;
@@ -251,7 +222,7 @@ const Input: React.FC<InputProps> = (_props) => {
       newValue = parserInteger(newValue);
     }
 
-    if (type === 'general') {
+    if (_type === 'general') {
       newValue = parserGeneral(newValue);
     }
 
@@ -259,16 +230,34 @@ const Input: React.FC<InputProps> = (_props) => {
       newValue = parserLength(newValue, maxLength);
     }
 
+    if (isNumber(min)) {
+      newValue = parserThan(newValue, min);
+    }
+
+    if (isNumber(max)) {
+      newValue = parserThan(newValue, max, false);
+    }
+
     return _parser ? _parser(newValue) : newValue;
   }
 
+  /* value传入input前进行格式化(在传入了解析parser时才不会影响最终的value结果) */
   function formatter(val: string) {
     return _formatter ? _formatter(val) : val;
   }
 
+  /** 根据type设置input应该使用的type */
+  function getRealType(tType: string) {
+    if (tType === 'number' || tType === 'integer') {
+      return 'tel';
+    }
+
+    return 'text';
+  }
+
   const isDisabled = disabled || blockLoading;
 
-  const hasClearBtn = allowClear && value && value.length > 4 && !isDisabled && !readonly;
+  const hasClearBtn = allowClear && value && value.length > 3 && !isDisabled && !readonly;
 
   // 对money类型特殊处理
   if (formatArg && memoFormat === 'money') {
@@ -279,45 +268,50 @@ const Input: React.FC<InputProps> = (_props) => {
     <span
       className={cls(
         'fr-input_wrap',
-        notBorder && '__not-border',
-        underline && '__underline',
         className,
         status && `__${status}`,
         size && `__${size}`,
         {
+          '__not-border': !textArea && notBorder,
+          __underline: !textArea && underline,
           __focus: focus,
           __disabled: isDisabled,
           __readonly: readonly,
           __matter: format === 'money',
+          __textarea: textArea,
         },
       )}
       style={style}
     >
-      <If when={prefix}><span className="fr-input_prefix">{prefix}</span></If>
-      <input
-        {...props}
-        ref={input}
-        className="fr-input"
-        type={(type === 'number' || type === 'integer') ? 'tel' : type} /* 数字输入时，使用tel类型，number类型会导致format异常 */
-        onFocus={focusHandle}
-        onBlur={blurHandle}
-        onKeyDown={keyDownHandle}
-        disabled={isDisabled}
-        readOnly={readonly}
-        value={formatter(inputValue)}
-        onChange={changeHandle}
-      />
+      <If when={prefix && !textArea}><span className="fr-input_prefix">{prefix}</span></If>
+      {React.createElement(textArea ? 'textarea' : 'input', {
+        ...props,
+        ref: input,
+        className: 'fr-input',
+        type: getRealType(type), /* 数字输入时，使用tel类型，number类型会导致format异常 */
+        onFocus: focusHandle,
+        onBlur: blurHandle,
+        onKeyDown: keyDownHandle,
+        disabled: isDisabled,
+        readOnly: readonly,
+        value: formatter(inputValue),
+        onChange: changeHandle,
+        style: textArea ? { height: textAreaHeight, overflow: autoSize ? 'hidden' : 'auto', resize: autoSize ? 'none' : undefined } : {},
+      })}
       <Spin className="fr-input_loading" size="small" text="" show={loading || blockLoading} full={blockLoading} />
       <If when={hasClearBtn}>
-        <Icon onClick={clearHandle} className="fr-input_icon" type="error" />
+        <Icon onClick={clearHandle} className="fr-input_icon fr-input_icon-clear" type="error" />
       </If>
-      <If when={_type === 'password'}>
+      <If when={_type === 'password' && !textArea}>
         <Icon onClick={passwordTypeChange} className="fr-input_icon" type={type === 'password' ? 'eyeClose' : 'eye'} />
       </If>
-      <If when={suffix}><span className="fr-input_suffix">{suffix}</span></If>
+      <If when={suffix && !textArea}><span className="fr-input_suffix">{suffix}</span></If>
+      <If when={textArea || charCount}>
+        <span className="fr-input_tip-text">{value.length}{maxLength ? `/${maxLength}` : '字'}</span>
+      </If>
       <TransitionBase
         style={{ position: 'relative' }}
-        toggle={search && !!value}
+        toggle={search && !!value && !textArea}
         mountOnEnter
         appear={false}
         from={{ width: 0, left: 6 }}

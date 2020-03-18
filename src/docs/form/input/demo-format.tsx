@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import Input from '@lxjx/flicker/lib/input';
+import Input from '@lxjx/fr/lib/input';
 
 const Demo = () => {
   const [phone, setPhone] = useState('18212341234');
@@ -13,7 +13,7 @@ const Demo = () => {
     <div>
       <div className="mt-16">
         <h2>内置的格式化类型</h2>
-        <p><span role="img" aria-label="提示">💡</span> 输出值和实际展示的值经过处理，不需要在上传时执行额外转换</p>
+        <p><span role="img" aria-label="提示">💡</span> 输出值和实际展示的值经过处理，不需要在上传时执行额外转换(只适用于受控或半受控，直接从input取值会获取到格式化后的值)</p>
         <Input prefix="手机号:" value={phone} onChange={value => setPhone(value)} format="phone" suffix={<span className="color-info">输入值：{phone}</span>} />
       </div>
       <div className="mt-16">
@@ -35,10 +35,10 @@ const Demo = () => {
           <li>formatLastRepeat(超出部分使用最后一位规则)</li>
           <li>formatRepeat(对超出部分重复使用每一位规则)</li>
         </ul>
-        <Input prefix="身份证号:" value={idCard} onChange={value => setIdCard(value)} formatPattern="3,3,4" formatLastRepeat />
+        <Input prefix="银行卡号:" value={idCard} onChange={value => setIdCard(value)} formatPattern="3,4" formatLastRepeat />
       </div>
       <div className="mt-16">
-        <Input prefix="银行卡号:" value={bankCard} onChange={value => setBankCard(value)} formatPattern="3,4" formatLastRepeat />
+        <Input prefix="一二三:" value={bankCard} onChange={value => setBankCard(value)} formatPattern="1,2,3" formatRepeat />
       </div>
 
       <div style={{ marginTop: 60 }}>

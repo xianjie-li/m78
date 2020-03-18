@@ -5,7 +5,7 @@ module.exports = {
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-      '@lxjx/flicker/lib': path.resolve(__dirname, './src/components'),
+      '@lxjx/fr/lib': path.resolve(__dirname, './src/components'),
     },
   },
 };

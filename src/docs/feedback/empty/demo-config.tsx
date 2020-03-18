@@ -1,10 +1,10 @@
 import React from 'react';
 
-import Empty from '@lxjx/flicker/lib/empty';
-import '@lxjx/flicker/lib/empty/style';
+import Empty from '@lxjx/fr/lib/empty';
+import '@lxjx/fr/lib/empty/style';
 
 import img from '@/src/mock/img/1.jpg';
-import Config from '@lxjx/flicker/lib/config';
+import Config from '@lxjx/fr/lib/config';
 
 const newEmptyNode = (<img src={img} alt="" />);
 

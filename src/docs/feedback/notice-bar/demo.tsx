@@ -1,7 +1,7 @@
 import React from 'react';
 
-import NoticeBar from '@lxjx/flicker/lib/notice-bar';
-import Button from '@lxjx/flicker/lib/button';
+import NoticeBar from '@lxjx/fr/lib/notice-bar';
+import Button from '@lxjx/fr/lib/button';
 
 const Demo = () => {
   const [show, setShow] = React.useState(true);

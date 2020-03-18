@@ -15,8 +15,6 @@ group:
 
 <code src="./demo.tsx" />
 
-> 滚轮缩放会与页面滚动冲突，可通过`useLockBodyScroll`<!-- TODO: 添加链接 -->解决, 但是更推荐的做法是不在常规文档流中使用Viewer组件，如基于此组件实现的`image-preview`
-
 ## API
 **`props`**
 ```tsx | pure

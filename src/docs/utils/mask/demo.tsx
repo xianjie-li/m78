@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import Mask from '@lxjx/flicker/lib/mask';
-import '@lxjx/flicker/lib/mask/style';
+import Mask from '@lxjx/fr/lib/mask';
+import '@lxjx/fr/lib/mask/style';
 
-import Button from '@lxjx/flicker/lib/button';
-import '@lxjx/flicker/lib/button/style';
+import Button from '@lxjx/fr/lib/button';
+import '@lxjx/fr/lib/button/style';
 
 import { ReactRenderApiProps } from '@lxjx/react-render-api';
 

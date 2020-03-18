@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Modal from '@lxjx/flicker/lib/modal';
-import Button from '@lxjx/flicker/lib/button';
+import Modal from '@lxjx/fr/lib/modal';
+import Button from '@lxjx/fr/lib/button';
 
 function mult(mask = true) {
   for (let i = 0; i < 6; i++) {

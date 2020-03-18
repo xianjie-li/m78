@@ -1,9 +1,9 @@
 import React from 'react';
-import Drawer from '@lxjx/flicker/lib/drawer';
-import '@lxjx/flicker/lib/drawer/style';
+import Drawer from '@lxjx/fr/lib/drawer';
+import '@lxjx/fr/lib/drawer/style';
 
-import Button from '@lxjx/flicker/lib/button';
-import '@lxjx/flicker/lib/button/style';
+import Button from '@lxjx/fr/lib/button';
+import '@lxjx/fr/lib/button/style';
 
 const Demo = () => {
   const [state, set] = React.useState({

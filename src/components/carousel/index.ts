@@ -1,4 +1,4 @@
-import '@lxjx/flicker/lib/carousel/style';
+import '@lxjx/fr/lib/carousel/style';
 
 export * from './carousel';
 export { default } from './carousel';

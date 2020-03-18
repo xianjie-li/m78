@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Icon from '@lxjx/flicker/lib/icon';
-import config from '@lxjx/flicker/lib/config';
+import Icon from '@lxjx/fr/lib/icon';
+import config from '@lxjx/fr/lib/config';
 
 import cls from 'classnames';
 

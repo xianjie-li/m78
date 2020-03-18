@@ -1,4 +1,4 @@
-import '@lxjx/flicker/lib/input/style';
+import '@lxjx/fr/lib/input/style';
 import Input from './input';
 
 export * from './type';

@@ -6,10 +6,10 @@ import {
   animated, config, useSpring,
 } from 'react-spring';
 
-import Portal from '@lxjx/flicker/lib/portal';
-import Icon from '@lxjx/flicker/lib/icon';
-import Spin from '@lxjx/flicker/lib/spin';
-import { If, Toggle } from '@lxjx/flicker/lib/fork';
+import Portal from '@lxjx/fr/lib/portal';
+import Icon from '@lxjx/fr/lib/icon';
+import Spin from '@lxjx/fr/lib/spin';
+import { If, Toggle } from '@lxjx/fr/lib/fork';
 import { useMeasure } from 'react-use';
 import { Transition } from '@lxjx/react-transition-spring';
 

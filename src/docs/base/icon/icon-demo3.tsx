@@ -1,9 +1,9 @@
 import React, {useEffect} from 'react';
-import Icon, { svgIconMap } from '@lxjx/flicker/lib/icon';
-import '@lxjx/flicker/lib/icon/style';
+import Icon, { svgIconMap } from '@lxjx/fr/lib/icon';
+import '@lxjx/fr/lib/icon/style';
 
-import message from '@lxjx/flicker/lib/message';
-import '@lxjx/flicker/lib/message/style';
+import message from '@lxjx/fr/lib/message';
+import '@lxjx/fr/lib/message/style';
 
 import { useCopyToClipboard } from 'react-use';
 

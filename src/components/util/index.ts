@@ -16,3 +16,13 @@ export function getGlobal() {
   if (typeof global !== 'undefined') { return global; }
   throw new Error('unable to locate global object');
 }
+
+export const __GLOBAL__ = getGlobal();
+
+export function getStyle(obj: HTMLElement, attr: keyof CSSStyleDeclaration) {
+  if (!obj) return;
+  // @ts-ignore
+  if (!obj.currentStyle && !window.getComputedStyle) return null;
+  // @ts-ignore currentStyle非标准属性
+  return obj.currentStyle ? obj.currentStyle[attr] : window.getComputedStyle(obj)[attr];
+}

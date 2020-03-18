@@ -9,11 +9,11 @@ import { Transition } from '@lxjx/react-transition-spring';
 import { useSelf, useSyncState, useScroll } from '@lxjx/hooks';
 import preventTopPullDown from 'prevent-top-pull-down';
 
-import { If, Toggle, Switch } from '@lxjx/flicker/lib/fork';
-import Spin from '@lxjx/flicker/lib/spin';
-import Empty from '@lxjx/flicker/lib/empty';
-import Button from '@lxjx/flicker/lib/button';
-import { dumpFn } from '@lxjx/flicker/lib/util';
+import { If, Toggle, Switch } from '@lxjx/fr/lib/fork';
+import Spin from '@lxjx/fr/lib/spin';
+import Empty from '@lxjx/fr/lib/empty';
+import Button from '@lxjx/fr/lib/button';
+import { dumpFn } from '@lxjx/fr/lib/util';
 import _debounce from 'lodash/debounce';
 
 import cls from 'classnames';

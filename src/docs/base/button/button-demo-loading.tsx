@@ -1,6 +1,6 @@
 import React from 'react';
-import Button from '@lxjx/flicker/lib/button';
-import '@lxjx/flicker/lib/button/style';
+import Button from '@lxjx/fr/lib/button';
+import '@lxjx/fr/lib/button/style';
 
 const ButtonDemoColor = () => {
   return (

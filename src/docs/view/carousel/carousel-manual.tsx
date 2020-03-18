@@ -1,9 +1,9 @@
 import React from 'react';
-import Carousel, { CarouselRef } from '@lxjx/flicker/lib/carousel';
-import '@lxjx/flicker/lib/carousel/style';
+import Carousel, { CarouselRef } from '@lxjx/fr/lib/carousel';
+import '@lxjx/fr/lib/carousel/style';
 
-import Button from '@lxjx/flicker/lib/button';
-import '@lxjx/flicker/lib/button/style';
+import Button from '@lxjx/fr/lib/button';
+import '@lxjx/fr/lib/button/style';
 
 import img1 from '@/src/mock/img/1.jpg';
 import img2 from '@/src/mock/img/2.jpg';

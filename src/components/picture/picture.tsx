@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 
-import Spin from '@lxjx/flicker/lib/spin';
-import config from '@lxjx/flicker/lib/config';
+import Spin from '@lxjx/fr/lib/spin';
+import config from '@lxjx/fr/lib/config';
 import { ComponentBaseProps } from '../types/types';
 
 import { useSetState } from '@lxjx/hooks';

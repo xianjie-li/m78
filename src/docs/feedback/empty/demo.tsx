@@ -1,10 +1,10 @@
 import React from 'react';
 
-import Empty from '@lxjx/flicker/lib/empty';
-import '@lxjx/flicker/lib/empty/style';
+import Empty from '@lxjx/fr/lib/empty';
+import '@lxjx/fr/lib/empty/style';
 
-import Button from '@lxjx/flicker/lib/button';
-import '@lxjx/flicker/lib/button/style';
+import Button from '@lxjx/fr/lib/button';
+import '@lxjx/fr/lib/button/style';
 
 import img from '@/src/mock/img/2.jpg';
 

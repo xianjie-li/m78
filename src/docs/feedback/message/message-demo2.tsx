@@ -1,9 +1,9 @@
 import React from 'react';
-import message from '@lxjx/flicker/lib/message';
-import '@lxjx/flicker/lib/message/style';
+import message from '@lxjx/fr/lib/message';
+import '@lxjx/fr/lib/message/style';
 
-import Button from '@lxjx/flicker/lib/button';
-import '@lxjx/flicker/lib/button/style';
+import Button from '@lxjx/fr/lib/button';
+import '@lxjx/fr/lib/button/style';
 
 const type = [
   'success',

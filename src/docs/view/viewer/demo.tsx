@@ -1,12 +1,11 @@
 import React from 'react';
-import Viewer, { ViewerRef } from '@lxjx/flicker/lib/viewer';
-import '@lxjx/flicker/lib/viewer/style';
+import Viewer, { ViewerRef } from '@lxjx/fr/lib/viewer';
+import '@lxjx/fr/lib/viewer/style';
 
-import Drawer from '@lxjx/flicker/lib/drawer';
-import '@lxjx/flicker/lib/drawer/style';
+import '@lxjx/fr/lib/drawer/style';
 
-import Button from '@lxjx/flicker/lib/button';
-import '@lxjx/flicker/lib/button/style';
+import Button from '@lxjx/fr/lib/button';
+import '@lxjx/fr/lib/button/style';
 
 import { getRandRange } from '@lxjx/utils';
 import img1 from '@/src/mock/img/3.jpg';

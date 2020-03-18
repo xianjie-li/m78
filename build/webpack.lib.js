@@ -14,7 +14,7 @@ const entrys = generateEntry();
 function externalsDependencies() {
   const depens = Object.keys(pkg.dependencies);
   // 额外的external
-  depens.push('@lxjx/flicker');
+  depens.push('@lxjx/fr');
   depens.push('react');
   depens.push('react-dom');
   return depens.map((key) => new RegExp(`^${key}`));
@@ -48,7 +48,7 @@ module.exports = {
     filename: '[name]/index.js',
     path: path.resolve(__dirname, '../lib'),
     publicPath: './',
-    library: ['flicker', '[name]'],
+    library: ['Fr', '[name]'],
     libraryTarget: 'commonjs2',
     // libraryTarget: 'umd',
   },

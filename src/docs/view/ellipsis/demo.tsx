@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
-import Ellipsis from '@lxjx/flicker/lib/ellipsis';
-import '@lxjx/flicker/lib/ellipsis/style';
+import Ellipsis from '@lxjx/fr/lib/ellipsis';
+import '@lxjx/fr/lib/ellipsis/style';
 
-import Button from '@lxjx/flicker/lib/button';
-import '@lxjx/flicker/lib/button/style';
+import Button from '@lxjx/fr/lib/button';
+import '@lxjx/fr/lib/button/style';
 
 const style: React.CSSProperties = { border: '1px solid #ccc', fontSize: 20, padding: 12 };
 

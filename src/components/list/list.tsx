@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 
-import '@lxjx/flicker/lib/base';
-import { Switch, If } from '@lxjx/flicker/lib/fork';
-import Icon from '@lxjx/flicker/lib/icon';
+import '@lxjx/fr/lib/base';
+import { Switch, If } from '@lxjx/fr/lib/fork';
+import Icon from '@lxjx/fr/lib/icon';
 
-import Ellipsis from '@lxjx/flicker/lib/ellipsis';
+import Ellipsis from '@lxjx/fr/lib/ellipsis';
 
 import { Title, SubTitle } from './titles';
 import Footer from './footer';

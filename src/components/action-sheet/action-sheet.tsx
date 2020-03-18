@@ -1,8 +1,8 @@
 import React from 'react';
 
-import Drawer from '@lxjx/flicker/lib/drawer';
-import Button from '@lxjx/flicker/lib/button';
-import { If } from '@lxjx/flicker/lib/fork';
+import Drawer from '@lxjx/fr/lib/drawer';
+import Button from '@lxjx/fr/lib/button';
+import { If } from '@lxjx/fr/lib/fork';
 
 import { useFormState } from '@lxjx/hooks';
 

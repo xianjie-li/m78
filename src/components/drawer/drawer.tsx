@@ -1,8 +1,8 @@
 import React from 'react';
 
-import Mask from '@lxjx/flicker/lib/mask';
-import Icon from '@lxjx/flicker/lib/icon';
-import { If } from '@lxjx/flicker/lib/fork';
+import Mask from '@lxjx/fr/lib/mask';
+import Icon from '@lxjx/fr/lib/icon';
+import { If } from '@lxjx/fr/lib/fork';
 import { Transition } from '@lxjx/react-transition-spring';
 
 import _capitalize from 'lodash/capitalize';

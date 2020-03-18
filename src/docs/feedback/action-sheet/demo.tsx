@@ -1,9 +1,9 @@
 import React from 'react';
-import ActionSheet from '@lxjx/flicker/lib/action-sheet';
-import '@lxjx/flicker/lib/action-sheet/style';
+import ActionSheet from '@lxjx/fr/lib/action-sheet';
+import '@lxjx/fr/lib/action-sheet/style';
 
-import Button from '@lxjx/flicker/lib/button';
-import '@lxjx/flicker/lib/button/style';
+import Button from '@lxjx/fr/lib/button';
+import '@lxjx/fr/lib/button/style';
 
 const options = [
   {

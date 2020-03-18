@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
+import { getStyle } from '@lxjx/fr/lib/util';
 import cls from 'classnames';
 
 export interface MaskProps extends React.PropsWithoutRef<JSX.IntrinsicElements['div']> {
@@ -11,14 +12,6 @@ export interface MaskProps extends React.PropsWithoutRef<JSX.IntrinsicElements['
   forceCompat?: boolean;
   /** 禁用 */
   disabled?: boolean;
-}
-
-function getStyle(obj: HTMLElement, attr: keyof CSSStyleDeclaration) {
-  if (!obj) return;
-  // @ts-ignore
-  if (!obj.currentStyle && !window.getComputedStyle) return null;
-  // @ts-ignore currentStyle非标准属性
-  return obj.currentStyle ? obj.currentStyle[attr] : window.getComputedStyle(obj)[attr];
 }
 
 function multiLine(line: number) {

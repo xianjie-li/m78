@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 
-import Spin from '@lxjx/flicker/lib/spin';
-import '@lxjx/flicker/lib/base';
+import Spin from '@lxjx/fr/lib/spin';
+import '@lxjx/fr/lib/base';
 import { isArray, isFunction } from '@lxjx/utils';
 
 import cls from 'classnames';

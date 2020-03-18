@@ -5,13 +5,13 @@ import { useSetState, useToggle, useUpdateEffect } from 'react-use';
 import _clamp from 'lodash/clamp';
 import cls from 'classnames';
 
-import Carousel, { CarouselRef } from '@lxjx/flicker/lib/carousel';
-import Viewer, { ViewerRef } from '@lxjx/flicker/lib/viewer';
-import Picture from '@lxjx/flicker/lib/picture';
-import Icon from '@lxjx/flicker/lib/icon';
-import { If } from '@lxjx/flicker/lib/fork';
-import Portal from '@lxjx/flicker/lib/portal';
-import { stopPropagation } from '@lxjx/flicker/lib/util';
+import Carousel, { CarouselRef } from '@lxjx/fr/lib/carousel';
+import Viewer, { ViewerRef } from '@lxjx/fr/lib/viewer';
+import Picture from '@lxjx/fr/lib/picture';
+import Icon from '@lxjx/fr/lib/icon';
+import { If } from '@lxjx/fr/lib/fork';
+import Portal from '@lxjx/fr/lib/portal';
+import { stopPropagation } from '@lxjx/fr/lib/util';
 
 import createRenderApi, { ReactRenderApiProps } from '@lxjx/react-render-api';
 import { Transition } from '@lxjx/react-transition-spring';

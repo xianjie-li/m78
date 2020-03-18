@@ -14,8 +14,8 @@ group:
 ## 基础示例
 ```tsx
 import React from 'react';
-import Portal from '@lxjx/flicker/lib/portal';
-import '@lxjx/flicker/lib/portal/style';
+import Portal from '@lxjx/fr/lib/portal';
+import '@lxjx/fr/lib/portal/style';
 
 export default () => (
     <div>
@@ -32,8 +32,8 @@ export default () => (
 
 ```tsx
 import React from 'react';
-import Portal from '@lxjx/flicker/lib/portal';
-import '@lxjx/flicker/lib/portal/style';
+import Portal from '@lxjx/fr/lib/portal';
+import '@lxjx/fr/lib/portal/style';
 
 export default () => (
     <div>

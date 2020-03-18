@@ -25,4 +25,4 @@ features:
 </Alert>
 
 
-flicker 是一套基于 react 的组件库，旨在为react开发提供一些非常常用的东西(组件、hooks、工具)等，从而减少项目的开发成本。
+fr 是一套基于 react 的组件库，旨在为react开发提供一些常用的东西(组件、hooks、工具)等，减少项目的开发成本。

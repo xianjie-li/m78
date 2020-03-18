@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Result from '@lxjx/flicker/lib/result';
-import Button from '@lxjx/flicker/lib/button';
+import Result from '@lxjx/fr/lib/result';
+import Button from '@lxjx/fr/lib/button';
 
 const Demo = () => {
   return (

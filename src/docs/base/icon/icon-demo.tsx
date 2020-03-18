@@ -1,6 +1,6 @@
 import React from 'react';
-import Icon from '@lxjx/flicker/lib/icon';
-import '@lxjx/flicker/lib/icon/style';
+import Icon from '@lxjx/fr/lib/icon';
+import '@lxjx/fr/lib/icon/style';
 
 const IconDemo = () => {
   return (

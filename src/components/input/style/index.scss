@@ -103,6 +103,41 @@ $unitSpace: 8px;
       }
     }
 
+    &.__textarea {
+      padding: 0;
+      height: auto !important;
+      line-height: 1.4;
+
+      textarea {
+        padding: 10px;
+        min-height: 3em; /* 退级 */
+        min-height: calc(20px + 2em * 1.4);
+        white-space: normal !important;
+        word-break: break-all;
+      }
+
+      .fr-input_tip-text {
+        position: absolute;
+        right: 8px;
+        bottom: 8px;
+        text-shadow: $stress-shadow-w;
+        user-select: none;
+        pointer-events: none;
+      }
+
+      .fr-input_icon-clear {
+        position: absolute;
+        right: 4px;
+        top: 4px;
+        text-shadow: $stress-shadow-w;
+      }
+
+      .fr-input_loading:not(.__full) {
+        position: absolute;
+        right: 10px;
+      }
+    }
+
     /* 尺寸 */
     &.__small {
       height: 28px;
@@ -208,14 +243,13 @@ $unitSpace: 8px;
     margin-left: $unitSpace - 4; /* 按钮原本就有空白，稍微减少不至于突兀 */
   }
 
-  &_label {
+
+
+  &_tip-text {
     line-height: 1;
-    position: absolute;
-    left: 40px;
-    top: -12px;
-    background-color: #fff;
-    font-size: 14px;
-    padding: 0 8px;
+    font-size: 12px;
+    margin-left: $unitSpace;
+    color: $b-second;
   }
 
   &_prefix, &_suffix {

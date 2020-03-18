@@ -1,5 +1,5 @@
 import React from 'react';
-import Fork from '@lxjx/flicker/lib/fork';
+import Fork from '@lxjx/fr/lib/fork';
 
 const Demo = () => {
   return (

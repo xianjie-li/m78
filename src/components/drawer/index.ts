@@ -1,3 +1,3 @@
-import '@lxjx/flicker/lib/drawer/style';
+import '@lxjx/fr/lib/drawer/style';
 
 export { default } from './drawer';

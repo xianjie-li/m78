@@ -1,8 +1,6 @@
 import React from 'react';
 
-import Input from '@lxjx/flicker/lib/input';
-import Button from '@lxjx/flicker/lib/button';
-import Icon from '@lxjx/flicker/lib/icon';
+import Input from '@lxjx/fr/lib/input';
 
 const Demo = () => {
   return (
@@ -20,9 +18,6 @@ const Demo = () => {
         <Input placeholder="任意合法的ReactNode" prefix="邮箱" suffix="@qq.com" />
       </div>
       <div className="mt-16">
-        <Input placeholder="清除按钮" format="phone" maxLength={13} />
-      </div>
-      <div className="mt-16">
         <Input placeholder="一段密码" type="password" />
       </div>
       <div className="mt-16">
@@ -32,7 +27,7 @@ const Demo = () => {
         <Input placeholder="阻塞型加载" blockLoading />
       </div>
       <div className="mt-16">
-        <Input placeholder="只读状态" readOnly />
+        <Input defaultValue="readOnly" readOnly />
       </div>
       <div className="mt-16">
         <Input placeholder="禁用" type="text" disabled />

@@ -3,8 +3,8 @@ import React, { useEffect } from 'react';
 import { useSpring, animated, interpolate, config } from 'react-spring';
 import { useSelf } from '@lxjx/hooks';
 
-import Mask, { MaskProps } from '@lxjx/flicker/lib/mask';
-import { stopPropagation } from '@lxjx/flicker/lib/util';
+import Mask, { MaskProps } from '@lxjx/fr/lib/mask';
+import { stopPropagation } from '@lxjx/fr/lib/util';
 
 import cls from 'classnames';
 

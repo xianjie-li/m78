@@ -1,7 +1,7 @@
 import React from 'react';
 
-import List from '@lxjx/flicker/lib/list';
-import '@lxjx/flicker/lib/list/style';
+import List from '@lxjx/fr/lib/list';
+import '@lxjx/fr/lib/list/style';
 
 const Demo = () => {
   return (

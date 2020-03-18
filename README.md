@@ -1,17 +1,17 @@
 <p align="center">
-<img src="./public/logo.png" width="200" alt="ZERO" />
+<img src="./public/logo.png" width="200" alt="fr" />
 </p>
 
-<h1 align="center">flicker</h1>
-<p align="center">完全使用hooks编写的组件库~</p>
+<h1 align="center">fr</h1>
+<p align="center">一套正在开发中的react工具包</p>
 
 <br>
 
 ## 📦Install
 ```shell
-yarn add @lxjx/flicker
+yarn add @lxjx/fr
 # or
-npm install @lxjx/flicker
+npm install @lxjx/fr
 ```
 
 <br>

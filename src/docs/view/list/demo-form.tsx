@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
-import List from '@lxjx/flicker/lib/list';
-import '@lxjx/flicker/lib/list/style';
+import List from '@lxjx/fr/lib/list';
+import '@lxjx/fr/lib/list/style';
 
-import Button from '@lxjx/flicker/lib/button';
-import '@lxjx/flicker/lib/button/style';
+import Button from '@lxjx/fr/lib/button';
+import '@lxjx/fr/lib/button/style';
 
 import { useSetState } from '@lxjx/hooks';
 

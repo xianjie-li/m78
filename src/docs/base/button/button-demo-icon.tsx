@@ -1,9 +1,9 @@
 import React from 'react';
-import Button from '@lxjx/flicker/lib/button';
-import Icon from '@lxjx/flicker/lib/icon';
-import Message from '@lxjx/flicker/lib/message';
-import '@lxjx/flicker/lib/button/style';
-import '@lxjx/flicker/lib/icon/style';
+import Button from '@lxjx/fr/lib/button';
+import Icon from '@lxjx/fr/lib/icon';
+import Message from '@lxjx/fr/lib/message';
+import '@lxjx/fr/lib/button/style';
+import '@lxjx/fr/lib/icon/style';
 
 const ButtonDemoColor = () => {
   return (

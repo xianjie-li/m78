@@ -1,6 +1,6 @@
 import React from 'react';
-import ArticleBox from '@lxjx/flicker/lib/article-box';
-import '@lxjx/flicker/lib/article-box/style';
+import ArticleBox from '@lxjx/fr/lib/article-box';
+import '@lxjx/fr/lib/article-box/style';
 
 import img from '@/src/mock/img/4.jpg';
 

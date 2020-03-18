@@ -3,9 +3,9 @@ import { useMeasure, useUpdateEffect } from 'react-use';
 import { useSpring, animated, config } from 'react-spring';
 import { useFormState, formStateMap } from '@lxjx/hooks';
 
-import Icon from '@lxjx/flicker/lib/icon';
-import { If } from '@lxjx/flicker/lib/fork';
-import Button from '@lxjx/flicker/lib/button';
+import Icon from '@lxjx/fr/lib/icon';
+import { If } from '@lxjx/fr/lib/fork';
+import Button from '@lxjx/fr/lib/button';
 import { Status } from '../types/types';
 
 import cls from 'classnames';

@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { SvgIcon } from '@lxjx/flicker/lib/icon';
-import Fork from '@lxjx/flicker/lib/fork';
-import Portal from '@lxjx/flicker/lib/portal';
+import { SvgIcon } from '@lxjx/fr/lib/icon';
+import Fork from '@lxjx/fr/lib/fork';
+import Portal from '@lxjx/fr/lib/portal';
 import { Transition, config } from '@lxjx/react-transition-spring';
 
 import cls from 'classnames';
