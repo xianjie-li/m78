@@ -265,4 +265,29 @@ $unitSpace: 8px;
   &_suffix {
     margin-left: $unitSpace;
   }
+
+  &_suffix-btn, &_prefix-btn {
+    height: 80%; // 退级
+    height: calc(100% - 8px);
+    right: -6px;
+  }
+
+  &_prefix-btn {
+    left: -6px;
+    right: auto;
+  }
+
+  &_group {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    & + & {
+      margin-top: 12px;
+    }
+
+    .fr-input_wrap + .fr-input_wrap {
+      margin-left: 10px;
+    }
+  }
 }

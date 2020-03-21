@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, {useEffect, useMemo, useRef, useState, useImperativeHandle } from 'react';
 
 import Icon from '@lxjx/fr/lib/icon';
 import Spin from '@lxjx/fr/lib/spin';
@@ -23,7 +23,11 @@ import {
   parserThan,
 } from './utils';
 
-const Input: React.FC<InputProps> = _props => {
+interface InputRef {
+  el: HTMLInputElement;
+}
+
+const Input: React.FC<InputProps> = React.forwardRef<InputRef, InputProps>((_props, ref) => {
   const {
     /* 处理特殊属性 */
     className,
@@ -60,6 +64,8 @@ const Input: React.FC<InputProps> = _props => {
     onSearch = dumpFn,
     prefix,
     suffix,
+    prefixBtn,
+    suffixBtn,
     textArea,
     autoSize = true,
     charCount = false,
@@ -122,6 +128,11 @@ const Input: React.FC<InputProps> = _props => {
 
   /* 指向input的ref */
   const input = useRef<HTMLInputElement>(null!);
+
+  /* 对外暴露input ref */
+  useImperativeHandle(ref, () => ({
+    el: input.current,
+  }));
 
   /* 启用了formatArg时，对其格式化，否则返回原value */
   // eslint-disable-next-line
@@ -293,6 +304,10 @@ const Input: React.FC<InputProps> = _props => {
       })}
       style={style}
     >
+
+     <If when={prefixBtn && !textArea}>{() =>
+       React.cloneElement(prefixBtn!, { className: 'fr-input_prefix-btn' })
+     }</If>
       <If when={prefix && !textArea}>
         <span className="fr-input_prefix">{prefix}</span>
       </If>
@@ -354,8 +369,11 @@ const Input: React.FC<InputProps> = _props => {
           <Icon type="search" />
         </Button>
       </TransitionBase>
+      <If when={suffixBtn && !textArea}>{() =>
+        React.cloneElement(suffixBtn!, { className: 'fr-input_suffix-btn' })
+      }</If>
     </span>
   );
-};
+});
 
 export default Input;

@@ -36,7 +36,7 @@ group:
 export interface InputProps
   extends FormLikeWithExtra<string, React.ChangeEvent<HTMLInputElement>>,
     InputPropsExtends {
-  /**
+/**
    * 'text' | 输入框类型
    *  text - 可输入任何内容
    *  number - 可输入整数、浮点数
@@ -76,10 +76,14 @@ export interface InputProps
    * 也可以单独用于格式化串，如：限制长度、限制数字等 (此函数也可代替formatter使用， 但是formatter存在的原因是，实际提交的值和显示值应该分开，否则会影响验证、上传结果等, 如果你不关心这些，可以直接使用parser)
    * */
   parser?: (value: string) => string;
-  /** 后导图标 */
+  /** 前置图标 */
   prefix?: React.ReactNode;
-  /** 前导图标 */
+  /** 后置图标 */
   suffix?: React.ReactNode;
+  /** 前置按钮 */
+  prefixBtn?: React.ReactElement<ButtonProps>;
+  /** 后置按钮 */
+  suffixBtn?: React.ReactElement<ButtonProps>;
   /** false | 设置为搜索框, 出现搜索按钮 */
   search?: boolean;
   /** 点击搜索按钮/回车/清空时，触发 */

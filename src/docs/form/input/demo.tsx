@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Input from '@lxjx/fr/lib/input';
+import Button from "@/components/button";
 
 const Demo = () => (
   <div>
@@ -11,7 +12,7 @@ const Demo = () => (
       <Input placeholder="搜索框" search onSearch={value => console.log(value)} />
     </div>
     <div className="mt-16">
-      <Input placeholder="前导与后导内容" prefix="🍀" suffix="✨" />
+      <Input placeholder="前置与后置内容" prefix="🍀" suffix="✨" />
     </div>
     <div className="mt-16">
       <Input placeholder="任意合法的ReactNode" prefix="邮箱" suffix="@qq.com" />
@@ -54,6 +55,12 @@ const Demo = () => (
     </div>
     <div className="mt-16">
       <Input placeholder="请输入商品金额" type="number" size="big" prefix="￥" format="money" />
+    </div>
+    <div className="mt-16">
+      <Input suffixBtn={<Button color="primary">后置按钮</Button>} />
+    </div>
+    <div className="mt-16">
+      <Input prefixBtn={<Button color="primary">前置按钮</Button>} />
     </div>
     <div className="mt-16">
       <Input placeholder="无边框" notBorder />
