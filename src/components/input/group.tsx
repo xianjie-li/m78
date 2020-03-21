@@ -1,11 +1,5 @@
 import React from 'react';
 
-const Group = () => {
-  return (
-    <div>
-
-    </div>
-  );
-};
+const Group = () => <div />;
 
 export default Group;

@@ -6,9 +6,8 @@ import { useFormState, formStateMap } from '@lxjx/hooks';
 import Icon from '@lxjx/fr/lib/icon';
 import { If } from '@lxjx/fr/lib/fork';
 import Button from '@lxjx/fr/lib/button';
-import { Status } from '../types/types';
-
 import cls from 'classnames';
+import { Status } from '../types/types';
 
 export interface NoticeBarProps {
   /** 关闭回调 */
@@ -39,9 +38,15 @@ const NoticeBar: React.FC<NoticeBarProps> = ({
   ...props
 }) => {
   const [ref, { height }] = useMeasure();
-  const [show, setShow] = useFormState(formStateMap(props, { value: 'show', trigger: 'onClose' }), true);
+  const [show, setShow] = useFormState(
+    formStateMap(props, { value: 'show', trigger: 'onClose' }),
+    true,
+  );
 
-  const [spStyle, set] = useSpring(() => ({ height: 'auto', config: { ...config.stiff, clamp: true } }));
+  const [spStyle, set] = useSpring(() => ({
+    height: 'auto',
+    config: { ...config.stiff, clamp: true },
+  }));
 
   useUpdateEffect(() => {
     set({ height: show ? height + 36 : 0 }); // 24 = padding 8px * 2 + border 1px * 2 + 12px 下边距(填白)
@@ -49,17 +54,23 @@ const NoticeBar: React.FC<NoticeBarProps> = ({
   }, [show, height]);
 
   return (
-    <animated.div style={spStyle} className={cls('fr-notice-bar', status && `__${status}`, { __fixed: fixedTop })}>
+    <animated.div
+      style={spStyle}
+      className={cls('fr-notice-bar', status && `__${status}`, { __fixed: fixedTop })}
+    >
       <div ref={ref} className="fr-notice-bar_wrap">
-        <If when={status}>{() => (
-          <div className="fr-notice-bar_left">
-            <Icon type={status!} />
-          </div>
-        )}
+        <If when={status}>
+          {() => (
+            <div className="fr-notice-bar_left">
+              <Icon type={status!} />
+            </div>
+          )}
         </If>
         <div className="fr-notice-bar_cont">
           <div className="fr-notice-bar_title ellipsis">{message}</div>
-          <If when={desc}><div className="fr-notice-bar_desc">{desc}</div></If>
+          <If when={desc}>
+            <div className="fr-notice-bar_desc">{desc}</div>
+          </If>
         </div>
         <div className="fr-notice-bar_right">
           {right}

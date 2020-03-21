@@ -1,9 +1,9 @@
 ---
 title: ActionSheet - 操作面板
 group:
-    title: 反馈
-    path: /feedback
-    order: 2000
+  title: 反馈
+  path: /feedback
+  order: 2000
 ---
 
 # ActionSheet 操作面板
@@ -11,17 +11,21 @@ group:
 快捷的提示用户进行一组操作
 
 ## 基础示例
-基于 useFormState  <!-- TODO: 添加链接  --> 实现，可以当做常规的表单组件使用
+
+基于 useFormState <!-- TODO: 添加链接  --> 实现，可以当做常规的表单组件使用
 
 <code src="./demo.tsx" />
 
-## 通过api调用
-api形式使用，支持编程式渲染、更新、关闭等，具体见 render-api <!-- TODO: 添加链接  -->
+## 通过 api 调用
+
+api 形式使用，支持编程式渲染、更新、关闭等，具体见 render-api <!-- TODO: 添加链接  -->
 
 <code src="./demo-api.tsx" />
 
 ## API
+
 **`Item`**
+
 ```tsx | pure
 interface ActionSheetItem {
   /* 该选项标题 */
@@ -38,6 +42,7 @@ interface ActionSheetItem {
 ```
 
 **`props`**
+
 ```tsx | pure
 interface ActionSheetProps extends ReactRenderApiProps, FormLike<ActionSheetItem> {
   /** 操作项配置 */
@@ -54,11 +59,13 @@ interface ActionSheetProps extends ReactRenderApiProps, FormLike<ActionSheetItem
 ```
 
 **`api option`**
+
 ```tsx | pure
 type ActionSheetOption = Omit<ActionSheetProps, keyof ReactRenderApiProps>;
 ```
 
 **相关接口**
+
 ```tsx | pure
 interface ReactRenderApiProps {
   /** 实例组件是否显示 */
@@ -79,14 +86,3 @@ interface FormLike<T> {
   defaultValue?: T;
 }
 ```
-
-
-
-
-
-
-
-
-
-
-

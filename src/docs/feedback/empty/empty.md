@@ -1,9 +1,9 @@
 ---
 title: Empty - 空状态
 group:
-    title: 展示组件
-    path: /feedback
-    order: 2000
+  title: 展示组件
+  path: /feedback
+  order: 2000
 ---
 
 # Empty 空状态
@@ -11,15 +11,17 @@ group:
 用于无数据展示时对用户进行反馈
 
 ## 示例
+
 <\code src="./demo.tsx" />
 
 ## 全局配置
+
 全局配置空状态图片
 
 <\code src="./demo-config.tsx" />
 
-
 ## props
+
 ```tsx | pure
 interface EmptyProps extends ComponentBaseProps {
   /** 描述 */
@@ -34,6 +36,7 @@ interface EmptyProps extends ComponentBaseProps {
 ```
 
 **相关接口**
+
 ```tsx | pure
 interface ComponentBaseProps {
   /** 包裹元素的类名 */
@@ -42,13 +45,3 @@ interface ComponentBaseProps {
   style?: React.CSSProperties;
 }
 ```
-
-
-
-
-
-
-
-
-
-

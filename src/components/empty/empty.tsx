@@ -13,22 +13,14 @@ function injectIconClassName(el?: React.ReactElement) {
   return React.cloneElement(el, { className: cls('fr-empty_icon', el.props.className) });
 }
 
-const Empty: React.FC<EmptyProps> = ({
-  desc,
-  children,
-  size,
-  emptyNode,
-  ...props
-}) => {
+const Empty: React.FC<EmptyProps> = ({ desc, children, size, emptyNode, ...props }) => {
   const { emptyNode: globalEmptyNode } = config.useConfig();
 
   return (
     <div className={cls('fr-empty', size && `__${size}`, props.className)} {...props}>
-      {
-        injectIconClassName(emptyNode)
-        || injectIconClassName(globalEmptyNode)
-        || (<Icon.SvgIcon className="fr-empty_icon" type="empty" />)
-      }
+      {injectIconClassName(emptyNode) || injectIconClassName(globalEmptyNode) || (
+        <Icon.SvgIcon className="fr-empty_icon" type="empty" />
+      )}
       <div className="fr-empty_desc">{desc}</div>
       <div className="fr-empty_actions">{children}</div>
     </div>

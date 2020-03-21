@@ -1,4 +1,4 @@
-@import "../../style/index";
+@import '../../style/index';
 
 $unitSpace: 8px;
 
@@ -39,7 +39,7 @@ $unitSpace: 8px;
     margin: 0;
   }
 
-  &:not([type=file]) {
+  &:not([type='file']) {
     top: -1px; /* 视觉居中 */
   }
 
@@ -63,9 +63,7 @@ $unitSpace: 8px;
     line-height: 1;
     overflow: hidden;
     max-width: $sm;
-    transition:
-      $animation-duration-base box-shadow,
-      $animation-duration-base border-color;
+    transition: $animation-duration-base box-shadow, $animation-duration-base border-color;
 
     /* 各种状态的处理 */
     &:not(.__disabled):hover {
@@ -142,7 +140,8 @@ $unitSpace: 8px;
     &.__small {
       height: 28px;
       font-size: 14px;
-      .fr-input_suffix, .fr-input_prefix {
+      .fr-input_suffix,
+      .fr-input_prefix {
         font-size: 12px;
       }
     }
@@ -151,7 +150,8 @@ $unitSpace: 8px;
       height: 50px;
       font-size: 20px;
 
-      .fr-input_suffix, .fr-input_prefix {
+      .fr-input_suffix,
+      .fr-input_prefix {
         font-size: 16px;
       }
     }
@@ -164,7 +164,8 @@ $unitSpace: 8px;
         letter-spacing: 2px;
       }
 
-      .fr-input_suffix, .fr-input_prefix {
+      .fr-input_suffix,
+      .fr-input_prefix {
         font-size: 24px;
       }
     }
@@ -186,11 +187,11 @@ $unitSpace: 8px;
       @include statusColor($color-error);
     }
 
-    &.__not-border, &.__underline {
+    &.__not-border,
+    &.__underline {
       border-color: transparent !important;
       //border-radius: 0;
       border-bottom-width: 2px;
-
     }
 
     &.__underline {
@@ -211,7 +212,6 @@ $unitSpace: 8px;
       &.__error {
         border-bottom-color: $color-error !important;
       }
-
     }
   }
 
@@ -243,8 +243,6 @@ $unitSpace: 8px;
     margin-left: $unitSpace - 4; /* 按钮原本就有空白，稍微减少不至于突兀 */
   }
 
-
-
   &_tip-text {
     line-height: 1;
     font-size: 12px;
@@ -252,7 +250,8 @@ $unitSpace: 8px;
     color: $b-second;
   }
 
-  &_prefix, &_suffix {
+  &_prefix,
+  &_suffix {
     user-select: none;
     white-space: nowrap;
     font-size: 14px;

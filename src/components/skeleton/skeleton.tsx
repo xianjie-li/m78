@@ -7,7 +7,7 @@ import { SkeletonProps, SkeletonFactoryProps } from './type';
 /* 获取一个以baseP为基础值的百分比宽度 */
 function getRandWidth(baseP: number) {
   const rand = getRand(0, 80);
-  return rand + baseP + '%';
+  return `${rand + baseP}%`;
 }
 
 /* 获取值区间 */
@@ -26,31 +26,37 @@ const _Skeleton: React.FC<SkeletonProps> = ({
   /* 渲染行 */
   function renderLineBox(number = 6) {
     /* 行的数量计算规则: */ /* 存在img时必须大于等于4，否则无限制 */
-    const lineNum = (img && (lineNumber as number) < 4) ? 4 : number;
+    const lineNum = img && (lineNumber as number) < 4 ? 4 : number;
     return Array.from({ length: lineNum }).map((val, ind) => {
       // 只在行数大于1时才减少列数量
       const last = lineNum > 1 && ind === lineNum - 1;
       return (
         <div key={ind} className="fr-skeleton_line-box">
-          { Array.from({ length: last ? 3 : 5 }).map((v, i) => (
+          {Array.from({ length: last ? 3 : 5 }).map((v, i) => (
             <div
               key={i}
               className="fr-skeleton_line fr-skeleton_animate"
               style={{ width: last ? `${getRand(8, 36)}%` : getRandWidth(10) }}
             />
-          )) }
+          ))}
         </div>
       );
     });
-  }
+  } /* 防止重绘 */
 
-  /* eslint-disable-next-line */ /* 防止重绘 */
-  const lines = useMemo(() => renderLineBox(lineNumber), [lineNumber]);
+  /* eslint-disable-next-line */ const lines = useMemo(() => renderLineBox(lineNumber), [
+    lineNumber,
+  ]);
 
   return (
     <div className={cls('fr-skeleton', { __shadow: shadow })} style={{ width, backgroundColor }}>
-      {img && <div className={cls('fr-skeleton_img', { __circle: !!circle })} style={{ backgroundColor }} />}
-      { lines }
+      {img && (
+        <div
+          className={cls('fr-skeleton_img', { __circle: !!circle })}
+          style={{ backgroundColor }}
+        />
+      )}
+      {lines}
     </div>
   );
 };
@@ -61,16 +67,16 @@ const _Banner: React.FC<Omit<SkeletonProps, 'circle' | 'img' | 'lineNumber'>> = 
   height,
   shadow = true,
   backgroundColor = '#fff',
-}) => {
-  return (
-    <div className={cls('fr-skeleton fr-skeleton_banner', { __shadow: shadow })} style={{ width, backgroundColor }}>
-      <div className="fr-skeleton_banner-main fr-skeleton_animate" style={{ height }} />
-      {/* eslint-disable-next-line */}
-      <_Skeleton show lineNumber={2} />
-    </div>
-  );
-};
-
+}) => (
+  <div
+    className={cls('fr-skeleton fr-skeleton_banner', { __shadow: shadow })}
+    style={{ width, backgroundColor }}
+  >
+    <div className="fr-skeleton_banner-main fr-skeleton_animate" style={{ height }} />
+    {/* eslint-disable-next-line */}
+    <_Skeleton show lineNumber={2} />
+  </div>
+);
 
 /** 工厂HOC，为其包裹的骨架组件提供一些基础的props和基本的流程控制 */
 function SkeletonFactory<T extends SkeletonFactoryProps = SkeletonFactoryProps>(
@@ -82,9 +88,10 @@ function SkeletonFactory<T extends SkeletonFactoryProps = SkeletonFactoryProps>(
     children = null,
     ...props
   }): any => {
-    const render = () => Array.from({ length: number as number }).map((v: any, i: number) => (
-      <Component key={i} {...props as T} />
-    ));
+    const render = () =>
+      Array.from({ length: number as number }).map((v: any, i: number) => (
+        <Component key={i} {...(props as T)} />
+      ));
 
     return show ? render() : children!;
   };
@@ -107,8 +114,5 @@ const Skeleton: SkeletonWithExtra = Object.assign(BasedSkeleton, {
   SkeletonFactory,
 });
 
-export {
-  BannerSkeleton,
-  SkeletonFactory,
-};
+export { BannerSkeleton, SkeletonFactory };
 export default Skeleton;

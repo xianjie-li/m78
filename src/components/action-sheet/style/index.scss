@@ -1,4 +1,4 @@
-@import "../../style/index";
+@import '../../style/index';
 
 .fr-action-sheet_wrap {
   background-color: transparent !important;
@@ -40,7 +40,8 @@
       color: $b-disable;
     }
 
-    &.__title, &.__cancel {
+    &.__title,
+    &.__cancel {
       padding: 20px;
       color: $b-title;
     }
@@ -50,11 +51,11 @@
       padding: 28px 18px;
       padding-bottom: 16px;
 
-      >button {
+      > button {
         flex: 0 0 auto;
         font-size: 17px;
       }
-      >div {
+      > div {
         flex: 1;
         font-size: 18px;
       }
@@ -75,7 +76,7 @@
     background-color: #fff;
     max-height: 60vh;
     overflow-y: auto;
-    .fr-hb-t:nth-child(n+2)::before {
+    .fr-hb-t:nth-child(n + 2)::before {
       left: 12px;
       right: 12px;
     }

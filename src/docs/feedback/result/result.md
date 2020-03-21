@@ -1,9 +1,9 @@
 ---
 title: Result - 结果
 group:
-    title: 反馈
-    path: /feedback
-    order: 2000
+  title: 反馈
+  path: /feedback
+  order: 2000
 ---
 
 # Result 结果
@@ -11,11 +11,13 @@ group:
 用于对用户操作结果进行反馈或提示进行某类操作
 
 ## 示例
-message组件基于render-api实现，包含轻提示、加载中、消息框三种用法
+
+message 组件基于 render-api 实现，包含轻提示、加载中、消息框三种用法
 
 <code src="./demo.tsx" />
 
 ## API
+
 ```tsx | pure
 type ResultTypes =
   | 'success'
@@ -24,7 +26,7 @@ type ResultTypes =
   | 'waiting'
   | 'notFound'
   | 'serverError'
-  | 'notAuth'
+  | 'notAuth';
 
 export interface ResultProps {
   /** true | 组件开关，任意falsy或truthy值 */
@@ -43,13 +45,3 @@ export interface ResultProps {
   fixed?: boolean;
 }
 ```
-
-
-
-
-
-
-
-
-
-

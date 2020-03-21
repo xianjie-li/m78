@@ -1,9 +1,9 @@
 ---
 title: Skeleton - 骨架
 group:
-    title: 反馈
-    path: /feedback
-    order: 2000
+  title: 反馈
+  path: /feedback
+  order: 2000
 ---
 
 # Skeleton 抽屉
@@ -11,10 +11,13 @@ group:
 与`Spin`类似，用于对某个区域元素的占位加载提醒。
 
 ## 基础示例
+
 <code src="./demo.tsx" />
 
 ## API
+
 **`Skeleton`**
+
 ```tsx | pure
 interface SkeletonProps extends SkeletonFactoryProps {
   /** 6 | 文本行的数量 */
@@ -35,12 +38,13 @@ interface SkeletonProps extends SkeletonFactoryProps {
 ```
 
 **`BannerSkeleton`**
+
 ```tsx | pure
 Omit<SkeletonProps, 'circle' | 'img' | 'lineNumber'>
 ```
 
-
 **相关接口**
+
 ```tsx | pure
 interface SkeletonFactoryProps {
   /** 要渲染的骨架总数 */
@@ -51,14 +55,3 @@ interface SkeletonFactoryProps {
   children?: React.ReactNode;
 }
 ```
-
-
-
-
-
-
-
-
-
-
-

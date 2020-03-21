@@ -10,13 +10,10 @@ import Spin from '@lxjx/fr/lib/spin';
 import { dumpFn } from '@lxjx/fr/lib/util';
 import { useSame } from '@lxjx/hooks';
 
-import createRenderApi, {
-  ReactRenderApiProps,
-} from '@lxjx/react-render-api';
+import createRenderApi, { ReactRenderApiProps } from '@lxjx/react-render-api';
 
 import cls from 'classnames';
 import { ComponentBaseProps } from '../types/types';
-
 
 export interface ModalProps extends ReactRenderApiProps, ComponentBaseProps {
   /** 启用响应式按钮，按钮会根据底部的宽度平分剩余宽度 */
@@ -30,7 +27,9 @@ export interface ModalProps extends ReactRenderApiProps, ComponentBaseProps {
   /** 内容区域 */
   children?: React.ReactNode;
   /** 通过配置设置按钮组 */
-  btns?: (Pick<ButtonProps, 'color' | 'children' | 'onClick' | 'disabled' | 'icon' | 'link'> & { text: string })[];
+  btns?: (Pick<ButtonProps, 'color' | 'children' | 'onClick' | 'disabled' | 'icon' | 'link'> & {
+    text: string;
+  })[];
   /** 自定义底部内容，与其他底部相关配置的优先级为 footer > btns > confirm、close */
   footer?: React.ReactNode;
   /** 默认的确认按钮被点击时 */
@@ -103,8 +102,14 @@ const _Modal: React.FC<ModalProps> = ({
   function renderDefaultFooter() {
     return (
       <>
-        {close && <Button onClick={() => onClose()}>{typeof close === 'string' ? close : '取消'}</Button>}
-        {confirm && <Button color="primary" onClick={() => onConfirm()}>{typeof confirm === 'string' ? confirm : '确认'}</Button>}
+        {close && (
+          <Button onClick={() => onClose()}>{typeof close === 'string' ? close : '取消'}</Button>
+        )}
+        {confirm && (
+          <Button color="primary" onClick={() => onConfirm()}>
+            {typeof confirm === 'string' ? confirm : '确认'}
+          </Button>
+        )}
       </>
     );
   }
@@ -112,7 +117,9 @@ const _Modal: React.FC<ModalProps> = ({
   function renderBtns() {
     if (btns.length === 0) return null;
     return btns.map(({ text, ...btnProps }, key) => (
-      <Button key={key} {...btnProps}>{text}</Button>
+      <Button key={key} {...btnProps}>
+        {text}
+      </Button>
     ));
   }
 
@@ -120,9 +127,7 @@ const _Modal: React.FC<ModalProps> = ({
     return (
       <>
         <div className={cls('fr-modal_title', headerClassName)}>
-          {header || (
-            <span>{title}</span>
-          )}
+          {header || <span>{title}</span>}
         </div>
         <div className={cls('fr-modal_cont', contentClassName)}>{children}</div>
         <div className={cls('fr-modal_footer', footerClassName, { __full: flexBtn })}>
@@ -138,7 +143,7 @@ const _Modal: React.FC<ModalProps> = ({
       mask={mask}
       visible={!beforeHasMask}
       maskClosable={loading ? false : maskClosable}
-      style={{ zIndex: nowZIndex, top: cIndex * 20 / dpr, left: cIndex * 20 / dpr }}
+      style={{ zIndex: nowZIndex, top: (cIndex * 20) / dpr, left: (cIndex * 20) / dpr }}
       contClassName={cls('fr-modal', className)}
       className="fr-modal_wrap"
       contStyle={{ ...style, maxWidth, padding: content ? 0 : '' }}
@@ -148,7 +153,13 @@ const _Modal: React.FC<ModalProps> = ({
     >
       {status && (
         <div className="fr-modal_status-warp">
-          <Transition className="fr-modal_status" alpha={false} toggle={show} type="slideLeft" config={config.slow}>
+          <Transition
+            className="fr-modal_status"
+            alpha={false}
+            toggle={show}
+            type="slideLeft"
+            config={config.slow}
+          >
             <Icon.SvgIcon type={status!} />
           </Transition>
         </div>

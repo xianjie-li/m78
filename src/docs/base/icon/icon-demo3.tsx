@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import Icon, { svgIconMap } from '@lxjx/fr/lib/icon';
 import '@lxjx/fr/lib/icon/style';
 

@@ -20,7 +20,8 @@ const option = [
   },
   {
     img: img3,
-    desc: '图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3',
+    desc:
+      '图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3',
   },
   {
     img: img4,
@@ -34,7 +35,8 @@ const option = [
   },
   {
     img: img7,
-    desc: '图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3',
+    desc:
+      '图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3',
   },
 ];
 
@@ -46,25 +48,23 @@ const imgStyle: React.CSSProperties = {
   borderRadius: '4px',
 };
 
-const Demo = () => {
-  return (
-    <div>
-      {option.map((item, ind) => (
-        <img
-          key={ind}
-          style={imgStyle}
-          src={item.img}
-          alt=""
-          onClick={() => {
-            ImagePreview.api({
-              images: option,
-              page: ind,
-            });
-          }}
-        />
-      ))}
-    </div>
-  );
-};
+const Demo = () => (
+  <div>
+    {option.map((item, ind) => (
+      <img
+        key={ind}
+        style={imgStyle}
+        src={item.img}
+        alt=""
+        onClick={() => {
+          ImagePreview.api({
+            images: option,
+            page: ind,
+          });
+        }}
+      />
+    ))}
+  </div>
+);
 
 export default Demo;

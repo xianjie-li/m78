@@ -1,4 +1,4 @@
-@import "../../style/index";
+@import '../../style/index';
 
 @keyframes fr-skeleton-animation {
   0% {
@@ -24,7 +24,7 @@
     display: flex;
     justify-content: flex-start;
 
-    &:last-child .fr-skeleton_line{
+    &:last-child .fr-skeleton_line {
       flex: 0 1 auto;
     }
 
@@ -45,12 +45,7 @@
   }
 
   &_animate {
-    background: linear-gradient(
-      to right,
-      #f3f3f3 30%,
-      #ecebeb 46%,
-      #f3f3f3 70%
-    );
+    background: linear-gradient(to right, #f3f3f3 30%, #ecebeb 46%, #f3f3f3 70%);
     background-size: 400% 100%;
     animation: fr-skeleton-animation 2s ease infinite;
   }
@@ -63,18 +58,13 @@
     background-color: #fff;
 
     &::before {
-      content: "";
+      content: '';
       position: absolute;
       height: 100%;
       left: 0;
       right: 12px;
       border-radius: $border-radius;
-      background: linear-gradient(
-                      to right,
-                      #f3f3f3 30%,
-                      #ecebeb 46%,
-                      #f3f3f3 70%
-      );
+      background: linear-gradient(to right, #f3f3f3 30%, #ecebeb 46%, #f3f3f3 70%);
       background-size: 400% 100%;
       animation: fr-skeleton-animation 2s ease infinite;
     }

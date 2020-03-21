@@ -1,4 +1,4 @@
-@import "../../style/index";
+@import '../../style/index';
 
 .fr-btn {
   appearance: none;
@@ -23,10 +23,10 @@
   color: $b-primary;
   text-align: center;
   /* fix: 修复safari下overflow失效的问题 */
-  transform: translate3d(0,0,0);
+  transform: translate3d(0, 0, 0);
   z-index: 1;
 
-  >span {
+  > span {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -52,7 +52,8 @@
   }
 
   // 非disabled的情况下hover及focus的样式
-  &:not(:disabled):hover, &:not(:disabled):focus {
+  &:not(:disabled):hover,
+  &:not(:disabled):focus {
     box-shadow: $shadow-2;
   }
 
@@ -100,7 +101,8 @@
   }
 
   // 圆形按钮 (比按钮大4px)
-  &.__circle, &.__icon {
+  &.__circle,
+  &.__icon {
     width: 34px;
     height: 34px;
     padding: 0 !important;
@@ -138,15 +140,15 @@
       margin-right: 0;
     }
 
-    &.__large .fr-icon{
+    &.__large .fr-icon {
       font-size: 30px;
     }
 
-    &.__small .fr-icon{
+    &.__small .fr-icon {
       font-size: 18px;
     }
 
-    &.__mini .fr-icon{
+    &.__mini .fr-icon {
       font-size: 14px;
     }
   }
@@ -164,8 +166,8 @@
   }
 
   // link按钮和icon按钮禁用样式
-  &.__icon, &.__link {
-
+  &.__icon,
+  &.__link {
     &:disabled,
     &[disabled] {
       opacity: 0.5;
@@ -203,7 +205,8 @@
     padding: 7px 15px;
 
     // 单独配置背景色和颜色
-    &:not(:disabled):hover, &:not(:disabled):focus  {
+    &:not(:disabled):hover,
+    &:not(:disabled):focus {
       color: #fff;
       background-color: $main-color;
       border: 1px solid transparent;

@@ -1,25 +1,27 @@
 ---
 title: Mask - 遮罩
 group:
-    title: 反馈
-    path: /utils
-    order: 5000
+  title: 反馈
+  path: /utils
+  order: 5000
 ---
 
 # Mask 遮罩
 
-与RenderApi配合使用, 为弹层类组件提供mask并且支持代理RenderApi的部分操作
+与 RenderApi 配合使用, 为弹层类组件提供 mask 并且支持代理 RenderApi 的部分操作
 
-* mask层和内容是分开渲染的，否则mask的fade动画会影响到内容
-* mask不会处理内容的动画、显示隐藏等，需要自行实现
-* 透传组件的ReactRenderApiProps到mask，使其能够在合适时机处理api内部方法的调用
+- mask 层和内容是分开渲染的，否则 mask 的 fade 动画会影响到内容
+- mask 不会处理内容的动画、显示隐藏等，需要自行实现
+- 透传组件的 ReactRenderApiProps 到 mask，使其能够在合适时机处理 api 内部方法的调用
 
 ## 示例
-下例创建一个modal组件来演示Mask的基本用法
+
+下例创建一个 modal 组件来演示 Mask 的基本用法
 
 <code src="./demo.tsx" />
 
 ## Props
+
 ```tsx | pure
 interface MaskProps extends ComponentBaseProps, ReactRenderApiProps {
   /** 是否显示mask */
@@ -38,6 +40,7 @@ interface MaskProps extends ComponentBaseProps, ReactRenderApiProps {
 ```
 
 **相关接口**
+
 ```tsx | pure
 interface ComponentBaseProps {
   /** 包裹元素的类名 */
@@ -59,14 +62,3 @@ interface ReactRenderApiProps {
   namespace?: string;
 }
 ```
-
-
-
-
-
-
-
-
-
-
-

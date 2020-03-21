@@ -8,8 +8,8 @@ import { Transition } from '@lxjx/react-transition-spring';
 import _capitalize from 'lodash/capitalize';
 import cls from 'classnames';
 
-import { DrawerProps } from './type';
 import { useSame } from '@lxjx/hooks';
+import { DrawerProps } from './type';
 
 const zIndex = 1400;
 

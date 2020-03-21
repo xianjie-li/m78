@@ -1,4 +1,4 @@
-@import "../../style/index";
+@import '../../style/index';
 
 .fr-empty {
   padding: 16px;
@@ -10,7 +10,8 @@
       width: auto;
     }
 
-    .fr-empty_desc, .fr-empty_actions {
+    .fr-empty_desc,
+    .fr-empty_actions {
       font-size: $fs-12;
     }
   }
@@ -21,7 +22,8 @@
       width: auto;
     }
 
-    .fr-empty_desc, .fr-empty_actions {
+    .fr-empty_desc,
+    .fr-empty_actions {
       font-size: $fs-16;
     }
   }

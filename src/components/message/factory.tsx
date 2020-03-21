@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Message, { MessageWrap } from './message';
 import createRenderApi, { ReactRenderApiProps } from '@lxjx/react-render-api';
+import Message, { MessageWrap } from './message';
 
 import { MessageProps } from './type';
 
@@ -17,29 +17,23 @@ const messageApi = createRenderApi<MessageOption>(Message, {
 export type TipsOption = Omit<MessageOption, 'loading' | 'hasCancel'>;
 
 /** 文本提示 */
-const tips = ({
-  ...options
-}: TipsOption) => {
-  return messageApi({
+const tips = ({ ...options }: TipsOption) =>
+  messageApi({
     ...options,
     hasCancel: false,
     loading: false,
   });
-};
 
 export type LoadingOption = Omit<MessageOption, 'type' | 'loading' | 'hasCancel'>;
 
 /** 加载中提示 */
-const loading = ({
-  ...options
-} = {} as LoadingOption) => {
-  return messageApi({
+const loading = ({ ...options } = {} as LoadingOption) =>
+  messageApi({
     hasCancel: false,
     duration: Infinity,
     ...options,
     loading: true,
   });
-};
 
 export interface NotifyOption extends Omit<MessageOption, 'loading'> {
   /** 标题 */
@@ -51,27 +45,20 @@ export interface NotifyOption extends Omit<MessageOption, 'loading'> {
 }
 
 /** 轻通知，包含的配置项: content, duration, type, mask, singleton, singleton */
-const notify = ({
-  title, desc, foot, content, ...options
-}: NotifyOption) => {
-  return messageApi({
+const notify = ({ title, desc, foot, content, ...options }: NotifyOption) =>
+  messageApi({
     duration: 4000,
     hasCancel: true,
     content: content || (
       <div className="fr-message_notification">
-        {title && <div className="fr-message_notification_title">{title}</div> }
-        {desc && <div className="fr-message_notification_desc">{desc}</div> }
-        {foot && <div className="fr-message_notification_foot">{foot}</div> }
+        {title && <div className="fr-message_notification_title">{title}</div>}
+        {desc && <div className="fr-message_notification_desc">{desc}</div>}
+        {foot && <div className="fr-message_notification_foot">{foot}</div>}
       </div>
     ),
     ...options,
     loading: false,
   });
-};
 
-export {
-  tips,
-  loading,
-  notify,
-};
+export { tips, loading, notify };
 export default messageApi;

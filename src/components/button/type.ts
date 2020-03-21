@@ -2,8 +2,7 @@ import React from 'react';
 import { ComponentBasePropsWithAny } from '../types/types';
 
 export interface ButtonProps
-  extends
-    ComponentBasePropsWithAny,
+  extends ComponentBasePropsWithAny,
     React.PropsWithoutRef<JSX.IntrinsicElements['button']> {
   /** 按钮颜色 */
   color?: 'blue' | 'red' | 'green' | 'yellow' | 'primary';

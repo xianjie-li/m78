@@ -46,15 +46,10 @@ const htmlStr = `
   </div>
 `;
 
-const Demo = () => {
-  return (
-    <div>
-      <ArticleBox
-        watermark="我是水印"
-        html={htmlStr}
-      />
-    </div>
-  );
-};
+const Demo = () => (
+  <div>
+    <ArticleBox watermark="我是水印" html={htmlStr} />
+  </div>
+);
 
 export default Demo;

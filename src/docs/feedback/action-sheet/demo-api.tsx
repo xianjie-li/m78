@@ -43,14 +43,10 @@ function showApi() {
   });
 }
 
-const Demo = () => {
-  return (
-    <div>
-      <Button onClick={showApi}
-      >toggle
-      </Button>
-    </div>
-  );
-};
+const Demo = () => (
+  <div>
+    <Button onClick={showApi}>toggle</Button>
+  </div>
+);
 
 export default Demo;

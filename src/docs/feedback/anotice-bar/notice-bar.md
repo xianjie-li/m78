@@ -1,9 +1,9 @@
 ---
 title: NoticeBar - 提示条
 group:
-    title: 反馈
-    path: /feedback
-    order: 2000
+  title: 反馈
+  path: /feedback
+  order: 2000
 ---
 
 # NoticeBar 提示条
@@ -15,6 +15,7 @@ group:
 <code src="./demo.tsx" />
 
 ## API
+
 ```tsx | pure
 interface NoticeBarProps {
   /** 关闭回调 */
@@ -35,14 +36,3 @@ interface NoticeBarProps {
   right?: React.ReactNode;
 }
 ```
-
-
-
-
-
-
-
-
-
-
-

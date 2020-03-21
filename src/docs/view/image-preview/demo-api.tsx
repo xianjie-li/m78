@@ -23,7 +23,8 @@ const option = [
   },
   {
     img: img3,
-    desc: '图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3',
+    desc:
+      '图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3',
   },
   {
     img: img4,
@@ -37,14 +38,15 @@ const option = [
   },
   {
     img: img7,
-    desc: '图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3',
+    desc:
+      '图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3图片3',
   },
 ];
 
-const Demo = () => {
-  return (
-    <div>
-      <Button onClick={() => {
+const Demo = () => (
+  <div>
+    <Button
+      onClick={() => {
         const [ref, id] = ImagePreview.api({
           images: option,
           page: 5,
@@ -52,10 +54,10 @@ const Demo = () => {
 
         console.log(ref, id);
       }}
-      >toggle
-      </Button>
-    </div>
-  );
-};
+    >
+      toggle
+    </Button>
+  </div>
+);
 
 export default Demo;

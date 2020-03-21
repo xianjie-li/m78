@@ -1,9 +1,9 @@
 ---
 title: CountDown - 倒计时
 group:
-    title: 展示组件
-    path: /view
-    order: 4000
+  title: 展示组件
+  path: /view
+  order: 4000
 ---
 
 # CountDown 倒计时
@@ -11,12 +11,15 @@ group:
 对某个时间距离当前时间的详细时间进行展示
 
 ## 示例
+
 <code src="./count-down-demo.tsx" />
 
 ## 自定义格式
+
 <code src="./count-down-format.tsx" />
 
 ## props
+
 ```tsx | pure
 interface CountDownProps extends ExtCls, ComponentBaseProps {
   /** 目标时间 */
@@ -31,6 +34,7 @@ interface CountDownProps extends ExtCls, ComponentBaseProps {
 ```
 
 **相关接口**
+
 ```tsx | pure
 interface ComponentBaseProps {
   /** 包裹元素的类名 */
@@ -46,13 +50,3 @@ interface ExtCls {
   timeClassName?: string;
 }
 ```
-
-
-
-
-
-
-
-
-
-

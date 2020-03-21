@@ -29,7 +29,7 @@ const Demo = () => {
         ref={scrollRef}
         style={{ height: 400, border: '1px solid #eee' }}
         pullDown={toggle1}
-        onPullDown={async (pullDownFinish) => {
+        onPullDown={async pullDownFinish => {
           console.log('下拉刷新触发');
 
           await getData(true);
@@ -39,21 +39,23 @@ const Demo = () => {
           set2(30);
         }}
         pullUp={toggle3}
-        onPullUp={async (pullUpFinish) => {
+        onPullUp={async pullUpFinish => {
           await getData(true);
           const num = Math.random() > 0.8 ? 0 : 30;
           const err = Math.random() > 0.9;
           pullUpFinish(num, err);
           !err && set2(prev => prev + num);
         }}
-        onScroll={(meta) => {
+        onScroll={meta => {
           console.log(meta);
         }}
         // throttleTime={500}
         hasData={data > 0}
       >
         {Array.from({ length: data }).map((item, key) => (
-          <div style={itemStyle} key={key} className={`item el-${key}`}>{key}</div>
+          <div style={itemStyle} key={key} className={`item el-${key}`}>
+            {key}
+          </div>
         ))}
       </Scroll>
       <div className="mt-16">

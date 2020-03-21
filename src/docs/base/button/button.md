@@ -1,18 +1,18 @@
 ---
 title: Button - 按钮
 group:
-    title: 基础组件
-    path: /base
-    order: 1000
+  title: 基础组件
+  path: /base
+  order: 1000
 ---
 
-
 <!-- 样式 -->
+
 ```tsx | inline
 import React from 'react';
 import './style.scss';
 
-export default () => <span />
+export default () => <span />;
 ```
 
 # Button 按钮
@@ -26,41 +26,51 @@ export default () => <span />
 <code src="./button-demo-color.tsx" />
 
 ## 禁用
+
 <code src="./button-demo-disabled.tsx" />
 
 ## 尺寸
+
 <code src="./button-demo-size.tsx" />
 
 ## 圆形按钮
+
 <code src="./button-demo-circle.tsx" />
 
 ## 透明 + 边框
+
 <code src="./button-demo-outline.tsx" />
 
 ## 加载中
+
 <code src="./button-demo-loading.tsx" />
 
 ## 块级按钮
+
 <code src="./button-demo-block.tsx" />
 
 ## 链接按钮
+
 <code src="./button-demo-link.tsx" />
 
 ## 图标按钮
+
 <code src="./button-demo-icon.tsx" />
 
 ## 交互效果
+
 <code src="./button-demo-effect.tsx" />
 
-
 ## props
+
 **`<Button>`**
+
 ```tsx | pure
-interface 
+interface
   ButtonProps
 extends
   ComponentBasePropsWithAny,
-  React.PropsWithoutRef<JSX.IntrinsicElements['button']> 
+  React.PropsWithoutRef<JSX.IntrinsicElements['button']>
 {
   /** 按钮颜色 */
   color?: 'blue' | 'red' | 'green' | 'yellow' | 'primary';
@@ -90,8 +100,9 @@ extends
 ```
 
 **相关接口**
+
 ```tsx | pure
-interface ComponentBasePropsWithAny extends ComponentBaseProps{
+interface ComponentBasePropsWithAny extends ComponentBaseProps {
   /** 透传到包裹元素上的属性 */
   [key: string]: any;
 }
@@ -103,15 +114,3 @@ interface ComponentBaseProps {
   style?: React.CSSProperties;
 }
 ```
-
-
-
-
-
-
-
-
-
-
-
-

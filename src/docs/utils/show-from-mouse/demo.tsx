@@ -28,10 +28,38 @@ const Demo = () => {
   return (
     <div>
       <div>
-        <Button color="blue" style={{ ...fixedStyle, left: 20, top: 20 }} type="button" onClick={() => toggle(!on)}>click</Button>
-        <Button color="blue" style={{ ...fixedStyle, left: 180, top: 180 }} type="button" onClick={() => toggle(!on)}>click</Button>
-        <Button color="blue" style={{ ...fixedStyle, left: '86vw', top: 20 }} type="button" onClick={() => toggle(!on)}>click</Button>
-        <Button color="blue" style={{ ...fixedStyle, bottom: 20, left: '86vw' }} type="button" onClick={() => toggle(!on)}>click</Button>
+        <Button
+          color="blue"
+          style={{ ...fixedStyle, left: 20, top: 20 }}
+          type="button"
+          onClick={() => toggle(!on)}
+        >
+          click
+        </Button>
+        <Button
+          color="blue"
+          style={{ ...fixedStyle, left: 180, top: 180 }}
+          type="button"
+          onClick={() => toggle(!on)}
+        >
+          click
+        </Button>
+        <Button
+          color="blue"
+          style={{ ...fixedStyle, left: '86vw', top: 20 }}
+          type="button"
+          onClick={() => toggle(!on)}
+        >
+          click
+        </Button>
+        <Button
+          color="blue"
+          style={{ ...fixedStyle, bottom: 20, left: '86vw' }}
+          type="button"
+          onClick={() => toggle(!on)}
+        >
+          click
+        </Button>
       </div>
       <span className="fs-20">点击页面各处的按钮来从不同位置召唤弹出层!</span>
       <ShowFromMouse
@@ -40,7 +68,8 @@ const Demo = () => {
         onClose={() => {
           toggle(false);
         }}
-      ><div style={box}>我是文字</div>
+      >
+        <div style={box}>我是文字</div>
       </ShowFromMouse>
     </div>
   );

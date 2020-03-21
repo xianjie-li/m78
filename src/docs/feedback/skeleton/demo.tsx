@@ -7,7 +7,9 @@ const Demo = () => {
 
   return (
     <div>
-      <Button className="mb-24" onClick={() => setShow((p) => !p)}>toggle</Button>
+      <Button className="mb-24" onClick={() => setShow(p => !p)}>
+        toggle
+      </Button>
       <Skeleton show={show}>
         <div>Skeleton 1</div>
       </Skeleton>

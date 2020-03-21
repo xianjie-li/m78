@@ -53,154 +53,159 @@ const initSpring = {
   y: 0,
 };
 
-const Viewer = React.forwardRef<ViewerRef, ViewerProps>(({
-  children,
-  disabled = false,
-  bound,
-  drag = true,
-  pinch = true,
-  wheel = true,
-}, ref) => {
-  const [wrap, { width, height }] = useMeasure();
-  const innerWrap = useRef<HTMLDivElement>(null!);
-  const eventEl = useRef<HTMLDivElement>(null!);
+const Viewer = React.forwardRef<ViewerRef, ViewerProps>(
+  ({ children, disabled = false, bound, drag = true, pinch = true, wheel = true }, ref) => {
+    const [wrap, { width, height }] = useMeasure();
+    const innerWrap = useRef<HTMLDivElement>(null!);
+    const eventEl = useRef<HTMLDivElement>(null!);
 
-  const [sp, set] = useSpring(() => (initSpring));
-  const self = useSelf({
-    ...initSpring,
-    /* 这三个开关只作用于组件内部，不与prop上的同名属性相关, 因为某些情况下需要在不触发组件render的情况下更改状态 */
-    drag: true,
-    pinch: true,
-    wheel: true,
-  });
-
-  const [scaleMin, scaleMax] = scaleBound;
-
-  useImperativeHandle(ref, () => ({
-    setRotate,
-    setScale,
-    reset,
-    instance: self,
-  }));
-
-  const bind = useGesture({
-    onDrag({ event, delta: [offsetX, offsetY] }) {
-      event?.preventDefault();
-      if (!self.drag) return;
-
-      let boundX;
-      let boundXMax;
-      let boundY;
-      let boundYMax;
-
-      if (bound) {
-        let boundNode;
-        if ('getBoundingClientRect' in bound) {
-          boundNode = bound;
-        } else {
-          boundNode = bound.current;
-        }
-
-        const bound1 = boundNode.getBoundingClientRect();
-        const bound2 = innerWrap.current.getBoundingClientRect();
-        boundY = -(bound2.top - bound1.top);
-        boundYMax = -(bound2.bottom - bound1.bottom);
-        boundX = -(bound2.left - bound1.left);
-        boundXMax = -(bound2.right - bound1.right);
-      } else {
-        boundXMax = width * self.scale;
-        boundX = -boundXMax;
-        boundYMax = height * self.scale;
-        boundY = -boundYMax;
-      }
-
-      self.x = _clamp(self.x + offsetX, boundX, boundXMax);
-      self.y = _clamp(self.y + offsetY, boundY, boundYMax);
-
-      set({ x: self.x, y: self.y, config: { mass: 3, tension: 350, friction: 40 } });
-    },
-    onPinchStart: disableDrag,
-    onPinchEnd: enableDrag,
-    onPinch({ direction: [direct], delta: [, y] }) {
-      self.scale = getScale(direct, 0.06);
-      self.rotateZ += y;
-      set({ rotateZ: self.rotateZ, scale: self.scale, config: { mass: 1, tension: 150, friction: 17 } });
-    },
-    onWheelStart: disableDrag,
-    onWheelEnd: enableDrag,
-    onWheel({ event, direction: [, direct] }) {
-      event?.preventDefault();
-      self.scale = getScale(direct, 0.16);
-      set({ scale: self.scale, config: config.stiff });
-    },
-  }, {
-    enabled: !disabled,
-    drag,
-    pinch,
-    wheel,
-    domTarget: eventEl,
-    event: { passive: false },
-  });
-
-  useEffect(bind, [bind]);
-
-  function getScale(direct: number, value: number): number {
-    const diff = direct > 0 ? +value : -value;
-    let scale = Math.round((self.scale + diff) * 100) / 100; // 去小数
-    scale = _clamp(scale, scaleMin, scaleMax);
-    return scale;
-  }
-
-  function disableDrag() {
-    self.drag = false;
-  }
-
-  function enableDrag() {
-    self.drag = true;
-  }
-
-  /** 根据传入的缩放比返回一个限定边界的缩放比 */
-  function setScale(scale: number) {
-    if (disabled) return;
-    self.scale = _clamp(scale, scaleMin, scaleMax);
-    set({ scale: self.scale });
-  }
-
-  function setRotate(rotate: number) {
-    if (disabled) return;
-    set({ rotateZ: self.rotateZ += rotate, config: config.slow });
-  }
-
-  function reset() {
-    if (disabled) return;
-    set({
-      scale: self.scale = initSpring.scale,
-      rotateZ: self.rotateZ = initSpring.rotateZ,
-      x: self.x = initSpring.x,
-      y: self.y = initSpring.y,
+    const [sp, set] = useSpring(() => initSpring);
+    const self = useSelf({
+      ...initSpring,
+      /* 这三个开关只作用于组件内部，不与prop上的同名属性相关, 因为某些情况下需要在不触发组件render的情况下更改状态 */
+      drag: true,
+      pinch: true,
+      wheel: true,
     });
-  }
 
-  return (
-    <div ref={wrap} className="fr-viewer" id="t-inner">
-      <div ref={innerWrap}> {/* useMeasure目前不能取到实际的ref，这里需要获取到wrap的bound信息 */}
-        <animated.div
-          ref={eventEl}
-          className="fr-viewer_cont"
-          style={{
-            transform: interpolate(
-              //  @ts-ignore
-              [sp.x, sp.y, sp.scale, sp.rotateZ],
-              //  @ts-ignore
-              (x, y, scale, rotateZ) => `translate3d(${x}px, ${y}px, 0px) scale(${scale}) rotateZ(${rotateZ}deg)`,
-            ),
-          }}
-        >
-          {children}
-        </animated.div>
+    const [scaleMin, scaleMax] = scaleBound;
+
+    useImperativeHandle(ref, () => ({
+      setRotate,
+      setScale,
+      reset,
+      instance: self,
+    }));
+
+    const bind = useGesture(
+      {
+        onDrag({ event, delta: [offsetX, offsetY] }) {
+          event?.preventDefault();
+          if (!self.drag) return;
+
+          let boundX;
+          let boundXMax;
+          let boundY;
+          let boundYMax;
+
+          if (bound) {
+            let boundNode;
+            if ('getBoundingClientRect' in bound) {
+              boundNode = bound;
+            } else {
+              boundNode = bound.current;
+            }
+
+            const bound1 = boundNode.getBoundingClientRect();
+            const bound2 = innerWrap.current.getBoundingClientRect();
+            boundY = -(bound2.top - bound1.top);
+            boundYMax = -(bound2.bottom - bound1.bottom);
+            boundX = -(bound2.left - bound1.left);
+            boundXMax = -(bound2.right - bound1.right);
+          } else {
+            boundXMax = width * self.scale;
+            boundX = -boundXMax;
+            boundYMax = height * self.scale;
+            boundY = -boundYMax;
+          }
+
+          self.x = _clamp(self.x + offsetX, boundX, boundXMax);
+          self.y = _clamp(self.y + offsetY, boundY, boundYMax);
+
+          set({ x: self.x, y: self.y, config: { mass: 3, tension: 350, friction: 40 } });
+        },
+        onPinchStart: disableDrag,
+        onPinchEnd: enableDrag,
+        onPinch({ direction: [direct], delta: [, y] }) {
+          self.scale = getScale(direct, 0.06);
+          self.rotateZ += y;
+          set({
+            rotateZ: self.rotateZ,
+            scale: self.scale,
+            config: { mass: 1, tension: 150, friction: 17 },
+          });
+        },
+        onWheelStart: disableDrag,
+        onWheelEnd: enableDrag,
+        onWheel({ event, direction: [, direct] }) {
+          event?.preventDefault();
+          self.scale = getScale(direct, 0.16);
+          set({ scale: self.scale, config: config.stiff });
+        },
+      },
+      {
+        enabled: !disabled,
+        drag,
+        pinch,
+        wheel,
+        domTarget: eventEl,
+        event: { passive: false },
+      },
+    );
+
+    useEffect(bind, [bind]);
+
+    function getScale(direct: number, value: number): number {
+      const diff = direct > 0 ? +value : -value;
+      let scale = Math.round((self.scale + diff) * 100) / 100; // 去小数
+      scale = _clamp(scale, scaleMin, scaleMax);
+      return scale;
+    }
+
+    function disableDrag() {
+      self.drag = false;
+    }
+
+    function enableDrag() {
+      self.drag = true;
+    }
+
+    /** 根据传入的缩放比返回一个限定边界的缩放比 */
+    function setScale(scale: number) {
+      if (disabled) return;
+      self.scale = _clamp(scale, scaleMin, scaleMax);
+      set({ scale: self.scale });
+    }
+
+    function setRotate(rotate: number) {
+      if (disabled) return;
+      set({ rotateZ: self.rotateZ += rotate, config: config.slow });
+    }
+
+    function reset() {
+      if (disabled) return;
+      set({
+        scale: self.scale = initSpring.scale,
+        rotateZ: self.rotateZ = initSpring.rotateZ,
+        x: self.x = initSpring.x,
+        y: self.y = initSpring.y,
+      });
+    }
+
+    return (
+      <div ref={wrap} className="fr-viewer" id="t-inner">
+        <div ref={innerWrap}>
+          {' '}
+          {/* useMeasure目前不能取到实际的ref，这里需要获取到wrap的bound信息 */}
+          <animated.div
+            ref={eventEl}
+            className="fr-viewer_cont"
+            style={{
+              transform: interpolate(
+                //  @ts-ignore
+                [sp.x, sp.y, sp.scale, sp.rotateZ],
+                //  @ts-ignore
+                (x, y, scale, rotateZ) =>
+                  `translate3d(${x}px, ${y}px, 0px) scale(${scale}) rotateZ(${rotateZ}deg)`,
+              ),
+            }}
+          >
+            {children}
+          </animated.div>
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  },
+);
 
 export default Viewer;

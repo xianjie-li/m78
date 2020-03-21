@@ -1,4 +1,4 @@
-@import "../../style/index";
+@import '../../style/index';
 
 .fr-result {
   display: flex;
@@ -75,7 +75,6 @@
     line-height: 1.3;
     text-align: left;
   }
-
 }
 
 @keyframes fr-result-waiting {

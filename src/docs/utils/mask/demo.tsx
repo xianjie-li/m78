@@ -37,26 +37,18 @@ const outStyle: React.CSSProperties = {
   transform: 'scale(0)',
 };
 
-const MaskDemo: React.FC<MaskDemo> = ({
-  children,
-  ...props
-}) => {
-  return (
-    <Mask {...props}>
-      <div style={{ ...box, ...(props.show ? inStyle : outStyle) }}>{children}</div>
-    </Mask>
-  );
-};
+const MaskDemo: React.FC<MaskDemo> = ({ children, ...props }) => (
+  <Mask {...props}>
+    <div style={{ ...box, ...(props.show ? inStyle : outStyle) }}>{children}</div>
+  </Mask>
+);
 
 const Demo = () => {
   const [show, setShow] = useState(false);
 
   return (
     <div>
-      <MaskDemo
-        show={show}
-        onClose={() => setShow(false)}
-      >
+      <MaskDemo show={show} onClose={() => setShow(false)}>
         <div>mask content</div>
       </MaskDemo>
       <Button onClick={() => setShow(prev => !prev)}>toggle | {show.toString()}</Button>

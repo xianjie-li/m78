@@ -67,17 +67,23 @@ const _ImagePreview: React.FC<ImagePreviewProps> = ({
     zoomOut: false,
   });
 
-  useEffect(function removeInstance() {
-    if (!show) {
-      setTimeout(onRemove!, 800);
-    }
-    // eslint-disable-next-line
-  }, [show]);
+  useEffect(
+    function removeInstance() {
+      if (!show) {
+        setTimeout(onRemove!, 800);
+      }
+      // eslint-disable-next-line
+    },
+    [show],
+  );
 
-  useEffect(function initPageChange() {
-    carousel.current && carousel.current.goTo(calcPage(page), true);
-    // eslint-disable-next-line
-  }, [page]);
+  useEffect(
+    function initPageChange() {
+      carousel.current && carousel.current.goTo(calcPage(page), true);
+      // eslint-disable-next-line
+    },
+    [page],
+  );
 
   const bindDrag = useDrag(({ time, first, last, memo, movement: [x], direction: [direct] }) => {
     if (last && memo) {
@@ -181,7 +187,13 @@ const _ImagePreview: React.FC<ImagePreviewProps> = ({
               <Viewer ref={viewer => (self.viewers[key] = viewer!)}>
                 <span>
                   <If when={self.currentPage >= key - 1 && self.currentPage <= key + 1}>
-                    <Picture {...stopPropagation} src={item.img} alt="图片加载失败" className="fr-image-preview_img" imgProps={{ onDragStart: disabledDrag }} />
+                    <Picture
+                      {...stopPropagation}
+                      src={item.img}
+                      alt="图片加载失败"
+                      className="fr-image-preview_img"
+                      imgProps={{ onDragStart: disabledDrag }}
+                    />
                   </If>
                 </span>
               </Viewer>
@@ -190,17 +202,49 @@ const _ImagePreview: React.FC<ImagePreviewProps> = ({
         </Carousel>
         <div className="fr-image-preview_ctrl-bar" onDoubleClick={stopPropagation.onClick}>
           <If when={images.length > 1}>
-            <span className={cls({ __disabled: state.disabledPrev })} title="上一张" onClick={() => prev()}><Icon type="left" /></span>
+            <span
+              className={cls({ __disabled: state.disabledPrev })}
+              title="上一张"
+              onClick={() => prev()}
+            >
+              <Icon type="left" />
+            </span>
           </If>
-          <span title="左旋转" onClick={() => rotate(false)}><Icon type="undo" /></span>
-          <span title="右旋转" onClick={() => rotate(true)}><Icon type="redo" /></span>
-          <span className={cls({ __disabled: state.zoomIn })} title="放大" onClick={() => scale(true)}><Icon type="zoomIn" /></span>
-          <span className={cls({ __disabled: state.zoomOut })} title="缩小" onClick={() => scale(false)}><Icon type="zoomOut" /></span>
-          <span title="重置" onClick={() => resetViewer()}><Icon type="sync" /></span>
+          <span title="左旋转" onClick={() => rotate(false)}>
+            <Icon type="undo" />
+          </span>
+          <span title="右旋转" onClick={() => rotate(true)}>
+            <Icon type="redo" />
+          </span>
+          <span
+            className={cls({ __disabled: state.zoomIn })}
+            title="放大"
+            onClick={() => scale(true)}
+          >
+            <Icon type="zoomIn" />
+          </span>
+          <span
+            className={cls({ __disabled: state.zoomOut })}
+            title="缩小"
+            onClick={() => scale(false)}
+          >
+            <Icon type="zoomOut" />
+          </span>
+          <span title="重置" onClick={() => resetViewer()}>
+            <Icon type="sync" />
+          </span>
           <If when={images.length > 1}>
-            <span className={cls({ __disabled: state.disabledNext })} title="下一张" onClick={() => next()}><Icon type="right" /></span>
+            <span
+              className={cls({ __disabled: state.disabledNext })}
+              title="下一张"
+              onClick={() => next()}
+            >
+              <Icon type="right" />
+            </span>
           </If>
-          <span title="关闭" onClick={close}><Icon type="error" /></span>
+          <span title="关闭" onClick={close}>
+            <Icon type="error" />
+          </span>
         </div>
       </Transition>
     </Portal>

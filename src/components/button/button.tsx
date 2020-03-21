@@ -19,7 +19,11 @@ function formatChildren(children: React.ReactNode) {
   if (isArray(children)) {
     return children.map((child, index) => {
       /* 这里直接匹配函数name是为了防止仅使用Button组件而需要导入Icon组件 */
-      if (React.isValidElement(child) && isFunction(child.type) && (child.type.name === 'Icon' || child.type.name === 'SvgIcon')) {
+      if (
+        React.isValidElement(child) &&
+        isFunction(child.type) &&
+        (child.type.name === 'Icon' || child.type.name === 'SvgIcon')
+      ) {
         let injectStyle: React.CSSProperties = { marginLeft: 8, marginRight: 8 };
 
         if (index === 0) {
@@ -42,11 +46,11 @@ function formatChildren(children: React.ReactNode) {
 }
 
 /*
-* large 38
-* default 30
-* small 26
-* mini 20
-* */
+ * large 38
+ * default 30
+ * small 26
+ * mini 20
+ * */
 
 const Button: React.FC<ButtonProps> = ({
   size,
@@ -65,42 +69,27 @@ const Button: React.FC<ButtonProps> = ({
   href,
   ...props
 }) => {
-  const classNames = cls(
-    className,
-    'fr-btn',
-    'fr-effect',
-    {
-      [`__${color}`]: color,
-      [`__${size}`]: size,
-      __circle: circle,
-      __outline: outline,
-      __block: block,
-      __link: link,
-      __icon: icon,
-      __md: md,
-      __win: win,
-      __light: !!color && !link && !icon, // 当是link/icon按钮时，可以直接使用对于颜色的波纹
-      __disabled: disabled || loading,
-    },
-  );
+  const classNames = cls(className, 'fr-btn', 'fr-effect', {
+    [`__${color}`]: color,
+    [`__${size}`]: size,
+    __circle: circle,
+    __outline: outline,
+    __block: block,
+    __link: link,
+    __icon: icon,
+    __md: md,
+    __win: win,
+    __light: !!color && !link && !icon, // 当是link/icon按钮时，可以直接使用对于颜色的波纹
+    __disabled: disabled || loading,
+  });
 
   const newChildren = useMemo(() => formatChildren(children), [children]);
 
   return (
-    <button
-      type="button"
-      {...props}
-      className={classNames}
-      disabled={!!disabled || !!loading}
-    >
+    <button type="button" {...props} className={classNames} disabled={!!disabled || !!loading}>
       {/* eslint-disable-next-line jsx-a11y/anchor-has-content,jsx-a11y/control-has-associated-label */}
       {link && <a className="fr-btn__link" href={href} />}
-      <Spin
-        style={{ fontSize: size ? sizeMap[size] : 14 }}
-        show={!!loading}
-        full
-        text=""
-      />
+      <Spin style={{ fontSize: size ? sizeMap[size] : 14 }} show={!!loading} full text="" />
       <span>{newChildren}</span>
     </button>
   );

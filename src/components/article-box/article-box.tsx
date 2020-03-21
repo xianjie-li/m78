@@ -1,9 +1,8 @@
 import React from 'react';
 import { useMeasure } from 'react-use';
 import { If } from '@lxjx/fr/lib/fork';
-import { ComponentBaseProps } from '../types/types';
-
 import cls from 'classnames';
+import { ComponentBaseProps } from '../types/types';
 
 export interface ArticleBoxProps extends ComponentBaseProps {
   /** 合法的html字符串 */
@@ -24,24 +23,24 @@ const ArticleBox: React.FC<ArticleBoxProps> = ({ watermark, html, content, style
 
   return (
     <div ref={ref} className={cls('fr-article-box', className)} style={style}>
-      <If when={html}>{() => (
-        <div className="fr-article-box_html" dangerouslySetInnerHTML={{ __html: html! }} />
-      )}
+      <If when={html}>
+        {() => <div className="fr-article-box_html" dangerouslySetInnerHTML={{ __html: html! }} />}
       </If>
       <If when={content && !html}>
         <div>{content}</div>
       </If>
-      <If when={watermark}>{() => (
-        <div className="fr-article-box_watermark">
-          {Array.from({ length: row }).map((rowItem, rowKey) => (
-            <div className="fr-article-box_watermark_item" key={rowKey}>
-              {Array.from({ length: col }).map((colItem, colKey) => (
-                <span key={colKey}>{watermark}</span>
-              ))}
-            </div>
-          ))}
-        </div>
-      )}
+      <If when={watermark}>
+        {() => (
+          <div className="fr-article-box_watermark">
+            {Array.from({ length: row }).map((rowItem, rowKey) => (
+              <div className="fr-article-box_watermark_item" key={rowKey}>
+                {Array.from({ length: col }).map((colItem, colKey) => (
+                  <span key={colKey}>{watermark}</span>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
       </If>
     </div>
   );

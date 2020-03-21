@@ -5,10 +5,7 @@ export interface MessageProps extends ReactRenderApiProps {
   /** 提示框的内容 */
   content?: React.ReactNode;
   /** 状态类型 */
-  type?:
-    | 'success'
-    | 'error'
-    | 'warning';
+  type?: 'success' | 'error' | 'warning';
   /** 持续时间，如果要一直存在，传Infinity */
   duration?: number;
   /** 是否启用遮罩层 */

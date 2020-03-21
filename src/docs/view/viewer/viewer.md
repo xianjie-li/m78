@@ -1,22 +1,25 @@
 ---
 title: Viewer - 查看器
 group:
-    title: 展示组件
-    path: /view
-    order: 4000
+  title: 展示组件
+  path: /view
+  order: 4000
 ---
 
 # Viewer 查看器
 
-创建一个可操作的展示区域，支持通过drag拖动、手势旋转、手势或鼠标滚轮缩放子元素
+创建一个可操作的展示区域，支持通过 drag 拖动、手势旋转、手势或鼠标滚轮缩放子元素
 
 ## 示例
+
 😊 请在移动端体验此示例的完整`(手势支持)`效果
 
 <code src="./demo.tsx" />
 
 ## API
+
 **`props`**
+
 ```tsx | pure
 interface ViewerProps {
   /** 任何react可渲染的东西 */
@@ -33,6 +36,7 @@ interface ViewerProps {
 ```
 
 **`ref`**
+
 ```tsx | pure
 interface ViewerRef {
   /** 设置旋转角度 */

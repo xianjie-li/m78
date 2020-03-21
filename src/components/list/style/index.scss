@@ -1,4 +1,4 @@
-@import "../../style/index";
+@import '../../style/index';
 
 @mixin emptyNone {
   &:empty {
@@ -63,7 +63,8 @@
       flex-wrap: wrap;
       width: 100%;
     }
-    .fr-list_cont-left, .fr-list_cont-right {
+    .fr-list_cont-left,
+    .fr-list_cont-right {
       width: 100%;
     }
     .fr-list_cont-right {
@@ -138,7 +139,8 @@
     }
   }
 
-  &.__not-border .fr-list_item::before, &.__inline .fr-list_item::before {
+  &.__not-border .fr-list_item::before,
+  &.__inline .fr-list_item::before {
     display: none;
   }
 
@@ -157,7 +159,7 @@
 
       &::after {
         position: absolute;
-        content: "";
+        content: '';
         left: 0;
         right: 0;
         top: 1px;
@@ -171,7 +173,7 @@
     & + & {
       &::before {
         position: absolute;
-        content: "";
+        content: '';
         height: 1px;
         top: 0;
         left: 12px;
@@ -219,7 +221,8 @@
     align-self: flex-start;
   }
 
-  &_cont-left, &_cont-right {
+  &_cont-left,
+  &_cont-right {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -298,7 +301,7 @@
     border-bottom: 1px solid $b-border;
   }
 
-  &_main-title-primary{
+  &_main-title-primary {
     font-size: $fs-20;
     font-weight: 500;
   }

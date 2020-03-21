@@ -5,12 +5,7 @@ import '@lxjx/fr/lib/message/style';
 import Button from '@lxjx/fr/lib/button';
 import '@lxjx/fr/lib/button/style';
 
-const type = [
-  'success',
-  'error',
-  'warning',
-  undefined,
-];
+const type = ['success', 'error', 'warning', undefined];
 
 function messageTest() {
   setTimeout(() => {
@@ -36,7 +31,8 @@ function loadingTest() {
 function notifyTest() {
   message.notify({
     title: '标题标题',
-    desc: '描述描述描述描述描述描述描述，描述描述描述描述描述描述描述描述描述描述描述，描述描述描述描述描述',
+    desc:
+      '描述描述描述描述描述描述描述，描述描述描述描述描述描述描述描述描述描述描述，描述描述描述描述描述',
     // @ts-ignore
     type: type[Math.floor(Math.random() * 4)],
   });

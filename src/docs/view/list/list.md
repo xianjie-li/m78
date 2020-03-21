@@ -1,9 +1,9 @@
 ---
 title: List - 列表
 group:
-    title: 展示组件
-    path: /view
-    order: 4000
+  title: 展示组件
+  path: /view
+  order: 4000
 ---
 
 # List - 列表
@@ -11,13 +11,17 @@ group:
 用于展示列表图片、段落，同时也用作表单的布局和展示
 
 ## 列表
+
 <code src="./demo.tsx" />
 
 ## 表单列表
+
 <code src="./demo-form.tsx" />
 
 ## API
+
 **`List`**
+
 ```tsx | pure
 interface ListType extends ComponentBasePropsWithAny {
   /** false | 开启表单模式 */
@@ -36,6 +40,7 @@ interface ListType extends ComponentBasePropsWithAny {
 ```
 
 **`Item`**
+
 ```tsx | pure
 interface ListItemProps extends ComponentBasePropsWithAny {
   /** 左侧插槽内容 */
@@ -73,6 +78,7 @@ interface ListItemProps extends ComponentBasePropsWithAny {
 ```
 
 **`Title`**
+
 ```tsx | pure
 interface ListTitleType extends ComponentBasePropsWithAny {
   /** 标题内容 */
@@ -83,6 +89,7 @@ interface ListTitleType extends ComponentBasePropsWithAny {
 ```
 
 **`SubTitle`**
+
 ```tsx | pure
 interface ListSubTitleType extends ComponentBasePropsWithAny {
   /** 标题内容 */
@@ -91,6 +98,7 @@ interface ListSubTitleType extends ComponentBasePropsWithAny {
 ```
 
 **`相关接口/Footer`**
+
 ```tsx | pure
 interface ComponentBaseProps {
   /** 包裹元素的类名 */
@@ -99,7 +107,7 @@ interface ComponentBaseProps {
   style?: React.CSSProperties;
 }
 
-interface ComponentBasePropsWithAny extends ComponentBaseProps{
+interface ComponentBasePropsWithAny extends ComponentBaseProps {
   /** 透传到包裹元素上的属性 */
   [key: string]: any;
 }

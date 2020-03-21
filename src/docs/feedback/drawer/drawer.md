@@ -1,20 +1,21 @@
 ---
 title: Drawer - 抽屉
 group:
-    title: 反馈
-    path: /feedback
-    order: 2000
+  title: 反馈
+  path: /feedback
+  order: 2000
 ---
 
 # Drawer 抽屉
 
-与Modal类似，在不跳转页面的情况下向用户展示一组内容
+与 Modal 类似，在不跳转页面的情况下向用户展示一组内容
 
 ## 基础示例
 
 <code src="./demo.tsx" />
 
 ## API
+
 ```tsx | pure
 interface DrawerProps extends ComponentBaseProps, ReactRenderApiProps {
   /** 是否显示关闭按钮 */
@@ -29,6 +30,7 @@ interface DrawerProps extends ComponentBaseProps, ReactRenderApiProps {
 ```
 
 **相关接口**
+
 ```tsx | pure
 interface ComponentBaseProps {
   /** 包裹元素的类名 */
@@ -50,14 +52,3 @@ interface ReactRenderApiProps {
   namespace?: string;
 }
 ```
-
-
-
-
-
-
-
-
-
-
-

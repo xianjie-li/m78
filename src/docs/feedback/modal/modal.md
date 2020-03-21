@@ -1,9 +1,9 @@
 ---
-title: Modal - 对话框 
+title: Modal - 对话框
 group:
-    title: 反馈
-    path: /feedback
-    order: 2000
+  title: 反馈
+  path: /feedback
+  order: 2000
 ---
 
 # Modal 对话框
@@ -11,48 +11,51 @@ group:
 用于提示用户进行一组操作而不必跳转页面，或是给予用户一些快捷提示
 
 ## 基础示例
-Modal组件的配置非常多样化，通过合理的配置可以实现绝大多数的Modal功能
 
+Modal 组件的配置非常多样化，通过合理的配置可以实现绝大多数的 Modal 功能
 
 <\code src="./demo.tsx" />
 
-## 通过api使用
+## 通过 api 使用
+
 通过[render-api](/#/utils/render-api)来进行组件外渲染
 
 <\code src="./demo-api.tsx" />
 
 ## 完全定制
-使用`content`参数，你可以最大化的对Modal进行定制，它将会覆盖所有的默认节点选项
+
+使用`content`参数，你可以最大化的对 Modal 进行定制，它将会覆盖所有的默认节点选项
 
 <\code src="./demo-custom.tsx" />
 
-
 `css`
+
 ```css
 .modal {
-    text-align:center;
-    border-radius: 2px;
-    overflow: hidden;
+  text-align: center;
+  border-radius: 2px;
+  overflow: hidden;
 }
 .modal-img img {
-    width: 100%;
+  width: 100%;
 }
 .modal-title {
-    margin: 24px 0 12px;
-    font-size: 18px;
+  margin: 24px 0 12px;
+  font-size: 18px;
 }
 .modal-cont {
-    padding: 0 24px;
-    font-size: 14px;
-    color: rgba(0,0,0,0.45);
+  padding: 0 24px;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.45);
 }
 .modal-btn {
-    margin: 12px 12px 24px;
-    font-size: 18px;
+  margin: 12px 12px 24px;
+  font-size: 18px;
 }
 ```
 
 ## API
+
 ```tsx | pure
 interface ModalProps extends ReactRenderApiProps, ComponentBaseProps {
   /** 启用响应式按钮，按钮会根据底部的宽度平分剩余宽度 */
@@ -66,7 +69,9 @@ interface ModalProps extends ReactRenderApiProps, ComponentBaseProps {
   /** 内容区域 */
   children?: React.ReactNode;
   /** 通过配置设置按钮组 */
-  btns?: (Pick<ButtonProps, 'color' | 'children' | 'onClick' | 'disabled' | 'icon' | 'link'> & { text: string })[];
+  btns?: (Pick<ButtonProps, 'color' | 'children' | 'onClick' | 'disabled' | 'icon' | 'link'> & {
+    text: string;
+  })[];
   /** 自定义底部内容，与其他底部相关配置的优先级为 footer > btns > confirm、close */
   footer?: React.ReactNode;
   /** 默认的确认按钮被点击时 */
@@ -94,10 +99,10 @@ interface ModalProps extends ReactRenderApiProps, ComponentBaseProps {
   /** 脚部区域class */
   footerClassName?: string;
 }
-
 ```
 
 **相关接口**
+
 ```tsx | pure
 interface ComponentBaseProps {
   /** 包裹元素的类名 */
@@ -119,14 +124,3 @@ interface ReactRenderApiProps {
   namespace?: string;
 }
 ```
-
-
-
-
-
-
-
-
-
-
-

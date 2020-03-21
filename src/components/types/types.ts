@@ -1,6 +1,6 @@
 import React from 'react';
 
-export interface ComponentBasePropsWithAny extends ComponentBaseProps{
+export interface ComponentBasePropsWithAny extends ComponentBaseProps {
   /** 透传到包裹元素上的属性 */
   [key: string]: any;
 }
@@ -18,7 +18,7 @@ export type Size = 'large' | 'small';
 
 export type AnyObject = {
   [key: string]: any;
-}
+};
 
 export type AnyFunction = (...args: Array<any>) => any;
 

@@ -28,21 +28,18 @@ const Demo = () => {
   }
 
   return (
-    <div style={{
-      width: '100%',
-      height: 300,
-      border: '1px solid #ccc',
-      position: 'relative',
-      overflow: 'hidden',
-      padding: 16,
-    }}
+    <div
+      style={{
+        width: '100%',
+        height: 300,
+        border: '1px solid #ccc',
+        position: 'relative',
+        overflow: 'hidden',
+        padding: 16,
+      }}
     >
       {/* 方向 */}
-      <Drawer
-        direction={state.direction as any}
-        show={state.show}
-        onClose={close}
-      >
+      <Drawer direction={state.direction as any} show={state.show} onClose={close}>
         <div>
           {Array.from({ length: 6 }).map((v, k) => (
             <p key={k}>content {k + 1} Lorem ipsum dolor sit amet</p>
@@ -51,12 +48,7 @@ const Demo = () => {
       </Drawer>
 
       {/* 全屏模式 */}
-      <Drawer
-        fullScreen
-        direction="bottom"
-        show={fullScreenShow}
-        onClose={close}
-      >
+      <Drawer fullScreen direction="bottom" show={fullScreenShow} onClose={close}>
         <div>
           {Array.from({ length: 6 }).map((v, k) => (
             <p key={k}>content {k + 1} Lorem ipsum dolor sit amet</p>
@@ -65,12 +57,7 @@ const Demo = () => {
       </Drawer>
 
       {/* 容器模式 */}
-      <Drawer
-        inside
-        direction="right"
-        show={insideShow}
-        onClose={close}
-      >
+      <Drawer inside direction="right" show={insideShow} onClose={close}>
         <div>
           {Array.from({ length: 6 }).map((v, k) => (
             <p key={k}>content {k + 1} Lorem ipsum dolor sit amet</p>
@@ -79,11 +66,7 @@ const Demo = () => {
       </Drawer>
 
       {/* 多层 */}
-      <Drawer
-        direction="right"
-        show={show1}
-        onClose={() => set1(false)}
-      >
+      <Drawer direction="right" show={show1} onClose={() => set1(false)}>
         <div>
           <Button onClick={() => set2(true)}>第二层</Button>
           {Array.from({ length: 6 }).map((v, k) => (
@@ -91,11 +74,7 @@ const Demo = () => {
           ))}
         </div>
       </Drawer>
-      <Drawer
-        direction="right"
-        show={show2}
-        onClose={() => set2(false)}
-      >
+      <Drawer direction="right" show={show2} onClose={() => set2(false)}>
         <div>
           <Button onClick={() => set3(true)}>第三层</Button>
           {Array.from({ length: 6 }).map((v, k) => (
@@ -103,21 +82,25 @@ const Demo = () => {
           ))}
         </div>
       </Drawer>
-      <Drawer
-        direction="right"
-        show={show3}
-        onClose={() => set3(false)}
-      >
+      <Drawer direction="right" show={show3} onClose={() => set3(false)}>
         <div>
           {Array.from({ length: 6 }).map((v, k) => (
             <p key={k}>content {k + 1} Lorem ipsum dolor sit amet</p>
           ))}
         </div>
       </Drawer>
-      <Button onClick={() => set(prev => ({ ...prev, direction: 'left', show: !prev.show }))}>left</Button>
-      <Button onClick={() => set(prev => ({ ...prev, direction: 'top', show: !prev.show }))}>top</Button>
-      <Button onClick={() => set(prev => ({ ...prev, direction: 'right', show: !prev.show }))}>right</Button>
-      <Button onClick={() => set(prev => ({ ...prev, direction: 'bottom', show: !prev.show }))}>bottom</Button>
+      <Button onClick={() => set(prev => ({ ...prev, direction: 'left', show: !prev.show }))}>
+        left
+      </Button>
+      <Button onClick={() => set(prev => ({ ...prev, direction: 'top', show: !prev.show }))}>
+        top
+      </Button>
+      <Button onClick={() => set(prev => ({ ...prev, direction: 'right', show: !prev.show }))}>
+        right
+      </Button>
+      <Button onClick={() => set(prev => ({ ...prev, direction: 'bottom', show: !prev.show }))}>
+        bottom
+      </Button>
 
       <div className="mt-16">
         <Button onClick={() => setFullScreen(prev => !prev)}>全屏</Button>

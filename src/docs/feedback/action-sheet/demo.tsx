@@ -39,8 +39,8 @@ const Demo = () => {
         title="标题"
         show={show}
         defaultValue={{ id: 1, name: '操作1' }}
-        onChange={(option) => console.log('change:', option)}
-        onConfirm={(option) => console.log('confirm:', option)}
+        onChange={option => console.log('change:', option)}
+        onConfirm={option => console.log('confirm:', option)}
         onClose={() => setShow(false)}
         options={options}
       />
@@ -49,8 +49,8 @@ const Demo = () => {
         title="选择后直接关闭"
         show={show2}
         defaultValue={{ id: 1, name: '操作1' }}
-        onChange={(option) => console.log('change:', option)}
-        onConfirm={(option) => console.log('confirm:', option)}
+        onChange={option => console.log('change:', option)}
+        onConfirm={option => console.log('confirm:', option)}
         onClose={() => setShow2(false)}
         options={options}
       />

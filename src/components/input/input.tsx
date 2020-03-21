@@ -9,13 +9,21 @@ import { isNumber, formatString, validateFormatString } from '@lxjx/utils';
 
 import cls from 'classnames';
 
-import { InputProps } from './type';
 import { useFormState, useDerivedStateFromProps } from '@lxjx/hooks';
 import { TransitionBase } from '@lxjx/react-transition-spring';
+import { InputProps } from './type';
 
-import { buildInPattern, formatMoney, parserNumber, parserInteger, parserGeneral, parserLength, parserThan } from './utils';
+import {
+  buildInPattern,
+  formatMoney,
+  parserNumber,
+  parserInteger,
+  parserGeneral,
+  parserLength,
+  parserThan,
+} from './utils';
 
-const Input: React.FC<InputProps> = (_props) => {
+const Input: React.FC<InputProps> = _props => {
   const {
     /* 处理特殊属性 */
     className,
@@ -71,9 +79,13 @@ const Input: React.FC<InputProps> = (_props) => {
 
     if (!formatPattern) return false;
     if (!validateFormatString.test(formatPattern)) return false;
-    return [formatPattern, { delimiter: formatDelimiter, repeat: formatRepeat, lastRepeat: formatLastRepeat }] as const;
+    return [
+      formatPattern,
+      { delimiter: formatDelimiter, repeat: formatRepeat, lastRepeat: formatLastRepeat },
+    ] as const;
     // eslint-disable-next-line
   }, []);
+
   // 对format类型进行缓存
   // eslint-disable-next-line
   const memoFormat = useMemo(() => format, []);
@@ -102,7 +114,7 @@ const Input: React.FC<InputProps> = (_props) => {
   }, [memoFormat]);
 
   useEffect(() => {
-    if ((type !== 'number' && type !== 'integer') && (isNumber(min) || isNumber(max))) {
+    if (type !== 'number' && type !== 'integer' && (isNumber(min) || isNumber(max))) {
       setType('number');
     }
     // eslint-disable-next-line
@@ -176,7 +188,11 @@ const Input: React.FC<InputProps> = (_props) => {
     setValue(parser(target.value));
 
     // 浏览器支持且存在formatArg配置或传入parser时，还原光标位置
-    if (typeof saveSelectInd === 'number' && target.setSelectionRange && (formatArg || typeof _parser === 'function')) {
+    if (
+      typeof saveSelectInd === 'number' &&
+      target.setSelectionRange &&
+      (formatArg || typeof _parser === 'function')
+    ) {
       setTimeout(() => {
         const diff = target.value.length - oldValueLength; // 基于新值计算差异长度，还原位置需要减去此差值
         target.setSelectionRange(saveSelectInd + diff, saveSelectInd + diff);
@@ -266,29 +282,25 @@ const Input: React.FC<InputProps> = (_props) => {
 
   return (
     <span
-      className={cls(
-        'fr-input_wrap',
-        className,
-        status && `__${status}`,
-        size && `__${size}`,
-        {
-          '__not-border': !textArea && notBorder,
-          __underline: !textArea && underline,
-          __focus: focus,
-          __disabled: isDisabled,
-          __readonly: readonly,
-          __matter: format === 'money',
-          __textarea: textArea,
-        },
-      )}
+      className={cls('fr-input_wrap', className, status && `__${status}`, size && `__${size}`, {
+        '__not-border': !textArea && notBorder,
+        __underline: !textArea && underline,
+        __focus: focus,
+        __disabled: isDisabled,
+        __readonly: readonly,
+        __matter: format === 'money',
+        __textarea: textArea,
+      })}
       style={style}
     >
-      <If when={prefix && !textArea}><span className="fr-input_prefix">{prefix}</span></If>
+      <If when={prefix && !textArea}>
+        <span className="fr-input_prefix">{prefix}</span>
+      </If>
       {React.createElement(textArea ? 'textarea' : 'input', {
         ...props,
         ref: input,
         className: 'fr-input',
-        type: getRealType(type), /* 数字输入时，使用tel类型，number类型会导致format异常 */
+        type: getRealType(type) /* 数字输入时，使用tel类型，number类型会导致format异常 */,
         onFocus: focusHandle,
         onBlur: blurHandle,
         onKeyDown: keyDownHandle,
@@ -296,18 +308,39 @@ const Input: React.FC<InputProps> = (_props) => {
         readOnly: readonly,
         value: formatter(inputValue),
         onChange: changeHandle,
-        style: textArea ? { height: textAreaHeight, overflow: autoSize ? 'hidden' : 'auto', resize: autoSize ? 'none' : undefined } : {},
+        style: textArea
+          ? {
+              height: textAreaHeight,
+              overflow: autoSize ? 'hidden' : 'auto',
+              resize: autoSize ? 'none' : undefined,
+            }
+          : {},
       })}
-      <Spin className="fr-input_loading" size="small" text="" show={loading || blockLoading} full={blockLoading} />
+      <Spin
+        className="fr-input_loading"
+        size="small"
+        text=""
+        show={loading || blockLoading}
+        full={blockLoading}
+      />
       <If when={hasClearBtn}>
         <Icon onClick={clearHandle} className="fr-input_icon fr-input_icon-clear" type="error" />
       </If>
       <If when={_type === 'password' && !textArea}>
-        <Icon onClick={passwordTypeChange} className="fr-input_icon" type={type === 'password' ? 'eyeClose' : 'eye'} />
+        <Icon
+          onClick={passwordTypeChange}
+          className="fr-input_icon"
+          type={type === 'password' ? 'eyeClose' : 'eye'}
+        />
       </If>
-      <If when={suffix && !textArea}><span className="fr-input_suffix">{suffix}</span></If>
+      <If when={suffix && !textArea}>
+        <span className="fr-input_suffix">{suffix}</span>
+      </If>
       <If when={textArea || charCount}>
-        <span className="fr-input_tip-text">{value.length}{maxLength ? `/${maxLength}` : '字'}</span>
+        <span className="fr-input_tip-text">
+          {value.length}
+          {maxLength ? `/${maxLength}` : '字'}
+        </span>
       </If>
       <TransitionBase
         style={{ position: 'relative' }}

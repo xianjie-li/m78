@@ -1,21 +1,21 @@
 .modal {
-    text-align:center;
-    border-radius: 2px;
-    overflow: hidden;
+  text-align: center;
+  border-radius: 2px;
+  overflow: hidden;
 }
 .modal-img img {
-    width: 100%;
+  width: 100%;
 }
 .modal-title {
-    margin: 24px 0 12px;
-    font-size: 18px;
+  margin: 24px 0 12px;
+  font-size: 18px;
 }
 .modal-cont {
-    padding: 0 24px;
-    font-size: 14px;
-    color: rgba(0,0,0,0.45);
+  padding: 0 24px;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.45);
 }
 .modal-btn {
-    margin: 12px 12px 24px;
-    font-size: 18px;
+  margin: 12px 12px 24px;
+  font-size: 18px;
 }

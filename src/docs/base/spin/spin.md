@@ -1,17 +1,18 @@
 ---
 title: Spin - 加载中
 group:
-    title: 基础组件
-    path: /base
-    order: 1000
+  title: 基础组件
+  path: /base
+  order: 1000
 ---
 
 <!-- 样式 -->
+
 ```tsx | inline
 import React from 'react';
 import './style.scss';
 
-export default () => <span />
+export default () => <span />;
 ```
 
 # Icon 图标
@@ -19,18 +20,20 @@ export default () => <span />
 设置一个内联的加载提示元素或将某个块设置为加载状态
 
 ## 基本用法
+
 <code src="./spin-demo.tsx"/>
 
 ## 内联
+
 <code src="./spin-demo2.tsx"/>
 
 ## 自定义文本
-<code src="./spin-demo-custom-text.tsx"/>
 
+<code src="./spin-demo-custom-text.tsx"/>
 
 ## 填满容器
 
-> 💡 需要确保父元素非常规定位元素，即position的值非static
+> 💡 需要确保父元素非常规定位元素，即 position 的值非 static
 
 <code src="./spin-demo-full.tsx"/>
 
@@ -54,6 +57,7 @@ interface SpinProps extends ComponentBaseProps {
 ```
 
 **相关接口**
+
 ```tsx | pure
 interface ComponentBaseProps {
   /** 包裹元素的类名 */
@@ -62,4 +66,3 @@ interface ComponentBaseProps {
   style?: React.CSSProperties;
 }
 ```
-

@@ -7,13 +7,20 @@ export const stopPropagation = {
 };
 
 /* 占位函数 */
-export const dumpFn = (...arg: any[]): any => undefined;
+export const dumpFn = (...arg: any[]): any => arg;
 
 export function getGlobal() {
   // eslint-disable-next-line no-restricted-globals
-  if (typeof self !== 'undefined') { return self; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
+  if (typeof self !== 'undefined') {
+    // eslint-disable-next-line no-restricted-globals
+    return self;
+  }
+  if (typeof window !== 'undefined') {
+    return window;
+  }
+  if (typeof global !== 'undefined') {
+    return global;
+  }
   throw new Error('unable to locate global object');
 }
 

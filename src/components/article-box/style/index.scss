@@ -1,4 +1,4 @@
-@import "../../style/index";
+@import '../../style/index';
 
 .fr-article-box {
   position: relative;
@@ -7,7 +7,12 @@
   background-color: #fff;
   word-break: break-word;
 
-  table, img, video, audio, pre, iframe {
+  table,
+  img,
+  video,
+  audio,
+  pre,
+  iframe {
     max-width: 100%;
   }
 

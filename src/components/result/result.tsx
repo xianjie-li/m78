@@ -7,14 +7,10 @@ import { Transition, config } from '@lxjx/react-transition-spring';
 
 import cls from 'classnames';
 
-/* 用于标记哪些Icon.Svg需要添加特殊的status样式 */
-const statusResultList = [
-  'notFound',
-  'serverError',
-  'notAuth',
-];
-
 import { ResultProps } from './type';
+
+/* 用于标记哪些Icon.Svg需要添加特殊的status样式 */
+const statusResultList = ['notFound', 'serverError', 'notAuth'];
 
 const Result: React.FC<ResultProps> = ({
   type = 'success',
@@ -36,7 +32,6 @@ const Result: React.FC<ResultProps> = ({
         className={cls('fr-result', { __fixed: fixed })}
       >
         <div className="fr-result_cont">
-
           <div className={cls('fr-result_icon', { __waiting: type === 'waiting' })}>
             <SvgIcon
               type={type}
@@ -46,40 +41,23 @@ const Result: React.FC<ResultProps> = ({
             />
           </div>
           <Fork.If when={title}>
-            <div className="fr-result_title">
-              { title }
-            </div>
+            <div className="fr-result_title">{title}</div>
           </Fork.If>
           <Fork.If when={!!desc}>
-            <div className="fr-result_desc">
-              { desc }
-            </div>
+            <div className="fr-result_desc">{desc}</div>
           </Fork.If>
           <Fork.If when={!!children}>
-            <div className="fr-result_extra">
-              { children }
-            </div>
+            <div className="fr-result_extra">{children}</div>
           </Fork.If>
           <Fork.If when={!!actions}>
-            <div className="fr-result_btns">
-              { actions }
-            </div>
+            <div className="fr-result_btns">{actions}</div>
           </Fork.If>
-
         </div>
       </Transition>
     );
   }
 
-  return (
-    fixed
-      ? (
-        <Portal>
-          { render() }
-        </Portal>
-      )
-      : render()
-  );
+  return fixed ? <Portal>{render()}</Portal> : render();
 };
 
 export default Result;

@@ -12,9 +12,7 @@ import img5 from '@/mock/img/5.jpg';
 import img6 from '@/mock/img/6.jpg';
 import img7 from '@/mock/img/7.jpg';
 
-const imgs = [
-  img1, img2, '', img3, img4, undefined, img5, img6, img7,
-];
+const imgs = [img1, img2, '', img3, img4, undefined, img5, img6, img7];
 
 const imgStyle: React.CSSProperties = {
   width: 100,
@@ -24,27 +22,26 @@ const imgStyle: React.CSSProperties = {
   borderRadius: '4px',
 };
 
-const Demo = () => {
-  return (
-    <div>
-      {imgs.map((item, key) => (
-        <Picture key={key} style={imgStyle} src={item} />
-      ))}
+const Demo = () => (
+  <div>
+    {imgs.map((item, key) => (
+      <Picture key={key} style={imgStyle} src={item} />
+    ))}
 
-      <div className="mt-32">
-        <h4>全局配置加载错误时展示的图片</h4>
-        <Config.Provider value={{
+    <div className="mt-32">
+      <h4>全局配置加载错误时展示的图片</h4>
+      <Config.Provider
+        value={{
           pictureErrorImg: 'https://www.baidu.com/img/baidu_jgylogo3.gif',
         }}
-        >
-          <div>
-            <Picture style={imgStyle} src={img2} />
-            <Picture style={imgStyle} src="" />
-          </div>
-        </Config.Provider>
-      </div>
+      >
+        <div>
+          <Picture style={imgStyle} src={img2} />
+          <Picture style={imgStyle} src="" />
+        </div>
+      </Config.Provider>
     </div>
-  );
-};
+  </div>
+);
 
 export default Demo;

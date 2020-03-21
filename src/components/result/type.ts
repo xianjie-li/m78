@@ -7,7 +7,7 @@ export type ResultTypes =
   | 'waiting'
   | 'notFound'
   | 'serverError'
-  | 'notAuth'
+  | 'notAuth';
 
 export interface ResultProps {
   /** true | 组件开关，任意falsy或truthy值 */

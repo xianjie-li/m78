@@ -2,9 +2,8 @@ import React, { useEffect, useRef } from 'react';
 import { getDateCountDown } from '@lxjx/utils';
 import { useSelf } from '@lxjx/hooks';
 import { dumpFn } from '@lxjx/fr/lib/util';
-import { ComponentBaseProps } from '../types/types';
-
 import cls from 'classnames';
+import { ComponentBaseProps } from '../types/types';
 
 interface ExtCls {
   /** 字符"xx天xx时xx分"中的xx所在包裹元素的额外类名 */
@@ -45,7 +44,15 @@ const _format: CountDownProps['format'] = (meta, triggerFinish) => {
     triggerFinish && triggerFinish();
   }
 
-  return (+meta.d ? (wTime(meta.d, s2) + wTxt('天', s1)) : '') + wTime(meta.h, s2) + wTxt('时', s1) + wTime(meta.m, s2) + wTxt('分', s1) + wTime(meta.s, s2) + wTxt('秒', s1);
+  return (
+    (+meta.d ? wTime(meta.d, s2) + wTxt('天', s1) : '') +
+    wTime(meta.h, s2) +
+    wTxt('时', s1) +
+    wTime(meta.m, s2) +
+    wTxt('分', s1) +
+    wTime(meta.s, s2) +
+    wTxt('秒', s1)
+  );
 };
 
 /* 快捷设置包装类名 */
@@ -99,9 +106,7 @@ const CountDown: React.FC<CountDownProps> = ({
     })}`;
   }
 
-  return (
-    <span className={cls('fr-count-down', className)} style={style} ref={ref} />
-  );
+  return <span className={cls('fr-count-down', className)} style={style} ref={ref} />;
 };
 
 export default CountDown;

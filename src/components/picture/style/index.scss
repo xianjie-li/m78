@@ -1,4 +1,4 @@
-@import "../../style/index";
+@import '../../style/index';
 
 .fr-picture {
   position: relative;
@@ -6,7 +6,8 @@
   vertical-align: middle;
   overflow: hidden;
 
-  >img, >canvas {
+  > img,
+  > canvas {
     display: inline-block;
     object-fit: cover;
     width: 100%;

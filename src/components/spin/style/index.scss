@@ -1,4 +1,4 @@
-@import "../../style/index";
+@import '../../style/index';
 
 .fr-spin {
   display: inline-flex;
@@ -72,14 +72,14 @@
   top: -0.2em;
   right: -0.2em;
   bottom: -0.2em;
-  content: "";
+  content: '';
   border-radius: 50%;
   border: 0.2em solid transparent;
   transform-origin: center center;
 
   &:nth-child(1) {
-      border-color: $red-6 transparent transparent transparent;
-      animation: fr-spin 1s infinite cubic-bezier(0, 0, 0.24, 0.9);
+    border-color: $red-6 transparent transparent transparent;
+    animation: fr-spin 1s infinite cubic-bezier(0, 0, 0.24, 0.9);
   }
 
   &:nth-child(2) {
@@ -88,8 +88,8 @@
   }
 
   &:nth-child(3) {
-      border-color: $green-6 transparent transparent transparent;
-      animation: fr-spin 1s infinite cubic-bezier(0, 0, 0.24, 0.5);
+    border-color: $green-6 transparent transparent transparent;
+    animation: fr-spin 1s infinite cubic-bezier(0, 0, 0.24, 0.5);
   }
 
   &:nth-child(4) {

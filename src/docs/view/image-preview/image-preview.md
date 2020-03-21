@@ -1,29 +1,33 @@
 ---
 title: ImagePreview - 图片浏览
 group:
-    title: 展示组件
-    path: /view
-    order: 4000
+  title: 展示组件
+  path: /view
+  order: 4000
 ---
 
-# ImagePreview  图片浏览
+# ImagePreview 图片浏览
 
 对一组图片进行浏览
 
 ## 示例
+
 💡 支持`Viewer`组件的所有手势
 
 <code src="./demo.tsx" />
 
-## 通过api调用
-基于`render-api`进行api形式渲染
+## 通过 api 调用
+
+基于`render-api`进行 api 形式渲染
 
 <code src="./demo-api.tsx" />
 
 ## 列表
+
 <code src="./demo-list.tsx" />
 
 ## props
+
 ```tsx | pure
 interface ImagePreviewProps extends ReactRenderApiProps {
   /** 图片数据 */
@@ -34,6 +38,7 @@ interface ImagePreviewProps extends ReactRenderApiProps {
 ```
 
 **相关接口**
+
 ```tsx | pure
 interface ReactRenderApiProps {
   /** 实例组件是否显示 */
@@ -48,14 +53,3 @@ interface ReactRenderApiProps {
   namespace?: string;
 }
 ```
-
-
-
-
-
-
-
-
-
-
-

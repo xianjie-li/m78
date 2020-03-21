@@ -1,24 +1,29 @@
 ---
 title: Picture - 图片
 group:
-    title: 展示组件
-    path: /view
-    order: 4000
+  title: 展示组件
+  path: /view
+  order: 4000
 ---
 
 # Picture 图片
 
-用于代替img元素使用，在图片加载失败时，会生成一张友好的占位图片, 并在图片加载过程中增加加载提示
+用于代替 img 元素使用，在图片加载失败时，会生成一张友好的占位图片, 并在图片加载过程中增加加载提示
 
 ## 示例
+
 <code src="./demo.tsx" />
 
-⚠ Picture必须包含正常的宽高，可通过className或style设置
+⚠ Picture 必须包含正常的宽高，可通过 className 或 style 设置
 
 ## API
+
 **`props`**
+
 ```tsx | pure
-interface PictureProps extends ComponentBaseProps, React.PropsWithoutRef<JSX.IntrinsicElements['span']> {
+interface PictureProps
+  extends ComponentBaseProps,
+    React.PropsWithoutRef<JSX.IntrinsicElements['span']> {
   /** 图片的地址 */
   src?: string;
   /** 同 img alt */
@@ -35,6 +40,7 @@ interface PictureProps extends ComponentBaseProps, React.PropsWithoutRef<JSX.Int
 ```
 
 **`相关接口`**
+
 ```tsx | pure
 interface ComponentBaseProps {
   /** 包裹元素的类名 */

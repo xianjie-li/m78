@@ -40,7 +40,7 @@ const Ellipsis: React.FC<MaskProps> = ({
   /* 不支持LineClamp 且大于1行; 传force时强制开启 */
   const shouldAddShadow = (!state.supportLineClamp && line > 1) || forceCompat;
   /* 非shouldAddShadow且大于1行启用多行省略 */
-  const extraStyle = (!shouldAddShadow && line > 1) ? multiLine(line) : {};
+  const extraStyle = !shouldAddShadow && line > 1 ? multiLine(line) : {};
 
   useEffect(() => {
     if (!shouldAddShadow) return;
@@ -63,23 +63,22 @@ const Ellipsis: React.FC<MaskProps> = ({
     }));
   }
 
-
   if (disabled) {
     /* 没有挂载点的话会导致开关后样式不统一 */
-    return <div className={className} style={style}>{children}</div>;
+    return (
+      <div className={className} style={style}>
+        {children}
+      </div>
+    );
   }
 
   return (
     <div
       ref={el}
-      className={cls(
-        'fr-ellipsis',
-        className,
-        {
-          __dark: dark,
-          ellipsis: !shouldAddShadow && line === 1,
-        },
-      )}
+      className={cls('fr-ellipsis', className, {
+        __dark: dark,
+        ellipsis: !shouldAddShadow && line === 1,
+      })}
       style={{
         maxHeight: state.height || '',
         ...extraStyle,
@@ -87,7 +86,12 @@ const Ellipsis: React.FC<MaskProps> = ({
       }}
     >
       {children}
-      {shouldAddShadow && <span className="fr-ellipsis_shadow" style={{ height: state.oneHeight, top: `${state.oneHeight * (line - 1)}px` }} />}
+      {shouldAddShadow && (
+        <span
+          className="fr-ellipsis_shadow"
+          style={{ height: state.oneHeight, top: `${state.oneHeight * (line - 1)}px` }}
+        />
+      )}
     </div>
   );
 };

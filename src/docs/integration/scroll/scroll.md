@@ -1,9 +1,9 @@
 ---
 title: Scroll - 滚动
 group:
-    title: 集成组件
-    path: /integration
-    order: 4000
+  title: 集成组件
+  path: /integration
+  order: 4000
 ---
 
 # Scroll 滚动
@@ -15,36 +15,41 @@ group:
 <code src="./demo.tsx" />
 
 ## 流程解析
+
 ### 下拉刷新
-开启下拉刷新，你需要完成以下步骤  
 
-1. 注册组件, `pullDown`选项传入`true`  
+开启下拉刷新，你需要完成以下步骤
 
-2. 编写并传入`onPullDown(pullDownFinish)`回调, 此时用户已经可以进行下拉操作  
+1. 注册组件, `pullDown`选项传入`true`
 
-3. 用户下拉后，会触发`onPullDown(pullDownFinish)`回调并执行其中的刷新逻辑  
+2. 编写并传入`onPullDown(pullDownFinish)`回调, 此时用户已经可以进行下拉操作
 
-4. 在完成刷新逻辑的最后，调用作为参数传入的`pullDownFinish(success?: boolean)`通知刷新完成并关闭动画  
+3. 用户下拉后，会触发`onPullDown(pullDownFinish)`回调并执行其中的刷新逻辑
 
-5. 如果刷新发生错误，为`pullDownFinish(success?: boolean)`传入false给予用户反馈  
+4. 在完成刷新逻辑的最后，调用作为参数传入的`pullDownFinish(success?: boolean)`通知刷新完成并关闭动画
+
+5. 如果刷新发生错误，为`pullDownFinish(success?: boolean)`传入 false 给予用户反馈
 
 ### 上拉加载
-开启上拉，你需要完成以下步骤  
 
-1. 注册组件, `pullUp`选项传入`true`  
+开启上拉，你需要完成以下步骤
 
-2. 声明组件数据初始状态，一般为`{ data: [], page: 0 }`  
+1. 注册组件, `pullUp`选项传入`true`
 
-2. 编写并传入`onPullUp(pullUpFinish, skip)`回调, 此时用户已经可以进行上拉操作  
+2. 声明组件数据初始状态，一般为`{ data: [], page: 0 }`
 
-3. 用户上拉后，会执行到`onPullUp`，此时，判断skip是否为true， 为true时作数据并更新合并，不执行页码增加等操作，为false时增加页码并更新请求数据和合并，(组件内部只在发生错误和触发重试时会传入skip)  
+3. 编写并传入`onPullUp(pullUpFinish, skip)`回调, 此时用户已经可以进行上拉操作
 
-4. 加载操作完成后，执行作为参数传入的`pullUpFinish(dataLength?: number, hasError?: boolean)`，dataLength为当次请求获取到的数据总量，hasError为是否发生错误，传入hasError: true时，参数1无效 
- 
-5. (可选) 为组件传入配置`hasData={data.length}`, 可以帮助组件提供更友好的初始化加载空数据提示  
+4. 用户上拉后，会执行到`onPullUp`，此时，判断 skip 是否为 true， 为 true 时作数据并更新合并，不执行页码增加等操作，为 false 时增加页码并更新请求数据和合并，(组件内部只在发生错误和触发重试时会传入 skip)
+
+5. 加载操作完成后，执行作为参数传入的`pullUpFinish(dataLength?: number, hasError?: boolean)`，dataLength 为当次请求获取到的数据总量，hasError 为是否发生错误，传入 hasError: true 时，参数 1 无效
+
+6. (可选) 为组件传入配置`hasData={data.length}`, 可以帮助组件提供更友好的初始化加载空数据提示
 
 ## API
+
 **`props`**
+
 ```tsx | pure
 interface ScrollProps extends ComponentBaseProps {
   /** 下拉刷新开关, 默认关闭 */
@@ -73,9 +78,8 @@ interface ScrollProps extends ComponentBaseProps {
 }
 ```
 
-
-
 **`ref`**
+
 ```tsx | pure
 interface ScrollRef {
   /** 结束下拉刷新，将刷新是否成功作为第一个参数传入, 默认成功 */
@@ -102,8 +106,8 @@ interface ScrollRef {
 }
 ```
 
-
 **相关接口**
+
 ```tsx | pure
 interface ComponentBaseProps {
   /** 包裹元素的类名 */
@@ -112,14 +116,3 @@ interface ComponentBaseProps {
   style?: React.CSSProperties;
 }
 ```
-
-
-
-
-
-
-
-
-
-
-

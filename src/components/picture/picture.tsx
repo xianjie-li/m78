@@ -2,13 +2,15 @@ import React, { useEffect, useRef } from 'react';
 
 import Spin from '@lxjx/fr/lib/spin';
 import config from '@lxjx/fr/lib/config';
-import { ComponentBaseProps } from '../types/types';
 
 import { useSetState } from '@lxjx/hooks';
 
 import cls from 'classnames';
+import { ComponentBaseProps } from '../types/types';
 
-interface PictureProps extends ComponentBaseProps, React.PropsWithoutRef<JSX.IntrinsicElements['span']> {
+interface PictureProps
+  extends ComponentBaseProps,
+    React.PropsWithoutRef<JSX.IntrinsicElements['span']> {
   /** 图片的地址 */
   src?: string;
   /** 同 img alt */
@@ -96,21 +98,20 @@ const Picture: React.FC<PictureProps> = ({
       ctx.fillStyle = 'rgba(0, 0, 0, 0.16)';
       ctx.fillRect(0, 0, wrapW, wrapH);
 
-      ctx.font = fontSize + 'px tabular-nums, Microsoft YaHei';
+      ctx.font = `${fontSize}px tabular-nums, Microsoft YaHei`;
       ctx.fillStyle = '#fff';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(`${wrapW}X${wrapH}`, wrapW / 2, wrapH / 2 * 1.04/* 视觉上更居中 */);
+      ctx.fillText(`${wrapW}X${wrapH}`, wrapW / 2, (wrapH / 2) * 1.04 /* 视觉上更居中 */);
     }
   }
 
   return (
     <span {...props} ref={wrap} className={cls('fr-picture', className)} style={style}>
-      {!state.error && <img {...imgProps} alt={alt} src={src} className={imgClassName} style={imgStyle} />}
-      {state.error && (
-        _errorImg
-          ? <img src={_errorImg} alt="" />
-          : <canvas ref={cvs} />)}
+      {!state.error && (
+        <img {...imgProps} alt={alt} src={src} className={imgClassName} style={imgStyle} />
+      )}
+      {state.error && (_errorImg ? <img src={_errorImg} alt="" /> : <canvas ref={cvs} />)}
       <Spin show={state.loading} full text="图片加载中" />
     </span>
   );

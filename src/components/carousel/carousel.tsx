@@ -57,209 +57,231 @@ function loopChildrenHandle(children: ReactElement[], loop: boolean): [ReactElem
   return [_child, true];
 }
 
-const Carousel = React.forwardRef<CarouselRef, CarouselProps>(({
-  children: _children,
-  vertical = false,
-  height: _height,
-  width: _width,
-  loop = true,
-  control = true,
-  forceNumberControl = false,
-  initPage = 0,
-  onChange,
-  autoplay = 0,
-  style,
-  className,
-  wheel = true,
-  drag = true,
-}, ref) => {
-  // 格式化children为适合loop的格式，后面一律以loopValid决定是否开启了loop
-  const [children, loopValid] = loopChildrenHandle(_children, loop);
-  // 获取包裹元素的尺寸等信息
-  const [wrapRef, { width, height }] = useMeasure();
-  // 用于阻止轮播组件内图片的drag操作
-  const innerWrap = useRef<HTMLDivElement>(null!);
+const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
+  (
+    {
+      children: _children,
+      vertical = false,
+      height: _height,
+      width: _width,
+      loop = true,
+      control = true,
+      forceNumberControl = false,
+      initPage = 0,
+      onChange,
+      autoplay = 0,
+      style,
+      className,
+      wheel = true,
+      drag = true,
+    },
+    ref,
+  ) => {
+    // 格式化children为适合loop的格式，后面一律以loopValid决定是否开启了loop
+    const [children, loopValid] = loopChildrenHandle(_children, loop);
+    // 获取包裹元素的尺寸等信息
+    const [wrapRef, { width, height }] = useMeasure();
+    // 用于阻止轮播组件内图片的drag操作
+    const innerWrap = useRef<HTMLDivElement>(null!);
 
-  // 决定每页的尺寸
-  const size = vertical ? height : width;
-  // 当前页码，当为loop时，所有页码的基准值要+1
-  const page = useRef(loopValid ? initPage + 1 : initPage);
-  // 切换动画相关
-  const [spProp, set] = useSpring(() => ({ offset: page.current * size, scale: 1 }));
+    // 决定每页的尺寸
+    const size = vertical ? height : width;
+    // 当前页码，当为loop时，所有页码的基准值要+1
+    const page = useRef(loopValid ? initPage + 1 : initPage);
+    // 切换动画相关
+    const [spProp, set] = useSpring(() => ({ offset: page.current * size, scale: 1 }));
 
-  const update = useUpdate();
+    const update = useUpdate();
 
-  // 延迟时间，为0时停止
-  const [delay, setDelay] = useState(autoplay);
-  // 自动轮播计时器
-  const autoPlayFlag = useRef<number>();
+    // 延迟时间，为0时停止
+    const [delay, setDelay] = useState(autoplay);
+    // 自动轮播计时器
+    const autoPlayFlag = useRef<number>();
 
-  _height = _height || 0;
+    _height = _height || 0;
 
-  useEffect(function resize() {
-    goTo(page.current, true);
-    // eslint-disable-next-line
-  }, [size]);
+    useEffect(
+      function resize() {
+        goTo(page.current, true);
+        // eslint-disable-next-line
+      },
+      [size],
+    );
 
-  useEffect(function childChange() {
-    page.current = loopValid ? initPage + 1 : initPage;
-    goTo(page.current, true);
-    /* 解决图片的拖动问题 */
-    // Array.from(innerWrap.current.querySelectorAll('img'))
-    //   .forEach(item => {
-    //     item.setAttribute('draggable', 'false');
-    //   });
-    // eslint-disable-next-line
-  }, [children.length]);
+    useEffect(
+      function childChange() {
+        page.current = loopValid ? initPage + 1 : initPage;
+        goTo(page.current, true);
+        /* 解决图片的拖动问题 */
+        // Array.from(innerWrap.current.querySelectorAll('img'))
+        //   .forEach(item => {
+        //     item.setAttribute('draggable', 'false');
+        //   });
+        // eslint-disable-next-line
+      },
+      [children.length],
+    );
 
-  useEffect(function mount() {
-    pageChange(page.current, true);
-    // eslint-disable-next-line
-  }, []);
+    useEffect(function mount() {
+      pageChange(page.current, true);
+      // eslint-disable-next-line
+    }, []);
 
-  useImperativeHandle(ref, () => ({
-    prev,
-    next,
-    goTo,
-  }));
+    useImperativeHandle(ref, () => ({
+      prev,
+      next,
+      goTo,
+    }));
 
-  useInterval(function autoPlayHandle() {
-    next();
-  }, delay > 0 ? delay : null);
+    useInterval(
+      function autoPlayHandle() {
+        next();
+      },
+      delay > 0 ? delay : null,
+    );
 
-  const bind = useGesture({
-    onDrag({ event, down, movement: [xMove, yMove], direction: [xDirect, yDirect], cancel, first }) {
-      event?.stopPropagation();
-      event?.preventDefault();
+    const bind = useGesture(
+      {
+        onDrag({
+          event,
+          down,
+          movement: [xMove, yMove],
+          direction: [xDirect, yDirect],
+          cancel,
+          first,
+        }) {
+          event?.stopPropagation();
+          event?.preventDefault();
 
-      const move = vertical ? yMove : xMove;
-      const distance = Math.abs(move);
-      const direct = vertical ? yDirect : xDirect;
+          const move = vertical ? yMove : xMove;
+          const distance = Math.abs(move);
+          const direct = vertical ? yDirect : xDirect;
 
-      if (down && distance > size / 2) {
-        cancel!();
-        stopAutoPlay();
-        direct < 0 ? next() : prev();
-      }
+          if (down && distance > size / 2) {
+            cancel!();
+            stopAutoPlay();
+            direct < 0 ? next() : prev();
+          }
 
-      /* loop 处理 */
-      if (loopValid && first && page.current === 0) {
+          /* loop 处理 */
+          if (loopValid && first && page.current === 0) {
+            goTo(children.length - 2, true);
+          }
+
+          if (loopValid && first && page.current === children.length - 1) {
+            goTo(1, true);
+          }
+
+          set({
+            offset: -(page.current * size + (down ? -move : 0)),
+            immediate: false,
+            scale: down ? 1 - distance / size / 2 : 1, // 收缩比例为在元素上滚动距离相对于元素本身的比例
+          });
+        },
+        // eslint-disable-next-line
+        onWheel({ event, memo, direction: [, directY], time }) {
+          event?.preventDefault();
+          if (memo) return;
+          directY < 0 ? prev() : next();
+          stopAutoPlay();
+          return time;
+        },
+        onHover({ hovering }) {
+          hovering && stopAutoPlay();
+        },
+      },
+      {
+        domTarget: innerWrap,
+        wheel,
+        drag,
+        event: { passive: false },
+      },
+    );
+
+    useEffect(bind, [bind]);
+
+    /** 跳转至上一页 */
+    function prev() {
+      if (loopValid && page.current === 0) {
         goTo(children.length - 2, true);
       }
+      goTo(calcPage(page.current - 1));
+    }
 
-      if (loopValid && first && page.current === children.length - 1) {
+    /** 跳转至下一页 */
+    function next() {
+      if (loopValid && page.current === children.length - 1) {
         goTo(1, true);
       }
-
-      set({
-        offset: -(page.current * size + (down ? -move : 0)),
-        immediate: false,
-        scale: down ? 1 - distance / size / 2 : 1, // 收缩比例为在元素上滚动距离相对于元素本身的比例
-      });
-    },
-    // eslint-disable-next-line
-    onWheel({ event, memo, direction: [directX, directY], time }) {
-      event?.preventDefault();
-      if (memo) return;
-      directY < 0 ? prev() : next();
-      stopAutoPlay();
-      return time;
-    },
-    onHover({ hovering }) {
-      hovering && stopAutoPlay();
-    },
-  }, {
-    domTarget: innerWrap,
-    wheel,
-    drag,
-    event: { passive: false },
-  });
-
-  useEffect(bind, [bind]);
-
-  /** 跳转至上一页 */
-  function prev() {
-    if (loopValid && page.current === 0) {
-      goTo(children.length - 2, true);
-    }
-    goTo(calcPage(page.current - 1));
-  }
-
-  /** 跳转至下一页 */
-  function next() {
-    if (loopValid && page.current === children.length - 1) {
-      goTo(1, true);
-    }
-    goTo(calcPage(page.current + 1));
-  }
-
-  /**
-   * @description - 跳转到指定页
-   * @param currentPage - 待调跳转的页面
-   * @param immediate - 跳过动画
-   * */
-  function goTo(currentPage: number, immediate = false) {
-    currentPage = calcPage(currentPage);
-    if (!immediate && currentPage !== page.current) {
-      pageChange(currentPage);
-    }
-    page.current = currentPage;
-    update();
-    set({ offset: -(currentPage * size), immediate });
-  }
-
-  /** 防止上下页超出页码区间 */
-  function calcPage(nextPage: number) {
-    return _clamp(nextPage, 0, children.length - 1);
-  }
-
-  /** 根据指定页码计算实际页码，用于处理开启loop后页面顺序错乱的问题 */
-  function getPagenNmber(currentPage: number) {
-    if (!loopValid) {
-      return currentPage;
-    }
-    if (currentPage === 0) return children.length - 3;
-    if (currentPage === children.length - 1) return 0;
-    return currentPage - 1;
-  }
-
-  function pageChange(currentPage: number, first?: boolean) {
-    onChange && onChange(getPagenNmber(currentPage), !!first);
-  }
-
-  /** 暂时关闭自动轮播 */
-  function stopAutoPlay() {
-    if (autoplay <= 0 || delay <= 0) return;
-    if (autoPlayFlag.current) {
-      return;
+      goTo(calcPage(page.current + 1));
     }
 
-    setDelay(0);
+    /**
+     * @description - 跳转到指定页
+     * @param currentPage - 待调跳转的页面
+     * @param immediate - 跳过动画
+     * */
+    function goTo(currentPage: number, immediate = false) {
+      currentPage = calcPage(currentPage);
+      if (!immediate && currentPage !== page.current) {
+        pageChange(currentPage);
+      }
+      page.current = currentPage;
+      update();
+      set({ offset: -(currentPage * size), immediate });
+    }
 
-    autoPlayFlag.current = window.setTimeout(() => {
-      setDelay(autoplay);
-      autoPlayFlag.current = undefined;
-      clearTimeout(autoPlayFlag.current);
-    }, 4000);
-  }
+    /** 防止上下页超出页码区间 */
+    function calcPage(nextPage: number) {
+      return _clamp(nextPage, 0, children.length - 1);
+    }
 
-  return (
-    <div
-      className={cls('fr-carousel', className, { __vertical: vertical })}
-      ref={wrapRef}
-      style={{ height: vertical ? _height : 'auto', width: _width || 'auto', ...style }}
-    >
-      <animated.div
-        className="fr-carousel_wrap"
-        ref={innerWrap}
-        style={{
-          transform: spProp.offset.interpolate(_offset => {
-            return `translate3d(${vertical ? `0,${_offset}px` : `${_offset}px,0`},0)`;
-          }),
-        }}
+    /** 根据指定页码计算实际页码，用于处理开启loop后页面顺序错乱的问题 */
+    function getPagenNmber(currentPage: number) {
+      if (!loopValid) {
+        return currentPage;
+      }
+      if (currentPage === 0) return children.length - 3;
+      if (currentPage === children.length - 1) return 0;
+      return currentPage - 1;
+    }
+
+    function pageChange(currentPage: number, first?: boolean) {
+      onChange && onChange(getPagenNmber(currentPage), !!first);
+    }
+
+    /** 暂时关闭自动轮播 */
+    function stopAutoPlay() {
+      if (autoplay <= 0 || delay <= 0) return;
+      if (autoPlayFlag.current) {
+        return;
+      }
+
+      setDelay(0);
+
+      autoPlayFlag.current = window.setTimeout(() => {
+        setDelay(autoplay);
+        autoPlayFlag.current = undefined;
+        clearTimeout(autoPlayFlag.current);
+      }, 4000);
+    }
+
+    return (
+      <div
+        className={cls('fr-carousel', className, { __vertical: vertical })}
+        ref={wrapRef}
+        style={{ height: vertical ? _height : 'auto', width: _width || 'auto', ...style }}
       >
-        {children.map((item, i) => {
-          return (
+        <animated.div
+          className="fr-carousel_wrap"
+          ref={innerWrap}
+          style={{
+            transform: spProp.offset.interpolate(
+              _offset => `translate3d(${vertical ? `0,${_offset}px` : `${_offset}px,0`},0)`,
+            ),
+          }}
+        >
+          {children.map((item, i) => (
             <animated.div
               key={i}
               className="fr-carousel_item"
@@ -274,30 +296,39 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(({
             >
               {item}
             </animated.div>
-          );
-        })}
-      </animated.div>
-      {control && (
-        <div className="fr-carousel_ctrl fr-stress">
-          {((_children.length < 7 || vertical) && !forceNumberControl)
-            ? children.map((v, i) => {
-              const show = loopValid ? i < children.length - 2 : true;
-              return (show && (
-                <div
-                  key={i}
-                  onClick={() => {
-                    goTo(loopValid ? i + 1 : i);
-                    stopAutoPlay();
-                  }}
-                  className={cls('fr-carousel_ctrl-item', { __active: i === getPagenNmber(page.current) })}
-                />
-              ));
-            })
-            : <span className="fr-carousel_ctrl-text">{getPagenNmber(page.current) + 1} / {loopValid ? children.length - 2 : children.length}</span>}
-        </div>
-      )}
-    </div>
-  );
-});
+          ))}
+        </animated.div>
+        {control && (
+          <div className="fr-carousel_ctrl fr-stress">
+            {(_children.length < 7 || vertical) && !forceNumberControl ? (
+              children.map((v, i) => {
+                const show = loopValid ? i < children.length - 2 : true;
+                return (
+                  show && (
+                    <div
+                      key={i}
+                      onClick={() => {
+                        goTo(loopValid ? i + 1 : i);
+                        stopAutoPlay();
+                      }}
+                      className={cls('fr-carousel_ctrl-item', {
+                        __active: i === getPagenNmber(page.current),
+                      })}
+                    />
+                  )
+                );
+              })
+            ) : (
+              <span className="fr-carousel_ctrl-text">
+                {getPagenNmber(page.current) + 1} /{' '}
+                {loopValid ? children.length - 2 : children.length}
+              </span>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  },
+);
 
 export default Carousel;

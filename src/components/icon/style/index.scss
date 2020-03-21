@@ -1,29 +1,31 @@
-@import "../../style/index";
+@import '../../style/index';
 
 /* 添加图标时，将对应的图标伪类添加的iconfont.css中并更新下方的字体链接 */
 /* iconfont.js为svg图标 */
 
 /* 重写字体名，防止和项目中的iconfont冲突 */
 @font-face {
-  font-family: "fr-icon";
+  font-family: 'fr-icon';
   src: url('../../assets/iconfont.eot?t=1584019149957'); /* IE9 */
-  src: url('../../assets/iconfont.eot?t=1584019149957#iefix') format('embedded-opentype'), /* IE6-IE8 */
-  url('../../assets/iconfont.woff?t=1584019149957') format('woff'),
-  url('../../assets/iconfont.ttf?t=1584019149957') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
-  url('../../assets/iconfont.svg?t=1584019149957#iconfont') format('svg'); /* iOS 4.1- */
+  src: url('../../assets/iconfont.eot?t=1584019149957#iefix') format('embedded-opentype'),
+    /* IE6-IE8 */ url('../../assets/iconfont.woff?t=1584019149957') format('woff'),
+    url('../../assets/iconfont.ttf?t=1584019149957') format('truetype'),
+    /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+      url('../../assets/iconfont.svg?t=1584019149957#iconfont') format('svg'); /* iOS 4.1- */
 }
 
 .fr-icon {
   display: inline-block;
   line-height: 1;
-  font-family: "fr-icon", serif !important;
+  font-family: 'fr-icon', serif !important;
   font-size: 1em;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   vertical-align: middle;
   //animation-duration: 1.2s !important;
-  & + .fr-icon, & + .fr-svg-icon {
+  & + .fr-icon,
+  & + .fr-svg-icon {
     margin-left: 8px;
   }
 }
@@ -35,7 +37,8 @@
   fill: currentColor;
   overflow: hidden;
   //animation-duration: 1.2s !important;
-  & + .fr-icon, & + .fr-svg-icon {
+  & + .fr-icon,
+  & + .fr-svg-icon {
     margin-left: 8px;
   }
 }

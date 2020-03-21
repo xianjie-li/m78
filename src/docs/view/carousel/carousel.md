@@ -1,24 +1,25 @@
 ---
 title: Carousel - 轮播
 group:
-    title: 展示组件
-    path: /view
-    order: 4000
+  title: 展示组件
+  path: /view
+  order: 4000
 ---
 
 # Carousel 轮播
 
-用于在指定区域对一组子元素进行切换展示
-用于在指定区域对一组子元素进行切换展示
-用于在指定区域对一组子元素进行切换展示
+用于在指定区域对一组子元素进行切换展示用于在指定区域对一组子元素进行切换展示用于在指定区域对一组子元素进行切换展示
 
 ## 基础示例
+
 <\code src="./carousel-demo.tsx" />
 
 ## 纵向轮播
+
 <\code src="./carousel-vertical.tsx" />
 
 ## 手动控制
+
 <\code src="./carousel-manual.tsx" />
 
 > 💡 确保每一个轮播子项的宽高一致
@@ -53,6 +54,7 @@ interface CarouselProps extends ComponentBaseProps {
 ```
 
 **相关接口**
+
 ```tsx | pure
 interface ComponentBaseProps {
   /** 包裹元素的类名 */
@@ -61,7 +63,9 @@ interface ComponentBaseProps {
   style?: React.CSSProperties;
 }
 ```
+
 ## ref
+
 ```tsx | pure
 interface CarouselRef {
   /** 跳转到前一页 */
@@ -76,14 +80,3 @@ interface CarouselRef {
   goTo(currentPage: number, immediate?: boolean): void;
 }
 ```
-
-
-
-
-
-
-
-
-
-
-

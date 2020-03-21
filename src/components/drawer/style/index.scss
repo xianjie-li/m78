@@ -1,4 +1,4 @@
-@import "../../style/index";
+@import '../../style/index';
 
 .fr-drawer {
   position: fixed;
@@ -10,11 +10,8 @@
   right: 0;
   overflow: auto;
   box-shadow: $shadow-1;
-  transition:
-          $animation-duration-base left,
-          $animation-duration-base top,
-          $animation-duration-base right,
-          $animation-duration-base bottom;
+  transition: $animation-duration-base left, $animation-duration-base top,
+    $animation-duration-base right, $animation-duration-base bottom;
 
   &_mask {
     z-index: $z-index-drawer;
@@ -44,7 +41,8 @@
     z-index: 1;
   }
 
-  &.__left, &.__right {
+  &.__left,
+  &.__right {
     max-width: 55%;
     top: 0;
     bottom: 0;
@@ -59,7 +57,8 @@
     left: auto;
   }
 
-  &.__top, &.__bottom {
+  &.__top,
+  &.__bottom {
     max-height: 55%;
     right: 0;
     left: 0;

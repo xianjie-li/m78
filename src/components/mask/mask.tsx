@@ -53,18 +53,21 @@ const Mask: React.FC<MaskProps> = ({
   const [lock, toggleLock] = useToggle(show);
   useLockBodyScroll(lock);
 
-  useUpdateEffect(function removeInstance() {
-    if (!show && onRemove) {
-      setTimeout(onRemove!, onRemoveDelay);
-    }
-    if (show) toggleLock(true);
-    if (!show) {
-      setTimeout(() => {
-        toggleLock(false);
-      }, unlockDelay);
-    }
-    // eslint-disable-next-line
-  }, [show]);
+  useUpdateEffect(
+    function removeInstance() {
+      if (!show && onRemove) {
+        setTimeout(onRemove!, onRemoveDelay);
+      }
+      if (show) toggleLock(true);
+      if (!show) {
+        setTimeout(() => {
+          toggleLock(false);
+        }, unlockDelay);
+      }
+      // eslint-disable-next-line
+    },
+    [show],
+  );
 
   function render() {
     return (
@@ -86,15 +89,7 @@ const Mask: React.FC<MaskProps> = ({
     );
   }
 
-  return (
-    portal
-      ? (
-        <Portal namespace={namespace}>
-          {render()}
-        </Portal>
-      )
-      : render()
-  );
+  return portal ? <Portal namespace={namespace}>{render()}</Portal> : render();
 };
 
 export default Mask;

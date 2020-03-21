@@ -1,35 +1,40 @@
 ---
 title: Icon - 图标
 group:
-    title: 基础组件
-    path: /base
-    order: 1000
+  title: 基础组件
+  path: /base
+  order: 1000
 ---
 
-
 <!-- 样式 -->
+
 ```tsx | inline
 import React from 'react';
 import './style.scss';
 
-export default () => <span />
+export default () => <span />;
 ```
 
 # Icon 图标
 
-一套常用的矢量图标，来自 [iconfont](https://www.iconfont.cn/) antd官方图标库
+一套常用的矢量图标，来自 [iconfont](https://www.iconfont.cn/) antd 官方图标库
 
 ## 代码示例
+
 <code src="./icon-demo.tsx"/>
 
 ## 单色图标
+
 <code src="./icon-demo2.tsx" inline />
 
-## svg图标
+## svg 图标
+
 <code src="./icon-demo3.tsx" inline />
 
 ## props
+
 **`Icon`**
+
 ```tsx | pure
 interface IconProps extends ComponentBasePropsWithAny {
   /** icon类型 */
@@ -44,6 +49,7 @@ interface IconProps extends ComponentBasePropsWithAny {
 ```
 
 **`SvgIcon`**
+
 ```tsx | pure
 interface SvgIconProps extends ComponentBasePropsWithAny {
   /** icon类型 */
@@ -56,8 +62,9 @@ interface SvgIconProps extends ComponentBasePropsWithAny {
 ```
 
 **相关接口**
+
 ```tsx | pure
-interface ComponentBasePropsWithAny extends ComponentBaseProps{
+interface ComponentBasePropsWithAny extends ComponentBaseProps {
   /** 透传到包裹元素上的属性 */
   [key: string]: any;
 }
@@ -69,15 +76,3 @@ interface ComponentBaseProps {
   style?: React.CSSProperties;
 }
 ```
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,4 +1,3 @@
-
 /* 内置format */
 import { InputProps } from './type';
 
@@ -23,7 +22,7 @@ export const buildInPattern: BuildInPatterns = {
     lastRepeat: true,
   },
   money: {
-    delimiter: '\'',
+    delimiter: "'",
     pattern: '5,3',
     lastRepeat: true,
   },
@@ -35,7 +34,7 @@ export const buildInPattern: BuildInPatterns = {
 };
 
 /* money format需要单独处理小数点 */
-export function formatMoney(moneyStr = '', delimiter = '\'') {
+export function formatMoney(moneyStr = '', delimiter = "'") {
   const dotIndex = moneyStr.indexOf('.');
 
   if (dotIndex === -1) return moneyStr;

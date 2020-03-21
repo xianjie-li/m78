@@ -2,10 +2,18 @@ import React from 'react';
 import { FormLikeWithExtra } from '@lxjx/hooks';
 import { Status, Size } from '../types/types';
 
-export type InputPropsExtends = Omit<React.PropsWithoutRef<JSX.IntrinsicElements['input']>, 'size' | 'value' | 'defaultValue' | 'onChange' | 'prefix' | 'type'>;
+export type InputPropsExtends = Omit<
+  React.PropsWithoutRef<JSX.IntrinsicElements['input']>,
+  'size' | 'value' | 'defaultValue' | 'onChange' | 'prefix' | 'type'
+>;
 
-export interface InputProps extends FormLikeWithExtra<string, React.ChangeEvent<HTMLInputElement>>,
-  InputPropsExtends {
+// "lint:script": "eslint --fix --cache --ext .js,.jsx,.ts,.tsx",
+//   "lint:prettier": "prettier --check ./src/**/* --write",
+//   "lint": "npm run lint:prettier && npm run lint:script",
+
+export interface InputProps
+  extends FormLikeWithExtra<string, React.ChangeEvent<HTMLInputElement>>,
+    InputPropsExtends {
   /**
    * 'text' | 输入框类型
    *  text - 可输入任何内容
@@ -50,7 +58,7 @@ export interface InputProps extends FormLikeWithExtra<string, React.ChangeEvent<
   prefix?: React.ReactNode;
   /** 前导图标 */
   suffix?: React.ReactNode;
-  /** false | 设置为搜索框, 出现搜索按钮*/
+  /** false | 设置为搜索框, 出现搜索按钮 */
   search?: boolean;
   /** 点击搜索按钮/回车/清空时，触发 */
   onSearch?: (value: string) => void;

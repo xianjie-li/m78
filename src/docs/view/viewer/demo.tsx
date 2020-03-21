@@ -41,7 +41,9 @@ const Demo = () => {
 
         <div>
           <Button onClick={() => ref.current.setScale(getRandRange(0, 3))}>setScale()</Button>
-          <Button onClick={() => ref.current.setRotate(getRandRange(-360, 360))}>setRotate()</Button>
+          <Button onClick={() => ref.current.setRotate(getRandRange(-360, 360))}>
+            setRotate()
+          </Button>
           <Button onClick={() => ref.current.reset()}>reset()</Button>
           <Button onClick={() => setDisable(prev => !prev)}>disabled {disable.toString()}</Button>
         </div>

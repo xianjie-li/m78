@@ -41,7 +41,14 @@ const ShowFromMouse: React.FC<ShowFromMouseProps> = ({
       (set as any)({
         to: async (next: any) => {
           await next({ x: self.x, y: self.y, scale: 0, immediate: true, reset: true });
-          await next({ x: 0, y: 0, scale: 1, immediate: false, config: config.stiff, reset: false });
+          await next({
+            x: 0,
+            y: 0,
+            scale: 1,
+            immediate: false,
+            config: config.stiff,
+            reset: false,
+          });
         },
       });
     } else {
@@ -57,17 +64,18 @@ const ShowFromMouse: React.FC<ShowFromMouseProps> = ({
       <animated.div
         className={cls(contClassName, 'fr-sfm_cont')}
         style={{
-          transform:
-            interpolate(
-              //  @ts-ignore
-              [sp.x, sp.y, sp.scale],
-              (x: number, y: number, scale: number) => `translate3d(${x}px,${y}px, 0px) scale3d(${scale},${scale},${scale})`,
-            ),
+          transform: interpolate(
+            //  @ts-ignore
+            [sp.x, sp.y, sp.scale],
+            (x: number, y: number, scale: number) =>
+              `translate3d(${x}px,${y}px, 0px) scale3d(${scale},${scale},${scale})`,
+          ),
           opacity: sp.scale,
           ...contStyle,
         }}
         {...stopPropagation}
-      >{children}
+      >
+        {children}
       </animated.div>
     </Mask>
   );

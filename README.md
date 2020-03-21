@@ -8,6 +8,7 @@
 <br>
 
 ## 📦Install
+
 ```shell
 yarn add @lxjx/fr
 # or
@@ -17,10 +18,11 @@ npm install @lxjx/fr
 <br>
 
 ## ✨Features
-还没想到.jpg
 
+还没想到.jpg
 
 <br>
 
 ## 🍭Usage
+
 还没准备写.svg
