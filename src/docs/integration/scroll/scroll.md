@@ -1,14 +1,14 @@
 ---
-title: Scroll - 滚动区域
+title: Scroll - 滚动
 group:
     title: 集成组件
     path: /integration
     order: 7500
 ---
 
-# Scroll 滚动区域
+# Scroll 滚动
 
-创建一个滚动区域，为其提供便捷的滚动控制能力以及执行上拉加载、下拉刷新等常见业务形式。
+创建一个滚动区域，提供便捷的滚动控制能力以及上拉加载、下拉刷新等常见业务功能。
 
 ## 基础示例
 

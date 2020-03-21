@@ -50,12 +50,14 @@ module.exports = {
     publicPath: './',
     library: ['Fr', '[name]'],
     libraryTarget: 'commonjs2',
-    // libraryTarget: 'umd',
+    // libraryTarget: 'umd', /* TODO: 添加umd打包，除了React和ReactDom外的依赖一律不走externals，方便demo中使用 */
   },
   optimization: {
     minimize: false,
     minimizer: [
-      new TerserJSPlugin({}),
+      new TerserJSPlugin({
+
+      }),
     ],
   },
   externals: externalsDependencies(),

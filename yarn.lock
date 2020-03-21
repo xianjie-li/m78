@@ -1447,10 +1447,10 @@
   dependencies:
     "@babel/runtime" "^7.7.6"
 
-"@lxjx/utils@^1.3.0":
-  version "1.3.0"
-  resolved "https://registry.npmjs.org/@lxjx/utils/-/utils-1.3.0.tgz#4fceb0348be59a1f1d4ead669f08508622d9e330"
-  integrity sha512-rjrKp3s+/R9eKBf2JJGHBgVj9vHwy6GwvdBuCMx3JokodcLrdpgrdLjqCwTs6lHIlYE3tHZYkQXQRM/lNaNpVA==
+"@lxjx/utils@^1.3.1":
+  version "1.3.1"
+  resolved "https://registry.npm.taobao.org/@lxjx/utils/download/@lxjx/utils-1.3.1.tgz?cache=0&sync_timestamp=1584714554481&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40lxjx%2Futils%2Fdownload%2F%40lxjx%2Futils-1.3.1.tgz#15006d9630d1ff444a4c5a44f789cfcfcde9ed56"
+  integrity sha1-FQBtljDR/0RKTFpE94nPz83p7VY=
   dependencies:
     "@babel/runtime" "^7.7.6"
     uuid "^7.0.2"
@@ -6101,7 +6101,7 @@ espree@^6.1.2:
     acorn-jsx "^5.2.0"
     eslint-visitor-keys "^1.1.0"
 
-esprima-extract-comments@1.1.0:
+esprima-extract-comments@1.1.0, esprima-extract-comments@^1.1.0:
   version "1.1.0"
   resolved "https://registry.npm.taobao.org/esprima-extract-comments/download/esprima-extract-comments-1.1.0.tgz#0dacab567a5900240de6d344cf18c33617becbc9"
   integrity sha1-DayrVnpZACQN5tNEzxjDNhe+y8k=
@@ -6419,13 +6419,13 @@ fastq@^1.6.0:
   dependencies:
     reusify "^1.0.4"
 
-father-doc@1.0.0-alpha.16:
-  version "1.0.0-alpha.16"
-  resolved "https://registry.npm.taobao.org/father-doc/download/father-doc-1.0.0-alpha.16.tgz#b33ee494fdefc7a52f0664f49549cce3cd883315"
-  integrity sha1-sz7klP3vx6UvBmT0lUnM482IMxU=
+father-doc@^1.0.0-beta.7:
+  version "1.0.0-beta.7"
+  resolved "https://registry.npm.taobao.org/father-doc/download/father-doc-1.0.0-beta.7.tgz#07a6f9f50934754e7f912eb3341d9af7bbea9b95"
+  integrity sha1-B6b59Qk0dU5/kS6zNB2a97vqm5U=
   dependencies:
     umi "^2.11.1"
-    umi-plugin-father-doc "1.0.0-alpha.16"
+    umi-plugin-father-doc "1.0.0-beta.7"
 
 fault@^1.0.1:
   version "1.0.4"
@@ -7591,6 +7591,13 @@ hosted-git-info@^2.1.4:
   resolved "https://registry.npm.taobao.org/hosted-git-info/download/hosted-git-info-2.8.8.tgz#7539bd4bc1e0e0a895815a2e0262420b12858488"
   integrity sha1-dTm9S8Hg4KiVgVouAmJCCxKFhIg=
 
+hosted-git-info@^3.0.2:
+  version "3.0.4"
+  resolved "https://registry.npm.taobao.org/hosted-git-info/download/hosted-git-info-3.0.4.tgz?cache=0&sync_timestamp=1583018405733&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fhosted-git-info%2Fdownload%2Fhosted-git-info-3.0.4.tgz#be4973eb1fd2737b11c9c7c19380739bb249f60d"
+  integrity sha1-vklz6x/Sc3sRycfBk4Bzm7JJ9g0=
+  dependencies:
+    lru-cache "^5.1.1"
+
 hpack.js@^2.1.6:
   version "2.1.6"
   resolved "https://registry.npm.taobao.org/hpack.js/download/hpack.js-2.1.6.tgz#87774c0949e513f42e84575b3c45681fade2a0b2"
@@ -7992,6 +7999,13 @@ inline-style-prefixer@^4.0.0:
   dependencies:
     bowser "^1.7.3"
     css-in-js-utils "^2.0.0"
+
+innertext@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.npm.taobao.org/innertext/download/innertext-1.0.3.tgz#f1a8767592bcdcce2ea94e686ed41a86ba4e8df0"
+  integrity sha1-8ah2dZK83M4uqU5obtQahrpOjfA=
+  dependencies:
+    html-entities "^1.2.0"
 
 inquirer@6.2.2:
   version "6.2.2"
@@ -14116,11 +14130,6 @@ screenfull@^5.0.0:
   resolved "https://registry.npm.taobao.org/screenfull/download/screenfull-5.0.2.tgz#b9acdcf1ec676a948674df5cd0ff66b902b0bed7"
   integrity sha1-uazc8exnapSGdN9c0P9muQKwvtc=
 
-scrollama@^2.1.3:
-  version "2.2.0"
-  resolved "https://registry.npm.taobao.org/scrollama/download/scrollama-2.2.0.tgz#c2bdbca1427244d204892777ba1657b610a5f9d3"
-  integrity sha1-wr28oUJyRNIEiSd3uhZXthCl+dM=
-
 scss-tokenizer@^0.2.3:
   version "0.2.3"
   resolved "https://registry.npm.taobao.org/scss-tokenizer/download/scss-tokenizer-0.2.3.tgz#8eb06db9a9723333824d3f5530641149847ce5d1"
@@ -16017,10 +16026,10 @@ umi-plugin-dva@1.11.0:
     path-to-regexp "1.7.0"
     umi-utils "1.7.2"
 
-umi-plugin-father-doc@1.0.0-alpha.16:
-  version "1.0.0-alpha.16"
-  resolved "https://registry.npm.taobao.org/umi-plugin-father-doc/download/umi-plugin-father-doc-1.0.0-alpha.16.tgz#2542c03490244de36ba099fa827fa03199937ee9"
-  integrity sha1-JULANJAkTeNroJn6gn+gMZmTfuk=
+umi-plugin-father-doc@1.0.0-beta.7:
+  version "1.0.0-beta.7"
+  resolved "https://registry.npm.taobao.org/umi-plugin-father-doc/download/umi-plugin-father-doc-1.0.0-beta.7.tgz#dec170477655509236164493e34fbbb3274ffa47"
+  integrity sha1-3sFwR3ZVUJI2FkST40+7sydP+kc=
   dependencies:
     "@babel/core" "^7.7.2"
     "@babel/generator" "^7.7.2"
@@ -16033,10 +16042,11 @@ umi-plugin-father-doc@1.0.0-alpha.16:
     "@mapbox/rehype-prism" "^0.3.1"
     assert "^2.0.0"
     deepmerge "^4.2.2"
-    glob "^7.1.6"
+    esprima-extract-comments "^1.1.0"
     hast-util-to-html "^6.0.2"
     hast-util-to-string "^1.0.2"
-    intersection-observer "^0.7.0"
+    hosted-git-info "^3.0.2"
+    innertext "^1.0.3"
     js-yaml "^3.13.1"
     lodash "^4.17.15"
     lz-string "^1.4.4"
@@ -16049,7 +16059,6 @@ umi-plugin-father-doc@1.0.0-alpha.16:
     remark-frontmatter "^1.3.2"
     remark-parse "^7.0.1"
     remark-rehype "^5.0.0"
-    scrollama "^2.1.3"
     slash2 "^2.0.0"
     sylvanas "^0.4.2"
     symlink-dir "^3.1.1"

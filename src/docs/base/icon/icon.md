@@ -17,7 +17,7 @@ export default () => <span />
 
 # Icon 图标
 
-一套常用的矢量图标，取自 [iconfont](https://www.iconfont.cn/) antd官方图标库
+一套常用的矢量图标，来自 [iconfont](https://www.iconfont.cn/) antd官方图标库
 
 ## 代码示例
 <code src="./icon-demo.tsx"/>

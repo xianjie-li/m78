@@ -13,8 +13,10 @@ export default {
     title: 'fr',
     // mode: 'site',
     desc: '一套正在开发中的react工具包',
-    // logo: '../public/logo.png',
+    logo: '/public/logo.png',
     locales: [['zh-CN', '中文']],
-    include: [],
+    include: [
+      path.resolve(__dirname, '../src'),
+    ],
   },
 };

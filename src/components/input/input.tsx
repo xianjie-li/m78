@@ -252,7 +252,7 @@ const Input: React.FC<InputProps> = (_props) => {
       return 'tel';
     }
 
-    return 'text';
+    return tType;
   }
 
   const isDisabled = disabled || blockLoading;
