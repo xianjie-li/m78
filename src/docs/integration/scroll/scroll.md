@@ -3,7 +3,7 @@ title: Scroll - 滚动区域
 group:
     title: 集成组件
     path: /integration
-    order: 7500
+    order: 4000
 ---
 
 # Scroll 滚动区域

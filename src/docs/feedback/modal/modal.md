@@ -3,7 +3,7 @@ title: Modal - 对话框
 group:
     title: 反馈
     path: /feedback
-    order: 8000
+    order: 2000
 ---
 
 # Modal 对话框
@@ -13,17 +13,18 @@ group:
 ## 基础示例
 Modal组件的配置非常多样化，通过合理的配置可以实现绝大多数的Modal功能
 
-<code src="./demo.tsx" />
+
+<\code src="./demo.tsx" />
 
 ## 通过api使用
 通过[render-api](/#/utils/render-api)来进行组件外渲染
 
-<code src="./demo-api.tsx" />
+<\code src="./demo-api.tsx" />
 
 ## 完全定制
 使用`content`参数，你可以最大化的对Modal进行定制，它将会覆盖所有的默认节点选项
 
-<code src="./demo-custom.tsx" />
+<\code src="./demo-custom.tsx" />
 
 
 `css`

@@ -2,8 +2,8 @@
 title: Empty - 空状态
 group:
     title: 展示组件
-    path: /view
-    order: 8000
+    path: /feedback
+    order: 2000
 ---
 
 # Empty 空状态
@@ -11,12 +11,13 @@ group:
 用于无数据展示时对用户进行反馈
 
 ## 示例
-<code src="./demo.tsx" />
+<\code src="./demo.tsx" />
 
 ## 全局配置
 全局配置空状态图片
 
-<code src="./demo-config.tsx" />
+<\code src="./demo-config.tsx" />
+
 
 ## props
 ```tsx | pure

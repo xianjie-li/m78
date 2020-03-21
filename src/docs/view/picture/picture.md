@@ -3,7 +3,7 @@ title: Picture - 图片
 group:
     title: 展示组件
     path: /view
-    order: 9000
+    order: 4000
 ---
 
 # Picture 图片

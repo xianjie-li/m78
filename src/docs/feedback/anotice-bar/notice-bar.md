@@ -3,7 +3,7 @@ title: NoticeBar - 提示条
 group:
     title: 反馈
     path: /feedback
-    order: 8000
+    order: 2000
 ---
 
 # NoticeBar 提示条

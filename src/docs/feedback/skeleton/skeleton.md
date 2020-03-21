@@ -3,7 +3,7 @@ title: Skeleton - 骨架
 group:
     title: 反馈
     path: /feedback
-    order: 8000
+    order: 2000
 ---
 
 # Skeleton 抽屉

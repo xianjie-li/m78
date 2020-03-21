@@ -205,7 +205,7 @@ const Input: React.FC<InputProps> = (_props) => {
   function calcTextHeight() {
     if (!textArea || !autoSize || !cloneText.current) return;
     const el = input.current;
-    cloneText.current.value = el.value;
+    cloneText.current.value = isNumber(maxLength) ? parserLength(el.value, maxLength) : el.value;
     setTextAreaHeight(`${cloneText.current.scrollHeight}px`);
   }
 

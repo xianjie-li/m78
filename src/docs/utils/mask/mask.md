@@ -3,7 +3,7 @@ title: Mask - 遮罩
 group:
     title: 反馈
     path: /utils
-    order: 7000
+    order: 5000
 ---
 
 # Mask 遮罩

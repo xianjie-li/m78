@@ -3,7 +3,7 @@ title: Spin - 加载中
 group:
     title: 基础组件
     path: /base
-    order: 10000
+    order: 1000
 ---
 
 <!-- 样式 -->
@@ -27,9 +27,10 @@ export default () => <span />
 ## 自定义文本
 <code src="./spin-demo-custom-text.tsx"/>
 
+
 ## 填满容器
 
-<Alert>💡 需要确保父元素非常规定位元素，即position的值非static</Alert>
+> 💡 需要确保父元素非常规定位元素，即position的值非static
 
 <code src="./spin-demo-full.tsx"/>
 

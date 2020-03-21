@@ -6,7 +6,7 @@ import '@lxjx/fr/lib/empty/style';
 import Button from '@lxjx/fr/lib/button';
 import '@lxjx/fr/lib/button/style';
 
-import img from '@/src/mock/img/2.jpg';
+import img from '@/mock/img/2.jpg';
 
 const Demo = () => {
   return (

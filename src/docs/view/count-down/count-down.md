@@ -3,7 +3,7 @@ title: CountDown - 倒计时
 group:
     title: 展示组件
     path: /view
-    order: 9000
+    order: 4000
 ---
 
 # CountDown 倒计时
