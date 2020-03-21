@@ -3,7 +3,7 @@ title: List - 列表
 group:
     title: 展示组件
     path: /view
-    order: 9000
+    order: 4000
 ---
 
 # List - 列表

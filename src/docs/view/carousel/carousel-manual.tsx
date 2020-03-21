@@ -5,9 +5,9 @@ import '@lxjx/fr/lib/carousel/style';
 import Button from '@lxjx/fr/lib/button';
 import '@lxjx/fr/lib/button/style';
 
-import img1 from '@/src/mock/img/1.jpg';
-import img2 from '@/src/mock/img/2.jpg';
-import img3 from '@/src/mock/img/3.jpg';
+import img1 from '@/mock/img/1.jpg';
+import img2 from '@/mock/img/2.jpg';
+import img3 from '@/mock/img/3.jpg';
 
 const Demo = () => {
   const ref = React.useRef<CarouselRef>(null!);

@@ -3,7 +3,7 @@ title: Input - 输入框
 group:
     title: 数据录入
     path: /form
-    order: 8000
+    order: 3000
 ---
 
 # Input 输入框

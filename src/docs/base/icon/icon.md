@@ -3,7 +3,7 @@ title: Icon - 图标
 group:
     title: 基础组件
     path: /base
-    order: 10000
+    order: 1000
 ---
 
 

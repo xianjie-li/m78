@@ -2,9 +2,9 @@ import React from 'react';
 import Carousel from '@lxjx/fr/lib/carousel';
 import '@lxjx/fr/lib/carousel/style';
 
-import img1 from '@/src/mock/img/1.jpg';
-import img2 from '@/src/mock/img/2.jpg';
-import img3 from '@/src/mock/img/3.jpg';
+import img1 from '@/mock/img/1.jpg';
+import img2 from '@/mock/img/2.jpg';
+import img3 from '@/mock/img/3.jpg';
 
 const Demo = () => {
   return (

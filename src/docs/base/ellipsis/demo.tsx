@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
-import Ellipsis from '@lxjx/fr/lib/ellipsis';
-import '@lxjx/fr/lib/ellipsis/style';
+import Ellipsis from '@/components/ellipsis';
+import '@/components/ellipsis/style';
 
 import Button from '@lxjx/fr/lib/button';
 import '@lxjx/fr/lib/button/style';

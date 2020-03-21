@@ -5,13 +5,13 @@ import '@lxjx/fr/lib/viewer/style';
 import Button from '@lxjx/fr/lib/button';
 import '@lxjx/fr/lib/button/style';
 
-import img1 from '@/src/mock/img/1.jpg';
-import img2 from '@/src/mock/img/2.jpg';
-import img3 from '@/src/mock/img/3.jpg';
-import img4 from '@/src/mock/img/4.jpg';
-import img5 from '@/src/mock/img/5.jpg';
-import img6 from '@/src/mock/img/6.jpg';
-import img7 from '@/src/mock/img/7.jpg';
+import img1 from '@/mock/img/1.jpg';
+import img2 from '@/mock/img/2.jpg';
+import img3 from '@/mock/img/3.jpg';
+import img4 from '@/mock/img/4.jpg';
+import img5 from '@/mock/img/5.jpg';
+import img6 from '@/mock/img/6.jpg';
+import img7 from '@/mock/img/7.jpg';
 
 const option = [
   {

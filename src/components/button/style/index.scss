@@ -225,16 +225,16 @@
   }
 
   // 彩色按钮禁用
-  &.__#{$name}:disabled,
-  &.__#{$name}[disabled] {
+  .fr-btn.__#{$name}:disabled,
+  .fr-btn.__#{$name}[disabled] {
     cursor: not-allowed;
     background-color: scale_color($main-color, $lightness: 60%);
     box-shadow: $shadow-1;
   }
 }
 
-@include btn(primary, $color);
-@include btn(blue, $color-info);
-@include btn(green, $color-success);
-@include btn(red, $color-error);
-@include btn(yellow, $color-warn);
+@include btn('primary', $color);
+@include btn('blue', $color-info);
+@include btn('green', $color-success);
+@include btn('red', $color-error);
+@include btn('yellow', $color-warn);

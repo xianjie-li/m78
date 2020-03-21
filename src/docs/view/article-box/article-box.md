@@ -3,7 +3,7 @@ title: ArticleBox - 富文本盒子
 group:
     title: 展示组件
     path: /view
-    order: 9000
+    order: 4000
 ---
 
 # ArticleBox 富文本盒子

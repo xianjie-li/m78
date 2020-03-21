@@ -3,7 +3,7 @@ title: Fork - 条件渲染
 group:
     title: 工具
     path: /utils
-    order: 7000
+    order: 5000
 ---
 
 # Fork 条件渲染
@@ -18,7 +18,7 @@ group:
 ## Toggle
 显示或隐藏内容 
 
-<Alert>⚠ 必须确保子只有一个子元素并且包含包裹元素（即不能为纯文本），用于挂载display: 'none'</Alert>
+> ⚠ 必须确保子只有一个子元素并且包含包裹元素（即不能为纯文本），用于挂载display: 'none'
 
 <code src="./fork-demo-toggle.tsx" />
 

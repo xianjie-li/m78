@@ -8,7 +8,7 @@ import Button from '@lxjx/fr/lib/button';
 import '@lxjx/fr/lib/button/style';
 
 import { getRandRange } from '@lxjx/utils';
-import img1 from '@/src/mock/img/3.jpg';
+import img1 from '@/mock/img/3.jpg';
 
 const boxStyle: React.CSSProperties = {
   width: '240px',
