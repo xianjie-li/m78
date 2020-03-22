@@ -12,13 +12,13 @@ group:
 
 ## 示例
 
-<\code src="./demo.tsx" />
+<code src="./demo.tsx" />
 
 ## 全局配置
 
 全局配置空状态图片
 
-<\code src="./demo-config.tsx" />
+<code src="./demo-config.tsx" />
 
 ## props
 

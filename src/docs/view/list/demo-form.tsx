@@ -4,20 +4,10 @@ import List from '@lxjx/fr/lib/list';
 import '@lxjx/fr/lib/list/style';
 
 import Button from '@lxjx/fr/lib/button';
+import Input from '@lxjx/fr/lib/input';
 import '@lxjx/fr/lib/button/style';
 
 import { useSetState } from '@lxjx/hooks';
-
-/* TODO: 完成表单输入组件后替换此页表单 */
-
-const inpStyle: React.CSSProperties = {
-  width: '100%',
-  border: '1px solid #ccc',
-  outline: 'none',
-  height: 34,
-  borderRadius: 2,
-  padding: '0 8px',
-};
 
 const Demo = () => {
   const [state, setState] = useSetState({
@@ -67,16 +57,16 @@ const Demo = () => {
           status="error"
           require
         >
-          <input type="text" placeholder="点击输入" style={inpStyle} />
+          <Input placeholder="点击输入" />
         </List.Item>
         <List.Item title="地址" footLeft="信息文本信息文本信息文本信息文本" status="success">
-          <input type="text" placeholder="点击输入" style={inpStyle} />
+          <Input placeholder="点击输入" />
         </List.Item>
         <List.Item title="出生年月" footLeft="不让你输入" status="warning" disabled require>
-          <input type="text" placeholder="点击输入" style={inpStyle} />
+          <Input placeholder="点击输入" />
         </List.Item>
         <List.Item title="自述" footLeft="信息文本信息文本信息文本信息文本">
-          <textarea placeholder="点击输入" style={{ ...inpStyle, minHeight: 64 }} />
+          <Input placeholder="点击输入" textArea />
         </List.Item>
         <List.Footer>
           <Button color="blue" size="large">

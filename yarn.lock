@@ -318,7 +318,7 @@
     "@babel/helper-remap-async-to-generator" "^7.8.3"
     "@babel/plugin-syntax-async-generators" "^7.8.0"
 
-"@babel/plugin-proposal-class-properties@7.8.3", "@babel/plugin-proposal-class-properties@^7.5.5", "@babel/plugin-proposal-class-properties@^7.7.4":
+"@babel/plugin-proposal-class-properties@7.8.3", "@babel/plugin-proposal-class-properties@^7.5.5", "@babel/plugin-proposal-class-properties@^7.7.2":
   version "7.8.3"
   resolved "https://registry.npm.taobao.org/@babel/plugin-proposal-class-properties/download/@babel/plugin-proposal-class-properties-7.8.3.tgz#5e06654af5cd04b608915aada9b2a6788004464e"
   integrity sha1-XgZlSvXNBLYIkVqtqbKmeIAERk4=
@@ -670,7 +670,7 @@
     "@babel/helper-plugin-utils" "^7.8.3"
     babel-plugin-dynamic-import-node "^2.3.0"
 
-"@babel/plugin-transform-modules-commonjs@^7.8.3", "@babel/plugin-transform-modules-commonjs@^7.9.0":
+"@babel/plugin-transform-modules-commonjs@^7.7.2", "@babel/plugin-transform-modules-commonjs@^7.8.3", "@babel/plugin-transform-modules-commonjs@^7.9.0":
   version "7.9.0"
   resolved "https://registry.npm.taobao.org/@babel/plugin-transform-modules-commonjs/download/@babel/plugin-transform-modules-commonjs-7.9.0.tgz?cache=0&sync_timestamp=1584746127807&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40babel%2Fplugin-transform-modules-commonjs%2Fdownload%2F%40babel%2Fplugin-transform-modules-commonjs-7.9.0.tgz#e3e72f4cbc9b4a260e30be0ea59bdf5a39748940"
   integrity sha1-4+cvTLybSiYOML4OpZvfWjl0iUA=
@@ -936,7 +936,7 @@
     levenary "^1.1.1"
     semver "^5.5.0"
 
-"@babel/preset-env@^7.4.5", "@babel/preset-env@^7.5.5", "@babel/preset-env@^7.7.1":
+"@babel/preset-env@^7.4.5", "@babel/preset-env@^7.5.5", "@babel/preset-env@^7.7.2":
   version "7.9.0"
   resolved "https://registry.npm.taobao.org/@babel/preset-env/download/@babel/preset-env-7.9.0.tgz?cache=0&sync_timestamp=1584746131127&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40babel%2Fpreset-env%2Fdownload%2F%40babel%2Fpreset-env-7.9.0.tgz#a5fc42480e950ae8f5d9f8f2bbc03f52722df3a8"
   integrity sha1-pfxCSA6VCuj12fjyu8A/UnIt86g=
@@ -1024,7 +1024,7 @@
     "@babel/plugin-transform-react-jsx-self" "^7.8.3"
     "@babel/plugin-transform-react-jsx-source" "^7.8.3"
 
-"@babel/preset-react@^7.0.0", "@babel/preset-react@^7.7.0":
+"@babel/preset-react@^7.0.0", "@babel/preset-react@^7.7.2":
   version "7.9.1"
   resolved "https://registry.npm.taobao.org/@babel/preset-react/download/@babel/preset-react-7.9.1.tgz#b346403c36d58c3bb544148272a0cefd9c28677a"
   integrity sha1-s0ZAPDbVjDu1RBSCcqDO/ZwoZ3o=
@@ -2134,22 +2134,24 @@
     umi-webpack-bundle-analyzer "3.5.0"
     zlib "1.0.5"
 
-"@umijs/preset-dumi@1.0.9":
-  version "1.0.9"
-  resolved "https://registry.npm.taobao.org/@umijs/preset-dumi/download/@umijs/preset-dumi-1.0.9.tgz#6611243932d5c14a3b195133694551c0b1e654ac"
-  integrity sha1-ZhEkOTLVwUo7GVEzaUVRwLHmVKw=
+"@umijs/preset-dumi@1.0.10":
+  version "1.0.10"
+  resolved "https://registry.npm.taobao.org/@umijs/preset-dumi/download/@umijs/preset-dumi-1.0.10.tgz#b571a2b08916b653fdf7c62fd5042d9c96e7b772"
+  integrity sha1-tXGisIkWtlP998Yv1QQtnJbnt3I=
   dependencies:
     "@babel/core" "^7.7.2"
     "@babel/generator" "^7.7.2"
-    "@babel/plugin-proposal-class-properties" "^7.7.4"
+    "@babel/plugin-proposal-class-properties" "^7.7.2"
+    "@babel/plugin-transform-modules-commonjs" "^7.7.2"
     "@babel/plugin-transform-typescript" "^7.7.2"
-    "@babel/preset-env" "^7.7.1"
-    "@babel/preset-react" "^7.7.0"
+    "@babel/preset-env" "^7.7.2"
+    "@babel/preset-react" "^7.7.2"
     "@babel/traverse" "^7.7.2"
     "@babel/types" "^7.7.2"
     "@mapbox/rehype-prism" "^0.3.1"
     "@umijs/types" "^3.0.0-beta.22"
     deepmerge "^4.2.2"
+    enhanced-resolve "^4.1.1"
     esprima-extract-comments "^1.1.0"
     hast-util-to-html "^6.0.2"
     hast-util-to-string "^1.0.2"
@@ -4431,12 +4433,12 @@ dotenv@8.2.0:
   resolved "https://registry.npm.taobao.org/dotenv/download/dotenv-8.2.0.tgz?cache=0&sync_timestamp=1571191376500&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fdotenv%2Fdownload%2Fdotenv-8.2.0.tgz#97e619259ada750eea3e4ea3e26bceea5424b16a"
   integrity sha1-l+YZJZradQ7qPk6j4mvO6lQksWo=
 
-dumi@^1.0.9:
-  version "1.0.9"
-  resolved "https://registry.npm.taobao.org/dumi/download/dumi-1.0.9.tgz#e3f2fd731ceaa790ba545e1b8e06e3b44c685d1e"
-  integrity sha1-4/L9cxzqp5C6VF4bjgbjtExoXR4=
+dumi@^1.0.10:
+  version "1.0.10"
+  resolved "https://registry.npm.taobao.org/dumi/download/dumi-1.0.10.tgz#2b7f14cdb148474b5cb2334b2db0b8c827449802"
+  integrity sha1-K38UzbFIR0tcsjNLLbC4yCdEmAI=
   dependencies:
-    "@umijs/preset-dumi" "1.0.9"
+    "@umijs/preset-dumi" "1.0.10"
     umi "^3.0.0"
 
 duplexer3@^0.1.4:
@@ -4546,7 +4548,7 @@ enhanced-resolve@4.1.0:
     memory-fs "^0.4.0"
     tapable "^1.0.0"
 
-enhanced-resolve@^4.1.0:
+enhanced-resolve@^4.1.0, enhanced-resolve@^4.1.1:
   version "4.1.1"
   resolved "https://registry.npm.taobao.org/enhanced-resolve/download/enhanced-resolve-4.1.1.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fenhanced-resolve%2Fdownload%2Fenhanced-resolve-4.1.1.tgz#2937e2b8066cd0fe7ce0990a98f0d71a35189f66"
   integrity sha1-KTfiuAZs0P584JkKmPDXGjUYn2Y=

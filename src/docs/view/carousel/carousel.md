@@ -12,15 +12,15 @@ group:
 
 ## 基础示例
 
-<\code src="./carousel-demo.tsx" />
+<code src="./carousel-demo.tsx" />
 
 ## 纵向轮播
 
-<\code src="./carousel-vertical.tsx" />
+<code src="./carousel-vertical.tsx" />
 
 ## 手动控制
 
-<\code src="./carousel-manual.tsx" />
+<code src="./carousel-manual.tsx" />
 
 > 💡 确保每一个轮播子项的宽高一致
 

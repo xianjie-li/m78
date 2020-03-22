@@ -14,19 +14,19 @@ group:
 
 Modal 组件的配置非常多样化，通过合理的配置可以实现绝大多数的 Modal 功能
 
-<\code src="./demo.tsx" />
+<code src="./demo.tsx" />
 
 ## 通过 api 使用
 
 通过[render-api](/#/utils/render-api)来进行组件外渲染
 
-<\code src="./demo-api.tsx" />
+<code src="./demo-api.tsx" />
 
 ## 完全定制
 
 使用`content`参数，你可以最大化的对 Modal 进行定制，它将会覆盖所有的默认节点选项
 
-<\code src="./demo-custom.tsx" />
+<code src="./demo-custom.tsx" />
 
 `css`
 
