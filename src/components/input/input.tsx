@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState, useImperativeHandle } from 'react';
+import React, { useEffect, useMemo, useRef, useState, useImperativeHandle } from 'react';
 
 import Icon from '@lxjx/fr/lib/icon';
 import Spin from '@lxjx/fr/lib/spin';
@@ -304,10 +304,9 @@ const Input: React.FC<InputProps> = React.forwardRef<InputRef, InputProps>((_pro
       })}
       style={style}
     >
-
-     <If when={prefixBtn && !textArea}>{() =>
-       React.cloneElement(prefixBtn!, { className: 'fr-input_prefix-btn' })
-     }</If>
+      <If when={prefixBtn && !textArea}>
+        {() => React.cloneElement(prefixBtn!, { className: 'fr-input_prefix-btn' })}
+      </If>
       <If when={prefix && !textArea}>
         <span className="fr-input_prefix">{prefix}</span>
       </If>
@@ -369,9 +368,9 @@ const Input: React.FC<InputProps> = React.forwardRef<InputRef, InputProps>((_pro
           <Icon type="search" />
         </Button>
       </TransitionBase>
-      <If when={suffixBtn && !textArea}>{() =>
-        React.cloneElement(suffixBtn!, { className: 'fr-input_suffix-btn' })
-      }</If>
+      <If when={suffixBtn && !textArea}>
+        {() => React.cloneElement(suffixBtn!, { className: 'fr-input_suffix-btn' })}
+      </If>
     </span>
   );
 });
