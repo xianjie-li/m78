@@ -8,22 +8,77 @@ import cls from 'classnames';
 
 import { CheckProps } from './type';
 
+interface ShareMeta {
+  focus: boolean;
+  checked: boolean;
+  disabled: boolean;
+}
+
+/**
+ * 定制Check样式时会用到的接口
+ * @param meta - 定制时会用到的一些组件内部状态
+ * @param checkProps - Check组件接收到的prop
+ * */
+export interface CheckCustom {
+  (meta: ShareMeta, checkProps: CheckProps): React.ReactElement;
+}
+
+/** 内置样式 */
 type BuiltIn = {
-  [key in NonNullable<CheckProps['type']>]?: React.ReactElement;
+  [key in NonNullable<CheckProps['type']>]?: CheckCustom;
 };
 
+/* 接收<ShareMeta>并生成适合的类名返回 */
+function getCheckCls({ focus, checked, disabled }: ShareMeta) {
+  return {
+    __focus: focus,
+    __checked: checked,
+    __disabled: disabled,
+  };
+}
+
+/** 内置样式实现 */
 const builtIn: BuiltIn = {
-  radio: (
-    <span className="fr-check_base fr-effect __md">
+  radio: meta => (
+    <span className={cls('fr-check_base fr-effect __md', getCheckCls(meta))}>
       <span className="fr-check_base-main">
         <span className="fr-check_base-inner" />
+      </span>
+    </span>
+  ),
+  checkbox: meta => (
+    <span className={cls('fr-check_base fr-effect __md', '__checkbox', getCheckCls(meta))}>
+      <span className="fr-check_base-main">
+        <span className="fr-check_base-inner" />
+      </span>
+    </span>
+  ),
+  switch: (meta, { switchOff, switchOn }) => (
+    <span className={cls('fr-check_switch', getCheckCls(meta))}>
+      <span className={cls('fr-check_switch-inner fr-effect __md', meta.disabled && '__disabled')}>
+        <span className="fr-check_switch-handle">
+          <If when={switchOff && switchOn}>
+            <span>{meta.checked ? switchOn : switchOff}</span>
+          </If>
+        </span>
       </span>
     </span>
   ),
 };
 
 const Check: React.FC<CheckProps> = _props => {
-  const { type = 'radio', disabled, label, autoFocus, value = '' } = _props;
+  const {
+    type = 'checkbox',
+    disabled = false,
+    label,
+    beforeLabel,
+    autoFocus,
+    value = '',
+    name,
+    block = false,
+    className,
+    style,
+  } = _props;
 
   const [checked, setChecked] = useFormState<boolean, string>(
     formStateMap(_props, { value: 'checked', trigger: 'onChange', defaultValue: 'defaultChecked' }),
@@ -32,7 +87,7 @@ const Check: React.FC<CheckProps> = _props => {
 
   const [focus, setFocus] = useState(false);
 
-  const renderEl = builtIn[type];
+  const renderCustom = builtIn[type];
 
   function focusHandle() {
     setFocus(true);
@@ -57,11 +112,25 @@ const Check: React.FC<CheckProps> = _props => {
     __focus: focus,
     __checked: checked,
     __disabled: disabled,
+    __block: block,
+    [`__${type}`]: true,
   };
+
+  if (!renderCustom) {
+    return null;
+  }
 
   return (
     /* eslint-disable-next-line jsx-a11y/label-has-associated-control,jsx-a11y/label-has-for */
-    <label className={cls('fr-check', statusCls)} onKeyPress={mouseUpHandel} onClick={blurHandle}>
+    <label
+      className={cls('fr-check', statusCls, className)}
+      style={style}
+      onKeyPress={mouseUpHandel}
+      onClick={blurHandle}
+    >
+      <If when={beforeLabel}>
+        <span className="fr-check_label-before">{beforeLabel}</span>
+      </If>
       <input
         value={value}
         onFocus={focusHandle}
@@ -70,14 +139,14 @@ const Check: React.FC<CheckProps> = _props => {
         onChange={onChange}
         className="fr-check_hidden-check"
         type="checkbox"
+        name={name}
         disabled={disabled}
         /* eslint-disable-next-line jsx-a11y/no-autofocus */
         autoFocus={autoFocus}
       />
-      {renderEl &&
-        React.cloneElement(renderEl, { className: cls(renderEl.props.className, statusCls) })}
+      {renderCustom && renderCustom({ focus, checked, disabled }, _props)}
       <If when={label}>
-        <span>选项1</span>
+        <span className="fr-check_label">{label}</span>
       </If>
     </label>
   );

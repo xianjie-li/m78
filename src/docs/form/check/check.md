@@ -1,14 +1,18 @@
 ---
-title: Check - 选框
+title: Check - 选择框
 group:
   title: 数据录入
   path: /form
   order: 3000
 ---
 
-# Check 输入框
+# Check 选择框
 
-最基础、最重要的输入单元
+`Check`是作为`Radio`和`CheckBox`的底层组件存在的，通常情况下，你不会直接使用它，而是使用基于其实现的上层组件。
+
+尽管如此，每一个`Check`也都可以作为独立的开关组件(value为boolean值的输入组件)来使用
+
+你也可以通过提供的API来定制自己的`Switch`、`Radio`、或者是`CheckBox`组件
 
 ## 示例
 
