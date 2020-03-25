@@ -17,13 +17,31 @@
 
   &.__focus {
     .fr-choice_ctrl {
-      background-color: rgba($color, 0.2);
+      background-color: $b-divider;
+    }
+  }
+
+  &.__focus.__checked {
+    .fr-choice_ctrl {
+      background-color: rgba($color, 0.1);
     }
   }
 
   &.__checked {
     .fr-choice_ctrl-inner {
       transform: scale3d(1, 1, 1);
+    }
+
+    .fr-choice_ctrl-main {
+      border-color: $color;
+    }
+
+    .fr-effect-ripple {
+      background: rgba($color, 0.1);
+    }
+
+    .fr-choice_ctrl:hover  {
+      background-color: rgba($color, 0.1);
     }
   }
 
@@ -45,6 +63,7 @@
   &_ctrl {
     position: relative;
     display: inline-flex;
+    vertical-align: middle;
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -52,17 +71,16 @@
     transition: background-color 0.6s;
 
     &:hover {
-      background-color: rgba($color, 0.1);
+      background-color: $b-divider;
     }
 
     &:active {
-      background-color: transparent !important;
+      background-color: transparent;
     }
 
     .fr-effect-ripple {
-      margin: auto;
-      background: rgba($color, 0.2) !important;
-      //transition: 0.3s ease-out !important;
+      transition: 0.3s ease-in !important;
+      background: $b-divider;
     }
   }
 
@@ -72,7 +90,7 @@
     display: inline-block;
     width: 22px;
     height: 22px;
-    border: 2px solid $color;
+    border: 2px solid $b-second;
     border-radius: 50%;
     z-index: 1;
   }

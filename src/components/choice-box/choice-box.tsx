@@ -9,7 +9,7 @@ import cls from 'classnames';
 import { ChoiceProps } from './type';
 
 const ChoiceBox: React.FC<ChoiceProps> = _props => {
-  const { disabled, label, autoFocus } = _props;
+  const { disabled, label, autoFocus, value = '' } = _props;
 
   const [checked, setChecked] = useFormState<boolean, string>(
     formStateMap(_props, { value: 'checked', trigger: 'onChange', defaultValue: 'defaultChecked' }),
@@ -34,7 +34,7 @@ const ChoiceBox: React.FC<ChoiceProps> = _props => {
   }
 
   function onChange() {
-    setChecked(check => !check);
+    setChecked(check => !check, value);
   }
 
   return (
@@ -49,6 +49,7 @@ const ChoiceBox: React.FC<ChoiceProps> = _props => {
       onClick={blurHandle}
     >
       <input
+        value={value}
         onFocus={focusHandle}
         onBlur={blurHandle}
         checked={checked}
@@ -59,7 +60,7 @@ const ChoiceBox: React.FC<ChoiceProps> = _props => {
         /* eslint-disable-next-line jsx-a11y/no-autofocus */
         autoFocus={autoFocus}
       />
-      <span className={cls('fr-choice_ctrl fr-effect __light __md', { __disabled: disabled })}>
+      <span className={cls('fr-choice_ctrl fr-effect __md', { __disabled: disabled })}>
         <span className="fr-choice_ctrl-main">
           <span className="fr-choice_ctrl-inner" />
         </span>
