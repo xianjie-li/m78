@@ -1,7 +1,7 @@
 import { FormLikeWithExtra } from '@lxjx/hooks';
 import { ComponentBaseProps } from '../types/types';
 
-export interface ChoiceProps extends ComponentBaseProps {
+export interface CheckProps extends ComponentBaseProps {
   /** 选择器类型 */
   type?: 'radio' | 'checkbox';
   /** 在视觉上设置为 `待定`，用于全选等操作满足部分条件的情况 */

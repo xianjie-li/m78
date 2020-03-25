@@ -6,10 +6,24 @@ import { formStateMap, useFormState } from '@lxjx/hooks';
 
 import cls from 'classnames';
 
-import { ChoiceProps } from './type';
+import { CheckProps } from './type';
 
-const ChoiceBox: React.FC<ChoiceProps> = _props => {
-  const { disabled, label, autoFocus, value = '' } = _props;
+type BuiltIn = {
+  [key in NonNullable<CheckProps['type']>]?: React.ReactElement;
+};
+
+const builtIn: BuiltIn = {
+  radio: (
+    <span className="fr-check_base fr-effect __md">
+      <span className="fr-check_base-main">
+        <span className="fr-check_base-inner" />
+      </span>
+    </span>
+  ),
+};
+
+const Check: React.FC<CheckProps> = _props => {
+  const { type = 'radio', disabled, label, autoFocus, value = '' } = _props;
 
   const [checked, setChecked] = useFormState<boolean, string>(
     formStateMap(_props, { value: 'checked', trigger: 'onChange', defaultValue: 'defaultChecked' }),
@@ -17,6 +31,8 @@ const ChoiceBox: React.FC<ChoiceProps> = _props => {
   );
 
   const [focus, setFocus] = useState(false);
+
+  const renderEl = builtIn[type];
 
   function focusHandle() {
     setFocus(true);
@@ -37,34 +53,29 @@ const ChoiceBox: React.FC<ChoiceProps> = _props => {
     setChecked(check => !check, value);
   }
 
+  const statusCls = {
+    __focus: focus,
+    __checked: checked,
+    __disabled: disabled,
+  };
+
   return (
     /* eslint-disable-next-line jsx-a11y/label-has-associated-control,jsx-a11y/label-has-for */
-    <label
-      className={cls('fr-choice', {
-        __focus: focus,
-        __checked: checked,
-        __disabled: disabled,
-      })}
-      onKeyPress={mouseUpHandel}
-      onClick={blurHandle}
-    >
+    <label className={cls('fr-check', statusCls)} onKeyPress={mouseUpHandel} onClick={blurHandle}>
       <input
         value={value}
         onFocus={focusHandle}
         onBlur={blurHandle}
         checked={checked}
         onChange={onChange}
-        className="fr-choice_hidden-check"
+        className="fr-check_hidden-check"
         type="checkbox"
         disabled={disabled}
         /* eslint-disable-next-line jsx-a11y/no-autofocus */
         autoFocus={autoFocus}
       />
-      <span className={cls('fr-choice_ctrl fr-effect __md', { __disabled: disabled })}>
-        <span className="fr-choice_ctrl-main">
-          <span className="fr-choice_ctrl-inner" />
-        </span>
-      </span>
+      {renderEl &&
+        React.cloneElement(renderEl, { className: cls(renderEl.props.className, statusCls) })}
       <If when={label}>
         <span>选项1</span>
       </If>
@@ -72,4 +83,4 @@ const ChoiceBox: React.FC<ChoiceProps> = _props => {
   );
 };
 
-export default ChoiceBox;
+export default Check;

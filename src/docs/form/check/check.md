@@ -1,12 +1,12 @@
 ---
-title: ChoiceBox - 选框
+title: Check - 选框
 group:
   title: 数据录入
   path: /form
   order: 3000
 ---
 
-# Input 输入框
+# Check 输入框
 
 最基础、最重要的输入单元
 
