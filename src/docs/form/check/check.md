@@ -10,9 +10,9 @@ group:
 
 `Check`是作为`Radio`和`CheckBox`的底层组件存在的，通常情况下，你不会直接使用它，而是使用基于其实现的上层组件。
 
-尽管如此，每一个`Check`也都可以作为独立的开关组件(value为boolean值的输入组件)来使用
+尽管如此，每一个`Check`也都可以作为独立的开关组件(value 为 boolean 值的输入组件)来使用
 
-你也可以通过提供的API来定制自己的`Switch`、`Radio`、或者是`CheckBox`组件
+你也可以通过提供的 API 来定制自己的`Switch`、`Radio`、或者是`CheckBox`组件
 
 ## 示例
 

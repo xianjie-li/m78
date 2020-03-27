@@ -36,7 +36,7 @@ group:
 export interface InputProps
   extends FormLikeWithExtra<string, React.ChangeEvent<HTMLInputElement>>,
     InputPropsExtends {
-/**
+  /**
    * 'text' | 输入框类型
    *  text - 可输入任何内容
    *  number - 可输入整数、浮点数

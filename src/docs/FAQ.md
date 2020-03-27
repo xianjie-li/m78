@@ -1,8 +1,7 @@
 ---
 title: FAQ - 常见问题
 group:
-  title: 数据录入
+  title: 其他
   path: /FAQ
   order: 10000
 ---
-

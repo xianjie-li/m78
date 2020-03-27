@@ -266,7 +266,8 @@ $unitSpace: 8px;
     margin-left: $unitSpace;
   }
 
-  &_suffix-btn, &_prefix-btn {
+  &_suffix-btn,
+  &_prefix-btn {
     height: 80%; // 退级
     height: calc(100% - 8px);
     right: -6px;

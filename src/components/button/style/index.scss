@@ -130,8 +130,8 @@
     box-shadow: none !important;
     background: transparent !important;
 
-    &:focus {
-      font-weight: bold;
+    &:focus, &:not(.__disabled):hover {
+      background-color: $b-divider !important;
     }
 
     .fr-icon {
@@ -160,8 +160,8 @@
     box-shadow: none !important;
     background: transparent !important;
     font-size: inherit;
-    &:focus {
-      text-shadow: 2px 2px 10px currentColor;
+    &:focus, &:not(.__disabled):hover {
+      background-color: $b-divider !important;
     }
   }
 
@@ -189,10 +189,18 @@
 
   .fr-btn.__#{$name}.__icon {
     color: $main-color;
+
+    &:focus, &:not(.__disabled):hover {
+      background-color: rgba($main-color, 0.1) !important;
+    }
   }
 
   .fr-btn.__#{$name}.__link {
     color: $main-color;
+
+    &:focus, &:not(.__disabled):hover {
+      background-color: rgba($main-color, 0.1) !important;
+    }
   }
 
   // 边框按钮

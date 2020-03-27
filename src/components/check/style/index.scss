@@ -43,7 +43,8 @@
     transition: background-color 0.6s;
 
     &.__checkbox {
-      .fr-check_base-main, .fr-check_base-inner {
+      .fr-check_base-main,
+      .fr-check_base-inner {
         border-radius: $border-radius;
       }
 
@@ -102,7 +103,6 @@
     }
 
     &.__checked {
-
       &:hover {
         background-color: rgba($color, 0.1);
       }
@@ -152,7 +152,6 @@
     }
   }
 
-
   &.__switch {
     .fr-check_label-before {
       margin-right: 10px;
@@ -163,7 +162,7 @@
       font-size: 14px;
     }
 
-    &.__block + &{
+    &.__block + & {
       margin-top: 16px;
     }
   }
@@ -241,7 +240,7 @@
       font-size: 12px;
       color: $b-second;
       @include ellipsis-x;
-      >span {
+      > span {
         transform: scale(0.8);
         transform-origin: center center;
       }
