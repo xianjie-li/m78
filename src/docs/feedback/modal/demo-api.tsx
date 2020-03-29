@@ -12,6 +12,9 @@ function mult(mask = true) {
         onConfirm() {
           refs.close(id);
         },
+        onClose() {
+          console.log(id)
+        }
       });
     });
   }

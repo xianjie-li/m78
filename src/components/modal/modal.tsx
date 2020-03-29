@@ -63,7 +63,7 @@ const zIndex = 1800;
 const _Modal: React.FC<ModalProps> = ({
   show,
   onRemove = dumpFn,
-  onClose = dumpFn,
+  onClose = dumpFn, /* TODO: render-api中的onClose可能存在与用户传入的冲突 */
   flexBtn,
   maxWidth = 360,
   footer,

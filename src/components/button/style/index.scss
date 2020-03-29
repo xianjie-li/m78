@@ -130,6 +130,7 @@
     box-shadow: none !important;
     background: transparent !important;
 
+    // 使用特有的交互样式
     &:focus, &:not(.__disabled):hover {
       background-color: $b-divider !important;
     }
@@ -160,6 +161,8 @@
     box-shadow: none !important;
     background: transparent !important;
     font-size: inherit;
+
+    // 使用特有的交互样式
     &:focus, &:not(.__disabled):hover {
       background-color: $b-divider !important;
     }

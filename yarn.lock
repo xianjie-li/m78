@@ -1226,10 +1226,10 @@
     "@umijs/fabric" "^2.0.4"
     prettier "^1.19.1"
 
-"@lxjx/react-render-api@^0.3.8":
-  version "0.3.8"
-  resolved "https://registry.npm.taobao.org/@lxjx/react-render-api/download/@lxjx/react-render-api-0.3.8.tgz#19a305538e83207b18b697b83c8dba439eb34dfc"
-  integrity sha1-GaMFU46DIHsYtpe4PI26Q56zTfw=
+"@lxjx/react-render-api@^0.3.9":
+  version "0.3.9"
+  resolved "https://registry.npmjs.org/@lxjx/react-render-api/-/react-render-api-0.3.9.tgz#d3082a807ba2affb485e06adb631bd4cae30a322"
+  integrity sha512-HrFKj9sN1OvWW78SAQpYD0C7SCp3EAr2B2bwgSWFigIQHc8VSabaUv9ZD4gCTh6uhABFWggf9GZsg4FSxnohcQ==
   dependencies:
     "@babel/runtime" "^7.7.6"
     "@lxjx/utils" "^1.1.7"
