@@ -1,6 +1,7 @@
-import { ComponentBasePropsWithAny } from '../types/types';
+import { ComponentBaseProps } from '../types/types';
+import { CheckCustom } from './check';
 
-export interface CheckProps extends ComponentBasePropsWithAny {
+export interface CheckProps extends ComponentBaseProps {
   /** 显示的样式 */
   type?: 'radio' | 'checkbox' | 'switch';
   /** 在视觉上设置为 `待定`，用于全选等操作满足部分条件的情况， 只限于type=checkbox */
@@ -23,7 +24,12 @@ export interface CheckProps extends ComponentBasePropsWithAny {
   block?: boolean;
   /** 同原生组件的`name` */
   name?: string;
+  /** 用于定制组件样式 */
+  customer?: CheckCustom;
+  /** 是否选中 */
   checked?: boolean;
+  /** 非受控模式下使用 */
   defaultChecked?: boolean;
+  /** checked触发改变的钩子，回传值为checked状态和value(未传入时为'') */
   onChange?: (checked: boolean, value: string) => void;
 }

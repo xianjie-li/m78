@@ -78,6 +78,7 @@ const Check: React.FC<CheckProps> = _props => {
     block = false,
     className,
     style,
+    customer,
   } = _props;
 
   const [checked, setChecked] = useFormState<boolean, string>(
@@ -87,7 +88,7 @@ const Check: React.FC<CheckProps> = _props => {
 
   const [focus, setFocus] = useState(false);
 
-  const renderCustom = builtIn[type];
+  const renderCustom = customer || builtIn[type];
 
   function focusHandle() {
     setFocus(true);
@@ -128,7 +129,7 @@ const Check: React.FC<CheckProps> = _props => {
       onKeyPress={mouseUpHandel}
       onClick={blurHandle}
     >
-      <If when={beforeLabel}>
+      <If when={beforeLabel && !customer}>
         <span className="fr-check_label-before">{beforeLabel}</span>
       </If>
       <input
@@ -145,7 +146,7 @@ const Check: React.FC<CheckProps> = _props => {
         autoFocus={autoFocus}
       />
       {renderCustom && renderCustom({ focus, checked, disabled }, _props)}
-      <If when={label}>
+      <If when={label && !customer}>
         <span className="fr-check_label">{label}</span>
       </If>
     </label>

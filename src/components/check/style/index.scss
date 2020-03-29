@@ -1,6 +1,7 @@
 @import '../../style/index';
 
 .fr-check {
+  position: relative;
   cursor: pointer;
   display: inline-flex;
   vertical-align: middle;
@@ -8,6 +9,7 @@
   font-size: 16px;
   line-height: $line-height-base;
   user-select: none;
+  z-index: 1;
 
   & + & {
     margin-left: 10px;
