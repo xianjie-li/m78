@@ -52,6 +52,11 @@ group:
 
 ❤ 需要注意的一点是，上例中的`myCheck`函数是`CheckCustom`接口的实现，而不是`React`组件
 
+## 通过`useCheck`管理选中状态
+
+通过`useCheck`钩子来实现强大的选择逻辑处理能力
+
+<code src="./useCheckDemo.tsx" />
 
 ## props
 

@@ -60,6 +60,13 @@
         }
       }
 
+      // 防止叠色
+      &.__disabled.__checked {
+        .fr-check_base-main {
+          border-color: transparent !important;
+        }
+      }
+
       .fr-check_base-main,
       .fr-check_base-inner {
         border-radius: $border-radius;
