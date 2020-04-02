@@ -10,6 +10,7 @@ const Demo = () => (
       <Check label="🍌香蕉" />
       <Check disabled label="🍎苹果(缺货)" />
       <Check label="🍇葡萄" />
+      <Check partial label="🍓草莓" />
     </div>
 
     <h3 className="mt-32">选择你的职业</h3>

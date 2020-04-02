@@ -46,8 +46,8 @@ const builtIn: BuiltIn = {
       </span>
     </span>
   ),
-  checkbox: meta => (
-    <span className={cls('fr-check_base fr-effect __md', '__checkbox', getCheckCls(meta))}>
+  checkbox: (meta, { partial }) => (
+    <span className={cls('fr-check_base fr-effect __md', '__checkbox', partial && '__partial', getCheckCls(meta))}>
       <span className="fr-check_base-main">
         <span className="fr-check_base-inner" />
       </span>

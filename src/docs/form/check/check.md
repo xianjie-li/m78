@@ -61,8 +61,8 @@ group:
 interface CheckProps extends ComponentBaseProps {
   /** 显示的样式 */
   type?: 'radio' | 'checkbox' | 'switch';
-  /** 在视觉上设置为 `待定`，用于全选等操作满足部分条件的情况， 只限于type=checkbox */
-  pending?: boolean;
+  /** 在视觉上设置为 `待定`，用于全选等操作满足部分条件的情况， 只限于type=checkbox,优选级小于checked */
+  partial?: boolean;
   /** 禁用 */
   disabled?: boolean;
   /** 渲染时自动获取焦点 */
