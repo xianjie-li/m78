@@ -12,23 +12,29 @@ const options = [
 ];
 
 const useCheckDemo = () => {
-  const res = useCheck<number, { id: number }>(options, [], item => item.id);
+  const res = useCheck<number, { id: number }>({
+    options,
+    disables: [3],
+    collector: item => item.id,
+  });
 
   return (
     <div>
       <h3>选择你最爱的水果</h3>
       <Check
-        label={res.allChecked ? '反选' : '全选'}
+        label={res.allChecked ? '取消' : '全选'}
         checked={res.allChecked}
         partial={res.partialChecked}
-        onChange={checked => checked ? res.checkAll() : res.unCheckAll()}
+        onChange={checked => {
+          checked ? res.checkAll() : res.unCheckAll()
+        }}
       />
       <div>
         {options.map(option => (
           <Check
             key={option.id}
             label={option.label}
-            disabled={option.disabled}
+            disabled={res.isDisabled(option.id)}
             checked={res.isChecked(option.id)}
             onChange={checked => res.setCheckBy(option.id, checked)}
           />

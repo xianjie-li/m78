@@ -8,12 +8,18 @@ const options2 = [
   { id: 1, label: '选项1' },
   { id: 2, label: '选项2' },
   { id: 3, label: '选项3' },
-  { id: 4, label: '选项4' },
+  { id: 4, label: '选项4', disabled: true },
   { id: 5, label: '选项5' },
 ];
 
 const Demo = () => {
-  const res = useCheck<Number, { id: number }>(options2, [1, 3], item => item.id);
+  // options2, [1, 3], item => item.id
+  const res = useCheck<Number, { id: number, disabled?: boolean; }>({
+    options: options2,
+    defaultCheck: [1, 3, 4],
+    disables: [4],
+    collector: item => item.id,
+  });
 
   return (
     <div>
@@ -23,7 +29,9 @@ const Demo = () => {
             <input
               type="checkbox"
               checked={res.isChecked(item.id)}
-              onChange={({ target }) => res.setCheckBy(item.id, target.checked)} />
+              onChange={({ target }) => res.setCheckBy(item.id, target.checked)}
+              disabled={item.disabled}
+            />
             {item.label}
           </label>
         ))}
@@ -80,12 +88,19 @@ const Demo = () => {
       <button onClick={() => console.log(res.isChecked(5))}>isChecked5</button>
       <br />
       <br />
+      <button onClick={() => console.log(res.isDisabled(1))}>isDisabled1</button>
+      <button onClick={() => console.log(res.isDisabled(2))}>isDisabled2</button>
+      <button onClick={() => console.log(res.isDisabled(3))}>isDisabled3</button>
+      <button onClick={() => console.log(res.isDisabled(4))}>isDisabled4</button>
+      <button onClick={() => console.log(res.isDisabled(5))}>isDisabled5</button>
+      <br />
+      <br />
       <button onClick={() => res.setChecked([1, 3])}>setChecked([1, 3])</button>
       <button onClick={() => res.setChecked([2, 4, 5])}>setChecked([2, 4, 5])</button>
       <br />
       <br />
       <button onClick={() => res.setCheckBy(2, true)}>setCheckBy(2, true)</button>
-      <button onClick={() => res.setCheckBy(3, false)}>setCheckBy(3, false)</button>
+      <button onClick={() => res.setCheckBy(4, false)}>setCheckBy(4, false)</button>
     </div>
   );
 };
