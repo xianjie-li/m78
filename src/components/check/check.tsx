@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { If } from '@lxjx/fr/lib/fork';
 
-import { formStateMap, useFormState } from '@lxjx/hooks';
+import { useFormState } from '@lxjx/hooks';
 
 import cls from 'classnames';
 
@@ -20,12 +20,12 @@ interface ShareMeta {
  * @param checkProps - Check组件接收到的prop
  * */
 export interface CheckCustom {
-  (meta: ShareMeta, checkProps: CheckProps): React.ReactElement;
+  (meta: ShareMeta, checkProps: CheckProps<any>): React.ReactElement;
 }
 
 /** 内置样式 */
 type BuiltIn = {
-  [key in NonNullable<CheckProps['type']>]?: CheckCustom;
+  [key in NonNullable<CheckProps<any>['type']>]?: CheckCustom;
 };
 
 /* 接收<ShareMeta>并生成适合的类名返回 */
@@ -66,14 +66,14 @@ const builtIn: BuiltIn = {
   ),
 };
 
-const Check: React.FC<CheckProps> = _props => {
+const Check = <Val extends unknown = undefined>(_props: CheckProps<Val>) => {
   const {
     type = 'checkbox',
     disabled = false,
     label,
     beforeLabel,
     autoFocus,
-    value = '',
+    value,
     name,
     block = false,
     className,
@@ -81,9 +81,14 @@ const Check: React.FC<CheckProps> = _props => {
     customer,
   } = _props;
 
-  const [checked, setChecked] = useFormState<boolean, string>(
-    formStateMap(_props, { value: 'checked', trigger: 'onChange', defaultValue: 'defaultChecked' }),
+  const [checked, setChecked] = useFormState<boolean, Val>(
+    _props,
     false,
+    {
+      valueKey: 'checked',
+      defaultValueKey: 'defaultChecked',
+      triggerKey: 'onChange',
+    }
   );
 
   const [focus, setFocus] = useState(false);
@@ -133,7 +138,7 @@ const Check: React.FC<CheckProps> = _props => {
         <span className="fr-check_label-before">{beforeLabel}</span>
       </If>
       <input
-        value={value}
+        value={String(value || '')}
         onFocus={focusHandle}
         onBlur={blurHandle}
         checked={checked}

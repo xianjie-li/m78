@@ -10,9 +10,9 @@ group:
 
 `Check`是作为`Radio`和`CheckBox`的底层组件存在的，通常情况下，你不会直接使用它，而是使用基于其实现的上层组件。
 
-尽管如此，每一个`Check`也都可以作为独立的开关组件(value 为 boolean 值的输入组件)来使用
+尽管如此，每一个`Check`也都可以作为独立的`Switch`组件(value 为 boolean 值的输入组件)来使用
 
-你也可以通过提供的 API 来定制自己的`Switch`、`Radio`、或者是`CheckBox`组件
+你还可以通过提供的 API 来定制自己的`Switch`、`Radio`、或者是`CheckBox`组件
 
 ## 示例
 
@@ -52,11 +52,14 @@ group:
 
 ❤ 需要注意的一点是，上例中的`myCheck`函数是`CheckCustom`接口的实现，而不是`React`组件
 
-## 通过`useCheck`管理选中状态
+## 使用`useCheck`
 
-通过`useCheck`钩子来实现强大的选择逻辑处理能力
+通过`useCheck`钩子来便捷的实现选中状态管理
 
 <code src="./useCheckDemo.tsx" />
+
+关于useCheck的更多用例，请查看`useCheck` 
+// TODO: 添加链接
 
 ## props
 

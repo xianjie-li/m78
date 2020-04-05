@@ -1,6 +1,6 @@
 import '@lxjx/fr/lib/check/style';
-import Radio from './radio';
+import RadioBox from './radio-box';
 
 export * from './type';
-export * from './radio';
-export default Radio;
+export * from './radio-box';
+export default RadioBox;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useMeasure, useUpdateEffect } from 'react-use';
 import { useSpring, animated, config } from 'react-spring';
-import { useFormState, formStateMap } from '@lxjx/hooks';
+import { useFormState } from '@lxjx/hooks';
 
 import Icon from '@lxjx/fr/lib/icon';
 import { If } from '@lxjx/fr/lib/fork';
@@ -39,8 +39,12 @@ const NoticeBar: React.FC<NoticeBarProps> = ({
 }) => {
   const [ref, { height }] = useMeasure();
   const [show, setShow] = useFormState(
-    formStateMap(props, { value: 'show', trigger: 'onClose' }),
+    props,
     true,
+    {
+      valueKey: 'show',
+      triggerKey: 'onClose',
+    }
   );
 
   const [spStyle, set] = useSpring(() => ({

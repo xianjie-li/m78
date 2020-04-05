@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Check from '@lxjx/fr/lib/check';
+import Button from '@lxjx/fr/lib/button';
 import { useCheck } from '@lxjx/fr/lib/hooks';
 
 const options = [
@@ -29,6 +30,8 @@ const useCheckDemo = () => {
           checked ? res.checkAll() : res.unCheckAll()
         }}
       />
+      <Button size="small" className="ml-12" onClick={res.toggleAll}>反选</Button>
+      <Button size="small" className="ml-12" onClick={() => res.setChecked([1, 4])}>选中1, 4</Button>
       <div>
         {options.map(option => (
           <Check
