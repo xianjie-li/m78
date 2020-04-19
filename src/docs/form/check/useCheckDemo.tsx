@@ -2,12 +2,12 @@ import React from 'react';
 
 import Check from '@lxjx/fr/lib/check';
 import Button from '@lxjx/fr/lib/button';
-import { useCheck } from '@lxjx/fr/lib/hooks';
+import { useCheck } from '@lxjx/hooks';
 
 const options = [
   { id: 1, label: '🍉西瓜' },
   { id: 2, label: '🍌香蕉' },
-  { id: 3, label: '🍎苹果(缺货)', disabled: true },
+  { id: 3, label: '🍎苹果' },
   { id: 4, label: '🍇葡萄' },
   { id: 5, label: '🍓草莓' },
 ];
@@ -15,7 +15,6 @@ const options = [
 const useCheckDemo = () => {
   const res = useCheck<number, { id: number }>({
     options,
-    disables: [3],
     collector: item => item.id,
   });
 
@@ -27,11 +26,15 @@ const useCheckDemo = () => {
         checked={res.allChecked}
         partial={res.partialChecked}
         onChange={checked => {
-          checked ? res.checkAll() : res.unCheckAll()
+          checked ? res.checkAll() : res.unCheckAll();
         }}
       />
-      <Button size="small" className="ml-12" onClick={res.toggleAll}>反选</Button>
-      <Button size="small" className="ml-12" onClick={() => res.setChecked([1, 4])}>选中1, 4</Button>
+      <Button size="small" className="ml-12" onClick={res.toggleAll}>
+        反选
+      </Button>
+      <Button size="small" className="ml-12" onClick={() => res.setChecked([1, 4])}>
+        选中1, 4
+      </Button>
       <div>
         {options.map(option => (
           <Check
@@ -44,7 +47,7 @@ const useCheckDemo = () => {
         ))}
       </div>
     </div>
-  )
+  );
 };
 
 export default useCheckDemo;

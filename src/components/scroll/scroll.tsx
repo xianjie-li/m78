@@ -6,7 +6,7 @@ import { animated, useSpring, interpolate, config } from 'react-spring';
 
 import { isNumber } from '@lxjx/utils';
 import { Transition } from '@lxjx/react-transition-spring';
-import { useSelf, useSyncState, useScroll } from '@lxjx/hooks';
+import { useSelf, useSetState, useScroll } from '@lxjx/hooks';
 import preventTopPullDown from 'prevent-top-pull-down';
 
 import { If, Toggle, Switch } from '@lxjx/fr/lib/fork';
@@ -110,7 +110,7 @@ const Scroll = React.forwardRef<ScrollRef, ScrollProps>(
     });
 
     /* 状态 */
-    const [state, setState] = useSyncState({
+    const [state, setState] = useSetState({
       pullDownLoading: false, // 正在下拉加载中，当处于此状态时无法触发下一次下拉或上拉
       pullDownSuccess: false, // 刷新成功时标记
       pullDownFail: false, // 刷新失败时标记

@@ -8,7 +8,7 @@ import { Transition } from '@lxjx/react-transition-spring';
 import _capitalize from 'lodash/capitalize';
 import cls from 'classnames';
 
-import { useSame } from '@lxjx/hooks';
+import { useSameState } from '@lxjx/hooks';
 import { DrawerProps } from './type';
 
 const zIndex = 1400;
@@ -27,7 +27,7 @@ const Drawer: React.FC<DrawerProps> = ({
   namespace,
   ...props
 }) => {
-  const [cIndex, instances, instanceId] = useSame('fr_drawer_metas', show, {
+  const [cIndex, instances, instanceId] = useSameState('fr_drawer_metas', show, {
     direction,
   });
 

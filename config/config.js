@@ -11,14 +11,12 @@ export default {
   },
   mode: 'doc',
   title: 'fr',
-  description: '一套正在开发中的react工具包',
+  description: 'components, hooks, utils, part of the react toolchain',
   logo: '/logo.png',
   locales: [['zh-CN', '中文']],
   resolve: {
-    includes: [
-      path.resolve(__dirname, '../src/docs')
-    ],
-  }
+    includes: [path.resolve(__dirname, '../src/docs')],
+  },
   // doc: {
   //   include: [],
   // },

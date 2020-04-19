@@ -6,9 +6,10 @@ export const stopPropagation = {
   },
 };
 
-/* 占位函数 */
+/* 占位函数 */ /* TODO: 改为引用utils中的 */
 export const dumpFn = (...arg: any[]): any => arg;
 
+/* TODO: 改为引用utils中的 */
 export function getGlobal() {
   // eslint-disable-next-line no-restricted-globals
   if (typeof self !== 'undefined') {

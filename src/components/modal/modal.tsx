@@ -8,7 +8,7 @@ import { config } from 'react-spring';
 import Icon from '@lxjx/fr/lib/icon';
 import Spin from '@lxjx/fr/lib/spin';
 import { dumpFn } from '@lxjx/fr/lib/util';
-import { useSame } from '@lxjx/hooks';
+import { useSameState } from '@lxjx/hooks';
 
 import createRenderApi, { ReactRenderApiProps } from '@lxjx/react-render-api';
 
@@ -63,7 +63,7 @@ const zIndex = 1800;
 const _Modal: React.FC<ModalProps> = ({
   show,
   onRemove = dumpFn,
-  onClose = dumpFn, /* TODO: render-api中的onClose可能存在与用户传入的冲突 */
+  onClose = dumpFn /* TODO: render-api中的onClose可能存在与用户传入的冲突 */,
   flexBtn,
   maxWidth = 360,
   footer,
@@ -87,7 +87,7 @@ const _Modal: React.FC<ModalProps> = ({
   content,
   namespace,
 }) => {
-  const [cIndex, instances] = useSame('fr_modal_metas', !!show, {
+  const [cIndex, instances] = useSameState('fr_modal_metas', !!show, {
     mask,
   });
   const nowZIndex = cIndex === -1 ? zIndex : cIndex + zIndex;

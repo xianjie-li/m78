@@ -12,6 +12,10 @@ interface UseCheckOptions<T, OPTION> {
   collector?: (item: OPTION) => T;
 }
 
+function onChange(v: any) {
+  console.log(v);
+}
+
 export function useCheck<T, OPTION = T>({
   options = [],
   defaultCheck = [],
@@ -38,9 +42,7 @@ export function useCheck<T, OPTION = T>({
 
   /** 传入一组选项值id来获取实际的选项 */
   function getCheckOptionByValues(values: T[]): OPTION[] {
-    return options.filter(item => {
-      return values.includes(pickItem(item));
-    });
+    return options.filter(item => values.includes(pickItem(item)));
   }
 
   /** 根据是否有collector来获取对应的item */
@@ -61,9 +63,7 @@ export function useCheck<T, OPTION = T>({
   /** 传入一组value，根据disables来过滤掉其中的禁用元素并返回 */
   function getEnable(values: T[]) {
     if (!refDisables.current.length) return values;
-    return values.filter(val => {
-      return !refDisables.current.includes(val);
-    });
+    return values.filter(val => !refDisables.current.includes(val));
   }
 
   const isChecked = useCallback((val: T) => {
@@ -72,9 +72,7 @@ export function useCheck<T, OPTION = T>({
     return ind !== -1;
   }, []);
 
-  const isDisabled = useCallback((val: T) => {
-    return refDisables.current.includes(val);
-  }, []);
+  const isDisabled = useCallback((val: T) => refDisables.current.includes(val), []);
 
   /** 从options中获取所有可用的选项，传入false时，从option中排除所有未禁用的选项并返回 */
   function getEnables(isCheck = true) {
@@ -96,7 +94,11 @@ export function useCheck<T, OPTION = T>({
     const [ind, current] = getIndex(val);
     if (!current) return;
     if (ind === -1) {
-      setChecked(prev => [...prev, current]);
+      setChecked(prev => {
+        const res = [...prev, current];
+        onChange(res);
+        return res;
+      });
     }
   }, []);
 
@@ -108,16 +110,21 @@ export function useCheck<T, OPTION = T>({
     if (ind !== -1) {
       const newArray = [...refChecked.current];
       newArray.splice(ind, 1);
+      onChange(newArray);
       setChecked(newArray);
     }
   }, []);
 
   const checkAll = useCallback(() => {
-    setChecked([...getEnables()]);
+    const res = getEnables();
+    onChange(res);
+    setChecked([...res]);
   }, []);
 
   const unCheckAll = useCallback(() => {
-    setChecked([...getEnables(false)]);
+    const res = getEnables(false);
+    onChange(res);
+    setChecked([...res]);
   }, []);
 
   const toggle = useCallback((val: T) => {
@@ -147,20 +154,24 @@ export function useCheck<T, OPTION = T>({
     setChecked(reverse);
   }, []);
 
-  const setCheck = useCallback((checked: T[]) => {
+  const setCheck = useCallback((_checked: T[]) => {
     // 取所有禁用且选中的值进行合并
-    const disabledChecked = getCheckOptionByValues(refDisables.current).filter(item => {
-      return isChecked(pickItem(item));
-    });
-    const newCheck = getCheckOptionByValues(checked);
+    const disabledChecked = getCheckOptionByValues(refDisables.current).filter(item =>
+      isChecked(pickItem(item)),
+    );
+    const newCheck = getCheckOptionByValues(_checked);
     setChecked([...newCheck, ...disabledChecked]);
   }, []);
 
-  const setCheckBy = useCallback((val: T, checked: boolean) => {
+  const setCheckBy = useCallback((val: T, _checked: boolean) => {
     const enables = getEnable([val]);
     if (!enables.length) return;
-    checked ? check(val) : unCheck(val);
+    _checked ? check(val) : unCheck(val);
   }, []);
+
+  function formatCheckedVal(_checkeds: OPTION[]) {
+    return (collector ? _checkeds.map(item => collector(item)) : _checkeds) as T[];
+  }
 
   const checkedDisableLength = checked.filter(item => disables.includes(pickItem(item)));
   const realOptionLength = options.length - disables.length; // 实际选项长度
@@ -168,7 +179,7 @@ export function useCheck<T, OPTION = T>({
 
   return {
     /** 被选中值, 存在collector时所有check项都会先走collector */
-    checked: (collector ? checked.map(item => collector(item)) : checked) as T[],
+    checked: formatCheckedVal(checked),
     /** 被选中的原始值，不走collector，未传collector时与check表现一致 */
     originalChecked: checked,
     /** 是否全部选中 */

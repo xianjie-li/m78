@@ -1,11 +1,19 @@
 <p align="center">
-    <img src="./public/logo.png" width="200" align="center" />
+    <img src="https://github.com/Iixianjie/fr/raw/master/public/logo.png" width="160" align="center" />
 </p>
 
 <h1 align="center">fr</h1>
-<p align="center">一套正在开发中的react工具包</p>
+<p align="center">components, hooks, utils, part of the react toolchain</p>
 
 <br>
+
+## Introduction
+
+一套 react 基础库，包含常用组件、hooks、以及其他工具。
+
+## ✨Features
+
+还没想到.jpg
 
 ## 📦Install
 
@@ -14,14 +22,6 @@ yarn add @lxjx/fr
 # or
 npm install @lxjx/fr
 ```
-
-<br>
-
-## ✨Features
-
-还没想到.jpg
-
-<br>
 
 ## 🍭Usage
 
