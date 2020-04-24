@@ -3,5 +3,7 @@ module.exports = {
 
   globals: {},
 
-  rules: {},
+  rules: {
+    'no-restricted-syntax': 'off',
+  },
 };

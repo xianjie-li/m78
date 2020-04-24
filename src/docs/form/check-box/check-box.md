@@ -5,7 +5,7 @@ group:
   path: /form
 ---
 
-# RadioBox 单选
+# CheckBox 多选
 
 基于[Check](/form/check)组件实现的上层组件，用于对一组选项中的一项或多项进行选择
 
