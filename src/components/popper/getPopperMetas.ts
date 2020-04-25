@@ -18,8 +18,12 @@ interface GetPopperMetasBound {
 interface GetPopperMetasOptions {
   /** 设置包裹元素，默认为窗口 */
   wrap?: HTMLElement | GetPopperMetasBound;
-  /** 偏移距离，对于左/上是减少距离，右/下是增加距离 */
+  /** 0 | 偏移距离，对于左/上是减少距离，右/下是增加距离 */
   offset?: number;
+  /** top | 预设方向 */
+  direction?: GetBoundMetasDirectionKeys;
+  /** 前一个方向，用于推测出当前更适合放置气泡的方向, 不传时取 direction */
+  prevDirection?: GetBoundMetasDirectionKeys;
 }
 
 /** 所有可能出现的方向 */
@@ -47,10 +51,21 @@ export interface GetBoundDirectionItem {
   y: number;
 }
 
-/** 返回值 */
-export type GetBoundMetasReturns = {
+/** 表示当前所有方向有关信息的对象 */
+export type GetBoundMetas = {
   [key in GetBoundMetasDirectionKeys]: GetBoundDirectionItem;
 };
+
+export interface getPopperMetasReturns {
+  /** 所有方向的描述对象 */
+  metas: GetBoundMetas;
+  /** 气泡是否可见 */
+  visible: boolean;
+  /** 气泡应显示的位置 */
+  currentDirection: GetBoundDirectionItem;
+  /** 表示currentDirection的key */
+  currentDirectionKey: GetBoundMetasDirectionKeys;
+}
 
 /** 关联的方向，用于帮助猜测下一个Direction的合理位置 */
 const relateDirectionMap: { [key in GetBoundMetasDirectionKeys]: GetBoundMetasDirectionKeys[] } = {
@@ -69,13 +84,14 @@ const relateDirectionMap: { [key in GetBoundMetasDirectionKeys]: GetBoundMetasDi
 };
 
 const defaultOptions = {
-  offset: 12,
+  offset: 0,
+  direction: 'top' as GetBoundMetasDirectionKeys,
 };
 
 /* TODO: 获取该位置是否可见、气泡相对于目标的方向 */
 
 /**
- * 返回，可用、元素可用x，y位置, 元素尺寸，目标尺寸, 可见hidden
+ * 根据目标元素和气泡元素的尺寸等获取气泡在目标各位置上的位置和可用信息、是否可见、以及推测当前合适的位置
  * @param source - 气泡元素的dom节点或虚拟尺寸信息
  * @param target - 目标元素的dom节点或虚拟位置信息
  * @param options - 一些额外配置
@@ -85,8 +101,8 @@ export function getPopperMetas(
   source: HTMLElement | GetPopperMetasSource,
   target: HTMLElement | GetPopperMetasBound,
   options?: GetPopperMetasOptions,
-): GetBoundMetasReturns {
-  const { wrap, offset } = {
+): getPopperMetasReturns {
+  const { wrap, offset, direction, prevDirection } = {
     ...defaultOptions,
     ...options,
   };
@@ -216,7 +232,15 @@ export function getPopperMetas(
   const topBottomEndYBase = targetB.left + targetB.width - sourceB.width + winSl;
   const topBottomXBase = targetB.left - targetOverWidthHalf + winSl;
 
-  return {
+  const leftHidden = wrapB.left < targetB.left + allWidth + offset;
+  const topHidden = wrapB.top < targetB.top + allHeight + offset;
+  const rightHidden = wrapB.left + wrapB.width > targetB.left - sourceB.width - offset;
+
+  console.log('left', leftHidden);
+  console.log('top', topHidden);
+  console.log('right', rightHidden);
+
+  const dMeta = {
     top: {
       safe: topBase && enableTB,
       x: topBottomXBase,
@@ -278,6 +302,15 @@ export function getPopperMetas(
       y: rightLeftEndYBase,
     },
   };
+
+  const current = getPopperDirectionForMeta(dMeta, direction, prevDirection || direction);
+
+  return {
+    metas: dMeta,
+    currentDirection: current[0],
+    currentDirectionKey: current[1],
+    visible: false,
+  };
 }
 
 /**
@@ -287,10 +320,10 @@ export function getPopperMetas(
  * @param prevDirection - 表示前一个位置的key
  * */
 export function getPopperDirectionForMeta(
-  meta: GetBoundMetasReturns,
+  meta: GetBoundMetas,
   direction: GetBoundMetasDirectionKeys,
   prevDirection: GetBoundMetasDirectionKeys,
-): [GetBoundDirectionItem, GetBoundMetasDirectionKeys] | undefined {
+): [GetBoundDirectionItem, GetBoundMetasDirectionKeys] {
   // 当前位置可用时优先选取
   if (meta[direction].safe) {
     return [meta[direction], direction];
@@ -323,7 +356,6 @@ export function getPopperDirectionForMeta(
   );
 
   if (current) {
-    console.log(123123, current);
     return current;
   }
 
@@ -334,5 +366,6 @@ export function getPopperDirectionForMeta(
     }
   }
 
+  // 默认前一个方向
   return [meta[prevDirection], prevDirection];
 }

@@ -3,11 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useFn, useSetState } from '@lxjx/hooks';
 import { useSpring, animated, config } from 'react-spring';
 import cls from 'classnames';
-import {
-  GetBoundMetasDirectionKeys,
-  getPopperMetas,
-  getPopperDirectionForMeta,
-} from './getPopperMetas';
+import { GetBoundMetasDirectionKeys, getPopperMetas } from './getPopperMetas';
 
 interface PopperProps {
   /** 直接指定目标元素 */
@@ -29,24 +25,27 @@ const Popper: React.FC<PopperProps> = ({ children, direction = 'bottomEnd' }) =>
 
   useEffect(() => {
     wrapEl.current.addEventListener('scroll', () => {
-      const meta = getPopperMetas(popperEl.current, targetEl.current, {
-        wrap: wrapEl.current,
-      });
-      const d = getPopperDirectionForMeta(meta, direction, state.direction);
+      const { metas, currentDirection, currentDirectionKey } = getPopperMetas(
+        popperEl.current,
+        targetEl.current,
+        {
+          offset: 12,
+          wrap: wrapEl.current,
+          direction,
+          prevDirection: state.direction,
+        },
+      );
 
-      if (d) {
-        const [currentMeta, currentDirection] = d;
-
-        if (currentDirection !== state.direction) {
+      if (currentDirection && currentDirectionKey) {
+        if (currentDirectionKey !== state.direction) {
           setState({
-            direction: currentDirection,
+            direction: currentDirectionKey,
           });
         }
-        console.log(d);
 
         set({
-          left: currentMeta.x,
-          top: currentMeta.y,
+          left: currentDirection.x,
+          top: currentDirection.y,
         });
       }
     });
@@ -59,7 +58,7 @@ const Popper: React.FC<PopperProps> = ({ children, direction = 'bottomEnd' }) =>
   return (
     <div className="wrap" ref={wrapEl}>
       <div className="inner">
-        <span style={{ margin: 500, display: 'inline-block' }} ref={targetEl}>
+        <span style={{ margin: 700, display: 'inline-block' }} ref={targetEl}>
           {children}
         </span>
         {/* {children && React.cloneElement(children, { onClick: clickHandle })} */}
