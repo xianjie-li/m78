@@ -232,14 +232,6 @@ export function getPopperMetas(
   const topBottomEndYBase = targetB.left + targetB.width - sourceB.width + winSl;
   const topBottomXBase = targetB.left - targetOverWidthHalf + winSl;
 
-  const leftHidden = wrapB.left < targetB.left + allWidth + offset;
-  const topHidden = wrapB.top < targetB.top + allHeight + offset;
-  const rightHidden = wrapB.left + wrapB.width > targetB.left - sourceB.width - offset;
-
-  console.log('left', leftHidden);
-  console.log('top', topHidden);
-  console.log('right', rightHidden);
-
   const dMeta = {
     top: {
       safe: topBase && enableTB,
@@ -304,12 +296,28 @@ export function getPopperMetas(
   };
 
   const current = getPopperDirectionForMeta(dMeta, direction, prevDirection || direction);
+  const currentMeta = current[0];
+
+  const cL = currentMeta.x;
+  const cT = currentMeta.y;
+  const cW = sourceB.width;
+  const ch = sourceB.height;
+
+  const hidden =
+    /* left */
+    cL + cW < wrapB.left + winSl ||
+    /* top */
+    cT + ch < wrapB.top + winSt ||
+    /* bottom */
+    cT > wrapB.top + wrapB.height + winSt ||
+    /* right */
+    cL > wrapB.left + wrapB.width + winSl;
 
   return {
     metas: dMeta,
     currentDirection: current[0],
     currentDirectionKey: current[1],
-    visible: false,
+    visible: !hidden,
   };
 }
 

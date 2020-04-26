@@ -23,6 +23,54 @@
   box-shadow: $shadow-2;
   z-index: $z-index-message;
 
+  &.__top {
+    transform-origin: center bottom;
+  }
+
+  &.__topStart {
+    transform-origin: left bottom;
+  }
+
+  &.__topEnd {
+    transform-origin: right bottom;
+  }
+
+  &.__left {
+    transform-origin: right center;
+  }
+
+  &.__leftStart {
+    transform-origin: top right;
+  }
+
+  &.__leftEnd {
+    transform-origin: bottom right;
+  }
+
+  &.__right {
+    transform-origin: left center;
+  }
+
+  &.__rightStart {
+    transform-origin: top left;
+  }
+
+  &.__rightEnd {
+    transform-origin: bottom left;
+  }
+
+  &.__bottom {
+    transform-origin: center top;
+  }
+
+  &.__bottomStart {
+    transform-origin: left top;
+  }
+
+  &.__bottomEnd {
+    transform-origin: right top;
+  }
+
   &_content {
     height: 100%;
     width: 100%;
