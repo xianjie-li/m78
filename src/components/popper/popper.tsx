@@ -1,8 +1,10 @@
 import Portal from '@lxjx/fr/lib/portal';
 import React, { useEffect, useRef, useState } from 'react';
 import { useFn, useSelf, useSetState } from '@lxjx/hooks';
-import { useSpring, animated, config } from 'react-spring';
+import { useSpring, animated, interpolate, config } from 'react-spring';
 import cls from 'classnames';
+import { useUpdateEffect } from 'react-use';
+import _throttle from 'lodash/throttle';
 import { GetBoundMetasDirectionKeys, getPopperMetas } from './getPopperMetas';
 
 interface PopperProps {
@@ -24,6 +26,8 @@ const Popper: React.FC<PopperProps> = ({ children, direction = 'top' }) => {
     lastX: (undefined as unknown) as number,
     lastY: (undefined as unknown) as number,
     lastVisible: true,
+    lastPopperW: 0,
+    lastPopperH: 0,
   });
 
   const [state, setState] = useSetState({
@@ -34,71 +38,88 @@ const Popper: React.FC<PopperProps> = ({ children, direction = 'top' }) => {
   const showBase = state.show ? 1 : 0;
 
   const [spProps, set] = useSpring(() => ({
-    left: 0,
-    top: 0,
+    xy: [0, 0],
     opacity: showBase,
-    transform: `scale3d(${showBase}, ${showBase}, ${showBase})`,
+    scale: showBase,
     config: config.stiff,
   }));
 
-  const refresh = useFn(() => {
-    if (!popperEl.current || !targetEl.current) return;
-
-    const { currentDirection, currentDirectionKey, visible } = getPopperMetas(
-      popperEl.current,
-      targetEl.current,
-      {
-        offset: 12,
-        wrap: wrapEl.current,
-        direction,
-        prevDirection: state.direction,
-      },
-    );
-
-    if (currentDirection && currentDirectionKey) {
-      // 方向与上次不同时同步
-      if (currentDirectionKey !== state.direction) {
-        setState({
-          direction: currentDirectionKey,
-        });
-      }
-
-      // 前一次位置与后一次完全相等时跳过
-      if (self.lastX === currentDirection.x && self.lastY === currentDirection.y) {
-        return;
-      }
-
-      // 前后visible状态均为false时跳过
-      if (!self.lastVisible && !visible) {
-        self.refreshCount = 0; // 防止初次入场时抖动
-        return;
-      }
-
-      self.lastVisible = visible;
-      self.lastX = currentDirection.x;
-      self.lastY = currentDirection.y;
-
-      set({
-        left: currentDirection.x,
-        top: currentDirection.y,
-        opacity: visible ? 1 : 0,
-        immediate: self.refreshCount === 0,
-      });
-
-      self.refreshCount++;
+  useEffect(() => {
+    if (state.show) {
+      self.lastPopperW = popperEl.current.offsetWidth;
+      self.lastPopperH = popperEl.current.offsetHeight;
     }
   });
 
+  console.log(123);
+
+  const refresh = useFn(
+    () => {
+      if (!popperEl.current || !targetEl.current) return;
+
+      const { currentDirection, currentDirectionKey, visible } = getPopperMetas(
+        // popperEl.current,
+        { width: self.lastPopperW, height: self.lastPopperH },
+        targetEl.current,
+        {
+          offset: 12,
+          wrap: wrapEl.current,
+          direction,
+          prevDirection: state.direction,
+        },
+      );
+
+      if (currentDirection && currentDirectionKey) {
+        // 方向与上次不同时同步
+        if (currentDirectionKey !== state.direction) {
+          setState({
+            direction: currentDirectionKey,
+          });
+        }
+
+        // 前一次位置与后一次完全相等时跳过
+        if (self.lastX === currentDirection.x && self.lastY === currentDirection.y) {
+          return;
+        }
+
+        // 前后visible状态均为false时跳过
+        if (!self.lastVisible && !visible) {
+          self.refreshCount = 0; // 防止初次入场/重入场时抖动
+          return;
+        }
+
+        self.lastVisible = visible;
+        self.lastX = currentDirection.x;
+        self.lastY = currentDirection.y;
+
+        set({
+          xy: [currentDirection.x, currentDirection.y],
+          opacity: visible && state.show ? 1 : 0,
+          scale: showBase,
+          immediate: self.refreshCount === 0,
+        });
+
+        self.refreshCount++;
+      }
+    },
+    f => _throttle(f, 0),
+  );
+
+  /** 初始化定位、默认触发变更方式(wrap滚动触发) */
   useEffect(() => {
     refresh();
     wrapEl.current.addEventListener('scroll', refresh);
   }, []);
 
-  useEffect(() => {
-    set({
-      opacity: showBase,
-      transform: `scale3d(${showBase}, ${showBase}, ${showBase})`,
-    });
+  /** show变更处理 */
+  useUpdateEffect(() => {
+    self.lastX = 0;
+    self.lastY = 0;
+    self.lastVisible = true;
+    refresh();
+    // set({
+    //   opacity: showBase,
+    // });
   }, [state.show]);
 
   return (
@@ -111,7 +132,13 @@ const Popper: React.FC<PopperProps> = ({ children, direction = 'top' }) => {
         <Portal namespace="popper">
           <animated.div
             ref={popperEl}
-            style={spProps}
+            style={{
+              transform: interpolate(
+                [spProps.xy, spProps.scale],
+                ([x, y], sc) => `translate3d(${x}px, ${y}px, 0) scale3d(${sc}, ${sc}, ${sc})`,
+              ),
+              opacity: spProps.opacity.interpolate(o => o),
+            }}
             className={cls('fr-popper', state.direction && `__${state.direction}`)}
           >
             <span className={cls('fr-popper_arrow', state.direction && `__${state.direction}`)} />
