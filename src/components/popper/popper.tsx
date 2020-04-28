@@ -5,8 +5,8 @@ import { useSpring, animated, interpolate, config } from 'react-spring';
 import cls from 'classnames';
 import { useUpdateEffect } from 'react-use';
 import _throttle from 'lodash/throttle';
-import {isDom, isNumber} from '@lxjx/utils';
-import {GetBoundMetasDirectionKeys, getPopperMetas} from './getPopperMetas';
+import { isDom, isNumber } from '@lxjx/utils';
+import { GetBoundMetasDirectionKeys, getPopperMetas } from './getPopperMetas';
 
 interface PopperProps {
   /** 直接指定目标元素 */
@@ -29,7 +29,7 @@ function getRefDomOrDom(
   return undefined;
 }
 
-const Popper: React.FC<PopperProps> = ({children, direction = 'top', wrapEl}) => {
+const Popper: React.FC<PopperProps> = ({ children, direction = 'top', wrapEl }) => {
   const popperEl = useRef<HTMLDivElement>(null!);
   const targetEl = useRef<any>(null!);
 
@@ -78,8 +78,8 @@ const Popper: React.FC<PopperProps> = ({children, direction = 'top', wrapEl}) =>
       if (!targetEl.current) return;
       if (!isNumber(self.lastPopperW) || !isNumber(self.lastPopperH)) return;
 
-      const {currentDirection, currentDirectionKey, visible} = getPopperMetas(
-        {width: self.lastPopperW, height: self.lastPopperH},
+      const { currentDirection, currentDirectionKey, visible } = getPopperMetas(
+        { width: self.lastPopperW, height: self.lastPopperH },
         targetEl.current,
         {
           offset: 12,
@@ -151,8 +151,8 @@ const Popper: React.FC<PopperProps> = ({children, direction = 'top', wrapEl}) =>
   return (
     <>
       <span
-        onClick={() => setState({show: !state.show})}
-        style={{margin: 700, display: 'inline-block'}}
+        onClick={() => setState({ show: !state.show })}
+        style={{ margin: 700, display: 'inline-block' }}
         ref={targetEl}
       >
         {children}
@@ -169,7 +169,7 @@ const Popper: React.FC<PopperProps> = ({children, direction = 'top', wrapEl}) =>
           }}
           className={cls('fr-popper', state.direction && `__${state.direction}`)}
         >
-          <span className={cls('fr-popper_arrow', state.direction && `__${state.direction}`)}/>
+          <span className={cls('fr-popper_arrow', state.direction && `__${state.direction}`)} />
           <div className="fr-popper_content">提示一段提示</div>
         </animated.div>
       </Portal>
