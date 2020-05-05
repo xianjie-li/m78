@@ -7,8 +7,14 @@ import { useUpdateEffect } from 'react-use';
 import _throttle from 'lodash/throttle';
 import { isDom, isNumber } from '@lxjx/utils';
 import { GetBoundMetasDirectionKeys, getPopperMetas } from './getPopperMetas';
+import { ComponentBaseProps } from '../types/types';
 
-interface PopperProps {
+/**
+ * 挂子节点、挂兄弟节点(然后删除?)
+ * 要求组件能够接受children并渲染且组件能够正常渲染出能接受相关事件的包裹元素
+ * */
+
+interface PopperProps extends ComponentBaseProps {
   /** 直接指定目标元素 */
   targetEl?: HTMLElement;
   /** 气泡方向 */
@@ -17,6 +23,8 @@ interface PopperProps {
   children?: React.ReactElement;
   /** 包裹元素，作为气泡边界的标识，并会在滚动时对气泡进行更新, 默认情况下，边界为窗口，并在window触发滚动时更新气泡 */
   wrapEl?: HTMLElement | React.MutableRefObject<any>;
+  /** 12 | 气泡的偏移位置 */
+  offset?: number;
 }
 
 /** 传入dom时原样返回，传入执行dom对象的ref时返回current，否则返回undefined */
@@ -29,7 +37,14 @@ function getRefDomOrDom(
   return undefined;
 }
 
-const Popper: React.FC<PopperProps> = ({ children, direction = 'top', wrapEl }) => {
+const Popper: React.FC<PopperProps> = ({
+  className,
+  style,
+  children,
+  direction = 'top',
+  wrapEl,
+  offset = 12,
+}) => {
   const popperEl = useRef<HTMLDivElement>(null!);
   const targetEl = useRef<any>(null!);
 
@@ -82,7 +97,7 @@ const Popper: React.FC<PopperProps> = ({ children, direction = 'top', wrapEl }) 
         { width: self.lastPopperW, height: self.lastPopperH },
         targetEl.current,
         {
-          offset: 12,
+          offset,
           wrap: getRefDomOrDom(wrapEl),
           direction,
           prevDirection: state.direction,
@@ -108,6 +123,14 @@ const Popper: React.FC<PopperProps> = ({ children, direction = 'top', wrapEl }) 
           return;
         }
 
+        /**
+         * 跳过动画,直接设置为目标状态
+         * 1. 由可见状态进入不可见状态
+         * */
+        // if (self.lastVisible && !visible) {
+        //   self.refreshCount = 0;
+        // }
+
         self.lastVisible = visible;
         self.lastX = currentDirection.x;
         self.lastY = currentDirection.y;
@@ -115,7 +138,7 @@ const Popper: React.FC<PopperProps> = ({ children, direction = 'top', wrapEl }) 
         set({
           xy: [currentDirection.x, currentDirection.y],
           opacity: visible && state.show ? 1 : 0,
-          scale: showBase,
+          scale: visible && state.show ? 1 : 0,
           immediate: self.refreshCount === 0,
         });
 
@@ -128,8 +151,8 @@ const Popper: React.FC<PopperProps> = ({ children, direction = 'top', wrapEl }) 
   /** 初始化定位、默认触发气泡更新方式(wrap滚动触发) */
   useEffect(() => {
     refresh();
-    const e = getRefDomOrDom(wrapEl) || window;
 
+    const e = getRefDomOrDom(wrapEl) || window;
     e.addEventListener('scroll', refresh);
 
     return () => {
@@ -143,9 +166,6 @@ const Popper: React.FC<PopperProps> = ({ children, direction = 'top', wrapEl }) 
     self.lastY = 0;
     self.lastVisible = true;
     refresh();
-    // set({
-    //   opacity: showBase,
-    // });
   }, [state.show]);
 
   return (
@@ -161,16 +181,19 @@ const Popper: React.FC<PopperProps> = ({ children, direction = 'top', wrapEl }) 
         <animated.div
           ref={popperEl}
           style={{
+            ...style,
             transform: interpolate(
               [spProps.xy, spProps.scale] as number[],
               ([x, y]: any, sc) => `translate3d(${x}px, ${y}px, 0) scale3d(${sc}, ${sc}, ${sc})`,
             ),
             opacity: spProps.opacity.interpolate(o => o),
           }}
-          className={cls('fr-popper', state.direction && `__${state.direction}`)}
+          className={cls('fr-popper', state.direction && `__${state.direction}`, className)}
         >
           <span className={cls('fr-popper_arrow', state.direction && `__${state.direction}`)} />
-          <div className="fr-popper_content">提示一段提示</div>
+          <div className="fr-popper_content">
+            <div>提示一段提示提示一段提示</div>
+          </div>
         </animated.div>
       </Portal>
     </>

@@ -1,7 +1,6 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import Popper from '@lxjx/fr/lib/popper';
 import Button from '@lxjx/fr/lib/button';
-import sty from './demo.module.scss';
 
 const Demo = () => {
   const wrap = useRef<HTMLDivElement>(null!);
