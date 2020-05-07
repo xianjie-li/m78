@@ -10,7 +10,7 @@ const Demo = () => {
       <div ref={wrap} className="wrap">
         <div className="inner">
           <Popper wrapEl={wrap}>
-            <Button>click</Button>
+            <Button style={{ margin: 700 }}>click</Button>
           </Popper>
         </div>
       </div>

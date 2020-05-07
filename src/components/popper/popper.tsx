@@ -1,12 +1,12 @@
 import Portal from '@lxjx/fr/lib/portal';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useFn, useSelf, useSetState } from '@lxjx/hooks';
-import { useSpring, animated, interpolate, config } from 'react-spring';
+import { animated, config, interpolate, useSpring } from 'react-spring';
 import cls from 'classnames';
 import { useUpdateEffect } from 'react-use';
 import _throttle from 'lodash/throttle';
-import { isDom, isNumber } from '@lxjx/utils';
-import { GetBoundMetasDirectionKeys, getPopperMetas } from './getPopperMetas';
+import { createRandString, isDom, isNumber } from '@lxjx/utils';
+import { GetBoundMetasDirectionKeys, getPopperMetas, GetPopperMetasBound } from './getPopperMetas';
 import { ComponentBaseProps } from '../types/types';
 
 /**
@@ -15,11 +15,15 @@ import { ComponentBaseProps } from '../types/types';
  * */
 
 interface PopperProps extends ComponentBaseProps {
-  /** 直接指定目标元素 */
-  targetEl?: HTMLElement;
+  /** 直接指定 目标元素/包含目标元素的ref对象/一个表示位置的GetPopperMetasBound对象, 优先级大于children */
+  target?: HTMLElement | GetPopperMetasBound | React.MutableRefObject<HTMLElement>;
   /** 气泡方向 */
   direction?: GetBoundMetasDirectionKeys;
-  /** 可选的子元素 */
+  /**
+   * 子元素, 作为气泡的定位对象使用, 子元素包含以下限制
+   * 1. 只能包含一个直接子节点
+   * 2. 该节点能够接受onMouseEnter、onMouseLeave、onFocus、onClick等事件
+   * */
   children?: React.ReactElement;
   /** 包裹元素，作为气泡边界的标识，并会在滚动时对气泡进行更新, 默认情况下，边界为窗口，并在window触发滚动时更新气泡 */
   wrapEl?: HTMLElement | React.MutableRefObject<any>;
@@ -27,7 +31,7 @@ interface PopperProps extends ComponentBaseProps {
   offset?: number;
 }
 
-/** 传入dom时原样返回，传入执行dom对象的ref时返回current，否则返回undefined */
+/** 传入dom时原样返回，传入包含dom对象的ref时返回current，否则返回undefined */
 function getRefDomOrDom(
   target?: HTMLElement | React.MutableRefObject<any>,
 ): HTMLElement | undefined {
@@ -44,9 +48,13 @@ const Popper: React.FC<PopperProps> = ({
   direction = 'top',
   wrapEl,
   offset = 12,
+  target,
 }) => {
   const popperEl = useRef<HTMLDivElement>(null!);
-  const targetEl = useRef<any>(null!);
+
+  const id = useMemo(() => createRandString(1), []);
+  // 在未传入target时，用于标识出目标所在元素
+  const targetSelector = `fr-popper_${id}`;
 
   const self = useSelf({
     // 优化动画
@@ -61,6 +69,8 @@ const Popper: React.FC<PopperProps> = ({
     lastPopperW: 0,
     /** 最后获取到的气泡高度 */
     lastPopperH: 0,
+    /** 目标元素 */
+    target: undefined as HTMLElement | GetPopperMetasBound | undefined,
   });
 
   const [state, setState] = useSetState({
@@ -79,6 +89,23 @@ const Popper: React.FC<PopperProps> = ({
     config: config.stiff,
   }));
 
+  // 根据参数设置self.target的值
+  useEffect(() => {
+    // props.target能正常取到值
+    const _target = getTarget();
+    if (_target) {
+      self.target = _target;
+      return;
+    }
+    // 根据标记targetSelector查到目标元素
+    const queryEl = document.querySelector(`.${targetSelector}`) as HTMLElement;
+    if (queryEl) {
+      self.target = queryEl;
+      return;
+    }
+    self.target = undefined;
+  }, [children, target]);
+
   /** 保存气泡尺寸，由于有缩放动画，直接获取dom信息会出现偏差 */
   useEffect(() => {
     if (state.show) {
@@ -90,12 +117,12 @@ const Popper: React.FC<PopperProps> = ({
   /** 更新气泡位置、状态、显示等 */
   const refresh = useFn(
     () => {
-      if (!targetEl.current) return;
+      if (!self.target) return;
       if (!isNumber(self.lastPopperW) || !isNumber(self.lastPopperH)) return;
-
+      console.log(self.target);
       const { currentDirection, currentDirectionKey, visible } = getPopperMetas(
         { width: self.lastPopperW, height: self.lastPopperH },
-        targetEl.current,
+        self.target,
         {
           offset,
           wrap: getRefDomOrDom(wrapEl),
@@ -145,7 +172,7 @@ const Popper: React.FC<PopperProps> = ({
         self.refreshCount++;
       }
     },
-    f => _throttle(f, 60),
+    f => _throttle(f, 100),
   );
 
   /** 初始化定位、默认触发气泡更新方式(wrap滚动触发) */
@@ -168,15 +195,46 @@ const Popper: React.FC<PopperProps> = ({
     refresh();
   }, [state.show]);
 
+  /**
+   * 根据props.target和children来获取作为目标的GetPopperMetasBound对象或dom元素
+   *
+   * */
+  function getTarget() {
+    // if (!target) return undefined;
+    // target能正常取到dom元素
+    const el = getRefDomOrDom(target as any);
+    if (el) return el;
+    // 是GetPopperMetasBound对象
+    if (
+      target &&
+      'left' in target &&
+      'right' in target &&
+      'width' in target &&
+      'height' in target
+    ) {
+      return target as GetPopperMetasBound;
+    }
+    return undefined;
+  }
+
+  function renderChildren() {
+    if (target) return null;
+    if (!children) return null;
+    return React.cloneElement(children, {
+      className: cls(children.props.className, targetSelector),
+    });
+  }
+
   return (
     <>
-      <span
-        onClick={() => setState({ show: !state.show })}
-        style={{ margin: 700, display: 'inline-block' }}
-        ref={targetEl}
-      >
-        {children}
-      </span>
+      {/* <span */}
+      {/*  onClick={() => setState({ show: !state.show })} */}
+      {/*  ref={targetEl} */}
+      {/* > */}
+      {/*  {renderChildren()} */}
+      {/* </span> */}
+      {renderChildren()}
+
       <Portal namespace="popper">
         <animated.div
           ref={popperEl}

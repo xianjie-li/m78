@@ -7,7 +7,7 @@ interface GetPopperMetasSource {
 }
 
 /** 描述位置和尺寸 */
-interface GetPopperMetasBound {
+export interface GetPopperMetasBound {
   width: number;
   height: number;
   left: number;
