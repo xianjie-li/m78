@@ -109,7 +109,7 @@ export function getPopperMetas(
   const wH = window.innerHeight;
   const wW = window.innerWidth;
 
-  // 取值, dom > GetPopperMetasBound > 默认(窗口)
+  /** 取值, dom > GetPopperMetasBound > 默认(窗口) */
   const wrapB = isDom(wrap)
     ? wrap.getBoundingClientRect()
     : wrap || {
@@ -124,55 +124,55 @@ export function getPopperMetas(
 
   /* ########## 基础依赖值 ######### */
 
-  // 目标元素 + 气泡元素的总尺寸
+  /** 目标元素 + 气泡元素的总尺寸 */
   const allHeight = targetB.height + sourceB.height;
   const allWidth = targetB.width + sourceB.width;
 
-  // 包裹元素距离窗口底部的距离
+  /** 包裹元素距离窗口底部的距离 */
   const WrapOffsetToBottom = wH - wrapB.top - wrapB.height;
-  // 包裹元素距离窗口右边的距离
+  /** 包裹元素距离窗口右边的距离 */
   const WrapOffsetToRight = wW - wrapB.left - wrapB.width;
 
-  //  气泡元素尺寸减去目标元素尺寸
+  /** 气泡元素尺寸减去目标元素尺寸 */
   const targetOverWidth = sourceB.width - targetB.width;
   const targetOverHeight = sourceB.height - targetB.height;
 
-  //  气泡元素尺寸减去目标元素尺寸的一半
+  /** 气泡元素尺寸减去目标元素尺寸的一半 */
   const targetOverWidthHalf = targetOverWidth / 2;
   const targetOverHeightHalf = targetOverHeight / 2;
 
   /* ######### 联动判断处理 ########## */
 
-  // 上下基础启用规则
+  /** 上下基础启用规则 */
   const TBEnableBaseLeft = targetB.left - wrapB.left;
   const TBEnableBaseRight = targetB.left + WrapOffsetToRight + targetB.width;
 
-  // 启用top、bottom的额外条件
+  /** 启用top、bottom的额外条件 */
   const enableTB =
     /*  */
     TBEnableBaseLeft - targetOverWidthHalf > 0 &&
     /*  */
     TBEnableBaseRight + targetOverWidthHalf < wW;
 
-  // 启用topStart、bottomStart的额外条件
+  /** 启用topStart、bottomStart的额外条件 */
   const enableTEBE =
     /*  */
     TBEnableBaseLeft - targetOverWidth - offset > 0 &&
     /*  */
     TBEnableBaseRight - offset < wW;
 
-  // 启用topStart、bottomStart的额外条件
+  /** 启用topStart、bottomStart的额外条件 */
   const enableTSBS =
     /*  */
     TBEnableBaseLeft + offset > 0 &&
     /*  */
     TBEnableBaseRight + targetOverWidth + offset < wW;
 
-  // 左右基础启用规则
+  /** 左右基础启用规则 */
   const LREnableBaseTop = targetB.top - wrapB.top;
   const LREnableBaseBottom = targetB.top + WrapOffsetToBottom + targetB.height;
 
-  // 启用left、right的额外条件
+  /** 启用left、right的额外条件 */
   const enableLR =
     /* 目标顶边距 - 包裹顶边距 > 0 */
     LREnableBaseTop - targetOverHeightHalf > 0 &&
