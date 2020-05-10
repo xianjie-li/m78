@@ -1,60 +1,44 @@
 import Portal from '@lxjx/fr/lib/portal';
 import React, { useEffect, useMemo, useRef } from 'react';
-import { useFn, useSelf, useSetState } from '@lxjx/hooks';
+import { useFn, useFormState, useSelf, useSetState } from '@lxjx/hooks';
 import { animated, config, interpolate, useSpring } from 'react-spring';
 import cls from 'classnames';
 import { useUpdateEffect } from 'react-use';
 import _throttle from 'lodash/throttle';
-import { createRandString, isDom, isNumber } from '@lxjx/utils';
+import { createRandString, isNumber } from '@lxjx/utils';
+import { getRefDomOrDom, isPopperMetasBound, getTriggerType } from './utils';
 import { GetBoundMetasDirectionKeys, getPopperMetas, GetPopperMetasBound } from './getPopperMetas';
-import { ComponentBaseProps } from '../types/types';
+import { PopperProps } from './types';
+import { buildInComponent } from './builtInComponent';
 
-/**
- * 挂子节点、挂兄弟节点(然后删除?)
- * 要求组件能够接受children并渲染且组件能够正常渲染出能接受相关事件的包裹元素
- * */
+const Popper: React.FC<PopperProps> = props => {
+  const {
+    className,
+    style,
+    children,
+    direction = 'top',
+    wrapEl,
+    offset = 12,
+    target,
+    trigger = ['hover'],
+    mountOnEnter = true,
+    unmountOnExit = false,
+  } = props;
 
-interface PopperProps extends ComponentBaseProps {
-  /** 直接指定 目标元素/包含目标元素的ref对象/一个表示位置的GetPopperMetasBound对象, 优先级大于children */
-  target?: HTMLElement | GetPopperMetasBound | React.MutableRefObject<HTMLElement>;
-  /** 气泡方向 */
-  direction?: GetBoundMetasDirectionKeys;
-  /**
-   * 子元素, 作为气泡的定位对象使用, 子元素包含以下限制
-   * 1. 只能包含一个直接子节点
-   * 2. 该节点能够接受onMouseEnter、onMouseLeave、onFocus、onClick等事件
-   * */
-  children?: React.ReactElement;
-  /** 包裹元素，作为气泡边界的标识，并会在滚动时对气泡进行更新, 默认情况下，边界为窗口，并在window触发滚动时更新气泡 */
-  wrapEl?: HTMLElement | React.MutableRefObject<any>;
-  /** 12 | 气泡的偏移位置 */
-  offset?: number;
-}
-
-/** 传入dom时原样返回，传入包含dom对象的ref时返回current，否则返回undefined */
-function getRefDomOrDom(
-  target?: HTMLElement | React.MutableRefObject<any>,
-): HTMLElement | undefined {
-  if (!target) return undefined;
-  if (isDom(target)) return target;
-  if (target && isDom(target.current)) return target.current as HTMLElement;
-  return undefined;
-}
-
-const Popper: React.FC<PopperProps> = ({
-  className,
-  style,
-  children,
-  direction = 'top',
-  wrapEl,
-  offset = 12,
-  target,
-}) => {
   const popperEl = useRef<HTMLDivElement>(null!);
 
+  const Component = buildInComponent.popper;
+
   const id = useMemo(() => createRandString(1), []);
-  // 在未传入target时，用于标识出目标所在元素
+  /** 在未传入target时，用于标识出目标所在元素 */
   const targetSelector = `fr-popper_${id}`;
+  /** 获取启用的事件类型 */
+  const triggerType = getTriggerType(trigger);
+
+  const [show, setShow] = useFormState(props, false, {
+    valueKey: 'show',
+    defaultValueKey: 'defaultShow',
+  });
 
   const self = useSelf({
     // 优化动画
@@ -69,18 +53,22 @@ const Popper: React.FC<PopperProps> = ({
     lastPopperW: 0,
     /** 最后获取到的气泡高度 */
     lastPopperH: 0,
-    /** 目标元素 */
+    /** 目标元素, 通过props.target或children获取 */
     target: undefined as HTMLElement | GetPopperMetasBound | undefined,
+    /** 实现延迟隐藏 */
+    hideTimer: (undefined as unknown) as number,
+    /** 实现延迟渲染 */
+    showTimer: (undefined as unknown) as number,
   });
 
   const [state, setState] = useSetState({
     /** 气泡所在方向 */
     direction: direction as GetBoundMetasDirectionKeys,
-    /** 是否可见 */
-    show: true,
+    /** content是否渲染，用于实现mountOnEnter、unmountOnExit */
+    contentShow: !mountOnEnter || show,
   });
 
-  const showBase = state.show ? 1 : 0;
+  const showBase = show ? 1 : 0;
 
   const [spProps, set] = useSpring(() => ({
     xy: [0, 0],
@@ -89,11 +77,12 @@ const Popper: React.FC<PopperProps> = ({
     config: config.stiff,
   }));
 
-  // 根据参数设置self.target的值
+  /** 根据参数设置self.target的值 */
   useEffect(() => {
     // props.target能正常取到值
     const _target = getTarget();
     if (_target) {
+      console.log(_target, 12321);
       self.target = _target;
       return;
     }
@@ -108,18 +97,89 @@ const Popper: React.FC<PopperProps> = ({
 
   /** 保存气泡尺寸，由于有缩放动画，直接获取dom信息会出现偏差 */
   useEffect(() => {
-    if (state.show) {
-      self.lastPopperW = popperEl.current.offsetWidth;
-      self.lastPopperH = popperEl.current.offsetHeight;
-    }
+    // if (show) {
+    self.lastPopperW = popperEl.current.offsetWidth;
+    self.lastPopperH = popperEl.current.offsetHeight;
+    // }
   });
 
-  /** 更新气泡位置、状态、显示等 */
+  const clickHandle = useFn(() => {
+    setShow(prev => !prev);
+  });
+
+  const mouseEnterHandle = useFn(() => {
+    clearTimeout(self.hideTimer);
+    if (show) return;
+    self.showTimer = setTimeout(() => {
+      setShow(true);
+    }, 100) as any;
+  });
+
+  const mouseLeaveHandle = useFn(() => {
+    clearTimeout(self.showTimer);
+    if (!show) return;
+    self.hideTimer = setTimeout(() => {
+      setShow(false);
+    }, 160) as any;
+  });
+
+  const focusHandle = useFn(() => {
+    setShow(true);
+  });
+
+  const blurHandle = useFn(() => {
+    setShow(false);
+  });
+
+  /** 绑定事件 */
+  useEffect(() => {
+    if (!self.target) return;
+    if (isPopperMetasBound(self.target)) return;
+
+    const el = self.target as HTMLElement;
+    if (!('addEventListener' in el)) return;
+
+    const clickEnable = triggerType.click;
+    const focusEnable = triggerType.focus;
+    const hoverEnable = triggerType.hover;
+
+    if (clickEnable) {
+      el.addEventListener('click', clickHandle);
+    }
+
+    if (hoverEnable) {
+      el.addEventListener('mouseenter', mouseEnterHandle);
+      el.addEventListener('mouseleave', mouseLeaveHandle);
+    }
+
+    if (focusEnable) {
+      el.addEventListener('focus', focusHandle);
+      el.addEventListener('blur', blurHandle);
+    }
+
+    return () => {
+      if (clickEnable) {
+        el.removeEventListener('click', clickHandle);
+      }
+
+      if (hoverEnable) {
+        el.removeEventListener('mouseenter', mouseEnterHandle);
+        el.removeEventListener('mouseleave', mouseLeaveHandle);
+      }
+
+      if (focusEnable) {
+        el.removeEventListener('focus', focusHandle);
+        el.removeEventListener('blur', blurHandle);
+      }
+    };
+  }, [self.target]);
+
+  /** 更新气泡位置、状态、显示等, 传入fix时仅对位置进行更新 */
   const refresh = useFn(
-    () => {
+    (fix?: boolean) => {
       if (!self.target) return;
       if (!isNumber(self.lastPopperW) || !isNumber(self.lastPopperH)) return;
-      console.log(self.target);
+
       const { currentDirection, currentDirectionKey, visible } = getPopperMetas(
         { width: self.lastPopperW, height: self.lastPopperH },
         self.target,
@@ -145,7 +205,7 @@ const Popper: React.FC<PopperProps> = ({
         }
 
         // 前后visible状态均为false时跳过
-        if (!self.lastVisible && !visible) {
+        if (!fix && !self.lastVisible && !visible) {
           self.refreshCount = 0; // 防止初次入场/重入场时气泡不必要的更新动画
           return;
         }
@@ -154,69 +214,93 @@ const Popper: React.FC<PopperProps> = ({
          * 跳过动画,直接设置为目标状态
          * 1. 由可见状态进入不可见状态
          * */
-        // if (self.lastVisible && !visible) {
-        //   self.refreshCount = 0;
-        // }
+        if ((!fix && self.lastVisible && !visible) || (!self.lastVisible && visible)) {
+          self.refreshCount = 0;
+        }
 
         self.lastVisible = visible;
         self.lastX = currentDirection.x;
         self.lastY = currentDirection.y;
 
+        const styleShow = visible && show ? 1 : 0;
+
         set({
           xy: [currentDirection.x, currentDirection.y],
-          opacity: visible && state.show ? 1 : 0,
-          scale: visible && state.show ? 1 : 0,
-          immediate: self.refreshCount === 0,
+          opacity: fix ? 0 : styleShow,
+          scale: fix ? 0 : styleShow,
+          immediate: fix || self.refreshCount === 0,
+          // @ts-ignore
+          onRest() {
+            // 实现unmountOnExit
+            if (!fix && !show && state.contentShow && unmountOnExit) {
+              setState({
+                contentShow: false,
+              });
+            }
+          },
         });
 
-        self.refreshCount++;
+        !fix && self.refreshCount++;
       }
     },
     f => _throttle(f, 100),
   );
+
+  const scrollHandle = useFn(() => {
+    refresh();
+  });
 
   /** 初始化定位、默认触发气泡更新方式(wrap滚动触发) */
   useEffect(() => {
     refresh();
 
     const e = getRefDomOrDom(wrapEl) || window;
-    e.addEventListener('scroll', refresh);
+    e.addEventListener('scroll', scrollHandle);
 
     return () => {
-      e.addEventListener('scroll', refresh);
+      e.addEventListener('scroll', scrollHandle);
     };
   }, [wrapEl]);
 
   /** show变更处理 */
   useUpdateEffect(() => {
-    self.lastX = 0;
-    self.lastY = 0;
-    self.lastVisible = true;
-    refresh();
-  }, [state.show]);
+    // 实现 mountOnEnter
+    if (show && !state.contentShow) {
+      setState({
+        contentShow: true,
+      });
+    }
 
-  /**
-   * 根据props.target和children来获取作为目标的GetPopperMetasBound对象或dom元素
-   *
-   * */
+    setTimeout(() => {
+      // 为true时需要先更新位置，然后刷新动画, 否则会导致入场动画异常
+      show && refresh(true);
+
+      self.lastX = 0;
+      self.lastY = 0;
+      self.lastVisible = true;
+
+      refresh();
+    });
+  }, [show]);
+
+  /** 根据props.target获取作为目标的GetPopperMetasBound对象或dom元素 */
   function getTarget() {
-    // if (!target) return undefined;
     // target能正常取到dom元素
     const el = getRefDomOrDom(target as any);
     if (el) return el;
     // 是GetPopperMetasBound对象
-    if (
-      target &&
-      'left' in target &&
-      'right' in target &&
-      'width' in target &&
-      'height' in target
-    ) {
-      return target as GetPopperMetasBound;
-    }
+    const bound = isPopperMetasBound(target);
+    if (bound) return bound;
+
     return undefined;
   }
 
+  /**
+   * children的渲染方式
+   * 1. target存在时，不渲染，取target的值
+   * 2. children不存在时，不渲染
+   * 3. 否则，为其添加一个用于选择器的类名后渲染
+   * */
   function renderChildren() {
     if (target) return null;
     if (!children) return null;
@@ -227,12 +311,6 @@ const Popper: React.FC<PopperProps> = ({
 
   return (
     <>
-      {/* <span */}
-      {/*  onClick={() => setState({ show: !state.show })} */}
-      {/*  ref={targetEl} */}
-      {/* > */}
-      {/*  {renderChildren()} */}
-      {/* </span> */}
       {renderChildren()}
 
       <Portal namespace="popper">
@@ -242,16 +320,18 @@ const Popper: React.FC<PopperProps> = ({
             ...style,
             transform: interpolate(
               [spProps.xy, spProps.scale] as number[],
-              ([x, y]: any, sc) => `translate3d(${x}px, ${y}px, 0) scale3d(${sc}, ${sc}, ${sc})`,
+              ([x, y]: any, sc) =>
+                /* 使用toFixed防止chrome字体模糊 */
+                `translate3d(${x.toFixed(0)}px, ${y.toFixed(0)}px, 0) scale3d(${sc}, ${sc}, ${sc})`,
             ),
             opacity: spProps.opacity.interpolate(o => o),
           }}
           className={cls('fr-popper', state.direction && `__${state.direction}`, className)}
+          onMouseEnter={triggerType.hover ? mouseEnterHandle : undefined}
+          onMouseLeave={triggerType.hover ? mouseLeaveHandle : undefined}
         >
+          {state.contentShow && <Component {...props} />}
           <span className={cls('fr-popper_arrow', state.direction && `__${state.direction}`)} />
-          <div className="fr-popper_content">
-            <div>提示一段提示提示一段提示</div>
-          </div>
         </animated.div>
       </Portal>
     </>

@@ -73,13 +73,13 @@ const relateDirectionMap: { [key in GetBoundMetasDirectionKeys]: GetBoundMetasDi
   top: ['topStart', 'topEnd'],
   topEnd: ['top', 'topStart', 'bottomEnd'],
   leftStart: ['left', 'leftEnd'],
-  left: ['leftStart', 'left', 'leftEnd'],
+  left: ['leftStart', 'left', 'leftEnd', 'bottom'],
   leftEnd: ['left', 'leftStart'],
   bottomStart: ['bottom', 'bottomEnd', 'topStart'],
   bottom: ['bottomStart', 'bottomEnd'],
   bottomEnd: ['bottom', 'bottomStart', 'topEnd'],
   rightStart: ['right', 'rightEnd'],
-  right: ['rightStart', 'rightEnd'],
+  right: ['rightStart', 'rightEnd', 'bottom'],
   rightEnd: ['right', 'rightStart'],
 };
 

@@ -19,19 +19,46 @@
   top: 0;
   position: absolute;
   border-radius: 2px;
-  text-align: center;
   box-shadow: $shadow-2;
   z-index: $z-index-message;
   will-change: auto;
   max-width: 90vw;
   max-height: 90vh;
+  line-height: $line-height-base;
 
   &_content {
+    border-radius: 2px;
     height: 100%;
     width: 100%;
+    overflow: auto;
+    min-width: 80px;
+    min-height: 30px;
     z-index: 100;
     background-color: #fff;
+  }
+
+  &_tooltip {
     padding: 6px 12px;
+    background-color: $grey-9;
+    color: #fff;
+    text-align: center;
+
+    & + .fr-popper_arrow {
+      background-color: $grey-9;
+    }
+  }
+
+  &_popper {
+
+    &_title {
+      padding: 6px 12px;
+      border-bottom: 1px solid $b-border;
+      font-weight: 600;
+    }
+
+    &_content {
+      padding: 8px 12px;
+    }
   }
 
   &_helper-dom {
