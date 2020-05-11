@@ -1,32 +1,31 @@
 import Portal from '@lxjx/fr/lib/portal';
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useFn, useFormState, useSelf, useSetState } from '@lxjx/hooks';
 import { animated, interpolate, useSpring } from 'react-spring';
 import cls from 'classnames';
-import { useUpdateEffect } from 'react-use';
+import { useMeasure, useUpdateEffect } from 'react-use';
 import _throttle from 'lodash/throttle';
 import { createRandString, isNumber } from '@lxjx/utils';
-import Button from '@lxjx/fr/lib/button';
-import Icon from '@lxjx/fr/lib/icon';
 import { getRefDomOrDom, isPopperMetasBound, getTriggerType } from './utils';
 import { GetBoundMetasDirectionKeys, getPopperMetas, GetPopperMetasBound } from './getPopperMetas';
 import { PopperProps } from './types';
-import { buildInComponent } from './builtInComponent';
+import { buildInComponent, getIsRead, IS_READ, NOT_IS_READ } from './builtInComponent';
 
 const Popper: React.FC<PopperProps> = props => {
   const {
     className,
     style,
     children,
-    direction = 'top',
+    direction = props.type === 'study' ? 'top' : 'top',
     wrapEl,
     offset = 12,
     target,
     trigger = ['hover'],
     mountOnEnter = true,
     unmountOnExit = false,
-    disabled = false,
+    disabled: _disabled = false,
     type = 'tooltip',
+    studyKey,
   } = props;
 
   const popperEl = useRef<HTMLDivElement>(null!);
@@ -43,6 +42,15 @@ const Popper: React.FC<PopperProps> = props => {
     valueKey: 'show',
     defaultValueKey: 'defaultShow',
   });
+
+  // 内部使用的disabled，和disabled中任意一个为true时都会产生禁用效果
+  const [inlineDisable, setInlineDisable] = useState(false);
+
+  const disabled = _disabled || inlineDisable;
+
+  // 学习指导是否被标为不再显示
+  const studyRead = useMemo(() => (studyKey ? getIsRead(studyKey) : NOT_IS_READ), []);
+  const isStudyRead = studyRead === IS_READ;
 
   const self = useSelf({
     // 优化动画
@@ -72,7 +80,14 @@ const Popper: React.FC<PopperProps> = props => {
     contentShow: !mountOnEnter || show,
   });
 
-  const showBase = show ? 1 : 0;
+  // 用于监听尺寸变化并更新气泡位置
+  const [ref, { width: mWidth, height: mHeight }] = useMeasure();
+
+  let showBase = show ? 1 : 0;
+
+  if (isStudyRead) {
+    showBase = 0;
+  }
 
   const [spProps, set] = useSpring(() => ({
     xy: [0, 0],
@@ -83,20 +98,7 @@ const Popper: React.FC<PopperProps> = props => {
 
   /** 根据参数设置self.target的值 */
   useEffect(() => {
-    // props.target能正常取到值
-    const _target = getTarget();
-    if (_target) {
-      console.log(_target, 12321);
-      self.target = _target;
-      return;
-    }
-    // 根据标记targetSelector查到目标元素
-    const queryEl = document.querySelector(`.${targetSelector}`) as HTMLElement;
-    if (queryEl) {
-      self.target = queryEl;
-      return;
-    }
-    self.target = undefined;
+    setTarget();
   }, [children, target]);
 
   /** 保存气泡尺寸，由于有缩放动画，直接获取dom信息会出现偏差 */
@@ -185,9 +187,14 @@ const Popper: React.FC<PopperProps> = props => {
 
   /** 更新气泡位置、状态、显示等, 传入fix时仅对位置进行更新 */
   const refresh = useFn(
-    (fix?: boolean) => {
+    (fix?: boolean, skipTransition?: boolean, forceShow?: boolean) => {
       if (!self.target) return;
       if (!isNumber(self.lastPopperW) || !isNumber(self.lastPopperH)) return;
+
+      if (show) {
+        self.lastPopperW = popperEl.current.offsetWidth;
+        self.lastPopperH = popperEl.current.offsetHeight;
+      }
 
       const { currentDirection, currentDirectionKey, visible } = getPopperMetas(
         { width: self.lastPopperW, height: self.lastPopperH },
@@ -223,7 +230,11 @@ const Popper: React.FC<PopperProps> = props => {
          * 跳过动画,直接设置为目标状态
          * 1. 由可见状态进入不可见状态
          * */
-        if ((!fix && self.lastVisible && !visible) || (!self.lastVisible && visible)) {
+        if (
+          (!fix && self.lastVisible && !visible) ||
+          (!self.lastVisible && visible) ||
+          skipTransition
+        ) {
           self.refreshCount = 0;
         }
 
@@ -231,7 +242,13 @@ const Popper: React.FC<PopperProps> = props => {
         self.lastX = currentDirection.x;
         self.lastY = currentDirection.y;
 
-        const styleShow = visible && show ? 1 : 0;
+        let styleShow = visible && show ? 1 : 0;
+
+        if (forceShow) {
+          styleShow = 1;
+          self.refreshCount += 1;
+        }
+        console.log(styleShow, self.refreshCount);
 
         set({
           xy: [currentDirection.x, currentDirection.y],
@@ -259,8 +276,15 @@ const Popper: React.FC<PopperProps> = props => {
     refresh();
   });
 
+  // 位置变化时更新位置
+  useEffect(() => {
+    refresh();
+  }, [mWidth, mHeight]);
+
   /** 初始化定位、默认触发气泡更新方式(wrap滚动触发) */
   useEffect(() => {
+    if (isStudyRead) return;
+
     refresh();
 
     const e = getRefDomOrDom(wrapEl) || window;
@@ -273,6 +297,8 @@ const Popper: React.FC<PopperProps> = props => {
 
   /** show变更处理 */
   useUpdateEffect(() => {
+    if (isStudyRead) return;
+
     // 实现 mountOnEnter
     if (show && !state.contentShow) {
       setState({
@@ -302,6 +328,28 @@ const Popper: React.FC<PopperProps> = props => {
     if (bound) return bound;
 
     return undefined;
+  }
+
+  /** 根据各种环境参数设置self.target的值, 传入参数时直接以参数作为值 */
+  function setTarget(currentTarget?: HTMLElement) {
+    if (currentTarget) {
+      self.target = currentTarget;
+      return;
+    }
+
+    // props.target能正常取到值
+    const _target = getTarget();
+    if (_target) {
+      self.target = _target;
+      return;
+    }
+    // 根据标记targetSelector查到目标元素
+    const queryEl = document.querySelector(`.${targetSelector}`) as HTMLElement;
+    if (queryEl) {
+      self.target = queryEl;
+      return;
+    }
+    self.target = undefined;
   }
 
   /**
@@ -339,11 +387,19 @@ const Popper: React.FC<PopperProps> = props => {
           onMouseEnter={triggerType.hover ? mouseEnterHandle : undefined}
           onMouseLeave={triggerType.hover ? mouseLeaveHandle : undefined}
         >
-          {state.contentShow && <Component show={show} setShow={setShow} {...props} />}
-          <span className={cls('fr-popper_arrow', state.direction && `__${state.direction}`)} />
-          <Button onClick={() => setShow(false)} icon className="fr-popper_close-btn" size="small">
-            <Icon type="close" />
-          </Button>
+          <div ref={ref}>
+            {state.contentShow && !isStudyRead && (
+              <Component
+                show={show}
+                setShow={setShow}
+                setInlineDisable={setInlineDisable}
+                refresh={refresh}
+                setTarget={setTarget}
+                {...props}
+              />
+            )}
+            <span className={cls('fr-popper_arrow', state.direction && `__${state.direction}`)} />
+          </div>
         </animated.div>
       </Portal>
     </>
