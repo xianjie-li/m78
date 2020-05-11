@@ -20,7 +20,7 @@ export interface IconProps extends ComponentBasePropsWithAny {
 export interface SvgIconProps extends ComponentBasePropsWithAny {
   /** icon类型 */
   type: SvgIconTypes;
-  /** 大小通过字号跳转，与{ fontSize: number | string }等效 */
+  /** 大小通过字号调整，与{ fontSize: number | string }等效 */
   size?: string | number;
   /** 是否旋转图标 */
   spin?: boolean;

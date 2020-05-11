@@ -37,4 +37,18 @@ export interface PopperProps extends ComponentBaseProps {
   mountOnEnter?: boolean;
   /** false | 在气泡隐藏会是否销毁content */
   unmountOnExit?: boolean;
+  /** 禁用 */
+  disabled?: boolean;
+  /** tooltip | 气泡框类型 */
+  type?: 'tooltip' | 'popper' | 'confirm' | 'study';
+  /** 标题，type为popper时生效 */
+  title?: React.ReactNode;
+  /** 确认 | 类型为confirm时，确认按钮的文字 */
+  confirmText?: React.ReactNode;
+  /** 取消 | 类型为confirm时，取消按钮的文字 */
+  cancelText?: React.ReactNode;
+  /** 点击确认的回调 */
+  onConfirm?(): void;
+  /** type为confirm时, 此选项用于设置图标类型 */
+  icon?: React.ReactNode;
 }

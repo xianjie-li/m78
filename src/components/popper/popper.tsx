@@ -1,11 +1,13 @@
 import Portal from '@lxjx/fr/lib/portal';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useFn, useFormState, useSelf, useSetState } from '@lxjx/hooks';
-import { animated, config, interpolate, useSpring } from 'react-spring';
+import { animated, interpolate, useSpring } from 'react-spring';
 import cls from 'classnames';
 import { useUpdateEffect } from 'react-use';
 import _throttle from 'lodash/throttle';
 import { createRandString, isNumber } from '@lxjx/utils';
+import Button from '@lxjx/fr/lib/button';
+import Icon from '@lxjx/fr/lib/icon';
 import { getRefDomOrDom, isPopperMetasBound, getTriggerType } from './utils';
 import { GetBoundMetasDirectionKeys, getPopperMetas, GetPopperMetasBound } from './getPopperMetas';
 import { PopperProps } from './types';
@@ -23,11 +25,13 @@ const Popper: React.FC<PopperProps> = props => {
     trigger = ['hover'],
     mountOnEnter = true,
     unmountOnExit = false,
+    disabled = false,
+    type = 'tooltip',
   } = props;
 
   const popperEl = useRef<HTMLDivElement>(null!);
 
-  const Component = buildInComponent.popper;
+  const Component = buildInComponent[type];
 
   const id = useMemo(() => createRandString(1), []);
   /** 在未传入target时，用于标识出目标所在元素 */
@@ -74,7 +78,7 @@ const Popper: React.FC<PopperProps> = props => {
     xy: [0, 0],
     opacity: showBase,
     scale: showBase,
-    config: config.stiff,
+    config: { mass: 1, tension: 320, friction: 22 },
   }));
 
   /** 根据参数设置self.target的值 */
@@ -104,30 +108,35 @@ const Popper: React.FC<PopperProps> = props => {
   });
 
   const clickHandle = useFn(() => {
+    if (disabled) return;
     setShow(prev => !prev);
   });
 
   const mouseEnterHandle = useFn(() => {
+    if (disabled) return;
     clearTimeout(self.hideTimer);
     if (show) return;
     self.showTimer = setTimeout(() => {
       setShow(true);
-    }, 100) as any;
+    }, 80) as any;
   });
 
   const mouseLeaveHandle = useFn(() => {
+    if (disabled) return;
     clearTimeout(self.showTimer);
     if (!show) return;
     self.hideTimer = setTimeout(() => {
       setShow(false);
-    }, 160) as any;
+    }, 300) as any;
   });
 
   const focusHandle = useFn(() => {
+    if (disabled) return;
     setShow(true);
   });
 
   const blurHandle = useFn(() => {
+    if (disabled) return;
     setShow(false);
   });
 
@@ -330,8 +339,11 @@ const Popper: React.FC<PopperProps> = props => {
           onMouseEnter={triggerType.hover ? mouseEnterHandle : undefined}
           onMouseLeave={triggerType.hover ? mouseLeaveHandle : undefined}
         >
-          {state.contentShow && <Component {...props} />}
+          {state.contentShow && <Component show={show} setShow={setShow} {...props} />}
           <span className={cls('fr-popper_arrow', state.direction && `__${state.direction}`)} />
+          <Button onClick={() => setShow(false)} icon className="fr-popper_close-btn" size="small">
+            <Icon type="close" />
+          </Button>
         </animated.div>
       </Portal>
     </>
