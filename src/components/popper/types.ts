@@ -40,7 +40,7 @@ export interface PopperProps extends ComponentBaseProps {
   /** 禁用 */
   disabled?: boolean;
   /** tooltip | 气泡框类型 */
-  type?: 'tooltip' | 'popper' | 'confirm' | 'study';
+  type?: 'tooltip' | 'popper' | 'confirm';
   /** 标题，type为popper时生效 */
   title?: React.ReactNode;
   /* ============ confirm特有配置 ============ */
@@ -52,16 +52,4 @@ export interface PopperProps extends ComponentBaseProps {
   onConfirm?(): void;
   /** type为confirm时, 此选项用于设置图标类型 */
   icon?: React.ReactNode;
-  /* ============ study特有配置 ============ */
-  /** 代指该组操作学习的key，用于本地缓存标识, 需要使用study能力时，此项必传 */
-  studyKey?: string;
-  /** 指示用户进行操作学习的一组数据, 只在初始化时生效 (在studyKey变更时，会重载所有状态并重新获取此值) */
-  studyData?: PopperStudyData[];
-}
-
-export interface PopperStudyData {
-  selector?: string;
-  title?: React.ReactNode;
-  desc?: React.ReactNode;
-  img?: string;
 }

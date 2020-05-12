@@ -1,5 +1,5 @@
 import Portal from '@lxjx/fr/lib/portal';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useFn, useFormState, useSelf, useSetState } from '@lxjx/hooks';
 import { animated, interpolate, useSpring } from 'react-spring';
 import cls from 'classnames';
@@ -9,23 +9,22 @@ import { createRandString, isNumber } from '@lxjx/utils';
 import { getRefDomOrDom, isPopperMetasBound, getTriggerType } from './utils';
 import { GetBoundMetasDirectionKeys, getPopperMetas, GetPopperMetasBound } from './getPopperMetas';
 import { PopperProps } from './types';
-import { buildInComponent, getIsRead, IS_READ, NOT_IS_READ } from './builtInComponent';
+import { buildInComponent } from './builtInComponent';
 
 const Popper: React.FC<PopperProps> = props => {
   const {
     className,
     style,
     children,
-    direction = props.type === 'study' ? 'top' : 'top',
+    direction = 'top',
     wrapEl,
     offset = 12,
     target,
     trigger = ['hover'],
     mountOnEnter = true,
     unmountOnExit = false,
-    disabled: _disabled = false,
+    disabled = false,
     type = 'tooltip',
-    studyKey,
   } = props;
 
   const popperEl = useRef<HTMLDivElement>(null!);
@@ -42,15 +41,6 @@ const Popper: React.FC<PopperProps> = props => {
     valueKey: 'show',
     defaultValueKey: 'defaultShow',
   });
-
-  // 内部使用的disabled，和disabled中任意一个为true时都会产生禁用效果
-  const [inlineDisable, setInlineDisable] = useState(false);
-
-  const disabled = _disabled || inlineDisable;
-
-  // 学习指导是否被标为不再显示
-  const studyRead = useMemo(() => (studyKey ? getIsRead(studyKey) : NOT_IS_READ), []);
-  const isStudyRead = studyRead === IS_READ;
 
   const self = useSelf({
     // 优化动画
@@ -71,6 +61,8 @@ const Popper: React.FC<PopperProps> = props => {
     hideTimer: (undefined as unknown) as number,
     /** 实现延迟渲染 */
     showTimer: (undefined as unknown) as number,
+    /** 防止show变更effect和尺寸变更effect重复更新 */
+    refreshing: false,
   });
 
   const [state, setState] = useSetState({
@@ -83,17 +75,13 @@ const Popper: React.FC<PopperProps> = props => {
   // 用于监听尺寸变化并更新气泡位置
   const [ref, { width: mWidth, height: mHeight }] = useMeasure();
 
-  let showBase = show ? 1 : 0;
-
-  if (isStudyRead) {
-    showBase = 0;
-  }
+  const showBase = show ? 1 : 0;
 
   const [spProps, set] = useSpring(() => ({
     xy: [0, 0],
     opacity: showBase,
     scale: showBase,
-    config: { mass: 1, tension: 320, friction: 22 },
+    config: { mass: 1, tension: 340, friction: 22 },
   }));
 
   /** 根据参数设置self.target的值 */
@@ -104,6 +92,7 @@ const Popper: React.FC<PopperProps> = props => {
   /** 保存气泡尺寸，由于有缩放动画，直接获取dom信息会出现偏差 */
   useEffect(() => {
     // if (show) {
+    if (!popperEl.current) return;
     self.lastPopperW = popperEl.current.offsetWidth;
     self.lastPopperH = popperEl.current.offsetHeight;
     // }
@@ -118,9 +107,12 @@ const Popper: React.FC<PopperProps> = props => {
     if (disabled) return;
     clearTimeout(self.hideTimer);
     if (show) return;
-    self.showTimer = setTimeout(() => {
-      setShow(true);
-    }, 80) as any;
+    self.showTimer = setTimeout(
+      () => {
+        setShow(true);
+      },
+      type === 'tooltip' ? 0 : 80,
+    ) as any;
   });
 
   const mouseLeaveHandle = useFn(() => {
@@ -185,13 +177,18 @@ const Popper: React.FC<PopperProps> = props => {
     };
   }, [self.target]);
 
-  /** 更新气泡位置、状态、显示等, 传入fix时仅对位置进行更新 */
+  /**
+   * 更新气泡位置、状态、显示等
+   * @param fix - 仅对位置进行更新
+   * @param skipTransition - 跳过动画
+   * @param forceShow - 强制显示, 不管是否可见、show是否为true
+   * */
   const refresh = useFn(
     (fix?: boolean, skipTransition?: boolean, forceShow?: boolean) => {
       if (!self.target) return;
       if (!isNumber(self.lastPopperW) || !isNumber(self.lastPopperH)) return;
 
-      if (show) {
+      if (show && popperEl.current) {
         self.lastPopperW = popperEl.current.offsetWidth;
         self.lastPopperH = popperEl.current.offsetHeight;
       }
@@ -246,9 +243,8 @@ const Popper: React.FC<PopperProps> = props => {
 
         if (forceShow) {
           styleShow = 1;
-          self.refreshCount += 1;
+          self.refreshCount = 0;
         }
-        console.log(styleShow, self.refreshCount);
 
         set({
           xy: [currentDirection.x, currentDirection.y],
@@ -276,15 +272,8 @@ const Popper: React.FC<PopperProps> = props => {
     refresh();
   });
 
-  // 位置变化时更新位置
-  useEffect(() => {
-    refresh();
-  }, [mWidth, mHeight]);
-
   /** 初始化定位、默认触发气泡更新方式(wrap滚动触发) */
   useEffect(() => {
-    if (isStudyRead) return;
-
     refresh();
 
     const e = getRefDomOrDom(wrapEl) || window;
@@ -297,7 +286,7 @@ const Popper: React.FC<PopperProps> = props => {
 
   /** show变更处理 */
   useUpdateEffect(() => {
-    if (isStudyRead) return;
+    self.refreshing = true;
 
     // 实现 mountOnEnter
     if (show && !state.contentShow) {
@@ -315,8 +304,16 @@ const Popper: React.FC<PopperProps> = props => {
       self.lastVisible = true;
 
       refresh();
+
+      self.refreshing = false;
     });
   }, [show]);
+
+  // 位置变化时更新位置
+  useUpdateEffect(() => {
+    if (self.refreshing) return;
+    show && refresh();
+  }, [mWidth, mHeight]);
 
   /** 根据props.target获取作为目标的GetPopperMetasBound对象或dom元素 */
   function getTarget() {
@@ -370,38 +367,33 @@ const Popper: React.FC<PopperProps> = props => {
     <>
       {renderChildren()}
 
-      <Portal namespace="popper">
-        <animated.div
-          ref={popperEl}
-          style={{
-            ...style,
-            transform: interpolate(
-              [spProps.xy, spProps.scale] as number[],
-              ([x, y]: any, sc) =>
-                /* 使用toFixed防止chrome字体模糊 */
-                `translate3d(${x.toFixed(0)}px, ${y.toFixed(0)}px, 0) scale3d(${sc}, ${sc}, ${sc})`,
-            ),
-            opacity: spProps.opacity.interpolate(o => o),
-          }}
-          className={cls('fr-popper', state.direction && `__${state.direction}`, className)}
-          onMouseEnter={triggerType.hover ? mouseEnterHandle : undefined}
-          onMouseLeave={triggerType.hover ? mouseLeaveHandle : undefined}
-        >
-          <div ref={ref}>
-            {state.contentShow && !isStudyRead && (
-              <Component
-                show={show}
-                setShow={setShow}
-                setInlineDisable={setInlineDisable}
-                refresh={refresh}
-                setTarget={setTarget}
-                {...props}
-              />
-            )}
-            <span className={cls('fr-popper_arrow', state.direction && `__${state.direction}`)} />
-          </div>
-        </animated.div>
-      </Portal>
+      {state.contentShow && (
+        <Portal namespace="popper">
+          <animated.div
+            ref={popperEl}
+            style={{
+              ...style,
+              transform: interpolate(
+                [spProps.xy, spProps.scale] as number[],
+                ([x, y]: any, sc) =>
+                  /* 使用toFixed防止chrome字体模糊 */
+                  `translate3d(${x.toFixed(0)}px, ${y.toFixed(
+                    0,
+                  )}px, 0) scale3d(${sc}, ${sc}, ${sc})`,
+              ),
+              opacity: spProps.opacity.interpolate(o => o),
+            }}
+            className={cls('fr-popper', state.direction && `__${state.direction}`, className)}
+            onMouseEnter={triggerType.hover ? mouseEnterHandle : undefined}
+            onMouseLeave={triggerType.hover ? mouseLeaveHandle : undefined}
+          >
+            <div ref={ref}>
+              <Component show={show} setShow={setShow} {...props} />
+              <span className={cls('fr-popper_arrow', state.direction && `__${state.direction}`)} />
+            </div>
+          </animated.div>
+        </Portal>
+      )}
     </>
   );
 };

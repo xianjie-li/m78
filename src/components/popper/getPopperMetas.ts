@@ -72,23 +72,21 @@ const relateDirectionMap: { [key in GetBoundMetasDirectionKeys]: GetBoundMetasDi
   topStart: ['top', 'topEnd', 'bottomStart'],
   top: ['topStart', 'topEnd'],
   topEnd: ['top', 'topStart', 'bottomEnd'],
-  leftStart: ['left', 'leftEnd'],
+  leftStart: ['left', 'leftEnd', 'bottom'],
   left: ['leftStart', 'left', 'leftEnd', 'bottom'],
-  leftEnd: ['left', 'leftStart'],
+  leftEnd: ['left', 'leftStart', 'top'],
   bottomStart: ['bottom', 'bottomEnd', 'topStart'],
   bottom: ['bottomStart', 'bottomEnd'],
   bottomEnd: ['bottom', 'bottomStart', 'topEnd'],
-  rightStart: ['right', 'rightEnd'],
+  rightStart: ['right', 'rightEnd', 'bottom'],
   right: ['rightStart', 'rightEnd', 'bottom'],
-  rightEnd: ['right', 'rightStart'],
+  rightEnd: ['right', 'rightStart', 'top'],
 };
 
 const defaultOptions = {
   offset: 0,
   direction: 'top' as GetBoundMetasDirectionKeys,
 };
-
-/* TODO: 获取该位置是否可见、气泡相对于目标的方向 */
 
 /**
  * 根据目标元素和气泡元素的尺寸等获取气泡在目标各位置上的位置和可用信息、是否可见、以及推测当前合适的位置
