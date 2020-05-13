@@ -68,6 +68,8 @@ const Popper: React.FC<PopperProps> = props => {
   const [state, setState] = useSetState({
     /** 气泡所在方向 */
     direction: direction as GetBoundMetasDirectionKeys,
+    /** 箭头位置 */
+    arrowX: 0,
     /** content是否渲染，用于实现mountOnEnter、unmountOnExit */
     contentShow: !mountOnEnter || show,
   });
@@ -209,6 +211,12 @@ const Popper: React.FC<PopperProps> = props => {
         if (currentDirectionKey !== state.direction) {
           setState({
             direction: currentDirectionKey,
+          });
+        }
+
+        if (currentDirection.arrowX !== state.arrowX) {
+          setState({
+            arrowX: currentDirection.arrowX,
           });
         }
 
@@ -389,7 +397,10 @@ const Popper: React.FC<PopperProps> = props => {
           >
             <div ref={ref}>
               <Component show={show} setShow={setShow} {...props} />
-              <span className={cls('fr-popper_arrow', state.direction && `__${state.direction}`)} />
+              <span
+                className={cls('fr-popper_arrow', state.direction && `__${state.direction}`)}
+                style={{ left: state.arrowX || undefined }}
+              />
             </div>
           </animated.div>
         </Portal>

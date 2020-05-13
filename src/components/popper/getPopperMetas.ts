@@ -49,6 +49,15 @@ export interface GetBoundDirectionItem {
   x: number;
   /** 改元素在x轴上放置的位置 */
   y: number;
+  [key: string]: any;
+}
+
+/** 表示一个可用位置 */
+interface Degrade {
+  direction: 'top' | 'right' | 'bottom' | 'left';
+  x: number;
+  y: number;
+  arrowX: number;
 }
 
 /** 表示当前所有方向有关信息的对象 */
@@ -65,6 +74,10 @@ export interface getPopperMetasReturns {
   currentDirection: GetBoundDirectionItem;
   /** 表示currentDirection的key */
   currentDirectionKey: GetBoundMetasDirectionKeys;
+  /** 所有理想位置都不可用，但存在的其他可用位置 */
+  degrade?: Degrade;
+  /** 没有可用理想位置 */
+  notValidDirection?: boolean;
 }
 
 /** 关联的方向，用于帮助猜测下一个Direction的合理位置 */
@@ -294,12 +307,24 @@ export function getPopperMetas(
   };
 
   const current = getPopperDirectionForMeta(dMeta, direction, prevDirection || direction);
-  const currentMeta = current[0];
+  let currentMeta = current[0];
+  let currentDirection = current[1];
+  const notValidDirection = current[2];
 
   const cL = currentMeta.x;
   const cT = currentMeta.y;
   const cW = sourceB.width;
   const ch = sourceB.height;
+
+  // 传递给其他函数来拆分函数
+  const passData = {
+    targetB,
+    wrapB,
+    sourceB,
+    winSt,
+    winSl,
+    offset,
+  };
 
   const hidden =
     /* left */
@@ -311,16 +336,78 @@ export function getPopperMetas(
     /* right */
     cL > wrapB.left + wrapB.width + winSl;
 
+  let degrade: Degrade | undefined;
+
+  if (notValidDirection && sourceB.width / wrapB.width > 0.7) {
+    degrade = getDegrade(passData);
+
+    if (degrade) {
+      currentMeta = {
+        x: degrade.x,
+        y: degrade.y,
+        safe: true,
+        arrowX: degrade.arrowX,
+      };
+      currentDirection = degrade.direction;
+    }
+  }
+
   return {
     metas: dMeta,
-    currentDirection: current[0],
-    currentDirectionKey: current[1],
+    currentDirection: currentMeta,
+    currentDirectionKey: currentDirection,
     visible: !hidden,
+    degrade,
+    notValidDirection,
   };
 }
 
+interface GetDegradeArg {
+  targetB: GetPopperMetasBound;
+  wrapB: GetPopperMetasBound;
+  sourceB: GetPopperMetasSource;
+  winSt: number;
+  winSl: number;
+  offset: number;
+}
+
+/** 所有位置都不存在时，获取一个可用的回退位置 */
+function getDegrade(arg: GetDegradeArg): Degrade | undefined {
+  const { targetB, wrapB, sourceB, winSt, winSl, offset } = arg;
+
+  const validArea = {
+    top: targetB.top - wrapB.top,
+    left: targetB.left - wrapB.left,
+    right: wrapB.left + wrapB.width - targetB.left - targetB.width,
+    bottom: wrapB.top + wrapB.height - targetB.top - targetB.height,
+  };
+
+  const xValid = wrapB.width >= sourceB.width;
+
+  const xPos = (wrapB.width - sourceB.width) / 2 + winSl;
+  const arrowX = targetB.left - xPos + targetB.width / 2;
+
+  if (validArea.top - offset >= sourceB.height && xValid) {
+    return {
+      direction: 'top',
+      x: xPos,
+      y: targetB.top - sourceB.height - offset + winSt,
+      arrowX,
+    };
+  }
+
+  if (validArea.bottom + offset >= sourceB.height && xValid) {
+    return {
+      direction: 'bottom',
+      x: xPos,
+      y: targetB.top + targetB.height + offset + winSt,
+      arrowX,
+    };
+  }
+}
+
 /**
- * 根据GetBoundMetasReturns和当前位置、前一个位置来从meta中挑选下一个合适的方向
+ * 根据GetBoundMetasReturns和当前位置、前一个位置来从meta中挑选下一个合适的方向, 当返回值3位true时，表示没有可用的位置
  * @param meta - getPopperMetas函数的返回值
  * @param direction - 预设位置, 优先选取
  * @param prevDirection - 表示前一个位置的key
@@ -329,7 +416,7 @@ export function getPopperDirectionForMeta(
   meta: GetBoundMetas,
   direction: GetBoundMetasDirectionKeys,
   prevDirection: GetBoundMetasDirectionKeys,
-): [GetBoundDirectionItem, GetBoundMetasDirectionKeys] {
+): [GetBoundDirectionItem, GetBoundMetasDirectionKeys, boolean?] {
   // 当前位置可用时优先选取
   if (meta[direction].safe) {
     return [meta[direction], direction];
@@ -373,5 +460,5 @@ export function getPopperDirectionForMeta(
   }
 
   // 默认前一个方向
-  return [meta[prevDirection], prevDirection];
+  return [meta[prevDirection], prevDirection, true];
 }
