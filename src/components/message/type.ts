@@ -14,4 +14,6 @@ export interface MessageProps extends ReactRenderApiProps {
   loading?: boolean;
   /** 是否显示关闭按钮 */
   hasCancel?: boolean;
+  /** 300 | 延迟显示loading的毫秒数 */
+  loadingDelay?: number;
 }

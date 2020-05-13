@@ -16,6 +16,8 @@ message 组件基于 render-api 实现，包含轻提示、加载中、消息框
 
 <code src="./message-demo.tsx" />
 
+💡 默认情况下，loading包含一个`300ms`的显示延迟，用来防止一闪而过的`loading`
+
 ## 底层 api
 
 上例中用到了`message.tips()` `message.loading()` `message.notify()`方法，类似于`$.ajax()`和`$.get()` `$.post()`的关系，这些方法可以通过底层方法`message()`来实现
@@ -40,6 +42,8 @@ interface MessageOption extends ReactRenderApiExtraProps {
   loading?: boolean;
   /** 是否显示关闭按钮 */
   hasCancel?: boolean;
+  /** 300 | 延迟显示loading的毫秒数 */
+  loadingDelay?: number;
 }
 ```
 
@@ -61,20 +65,22 @@ interface TipsOption extends ReactRenderApiExtraProps {
 **`loading(option?)`**
 
 ```tsx | pure
-interface TipsOption extends ReactRenderApiExtraProps {
+interface LoadingOption extends ReactRenderApiExtraProps {
   /** 提示框的内容 */
   content?: React.ReactNode;
   /** 持续时间，如果要一直存在，传Infinity */
   duration?: number;
   /** 是否启用遮罩层 */
   mask?: boolean;
+  /** 300 | 延迟显示loading的毫秒数 */
+  loadingDelay?: number;
 }
 ```
 
 **`notify(option)`**
 
 ```tsx | pure
-interface TipsOption extends ReactRenderApiExtraProps {
+interface NotifyOption extends ReactRenderApiExtraProps {
   /** 提示框的内容 */
   content?: React.ReactNode;
   /** 状态类型 */

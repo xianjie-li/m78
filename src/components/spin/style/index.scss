@@ -60,7 +60,7 @@
   position: relative;
   width: 1.6em;
   height: 1.6em;
-  border: 0.19em solid #eee;
+  border: 0.28em solid #eee;
   border-radius: 50%;
   text-align: center;
 }
@@ -68,33 +68,33 @@
 .fr-spin_circle-item {
   display: inline-block;
   position: absolute;
-  left: -0.2em;
-  top: -0.2em;
-  right: -0.2em;
-  bottom: -0.2em;
+  left: -0.36em;
+  top: -0.36em;
+  right: -0.36em;
+  bottom: -0.36em;
   content: '';
   border-radius: 50%;
-  border: 0.2em solid transparent;
+  border: 0.42em solid transparent;
   transform-origin: center center;
 
   &:nth-child(1) {
     border-color: $red-6 transparent transparent transparent;
-    animation: fr-spin 0.8s infinite cubic-bezier(0, 0, 0.24, 0.9);
+    animation: fr-spin 1s infinite cubic-bezier(0, 0, 0.24, 0.9);
   }
 
   &:nth-child(2) {
     border-color: $yellow-6 transparent transparent transparent;
-    animation: fr-spin 0.8s infinite cubic-bezier(0, 0, 0.24, 0.7);
+    animation: fr-spin 1s infinite cubic-bezier(0, 0, 0.24, 0.7);
   }
 
   &:nth-child(3) {
     border-color: $green-6 transparent transparent transparent;
-    animation: fr-spin 0.8s infinite cubic-bezier(0, 0, 0.24, 0.5);
+    animation: fr-spin 1s infinite cubic-bezier(0, 0, 0.24, 0.5);
   }
 
   &:nth-child(4) {
     border-color: $blue-6 transparent transparent transparent;
-    animation: fr-spin 0.8s infinite cubic-bezier(0, 0, 0.24, 0.3);
+    animation: fr-spin 1s infinite cubic-bezier(0, 0, 0.24, 0.3);
   }
 }
 

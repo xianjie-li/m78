@@ -11,6 +11,7 @@ import { Transition } from '@lxjx/react-transition-spring';
 
 import cls from 'classnames';
 
+import { useSelf } from '@lxjx/hooks';
 import { MessageProps } from './type';
 
 function MessageWrap({ children }: any) {
@@ -31,16 +32,24 @@ const Message: React.FC<MessageProps> = ({
   show = true,
   onClose,
   onRemove,
+  loadingDelay = 300,
 }) => {
+  const self = useSelf({
+    showTimer: null as any,
+  });
+
   const [{ life, ...springProp }, set] = useSpring(() => ({
     opacity: 0,
     height: 0,
     transform: 'scale3d(0, 0, 0)',
     life: 100,
-    config: { ...config.wobbly },
+    config: { ...config.stiff },
   }));
+
   const [maskShow, setMaskShow] = useState(mask);
+
   const [bind, { height }] = useMeasure();
+
   /* 元素显示&隐藏 */
   useEffect(() => {
     if (!show) {
@@ -49,25 +58,34 @@ const Message: React.FC<MessageProps> = ({
     }
 
     if (show && height) {
-      set({
-        // @ts-ignore
-        to: async next => {
-          await next({
-            // height + 内外边距
-            opacity: 1,
-            height: height + (hasCancel ? 60 : 32),
-            life: 100,
-            transform: 'scale3d(1, 1 ,1)',
+      self.showTimer = setTimeout(
+        () => {
+          set({
+            // @ts-ignore
+            to: async next => {
+              await next({
+                // height + 内外边距
+                opacity: 1,
+                height: height + (hasCancel ? 60 : 36),
+                life: 100,
+                transform: 'scale3d(1, 1 ,1)',
+              });
+              await next({
+                opacity: 1,
+                life: 0,
+                config: { duration }, // 减去初始动画的持续时间
+              });
+              close();
+            },
           });
-          await next({
-            opacity: 1,
-            life: 0,
-            config: { duration }, // 减去初始动画的持续时间
-          });
-          close();
         },
-      });
+        loading ? loadingDelay : 0,
+      );
     }
+
+    return () => {
+      self.showTimer && clearTimeout(self.showTimer);
+    };
     // eslint-disable-next-line
   }, [show, height]);
 
@@ -107,7 +125,7 @@ const Message: React.FC<MessageProps> = ({
         </Toggle>
         <If when={loading}>
           <div className="fr-message_loading">
-            <Spin inline show text={content} />
+            <Spin show text={content} />
           </div>
         </If>
         <If when={!loading}>

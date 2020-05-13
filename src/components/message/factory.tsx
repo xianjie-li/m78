@@ -14,7 +14,7 @@ const messageApi = createRenderApi<MessageOption>(Message, {
   namespace: 'MESSAGE',
 });
 
-export type TipsOption = Omit<MessageOption, 'loading' | 'hasCancel'>;
+export type TipsOption = Omit<MessageOption, 'loading' | 'hasCancel' | 'loadingDelay'>;
 
 /** 文本提示 */
 const tips = ({ ...options }: TipsOption) =>
@@ -35,7 +35,7 @@ const loading = ({ ...options } = {} as LoadingOption) =>
     loading: true,
   });
 
-export interface NotifyOption extends Omit<MessageOption, 'loading'> {
+export interface NotifyOption extends Omit<MessageOption, 'loading' | 'loadingDelay'> {
   /** 标题 */
   title?: React.ReactNode;
   /** 详细内容 */

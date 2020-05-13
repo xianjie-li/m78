@@ -29,6 +29,7 @@ const Spin: React.FC<SpinProps> = ({
       __dark: dark,
     })}
   >
+    {/* <div className="fr-spin_circle-2" /> */}
     <div className="fr-spin_circle">
       <span className="fr-spin_circle-item" />
       <span className="fr-spin_circle-item" />
