@@ -36,7 +36,7 @@ interface RadioBoxProps<Val> extends FormLike<Val> {
     beforeLabel?: string;
     value: Val;
     disabled?: boolean;
-  }>
+  }>;
 }
 ```
 
@@ -48,8 +48,8 @@ interface RadioBoxProps<Val> extends FormLike<Val> {
  * @interface <T> - value类型
  * */
 export interface FormLike<T> {
-    value?: T;
-    onChange?: (value: T) => void;
-    defaultValue?: T;
+  value?: T;
+  onChange?: (value: T) => void;
+  defaultValue?: T;
 }
 ```

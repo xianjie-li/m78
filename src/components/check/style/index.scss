@@ -45,7 +45,6 @@
     transition: background-color 0.6s;
 
     &.__checkbox {
-
       &.__partial {
         .fr-check_base-inner {
           &::after {
@@ -126,7 +125,8 @@
       background-color: rgba($color, 0.1);
     }
 
-    &.__checked, &.__partial {
+    &.__checked,
+    &.__partial {
       &:hover {
         background-color: rgba($color, 0.1);
       }

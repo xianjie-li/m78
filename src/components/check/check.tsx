@@ -47,7 +47,14 @@ const builtIn: BuiltIn = {
     </span>
   ),
   checkbox: (meta, { partial }) => (
-    <span className={cls('fr-check_base fr-effect __md', '__checkbox', partial && '__partial', getCheckCls(meta))}>
+    <span
+      className={cls(
+        'fr-check_base fr-effect __md',
+        '__checkbox',
+        partial && '__partial',
+        getCheckCls(meta),
+      )}
+    >
       <span className="fr-check_base-main">
         <span className="fr-check_base-inner" />
       </span>
@@ -81,15 +88,11 @@ const Check = <Val extends unknown = undefined>(_props: CheckProps<Val>) => {
     customer,
   } = _props;
 
-  const [checked, setChecked] = useFormState<boolean, Val>(
-    _props,
-    false,
-    {
-      valueKey: 'checked',
-      defaultValueKey: 'defaultChecked',
-      triggerKey: 'onChange',
-    }
-  );
+  const [checked, setChecked] = useFormState<boolean, Val>(_props, false, {
+    valueKey: 'checked',
+    defaultValueKey: 'defaultChecked',
+    triggerKey: 'onChange',
+  });
 
   const [focus, setFocus] = useState(false);
 

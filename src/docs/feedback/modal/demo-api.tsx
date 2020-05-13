@@ -13,8 +13,8 @@ function mult(mask = true) {
           refs.close(id);
         },
         onClose() {
-          console.log(id)
-        }
+          console.log(id);
+        },
       });
     });
   }

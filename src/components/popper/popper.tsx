@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useRef } from 'react';
 import { useFn, useFormState, useSelf, useSetState } from '@lxjx/hooks';
 import { animated, interpolate, useSpring } from 'react-spring';
 import cls from 'classnames';
-import { useMeasure, useUpdateEffect } from 'react-use';
+import { useClickAway, useMeasure, useUpdateEffect } from 'react-use';
 import _throttle from 'lodash/throttle';
 import { createRandString, isNumber } from '@lxjx/utils';
 import { getRefDomOrDom, isPopperMetasBound, getTriggerType } from './utils';
@@ -58,26 +58,41 @@ const Popper: React.FC<PopperProps> = props => {
     /** 目标元素, 通过props.target或children获取 */
     target: undefined as HTMLElement | GetPopperMetasBound | undefined,
     /** 实现延迟隐藏 */
-    hideTimer: (undefined as unknown) as number,
+    hideTimer: (undefined as unknown) as any,
     /** 实现延迟渲染 */
-    showTimer: (undefined as unknown) as number,
+    showTimer: (undefined as unknown) as any,
     /** 防止show变更effect和尺寸变更effect重复更新 */
     refreshing: false,
+    /** 触发气泡外任意位置点击后的标识 */
+    awayClicked: false,
+    /** 外部点击清除计时器 */
+    awayClickTimer: (undefined as unknown) as any,
   });
 
   const [state, setState] = useSetState({
     /** 气泡所在方向 */
     direction: direction as GetBoundMetasDirectionKeys,
-    /** 箭头位置 */
+    /** 用于修补的箭头位置 */
     arrowX: 0,
     /** content是否渲染，用于实现mountOnEnter、unmountOnExit */
     contentShow: !mountOnEnter || show,
   });
 
-  // 用于监听尺寸变化并更新气泡位置
+  // 监听尺寸变化并更新气泡位置
   const [ref, { width: mWidth, height: mHeight }] = useMeasure();
 
   const showBase = show ? 1 : 0;
+
+  useClickAway(popperEl, () => {
+    if (triggerType.click && show) {
+      self.awayClicked = true;
+      clearTimeout(self.awayClickTimer);
+      self.awayClickTimer = setTimeout(() => {
+        self.awayClicked = false;
+      }, 100);
+      setShow(false);
+    }
+  });
 
   const [spProps, set] = useSpring(() => ({
     xy: [0, 0],
@@ -102,7 +117,14 @@ const Popper: React.FC<PopperProps> = props => {
 
   const clickHandle = useFn(() => {
     if (disabled) return;
-    setShow(prev => !prev);
+    if (!show) {
+      if (self.awayClicked) {
+        clearTimeout(self.awayClickTimer);
+        self.awayClicked = false;
+        return;
+      }
+      setShow(true);
+    }
   });
 
   const mouseEnterHandle = useFn(() => {
@@ -189,7 +211,6 @@ const Popper: React.FC<PopperProps> = props => {
     (fix?: boolean, skipTransition?: boolean, forceShow?: boolean) => {
       if (!self.target) return;
       if (!isNumber(self.lastPopperW) || !isNumber(self.lastPopperH)) return;
-
       if (show && popperEl.current) {
         self.lastPopperW = popperEl.current.offsetWidth;
         self.lastPopperH = popperEl.current.offsetHeight;
@@ -277,13 +298,13 @@ const Popper: React.FC<PopperProps> = props => {
   );
 
   const scrollHandle = useFn(() => {
+    if (!show) return;
     refresh();
   });
 
   /** 初始化定位、默认触发气泡更新方式(wrap滚动触发) */
   useEffect(() => {
     refresh();
-
     const e = getRefDomOrDom(wrapEl) || window;
     e.addEventListener('scroll', scrollHandle);
 
@@ -317,9 +338,10 @@ const Popper: React.FC<PopperProps> = props => {
     });
   }, [show]);
 
-  // 位置变化时更新位置
+  // 尺寸变化时更新位置
   useUpdateEffect(() => {
     if (self.refreshing) return;
+    if (!state.contentShow) return;
     show && refresh();
   }, [mWidth, mHeight]);
 

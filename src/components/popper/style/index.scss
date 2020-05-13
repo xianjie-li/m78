@@ -1,18 +1,5 @@
 @import '../../style/index';
 
-.wrap {
-  position: relative;
-  height: 400px;
-  width: 400px;
-  border: 1px dashed #ccc;
-  overflow: auto;
-}
-
-.inner {
-  width: 2000px;
-  height: 2000px;
-}
-
 @media (max-width: $sm) {
   // 增加优先级
   .fr-popper {
@@ -28,7 +15,6 @@
       max-width: 90vw;
     }
   }
-
 }
 
 .fr-popper {
@@ -69,7 +55,6 @@
 
   // popper不限制宽度，又用户控制
   &_popper {
-
     &-title {
       padding: 4px 12px;
       border-bottom: 1px solid $b-border;
@@ -112,7 +97,6 @@
     }
 
     &-content {
-
     }
 
     &-img {
@@ -193,52 +177,66 @@
     background-color: #fff;
     z-index: -1;
 
-    &.__top, &.__topStart, &.__topEnd {
+    &.__top,
+    &.__topStart,
+    &.__topEnd {
       box-shadow: 4px 1px 2px rgba(0, 0, 0, 0.14);
       bottom: -4px;
     }
 
-    &.__bottom, &.__bottomStart, &.__bottomEnd {
+    &.__bottom,
+    &.__bottomStart,
+    &.__bottomEnd {
       box-shadow: 1px 0 2px rgba(0, 0, 0, 0.14);
       top: -4px;
     }
 
-    &.__right, &.__rightStart, &.__rightEnd {
+    &.__right,
+    &.__rightStart,
+    &.__rightEnd {
       box-shadow: -2px 0 2px rgba(0, 0, 0, 0.14);
       left: -4px;
     }
 
-    &.__left, &.__leftStart, &.__leftEnd {
+    &.__left,
+    &.__leftStart,
+    &.__leftEnd {
       box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.14);
       right: -4px;
     }
 
-    &.__top, &.__bottom {
+    &.__top,
+    &.__bottom {
       transform: translate(-50%, 0) rotate(45deg);
       left: 50%;
     }
 
-    &.__topStart, &.__bottomStart {
+    &.__topStart,
+    &.__bottomStart {
       transform: rotate(45deg);
       left: 8px;
     }
 
-    &.__topEnd, &.__bottomEnd {
+    &.__topEnd,
+    &.__bottomEnd {
       transform: rotate(45deg);
       right: 8px;
     }
 
-    &.__right, &.__left {
+    &.__right,
+    &.__left {
       transform: translate(0, -50%) rotate(-45deg);
       top: 50%;
     }
 
-    &.__rightStart, &.__leftStart {
+    &.__rightStart,
+    &.__leftStart {
       transform: rotate(-45deg);
       top: 8px;
     }
 
-    &.__rightEnd, &.__leftEnd {
+    &.__rightEnd,
+    &.__leftEnd {
       transform: rotate(-45deg);
       bottom: 8px;
     }

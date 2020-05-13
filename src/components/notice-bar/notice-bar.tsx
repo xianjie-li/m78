@@ -38,14 +38,10 @@ const NoticeBar: React.FC<NoticeBarProps> = ({
   ...props
 }) => {
   const [ref, { height }] = useMeasure();
-  const [show, setShow] = useFormState(
-    props,
-    true,
-    {
-      valueKey: 'show',
-      triggerKey: 'onClose',
-    }
-  );
+  const [show, setShow] = useFormState(props, true, {
+    valueKey: 'show',
+    triggerKey: 'onClose',
+  });
 
   const [spStyle, set] = useSpring(() => ({
     height: 'auto',

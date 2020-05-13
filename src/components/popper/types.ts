@@ -4,10 +4,6 @@ import { ComponentBaseProps } from '../types/types';
 
 export type PopperTriggerType = 'hover' | 'click' | 'focus';
 
-/**
- * 挂子节点、挂兄弟节点(然后删除?)
- * 要求组件能够接受children并渲染且组件能够正常渲染出能接受相关事件的包裹元素
- * */
 export interface PopperProps extends ComponentBaseProps {
   /** 直接指定 目标元素/包含目标元素的ref对象/一个表示位置的GetPopperMetasBound对象, 优先级大于children */
   target?: HTMLElement | GetPopperMetasBound | React.MutableRefObject<HTMLElement>;
@@ -50,6 +46,6 @@ export interface PopperProps extends ComponentBaseProps {
   cancelText?: React.ReactNode;
   /** 点击确认的回调 */
   onConfirm?(): void;
-  /** type为confirm时, 此选项用于设置图标类型 */
+  /** type为confirm时, 此选项用于设置图标 */
   icon?: React.ReactNode;
 }

@@ -20,11 +20,12 @@ group:
 
 ## 样式定制
 
-`Check`组件是高度可定制的，实际上，内置的`'radio' | 'checkbox' | 'switch'`等样式也是通过定制API来实现的。
+`Check`组件是高度可定制的，实际上，内置的`'radio' | 'checkbox' | 'switch'`等样式也是通过定制 API 来实现的。
 
 <code src="./custom.tsx" />
 
-组件css
+组件 css
+
 ```scss
 .MyCustomCheck {
   display: inline-block;
@@ -58,8 +59,7 @@ group:
 
 <code src="./useCheckDemo.tsx" />
 
-关于useCheck的更多用例，请查看`useCheck` 
-// TODO: 添加链接
+关于 useCheck 的更多用例，请查看`useCheck` // TODO: 添加链接
 
 ## props
 

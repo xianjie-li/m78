@@ -4,10 +4,9 @@ export const stopPropagation = {
   onClick(e: React.SyntheticEvent) {
     e.stopPropagation();
   },
-};
+}; /* TODO: 改为引用utils中的 */
 
-/* 占位函数 */ /* TODO: 改为引用utils中的 */
-export const dumpFn = (...arg: any[]): any => arg;
+/* 占位函数 */ export const dumpFn = (...arg: any[]): any => arg;
 
 /* TODO: 改为引用utils中的 */
 export function getGlobal() {

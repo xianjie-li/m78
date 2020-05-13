@@ -131,7 +131,8 @@
     background: transparent !important;
 
     // 使用特有的交互样式
-    &:focus, &:not(.__disabled):hover {
+    &:focus,
+    &:not(.__disabled):hover {
       background-color: $b-divider !important;
     }
 
@@ -163,7 +164,8 @@
     font-size: inherit;
 
     // 使用特有的交互样式
-    &:focus, &:not(.__disabled):hover {
+    &:focus,
+    &:not(.__disabled):hover {
       background-color: $b-divider !important;
     }
   }
@@ -193,7 +195,8 @@
   .fr-btn.__#{$name}.__icon {
     color: $main-color;
 
-    &:focus, &:not(.__disabled):hover {
+    &:focus,
+    &:not(.__disabled):hover {
       background-color: rgba($main-color, 0.1) !important;
     }
   }
@@ -201,7 +204,8 @@
   .fr-btn.__#{$name}.__link {
     color: $main-color;
 
-    &:focus, &:not(.__disabled):hover {
+    &:focus,
+    &:not(.__disabled):hover {
       background-color: rgba($main-color, 0.1) !important;
     }
   }

@@ -1,18 +1,20 @@
 import React from 'react';
 
 import Check, { CheckCustom } from '@lxjx/fr/lib/check';
-import  './style.scss';
-import cls from "classnames";
+import './style.scss';
+import cls from 'classnames';
 
-const myCheck: CheckCustom = ({ checked, disabled, focus }, props) => {
-  return (
-    <span className={cls('MyCustomCheck', {
+const myCheck: CheckCustom = ({ checked, disabled, focus }, props) => (
+  <span
+    className={cls('MyCustomCheck', {
       __checked: checked,
       __disabled: disabled,
       __focus: focus,
-    })}>{props.label}</span>
-  )
-};
+    })}
+  >
+    {props.label}
+  </span>
+);
 
 const Demo2 = () => (
   <div>

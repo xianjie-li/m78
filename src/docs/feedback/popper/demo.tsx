@@ -1,115 +1,62 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import Popper from '@lxjx/fr/lib/popper';
+import Button from '@lxjx/fr/lib/button';
 
-const Demo = () => {
-  const wrap = useRef<HTMLDivElement>(null!);
+import sty from './demo.module.scss';
 
-  function renderContent() {
-    return (
-      <div>
-        <div>气泡内容123123气泡内容12312气泡内容气泡内</div>
+const Demo = () => (
+  <div>
+    <div className={sty.tooltip}>
+      <div className={sty.top}>
+        <Popper content="一段提示" direction="topStart">
+          <Button>topStart</Button>
+        </Popper>
+        <Popper content="一段提示" direction="top">
+          <Button>top</Button>
+        </Popper>
+        <Popper content="一段提示" direction="topEnd">
+          <Button>topEnd</Button>
+        </Popper>
       </div>
-    );
-  }
 
-  return (
-    <div>
-      <div ref={wrap}>
-        {/* <Popper content="一段提示"> */}
-        {/*  <button type="button" style={{ marginRight: 60 }}> */}
-        {/*    click */}
-        {/*  </button> */}
-        {/* </Popper> */}
-        {/* <Popper content="一段提示" direction="left"> */}
-        {/*  <button type="button" style={{ marginRight: 60 }}> */}
-        {/*    click */}
-        {/*  </button> */}
-        {/* </Popper> */}
-        {/* <Popper content="一段提示" direction="right"> */}
-        {/*  <button type="button" style={{ marginRight: 60 }}> */}
-        {/*    click */}
-        {/*  </button> */}
-        {/* </Popper> */}
-        {/* <Popper content="一段提示" direction="bottom"> */}
-        {/*  <button type="button" style={{ marginRight: 60 }}> */}
-        {/*    click */}
-        {/*  </button> */}
-        {/* </Popper> */}
+      <div className={sty.left}>
+        <Popper content="一段提示" direction="leftStart">
+          <Button>leftStart</Button>
+        </Popper>
+        <Popper content="一段提示" direction="left">
+          <Button>left</Button>
+        </Popper>
+        <Popper content="一段提示" direction="leftEnd">
+          <Button>leftEnd</Button>
+        </Popper>
+      </div>
 
-        <div style={{ marginTop: 60 }}>
-          {/* <Popper type="popper" title="一段提示" content="我是内容"> */}
-          {/*  <button type="button" style={{ marginRight: 60 }}> */}
-          {/*    click */}
-          {/*  </button> */}
-          {/* </Popper> */}
-          {/* <Popper direction="right" type="popper" title="一段提示" content="我是内容"> */}
-          {/*  <button type="button" style={{ marginRight: 60 }}> */}
-          {/*    click */}
-          {/*  </button> */}
-          {/* </Popper> */}
-          {/* <Popper direction="bottom" type="popper" title="一段提示" content="我是内容"> */}
-          {/*  <button type="button" style={{ marginRight: 60 }}> */}
-          {/*    click */}
-          {/*  </button> */}
-          {/* </Popper> */}
-          <Popper
-            trigger="click"
-            direction="top"
-            type="popper"
-            title="一段提示"
-            content={
-              <div>
-                <div>
-                  我是内容我是内容我是内容我是内容我是内容我是内容我是内容我是内容我是内容我是内容我是内容我是内容
-                </div>
-                <div>我是内容我是内容我是内容我是内容</div>
-                <div>我是内容我是内容我是内容我是内容</div>
-                <div>我是内容我是内容我是内容我是内容</div>
-                <div>我是内容我是内容我是内容我是内容</div>
-                <div>我是内容我是内容我是内容我是内容</div>
-                <div>我是内容我是内容我是内容我是内容</div>
-                <div>我是内容我是内容我是内容我是内容</div>
-              </div>
-            }
-          >
-            <button type="button" style={{ marginRight: 60, marginLeft: 100 }}>
-              click
-            </button>
-          </Popper>
-        </div>
+      <div className={sty.right}>
+        <Popper content="一段提示" direction="rightStart">
+          <Button>rightStart</Button>
+        </Popper>
+        <Popper content="一段提示" direction="right">
+          <Button>right</Button>
+        </Popper>
+        <Popper content="一段提示" direction="rightEnd">
+          <Button>rightEnd</Button>
+        </Popper>
+      </div>
 
-        {/* <div style={{ marginTop: 60 }}> */}
-        {/*  <Popper type="confirm" title="一段提示" content="我是内容"> */}
-        {/*    <button type="button" style={{ marginRight: 60 }}> */}
-        {/*      click */}
-        {/*    </button> */}
-        {/*  </Popper> */}
-        {/*  <Popper direction="right" type="confirm" title="一段提示" content="我是内容"> */}
-        {/*    <button type="button" style={{ marginRight: 60 }}> */}
-        {/*      click */}
-        {/*    </button> */}
-        {/*  </Popper> */}
-        {/*  <Popper direction="bottom" type="confirm" title="一段提示" content="我是内容"> */}
-        {/*    <button type="button" style={{ marginRight: 60 }}> */}
-        {/*      click */}
-        {/*    </button> */}
-        {/*  </Popper> */}
-        {/*  <Popper */}
-        {/*    trigger="click" */}
-        {/*    direction="left" */}
-        {/*    type="confirm" */}
-        {/*    title="一段提示" */}
-        {/*    content="我是内容" */}
-        {/*  > */}
-        {/*    <button type="button" style={{ marginRight: 60 }}> */}
-        {/*      click */}
-        {/*    </button> */}
-        {/*  </Popper> */}
-        {/* </div> */}
+      <div className={sty.bottom}>
+        <Popper content="一段提示" direction="bottomStart">
+          <Button>bottomStart</Button>
+        </Popper>
+        <Popper content="一段提示" direction="bottom">
+          <Button>bottom</Button>
+        </Popper>
+        <Popper content="一段提示" direction="bottomEnd">
+          <Button>bottomEnd</Button>
+        </Popper>
       </div>
     </div>
-  );
-};
+  </div>
+);
 
 const cachePrefix = 'FR_POPPER_CACHE';
 

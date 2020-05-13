@@ -16,5 +16,5 @@ export interface RadioBoxProps<Val> extends FormLike<Val> {
     beforeLabel?: string;
     value: Val;
     disabled?: boolean;
-  }>
+  }>;
 }

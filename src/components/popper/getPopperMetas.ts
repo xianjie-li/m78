@@ -340,7 +340,6 @@ export function getPopperMetas(
 
   if (notValidDirection && sourceB.width / wrapB.width > 0.7) {
     degrade = getDegrade(passData);
-
     if (degrade) {
       currentMeta = {
         x: degrade.x,
@@ -384,7 +383,12 @@ function getDegrade(arg: GetDegradeArg): Degrade | undefined {
 
   const xValid = wrapB.width >= sourceB.width;
 
-  const xPos = (wrapB.width - sourceB.width) / 2 + winSl;
+  const a = wrapB.width - (wrapB.width - targetB.left);
+  const b = wrapB.width - targetB.left;
+  const c = sourceB.width - b;
+
+  // const xPos = (wrapB.width - sourceB.width) / 2 + winSl;
+  const xPos = a - c - 16 - winSl;
   const arrowX = targetB.left - xPos + targetB.width / 2;
 
   if (validArea.top - offset >= sourceB.height && xValid) {
