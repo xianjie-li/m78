@@ -63,10 +63,6 @@ const Popper: React.FC<PopperProps> = props => {
     showTimer: (undefined as unknown) as any,
     /** 防止show变更effect和尺寸变更effect重复更新 */
     refreshing: false,
-    /** 触发气泡外任意位置点击后的标识 */
-    awayClicked: false,
-    /** 外部点击清除计时器 */
-    awayClickTimer: (undefined as unknown) as any,
   });
 
   const [state, setState] = useSetState({
@@ -83,14 +79,16 @@ const Popper: React.FC<PopperProps> = props => {
 
   const showBase = show ? 1 : 0;
 
-  useClickAway(popperEl, () => {
+  // click下点击它处关闭气泡
+  useClickAway(popperEl, ({ target: _target }) => {
     if (triggerType.click && show) {
-      self.awayClicked = true;
-      clearTimeout(self.awayClickTimer);
-      self.awayClickTimer = setTimeout(() => {
-        self.awayClicked = false;
-      }, 100);
-      setShow(false);
+      const targetEl: any = self.target;
+      if (_target && targetEl && targetEl.contains) {
+        const isTarget = targetEl.contains(_target);
+        if (!isTarget) {
+          setShow(false);
+        }
+      }
     }
   });
 
@@ -117,14 +115,7 @@ const Popper: React.FC<PopperProps> = props => {
 
   const clickHandle = useFn(() => {
     if (disabled) return;
-    if (!show) {
-      if (self.awayClicked) {
-        clearTimeout(self.awayClickTimer);
-        self.awayClicked = false;
-        return;
-      }
-      setShow(true);
-    }
+    setShow(prev => !prev);
   });
 
   const mouseEnterHandle = useFn(() => {
@@ -211,7 +202,8 @@ const Popper: React.FC<PopperProps> = props => {
     (fix?: boolean, skipTransition?: boolean, forceShow?: boolean) => {
       if (!self.target) return;
       if (!isNumber(self.lastPopperW) || !isNumber(self.lastPopperH)) return;
-      if (show && popperEl.current) {
+
+      if (!fix && show && popperEl.current) {
         self.lastPopperW = popperEl.current.offsetWidth;
         self.lastPopperH = popperEl.current.offsetHeight;
       }
@@ -241,32 +233,30 @@ const Popper: React.FC<PopperProps> = props => {
           });
         }
 
-        // 前一次位置与后一次完全相等时跳过
-        if (self.lastX === currentDirection.x && self.lastY === currentDirection.y) {
-          return;
-        }
+        if (!fix) {
+          // 前一次位置与后一次完全相等时跳过
+          if (self.lastX === currentDirection.x && self.lastY === currentDirection.y) {
+            return;
+          }
 
-        // 前后visible状态均为false时跳过
-        if (!fix && !self.lastVisible && !visible) {
-          self.refreshCount = 0; // 防止初次入场/重入场时气泡不必要的更新动画
-          return;
-        }
+          // 前后visible状态均为false时跳过
+          if (!self.lastVisible && !visible) {
+            self.refreshCount = 0; // 防止初次入场/重入场时气泡不必要的更新动画
+            return;
+          }
 
-        /**
-         * 跳过动画,直接设置为目标状态
-         * 1. 由可见状态进入不可见状态
-         * */
-        if (
-          (!fix && self.lastVisible && !visible) ||
-          (!self.lastVisible && visible) ||
-          skipTransition
-        ) {
-          self.refreshCount = 0;
-        }
+          /**
+           * 跳过动画,直接设置为目标状态
+           * 1. 由可见状态进入不可见状态
+           * */
+          if ((self.lastVisible && !visible) || (!self.lastVisible && visible) || skipTransition) {
+            self.refreshCount = 0;
+          }
 
-        self.lastVisible = visible;
-        self.lastX = currentDirection.x;
-        self.lastY = currentDirection.y;
+          self.lastVisible = visible;
+          self.lastX = currentDirection.x;
+          self.lastY = currentDirection.y;
+        }
 
         let styleShow = visible && show ? 1 : 0;
 

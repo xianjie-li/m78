@@ -8,7 +8,7 @@ group:
 
 # Popper 气泡框
 
-与`Spin`类似，用于对某个区域元素的占位加载提醒。
+通过一个相对于元素位置的气泡框来对用户进行轻量提示或操作提示
 
 ## tooltip
 
@@ -18,7 +18,7 @@ group:
 
 ## Popper/Confirm
 
-相对于 tooltip，同来进行快速提示，并且可承载一些复杂操作
+相对于 tooltip，用来进行快速提示，并且可承载一些复杂操作
 
 <code src="./demo2.tsx" />
 
