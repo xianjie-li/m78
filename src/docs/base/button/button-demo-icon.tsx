@@ -1,64 +1,71 @@
 import React from 'react';
 import Button from '@lxjx/fr/lib/button';
-import Icon from '@lxjx/fr/lib/icon';
+import {
+  TagOutlined,
+  SettingOutlined,
+  QuestionCircleOutlined,
+  SearchOutlined,
+  BellOutlined,
+  BulbOutlined,
+  CaretLeftOutlined,
+  CaretRightOutlined,
+} from '@lxjx/fr/lib/icon2';
 import Message from '@lxjx/fr/lib/message';
-import '@lxjx/fr/lib/button/style';
-import '@lxjx/fr/lib/icon/style';
 
 const ButtonDemoColor = () => (
   <div>
     <div>纯图标按钮</div>
     <Button icon>
-      <Icon type="tag" />
+      <TagOutlined />
     </Button>
     <Button color="red" icon>
-      <Icon type="setting" />
+      <SettingOutlined />
     </Button>
     <Button color="green" icon disabled>
-      <Icon type="question" />
+      <QuestionCircleOutlined />
     </Button>
     <Button color="blue" icon>
-      <Icon type="search" />
+      <SearchOutlined />
     </Button>
     <Button color="yellow" icon>
-      <Icon type="location" />
+      <BellOutlined />
     </Button>
     <Button color="red" icon>
       李
     </Button>
     <Button color="red" icon size="large">
-      <Icon type="setting" />
+      <SettingOutlined />
     </Button>
     <Button color="blue" icon>
-      <Icon type="setting" />
+      <SettingOutlined />
     </Button>
     <Button color="green" icon size="small">
-      <Icon type="setting" />
+      <SettingOutlined />
     </Button>
     <Button color="yellow" icon size="mini">
-      <Icon type="setting" />
+      <SettingOutlined />
     </Button>
 
     <div className="mt-16">
       <div className="mb-16">文字图标混排</div>
       <Button>
-        <Icon type="tag" />
+        <TagOutlined />
         按钮
       </Button>
       <Button color="red">
-        <Icon type="setting" />
+        <SettingOutlined />
         按钮
       </Button>
       <Button color="green">
-        <Icon type="question" />
+        <QuestionCircleOutlined />
         按钮
       </Button>
       <Button color="blue">
-        <Icon type="location" />
+        <BellOutlined />
         按钮
       </Button>
       <Button color="yellow">
-        <Icon type="zoomIn" />
+        <BulbOutlined />
         按钮
       </Button>
     </div>
@@ -70,11 +77,11 @@ const ButtonDemoColor = () => (
           color="primary"
           onClick={() => Message.tips({ type: 'success', content: '恭喜您成功脱发一根!' })}
         >
-          <Icon type="swapLeft" />
+          <CaretLeftOutlined />
           点我
-          <Icon type="bell" />
+          <BellOutlined />
           脱发
-          <Icon type="swapRight" />
+          <CaretRightOutlined />
         </Button>
       </div>
     </div>

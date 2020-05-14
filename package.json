@@ -24,6 +24,7 @@
     "react-dom": ">= 16.8.0"
   },
   "dependencies": {
+    "@ant-design/icons": "^4.1.0",
     "@babel/runtime": "^7.7.2",
     "@lxjx/fr-click-effect": "^1.0.2",
     "@lxjx/hooks": "^1.1.3",

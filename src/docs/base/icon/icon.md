@@ -4,75 +4,36 @@ group:
   title: 基础组件
   path: /base
   order: 1000
----
+--- 
 
 <!-- 样式 -->
 
-```tsx | inline
-import React from 'react';
-import './style.scss';
-
-export default () => <span />;
-```
-
 # Icon 图标
 
-一套常用的矢量图标，来自 [iconfont](https://www.iconfont.cn/) antd 官方图标库
+包含[`@ant-design/icons`](https://ant.design/components/icon-cn)库中的所有图标，以及部分内置图标
 
 ## 代码示例
 
 <code src="./icon-demo.tsx"/>
 
-## 单色图标
-
-<code src="./icon-demo2.tsx" inline />
-
-## svg 图标
+## 内置图标
 
 <code src="./icon-demo3.tsx" inline />
 
 ## props
 
-**`Icon`**
-
+**`Props`**-
 ```tsx | pure
-interface IconProps extends ComponentBasePropsWithAny {
-  /** icon类型 */
-  type: IconTypes;
-  /** 颜色 */
-  color?: string;
-  /** 大小通过字号跳转，与{ fontSize: number | string }等效 */
-  size?: string | number;
-  /** 是否添加旋转动画 */
-  spin?: boolean;
-}
-```
-
-**`SvgIcon`**
-
-```tsx | pure
-interface SvgIconProps extends ComponentBasePropsWithAny {
-  /** icon类型 */
-  type: SvgIconTypes;
-  /** 大小通过字号跳转，与{ fontSize: number | string }等效 */
-  size?: string | number;
-  /** 是否旋转图标 */
-  spin?: boolean;
-}
-```
-
-**相关接口**
-
-```tsx | pure
-interface ComponentBasePropsWithAny extends ComponentBaseProps {
-  /** 透传到包裹元素上的属性 */
-  [key: string]: any;
-}
-
-interface ComponentBaseProps {
-  /** 包裹元素的类名 */
+interface IconProps {
+  /** 设置图标的样式名 */
   className?: string;
-  /** 包裹元素样式 */
-  style?: React.CSSProperties;
+  /** 设置图标的样式，例如 fontSize 和 color	CSSProperties */
+  style?: CSSProperties;
+  /** false | 是否有旋转动画 */
+  spin?: boolean;
+  /** 图标旋转角度（IE9 无效） */
+  rotate?: number;
+  /** 仅适用双色图标。设置双色图标的主要颜色 */
+  twoToneColor?: string;
 }
 ```

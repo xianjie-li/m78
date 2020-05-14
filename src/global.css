@@ -3,3 +3,11 @@
   height: 120px !important;
   background-position: center !important;
 }
+
+.__dumi-default-menu {
+  background-color: #fff !important;
+}
+
+.__dumi-default-menu:after {
+  display: none !important;
+}

@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 
 import Spin from '@lxjx/fr/lib/spin';
 import '@lxjx/fr/lib/base';
-import { isArray, isFunction } from '@lxjx/utils';
+import { isArray } from '@lxjx/utils';
 
 import cls from 'classnames';
 
@@ -14,18 +14,22 @@ const sizeMap = {
   mini: 12,
 };
 
+const matchIcon = /.?(Outlined|Filled|TwoTone|Icon)$/;
+
 /* 该函数用于遍历Button的children，当存在Icon和SvgIcon时(非函数匹配, 函数组件name能就会添加)，为其添加适当边距并返回 */
 function formatChildren(children: React.ReactNode) {
   if (isArray(children)) {
     return children.map((child, index) => {
-      /* 这里直接匹配函数name是为了防止仅使用Button组件而需要导入Icon组件 */
-      if (
-        React.isValidElement(child) &&
-        isFunction(child.type) &&
-        (child.type.name === 'Icon' || child.type.name === 'SvgIcon')
-      ) {
-        let injectStyle: React.CSSProperties = { marginLeft: 8, marginRight: 8 };
+      const type = (child as any)?.type;
+      let name: string = '';
 
+      if (type) {
+        name = type.render?.displayName || type.render?.name || type.name;
+      }
+
+      /* 为满足matchIcon规则的子元素添加边距 */
+      if (name && React.isValidElement(child) && matchIcon.test(name)) {
+        let injectStyle: React.CSSProperties = { marginLeft: 8, marginRight: 8 };
         if (index === 0) {
           injectStyle = { marginRight: 8 };
         }

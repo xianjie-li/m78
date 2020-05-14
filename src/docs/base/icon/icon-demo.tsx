@@ -1,17 +1,30 @@
 import React from 'react';
-import Icon from '@lxjx/fr/lib/icon';
-import '@lxjx/fr/lib/icon/style';
+import './style.scss';
+
+import {
+  HomeOutlined,
+  SettingFilled,
+  SmileOutlined,
+  SyncOutlined,
+  LoadingOutlined,
+  SmileTwoTone,
+  HeartTwoTone,
+  CheckCircleTwoTone,
+  SuccessIcon,
+} from '@lxjx/fr/lib/icon2';
 
 const IconDemo = () => (
-  <div>
-    <Icon type="setting" size={30} />
-    <Icon type="search" size={30} />
-    <Icon type="plus" size={30} />
-    <Icon type="ellipsis" size={30} />
-    <Icon type="sync" size={30} spin />
-    <Icon.SvgIcon type="success" size={30} />
-    <Icon.SvgIcon type="error" size={30} />
-    <Icon.SvgIcon type="warning" size={30} />
+  <div className="d-antd-icons-demo">
+    <HomeOutlined />
+    <SettingFilled />
+    <SmileOutlined />
+    <SyncOutlined spin />
+    <SmileOutlined rotate={180} />
+    <LoadingOutlined />
+    <SmileTwoTone />
+    <HeartTwoTone twoToneColor="#eb2f96" />
+    <CheckCircleTwoTone twoToneColor="#52c41a" />
+    <SuccessIcon />
   </div>
 );
 
