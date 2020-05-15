@@ -1,5 +1,5 @@
 import React from 'react';
-import { SvgIcon } from '@lxjx/fr/lib/icon';
+import { WarningIcon } from '@lxjx/fr/lib/icon';
 import Button from '@lxjx/fr/lib/button';
 import { useFn } from '@lxjx/hooks';
 import { PopperProps } from './types';
@@ -47,7 +47,7 @@ function Confirm(props: PopperPropsCustom) {
 
   return (
     <div className="fr-popper_content fr-popper_confirm">
-      <span className="fr-popper_confirm-icon">{icon || <SvgIcon type="warning" size={22} />}</span>
+      <span className="fr-popper_confirm-icon">{icon || <WarningIcon />}</span>
       <span>{content}</span>
       <div className="fr-popper_confirm-btns">
         <Button size="small" onClick={closeHandle}>

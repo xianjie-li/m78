@@ -25,6 +25,7 @@
     top: 12px;
     cursor: pointer;
     text-shadow: $stress-shadow-w;
+    font-size: $fs-12 !important;
 
     &:hover {
       font-weight: bold;

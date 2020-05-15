@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 
 import '@lxjx/fr/lib/base';
 import { Switch, If } from '@lxjx/fr/lib/fork';
-import Icon from '@lxjx/fr/lib/icon';
+import { statusIcons, RightOutlined } from '@lxjx/fr/lib/icon';
 
 import Ellipsis from '@lxjx/fr/lib/ellipsis';
 
@@ -69,6 +69,8 @@ const Item: React.FC<ListItemProps> = ({
   const hasEffect = !isForm && !disabled && (arrow || props.onClick || effect);
   const itemStyle = column > 1 ? { width: `${100 / column}%` } : {};
 
+  const StatusIcon = statusIcons[status!];
+
   return React.createElement(
     isForm ? 'label' : 'div',
     {
@@ -99,26 +101,10 @@ const Item: React.FC<ListItemProps> = ({
       <div className="fr-list_icon">
         {/* icon显示优先级: 状态 > icon > arrow */}
         <Switch>
-          <If when={status}>
-            {status === 'success' && (
-              <svg className="fr-list_extra-icon fr-svg-icon" aria-hidden="true">
-                <use xlinkHref="#icon-result_success" />
-              </svg>
-            )}
-            {status === 'error' && (
-              <svg className="fr-list_extra-icon fr-svg-icon" aria-hidden="true">
-                <use xlinkHref="#icon-result_error" />
-              </svg>
-            )}
-            {status === 'warning' && (
-              <svg className="fr-list_extra-icon fr-svg-icon" aria-hidden="true">
-                <use xlinkHref="#icon-result_warn" />
-              </svg>
-            )}
-          </If>
+          <If when={status}>{() => <StatusIcon className="fr-list_extra-icon fr-svg-icon" />}</If>
           <If when={icon}>{icon}</If>
           <If when={arrow && !icon}>
-            <Icon type="right" />
+            <RightOutlined />
           </If>
         </Switch>
       </div>

@@ -12,7 +12,7 @@ export interface ComponentBaseProps {
   style?: React.CSSProperties;
 }
 
-export type Status = 'info' | 'success' | 'warn' | 'error';
+export type Status = 'info' | 'success' | 'warning' | 'error';
 
 export type Size = 'large' | 'small';
 

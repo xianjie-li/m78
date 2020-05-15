@@ -13,6 +13,7 @@ import { If, Toggle, Switch } from '@lxjx/fr/lib/fork';
 import Spin from '@lxjx/fr/lib/spin';
 import Empty from '@lxjx/fr/lib/empty';
 import Button from '@lxjx/fr/lib/button';
+import { CaretUpOutlined } from '@lxjx/fr/lib/icon';
 import { dumpFn } from '@lxjx/fr/lib/util';
 import _debounce from 'lodash/debounce';
 
@@ -412,7 +413,7 @@ const Scroll = React.forwardRef<ScrollRef, ScrollProps>(
               scrollTo(0);
             }}
           >
-            <span className="fs-20">↑</span>
+            <CaretUpOutlined className="fs-20 color-second" />
           </Button>
         </Transition>
         {/* 下拉刷新提示器 */}

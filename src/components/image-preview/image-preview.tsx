@@ -8,7 +8,16 @@ import cls from 'classnames';
 import Carousel, { CarouselRef } from '@lxjx/fr/lib/carousel';
 import Viewer, { ViewerRef } from '@lxjx/fr/lib/viewer';
 import Picture from '@lxjx/fr/lib/picture';
-import Icon from '@lxjx/fr/lib/icon';
+import {
+  CloseCircleOutlined,
+  RightOutlined,
+  SyncOutlined,
+  ZoomOutOutlined,
+  ZoomInOutlined,
+  RedoOutlined,
+  UndoOutlined,
+  LeftOutlined,
+} from '@lxjx/fr/lib/icon';
 import { If } from '@lxjx/fr/lib/fork';
 import Portal from '@lxjx/fr/lib/portal';
 import { stopPropagation } from '@lxjx/fr/lib/util';
@@ -207,31 +216,32 @@ const _ImagePreview: React.FC<ImagePreviewProps> = ({
               title="上一张"
               onClick={() => prev()}
             >
-              <Icon type="left" />
+              <LeftOutlined />
             </span>
           </If>
           <span title="左旋转" onClick={() => rotate(false)}>
-            <Icon type="undo" />
+            <UndoOutlined />
           </span>
           <span title="右旋转" onClick={() => rotate(true)}>
-            <Icon type="redo" />
+            <RedoOutlined />
           </span>
           <span
             className={cls({ __disabled: state.zoomIn })}
             title="放大"
             onClick={() => scale(true)}
           >
-            <Icon type="zoomIn" />
+            <ZoomInOutlined />
           </span>
           <span
             className={cls({ __disabled: state.zoomOut })}
             title="缩小"
             onClick={() => scale(false)}
           >
-            <Icon type="zoomOut" />
+            <ZoomOutOutlined />
           </span>
           <span title="重置" onClick={() => resetViewer()}>
-            <Icon type="sync" />
+            <SyncOutlined style={{ fontSize: 21 }} />{' '}
+            {/* Sync图标基础大小比其他图标稍大，优化视觉效果 */}
           </span>
           <If when={images.length > 1}>
             <span
@@ -239,11 +249,11 @@ const _ImagePreview: React.FC<ImagePreviewProps> = ({
               title="下一张"
               onClick={() => next()}
             >
-              <Icon type="right" />
+              <RightOutlined />
             </span>
           </If>
           <span title="关闭" onClick={close}>
-            <Icon type="error" />
+            <CloseCircleOutlined />
           </span>
         </div>
       </Transition>

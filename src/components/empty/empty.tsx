@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Icon from '@lxjx/fr/lib/icon';
+import { EmptyIcon } from '@lxjx/fr/lib/icon';
 import config from '@lxjx/fr/lib/config';
 
 import cls from 'classnames';
@@ -19,7 +19,8 @@ const Empty: React.FC<EmptyProps> = ({ desc, children, size, emptyNode, ...props
   return (
     <div className={cls('fr-empty', size && `__${size}`, props.className)} {...props}>
       {injectIconClassName(emptyNode) || injectIconClassName(globalEmptyNode) || (
-        <Icon.SvgIcon className="fr-empty_icon" type="empty" />
+        // <Icon.SvgIcon type="empty" />
+        <EmptyIcon className="fr-empty_icon" />
       )}
       <div className="fr-empty_desc">{desc}</div>
       <div className="fr-empty_actions">{children}</div>

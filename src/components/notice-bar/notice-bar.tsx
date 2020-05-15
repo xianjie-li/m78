@@ -3,7 +3,7 @@ import { useMeasure, useUpdateEffect } from 'react-use';
 import { useSpring, animated, config } from 'react-spring';
 import { useFormState } from '@lxjx/hooks';
 
-import Icon from '@lxjx/fr/lib/icon';
+import { lineStatusIcons, CloseOutlined } from '@lxjx/fr/lib/icon';
 import { If } from '@lxjx/fr/lib/fork';
 import Button from '@lxjx/fr/lib/button';
 import cls from 'classnames';
@@ -53,6 +53,8 @@ const NoticeBar: React.FC<NoticeBarProps> = ({
     // eslint-disable-next-line
   }, [show, height]);
 
+  const StatusIcon = lineStatusIcons[status!];
+
   return (
     <animated.div
       style={spStyle}
@@ -62,7 +64,7 @@ const NoticeBar: React.FC<NoticeBarProps> = ({
         <If when={status}>
           {() => (
             <div className="fr-notice-bar_left">
-              <Icon type={status!} />
+              <StatusIcon />
             </div>
           )}
         </If>
@@ -83,7 +85,7 @@ const NoticeBar: React.FC<NoticeBarProps> = ({
                 setShow(false);
               }}
             >
-              <Icon type="close" />
+              <CloseOutlined />
             </Button>
           </If>
         </div>

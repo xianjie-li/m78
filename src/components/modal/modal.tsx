@@ -5,7 +5,7 @@ import ShowFromMouse from '@lxjx/fr/lib/show-from-mouse';
 import Button, { ButtonProps } from '@lxjx/fr/lib/button';
 import { Transition } from '@lxjx/react-transition-spring';
 import { config } from 'react-spring';
-import Icon from '@lxjx/fr/lib/icon';
+import { CloseOutlined, statusIcons } from '@lxjx/fr/lib/icon';
 import Spin from '@lxjx/fr/lib/spin';
 import { dumpFn } from '@lxjx/fr/lib/util';
 import { useSameState } from '@lxjx/hooks';
@@ -137,6 +137,8 @@ const _Modal: React.FC<ModalProps> = ({
     );
   }
 
+  const StatusIcon = statusIcons[status!];
+
   return (
     <ShowFromMouse
       namespace={namespace}
@@ -160,13 +162,13 @@ const _Modal: React.FC<ModalProps> = ({
             type="slideLeft"
             config={config.slow}
           >
-            <Icon.SvgIcon type={status!} />
+            <StatusIcon />
           </Transition>
         </div>
       )}
       {closeIcon && (
         <Button icon className="fr-modal_close-icon" onClick={() => onClose()} size="small">
-          <Icon type="close" />
+          <CloseOutlined />
         </Button>
       )}
       <Spin full show={loading} text="请稍后" />

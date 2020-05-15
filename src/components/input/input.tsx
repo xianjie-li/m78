@@ -1,6 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState, useImperativeHandle } from 'react';
 
-import Icon from '@lxjx/fr/lib/icon';
+import {
+  CloseCircleOutlined,
+  EyeOutlined,
+  EyeInvisibleOutlined,
+  SearchOutlined,
+} from '@lxjx/fr/lib/icon';
 import Spin from '@lxjx/fr/lib/spin';
 import Button from '@lxjx/fr/lib/button';
 import { If } from '@lxjx/fr/lib/fork';
@@ -338,14 +343,14 @@ const Input: React.FC<InputProps> = React.forwardRef<InputRef, InputProps>((_pro
         full={blockLoading}
       />
       <If when={hasClearBtn}>
-        <Icon onClick={clearHandle} className="fr-input_icon fr-input_icon-clear" type="error" />
+        <CloseCircleOutlined onClick={clearHandle} className="fr-input_icon fr-input_icon-clear" />
       </If>
       <If when={_type === 'password' && !textArea}>
-        <Icon
-          onClick={passwordTypeChange}
-          className="fr-input_icon"
-          type={type === 'password' ? 'eyeClose' : 'eye'}
-        />
+        {type === 'password' ? (
+          <EyeOutlined onClick={passwordTypeChange} className="fr-input_icon" />
+        ) : (
+          <EyeInvisibleOutlined onClick={passwordTypeChange} className="fr-input_icon" />
+        )}
       </If>
       <If when={suffix && !textArea}>
         <span className="fr-input_suffix">{suffix}</span>
@@ -365,7 +370,7 @@ const Input: React.FC<InputProps> = React.forwardRef<InputRef, InputProps>((_pro
         to={{ width: 28, left: 0 }}
       >
         <Button className="fr-input_search-icon" icon win size="small" onClick={searchHandle}>
-          <Icon type="search" />
+          <SearchOutlined />
         </Button>
       </TransitionBase>
       <If when={suffixBtn && !textArea}>

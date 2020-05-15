@@ -1,15 +1,6 @@
 import '@lxjx/fr/lib/icon/style';
-import InternalIcon, { SvgIcon } from './icon';
-
-type InternalIconType = typeof InternalIcon;
-
-interface Icon extends InternalIconType {
-  SvgIcon: typeof SvgIcon;
-}
-
-const Icon: Icon = Object.assign(InternalIcon, { SvgIcon });
 
 export * from './type';
-export * from './iconMap';
-export { SvgIcon };
-export default Icon;
+export * from './icon';
+export * from '@ant-design/icons';
+export { default } from '@ant-design/icons';

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { SvgIcon } from '@lxjx/fr/lib/icon';
+import { statusIcons } from '@lxjx/fr/lib/icon';
 import Fork from '@lxjx/fr/lib/fork';
 import Portal from '@lxjx/fr/lib/portal';
 import { Transition, config } from '@lxjx/react-transition-spring';
@@ -21,6 +21,8 @@ const Result: React.FC<ResultProps> = ({
   show = true,
   fixed = false,
 }) => {
+  const StatusIcon = statusIcons[type];
+
   function render() {
     return (
       <Transition
@@ -33,7 +35,7 @@ const Result: React.FC<ResultProps> = ({
       >
         <div className="fr-result_cont">
           <div className={cls('fr-result_icon', { __waiting: type === 'waiting' })}>
-            <SvgIcon
+            <StatusIcon
               type={type}
               className={cls({
                 'fr-result_status-img': statusResultList.includes(type),

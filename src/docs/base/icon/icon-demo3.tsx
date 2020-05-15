@@ -9,7 +9,7 @@ import {
   ServerErrorIcon,
   WindmillIcon,
   WaitingIcon,
-} from '@lxjx/fr/lib/icon2';
+} from '@lxjx/fr/lib/icon';
 
 import message from '@lxjx/fr/lib/message';
 

@@ -22,7 +22,6 @@ group:
 
 ## props
 
-**`Props`**-
 ```tsx | pure
 interface IconProps {
   /** 设置图标的样式名 */

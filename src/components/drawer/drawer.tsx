@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Mask from '@lxjx/fr/lib/mask';
-import Icon from '@lxjx/fr/lib/icon';
+import { CloseCircleOutlined } from '@lxjx/fr/lib/icon';
 import { If } from '@lxjx/fr/lib/fork';
 import { Transition } from '@lxjx/react-transition-spring';
 
@@ -79,7 +79,7 @@ const Drawer: React.FC<DrawerProps> = ({
           reset
         >
           <If when={hasCloseIcon || fullScreen}>
-            <Icon className="fr-drawer_close" type="error" onClick={close} />
+            <CloseCircleOutlined className="fr-drawer_close" onClick={close} />
           </If>
           {children}
         </Transition>

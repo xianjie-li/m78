@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { animated, config, useSpring } from 'react-spring';
 
 import Portal from '@lxjx/fr/lib/portal';
-import Icon from '@lxjx/fr/lib/icon';
+import { CloseOutlined, statusIcons } from '@lxjx/fr/lib/icon';
 import Spin from '@lxjx/fr/lib/spin';
 import { If, Toggle } from '@lxjx/fr/lib/fork';
 import { useMeasure } from 'react-use';
@@ -12,6 +12,7 @@ import { Transition } from '@lxjx/react-transition-spring';
 import cls from 'classnames';
 
 import { useSelf } from '@lxjx/hooks';
+import Button from '@/components/button';
 import { MessageProps } from './type';
 
 function MessageWrap({ children }: any) {
@@ -106,6 +107,8 @@ const Message: React.FC<MessageProps> = ({
     });
   }
 
+  const StatusIcon = statusIcons[type || 'success'];
+
   return (
     <animated.div style={springProp} className="fr-message_item">
       <Portal>
@@ -116,11 +119,15 @@ const Message: React.FC<MessageProps> = ({
         className={cls('fr-message_item-cont', { __loading: loading, __notification: hasCancel })}
       >
         <If when={hasCancel}>
-          {() => <Icon onClick={onClose} className="fr-message_close" size={20} type="close" />}
+          {() => (
+            <Button onClick={onClose} className="fr-message_close" icon size="small">
+              <CloseOutlined />
+            </Button>
+          )}
         </If>
         <Toggle when={type && !loading}>
-          <div>
-            <Icon.SvgIcon type={type || 'success'} />
+          <div className="fr-message_icon">
+            <StatusIcon />
           </div>
         </Toggle>
         <If when={loading}>

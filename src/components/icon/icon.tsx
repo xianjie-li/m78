@@ -1,38 +1,62 @@
 import React from 'react';
-import { shakeFalsy } from '@lxjx/utils';
-import cls from 'classnames';
-import { IconProps, SvgIconProps } from './type';
+import Icon, {
+  InfoCircleOutlined,
+  ExclamationCircleOutlined,
+  CloseCircleOutlined,
+  CheckCircleOutlined,
+} from '@ant-design/icons';
+import { AntdIconProps } from '@ant-design/icons/es/components/AntdIcon';
+import * as BuiltIns from './built-ins';
 
-import { iconMap, svgIconMap } from './iconMap';
+export const EmptyIcon = (props: AntdIconProps) => (
+  <Icon component={BuiltIns.Empty} {...(props as any)} />
+);
 
-const Icon: React.FC<IconProps> = ({ className, style, type, size, color, spin, ...props }) => {
-  const spread = {
-    className: cls(className, iconMap[type], 'fr-icon', spin && 'fr-animated-spin'),
-    style: shakeFalsy({
-      ...style,
-      fontSize: size,
-      color,
-    }),
-  };
+export const SuccessIcon = (props: AntdIconProps) => (
+  <Icon component={BuiltIns.Success} {...(props as any)} />
+);
 
-  return <i {...props} {...spread} />;
+export const WarningIcon = (props: AntdIconProps) => (
+  <Icon component={BuiltIns.Warning} {...(props as any)} />
+);
+
+export const ErrorIcon = (props: AntdIconProps) => (
+  <Icon component={BuiltIns.Error} {...(props as any)} />
+);
+
+export const NotAuthIcon = (props: AntdIconProps) => (
+  <Icon component={BuiltIns.NotAuth} {...(props as any)} />
+);
+
+export const NotFoundIcon = (props: AntdIconProps) => (
+  <Icon component={BuiltIns.NotFound} {...(props as any)} />
+);
+
+export const ServerErrorIcon = (props: AntdIconProps) => (
+  <Icon component={BuiltIns.ServerError} {...(props as any)} />
+);
+
+export const WindmillIcon = (props: AntdIconProps) => (
+  <Icon component={BuiltIns.Windmill} {...(props as any)} />
+);
+
+export const WaitingIcon = (props: AntdIconProps) => (
+  <Icon component={BuiltIns.Waiting} {...(props as any)} />
+);
+
+export const statusIcons = {
+  success: SuccessIcon,
+  error: ErrorIcon,
+  warning: WarningIcon,
+  waiting: WaitingIcon,
+  notFound: NotFoundIcon,
+  serverError: ServerErrorIcon,
+  notAuth: NotAuthIcon,
 };
 
-const SvgIcon: React.FC<SvgIconProps> = ({ className, style, type, size, spin, ...props }) => {
-  const spread = {
-    className: cls(className, 'fr-svg-icon', spin && 'fr-animated-spin'),
-    style: shakeFalsy({
-      ...style,
-      fontSize: size,
-    }),
-  };
-
-  return (
-    <svg {...props} {...spread} aria-hidden="true">
-      <use xlinkHref={`#${svgIconMap[type]}`} />
-    </svg>
-  );
+export const lineStatusIcons = {
+  info: InfoCircleOutlined,
+  success: CheckCircleOutlined,
+  warning: ExclamationCircleOutlined,
+  error: CloseCircleOutlined,
 };
-
-export { SvgIcon };
-export default Icon;

@@ -9,7 +9,7 @@ import {
   BulbOutlined,
   CaretLeftOutlined,
   CaretRightOutlined,
-} from '@lxjx/fr/lib/icon2';
+} from '@lxjx/fr/lib/icon';
 import Message from '@lxjx/fr/lib/message';
 
 const ButtonDemoColor = () => (

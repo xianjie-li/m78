@@ -20,7 +20,7 @@ const Demo = () => {
       />
       <NoticeBar message="一段提示文本" status="info" />
       <NoticeBar message="一段提示文本" status="success" />
-      <NoticeBar message="一段提示文本" status="warn" />
+      <NoticeBar message="一段提示文本" status="warning" />
       <NoticeBar message="一段提示文本" status="error" />
       <NoticeBar
         message="一段提示文本"
@@ -33,7 +33,7 @@ const Demo = () => {
       />
       <NoticeBar
         message="一段提示文本"
-        status="warn"
+        status="warning"
         desc={
           <div>
             <Button link color="blue">
@@ -44,7 +44,7 @@ const Demo = () => {
       />
       <NoticeBar
         message="自定义右侧内容"
-        status="warn"
+        status="warning"
         right={
           <Button link size="small" color="red">
             不再显示
