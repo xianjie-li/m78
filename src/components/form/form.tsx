@@ -1,21 +1,23 @@
-import React, { useContext, useEffect, useMemo } from 'react';
-import RForm, { Field, useForm } from 'rc-field-form';
-import List from '@lxjx/fr/lib/list';
-
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import RForm, { useForm } from 'rc-field-form';
+import List, { Title, SubTitle, Footer } from '@lxjx/fr/lib/list';
 import Schema from 'async-validator';
+import { createRandString, isFunction } from '@lxjx/utils';
+import { useFn, useScroll } from '@lxjx/hooks';
+import { useUpdateEffect } from 'react-use';
+import { ValidateErrorEntity } from 'rc-field-form/es/interface';
+import { checkElementVisible, dumpFn, getFirstScrollParent } from '@lxjx/fr/lib/util';
 import cls from 'classnames';
-import { createRandString, isArray, isFunction } from '@lxjx/utils';
-import { useFn } from '@lxjx/hooks';
-import _has from 'lodash/has';
-import { useUpdate } from 'react-use';
-import { FormProps, FormItemProps } from './type';
-import { getFirstError, getStatus } from './utils';
+
+import { FormProps } from './type';
+import { getNameString } from './utils';
 import FormContext from './context';
+import Item from './item';
 
 // @ts-ignore
 Schema.warning = () => {};
 
-const Form: React.FC<FormProps> = props => {
+const BaseForm: React.FC<FormProps> = props => {
   const {
     children,
     style,
@@ -24,21 +26,53 @@ const Form: React.FC<FormProps> = props => {
     layout,
     column,
     fullWidth,
-    disabled,
+    disabled = true,
     form: _form,
     onValuesChange,
+    hideRequiredMark = false,
     ...otherProps
   } = props;
+  /** 该表单的唯一id */
+  const id = useMemo(() => createRandString(2), []);
+
+  const flagEl = useRef<HTMLSpanElement>(null!);
 
   const [form] = useForm(_form);
 
-  const contextValue = useMemo(
-    () => ({
-      form,
-      onChangeTriggers: {},
-    }),
-    [],
-  );
+  const [scrollParent, setScrollParent] = useState<HTMLElement | undefined>();
+
+  const { scrollToElement } = useScroll({
+    el: scrollParent,
+    offsetX: -(window.innerWidth * 0.3),
+    offsetY: -(window.innerHeight * 0.3),
+  });
+
+  const [contextValue, setContextValue] = useState(() => ({
+    form,
+    onChangeTriggers: {},
+    disabled,
+    hideRequiredMark,
+    scrollToElement,
+    id,
+  }));
+
+  useUpdateEffect(() => {
+    setContextValue(prev => ({
+      ...prev,
+      disabled,
+      hideRequiredMark,
+    }));
+  }, [disabled, hideRequiredMark]);
+
+  useEffect(() => {
+    getFirstScrollParent(flagEl.current)
+      .then(el => {
+        if (el && el !== document.documentElement && el !== document.body) {
+          setScrollParent(el);
+        }
+      })
+      .catch(dumpFn);
+  }, []);
 
   // 由于存在valid属性，Field可能并未被渲染，所以需要在值更新时手动对比dependencies决定是否要更新组件
   const changeHandle = useFn((...arg: [any, any]) => {
@@ -48,138 +82,68 @@ const Form: React.FC<FormProps> = props => {
     }
   });
 
+  const finishFailedHandle = useFn((arg: ValidateErrorEntity) => {
+    const { errorFields, outOfDate } = arg;
+    props.onFinishFailed?.(arg);
+
+    if (outOfDate) return;
+
+    const firstName = errorFields?.[0]?.name;
+
+    if (!firstName) return;
+
+    const el = document.getElementById(`FR-FORM-ITEM-${id}-${getNameString(firstName)}`);
+
+    if (!el) return;
+
+    const visible = checkElementVisible(el, {
+      wrapEl: scrollParent || undefined,
+      fullVisible: true,
+    });
+
+    /* TODO: 高亮组件完成后可以添加一个高亮效果 */
+    !visible && scrollToElement(el);
+  });
+
   return (
     <FormContext.Provider value={contextValue}>
       <List
         form
         style={style}
-        className={className}
+        className={cls(
+          className,
+          'fr-form',
+          contextValue.hideRequiredMark && '__hide-required-mark',
+        )}
         notBorder={notBorder}
         layout={layout}
         column={column}
         fullWidth={fullWidth}
         disabled={disabled}
       >
-        <RForm {...otherProps} onValuesChange={changeHandle} form={form}>
+        {/* <Button icon className="fr-form_setting" title="表单设置"> */}
+        {/*  <SettingOutlined /> */}
+        {/* </Button> */}
+        <RForm
+          {...otherProps}
+          onValuesChange={changeHandle}
+          form={form}
+          onFinishFailed={finishFailedHandle}
+        >
           {children}
         </RForm>
+        <span ref={flagEl} />
       </List>
     </FormContext.Provider>
   );
 };
 
-const Item: React.FC<FormItemProps> = props => {
-  /** 该字段的唯一id */
-  const id = useMemo(() => createRandString(2), []);
-  /** 根据传入的name生成字符串 */
-  const nameString = isArray(props.name) ? props.name.join('-') : props.name;
-
-  const { form, onChangeTriggers } = useContext(FormContext);
-
-  const {
-    children,
-    name = nameString,
-    style,
-    className,
-    label,
-    extra,
-    desc,
-    required,
-    disabled,
-    noStyle,
-    visible: _visible = true,
-    valid: _valid = true,
-    dependencies,
-    ...otherProps
-  } = props;
-
-  const update = useUpdate();
-
-  // 由于存在valid属性，Field可能并未被渲染，所以需要在值更新时手动对比dependencies决定是否要更新组件
-  useEffect(() => {
-    onChangeTriggers[id] = (changeValue: any) => {
-      if (dependencies && dependencies.length && changeValue) {
-        const isDepsChange = dependencies.some(item => {
-          if (isArray(item)) {
-            return _has(changeValue, item);
-          }
-          return item in changeValue;
-        });
-
-        isDepsChange && update();
-      }
-    };
-
-    return () => {
-      delete onChangeTriggers[id];
-    };
-  }, []);
-
-  const valid = isFunction(_valid) ? _valid(name!, form) : _valid;
-
-  if (!valid) {
-    return null;
-  }
-
-  const visible = isFunction(_visible) ? _visible(name!, form) : _visible;
-
-  const _style = { display: visible ? undefined : 'none', ...style };
-
-  if (!name || !React.isValidElement(children)) {
-    return (
-      <List.Item
-        desc={desc}
-        extra={extra}
-        title={label}
-        disabled={disabled}
-        required={required}
-        style={_style}
-        className={className}
-      >
-        {children}
-      </List.Item>
-    );
-  }
-
-  return (
-    <Field name={name} {...otherProps} messageVariables={{ label: label || '' }}>
-      {(control, { errors, validating }) => {
-        const errorString = getFirstError(errors);
-
-        const status = getStatus(errorString, validating);
-
-        const cloneEl = React.cloneElement<any>(children, {
-          name,
-          disabled,
-          loading: children.type === 'input' ? undefined : validating,
-          status,
-          ...control,
-        });
-
-        return noStyle ? (
-          <div className={cls('fr-form_item', className)} style={_style}>
-            <div>{cloneEl}</div>
-            {errorString && <div className="fr-form_item-extra">{errorString}</div>}
-          </div>
-        ) : (
-          <List.Item
-            desc={desc}
-            extra={extra}
-            title={label}
-            disabled={disabled}
-            required={required}
-            style={_style}
-            className={className}
-            footLeft={errorString}
-            status={status}
-          >
-            {cloneEl}
-          </List.Item>
-        );
-      }}
-    </Field>
-  );
-};
+const Form = Object.assign(BaseForm, {
+  Item,
+  Title,
+  SubTitle,
+  Footer,
+});
 
 export { Item };
 export default Form;

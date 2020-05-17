@@ -12,7 +12,7 @@ const Title: React.FC<ListTitleType> = ({ title, desc, className, ...props }) =>
 );
 
 const SubTitle: React.FC<ListSubTitleType> = ({ title, className, ...props }) => (
-  <h3 className={cls('fr-list_sub-title fr-hb-b', className)} {...props}>
+  <h3 className={cls('fr-list_sub-title', className)} {...props}>
     {title}
   </h3>
 );

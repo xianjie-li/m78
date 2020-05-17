@@ -1,6 +1,6 @@
 import Form, { Item } from '@lxjx/fr/lib/form';
-import React, { useState, useRef } from 'react';
-import RForm, { Field, List } from 'rc-field-form';
+import React, { useState } from 'react';
+import { List } from 'rc-field-form';
 import Input from '@lxjx/fr/lib/input';
 import Button from '@lxjx/fr/lib/button';
 import { CloseCircleOutlined } from '@lxjx/fr/lib/icon';
@@ -10,39 +10,44 @@ const Demo = () => {
     console.log(e);
   };
 
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(false);
 
   return (
     <Form
+      layout="horizontal"
       onFinish={submitHandle}
+      disabled={show}
       initialValues={{
         name: 'lxj',
-        age: 3,
+        age: '3',
       }}
     >
+      {/* <Form.Title title="基础表单" /> */}
       <Item
-        // dependencies={['age']}
-        // valid={(namePath, form) => form.getFieldValue('age') !== '3'}
-        name="name"
-        label="姓名"
-        // required
-        // rules={[{ required: true, max: 6, min: 2 }]}
-      >
-        <Input />
-      </Item>
-      <Item
-        visible={show}
-        name="age"
-        label="年龄"
-        rules={[{ type: 'number', required: true, max: 6, min: 2, transform: value => +value }]}
-      >
-        <Input />
-      </Item>
-      <Item
-        label="地址"
         dependencies={['age']}
         valid={(namePath, form) => form.getFieldValue('age') !== '3'}
+        name="name"
+        label="姓名"
+        required
+        max={6}
+        min={3}
+        len={6}
+        validator={(rule, value, callback) => {
+          setTimeout(() => {
+            if (value === 'lxj') {
+              callback('名字不能为lxj');
+            } else {
+              callback();
+            }
+          }, 1000);
+        }}
       >
+        <Input />
+      </Item>
+      <Item name="age" label="年龄">
+        <Input />
+      </Item>
+      <Item label="地址">
         <Item
           noStyle
           style={{ width: 178, marginRight: 12 }}
@@ -51,12 +56,7 @@ const Demo = () => {
         >
           <Input />
         </Item>
-        <Item
-          noStyle
-          style={{ width: 178 }}
-          name={['address', 'name']}
-          rules={[{ required: true }]}
-        >
+        <Item noStyle style={{ width: 178 }} name={['address', 'name']}>
           <Input />
         </Item>
       </Item>
@@ -70,16 +70,11 @@ const Demo = () => {
                     noStyle
                     style={{ width: 178, marginRight: 12 }}
                     name={[filed.name, 'name']}
-                    rules={[{ required: true }]}
+                    required
                   >
                     <Input />
                   </Item>
-                  <Item
-                    noStyle
-                    style={{ width: 178 }}
-                    name={[filed.name, 'age']}
-                    rules={[{ required: true }]}
-                  >
+                  <Item noStyle style={{ width: 178 }} name={[filed.name, 'age']} required>
                     <Input />
                   </Item>
                   <Button icon onClick={() => operations.remove(filed.name)}>
@@ -94,10 +89,12 @@ const Demo = () => {
           )}
         </List>
       </Item>
-      <Button type="submit" color="blue">
-        submit
-      </Button>
-      <Button onClick={() => setShow(prev => !prev)}>click</Button>
+      <Form.Footer>
+        <Button type="submit" color="blue">
+          submit
+        </Button>
+        <Button onClick={() => setShow(prev => !prev)}>click</Button>
+      </Form.Footer>
     </Form>
   );
 };

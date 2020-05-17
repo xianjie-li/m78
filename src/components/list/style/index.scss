@@ -28,7 +28,7 @@
   }
 
   &.__disabled::before {
-    content: '⛔';
+    content: '';
     display: flex;
     align-items: center;
     justify-content: center;
@@ -36,8 +36,8 @@
     position: absolute;
     z-index: 100;
     @include full;
-    color: #000;
-    background-color: $w-primary;
+    background-color: $w-disable;
+    cursor: not-allowed;
   }
 
   &.__form {
@@ -59,7 +59,7 @@
         padding-left: calc(6em + 12px);
       }
       .fr-list_main-footer {
-        padding-left: calc(6em + 28px);
+        padding-left: calc(6em + 24px);
       }
     }
     .fr-ellipsis_shadow {
@@ -151,7 +151,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    padding: 12px 16px;
+    padding: 12px;
 
     &.__disabled {
       user-select: none;
@@ -299,7 +299,18 @@
   &_main-title {
     position: relative;
     padding: 12px 16px;
-    border-bottom: 1px solid $b-border;
+    //border-bottom: 1px dashed $b-border;
+
+    &::before {
+      position: absolute;
+      left: -2px;
+      top: 0;
+      content: '';
+      display: inline-block;
+      width: 3px;
+      height: 100%;
+      background-color: $color;
+    }
   }
 
   &_main-title-primary {
@@ -316,10 +327,11 @@
 
   &_sub-title {
     position: relative;
-    padding: 24px 16px 12px;
+    padding: 20px 16px 12px;
     font-size: 16px;
     font-weight: 600;
     color: $b-primary;
+    border-bottom: 1px dashed $b-border;
   }
 
   &_main-footer {
@@ -327,7 +339,7 @@
     line-height: 1.5;
     font-size: $fs-14;
     color: $b-second;
-    border-top: 1px solid $b-border;
+    border-top: 1px dashed $b-border;
   }
 
   &_require {

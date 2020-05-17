@@ -11,3 +11,38 @@
 .__dumi-default-menu:after {
   display: none !important;
 }
+
+.__dumi-default-menu-inner .__dumi-default-menu-list > li > a.active {
+  background: #e6fffb !important;
+}
+
+.__dumi-default-menu-inner > ul ul a.active, .__dumi-default-menu-inner ul li a:hover, .__dumi-default-menu-inner ul li a.active {
+  color: #13c2c2 !important;
+}
+
+.__dumi-default-menu-inner ul li a::before {
+  background: #13c2c2 !important;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 6px;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background: #9e9e9e;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #878787;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #717171;
+}

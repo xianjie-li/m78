@@ -407,4 +407,6 @@ const Input: React.FC<InputProps> = React.forwardRef<InputRef, InputProps>((_pro
   );
 });
 
+Input.displayName = 'FrInput';
+
 export default Input;
