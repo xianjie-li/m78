@@ -1,9 +1,7 @@
 import React from 'react';
 import { ComponentBasePropsWithAny } from '../types/types';
 
-export interface ListType extends ComponentBasePropsWithAny {
-  /** false | 开启表单模式 */
-  form?: boolean;
+export interface ListFormType extends ComponentBasePropsWithAny {
   /** false | 是否去掉列表项边框 */
   notBorder?: boolean;
   /** 'vertical' | 横向表单/纵向表单 */
@@ -14,6 +12,11 @@ export interface ListType extends ComponentBasePropsWithAny {
   fullWidth?: boolean;
   /** false | 禁用表单 */
   disabled?: boolean;
+}
+
+export interface ListType extends ComponentBasePropsWithAny, ListFormType {
+  /** false | 开启表单模式 */
+  form?: boolean;
 }
 
 export interface ListItemProps extends ComponentBasePropsWithAny {
@@ -40,11 +43,11 @@ export interface ListItemProps extends ComponentBasePropsWithAny {
   /** 禁用该列表项 */
   disabled?: boolean;
   /** 列表状态，会改变footLeft内的文本颜色并在icon插槽内显示反馈图标 */
-  status?: 'success' | 'error' | 'warning';
+  status?: 'success' | 'error' | 'warning' | 'loading';
   /** 表单类型的List适用，放置表单控件或说明文本 */
   children?: React.ReactNode;
   /** 标记该项为必填项（标题后会带红色*号） */
-  require?: boolean;
+  required?: boolean;
   /** 2 | 3 标题和描述的最大行数 */
   titleEllipsis?: number;
   descEllipsis?: number;

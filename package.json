@@ -39,6 +39,7 @@
     "classnames": "^2.2.6",
     "lodash": "^4.17.15",
     "prevent-top-pull-down": "^1.0.1",
+    "rc-field-form": "^1.4.0",
     "react-spring": "^8.0.27",
     "react-use": "^13.8.0",
     "react-use-gesture": "^6.0.14",

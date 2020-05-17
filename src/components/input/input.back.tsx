@@ -14,9 +14,8 @@ import { isNumber, formatString, validateFormatString } from '@lxjx/utils';
 
 import cls from 'classnames';
 
-import { useFormState, useDerivedStateFromProps, useSelf } from '@lxjx/hooks';
+import { useFormState, useDerivedStateFromProps } from '@lxjx/hooks';
 import { TransitionBase } from '@lxjx/react-transition-spring';
-import { useUpdateEffect } from 'react-use';
 import { InputProps } from './type';
 
 import {
@@ -81,7 +80,7 @@ const Input: React.FC<InputProps> = React.forwardRef<InputRef, InputProps>((_pro
   // eslint
   dumpFn(_value, _defaultValue, _onChange);
 
-  /** format相关配置, 不允许改变 */
+  // format相关配置, 不允许改变
   const formatArg = useMemo(() => {
     // 有预设优先用预设
     if (format && buildInPattern[format]) {
@@ -91,21 +90,12 @@ const Input: React.FC<InputProps> = React.forwardRef<InputRef, InputProps>((_pro
 
     if (!formatPattern) return false;
     if (!validateFormatString.test(formatPattern)) return false;
-
     return [
       formatPattern,
       { delimiter: formatDelimiter, repeat: formatRepeat, lastRepeat: formatLastRepeat },
     ] as const;
     // eslint-disable-next-line
   }, []);
-
-  const self = useSelf({
-    /**
-     * 当前是否包含混合输入
-     * 使用输入法等输入时，每次输入都会触发onChange并且执行格式化方法，通过此参数对值进行延迟设置
-     * */
-    hasComposing: false,
-  });
 
   // 对format类型进行缓存
   // eslint-disable-next-line
@@ -134,7 +124,6 @@ const Input: React.FC<InputProps> = React.forwardRef<InputRef, InputProps>((_pro
     // eslint-disable-next-line
   }, [memoFormat]);
 
-  /** 输入框类型修正 */
   useEffect(() => {
     if (type !== 'number' && type !== 'integer' && (isNumber(min) || isNumber(max))) {
       setType('number');
@@ -150,10 +139,13 @@ const Input: React.FC<InputProps> = React.forwardRef<InputRef, InputProps>((_pro
     el: input.current,
   }));
 
+  /* 启用了formatArg时，对其格式化，否则返回原value */
+  // eslint-disable-next-line
+  let inputValue = useMemo(() => (formatArg ? formatString(value, ...formatArg) : value), [value]);
+
   /* 实现textarea autoSize */
   const cloneText = useRef<any>();
 
-  /* 实现textarea autoSize */
   useEffect(() => {
     if (textArea && autoSize) {
       cloneText.current = input.current.cloneNode();
@@ -194,17 +186,22 @@ const Input: React.FC<InputProps> = React.forwardRef<InputRef, InputProps>((_pro
     setType(prev => (prev === 'password' ? 'text' : 'password'));
   }
 
-  /** 处理input的onChange */
+  /* 处理input的change */
   function changeHandle({ target }: React.ChangeEvent<HTMLInputElement>) {
+    /* TODO: parser会打断输入法 */
+    // const inputType = nativeEvent.inputType;
+    // const isComposing = nativeEvent.isComposing;
+    // console.log(inputType, isComposing, nativeEvent);
+    // // 对兼容inputType/isComposing API的浏览器进行混合输入处理，防止输入法操作被打断
+    // if (inputType === 'insertCompositionText' && isComposing) {
+    //   return;
+    // }
+
     // 设置formatArg后，改变value长度会导致光标移动到输入框末尾，手动将其还原
     const saveSelectInd = target.selectionStart;
     const oldValueLength = target.value.length;
 
-    if (self.hasComposing) {
-      return;
-    }
-
-    setInputVal(parser(target.value));
+    setValue(parser(target.value));
 
     // 浏览器支持且存在formatArg配置或传入parser时，还原光标位置
     if (
@@ -223,7 +220,7 @@ const Input: React.FC<InputProps> = React.forwardRef<InputRef, InputProps>((_pro
 
   /* 清空输入框 */
   function clearHandle() {
-    setInputVal('');
+    setValue('');
     setTimeout(() => {
       // 清空后、触发搜索，并且在autoSize启用时时更新高度
       searchHandle();
@@ -276,6 +273,11 @@ const Input: React.FC<InputProps> = React.forwardRef<InputRef, InputProps>((_pro
     return _parser ? _parser(newValue) : newValue;
   }
 
+  /* value传入input前进行格式化(在传入了解析parser时才不会影响最终的value结果) */
+  function formatter(val: string) {
+    return _formatter ? _formatter(val) : val;
+  }
+
   /** 根据type设置input应该使用的type */
   function getRealType(tType: string) {
     if (tType === 'number' || tType === 'integer') {
@@ -285,34 +287,14 @@ const Input: React.FC<InputProps> = React.forwardRef<InputRef, InputProps>((_pro
     return tType;
   }
 
-  useUpdateEffect(() => {
-    setInputVal(value || '');
-  }, [value]);
-
-  /** 将字符值根据配置格式化后返回 */
-  function formatVal(val: string) {
-    /* 启用了formatArg时，对其格式化，否则返回原value */
-    // eslint-disable-next-line
-    let formatValue = formatArg ? formatString(val, ...formatArg) : val;
-
-    // 对money类型特殊处理
-    if (formatArg && memoFormat === 'money') {
-      formatValue = formatMoney(formatValue);
-    }
-
-    /* value传入input前进行格式化(在传入了解析parser时才不会影响最终的value结果) */
-    return _formatter ? _formatter(formatValue) : formatValue;
-  }
-
-  /** 设置input的值 */
-  function setInputVal(val: string, skipSet?: boolean) {
-    !skipSet && setValue(val);
-    input.current.value = formatVal(val);
-  }
-
   const isDisabled = disabled || blockLoading;
 
   const hasClearBtn = allowClear && value && value.length > 3 && !isDisabled && !readonly;
+
+  // 对money类型特殊处理
+  if (formatArg && memoFormat === 'money') {
+    inputValue = formatMoney(inputValue);
+  }
 
   return (
     <span
@@ -343,15 +325,8 @@ const Input: React.FC<InputProps> = React.forwardRef<InputRef, InputProps>((_pro
         onKeyDown: keyDownHandle,
         disabled: isDisabled,
         readOnly: readonly,
-        defaultValue: formatVal(value),
+        value: formatter(inputValue) || '',
         onChange: changeHandle,
-        onCompositionStart() {
-          self.hasComposing = true;
-        },
-        onCompositionEnd(e: any) {
-          self.hasComposing = false;
-          changeHandle(e);
-        },
         style: textArea
           ? {
               height: textAreaHeight,

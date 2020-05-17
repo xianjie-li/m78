@@ -96,7 +96,7 @@ const Popper: React.FC<PopperProps> = props => {
     xy: [0, 0],
     opacity: showBase,
     scale: showBase,
-    config: { mass: 1, tension: 340, friction: 22 },
+    config: { mass: 1, tension: 440, friction: 22 },
   }));
 
   /** 根据参数设置self.target的值 */

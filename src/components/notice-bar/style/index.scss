@@ -33,7 +33,7 @@
     color: $color-success;
   }
 
-  &.__warn &_wrap {
+  &.__warning &_wrap {
     border: 2px solid currentColor;
     color: $color-warn;
   }

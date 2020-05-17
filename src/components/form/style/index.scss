@@ -1,0 +1,11 @@
+@import '../../style/index';
+
+.fr-form_item {
+  display: inline-block;
+  vertical-align: top;
+
+  &-extra {
+    font-size: $fs-14;
+    color: $color-error;
+  }
+}

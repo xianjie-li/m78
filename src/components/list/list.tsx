@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 
 import '@lxjx/fr/lib/base';
 import { Switch, If } from '@lxjx/fr/lib/fork';
-import { statusIcons, RightOutlined } from '@lxjx/fr/lib/icon';
+import { statusIcons, RightOutlined, LoadingOutlined } from '@lxjx/fr/lib/icon';
 
 import Ellipsis from '@lxjx/fr/lib/ellipsis';
 
@@ -57,7 +57,7 @@ const Item: React.FC<ListItemProps> = ({
   disabled,
   status,
   children,
-  require,
+  required,
   titleEllipsis = 2,
   descEllipsis = 3,
   className,
@@ -69,25 +69,27 @@ const Item: React.FC<ListItemProps> = ({
   const hasEffect = !isForm && !disabled && (arrow || props.onClick || effect);
   const itemStyle = column > 1 ? { width: `${100 / column}%` } : {};
 
-  const StatusIcon = statusIcons[status!];
+  const StatusIcon = (statusIcons as any)[status!];
 
-  return React.createElement(
-    isForm ? 'label' : 'div',
-    {
-      className: cls('fr-list_item __md', className, status && `__${status}`, {
+  return (
+    <div
+      className={cls('fr-list_item __md', className, status && `__${status}`, {
         __disabled: disabled,
         'fr-effect': hasEffect,
-      }),
-      style: { ...itemStyle, ...style },
-      ...props,
-    },
-    <>
+      })}
+      style={{ ...itemStyle, ...style }}
+      {...props}
+    >
       <div className={cls('fr-list_left', leftAlign && `__${leftAlign}`)}>{left}</div>
       <div className="fr-list_cont">
         <div className="fr-list_cont-left">
           <Ellipsis line={titleEllipsis} className={cls('fr-list_title')}>
             {title}
-            {require && <i className="fr-list_require">*</i>}
+            {required && (
+              <i className="fr-list_require" title="必填项">
+                *
+              </i>
+            )}
           </Ellipsis>
           {desc && (
             <Ellipsis className={cls('fr-list_desc')} line={descEllipsis}>
@@ -101,21 +103,47 @@ const Item: React.FC<ListItemProps> = ({
       <div className="fr-list_icon">
         {/* icon显示优先级: 状态 > icon > arrow */}
         <Switch>
-          <If when={status}>{() => <StatusIcon className="fr-list_extra-icon fr-svg-icon" />}</If>
+          <If when={status}>
+            {() =>
+              status === 'loading' ? (
+                <LoadingOutlined spin />
+              ) : (
+                <StatusIcon className="fr-list_extra-icon fr-svg-icon" />
+              )
+            }
+          </If>
           <If when={icon}>{icon}</If>
           <If when={arrow && !icon}>
             <RightOutlined />
           </If>
         </Switch>
       </div>
+      <If when={extra && isForm}>
+        <div className="fr-list_extra __gray">{extra}</div>
+      </If>
       <If when={!!footLeft || !!footRight}>
         <div className="fr-list_extra">
           <div>{footLeft}</div>
           <div className="fr-list_extra-second">{footRight}</div>
         </div>
       </If>
-    </>,
+    </div>
   );
+
+  // return React.createElement(
+  //   isForm ? 'div' : 'div',
+  //   {
+  //     className: cls('fr-list_item __md', className, status && `__${status}`, {
+  //       __disabled: disabled,
+  //       'fr-effect': hasEffect,
+  //     }),
+  //     style: { ...itemStyle, ...style },
+  //     ...props,
+  //   },
+  //   <>
+  //
+  //   </>,
+  // );
 };
 
 type List = typeof _List;

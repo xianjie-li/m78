@@ -55,14 +55,14 @@ const Demo = () => {
           extra="表单说明"
           footLeft="信息文本信息文本信息文本信息文本"
           status="error"
-          require
+          required
         >
           <Input placeholder="点击输入" />
         </List.Item>
-        <List.Item title="地址" footLeft="信息文本信息文本信息文本信息文本" status="success">
+        <List.Item title="地址" footLeft="信息文本信息文本信息文本信息文本" status="loading">
           <Input placeholder="点击输入" />
         </List.Item>
-        <List.Item title="出生年月" footLeft="不让你输入" status="warning" disabled require>
+        <List.Item title="出生年月" footLeft="不让你输入" status="warning" disabled required>
           <Input placeholder="点击输入" />
         </List.Item>
         <List.Item title="自述" footLeft="信息文本信息文本信息文本信息文本">

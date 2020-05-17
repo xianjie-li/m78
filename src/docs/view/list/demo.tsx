@@ -5,12 +5,12 @@ import '@lxjx/fr/lib/list/style';
 
 const Demo = () => (
   <div>
-    <List>
+    <List fullWidth>
       <List.Title title="列表标题" desc="对列表的一段说明" />
       <List.SubTitle title="常规列表" />
       <List.Item title="普通内容" />
-      <List.Item title="操作项" require arrow />
-      <List.Item title="余额" extra="80000.00" require arrow />
+      <List.Item title="操作项" required arrow />
+      <List.Item title="余额" extra="80000.00" required arrow />
       <List.Item title="禁用" extra="80000.00" disabled />
       <List.Item title="操作项" extra={<input type="checkbox" />} effect />
       <List.Item left="😍" title="自定义左右内容" icon="😆" />
