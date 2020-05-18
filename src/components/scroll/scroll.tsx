@@ -13,7 +13,7 @@ import { If, Toggle, Switch } from '@lxjx/fr/lib/fork';
 import Spin from '@lxjx/fr/lib/spin';
 import Empty from '@lxjx/fr/lib/empty';
 import Button from '@lxjx/fr/lib/button';
-import { CaretUpOutlined } from '@lxjx/fr/lib/icon';
+import { CaretUpOutlined, WindmillIcon } from '@lxjx/fr/lib/icon';
 import { dumpFn } from '@lxjx/fr/lib/util';
 import _debounce from 'lodash/debounce';
 
@@ -428,12 +428,9 @@ const Scroll = React.forwardRef<ScrollRef, ScrollProps>(
                 ),
               }}
             >
-              <svg
+              <WindmillIcon
                 className={cls('fr-svg-icon', { __animation: state.pullDownLoading })}
-                aria-hidden="true"
-              >
-                <use xlinkHref="#icon-fengche" />
-              </svg>
+              />
             </animated.div>
           </div>
         </Toggle>

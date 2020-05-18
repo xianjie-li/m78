@@ -10,7 +10,7 @@ export interface ListFormType extends ComponentBasePropsWithAny {
   column?: number;
   /** false | 不限制最大宽度 */
   fullWidth?: boolean;
-  /** false | 禁用(样式层面) */
+  /** false | 禁用(样式层面), 会将disabled传入表单控件，需要表单控件支持 */
   disabled?: boolean;
 }
 

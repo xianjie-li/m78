@@ -1,6 +1,5 @@
 import Form, { Item } from '@lxjx/fr/lib/form';
 import React, { useState } from 'react';
-import { List } from 'rc-field-form';
 import Input from '@lxjx/fr/lib/input';
 import Button from '@lxjx/fr/lib/button';
 import { CloseCircleOutlined } from '@lxjx/fr/lib/icon';
@@ -61,7 +60,7 @@ const Demo = () => {
         </Item>
       </Item>
       <Item label="朋友">
-        <List name="friends">
+        <Form.List name="friends">
           {(fields, operations) => (
             <div>
               {fields.map(filed => (
@@ -87,7 +86,7 @@ const Demo = () => {
               </Button>
             </div>
           )}
-        </List>
+        </Form.List>
       </Item>
       <Form.Footer>
         <Button type="submit" color="blue">

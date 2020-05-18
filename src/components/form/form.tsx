@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import RForm, { useForm } from 'rc-field-form';
+import RForm, { useForm, FormProvider, List as FormList } from 'rc-field-form';
 import List, { Title, SubTitle, Footer } from '@lxjx/fr/lib/list';
 import Schema from 'async-validator';
 import { createRandString, isFunction } from '@lxjx/utils';
@@ -26,7 +26,7 @@ const BaseForm: React.FC<FormProps> = props => {
     layout,
     column,
     fullWidth,
-    disabled = true,
+    disabled = false,
     form: _form,
     onValuesChange,
     hideRequiredMark = false,
@@ -138,12 +138,25 @@ const BaseForm: React.FC<FormProps> = props => {
   );
 };
 
-const Form = Object.assign(BaseForm, {
+type Form = typeof BaseForm;
+
+interface FormWithExtra extends Form {
+  FormProvider: typeof FormProvider;
+  Item: typeof Item;
+  List: typeof FormList;
+  Title: typeof Title;
+  SubTitle: typeof SubTitle;
+  Footer: typeof Footer;
+}
+
+const Form: FormWithExtra = Object.assign(BaseForm, {
+  FormProvider,
   Item,
+  List: FormList,
   Title,
   SubTitle,
   Footer,
 });
 
-export { Item };
+export { FormProvider, Item, List, Title, SubTitle, Footer };
 export default Form;

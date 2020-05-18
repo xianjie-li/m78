@@ -1225,10 +1225,10 @@
     react "^16.11.0"
     react-use "^13.6.3"
 
-"@lxjx/hooks@^1.1.3":
-  version "1.1.3"
-  resolved "https://registry.npmjs.org/@lxjx/hooks/-/hooks-1.1.3.tgz#179f986ecfbe14c63c36298cfeada2b56c7f4fb5"
-  integrity sha512-LWPYEhSIVDvePPVj2XfHVT4WOGAq69F8oQIIqwKBWGgJi+A2zGji5Sd2tZtq0R4HRm47nY33NJtZ0bm2rdarRg==
+"@lxjx/hooks@^1.1.5":
+  version "1.1.5"
+  resolved "https://registry.npmjs.org/@lxjx/hooks/-/hooks-1.1.5.tgz#5c43696cd7e1558e82fde9421b5e462293c4606e"
+  integrity sha512-2/i7WYUkqUxBYjsOv4lWS9R+mC+5OA33Pf4GhPsl3q+93G52W2LMkcl+B3nt5T9rmCUx24RjUim7E+ZrY8u9Og==
   dependencies:
     "@lxjx/utils" "^1.3.4"
     "@types/lodash" "^4.14.149"
