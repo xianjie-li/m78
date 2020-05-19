@@ -179,7 +179,7 @@ $unitSpace: 8px;
       @include statusColor($color-success);
     }
 
-    &.__warn {
+    &.__warning {
       @include statusColor($color-warn);
     }
 
@@ -205,7 +205,7 @@ $unitSpace: 8px;
         border-bottom-color: $color-success !important;
       }
 
-      &.__warn {
+      &.__warning {
         border-bottom-color: $color-warn !important;
       }
 

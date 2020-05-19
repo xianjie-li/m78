@@ -1,6 +1,6 @@
 import { createContext } from 'react';
 import { FormInstance } from 'rc-field-form';
-import { RuleObject } from 'rc-field-form/es/interface';
+import { FormProps } from './type';
 
 interface FormInsideContext {
   /** 表单实例 */
@@ -14,9 +14,7 @@ interface FormInsideContext {
   /** 表示该表单的唯一id */
   id: string;
   /** 直接传入rules配置来进行表单验证 */
-  rules?: {
-    [key: string]: RuleObject | RuleObject[];
-  };
+  rules?: FormProps[''];
 }
 
 const context = createContext<FormInsideContext>({

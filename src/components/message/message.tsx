@@ -12,7 +12,7 @@ import { Transition } from '@lxjx/react-transition-spring';
 import cls from 'classnames';
 
 import { useSelf } from '@lxjx/hooks';
-import Button from '@/components/button';
+import Button from '@lxjx/fr/lib/button';
 import { MessageProps } from './type';
 
 function MessageWrap({ children }: any) {

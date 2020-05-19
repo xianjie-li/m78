@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Input from '@lxjx/fr/lib/input';
-import Button from '@/components/button';
+import Button from '@lxjx/fr/lib/button';
 
 const Demo = () => (
   <div>
@@ -39,7 +39,7 @@ const Demo = () => (
       <Input placeholder="成功" status="success" />
     </div>
     <div className="mt-16">
-      <Input placeholder="警告" status="warn" />
+      <Input placeholder="警告" status="warning" />
     </div>
     <div className="mt-16">
       <Input placeholder="失败" status="error" />
