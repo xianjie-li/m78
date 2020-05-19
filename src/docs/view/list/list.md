@@ -16,6 +16,8 @@ group:
 
 ## 表单列表
 
+`List`组件只提供布局，实际使用时请使用[Form](/form/form)组件
+
 <code src="./demo-form.tsx" />
 
 ## API

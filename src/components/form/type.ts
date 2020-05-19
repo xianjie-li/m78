@@ -1,6 +1,6 @@
 import { FormProps as RFormProps } from 'rc-field-form/es/Form';
 import { FieldProps } from 'rc-field-form/es/Field';
-import { NamePath, FormInstance, RuleObject, Meta } from 'rc-field-form/es/interface';
+import { NamePath, FormInstance, RuleObject, Meta, Rule } from 'rc-field-form/es/interface';
 import React from 'react';
 import { ListFormType } from '@lxjx/fr/lib/list';
 import { AnyObject } from '@lxjx/utils';
@@ -20,7 +20,7 @@ export interface FormProps extends ComponentBaseProps, RFormProps, ListFormType 
   hideRequiredMark?: boolean;
   /** 直接传入rules配置来进行表单验证 */
   rules?: {
-    [key: string]: RuleObject | RuleObject[];
+    [key: string]: Rule | Rule[];
   };
 }
 

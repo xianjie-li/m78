@@ -1,6 +1,7 @@
 import { isArray, isEmpty } from '@lxjx/utils';
 import { NamePath } from 'rc-field-form/es/interface';
-import { FormItemProps } from './type';
+import _get from 'lodash/get';
+import { FormItemProps, FormProps } from './type';
 
 /** 从错误字符数组中取第一位 */
 export function getFirstError(errors?: string[]) {
@@ -26,7 +27,7 @@ export function getStatus(error?: string, loading?: boolean) {
   return status;
 }
 
-export function getFlatRules(props: FormItemProps) {
+export function getFlatRules(props: FormItemProps, fullRules?: FormProps['rules']) {
   const {
     rules: _rules = [],
     enum: enums,
@@ -65,6 +66,18 @@ export function getFlatRules(props: FormItemProps) {
 
   if (!isEmpty(rules)) {
     nextRule.unshift(rules);
+  }
+
+  if (!isEmpty(fullRules) && props.name) {
+    const rule = _get(fullRules, props.name);
+
+    if (rule) {
+      if (isArray(rule)) {
+        nextRule.push(...rule);
+      } else {
+        nextRule.push(rule);
+      }
+    }
   }
 
   // validator需要放到单独的rule中

@@ -16,7 +16,13 @@ const Item: React.FC<FormItemProps> = props => {
   /** 根据传入的name生成字符串 */
   const nameString = getNameString(props.name);
 
-  const { form, onChangeTriggers, disabled: contextDisabled, id: formId } = useContext(FormContext);
+  const {
+    form,
+    onChangeTriggers,
+    disabled: contextDisabled,
+    id: formId,
+    rules: fullRules,
+  } = useContext(FormContext);
 
   const selector = nameString ? `FR-FORM-ITEM-${formId}-${nameString}` : undefined;
 
@@ -37,7 +43,7 @@ const Item: React.FC<FormItemProps> = props => {
     ...otherProps
   } = props;
 
-  const [rules, isRequired] = getFlatRules(props);
+  const [rules, isRequired] = getFlatRules(props, fullRules);
 
   const update = useUpdate();
 

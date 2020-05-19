@@ -3,7 +3,7 @@ import Form from '@lxjx/fr/lib/form';
 import Input from '@lxjx/fr/lib/input';
 import Button from '@lxjx/fr/lib/button';
 
-const Neest = () => (
+const Embedded = () => (
   <Form
     onFinish={e => {
       // eslint-disable-next-line no-alert
@@ -40,4 +40,4 @@ const Neest = () => (
   </Form>
 );
 
-export default Neest;
+export default Embedded;

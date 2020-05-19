@@ -4,7 +4,6 @@ import List, { Title, SubTitle, Footer } from '@lxjx/fr/lib/list';
 import Schema from 'async-validator';
 import { createRandString, isFunction } from '@lxjx/utils';
 import { useFn, useScroll } from '@lxjx/hooks';
-import { useUpdateEffect } from 'react-use';
 import { ValidateErrorEntity } from 'rc-field-form/es/interface';
 import { checkElementVisible, dumpFn, getFirstScrollParent } from '@lxjx/fr/lib/util';
 import cls from 'classnames';
@@ -30,6 +29,7 @@ const BaseForm: React.FC<FormProps> = props => {
     form: _form,
     onValuesChange,
     hideRequiredMark = false,
+    rules,
     ...otherProps
   } = props;
   /** 该表单的唯一id */
@@ -47,22 +47,23 @@ const BaseForm: React.FC<FormProps> = props => {
     offsetY: -(window.innerHeight * 0.3),
   });
 
-  const [contextValue, setContextValue] = useState(() => ({
+  const [contextValue] = useState(() => ({
     form,
     onChangeTriggers: {},
     disabled,
     hideRequiredMark,
-    scrollToElement,
     id,
+    rules,
   }));
 
-  useUpdateEffect(() => {
-    setContextValue(prev => ({
-      ...prev,
-      disabled,
-      hideRequiredMark,
-    }));
-  }, [disabled, hideRequiredMark]);
+  // useUpdateEffect(() => {
+  //   setContextValue(prev => ({
+  //     ...prev,
+  //     disabled,
+  //     hideRequiredMark,
+  //     rules,
+  //   }));
+  // }, [disabled, hideRequiredMark]);
 
   useEffect(() => {
     getFirstScrollParent(flagEl.current)
@@ -106,7 +107,7 @@ const BaseForm: React.FC<FormProps> = props => {
   });
 
   return (
-    <FormContext.Provider value={contextValue}>
+    <FormContext.Provider value={{ ...contextValue, rules, disabled, hideRequiredMark }}>
       <List
         form
         style={style}

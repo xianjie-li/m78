@@ -15,12 +15,6 @@ group:
 
 <code src="./base.tsx" />
 
-## 嵌套结构
-
-支持对象嵌套和数组嵌套
-
-<code src="./neest.tsx" />
-
 ## 联动
 
 相比 antd, `Form`组件提供了更简单易用的表单联动支持, 并且可以自动地清理已经失效的字段
@@ -32,6 +26,12 @@ group:
 1. 通过`valid`或`visible`返回`boolean`状态，字段将根据返回来决定是否渲染表单，支持直接传入`boolean`值
 2. 为了更好的性能，默认情况下某一表单值变更不会影响到其他的字段，通过手动传入`dependencies`来监听对应字段值的变化
 3. `valid`和`visible`的区别是，前者会在接收到`false`时清理表单值，并在为`true`时还原，后者仅仅是简单的进行`display`切换，不会对已有值造成影响
+
+## 嵌套结构
+
+支持对象嵌套和数组嵌套
+
+<code src="./embedded.tsx" />
 
 ## 动态表单
 
@@ -50,6 +50,19 @@ group:
 <code src="./validate.tsx" />
 
 ⛔ 三种验证方式可以混用，但是最好别这么做。验证顺序是 `直接传入` > `rules` > `Form配置`
+
+<br>
+
+**通过`Form - rules`验证**
+
+通过`Form`传递验证规则，可以抽离验证代码，减少`jsx`污染
+
+<code src="./validate2.tsx" />
+
+## 布局/样式
+
+<code src="./layout.tsx" />
+
 
 ## API
 
