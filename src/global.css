@@ -16,7 +16,9 @@
   background: #e6fffb !important;
 }
 
-.__dumi-default-menu-inner > ul ul a.active, .__dumi-default-menu-inner ul li a:hover, .__dumi-default-menu-inner ul li a.active {
+.__dumi-default-menu-inner > ul ul a.active,
+.__dumi-default-menu-inner ul li a:hover,
+.__dumi-default-menu-inner ul li a.active {
   color: #13c2c2 !important;
 }
 

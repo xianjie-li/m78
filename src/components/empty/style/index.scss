@@ -6,7 +6,8 @@
   line-height: $line-height-base;
 
   &.__small {
-    .fr-empty_icon, .fr-empty_icon > svg {
+    .fr-empty_icon,
+    .fr-empty_icon > svg {
       height: 48px;
       width: auto;
     }
@@ -18,7 +19,8 @@
   }
 
   &.__large {
-    .fr-empty_icon, .fr-empty_icon > svg {
+    .fr-empty_icon,
+    .fr-empty_icon > svg {
       height: 80px;
       width: auto;
     }
@@ -29,7 +31,8 @@
     }
   }
 
-  &_icon, &_icon > svg{
+  &_icon,
+  &_icon > svg {
     height: 64px;
     width: auto;
   }

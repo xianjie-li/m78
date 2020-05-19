@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Form, { FormProps } from '@lxjx/fr/lib/form';
 import Input from '@lxjx/fr/lib/input';
 import Button from '@lxjx/fr/lib/button';

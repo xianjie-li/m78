@@ -1429,6 +1429,13 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
+"@lxjx/async-filed-cn-template@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/@lxjx/async-filed-cn-template/-/async-filed-cn-template-1.0.1.tgz#8cfd81ed355bcaeb72b4707e5b17c09908308409"
+  integrity sha512-l7fvnkCsO5//aFwcesMubfiZL4umjUcWsqB0ZOCBB9LTiBrn3y+DPvIY8MEvDBk8yHgQo9q8tUcBAP3kzI+l4w==
+  dependencies:
+    tslib "^2.0.0"
+
 "@lxjx/fr-click-effect@^1.0.2":
   version "1.0.2"
   resolved "https://registry.npm.taobao.org/@lxjx/fr-click-effect/download/@lxjx/fr-click-effect-1.0.2.tgz#b3450eaf968ea738350b645f976dd27c7efe8603"
@@ -12586,6 +12593,11 @@ tslib@^1.10.0, tslib@^1.8.1, tslib@^1.9.0:
   version "1.11.1"
   resolved "https://registry.npm.taobao.org/tslib/download/tslib-1.11.1.tgz#eb15d128827fbee2841549e171f45ed338ac7e35"
   integrity sha1-6xXRKIJ/vuKEFUnhcfRe0zisfjU=
+
+tslib@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.npmjs.org/tslib/-/tslib-2.0.0.tgz#18d13fc2dce04051e20f074cc8387fd8089ce4f3"
+  integrity sha512-lTqkx847PI7xEDYJntxZH89L2/aXInsyF2luSafe/+0fHOMjlBNXdH6th7f70qxLDhul7KZK0zC8V5ZIyHl0/g==
 
 tsutils@^3.17.1, tsutils@^3.7.0:
   version "3.17.1"
