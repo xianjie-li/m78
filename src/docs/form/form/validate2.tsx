@@ -7,8 +7,7 @@ const rules: FormProps['rules'] = {
   name: {
     required: true,
     type: 'string',
-    max: 10,
-    min: 2,
+    len: 10,
   },
   phone: {
     required: true,

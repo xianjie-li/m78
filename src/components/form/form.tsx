@@ -7,11 +7,16 @@ import { useFn, useScroll } from '@lxjx/hooks';
 import { ValidateErrorEntity } from 'rc-field-form/es/interface';
 import { checkElementVisible, dumpFn, getFirstScrollParent } from '@lxjx/fr/lib/util';
 import cls from 'classnames';
+import { createMessagesTemplate } from '@lxjx/async-filed-cn-template';
 
 import { FormProps } from './type';
 import { getNameString } from './utils';
 import FormContext from './context';
 import Item from './item';
+
+const msgTpl = createMessagesTemplate({ hasName: false /* nameKey: 'label' */ });
+
+console.log(msgTpl);
 
 // @ts-ignore
 Schema.warning = () => {};
@@ -55,15 +60,6 @@ const BaseForm: React.FC<FormProps> = props => {
     id,
     rules,
   }));
-
-  // useUpdateEffect(() => {
-  //   setContextValue(prev => ({
-  //     ...prev,
-  //     disabled,
-  //     hideRequiredMark,
-  //     rules,
-  //   }));
-  // }, [disabled, hideRequiredMark]);
 
   useEffect(() => {
     getFirstScrollParent(flagEl.current)
@@ -126,6 +122,7 @@ const BaseForm: React.FC<FormProps> = props => {
         {/*  <SettingOutlined /> */}
         {/* </Button> */}
         <RForm
+          validateMessages={msgTpl}
           {...otherProps}
           onValuesChange={changeHandle}
           form={form}

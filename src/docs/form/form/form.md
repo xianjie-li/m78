@@ -41,7 +41,7 @@ group:
 
 ## 验证
 
-支持三种方式传递验证选项
+支持三种方式进行验证
 
 1. 通过`rules`来进行[async-validator](https://github.com/yiminghe/async-validator/)规则配置, 与`antd`用法完全一致
 2. 通过`Form.Item`直接配置`required`、`type`、`max`等验证配置，组件内部会将其转换为第一种后验证
