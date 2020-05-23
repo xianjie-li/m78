@@ -29,13 +29,29 @@ const Spin: React.FC<SpinProps> = ({
       __dark: dark,
     })}
   >
-    {/* <div className="fr-spin_circle-2" /> */}
-    <div className="fr-spin_circle">
-      <span className="fr-spin_circle-item" />
-      <span className="fr-spin_circle-item" />
-      <span className="fr-spin_circle-item" />
-      <span className="fr-spin_circle-item" />
-    </div>
+    {/* <div className="fr-spin_circle"> */}
+    {/*  <span className="fr-spin_circle-item" /> */}
+    {/*  <span className="fr-spin_circle-item" /> */}
+    {/*  <span className="fr-spin_circle-item" /> */}
+    {/*  <span className="fr-spin_circle-item" /> */}
+    {/* </div> */}
+    <svg
+      className="spinner"
+      // width="65px"
+      // height="65px"
+      viewBox="0 0 120 120"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <circle
+        className="path"
+        fill="none"
+        strokeWidth="14"
+        strokeLinecap="round"
+        cx="60"
+        cy="60"
+        r="46"
+      />
+    </svg>
     {text && (
       <span className="fr-spin_text">
         {text}

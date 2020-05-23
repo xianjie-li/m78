@@ -18,7 +18,7 @@ function messageTest() {
 }
 
 function loadingTest() {
-  const [ref, id] = message.loading();
+  const [ref, id] = message.loading({ content: '加载中加载中加载中加载中加载中加载中' });
 
   setTimeout(() => {
     ref.close(id);
