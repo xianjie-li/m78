@@ -37,6 +37,8 @@ const Message: React.FC<MessageProps> = ({
 }) => {
   const self = useSelf({
     showTimer: null as any,
+    hideTimer: null as any,
+    lastShowTime: 0,
   });
 
   const [{ life, ...springProp }, set] = useSpring(() => ({
@@ -54,13 +56,19 @@ const Message: React.FC<MessageProps> = ({
   /* 元素显示&隐藏 */
   useEffect(() => {
     if (!show) {
-      close();
+      // 延迟时间未达到loadingDelay时间的话延迟关闭
+      const diff = Date.now() - self.lastShowTime;
+
+      // +300ms的动画补正时间
+      self.hideTimer = setTimeout(close, loading && diff > 0 ? diff + loadingDelay + 300 : 0);
+
       return;
     }
 
-    if (show && height) {
+    if (height && show) {
       self.showTimer = setTimeout(
         () => {
+          self.lastShowTime = Date.now();
           set({
             // @ts-ignore
             to: async next => {
@@ -86,6 +94,7 @@ const Message: React.FC<MessageProps> = ({
 
     return () => {
       self.showTimer && clearTimeout(self.showTimer);
+      self.hideTimer && clearTimeout(self.hideTimer);
     };
     // eslint-disable-next-line
   }, [show, height]);
@@ -132,7 +141,7 @@ const Message: React.FC<MessageProps> = ({
         </Toggle>
         <If when={loading}>
           <div className="fr-message_loading">
-            <Spin show text={content} />
+            <Spin show loadingDelay={0} text={content} />
           </div>
         </If>
         <If when={!loading}>

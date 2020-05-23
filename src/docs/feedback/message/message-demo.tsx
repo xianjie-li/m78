@@ -18,11 +18,11 @@ function messageTest() {
 }
 
 function loadingTest() {
-  const [ref, id] = message.loading({ content: '加载中加载中加载中加载中加载中加载中' });
+  const [ref, id] = message.loading();
 
   setTimeout(() => {
     ref.close(id);
-  }, 2000);
+  }, 400);
 }
 
 function notifyTest() {

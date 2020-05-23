@@ -35,6 +35,8 @@ export default () => <span />;
 
 > 💡 需要确保父元素非常规定位元素，即 position 的值非 static
 
+🔺 当操作在很快的时间内得到了响应时，loading会一闪而过，这样会比不使用loading体验更差，所以在默认情况下，loading 包含一个300ms的显示/隐藏延迟
+
 <code src="./spin-demo-full.tsx"/>
 
 ## props

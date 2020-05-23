@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { WindmillIcon } from '@lxjx/fr/lib/icon';
+import { useDelayDerivedToggleStatus } from '@lxjx/fr/lib/hooks';
 import { Transition, config } from '@lxjx/react-transition-spring';
 
 import cls from 'classnames';
@@ -13,52 +15,35 @@ const Spin: React.FC<SpinProps> = ({
   dark,
   show = true,
   className,
+  loadingDelay = 300,
   ...props
-}) => (
-  <Transition
-    toggle={show}
-    type="fade"
-    mountOnEnter
-    unmountOnExit
-    {...props}
-    config={config.stiff}
-    className={cls(className, 'fr-spin', {
-      [`__${size}`]: !!size,
-      __inline: inline,
-      __full: full,
-      __dark: dark,
-    })}
-  >
-    {/* <div className="fr-spin_circle"> */}
-    {/*  <span className="fr-spin_circle-item" /> */}
-    {/*  <span className="fr-spin_circle-item" /> */}
-    {/*  <span className="fr-spin_circle-item" /> */}
-    {/*  <span className="fr-spin_circle-item" /> */}
-    {/* </div> */}
-    <svg
-      className="spinner"
-      // width="65px"
-      // height="65px"
-      viewBox="0 0 120 120"
-      xmlns="http://www.w3.org/2000/svg"
+}) => {
+  const innerShow = useDelayDerivedToggleStatus(show, loadingDelay);
+
+  return (
+    <Transition
+      toggle={innerShow}
+      type="fade"
+      mountOnEnter
+      unmountOnExit
+      {...props}
+      config={config.stiff}
+      className={cls(className, 'fr-spin', {
+        [`__${size}`]: !!size,
+        __inline: inline,
+        __full: full,
+        __dark: dark,
+      })}
     >
-      <circle
-        className="path"
-        fill="none"
-        strokeWidth="14"
-        strokeLinecap="round"
-        cx="60"
-        cy="60"
-        r="46"
-      />
-    </svg>
-    {text && (
-      <span className="fr-spin_text">
-        {text}
-        <span className="fr-spin_ellipsis" />
-      </span>
-    )}
-  </Transition>
-);
+      <WindmillIcon className="fr-spin_unit" />
+      {text && (
+        <span className="fr-spin_text">
+          {text}
+          <span className="fr-spin_ellipsis" />
+        </span>
+      )}
+    </Transition>
+  );
+};
 
 export default Spin;

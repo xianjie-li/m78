@@ -413,7 +413,7 @@ const Scroll = React.forwardRef<ScrollRef, ScrollProps>(
               scrollTo(0);
             }}
           >
-            <CaretUpOutlined className="fs-20 color-second" />
+            <CaretUpOutlined className="fs-16 color-second" />
           </Button>
         </Transition>
         {/* 下拉刷新提示器 */}

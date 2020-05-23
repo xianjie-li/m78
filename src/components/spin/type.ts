@@ -18,4 +18,6 @@ export interface SpinProps extends ComponentBaseProps {
   style?: React.CSSProperties;
   /** 包裹组件的类名 */
   className?: string;
+  /** 300 | 延迟显示/隐藏loading的毫秒数 */
+  loadingDelay?: number;
 }

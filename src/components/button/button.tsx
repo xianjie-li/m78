@@ -93,7 +93,12 @@ const Button: React.FC<ButtonProps> = ({
     <button type="button" {...props} className={classNames} disabled={!!disabled || !!loading}>
       {/* eslint-disable-next-line jsx-a11y/anchor-has-content,jsx-a11y/control-has-associated-label */}
       {link && <a className="fr-btn__link" href={href} />}
-      <Spin style={{ fontSize: size ? sizeMap[size] : 14 }} show={!!loading} full text="" />
+      <Spin
+        style={{ fontSize: size ? sizeMap[size] : 14, color: '#333' }}
+        show={!!loading}
+        full
+        text=""
+      />
       <span>{newChildren}</span>
     </button>
   );

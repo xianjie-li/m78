@@ -16,8 +16,6 @@ import Item from './item';
 
 const msgTpl = createMessagesTemplate({ hasName: false /* nameKey: 'label' */ });
 
-console.log(msgTpl);
-
 // @ts-ignore
 Schema.warning = () => {};
 
