@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentBasePropsWithAny } from '../types/types';
+import { ComponentBasePropsWithAny, Size } from '../types/types';
 
 export interface ButtonProps
   extends ComponentBasePropsWithAny,
@@ -7,7 +7,7 @@ export interface ButtonProps
   /** 按钮颜色 */
   color?: 'blue' | 'red' | 'green' | 'yellow' | 'primary';
   /** 大小 */
-  size?: 'large' | 'small' | 'mini';
+  size?: Size | 'mini';
   /** 圆形按钮 */
   circle?: boolean;
   /** 边框按钮 */

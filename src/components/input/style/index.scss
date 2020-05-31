@@ -54,7 +54,7 @@ $unitSpace: 8px;
     position: relative;
     display: inline-flex;
     align-items: center;
-    height: 36px;
+    height: $size-default;
     width: 100%;
     border: 1px solid $b-border;
     border-radius: $border-radius;
@@ -138,7 +138,7 @@ $unitSpace: 8px;
 
     /* 尺寸 */
     &.__small {
-      height: 28px;
+      height: $size-small;
       font-size: 14px;
       .fr-input_suffix,
       .fr-input_prefix {
@@ -147,7 +147,7 @@ $unitSpace: 8px;
     }
 
     &.__large {
-      height: 50px;
+      height: $size-large;
       font-size: 20px;
 
       .fr-input_suffix,
@@ -157,7 +157,7 @@ $unitSpace: 8px;
     }
 
     &.__big {
-      height: 70px;
+      height: $size-big;
       font-size: 28px;
 
       .fr-input {
@@ -269,8 +269,9 @@ $unitSpace: 8px;
   &_suffix-btn,
   &_prefix-btn {
     height: 80%; // 退级
-    height: calc(100% - 8px);
+    height: calc(100% - 6px);
     right: -6px;
+    padding: 0 12px;
   }
 
   &_prefix-btn {

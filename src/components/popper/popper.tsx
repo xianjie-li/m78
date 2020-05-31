@@ -25,11 +25,12 @@ const Popper: React.FC<PopperProps> = props => {
     unmountOnExit = false,
     disabled = false,
     type = 'tooltip',
+    customer,
   } = props;
 
   const popperEl = useRef<HTMLDivElement>(null!);
 
-  const Component = buildInComponent[type];
+  const Component = customer || buildInComponent[type];
 
   const id = useMemo(() => createRandString(1), []);
   /** 在未传入target时，用于标识出目标所在元素 */
@@ -265,10 +266,13 @@ const Popper: React.FC<PopperProps> = props => {
           self.refreshCount = 0;
         }
 
+        // 缩放最小值为0.8，不建议太小，否则会影响交互体验
+        const scale = styleShow ? 1 : 0.8;
+
         set({
           xy: [currentDirection.x, currentDirection.y],
           opacity: fix ? 0 : styleShow,
-          scale: fix ? 0 : styleShow,
+          scale: fix ? 0.8 : scale,
           immediate: fix || self.refreshCount === 0,
           // @ts-ignore
           onRest() {

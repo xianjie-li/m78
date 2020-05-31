@@ -14,12 +14,9 @@ export interface ComponentBaseProps {
 
 export type Status = 'info' | 'success' | 'warning' | 'error';
 
-export type Size = 'large' | 'small';
+export type Size = 'large' | 'small' /* 40 | 32 | 24 */;
 
-export type AnyObject = {
-  [key: string]: any;
-};
-
-export type AnyFunction = (...args: Array<any>) => any;
-
-export type PlainFn = () => void;
+export interface DataSourceItem<T = any> {
+  label: React.ReactNode;
+  value: T;
+}

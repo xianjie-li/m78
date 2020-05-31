@@ -1,6 +1,7 @@
 import React from 'react';
 import { GetBoundMetasDirectionKeys, GetPopperMetasBound } from './getPopperMetas';
 import { ComponentBaseProps } from '../types/types';
+import { PopperPropsCustom } from './builtInComponent';
 
 export type PopperTriggerType = 'hover' | 'click' | 'focus';
 
@@ -48,4 +49,6 @@ export interface PopperProps extends ComponentBaseProps {
   onConfirm?(): void;
   /** type为confirm时, 此选项用于设置图标 */
   icon?: React.ReactNode;
+  /** 定制气泡样式 通过根节点选择器来命中箭头，如 .my-custom + .fr-popper_arrow */
+  customer?(props: PopperPropsCustom): JSX.Element;
 }

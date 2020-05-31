@@ -12,8 +12,8 @@
   vertical-align: middle;
   user-select: none;
   border: none;
-  padding: 0 16px;
-  height: 30px;
+  padding: 0 18px;
+  height: $size-default;
   font-size: $font-size;
   line-height: 1;
   border-radius: 2px;
@@ -72,13 +72,13 @@
   }
   // 大小
   &.__large {
-    height: 38px;
-    padding: 0 24px;
+    height: $size-large;
+    padding: 0 26px;
     font-size: 18px;
   }
 
   &.__small {
-    height: 24px;
+    height: $size-small;
     padding: 0 8px;
     font-size: 14px;
   }

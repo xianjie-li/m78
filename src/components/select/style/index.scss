@@ -1,0 +1,97 @@
+@import '../../style/index';
+
+.fr-select {
+  .fr-input_prefix {
+    z-index: 1000;
+    max-width: 70%;
+  }
+
+  .fr-btn {
+    box-shadow: none !important;
+    border: 1px dashed $b-second;
+    cursor: auto;
+  }
+
+  &.__multiple {
+    height: auto;
+  }
+
+  &_popper {
+    & + .fr-popper_arrow {
+      display: none;
+    }
+  }
+
+  &_list {
+    .fr-empty {
+      padding: 8px 12px;
+    }
+  }
+
+  &_item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: $size-default;
+    padding: 0 $space-12;
+    cursor: pointer;
+    user-select: none;
+    @include ellipsis-x;
+    background-color: $component-background;
+    overflow-y: auto;
+
+    &:hover {
+      background-color: $color-1;
+    }
+
+    &:active {
+      background-color: rgba($color-2, 0.5);
+    }
+
+    &.__title, &.__divider, &.__disabled {
+      background-color: $component-background !important;
+      cursor: auto;
+    }
+
+    &.__active {
+      background-color: $color-2;
+    }
+
+    &.__title {
+      font-size: $fs-12;
+      color: $b-second;
+    }
+
+    &.__divider {
+      height: 1px;
+    }
+
+    &.__disabled {
+      color: $b-disable;
+      cursor: not-allowed;
+    }
+
+  }
+
+  &_tags {
+    display: flex;
+  }
+
+  &_close-btn {
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: 6px;
+    color: $b-second;
+    transform: scale(0.9) translateY(-1px);
+    //position: absolute;
+    //right: -6px;
+    //top: -6px;
+    //width: 16px;
+    //height: 16px;
+    //vertical-align: middle;
+    //font-size: 16px;
+    //background-color: $color;
+    //border-radius: 50%;
+    //color: #fff;
+  }
+}

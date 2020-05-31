@@ -4,7 +4,7 @@ import Button from '@lxjx/fr/lib/button';
 import { useFn } from '@lxjx/hooks';
 import { PopperProps } from './types';
 
-interface PopperPropsCustom extends PopperProps {
+export interface PopperPropsCustom extends PopperProps {
   setShow(patch: boolean | ((prevState: boolean) => boolean)): void;
   show: boolean;
 }
