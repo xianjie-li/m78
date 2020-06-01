@@ -6,7 +6,10 @@ import '@lxjx/fr/lib/list/style';
 const Demo = () => (
   <div>
     <List fullWidth>
-      <List.Title title="列表标题" desc="对列表的一段说明" />
+      <List.Title
+        title="列表标题"
+        desc="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias animi, atque aut deleniti dolor eum expedita fugit itaque laborum libero magnam natus nobis, nostrum pariatur quidem tempora ullam? Exercitationem, quod!"
+      />
       <List.SubTitle title="常规列表" />
       <List.Item title="普通内容" />
       <List.Item title="操作项" required arrow />
@@ -44,7 +47,7 @@ const Demo = () => (
 
       <List.Footer>
         底部描述
-        <p>带*号的为必填项</p>
+        <p>这是对该列表的一段描述</p>
       </List.Footer>
     </List>
   </div>

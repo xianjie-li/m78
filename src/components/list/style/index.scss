@@ -14,6 +14,7 @@
   background-color: #fff;
   margin: auto;
   max-width: $md;
+  border: 1px solid $b-border;
 
   .fr-effect-ripple {
     z-index: 2;
@@ -42,6 +43,10 @@
 
   &.__form {
     margin: 0;
+
+    .fr-list_item {
+      padding: 16px;
+    }
 
     .fr-list_cont-left {
       width: 5em;
@@ -151,7 +156,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    padding: 12px;
+    padding: 8px 12px;
 
     &.__disabled {
       user-select: none;
@@ -177,7 +182,7 @@
         content: '';
         height: 1px;
         top: 0;
-        left: 12px;
+        left: 0;
         right: 0;
         background-color: $b-border;
         transform: scaleY(0.5);

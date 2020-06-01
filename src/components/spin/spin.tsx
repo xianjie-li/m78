@@ -15,7 +15,7 @@ const Spin: React.FC<SpinProps> = ({
   dark,
   show = true,
   className,
-  loadingDelay = 300,
+  loadingDelay = 0,
   ...props
 }) => {
   const innerShow = useDelayDerivedToggleStatus(show, loadingDelay);

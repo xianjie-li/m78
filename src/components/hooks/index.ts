@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSelf } from '@lxjx/hooks';
 
+/* TODO: 将所有延迟显示、关闭更换为 显示时间未达到delay时，延迟至该时间再关闭 */
 /**
  * 将转入的开关状态在指定延迟后转为本地状态并在变更后同步
  * */

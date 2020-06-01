@@ -21,4 +21,4 @@ group:
     * success
     * warn
 * 支持黑色主题和白色主题(待实现)
-* 如果需要提供ref来访问组件类的包裹节点，使用`nodeRef`
+* 对于需要将内部dom元素通过ref转发的，使用名为`nodeRef`的prop, 通过ref获取组件实例
