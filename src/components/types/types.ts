@@ -17,6 +17,8 @@ export type Status = 'info' | 'success' | 'warning' | 'error';
 export type Size = 'large' | 'small' /* 40 | 32 | 24 */;
 
 export interface DataSourceItem<T = any> {
+  /** 选项名 */
   label: React.ReactNode;
+  /** 选项值, 默认与label相同 */
   value: T;
 }

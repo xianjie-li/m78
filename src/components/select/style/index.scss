@@ -3,17 +3,37 @@
 .fr-select {
   .fr-input_prefix {
     z-index: 1000;
-    max-width: 70%;
-  }
-
-  .fr-btn {
-    box-shadow: none !important;
-    border: 1px dashed $b-second;
-    cursor: auto;
   }
 
   &.__multiple {
     height: auto;
+    flex-wrap: wrap;
+    min-height: 32px;
+
+    .fr-btn {
+      box-shadow: none !important;
+      border: 1px dashed $b-second;
+      cursor: auto;
+      margin: 4px 8px 4px 0;
+      padding-right: 24px;
+
+      > span {
+        overflow: hidden;
+      }
+    }
+
+    .fr-input_prefix {
+      width: 100%;
+    }
+
+    .fr-select_tags {
+      flex-wrap: wrap;
+    }
+
+    .fr-input {
+      min-width: 30%;
+      align-self: stretch;
+    }
   }
 
   &_popper {
@@ -32,7 +52,7 @@
     position: relative;
     display: flex;
     align-items: center;
-    height: $size-default;
+    justify-content: space-between;
     padding: 0 $space-12;
     cursor: pointer;
     user-select: none;
@@ -73,11 +93,18 @@
 
   }
 
+  &_check-icon {
+    color: $color;
+  }
+
   &_tags {
     display: flex;
   }
 
   &_close-btn {
+    position: absolute;
+    right: 6px;
+    background-color: #fff;
     cursor: pointer;
     font-size: 12px;
     margin-left: 6px;

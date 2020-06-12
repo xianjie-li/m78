@@ -7,7 +7,7 @@ $unitSpace: 8px;
   border-color: $_color_;
 
   &.__focus {
-    box-shadow: 0 0 0 3px rgba($_color_, 0.2);
+    box-shadow: 0 0 0 3.8px rgba($_color_, 0.2);
   }
 
   &:not(.__disabled):hover {
@@ -64,6 +64,7 @@ $unitSpace: 8px;
     overflow: hidden;
     max-width: $sm;
     transition: $animation-duration-base box-shadow, $animation-duration-base border-color;
+    transition-delay: 0s;
 
     /* 各种状态的处理 */
     &:not(.__disabled):hover {
@@ -73,6 +74,7 @@ $unitSpace: 8px;
     &:not(.__disabled):not(.__readonly):active {
       border-color: $color;
       box-shadow: 0 0 0 3px rgba($color, 0.5);
+      transition-delay: 0.1s;
     }
 
     &.__readonly {
@@ -81,7 +83,7 @@ $unitSpace: 8px;
 
     &.__focus {
       border-color: $color;
-      box-shadow: 0 0 0 3px rgba($color, 0.2);
+      box-shadow: 0 0 0 3.8px rgba($color, 0.2);
     }
 
     &.__disabled {
