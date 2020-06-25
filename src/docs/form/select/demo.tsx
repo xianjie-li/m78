@@ -1,5 +1,6 @@
 import Select, { SelectOptionItem } from '@lxjx/fr/lib/select';
-import React from 'react';
+import Input from '@lxjx/fr/lib/input';
+import React, { useState } from 'react';
 
 function fakeOptions(num: number): SelectOptionItem[] {
   return Array.from({ length: num }).map((_, index) => ({
@@ -9,12 +10,16 @@ function fakeOptions(num: number): SelectOptionItem[] {
   }));
 }
 
+const options = fakeOptions(10);
+
 const Demo = () => {
+  const [v, setV] = useState('111');
+
   return (
     <div>
       <div>
         <Select
-          options={fakeOptions(300000)}
+          options={options}
           multiple
           // showTag={false}
           toolbar
@@ -22,9 +27,11 @@ const Demo = () => {
           // defaultValue={1}
           placeholder="请选择..."
           search
-          onChange={(value, options) => {
-            console.log(111, value, options);
+          onChange={(value, opt) => {
+            console.log(111, value, opt);
           }}
+          disabledOption={[1, 4, 5, 6, 8]}
+          // listWidth={200}
         />
       </div>
     </div>

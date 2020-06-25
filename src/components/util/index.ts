@@ -19,6 +19,7 @@ export function getStyle(obj: HTMLElement, attr: keyof CSSStyleDeclaration) {
   return obj.currentStyle ? obj.currentStyle[attr] : window.getComputedStyle(obj)[attr];
 }
 
+/** TODO: 更改为同步 */
 export function getFirstScrollParent(ele: HTMLElement): Promise<HTMLElement> {
   return new Promise<HTMLElement>((res, rej) => {
     handle(ele);
@@ -90,7 +91,6 @@ export function checkElementVisible(
   return topPass && rightPass && bottomPass && leftPass;
 }
 
-// TODO: 添加到utils filter类别中
 /** 如果入参为truthy或0则返回，否则返回false */
 export function isTruthyOrZero(arg: any): boolean {
   return !!arg || arg === 0;
@@ -104,4 +104,46 @@ export function getFirstTruthyOrZero(...args: any): any {
     }
   }
   return false;
+}
+
+/**
+ * 根据传入的node节点查询其所有父节点中是否存在指定节点
+ * @param node - 待查询的节点
+ * @param matcher - 匹配器，递归接收父节点，返回值决定是否匹配
+ * @param depth - 询深度
+ * */
+export function getCurrentParent(
+  node: Element,
+  matcher: (node: Element) => boolean,
+  depth: number,
+) {
+  let hasMatch = false;
+
+  let cDepth = 0;
+
+  function recur(n: Element) {
+    if (depth) {
+      cDepth++;
+      if (cDepth === depth) return;
+    }
+
+    if (!n) {
+      return;
+    }
+    const pNode = n.parentNode as Element;
+
+    if (pNode) {
+      const res = matcher(pNode);
+      if (res) {
+        hasMatch = true;
+        return;
+      }
+    }
+
+    recur(pNode);
+  }
+
+  recur(node);
+
+  return hasMatch;
 }

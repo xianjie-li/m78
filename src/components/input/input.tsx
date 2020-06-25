@@ -71,6 +71,7 @@ const Input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
     textArea,
     autoSize = true,
     charCount = false,
+    innerRef,
     ...props
   } = _props;
 
@@ -139,7 +140,9 @@ const Input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
   }, [min, max]);
 
   /* 指向input的ref */
-  const input = useRef<HTMLInputElement>(null!);
+  const inputRef = useRef<HTMLInputElement>(null!);
+
+  const input = innerRef || inputRef;
 
   /* 对外暴露input ref */
   useImperativeHandle(ref, () => ({
@@ -196,6 +199,8 @@ const Input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
 
   /** 处理input的onChange */
   function changeHandle({ target }: React.ChangeEvent<HTMLInputElement>) {
+    const val = target.value;
+
     // 设置formatArg后，改变value长度会导致光标移动到输入框末尾，手动将其还原
     const saveSelectInd = target.selectionStart;
     const oldValueLength = target.value.length;
@@ -204,7 +209,15 @@ const Input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
       return;
     }
 
-    setInputVal(parser(target.value));
+    const pValue = parser(val);
+
+    if ('value' in _props) {
+      // 为受控组件时，通过onChange回传
+      setInputVal(value, true);
+      _props.onChange?.(pValue);
+    } else {
+      setInputVal(pValue);
+    }
 
     // 浏览器支持且存在formatArg配置或传入parser时，还原光标位置
     if (

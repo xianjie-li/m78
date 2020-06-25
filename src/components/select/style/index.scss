@@ -50,7 +50,7 @@
 
   &_list {
     position: relative;
-    min-width: 200px;
+    min-width: 280px;
     max-width: 90vw;
 
     .fr-empty {
@@ -170,6 +170,17 @@
       align-items: center;
       height: 40px;
       padding: 0 $space-12;
+    }
+  }
+
+  &_down-icon {
+    position: relative;
+    top: 0.1em;
+    color: $b-second;
+    transition: 0.3s transform;
+
+    &.__reverse {
+      transform: rotate(180deg);
     }
   }
 

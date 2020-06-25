@@ -1,14 +1,12 @@
 import React from 'react';
 import { FormLikeWithExtra } from '@lxjx/hooks';
-import { ComponentBaseProps, FullSize, Size } from '../types/types';
+import { ComponentBaseProps, FullSize, Size, Status } from '../types/types';
 
 export interface SelectOptionItem {
   /** 类目名 */
   label?: string;
   /** 值 */
   value?: any;
-  /** 是否禁用 */
-  disabled?: boolean;
   /** 特殊的选项类型 */
   type?: 'title' | 'divider';
   /** 前置内容 */
@@ -30,10 +28,6 @@ export interface SelectProps<ValType, Options = any>
   labelKey?: string;
   /** 'value' | 配置如何从options项中获取值 */
   valueKey?: string;
-  /** 为列表设置style */
-  listStyle?: React.CSSProperties;
-  /** 为列表设置className */
-  listClassName?: string;
   /** 手动控制显示 */
   show?: boolean;
   /** 是否默认显示 */
@@ -62,14 +56,6 @@ export interface SelectProps<ValType, Options = any>
   /** 最大选中条数 */
   maxLength?: number;
 
-  /* ================= 尺寸 ================ */
-  /** 列表宽度，默认与输入框等宽 */
-  listWidth?: number | string;
-  /** 320 | 列表最大高度, 超出时出现滚动条 */
-  listMaxHeight?: number | string;
-  /** 32 | 虚拟滚动需要确定的高度(px)，如果列表项通过其他配置修改过，通过此项设置修改后的高度 */
-  listItemHeight?: number;
-
   /* ================= 工具栏 ================ */
   /** false | 是否显示toolbar, 单选时无效 */
   toolbar?: boolean;
@@ -90,17 +76,38 @@ export interface SelectProps<ValType, Options = any>
   /** 是否开启搜索 */
   search?: boolean;
 
+  /* ================= 样式 ================ */
+  /** 为列表设置style */
+  listStyle?: React.CSSProperties;
+  /** 为列表设置className */
+  listClassName?: string;
+  /** 无边框 */
+  notBorder?: boolean;
+  /** 只有下边框 */
+  underline?: boolean;
+  /** 列表宽度，默认与输入框等宽 */
+  listWidth?: number | string;
+  /** 320 | 列表最大高度, 超出时出现滚动条 */
+  listMaxHeight?: number | string;
+  /** 32 | 虚拟滚动需要确定的高度(px)，如果列表项通过其他配置修改过，通过此项设置修改后的高度 */
+  listItemHeight?: number;
+
   /* ================= 态 ================ */
   /** 设置为禁用状态 */
   disabled?: boolean;
+  /** 禁用指定选项 */
+  disabledOption?: any[];
   /** 尺寸 */
   size?: FullSize;
+  /** 状态，不同状态会以不同的功能色展示 */
+  status?: Status;
 }
 
 /** 约定内部选项Item的入参 */
 export interface RenderItemData {
   listItemHeight: number | string;
   isChecked(val: any): boolean;
+  isDisabled(val: any): boolean;
   onCheckItem(val?: any): void;
   options: SelectOptionItem[];
   labelKey: string;

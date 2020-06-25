@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormLikeWithExtra } from '@lxjx/hooks';
+import { FormLike, FormLikeWithExtra } from '@lxjx/hooks';
 import { ButtonProps } from '@lxjx/fr/lib/button';
 import { Status, FullSize } from '../types/types';
 
@@ -12,9 +12,7 @@ export interface InputRef {
   el: HTMLInputElement;
 }
 
-export interface InputProps
-  extends FormLikeWithExtra<string, React.ChangeEvent<HTMLInputElement>>,
-    InputPropsExtends {
+export interface InputProps extends FormLike<string>, InputPropsExtends {
   /**
    * 'text' | 输入框类型
    *  text - 可输入任何内容
@@ -75,6 +73,6 @@ export interface InputProps
   charCount?: boolean;
   /** 按下回车的回调 */
   onPressEnter?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  // /** 指向内部input元素的ref */
-  // nodeRef?: React.MutableRefObject<HTMLInputElement>;
+  /** 指向内部input元素的ref */
+  innerRef?: React.MutableRefObject<HTMLInputElement>;
 }

@@ -1,17 +1,20 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import Input from '@lxjx/fr/lib/input';
 import Popper, { PopperRef } from '@lxjx/fr/lib/popper';
 import Spin from '@lxjx/fr/lib/spin';
 import Empty from '@lxjx/fr/lib/empty';
 import Button from '@lxjx/fr/lib/button';
+import { DownOutlined } from '@lxjx/fr/lib/icon';
 import { If } from '@lxjx/fr/lib/fork';
+import { getCurrentParent } from '@lxjx/fr/lib/util';
+import _debounce from 'lodash/debounce';
 
 import { VariableSizeList as FixedList } from 'react-window';
 
 import cls from 'classnames';
 
-import { useCheck, useDebounce, useFn, useFormState, useSelf } from '@lxjx/hooks';
+import { useCheck, useFn, useFormState, useSelf, useSetState } from '@lxjx/hooks';
 import { SelectProps, RenderItemData, SelectCustomTagMeta } from './type';
 import {
   CustomPopper,
@@ -29,7 +32,7 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
     className,
     style,
     listMaxHeight = 200,
-    listWidth = 400,
+    listWidth,
     listItemHeight = 36,
     multiple,
     showTag = true,
@@ -53,10 +56,18 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
     size,
     search = false,
     maxLength,
+    status,
+    notBorder,
+    underline,
+    disabledOption,
   } = props;
 
   const self = useSelf({
     isFocus: false,
+  });
+
+  const [state, setState] = useSetState({
+    inputWidth: 280,
   });
 
   const popperRef = useRef<PopperRef>(null!);
@@ -69,8 +80,6 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
     valueKey: 'show',
   });
 
-  // useClickAway()
-
   const checkHelper = useCheck<any>({
     ...conf,
     options,
@@ -82,6 +91,7 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
       });
     },
     notExistValueTrigger,
+    disables: disabledOption,
   });
 
   const {
@@ -94,7 +104,10 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
     allChecked,
     toggleAll,
     checkAll,
+    isDisabled,
   } = checkHelper;
+
+  const inpRef = useRef<HTMLInputElement>(null!);
 
   /** 指向input的value */
   const [inpVal, setInpVal] = useState('');
@@ -102,13 +115,32 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
   /** 经过筛选后的选项列表 */
   const filterOptions = useMemo(
     () => filterOptionsHandler(inpVal, options, checked, hideSelected, isChecked, valueKey),
-    [inpVal, options, checked, hideSelected],
+    [inpVal, options, hideSelected],
   );
 
+  useEffect(() => {
+    if (!inpRef.current || listWidth) return;
+
+    const pNode = inpRef.current.parentNode as HTMLElement;
+
+    if (!pNode) return;
+
+    const w = pNode.offsetWidth;
+
+    if (w && state.inputWidth !== w) {
+      setState({
+        inputWidth: pNode.offsetWidth,
+      });
+    }
+  });
+
   /** 输入框值改变 */
-  const onKeyChange = useDebounce(key => {
-    setInpVal(key);
-  }, 200);
+  const onKeyChange = useFn(
+    key => {
+      setInpVal(key);
+    },
+    fn => _debounce(fn, 200),
+  );
 
   /** 点击某项 */
   const onCheckItem = useFn((_val: any) => {
@@ -131,6 +163,7 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
   const itemData: RenderItemData = {
     listItemHeight,
     isChecked,
+    isDisabled,
     onCheckItem,
     options: filterOptions,
     labelKey,
@@ -156,7 +189,16 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
     if (!_show) setShow(false);
   }
 
-  function onShow() {
+  function onShow({ target }: any) {
+    if (target) {
+      const isCloseBtn = getCurrentParent(
+        target,
+        node => node.className === 'fr-select_close-btn',
+        5,
+      );
+      if (isCloseBtn) return;
+    }
+
     if (!multiple) {
       if (search && !show) {
         setShow(true);
@@ -211,7 +253,7 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
     return (
       <div
         className={cls('fr-select_list fr-scroll-bar', { __disabled: disabled })}
-        style={{ width: listWidth }}
+        style={{ width: listWidth || state.inputWidth }}
       >
         {(listLoading || loading) && <Spin full size="small" text={null} />}
         {!filterOptions.length && <Empty size="small" desc="暂无相关内容" />}
@@ -311,6 +353,7 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
       onChange={onPopperClose}
     >
       <Input
+        innerRef={inpRef}
         onClick={onShow}
         className={cls('fr-select', className, {
           __disabled: disabled, // 要同时为list设置
@@ -319,11 +362,13 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
           '__text-value': showSelectString,
           '__has-multiple-tag': showMultipleTag && originalChecked.length,
         })}
+        status={status}
         style={style}
         onKeyDown={onKeyDown}
         placeholder={_placeholder || placeholder}
         prefix={showMultipleTag && originalChecked.length && renderPrefix()}
-        value={inpVal}
+        suffix={<DownOutlined className={cls('fr-select_down-icon', { __reverse: show })} />}
+        // value={inpVal}
         onChange={onKeyChange}
         loading={inputLoading}
         blockLoading={loading || blockLoading}
@@ -331,6 +376,8 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
         size={size}
         readOnly={!search}
         onFocus={onFocus}
+        underline={underline}
+        notBorder={notBorder}
       />
     </Popper>
   );

@@ -71,7 +71,6 @@ export function RenderItem({ index, style, data }: Item) {
 
   const label = getLabel(item, labelKey, valueKey);
   const value = getValue(item, valueKey);
-  const { disabled } = item;
 
   const isDivider = item.type === 'divider';
 
@@ -79,7 +78,9 @@ export function RenderItem({ index, style, data }: Item) {
     return null;
   }
 
-  const _isChecked = data.isChecked(getValue(item, valueKey));
+  const _isChecked = data.isChecked(value);
+
+  const disabled = data.isDisabled(value);
 
   return (
     <div
