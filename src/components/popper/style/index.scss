@@ -29,6 +29,7 @@
   max-height: 90vh;
   line-height: $line-height-base;
   font-size: 14px;
+  overflow: auto;
 
   &_content {
     border-radius: 2px;

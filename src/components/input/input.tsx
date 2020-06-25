@@ -17,7 +17,7 @@ import cls from 'classnames';
 import { useFormState, useDerivedStateFromProps, useSelf } from '@lxjx/hooks';
 import { TransitionBase } from '@lxjx/react-transition-spring';
 import { useUpdateEffect } from 'react-use';
-import { InputProps } from './type';
+import { InputProps, InputRef } from './type';
 
 import {
   buildInPattern,
@@ -29,11 +29,7 @@ import {
   parserThan,
 } from './utils';
 
-interface InputRef {
-  el: HTMLInputElement;
-}
-
-const Input: React.FC<InputProps> = React.forwardRef<InputRef, InputProps>((_props, ref) => {
+const Input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
   const {
     /* 处理特殊属性 */
     className,
@@ -169,14 +165,18 @@ const Input: React.FC<InputProps> = React.forwardRef<InputRef, InputProps>((_pro
     // eslint-disable-next-line
   }, []);
 
-  function focusHandle() {
+  useUpdateEffect(() => {
+    setInputVal(value || '', true);
+  }, [value]);
+
+  function focusHandle(e: any) {
     if (disabled || readonly) return;
-    onFocus();
+    onFocus(e);
     setFocus(true);
   }
 
-  function blurHandle() {
-    onBlur();
+  function blurHandle(e: any) {
+    onBlur(e);
     setFocus(false);
   }
 
@@ -284,10 +284,6 @@ const Input: React.FC<InputProps> = React.forwardRef<InputRef, InputProps>((_pro
 
     return tType;
   }
-
-  useUpdateEffect(() => {
-    setInputVal(value || '');
-  }, [value]);
 
   /** 将字符值根据配置格式化后返回 */
   function formatVal(val: string) {

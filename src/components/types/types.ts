@@ -16,9 +16,11 @@ export type Status = 'info' | 'success' | 'warning' | 'error';
 
 export type Size = 'large' | 'small' /* 40 | 32 | 24 */;
 
-export interface DataSourceItem<T = any> {
+export type FullSize = 'big' | Size;
+
+export interface DataSourceItem<ValType = any> {
   /** 选项名 */
   label: React.ReactNode;
   /** 选项值, 默认与label相同 */
-  value: T;
+  value: ValType;
 }

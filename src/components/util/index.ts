@@ -89,3 +89,19 @@ export function checkElementVisible(
 
   return topPass && rightPass && bottomPass && leftPass;
 }
+
+// TODO: 添加到utils filter类别中
+/** 如果入参为truthy或0则返回，否则返回false */
+export function isTruthyOrZero(arg: any): boolean {
+  return !!arg || arg === 0;
+}
+
+/** 返回入参中第一个truthy值或0 */
+export function getFirstTruthyOrZero(...args: any): any {
+  for (const arg of args) {
+    if (isTruthyOrZero(arg)) {
+      return arg;
+    }
+  }
+  return false;
+}

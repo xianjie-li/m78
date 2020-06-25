@@ -1,46 +1,34 @@
-import Select, {SelectOptionItem} from '@lxjx/fr/lib/select';
-import React, {useState, useRef} from 'react';
+import Select, { SelectOptionItem } from '@lxjx/fr/lib/select';
+import React from 'react';
 
-const data: SelectOptionItem[] = [
-  {
-    label: '标题一',
-    type: 'title',
-  },
-  {
-    label: '选项一',
-    value: 1,
-  },
-  {
-    label: '选项二',
-    value: 2,
-  },
-  {
-    label: '选项三',
-    value: 3,
-  },
-  {
-    type: 'divider',
-  },
-  {
-    label: '选项四',
-    value: 4,
-  },
-  {
-    label: '选项五',
-    value: 5,
-  },
-  {
-    label: '选项六',
-    value: 6,
-  },
-];
+function fakeOptions(num: number): SelectOptionItem[] {
+  return Array.from({ length: num }).map((_, index) => ({
+    label: `选项${index}`,
+    value: index,
+    // disabled: true,
+  }));
+}
 
-const Demo = () => (
-  <div>
+const Demo = () => {
+  return (
     <div>
-      <Select options={data} multiple listMaxHeight={200}/>
+      <div>
+        <Select
+          options={fakeOptions(300000)}
+          multiple
+          // showTag={false}
+          toolbar
+          defaultValue={[1, 4, 5]}
+          // defaultValue={1}
+          placeholder="请选择..."
+          search
+          onChange={(value, options) => {
+            console.log(111, value, options);
+          }}
+        />
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default Demo;

@@ -1,9 +1,17 @@
 import React from 'react';
 import { GetBoundMetasDirectionKeys, GetPopperMetasBound } from './getPopperMetas';
 import { ComponentBaseProps } from '../types/types';
-import { PopperPropsCustom } from './builtInComponent';
 
 export type PopperTriggerType = 'hover' | 'click' | 'focus';
+
+export interface PopperRef {
+  refresh: (fix?: boolean, skipTransition?: boolean, forceShow?: boolean) => void;
+}
+
+export interface PopperPropsCustom extends PopperProps {
+  setShow(patch: boolean | ((prevState: boolean) => boolean)): void;
+  show: boolean;
+}
 
 export interface PopperProps extends ComponentBaseProps {
   /** 直接指定 目标元素/包含目标元素的ref对象/一个表示位置的GetPopperMetasBound对象, 优先级大于children */

@@ -2,37 +2,43 @@
 
 .fr-select {
   .fr-input_prefix {
-    z-index: 1000;
+    //z-index: 1000;
   }
 
-  &.__multiple {
+  &.__has-multiple-tag {
     height: auto;
     flex-wrap: wrap;
     min-height: 32px;
-
-    .fr-btn {
-      box-shadow: none !important;
-      border: 1px dashed $b-second;
-      cursor: auto;
-      margin: 4px 8px 4px 0;
-      padding-right: 24px;
-
-      > span {
-        overflow: hidden;
-      }
-    }
-
+    padding: 6px 10px;
     .fr-input_prefix {
-      width: 100%;
+      flex: 1 0 100%;
     }
-
-    .fr-select_tags {
-      flex-wrap: wrap;
-    }
-
     .fr-input {
-      min-width: 30%;
-      align-self: stretch;
+      margin-top: 4px;
+    }
+
+    &.__not-search {
+      padding: 0 10px;
+    }
+
+    &.__not-search .fr-input {
+      display: none;
+    }
+  }
+
+  &.__not-search {
+    border-style: solid;
+  }
+
+  &.__text-value {
+    .fr-input::placeholder {
+      color: #000000;
+    }
+
+    &.__empty, &.__focus {
+      .fr-input::placeholder {
+        color: $b-second !important;
+      }
     }
   }
 
@@ -43,12 +49,28 @@
   }
 
   &_list {
+    position: relative;
+    min-width: 200px;
+    max-width: 90vw;
+
     .fr-empty {
       padding: 8px 12px;
+    }
+
+
+    &.__disabled {
+      &::after {
+        content: '';
+        position: absolute;
+        background-color: $w-primary;
+        cursor: not-allowed;
+        @include full;
+      }
     }
   }
 
   &_item {
+
     position: relative;
     display: flex;
     align-items: center;
@@ -61,7 +83,7 @@
     overflow-y: auto;
 
     &:hover {
-      background-color: $color-1;
+      background-color: rgba($color-1, 0.5);
     }
 
     &:active {
@@ -74,7 +96,8 @@
     }
 
     &.__active {
-      background-color: $color-2;
+      background-color: $color-1;
+      font-weight: $fw-600;
     }
 
     &.__title {
@@ -99,26 +122,69 @@
 
   &_tags {
     display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  &_tag {
+    display: flex;
+    align-items: center;
+    position: relative;
+    line-height: $line-height-base;
+    border: 1px dashed $b-border;
+    margin: 4px 8px 4px 0;
+    height: 28px;
+    padding: 4px $space-12;
+    padding-right: 28px;
+    font-size: 12px;
+    background: $b-bg;
+    border-radius: $border-radius;
+
+    &.__small {
+      height: $size-small;
+    }
+
+    &.__large, &.__big {
+      height: $size-large;
+      font-size: $fs-18;
+    }
+
+    &.__disabled {
+      .fr-select_close-btn {
+        pointer-events: none;
+      }
+    }
+  }
+
+  &_toolbar {
+    -webkit-filter: blur(0); // chrome模糊
+    overflow: hidden;
+
+    &-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 40px;
+      padding: 0 $space-12;
+    }
   }
 
   &_close-btn {
+    line-height: 1;
     position: absolute;
     right: 6px;
-    background-color: #fff;
+    background-color: $w-primary;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 18px;
     margin-left: 6px;
     color: $b-second;
-    transform: scale(0.9) translateY(-1px);
-    //position: absolute;
-    //right: -6px;
-    //top: -6px;
-    //width: 16px;
-    //height: 16px;
-    //vertical-align: middle;
-    //font-size: 16px;
-    //background-color: $color;
-    //border-radius: 50%;
-    //color: #fff;
+    border-radius: 50%;
+
+    @include effect-font;
   }
+
 }

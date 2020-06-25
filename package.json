@@ -28,7 +28,7 @@
     "@babel/runtime": "^7.7.2",
     "@lxjx/async-filed-cn-template": "^1.0.1",
     "@lxjx/fr-click-effect": "^1.0.2",
-    "@lxjx/hooks": "^1.1.5",
+    "@lxjx/hooks": "^1.3.0",
     "@lxjx/react-render-api": "^0.3.9",
     "@lxjx/react-transition-spring": "^1.0.9",
     "@lxjx/sass-base": "^1.0.10",
@@ -38,13 +38,15 @@
     "@types/node": "^12.7.5",
     "@types/react": "^16.9.22",
     "@types/react-dom": "^16.9.5",
+    "@types/react-window": "^1.8.2",
     "classnames": "^2.2.6",
     "lodash": "^4.17.15",
     "prevent-top-pull-down": "^1.0.1",
     "rc-field-form": "^1.4.0",
     "react-spring": "^8.0.27",
     "react-use": "^13.8.0",
-    "react-use-gesture": "^6.0.14"
+    "react-use-gesture": "^6.0.14",
+    "react-window": "^1.8.5"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",

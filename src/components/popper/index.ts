@@ -1,4 +1,4 @@
 import '@lxjx/fr/lib/popper/style';
 
-// export * from './popper';
+export { PopperRef, PopperPropsCustom } from './types';
 export { default } from './popper';

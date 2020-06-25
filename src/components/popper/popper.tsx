@@ -1,5 +1,5 @@
 import Portal from '@lxjx/fr/lib/portal';
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useImperativeHandle } from 'react';
 import { useFn, useFormState, useSelf, useSetState } from '@lxjx/hooks';
 import { animated, interpolate, useSpring } from 'react-spring';
 import cls from 'classnames';
@@ -8,10 +8,10 @@ import _throttle from 'lodash/throttle';
 import { createRandString, isNumber } from '@lxjx/utils';
 import { getRefDomOrDom, isPopperMetasBound, getTriggerType } from './utils';
 import { GetBoundMetasDirectionKeys, getPopperMetas, GetPopperMetasBound } from './getPopperMetas';
-import { PopperProps } from './types';
+import { PopperProps, PopperRef } from './types';
 import { buildInComponent } from './builtInComponent';
 
-const Popper: React.FC<PopperProps> = props => {
+const Popper = React.forwardRef<PopperRef, PopperProps>((props, fRef) => {
   const {
     className,
     style,
@@ -339,6 +339,14 @@ const Popper: React.FC<PopperProps> = props => {
     show && refresh();
   }, [mWidth, mHeight]);
 
+  useImperativeHandle(
+    fRef,
+    () => ({
+      refresh,
+    }),
+    [],
+  );
+
   /** 根据props.target获取作为目标的GetPopperMetasBound对象或dom元素 */
   function getTarget() {
     // target能正常取到dom元素
@@ -423,6 +431,6 @@ const Popper: React.FC<PopperProps> = props => {
       )}
     </>
   );
-};
+});
 
 export default Popper;

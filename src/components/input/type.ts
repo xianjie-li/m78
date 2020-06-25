@@ -1,12 +1,16 @@
 import React from 'react';
 import { FormLikeWithExtra } from '@lxjx/hooks';
 import { ButtonProps } from '@lxjx/fr/lib/button';
-import { Status, Size } from '../types/types';
+import { Status, FullSize } from '../types/types';
 
 export type InputPropsExtends = Omit<
   React.PropsWithoutRef<JSX.IntrinsicElements['input']>,
   'size' | 'value' | 'defaultValue' | 'onChange' | 'prefix' | 'type'
 >;
+
+export interface InputRef {
+  el: HTMLInputElement;
+}
 
 export interface InputProps
   extends FormLikeWithExtra<string, React.ChangeEvent<HTMLInputElement>>,
@@ -29,7 +33,7 @@ export interface InputProps
   /** 输入框状态，不同状态会以不同的功能色展示 */
   status?: Status;
   /** 组件尺寸 */
-  size?: Size | 'big';
+  size?: FullSize;
   /** 无边框 */
   notBorder?: boolean;
   /** 只有下边框 */
@@ -71,4 +75,6 @@ export interface InputProps
   charCount?: boolean;
   /** 按下回车的回调 */
   onPressEnter?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  // /** 指向内部input元素的ref */
+  // nodeRef?: React.MutableRefObject<HTMLInputElement>;
 }

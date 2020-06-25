@@ -39,9 +39,9 @@ $unitSpace: 8px;
     margin: 0;
   }
 
-  &:not([type='file']) {
-    top: -1px; /* 视觉居中 */
-  }
+  //&:not([type='file']) {
+  //  top: -1px; /* 视觉居中 */
+  //}
 
   &:disabled {
     color: $b-disable;
