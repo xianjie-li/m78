@@ -11,7 +11,8 @@
     min-height: 32px;
     padding: 6px 10px;
     .fr-input_prefix {
-      flex: 1 0 100%;
+      flex: 1 0 auto;
+      width: 100%;
     }
     .fr-input {
       margin-top: 4px;
@@ -22,6 +23,10 @@
     }
 
     &.__not-search .fr-input {
+      display: none;
+    }
+
+    &.__not-search .fr-input_suffix {
       display: none;
     }
   }
@@ -118,6 +123,7 @@
 
   &_check-icon {
     color: $color;
+    margin-left: 4px;
   }
 
   &_tags {
@@ -131,6 +137,7 @@
   }
 
   &_tag {
+    max-width: 40%;
     display: flex;
     align-items: center;
     position: relative;
@@ -182,6 +189,14 @@
     &.__reverse {
       transform: rotate(180deg);
     }
+  }
+
+  &_prefix {
+    margin-right: 4px;
+  }
+
+  &_suffix {
+    margin-left: 4px;
   }
 
   &_close-btn {

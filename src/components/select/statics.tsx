@@ -94,8 +94,16 @@ export function RenderItem({ index, style, data }: Item) {
       style={style}
       onClick={() => (item.type || disabled ? undefined : data.onCheckItem(value))}
     >
-      {!isDivider && <span className="ellipsis">{label}</span>}
-      {_isChecked && <CheckOutlined className="fr-select_check-icon" />}
+      {!isDivider && (
+        <span className="ellipsis">
+          {item.prefix && <span className="fr-select_prefix">{item.prefix}</span>}
+          {label}
+        </span>
+      )}
+      <span>
+        {_isChecked && <CheckOutlined className="fr-select_check-icon" />}
+        {item.suffix && <span className="fr-select_suffix">{item.suffix}</span>}
+      </span>
     </div>
   );
 }
@@ -124,11 +132,39 @@ export function showMultipleString(
   return s;
 }
 
-export const buildInTagRender: SelectCustomTag = ({ label, del, index, className }) => (
-  <span className={cls(className, 'fr-select_tag')} key={index}>
+export const buildInTagRender: SelectCustomTag = ({ label, del, key, className }) => (
+  <span className={cls(className, 'fr-select_tag')} key={key}>
     <span className="fr-select_close-btn" title="删除">
       <CloseCircleOutlined onClick={del} />
     </span>
-    {label}
+    <span className="ellipsis">{label}</span>
   </span>
 );
+
+/** 合并两组SelectOptionItem，并去除掉value重复的选项 */
+export function mergeOptions(
+  source1: SelectOptionItem[],
+  source2: SelectOptionItem[],
+  valueKey = 'value',
+) {
+  const map: any = {};
+
+  const allSource = [source1, source2];
+
+  allSource.forEach(s => {
+    s.forEach(opt => {
+      const vK = getValue(opt, valueKey);
+      map[vK] = opt;
+    });
+  });
+
+  const mergeOpt = [];
+
+  for (const key in map) {
+    if (map.hasOwnProperty(key)) {
+      mergeOpt.push(map[key]);
+    }
+  }
+
+  return mergeOpt;
+}

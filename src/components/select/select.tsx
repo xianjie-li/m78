@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import Input from '@lxjx/fr/lib/input';
 import Popper, { PopperRef } from '@lxjx/fr/lib/popper';
@@ -40,7 +40,7 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
     options = [],
     placeholder,
     multipleMaxShowLength = 8,
-    toolbar = false,
+    toolbar = true,
     customToolBar,
     customTag,
     inputLoading,
@@ -60,6 +60,9 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
     notBorder,
     underline,
     disabledOption,
+    debounceTime = 300,
+    onSearch,
+    onAddTag,
   } = props;
 
   const self = useSelf({
@@ -96,6 +99,7 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
 
   const {
     checked,
+    check,
     toggle,
     unCheck,
     isChecked,
@@ -104,6 +108,7 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
     allChecked,
     toggleAll,
     checkAll,
+    unCheckAll,
     isDisabled,
   } = checkHelper;
 
@@ -112,12 +117,15 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
   /** 指向input的value */
   const [inpVal, setInpVal] = useState('');
 
+  /** 延迟版的inpVal */
+  const [inpDebounceVal, setInpDebounceVal] = useState(inpVal);
+
   /** 经过筛选后的选项列表 */
-  const filterOptions = useMemo(
-    () => filterOptionsHandler(inpVal, options, checked, hideSelected, isChecked, valueKey),
-    [inpVal, options, hideSelected],
+  const [filterOptions, setFilterOpt] = useState(() =>
+    filterOptionsHandler(inpVal, options, checked, hideSelected, isChecked, valueKey),
   );
 
+  /** 获取输入框宽度 */
   useEffect(() => {
     if (!inpRef.current || listWidth) return;
 
@@ -134,13 +142,23 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
     }
   });
 
-  /** 输入框值改变 */
-  const onKeyChange = useFn(
+  useEffect(() => {
+    setFilterOpt(filterOptionsHandler(inpVal, options, checked, hideSelected, isChecked, valueKey));
+  }, [inpDebounceVal, options, hideSelected]);
+
+  const onKeyDebounceChange = useFn(
     key => {
-      setInpVal(key);
+      setInpDebounceVal(key);
+      key && onSearch?.(key);
     },
-    fn => _debounce(fn, 200),
+    fn => _debounce(fn, debounceTime),
   );
+
+  /** 输入框值改变 */
+  const onKeyChange = useFn(key => {
+    setInpVal(key);
+    onKeyDebounceChange(key);
+  });
 
   /** 点击某项 */
   const onCheckItem = useFn((_val: any) => {
@@ -170,26 +188,45 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
     valueKey,
   };
 
-  function onFocus() {
+  const onFocus = useFn(() => {
     self.isFocus = true;
     setShow(true);
-  }
+  });
 
-  function onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+  const addTagFn = useFn(() => {
+    // 触发新增标签并清空输入值
+    if (inpVal) {
+      onAddTag?.(inpVal, (val: any) => {
+        // 防止check在合并选项后立刻被调用
+        setTimeout(() => {
+          multiple ? check(val) : setChecked([val]);
+        });
+      });
+
+      setInpVal('');
+    }
+  });
+
+  const onKeyDown = useFn((e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.keyCode === 9) {
       setShow(false);
     }
-  }
+    if (onAddTag && e.keyCode === 13) {
+      addTagFn();
+    }
+  });
 
-  function onPopperClose(_show: boolean) {
+  const onPopperClose = useFn((_show: boolean) => {
+    if (_show && disabled) return;
+
     if (!multiple) {
       setShow(_show);
       return;
     }
     if (!_show) setShow(false);
-  }
+  });
 
-  function onShow({ target }: any) {
+  const onShow = useFn(({ target }: any) => {
     if (target) {
       const isCloseBtn = getCurrentParent(
         target,
@@ -206,11 +243,11 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
       return;
     }
     setShow(true);
-  }
+  });
 
-  function onHide() {
+  const onHide = useFn(() => {
     setShow(false);
-  }
+  });
 
   function renderVirtualList() {
     return (
@@ -250,6 +287,20 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
     // 数据大于20条时，启用虚拟滚动
     const hasVirtual = filterOptions.length > 20;
 
+    let barShow = false;
+
+    if (toolbar && multiple) {
+      barShow = true;
+    }
+
+    if (multiple && onAddTag) {
+      barShow = true;
+    }
+
+    if (customToolBar) {
+      barShow = true;
+    }
+
     return (
       <div
         className={cls('fr-select_list fr-scroll-bar', { __disabled: disabled })}
@@ -263,14 +314,13 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
         >
           {hasVirtual ? renderVirtualList() : renderNormalList()}
         </div>
-        {((toolbar && !!filterOptions.length && multiple) || customToolBar) && renderToolbar()}
+        {barShow && renderToolbar()}
       </div>
     );
   }
 
   /** 操作栏 */
   function renderToolbar() {
-    /* TODO: Check添加size选项 */
     const bar = (
       <div className="fr-select_toolbar-inner fr-hb-t">
         <div className="color-second fs-12">
@@ -280,10 +330,17 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
           </If>
         </div>
         <div>
-          <Button link onClick={() => setChecked([])} size="small">
-            清空
-          </Button>
-          <If when={maxLength === undefined}>
+          <If when={onAddTag && inpVal}>
+            <Button link color="blue" onClick={addTagFn} size="small">
+              添加标签
+            </Button>
+          </If>
+          <If when={filterOptions.length && checked.length}>
+            <Button link onClick={unCheckAll} size="small">
+              清空
+            </Button>
+          </If>
+          <If when={maxLength === undefined && filterOptions.length}>
             <Button link onClick={checkAll} size="small" color={allChecked ? 'primary' : undefined}>
               全选
             </Button>
@@ -303,16 +360,21 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
     const hasSlice = multipleMaxShowLength > 0;
     const isMax = originalChecked.length > multipleMaxShowLength;
 
-    const list = hasSlice ? originalChecked.slice(0, multipleMaxShowLength) : originalChecked;
+    const list = hasSlice
+      ? originalChecked.slice(0, multipleMaxShowLength)
+      : originalChecked.slice();
 
     return (
       <div className="fr-select_tags" onClick={onShow}>
         {list.map((item, index) => {
+          const val = getValue(item, valueKey);
+
           const meta: SelectCustomTagMeta = {
             index,
+            key: val,
             option: item,
             del() {
-              !disabled && unCheck(getValue(item, valueKey));
+              !disabled && unCheck(val);
             },
             label: getLabel(item, labelKey, valueKey),
             className: cls(
@@ -368,7 +430,7 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
         placeholder={_placeholder || placeholder}
         prefix={showMultipleTag && originalChecked.length && renderPrefix()}
         suffix={<DownOutlined className={cls('fr-select_down-icon', { __reverse: show })} />}
-        // value={inpVal}
+        value={inpVal}
         onChange={onKeyChange}
         loading={inputLoading}
         blockLoading={loading || blockLoading}

@@ -1,39 +1,36 @@
-import Select, { SelectOptionItem } from '@lxjx/fr/lib/select';
-import Input from '@lxjx/fr/lib/input';
+import Select from '@lxjx/fr/lib/select';
 import React, { useState } from 'react';
 
-function fakeOptions(num: number): SelectOptionItem[] {
-  return Array.from({ length: num }).map((_, index) => ({
-    label: `选项${index}`,
-    value: index,
-    // disabled: true,
-  }));
-}
-
-const options = fakeOptions(10);
+import { options } from './utils';
 
 const Demo = () => {
-  const [v, setV] = useState('111');
+  const [opt] = useState(options);
 
   return (
-    <div>
-      <div>
-        <Select
-          options={options}
-          multiple
-          // showTag={false}
-          toolbar
-          defaultValue={[1, 4, 5]}
-          // defaultValue={1}
-          placeholder="请选择..."
-          search
-          onChange={(value, opt) => {
-            console.log(111, value, opt);
-          }}
-          disabledOption={[1, 4, 5, 6, 8]}
-          // listWidth={200}
-        />
-      </div>
+    <div style={{ maxWidth: 280 }}>
+      <h3>尺寸</h3>
+      <Select size="small" options={opt} placeholder="请选择" />
+      <Select options={opt} placeholder="请选择" className="mt-12" />
+      <Select size="large" options={opt} placeholder="请选择" className="mt-12" />
+
+      <h3 className="mt-24">状态</h3>
+      <Select status="success" options={opt} placeholder="请选择" />
+      <Select status="warning" options={opt} placeholder="请选择" className="mt-12" />
+      <Select status="error" options={opt} placeholder="请选择" className="mt-12" />
+
+      <h3 className="mt-24">禁用</h3>
+      <Select disabled options={opt} placeholder="请选择" />
+      <Select disabledOption={[1, 4, 5]} options={opt} placeholder="请选择" className="mt-12" />
+
+      <h3 className="mt-24">loading</h3>
+      <Select loading options={opt} placeholder="请选择" />
+      <Select listLoading options={opt} placeholder="请选择" className="mt-12" />
+      <Select inputLoading options={opt} placeholder="请选择" className="mt-12" />
+      <Select blockLoading options={opt} placeholder="请选择" className="mt-12" />
+
+      <h3 className="mt-24">样式</h3>
+      <Select notBorder options={opt} placeholder="请选择" />
+      <Select underline options={opt} placeholder="请选择" className="mt-12" />
     </div>
   );
 };

@@ -75,6 +75,16 @@ export interface SelectProps<ValType, Options = any>
   /* ================= 搜索 ================ */
   /** 是否开启搜索 */
   search?: boolean;
+  /** 300 | 搜索防抖延迟 */
+  debounceTime?: number;
+  /** 关键词变更时触发，用于从服务端查询数据并同步到options中 */
+  onSearch?(key: string): void;
+  /**
+   * 当用户触发新增标签时触发(包含keyword时按下Enter/点击添加按钮)
+   * check用于组件为非受控使用时在合并新tag到options后传入选项值对其进行选中，
+   * 如果作为受控组件使用，直接更改value绑定的值即可
+   * */
+  onAddTag?(key: string, check: (val: any) => void): void;
 
   /* ================= 样式 ================ */
   /** 为列表设置style */
@@ -125,6 +135,8 @@ export interface SelectCustomTagMeta {
   index: number;
   /** 透传给标签的className，包含size/disabled等用于定制的定制状态类 */
   className?: string;
+  /** 选项的value，可作为key使用 */
+  key: any;
 }
 
 export interface SelectCustomTag {
