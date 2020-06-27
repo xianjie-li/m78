@@ -60,13 +60,11 @@ const BaseForm: React.FC<FormProps> = props => {
   }));
 
   useEffect(() => {
-    getFirstScrollParent(flagEl.current)
-      .then(el => {
-        if (el && el !== document.documentElement && el !== document.body) {
-          setScrollParent(el);
-        }
-      })
-      .catch(dumpFn);
+    const el = getFirstScrollParent(flagEl.current);
+
+    if (el) {
+      setScrollParent(el);
+    }
   }, []);
 
   // 由于存在valid属性，Field可能并未被渲染，所以需要在值更新时手动对比dependencies决定是否要更新组件

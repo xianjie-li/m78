@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 import { fakeOptions } from './utils';
 
-const Demo4 = () => {
+const BigData = () => {
   const [opt] = useState(() => fakeOptions(500000));
 
   return (
@@ -14,4 +14,4 @@ const Demo4 = () => {
   );
 };
 
-export default Demo4;
+export default BigData;

@@ -18,7 +18,7 @@ const Demo4 = () => {
         <Popper
           title="提示"
           show
-          wrapEl={wrap}
+          // wrapEl={wrap}
           content={
             <div>
               <div>提示提示提示提示</div>

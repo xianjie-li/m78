@@ -19,42 +19,39 @@ export function getStyle(obj: HTMLElement, attr: keyof CSSStyleDeclaration) {
   return obj.currentStyle ? obj.currentStyle[attr] : window.getComputedStyle(obj)[attr];
 }
 
-/** TODO: 更改为同步 */
-export function getFirstScrollParent(ele: HTMLElement): Promise<HTMLElement> {
-  return new Promise<HTMLElement>((res, rej) => {
-    handle(ele);
+export function getFirstScrollParent(ele: HTMLElement): HTMLElement | null {
+  let node: Element | null = null;
 
-    function handle(el: HTMLElement) {
-      const parent = el.parentNode;
+  function handle(el: HTMLElement) {
+    const parent = el.parentNode;
 
-      if (parent) {
-        const e = parent as HTMLElement;
-        const h = e.offsetHeight;
-        const sH = e.scrollHeight;
+    if (parent) {
+      const e = parent as HTMLElement;
+      const h = e.offsetHeight;
+      const sH = e.scrollHeight;
 
-        if (sH > h) {
-          const overflow = getStyle(e, 'overflow');
+      if (sH > h) {
+        const overflow = getStyle(e, 'overflow');
 
-          if (overflow === 'scroll' || overflow === 'auto') {
-            res(e);
-            return;
-          }
-
-          if (e === document.documentElement || e === document.body) {
-            res(e);
-          }
+        if (overflow === 'scroll' || overflow === 'auto') {
+          node = e;
+          return;
         }
-
-        handle(e);
-      } else {
-        rej('getFirstScrollParent(): no parent node containing scroll bar is captured');
       }
+
+      handle(e);
+    } else {
+      // 无匹配
     }
-  });
+  }
+
+  handle(ele);
+
+  return node;
 }
 
 /**
- * 元素是否在视口可见位置 TODO: 提到utils中
+ * 元素是否在视口可见位置
  * @param el - 待检测元素
  * @param option
  * @param option.fullVisible - 默认完全不可见时才算不可见，设置为true只要元素有部分遮挡即视为不可见

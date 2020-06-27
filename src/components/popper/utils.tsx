@@ -9,7 +9,7 @@ export function getRefDomOrDom(
 ): HTMLElement | undefined {
   if (!target) return undefined;
   if (isDom(target)) return target;
-  if (target && isDom(target.current)) return target.current as HTMLElement;
+  if (isDom(target.current)) return target.current as HTMLElement;
   return undefined;
 }
 

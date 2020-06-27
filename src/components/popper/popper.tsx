@@ -5,11 +5,14 @@ import { animated, interpolate, useSpring } from 'react-spring';
 import cls from 'classnames';
 import { useClickAway, useMeasure, useUpdateEffect } from 'react-use';
 import _throttle from 'lodash/throttle';
-import { createRandString, isNumber } from '@lxjx/utils';
+import { createRandString, isDom, isNumber } from '@lxjx/utils';
+import { getFirstScrollParent } from '@lxjx/fr/lib//util';
 import { getRefDomOrDom, isPopperMetasBound, getTriggerType } from './utils';
 import { GetBoundMetasDirectionKeys, getPopperMetas, GetPopperMetasBound } from './getPopperMetas';
 import { PopperProps, PopperRef } from './types';
 import { buildInComponent } from './builtInComponent';
+
+const MIN_SCALE = 0.86;
 
 const Popper = React.forwardRef<PopperRef, PopperProps>((props, fRef) => {
   const {
@@ -62,7 +65,7 @@ const Popper = React.forwardRef<PopperRef, PopperProps>((props, fRef) => {
     hideTimer: (undefined as unknown) as any,
     /** 实现延迟渲染 */
     showTimer: (undefined as unknown) as any,
-    /** 防止show变更effect和尺寸变更effect重复更新 */
+    /** 防止show变更和尺寸变更effect重复更新 */
     refreshing: false,
   });
 
@@ -78,7 +81,7 @@ const Popper = React.forwardRef<PopperRef, PopperProps>((props, fRef) => {
   // 监听尺寸变化并更新气泡位置
   const [ref, { width: mWidth, height: mHeight }] = useMeasure();
 
-  const showBase = show ? 1 : 0;
+  const showBase = show ? 1 : MIN_SCALE;
 
   // click下点击它处关闭气泡
   useClickAway(popperEl, ({ target: _target }) => {
@@ -150,7 +153,7 @@ const Popper = React.forwardRef<PopperRef, PopperProps>((props, fRef) => {
     setShow(false);
   });
 
-  /** 绑定事件 */
+  /** 绑定事件, 由于需要支持多种target类型，需要直接使用原生api绑定 */
   useEffect(() => {
     if (!self.target) return;
     if (isPopperMetasBound(self.target)) return;
@@ -214,7 +217,7 @@ const Popper = React.forwardRef<PopperRef, PopperProps>((props, fRef) => {
         self.target,
         {
           offset,
-          wrap: getRefDomOrDom(wrapEl),
+          wrap: getWrapEl(),
           direction,
           prevDirection: state.direction,
         },
@@ -266,13 +269,12 @@ const Popper = React.forwardRef<PopperRef, PopperProps>((props, fRef) => {
           self.refreshCount = 0;
         }
 
-        // 缩放最小值为0.8，不建议太小，否则会影响交互体验
-        const scale = styleShow ? 1 : 0.8;
+        const scale = styleShow ? 1 : 0.86;
 
         set({
           xy: [currentDirection.x, currentDirection.y],
           opacity: fix ? 0 : styleShow,
-          scale: fix ? 0.8 : scale,
+          scale: fix ? 0.86 : scale,
           immediate: fix || self.refreshCount === 0,
           // @ts-ignore
           onRest() {
@@ -299,7 +301,9 @@ const Popper = React.forwardRef<PopperRef, PopperProps>((props, fRef) => {
   /** 初始化定位、默认触发气泡更新方式(wrap滚动触发) */
   useEffect(() => {
     refresh();
-    const e = getRefDomOrDom(wrapEl) || window;
+
+    const e = getWrapEl() || window;
+
     e.addEventListener('scroll', scrollHandle);
 
     return () => {
@@ -346,6 +350,18 @@ const Popper = React.forwardRef<PopperRef, PopperProps>((props, fRef) => {
     }),
     [],
   );
+
+  /** 获取包含滚动条的父元素或wrapEl */
+  function getWrapEl() {
+    if (isDom(self.target)) {
+      const sp = getFirstScrollParent(self.target);
+      if (sp) {
+        return sp;
+      }
+    }
+
+    return getRefDomOrDom(wrapEl);
+  }
 
   /** 根据props.target获取作为目标的GetPopperMetasBound对象或dom元素 */
   function getTarget() {
@@ -414,6 +430,7 @@ const Popper = React.forwardRef<PopperRef, PopperProps>((props, fRef) => {
                   )}px, 0) scale3d(${sc}, ${sc}, ${sc})`,
               ),
               opacity: spProps.opacity.interpolate(o => o),
+              visibility: spProps.opacity.interpolate(o => (o === 0 ? 'hidden' : undefined)),
             }}
             className={cls('fr-popper', state.direction && `__${state.direction}`, className)}
             onMouseEnter={triggerType.hover ? mouseEnterHandle : undefined}

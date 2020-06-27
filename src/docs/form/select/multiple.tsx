@@ -8,7 +8,14 @@ const Demo2 = () => {
 
   return (
     <div style={{ maxWidth: 360 }}>
-      <Select multiple defaultValue={[1, 2]} options={opt} placeholder="请选择" className="mt-12" />
+      <Select
+        size="small"
+        multiple
+        defaultValue={[1, 2]}
+        options={opt}
+        placeholder="请选择"
+        className="mt-12"
+      />
       <Select
         multiple
         showTag={false}

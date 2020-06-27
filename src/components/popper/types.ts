@@ -24,7 +24,7 @@ export interface PopperProps extends ComponentBaseProps {
    * 2. 该节点能够接受onMouseEnter、onMouseLeave、onFocus、onClick等事件
    * */
   children?: React.ReactElement;
-  /** 包裹元素，作为气泡边界的标识，并会在滚动时对气泡进行更新, 默认情况下，边界为窗口，并在window触发滚动时更新气泡 */
+  /** 包裹元素，作为气泡边界的标识，并会在滚动时对气泡进行更新, 默认情况下，边界为递归获取到的第一个滚动父元素 */
   wrapEl?: HTMLElement | React.MutableRefObject<any>;
   /** 12 | 气泡的偏移位置 */
   offset?: number;

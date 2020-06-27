@@ -1,9 +1,10 @@
 import { SelectOptionItem } from '@/components/select';
 
-export const options = [
+export const options: SelectOptionItem[] = [
   {
     label: 'vanillaJS',
     value: 1,
+    prefix: '🍀',
   },
   {
     label: 'typescript',
