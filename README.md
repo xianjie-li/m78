@@ -1,9 +1,3 @@
----
-title: 约定
-sidemenu: false
----
-
-
 <p align="center">
     <img src="https://github.com/Iixianjie/fr/raw/master/public/logo.png" width="160" align="center" />
 </p>
