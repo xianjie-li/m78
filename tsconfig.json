@@ -27,7 +27,8 @@
   "include": [
     "src/components/**/*",
     "src/docs/**/*",
-    "./app.d.ts"
+    "./app.d.ts",
+    ".eslintrc.js"
   ],
   "exclude": [
     "../src/components/*/style/**",

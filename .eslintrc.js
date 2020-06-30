@@ -5,6 +5,8 @@ module.exports = {
 
   rules: {
     'no-restricted-syntax': 'off',
-    'prefer-promise-reject-errors': 'off'
+    'prefer-promise-reject-errors': 'off',
+    '@typescript-eslint/naming-convention': 'off',
+    '@typescript-eslint/no-unused-expressions': 'off',
   },
 };

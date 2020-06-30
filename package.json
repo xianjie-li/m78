@@ -1,6 +1,6 @@
 {
   "name": "@lxjx/fr",
-  "version": "0.2.0-alpha",
+  "version": "0.5.0-alpha",
   "types": "./lib",
   "license": "MIT",
   "scripts": {
@@ -59,7 +59,7 @@
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.6.0",
-    "@lxjx/preset-config": "^0.0.4",
+    "@lxjx/preset-config": "^0.1.0",
     "@umijs/plugin-sass": "^1.1.1",
     "autoprefixer": "^9.6.1",
     "babel-eslint": "^10.0.3",

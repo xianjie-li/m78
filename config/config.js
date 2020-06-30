@@ -2,6 +2,8 @@ const path = require('path');
 
 export default {
   outputPath: 'docs',
+  base: '/hooks/',
+  publicPath: '/hooks/',
   alias: {
     '@': path.resolve(__dirname, '../src'),
     '@lxjx/fr/lib': path.resolve(__dirname, '../src/components'),
@@ -15,7 +17,7 @@ export default {
     // includes: [path.resolve(__dirname, '../src/docs')],
   },
   exportStatic: {
-    dynamicRoot: true,
+    // dynamicRoot: true,
   },
   dynamicImport: {},
   navs: [
