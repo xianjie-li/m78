@@ -2,8 +2,8 @@ const path = require('path');
 
 export default {
   outputPath: 'docs',
-  base: '/hooks/',
-  publicPath: '/hooks/',
+  base: '/fr/',
+  publicPath: '/fr/',
   alias: {
     '@': path.resolve(__dirname, '../src'),
     '@lxjx/fr/lib': path.resolve(__dirname, '../src/components'),
