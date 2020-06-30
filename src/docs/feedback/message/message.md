@@ -16,7 +16,7 @@ message 组件基于 render-api 实现，包含轻提示、加载中、消息框
 
 <code src="./message-demo.tsx" />
 
-🔺 当操作在很快的时间内得到了响应时，loading会一闪而过，这样会比不使用loading体验更差，所以在默认情况下，loading 包含一个300ms的显示/隐藏延迟
+🔺 当操作在很快的时间内得到了响应时，loading 会一闪而过，这样会比不使用 loading 体验更差，所以在默认情况下，loading 包含一个 300ms 的显示/隐藏延迟
 
 ## 底层 api
 

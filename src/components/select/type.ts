@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormLikeWithExtra } from '@lxjx/hooks';
-import { ComponentBaseProps, FullSize, Size, Status } from '../types/types';
+import { ComponentBaseProps, FullSize, Status } from '../types/types';
 
 export interface SelectOptionItem {
   /** 类目名 */

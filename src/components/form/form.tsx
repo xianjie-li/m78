@@ -5,7 +5,7 @@ import Schema from 'async-validator';
 import { createRandString, isFunction } from '@lxjx/utils';
 import { useFn, useScroll } from '@lxjx/hooks';
 import { ValidateErrorEntity } from 'rc-field-form/es/interface';
-import { checkElementVisible, dumpFn, getFirstScrollParent } from '@lxjx/fr/lib/util';
+import { checkElementVisible, getFirstScrollParent } from '@lxjx/fr/lib/util';
 import cls from 'classnames';
 import { createMessagesTemplate } from '@lxjx/async-filed-cn-template';
 

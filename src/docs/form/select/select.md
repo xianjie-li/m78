@@ -4,8 +4,7 @@ group:
   title: 数据录入
   path: /form
 ---
- 
- 
+
 ## 基本使用
 
 大小/状态/禁用/loading/选项不同用法/边框
@@ -16,7 +15,7 @@ group:
 
 <code src="./multiple.tsx" />
 
-## 搜索/添加tag
+## 搜索/添加 tag
 
 <code src="./search.tsx" />
 
@@ -26,11 +25,11 @@ group:
 
 <code src="./big-data.tsx" />
 
-## 定制tag样式
+## 定制 tag 样式
 
 <code src="./custom-tag.tsx" />
 
-## 定制toolbar
+## 定制 toolbar
 
 <code src="./custom-toolbar.tsx" />
 
@@ -140,9 +139,9 @@ interface SelectProps<ValType, Options = any>
 
 ```ts
 interface FormLikeWithExtra<T, Ext = any> {
-    value?: T;
-    onChange?: (value: T, extra: Ext) => void;
-    defaultValue?: T;
+  value?: T;
+  onChange?: (value: T, extra: Ext) => void;
+  defaultValue?: T;
 }
 
 interface SelectOptionItem {

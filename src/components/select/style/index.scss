@@ -40,7 +40,8 @@
       color: #000000;
     }
 
-    &.__empty, &.__focus {
+    &.__empty,
+    &.__focus {
       .fr-input::placeholder {
         color: $b-second !important;
       }
@@ -62,7 +63,6 @@
       padding: 8px 12px;
     }
 
-
     &.__disabled {
       &::after {
         content: '';
@@ -75,7 +75,6 @@
   }
 
   &_item {
-
     position: relative;
     display: flex;
     align-items: center;
@@ -95,7 +94,9 @@
       background-color: rgba($color-2, 0.5);
     }
 
-    &.__title, &.__divider, &.__disabled {
+    &.__title,
+    &.__divider,
+    &.__disabled {
       background-color: $component-background !important;
       cursor: auto;
     }
@@ -118,7 +119,6 @@
       color: $b-disable;
       cursor: not-allowed;
     }
-
   }
 
   &_check-icon {
@@ -155,7 +155,8 @@
       height: $size-small;
     }
 
-    &.__large, &.__big {
+    &.__large,
+    &.__big {
       height: $size-large;
       font-size: $fs-18;
     }
@@ -212,5 +213,4 @@
 
     @include effect-font;
   }
-
 }

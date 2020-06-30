@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormLike, FormLikeWithExtra } from '@lxjx/hooks';
+import { FormLike } from '@lxjx/hooks';
 import { ButtonProps } from '@lxjx/fr/lib/button';
 import { Status, FullSize } from '../types/types';
 
