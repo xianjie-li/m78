@@ -19,7 +19,7 @@ export default {
   exportStatic: {
     // dynamicRoot: true,
   },
-  dynamicImport: {},
+  // dynamicImport: {},
   navs: [
     null,
     {
