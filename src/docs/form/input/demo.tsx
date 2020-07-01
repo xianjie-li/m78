@@ -57,7 +57,7 @@ const Demo = () => (
       <Input placeholder="请输入商品金额" type="number" size="big" prefix="￥" format="money" />
     </div>
     <div className="mt-16">
-      <Input suffixBtn={<Button color="primary">后置按钮</Button>} />
+      <Input suffixBtn={<Button color="primary">后置按钮123</Button>} />
     </div>
     <div className="mt-16">
       <Input prefixBtn={<Button color="primary">前置按钮</Button>} />
