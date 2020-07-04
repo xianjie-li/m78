@@ -270,14 +270,14 @@ $unitSpace: 8px;
 
   &_suffix-btn,
   &_prefix-btn {
-    height: 80%; // 退级
-    height: calc(100% - 6px);
-    right: -6px;
+    height: 100%; // 退级
+    //height: calc(100% - 6px);
+    right: -10px;
     padding: 0 12px;
   }
 
   &_prefix-btn {
-    left: -6px;
+    left: -10px;
     right: auto;
   }
 
