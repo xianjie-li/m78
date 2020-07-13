@@ -1,13 +1,11 @@
 {
   "name": "@lxjx/fr",
-  "version": "0.5.0-alpha",
+  "version": "0.5.1-alpha",
   "types": "./lib",
   "license": "MIT",
   "scripts": {
-    "gg": "node script/build",
-    "emit": "tsc --emitDeclarationOnly -p ./config/lib.config.json --outDir ./esm",
+    "build": "node script/build",
     "prebuild": "npm run lint && npm run typecheck",
-    "build": "webpack --config ./build/webpack.lib.js && tsc --emitDeclarationOnly -p config/lib.config.json",
     "lint:script": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "lint:prettier": "prettier --check ./src/**/*",
     "lint": "npm run lint:prettier && npm run lint:script",
@@ -18,7 +16,8 @@
   },
   "files": [
     "esm",
-    "cjs"
+    "cjs",
+    "README.md"
   ],
   "resolutions": {
     "remark": "11.0.2"
@@ -60,7 +59,6 @@
     "@babel/plugin-proposal-optional-chaining": "^7.2.0",
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/plugin-transform-runtime": "^7.5.5",
-    "@babel/plugin-transform-typescript": "^7.6.0",
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.6.0",
@@ -70,31 +68,18 @@
     "@rollup/plugin-node-resolve": "^8.4.0",
     "@rollup/plugin-replace": "^2.3.3",
     "@umijs/plugin-sass": "^1.1.1",
-    "autoprefixer": "^9.6.1",
-    "babel-eslint": "^10.0.3",
-    "babel-loader": "^8.0.6",
     "chalk": "^4.1.0",
-    "clean-webpack-plugin": "^3.0.0",
-    "copy-webpack-plugin": "^5.0.4",
-    "css-loader": "^3.2.0",
     "dumi": "^1.0.31",
     "file-loader": "^4.2.0",
     "fs-extra": "^9.0.1",
     "glob": "^7.1.4",
-    "mini-css-extract-plugin": "^0.8.0",
     "node-sass": "^4.13.1",
     "ora": "^4.0.4",
-    "progress-bar-webpack-plugin": "^1.12.1",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "rollup": "^2.21.0",
     "rollup-plugin-copy": "^3.3.0",
     "rollup-plugin-extensions": "^0.1.0",
-    "sass-loader": "^8.0.0",
-    "terser-webpack-plugin": "^1.4.1",
-    "typescript": "^3.7.2",
-    "webpack": "^4.39.2",
-    "webpack-bundle-analyzer": "^3.4.1",
-    "webpack-cli": "^3.3.7"
+    "typescript": "^3.7.2"
   }
 }

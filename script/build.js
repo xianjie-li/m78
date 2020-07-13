@@ -8,10 +8,10 @@ const path = require('path');
 const ora = require('ora');
 const chalk = require('chalk');
 const fs = require('fs-extra');
-const { exec } = require('./emit');
+const { exec } = require('./exec');
 
 const pkg = require('../package.json');
-const generateEntry = require('../build/generate-entry');
+const generateEntry = require('./generate-entry');
 
 function externalsDependencies() {
   const deps = Object.keys(pkg.dependencies);
