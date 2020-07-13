@@ -31,7 +31,7 @@ npm install @lxjx/fr
 ## 🍭Usage
 
 ```js
-import Button from '@lxjx/fr/button';
+import Button from '@lxjx/fr/esm/button';
 
 function App() {
   return (
