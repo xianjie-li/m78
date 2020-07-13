@@ -1,0 +1,32 @@
+@import '../../style/index';
+
+.fr-ellipsis {
+  position: relative;
+  overflow: hidden;
+  // 计算padding进行兼容会导致更多的问题
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+
+  &_shadow {
+    position: absolute;
+    display: inline-block;
+    right: 0;
+    width: 4em;
+    z-index: 1;
+    background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0),
+      rgba(255, 255, 255, 0.84) 60%,
+      rgba(255, 255, 255, 0.96) 74%
+    );
+  }
+
+  &.__dark .fr-ellipsis_shadow {
+    background: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0),
+      rgba(0, 0, 0, 0.84) 60%,
+      rgba(0, 0, 0, 0.96) 74%
+    );
+  }
+}

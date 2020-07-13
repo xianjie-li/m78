@@ -13,6 +13,10 @@
       "dom.iterable",
       "esnext"
     ],
+
+//    "declaration": true,
+//    "declarationMap": true,
+//    "outDir": "../libtest",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
@@ -28,10 +32,11 @@
     "src/components/**/*",
     "src/docs/**/*",
     "./app.d.ts",
+    "./script",
     ".eslintrc.js"
-  ],
-  "exclude": [
-    "../src/components/*/style/**",
-    "lib"
   ]
+//  "exclude": [
+////    "../src/components/*/style/**",
+//    "lib"
+//  ]
 }

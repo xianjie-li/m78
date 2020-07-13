@@ -9,3 +9,5 @@ import { registerPositionSave } from '@lxjx/fr/lib/show-from-mouse';
 new ClickEffect();
 
 registerPositionSave();
+
+export default 1;

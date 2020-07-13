@@ -17,12 +17,12 @@ function externalsDependencies() {
   depens.push('@lxjx/fr');
   depens.push('react');
   depens.push('react-dom');
-  return depens.map((key) => new RegExp(`^${key}`));
+  return depens.map(key => new RegExp(`^${key}`));
 }
 
 const libKeys = Object.keys(entrys);
 /* 原样移动样式文件 */
-const copyList = libKeys.map((key) => ({
+const copyList = libKeys.map(key => ({
   from: path.resolve(__dirname, '../src/components/', key, './style/'),
   to: path.resolve(__dirname, '../lib/', key + '/style/'),
 }));
@@ -31,10 +31,11 @@ copyList.push(
   {
     from: path.resolve(__dirname, '../src/components/style/'),
     to: path.resolve(__dirname, '../lib/style/'),
-  }, {
+  },
+  {
     from: path.resolve(__dirname, '../src/components/assets/'),
     to: path.resolve(__dirname, '../lib/assets/'),
-  }
+  },
 );
 
 module.exports = {
@@ -54,11 +55,7 @@ module.exports = {
   },
   optimization: {
     minimize: false,
-    minimizer: [
-      new TerserJSPlugin({
-
-      }),
-    ],
+    minimizer: [new TerserJSPlugin({})],
   },
   externals: externalsDependencies(),
   module: {

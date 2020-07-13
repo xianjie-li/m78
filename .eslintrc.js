@@ -8,5 +8,7 @@ module.exports = {
     'prefer-promise-reject-errors': 'off',
     '@typescript-eslint/naming-convention': 'off',
     '@typescript-eslint/no-unused-expressions': 'off',
+    'no-await-in-loop': 'off',
+    'import/no-extraneous-dependencies': 'off',
   },
 };

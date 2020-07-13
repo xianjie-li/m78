@@ -1,0 +1,89 @@
+@import '../../style/index';
+
+.fr-spin {
+  display: inline-flex;
+  align-items: center;
+  flex-direction: column;
+  line-height: 1;
+  vertical-align: middle;
+  margin: 0 8px;
+  font-size: 22px;
+
+  svg {
+    width: 1.8em !important;
+    height: 1.8em !important;
+  }
+
+  &.__inline {
+    flex-direction: row;
+    .fr-spin_text {
+      margin-left: 8px;
+      margin-top: 0;
+    }
+  }
+
+  &.__full {
+    @include full;
+
+    justify-content: center;
+    position: absolute;
+    background-color: $w-primary;
+    margin: 0;
+    z-index: $z-index;
+  }
+
+  &.__dark {
+    background-color: $b-primary;
+    .fr-spin_text {
+      color: $w-title;
+    }
+  }
+
+  &.__small {
+    font-size: 18px;
+  }
+
+  &.__large {
+    font-size: 26px;
+  }
+}
+
+.fr-spin_text {
+  font-size: $fs-14;
+  color: $b-second;
+  margin-left: 0;
+  margin-top: 8px;
+  user-select: none;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.fr-spin_unit {
+  animation: fr-spin 1.2s linear infinite reverse;
+}
+
+.fr-spin_ellipsis {
+  position: absolute;
+  &::after {
+    content: '';
+    display: inline-block;
+    animation: fr-spin_ellipsis 1s infinite;
+  }
+}
+
+@keyframes fr-spin_ellipsis {
+  0% {
+    content: '';
+  }
+  33% {
+    content: '.';
+  }
+  66% {
+    content: '..';
+  }
+  100% {
+    content: '...';
+  }
+}
