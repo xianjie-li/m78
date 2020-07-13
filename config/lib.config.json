@@ -1,0 +1,6 @@
+{
+  "extends": "../tsconfig.json",
+
+  "declaration": true,
+  "declarationMap": true
+}
