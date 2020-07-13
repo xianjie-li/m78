@@ -14,9 +14,6 @@
       "esnext"
     ],
 
-//    "declaration": true,
-//    "declarationMap": true,
-//    "outDir": "../libtest",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
@@ -34,9 +31,9 @@
     "./app.d.ts",
     "./script",
     ".eslintrc.js"
+  ],
+  "exclude": [
+    "../src/components/*/style/**",
+    "lib"
   ]
-//  "exclude": [
-////    "../src/components/*/style/**",
-//    "lib"
-//  ]
 }

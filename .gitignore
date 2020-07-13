@@ -3,6 +3,8 @@ node_modules
 /dist
 /lib
 lib
+/esm
+/cjs
 
 # local env files
 .env.local

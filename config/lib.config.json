@@ -1,6 +1,15 @@
 {
   "extends": "../tsconfig.json",
-
-  "declaration": true,
-  "declarationMap": true
+  "compilerOptions": {
+    "declaration": true,
+    "declarationMap": true
+  },
+  "include": [
+    "../src/components/**/*",
+    "../app.d.ts"
+  ],
+  "exclude": [
+    "../src/components/*/style/**",
+    "../lib"
+  ]
 }

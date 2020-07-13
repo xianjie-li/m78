@@ -5,9 +5,9 @@
   "license": "MIT",
   "scripts": {
     "gg": "node script/build",
-    "emit": "tsc --emitDeclarationOnly",
+    "emit": "tsc --emitDeclarationOnly -p ./config/lib.config.json --outDir ./esm",
     "prebuild": "npm run lint && npm run typecheck",
-    "build": "webpack --config ./build/webpack.lib.js && tsc --emitDeclarationOnly -p ./build/lib.config.json",
+    "build": "webpack --config ./build/webpack.lib.js && tsc --emitDeclarationOnly -p config/lib.config.json",
     "lint:script": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "lint:prettier": "prettier --check ./src/**/*",
     "lint": "npm run lint:prettier && npm run lint:script",

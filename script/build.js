@@ -10,6 +10,7 @@ const path = require('path');
 const ora = require('ora');
 const chalk = require('chalk');
 const fs = require('fs-extra');
+const { exec } = require('./emit');
 
 const pkg = require('../package.json');
 const generateEntry = require('../build/generate-entry');
@@ -106,13 +107,19 @@ async function build(type = 'esm') {
 
     try {
       const bundle = await rollup.rollup(conf.input);
+
       await bundle.write(conf.output);
+
       spinner.succeed(`${conf.name} compile successfully.`);
     } catch (e) {
       spinner.stop();
       console.log(e);
     }
   }
+
+  console.log(chalk.blue(`${type} generate declaration...`));
+
+  await exec(`tsc --emitDeclarationOnly -p ./config/lib.config.json --outDir ./${type}`);
 
   console.log(chalk.blue(`${chalk.cyan(type)} build complete.`));
 }
@@ -122,8 +129,10 @@ async function build(type = 'esm') {
 
   try {
     await build().catch(err => console.log(err));
-    // spinner.text = 'cjs building...';
-    // await build('cjs').catch(err => console.log(err));
+
+    spinner.text = 'cjs building...';
+    await build('cjs').catch(err => console.log(err));
+
     // spinner.text = 'umd building...';
     // await build('umd').catch(err => console.log(err));
   } catch (e) {
