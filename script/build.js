@@ -1,5 +1,3 @@
-const scss = require('rollup-plugin-scss');
-
 const { babel } = require('@rollup/plugin-babel');
 const { nodeResolve } = require('@rollup/plugin-node-resolve');
 const commonjs = require('@rollup/plugin-commonjs');
@@ -30,11 +28,6 @@ function externalsDependencies() {
 const external = externalsDependencies();
 
 const entry = generateEntry();
-
-// const entry = {
-//   test1: path.resolve(__dirname, '../src/components/test1/index.ts'),
-//   test2: path.resolve(__dirname, '../src/components/test2/index.ts'),
-// };
 
 async function build(type = 'esm') {
   fs.removeSync(path.resolve(__dirname, '../', type));
@@ -76,15 +69,12 @@ async function build(type = 'esm') {
           targets: copyList,
           hook: 'writeBundle',
         }),
-        // scss({ output: `style/css.css` }), // TODO: css打包
       ],
     };
 
     const output = {
       file: path.resolve(__dirname, `../${type}`, name, 'index.js'),
       format: type,
-      // name: type === 'umd' ? `Fr.${name}` : undefined,
-      // name,
       exports: 'named',
     };
 
@@ -131,6 +121,7 @@ async function build(type = 'esm') {
     await build().catch(err => console.log(err));
 
     spinner.text = 'cjs building...';
+
     await build('cjs').catch(err => console.log(err));
 
     // spinner.text = 'umd building...';

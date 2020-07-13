@@ -5463,11 +5463,6 @@ estraverse@^5.1.0:
   resolved "https://registry.npm.taobao.org/estraverse/download/estraverse-5.1.0.tgz#374309d39fd935ae500e7b92e8a6b4c720e59642"
   integrity sha1-N0MJ05/ZNa5QDnuS6Ka0xyDllkI=
 
-estree-walker@^0.6.1:
-  version "0.6.1"
-  resolved "https://registry.npm.taobao.org/estree-walker/download/estree-walker-0.6.1.tgz#53049143f40c6eb918b23671d1fe3219f3a1b362"
-  integrity sha1-UwSRQ/QMbrkYsjZx0f4yGfOhs2I=
-
 estree-walker@^1.0.1:
   version "1.0.1"
   resolved "https://registry.npm.taobao.org/estree-walker/download/estree-walker-1.0.1.tgz#31bc5d612c96b704106b477e6dd5d8aa138cb700"
@@ -8765,7 +8760,7 @@ node-releases@^1.1.58:
   resolved "https://registry.npm.taobao.org/node-releases/download/node-releases-1.1.58.tgz#8ee20eef30fa60e52755fcc0942def5a734fe935"
   integrity sha1-juIO7zD6YOUnVfzAlC3vWnNP6TU=
 
-node-sass@4, node-sass@^4.13.1:
+node-sass@^4.13.1:
   version "4.14.1"
   resolved "https://registry.npm.taobao.org/node-sass/download/node-sass-4.14.1.tgz#99c87ec2efb7047ed638fb4c9db7f3a42e2217b5"
   integrity sha1-mch+wu+3BH7WOPtMnbfzpC4iF7U=
@@ -11259,21 +11254,6 @@ rollup-plugin-extensions@^0.1.0:
   version "0.1.0"
   resolved "https://registry.npm.taobao.org/rollup-plugin-extensions/download/rollup-plugin-extensions-0.1.0.tgz#a2e6922232245e1355ebe6972a89e57390d29cbb"
   integrity sha1-ouaSIjIkXhNV6+aXKonlc5DSnLs=
-
-rollup-plugin-scss@^2.5.0:
-  version "2.5.0"
-  resolved "https://registry.npm.taobao.org/rollup-plugin-scss/download/rollup-plugin-scss-2.5.0.tgz#ce97d829b27d053007a0e7bd22269eb9af3e7705"
-  integrity sha1-zpfYKbJ9BTAHoOe9Iiaeua8+dwU=
-  dependencies:
-    node-sass "4"
-    rollup-pluginutils "2"
-
-rollup-pluginutils@2:
-  version "2.8.2"
-  resolved "https://registry.npm.taobao.org/rollup-pluginutils/download/rollup-pluginutils-2.8.2.tgz#72f2af0748b592364dbd3389e600e5a9444a351e"
-  integrity sha1-cvKvB0i1kjZNvTOJ5gDlqURKNR4=
-  dependencies:
-    estree-walker "^0.6.1"
 
 rollup@^2.21.0:
   version "2.21.0"
