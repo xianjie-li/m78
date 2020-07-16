@@ -1,0 +1,199 @@
+@import '../../style/index';
+
+.fr-dates {
+  display: inline-block;
+  background: $component-background;
+  border-radius: $border-radius;
+  box-shadow: $shadow-1;
+  width: 320px;
+
+  &_head, &_foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 40px;
+  }
+
+  &_head, &_foot, &_body {
+    padding: $space-12 10px;
+  }
+
+  &_head {
+    border-bottom: 1px solid $b-border;
+  }
+
+  &_foot {
+    border-top: 1px solid $b-border;
+  }
+
+  &_body {
+    min-height: 60px;
+    user-select: none;
+    overflow: hidden;
+  }
+
+  &_btns {
+    .fr-btn {
+      margin: 0;
+    }
+  }
+
+  &_label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 4px;
+    font-weight: bold;
+
+    .anticon {
+      margin: 0 8px;
+
+      &:hover {
+        color: $color;
+        cursor: pointer;
+      }
+    }
+  }
+
+  &_time {
+    padding: 0 4px;
+    margin-left: 4px;
+    cursor: pointer;
+
+    .fr-btn {
+      margin: 0;
+    }
+
+    @include effect-bg;
+  }
+
+  &_list {
+    height: 231px;
+
+    .fr-carousel_item {
+      box-shadow: none;
+    }
+  }
+
+  &_list-item {
+
+  }
+
+  &_day-item {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100 / 7 + 0%;
+    margin-bottom: 4%;
+
+    &::before {
+      content: "";
+      padding-top: 80%;
+      float: left;
+    }
+
+    span {
+      position: absolute;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 80%;
+      height: 100%;
+      border-radius: $border-radius;
+      font-weight: bold;
+
+      @include effect-bg;
+    }
+
+    &.__gray {
+      color: $b-disable;
+    }
+
+    &.__active {
+      span {
+        color: #fff;
+        background-color: $color;
+      }
+    }
+
+    &.__focus {
+      span {
+        border: 1px dashed $color;
+        background-color: transparent;
+      }
+    }
+
+    &.__disabled {
+      span {
+        background-color: $b-divider;
+        color: $b-disable;
+        cursor: not-allowed;
+      }
+    }
+
+    &.__activeRang {
+      color: #fff;
+      background-color: $color-6;
+
+      &:nth-of-type(1) {
+        border-radius: 6px 0 0 6px;
+      }
+
+      span {
+        color: #fff;
+        background-color: transparent;
+      }
+
+      &.__disabled {
+        background-color: $b-divider;
+        span {
+          color: $b-disable;
+        }
+      }
+
+      &:hover {
+        opacity: 0.8;
+      }
+
+      &:active {
+        opacity: 0.7;
+      }
+    }
+
+    &.__disabledRang {
+      color: $b-disable;
+      background-color: $b-divider;
+      cursor: not-allowed;
+
+      span {
+        color: $b-disable;
+        cursor: not-allowed;
+        background-color: transparent;
+      }
+    }
+
+    &.__firstRang {
+      border-radius: $border-radius 0 0 $border-radius;
+    }
+
+    &.__lastRang {
+      border-radius: 0 $border-radius $border-radius 0;
+    }
+
+    &.__title {
+      margin-bottom: 0;
+
+      span {
+        font-weight: 400;
+        cursor: auto;
+        background-color: transparent !important;
+      }
+
+      &::before {
+        padding-top: 60%;
+      }
+    }
+
+  }
+}
