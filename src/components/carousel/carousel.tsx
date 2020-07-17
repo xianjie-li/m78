@@ -6,6 +6,7 @@ import _clamp from 'lodash/clamp';
 
 import cls from 'classnames';
 
+import { dumpFn } from '@lxjx/utils';
 import { ComponentBaseProps } from '../types/types';
 
 export interface CarouselProps extends ComponentBaseProps {
@@ -25,14 +26,16 @@ export interface CarouselProps extends ComponentBaseProps {
   control?: boolean;
   /** 强制使用number计数器 */
   forceNumberControl?: boolean;
-  /** 页码改变时触发，在mounted时也会触发，并且会传入first=true */
-  onChange?: (currentPage: number, first?: boolean) => void;
   /** 自动轮播 */
   autoplay?: number;
   /** 是否开启鼠标滚轮监听 */
   wheel?: boolean;
   /** 是否开启drag */
   drag?: boolean;
+  /** 页码改变时触发，在mounted时也会触发，并且会传入first=true */
+  onChange?: (currentPage: number, first?: boolean) => void;
+  /** 当发生任何可能切换页面的操作(drag、滚动)时触发 */
+  onWillChange?: () => void;
 }
 
 export interface CarouselRef {
@@ -74,6 +77,7 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
       className,
       wheel = true,
       drag = true,
+      onWillChange = dumpFn,
     },
     ref,
   ) => {
@@ -142,6 +146,9 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
 
     const bind = useGesture(
       {
+        onDragStart() {
+          onWillChange();
+        },
         onDrag({
           event,
           down,
@@ -228,7 +235,10 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
       }
       page.current = currentPage;
       update();
-      set({ offset: -(currentPage * size), immediate });
+      set({
+        offset: -(currentPage * size),
+        immediate,
+      });
     }
 
     /** 防止上下页超出页码区间 */

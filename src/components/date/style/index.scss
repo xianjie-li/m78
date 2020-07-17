@@ -30,6 +30,7 @@
     min-height: 60px;
     user-select: none;
     overflow: hidden;
+    padding-bottom: 0;
   }
 
   &_btns {
@@ -69,6 +70,7 @@
 
   &_list {
     height: 231px;
+    margin-top: $space-4;
 
     .fr-carousel_item {
       box-shadow: none;
@@ -79,13 +81,23 @@
 
   }
 
-  &_day-item {
+  &.__year {
+    .fr-dates_date-item {
+      width: 100 / 3 + 0%;
+
+      &::before {
+        padding-top: 46%;
+      }
+    }
+  }
+
+  &_date-item {
     position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     width: 100 / 7 + 0%;
-    margin-bottom: 4%;
+    margin-bottom: 2%;
 
     &::before {
       content: "";

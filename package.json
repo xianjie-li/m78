@@ -45,6 +45,7 @@
     "async-validator": "^3.3.0",
     "classnames": "^2.2.6",
     "lodash": "^4.17.15",
+    "moment": "^2.27.0",
     "prevent-top-pull-down": "^1.0.1",
     "rc-field-form": "^1.4.0",
     "react-spring": "^8.0.27",
