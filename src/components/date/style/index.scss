@@ -5,17 +5,14 @@
   background: $component-background;
   border-radius: $border-radius;
   box-shadow: $shadow-1;
-  width: 320px;
+  width: 300px;
 
   &_head, &_foot {
     display: flex;
     align-items: center;
     justify-content: space-between;
     min-height: 40px;
-  }
-
-  &_head, &_foot, &_body {
-    padding: $space-12 10px;
+    padding: 8px 10px;
   }
 
   &_head {
@@ -30,7 +27,7 @@
     min-height: 60px;
     user-select: none;
     overflow: hidden;
-    padding-bottom: 0;
+    padding: $space-12 10px;
   }
 
   &_btns {
@@ -43,33 +40,17 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-bottom: 4px;
+    padding: 0 6px 12px;
     font-weight: bold;
-
-    .anticon {
-      margin: 0 8px;
-
-      &:hover {
-        color: $color;
-        cursor: pointer;
-      }
-    }
   }
 
   &_time {
-    padding: 0 4px;
-    margin-left: 4px;
-    cursor: pointer;
-
     .fr-btn {
       margin: 0;
     }
-
-    @include effect-bg;
   }
 
   &_list {
-    height: 231px;
     margin-top: $space-4;
 
     .fr-carousel_item {
@@ -79,16 +60,6 @@
 
   &_list-item {
 
-  }
-
-  &.__year {
-    .fr-dates_date-item {
-      width: 100 / 3 + 0%;
-
-      &::before {
-        padding-top: 46%;
-      }
-    }
   }
 
   &_date-item {
@@ -105,46 +76,41 @@
       float: left;
     }
 
-    span {
-      position: absolute;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 80%;
-      height: 100%;
-      border-radius: $border-radius;
-      font-weight: bold;
+    &.__yearMonth {
+      width: 100 / 3 + 0%;
 
-      @include effect-bg;
+      &::before {
+        padding-top: 46%;
+      }
     }
 
     &.__gray {
       color: $b-disable;
     }
 
-    &.__active {
-      span {
-        color: #fff;
-        background-color: $color;
-      }
-    }
-
     &.__focus {
-      span {
+      .fr-dates_date-item-inner {
         border: 1px dashed $color;
         background-color: transparent;
       }
     }
 
+    &.__active {
+      .fr-dates_date-item-inner {
+        color: #fff;
+        background-color: $color;
+      }
+    }
+
     &.__disabled {
-      span {
+      .fr-dates_date-item-inner {
         background-color: $b-divider;
         color: $b-disable;
         cursor: not-allowed;
       }
     }
 
-    &.__activeRang {
+    &.__activeRange {
       color: #fff;
       background-color: $color-6;
 
@@ -152,14 +118,14 @@
         border-radius: 6px 0 0 6px;
       }
 
-      span {
+      .fr-dates_date-item-inner {
         color: #fff;
         background-color: transparent;
       }
 
       &.__disabled {
         background-color: $b-divider;
-        span {
+        .fr-dates_date-item-inner {
           color: $b-disable;
         }
       }
@@ -173,30 +139,30 @@
       }
     }
 
-    &.__disabledRang {
+    &.__disabledRange {
       color: $b-disable;
       background-color: $b-divider;
       cursor: not-allowed;
 
-      span {
+      .fr-dates_date-item-inner {
         color: $b-disable;
         cursor: not-allowed;
         background-color: transparent;
       }
     }
 
-    &.__firstRang {
-      border-radius: $border-radius 0 0 $border-radius;
+    &.__firstRange {
+      border-radius: 4px 0 0 4px;
     }
 
-    &.__lastRang {
-      border-radius: 0 $border-radius $border-radius 0;
+    &.__lastRange {
+      border-radius: 0 4px 4px 0;
     }
 
     &.__title {
       margin-bottom: 0;
 
-      span {
+      .fr-dates_date-item-inner {
         font-weight: 400;
         cursor: auto;
         background-color: transparent !important;
@@ -206,6 +172,169 @@
         padding-top: 60%;
       }
     }
+  }
 
+  &_date-item-inner {
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+    height: 100%;
+    border-radius: $border-radius;
+    //font-weight: bold;
+    transition: none !important;
+
+    @include effect-bg;
+  }
+
+  &_arrow {
+    display: inline-block;
+    color: $b-second;
+
+    &::after, &::before {
+      position: relative;
+      content: '';
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 2px solid transparent;
+      border-left-color: currentColor;
+      border-bottom-color: currentColor;
+      transform: rotate(45deg);
+      border-radius: 3px;
+    }
+
+    &::after {
+      left: -4px;
+    }
+
+    &.__single::after {
+      display: none;
+    }
+
+    &:hover {
+      color: $color;
+      cursor: pointer;
+    }
+
+    &.__reverse {
+      transform: rotate(180deg);
+    }
+  }
+
+  &_effect-text {
+    display: inline-block;
+    padding: 0 4px;
+    cursor: pointer;
+
+    @include effect-bg;
+
+    &:hover {
+      color: $color;
+    }
+  }
+
+  &.__time {
+    .fr-dates_body {
+      padding: 0 10px;
+    }
+
+    .fr-dates_foot {
+      border-top: none;
+    }
+  }
+
+  &_picker {
+    margin: 0 -10px;
+    margin-top: -1px;
+  }
+
+  &_picker-item {
+    display: flex;
+    border-top: 1px solid $b-border;
+    border-bottom: 1px solid $b-border;
+
+    & + .fr-dates_picker-item-diver {
+      //margin-top: 12px;
+    }
+  }
+
+  &_picker-item-diver {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    margin: 4px;
+
+    >span {
+      display: inline-block;
+      background-color: #fff;
+      padding: 0 12px;
+      z-index: 1;
+    }
+  }
+
+  &_picker-label {
+    padding: 0 $space-12;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  &_picker-column {
+    flex: 1;
+    text-align: center;
+    height: 150px;
+    overflow-y: scroll;
+    border-radius: 2px;
+
+    & + & {
+      border-left: 1px solid $b-border;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: transparent;
+    }
+
+    &:hover, &:active {
+      &::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.1);
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: #9e9e9e;
+      }
+    }
+  }
+
+  &_picker-time {
+    height: 30px;
+    line-height: 30px;
+    padding-left: 6px;
+    font-size: 15px;
+
+    &.__active {
+      font-weight: bold;
+      color: $color;
+      font-size: 18px;
+
+      >span {
+        font-weight: 400;
+      }
+    }
+
+    &.__disabled {
+      cursor: not-allowed;
+      color: $b-border;
+      background-color: transparent !important;
+      > span {
+        color: $b-border !important;
+      }
+    }
+
+    @include effect-bg;
   }
 }

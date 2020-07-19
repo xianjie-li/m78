@@ -1,12 +1,21 @@
-import React, { ReactElement, useEffect, useRef, useState, useImperativeHandle } from 'react';
+import React, {
+  ReactElement,
+  useEffect,
+  useRef,
+  useState,
+  useImperativeHandle,
+  useMemo,
+} from 'react';
 import { useMeasure, useUpdate, useInterval } from 'react-use';
 import { animated, useSpring } from 'react-spring';
 import { useGesture } from 'react-use-gesture';
 import _clamp from 'lodash/clamp';
+import _throttle from 'lodash/throttle';
 
 import cls from 'classnames';
 
 import { dumpFn } from '@lxjx/utils';
+import { useFn } from '@lxjx/hooks';
 import { ComponentBaseProps } from '../types/types';
 
 export interface CarouselProps extends ComponentBaseProps {
@@ -36,6 +45,8 @@ export interface CarouselProps extends ComponentBaseProps {
   onChange?: (currentPage: number, first?: boolean) => void;
   /** 当发生任何可能切换页面的操作(drag、滚动)时触发 */
   onWillChange?: () => void;
+  /** onPageSetup */
+  onPageSetup?: () => void;
 }
 
 export interface CarouselRef {
@@ -85,6 +96,7 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
     const [children, loopValid] = loopChildrenHandle(_children, loop);
     // 获取包裹元素的尺寸等信息
     const [wrapRef, { width, height }] = useMeasure();
+
     // 用于阻止轮播组件内图片的drag操作
     const innerWrap = useRef<HTMLDivElement>(null!);
 
@@ -92,8 +104,13 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
     const size = vertical ? height : width;
     // 当前页码，当为loop时，所有页码的基准值要+1
     const page = useRef(loopValid ? initPage + 1 : initPage);
+
     // 切换动画相关
-    const [spProp, set] = useSpring(() => ({ offset: page.current * size, scale: 1 }));
+    const [spProp, set] = useSpring(() => ({
+      offset: page.current * size,
+      scale: 1,
+      config: { clamp: true },
+    }));
 
     const update = useUpdate();
 
@@ -116,12 +133,10 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
       function childChange() {
         page.current = loopValid ? initPage + 1 : initPage;
         goTo(page.current, true);
-        /* 解决图片的拖动问题 */
-        // Array.from(innerWrap.current.querySelectorAll('img'))
-        //   .forEach(item => {
-        //     item.setAttribute('draggable', 'false');
-        //   });
-        // eslint-disable-next-line
+        // /* 解决图片的拖动问题 */
+        // Array.from(innerWrap.current.querySelectorAll('img')).forEach(item => {
+        //   item.setAttribute('draggable', 'false');
+        // });
       },
       [children.length],
     );
@@ -147,6 +162,9 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
     const bind = useGesture(
       {
         onDragStart() {
+          onWillChange();
+        },
+        onWheelStart() {
           onWillChange();
         },
         onDrag({
@@ -238,6 +256,9 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
       set({
         offset: -(currentPage * size),
         immediate,
+        // onFrame(ds) {
+        //   console.log(111, ds);
+        // },
       });
     }
 

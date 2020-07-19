@@ -1,5 +1,15 @@
 import moment, { Moment } from 'moment';
 
+export const DATE_FORMAT_YEAR = 'YYYY';
+
+export const DATE_FORMAT_MONTH = 'YYYY-MM';
+
+export const DATE_FORMAT_DATE = 'YYYY-MM-DD';
+
+export const DATE_FORMAT_TIME = 'HH:mm:ss';
+
+export const DATE_FORMAT_DATE_TIME = `${DATE_FORMAT_DATE} ${DATE_FORMAT_TIME}`;
+
 /** 根据年、月获取用于显示的moment列表 */
 export function getDates(year: number, month: number) {
   const base = `${year}-${month}`;
@@ -41,12 +51,52 @@ export function getDates(year: number, month: number) {
   return moments;
 }
 
-/** 传入的moment获取数组 [上一月，当前，下一月] */
-export function getListMoments(m: Moment) {
-  const prev = m.clone();
-  const next = m.clone();
-  prev.subtract(1, 'month');
-  next.add(1, 'month');
+/** 根据年、月获取用于显示的月moment列表 */
+export function getMonths(year: number) {
+  const ms: Moment[] = [];
 
-  return [prev, m.clone(), next];
+  for (let i = 0; i < 12; i++) {
+    ms.push(moment([year, i]));
+  }
+
+  return ms;
+}
+
+/** 根据年获取与该年相邻的前4年和后7年和对应区间的可读字符 */
+export function getYears(year: number) {
+  const ms: Moment[] = [];
+
+  for (let i = 0; i < 5; i++) {
+    ms.unshift(moment([year - i]));
+  }
+
+  for (let i = 1; i < 8; i++) {
+    ms.push(moment([year + i]));
+  }
+
+  return [ms, `${year - 4} ~ ${year + 7}`] as const;
+}
+
+/** 根据年月日获取时间 */
+export function getTimes() {
+  const time = {
+    h: [] as number[],
+    m: [] as number[],
+    s: [] as number[],
+  };
+
+  for (let i = 0; i < 24; i++) {
+    time.h.push(i);
+  }
+
+  for (let i = 0; i < 60; i++) {
+    time.m.push(i);
+    time.s.push(i);
+  }
+
+  return time;
+}
+
+export function formatDate(m: Moment, format: string) {
+  return m.format(format);
 }

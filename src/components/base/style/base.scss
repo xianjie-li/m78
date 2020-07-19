@@ -1,7 +1,7 @@
 @import '../../style/index';
 
 @media (min-width: $sm) {
-  .fr-scroll-bar {
+  .fr-scroll-bar, html {
     ::-webkit-scrollbar {
       width: 5px;
       height: 5px;
@@ -9,7 +9,7 @@
 
     ::-webkit-scrollbar-track {
       border-radius: 6px;
-      background-color: rgba(0, 0, 0, 0.1);
+      background: rgba(0, 0, 0, 0.1);
     }
 
     ::-webkit-scrollbar-thumb {
