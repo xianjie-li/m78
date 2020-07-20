@@ -111,6 +111,8 @@ async function build(type = 'esm') {
 
   await exec(`tsc --emitDeclarationOnly -p ./config/lib.config.json --outDir ./${type}`);
 
+  // tsc foo.ts --outFile foo.js --declaration --module system
+
   console.log(chalk.blue(`${chalk.cyan(type)} build complete.`));
 }
 

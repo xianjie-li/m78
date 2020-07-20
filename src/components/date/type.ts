@@ -1,6 +1,8 @@
 import { Moment } from 'moment';
 import { FormLikeWithExtra, FormLike } from '@lxjx/hooks';
 import React from 'react';
+import { SetState } from '@lxjx/hooks/dist/type';
+import { AnyFunction } from '@lxjx/utils';
 import { ComponentBaseProps } from '../types/types';
 
 export enum DateType {
@@ -10,11 +12,11 @@ export enum DateType {
   TIME = 'time',
 }
 
-interface Base {}
+type DateTypeUnion = 'date' | 'month' | 'year' | 'time';
 
 export interface DatesProps extends ComponentBaseProps, FormLikeWithExtra<Moment> {
   /** 选择器类型 */
-  type?: DateType;
+  type?: DateType | DateTypeUnion /* 接受传 DateType 或 字面量 */;
   /** 是否包含时间 */
   hasTime?: boolean;
 }
@@ -67,4 +69,22 @@ export interface TimeProps extends FormLike<TimeValue> {
   ): boolean | void;
   /** 传递给disabledTime函数的额外参数 */
   disabledTimeExtra?: any;
+}
+
+/** 拆分代码时在被拆分代码中被依赖的一些东西 */
+export interface ShareMetas {
+  nowM: Moment;
+  state: {
+    currentM: Moment;
+    type: DateType | DateTypeUnion;
+  };
+  setState: SetState<ShareMetas['state']>;
+  value: string;
+  setValue: AnyFunction;
+  self: {
+    cValueMoment: Moment;
+  };
+  hasTime: boolean;
+  getCurrentTime(): TimeValue;
+  type: DateType | DateTypeUnion;
 }

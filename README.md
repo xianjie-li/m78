@@ -58,14 +58,17 @@ function App() {
 
 
 
-打包组件目录是支持使用[babel-plugin-import](<https://github.com/ant-design/babel-plugin-import>)的,  不过不推荐, 一是对这样对idea和ts来说很怪异，支持不好；二是，组件通常会包含多个命名导出，如 `import Form, { Item, Title, Footer, FormProps } from '@lxjx/fr/esm/form'`。
+打包组件目录支持使用[babel-plugin-import](<https://github.com/ant-design/babel-plugin-import>),  不过不推荐, 一是对这样对idea和ts来说很怪异，支持不好；二是，组件通常会包含多个命名导出，如 `import Form, { Item, Title, Footer, FormProps } from '@lxjx/fr/esm/form'`。
 
 
+<br>
 
 ### `样式` 
 
 `fr` 的样式采用后编译(开发时编译), 你需要为你的`webpack`或其他打包器添加`scss`文件支持才能正常使用。
 
+
+<br>
 
 
 ## 🎄其他
