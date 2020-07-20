@@ -10,6 +10,9 @@ export const DATE_FORMAT_TIME = 'HH:mm:ss';
 
 export const DATE_FORMAT_DATE_TIME = `${DATE_FORMAT_DATE} ${DATE_FORMAT_TIME}`;
 
+// 支持的value解析格式
+export const DATE_DEFAULT_PARSE = [DATE_FORMAT_DATE_TIME, 'YYYY/MM/DD HH:mm:ss'];
+
 /** 根据年、月获取用于显示的moment列表 */
 export function getDates(year: number, month: number) {
   const base = `${year}-${month}`;

@@ -5,13 +5,6 @@ import { createRandString } from '@lxjx/utils';
 import { getTimes } from './utils';
 import { TimeProps, TimeValue } from './type';
 
-// function disabledTime(arg: TimeValue & { key: keyof TimeValue; val: number }, extra: any) {
-//   if (arg.key === 'h' && arg.val % 2 === 0) return true;
-//   if (arg.h === 5 && arg.key === 'm') {
-//     if (arg.val < 40) return true;
-//   }
-// }
-
 function getSelector(id: string, key: string, val: number) {
   return `${key}-${val}-${id}`;
 }
@@ -81,7 +74,8 @@ const Time: React.FC<TimeProps> = props => {
             );
 
             if (enableVal) {
-              patchValue(key, enableVal);
+              // !!! 不要在render中设置状态
+              setTimeout(() => patchValue(key, enableVal));
             }
           }
 
@@ -104,6 +98,10 @@ const Time: React.FC<TimeProps> = props => {
             </div>
           );
         })}
+        <div className="fr-dates_picker-time __plain" />
+        <div className="fr-dates_picker-time __plain" />
+        <div className="fr-dates_picker-time __plain" />
+        <div className="fr-dates_picker-time __plain" />
       </div>
     );
   }

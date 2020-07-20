@@ -1,9 +1,10 @@
 import React, { useMemo, useState } from 'react';
 import Button from '@lxjx/fr/lib/button';
-import { useFn, useFormState, useSelf, useSetState } from '@lxjx/hooks';
-import moment, { Moment, unitOfTime } from 'moment';
+import { useFormState, useSelf, useSetState } from '@lxjx/hooks';
+import moment, { Moment } from 'moment';
 import cls from 'classnames';
 
+import { DATE_DEFAULT_PARSE, DATE_FORMAT_DATE } from '@/components/date/utils';
 import {
   staticRenderCheckedValue,
   staticRenderDate,
@@ -11,12 +12,12 @@ import {
   staticRenderTabBtns,
   staticRenderYear,
 } from './renders';
-import { DateItemProps, DatesProps, DateType, TimeProps, ShareMetas } from './type';
+import { DatesProps, DateType, ShareMetas } from './type';
 import Time from './Time';
 import { useDateUIController, useHandlers } from './hooks';
 
 const Dates: React.FC<DatesProps> = props => {
-  const { type = DateType.DATE, hasTime = true } = props;
+  const { type = DateType.DATE, hasTime = false } = props;
 
   /**  当前时间 */
   const [nowM] = useState(() => moment());
@@ -38,7 +39,15 @@ const Dates: React.FC<DatesProps> = props => {
   /** 同步value到cValueMoment(useMemo执行时机比effect更快) */
   useMemo(() => {
     if (value) {
-      self.cValueMoment = moment(value); // 使用宽容模式来兼容更多value格式
+      if (type === DateType.TIME) {
+        // 作为纯时间组件使用时，拼接为当天
+        self.cValueMoment = moment(
+          `${moment().format(DATE_FORMAT_DATE)} ${value}`,
+          DATE_DEFAULT_PARSE,
+        );
+      } else {
+        self.cValueMoment = moment(value, DATE_DEFAULT_PARSE); // 使用宽容模式来兼容更多value格式
+      }
     }
   }, [value]);
 
@@ -52,6 +61,7 @@ const Dates: React.FC<DatesProps> = props => {
     hasTime,
     getCurrentTime,
     type,
+    props,
   };
 
   /** 外部化一控制函数 */
@@ -72,7 +82,7 @@ const Dates: React.FC<DatesProps> = props => {
     };
   }
 
-  const renderCheckedValue = () => staticRenderCheckedValue(share);
+  const renderCheckedValue = () => staticRenderCheckedValue(share, controllers);
 
   const renderDate = () => staticRenderDate(share, controllers, handlers);
 
@@ -88,6 +98,9 @@ const Dates: React.FC<DatesProps> = props => {
       <Time
         value={getCurrentTime()}
         onChange={onCheckTime}
+        disabledTime={props.disabledTime}
+        hideDisabled={props.hideDisabledTime}
+        disabledTimeExtra={self.cValueMoment}
         // label={
         //   <span>
         //     <span>开始:</span> 2020-07-24

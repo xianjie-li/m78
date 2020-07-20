@@ -1,7 +1,7 @@
-import { unitOfTime } from 'moment';
+import moment, { unitOfTime } from 'moment';
 import { useFn } from '@lxjx/hooks';
-import { DateItemProps, DateType, TimeProps, ShareMetas } from './type';
-import { DATE_FORMAT_DATE_TIME } from './utils';
+import { DateItemProps, DateType, ShareMetas, TimeProps } from './type';
+import { DATE_FORMAT_DATE_TIME, DATE_FORMAT_TIME } from './utils';
 
 /** 简化主文件, 获取更新当前选择器数据和位置的一些函数 */
 export function useDateUIController({ state, setState }: ShareMetas) {
@@ -84,7 +84,7 @@ export function useDateUIController({ state, setState }: ShareMetas) {
 
 /** 简化主文件, 外部化一些事件处理器 */
 export function useHandlers(
-  { hasTime, setValue, getCurrentTime, self, type, state, setState }: ShareMetas,
+  { hasTime, setValue, getCurrentTime, self, type, state, setState, nowM }: ShareMetas,
   { toTime }: ReturnType<typeof useDateUIController>,
 ) {
   /** 选中日期项 */
@@ -103,15 +103,29 @@ export function useHandlers(
 
   /** 选中时间 */
   const onCheckTime: TimeProps['onChange'] = useFn(({ h, m, s }) => {
-    const cM = self.cValueMoment.clone();
+    // 如果是单纯的时间选择，则以当天时间设置moment返回，否则根据已选时间设置
 
-    cM.set({
-      hour: h,
-      minute: m,
-      second: s,
-    });
+    if (type === DateType.TIME) {
+      const cM = nowM.clone();
 
-    setValue(cM.format(DATE_FORMAT_DATE_TIME), cM);
+      cM.set({
+        hour: h,
+        minute: m,
+        second: s,
+      });
+
+      setValue(cM.format(DATE_FORMAT_TIME), cM);
+    } else {
+      const cM = self.cValueMoment.clone();
+
+      cM.set({
+        hour: h,
+        minute: m,
+        second: s,
+      });
+
+      setValue(cM.format(DATE_FORMAT_DATE_TIME), cM);
+    }
   });
 
   /** 选中月 */

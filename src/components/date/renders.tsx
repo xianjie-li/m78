@@ -1,3 +1,5 @@
+import Button from '@lxjx/fr/lib/button';
+import React from 'react';
 import {
   DATE_FORMAT_DATE,
   DATE_FORMAT_MONTH,
@@ -6,39 +8,37 @@ import {
   getDates,
   getMonths,
   getYears,
-} from '@/components/date/utils';
-import DateItem from '@/components/date/DateItem';
-import { DateType, ShareMetas } from '@/components/date/type';
-import React from 'react';
-import { useDateUIController, useHandlers } from '@/components/date/hooks';
-import { Moment } from 'moment';
-import Button from '@/components/button';
+} from './utils';
+import { DateType, ShareMetas } from './type';
+import { useDateUIController, useHandlers } from './hooks';
+import DateItem from './DateItem';
 
-function disabledDate(mmt: Moment, type: any) {
-  if (mmt.isBefore('2020-07-16', type)) {
-    return true;
-  }
-}
+const placeholderMaps = {
+  [DateType.YEAR]: '请选择年份',
+  [DateType.MONTH]: '请选择月份',
+  [DateType.DATE]: '请选择日期',
+  [DateType.TIME]: '请选择时间 ',
+};
 
 /**  渲染选择结果 */
-export function staticRenderCheckedValue({ self, hasTime, type, value }: ShareMetas) {
+export function staticRenderCheckedValue(
+  { self, hasTime, type, value }: ShareMetas,
+  { toTime }: ReturnType<typeof useDateUIController>,
+) {
   if (!value) {
-    const maps = {
-      [DateType.YEAR]: '请选择年份',
-      [DateType.MONTH]: '请选择月份',
-      [DateType.DATE]: '请选择日期',
-      [DateType.TIME]: '请选择时间 ',
-    };
-
-    return <div>{maps[type]}</div>;
+    return <div>{placeholderMaps[type]}</div>;
   }
 
   if (type === DateType.DATE) {
     return (
       <div>
-        {self.cValueMoment.format(DATE_FORMAT_DATE)}
+        <span>{self.cValueMoment.format(DATE_FORMAT_DATE)}</span>
         {hasTime && (
-          <span className="color-primary fr-dates_time fr-dates_effect-text" title="点击选择">
+          <span
+            onClick={toTime}
+            className="color-primary fr-dates_time fr-dates_effect-text"
+            title="点击选择"
+          >
             {self.cValueMoment.format(DATE_FORMAT_TIME)}
           </span>
         )}
@@ -53,11 +53,15 @@ export function staticRenderCheckedValue({ self, hasTime, type, value }: ShareMe
   if (type === DateType.YEAR) {
     return <div>{self.cValueMoment.format(DATE_FORMAT_YEAR)}年</div>;
   }
+
+  if (type === DateType.TIME) {
+    return <div>{self.cValueMoment.format(DATE_FORMAT_TIME)}</div>;
+  }
 }
 
 /** 日期选择 */
 export function staticRenderDate(
-  { self, state, nowM }: ShareMetas,
+  { self, state, nowM, props }: ShareMetas,
   {
     onCurrentChange,
     prevY,
@@ -117,7 +121,7 @@ export function staticRenderDate(
       <div className="fr-dates_list">
         {getDates(state.currentM.year(), state.currentM.month() + 1).map(mm => (
           <DateItem
-            disabledDate={disabledDate}
+            disabledDate={props.disabledDate}
             itemMoment={mm}
             currentMoment={state.currentM}
             checkedMoment={self.cValueMoment}
@@ -135,7 +139,7 @@ export function staticRenderDate(
 
 /** 月份选择 */
 export function staticRenderMonth(
-  { self, state, nowM }: ShareMetas,
+  { self, state, nowM, props }: ShareMetas,
   { prevY, toYear, nextY }: ReturnType<typeof useDateUIController>,
   { onCheckMonth }: ReturnType<typeof useHandlers>,
 ) {
@@ -154,7 +158,7 @@ export function staticRenderMonth(
       <div className="fr-dates_list">
         {getMonths(state.currentM.year()).map(mm => (
           <DateItem
-            disabledDate={disabledDate}
+            disabledDate={props.disabledDate}
             itemMoment={mm}
             currentMoment={state.currentM}
             checkedMoment={self.cValueMoment}
@@ -171,7 +175,7 @@ export function staticRenderMonth(
 
 /** 年份选择 */
 export function staticRenderYear(
-  { self, state, nowM }: ShareMetas,
+  { self, state, nowM, props }: ShareMetas,
   { changeDate }: ReturnType<typeof useDateUIController>,
   { onCheckYear }: ReturnType<typeof useHandlers>,
 ) {
@@ -195,7 +199,7 @@ export function staticRenderYear(
       <div className="fr-dates_list">
         {list.map(mm => (
           <DateItem
-            disabledDate={disabledDate}
+            disabledDate={props.disabledDate}
             itemMoment={mm}
             currentMoment={state.currentM}
             checkedMoment={self.cValueMoment}
@@ -265,7 +269,7 @@ export function staticRenderTabBtns(
   }
 
   /* 选择了时间 且 类型为日期选择器 并且启用了 时间选择 或 类型为时间选择器 */
-  if (self.cValueMoment && ((type === DateType.DATE && hasTime) || type === DateType.TIME)) {
+  if (self.cValueMoment && type === DateType.DATE && hasTime) {
     time = (
       <Button
         size="small"

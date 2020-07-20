@@ -5,7 +5,7 @@
   background: $component-background;
   border-radius: $border-radius;
   box-shadow: $shadow-1;
-  width: 300px;
+  width: 320px;
 
   &_head, &_foot {
     display: flex;
@@ -333,6 +333,11 @@
       > span {
         color: $b-border !important;
       }
+    }
+
+    &.__plain {
+      background-color: transparent !important;
+      cursor: auto;
     }
 
     @include effect-bg;

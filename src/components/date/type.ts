@@ -11,17 +11,49 @@ export enum DateType {
   YEAR = 'year',
   TIME = 'time',
 }
+// 使用宽容模式解析时间，因而支持很多的怪异时间格式
 
+/* 需要同时允许用户传入DateType 或 字面量 */
 type DateTypeUnion = 'date' | 'month' | 'year' | 'time';
 
-export interface DatesProps extends ComponentBaseProps, FormLikeWithExtra<Moment> {
+export interface DatesProps extends ComponentBaseProps, FormLikeWithExtra<string, Moment> {
   /** 选择器类型 */
-  type?: DateType | DateTypeUnion /* 接受传 DateType 或 字面量 */;
-  /** 是否包含时间 */
+  type?: DateType | DateTypeUnion;
+  /**
+   * 定制时间格式
+   * 默认支持解析 YYYY-MM-DD HH:mm:ss / YYYY/MM/DD HH:mm:ss 两种格式
+   * 默认导出格式为 YYYY-MM-DD HH:mm:ss
+   * 传入后，将统一解析和导出时间为指定的格式, 令牌格式可参考https://momentjs.com/docs/#/displaying/format/
+   * */
+  format?: string;
+  /** 禁用日期, 参数为当前项的moment、当前类型(year | month | date)，返回true时禁用该项 */
+  disabledDate?(mmt: Moment, type: Exclude<DateType, DateType.TIME>): boolean | void;
+
+  /* ===== Time ===== */
+  /** 日期选择时是否包含时间选择 */
   hasTime?: boolean;
+  /**
+   * 隐藏已被禁用的时间, 当包含很多禁用时间时，可通过此项来提高用户进行信息筛选的速度
+   * 也可以通过此项实现时间步进选择(1点 3点 4点...)的效果 */
+  hideDisabledTime?: boolean;
+  /**
+   * 接收当前时间元数据来决定禁用哪些时间
+   * @param meta
+   * @param meta.key - 当前项类型 'h' | 'm' | 's'
+   * @param meta.val - 当前项的值
+   * @param meta.h - 当前选中的时
+   * @param meta.m - 当前选中的分
+   * @param meta.s - 当前选中的秒
+   * @param currentDate - 如果类型为日期选择器，则此项会传入当前选中的日期
+   * @return - 返回true时，该项被禁用
+   * */
+  disabledTime?(
+    meta: TimeValue & { key: keyof TimeValue; val: number },
+    currentDate?: Moment,
+  ): boolean | void;
 }
 
-export interface ItemBase {
+export interface DateItemProps {
   /** 该项所在时间 */
   itemMoment: Moment;
   /** 当前显示的时间 */
@@ -32,17 +64,15 @@ export interface ItemBase {
   checkedMoment: Moment | null;
   /** 点击选中该项 */
   onCheck?(dString: string, mmt: Moment): void;
-}
-
-export interface DateItemProps extends ItemBase {
   /** 禁用所有返回true的日期 */
-  disabledDate?(mmt: Moment, type: DateType): boolean | void;
-  /** 通知父节点更新currentMoment */
+  disabledDate: DatesProps['disabledDate'];
+  /** 通知父节点更新currentMoment, (目前会在用户通过日期中的灰色日期选中下一月日期时触发) */
   onCurrentChange?(mmt: Moment): void;
   /** 选择器类型 */
   type?: Exclude<DateType, DateType.TIME>;
 }
 
+/** 组成时间的基本对象 */
 export interface TimeValue {
   h: number;
   m: number;
@@ -50,7 +80,9 @@ export interface TimeValue {
 }
 
 export interface TimeProps extends FormLike<TimeValue> {
+  /** 选择器顶部显示内容 */
   label?: React.ReactNode;
+  /** 隐藏禁用项 */
   hideDisabled?: boolean;
   /**
    * 接收当前时间参数并根据参数决定禁用哪些时间
@@ -87,4 +119,5 @@ export interface ShareMetas {
   hasTime: boolean;
   getCurrentTime(): TimeValue;
   type: DateType | DateTypeUnion;
+  props: DatesProps;
 }
