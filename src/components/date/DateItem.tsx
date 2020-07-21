@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import cls from 'classnames';
 import { useFn } from '@lxjx/hooks';
+import { Moment } from 'moment';
 import { DATE_FORMAT_DATE, DATE_FORMAT_MONTH, DATE_FORMAT_YEAR, formatDate } from './utils';
 import { DateItemProps, DateType } from './type';
 
@@ -11,6 +12,7 @@ const DateItem: React.FC<DateItemProps> = ({
   disabledDate,
   onCheck,
   checkedMoment,
+  checkedEndMoment,
   onCurrentChange,
   type = DateType.DATE as NonNullable<DateItemProps['type']>,
 }) => {
@@ -18,6 +20,7 @@ const DateItem: React.FC<DateItemProps> = ({
 
   const insideM = useMemo(() => itemMoment.clone(), [itemMoment]);
 
+  // 对各种类型的值映射
   const map1 = {
     [DateType.DATE]: 'days',
     [DateType.MONTH]: 'months',
@@ -36,6 +39,7 @@ const DateItem: React.FC<DateItemProps> = ({
     [DateType.YEAR]: DATE_FORMAT_YEAR,
   } as const;
 
+  // 前后一天
   const prev = useMemo(() => insideM.clone().subtract(1, map1[type]), [insideM]);
   const last = useMemo(() => insideM.clone().add(1, map1[type]), [insideM]);
 
@@ -51,8 +55,20 @@ const DateItem: React.FC<DateItemProps> = ({
 
   /** 是否选中 */
   const isChecked = useMemo(() => {
-    return insideM.isSame(checkedMoment, map2[type]);
+    return checkedMoment ? insideM.isSame(checkedMoment, map2[type]) : false;
   }, [insideM, checkedMoment]);
+
+  /** 是否为范围选中的尾值 */
+  const isEndChecked = useMemo(() => {
+    return checkedEndMoment ? insideM.isSame(checkedEndMoment, map2[type]) : false;
+  }, [insideM, checkedEndMoment]);
+
+  // 是否是范围选中的两个范围之间
+  const isRangeCheckBetween = useMemo(() => {
+    if (!checkedMoment || !checkedEndMoment) return false;
+
+    return insideM.isBetween(checkedMoment, checkedEndMoment, map2[type]);
+  }, [checkedMoment, checkedEndMoment, insideM]);
 
   const isDisabled = useMemo(() => disabledDate?.(insideM, type), [insideM]);
 
@@ -60,7 +76,7 @@ const DateItem: React.FC<DateItemProps> = ({
   const prevDisabled = useMemo(() => disabledDate?.(prev, type), [prev]);
   const lastDisabled = useMemo(() => disabledDate?.(last, type), [last]);
 
-  const isRange = isDisabled && (prevDisabled || lastDisabled);
+  const isDisabledRange = isDisabled && (prevDisabled || lastDisabled);
 
   const onClick = useFn(() => {
     if (isDisabled) return;
@@ -93,18 +109,24 @@ const DateItem: React.FC<DateItemProps> = ({
   return (
     <div
       className={cls('fr-dates_date-item', {
-        __active: isChecked,
+        __active: isChecked || isEndChecked,
         __gray: type === DateType.DATE ? !isCurrentBetween : false,
         __focus: isSame,
         __disabled: isDisabled,
-        __disabledRange: isRange,
+        __disabledRange: isDisabledRange,
         __firstRange: isDisabled && !prevDisabled,
         __lastRange: isDisabled && !lastDisabled,
         __yearMonth: type === DateType.MONTH || type === DateType.YEAR,
+        __activeRange: isRangeCheckBetween,
       })}
       onClick={onClick}
     >
-      <span className="fr-dates_date-item-inner">{renderItemFormat()}</span>
+      {/* 日历模式 */}
+      <span className="fr-dates_date-item-inner">
+        {isChecked && !isEndChecked && <span className="fr-dates_tips">开始</span>}
+        {isEndChecked && <span className="fr-dates_tips">{isChecked ? '开始/结束' : '结束'}</span>}
+        {renderItemFormat()}
+      </span>
     </div>
   );
 };

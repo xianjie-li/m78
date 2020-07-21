@@ -28,6 +28,12 @@ export interface DatesProps extends ComponentBaseProps, FormLikeWithExtra<string
   format?: string;
   /** 禁用日期, 参数为当前项的moment、当前类型(year | month | date)，返回true时禁用该项 */
   disabledDate?(mmt: Moment, type: Exclude<DateType, DateType.TIME>): boolean | void;
+  /** 开启范围选择 */
+  range?: boolean;
+  /** '开始' | 自定义开始时间的文本 */
+  startDateLabel?: string;
+  /** '结束' | 自定义结束时间的文本 */
+  endDateLabel?: string;
 
   /* ===== Time ===== */
   /** 日期选择时是否包含时间选择 */
@@ -61,7 +67,9 @@ export interface DateItemProps {
   /** 当前时间 */
   nowMoment: Moment;
   /** 当前选中时间 */
-  checkedMoment: Moment | null;
+  checkedMoment?: Moment;
+  /** 当前选中的结束时间 */
+  checkedEndMoment?: Moment;
   /** 点击选中该项 */
   onCheck?(dString: string, mmt: Moment): void;
   /** 禁用所有返回true的日期 */
@@ -111,10 +119,11 @@ export interface ShareMetas {
     type: DateType | DateTypeUnion;
   };
   setState: SetState<ShareMetas['state']>;
-  value: string;
+  value: string | string[];
   setValue: AnyFunction;
   self: {
-    cValueMoment: Moment;
+    cValueMoment?: Moment;
+    endValueMoment?: Moment;
   };
   hasTime: boolean;
   getCurrentTime(): TimeValue;

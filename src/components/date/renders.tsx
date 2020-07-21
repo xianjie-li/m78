@@ -1,5 +1,6 @@
 import Button from '@lxjx/fr/lib/button';
 import React from 'react';
+import { Moment } from 'moment';
 import {
   DATE_FORMAT_DATE,
   DATE_FORMAT_MONTH,
@@ -14,48 +15,110 @@ import { useDateUIController, useHandlers } from './hooks';
 import DateItem from './DateItem';
 
 const placeholderMaps = {
-  [DateType.YEAR]: '请选择年份',
-  [DateType.MONTH]: '请选择月份',
-  [DateType.DATE]: '请选择日期',
-  [DateType.TIME]: '请选择时间 ',
+  [DateType.YEAR]: '年份',
+  [DateType.MONTH]: '月份',
+  [DateType.DATE]: '日期',
+  [DateType.TIME]: '时间 ',
 };
 
 /**  渲染选择结果 */
 export function staticRenderCheckedValue(
-  { self, hasTime, type, value }: ShareMetas,
+  { self, hasTime, type, value, props }: ShareMetas,
   { toTime }: ReturnType<typeof useDateUIController>,
 ) {
   if (!value) {
-    return <div>{placeholderMaps[type]}</div>;
+    return <div>请选择{placeholderMaps[type]}</div>;
   }
 
-  if (type === DateType.DATE) {
+  function renderDateItem(mmt?: Moment, label?: React.ReactNode) {
     return (
       <div>
-        <span>{self.cValueMoment.format(DATE_FORMAT_DATE)}</span>
-        {hasTime && (
+        {label}
+        {mmt && <span>{mmt.format(DATE_FORMAT_DATE)}</span>}
+        {mmt && hasTime && (
           <span
             onClick={toTime}
             className="color-primary fr-dates_time fr-dates_effect-text"
             title="点击选择"
           >
-            {self.cValueMoment.format(DATE_FORMAT_TIME)}
+            {mmt.format(DATE_FORMAT_TIME)}
           </span>
         )}
       </div>
     );
   }
 
+  const { range } = props;
+  const startLabel = props.range && <span className="color-second">开始: </span>;
+  const endLabel = props.range && <span className="color-second">结束: </span>;
+  const tipsNode = <span className="color-second">请选择{placeholderMaps[type]}</span>;
+
+  if (type === DateType.DATE) {
+    return (
+      <div>
+        {renderDateItem(self.cValueMoment, startLabel)}
+        {range && renderDateItem(self.endValueMoment, endLabel)}
+      </div>
+    );
+  }
+
   if (type === DateType.MONTH) {
-    return <div>{self.cValueMoment.format(DATE_FORMAT_MONTH)}月</div>;
+    const r = (mmt?: Moment) => (mmt ? <span>{mmt.format(DATE_FORMAT_MONTH)}月</span> : tipsNode);
+
+    return (
+      <div>
+        {(range || self.cValueMoment) && (
+          <div>
+            {startLabel}
+            {r(self.cValueMoment)}
+          </div>
+        )}
+        {range && (
+          <div>
+            {endLabel}
+            {r(self.endValueMoment)}
+          </div>
+        )}
+      </div>
+    );
   }
 
   if (type === DateType.YEAR) {
-    return <div>{self.cValueMoment.format(DATE_FORMAT_YEAR)}年</div>;
+    return (
+      <div>
+        {self.cValueMoment && (
+          <div>
+            {startLabel}
+            {self.cValueMoment.format(DATE_FORMAT_YEAR)}年
+          </div>
+        )}
+        {self.endValueMoment && (
+          <div>
+            {endLabel}
+            {self.endValueMoment.format(DATE_FORMAT_YEAR)}年
+          </div>
+        )}
+      </div>
+    );
   }
 
   if (type === DateType.TIME) {
-    return <div>{self.cValueMoment.format(DATE_FORMAT_TIME)}</div>;
+    return (
+      <div>
+        {self.cValueMoment && (
+          <div>
+            {startLabel}
+            {self.cValueMoment.format(DATE_FORMAT_TIME)}
+          </div>
+        )}
+        {self.endValueMoment && (
+          <div>
+            {endLabel}
+            {self.endValueMoment.format(DATE_FORMAT_TIME)}
+          </div>
+        )}
+      </div>
+    );
   }
 }
 
@@ -125,6 +188,7 @@ export function staticRenderDate(
             itemMoment={mm}
             currentMoment={state.currentM}
             checkedMoment={self.cValueMoment}
+            checkedEndMoment={self.endValueMoment}
             nowMoment={nowM}
             onCheck={onCheck}
             onCurrentChange={onCurrentChange}
@@ -162,6 +226,7 @@ export function staticRenderMonth(
             itemMoment={mm}
             currentMoment={state.currentM}
             checkedMoment={self.cValueMoment}
+            checkedEndMoment={self.endValueMoment}
             nowMoment={nowM}
             onCheck={onCheckMonth}
             key={mm.format()}
@@ -203,6 +268,7 @@ export function staticRenderYear(
             itemMoment={mm}
             currentMoment={state.currentM}
             checkedMoment={self.cValueMoment}
+            checkedEndMoment={self.endValueMoment}
             nowMoment={nowM}
             onCheck={onCheckYear}
             key={mm.format()}

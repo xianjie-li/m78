@@ -58,10 +58,6 @@
     }
   }
 
-  &_list-item {
-
-  }
-
   &_date-item {
     position: relative;
     display: inline-flex;
@@ -69,10 +65,11 @@
     justify-content: center;
     width: 100 / 7 + 0%;
     margin-bottom: 2%;
+    font-size: 16px;
 
     &::before {
       content: "";
-      padding-top: 80%;
+      padding-top: 74%;
       float: left;
     }
 
@@ -110,16 +107,16 @@
       }
     }
 
+    // 高亮范围， 暂时不用了
     &.__activeRange {
-      color: #fff;
-      background-color: $color-6;
+      background-color: $color-1;
 
       &:nth-of-type(1) {
         border-radius: 6px 0 0 6px;
       }
 
       .fr-dates_date-item-inner {
-        color: #fff;
+        //color: $b-second;
         background-color: transparent;
       }
 
@@ -186,6 +183,34 @@
     transition: none !important;
 
     @include effect-bg;
+  }
+
+  &_tips {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    display: inline-block;
+    font-size: 12px;
+    border: 1px solid $b-border;
+    z-index: 1;
+    background-color: #666;
+    line-height: 1;
+    color: #fff;
+    padding: 2px 4px;
+    border-radius: 2px;
+    text-align: center;
+    white-space: nowrap;
+    transform: translate(-50%, -100%);
+
+    &::after {
+      position: absolute;
+      bottom: -11px;
+      left: 50%;
+      margin-left: -6px;
+      content: '';
+      border: 6px solid transparent;
+      border-top-color: #666;
+    }
   }
 
   &_arrow {
@@ -341,5 +366,51 @@
     }
 
     @include effect-bg;
+  }
+
+  &_date-line {
+    position: absolute;
+    height: 2px;
+    width: 100%;
+    border-top: 2px dashed $b-border;
+
+    &.__tl, &.__tr, &.__bl, &.__br {
+      width: 50%;
+      height: 50%;
+      border-top: none;
+    }
+
+    &.__tl, &.__tr {
+      top: 1px;
+    }
+
+    &.__bl, &.__br {
+      border-top: none;
+      bottom: 1px;
+    }
+
+    &.__tl {
+      left: 0;
+      border-right: 2px solid $b-second;
+      border-bottom: 2px solid $b-second;
+    }
+
+    &.__tr {
+      right: 0;
+      border-left: 2px solid $b-second;
+      border-bottom: 2px solid $b-second;
+    }
+
+    &.__bl {
+      left: 0;
+      border-top: 2px solid $b-second;
+      border-right: 2px solid $b-second;
+    }
+
+    &.__br {
+      right: 0;
+      border-top: 2px solid $b-second;
+      border-left: 2px solid $b-second;
+    }
   }
 }

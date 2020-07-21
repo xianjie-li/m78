@@ -17,12 +17,12 @@ import Time from './Time';
 import { useDateUIController, useHandlers } from './hooks';
 
 const Dates: React.FC<DatesProps> = props => {
-  const { type = DateType.DATE, hasTime = false } = props;
+  const { type = DateType.DATE, hasTime = false, range } = props;
 
   /**  当前时间 */
   const [nowM] = useState(() => moment());
 
-  const [value, setValue] = useFormState<string, Moment>(props, '');
+  const [value, setValue] = useFormState<string[] | string, Moment>(props, range ? [] : '');
 
   const [state, setState] = useSetState({
     /** 实际存储的时间, 控制当前日期显示的位置, 根据选择的日期类型来决定设置年/月/日中的某一项 */
@@ -34,6 +34,8 @@ const Dates: React.FC<DatesProps> = props => {
   const self = useSelf({
     /** 指向当前value的moment, 这里才是实际存储value的地方, value相当于此值的format */
     cValueMoment: (null as unknown) as Moment,
+    /** 当是范围选择时，存储结束时间 */
+    endValueMoment: (null as unknown) as Moment,
   });
 
   /** 同步value到cValueMoment(useMemo执行时机比effect更快) */
@@ -46,7 +48,16 @@ const Dates: React.FC<DatesProps> = props => {
           DATE_DEFAULT_PARSE,
         );
       } else {
-        self.cValueMoment = moment(value, DATE_DEFAULT_PARSE); // 使用宽容模式来兼容更多value格式
+        if (range) {
+          if (!value.length) return;
+          self.cValueMoment = moment(value[0], DATE_DEFAULT_PARSE);
+
+          if (value[1]) {
+            self.endValueMoment = moment(value[1], DATE_DEFAULT_PARSE);
+          }
+          return;
+        }
+        self.cValueMoment = moment(value, DATE_DEFAULT_PARSE);
       }
     }
   }, [value]);
@@ -121,6 +132,8 @@ const Dates: React.FC<DatesProps> = props => {
 
     return null;
   }
+
+  console.log('value', value, self.cValueMoment, self.endValueMoment);
 
   return (
     <div

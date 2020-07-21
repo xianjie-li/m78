@@ -42,17 +42,18 @@ const disabledTime: DatesProps['disabledTime'] = (meta, mmt) => {
 };
 
 const Dates = () => {
-  const [val, setV] = useState('2020-7-20 15:30:30');
+  // const [val, setV] = useState('2020-7-20 15:30:30');
 
   return React.createElement(Datess, {
-    type: 'date',
-    hasTime: true,
-    value: val,
+    type: 'month',
+    // hasTime: true,
+    range: true,
+    // value: val,
     disabledTime,
     disabledDate,
-    onChange(v, m) {
-      setV(v);
-    },
+    // onChange(v, m) {
+    //   setV(v);
+    // },
   });
 };
 

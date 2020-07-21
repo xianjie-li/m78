@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo } from 'react';
-import { useFormState, useScroll } from '@lxjx/hooks';
+import React, { useMemo, useEffect } from 'react';
+import { useEffectEqual, useFormState, useScroll } from '@lxjx/hooks';
 import cls from 'classnames';
 import { createRandString } from '@lxjx/utils';
 import { getTimes } from './utils';
@@ -30,10 +30,49 @@ const Time: React.FC<TimeProps> = props => {
 
   /** 默认选中项 */
   useEffect(() => {
-    sc1.scrollToElement(`.${getSelector(id, 'h', value.h)}`, true);
-    sc2.scrollToElement(`.${getSelector(id, 'm', value.m)}`, true);
-    sc3.scrollToElement(`.${getSelector(id, 's', value.s)}`, true);
+    patchPosition(true);
   }, []);
+
+  // 存在已选中的禁用时间时，将其更新为该列第一个可用值
+  useEffectEqual(() => {
+    if (!disabledTime) return;
+
+    const newTime = { ...value };
+    let hasDisabled = false;
+
+    Object.entries(value).forEach(([key, t]) => {
+      const k = key as keyof TimeValue;
+
+      const isDisabled = disabledTime(
+        {
+          ...value,
+          key: k,
+          val: t,
+        },
+        disabledTimeExtra,
+      );
+
+      if (isDisabled) {
+        const currentColumn = times[k];
+
+        // 查找该列第一个可用
+        const enableVal = currentColumn.find(
+          cItem => !disabledTime({ ...value, key: k, val: cItem }, disabledTimeExtra),
+        );
+
+        if (enableVal) {
+          hasDisabled = true; // 有可替换值才视为禁用
+          newTime[k] = enableVal;
+        }
+      }
+    });
+
+    if (hasDisabled) {
+      setValue(newTime);
+    }
+
+    patchPosition();
+  }, [value]);
 
   /** 设置指定key的值到value并滚动到其所在位置 */
   function patchValue(key: keyof typeof map, val: number, immediate?: boolean) {
@@ -46,6 +85,15 @@ const Time: React.FC<TimeProps> = props => {
 
     setTimeout(() => {
       cM.sc.scrollToElement(`.${getSelector(id, key, val)}`, immediate);
+    });
+  }
+
+  /** 同步滚动到当前选中位置 */
+  function patchPosition(immediate = false) {
+    setTimeout(() => {
+      sc1.scrollToElement(`.${getSelector(id, 'h', value.h)}`, immediate);
+      sc2.scrollToElement(`.${getSelector(id, 'm', value.m)}`, immediate);
+      sc3.scrollToElement(`.${getSelector(id, 's', value.s)}`, immediate);
     });
   }
 
@@ -65,19 +113,6 @@ const Time: React.FC<TimeProps> = props => {
                 disabledTimeExtra,
               )
             : false;
-
-          /** 禁用且该项被选中 */
-          if (disabled && value[key] === item) {
-            const currentColumn = times[key];
-            const enableVal = currentColumn.find(
-              cItem => !disabledTime!({ ...value, key, val: cItem }, disabledTimeExtra),
-            );
-
-            if (enableVal) {
-              // !!! 不要在render中设置状态
-              setTimeout(() => patchValue(key, enableVal));
-            }
-          }
 
           /** 禁用并隐藏 */
           if (disabled && hideDisabled) return null;

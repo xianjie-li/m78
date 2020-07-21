@@ -1,7 +1,13 @@
-import moment, { unitOfTime } from 'moment';
+import moment, { unitOfTime, Moment } from 'moment';
 import { useFn } from '@lxjx/hooks';
 import { DateItemProps, DateType, ShareMetas, TimeProps } from './type';
-import { DATE_FORMAT_DATE_TIME, DATE_FORMAT_TIME } from './utils';
+import {
+  DATE_FORMAT_DATE,
+  DATE_FORMAT_DATE_TIME,
+  DATE_FORMAT_MONTH,
+  DATE_FORMAT_TIME,
+  DATE_FORMAT_YEAR,
+} from './utils';
 
 /** 简化主文件, 获取更新当前选择器数据和位置的一些函数 */
 export function useDateUIController({ state, setState }: ShareMetas) {
@@ -84,17 +90,39 @@ export function useDateUIController({ state, setState }: ShareMetas) {
 
 /** 简化主文件, 外部化一些事件处理器 */
 export function useHandlers(
-  { hasTime, setValue, getCurrentTime, self, type, state, setState, nowM }: ShareMetas,
+  { hasTime, setValue, getCurrentTime, self, type, state, setState, nowM, props }: ShareMetas,
   { toTime }: ReturnType<typeof useDateUIController>,
 ) {
+  function rangeHandler(dString: string, mmt: Moment, format: string) {
+    if (self.cValueMoment && !self.endValueMoment) {
+      const min = moment.min(mmt, self.cValueMoment);
+      const max = moment.max(mmt, self.cValueMoment);
+
+      self.cValueMoment = min;
+      self.endValueMoment = max;
+      setValue([min.format(format), max.format(format)], [min, max]);
+      return;
+    }
+    self.endValueMoment = undefined;
+
+    setValue([dString], [mmt]);
+  }
+
   /** 选中日期项 */
   const onCheck: DateItemProps['onCheck'] = useFn((dString, mmt) => {
     if (hasTime) {
+      // 包含时间时，范围选择需要特殊处理
       mmt.set(getCurrentTime());
 
       setValue(mmt.format(DATE_FORMAT_DATE_TIME), mmt);
 
-      toTime();
+      // 需要value更新完成后再执行
+      setTimeout(toTime);
+      return;
+    }
+
+    if (props.range) {
+      rangeHandler(dString, mmt, DATE_FORMAT_DATE);
       return;
     }
 
@@ -116,9 +144,15 @@ export function useHandlers(
 
       setValue(cM.format(DATE_FORMAT_TIME), cM);
     } else {
-      const cM = self.cValueMoment.clone();
+      const cM = self.cValueMoment!.clone();
 
       cM.set({
+        hour: h,
+        minute: m,
+        second: s,
+      });
+
+      console.log({
         hour: h,
         minute: m,
         second: s,
@@ -130,10 +164,14 @@ export function useHandlers(
 
   /** 选中月 */
   const onCheckMonth: DateItemProps['onCheck'] = useFn((dString, mmt) => {
-    console.log(dString);
     // 选择器类型为月时直接选中，不是则将UI更新到对应的月
 
     if (type === DateType.MONTH) {
+      if (props.range) {
+        rangeHandler(dString, mmt, DATE_FORMAT_MONTH);
+        return;
+      }
+
       setValue(dString, mmt);
       return;
     }
@@ -150,10 +188,14 @@ export function useHandlers(
 
   /** 选中年 */
   const onCheckYear: DateItemProps['onCheck'] = useFn((dString, mmt) => {
-    console.log(dString);
     // 选择器类型为年时直接选中，不是则将UI更新到对应的月
 
     if (type === DateType.YEAR) {
+      if (props.range) {
+        rangeHandler(dString, mmt, DATE_FORMAT_YEAR);
+        return;
+      }
+
       setValue(dString, mmt);
       return;
     }
