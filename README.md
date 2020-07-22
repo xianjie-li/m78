@@ -2,7 +2,7 @@
     <img src="https://gitee.com/llixianjie/docs/raw/master/fr/logo.png" width="160" align="center" />
 </p>
 
-<h1 align="center">fr</h1>
+<h1 align="center">Fr</h1>
 <p align="center">components, hooks, utils, part of the react toolchain</p>
 
 <br>

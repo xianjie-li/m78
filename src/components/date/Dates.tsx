@@ -4,7 +4,7 @@ import { useFormState, useSelf, useSetState } from '@lxjx/hooks';
 import moment, { Moment } from 'moment';
 import cls from 'classnames';
 
-import { DATE_DEFAULT_PARSE, DATE_FORMAT_DATE } from './utils';
+import { concatTimeToMoment, DATE_DEFAULT_PARSE } from './utils';
 import {
   staticRenderCheckedValue,
   staticRenderDate,
@@ -19,12 +19,15 @@ import { useDateUIController, useHandlers } from './hooks';
 function Dates(props: DatesProps): JSX.Element;
 function Dates(props: DatesRangeProps): JSX.Element;
 function Dates(props: DatesProps | DatesRangeProps) {
-  const { type = DateType.DATE, hasTime = false, range } = props as DatesProps & DatesRangeProps;
+  const tProps = props as DatesProps & DatesRangeProps;
+  const { type = DateType.DATE, hasTime = false, range } = tProps;
 
   /**  当前时间 */
   const [nowM] = useState(() => moment());
 
   const [value, setValue] = useFormState<string[] | string, Moment>(props, range ? [] : '');
+
+  console.log('val', value);
 
   const [state, setState] = useSetState<ShareMetas['state']>({
     /** 实际存储的时间, 控制当前日期显示的位置, 根据选择的日期类型来决定设置年/月/日中的某一项 */
@@ -42,15 +45,22 @@ function Dates(props: DatesProps | DatesRangeProps) {
     endValueMoment: undefined,
   });
 
-  /** 同步value到cValueMoment(useMemo执行时机比effect更快) */
+  /** 解析value到cValueMoment/endValueMoment(useMemo执行时机比effect更快) */
   useMemo(() => {
     if (value) {
       if (type === DateType.TIME) {
-        // 作为纯时间组件使用时，拼接为当天
-        self.cValueMoment = moment(
-          `${moment().format(DATE_FORMAT_DATE)} ${value}`,
-          DATE_DEFAULT_PARSE,
-        );
+        if (range) {
+          if (!value.length) return;
+          self.cValueMoment = concatTimeToMoment(value[0]);
+
+          if (value[1]) {
+            self.endValueMoment = concatTimeToMoment(value[1]);
+          }
+          return;
+        }
+
+        // 作为纯时间组件使用
+        self.cValueMoment = concatTimeToMoment(value as string);
       } else {
         if (range) {
           if (!value.length) return;
@@ -87,13 +97,16 @@ function Dates(props: DatesProps | DatesRangeProps) {
 
   const { onCheckTime } = handlers;
 
-  /** 根据当前选中事件获取时分秒，未选中时间则取当前时间 */
-  function getCurrentTime() {
-    const cM = self.cValueMoment;
+  /** 根据当前选中事件获取时分秒，未选中时间则取当前时间, 传入getEndTime时获取结束时间 */
+  function getCurrentTime(isEnd?: boolean) {
+    const cM = isEnd ? self.endValueMoment : self.cValueMoment;
+
+    if (!cM) return undefined;
+
     return {
-      h: cM ? cM.hour() : nowM.hour(),
-      m: cM ? cM.minute() : nowM.minute(),
-      s: cM ? cM.second() : 0,
+      h: cM.hour(),
+      m: cM.minute(),
+      s: cM.second(),
     };
   }
 
@@ -109,19 +122,24 @@ function Dates(props: DatesProps | DatesRangeProps) {
 
   /** 时间选择 */
   function renderTime() {
+    const common = {
+      disabledTime: props.disabledTime,
+      hideDisabled: props.hideDisabledTime,
+      disabledTimeExtra: range ? [self.cValueMoment, self.endValueMoment] : self.cValueMoment,
+    };
+
     return (
-      <Time
-        value={getCurrentTime()}
-        onChange={onCheckTime}
-        disabledTime={props.disabledTime}
-        hideDisabled={props.hideDisabledTime}
-        disabledTimeExtra={self.cValueMoment}
-        // label={
-        //   <span>
-        //     <span>开始:</span> 2020-07-24
-        //   </span>
-        // }
-      />
+      <>
+        <Time {...common} value={getCurrentTime()} onChange={onCheckTime} />
+        {range && (
+          <Time
+            {...common}
+            value={getCurrentTime(true)}
+            onChange={times => onCheckTime(times, true)}
+            label={<span>~ 选择时间范围 ~</span>}
+          />
+        )}
+      </>
     );
   }
 
@@ -136,8 +154,6 @@ function Dates(props: DatesProps | DatesRangeProps) {
 
     return null;
   }
-
-  console.log('value', value, self.cValueMoment, self.endValueMoment);
 
   return (
     <div
@@ -168,8 +184,8 @@ function Dates(props: DatesProps | DatesRangeProps) {
 }
 
 Dates.defaultProps = {
-  startDateLabel: '开始时间',
-  endDateLabel: '结束时间',
+  startDateLabel: '开始',
+  endDateLabel: '结束',
 };
 
 export default Dates;

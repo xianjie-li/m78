@@ -151,7 +151,7 @@ export interface ShareMetas {
     endValueMoment?: Moment;
   };
   hasTime: boolean;
-  getCurrentTime(): TimeValue;
+  getCurrentTime(): TimeValue | undefined;
   type: DateType | DateTypeUnion;
   props: DatesProps & DatesRangeProps;
 }

@@ -274,7 +274,7 @@ export function staticRenderYear(
 }
 
 export function staticRenderTabBtns(
-  { self, state, type, hasTime }: ShareMetas,
+  { self, state, type, hasTime, props }: ShareMetas,
   { toYear, toMonth, toDate, toTime }: ReturnType<typeof useDateUIController>,
 ) {
   let year: React.ReactElement | null = null;
@@ -340,6 +340,8 @@ export function staticRenderTabBtns(
         时
       </Button>
     );
+
+    if (props.range && !self.endValueMoment) time = null;
   }
 
   return (

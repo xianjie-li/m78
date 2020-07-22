@@ -1,6 +1,6 @@
-import moment, { unitOfTime, Moment } from 'moment';
+import moment, { Moment, unitOfTime } from 'moment';
 import { useFn } from '@lxjx/hooks';
-import { DateItemProps, DateType, ShareMetas, TimeProps } from './type';
+import { DateItemProps, DateType, ShareMetas, TimeValue } from './type';
 import {
   DATE_FORMAT_DATE,
   DATE_FORMAT_DATE_TIME,
@@ -110,56 +110,75 @@ export function useHandlers(
 
   /** 选中日期项 */
   const onCheck: DateItemProps['onCheck'] = useFn((dString, mmt) => {
-    if (hasTime) {
-      // 包含时间时，范围选择需要特殊处理
-      mmt.set(getCurrentTime());
+    const format = hasTime ? DATE_FORMAT_DATE_TIME : DATE_FORMAT_DATE;
 
-      setValue(mmt.format(DATE_FORMAT_DATE_TIME), mmt);
+    const nowTime = {
+      hour: nowM.hour(),
+      minute: nowM.minute(),
+      second: nowM.second(),
+    };
+
+    if (props.range) {
+      // 范围选择时，默认设置当前时间
+      if (hasTime) {
+        mmt.set(nowTime);
+      }
+
+      rangeHandler(mmt.format(format), mmt, format);
+
+      if (hasTime && self.cValueMoment && self.endValueMoment) {
+        setTimeout(toTime);
+      }
+      return;
+    }
+
+    // 常规选择且包含时间，设置将已选时间设置到选择的日期上
+    if (hasTime) {
+      mmt.set(getCurrentTime() || nowTime);
+
+      setValue(mmt.format(format), mmt);
 
       // 需要value更新完成后再执行
       setTimeout(toTime);
       return;
     }
 
-    if (props.range) {
-      rangeHandler(dString, mmt, DATE_FORMAT_DATE);
-      return;
-    }
-
     setValue(dString, mmt);
   });
 
-  /** 选中时间 */
-  const onCheckTime: TimeProps['onChange'] = useFn(({ h, m, s }) => {
+  /** 选中时间, 传入isEnd时设置结束时间 */
+  const onCheckTime = useFn(({ h, m, s }: TimeValue, isEnd?: boolean) => {
     // 如果是单纯的时间选择，则以当天时间设置moment返回，否则根据已选时间设置
 
-    if (type === DateType.TIME) {
-      const cM = nowM.clone();
+    let cM = isEnd ? self.endValueMoment?.clone() : self.cValueMoment?.clone();
+    // 没有已选中时间时取当天
+    if (!cM || type === DateType.TIME) cM = nowM.clone();
 
-      cM.set({
-        hour: h,
-        minute: m,
-        second: s,
-      });
+    // 在当前时间的基础上替换时间
+    cM.set({
+      hour: h,
+      minute: m,
+      second: s,
+    });
 
-      setValue(cM.format(DATE_FORMAT_TIME), cM);
+    if (isEnd) {
+      self.endValueMoment = cM;
     } else {
-      const cM = self.cValueMoment!.clone();
-
-      cM.set({
-        hour: h,
-        minute: m,
-        second: s,
-      });
-
-      console.log({
-        hour: h,
-        minute: m,
-        second: s,
-      });
-
-      setValue(cM.format(DATE_FORMAT_DATE_TIME), cM);
+      self.cValueMoment = cM;
     }
+
+    const format = type === DateType.TIME ? DATE_FORMAT_TIME : DATE_FORMAT_DATE_TIME;
+
+    const ds = cM.format(format);
+
+    if (!props.range) {
+      setValue(ds, cM);
+      return;
+    }
+
+    isEnd
+      ? setValue([self.cValueMoment?.format(format), ds], [self.cValueMoment, cM])
+      : setValue([ds, self.endValueMoment?.format(format)], [cM, self.endValueMoment]);
   });
 
   /** 选中月 */

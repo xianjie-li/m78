@@ -54,7 +54,7 @@ export function getDates(year: number, month: number) {
   return moments;
 }
 
-/** 根据年、月获取用于显示的月moment列表 */
+/** 根据年获取用于显示的月moment列表 */
 export function getMonths(year: number) {
   const ms: Moment[] = [];
 
@@ -80,7 +80,7 @@ export function getYears(year: number) {
   return [ms, `${year - 4} ~ ${year + 7}`] as const;
 }
 
-/** 根据年月日获取时间 */
+/** 获取用于渲染的时间列表 */
 export function getTimes() {
   const time = {
     h: [] as number[],
@@ -102,4 +102,9 @@ export function getTimes() {
 
 export function formatDate(m: Moment, format: string) {
   return m.format(format);
+}
+
+/** 将一个时间串 HH:mm:ss 以当前日期拼接为一个完整moment对象并返回 */
+export function concatTimeToMoment(tStr: string) {
+  return moment(`${moment().format(DATE_FORMAT_DATE)} ${tStr}`, DATE_DEFAULT_PARSE);
 }

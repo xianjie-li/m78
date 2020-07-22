@@ -17,6 +17,10 @@
 
   &_head {
     border-bottom: 1px solid $b-border;
+
+    .fr-btn.__link {
+      padding: 0 6px;
+    }
   }
 
   &_foot {

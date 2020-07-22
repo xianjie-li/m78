@@ -28,26 +28,25 @@ function disabledDate(mmt: Moment, type: any) {
 
 const disabledTime: DatesProps['disabledTime'] = (meta, mmt) => {
   // 禁用所有偶数小时
-  if (meta.key === 'h' && meta.val % 2 === 0) return true;
-
-  // 当前时间为5、6、7点时禁用所有小于40的分钟项
-  if (meta.h === 5 || meta.h === 6 || meta.h === 7) {
-    if (meta.key === 'm' && meta.val < 40) return true;
-  }
-
+  // if (meta.key === 'h' && meta.val % 2 !== 0) return true;
+  //
+  // // 当前时间为5、6、7点时禁用所有小于40的分钟项
+  // if (meta.h === 5 || meta.h === 6 || meta.h === 7) {
+  //   if (meta.key === 'm' && meta.val < 40) return true;
+  // }
   // 选择了偶数日期时，只能选择10点到14点
-  if (mmt && mmt.date() % 2 === 0 && meta.key === 'h') {
-    if (meta.val < 10 || meta.val > 14) return true;
-  }
+  // if (mmt && mmt.date() % 2 === 0 && meta.key === 'h') {
+  //   if (meta.val < 10 || meta.val > 14) return true;
+  // }
 };
 
 const Dates = () => {
   // const [val, setV] = useState('2020-7-20 15:30:30');
 
   return React.createElement(Datess, {
-    type: 'date',
-    // hasTime: true,
-    range: true,
+    type: 'year',
+    hasTime: false,
+    range: false,
     // value: val,
     disabledTime,
     disabledDate,

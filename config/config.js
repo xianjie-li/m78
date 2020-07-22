@@ -9,7 +9,7 @@ export default {
     '@lxjx/fr/lib': path.resolve(__dirname, '../src/components'),
   },
   mode: 'site',
-  title: 'fr',
+  title: 'Fr',
   description: 'components, hooks, utils, part of the react toolchain',
   logo: 'https://gitee.com/llixianjie/docs/raw/master/fr/logo.png',
   locales: [['zh-CN', '中文']],
