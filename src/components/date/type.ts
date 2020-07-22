@@ -78,6 +78,8 @@ export interface DateItemProps {
   onCurrentChange?(mmt: Moment): void;
   /** 选择器类型 */
   type?: Exclude<DateType, DateType.TIME>;
+  /** 是否多选 */
+  range?: boolean;
 }
 
 /** 组成时间的基本对象 */

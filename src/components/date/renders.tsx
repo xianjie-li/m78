@@ -30,11 +30,18 @@ export function staticRenderCheckedValue(
     return <div>请选择{placeholderMaps[type]}</div>;
   }
 
+  const { range } = props;
+
+  const startLabel = range && <span className="color-second">开始: </span>;
+  const endLabel = range && <span className="color-second">结束: </span>;
+
+  const tipsNode = <span>请选择{placeholderMaps[type]}</span>;
+
   function renderDateItem(mmt?: Moment, label?: React.ReactNode) {
     return (
       <div>
         {label}
-        {mmt && <span>{mmt.format(DATE_FORMAT_DATE)}</span>}
+        {mmt ? <span>{mmt.format(DATE_FORMAT_DATE)}</span> : tipsNode}
         {mmt && hasTime && (
           <span
             onClick={toTime}
@@ -48,10 +55,28 @@ export function staticRenderCheckedValue(
     );
   }
 
-  const { range } = props;
-  const startLabel = props.range && <span className="color-second">开始: </span>;
-  const endLabel = props.range && <span className="color-second">结束: </span>;
-  const tipsNode = <span className="color-second">请选择{placeholderMaps[type]}</span>;
+  const renderHelper = (mmt?: Moment, label?: React.ReactNode, format?: string, unit?: string) => (
+    <div>
+      {label}
+      {mmt ? (
+        <span>
+          {mmt.format(format)}
+          {unit}
+        </span>
+      ) : (
+        tipsNode
+      )}
+    </div>
+  );
+
+  function commonRender(format: string, unit?: string) {
+    return (
+      <div>
+        {(range || self.cValueMoment) && renderHelper(self.cValueMoment, startLabel, format, unit)}
+        {range && renderHelper(self.endValueMoment, endLabel, format, unit)}
+      </div>
+    );
+  }
 
   if (type === DateType.DATE) {
     return (
@@ -63,62 +88,15 @@ export function staticRenderCheckedValue(
   }
 
   if (type === DateType.MONTH) {
-    const r = (mmt?: Moment) => (mmt ? <span>{mmt.format(DATE_FORMAT_MONTH)}月</span> : tipsNode);
-
-    return (
-      <div>
-        {(range || self.cValueMoment) && (
-          <div>
-            {startLabel}
-            {r(self.cValueMoment)}
-          </div>
-        )}
-        {range && (
-          <div>
-            {endLabel}
-            {r(self.endValueMoment)}
-          </div>
-        )}
-      </div>
-    );
+    return commonRender(DATE_FORMAT_MONTH, '月');
   }
 
   if (type === DateType.YEAR) {
-    return (
-      <div>
-        {self.cValueMoment && (
-          <div>
-            {startLabel}
-            {self.cValueMoment.format(DATE_FORMAT_YEAR)}年
-          </div>
-        )}
-        {self.endValueMoment && (
-          <div>
-            {endLabel}
-            {self.endValueMoment.format(DATE_FORMAT_YEAR)}年
-          </div>
-        )}
-      </div>
-    );
+    return commonRender(DATE_FORMAT_YEAR, '年');
   }
 
   if (type === DateType.TIME) {
-    return (
-      <div>
-        {self.cValueMoment && (
-          <div>
-            {startLabel}
-            {self.cValueMoment.format(DATE_FORMAT_TIME)}
-          </div>
-        )}
-        {self.endValueMoment && (
-          <div>
-            {endLabel}
-            {self.endValueMoment.format(DATE_FORMAT_TIME)}
-          </div>
-        )}
-      </div>
-    );
+    return commonRender(DATE_FORMAT_TIME);
   }
 }
 
@@ -194,6 +172,7 @@ export function staticRenderDate(
             onCurrentChange={onCurrentChange}
             key={mm.format()}
             type={DateType.DATE}
+            range={props.range}
           />
         ))}
       </div>
@@ -231,6 +210,7 @@ export function staticRenderMonth(
             onCheck={onCheckMonth}
             key={mm.format()}
             type={DateType.MONTH}
+            range={props.range}
           />
         ))}
       </div>
@@ -273,6 +253,7 @@ export function staticRenderYear(
             onCheck={onCheckYear}
             key={mm.format()}
             type={DateType.YEAR}
+            range={props.range}
           />
         ))}
       </div>

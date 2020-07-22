@@ -1,6 +1,6 @@
 import '@lxjx/fr/lib/date/style';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { DatesProps } from '@/components/date/type';
 import moment, { Moment } from 'moment';
 import Datess from './Dates';
@@ -45,9 +45,9 @@ const Dates = () => {
   // const [val, setV] = useState('2020-7-20 15:30:30');
 
   return React.createElement(Datess, {
-    type: 'month',
+    type: 'date',
     // hasTime: true,
-    range: true,
+    range: false,
     // value: val,
     disabledTime,
     disabledDate,

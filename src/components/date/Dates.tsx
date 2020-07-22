@@ -142,7 +142,7 @@ const Dates: React.FC<DatesProps> = props => {
       })}
     >
       <div className="fr-dates_head">
-        <span className="bold">{renderCheckedValue()}</span>
+        <span>{renderCheckedValue()}</span>
         {renderTabBtns()}
       </div>
       <div className="fr-dates_body">{render()}</div>

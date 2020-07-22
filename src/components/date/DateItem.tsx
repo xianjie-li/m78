@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import cls from 'classnames';
 import { useFn } from '@lxjx/hooks';
-import { Moment } from 'moment';
 import { DATE_FORMAT_DATE, DATE_FORMAT_MONTH, DATE_FORMAT_YEAR, formatDate } from './utils';
 import { DateItemProps, DateType } from './type';
 
@@ -15,6 +14,7 @@ const DateItem: React.FC<DateItemProps> = ({
   checkedEndMoment,
   onCurrentChange,
   type = DateType.DATE as NonNullable<DateItemProps['type']>,
+  range,
 }) => {
   /** 由于调用频率很高，一定要确保计算都被memo */
 
@@ -65,8 +65,7 @@ const DateItem: React.FC<DateItemProps> = ({
 
   // 是否是范围选中的两个范围之间
   const isRangeCheckBetween = useMemo(() => {
-    if (!checkedMoment || !checkedEndMoment) return false;
-
+    if (!range || !checkedMoment || !checkedEndMoment) return false;
     return insideM.isBetween(checkedMoment, checkedEndMoment, map2[type]);
   }, [checkedMoment, checkedEndMoment, insideM]);
 
@@ -123,8 +122,10 @@ const DateItem: React.FC<DateItemProps> = ({
     >
       {/* 日历模式 */}
       <span className="fr-dates_date-item-inner">
-        {isChecked && !isEndChecked && <span className="fr-dates_tips">开始</span>}
-        {isEndChecked && <span className="fr-dates_tips">{isChecked ? '开始/结束' : '结束'}</span>}
+        {range && isChecked && !isEndChecked && <span className="fr-dates_tips">开始</span>}
+        {range && isEndChecked && (
+          <span className="fr-dates_tips">{isChecked ? '开始/结束' : '结束'}</span>
+        )}
         {renderItemFormat()}
       </span>
     </div>
