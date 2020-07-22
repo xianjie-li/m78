@@ -1,8 +1,8 @@
 import '@lxjx/fr/lib/date/style';
 
 import React from 'react';
-import { DatesProps } from '@/components/date/type';
 import moment, { Moment } from 'moment';
+import { DatesProps } from './type';
 import Datess from './Dates';
 
 function disabledDate(mmt: Moment, type: any) {
@@ -47,7 +47,7 @@ const Dates = () => {
   return React.createElement(Datess, {
     type: 'date',
     // hasTime: true,
-    range: false,
+    range: true,
     // value: val,
     disabledTime,
     disabledDate,
@@ -57,4 +57,4 @@ const Dates = () => {
   });
 };
 
-export { Dates };
+export { Dates, Datess };

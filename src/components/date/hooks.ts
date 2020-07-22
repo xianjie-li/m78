@@ -209,10 +209,18 @@ export function useHandlers(
     });
   });
 
+  /** 设置活动状态 */
+  const onItemActive: DateItemProps['onActive'] = useFn(mmt => {
+    setState({
+      tempM: mmt,
+    });
+  });
+
   return {
     onCheck,
     onCheckTime,
     onCheckMonth,
     onCheckYear,
+    onItemActive,
   };
 }

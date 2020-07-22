@@ -4,7 +4,7 @@ import { useFormState, useSelf, useSetState } from '@lxjx/hooks';
 import moment, { Moment } from 'moment';
 import cls from 'classnames';
 
-import { DATE_DEFAULT_PARSE, DATE_FORMAT_DATE } from '@/components/date/utils';
+import { DATE_DEFAULT_PARSE, DATE_FORMAT_DATE } from './utils';
 import {
   staticRenderCheckedValue,
   staticRenderDate,
@@ -12,30 +12,34 @@ import {
   staticRenderTabBtns,
   staticRenderYear,
 } from './renders';
-import { DatesProps, DateType, ShareMetas } from './type';
+import { DatesProps, DatesRangeProps, DateType, ShareMetas } from './type';
 import Time from './Time';
 import { useDateUIController, useHandlers } from './hooks';
 
-const Dates: React.FC<DatesProps> = props => {
-  const { type = DateType.DATE, hasTime = false, range } = props;
+function Dates(props: DatesProps): JSX.Element;
+function Dates(props: DatesRangeProps): JSX.Element;
+function Dates(props: DatesProps | DatesRangeProps) {
+  const { type = DateType.DATE, hasTime = false, range } = props as DatesProps & DatesRangeProps;
 
   /**  当前时间 */
   const [nowM] = useState(() => moment());
 
   const [value, setValue] = useFormState<string[] | string, Moment>(props, range ? [] : '');
 
-  const [state, setState] = useSetState({
+  const [state, setState] = useSetState<ShareMetas['state']>({
     /** 实际存储的时间, 控制当前日期显示的位置, 根据选择的日期类型来决定设置年/月/日中的某一项 */
     currentM: nowM,
+    /** 当前参与交互的临时时间，用于预览最终状态等 */
+    tempM: undefined,
     /** 控制当前展示的选择器类型 */
     type,
   });
 
-  const self = useSelf({
+  const self = useSelf<ShareMetas['self']>({
     /** 指向当前value的moment, 这里才是实际存储value的地方, value相当于此值的format */
-    cValueMoment: (null as unknown) as Moment,
+    cValueMoment: undefined,
     /** 当是范围选择时，存储结束时间 */
-    endValueMoment: (null as unknown) as Moment,
+    endValueMoment: undefined,
   });
 
   /** 同步value到cValueMoment(useMemo执行时机比effect更快) */
@@ -72,7 +76,7 @@ const Dates: React.FC<DatesProps> = props => {
     hasTime,
     getCurrentTime,
     type,
-    props,
+    props: props as DatesProps & DatesRangeProps,
   };
 
   /** 外部化一控制函数 */
@@ -142,7 +146,7 @@ const Dates: React.FC<DatesProps> = props => {
       })}
     >
       <div className="fr-dates_head">
-        <span>{renderCheckedValue()}</span>
+        <span className="bold">{renderCheckedValue()}</span>
         {renderTabBtns()}
       </div>
       <div className="fr-dates_body">{render()}</div>
@@ -161,6 +165,11 @@ const Dates: React.FC<DatesProps> = props => {
       </div>
     </div>
   );
+}
+
+Dates.defaultProps = {
+  startDateLabel: '开始时间',
+  endDateLabel: '结束时间',
 };
 
 export default Dates;

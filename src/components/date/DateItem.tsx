@@ -1,6 +1,9 @@
 import React, { useMemo } from 'react';
 import cls from 'classnames';
 import { useFn } from '@lxjx/hooks';
+import { useHover } from 'react-use-gesture';
+import { dumpFn } from '@lxjx/utils';
+import moment from 'moment';
 import { DATE_FORMAT_DATE, DATE_FORMAT_MONTH, DATE_FORMAT_YEAR, formatDate } from './utils';
 import { DateItemProps, DateType } from './type';
 
@@ -13,8 +16,12 @@ const DateItem: React.FC<DateItemProps> = ({
   checkedMoment,
   checkedEndMoment,
   onCurrentChange,
+  tempMoment,
   type = DateType.DATE as NonNullable<DateItemProps['type']>,
   range,
+  onActive = dumpFn,
+  startDateLabel,
+  endDateLabel,
 }) => {
   /** 由于调用频率很高，一定要确保计算都被memo */
 
@@ -65,9 +72,21 @@ const DateItem: React.FC<DateItemProps> = ({
 
   // 是否是范围选中的两个范围之间
   const isRangeCheckBetween = useMemo(() => {
-    if (!range || !checkedMoment || !checkedEndMoment) return false;
-    return insideM.isBetween(checkedMoment, checkedEndMoment, map2[type]);
-  }, [checkedMoment, checkedEndMoment, insideM]);
+    if (!range || !checkedMoment) return false;
+    if (!checkedEndMoment && !tempMoment) return false;
+
+    if (checkedMoment && checkedEndMoment) {
+      return insideM.isBetween(checkedMoment, checkedEndMoment, map2[type]);
+    }
+
+    if (tempMoment) {
+      const min = moment.min(checkedMoment, tempMoment);
+      const max = moment.max(checkedMoment, tempMoment);
+
+      return insideM.isBetween(min, max, map2[type]);
+    }
+    return false;
+  }, [checkedMoment, checkedEndMoment, tempMoment, insideM]);
 
   const isDisabled = useMemo(() => disabledDate?.(insideM, type), [insideM]);
 
@@ -77,7 +96,33 @@ const DateItem: React.FC<DateItemProps> = ({
 
   const isDisabledRange = isDisabled && (prevDisabled || lastDisabled);
 
+  /** 是否是活动时间 */
+  const isActiveDate = useMemo(() => {
+    if (!range || !tempMoment || !checkedMoment || isDisabled) return false;
+    if (checkedMoment && checkedEndMoment) return false;
+    return insideM.isSame(tempMoment, map2[type]);
+  }, [tempMoment, range]);
+
+  /** 活动时间是否在选中时间之前 */
+  const isActiveBeforeChecked = useMemo(() => {
+    if (!isActiveDate || !tempMoment) return false;
+    return tempMoment.isBefore(checkedMoment);
+  }, [isActiveDate]);
+
+  const isActiveSameChecked = useMemo(() => {
+    if (!isActiveDate || !tempMoment) return false;
+    return tempMoment.isSame(checkedMoment, map2[type]);
+  }, [isActiveDate]);
+
+  const bind = useHover(
+    ({ hovering }) => {
+      onActive(hovering ? insideM.clone() : undefined);
+    },
+    { enabled: onActive && range && !checkedEndMoment && !!checkedMoment && !isDisabled },
+  );
+
   const onClick = useFn(() => {
+    onActive(undefined);
     if (isDisabled) return;
 
     if (onCheck) {
@@ -108,7 +153,7 @@ const DateItem: React.FC<DateItemProps> = ({
   return (
     <div
       className={cls('fr-dates_date-item', {
-        __active: isChecked || isEndChecked,
+        __active: isChecked || isEndChecked || isActiveDate,
         __gray: type === DateType.DATE ? !isCurrentBetween : false,
         __focus: isSame,
         __disabled: isDisabled,
@@ -119,12 +164,27 @@ const DateItem: React.FC<DateItemProps> = ({
         __activeRange: isRangeCheckBetween,
       })}
       onClick={onClick}
+      {...bind()}
     >
       {/* 日历模式 */}
       <span className="fr-dates_date-item-inner">
-        {range && isChecked && !isEndChecked && <span className="fr-dates_tips">开始</span>}
+        {range && isChecked && !isEndChecked && (
+          <span className="fr-dates_tips">{startDateLabel}</span>
+        )}
         {range && isEndChecked && (
-          <span className="fr-dates_tips">{isChecked ? '开始/结束' : '结束'}</span>
+          <span className="fr-dates_tips">
+            {isChecked ? `${startDateLabel}/${endDateLabel}` : endDateLabel}
+          </span>
+        )}
+        {isActiveDate && isActiveSameChecked && (
+          <span className="fr-dates_tips">
+            设为{startDateLabel}/{endDateLabel}
+          </span>
+        )}
+        {isActiveDate && !isActiveSameChecked && (
+          <span className="fr-dates_tips">
+            {isActiveBeforeChecked ? `设为${startDateLabel}` : `设为${endDateLabel}`}
+          </span>
         )}
         {renderItemFormat()}
       </span>

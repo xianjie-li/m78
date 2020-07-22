@@ -179,7 +179,6 @@
     width: 80%;
     height: 100%;
     border-radius: $border-radius;
-    //font-weight: bold;
     transition: none !important;
 
     @include effect-bg;
@@ -339,7 +338,7 @@
     height: 30px;
     line-height: 30px;
     padding-left: 6px;
-    font-size: 15px;
+    font-size: 18px;
 
     &.__active {
       font-weight: bold;

@@ -1,5 +1,5 @@
 import { Moment } from 'moment';
-import { FormLikeWithExtra, FormLike } from '@lxjx/hooks';
+import { FormLike } from '@lxjx/hooks';
 import React from 'react';
 import { SetState } from '@lxjx/hooks/dist/type';
 import { AnyFunction } from '@lxjx/utils';
@@ -16,7 +16,7 @@ export enum DateType {
 /* 需要同时允许用户传入DateType 或 字面量 */
 type DateTypeUnion = 'date' | 'month' | 'year' | 'time';
 
-export interface DatesProps extends ComponentBaseProps, FormLikeWithExtra<string, Moment> {
+export interface DatesBaseProps extends ComponentBaseProps {
   /** 选择器类型 */
   type?: DateType | DateTypeUnion;
   /**
@@ -28,15 +28,9 @@ export interface DatesProps extends ComponentBaseProps, FormLikeWithExtra<string
   format?: string;
   /** 禁用日期, 参数为当前项的moment、当前类型(year | month | date)，返回true时禁用该项 */
   disabledDate?(mmt: Moment, type: Exclude<DateType, DateType.TIME>): boolean | void;
-  /** 开启范围选择 */
-  range?: boolean;
-  /** '开始' | 自定义开始时间的文本 */
-  startDateLabel?: string;
-  /** '结束' | 自定义结束时间的文本 */
-  endDateLabel?: string;
 
   /* ===== Time ===== */
-  /** 日期选择时是否包含时间选择 */
+  /** 日期选择时是否启用时间选择 */
   hasTime?: boolean;
   /**
    * 隐藏已被禁用的时间, 当包含很多禁用时间时，可通过此项来提高用户进行信息筛选的速度
@@ -59,6 +53,25 @@ export interface DatesProps extends ComponentBaseProps, FormLikeWithExtra<string
   ): boolean | void;
 }
 
+export interface DatesProps extends DatesBaseProps {
+  value?: string;
+  onChange?: (value: string, mmt: Moment) => void;
+  defaultValue?: string;
+}
+
+export interface DatesRangeProps extends DatesBaseProps {
+  value?: [string, string];
+  onChange?: (values: [string, string], mmts: [Moment, Moment]) => void;
+  defaultValue?: [string, string];
+  /** 开启范围选择 */
+  range?: boolean;
+  /** '开始' | 自定义开始时间的文本 */
+  startDateLabel?: string;
+  /** '结束' | 自定义结束时间的文本 */
+  endDateLabel?: string;
+}
+
+/** 表示年月日中的一项 */
 export interface DateItemProps {
   /** 该项所在时间 */
   itemMoment: Moment;
@@ -70,6 +83,8 @@ export interface DateItemProps {
   checkedMoment?: Moment;
   /** 当前选中的结束时间 */
   checkedEndMoment?: Moment;
+  /** 当前参与交互的临时时间，用于预览最终状态等 */
+  tempMoment?: Moment;
   /** 点击选中该项 */
   onCheck?(dString: string, mmt: Moment): void;
   /** 禁用所有返回true的日期 */
@@ -80,6 +95,12 @@ export interface DateItemProps {
   type?: Exclude<DateType, DateType.TIME>;
   /** 是否多选 */
   range?: boolean;
+  /** 当前时间处于 活动/失活 时触发 */
+  onActive?(mmt?: Moment): void;
+
+  startDateLabel: DatesRangeProps['startDateLabel'];
+
+  endDateLabel: DatesRangeProps['endDateLabel'];
 }
 
 /** 组成时间的基本对象 */
@@ -89,6 +110,7 @@ export interface TimeValue {
   s: number;
 }
 
+/** 时间组件的props */
 export interface TimeProps extends FormLike<TimeValue> {
   /** 选择器顶部显示内容 */
   label?: React.ReactNode;
@@ -118,6 +140,7 @@ export interface ShareMetas {
   nowM: Moment;
   state: {
     currentM: Moment;
+    tempM: Moment | undefined;
     type: DateType | DateTypeUnion;
   };
   setState: SetState<ShareMetas['state']>;
@@ -130,5 +153,5 @@ export interface ShareMetas {
   hasTime: boolean;
   getCurrentTime(): TimeValue;
   type: DateType | DateTypeUnion;
-  props: DatesProps;
+  props: DatesProps & DatesRangeProps;
 }

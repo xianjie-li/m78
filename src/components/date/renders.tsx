@@ -32,10 +32,10 @@ export function staticRenderCheckedValue(
 
   const { range } = props;
 
-  const startLabel = range && <span className="color-second">开始: </span>;
-  const endLabel = range && <span className="color-second">结束: </span>;
+  const startLabel = range && <span className="color-second">{props.startDateLabel}: </span>;
+  const endLabel = range && <span className="color-second">{props.endDateLabel}: </span>;
 
-  const tipsNode = <span>请选择{placeholderMaps[type]}</span>;
+  const tipsNode = <span>请选择{!range && placeholderMaps[type]}</span>;
 
   function renderDateItem(mmt?: Moment, label?: React.ReactNode) {
     return (
@@ -112,7 +112,7 @@ export function staticRenderDate(
     nextY,
     next,
   }: ReturnType<typeof useDateUIController>,
-  { onCheck }: ReturnType<typeof useHandlers>,
+  { onCheck, onItemActive }: ReturnType<typeof useHandlers>,
 ) {
   return (
     <>
@@ -173,6 +173,10 @@ export function staticRenderDate(
             key={mm.format()}
             type={DateType.DATE}
             range={props.range}
+            onActive={onItemActive}
+            tempMoment={state.tempM}
+            startDateLabel={props.startDateLabel}
+            endDateLabel={props.endDateLabel}
           />
         ))}
       </div>
@@ -184,7 +188,7 @@ export function staticRenderDate(
 export function staticRenderMonth(
   { self, state, nowM, props }: ShareMetas,
   { prevY, toYear, nextY }: ReturnType<typeof useDateUIController>,
-  { onCheckMonth }: ReturnType<typeof useHandlers>,
+  { onCheckMonth, onItemActive }: ReturnType<typeof useHandlers>,
 ) {
   return (
     <>
@@ -211,6 +215,10 @@ export function staticRenderMonth(
             key={mm.format()}
             type={DateType.MONTH}
             range={props.range}
+            onActive={onItemActive}
+            tempMoment={state.tempM}
+            startDateLabel={props.startDateLabel}
+            endDateLabel={props.endDateLabel}
           />
         ))}
       </div>
@@ -222,7 +230,7 @@ export function staticRenderMonth(
 export function staticRenderYear(
   { self, state, nowM, props }: ShareMetas,
   { changeDate }: ReturnType<typeof useDateUIController>,
-  { onCheckYear }: ReturnType<typeof useHandlers>,
+  { onCheckYear, onItemActive }: ReturnType<typeof useHandlers>,
 ) {
   const [list, str] = getYears(state.currentM.year());
 
@@ -254,6 +262,10 @@ export function staticRenderYear(
             key={mm.format()}
             type={DateType.YEAR}
             range={props.range}
+            onActive={onItemActive}
+            tempMoment={state.tempM}
+            startDateLabel={props.startDateLabel}
+            endDateLabel={props.endDateLabel}
           />
         ))}
       </div>
