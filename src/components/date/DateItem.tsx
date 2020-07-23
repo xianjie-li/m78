@@ -88,11 +88,30 @@ const DateItem: React.FC<DateItemProps> = ({
     return false;
   }, [checkedMoment, checkedEndMoment, tempMoment, insideM]);
 
-  const isDisabled = useMemo(() => disabledDate?.(insideM, type), [insideM]);
+  const disabledExtra = useMemo(
+    () => ({
+      checkedDate: checkedMoment,
+      checkedEndDate: checkedEndMoment,
+      isRange: range,
+    }),
+    [checkedMoment, checkedEndMoment],
+  );
+
+  const isDisabled = useMemo(() => disabledDate?.(insideM, type, disabledExtra), [
+    insideM,
+    disabledExtra,
+  ]);
 
   /** 前后一天/月/年是否被禁用 */
-  const prevDisabled = useMemo(() => disabledDate?.(prev, type), [prev]);
-  const lastDisabled = useMemo(() => disabledDate?.(last, type), [last]);
+  const prevDisabled = useMemo(() => disabledDate?.(prev, type, disabledExtra), [
+    prev,
+    disabledExtra,
+  ]);
+
+  const lastDisabled = useMemo(() => disabledDate?.(last, type, disabledExtra), [
+    last,
+    disabledExtra,
+  ]);
 
   const isDisabledRange = isDisabled && (prevDisabled || lastDisabled);
 

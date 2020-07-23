@@ -27,8 +27,6 @@ function Dates(props: DatesProps | DatesRangeProps) {
 
   const [value, setValue] = useFormState<string[] | string, Moment>(props, range ? [] : '');
 
-  console.log('val', value);
-
   const [state, setState] = useSetState<ShareMetas['state']>({
     /** 实际存储的时间, 控制当前日期显示的位置, 根据选择的日期类型来决定设置年/月/日中的某一项 */
     currentM: nowM,
@@ -125,7 +123,11 @@ function Dates(props: DatesProps | DatesRangeProps) {
     const common = {
       disabledTime: props.disabledTime,
       hideDisabled: props.hideDisabledTime,
-      disabledTimeExtra: range ? [self.cValueMoment, self.endValueMoment] : self.cValueMoment,
+      disabledTimeExtra: {
+        checkedDate: self.cValueMoment,
+        checkedEndDate: self.endValueMoment,
+        isRange: range,
+      },
     };
 
     return (

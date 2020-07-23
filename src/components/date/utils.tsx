@@ -1,4 +1,5 @@
 import moment, { Moment } from 'moment';
+import { DisabledDate, DisabledTime } from '@/components/date/type';
 
 export const DATE_FORMAT_YEAR = 'YYYY';
 
@@ -108,3 +109,6 @@ export function formatDate(m: Moment, format: string) {
 export function concatTimeToMoment(tStr: string) {
   return moment(`${moment().format(DATE_FORMAT_DATE)} ${tStr}`, DATE_DEFAULT_PARSE);
 }
+
+/** 接收DisabledTime数组或DisabledDate数组并将参数原样传入，如果有任意一个返回了true则返回true */
+export function checkDisabledArray(arr: Array<DisabledDate> | Array<DisabledTime>, ...args: any) {}

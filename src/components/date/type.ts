@@ -16,6 +16,42 @@ export enum DateType {
 /* 需要同时允许用户传入DateType 或 字面量 */
 type DateTypeUnion = 'date' | 'month' | 'year' | 'time';
 
+/** 传递给disabledDate/disabledTime的额外参数 */
+interface DisabledExtras {
+  /** 当前时间 */
+  checkedDate?: Moment;
+  /** 如果为range选择且选择了结束时间，会以此项传入 */
+  checkedEndDate?: Moment;
+  /** 是否为范围选择 */
+  isRange?: boolean;
+}
+
+export interface DisabledDate {
+  /**
+   * 禁用日期,返回true的日期项会被禁用
+   * @param mmt - 当前项的时间
+   * @param type- 当前项类型 当前类型(year | month | date)
+   * @param extra - <DisabledExtras>
+   * @return - 返回true时，该项被禁用
+   * */
+  (mmt: Moment, type: Exclude<DateType, DateType.TIME>, extra: DisabledExtras): boolean | void;
+}
+
+/**
+ * 接收当前时间元数据来决定禁用哪些时间
+ * @param meta
+ * @param meta.key - 当前项类型 'h' | 'm' | 's'
+ * @param meta.val - 当前项的值
+ * @param meta.h - 当前选中的时
+ * @param meta.m - 当前选中的分
+ * @param meta.s - 当前选中的秒
+ * @param extra - <DisabledExtras>
+ * @return - 返回true时，该项被禁用
+ * */
+export interface DisabledTime {
+  (meta: TimeValue & { key: keyof TimeValue; val: number }, extra: DisabledExtras): boolean | void;
+}
+
 export interface DatesBaseProps extends ComponentBaseProps {
   /** 选择器类型 */
   type?: DateType | DateTypeUnion;
@@ -26,8 +62,8 @@ export interface DatesBaseProps extends ComponentBaseProps {
    * 传入后，将统一解析和导出时间为指定的格式, 令牌格式可参考https://momentjs.com/docs/#/displaying/format/
    * */
   format?: string;
-  /** 禁用日期, 参数为当前项的moment、当前类型(year | month | date)，返回true时禁用该项 */
-  disabledDate?(mmt: Moment, type: Exclude<DateType, DateType.TIME>): boolean | void;
+
+  disabledDate?: DisabledDate;
 
   /* ===== Time ===== */
   /** 日期选择时是否启用时间选择 */
@@ -36,32 +72,23 @@ export interface DatesBaseProps extends ComponentBaseProps {
    * 隐藏已被禁用的时间, 当包含很多禁用时间时，可通过此项来提高用户进行信息筛选的速度
    * 也可以通过此项实现时间步进选择(1点 3点 4点...)的效果 */
   hideDisabledTime?: boolean;
-  /**
-   * 接收当前时间元数据来决定禁用哪些时间
-   * @param meta
-   * @param meta.key - 当前项类型 'h' | 'm' | 's'
-   * @param meta.val - 当前项的值
-   * @param meta.h - 当前选中的时
-   * @param meta.m - 当前选中的分
-   * @param meta.s - 当前选中的秒
-   * @param currentDate - 如果类型为日期选择器，则此项会传入当前选中的日期
-   * @return - 返回true时，该项被禁用
-   * */
-  disabledTime?(
-    meta: TimeValue & { key: keyof TimeValue; val: number },
-    currentDate?: Moment,
-  ): boolean | void;
+
+  disabledTime?: DisabledTime;
 }
 
 export interface DatesProps extends DatesBaseProps {
   value?: string;
+
   onChange?: (value: string, mmt: Moment) => void;
+
   defaultValue?: string;
 }
 
 export interface DatesRangeProps extends DatesBaseProps {
   value?: [string, string];
+
   onChange?: (values: [string, string], mmts: [Moment, Moment]) => void;
+
   defaultValue?: [string, string];
   /** 开启范围选择 */
   range?: boolean;

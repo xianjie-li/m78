@@ -74,7 +74,7 @@ const Time: React.FC<TimeProps> = props => {
             cItem => !disabledTime({ ...value, key: k, val: cItem }, disabledTimeExtra),
           );
 
-          if (enableVal) {
+          if (enableVal !== undefined) {
             hasDisabled = true; // 有可替换值才视为禁用
             newTime[k] = enableVal;
           }
