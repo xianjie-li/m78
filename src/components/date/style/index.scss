@@ -6,6 +6,18 @@
   border-radius: $border-radius;
   box-shadow: $shadow-1;
   width: 320px;
+  z-index: $z-index;
+
+  &_inp {
+    border-style: solid !important;
+  }
+
+  &_popper {
+    .fr-popper_popper-content {
+      padding: 0;
+      box-shadow: none;
+    }
+  }
 
   &_head, &_foot {
     display: flex;
@@ -35,6 +47,7 @@
   }
 
   &_btns {
+    flex: 0 0 auto;
     .fr-btn {
       margin: 0;
     }

@@ -4,8 +4,34 @@ import { useFn } from '@lxjx/hooks';
 import { useHover } from 'react-use-gesture';
 import { dumpFn } from '@lxjx/utils';
 import moment from 'moment';
-import { DATE_FORMAT_DATE, DATE_FORMAT_MONTH, DATE_FORMAT_YEAR, formatDate } from './utils';
+import {
+  checkDisabled,
+  DATE_FORMAT_DATE,
+  DATE_FORMAT_MONTH,
+  DATE_FORMAT_YEAR,
+  disabledHandlerFormat,
+  formatDate,
+} from './utils';
 import { DateItemProps, DateType } from './type';
+
+// 对各种类型的值映射
+const map1 = {
+  [DateType.DATE]: 'days',
+  [DateType.MONTH]: 'months',
+  [DateType.YEAR]: 'years',
+} as const;
+
+const map2 = {
+  [DateType.DATE]: 'dates',
+  [DateType.MONTH]: 'months',
+  [DateType.YEAR]: 'years',
+} as const;
+
+const map3 = {
+  [DateType.DATE]: DATE_FORMAT_DATE,
+  [DateType.MONTH]: DATE_FORMAT_MONTH,
+  [DateType.YEAR]: DATE_FORMAT_YEAR,
+} as const;
 
 const DateItem: React.FC<DateItemProps> = ({
   itemMoment,
@@ -20,31 +46,12 @@ const DateItem: React.FC<DateItemProps> = ({
   type = DateType.DATE as NonNullable<DateItemProps['type']>,
   range,
   onActive = dumpFn,
-  startDateLabel,
-  endDateLabel,
+  startLabel,
+  endLabel,
 }) => {
   /** 由于调用频率很高，一定要确保计算都被memo */
 
   const insideM = useMemo(() => itemMoment.clone(), [itemMoment]);
-
-  // 对各种类型的值映射
-  const map1 = {
-    [DateType.DATE]: 'days',
-    [DateType.MONTH]: 'months',
-    [DateType.YEAR]: 'years',
-  } as const;
-
-  const map2 = {
-    [DateType.DATE]: 'dates',
-    [DateType.MONTH]: 'months',
-    [DateType.YEAR]: 'years',
-  } as const;
-
-  const map3 = {
-    [DateType.DATE]: DATE_FORMAT_DATE,
-    [DateType.MONTH]: DATE_FORMAT_MONTH,
-    [DateType.YEAR]: DATE_FORMAT_YEAR,
-  } as const;
 
   // 前后一天
   const prev = useMemo(() => insideM.clone().subtract(1, map1[type]), [insideM]);
@@ -97,21 +104,23 @@ const DateItem: React.FC<DateItemProps> = ({
     [checkedMoment, checkedEndMoment],
   );
 
-  const isDisabled = useMemo(() => disabledDate?.(insideM, type, disabledExtra), [
-    insideM,
-    disabledExtra,
-  ]);
+  const disables = disabledHandlerFormat(disabledDate);
+
+  const isDisabled = useMemo(
+    () => !!disables && checkDisabled(disables, insideM, type, disabledExtra),
+    [insideM, disabledExtra],
+  );
 
   /** 前后一天/月/年是否被禁用 */
-  const prevDisabled = useMemo(() => disabledDate?.(prev, type, disabledExtra), [
-    prev,
-    disabledExtra,
-  ]);
+  const prevDisabled = useMemo(
+    () => !!disables && checkDisabled(disables, prev, type, disabledExtra),
+    [prev, disabledExtra],
+  );
 
-  const lastDisabled = useMemo(() => disabledDate?.(last, type, disabledExtra), [
-    last,
-    disabledExtra,
-  ]);
+  const lastDisabled = useMemo(
+    () => !!disables && checkDisabled(disables, last, type, disabledExtra),
+    [last, disabledExtra],
+  );
 
   const isDisabledRange = isDisabled && (prevDisabled || lastDisabled);
 
@@ -148,7 +157,12 @@ const DateItem: React.FC<DateItemProps> = ({
       onCheck(formatDate(itemMoment, map3[type]), itemMoment.clone());
     }
 
-    if (onCurrentChange && type === DateType.DATE && !isCurrentBetween) {
+    if (
+      onCurrentChange &&
+      type === DateType.DATE &&
+      !isCurrentBetween &&
+      !range /* range时不需要自动跳上下月 */
+    ) {
       onCurrentChange(insideM.clone());
     }
   });
@@ -177,32 +191,29 @@ const DateItem: React.FC<DateItemProps> = ({
         __focus: isSame,
         __disabled: isDisabled,
         __disabledRange: isDisabledRange,
-        __firstRange: isDisabled && !prevDisabled,
-        __lastRange: isDisabled && !lastDisabled,
+        __firstRange: isDisabled && !prevDisabled && !isRangeCheckBetween,
+        __lastRange: isDisabled && !lastDisabled && !isRangeCheckBetween,
         __yearMonth: type === DateType.MONTH || type === DateType.YEAR,
         __activeRange: isRangeCheckBetween,
       })}
       onClick={onClick}
       {...bind()}
     >
-      {/* 日历模式 */}
       <span className="fr-dates_date-item-inner">
-        {range && isChecked && !isEndChecked && (
-          <span className="fr-dates_tips">{startDateLabel}</span>
-        )}
+        {range && isChecked && !isEndChecked && <span className="fr-dates_tips">{startLabel}</span>}
         {range && isEndChecked && (
           <span className="fr-dates_tips">
-            {isChecked ? `${startDateLabel}/${endDateLabel}` : endDateLabel}
+            {isChecked ? `${startLabel}/${endLabel}` : endLabel}
           </span>
         )}
         {isActiveDate && isActiveSameChecked && (
           <span className="fr-dates_tips">
-            设为{startDateLabel}/{endDateLabel}
+            设为{startLabel}/{endLabel}
           </span>
         )}
         {isActiveDate && !isActiveSameChecked && (
           <span className="fr-dates_tips">
-            {isActiveBeforeChecked ? `设为${startDateLabel}` : `设为${endDateLabel}`}
+            {isActiveBeforeChecked ? `设为${startLabel}` : `设为${endLabel}`}
           </span>
         )}
         {renderItemFormat()}

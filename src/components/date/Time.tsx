@@ -1,10 +1,9 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { useEffectEqual, useFormState, useScroll } from '@lxjx/hooks';
 import { useFirstMountState } from 'react-use';
 import cls from 'classnames';
 import { createRandString } from '@lxjx/utils';
-import moment from 'moment';
-import { getTimes } from './utils';
+import { checkDisabled, getTimes } from './utils';
 import { TimeProps, TimeValue } from './type';
 
 function getSelector(id: string, key: string, val: number) {
@@ -20,16 +19,16 @@ const Time: React.FC<TimeProps> = props => {
 
   const firstMount = useFirstMountState();
 
-  const nowTime = useMemo(() => {
-    const now = moment();
-    return {
-      h: now.hour(),
-      m: now.minute(),
-      s: now.second(),
-    };
-  }, []);
+  // const nowTime = useMemo(() => {
+  //   const now = moment();
+  //   return {
+  //     h: now.hour(),
+  //     m: now.minute(),
+  //     s: now.second(),
+  //   };
+  // }, []);
 
-  const [value, setValue] = useFormState<TimeValue | undefined>(props, nowTime);
+  const [value, setValue] = useFormState<TimeValue | undefined>(props, undefined as any);
 
   const sc1 = useScroll<HTMLDivElement>();
   const sc2 = useScroll<HTMLDivElement>();
@@ -40,11 +39,6 @@ const Time: React.FC<TimeProps> = props => {
     m: { sc: sc2, unit: '分' },
     s: { sc: sc3, unit: '秒' },
   };
-
-  // 当没有传入value时，将当前时间上报给消费组件
-  useEffect(() => {
-    value === nowTime && setValue(nowTime);
-  }, []);
 
   // 滚动到当前选中、存在已选中的禁用时间时，将其更新为该列第一个可用值
   useEffectEqual(() => {
@@ -57,7 +51,8 @@ const Time: React.FC<TimeProps> = props => {
       Object.entries(value).forEach(([key, t]) => {
         const k = key as keyof TimeValue;
 
-        const isDisabled = disabledTime(
+        const isDisabled = checkDisabled(
+          disabledTime,
           {
             ...value,
             key: k,
@@ -71,7 +66,8 @@ const Time: React.FC<TimeProps> = props => {
 
           // 查找该列第一个可用
           const enableVal = currentColumn.find(
-            cItem => !disabledTime({ ...value, key: k, val: cItem }, disabledTimeExtra),
+            cItem =>
+              !checkDisabled(disabledTime, { ...value, key: k, val: cItem }, disabledTimeExtra),
           );
 
           if (enableVal !== undefined) {
@@ -84,10 +80,9 @@ const Time: React.FC<TimeProps> = props => {
     if (hasDisabled) {
       setValue(newTime);
     }
-
     // 参数1防止滚动，参数2防止抖动
-    patchPosition(firstMount, !firstMount);
-  }, [value]);
+    patchPosition(true, !firstMount);
+  }, [value, disabledTimeExtra]);
 
   /** 设置指定key的值到value并滚动到其所在位置 */
   function patchValue(key: keyof typeof map, val: number, immediate?: boolean) {
@@ -127,7 +122,8 @@ const Time: React.FC<TimeProps> = props => {
 
           const disabled =
             disabledTime && value
-              ? disabledTime(
+              ? checkDisabled(
+                  disabledTime,
                   {
                     ...value,
                     key,

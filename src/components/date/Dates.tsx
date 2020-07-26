@@ -1,26 +1,41 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Button from '@lxjx/fr/lib/button';
+import Input from '@lxjx/fr/lib/input';
+import ShowFromMouse from '@lxjx/fr/lib/show-from-mouse';
+import Popper from '@lxjx/fr/lib/popper';
+import { Z_INDEX_MESSAGE } from '@lxjx/fr/lib/util';
 import { useFormState, useSelf, useSetState } from '@lxjx/hooks';
 import moment, { Moment } from 'moment';
 import cls from 'classnames';
 
-import { concatTimeToMoment, DATE_DEFAULT_PARSE } from './utils';
+import { defaultFormat, parseValue, placeholderMaps, pickerTypeWrap } from './utils';
 import {
+  renderPresetDates,
   staticRenderCheckedValue,
   staticRenderDate,
   staticRenderMonth,
-  staticRenderTabBtns,
+  staticRenderTabs,
+  staticRenderTime,
   staticRenderYear,
 } from './renders';
 import { DatesProps, DatesRangeProps, DateType, ShareMetas } from './type';
-import Time from './Time';
 import { useDateUIController, useHandlers } from './hooks';
 
 function Dates(props: DatesProps): JSX.Element;
 function Dates(props: DatesRangeProps): JSX.Element;
 function Dates(props: DatesProps | DatesRangeProps) {
   const tProps = props as DatesProps & DatesRangeProps;
-  const { type = DateType.DATE, hasTime = false, range } = tProps;
+  const {
+    type = DateType.DATE,
+    hasTime = false,
+    range,
+    className,
+    style,
+    disabledPreset,
+    format = defaultFormat,
+    size,
+    disabled,
+  } = tProps;
 
   /**  当前时间 */
   const [nowM] = useState(() => moment());
@@ -28,51 +43,24 @@ function Dates(props: DatesProps | DatesRangeProps) {
   const [value, setValue] = useFormState<string[] | string, Moment>(props, range ? [] : '');
 
   const [state, setState] = useSetState<ShareMetas['state']>({
-    /** 实际存储的时间, 控制当前日期显示的位置, 根据选择的日期类型来决定设置年/月/日中的某一项 */
+    /** 实际存储的时间, 控制当前日期显示的位置 */
     currentM: nowM,
-    /** 当前参与交互的临时时间，用于预览最终状态等 */
+    /** 当前参与交互的临时时间，实现预览功能 */
     tempM: undefined,
     /** 控制当前展示的选择器类型 */
     type,
+    /** 是否显示 */
+    show: false,
+    /** 是否为移动设备（不严格匹配, 屏幕小于指定物理像素即视为移动设备） */
+    mobile: false,
   });
 
   const self = useSelf<ShareMetas['self']>({
-    /** 指向当前value的moment, 这里才是实际存储value的地方, value相当于此值的format */
+    /** 指向当前value的moment, 这里才是实际存储value的地方, value相当于此值的时间字符映射 */
     cValueMoment: undefined,
     /** 当是范围选择时，存储结束时间 */
     endValueMoment: undefined,
   });
-
-  /** 解析value到cValueMoment/endValueMoment(useMemo执行时机比effect更快) */
-  useMemo(() => {
-    if (value) {
-      if (type === DateType.TIME) {
-        if (range) {
-          if (!value.length) return;
-          self.cValueMoment = concatTimeToMoment(value[0]);
-
-          if (value[1]) {
-            self.endValueMoment = concatTimeToMoment(value[1]);
-          }
-          return;
-        }
-
-        // 作为纯时间组件使用
-        self.cValueMoment = concatTimeToMoment(value as string);
-      } else {
-        if (range) {
-          if (!value.length) return;
-          self.cValueMoment = moment(value[0], DATE_DEFAULT_PARSE);
-
-          if (value[1]) {
-            self.endValueMoment = moment(value[1], DATE_DEFAULT_PARSE);
-          }
-          return;
-        }
-        self.cValueMoment = moment(value, DATE_DEFAULT_PARSE);
-      }
-    }
-  }, [value]);
 
   const share: ShareMetas = {
     nowM,
@@ -87,13 +75,17 @@ function Dates(props: DatesProps | DatesRangeProps) {
     props: props as DatesProps & DatesRangeProps,
   };
 
-  /** 外部化一控制函数 */
+  /** 将value解析到cValueMoment/endValueMoment(useMemo执行时机比effect更快) */
+  useMemo(() => parseValue(share), [value]);
+
+  /** 控制picker的显示类型, 并在窗口大小变更时更新 */
+  useEffect(pickerTypeWrap(state, setState), []);
+
+  /** 外部化一些控制函数 */
   const controllers = useDateUIController(share);
 
   /** 外部化一处理函数 */
   const handlers = useHandlers(share, controllers);
-
-  const { onCheckTime } = handlers;
 
   /** 根据当前选中事件获取时分秒，未选中时间则取当前时间, 传入getEndTime时获取结束时间 */
   function getCurrentTime(isEnd?: boolean) {
@@ -116,34 +108,9 @@ function Dates(props: DatesProps | DatesRangeProps) {
 
   const renderYear = () => staticRenderYear(share, controllers, handlers);
 
-  const renderTabBtns = () => staticRenderTabBtns(share, controllers);
+  const renderTime = () => staticRenderTime(share, handlers);
 
-  /** 时间选择 */
-  function renderTime() {
-    const common = {
-      disabledTime: props.disabledTime,
-      hideDisabled: props.hideDisabledTime,
-      disabledTimeExtra: {
-        checkedDate: self.cValueMoment,
-        checkedEndDate: self.endValueMoment,
-        isRange: range,
-      },
-    };
-
-    return (
-      <>
-        <Time {...common} value={getCurrentTime()} onChange={onCheckTime} />
-        {range && (
-          <Time
-            {...common}
-            value={getCurrentTime(true)}
-            onChange={times => onCheckTime(times, true)}
-            label={<span>~ 选择时间范围 ~</span>}
-          />
-        )}
-      </>
-    );
-  }
+  const renderTabs = () => staticRenderTabs(share, controllers);
 
   function render() {
     if (state.type === DateType.DATE && type === DateType.DATE) return renderDate();
@@ -157,37 +124,102 @@ function Dates(props: DatesProps | DatesRangeProps) {
     return null;
   }
 
-  return (
-    <div
-      className={cls('fr-dates', {
-        __time: type === DateType.TIME || state.type === DateType.TIME,
-      })}
-    >
-      <div className="fr-dates_head">
-        <span className="bold">{renderCheckedValue()}</span>
-        {renderTabBtns()}
+  function renderMain(fullWidth = false) {
+    return (
+      <div
+        className={cls('fr-dates', className, {
+          __time: type === DateType.TIME || state.type === DateType.TIME,
+        })}
+        style={{ width: fullWidth ? '100%' : undefined, ...style }}
+      >
+        <div className="fr-dates_head">
+          <span className="bold">{renderCheckedValue()}</span>
+          {renderTabs()}
+        </div>
+        <div className="fr-dates_body">{render()}</div>
+        <div className="fr-dates_foot">
+          <span className="fr-dates_btns">{!disabledPreset && renderPresetDates(share)}</span>
+          <span>
+            <Button size="small" link onClick={handlers.reset}>
+              清空
+            </Button>
+            <Button size="small" color="primary" onClick={() => setState({ show: false })}>
+              完成
+            </Button>
+          </span>
+        </div>
       </div>
-      <div className="fr-dates_body">{render()}</div>
-      <div className="fr-dates_foot">
-        <span className="fr-dates_btns">
-          <Button size="small" link color="primary">
-            今天
-          </Button>
-          <Button size="small" link color="primary">
-            现在
-          </Button>
-        </span>
-        <Button size="small" color="primary">
-          完成
-        </Button>
-      </div>
-    </div>
-  );
+    );
+  }
+
+  function renderInput() {
+    return (
+      <Input
+        className="fr-dates_inp"
+        value={format({
+          current: self.cValueMoment,
+          end: self.endValueMoment,
+          isRange: !!range,
+          type,
+          hasTime,
+        })}
+        allowClear={false}
+        placeholder={tProps.placeholder || `请选择${placeholderMaps[type]}${range ? '范围' : ''}`}
+        onFocus={state.mobile ? undefined : handlers.onShow}
+        onClick={handlers.onShow}
+        onKeyDown={handlers.onKeyDown}
+        readOnly={state.mobile}
+        size={size}
+        disabled={disabled}
+      />
+    );
+  }
+
+  function renderTooltip() {
+    return (
+      <Popper
+        className="fr-dates_popper"
+        offset={4}
+        content={renderMain()}
+        direction="bottomStart"
+        trigger="click"
+        show={state.show}
+        type="popper"
+        disabled={disabled}
+        onChange={_show => {
+          setState({
+            show: _show,
+          });
+        }}
+      >
+        {renderInput()}
+      </Popper>
+    );
+  }
+
+  /** 在小屏设备上使用model开启 */
+  function renderModel() {
+    return (
+      <>
+        {renderInput()}
+        <ShowFromMouse
+          style={{ zIndex: Z_INDEX_MESSAGE }}
+          show={state.show}
+          contStyle={{ width: '94%', padding: 12 }}
+          onClose={handlers.onHide}
+        >
+          {renderMain(true)}
+        </ShowFromMouse>
+      </>
+    );
+  }
+
+  return state.mobile ? renderModel() : renderTooltip();
 }
 
 Dates.defaultProps = {
-  startDateLabel: '开始',
-  endDateLabel: '结束',
+  startLabel: '开始',
+  endLabel: '结束',
 };
 
 export default Dates;

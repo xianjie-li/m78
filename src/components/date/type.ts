@@ -3,6 +3,7 @@ import { FormLike } from '@lxjx/hooks';
 import React from 'react';
 import { SetState } from '@lxjx/hooks/dist/type';
 import { AnyFunction } from '@lxjx/utils';
+import { InputProps } from '@/components/input';
 import { ComponentBaseProps } from '../types/types';
 
 export enum DateType {
@@ -11,7 +12,6 @@ export enum DateType {
   YEAR = 'year',
   TIME = 'time',
 }
-// 使用宽容模式解析时间，因而支持很多的怪异时间格式
 
 /* 需要同时允许用户传入DateType 或 字面量 */
 type DateTypeUnion = 'date' | 'month' | 'year' | 'time';
@@ -26,14 +26,14 @@ interface DisabledExtras {
   isRange?: boolean;
 }
 
-export interface DisabledDate {
-  /**
-   * 禁用日期,返回true的日期项会被禁用
-   * @param mmt - 当前项的时间
-   * @param type- 当前项类型 当前类型(year | month | date)
-   * @param extra - <DisabledExtras>
-   * @return - 返回true时，该项被禁用
-   * */
+/**
+ * 禁用日期,返回true的日期项会被禁用
+ * @param mmt - 当前项的时间
+ * @param type- 当前项类型 当前类型(year | month | date)
+ * @param extra - <DisabledExtras>
+ * @return - 返回true时，该项被禁用
+ * */
+export interface DateLimiter {
   (mmt: Moment, type: Exclude<DateType, DateType.TIME>, extra: DisabledExtras): boolean | void;
 }
 
@@ -48,34 +48,46 @@ export interface DisabledDate {
  * @param extra - <DisabledExtras>
  * @return - 返回true时，该项被禁用
  * */
-export interface DisabledTime {
+export interface DisabledLimiter {
   (meta: TimeValue & { key: keyof TimeValue; val: number }, extra: DisabledExtras): boolean | void;
 }
 
 export interface DatesBaseProps extends ComponentBaseProps {
-  /** 选择器类型 */
+  /** 'date' | 选择器类型 ('date' | 'month' | 'year' | 'time') */
   type?: DateType | DateTypeUnion;
-  /**
-   * 定制时间格式
-   * 默认支持解析 YYYY-MM-DD HH:mm:ss / YYYY/MM/DD HH:mm:ss 两种格式
-   * 默认导出格式为 YYYY-MM-DD HH:mm:ss
-   * 传入后，将统一解析和导出时间为指定的格式, 令牌格式可参考https://momentjs.com/docs/#/displaying/format/
-   * */
-  format?: string;
+  /** 限制可用日期 */
+  disabledDate?: DateLimiter | Array<DateLimiter>;
+  /** 'select' | 显示模式 组件、日历、选择器模式 */
+  mode?: 'component' | 'calendar' | 'select';
+  /** 未选中内容时的占位文本 */
+  placeholder?: string;
+  /** 格式化显示到占位框上的value，默认单选时为YYYY-MM-DD HH:mm:ss, 多选时为 YYYY-MM-DD HH:mm:ss ~ YYYY-MM-DD HH:mm:ss */
+  format?(meta: {
+    current?: Moment;
+    end?: Moment;
+    isRange: boolean;
+    type: DateType | DateTypeUnion;
+    hasTime: boolean;
+  }): string;
+  /** 禁用自带的时间预设，当你禁用了某些日期、时间段时，默认的预设可能会和被禁用的时间冲突，此时可以传入该选项来将其禁用 */
+  disabledPreset?: boolean;
+  /** 尺寸，只针对输入框 */
+  size?: InputProps['size'];
+  /** 禁用 */
+  disabled?: boolean;
 
-  disabledDate?: DisabledDate;
-
-  /* ===== Time ===== */
+  /* ========== Time ========== */
   /** 日期选择时是否启用时间选择 */
   hasTime?: boolean;
   /**
    * 隐藏已被禁用的时间, 当包含很多禁用时间时，可通过此项来提高用户进行信息筛选的速度
    * 也可以通过此项实现时间步进选择(1点 3点 4点...)的效果 */
   hideDisabledTime?: boolean;
-
-  disabledTime?: DisabledTime;
+  /** 限制可用时间 */
+  disabledTime?: DisabledLimiter | Array<DisabledLimiter>;
 }
 
+/** 常规选择，value为string */
 export interface DatesProps extends DatesBaseProps {
   value?: string;
 
@@ -84,6 +96,7 @@ export interface DatesProps extends DatesBaseProps {
   defaultValue?: string;
 }
 
+/** 范围选择，value为array, 分别表示[开始, 结束时间] */
 export interface DatesRangeProps extends DatesBaseProps {
   value?: [string, string];
 
@@ -93,9 +106,9 @@ export interface DatesRangeProps extends DatesBaseProps {
   /** 开启范围选择 */
   range?: boolean;
   /** '开始' | 自定义开始时间的文本 */
-  startDateLabel?: string;
+  startLabel?: string;
   /** '结束' | 自定义结束时间的文本 */
-  endDateLabel?: string;
+  endLabel?: string;
 }
 
 /** 表示年月日中的一项 */
@@ -125,9 +138,9 @@ export interface DateItemProps {
   /** 当前时间处于 活动/失活 时触发 */
   onActive?(mmt?: Moment): void;
 
-  startDateLabel: DatesRangeProps['startDateLabel'];
+  startLabel: DatesRangeProps['startLabel'];
 
-  endDateLabel: DatesRangeProps['endDateLabel'];
+  endLabel: DatesRangeProps['endLabel'];
 }
 
 /** 组成时间的基本对象 */
@@ -143,21 +156,8 @@ export interface TimeProps extends FormLike<TimeValue> {
   label?: React.ReactNode;
   /** 隐藏禁用项 */
   hideDisabled?: boolean;
-  /**
-   * 接收当前时间参数并根据参数决定禁用哪些时间
-   * @param meta
-   * @param meta.key - 当前项类型 'h' | 'm' | 's'
-   * @param meta.val - 当前项的值
-   * @param meta.h - 当前选中的时
-   * @param meta.m - 当前选中的分
-   * @param meta.s - 当前选中的秒
-   * @param extra - 传递给组件的disabledTimeExtra
-   * @return - 返回true时，该项被禁用
-   * */
-  disabledTime?(
-    meta: TimeValue & { key: keyof TimeValue; val: number },
-    extra?: any,
-  ): boolean | void;
+
+  disabledTime?: Array<DisabledLimiter>;
   /** 传递给disabledTime函数的额外参数 */
   disabledTimeExtra?: any;
 }
@@ -169,6 +169,8 @@ export interface ShareMetas {
     currentM: Moment;
     tempM: Moment | undefined;
     type: DateType | DateTypeUnion;
+    show: boolean;
+    mobile: boolean;
   };
   setState: SetState<ShareMetas['state']>;
   value: string | string[];
@@ -178,7 +180,7 @@ export interface ShareMetas {
     endValueMoment?: Moment;
   };
   hasTime: boolean;
-  getCurrentTime(): TimeValue | undefined;
+  getCurrentTime(isEnd?: boolean): TimeValue | undefined;
   type: DateType | DateTypeUnion;
   props: DatesProps & DatesRangeProps;
 }

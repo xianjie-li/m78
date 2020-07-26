@@ -2,8 +2,11 @@ import '@lxjx/fr/lib/date/style';
 
 import React from 'react';
 import moment, { Moment } from 'moment';
+
 import { DatesProps } from './type';
 import Datess from './Dates';
+
+moment.locale('zh-cn');
 
 function disabledDate(mmt: Moment, type: any) {
   // 禁用本月5号以前的所有日期/月/年
@@ -26,36 +29,47 @@ function disabledDate(mmt: Moment, type: any) {
   return endDay.isSame(mmt, 'date');
 }
 
+function disabledDate2(mmt: Moment, type: any) {
+  // 禁用每个月24/26号
+  if (mmt.date() === 9 || mmt.date() === 10) return true;
+}
+
 const disabledTime: DatesProps['disabledTime'] = (
   meta,
   { checkedDate: mmt, checkedEndDate: mmt2, isRange },
 ) => {
-  // 禁用所有偶数小时
-  if (meta.key === 'h' && meta.val % 2 !== 0) return true;
+  // // 禁用所有偶数小时
+  // if (meta.key === 'h' && meta.val % 2 !== 0) return true;
+  //
+  // // 当前时间为5、6、7点时禁用所有小于40的分钟项
+  // if (meta.h === 5 || meta.h === 6 || meta.h === 7) {
+  //   if (meta.key === 'm' && meta.val < 40) return true;
+  // }
+  // // 选择了偶数日期时，只能选择10点到14点
+  // if (mmt && mmt.date() % 2 === 0 && meta.key === 'h') {
+  //   if (meta.val < 10 || meta.val > 14) return true;
+  // }
+};
 
-  // 当前时间为5、6、7点时禁用所有小于40的分钟项
-  if (meta.h === 5 || meta.h === 6 || meta.h === 7) {
-    if (meta.key === 'm' && meta.val < 40) return true;
-  }
-  // 选择了偶数日期时，只能选择10点到14点
-  if (mmt && mmt.date() % 2 === 0 && meta.key === 'h') {
-    if (meta.val < 10 || meta.val > 14) return true;
-  }
+const disabledTime2: DatesProps['disabledTime'] = meta => {
+  if (meta.key === 'h' && meta.val === 14) return true;
 };
 
 const Dates = () => {
   // const [val, setV] = useState('2020-7-20 15:30:30');
 
   return React.createElement(Datess, {
-    type: 'time',
-    hasTime: false,
+    type: 'year',
+    hasTime: true,
     range: true,
     // value: val,
-    disabledTime,
-    disabledDate,
+    disabledTime: [disabledTime, disabledTime2],
+    disabledDate: [disabledDate, disabledDate2],
     // onChange(v, m) {
     //   setV(v);
     // },
+    size: 'large',
+    disabled: true,
   });
 };
 

@@ -1,7 +1,7 @@
 @import '../../style/index';
 
 @media (min-width: $sm) {
-  .fr-scroll-bar, html {
+  .fr-scroll-bar {
     ::-webkit-scrollbar {
       width: 5px;
       height: 5px;

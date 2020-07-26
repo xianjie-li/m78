@@ -62,7 +62,7 @@ $unitSpace: 8px;
     font-size: 16px;
     line-height: 1;
     overflow: hidden;
-    max-width: $sm;
+    max-width: 375px;
     transition: $animation-duration-base box-shadow, $animation-duration-base border-color;
     transition-delay: 0s;
 

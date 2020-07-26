@@ -1,5 +1,8 @@
 import moment, { Moment } from 'moment';
-import { DisabledDate, DisabledTime } from '@/components/date/type';
+import { isArray } from '@lxjx/utils';
+import _debounce from 'lodash/debounce';
+import { SM } from '@lxjx/fr/lib/util';
+import { DateLimiter, DatesProps, DateType, DisabledLimiter, ShareMetas } from './type';
 
 export const DATE_FORMAT_YEAR = 'YYYY';
 
@@ -13,6 +16,20 @@ export const DATE_FORMAT_DATE_TIME = `${DATE_FORMAT_DATE} ${DATE_FORMAT_TIME}`;
 
 // 支持的value解析格式
 export const DATE_DEFAULT_PARSE = [DATE_FORMAT_DATE_TIME, 'YYYY/MM/DD HH:mm:ss'];
+
+export const formatMap = {
+  [DateType.DATE]: DATE_FORMAT_DATE,
+  [DateType.MONTH]: DATE_FORMAT_MONTH,
+  [DateType.YEAR]: DATE_FORMAT_YEAR,
+  [DateType.TIME]: DATE_FORMAT_TIME,
+};
+
+export const placeholderMaps = {
+  [DateType.YEAR]: '年份',
+  [DateType.MONTH]: '月份',
+  [DateType.DATE]: '日期',
+  [DateType.TIME]: '时间',
+};
 
 /** 根据年、月获取用于显示的moment列表 */
 export function getDates(year: number, month: number) {
@@ -110,5 +127,152 @@ export function concatTimeToMoment(tStr: string) {
   return moment(`${moment().format(DATE_FORMAT_DATE)} ${tStr}`, DATE_DEFAULT_PARSE);
 }
 
-/** 接收DisabledTime数组或DisabledDate数组并将参数原样传入，如果有任意一个返回了true则返回true */
-export function checkDisabledArray(arr: Array<DisabledDate> | Array<DisabledTime>, ...args: any) {}
+/** 用于将传入的DisabledTime/DisabledTime或数组组成严格化为数组并与内置处理器合并 */
+export function disabledHandlerFormat<T>(
+  handler?: Array<T> | T,
+  builtIn?: Array<T>,
+): Array<T> | undefined {
+  if (!handler) return builtIn;
+  if (!isArray(handler)) return [...(builtIn || []), handler];
+  if (!handler.length) return builtIn;
+  return [...(builtIn || []), ...handler];
+}
+
+/** 接收DisabledTime或DisabledDate组成的数组并进行验证，如果有任意一个返回了true则返回true */
+export function checkDisabled(handler: Array<DateLimiter> | Array<DisabledLimiter>, ...args: any) {
+  if (!handler.length) return false;
+
+  for (let i = 0; i < handler.length; i++) {
+    if ((handler[i] as any)(...args)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+/** 决定了如何从value字符串中解析cValueMoment/endValueMoment */
+export function parseValue({ value, type, props, self }: ShareMetas) {
+  if (!value) return;
+  const { range } = props;
+
+  if (type === DateType.TIME) {
+    if (range) {
+      if (!value.length) return;
+
+      const cValueM = concatTimeToMoment(value[0]);
+      cValueM.isValid() && (self.cValueMoment = cValueM);
+
+      if (value[1]) {
+        const cEValueM = concatTimeToMoment(value[1]);
+        cEValueM.isValid() && (self.endValueMoment = cEValueM);
+      }
+      return;
+    }
+
+    const cValueM = concatTimeToMoment(value as string);
+    // 作为纯时间组件使用
+    cValueM.isValid() && (self.cValueMoment = cValueM);
+  } else {
+    if (range) {
+      if (!value.length) return;
+      const cValueM = moment(value[0], DATE_DEFAULT_PARSE);
+      cValueM.isValid() && (self.cValueMoment = cValueM);
+
+      if (value[1]) {
+        const cEValueM = moment(value[1], DATE_DEFAULT_PARSE);
+        cEValueM.isValid() && (self.endValueMoment = cEValueM);
+      }
+      return;
+    }
+    const cEValueM = moment(value, DATE_DEFAULT_PARSE);
+    cEValueM.isValid() && (self.cValueMoment = cEValueM);
+  }
+}
+
+/** 根据大小屏切换选择器的展示方式 */
+export function pickerTypeWrap(state: ShareMetas['state'], setState: ShareMetas['setState']) {
+  return () => {
+    const debounceResize = _debounce(() => {
+      const isM = window.innerWidth <= SM;
+
+      if (isM !== state.mobile) {
+        setState({
+          mobile: isM,
+        });
+      }
+    }, 400);
+
+    debounceResize();
+
+    window.addEventListener('resize', debounceResize);
+
+    return () => window.removeEventListener('resize', debounceResize);
+  };
+}
+
+/** 格式化value到input中用于显示 */
+export const defaultFormat: NonNullable<DatesProps['format']> = ({
+  current,
+  end,
+  type,
+  hasTime,
+}) => {
+  const isDateTime = hasTime && type === DateType.DATE;
+
+  const format = formatMap[type] + (isDateTime ? ` ${DATE_FORMAT_TIME}` : '');
+
+  if (current && end) {
+    return `${current.format(format)} ~ ${end.format(format)}`;
+  }
+
+  if (current) {
+    return `${current.format(format)}`;
+  }
+
+  return '';
+};
+
+/** 预设的时间段 */
+export const timePreset = {
+  day: [
+    {},
+    {
+      hour: 23,
+      minute: 59,
+      second: 59,
+    },
+  ],
+  morning: [
+    {
+      hour: 8,
+    },
+    {
+      hour: 11,
+    },
+  ],
+  midday: [
+    {
+      hour: 11,
+    },
+    {
+      hour: 13,
+    },
+  ],
+  afternoon: [
+    {
+      hour: 13,
+    },
+    {
+      hour: 18,
+    },
+  ],
+  evening: [
+    {
+      hour: 18,
+    },
+    {
+      hour: 23,
+    },
+  ],
+};

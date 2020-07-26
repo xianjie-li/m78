@@ -1,25 +1,24 @@
 import Button from '@lxjx/fr/lib/button';
 import React from 'react';
-import { Moment } from 'moment';
+import moment, { Moment } from 'moment';
+import Time from './Time';
+import { rangeDisabledBeforeTime } from './builtInHandlers';
 import {
   DATE_FORMAT_DATE,
+  DATE_FORMAT_DATE_TIME,
   DATE_FORMAT_MONTH,
   DATE_FORMAT_TIME,
   DATE_FORMAT_YEAR,
+  disabledHandlerFormat,
   getDates,
   getMonths,
   getYears,
+  placeholderMaps,
+  timePreset,
 } from './utils';
-import { DateType, ShareMetas } from './type';
+import { DatesBaseProps, DateType, ShareMetas } from './type';
 import { useDateUIController, useHandlers } from './hooks';
 import DateItem from './DateItem';
-
-const placeholderMaps = {
-  [DateType.YEAR]: '年份',
-  [DateType.MONTH]: '月份',
-  [DateType.DATE]: '日期',
-  [DateType.TIME]: '时间 ',
-};
 
 /**  渲染选择结果 */
 export function staticRenderCheckedValue(
@@ -32,8 +31,8 @@ export function staticRenderCheckedValue(
 
   const { range } = props;
 
-  const startLabel = range && <span className="color-second">{props.startDateLabel}: </span>;
-  const endLabel = range && <span className="color-second">{props.endDateLabel}: </span>;
+  const startLabel = range && <span className="color-second">{props.startLabel}: </span>;
+  const endLabel = range && <span className="color-second">{props.endLabel}: </span>;
 
   const tipsNode = <span>请选择{!range && placeholderMaps[type]}</span>;
 
@@ -175,8 +174,8 @@ export function staticRenderDate(
             range={props.range}
             onActive={onItemActive}
             tempMoment={state.tempM}
-            startDateLabel={props.startDateLabel}
-            endDateLabel={props.endDateLabel}
+            startLabel={props.startLabel}
+            endLabel={props.endLabel}
           />
         ))}
       </div>
@@ -217,8 +216,8 @@ export function staticRenderMonth(
             range={props.range}
             onActive={onItemActive}
             tempMoment={state.tempM}
-            startDateLabel={props.startDateLabel}
-            endDateLabel={props.endDateLabel}
+            startLabel={props.startLabel}
+            endLabel={props.endLabel}
           />
         ))}
       </div>
@@ -264,8 +263,8 @@ export function staticRenderYear(
             range={props.range}
             onActive={onItemActive}
             tempMoment={state.tempM}
-            startDateLabel={props.startDateLabel}
-            endDateLabel={props.endDateLabel}
+            startLabel={props.startLabel}
+            endLabel={props.endLabel}
           />
         ))}
       </div>
@@ -273,7 +272,37 @@ export function staticRenderYear(
   );
 }
 
-export function staticRenderTabBtns(
+export function staticRenderTime(
+  { props, self, getCurrentTime }: ShareMetas,
+  { onCheckTime }: ReturnType<typeof useHandlers>,
+) {
+  const common = {
+    disabledTime: disabledHandlerFormat(props.disabledTime),
+    hideDisabled: props.hideDisabledTime,
+    disabledTimeExtra: {
+      checkedDate: self.cValueMoment,
+      checkedEndDate: self.endValueMoment,
+      isRange: props.range,
+    },
+  };
+
+  return (
+    <>
+      <Time {...common} value={getCurrentTime()} onChange={onCheckTime} />
+      {props.range && (
+        <Time
+          {...common}
+          disabledTime={disabledHandlerFormat(props.disabledTime, [rangeDisabledBeforeTime])}
+          value={getCurrentTime(true)}
+          onChange={times => onCheckTime(times, true)}
+          label={<span>~ 选择时间范围 ~</span>}
+        />
+      )}
+    </>
+  );
+}
+
+export function staticRenderTabs(
   { self, state, type, hasTime, props }: ShareMetas,
   { toYear, toMonth, toDate, toTime }: ReturnType<typeof useDateUIController>,
 ) {
@@ -285,61 +314,33 @@ export function staticRenderTabBtns(
 
   let time: React.ReactElement | null = null;
 
+  const renderButton = (dType: DateType, title: string, unit: string, handler: any) => (
+    <Button
+      size="small"
+      link
+      title={title}
+      color={state.type === dType ? 'primary' : undefined}
+      onClick={handler}
+    >
+      {unit}
+    </Button>
+  );
+
   if (type === DateType.MONTH || type === DateType.DATE) {
-    year = (
-      <Button
-        size="small"
-        link
-        title="选择年份"
-        color={state.type === DateType.YEAR ? 'primary' : undefined}
-        onClick={toYear}
-      >
-        年
-      </Button>
-    );
+    year = renderButton(DateType.YEAR, '选择年份', '年', toYear);
   }
 
   if (type === DateType.MONTH || type === DateType.DATE) {
-    month = (
-      <Button
-        size="small"
-        link
-        title="选择月份"
-        color={state.type === DateType.MONTH ? 'primary' : undefined}
-        onClick={toMonth}
-      >
-        月
-      </Button>
-    );
+    month = renderButton(DateType.MONTH, '选择月份', '月', toMonth);
   }
 
   if (type === DateType.DATE) {
-    date = (
-      <Button
-        size="small"
-        link
-        title="选择日期"
-        color={state.type === DateType.DATE ? 'primary' : undefined}
-        onClick={toDate}
-      >
-        日
-      </Button>
-    );
+    date = renderButton(DateType.DATE, '选择日期', '日', toDate);
   }
 
   /* 选择了时间 且 类型为日期选择器 并且启用了 时间选择 或 类型为时间选择器 */
   if (self.cValueMoment && type === DateType.DATE && hasTime) {
-    time = (
-      <Button
-        size="small"
-        link
-        title="选择时间"
-        color={state.type === DateType.TIME ? 'primary' : undefined}
-        onClick={toTime}
-      >
-        时
-      </Button>
-    );
+    time = renderButton(DateType.TIME, '选择时间', '时', toTime);
 
     if (props.range && !self.endValueMoment) time = null;
   }
@@ -353,3 +354,116 @@ export function staticRenderTabBtns(
     </span>
   );
 }
+
+/** 为一个包含 hour minute second 的对象设置空值的默认值 */
+const timePresetHelper = (t?: any) => {
+  const defaultTime = {
+    hour: 0,
+    minute: 0,
+    second: 0,
+  };
+  return {
+    ...defaultTime,
+    ...t,
+  };
+};
+
+export const renderPresetDates: NonNullable<DatesBaseProps['presetDates']> = ({
+  type,
+  hasTime,
+  setValue,
+  props,
+}) => {
+  const baseProps = { size: 'small', link: true, color: 'primary' } as const;
+
+  // 设为当前
+  const setCurrent = (format: string) => {
+    const now = moment();
+    setValue(now.format(format), now);
+  };
+
+  // 设置年月日时的范围
+  const setCurrentRange = (format: string, setType?: 'week' | 'month') => {
+    const now = moment();
+    const end = moment();
+
+    now.set(timePresetHelper());
+
+    end.set(timePreset.day[1]);
+
+    if (setType) {
+      now.startOf(setType);
+      end.endOf(setType);
+    }
+
+    setValue([now.format(format), end.format(format)], [now, end]);
+  };
+
+  // 设置时间范围
+  const setCurrentTimeRange = (setType: keyof typeof timePreset) => {
+    const now = moment();
+    const end = moment();
+
+    const p = timePreset[setType] || timePreset.day;
+
+    now.set(timePresetHelper(p[0]));
+
+    end.set(timePresetHelper(p[1]));
+
+    setValue([now.format(DATE_FORMAT_TIME), end.format(DATE_FORMAT_TIME)], [now, end]);
+  };
+
+  const simpleHelper = (label: string, handler: any) => {
+    return React.createElement(Button, { ...baseProps, onClick: handler }, label);
+  };
+
+  if (props.range) {
+    if (type === DateType.TIME) {
+      return (
+        <>
+          {simpleHelper('全天', () => setCurrentTimeRange('day'))}
+          {simpleHelper('早', () => setCurrentTimeRange('morning'))}
+          {simpleHelper('中', () => setCurrentTimeRange('midday'))}
+          {simpleHelper('午', () => setCurrentTimeRange('afternoon'))}
+          {simpleHelper('晚', () => setCurrentTimeRange('evening'))}
+        </>
+      );
+    }
+
+    if (type === DateType.DATE) {
+      return (
+        <>
+          {simpleHelper(hasTime ? '全天' : '今天', () =>
+            setCurrentRange(hasTime ? DATE_FORMAT_DATE_TIME : DATE_FORMAT_DATE),
+          )}
+          {simpleHelper('本周', () =>
+            setCurrentRange(hasTime ? DATE_FORMAT_DATE_TIME : DATE_FORMAT_DATE, 'week'),
+          )}
+          {simpleHelper('本月', () =>
+            setCurrentRange(hasTime ? DATE_FORMAT_DATE_TIME : DATE_FORMAT_DATE, 'month'),
+          )}
+        </>
+      );
+    }
+
+    return;
+  }
+
+  if (type === DateType.TIME) {
+    return simpleHelper('现在', () => setCurrent(DATE_FORMAT_TIME));
+  }
+
+  if (type === DateType.DATE) {
+    return simpleHelper('今天', () =>
+      setCurrent(hasTime ? DATE_FORMAT_DATE_TIME : DATE_FORMAT_DATE),
+    );
+  }
+
+  if (type === DateType.MONTH) {
+    return simpleHelper('本月', () => setCurrent(DATE_FORMAT_MONTH));
+  }
+
+  if (type === DateType.YEAR) {
+    return simpleHelper('今年', () => setCurrent(DATE_FORMAT_YEAR));
+  }
+};

@@ -1,5 +1,6 @@
 import moment, { Moment, unitOfTime } from 'moment';
 import { useFn } from '@lxjx/hooks';
+import React from 'react';
 import { DateItemProps, DateType, ShareMetas, TimeValue } from './type';
 import {
   DATE_FORMAT_DATE,
@@ -9,7 +10,7 @@ import {
   DATE_FORMAT_YEAR,
 } from './utils';
 
-/** 简化主文件, 获取更新当前选择器数据和位置的一些函数 */
+/** 获取更新当前选择器数据和位置的一些操作函数 */
 export function useDateUIController({ state, setState }: ShareMetas) {
   /** 在当前月份上增加或减少指定天数并更新currentM */
   function changeDate(cType: 1 | 2, number = 1, dateType = 'months' as unitOfTime.Base) {
@@ -88,7 +89,7 @@ export function useDateUIController({ state, setState }: ShareMetas) {
   };
 }
 
-/** 简化主文件, 外部化一些事件处理器 */
+/** 外部化的一些事件处理器 */
 export function useHandlers(
   { hasTime, setValue, getCurrentTime, self, type, state, setState, nowM, props }: ShareMetas,
   { toTime }: ReturnType<typeof useDateUIController>,
@@ -220,6 +221,7 @@ export function useHandlers(
     }
 
     const cm = state.currentM.clone();
+
     cm.year(mmt.year());
 
     setState({
@@ -235,11 +237,38 @@ export function useHandlers(
     });
   });
 
+  const reset = useFn(() => {
+    self.cValueMoment = undefined;
+    self.endValueMoment = undefined;
+
+    setState({
+      type,
+      currentM: nowM,
+    });
+    setValue(props.range ? [] : '');
+  });
+
+  const onKeyDown = useFn((e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.keyCode === 9) {
+      setState({
+        show: false,
+      });
+    }
+  });
+
+  const onShow = useFn(() => setState({ show: true }));
+
+  const onHide = useFn(() => setState({ show: false }));
+
   return {
     onCheck,
     onCheckTime,
     onCheckMonth,
     onCheckYear,
     onItemActive,
+    onKeyDown,
+    onShow,
+    reset,
+    onHide,
   };
 }
