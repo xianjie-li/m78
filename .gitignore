@@ -5,6 +5,7 @@ node_modules
 lib
 /esm
 /cjs
+/play
 
 # local env files
 .env.local
