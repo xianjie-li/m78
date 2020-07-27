@@ -1,4 +1,4 @@
-import '@lxjx/fr/lib/notice-bar/style';
+import '@lxjx/fr/notice-bar/style';
 
 export * from './notice-bar';
 export { default } from './notice-bar';

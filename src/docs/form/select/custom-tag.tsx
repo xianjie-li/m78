@@ -1,4 +1,4 @@
-import Select, { SelectCustomTag } from '@lxjx/fr/lib/select';
+import Select, { SelectCustomTag } from '@lxjx/fr/select';
 import React, { useState } from 'react';
 
 import { options } from './utils';

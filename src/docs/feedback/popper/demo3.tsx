@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import Popper from '@lxjx/fr/lib/popper';
+import Popper from '@lxjx/fr/popper';
 
 const Demo3 = () => {
   const btn = useRef<HTMLButtonElement>(null!);

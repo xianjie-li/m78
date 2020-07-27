@@ -5,11 +5,11 @@ import {
   EyeOutlined,
   EyeInvisibleOutlined,
   SearchOutlined,
-} from '@lxjx/fr/lib/icon';
-import Spin from '@lxjx/fr/lib/spin';
-import Button from '@lxjx/fr/lib/button';
-import { If } from '@lxjx/fr/lib/fork';
-import { dumpFn } from '@lxjx/fr/lib/util';
+} from '@lxjx/fr/icon';
+import Spin from '@lxjx/fr/spin';
+import Button from '@lxjx/fr/button';
+import { If } from '@lxjx/fr/fork';
+import { dumpFn } from '@lxjx/fr/util';
 import { isNumber, formatString, validateFormatString } from '@lxjx/utils';
 
 import cls from 'classnames';

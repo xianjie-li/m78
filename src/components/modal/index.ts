@@ -1,4 +1,4 @@
-import '@lxjx/fr/lib/modal/style';
+import '@lxjx/fr/modal/style';
 
 export * from './modal';
 export { default } from './modal';

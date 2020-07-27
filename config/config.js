@@ -1,9 +1,9 @@
 const path = require('path');
-
+// @lxjx/fr/lib
 export default {
   alias: {
     '@': path.resolve(__dirname, '../src'),
-    '@lxjx/fr/lib': path.resolve(__dirname, '../src/components'),
+    '@lxjx/fr': path.resolve(__dirname, '../src/components'),
   },
   title: 'Fr',
   description: 'components, hooks, utils, part of the react toolchain',

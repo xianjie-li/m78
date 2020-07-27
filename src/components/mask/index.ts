@@ -1,4 +1,4 @@
-import '@lxjx/fr/lib/mask/style';
+import '@lxjx/fr/mask/style';
 
 export * from './mask';
 export { default } from './mask';

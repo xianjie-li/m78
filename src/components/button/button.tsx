@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 
-import Spin from '@lxjx/fr/lib/spin';
-import '@lxjx/fr/lib/base';
+import Spin from '@lxjx/fr/spin';
+import '@lxjx/fr/base';
 import { isArray } from '@lxjx/utils';
 
 import cls from 'classnames';

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Form from '@lxjx/fr/lib/form';
-import Input from '@lxjx/fr/lib/input';
-import Button from '@lxjx/fr/lib/button';
+import Form from '@lxjx/fr/form';
+import Input from '@lxjx/fr/input';
+import Button from '@lxjx/fr/button';
 
 const Base = () => {
   const [layout, setLayout] = useState(false);

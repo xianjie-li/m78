@@ -1,4 +1,4 @@
-import '@lxjx/fr/lib/check/style';
+import '@lxjx/fr/check/style';
 import CheckBox from './check-box';
 
 export * from './type';

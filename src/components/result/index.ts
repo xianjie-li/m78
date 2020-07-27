@@ -1,4 +1,4 @@
-import '@lxjx/fr/lib/result/style';
+import '@lxjx/fr/result/style';
 import Result from './result';
 
 export default Result;

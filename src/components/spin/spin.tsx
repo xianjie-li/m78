@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { WindmillIcon } from '@lxjx/fr/lib/icon';
-import { useDelayDerivedToggleStatus } from '@lxjx/fr/lib/hooks';
+import { WindmillIcon } from '@lxjx/fr/icon';
+import { useDelayDerivedToggleStatus } from '@lxjx/fr/hooks';
 import { Transition, config } from '@lxjx/react-transition-spring';
 
 import cls from 'classnames';

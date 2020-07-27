@@ -1,10 +1,10 @@
 import React from 'react';
 
-import Empty from '@lxjx/fr/lib/empty';
-import '@lxjx/fr/lib/empty/style';
+import Empty from '@lxjx/fr/empty';
+import '@lxjx/fr/empty/style';
 
-import Button from '@lxjx/fr/lib/button';
-import '@lxjx/fr/lib/button/style';
+import Button from '@lxjx/fr/button';
+import '@lxjx/fr/button/style';
 
 import img from '@/mock/img/2.jpg';
 

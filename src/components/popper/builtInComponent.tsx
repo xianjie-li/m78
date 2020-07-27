@@ -1,6 +1,6 @@
 import React from 'react';
-import { WarningIcon } from '@lxjx/fr/lib/icon';
-import Button from '@lxjx/fr/lib/button';
+import { WarningIcon } from '@lxjx/fr/icon';
+import Button from '@lxjx/fr/button';
 import { useFn } from '@lxjx/hooks';
 import { PopperPropsCustom } from './types';
 

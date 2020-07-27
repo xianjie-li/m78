@@ -1,4 +1,4 @@
-import '@lxjx/fr/lib/viewer/style';
+import '@lxjx/fr/viewer/style';
 
 export * from './viewer';
 export { default } from './viewer';

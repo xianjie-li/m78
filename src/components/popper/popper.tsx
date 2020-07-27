@@ -1,4 +1,4 @@
-import Portal from '@lxjx/fr/lib/portal';
+import Portal from '@lxjx/fr/portal';
 import React, { useEffect, useMemo, useRef, useImperativeHandle } from 'react';
 import { useFn, useFormState, useSelf, useSetState } from '@lxjx/hooks';
 import { animated, interpolate, useSpring } from 'react-spring';
@@ -6,7 +6,7 @@ import cls from 'classnames';
 import { useClickAway, useMeasure, useUpdateEffect } from 'react-use';
 import _throttle from 'lodash/throttle';
 import { createRandString, isDom, isNumber } from '@lxjx/utils';
-import { getFirstScrollParent } from '@lxjx/fr/lib//util';
+import { getFirstScrollParent } from '@lxjx/fr//util';
 import { getRefDomOrDom, isPopperMetasBound, getTriggerType } from './utils';
 import { GetBoundMetasDirectionKeys, getPopperMetas, GetPopperMetasBound } from './getPopperMetas';
 import { PopperProps, PopperRef } from './types';

@@ -1,6 +1,6 @@
 import React from 'react';
-import ArticleBox from '@lxjx/fr/lib/article-box';
-import '@lxjx/fr/lib/article-box/style';
+import ArticleBox from '@lxjx/fr/article-box';
+import '@lxjx/fr/article-box/style';
 
 import img from '@/mock/img/4.jpg';
 

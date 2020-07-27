@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { If } from '@lxjx/fr/lib/fork';
+import { If } from '@lxjx/fr/fork';
 
 import { useFormState } from '@lxjx/hooks';
 

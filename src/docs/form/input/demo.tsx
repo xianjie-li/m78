@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Input from '@lxjx/fr/lib/input';
-import Button from '@lxjx/fr/lib/button';
+import Input from '@lxjx/fr/input';
+import Button from '@lxjx/fr/button';
 
 const Demo = () => (
   <div>

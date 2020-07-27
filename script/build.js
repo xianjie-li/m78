@@ -29,9 +29,11 @@ const external = externalsDependencies();
 
 const entry = generateEntry();
 
-async function build(type = 'esm') {
-  fs.removeSync(path.resolve(__dirname, '../', type));
+const DIST = 'dist';
 
+const parsePath = (...args) => path.resolve(__dirname, ...args);
+
+async function build(type = 'esm') {
   const confs = [];
 
   const extensions = ['.ts', '.tsx', '.jsx', '.js'];
@@ -39,11 +41,11 @@ async function build(type = 'esm') {
   const copyList = [
     {
       src: 'src/components/style/**/*',
-      dest: `${type}/style`,
+      dest: parsePath(`../${DIST}/${type}/style`),
     },
     {
       src: 'src/components/assets/**/*',
-      dest: `${type}/assets`,
+      dest: parsePath(`../${DIST}/${type}/assets`),
     },
   ];
 
@@ -52,10 +54,6 @@ async function build(type = 'esm') {
       input: ePath,
       external,
       plugins: [
-        replace({
-          '@lxjx/fr/lib/': `'@lxjx/fr/${type}/`,
-          delimiters: ["'", ''],
-        }),
         nodeResolve({
           extensions,
         }),
@@ -72,15 +70,24 @@ async function build(type = 'esm') {
       ],
     };
 
+    if (type !== 'esm') {
+      input.plugins.unshift(
+        replace({
+          '@lxjx/fr/': `'@lxjx/fr/${type}/`,
+          delimiters: ["'", ''],
+        }),
+      );
+    }
+
     const output = {
-      file: path.resolve(__dirname, `../${type}`, name, 'index.js'),
+      file: parsePath('../', DIST, `./${type}`, name, 'index.js'),
       format: type,
       exports: 'named',
     };
 
     copyList.push({
       src: `src/components/${name}/style/**/*`,
-      dest: path.resolve(__dirname, `../${type}/${name}/style`),
+      dest: parsePath('../', DIST, `./${type}/${name}/style`),
     });
 
     confs.push({
@@ -109,7 +116,7 @@ async function build(type = 'esm') {
 
   console.log(chalk.blue(`${type} generate declaration...`));
 
-  await exec(`tsc --emitDeclarationOnly -p ./config/lib.config.json --outDir ./${type}`);
+  await exec(`tsc --emitDeclarationOnly -p ./config/lib.config.json --outDir ./${DIST}/${type}`);
 
   // tsc foo.ts --outFile foo.js --declaration --module system
 
@@ -120,11 +127,23 @@ async function build(type = 'esm') {
   const spinner = ora('esm building...').start();
 
   try {
+    fs.removeSync(parsePath('../', DIST));
+
     await build().catch(err => console.log(err));
 
-    spinner.text = 'cjs building...';
+    // spinner.text = 'cjs building...';
+    //
+    // await build('cjs').catch(err => console.log(err));
 
-    await build('cjs').catch(err => console.log(err));
+    console.log(chalk.blue('copy file...'));
+
+    fs.copySync(parsePath('../package.json'), parsePath(`../${DIST}/package.json`));
+
+    fs.copySync(parsePath(`../${DIST}/esm`), parsePath(`../${DIST}`));
+
+    fs.removeSync(parsePath(`../${DIST}/esm`));
+
+    console.log(chalk.green('build complete. (please publish the dist directory)'));
 
     // spinner.text = 'umd building...';
     // await build('umd').catch(err => console.log(err));

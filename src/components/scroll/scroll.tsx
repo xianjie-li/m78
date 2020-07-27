@@ -9,12 +9,12 @@ import { Transition } from '@lxjx/react-transition-spring';
 import { useSelf, useSetState, useScroll } from '@lxjx/hooks';
 import preventTopPullDown from 'prevent-top-pull-down';
 
-import { If, Toggle, Switch } from '@lxjx/fr/lib/fork';
-import Spin from '@lxjx/fr/lib/spin';
-import Empty from '@lxjx/fr/lib/empty';
-import Button from '@lxjx/fr/lib/button';
-import { CaretUpOutlined, WindmillIcon } from '@lxjx/fr/lib/icon';
-import { dumpFn } from '@lxjx/fr/lib/util';
+import { If, Toggle, Switch } from '@lxjx/fr/fork';
+import Spin from '@lxjx/fr/spin';
+import Empty from '@lxjx/fr/empty';
+import Button from '@lxjx/fr/button';
+import { CaretUpOutlined, WindmillIcon } from '@lxjx/fr/icon';
+import { dumpFn } from '@lxjx/fr/util';
 import _debounce from 'lodash/debounce';
 
 import cls from 'classnames';

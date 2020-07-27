@@ -1,4 +1,4 @@
-import CheckBox from '@lxjx/fr/lib/check-box';
+import CheckBox from '@lxjx/fr/check-box';
 import React, { useState, useRef } from 'react';
 import { UseCheckReturns } from '@lxjx/hooks';
 

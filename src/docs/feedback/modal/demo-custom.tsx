@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Modal from '@lxjx/fr/lib/modal';
-import Button from '@lxjx/fr/lib/button';
+import Modal from '@lxjx/fr/modal';
+import Button from '@lxjx/fr/button';
 
 import img1 from '@/mock/img/1.jpg';
 

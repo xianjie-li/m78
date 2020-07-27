@@ -3,9 +3,9 @@ import { useMeasure, useUpdateEffect } from 'react-use';
 import { useSpring, animated, config } from 'react-spring';
 import { useFormState } from '@lxjx/hooks';
 
-import { lineStatusIcons, CloseOutlined } from '@lxjx/fr/lib/icon';
-import { If } from '@lxjx/fr/lib/fork';
-import Button from '@lxjx/fr/lib/button';
+import { lineStatusIcons, CloseOutlined } from '@lxjx/fr/icon';
+import { If } from '@lxjx/fr/fork';
+import Button from '@lxjx/fr/button';
 import cls from 'classnames';
 import { Status } from '../types/types';
 

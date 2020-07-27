@@ -4,7 +4,6 @@
 
 <h1 align="center">Fr</h1>
 <p align="center">components, hooks, utils, part of the react toolchain</p>
-
 <br>
 
 ## 🎉Introduction
@@ -38,10 +37,10 @@ npm install @lxjx/fr
 
 ### `import组件`
 
-`fr `支持 `es modules` (推荐)和 `commomjs` 两种类型的模块，你分别可以通过`@lxjx/fr/esm/*`和`@lxjx/fr/cjs/*`导入它们。
+`fr ` 支持 `es modules` 模块，通过`@lxjx/fr/*` 来导入主包下的各个模块
 
 ```js
-import Button, { ButtonProps } from '@lxjx/fr/esm/button';
+import Button, { ButtonProps } from '@lxjx/fr/button';
 
 function App() {
   return (
@@ -59,7 +58,6 @@ function App() {
 
 
 打包组件目录支持使用[babel-plugin-import](<https://github.com/ant-design/babel-plugin-import>),  不过不推荐, 一是对这样对idea和ts来说很怪异，支持不好；二是，组件通常会包含多个命名导出，如 `import Form, { Item, Title, Footer, FormProps } from '@lxjx/fr/esm/form'`。
-
 
 <br>
 

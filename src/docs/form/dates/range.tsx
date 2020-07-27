@@ -1,5 +1,5 @@
 import React from 'react';
-import Dates, { DateType } from '@lxjx/fr/lib/dates';
+import Dates, { DateType } from '@lxjx/fr/dates';
 
 const RangeDemo = () => {
   return (

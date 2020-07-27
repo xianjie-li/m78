@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import Button from '@lxjx/fr/lib/button';
-import Input from '@lxjx/fr/lib/input';
-import ShowFromMouse from '@lxjx/fr/lib/show-from-mouse';
-import Popper from '@lxjx/fr/lib/popper';
-import { Z_INDEX_MESSAGE } from '@lxjx/fr/lib/util';
+import Button from '@lxjx/fr/button';
+import Input from '@lxjx/fr/input';
+import ShowFromMouse from '@lxjx/fr/show-from-mouse';
+import Popper from '@lxjx/fr/popper';
+import { Z_INDEX_MESSAGE } from '@lxjx/fr/util';
 import { useFormState, useSelf, useSetState } from '@lxjx/hooks';
 import moment, { Moment } from 'moment';
 import cls from 'classnames';

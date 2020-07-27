@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import RForm, { useForm, FormProvider, List as FormList } from 'rc-field-form';
-import List, { Title, SubTitle, Footer } from '@lxjx/fr/lib/list';
+import List, { Title, SubTitle, Footer } from '@lxjx/fr/list';
 import Schema from 'async-validator';
 import { createRandString, isFunction } from '@lxjx/utils';
 import { useFn, useScroll } from '@lxjx/hooks';
 import { ValidateErrorEntity } from 'rc-field-form/es/interface';
-import { checkElementVisible, getFirstScrollParent } from '@lxjx/fr/lib/util';
+import { checkElementVisible, getFirstScrollParent } from '@lxjx/fr/util';
 import cls from 'classnames';
 import { createMessagesTemplate } from '@lxjx/async-filed-cn-template';
 

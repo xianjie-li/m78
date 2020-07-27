@@ -1,10 +1,10 @@
-import { PopperPropsCustom } from '@lxjx/fr/lib/popper';
+import { PopperPropsCustom } from '@lxjx/fr/popper';
 import React from 'react';
 import { isArray } from '@lxjx/utils';
 import cls from 'classnames';
-import { CheckOutlined, CloseCircleOutlined } from '@lxjx/fr/lib/icon';
+import { CheckOutlined, CloseCircleOutlined } from '@lxjx/fr/icon';
 import { ListChildComponentProps } from 'react-window';
-import { getFirstTruthyOrZero } from '@lxjx/fr/lib/util';
+import { getFirstTruthyOrZero } from '@lxjx/fr/util';
 import { RenderItemData, SelectCustomTag, SelectOptionItem, SelectProps } from './type';
 
 /** 自定义popper样式 */

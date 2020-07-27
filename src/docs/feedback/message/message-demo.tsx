@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import message from '@lxjx/fr/lib/message';
-import Button from '@lxjx/fr/lib/button';
+import message from '@lxjx/fr/message';
+import Button from '@lxjx/fr/button';
 
 const type = ['success', 'error', 'warning', undefined];
 

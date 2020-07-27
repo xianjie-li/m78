@@ -1,4 +1,4 @@
-import '@lxjx/fr/lib/scroll/style';
+import '@lxjx/fr/scroll/style';
 
 export * from './scroll';
 export { default } from './scroll';

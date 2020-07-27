@@ -5,9 +5,9 @@ import { useSetState, useToggle, useUpdateEffect } from 'react-use';
 import _clamp from 'lodash/clamp';
 import cls from 'classnames';
 
-import Carousel, { CarouselRef } from '@lxjx/fr/lib/carousel';
-import Viewer, { ViewerRef } from '@lxjx/fr/lib/viewer';
-import Picture from '@lxjx/fr/lib/picture';
+import Carousel, { CarouselRef } from '@lxjx/fr/carousel';
+import Viewer, { ViewerRef } from '@lxjx/fr/viewer';
+import Picture from '@lxjx/fr/picture';
 import {
   CloseCircleOutlined,
   RightOutlined,
@@ -17,10 +17,10 @@ import {
   RedoOutlined,
   UndoOutlined,
   LeftOutlined,
-} from '@lxjx/fr/lib/icon';
-import { If } from '@lxjx/fr/lib/fork';
-import Portal from '@lxjx/fr/lib/portal';
-import { stopPropagation } from '@lxjx/fr/lib/util';
+} from '@lxjx/fr/icon';
+import { If } from '@lxjx/fr/fork';
+import Portal from '@lxjx/fr/portal';
+import { stopPropagation } from '@lxjx/fr/util';
 
 import createRenderApi, { ReactRenderApiProps } from '@lxjx/react-render-api';
 import { Transition } from '@lxjx/react-transition-spring';

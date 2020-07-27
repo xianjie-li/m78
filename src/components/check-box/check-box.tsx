@@ -2,7 +2,7 @@ import React, { useMemo, useImperativeHandle } from 'react';
 
 import { useCheck, UseCheckReturns } from '@lxjx/hooks';
 
-import Check from '@lxjx/fr/lib/check';
+import Check from '@lxjx/fr/check';
 
 import { CheckBoxProps } from './type';
 

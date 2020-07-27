@@ -1,6 +1,6 @@
 import React from 'react';
-import Carousel from '@lxjx/fr/lib/carousel';
-import '@lxjx/fr/lib/carousel/style';
+import Carousel from '@lxjx/fr/carousel';
+import '@lxjx/fr/carousel/style';
 
 import img1 from '../../../mock/img/1.jpg';
 import img2 from '../../../mock/img/2.jpg';

@@ -1,3 +1,3 @@
-import '@lxjx/fr/lib/drawer/style';
+import '@lxjx/fr/drawer/style';
 
 export { default } from './drawer';

@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { statusIcons } from '@lxjx/fr/lib/icon';
-import Fork from '@lxjx/fr/lib/fork';
-import Portal from '@lxjx/fr/lib/portal';
+import { statusIcons } from '@lxjx/fr/icon';
+import Fork from '@lxjx/fr/fork';
+import Portal from '@lxjx/fr/portal';
 import { Transition, config } from '@lxjx/react-transition-spring';
 
 import cls from 'classnames';

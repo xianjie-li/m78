@@ -1,6 +1,6 @@
 import React from 'react';
 import { useMeasure } from 'react-use';
-import { If } from '@lxjx/fr/lib/fork';
+import { If } from '@lxjx/fr/fork';
 import cls from 'classnames';
 import { ComponentBaseProps } from '../types/types';
 

@@ -1,8 +1,8 @@
 import React from 'react';
 
-import Mask from '@lxjx/fr/lib/mask';
-import { CloseCircleOutlined } from '@lxjx/fr/lib/icon';
-import { If } from '@lxjx/fr/lib/fork';
+import Mask from '@lxjx/fr/mask';
+import { CloseCircleOutlined } from '@lxjx/fr/icon';
+import { If } from '@lxjx/fr/fork';
 import { Transition } from '@lxjx/react-transition-spring';
 
 import _capitalize from 'lodash/capitalize';

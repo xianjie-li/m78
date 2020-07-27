@@ -1,7 +1,7 @@
 import React from 'react';
 
-import List from '@lxjx/fr/lib/list';
-import '@lxjx/fr/lib/list/style';
+import List from '@lxjx/fr/list';
+import '@lxjx/fr/list/style';
 
 const Demo = () => (
   <div>

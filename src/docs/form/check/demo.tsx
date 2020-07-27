@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Check from '@lxjx/fr/lib/check';
+import Check from '@lxjx/fr/check';
 
 const Demo = () => (
   <div>

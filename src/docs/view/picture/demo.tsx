@@ -1,8 +1,8 @@
 import React from 'react';
-import Picture from '@lxjx/fr/lib/picture';
-import '@lxjx/fr/lib/picture/style';
+import Picture from '@lxjx/fr/picture';
+import '@lxjx/fr/picture/style';
 
-import Config from '@lxjx/fr/lib/config';
+import Config from '@lxjx/fr/config';
 
 import img1 from '@/mock/img/1.jpg';
 import img2 from '@/mock/img/2.jpg';

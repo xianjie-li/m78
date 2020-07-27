@@ -3,7 +3,7 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"],
-      "@lxjx/fr/lib/*": [
+      "@lxjx/fr/*": [
         "src/components/*"
       ]
     },

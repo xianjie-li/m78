@@ -2,7 +2,7 @@ import { FormProps as RFormProps } from 'rc-field-form/es/Form';
 import { FieldProps } from 'rc-field-form/es/Field';
 import { NamePath, FormInstance, RuleObject, Meta, Rule } from 'rc-field-form/es/interface';
 import React from 'react';
-import { ListFormType } from '@lxjx/fr/lib/list';
+import { ListFormType } from '@lxjx/fr/list';
 import { AnyObject } from '@lxjx/utils';
 import { ComponentBaseProps } from '../types/types';
 

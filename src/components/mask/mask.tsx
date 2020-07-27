@@ -4,7 +4,7 @@ import { useUpdateEffect, useToggle } from 'react-use';
 import { useLockBodyScroll } from '@lxjx/hooks';
 import { Transition } from '@lxjx/react-transition-spring';
 
-import Portal from '@lxjx/fr/lib/portal';
+import Portal from '@lxjx/fr/portal';
 
 import cls from 'classnames';
 

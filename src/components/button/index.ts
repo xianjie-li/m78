@@ -1,4 +1,4 @@
-import '@lxjx/fr/lib/button/style';
+import '@lxjx/fr/button/style';
 
 export * from './type';
 export { default } from './button';

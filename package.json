@@ -5,19 +5,22 @@
   "license": "MIT",
   "scripts": {
     "build": "node script/build",
-    "prebuild": "npm run lint && npm run typecheck",
     "lint:script": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "lint:prettier": "prettier --check ./src/**/*",
     "lint": "npm run lint:prettier && npm run lint:script",
     "fix": "prettier --check ./src/**/* --write && eslint ./src --ext .js,.jsx,.ts,.tsx --fix",
     "typecheck": "tsc --noEmit",
     "dev": "dumi dev",
-    "build:doc": "dumi build"
+    "build:doc": "dumi build",
+    "ypublish": " yarn publish ./dist --access public"
+  },
+  "repository": "https://github.com/Iixianjie/fr",
+  "author": {
+    "name": "lxj",
+    "email": "1073830130@qq.com"
   },
   "files": [
-    "esm",
-    "cjs",
-    "README.md"
+    "**"
   ],
   "resolutions": {
     "remark": "11.0.2"

@@ -1,5 +1,5 @@
 import React from 'react';
-import Dates, { DateType, TimeLimiter, DateLimiter } from '@lxjx/fr/lib/dates';
+import Dates, { DateType, TimeLimiter, DateLimiter } from '@lxjx/fr/dates';
 import moment, { Moment } from 'moment';
 
 const disabledDate: DateLimiter = (mmt: Moment, type: any) => {

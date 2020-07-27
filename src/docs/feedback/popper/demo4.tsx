@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import Popper from '@lxjx/fr/lib/popper';
-import Button from '@lxjx/fr/lib/button';
+import Popper from '@lxjx/fr/popper';
+import Button from '@lxjx/fr/button';
 
 import sty from './demo.module.scss';
 

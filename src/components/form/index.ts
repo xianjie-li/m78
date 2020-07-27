@@ -1,4 +1,4 @@
-import '@lxjx/fr/lib/form/style';
+import '@lxjx/fr/form/style';
 import Form from './form';
 
 export * from './type';

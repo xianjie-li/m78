@@ -1,4 +1,4 @@
-import RadioBox from '@lxjx/fr/lib/radio-box';
+import RadioBox from '@lxjx/fr/radio-box';
 import React, { useState } from 'react';
 
 const options = [

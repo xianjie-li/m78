@@ -1,4 +1,4 @@
-import Button from '@lxjx/fr/lib/button';
+import Button from '@lxjx/fr/button';
 import React from 'react';
 import moment, { Moment } from 'moment';
 import Time from './Time';

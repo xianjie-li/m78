@@ -1,6 +1,6 @@
 import React from 'react';
-import ImagePreview from '@lxjx/fr/lib/image-preview';
-import '@lxjx/fr/lib/viewer/style';
+import ImagePreview from '@lxjx/fr/image-preview';
+import '@lxjx/fr/viewer/style';
 
 import img1 from '@/mock/img/1.jpg';
 import img2 from '@/mock/img/2.jpg';

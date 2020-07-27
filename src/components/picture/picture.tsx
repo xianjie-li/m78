@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 
-import Spin from '@lxjx/fr/lib/spin';
-import config from '@lxjx/fr/lib/config';
+import Spin from '@lxjx/fr/spin';
+import config from '@lxjx/fr/config';
 
 import { useSetState } from '@lxjx/hooks';
 

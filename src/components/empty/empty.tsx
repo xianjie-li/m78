@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { EmptyIcon } from '@lxjx/fr/lib/icon';
-import config from '@lxjx/fr/lib/config';
+import { EmptyIcon } from '@lxjx/fr/icon';
+import config from '@lxjx/fr/config';
 
 import cls from 'classnames';
 

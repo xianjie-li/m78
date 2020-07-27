@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Input from '@lxjx/fr/lib/input';
+import Input from '@lxjx/fr/input';
 
 const Demo3 = () => (
   <div>

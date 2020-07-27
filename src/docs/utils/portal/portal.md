@@ -14,8 +14,8 @@ group:
 
 ```tsx
 import React from 'react';
-import Portal from '@lxjx/fr/lib/portal';
-import '@lxjx/fr/lib/portal/style';
+import Portal from '@lxjx/fr/portal';
+import '@lxjx/fr/portal/style';
 
 export default () => (
   <div>
@@ -36,8 +36,8 @@ export default () => (
 
 ```tsx
 import React from 'react';
-import Portal from '@lxjx/fr/lib/portal';
-import '@lxjx/fr/lib/portal/style';
+import Portal from '@lxjx/fr/portal';
+import '@lxjx/fr/portal/style';
 
 export default () => (
   <div>

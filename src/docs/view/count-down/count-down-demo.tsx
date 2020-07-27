@@ -1,6 +1,6 @@
 import React from 'react';
-import CountDown from '@lxjx/fr/lib/count-down';
-import '@lxjx/fr/lib/count-down/style';
+import CountDown from '@lxjx/fr/count-down';
+import '@lxjx/fr/count-down/style';
 
 const d = new Date();
 

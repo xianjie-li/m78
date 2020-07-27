@@ -1,6 +1,6 @@
 import React from 'react';
-import Spin from '@lxjx/fr/lib/spin';
-import '@lxjx/fr/lib/spin/style';
+import Spin from '@lxjx/fr/spin';
+import '@lxjx/fr/spin/style';
 
 const IconDemo = () => (
   <div className="demo">

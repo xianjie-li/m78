@@ -1,13 +1,13 @@
 import React, { useMemo } from 'react';
 
-import '@lxjx/fr/lib/base';
-import ShowFromMouse from '@lxjx/fr/lib/show-from-mouse';
-import Button, { ButtonProps } from '@lxjx/fr/lib/button';
+import '@lxjx/fr/base';
+import ShowFromMouse from '@lxjx/fr/show-from-mouse';
+import Button, { ButtonProps } from '@lxjx/fr/button';
 import { Transition } from '@lxjx/react-transition-spring';
 import { config } from 'react-spring';
-import { CloseOutlined, statusIcons } from '@lxjx/fr/lib/icon';
-import Spin from '@lxjx/fr/lib/spin';
-import { dumpFn } from '@lxjx/fr/lib/util';
+import { CloseOutlined, statusIcons } from '@lxjx/fr/icon';
+import Spin from '@lxjx/fr/spin';
+import { dumpFn } from '@lxjx/fr/util';
 import { useSameState } from '@lxjx/hooks';
 
 import createRenderApi, { ReactRenderApiProps } from '@lxjx/react-render-api';

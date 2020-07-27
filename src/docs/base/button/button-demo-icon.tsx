@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from '@lxjx/fr/lib/button';
+import Button from '@lxjx/fr/button';
 import {
   TagOutlined,
   SettingOutlined,
@@ -9,8 +9,8 @@ import {
   BulbOutlined,
   CaretLeftOutlined,
   CaretRightOutlined,
-} from '@lxjx/fr/lib/icon';
-import Message from '@lxjx/fr/lib/message';
+} from '@lxjx/fr/icon';
+import Message from '@lxjx/fr/message';
 
 const ButtonDemoColor = () => (
   <div>

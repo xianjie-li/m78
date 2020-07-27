@@ -1,4 +1,4 @@
-import '@lxjx/fr/lib/picture/style';
+import '@lxjx/fr/picture/style';
 import Picture from './picture';
 
 export default Picture;

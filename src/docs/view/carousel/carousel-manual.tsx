@@ -1,9 +1,9 @@
 import React from 'react';
-import Carousel, { CarouselRef } from '@lxjx/fr/lib/carousel';
-import '@lxjx/fr/lib/carousel/style';
+import Carousel, { CarouselRef } from '@lxjx/fr/carousel';
+import '@lxjx/fr/carousel/style';
 
-import Button from '@lxjx/fr/lib/button';
-import '@lxjx/fr/lib/button/style';
+import Button from '@lxjx/fr/button';
+import '@lxjx/fr/button/style';
 
 import img1 from '@/mock/img/1.jpg';
 import img2 from '@/mock/img/2.jpg';

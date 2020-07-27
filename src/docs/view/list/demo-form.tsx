@@ -1,11 +1,11 @@
 import React from 'react';
 
-import List from '@lxjx/fr/lib/list';
-import '@lxjx/fr/lib/list/style';
+import List from '@lxjx/fr/list';
+import '@lxjx/fr/list/style';
 
-import Button from '@lxjx/fr/lib/button';
-import Input from '@lxjx/fr/lib/input';
-import '@lxjx/fr/lib/button/style';
+import Button from '@lxjx/fr/button';
+import Input from '@lxjx/fr/input';
+import '@lxjx/fr/button/style';
 
 import { useSetState } from '@lxjx/hooks';
 

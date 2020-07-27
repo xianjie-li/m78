@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Check, { CheckCustom } from '@lxjx/fr/lib/check';
+import Check, { CheckCustom } from '@lxjx/fr/check';
 import './style.scss';
 import cls from 'classnames';
 

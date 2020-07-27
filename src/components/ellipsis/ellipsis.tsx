@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { getStyle } from '@lxjx/fr/lib/util';
+import { getStyle } from '@lxjx/fr/util';
 import cls from 'classnames';
 
 export interface MaskProps extends React.PropsWithoutRef<JSX.IntrinsicElements['div']> {

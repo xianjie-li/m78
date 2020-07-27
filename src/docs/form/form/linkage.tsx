@@ -1,8 +1,8 @@
 import React from 'react';
-import Form from '@lxjx/fr/lib/form';
-import Input from '@lxjx/fr/lib/input';
-import Button from '@lxjx/fr/lib/button';
-import Check from '@lxjx/fr/lib/check';
+import Form from '@lxjx/fr/form';
+import Input from '@lxjx/fr/input';
+import Button from '@lxjx/fr/button';
+import Check from '@lxjx/fr/check';
 
 const Linkage = () => (
   <Form

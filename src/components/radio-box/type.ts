@@ -1,5 +1,5 @@
 import { FormLike } from '@lxjx/hooks';
-import { CheckCustom } from '@lxjx/fr/lib/check';
+import { CheckCustom } from '@lxjx/fr/check';
 
 export interface RadioBoxProps<Val> extends FormLike<Val> {
   /** 传递给原生组件 */

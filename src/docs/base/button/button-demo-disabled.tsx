@@ -1,6 +1,6 @@
 import React from 'react';
-import Button from '@lxjx/fr/lib/button';
-import '@lxjx/fr/lib/button/style';
+import Button from '@lxjx/fr/button';
+import '@lxjx/fr/button/style';
 
 const ButtonDemoColor = () => (
   <div>

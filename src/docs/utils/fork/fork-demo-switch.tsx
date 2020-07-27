@@ -1,5 +1,5 @@
 import React from 'react';
-import Fork from '@lxjx/fr/lib/fork';
+import Fork from '@lxjx/fr/fork';
 
 const Demo = () => (
   <div>

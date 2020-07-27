@@ -2,17 +2,17 @@ import React, { useState, useEffect } from 'react';
 
 import { animated, config, useSpring } from 'react-spring';
 
-import Portal from '@lxjx/fr/lib/portal';
-import { CloseOutlined, statusIcons } from '@lxjx/fr/lib/icon';
-import Spin from '@lxjx/fr/lib/spin';
-import { If, Toggle } from '@lxjx/fr/lib/fork';
+import Portal from '@lxjx/fr/portal';
+import { CloseOutlined, statusIcons } from '@lxjx/fr/icon';
+import Spin from '@lxjx/fr/spin';
+import { If, Toggle } from '@lxjx/fr/fork';
 import { useMeasure } from 'react-use';
 import { Transition } from '@lxjx/react-transition-spring';
 
 import cls from 'classnames';
 
 import { useSelf } from '@lxjx/hooks';
-import Button from '@lxjx/fr/lib/button';
+import Button from '@lxjx/fr/button';
 import { MessageProps } from './type';
 
 function MessageWrap({ children }: any) {

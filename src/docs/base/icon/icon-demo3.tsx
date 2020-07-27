@@ -9,9 +9,9 @@ import {
   ServerErrorIcon,
   WindmillIcon,
   WaitingIcon,
-} from '@lxjx/fr/lib/icon';
+} from '@lxjx/fr/icon';
 
-import message from '@lxjx/fr/lib/message';
+import message from '@lxjx/fr/message';
 
 import { useCopyToClipboard } from 'react-use';
 

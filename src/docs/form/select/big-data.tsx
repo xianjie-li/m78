@@ -1,4 +1,4 @@
-import Select from '@lxjx/fr/lib/select';
+import Select from '@lxjx/fr/select';
 import React, { useState } from 'react';
 
 import { fakeOptions } from './utils';

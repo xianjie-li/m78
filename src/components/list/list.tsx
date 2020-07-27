@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 
-import '@lxjx/fr/lib/base';
-import { Switch, If } from '@lxjx/fr/lib/fork';
-import { statusIcons, RightOutlined, LoadingOutlined } from '@lxjx/fr/lib/icon';
+import '@lxjx/fr/base';
+import { Switch, If } from '@lxjx/fr/fork';
+import { statusIcons, RightOutlined, LoadingOutlined } from '@lxjx/fr/icon';
 
-import Ellipsis from '@lxjx/fr/lib/ellipsis';
+import Ellipsis from '@lxjx/fr/ellipsis';
 
 import cls from 'classnames';
 import { Title, SubTitle } from './titles';

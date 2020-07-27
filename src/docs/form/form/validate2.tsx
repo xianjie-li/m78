@@ -1,7 +1,7 @@
 import React from 'react';
-import Form, { FormProps } from '@lxjx/fr/lib/form';
-import Input from '@lxjx/fr/lib/input';
-import Button from '@lxjx/fr/lib/button';
+import Form, { FormProps } from '@lxjx/fr/form';
+import Input from '@lxjx/fr/input';
+import Button from '@lxjx/fr/button';
 
 const rules: FormProps['rules'] = {
   name: {

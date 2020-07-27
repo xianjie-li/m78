@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useMemo } from 'react';
 import { AnyObject, createRandString, isArray, isFunction } from '@lxjx/utils';
 import { useUpdate } from 'react-use';
 import _has from 'lodash/has';
-import List from '@lxjx/fr/lib/list';
+import List from '@lxjx/fr/list';
 import { FormInstance } from 'rc-field-form/es/interface';
 import { Field } from 'rc-field-form';
 import cls from 'classnames';

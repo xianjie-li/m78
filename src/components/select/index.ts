@@ -1,4 +1,4 @@
-import '@lxjx/fr/lib/select/style';
+import '@lxjx/fr/select/style';
 import Select from './select';
 
 export { mergeOptions, CustomPopper } from './statics';

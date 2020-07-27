@@ -1,9 +1,9 @@
 import React from 'react';
-import message from '@lxjx/fr/lib/message';
-import '@lxjx/fr/lib/message/style';
+import message from '@lxjx/fr/message';
+import '@lxjx/fr/message/style';
 
-import Button from '@lxjx/fr/lib/button';
-import '@lxjx/fr/lib/button/style';
+import Button from '@lxjx/fr/button';
+import '@lxjx/fr/button/style';
 
 const type = ['success', 'error', 'warning', undefined];
 

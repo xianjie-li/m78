@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import Input from '@lxjx/fr/lib/input';
-import Popper, { PopperRef } from '@lxjx/fr/lib/popper';
-import Spin from '@lxjx/fr/lib/spin';
-import Empty from '@lxjx/fr/lib/empty';
-import Button from '@lxjx/fr/lib/button';
-import { DownOutlined } from '@lxjx/fr/lib/icon';
-import { If } from '@lxjx/fr/lib/fork';
-import { getCurrentParent } from '@lxjx/fr/lib/util';
+import Input from '@lxjx/fr/input';
+import Popper, { PopperRef } from '@lxjx/fr/popper';
+import Spin from '@lxjx/fr/spin';
+import Empty from '@lxjx/fr/empty';
+import Button from '@lxjx/fr/button';
+import { DownOutlined } from '@lxjx/fr/icon';
+import { If } from '@lxjx/fr/fork';
+import { getCurrentParent } from '@lxjx/fr/util';
 import _debounce from 'lodash/debounce';
 
 import { VariableSizeList as FixedList } from 'react-window';

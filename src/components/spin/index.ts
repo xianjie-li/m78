@@ -1,4 +1,4 @@
-import '@lxjx/fr/lib/spin/style';
+import '@lxjx/fr/spin/style';
 
 export * from './type';
 export { default } from './spin';

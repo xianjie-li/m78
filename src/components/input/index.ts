@@ -1,4 +1,4 @@
-import '@lxjx/fr/lib/input/style';
+import '@lxjx/fr/input/style';
 import Input from './input';
 
 export * from './type';

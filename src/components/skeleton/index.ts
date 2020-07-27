@@ -1,4 +1,4 @@
-import '@lxjx/fr/lib/skeleton/style';
+import '@lxjx/fr/skeleton/style';
 
 export * from './skeleton';
 export { default } from './skeleton';

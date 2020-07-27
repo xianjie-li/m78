@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Result from '@lxjx/fr/lib/result';
-import Button from '@lxjx/fr/lib/button';
+import Result from '@lxjx/fr/result';
+import Button from '@lxjx/fr/button';
 
 const Demo = () => (
   <div>
