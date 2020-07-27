@@ -79,6 +79,7 @@ const _ImagePreview: React.FC<ImagePreviewProps> = ({
   useEffect(
     function removeInstance() {
       if (!show) {
+        // eslint-disable-next-line @typescript-eslint/no-implied-eval
         setTimeout(onRemove!, 800);
       }
       // eslint-disable-next-line

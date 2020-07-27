@@ -1,21 +1,12 @@
-import React, {
-  ReactElement,
-  useEffect,
-  useRef,
-  useState,
-  useImperativeHandle,
-  useMemo,
-} from 'react';
+import React, { ReactElement, useEffect, useRef, useState, useImperativeHandle } from 'react';
 import { useMeasure, useUpdate, useInterval } from 'react-use';
 import { animated, useSpring } from 'react-spring';
 import { useGesture } from 'react-use-gesture';
 import _clamp from 'lodash/clamp';
-import _throttle from 'lodash/throttle';
 
 import cls from 'classnames';
 
 import { dumpFn } from '@lxjx/utils';
-import { useFn } from '@lxjx/hooks';
 import { ComponentBaseProps } from '../types/types';
 
 export interface CarouselProps extends ComponentBaseProps {

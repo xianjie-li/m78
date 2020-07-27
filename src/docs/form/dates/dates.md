@@ -6,17 +6,18 @@ group:
 ---
 
 # Dates 时间
+
 一个针对日期、时间进行展示或录入的控件，支持选择器、面板、日历等使用形式。
 
 ## 基本使用
 
 不同的选择器类型
 
-<code src="./demo.tsx" /> 
+<code src="./demo.tsx" />
 
 ## 范围选择
 
-<code src="./range.tsx" /> 
+<code src="./range.tsx" />
 
 ## 限制日期/时间
 
@@ -37,7 +38,6 @@ group:
 <code src="./calendar.tsx" />
 
 ## API
-
 
 ### **`props`**
 
@@ -103,6 +103,7 @@ export interface DatesRangeProps extends DatesBaseProps {
 ```
 
 ### **`限制器`**
+
 ```tsx | pure
 /**
  * 禁用日期,返回true的日期项会被禁用
@@ -132,6 +133,7 @@ export interface TimeLimiter {
 ```
 
 ### **`相关接口`**
+
 ```tsx | pure
 interface ComponentBaseProps {
   /** 包裹元素的类名 */

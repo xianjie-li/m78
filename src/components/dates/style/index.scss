@@ -19,7 +19,8 @@
     }
   }
 
-  &_head, &_foot {
+  &_head,
+  &_foot {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -85,7 +86,7 @@
     font-size: 16px;
 
     &::before {
-      content: "";
+      content: '';
       padding-top: 74%;
       float: left;
     }
@@ -233,7 +234,8 @@
     display: inline-block;
     color: $b-second;
 
-    &::after, &::before {
+    &::after,
+    &::before {
       position: relative;
       content: '';
       display: inline-block;
@@ -307,7 +309,7 @@
     justify-content: center;
     margin: 4px;
 
-    >span {
+    > span {
       display: inline-block;
       background-color: #fff;
       padding: 0 12px;
@@ -340,7 +342,8 @@
       background: transparent;
     }
 
-    &:hover, &:active {
+    &:hover,
+    &:active {
       &::-webkit-scrollbar-track {
         background: rgba(0, 0, 0, 0.1);
       }
@@ -362,7 +365,7 @@
       color: $color;
       font-size: 18px;
 
-      >span {
+      > span {
         font-weight: 400;
       }
     }
@@ -390,17 +393,22 @@
     width: 100%;
     border-top: 2px dashed $b-border;
 
-    &.__tl, &.__tr, &.__bl, &.__br {
+    &.__tl,
+    &.__tr,
+    &.__bl,
+    &.__br {
       width: 50%;
       height: 50%;
       border-top: none;
     }
 
-    &.__tl, &.__tr {
+    &.__tl,
+    &.__tr {
       top: 1px;
     }
 
-    &.__bl, &.__br {
+    &.__bl,
+    &.__br {
       border-top: none;
       bottom: 1px;
     }

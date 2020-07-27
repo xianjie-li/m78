@@ -34,7 +34,7 @@ async function build(type = 'esm') {
 
   const confs = [];
 
-  const extensions = ['.tsx', '.ts', '.jsx', '.js'];
+  const extensions = ['.ts', '.tsx', '.jsx', '.js'];
 
   const copyList = [
     {

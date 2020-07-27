@@ -16,16 +16,6 @@ export enum DateType {
 /* 需要同时允许用户传入DateType 或 字面量 */
 type DateTypeUnion = 'date' | 'month' | 'year' | 'time';
 
-/** 传递给disabledDate/disabledTime的额外参数 */
-interface DisabledExtras {
-  /** 当前时间 */
-  checkedDate?: Moment;
-  /** 如果为range选择且选择了结束时间，会以此项传入 */
-  checkedEndDate?: Moment;
-  /** 是否为范围选择 */
-  isRange?: boolean;
-}
-
 /**
  * 禁用日期,返回true的日期项会被禁用
  * @param mmt - 当前项的时间
@@ -50,6 +40,16 @@ export interface DateLimiter {
  * */
 export interface TimeLimiter {
   (meta: TimeValue & { key: keyof TimeValue; val: number }, extra: DisabledExtras): boolean | void;
+}
+
+/** 传递给disabledDate/disabledTime的额外参数 */
+interface DisabledExtras {
+  /** 当前时间 */
+  checkedDate?: Moment;
+  /** 如果为range选择且选择了结束时间，会以此项传入 */
+  checkedEndDate?: Moment;
+  /** 是否为范围选择 */
+  isRange?: boolean;
 }
 
 export interface DatesBaseProps extends ComponentBaseProps {

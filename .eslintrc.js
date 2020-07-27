@@ -10,5 +10,6 @@ module.exports = {
     '@typescript-eslint/no-unused-expressions': 'off',
     'no-await-in-loop': 'off',
     'import/no-extraneous-dependencies': 'off',
+    '@typescript-eslint/no-implied-eval': 'off',
   },
 };
