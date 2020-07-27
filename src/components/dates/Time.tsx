@@ -120,18 +120,17 @@ const Time: React.FC<TimeProps> = props => {
         {times[key].map(item => {
           const selector = getSelector(id, key, item);
 
-          const disabled =
-            disabledTime && value
-              ? checkDisabled(
-                  disabledTime,
-                  {
-                    ...value,
-                    key,
-                    val: item,
-                  },
-                  disabledTimeExtra,
-                )
-              : false;
+          const disabled = disabledTime
+            ? checkDisabled(
+                disabledTime,
+                {
+                  ...value,
+                  key,
+                  val: item,
+                },
+                disabledTimeExtra,
+              )
+            : false;
 
           /** 禁用并隐藏 */
           if (disabled && hideDisabled) return null;

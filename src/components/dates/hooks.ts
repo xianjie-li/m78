@@ -109,6 +109,10 @@ export function useHandlers(
     setValue([dString], [mmt]);
   }
 
+  const onShow = useFn(() => setState({ show: true }));
+
+  const onHide = useFn(() => setState({ show: false }));
+
   /** 选中日期项 */
   const onCheck: DateItemProps['onCheck'] = useFn((dString, mmt) => {
     const format = hasTime ? DATE_FORMAT_DATE_TIME : DATE_FORMAT_DATE;
@@ -145,6 +149,8 @@ export function useHandlers(
     }
 
     setValue(dString, mmt);
+
+    onHide();
   });
 
   /** 选中时间, 传入isEnd时设置结束时间 */
@@ -193,6 +199,8 @@ export function useHandlers(
       }
 
       setValue(dString, mmt);
+
+      onHide();
       return;
     }
 
@@ -217,6 +225,8 @@ export function useHandlers(
       }
 
       setValue(dString, mmt);
+
+      onHide();
       return;
     }
 
@@ -255,10 +265,6 @@ export function useHandlers(
       });
     }
   });
-
-  const onShow = useFn(() => setState({ show: true }));
-
-  const onHide = useFn(() => setState({ show: false }));
 
   return {
     onCheck,

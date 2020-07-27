@@ -3,7 +3,7 @@ import { FormLike } from '@lxjx/hooks';
 import React from 'react';
 import { SetState } from '@lxjx/hooks/dist/type';
 import { AnyFunction } from '@lxjx/utils';
-import { InputProps } from '@/components/input';
+import { InputProps } from '../input';
 import { ComponentBaseProps } from '../types/types';
 
 export enum DateType {
@@ -48,7 +48,7 @@ export interface DateLimiter {
  * @param extra - <DisabledExtras>
  * @return - 返回true时，该项被禁用
  * */
-export interface DisabledLimiter {
+export interface TimeLimiter {
   (meta: TimeValue & { key: keyof TimeValue; val: number }, extra: DisabledExtras): boolean | void;
 }
 
@@ -84,7 +84,7 @@ export interface DatesBaseProps extends ComponentBaseProps {
    * 也可以通过此项实现时间步进选择(1点 3点 4点...)的效果 */
   hideDisabledTime?: boolean;
   /** 限制可用时间 */
-  disabledTime?: DisabledLimiter | Array<DisabledLimiter>;
+  disabledTime?: TimeLimiter | Array<TimeLimiter>;
 }
 
 /** 常规选择，value为string */
@@ -157,7 +157,7 @@ export interface TimeProps extends FormLike<TimeValue> {
   /** 隐藏禁用项 */
   hideDisabled?: boolean;
 
-  disabledTime?: Array<DisabledLimiter>;
+  disabledTime?: Array<TimeLimiter>;
   /** 传递给disabledTime函数的额外参数 */
   disabledTimeExtra?: any;
 }

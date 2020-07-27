@@ -35,6 +35,7 @@ function Dates(props: DatesProps | DatesRangeProps) {
     format = defaultFormat,
     size,
     disabled,
+    mode = 'select',
   } = tProps;
 
   /**  当前时间 */
@@ -212,6 +213,10 @@ function Dates(props: DatesProps | DatesRangeProps) {
         </ShowFromMouse>
       </>
     );
+  }
+
+  if (mode === 'component' || mode === 'calendar') {
+    return renderMain(mode === 'calendar');
   }
 
   return state.mobile ? renderModel() : renderTooltip();

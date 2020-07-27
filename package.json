@@ -70,7 +70,7 @@
     "@rollup/plugin-replace": "^2.3.3",
     "@umijs/plugin-sass": "^1.1.1",
     "chalk": "^4.1.0",
-    "dumi": "^1.0.33",
+    "dumi": "^1.0.27",
     "file-loader": "^4.2.0",
     "fs-extra": "^9.0.1",
     "glob": "^7.1.4",

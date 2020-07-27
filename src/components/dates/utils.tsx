@@ -2,7 +2,7 @@ import moment, { Moment } from 'moment';
 import { isArray } from '@lxjx/utils';
 import _debounce from 'lodash/debounce';
 import { SM } from '@lxjx/fr/lib/util';
-import { DateLimiter, DatesProps, DateType, DisabledLimiter, ShareMetas } from './type';
+import { DateLimiter, DatesProps, DateType, TimeLimiter, ShareMetas } from './type';
 
 export const DATE_FORMAT_YEAR = 'YYYY';
 
@@ -139,7 +139,7 @@ export function disabledHandlerFormat<T>(
 }
 
 /** 接收DisabledTime或DisabledDate组成的数组并进行验证，如果有任意一个返回了true则返回true */
-export function checkDisabled(handler: Array<DateLimiter> | Array<DisabledLimiter>, ...args: any) {
+export function checkDisabled(handler: Array<DateLimiter> | Array<TimeLimiter>, ...args: any) {
   if (!handler.length) return false;
 
   for (let i = 0; i < handler.length; i++) {

@@ -16,7 +16,7 @@ import {
   placeholderMaps,
   timePreset,
 } from './utils';
-import { DatesBaseProps, DateType, ShareMetas } from './type';
+import { DateType, ShareMetas } from './type';
 import { useDateUIController, useHandlers } from './hooks';
 import DateItem from './DateItem';
 
@@ -368,12 +368,7 @@ const timePresetHelper = (t?: any) => {
   };
 };
 
-export const renderPresetDates: NonNullable<DatesBaseProps['presetDates']> = ({
-  type,
-  hasTime,
-  setValue,
-  props,
-}) => {
+export const renderPresetDates = ({ type, hasTime, setValue, props }: ShareMetas) => {
   const baseProps = { size: 'small', link: true, color: 'primary' } as const;
 
   // 设为当前
