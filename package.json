@@ -33,7 +33,7 @@
     "@ant-design/icons": "^4.1.0",
     "@babel/runtime": "^7.7.2",
     "@lxjx/async-filed-cn-template": "^1.0.1",
-    "@lxjx/auth": "^0.9.1",
+    "@lxjx/auth": "^0.10.1",
     "@lxjx/fr-click-effect": "^1.0.2",
     "@lxjx/hooks": "^1.4.0",
     "@lxjx/react-render-api": "^0.3.9",

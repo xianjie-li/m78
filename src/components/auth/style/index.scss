@@ -1,0 +1,22 @@
+@import '../../style/index';
+
+.fr-auth {
+
+  &_popper {
+    .fr-result {
+      margin: 0;
+    }
+    .fr-result_cont {
+      padding: 0;
+    }
+    .fr-result_icon {
+      display: none;
+    }
+    .fr-result_btns {
+      margin-top: 12px;
+    }
+    .fr-result_btns .fr-btn {
+      width: auto;
+    }
+  }
+}

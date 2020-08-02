@@ -20,6 +20,7 @@ export function useDelayDerivedToggleStatus(
   const { disabled, deps = [], extraDelay = 0 } = options || {};
 
   const [innerState, setInnerState] = useState(disabled ? toggle : false); // 默认一定要为false
+
   const self = useSelf({
     toggleTimer: null as any,
   });

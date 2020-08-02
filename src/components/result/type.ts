@@ -1,4 +1,5 @@
 import React from 'react';
+import { ComponentBaseProps } from '../types/types';
 
 export type ResultTypes =
   | 'success'
@@ -9,7 +10,7 @@ export type ResultTypes =
   | 'serverError'
   | 'notAuth';
 
-export interface ResultProps {
+export interface ResultProps extends ComponentBaseProps {
   /** true | 组件开关，任意falsy或truthy值 */
   show?: boolean;
   /** 'success' | 类型 */
@@ -24,4 +25,6 @@ export interface ResultProps {
   actions?: React.ReactNode;
   /** false | 浮动模式，脱离文档流全屏进行展示 */
   fixed?: boolean;
+  /** 自定义显示的icon */
+  icon?: React.ReactNode;
 }

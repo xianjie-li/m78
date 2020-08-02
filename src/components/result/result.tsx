@@ -20,6 +20,9 @@ const Result: React.FC<ResultProps> = ({
   actions,
   show = true,
   fixed = false,
+  icon,
+  className,
+  style,
 }) => {
   const StatusIcon = statusIcons[type];
 
@@ -31,16 +34,19 @@ const Result: React.FC<ResultProps> = ({
         config={config.stiff}
         mountOnEnter
         unmountOnExit
-        className={cls('fr-result', { __fixed: fixed })}
+        className={cls('fr-result', className, { __fixed: fixed })}
+        style={style}
       >
         <div className="fr-result_cont">
           <div className={cls('fr-result_icon', { __waiting: type === 'waiting' })}>
-            <StatusIcon
-              type={type}
-              className={cls({
-                'fr-result_status-img': statusResultList.includes(type),
-              })}
-            />
+            {icon || (
+              <StatusIcon
+                type={type}
+                className={cls({
+                  'fr-result_status-img': statusResultList.includes(type),
+                })}
+              />
+            )}
           </div>
           <Fork.If when={title}>
             <div className="fr-result_title">{title}</div>

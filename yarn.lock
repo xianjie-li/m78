@@ -1281,10 +1281,10 @@
   dependencies:
     tslib "^2.0.0"
 
-"@lxjx/auth@^0.9.1":
-  version "0.9.1"
-  resolved "https://registry.npm.taobao.org/@lxjx/auth/download/@lxjx/auth-0.9.1.tgz#fe207fccb54647377194a45059ea12cf40619963"
-  integrity sha1-/iB/zLVGRzdxlKRQWeoSz0BhmWM=
+"@lxjx/auth@^0.10.1":
+  version "0.10.1"
+  resolved "https://registry.npm.taobao.org/@lxjx/auth/download/@lxjx/auth-0.10.1.tgz#a3a9431ed6641f6175ee4613eadd9ab998440cf9"
+  integrity sha1-o6lDHtZkH2F17kYT6t2auZhEDPk=
   dependencies:
     "@lxjx/utils" "^1.4.5"
     tslib "^2.0.0"
