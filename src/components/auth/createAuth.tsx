@@ -64,7 +64,7 @@ export function createAuth<D, V>(auth: Auth<D, V>) {
     if (self.flag) return null;
 
     if (loading) {
-      return pendingNode || <Spin text="验证中..." />;
+      return pendingNode || <Spin text="验证中" />;
     }
 
     if (state.rejects) {
