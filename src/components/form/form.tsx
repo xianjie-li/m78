@@ -7,7 +7,7 @@ import { useFn, useScroll } from '@lxjx/hooks';
 import { ValidateErrorEntity } from 'rc-field-form/es/interface';
 import { checkElementVisible, getFirstScrollParent } from '@lxjx/fr/util';
 import cls from 'classnames';
-import { createMessagesTemplate } from '@lxjx/async-filed-cn-template';
+import { createMessagesTemplate } from '@lxjx/validate-tools';
 
 import { FormProps } from './type';
 import { getNameString } from './utils';

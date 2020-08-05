@@ -1369,6 +1369,17 @@
     "@types/node" "^13.11.0"
     uuid "^7.0.2"
 
+"@lxjx/validate-tools@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.npm.taobao.org/@lxjx/validate-tools/download/@lxjx/validate-tools-1.1.0.tgz#4061a7d6cb6b963892fcedbf724e686e5eedb811"
+  integrity sha1-QGGn1strljiS/O2/ck5obl7tuBE=
+  dependencies:
+    "@lxjx/utils" "^1.4.5"
+    "@types/lodash" "^4.14.155"
+    async-validator "^3.3.0"
+    lodash "^4.17.15"
+    tslib "^2.0.0"
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.npm.taobao.org/@mrmlnc/readdir-enhanced/download/@mrmlnc/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -1774,7 +1785,7 @@
   resolved "https://registry.npm.taobao.org/@types/lodash/download/@types/lodash-4.14.157.tgz#fdac1c52448861dfde1a2e1515dbc46e54926dc8"
   integrity sha1-/awcUkSIYd/eGi4VFdvEblSSbcg=
 
-"@types/lodash@^4.14.141", "@types/lodash@^4.14.149":
+"@types/lodash@^4.14.141", "@types/lodash@^4.14.149", "@types/lodash@^4.14.155":
   version "4.14.158"
   resolved "https://registry.npm.taobao.org/@types/lodash/download/@types/lodash-4.14.158.tgz#b38ea8b6fe799acd076d7a8d7ab71c26ef77f785"
   integrity sha1-s46otv55ms0HbXqNerccJu9394U=
@@ -10572,10 +10583,10 @@ raw-loader@4.0.1:
     loader-utils "^2.0.0"
     schema-utils "^2.6.5"
 
-rc-field-form@^1.4.0:
-  version "1.8.0"
-  resolved "https://registry.npm.taobao.org/rc-field-form/download/rc-field-form-1.8.0.tgz?cache=0&sync_timestamp=1594804973089&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Frc-field-form%2Fdownload%2Frc-field-form-1.8.0.tgz#c51312321409727e5a333873311f9c1f5e13e8c2"
-  integrity sha1-xRMSMhQJcn5aMzhzMR+cH14T6MI=
+rc-field-form@^1.9.4:
+  version "1.9.4"
+  resolved "https://registry.npm.taobao.org/rc-field-form/download/rc-field-form-1.9.4.tgz#95a8bb30033a6b079c75da6953539a873966055e"
+  integrity sha1-lai7MAM6awecddppU1OahzlmBV4=
   dependencies:
     "@babel/runtime" "^7.8.4"
     async-validator "^3.0.3"
