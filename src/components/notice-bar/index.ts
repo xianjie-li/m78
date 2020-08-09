@@ -1,4 +1,4 @@
-import '@lxjx/fr/notice-bar/style';
+import 'm78/notice-bar/style';
 
 export * from './notice-bar';
 export { default } from './notice-bar';

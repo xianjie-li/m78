@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { getStyle } from '@lxjx/fr/util';
+import { getStyle } from 'm78/util';
 import cls from 'classnames';
 
 export interface MaskProps extends React.PropsWithoutRef<JSX.IntrinsicElements['div']> {
@@ -75,7 +75,7 @@ const Ellipsis: React.FC<MaskProps> = ({
   return (
     <div
       ref={el}
-      className={cls('fr-ellipsis', className, {
+      className={cls('m78-ellipsis', className, {
         __dark: dark,
         ellipsis: !shouldAddShadow && line === 1,
       })}
@@ -88,7 +88,7 @@ const Ellipsis: React.FC<MaskProps> = ({
       {children}
       {shouldAddShadow && (
         <span
-          className="fr-ellipsis_shadow"
+          className="m78-ellipsis_shadow"
           style={{ height: state.oneHeight, top: `${state.oneHeight * (line - 1)}px` }}
         />
       )}

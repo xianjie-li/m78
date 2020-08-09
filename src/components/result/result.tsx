@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { statusIcons } from '@lxjx/fr/icon';
-import Fork from '@lxjx/fr/fork';
-import Portal from '@lxjx/fr/portal';
+import { statusIcons } from 'm78/icon';
+import Fork from 'm78/fork';
+import Portal from 'm78/portal';
 import { Transition, config } from '@lxjx/react-transition-spring';
 
 import cls from 'classnames';
@@ -34,31 +34,31 @@ const Result: React.FC<ResultProps> = ({
         config={config.stiff}
         mountOnEnter
         unmountOnExit
-        className={cls('fr-result', className, { __fixed: fixed })}
+        className={cls('m78-result', className, { __fixed: fixed })}
         style={style}
       >
-        <div className="fr-result_cont">
-          <div className={cls('fr-result_icon', { __waiting: type === 'waiting' })}>
+        <div className="m78-result_cont">
+          <div className={cls('m78-result_icon', { __waiting: type === 'waiting' })}>
             {icon || (
               <StatusIcon
                 type={type}
                 className={cls({
-                  'fr-result_status-img': statusResultList.includes(type),
+                  'm78-result_status-img': statusResultList.includes(type),
                 })}
               />
             )}
           </div>
           <Fork.If when={title}>
-            <div className="fr-result_title">{title}</div>
+            <div className="m78-result_title">{title}</div>
           </Fork.If>
           <Fork.If when={!!desc}>
-            <div className="fr-result_desc">{desc}</div>
+            <div className="m78-result_desc">{desc}</div>
           </Fork.If>
           <Fork.If when={!!children}>
-            <div className="fr-result_extra">{children}</div>
+            <div className="m78-result_extra">{children}</div>
           </Fork.If>
           <Fork.If when={!!actions}>
-            <div className="fr-result_btns">{actions}</div>
+            <div className="m78-result_btns">{actions}</div>
           </Fork.If>
         </div>
       </Transition>

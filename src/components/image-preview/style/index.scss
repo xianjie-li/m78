@@ -1,31 +1,31 @@
 @import '../../style/index';
 
-.fr-image-preview {
+.m78-image-preview {
   position: fixed;
   background: rgba(255, 255, 255, 0.75);
   z-index: $z-index-drawer;
 
   @include full;
 
-  .fr-viewer {
+  .m78-viewer {
     flex: 0 0 auto;
     max-width: 90%;
   }
 
-  .fr-viewer_cont {
+  .m78-viewer_cont {
     border: 6px solid #fff;
     box-shadow: $shadow-1;
   }
 
-  .fr-carousel_item {
+  .m78-carousel_item {
     box-shadow: none;
   }
 
-  .fr-carousel_ctrl {
+  .m78-carousel_ctrl {
     bottom: 108px;
   }
 
-  .fr-carousel_ctrl-item {
+  .m78-carousel_ctrl-item {
     background-color: $b-disable;
 
     &.__active {
@@ -74,7 +74,7 @@
 
       &.__disabled {
         color: $b-disable;
-        .fr-icon {
+        .m78-icon {
           transform: scale(1) !important;
         }
       }
@@ -87,7 +87,7 @@
         color: $color-error;
       }
 
-      .fr-icon {
+      .m78-icon {
         &:hover {
           transform: scale(1.1);
         }

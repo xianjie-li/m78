@@ -1,7 +1,7 @@
 @import '../../style/index';
 
-.fr-select {
-  .fr-input_prefix {
+.m78-select {
+  .m78-input_prefix {
     //z-index: 1000;
   }
 
@@ -10,11 +10,11 @@
     flex-wrap: wrap;
     min-height: 32px;
     padding: 6px 10px;
-    .fr-input_prefix {
+    .m78-input_prefix {
       flex: 1 0 auto;
       width: 100%;
     }
-    .fr-input {
+    .m78-input {
       margin-top: 4px;
     }
 
@@ -22,11 +22,11 @@
       padding: 0 10px;
     }
 
-    &.__not-search .fr-input {
+    &.__not-search .m78-input {
       display: none;
     }
 
-    &.__not-search .fr-input_suffix {
+    &.__not-search .m78-input_suffix {
       display: none;
     }
   }
@@ -36,20 +36,20 @@
   }
 
   &.__text-value {
-    .fr-input::placeholder {
+    .m78-input::placeholder {
       color: #000000;
     }
 
     &.__empty,
     &.__focus {
-      .fr-input::placeholder {
+      .m78-input::placeholder {
         color: $b-second !important;
       }
     }
   }
 
   &_popper {
-    & + .fr-popper_arrow {
+    & + .m78-popper_arrow {
       display: none;
     }
   }
@@ -59,7 +59,7 @@
     min-width: 280px;
     max-width: 90vw;
 
-    .fr-empty {
+    .m78-empty {
       padding: 8px 12px;
     }
 
@@ -162,7 +162,7 @@
     }
 
     &.__disabled {
-      .fr-select_close-btn {
+      .m78-select_close-btn {
         pointer-events: none;
       }
     }

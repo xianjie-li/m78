@@ -1,5 +1,5 @@
 import React from 'react';
-import Dates from '@lxjx/fr/dates';
+import Dates from 'm78/dates';
 
 const ComponentDemo = () => {
   return (

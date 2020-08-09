@@ -1,6 +1,6 @@
 @import '../../style/index';
 
-.fr-drawer {
+.m78-drawer {
   position: fixed;
   z-index: $z-index-drawer;
   background-color: #fff;
@@ -24,10 +24,10 @@
   }
 
   &_mask.__inside {
-    .fr-mask-node {
+    .m78-mask-node {
       position: absolute;
     }
-    .fr-mask_inner {
+    .m78-mask_inner {
       position: static;
     }
   }

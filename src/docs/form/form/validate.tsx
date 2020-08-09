@@ -1,7 +1,7 @@
 import React from 'react';
-import Form from '@lxjx/fr/form';
-import Input from '@lxjx/fr/input';
-import Button from '@lxjx/fr/button';
+import Form from 'm78/form';
+import Input from 'm78/input';
+import Button from 'm78/button';
 
 const Base = () => (
   <Form

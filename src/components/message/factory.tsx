@@ -50,10 +50,10 @@ const notify = ({ title, desc, foot, content, ...options }: NotifyOption) =>
     duration: 4000,
     hasCancel: true,
     content: content || (
-      <div className="fr-message_notification">
-        {title && <div className="fr-message_notification_title">{title}</div>}
-        {desc && <div className="fr-message_notification_desc">{desc}</div>}
-        {foot && <div className="fr-message_notification_foot">{foot}</div>}
+      <div className="m78-message_notification">
+        {title && <div className="m78-message_notification_title">{title}</div>}
+        {desc && <div className="m78-message_notification_desc">{desc}</div>}
+        {foot && <div className="m78-message_notification_foot">{foot}</div>}
       </div>
     ),
     ...options,

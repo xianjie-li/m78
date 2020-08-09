@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Modal from '@lxjx/fr/modal';
-import Button from '@lxjx/fr/button';
+import Modal from 'm78/modal';
+import Button from 'm78/button';
 
 function mult(mask = true) {
   for (let i = 0; i < 6; i++) {

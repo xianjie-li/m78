@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import Mask from '@lxjx/fr/mask';
-import '@lxjx/fr/mask/style';
+import Mask from 'm78/mask';
+import 'm78/mask/style';
 
-import Button from '@lxjx/fr/button';
-import '@lxjx/fr/button/style';
+import Button from 'm78/button';
+import 'm78/button/style';
 
 import { ReactRenderApiProps } from '@lxjx/react-render-api';
 

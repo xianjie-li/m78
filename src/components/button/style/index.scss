@@ -1,6 +1,6 @@
 @import '../../style/index';
 
-.fr-btn {
+.m78-btn {
   appearance: none;
   position: relative;
   /* 退级 */
@@ -32,7 +32,7 @@
     justify-content: center;
   }
 
-  .fr-icon,
+  .m78-icon,
   .anticon {
     position: relative;
     font-size: 1em;
@@ -137,21 +137,21 @@
       background-color: $b-divider !important;
     }
 
-    .fr-icon {
+    .m78-icon {
       font-size: 24px;
       transform: scale(1);
       margin-right: 0;
     }
 
-    &.__large .fr-icon {
+    &.__large .m78-icon {
       font-size: 30px;
     }
 
-    &.__small .fr-icon {
+    &.__small .m78-icon {
       font-size: 18px;
     }
 
-    &.__mini .fr-icon {
+    &.__mini .m78-icon {
       font-size: 14px;
     }
   }
@@ -188,12 +188,12 @@
   */
 @mixin btn($name, $main-color) {
   // 基础样式
-  .fr-btn.__#{$name} {
+  .m78-btn.__#{$name} {
     color: #fff;
     background-color: $main-color;
   }
 
-  .fr-btn.__#{$name}.__icon {
+  .m78-btn.__#{$name}.__icon {
     color: $main-color;
 
     &:focus,
@@ -202,7 +202,7 @@
     }
   }
 
-  .fr-btn.__#{$name}.__link {
+  .m78-btn.__#{$name}.__link {
     color: $main-color;
 
     &:focus,
@@ -212,7 +212,7 @@
   }
 
   // 边框按钮
-  .fr-btn.__#{$name}.__outline {
+  .m78-btn.__#{$name}.__outline {
     color: $main-color;
     background-color: transparent;
     background-image: none;
@@ -244,8 +244,8 @@
   }
 
   // 彩色按钮禁用
-  .fr-btn.__#{$name}:disabled,
-  .fr-btn.__#{$name}[disabled] {
+  .m78-btn.__#{$name}:disabled,
+  .m78-btn.__#{$name}[disabled] {
     cursor: not-allowed;
     background-color: scale_color($main-color, $lightness: 60%);
     box-shadow: $shadow-1;

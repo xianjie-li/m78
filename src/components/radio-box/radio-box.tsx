@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useFormState } from '@lxjx/hooks';
 
-import Check from '@lxjx/fr/check';
+import Check from 'm78/check';
 
 import { RadioBoxProps } from './type';
 
@@ -12,7 +12,7 @@ const RadioBox = <Val extends unknown>(props: RadioBoxProps<Val>) => {
   const [value, setValue] = useFormState<Val>(props, undefined!);
 
   return (
-    <div className="fr-radio-box">
+    <div className="m78-radio-box">
       {options.map((item, index) => (
         <Check
           key={index}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { If } from '@lxjx/fr/fork';
+import { If } from 'm78/fork';
 
 import { useFormState } from '@lxjx/hooks';
 
@@ -40,30 +40,32 @@ function getCheckCls({ focus, checked, disabled }: ShareMeta) {
 /** 内置样式实现 */
 const builtIn: BuiltIn = {
   radio: meta => (
-    <span className={cls('fr-check_base fr-effect __md', getCheckCls(meta))}>
-      <span className="fr-check_base-main">
-        <span className="fr-check_base-inner" />
+    <span className={cls('m78-check_base m78-effect __md', getCheckCls(meta))}>
+      <span className="m78-check_base-main">
+        <span className="m78-check_base-inner" />
       </span>
     </span>
   ),
   checkbox: (meta, { partial }) => (
     <span
       className={cls(
-        'fr-check_base fr-effect __md',
+        'm78-check_base m78-effect __md',
         '__checkbox',
         partial && '__partial',
         getCheckCls(meta),
       )}
     >
-      <span className="fr-check_base-main">
-        <span className="fr-check_base-inner" />
+      <span className="m78-check_base-main">
+        <span className="m78-check_base-inner" />
       </span>
     </span>
   ),
   switch: (meta, { switchOff, switchOn }) => (
-    <span className={cls('fr-check_switch', getCheckCls(meta))}>
-      <span className={cls('fr-check_switch-inner fr-effect __md', meta.disabled && '__disabled')}>
-        <span className="fr-check_switch-handle">
+    <span className={cls('m78-check_switch', getCheckCls(meta))}>
+      <span
+        className={cls('m78-check_switch-inner m78-effect __md', meta.disabled && '__disabled')}
+      >
+        <span className="m78-check_switch-handle">
           <If when={switchOff && switchOn}>
             <span>{meta.checked ? switchOn : switchOff}</span>
           </If>
@@ -132,13 +134,13 @@ const Check = <Val extends unknown = undefined>(_props: CheckProps<Val>) => {
   return (
     /* eslint-disable-next-line jsx-a11y/label-has-associated-control,jsx-a11y/label-has-for */
     <label
-      className={cls('fr-check', statusCls, className)}
+      className={cls('m78-check', statusCls, className)}
       style={style}
       onKeyPress={mouseUpHandel}
       onClick={blurHandle}
     >
       <If when={beforeLabel && !customer}>
-        <span className="fr-check_label-before">{beforeLabel}</span>
+        <span className="m78-check_label-before">{beforeLabel}</span>
       </If>
       <input
         value={String(value || '')}
@@ -146,7 +148,7 @@ const Check = <Val extends unknown = undefined>(_props: CheckProps<Val>) => {
         onBlur={blurHandle}
         checked={checked}
         onChange={onChange}
-        className="fr-check_hidden-check"
+        className="m78-check_hidden-check"
         type="checkbox"
         name={name}
         disabled={disabled}
@@ -155,7 +157,7 @@ const Check = <Val extends unknown = undefined>(_props: CheckProps<Val>) => {
       />
       {renderCustom && renderCustom({ focus, checked, disabled }, _props)}
       <If when={label && !customer}>
-        <span className="fr-check_label">{label}</span>
+        <span className="m78-check_label">{label}</span>
       </If>
     </label>
   );

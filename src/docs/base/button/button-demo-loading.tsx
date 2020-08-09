@@ -1,6 +1,6 @@
 import React from 'react';
-import Button from '@lxjx/fr/button';
-import '@lxjx/fr/button/style';
+import Button from 'm78/button';
+import 'm78/button/style';
 
 const ButtonDemoColor = () => (
   <div>

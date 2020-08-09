@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import Input from '@lxjx/fr/input';
-import Popper, { PopperRef } from '@lxjx/fr/popper';
-import Spin from '@lxjx/fr/spin';
-import Empty from '@lxjx/fr/empty';
-import Button from '@lxjx/fr/button';
-import { DownOutlined } from '@lxjx/fr/icon';
-import { If } from '@lxjx/fr/fork';
-import { getCurrentParent } from '@lxjx/fr/util';
+import Input from 'm78/input';
+import Popper, { PopperRef } from 'm78/popper';
+import Spin from 'm78/spin';
+import Empty from 'm78/empty';
+import Button from 'm78/button';
+import { DownOutlined } from 'm78/icon';
+import { If } from 'm78/fork';
+import { getCurrentParent } from 'm78/util';
 import _debounce from 'lodash/debounce';
 
 import { VariableSizeList as FixedList } from 'react-window';
@@ -230,7 +230,7 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
     if (target) {
       const isCloseBtn = getCurrentParent(
         target,
-        node => node.className === 'fr-select_close-btn',
+        node => node.className === 'm78-select_close-btn',
         5,
       );
       if (isCloseBtn) return;
@@ -303,7 +303,7 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
 
     return (
       <div
-        className={cls('fr-select_list fr-scroll-bar', { __disabled: disabled })}
+        className={cls('m78-select_list m78-scroll-bar', { __disabled: disabled })}
         style={{ width: listWidth || state.inputWidth }}
       >
         {(listLoading || loading) && <Spin full size="small" text={null} />}
@@ -322,7 +322,7 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
   /** 操作栏 */
   function renderToolbar() {
     const bar = (
-      <div className="fr-select_toolbar-inner fr-hb-t">
+      <div className="m78-select_toolbar-inner m78-hb-t">
         <div className="color-second fs-12">
           已选中{checked.length}项
           <If when={maxLength && checked.length >= maxLength}>
@@ -351,7 +351,7 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
         </div>
       </div>
     );
-    return <div className="fr-select_toolbar">{customToolBar ? customToolBar(bar) : bar}</div>;
+    return <div className="m78-select_toolbar">{customToolBar ? customToolBar(bar) : bar}</div>;
   }
 
   /** tag列表 */
@@ -365,7 +365,7 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
       : originalChecked.slice();
 
     return (
-      <div className="fr-select_tags" onClick={onShow}>
+      <div className="m78-select_tags" onClick={onShow}>
         {list.map((item, index) => {
           const val = getValue(item, valueKey);
 
@@ -417,7 +417,7 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
       <Input
         innerRef={inpRef}
         onClick={onShow}
-        className={cls('fr-select', className, {
+        className={cls('m78-select', className, {
           __disabled: disabled, // 要同时为list设置
           __empty: checked.length === 0,
           '__not-search': !search,
@@ -429,7 +429,7 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
         onKeyDown={onKeyDown}
         placeholder={_placeholder || placeholder}
         prefix={showMultipleTag && originalChecked.length && renderPrefix()}
-        suffix={<DownOutlined className={cls('fr-select_down-icon', { __reverse: show })} />}
+        suffix={<DownOutlined className={cls('m78-select_down-icon', { __reverse: show })} />}
         value={inpVal}
         onChange={onKeyChange}
         loading={inputLoading}

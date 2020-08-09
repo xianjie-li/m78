@@ -1,8 +1,8 @@
-import Form, { Item } from '@lxjx/fr/form';
+import Form, { Item } from 'm78/form';
 import React, { useState } from 'react';
-import Input from '@lxjx/fr/input';
-import Button from '@lxjx/fr/button';
-import { CloseCircleOutlined } from '@lxjx/fr/icon';
+import Input from 'm78/input';
+import Button from 'm78/button';
+import { CloseCircleOutlined } from 'm78/icon';
 
 const Demo = () => {
   const submitHandle = (e: any) => {

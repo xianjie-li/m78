@@ -1,6 +1,6 @@
 @import '../../style/index';
 
-@keyframes fr-skeleton-animation {
+@keyframes m78-skeleton-animation {
   0% {
     background-position: 100% 50%;
   }
@@ -9,7 +9,7 @@
   }
 }
 
-.fr-skeleton {
+.m78-skeleton {
   position: relative;
   margin-bottom: 12px;
   border-radius: $border-radius;
@@ -24,7 +24,7 @@
     display: flex;
     justify-content: flex-start;
 
-    &:last-child .fr-skeleton_line {
+    &:last-child .m78-skeleton_line {
       flex: 0 1 auto;
     }
 
@@ -47,7 +47,7 @@
   &_animate {
     background: linear-gradient(to right, #f3f3f3 30%, #ecebeb 46%, #f3f3f3 70%);
     background-size: 400% 100%;
-    animation: fr-skeleton-animation 2s ease infinite;
+    animation: m78-skeleton-animation 2s ease infinite;
   }
 
   &_img {
@@ -66,7 +66,7 @@
       border-radius: $border-radius;
       background: linear-gradient(to right, #f3f3f3 30%, #ecebeb 46%, #f3f3f3 70%);
       background-size: 400% 100%;
-      animation: fr-skeleton-animation 2s ease infinite;
+      animation: m78-skeleton-animation 2s ease infinite;
     }
 
     &.__circle {
@@ -84,7 +84,7 @@
     padding: 0;
     margin-bottom: 0;
 
-    .fr-skeleton {
+    .m78-skeleton {
       margin-bottom: 0;
       background-color: transparent;
     }

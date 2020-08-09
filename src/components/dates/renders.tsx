@@ -1,4 +1,4 @@
-import Button from '@lxjx/fr/button';
+import Button from 'm78/button';
 import React from 'react';
 import moment, { Moment } from 'moment';
 import Time from './Time';
@@ -44,7 +44,7 @@ export function staticRenderCheckedValue(
         {mmt && hasTime && (
           <span
             onClick={toTime}
-            className="color-primary fr-dates_time fr-dates_effect-text"
+            className="color-primary m78-dates_time m78-dates_effect-text"
             title="点击选择"
           >
             {mmt.format(DATE_FORMAT_TIME)}
@@ -115,50 +115,50 @@ export function staticRenderDate(
 ) {
   return (
     <>
-      <div className="fr-dates_label">
+      <div className="m78-dates_label">
         <span>
-          <span className="fr-dates_arrow" title="上一年" onClick={prevY} />
-          <span className="fr-dates_arrow __single ml-8" title="上一月" onClick={prev} />
+          <span className="m78-dates_arrow" title="上一年" onClick={prevY} />
+          <span className="m78-dates_arrow __single ml-8" title="上一月" onClick={prev} />
         </span>
         <span>
-          <span className="fr-dates_effect-text" onClick={toYear}>
+          <span className="m78-dates_effect-text" onClick={toYear}>
             {state.currentM.year()}
           </span>
           年
-          <span className="fr-dates_effect-text" onClick={toMonth} style={{ marginLeft: 4 }}>
+          <span className="m78-dates_effect-text" onClick={toMonth} style={{ marginLeft: 4 }}>
             {state.currentM.month() + 1}
           </span>
           月
         </span>
         <span>
-          <span className="fr-dates_arrow __reverse __single" title="下一月" onClick={next} />
-          <span className="fr-dates_arrow __reverse ml-8" title="下一年" onClick={nextY} />
+          <span className="m78-dates_arrow __reverse __single" title="下一月" onClick={next} />
+          <span className="m78-dates_arrow __reverse ml-8" title="下一年" onClick={nextY} />
         </span>
       </div>
       <div>
-        <div className="fr-dates_date-item __title">
-          <span className="fr-dates_date-item-inner">一</span>
+        <div className="m78-dates_date-item __title">
+          <span className="m78-dates_date-item-inner">一</span>
         </div>
-        <div className="fr-dates_date-item __title">
-          <span className="fr-dates_date-item-inner">二</span>
+        <div className="m78-dates_date-item __title">
+          <span className="m78-dates_date-item-inner">二</span>
         </div>
-        <div className="fr-dates_date-item __title">
-          <span className="fr-dates_date-item-inner">三</span>
+        <div className="m78-dates_date-item __title">
+          <span className="m78-dates_date-item-inner">三</span>
         </div>
-        <div className="fr-dates_date-item __title">
-          <span className="fr-dates_date-item-inner">四</span>
+        <div className="m78-dates_date-item __title">
+          <span className="m78-dates_date-item-inner">四</span>
         </div>
-        <div className="fr-dates_date-item __title">
-          <span className="fr-dates_date-item-inner">五</span>
+        <div className="m78-dates_date-item __title">
+          <span className="m78-dates_date-item-inner">五</span>
         </div>
-        <div className="fr-dates_date-item __title">
-          <span className="fr-dates_date-item-inner">六</span>
+        <div className="m78-dates_date-item __title">
+          <span className="m78-dates_date-item-inner">六</span>
         </div>
-        <div className="fr-dates_date-item __title">
-          <span className="fr-dates_date-item-inner">日</span>
+        <div className="m78-dates_date-item __title">
+          <span className="m78-dates_date-item-inner">日</span>
         </div>
       </div>
-      <div className="fr-dates_list">
+      <div className="m78-dates_list">
         {getDates(state.currentM.year(), state.currentM.month() + 1).map(mm => (
           <DateItem
             disabledDate={props.disabledDate}
@@ -191,17 +191,17 @@ export function staticRenderMonth(
 ) {
   return (
     <>
-      <div className="fr-dates_label">
-        <span className="fr-dates_arrow" title="上一年" onClick={prevY} />
+      <div className="m78-dates_label">
+        <span className="m78-dates_arrow" title="上一年" onClick={prevY} />
         <span>
-          <span className="fr-dates_effect-text" onClick={toYear}>
+          <span className="m78-dates_effect-text" onClick={toYear}>
             {state.currentM.year()}
           </span>
           年
         </span>
-        <span className="fr-dates_arrow __reverse" title="下一年" onClick={nextY} />
+        <span className="m78-dates_arrow __reverse" title="下一年" onClick={nextY} />
       </div>
-      <div className="fr-dates_list">
+      <div className="m78-dates_list">
         {getMonths(state.currentM.year()).map(mm => (
           <DateItem
             disabledDate={props.disabledDate}
@@ -235,20 +235,20 @@ export function staticRenderYear(
 
   return (
     <>
-      <div className="fr-dates_label">
+      <div className="m78-dates_label">
         <span
-          className="fr-dates_arrow"
+          className="m78-dates_arrow"
           title="前一组"
           onClick={() => changeDate(2, 12, 'years')}
         />
         <span>{str}</span>
         <span
-          className="fr-dates_arrow __reverse"
+          className="m78-dates_arrow __reverse"
           title="后一组"
           onClick={() => changeDate(1, 12, 'years')}
         />
       </div>
-      <div className="fr-dates_list">
+      <div className="m78-dates_list">
         {list.map(mm => (
           <DateItem
             disabledDate={props.disabledDate}
@@ -346,7 +346,7 @@ export function staticRenderTabs(
   }
 
   return (
-    <span className="fr-dates_btns">
+    <span className="m78-dates_btns">
       {year}
       {month}
       {date}

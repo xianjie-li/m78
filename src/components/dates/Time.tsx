@@ -116,7 +116,7 @@ const Time: React.FC<TimeProps> = props => {
 
   function renderColumn([key, { sc, unit }]: [keyof TimeValue, typeof map[keyof typeof map]]) {
     return (
-      <div className="fr-dates_picker-column" ref={sc.ref} key={key}>
+      <div className="m78-dates_picker-column" ref={sc.ref} key={key}>
         {times[key].map(item => {
           const selector = getSelector(id, key, item);
 
@@ -138,7 +138,7 @@ const Time: React.FC<TimeProps> = props => {
           return (
             <div
               key={item}
-              className={cls('fr-dates_picker-time', selector, {
+              className={cls('m78-dates_picker-time', selector, {
                 __active: value && value[key as keyof TimeValue] === item,
                 __disabled: disabled,
               })}
@@ -151,25 +151,25 @@ const Time: React.FC<TimeProps> = props => {
             </div>
           );
         })}
-        <div className="fr-dates_picker-time __plain" />
-        <div className="fr-dates_picker-time __plain" />
-        <div className="fr-dates_picker-time __plain" />
-        <div className="fr-dates_picker-time __plain" />
+        <div className="m78-dates_picker-time __plain" />
+        <div className="m78-dates_picker-time __plain" />
+        <div className="m78-dates_picker-time __plain" />
+        <div className="m78-dates_picker-time __plain" />
       </div>
     );
   }
 
   function renderTimes() {
     return (
-      <div className="fr-dates_picker-item fr-scroll-bar">
+      <div className="m78-dates_picker-item m78-scroll-bar">
         {Object.entries(map).map((item: any) => renderColumn(item))}
       </div>
     );
   }
 
   return (
-    <div className="fr-dates_picker">
-      {props.label && <div className="fr-dates_picker-item-diver">{props.label}</div>}
+    <div className="m78-dates_picker">
+      {props.label && <div className="m78-dates_picker-item-diver">{props.label}</div>}
 
       {renderTimes()}
     </div>

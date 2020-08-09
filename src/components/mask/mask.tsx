@@ -4,7 +4,7 @@ import { useUpdateEffect, useToggle } from 'react-use';
 import { useLockBodyScroll } from '@lxjx/hooks';
 import { Transition } from '@lxjx/react-transition-spring';
 
-import Portal from '@lxjx/fr/portal';
+import Portal from 'm78/portal';
 
 import cls from 'classnames';
 
@@ -73,14 +73,14 @@ const Mask: React.FC<MaskProps> = ({
 
   function render() {
     return (
-      <div className={cls('fr-mask_wrap', className)} style={style}>
+      <div className={cls('m78-mask_wrap', className)} style={style}>
         {mask && (
-          <div className="fr-mask_inner" style={{ opacity: visible ? 1 : 0 }}>
+          <div className="m78-mask_inner" style={{ opacity: visible ? 1 : 0 }}>
             <Transition
               onClick={maskClosable ? onClose : undefined}
               toggle={show}
               type="fade"
-              className={cls('fr-mask-node', dark ? 'fr-mask-b' : 'fr-mask')}
+              className={cls('m78-mask-node', dark ? 'm78-mask-b' : 'm78-mask')}
               mountOnEnter
               unmountOnExit
             />

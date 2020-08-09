@@ -1,3 +1,4 @@
+import 'm78/fork/style';
 import InternalFork, { If, Toggle, Switch } from './fork';
 
 type ForkType = typeof InternalFork;

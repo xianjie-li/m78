@@ -1,11 +1,11 @@
 import React from 'react';
-import create from '@lxjx/fr/auth';
-import Button from '@lxjx/fr/button';
+import create from 'm78/auth';
+import Button from 'm78/button';
 
 const { Auth, setDeps } = create({
   /* 被所有验证器依赖数据 */
   dependency: {
-    name: 'lxj',
+    name: '',
   },
   /* 声明验证器 */
   validators: {

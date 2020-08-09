@@ -1,13 +1,13 @@
 import React, { useMemo } from 'react';
 
-import '@lxjx/fr/base';
-import ShowFromMouse from '@lxjx/fr/show-from-mouse';
-import Button, { ButtonProps } from '@lxjx/fr/button';
+import 'm78/base';
+import ShowFromMouse from 'm78/show-from-mouse';
+import Button, { ButtonProps } from 'm78/button';
 import { Transition } from '@lxjx/react-transition-spring';
 import { config } from 'react-spring';
-import { CloseOutlined, statusIcons } from '@lxjx/fr/icon';
-import Spin from '@lxjx/fr/spin';
-import { dumpFn } from '@lxjx/fr/util';
+import { CloseOutlined, statusIcons } from 'm78/icon';
+import Spin from 'm78/spin';
+import { dumpFn } from 'm78/util';
 import { useSameState } from '@lxjx/hooks';
 
 import createRenderApi, { ReactRenderApiProps } from '@lxjx/react-render-api';
@@ -126,11 +126,11 @@ const _Modal: React.FC<ModalProps> = ({
   function renderDefault() {
     return (
       <>
-        <div className={cls('fr-modal_title', headerClassName)}>
+        <div className={cls('m78-modal_title', headerClassName)}>
           {header || <span>{title}</span>}
         </div>
-        <div className={cls('fr-modal_cont', contentClassName)}>{children}</div>
-        <div className={cls('fr-modal_footer', footerClassName, { __full: flexBtn })}>
+        <div className={cls('m78-modal_cont', contentClassName)}>{children}</div>
+        <div className={cls('m78-modal_footer', footerClassName, { __full: flexBtn })}>
           {footer || renderBtns() || renderDefaultFooter()}
         </div>
       </>
@@ -146,17 +146,17 @@ const _Modal: React.FC<ModalProps> = ({
       visible={!beforeHasMask}
       maskClosable={loading ? false : maskClosable}
       style={{ zIndex: nowZIndex, top: (cIndex * 20) / dpr, left: (cIndex * 20) / dpr }}
-      contClassName={cls('fr-modal', className)}
-      className="fr-modal_wrap"
+      contClassName={cls('m78-modal', className)}
+      className="m78-modal_wrap"
       contStyle={{ ...style, maxWidth, padding: content ? 0 : '' }}
       show={show}
       onRemove={onRemove}
       onClose={onClose}
     >
       {status && (
-        <div className="fr-modal_status-warp">
+        <div className="m78-modal_status-warp">
           <Transition
-            className="fr-modal_status"
+            className="m78-modal_status"
             alpha={false}
             toggle={show}
             type="slideLeft"
@@ -167,7 +167,7 @@ const _Modal: React.FC<ModalProps> = ({
         </div>
       )}
       {closeIcon && (
-        <Button icon className="fr-modal_close-icon" onClick={() => onClose()} size="small">
+        <Button icon className="m78-modal_close-icon" onClick={() => onClose()} size="small">
           <CloseOutlined />
         </Button>
       )}

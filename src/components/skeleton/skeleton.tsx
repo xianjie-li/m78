@@ -31,11 +31,11 @@ const _Skeleton: React.FC<SkeletonProps> = ({
       // 只在行数大于1时才减少列数量
       const last = lineNum > 1 && ind === lineNum - 1;
       return (
-        <div key={ind} className="fr-skeleton_line-box">
+        <div key={ind} className="m78-skeleton_line-box">
           {Array.from({ length: last ? 3 : 5 }).map((v, i) => (
             <div
               key={i}
-              className="fr-skeleton_line fr-skeleton_animate"
+              className="m78-skeleton_line m78-skeleton_animate"
               style={{ width: last ? `${getRand(8, 36)}%` : getRandWidth(10) }}
             />
           ))}
@@ -49,10 +49,10 @@ const _Skeleton: React.FC<SkeletonProps> = ({
   ]);
 
   return (
-    <div className={cls('fr-skeleton', { __shadow: shadow })} style={{ width, backgroundColor }}>
+    <div className={cls('m78-skeleton', { __shadow: shadow })} style={{ width, backgroundColor }}>
       {img && (
         <div
-          className={cls('fr-skeleton_img', { __circle: !!circle })}
+          className={cls('m78-skeleton_img', { __circle: !!circle })}
           style={{ backgroundColor }}
         />
       )}
@@ -69,10 +69,10 @@ const _Banner: React.FC<Omit<SkeletonProps, 'circle' | 'img' | 'lineNumber'>> = 
   backgroundColor = '#fff',
 }) => (
   <div
-    className={cls('fr-skeleton fr-skeleton_banner', { __shadow: shadow })}
+    className={cls('m78-skeleton m78-skeleton_banner', { __shadow: shadow })}
     style={{ width, backgroundColor }}
   >
-    <div className="fr-skeleton_banner-main fr-skeleton_animate" style={{ height }} />
+    <div className="m78-skeleton_banner-main m78-skeleton_animate" style={{ height }} />
     {/* eslint-disable-next-line */}
     <_Skeleton show lineNumber={2} />
   </div>

@@ -1,4 +1,4 @@
-import '@lxjx/fr/icon/style';
+import 'm78/icon/style';
 
 export * from './type';
 export * from './icon';

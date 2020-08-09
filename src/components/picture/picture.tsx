@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 
-import Spin from '@lxjx/fr/spin';
-import config from '@lxjx/fr/config';
+import Spin from 'm78/spin';
+import config from 'm78/config';
 
 import { useSetState } from '@lxjx/hooks';
 
@@ -107,7 +107,7 @@ const Picture: React.FC<PictureProps> = ({
   }
 
   return (
-    <span {...props} ref={wrap} className={cls('fr-picture', className)} style={style}>
+    <span {...props} ref={wrap} className={cls('m78-picture', className)} style={style}>
       {!state.error && (
         <img {...imgProps} alt={alt} src={src} className={imgClassName} style={imgStyle} />
       )}

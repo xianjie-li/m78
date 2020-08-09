@@ -11,5 +11,6 @@ module.exports = {
     'no-await-in-loop': 'off',
     'import/no-extraneous-dependencies': 'off',
     '@typescript-eslint/no-implied-eval': 'off',
+    'no-alert': 'off',
   },
 };

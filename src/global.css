@@ -26,6 +26,10 @@
   background: #13c2c2 !important;
 }
 
+.__dumi-default-previewer-demo {
+  max-width: 888px;
+}
+
 /*::-webkit-scrollbar {*/
 /*  width: 5px;*/
 /*  height: 5px;*/

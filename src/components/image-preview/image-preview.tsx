@@ -5,9 +5,9 @@ import { useSetState, useToggle, useUpdateEffect } from 'react-use';
 import _clamp from 'lodash/clamp';
 import cls from 'classnames';
 
-import Carousel, { CarouselRef } from '@lxjx/fr/carousel';
-import Viewer, { ViewerRef } from '@lxjx/fr/viewer';
-import Picture from '@lxjx/fr/picture';
+import Carousel, { CarouselRef } from 'm78/carousel';
+import Viewer, { ViewerRef } from 'm78/viewer';
+import Picture from 'm78/picture';
 import {
   CloseCircleOutlined,
   RightOutlined,
@@ -17,10 +17,10 @@ import {
   RedoOutlined,
   UndoOutlined,
   LeftOutlined,
-} from '@lxjx/fr/icon';
-import { If } from '@lxjx/fr/fork';
-import Portal from '@lxjx/fr/portal';
-import { stopPropagation } from '@lxjx/fr/util';
+} from 'm78/icon';
+import { If } from 'm78/fork';
+import Portal from 'm78/portal';
+import { stopPropagation } from 'm78/util';
 
 import createRenderApi, { ReactRenderApiProps } from '@lxjx/react-render-api';
 import { Transition } from '@lxjx/react-transition-spring';
@@ -179,7 +179,7 @@ const _ImagePreview: React.FC<ImagePreviewProps> = ({
         type="fade"
         toggle={show && images.length > 0}
         mountOnEnter
-        className="fr-image-preview"
+        className="m78-image-preview"
         {...bindDrag()}
         onDoubleClick={close}
       >
@@ -193,7 +193,7 @@ const _ImagePreview: React.FC<ImagePreviewProps> = ({
           onChange={onChange}
         >
           {images.map((item, key) => (
-            <div key={key} className="fr-image-preview_img-wrap">
+            <div key={key} className="m78-image-preview_img-wrap">
               <Viewer ref={viewer => (self.viewers[key] = viewer!)}>
                 <span>
                   <If when={self.currentPage >= key - 1 && self.currentPage <= key + 1}>
@@ -201,7 +201,7 @@ const _ImagePreview: React.FC<ImagePreviewProps> = ({
                       {...stopPropagation}
                       src={item.img}
                       alt="图片加载失败"
-                      className="fr-image-preview_img"
+                      className="m78-image-preview_img"
                       imgProps={{ onDragStart: disabledDrag }}
                     />
                   </If>
@@ -210,7 +210,7 @@ const _ImagePreview: React.FC<ImagePreviewProps> = ({
             </div>
           ))}
         </Carousel>
-        <div className="fr-image-preview_ctrl-bar" onDoubleClick={stopPropagation.onClick}>
+        <div className="m78-image-preview_ctrl-bar" onDoubleClick={stopPropagation.onClick}>
           <If when={images.length > 1}>
             <span
               className={cls({ __disabled: state.disabledPrev })}

@@ -1,11 +1,11 @@
 import React from 'react';
-import Viewer, { ViewerRef } from '@lxjx/fr/viewer';
-import '@lxjx/fr/viewer/style';
+import Viewer, { ViewerRef } from 'm78/viewer';
+import 'm78/viewer/style';
 
-import '@lxjx/fr/drawer/style';
+import 'm78/drawer/style';
 
-import Button from '@lxjx/fr/button';
-import '@lxjx/fr/button/style';
+import Button from 'm78/button';
+import 'm78/button/style';
 
 import { getRandRange } from '@lxjx/utils';
 import img1 from '@/mock/img/3.jpg';

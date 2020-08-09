@@ -1,8 +1,8 @@
 import React from 'react';
 
-import Drawer from '@lxjx/fr/drawer';
-import Button from '@lxjx/fr/button';
-import { If } from '@lxjx/fr/fork';
+import Drawer from 'm78/drawer';
+import Button from 'm78/button';
+import { If } from 'm78/fork';
 
 import { useFormState } from '@lxjx/hooks';
 
@@ -39,7 +39,7 @@ const ActionSheet: React.FC<ActionSheetProps> = props => {
           if (state && v.id === state.id) return;
           setState(v);
         }}
-        className={cls('fr-action-sheet_item fr-effect fr-hb-t __md', {
+        className={cls('m78-action-sheet_item m78-effect m78-hb-t __md', {
           __active: v.highlight,
           __confirm: isConfirm,
           __disabled: v.disabled,
@@ -48,11 +48,11 @@ const ActionSheet: React.FC<ActionSheetProps> = props => {
         <div className={cls(isConfirm && 'tl')}>
           <div>{v.name}</div>
           <If when={v.desc}>
-            <div className="fr-action-sheet_desc">{v.desc}</div>
+            <div className="m78-action-sheet_desc">{v.desc}</div>
           </If>
         </div>
         <If when={isConfirm}>
-          <span className="fr-action-sheet_check">
+          <span className="m78-action-sheet_check">
             {/* TODO: 完成Checkbox组件后替换 */}
             <input
               type="checkbox"
@@ -69,16 +69,16 @@ const ActionSheet: React.FC<ActionSheetProps> = props => {
   return (
     <Drawer
       namespace={namespace}
-      className="fr-action-sheet_wrap"
+      className="m78-action-sheet_wrap"
       show={show}
       onRemove={onRemove}
       onClose={close}
       style={{ boxShadow: 'none' }}
     >
-      <div className={cls('fr-action-sheet', { __custom: !!children })}>
-        <div className="fr-action-sheet_item fr-effect __md __title __disabled">
+      <div className={cls('m78-action-sheet', { __custom: !!children })}>
+        <div className="m78-action-sheet_item m78-effect __md __title __disabled">
           <If when={isConfirm}>
-            <Button className="fr-action-sheet_confirm" onClick={onClose} link color="red">
+            <Button className="m78-action-sheet_confirm" onClick={onClose} link color="red">
               取消
             </Button>
           </If>
@@ -89,16 +89,19 @@ const ActionSheet: React.FC<ActionSheetProps> = props => {
                 close();
                 onConfirm && onConfirm(state);
               }}
-              className="fr-action-sheet_confirm"
+              className="m78-action-sheet_confirm"
               color="blue"
             >
               {confirmText}
             </Button>
           </If>
         </div>
-        <div className="fr-action-sheet_item-cont">{children || renderItems()}</div>
+        <div className="m78-action-sheet_item-cont">{children || renderItems()}</div>
         <If when={!isConfirm}>
-          <div className="fr-action-sheet_item fr-effect fr-hb-t __md __cancel" onClick={onClose}>
+          <div
+            className="m78-action-sheet_item m78-effect m78-hb-t __md __cancel"
+            onClick={onClose}
+          >
             取消
           </div>
         </If>

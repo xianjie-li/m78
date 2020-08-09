@@ -1,8 +1,8 @@
 import React from 'react';
-import Form, { Item } from '@lxjx/fr/form';
-import Input from '@lxjx/fr/input';
-import Button from '@lxjx/fr/button';
-import { CloseOutlined } from '@lxjx/fr/icon';
+import Form, { Item } from 'm78/form';
+import Input from 'm78/input';
+import Button from 'm78/button';
+import { CloseOutlined } from 'm78/icon';
 
 const List = () => (
   <Form

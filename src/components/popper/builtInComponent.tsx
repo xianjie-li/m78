@@ -1,22 +1,22 @@
 import React from 'react';
-import { WarningIcon } from '@lxjx/fr/icon';
-import Button from '@lxjx/fr/button';
+import { WarningIcon } from 'm78/icon';
+import Button from 'm78/button';
 import { useFn } from '@lxjx/hooks';
 import { PopperPropsCustom } from './types';
 
 function Tooltip(props: PopperPropsCustom) {
   const { content } = props;
 
-  return <div className="fr-popper_content fr-popper_tooltip">{content}</div>;
+  return <div className="m78-popper_content m78-popper_tooltip">{content}</div>;
 }
 
 function Popper(props: PopperPropsCustom) {
   const { content, title } = props;
 
   return (
-    <div className="fr-popper_content fr-popper_popper">
-      {title && <div className="fr-popper_popper-title">{title}</div>}
-      <div className="fr-popper_popper-content">{content}</div>
+    <div className="m78-popper_content m78-popper_popper">
+      {title && <div className="m78-popper_popper-title">{title}</div>}
+      <div className="m78-popper_popper-content">{content}</div>
     </div>
   );
 }
@@ -41,10 +41,10 @@ function Confirm(props: PopperPropsCustom) {
   });
 
   return (
-    <div className="fr-popper_content fr-popper_confirm">
-      <span className="fr-popper_confirm-icon">{icon || <WarningIcon />}</span>
+    <div className="m78-popper_content m78-popper_confirm">
+      <span className="m78-popper_confirm-icon">{icon || <WarningIcon />}</span>
       <span>{content}</span>
-      <div className="fr-popper_confirm-btns">
+      <div className="m78-popper_confirm-btns">
         <Button size="small" onClick={closeHandle}>
           {cancelText}
         </Button>

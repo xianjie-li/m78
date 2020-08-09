@@ -1,4 +1,4 @@
-import '@lxjx/fr/list/style';
+import 'm78/list/style';
 import List from './list';
 
 export * from './list';

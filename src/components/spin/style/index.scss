@@ -1,6 +1,6 @@
 @import '../../style/index';
 
-.fr-spin {
+.m78-spin {
   display: inline-flex;
   align-items: center;
   flex-direction: column;
@@ -16,7 +16,7 @@
 
   &.__inline {
     flex-direction: row;
-    .fr-spin_text {
+    .m78-spin_text {
       margin-left: 8px;
       margin-top: 0;
     }
@@ -34,7 +34,7 @@
 
   &.__dark {
     background-color: $b-primary;
-    .fr-spin_text {
+    .m78-spin_text {
       color: $w-title;
     }
   }
@@ -48,7 +48,7 @@
   }
 }
 
-.fr-spin_text {
+.m78-spin_text {
   font-size: $fs-14;
   color: $b-second;
   margin-left: 0;
@@ -60,20 +60,20 @@
   }
 }
 
-.fr-spin_unit {
-  animation: fr-spin 1.2s linear infinite reverse;
+.m78-spin_unit {
+  animation: m78-spin 1.2s linear infinite reverse;
 }
 
-.fr-spin_ellipsis {
+.m78-spin_ellipsis {
   position: absolute;
   &::after {
     content: '';
     display: inline-block;
-    animation: fr-spin_ellipsis 1s infinite;
+    animation: m78-spin_ellipsis 1s infinite;
   }
 }
 
-@keyframes fr-spin_ellipsis {
+@keyframes m78-spin_ellipsis {
   0% {
     content: '';
   }

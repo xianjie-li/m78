@@ -1,8 +1,8 @@
 @import '../../style/index';
 
-.fr-form {
+.m78-form {
   &.__hide-required-mark {
-    .fr-list_require {
+    .m78-list_require {
       display: none;
     }
   }
@@ -31,7 +31,7 @@
   }
 
   //&:hover {
-  //  .fr-form_setting {
+  //  .m78-form_setting {
   //    visibility: visible;
   //    opacity: 1;
   //  }

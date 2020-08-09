@@ -1,6 +1,6 @@
 @import '../../style/index';
 
-.fr-ellipsis {
+.m78-ellipsis {
   position: relative;
   overflow: hidden;
   // 计算padding进行兼容会导致更多的问题
@@ -21,7 +21,7 @@
     );
   }
 
-  &.__dark .fr-ellipsis_shadow {
+  &.__dark .m78-ellipsis_shadow {
     background: linear-gradient(
       to right,
       rgba(0, 0, 0, 0),

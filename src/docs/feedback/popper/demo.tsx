@@ -1,6 +1,6 @@
 import React from 'react';
-import Popper from '@lxjx/fr/popper';
-import Button from '@lxjx/fr/button';
+import Popper from 'm78/popper';
+import Button from 'm78/button';
 
 import sty from './demo.module.scss';
 
@@ -155,22 +155,22 @@ export function setIsRead(studyKey: string, val: string) {
 //   const multiPage = studyList.length > 1;
 //
 //   return (
-//     <div className="fr-popper_content fr-popper_study">
+//     <div className="m78-popper_content m78-popper_study">
 //       <If when={currentStudy.img}>
-//         {() => <Picture className="fr-popper_study-img" src={currentStudy.img} />}
+//         {() => <Picture className="m78-popper_study-img" src={currentStudy.img} />}
 //       </If>
 //       <If when={currentStudy}>
 //         {() => (
 //           <>
-//             {title && <div className="fr-popper_study-title">{currentStudy.title}</div>}
-//             <div className="fr-popper_study-content">{currentStudy.desc}</div>
+//             {title && <div className="m78-popper_study-title">{currentStudy.title}</div>}
+//             <div className="m78-popper_study-content">{currentStudy.desc}</div>
 //           </>
 //         )}
 //       </If>
 //
-//       <div className="fr-popper_study-btn-box">
+//       <div className="m78-popper_study-btn-box">
 //         <If when={multiPage}>
-//           <span className="fr-popper_study-page">
+//           <span className="m78-popper_study-page">
 //             {state.page + 1}/{studyList.length}
 //           </span>
 //         </If>

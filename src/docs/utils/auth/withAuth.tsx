@@ -1,6 +1,6 @@
 import React from 'react';
-import create from '@lxjx/fr/auth';
-import Button from '@lxjx/fr/button';
+import create from 'm78/auth';
+import Button from 'm78/button';
 
 const { withAuth, setDeps } = create({
   /* 被所有验证器依赖数据 */

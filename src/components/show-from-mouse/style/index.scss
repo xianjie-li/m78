@@ -1,6 +1,6 @@
 @import '../../style/index';
 
-.fr-sfm {
+.m78-sfm {
   position: fixed;
   display: flex;
   justify-content: center;
@@ -9,7 +9,7 @@
   pointer-events: none;
   @include full;
 
-  .fr-mask {
+  .m78-mask {
     pointer-events: auto;
   }
 

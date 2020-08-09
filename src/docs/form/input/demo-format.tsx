@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import Input from '@lxjx/fr/input';
+import Input from 'm78/input';
 
 const Demo = () => {
   const [phone, setPhone] = useState('18212341234');

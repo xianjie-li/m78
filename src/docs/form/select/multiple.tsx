@@ -1,4 +1,4 @@
-import Select from '@lxjx/fr/select';
+import Select from 'm78/select';
 import React, { useState } from 'react';
 
 import { options } from './utils';

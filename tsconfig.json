@@ -3,7 +3,7 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"],
-      "@lxjx/fr/*": [
+      "m78/*": [
         "src/components/*"
       ]
     },
@@ -28,6 +28,8 @@
   "include": [
     "src/components/**/*",
     "src/docs/**/*",
+    ".babelrc.js",
+    "test/**/*",
     "./app.d.ts",
     "./script",
     ".eslintrc.js"

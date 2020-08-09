@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormLike } from '@lxjx/hooks';
-import { ButtonProps } from '@lxjx/fr/button';
+import { ButtonProps } from 'm78/button';
 import { Status, FullSize } from '../types/types';
 
 export type InputPropsExtends = Omit<

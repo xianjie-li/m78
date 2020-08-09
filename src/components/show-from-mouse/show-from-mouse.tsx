@@ -3,8 +3,8 @@ import React, { useEffect } from 'react';
 import { useSpring, animated, interpolate, config } from 'react-spring';
 import { useSelf } from '@lxjx/hooks';
 
-import Mask, { MaskProps } from '@lxjx/fr/mask';
-import { stopPropagation } from '@lxjx/fr/util';
+import Mask, { MaskProps } from 'm78/mask';
+import { stopPropagation } from 'm78/util';
 
 import cls from 'classnames';
 
@@ -60,9 +60,9 @@ const ShowFromMouse: React.FC<ShowFromMouseProps> = ({
   }, [show]);
 
   return (
-    <Mask className={cls('fr-sfm', className)} {...props}>
+    <Mask className={cls('m78-sfm', className)} {...props}>
       <animated.div
-        className={cls(contClassName, 'fr-sfm_cont')}
+        className={cls(contClassName, 'm78-sfm_cont')}
         style={{
           transform: interpolate(
             //  @ts-ignore

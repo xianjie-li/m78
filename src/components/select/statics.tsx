@@ -1,16 +1,16 @@
-import { PopperPropsCustom } from '@lxjx/fr/popper';
+import { PopperPropsCustom } from 'm78/popper';
 import React from 'react';
 import { isArray } from '@lxjx/utils';
 import cls from 'classnames';
-import { CheckOutlined, CloseCircleOutlined } from '@lxjx/fr/icon';
+import { CheckOutlined, CloseCircleOutlined } from 'm78/icon';
 import { ListChildComponentProps } from 'react-window';
-import { getFirstTruthyOrZero } from '@lxjx/fr/util';
+import { getFirstTruthyOrZero } from 'm78/util';
 import { RenderItemData, SelectCustomTag, SelectOptionItem, SelectProps } from './type';
 
 /** 自定义popper样式 */
 export function CustomPopper(props: PopperPropsCustom) {
   const { content } = props;
-  return <div className="fr-popper_content fr-select_popper">{content}</div>;
+  return <div className="m78-popper_content m78-select_popper">{content}</div>;
 }
 
 /** 根据SelectOptionItem取value */
@@ -84,8 +84,8 @@ export function RenderItem({ index, style, data }: Item) {
 
   return (
     <div
-      className={cls('fr-select_item', {
-        'fr-hb-b': !!item.type,
+      className={cls('m78-select_item', {
+        'm78-hb-b': !!item.type,
         __title: item.type === 'title',
         __divider: item.type === 'divider',
         __active: _isChecked,
@@ -96,13 +96,13 @@ export function RenderItem({ index, style, data }: Item) {
     >
       {!isDivider && (
         <span className="ellipsis">
-          {item.prefix && <span className="fr-select_prefix">{item.prefix}</span>}
+          {item.prefix && <span className="m78-select_prefix">{item.prefix}</span>}
           {label}
         </span>
       )}
       <span>
-        {_isChecked && <CheckOutlined className="fr-select_check-icon" />}
-        {item.suffix && <span className="fr-select_suffix">{item.suffix}</span>}
+        {_isChecked && <CheckOutlined className="m78-select_check-icon" />}
+        {item.suffix && <span className="m78-select_suffix">{item.suffix}</span>}
       </span>
     </div>
   );
@@ -133,8 +133,8 @@ export function showMultipleString(
 }
 
 export const buildInTagRender: SelectCustomTag = ({ label, del, key, className }) => (
-  <span className={cls(className, 'fr-select_tag')} key={key}>
-    <span className="fr-select_close-btn" title="删除">
+  <span className={cls(className, 'm78-select_tag')} key={key}>
+    <span className="m78-select_close-btn" title="删除">
       <CloseCircleOutlined onClick={del} />
     </span>
     <span className="ellipsis">{label}</span>

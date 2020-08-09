@@ -1,6 +1,6 @@
 import React from 'react';
-import Scroll, { ScrollRef } from '@lxjx/fr/scroll';
-import Button from '@lxjx/fr/button';
+import Scroll, { ScrollRef } from 'm78/scroll';
+import Button from 'm78/button';
 
 const itemStyle: React.CSSProperties = {
   height: 50,

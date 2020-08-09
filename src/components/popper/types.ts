@@ -57,6 +57,6 @@ export interface PopperProps extends ComponentBaseProps {
   onConfirm?(): void;
   /** type为confirm时, 此选项用于设置图标 */
   icon?: React.ReactNode;
-  /** 定制气泡样式 通过根节点选择器来命中箭头，如 .my-custom + .fr-popper_arrow */
+  /** 定制气泡样式 通过根节点选择器来命中箭头，如 .my-custom + .m78-popper_arrow */
   customer?(props: PopperPropsCustom): JSX.Element;
 }

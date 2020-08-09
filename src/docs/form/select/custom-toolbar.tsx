@@ -1,4 +1,4 @@
-import Select, { SelectCustomToolbar } from '@lxjx/fr/select';
+import Select, { SelectCustomToolbar } from 'm78/select';
 import React, { useState } from 'react';
 
 import { options } from './utils';

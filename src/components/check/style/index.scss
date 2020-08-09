@@ -1,6 +1,6 @@
 @import '../../style/index';
 
-.fr-check {
+.m78-check {
   position: relative;
   cursor: pointer;
   display: inline-flex;
@@ -46,7 +46,7 @@
 
     &.__checkbox {
       &.__partial {
-        .fr-check_base-inner {
+        .m78-check_base-inner {
           &::after {
             border: none;
             width: 14px;
@@ -61,21 +61,21 @@
 
       // 防止叠色
       &.__disabled.__checked {
-        .fr-check_base-main {
+        .m78-check_base-main {
           border-color: transparent !important;
         }
       }
 
-      .fr-check_base-main,
-      .fr-check_base-inner {
+      .m78-check_base-main,
+      .m78-check_base-inner {
         border-radius: $border-radius;
       }
 
-      .fr-check_base-main {
+      .m78-check_base-main {
         width: 20px;
         height: 20px;
       }
-      .fr-check_base-inner {
+      .m78-check_base-inner {
         position: relative;
         width: 20px;
         height: 20px;
@@ -109,10 +109,10 @@
     &.__disabled {
       background-color: transparent !important;
 
-      .fr-check_base-main {
+      .m78-check_base-main {
         border-color: $b-disable !important;
       }
-      .fr-check_base-inner {
+      .m78-check_base-inner {
         background-color: $b-disable !important;
       }
     }
@@ -130,20 +130,20 @@
       &:hover {
         background-color: rgba($color, 0.1);
       }
-      .fr-check_base-inner {
+      .m78-check_base-inner {
         transform: scale3d(1, 1, 1);
       }
 
-      .fr-check_base-main {
+      .m78-check_base-main {
         border-color: $color;
       }
 
-      .fr-effect-ripple {
+      .m78-effect-ripple {
         background: rgba($color, 0.1);
       }
     }
 
-    .fr-effect-ripple {
+    .m78-effect-ripple {
       transition: 0.3s ease-in !important;
       background: $b-divider;
     }
@@ -177,11 +177,11 @@
   }
 
   &.__switch {
-    .fr-check_label-before {
+    .m78-check_label-before {
       margin-right: 10px;
       font-size: 14px;
     }
-    .fr-check_label {
+    .m78-check_label {
       margin-left: 10px;
       font-size: 14px;
     }
@@ -203,21 +203,21 @@
     &.__checked {
       background-color: $color;
 
-      .fr-check_switch-inner {
+      .m78-check_switch-inner {
         transform: translateX(20px);
       }
 
-      .fr-effect-ripple {
+      .m78-effect-ripple {
         background: rgba($color, 0.4);
       }
     }
 
     &.__focus {
-      .fr-check_switch-inner {
+      .m78-check_switch-inner {
         background-color: $b-divider;
       }
 
-      &.__checked .fr-check_switch-inner {
+      &.__checked .m78-check_switch-inner {
         background-color: rgba($color, 0.4);
       }
     }
@@ -226,7 +226,7 @@
       background-color: $b-divider;
       box-shadow: 0 0 0 1px $b-disable;
 
-      .fr-check_switch-handle {
+      .m78-check_switch-handle {
         box-shadow: 0 0 0 1px $b-disable;
       }
 

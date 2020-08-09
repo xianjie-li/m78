@@ -1,9 +1,9 @@
 import React from 'react';
-import ActionSheet from '@lxjx/fr/action-sheet';
-import '@lxjx/fr/action-sheet/style';
+import ActionSheet from 'm78/action-sheet';
+import 'm78/action-sheet/style';
 
-import Button from '@lxjx/fr/button';
-import '@lxjx/fr/button/style';
+import Button from 'm78/button';
+import 'm78/button/style';
 
 const options = [
   {

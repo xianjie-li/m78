@@ -1,6 +1,6 @@
 import React from 'react';
-import Skeleton from '@lxjx/fr/skeleton';
-import Button from '@lxjx/fr/button';
+import Skeleton from 'm78/skeleton';
+import Button from 'm78/button';
 
 const Demo = () => {
   const [show, setShow] = React.useState(true);

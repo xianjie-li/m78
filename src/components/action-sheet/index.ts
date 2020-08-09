@@ -1,4 +1,4 @@
-import '@lxjx/fr/action-sheet/style';
+import 'm78/action-sheet/style';
 
 import createRenderApi, { ReactRenderApiProps } from '@lxjx/react-render-api';
 import _ActionSheet from './action-sheet';

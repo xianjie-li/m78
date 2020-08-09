@@ -1,14 +1,11 @@
 module.exports = {
-  presets: [
-    '@babel/preset-typescript',
-    ['@babel/preset-env', { modules: false }],
-    '@babel/preset-react',
-  ],
+  presets: ['@babel/preset-typescript', '@babel/preset-env', '@babel/preset-react'],
   plugins: [
     [
       '@babel/plugin-transform-runtime',
       {
         // fix this: https://github.com/babel/babel/issues/10261
+        // eslint-disable-next-line global-require
         version: require('@babel/runtime/package.json').version,
       },
     ],

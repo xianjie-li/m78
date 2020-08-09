@@ -2,7 +2,7 @@ import React, { useMemo, useImperativeHandle } from 'react';
 
 import { useCheck, UseCheckReturns } from '@lxjx/hooks';
 
-import Check from '@lxjx/fr/check';
+import Check from 'm78/check';
 
 import { CheckBoxProps } from './type';
 
@@ -30,7 +30,7 @@ const CheckBox = React.forwardRef<UseCheckReturns<any, any>, CheckBoxProps<any>>
     useImperativeHandle(ref, () => ck);
 
     return (
-      <div className="fr-radio-box">
+      <div className="m78-radio-box">
         {options.map((item, index) => (
           <Check<Val>
             key={index}

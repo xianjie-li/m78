@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useMemo } from 'react';
 import { AnyObject, createRandString, isArray, isFunction } from '@lxjx/utils';
 import { useUpdate } from 'react-use';
 import _has from 'lodash/has';
-import List from '@lxjx/fr/list';
+import List from 'm78/list';
 import { FormInstance } from 'rc-field-form/es/interface';
 import { Field } from 'rc-field-form';
 import cls from 'classnames';
@@ -24,7 +24,7 @@ const Item: React.FC<FormItemProps> = props => {
     rules: fullRules,
   } = useContext(FormContext);
 
-  const selector = nameString ? `FR-FORM-ITEM-${formId}-${nameString}` : undefined;
+  const selector = nameString ? `m78-FORM-ITEM-${formId}-${nameString}` : undefined;
 
   const {
     children,
@@ -144,14 +144,14 @@ const Item: React.FC<FormItemProps> = props => {
 
         if (noStyle) {
           return (
-            <div id={selector} className={cls('fr-form_item', className)} style={_style}>
+            <div id={selector} className={cls('m78-form_item', className)} style={_style}>
               <div>{child}</div>
               {isRequired && (
-                <span className="fr-list_require fr-form_item-mark" title="必填项">
+                <span className="m78-list_require m78-form_item-mark" title="必填项">
                   *
                 </span>
               )}
-              {errorString && <div className="fr-form_item-extra">{errorString}</div>}
+              {errorString && <div className="m78-form_item-extra">{errorString}</div>}
             </div>
           );
         }

@@ -1,4 +1,4 @@
-import Portal from '@lxjx/fr/portal';
+import Portal from 'm78/portal';
 import React, { useEffect, useMemo, useRef, useImperativeHandle } from 'react';
 import { useFn, useFormState, useSelf, useSetState } from '@lxjx/hooks';
 import { animated, interpolate, useSpring } from 'react-spring';
@@ -6,7 +6,7 @@ import cls from 'classnames';
 import { useClickAway, useMeasure, useUpdateEffect } from 'react-use';
 import _throttle from 'lodash/throttle';
 import { createRandString, isDom, isNumber } from '@lxjx/utils';
-import { getFirstScrollParent } from '@lxjx/fr//util';
+import { getFirstScrollParent } from 'm78//util';
 import { getRefDomOrDom, isPopperMetasBound, getTriggerType } from './utils';
 import { GetBoundMetasDirectionKeys, getPopperMetas, GetPopperMetasBound } from './getPopperMetas';
 import { PopperProps, PopperRef } from './types';
@@ -37,7 +37,7 @@ const Popper = React.forwardRef<PopperRef, PopperProps>((props, fRef) => {
 
   const id = useMemo(() => createRandString(1), []);
   /** 在未传入target时，用于标识出目标所在元素 */
-  const targetSelector = `fr-popper_${id}`;
+  const targetSelector = `m78-popper_${id}`;
   /** 获取启用的事件类型 */
   const triggerType = getTriggerType(trigger);
 
@@ -432,14 +432,14 @@ const Popper = React.forwardRef<PopperRef, PopperProps>((props, fRef) => {
               opacity: spProps.opacity.interpolate(o => o),
               visibility: spProps.opacity.interpolate(o => (o === 0 ? 'hidden' : undefined)),
             }}
-            className={cls('fr-popper', state.direction && `__${state.direction}`, className)}
+            className={cls('m78-popper', state.direction && `__${state.direction}`, className)}
             onMouseEnter={triggerType.hover ? mouseEnterHandle : undefined}
             onMouseLeave={triggerType.hover ? mouseLeaveHandle : undefined}
           >
             <div ref={ref}>
               <Component show={show} setShow={setShow} {...props} />
               <span
-                className={cls('fr-popper_arrow', state.direction && `__${state.direction}`)}
+                className={cls('m78-popper_arrow', state.direction && `__${state.direction}`)}
                 style={{ left: state.arrowX || undefined }}
               />
             </div>

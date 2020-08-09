@@ -1,9 +1,9 @@
 import React from 'react';
-import ImagePreview from '@lxjx/fr/image-preview';
-import '@lxjx/fr/viewer/style';
+import ImagePreview from 'm78/image-preview';
+import 'm78/viewer/style';
 
-import Button from '@lxjx/fr/button';
-import '@lxjx/fr/button/style';
+import Button from 'm78/button';
+import 'm78/button/style';
 
 import img1 from '@/mock/img/1.jpg';
 import img2 from '@/mock/img/2.jpg';

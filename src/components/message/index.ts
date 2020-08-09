@@ -1,4 +1,4 @@
-import '@lxjx/fr/message/style';
+import 'm78/message/style';
 
 import _messageApi, { tips, loading, notify } from './factory';
 

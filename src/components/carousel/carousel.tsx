@@ -290,12 +290,12 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
 
     return (
       <div
-        className={cls('fr-carousel', className, { __vertical: vertical })}
+        className={cls('m78-carousel', className, { __vertical: vertical })}
         ref={wrapRef}
         style={{ height: vertical ? _height : 'auto', width: _width || 'auto', ...style }}
       >
         <animated.div
-          className="fr-carousel_wrap"
+          className="m78-carousel_wrap"
           ref={innerWrap}
           style={{
             transform: spProp.offset.interpolate(
@@ -306,7 +306,7 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
           {children.map((item, i) => (
             <animated.div
               key={i}
-              className="fr-carousel_item"
+              className="m78-carousel_item"
               style={{
                 zIndex: page.current === i ? 1 : 0,
                 transform: spProp.scale.interpolate(_scale => {
@@ -321,7 +321,7 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
           ))}
         </animated.div>
         {control && (
-          <div className="fr-carousel_ctrl fr-stress">
+          <div className="m78-carousel_ctrl m78-stress">
             {(_children.length < 7 || vertical) && !forceNumberControl ? (
               children.map((v, i) => {
                 const show = loopValid ? i < children.length - 2 : true;
@@ -333,7 +333,7 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
                         goTo(loopValid ? i + 1 : i);
                         stopAutoPlay();
                       }}
-                      className={cls('fr-carousel_ctrl-item', {
+                      className={cls('m78-carousel_ctrl-item', {
                         __active: i === getPagenNmber(page.current),
                       })}
                     />
@@ -341,7 +341,7 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
                 );
               })
             ) : (
-              <span className="fr-carousel_ctrl-text">
+              <span className="m78-carousel_ctrl-text">
                 {getPagenNmber(page.current) + 1} /{' '}
                 {loopValid ? children.length - 2 : children.length}
               </span>

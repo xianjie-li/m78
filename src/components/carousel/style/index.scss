@@ -1,17 +1,17 @@
 @import '../../style/index';
 
-.fr-carousel {
+.m78-carousel {
   width: 100%;
   position: relative;
   overflow: hidden;
   touch-action: none;
 
   &.__vertical {
-    .fr-carousel_wrap {
+    .m78-carousel_wrap {
       flex-wrap: wrap;
     }
 
-    .fr-carousel_ctrl {
+    .m78-carousel_ctrl {
       right: 12px;
       top: 50%;
       bottom: auto;
@@ -22,7 +22,7 @@
       text-align: right;
     }
 
-    .fr-carousel_ctrl-item {
+    .m78-carousel_ctrl-item {
       margin: 0 0;
 
       &::after {

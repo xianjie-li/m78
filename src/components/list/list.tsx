@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 
-import '@lxjx/fr/base';
-import { Switch, If } from '@lxjx/fr/fork';
-import { statusIcons, RightOutlined, LoadingOutlined } from '@lxjx/fr/icon';
+import 'm78/base';
+import { Switch, If } from 'm78/fork';
+import { statusIcons, RightOutlined, LoadingOutlined } from 'm78/icon';
 
-import Ellipsis from '@lxjx/fr/ellipsis';
+import Ellipsis from 'm78/ellipsis';
 
 import cls from 'classnames';
 import { Title, SubTitle } from './titles';
@@ -29,7 +29,7 @@ const _List: React.FC<ListType> = ({
   ...props
 }) => (
   <div
-    className={cls('fr-list', className, {
+    className={cls('m78-list', className, {
       __form: form,
       '__not-border': notBorder,
       __vertical: layout === 'vertical',
@@ -73,34 +73,34 @@ const Item: React.FC<ListItemProps> = ({
 
   return (
     <div
-      className={cls('fr-list_item __md', className, status && `__${status}`, {
+      className={cls('m78-list_item __md', className, status && `__${status}`, {
         __disabled: disabled,
-        'fr-effect': hasEffect,
+        'm78-effect': hasEffect,
       })}
       style={{ ...itemStyle, ...style }}
       {...props}
     >
-      <div className={cls('fr-list_left', leftAlign && `__${leftAlign}`)}>{left}</div>
-      <div className="fr-list_cont">
-        <div className="fr-list_cont-left">
-          <Ellipsis line={titleEllipsis} className={cls('fr-list_title')}>
+      <div className={cls('m78-list_left', leftAlign && `__${leftAlign}`)}>{left}</div>
+      <div className="m78-list_cont">
+        <div className="m78-list_cont-left">
+          <Ellipsis line={titleEllipsis} className={cls('m78-list_title')}>
             {title}
             {required && (
-              <i className="fr-list_require" title="必填项">
+              <i className="m78-list_require" title="必填项">
                 *
               </i>
             )}
           </Ellipsis>
           {desc && (
-            <Ellipsis className={cls('fr-list_desc')} line={descEllipsis}>
+            <Ellipsis className={cls('m78-list_desc')} line={descEllipsis}>
               {desc}
             </Ellipsis>
           )}
         </div>
-        {isForm && <div className="fr-list_cont-right">{children}</div>}
+        {isForm && <div className="m78-list_cont-right">{children}</div>}
       </div>
-      <div className="fr-list_right">{extra}</div>
-      <div className="fr-list_icon">
+      <div className="m78-list_right">{extra}</div>
+      <div className="m78-list_icon">
         {/* icon显示优先级: 状态 > icon > arrow */}
         <Switch>
           <If when={status}>
@@ -108,7 +108,7 @@ const Item: React.FC<ListItemProps> = ({
               status === 'loading' ? (
                 <LoadingOutlined spin />
               ) : (
-                <StatusIcon className="fr-list_extra-icon fr-svg-icon" />
+                <StatusIcon className="m78-list_extra-icon m78-svg-icon" />
               )
             }
           </If>
@@ -119,12 +119,12 @@ const Item: React.FC<ListItemProps> = ({
         </Switch>
       </div>
       <If when={extra && isForm}>
-        <div className="fr-list_extra __gray">{extra}</div>
+        <div className="m78-list_extra __gray">{extra}</div>
       </If>
       <If when={!!footLeft || !!footRight}>
-        <div className="fr-list_extra">
+        <div className="m78-list_extra">
           <div>{footLeft}</div>
-          <div className="fr-list_extra-second">{footRight}</div>
+          <div className="m78-list_extra-second">{footRight}</div>
         </div>
       </If>
     </div>
@@ -133,9 +133,9 @@ const Item: React.FC<ListItemProps> = ({
   // return React.createElement(
   //   isForm ? 'div' : 'div',
   //   {
-  //     className: cls('fr-list_item __md', className, status && `__${status}`, {
+  //     className: cls('m78-list_item __md', className, status && `__${status}`, {
   //       __disabled: disabled,
-  //       'fr-effect': hasEffect,
+  //       'm78-effect': hasEffect,
   //     }),
   //     style: { ...itemStyle, ...style },
   //     ...props,

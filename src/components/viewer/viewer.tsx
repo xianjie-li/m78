@@ -183,13 +183,13 @@ const Viewer = React.forwardRef<ViewerRef, ViewerProps>(
     }
 
     return (
-      <div ref={wrap} className="fr-viewer" id="t-inner">
+      <div ref={wrap} className="m78-viewer" id="t-inner">
         <div ref={innerWrap}>
           {' '}
           {/* useMeasure目前不能取到实际的ref，这里需要获取到wrap的bound信息 */}
           <animated.div
             ref={eventEl}
-            className="fr-viewer_cont"
+            className="m78-viewer_cont"
             style={{
               transform: interpolate(
                 //  @ts-ignore

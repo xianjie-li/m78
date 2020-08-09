@@ -3,9 +3,9 @@ import { useMeasure, useUpdateEffect } from 'react-use';
 import { useSpring, animated, config } from 'react-spring';
 import { useFormState } from '@lxjx/hooks';
 
-import { lineStatusIcons, CloseOutlined } from '@lxjx/fr/icon';
-import { If } from '@lxjx/fr/fork';
-import Button from '@lxjx/fr/button';
+import { lineStatusIcons, CloseOutlined } from 'm78/icon';
+import { If } from 'm78/fork';
+import Button from 'm78/button';
 import cls from 'classnames';
 import { Status } from '../types/types';
 
@@ -58,27 +58,27 @@ const NoticeBar: React.FC<NoticeBarProps> = ({
   return (
     <animated.div
       style={spStyle}
-      className={cls('fr-notice-bar', status && `__${status}`, { __fixed: fixedTop })}
+      className={cls('m78-notice-bar', status && `__${status}`, { __fixed: fixedTop })}
     >
-      <div ref={ref} className="fr-notice-bar_wrap">
+      <div ref={ref} className="m78-notice-bar_wrap">
         <If when={status}>
           {() => (
-            <div className="fr-notice-bar_left">
+            <div className="m78-notice-bar_left">
               <StatusIcon />
             </div>
           )}
         </If>
-        <div className="fr-notice-bar_cont">
-          <div className="fr-notice-bar_title ellipsis">{message}</div>
+        <div className="m78-notice-bar_cont">
+          <div className="m78-notice-bar_title ellipsis">{message}</div>
           <If when={desc}>
-            <div className="fr-notice-bar_desc">{desc}</div>
+            <div className="m78-notice-bar_desc">{desc}</div>
           </If>
         </div>
-        <div className="fr-notice-bar_right">
+        <div className="m78-notice-bar_right">
           {right}
           <If when={closable && !right}>
             <Button
-              className="fr-notice-bar_close"
+              className="m78-notice-bar_close"
               icon
               size="mini"
               onClick={() => {

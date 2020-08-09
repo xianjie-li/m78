@@ -1,6 +1,6 @@
 @import '../../style/index';
 
-.fr-message {
+.m78-message {
   position: fixed;
   left: 50%;
   top: 50%;
@@ -47,7 +47,7 @@
     }
 
     &.__notification {
-      .fr-message_icon {
+      .m78-message_icon {
         font-size: 80px;
       }
 
@@ -78,7 +78,7 @@
   &_loading {
     display: inline-block;
 
-    .fr-spin {
+    .m78-spin {
       font-size: 24px;
       vertical-align: middle;
     }
@@ -117,7 +117,7 @@
       margin-bottom: -8px;
       margin-top: 12px;
 
-      .fr-btn + .fr-btn {
+      .m78-btn + .m78-btn {
         margin-left: 16px;
       }
     }

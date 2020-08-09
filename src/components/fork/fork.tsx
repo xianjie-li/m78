@@ -1,10 +1,68 @@
 import React from 'react';
-
+import Spin from 'm78/spin';
 import { isFunction } from '@lxjx/utils';
+import Button from 'm78/button';
 
-import { IfProps, ToggleProps, SwitchProps } from './type';
+import NoticeBar from 'm78/notice-bar';
+import Empty from 'm78/empty';
+import { IfProps, ToggleProps, SwitchProps, ForkProps } from './type';
 
-const Fork = () => null;
+const Fork: React.FC<ForkProps> = ({
+  children,
+  send,
+  loadingFull,
+  loading,
+  error,
+  timeout,
+  hasData,
+  forceRenderChild,
+  loadingStyle,
+  emptyText = '暂无数据',
+}) => {
+  const renderChild = () => (isFunction(children) ? (children() as any) : children);
+
+  if (loading) {
+    return (
+      <>
+        <Spin
+          className="ptb-12"
+          style={{ width: '100%', ...loadingStyle }}
+          full={loadingFull}
+          loadingDelay={300}
+        />
+        {(forceRenderChild || loadingFull) && renderChild()}
+      </>
+    );
+  }
+
+  const reloadBtn = send ? (
+    <Button onClick={send} color="primary" link size="small" style={{ top: -1 /* 视觉居中 */ }}>
+      点击重新加载
+    </Button>
+  ) : null;
+
+  if (error || timeout) {
+    return (
+      <NoticeBar
+        status="error"
+        message={timeout ? '请求超时' : '数据加载失败'}
+        desc={
+          <div>
+            {error?.message && <div className="color-error mb-8">{error.message}</div>}
+            <span>请稍后重试{send ? '或' : null} </span>
+            {reloadBtn}
+          </div>
+        }
+      />
+    );
+  }
+
+  if (!hasData && !loading) {
+    return <Empty desc={emptyText}>{reloadBtn}</Empty>;
+  }
+
+  return renderChild();
+};
 
 /* 根据条件渲染或卸载内部的组件 */
 const If: React.FC<IfProps> = ({ when, children }) => {

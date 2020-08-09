@@ -2,23 +2,23 @@ import React, { useState, useEffect } from 'react';
 
 import { animated, config, useSpring } from 'react-spring';
 
-import Portal from '@lxjx/fr/portal';
-import { CloseOutlined, statusIcons } from '@lxjx/fr/icon';
-import Spin from '@lxjx/fr/spin';
-import { If, Toggle } from '@lxjx/fr/fork';
+import Portal from 'm78/portal';
+import { CloseOutlined, statusIcons } from 'm78/icon';
+import Spin from 'm78/spin';
+import { If, Toggle } from 'm78/fork';
 import { useMeasure } from 'react-use';
 import { Transition } from '@lxjx/react-transition-spring';
 
 import cls from 'classnames';
 
 import { useSelf } from '@lxjx/hooks';
-import Button from '@lxjx/fr/button';
+import Button from 'm78/button';
 import { MessageProps } from './type';
 
 function MessageWrap({ children }: any) {
   return (
-    <div className="fr-message">
-      <div className="fr-message_cont">{children}</div>
+    <div className="m78-message">
+      <div className="m78-message_cont">{children}</div>
     </div>
   );
 }
@@ -119,28 +119,28 @@ const Message: React.FC<MessageProps> = ({
   const StatusIcon = statusIcons[type || 'success'];
 
   return (
-    <animated.div style={springProp} className="fr-message_item">
+    <animated.div style={springProp} className="m78-message_item">
       <Portal>
-        <Transition className="fr-mask" toggle={maskShow} type="fade" mountOnEnter unmountOnExit />
+        <Transition className="m78-mask" toggle={maskShow} type="fade" mountOnEnter unmountOnExit />
       </Portal>
       <div
         ref={bind}
-        className={cls('fr-message_item-cont', { __loading: loading, __notification: hasCancel })}
+        className={cls('m78-message_item-cont', { __loading: loading, __notification: hasCancel })}
       >
         <If when={hasCancel}>
           {() => (
-            <Button onClick={onClose} className="fr-message_close" icon size="small">
+            <Button onClick={onClose} className="m78-message_close" icon size="small">
               <CloseOutlined />
             </Button>
           )}
         </If>
         <Toggle when={type && !loading}>
-          <div className="fr-message_icon">
+          <div className="m78-message_icon">
             <StatusIcon />
           </div>
         </Toggle>
         <If when={loading}>
-          <div className="fr-message_loading">
+          <div className="m78-message_loading">
             <Spin show loadingDelay={0} text={content} />
           </div>
         </If>
@@ -151,7 +151,7 @@ const Message: React.FC<MessageProps> = ({
           {() => (
             <animated.div
               style={{ width: life ? life.interpolate(x => `${x.toFixed(2)}%`) : 0 }}
-              className="fr-message_process"
+              className="m78-message_process"
             />
           )}
         </If>

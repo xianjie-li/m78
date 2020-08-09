@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import Button from '@lxjx/fr/button';
-import Input from '@lxjx/fr/input';
-import ShowFromMouse from '@lxjx/fr/show-from-mouse';
-import Popper from '@lxjx/fr/popper';
-import { Z_INDEX_MESSAGE } from '@lxjx/fr/util';
+import Button from 'm78/button';
+import Input from 'm78/input';
+import ShowFromMouse from 'm78/show-from-mouse';
+import Popper from 'm78/popper';
+import { Z_INDEX_MESSAGE } from 'm78/util';
 import { useFormState, useSelf, useSetState } from '@lxjx/hooks';
 import moment, { Moment } from 'moment';
 import cls from 'classnames';
@@ -128,18 +128,18 @@ function Dates(props: DatesProps | DatesRangeProps) {
   function renderMain(fullWidth = false) {
     return (
       <div
-        className={cls('fr-dates', className, {
+        className={cls('m78-dates', className, {
           __time: type === DateType.TIME || state.type === DateType.TIME,
         })}
         style={{ width: fullWidth ? '100%' : undefined, ...style }}
       >
-        <div className="fr-dates_head">
+        <div className="m78-dates_head">
           <span className="bold">{renderCheckedValue()}</span>
           {renderTabs()}
         </div>
-        <div className="fr-dates_body">{render()}</div>
-        <div className="fr-dates_foot">
-          <span className="fr-dates_btns">{!disabledPreset && renderPresetDates(share)}</span>
+        <div className="m78-dates_body">{render()}</div>
+        <div className="m78-dates_foot">
+          <span className="m78-dates_btns">{!disabledPreset && renderPresetDates(share)}</span>
           <span>
             <Button size="small" link onClick={handlers.reset}>
               清空
@@ -156,7 +156,7 @@ function Dates(props: DatesProps | DatesRangeProps) {
   function renderInput() {
     return (
       <Input
-        className="fr-dates_inp"
+        className="m78-dates_inp"
         value={format({
           current: self.cValueMoment,
           end: self.endValueMoment,
@@ -179,7 +179,7 @@ function Dates(props: DatesProps | DatesRangeProps) {
   function renderTooltip() {
     return (
       <Popper
-        className="fr-dates_popper"
+        className="m78-dates_popper"
         offset={4}
         content={renderMain()}
         direction="bottomStart"

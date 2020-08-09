@@ -1,15 +1,10 @@
 import React, { useEffect, useMemo, useRef, useState, useImperativeHandle } from 'react';
 
-import {
-  CloseCircleOutlined,
-  EyeOutlined,
-  EyeInvisibleOutlined,
-  SearchOutlined,
-} from '@lxjx/fr/icon';
-import Spin from '@lxjx/fr/spin';
-import Button from '@lxjx/fr/button';
-import { If } from '@lxjx/fr/fork';
-import { dumpFn } from '@lxjx/fr/util';
+import { CloseCircleOutlined, EyeOutlined, EyeInvisibleOutlined, SearchOutlined } from 'm78/icon';
+import Spin from 'm78/spin';
+import Button from 'm78/button';
+import { If } from 'm78/fork';
+import { dumpFn } from 'm78/util';
 import { isNumber, formatString, validateFormatString } from '@lxjx/utils';
 
 import cls from 'classnames';
@@ -325,7 +320,7 @@ const Input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
 
   return (
     <span
-      className={cls('fr-input_wrap', className, status && `__${status}`, size && `__${size}`, {
+      className={cls('m78-input_wrap', className, status && `__${status}`, size && `__${size}`, {
         '__not-border': !textArea && notBorder,
         __underline: !textArea && underline,
         __focus: focus,
@@ -337,15 +332,15 @@ const Input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
       style={style}
     >
       <If when={prefixBtn && !textArea}>
-        {() => React.cloneElement(prefixBtn!, { className: 'fr-input_prefix-btn' })}
+        {() => React.cloneElement(prefixBtn!, { className: 'm78-input_prefix-btn' })}
       </If>
       <If when={prefix && !textArea}>
-        <span className="fr-input_prefix">{prefix}</span>
+        <span className="m78-input_prefix">{prefix}</span>
       </If>
       {React.createElement(textArea ? 'textarea' : 'input', {
         ...props,
         ref: input,
-        className: 'fr-input',
+        className: 'm78-input',
         type: getRealType(type) /* 数字输入时，使用tel类型，number类型会导致format异常 */,
         onFocus: focusHandle,
         onBlur: blurHandle,
@@ -370,28 +365,31 @@ const Input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
           : {},
       })}
       <Spin
-        className="fr-input_loading"
+        className="m78-input_loading"
         size="small"
         text=""
         show={loading || blockLoading}
         full={blockLoading}
       />
       <If when={hasClearBtn}>
-        <CloseCircleOutlined onClick={clearHandle} className="fr-input_icon fr-input_icon-clear" />
+        <CloseCircleOutlined
+          onClick={clearHandle}
+          className="m78-input_icon m78-input_icon-clear"
+        />
       </If>
       <If when={_type === 'password' && !textArea}>
         {type === 'password' ? (
-          <EyeOutlined onClick={passwordTypeChange} className="fr-input_icon" />
+          <EyeOutlined onClick={passwordTypeChange} className="m78-input_icon" />
         ) : (
-          <EyeInvisibleOutlined onClick={passwordTypeChange} className="fr-input_icon" />
+          <EyeInvisibleOutlined onClick={passwordTypeChange} className="m78-input_icon" />
         )}
       </If>
       <If when={suffix && !textArea}>
-        <span className="fr-input_suffix">{suffix}</span>
+        <span className="m78-input_suffix">{suffix}</span>
       </If>
       <If when={(textArea || charCount) && value}>
         {() => (
-          <span className="fr-input_tip-text">
+          <span className="m78-input_tip-text">
             {value.length}
             {maxLength ? `/${maxLength}` : '字'}
           </span>
@@ -405,12 +403,12 @@ const Input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
         from={{ width: 0, left: 6 }}
         to={{ width: 28, left: 0 }}
       >
-        <Button className="fr-input_search-icon" icon win size="small" onClick={searchHandle}>
+        <Button className="m78-input_search-icon" icon win size="small" onClick={searchHandle}>
           <SearchOutlined />
         </Button>
       </TransitionBase>
       <If when={suffixBtn && !textArea}>
-        {() => React.cloneElement(suffixBtn!, { className: 'fr-input_suffix-btn' })}
+        {() => React.cloneElement(suffixBtn!, { className: 'm78-input_suffix-btn' })}
       </If>
     </span>
   );

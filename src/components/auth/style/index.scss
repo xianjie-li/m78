@@ -1,21 +1,20 @@
 @import '../../style/index';
 
-.fr-auth {
-
+.m78-auth {
   &_popper {
-    .fr-result {
+    .m78-result {
       margin: 0;
     }
-    .fr-result_cont {
+    .m78-result_cont {
       padding: 0;
     }
-    .fr-result_icon {
+    .m78-result_icon {
       display: none;
     }
-    .fr-result_btns {
+    .m78-result_btns {
       margin-top: 12px;
     }
-    .fr-result_btns .fr-btn {
+    .m78-result_btns .m78-btn {
       width: auto;
     }
   }

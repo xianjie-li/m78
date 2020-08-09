@@ -1,8 +1,8 @@
 import React from 'react';
 
-import Mask from '@lxjx/fr/mask';
-import { CloseCircleOutlined } from '@lxjx/fr/icon';
-import { If } from '@lxjx/fr/fork';
+import Mask from 'm78/mask';
+import { CloseCircleOutlined } from 'm78/icon';
+import { If } from 'm78/fork';
 import { Transition } from '@lxjx/react-transition-spring';
 
 import _capitalize from 'lodash/capitalize';
@@ -58,12 +58,12 @@ const Drawer: React.FC<DrawerProps> = ({
         onRemove={onRemove}
         portal={!inside}
         dark
-        className={cls('fr-drawer_mask', { __inside: inside })}
+        className={cls('m78-drawer_mask', { __inside: inside })}
       >
         <Transition
           {...props}
           className={cls(
-            'fr-drawer',
+            'm78-drawer',
             direction && !fullScreen && `__${direction}`,
             {
               '__full-screen': fullScreen,
@@ -79,7 +79,7 @@ const Drawer: React.FC<DrawerProps> = ({
           reset
         >
           <If when={hasCloseIcon || fullScreen}>
-            <CloseCircleOutlined className="fr-drawer_close" onClick={close} />
+            <CloseCircleOutlined className="m78-drawer_close" onClick={close} />
           </If>
           {children}
         </Transition>

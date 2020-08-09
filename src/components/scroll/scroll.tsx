@@ -9,12 +9,12 @@ import { Transition } from '@lxjx/react-transition-spring';
 import { useSelf, useSetState, useScroll } from '@lxjx/hooks';
 import preventTopPullDown from 'prevent-top-pull-down';
 
-import { If, Toggle, Switch } from '@lxjx/fr/fork';
-import Spin from '@lxjx/fr/spin';
-import Empty from '@lxjx/fr/empty';
-import Button from '@lxjx/fr/button';
-import { CaretUpOutlined, WindmillIcon } from '@lxjx/fr/icon';
-import { dumpFn } from '@lxjx/fr/util';
+import { If, Toggle, Switch } from 'm78/fork';
+import Spin from 'm78/spin';
+import Empty from 'm78/empty';
+import Button from 'm78/button';
+import { CaretUpOutlined, WindmillIcon } from 'm78/icon';
+import { dumpFn } from 'm78/util';
 import _debounce from 'lodash/debounce';
 
 import cls from 'classnames';
@@ -387,12 +387,12 @@ const Scroll = React.forwardRef<ScrollRef, ScrollProps>(
     }
 
     return (
-      <div className={cls('fr-scroll_wrap', className)} style={style}>
+      <div className={cls('m78-scroll_wrap', className)} style={style}>
         {/* 顶部文字提示框 */}
         <Transition
           type="slideTop"
           toggle={state.pullDownSuccess || state.pullDownFail || !!state.dataLength}
-          className={cls('fr-scroll_tips', { __fail: state.pullDownFail })}
+          className={cls('m78-scroll_tips', { __fail: state.pullDownFail })}
         >
           <If when={state.pullDownSuccess}>{pullDownSuccessText}</If>
           <If when={state.pullDownFail}>{pullDownFailText}</If>
@@ -402,7 +402,7 @@ const Scroll = React.forwardRef<ScrollRef, ScrollProps>(
         </Transition>
         {/* 返回顶部按钮 */}
         <Transition
-          className="fr-scroll_scroll-top"
+          className="m78-scroll_scroll-top"
           type="slideRight"
           toggle={state.toTopShow}
           alpha={false}
@@ -418,9 +418,9 @@ const Scroll = React.forwardRef<ScrollRef, ScrollProps>(
         </Transition>
         {/* 下拉刷新提示器 */}
         <Toggle when={pullDown}>
-          <div className="fr-scroll_pulldown-wrap">
+          <div className="m78-scroll_pulldown-wrap">
             <animated.div
-              className="fr-scroll_icon"
+              className="m78-scroll_icon"
               style={{
                 transform: interpolate(
                   [spPullDown.y, spPullDown.over],
@@ -429,13 +429,13 @@ const Scroll = React.forwardRef<ScrollRef, ScrollProps>(
               }}
             >
               <WindmillIcon
-                className={cls('fr-svg-icon', { __animation: state.pullDownLoading })}
+                className={cls('m78-svg-icon', { __animation: state.pullDownLoading })}
               />
             </animated.div>
           </div>
         </Toggle>
         {/* ios滑动时绝对定位的元素会抖动，多套一层方便放一些其他的挂件 */}
-        <animated.div ref={ref} className="fr-scroll">
+        <animated.div ref={ref} className="m78-scroll">
           {/* 实际内容 */}
           <div>{children}</div>
           {/* 上拉加载相关 */}
@@ -455,19 +455,19 @@ const Scroll = React.forwardRef<ScrollRef, ScrollProps>(
                 </Button>
               </Empty>
             </If>
-            <div className="fr-scroll_pullup-wrap">
+            <div className="m78-scroll_pullup-wrap">
               <Switch>
                 <If when={state.pullUpLoading}>
                   <Spin size="small" inline show={state.pullUpLoading} />
                 </If>
                 <If when={state.pullUpHasError}>
-                  <span className="fr-scroll_tip-base fr-scroll_error">
+                  <span className="m78-scroll_tip-base m78-scroll_error">
                     {pullUpErrorText}
                     <span onClick={onReTry}> 重试</span>
                   </span>
                 </If>
                 <If when={state.dataLength === 0 && hasData}>
-                  <span className="fr-scroll_no-data fr-scroll_tip-base">{pullUpNoDataText}</span>
+                  <span className="m78-scroll_no-data m78-scroll_tip-base">{pullUpNoDataText}</span>
                 </If>
                 <If
                   when={
@@ -478,7 +478,7 @@ const Scroll = React.forwardRef<ScrollRef, ScrollProps>(
                   }
                 >
                   <span
-                    className="fr-scroll_loadmore fr-scroll_tip-base"
+                    className="m78-scroll_loadmore m78-scroll_tip-base"
                     onClick={() => touchBottom()}
                   >
                     <Button size="small">{pullUpLoadMoreText}</Button>

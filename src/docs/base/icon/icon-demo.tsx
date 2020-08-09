@@ -11,7 +11,7 @@ import {
   HeartTwoTone,
   CheckCircleTwoTone,
   SuccessIcon,
-} from '@lxjx/fr/icon';
+} from 'm78/icon';
 
 const IconDemo = () => (
   <div className="d-antd-icons-demo">

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { getDateCountDown } from '@lxjx/utils';
 import { useSelf } from '@lxjx/hooks';
-import { dumpFn } from '@lxjx/fr/util';
+import { dumpFn } from 'm78/util';
 import cls from 'classnames';
 import { ComponentBaseProps } from '../types/types';
 
@@ -57,11 +57,11 @@ const _format: CountDownProps['format'] = (meta, triggerFinish) => {
 
 /* 快捷设置包装类名 */
 function wTime(s: string, extra?: string) {
-  return `<span class="${cls('fr-count-down_time', extra)}">${s}</span>`;
+  return `<span class="${cls('m78-count-down_time', extra)}">${s}</span>`;
 }
 
 function wTxt(s: string, extra?: string) {
-  return `<span class="${cls('fr-count-down_text', extra)}">${s}</span>`;
+  return `<span class="${cls('m78-count-down_text', extra)}">${s}</span>`;
 }
 
 const CountDown: React.FC<CountDownProps> = ({
@@ -106,7 +106,7 @@ const CountDown: React.FC<CountDownProps> = ({
     })}`;
   }
 
-  return <span className={cls('fr-count-down', className)} style={style} ref={ref} />;
+  return <span className={cls('m78-count-down', className)} style={style} ref={ref} />;
 };
 
 export default CountDown;

@@ -1,6 +1,6 @@
 @import '../../style/index';
 
-.fr-dates {
+.m78-dates {
   display: inline-block;
   background: $component-background;
   border-radius: $border-radius;
@@ -13,7 +13,7 @@
   }
 
   &_popper {
-    .fr-popper_popper-content {
+    .m78-popper_popper-content {
       padding: 0;
       box-shadow: none;
     }
@@ -31,7 +31,7 @@
   &_head {
     border-bottom: 1px solid $b-border;
 
-    .fr-btn.__link {
+    .m78-btn.__link {
       padding: 0 6px;
     }
   }
@@ -49,7 +49,7 @@
 
   &_btns {
     flex: 0 0 auto;
-    .fr-btn {
+    .m78-btn {
       margin: 0 !important;
     }
   }
@@ -63,7 +63,7 @@
   }
 
   &_time {
-    .fr-btn {
+    .m78-btn {
       margin: 0 !important;
     }
   }
@@ -71,7 +71,7 @@
   &_list {
     margin-top: $space-4;
 
-    .fr-carousel_item {
+    .m78-carousel_item {
       box-shadow: none;
     }
   }
@@ -104,21 +104,21 @@
     }
 
     &.__focus {
-      .fr-dates_date-item-inner {
+      .m78-dates_date-item-inner {
         border: 1px dashed $color;
         background-color: transparent;
       }
     }
 
     &.__active {
-      .fr-dates_date-item-inner {
+      .m78-dates_date-item-inner {
         color: #fff;
         background-color: $color;
       }
     }
 
     &.__disabled {
-      .fr-dates_date-item-inner {
+      .m78-dates_date-item-inner {
         background-color: $b-divider;
         color: $b-disable;
         cursor: not-allowed;
@@ -133,14 +133,14 @@
         border-radius: 6px 0 0 6px;
       }
 
-      .fr-dates_date-item-inner {
+      .m78-dates_date-item-inner {
         //color: $b-second;
         background-color: transparent;
       }
 
       &.__disabled {
         background-color: $b-divider;
-        .fr-dates_date-item-inner {
+        .m78-dates_date-item-inner {
           color: $b-disable;
         }
       }
@@ -159,7 +159,7 @@
       background-color: $b-divider;
       cursor: not-allowed;
 
-      .fr-dates_date-item-inner {
+      .m78-dates_date-item-inner {
         color: $b-disable;
         cursor: not-allowed;
         background-color: transparent;
@@ -177,7 +177,7 @@
     &.__title {
       margin-bottom: 0;
 
-      .fr-dates_date-item-inner {
+      .m78-dates_date-item-inner {
         font-weight: 400;
         cursor: auto;
         background-color: transparent !important;
@@ -279,11 +279,11 @@
   }
 
   &.__time {
-    .fr-dates_body {
+    .m78-dates_body {
       padding: 0 10px;
     }
 
-    .fr-dates_foot {
+    .m78-dates_foot {
       border-top: none;
     }
   }
@@ -298,7 +298,7 @@
     border-top: 1px solid $b-border;
     border-bottom: 1px solid $b-border;
 
-    & + .fr-dates_picker-item-diver {
+    & + .m78-dates_picker-item-diver {
       //margin-top: 12px;
     }
   }

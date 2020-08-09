@@ -1,9 +1,9 @@
 import React from 'react';
-import message from '@lxjx/fr/message';
-import '@lxjx/fr/message/style';
+import message from 'm78/message';
+import 'm78/message/style';
 
-import Button from '@lxjx/fr/button';
-import '@lxjx/fr/button/style';
+import Button from 'm78/button';
+import 'm78/button/style';
 
 const type = ['success', 'error', 'warning', undefined];
 
@@ -36,12 +36,12 @@ function notifyTest() {
     duration: Infinity,
     hasCancel: true,
     content: (
-      <div className="fr-message_notification">
-        <div className="fr-message_notification_title">我是标题</div>
-        <div className="fr-message_notification_desc">
+      <div className="m78-message_notification">
+        <div className="m78-message_notification_title">我是标题</div>
+        <div className="m78-message_notification_desc">
           我是描述我是描述我是描我是描述我是描述我是描述我是描述我是描述我是描述我是描述
         </div>
-        <div className="fr-message_notification_foot">
+        <div className="m78-message_notification_foot">
           <Button>取消</Button>
           <Button color="blue" onClick={() => res.close(id)}>
             确认

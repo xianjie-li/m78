@@ -1,6 +1,6 @@
 import React from 'react';
 import { useMeasure } from 'react-use';
-import { If } from '@lxjx/fr/fork';
+import { If } from 'm78/fork';
 import cls from 'classnames';
 import { ComponentBaseProps } from '../types/types';
 
@@ -22,18 +22,18 @@ const ArticleBox: React.FC<ArticleBoxProps> = ({ watermark, html, content, style
   const col = Math.ceil(width / 300);
 
   return (
-    <div ref={ref} className={cls('fr-article-box', className)} style={style}>
+    <div ref={ref} className={cls('m78-article-box', className)} style={style}>
       <If when={html}>
-        {() => <div className="fr-article-box_html" dangerouslySetInnerHTML={{ __html: html! }} />}
+        {() => <div className="m78-article-box_html" dangerouslySetInnerHTML={{ __html: html! }} />}
       </If>
       <If when={content && !html}>
         <div>{content}</div>
       </If>
       <If when={watermark}>
         {() => (
-          <div className="fr-article-box_watermark">
+          <div className="m78-article-box_watermark">
             {Array.from({ length: row }).map((rowItem, rowKey) => (
-              <div className="fr-article-box_watermark_item" key={rowKey}>
+              <div className="m78-article-box_watermark_item" key={rowKey}>
                 {Array.from({ length: col }).map((colItem, colKey) => (
                   <span key={colKey}>{watermark}</span>
                 ))}

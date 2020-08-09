@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSelf } from '@lxjx/hooks';
 
-/* TODO: 将所有延迟显示、关闭更换为 显示时间未达到delay时，延迟至该时间再关闭 */
 /**
  * 将转入的开关状态在指定延迟后转为本地状态并在变更后同步
  * */
@@ -15,23 +14,30 @@ export function useDelayDerivedToggleStatus(
     deps?: any[];
     /** 额外的延迟时间，用于对动画等消费的时间进行修正 */
     extraDelay?: number;
+    /** true | 启用入场延迟 */
+    leading?: boolean;
+    /** false | 启用离场延迟 */
+    trailing?: boolean;
   },
 ): boolean {
-  const { disabled, deps = [], extraDelay = 0 } = options || {};
+  const { disabled, deps = [], extraDelay = 0, trailing, leading = true } = options || {};
 
-  const [innerState, setInnerState] = useState(disabled ? toggle : false); // 默认一定要为false
+  const isDisabled = !delay || disabled || (!trailing && !leading);
+
+  // 初始值在禁用或未开启前导延迟时为toggle本身，否则为false
+  const [innerState, setInnerState] = useState(isDisabled || !leading ? toggle : false);
 
   const self = useSelf({
     toggleTimer: null as any,
   });
 
   useEffect(() => {
-    if (!delay || disabled) {
-      setInnerState(toggle);
+    if (isDisabled || toggle === innerState) {
       return;
     }
 
-    if (toggle === innerState) {
+    if ((toggle && !leading) || (!toggle && !trailing)) {
+      setInnerState(toggle);
       return;
     }
 
@@ -44,5 +50,5 @@ export function useDelayDerivedToggleStatus(
     };
   }, [toggle, ...deps]);
 
-  return innerState;
+  return isDisabled ? toggle : innerState;
 }

@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { useEffectEqual, useFn, useSelf, useSetState } from '@lxjx/hooks';
 import { Auth, ValidMeta } from '@lxjx/auth';
-import { useDelayDerivedToggleStatus } from '@lxjx/fr/hooks';
-import Spin from '@lxjx/fr/spin';
-import Button from '@lxjx/fr/button';
-import Result from '@lxjx/fr/result';
-import Popper from '@lxjx/fr/popper';
+import { useDelayDerivedToggleStatus } from 'm78/hooks';
+import Spin from 'm78/spin';
+import Button from 'm78/button';
+import Result from 'm78/result';
+import Popper from 'm78/popper';
 import { AuthProps } from './type';
 
 export function createAuth<D, V>(auth: Auth<D, V>) {
@@ -101,7 +101,7 @@ export function createAuth<D, V>(auth: Auth<D, V>) {
       if (type === 'popper') {
         return (
           <Popper
-            className="fr-auth_popper"
+            className="m78-auth_popper"
             type="popper"
             trigger="click"
             icon={icon}

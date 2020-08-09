@@ -1,6 +1,6 @@
 import React from 'react';
-import create from '@lxjx/fr/auth';
-import Button from '@lxjx/fr/button';
+import create from 'm78/auth';
+import Button from 'm78/button';
 
 /**
  *  1. 通过`create()`根据依赖数据和验证器创建auth api

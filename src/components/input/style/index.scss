@@ -20,7 +20,7 @@ $unitSpace: 8px;
   }
 }
 
-.fr-input {
+.m78-input {
   position: relative;
   flex: 1;
   appearance: none;
@@ -62,7 +62,7 @@ $unitSpace: 8px;
     font-size: 16px;
     line-height: 1;
     overflow: hidden;
-    max-width: $md;
+    max-width: $sm;
     transition: $animation-duration-base box-shadow, $animation-duration-base border-color;
     transition-delay: 0s;
 
@@ -116,7 +116,7 @@ $unitSpace: 8px;
         word-break: break-all;
       }
 
-      .fr-input_tip-text {
+      .m78-input_tip-text {
         position: absolute;
         right: 8px;
         bottom: 8px;
@@ -125,14 +125,14 @@ $unitSpace: 8px;
         pointer-events: none;
       }
 
-      .fr-input_icon-clear {
+      .m78-input_icon-clear {
         position: absolute;
         right: 4px;
         top: 4px;
         text-shadow: $stress-shadow-w;
       }
 
-      .fr-input_loading:not(.__full) {
+      .m78-input_loading:not(.__full) {
         position: absolute;
         right: 10px;
       }
@@ -142,8 +142,8 @@ $unitSpace: 8px;
     &.__small {
       height: $size-small;
       font-size: 14px;
-      .fr-input_suffix,
-      .fr-input_prefix {
+      .m78-input_suffix,
+      .m78-input_prefix {
         font-size: 12px;
       }
     }
@@ -152,8 +152,8 @@ $unitSpace: 8px;
       height: $size-large;
       font-size: 20px;
 
-      .fr-input_suffix,
-      .fr-input_prefix {
+      .m78-input_suffix,
+      .m78-input_prefix {
         font-size: 16px;
       }
     }
@@ -162,12 +162,12 @@ $unitSpace: 8px;
       height: $size-big;
       font-size: 28px;
 
-      .fr-input {
+      .m78-input {
         letter-spacing: 2px;
       }
 
-      .fr-input_suffix,
-      .fr-input_prefix {
+      .m78-input_suffix,
+      .m78-input_prefix {
         font-size: 24px;
       }
     }
@@ -239,7 +239,7 @@ $unitSpace: 8px;
   }
 
   &_search-icon {
-    .fr-icon {
+    .m78-icon {
       font-size: 24px !important;
     }
     margin-left: $unitSpace - 4; /* 按钮原本就有空白，稍微减少不至于突兀 */
@@ -290,7 +290,7 @@ $unitSpace: 8px;
       margin-top: 12px;
     }
 
-    .fr-input_wrap + .fr-input_wrap {
+    .m78-input_wrap + .m78-input_wrap {
       margin-left: 10px;
     }
   }

@@ -1,6 +1,6 @@
 @import '../../style/index';
 
-.fr-result {
+.m78-result {
   display: flex;
   position: relative;
   margin: 12px 0;
@@ -29,13 +29,13 @@
     margin-bottom: 12px;
     line-height: 1;
 
-    .fr-spin {
+    .m78-spin {
       font-size: 50px;
     }
 
     &.__waiting {
-      .fr-svg-icon {
-        animation: fr-spin 2s 1.5s infinite forwards ease;
+      .m78-svg-icon {
+        animation: m78-spin 2s 1.5s infinite forwards ease;
       }
     }
   }
@@ -59,11 +59,11 @@
   &_btns {
     margin-top: 24px;
 
-    .fr-btn {
+    .m78-btn {
       width: 100px;
     }
 
-    .fr-btn + .fr-btn {
+    .m78-btn + .m78-btn {
       margin-left: 16px !important;
     }
   }
@@ -78,7 +78,7 @@
   }
 }
 
-@keyframes fr-result-waiting {
+@keyframes m78-result-waiting {
   0% {
     transform: rotate3d(0, 0, 0, 0);
   }

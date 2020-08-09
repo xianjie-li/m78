@@ -1,6 +1,6 @@
 import React from 'react';
-import Popper from '@lxjx/fr/popper';
-import Button from '@lxjx/fr/button';
+import Popper from 'm78/popper';
+import Button from 'm78/button';
 
 const Demo2 = () => {
   function renderContent() {

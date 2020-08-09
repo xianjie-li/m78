@@ -185,7 +185,7 @@ const DateItem: React.FC<DateItemProps> = ({
 
   return (
     <div
-      className={cls('fr-dates_date-item', {
+      className={cls('m78-dates_date-item', {
         __active: isChecked || isEndChecked || isActiveDate,
         __gray: type === DateType.DATE ? !isCurrentBetween : false,
         __focus: isSame,
@@ -199,20 +199,22 @@ const DateItem: React.FC<DateItemProps> = ({
       onClick={onClick}
       {...bind()}
     >
-      <span className="fr-dates_date-item-inner">
-        {range && isChecked && !isEndChecked && <span className="fr-dates_tips">{startLabel}</span>}
+      <span className="m78-dates_date-item-inner">
+        {range && isChecked && !isEndChecked && (
+          <span className="m78-dates_tips">{startLabel}</span>
+        )}
         {range && isEndChecked && (
-          <span className="fr-dates_tips">
+          <span className="m78-dates_tips">
             {isChecked ? `${startLabel}/${endLabel}` : endLabel}
           </span>
         )}
         {isActiveDate && isActiveSameChecked && (
-          <span className="fr-dates_tips">
+          <span className="m78-dates_tips">
             设为{startLabel}/{endLabel}
           </span>
         )}
         {isActiveDate && !isActiveSameChecked && (
-          <span className="fr-dates_tips">
+          <span className="m78-dates_tips">
             {isActiveBeforeChecked ? `设为${startLabel}` : `设为${endLabel}`}
           </span>
         )}

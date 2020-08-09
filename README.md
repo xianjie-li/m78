@@ -2,13 +2,13 @@
     <img src="https://gitee.com/llixianjie/docs/raw/master/fr/logo.png" width="160" align="center" />
 </p>
 
-<h1 align="center">Fr</h1>
+<h1 align="center">M78</h1>
 <p align="center">components, hooks, utils, part of the react toolchain</p>
 <br>
 
 ## 🎉Introduction
 
-一套 react 基础库，包含常用组件、hooks、以及其他工具。[查看文档](https://iixianjie.github.io/fr/docs)
+一套 react 基础库，包含常用组件、hooks、以及其他工具。[查看文档](https://iixianjie.github.io/m78/docs)
 
 <br>
 
@@ -26,9 +26,9 @@
 ## 📦Install
 
 ```shell
-yarn add @lxjx/fr
+yarn add m78
 # or
-npm install @lxjx/fr
+npm install m78
 ```
 
 <br>
@@ -37,10 +37,10 @@ npm install @lxjx/fr
 
 ### `import组件`
 
-`fr ` 支持 `es modules` 模块，通过`@lxjx/fr/*` 来导入主包下的各个模块
+`M78` 使用 `es modules` 模块，通过`m78/*` 来导入主包下的各个模块
 
 ```js
-import Button, { ButtonProps } from '@lxjx/fr/button';
+import Button, { ButtonProps } from 'm78/button';
 
 function App() {
   return (
@@ -57,13 +57,13 @@ function App() {
 
 
 
-打包组件目录支持使用[babel-plugin-import](<https://github.com/ant-design/babel-plugin-import>),  不过不推荐, 一是对这样对idea和ts来说很怪异，支持不好；二是，组件通常会包含多个命名导出，如 `import Form, { Item, Title, Footer, FormProps } from '@lxjx/fr/esm/form'`。
+打包组件目录支持使用[babel-plugin-import](<https://github.com/ant-design/babel-plugin-import>),  不过不推荐, 一是对这样对idea和ts来说很怪异，支持不好；二是，组件通常会包含多个命名导出，如 `import Form, { Item, Title, Footer, FormProps } from 'M78/form'`。
 
 <br>
 
 ### `样式` 
 
-`fr` 的样式采用后编译(开发时编译), 你需要为你的`webpack`或其他打包器添加`scss`文件支持才能正常使用。
+样式采用后编译(开发时编译), 你需要为你的`webpack`或其他打包器添加`scss`文件支持才能正常使用。
 
 
 <br>

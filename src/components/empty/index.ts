@@ -1,4 +1,4 @@
-import '@lxjx/fr/empty/style';
+import 'm78/empty/style';
 import Empty from './empty';
 
 export * from './type';

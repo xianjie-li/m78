@@ -1,6 +1,6 @@
 import React from 'react';
-import Spin from '@lxjx/fr/spin';
-import '@lxjx/fr/spin/style';
+import Spin from 'm78/spin';
+import 'm78/spin/style';
 
 const IconDemo = () => {
   const [show, setShow] = React.useState(true);

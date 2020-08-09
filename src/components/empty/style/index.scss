@@ -1,32 +1,32 @@
 @import '../../style/index';
 
-.fr-empty {
+.m78-empty {
   padding: 16px;
   text-align: center;
   line-height: $line-height-base;
 
   &.__small {
-    .fr-empty_icon,
-    .fr-empty_icon > svg {
+    .m78-empty_icon,
+    .m78-empty_icon > svg {
       height: 48px;
       width: auto;
     }
 
-    .fr-empty_desc,
-    .fr-empty_actions {
+    .m78-empty_desc,
+    .m78-empty_actions {
       font-size: $fs-12;
     }
   }
 
   &.__large {
-    .fr-empty_icon,
-    .fr-empty_icon > svg {
+    .m78-empty_icon,
+    .m78-empty_icon > svg {
       height: 80px;
       width: auto;
     }
 
-    .fr-empty_desc,
-    .fr-empty_actions {
+    .m78-empty_desc,
+    .m78-empty_actions {
       font-size: $fs-16;
     }
   }

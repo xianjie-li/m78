@@ -1,5 +1,5 @@
 import { FormLike } from '@lxjx/hooks';
-import { CheckCustom } from '@lxjx/fr/check';
+import { CheckCustom } from 'm78/check';
 
 interface Item<Val> {
   label?: string;

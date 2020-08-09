@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import RForm, { useForm, FormProvider, List as FormList } from 'rc-field-form';
-import List, { Title, SubTitle, Footer } from '@lxjx/fr/list';
+import List, { Title, SubTitle, Footer } from 'm78/list';
 import Schema from 'async-validator';
 import { createRandString, isFunction } from '@lxjx/utils';
 import { useFn, useScroll } from '@lxjx/hooks';
 import { ValidateErrorEntity } from 'rc-field-form/es/interface';
-import { checkElementVisible, getFirstScrollParent } from '@lxjx/fr/util';
+import { checkElementVisible, getFirstScrollParent } from 'm78/util';
 import cls from 'classnames';
 import { createMessagesTemplate } from '@lxjx/validate-tools';
 
@@ -85,7 +85,7 @@ const BaseForm: React.FC<FormProps> = props => {
 
     if (!firstName) return;
 
-    const el = document.getElementById(`FR-FORM-ITEM-${id}-${getNameString(firstName)}`);
+    const el = document.getElementById(`m78-FORM-ITEM-${id}-${getNameString(firstName)}`);
 
     if (!el) return;
 
@@ -105,7 +105,7 @@ const BaseForm: React.FC<FormProps> = props => {
         style={style}
         className={cls(
           className,
-          'fr-form',
+          'm78-form',
           contextValue.hideRequiredMark && '__hide-required-mark',
         )}
         notBorder={notBorder}
@@ -114,7 +114,7 @@ const BaseForm: React.FC<FormProps> = props => {
         fullWidth={fullWidth}
         disabled={disabled}
       >
-        {/* <Button icon className="fr-form_setting" title="表单设置"> */}
+        {/* <Button icon className="m78-form_setting" title="表单设置"> */}
         {/*  <SettingOutlined /> */}
         {/* </Button> */}
         <RForm

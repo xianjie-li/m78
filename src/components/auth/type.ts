@@ -1,5 +1,5 @@
 import React from 'react';
-import { ButtonProps } from '@lxjx/fr/button';
+import { ButtonProps } from 'm78/button';
 import { AuthKeys, Auth, CreateAuthConfig, Validators, Action, ValidMeta } from '@lxjx/auth';
 import { AnyObject } from '@lxjx/utils';
 

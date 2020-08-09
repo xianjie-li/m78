@@ -1,9 +1,9 @@
 import React from 'react';
 import { useToggle } from 'react-use';
 
-import ShowFromMouse from '@lxjx/fr/show-from-mouse';
+import ShowFromMouse from 'm78/show-from-mouse';
 
-import Button from '@lxjx/fr/button';
+import Button from 'm78/button';
 
 const fixedStyle: React.CSSProperties = {
   position: 'fixed',

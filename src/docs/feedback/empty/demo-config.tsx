@@ -1,10 +1,10 @@
 import React from 'react';
 
-import Empty from '@lxjx/fr/empty';
-import '@lxjx/fr/empty/style';
+import Empty from 'm78/empty';
+import 'm78/empty/style';
 
 import img from '@/mock/img/1.jpg';
-import Config from '@lxjx/fr/config';
+import Config from 'm78/config';
 
 const newEmptyNode = <img src={img} alt="" />;
 

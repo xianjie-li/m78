@@ -18,8 +18,8 @@ function externalsDependencies() {
 
   const matchDeps = deps.map(key => new RegExp(`^${key}`));
   // 额外的external
-  matchDeps.push(/^@lxjx\/fr/);
-  matchDeps.push('@lxjx/fr');
+  matchDeps.push(/^m78/);
+  matchDeps.push('m78');
   matchDeps.push('react');
   matchDeps.push('react-dom');
   return matchDeps;
@@ -73,7 +73,7 @@ async function build(type = 'esm') {
     if (type !== 'esm') {
       input.plugins.unshift(
         replace({
-          '@lxjx/fr/': `'@lxjx/fr/${type}/`,
+          'm78/': `'m78/${type}/`,
           delimiters: ["'", ''],
         }),
       );

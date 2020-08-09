@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { WindmillIcon } from '@lxjx/fr/icon';
-import { useDelayDerivedToggleStatus } from '@lxjx/fr/hooks';
+import { WindmillIcon } from 'm78/icon';
+import { useDelayDerivedToggleStatus } from 'm78/hooks';
 import { Transition, config } from '@lxjx/react-transition-spring';
 
 import cls from 'classnames';
@@ -28,18 +28,18 @@ const Spin: React.FC<SpinProps> = ({
       unmountOnExit
       {...props}
       config={config.stiff}
-      className={cls(className, 'fr-spin', {
+      className={cls(className, 'm78-spin', {
         [`__${size}`]: !!size,
         __inline: inline,
         __full: full,
         __dark: dark,
       })}
     >
-      <WindmillIcon className="fr-spin_unit" />
+      <WindmillIcon className="m78-spin_unit" />
       {text && (
-        <span className="fr-spin_text">
+        <span className="m78-spin_text">
           {text}
-          <span className="fr-spin_ellipsis" />
+          <span className="m78-spin_ellipsis" />
         </span>
       )}
     </Transition>

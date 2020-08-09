@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 
-import Spin from '@lxjx/fr/spin';
-import '@lxjx/fr/base';
+import Spin from 'm78/spin';
+import 'm78/base';
 import { isArray } from '@lxjx/utils';
 
 import cls from 'classnames';
@@ -73,7 +73,7 @@ const Button: React.FC<ButtonProps> = ({
   href,
   ...props
 }) => {
-  const classNames = cls(className, 'fr-btn', 'fr-effect', {
+  const classNames = cls(className, 'm78-btn', 'm78-effect', {
     [`__${color}`]: color,
     [`__${size}`]: size,
     __circle: circle,
@@ -92,7 +92,7 @@ const Button: React.FC<ButtonProps> = ({
   return (
     <button type="button" {...props} className={classNames} disabled={!!disabled || !!loading}>
       {/* eslint-disable-next-line jsx-a11y/anchor-has-content,jsx-a11y/control-has-associated-label */}
-      {link && <a className="fr-btn__link" href={href} />}
+      {link && <a className="m78-btn__link" href={href} />}
       <Spin
         style={{ fontSize: size ? sizeMap[size] : 14, color: '#333' }}
         show={!!loading}
