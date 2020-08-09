@@ -10,8 +10,8 @@ export default {
   logo: 'https://gitee.com/llixianjie/docs/raw/master/fr/logo.png',
   locales: [['zh-CN', '中文']],
   outputPath: 'docs',
-  base: '/m78/',
-  publicPath: '/m78/',
+  base: '/M78/',
+  publicPath: '/M78/',
   resolve: {},
   mode: 'site',
   navs: [
