@@ -24,7 +24,7 @@
     "test": "jest ./test",
     "ypublish": "yarn publish ./dist"
   },
-  "repository": "https://github.com/Iixianjie/fr",
+  "repository": "https://github.com/Iixianjie/m78",
   "author": {
     "name": "lxj",
     "email": "1073830130@qq.com"
