@@ -219,7 +219,6 @@ const Popper = React.forwardRef<PopperRef, PopperProps>((props, fRef) => {
           offset,
           wrap: getWrapEl(),
           direction,
-          prevDirection: state.direction,
         },
       );
 
@@ -276,7 +275,6 @@ const Popper = React.forwardRef<PopperRef, PopperProps>((props, fRef) => {
           opacity: fix ? 0 : styleShow,
           scale: fix ? 0.86 : scale,
           immediate: fix || self.refreshCount === 0,
-          // @ts-ignore
           onRest() {
             // 实现unmountOnExit
             if (!fix && !show && state.contentShow && unmountOnExit) {
@@ -431,6 +429,7 @@ const Popper = React.forwardRef<PopperRef, PopperProps>((props, fRef) => {
               ),
               opacity: spProps.opacity.interpolate(o => o),
               visibility: spProps.opacity.interpolate(o => (o === 0 ? 'hidden' : undefined)),
+              pointerEvents: spProps.opacity.interpolate(o => (o! < 0.7 ? 'none' : undefined)),
             }}
             className={cls('m78-popper', state.direction && `__${state.direction}`, className)}
             onMouseEnter={triggerType.hover ? mouseEnterHandle : undefined}
