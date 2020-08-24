@@ -1,4 +1,3 @@
-import 'm78/mask/style';
+import 'm78/modal-base/style';
 
-export * from './mask';
-export { default } from './mask';
+export { default } from './ModalBase';

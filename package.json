@@ -89,7 +89,7 @@
     "@umijs/plugin-sass": "^1.1.1",
     "babel-jest": "^26.1.0",
     "chalk": "^4.1.0",
-    "dumi": "1.0.27",
+    "dumi": "^1.0.34",
     "file-loader": "^4.2.0",
     "fs-extra": "^9.0.1",
     "glob": "^7.1.4",

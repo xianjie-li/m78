@@ -1,9 +1,20 @@
 @import '../../style/index';
 
-.m78-mask {
-  &_inner {
-    /* 即使在更高的层级下，依然会触发低层级的mask点击？通过下面两行修复 */
-    position: fixed;
-    z-index: $z-index;
-  }
+.m78-modal-base {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: $z-index-modal;
+  border: 1px dashed red;
+  padding: 28px;
+  background-color: #fff;
+}
+
+.m78-modal-base_calc-node {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  visibility: hidden;
 }
