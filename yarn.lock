@@ -1208,7 +1208,7 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.10.1", "@babel/runtime@^7.10.2", "@babel/runtime@^7.3.1", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.3", "@babel/runtime@^7.7.2", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.4":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.10.1", "@babel/runtime@^7.10.2", "@babel/runtime@^7.3.1", "@babel/runtime@^7.5.5", "@babel/runtime@^7.7.2", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.4":
   version "7.11.0"
   resolved "https://registry.npm.taobao.org/@babel/runtime/download/@babel/runtime-7.11.0.tgz?cache=0&sync_timestamp=1596143081434&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40babel%2Fruntime%2Fdownload%2F%40babel%2Fruntime-7.11.0.tgz#f10245877042a815e07f7e693faff0ae9d3a2aac"
   integrity sha1-8QJFh3BCqBXgf35pP6/wrp06Kqw=
@@ -1554,16 +1554,6 @@
   dependencies:
     "@babel/runtime" "^7.5.5"
 
-"@lxjx/hooks@^0.2.5":
-  version "0.2.5"
-  resolved "https://registry.npm.taobao.org/@lxjx/hooks/download/@lxjx/hooks-0.2.5.tgz#8f3e1e71cc1f49f28bacbbc48b58a8ee8e92f2c4"
-  integrity sha1-jz4eccwfSfKLrLvEi1io7o6S8sQ=
-  dependencies:
-    "@babel/runtime" "^7.6.3"
-    "@lxjx/utils" "^1.0.9"
-    react "^16.11.0"
-    react-use "^13.6.3"
-
 "@lxjx/hooks@^1.4.0":
   version "1.4.0"
   resolved "https://registry.npm.taobao.org/@lxjx/hooks/download/@lxjx/hooks-1.4.0.tgz#2cbb99a61e7aa44610a64b06b458a6413d8bc75d"
@@ -1600,15 +1590,14 @@
     "@types/prop-types" "^15.7.3"
     prop-types "^15.7.2"
 
-"@lxjx/react-transition-spring@^1.0.9":
-  version "1.0.9"
-  resolved "https://registry.npm.taobao.org/@lxjx/react-transition-spring/download/@lxjx/react-transition-spring-1.0.9.tgz#aef9f82c668c4fa9af79b3c697c76034973b209a"
-  integrity sha1-rvn4LGaMT6mvebPGl8dgNJc7IJo=
+"@lxjx/react-transition-spring@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.npm.taobao.org/@lxjx/react-transition-spring/download/@lxjx/react-transition-spring-1.1.0.tgz#b4cde4590093a6c53402763f2c4612862eaad553"
+  integrity sha1-tM3kWQCTpsU0AnY/LEYShi6q1VM=
   dependencies:
     "@babel/runtime" "^7.7.2"
-    "@lxjx/hooks" "^0.2.5"
+    "@lxjx/hooks" "^1.4.0"
     "@types/prop-types" "^15.7.3"
-    prop-types "^15.7.2"
     react-spring "^8.0.27"
 
 "@lxjx/sass-base@^1.1.0":
@@ -1618,7 +1607,7 @@
   dependencies:
     "@ant-design/colors" "^3.2.2"
 
-"@lxjx/utils@^1.0.9", "@lxjx/utils@^1.1.7", "@lxjx/utils@^1.3.2", "@lxjx/utils@^1.3.4", "@lxjx/utils@^1.4.5":
+"@lxjx/utils@^1.1.7", "@lxjx/utils@^1.3.2", "@lxjx/utils@^1.3.4", "@lxjx/utils@^1.4.5":
   version "1.4.5"
   resolved "https://registry.npm.taobao.org/@lxjx/utils/download/@lxjx/utils-1.4.5.tgz#9b7b13236891a5dfdab44be855274abe0773a9bc"
   integrity sha1-m3sTI2iRpd/atEvoVSdKvgdzqbw=
@@ -11914,7 +11903,7 @@ react-use-gesture@^6.0.14:
   resolved "https://registry.npm.taobao.org/react-use-gesture/download/react-use-gesture-6.0.14.tgz#ab2d35ef72a5fb6060a6160eb12568c276f8a4b1"
   integrity sha1-qy0173Kl+2BgphYOsSVownb4pLE=
 
-react-use@^13.6.3, react-use@^13.8.0:
+react-use@^13.8.0:
   version "13.27.1"
   resolved "https://registry.npm.taobao.org/react-use/download/react-use-13.27.1.tgz#e2ae2b708dafc7893c4772628801589aab9de370"
   integrity sha1-4q4rcI2vx4k8R3JiiAFYmqud43A=
@@ -11961,7 +11950,7 @@ react-window@^1.8.5:
     "@babel/runtime" "^7.0.0"
     memoize-one ">=3.1.1 <6"
 
-react@^16.11.0, react@^16.13.1:
+react@^16.13.1:
   version "16.13.1"
   resolved "https://registry.npm.taobao.org/react/download/react-16.13.1.tgz?cache=0&sync_timestamp=1595004951016&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Freact%2Fdownload%2Freact-16.13.1.tgz#2e818822f1a9743122c063d6410d85c1e3afe48e"
   integrity sha1-LoGIIvGpdDEiwGPWQQ2FweOv5I4=
