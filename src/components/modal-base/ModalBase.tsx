@@ -1,12 +1,13 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ModalBaseProps, TupleNumber } from 'm78/modal-base/types';
 import Portal from 'm78/portal';
 import { calcAlignment } from 'm78/modal-base/commons';
-import { useClickAway, useMeasure } from 'react-use';
+import { useClickAway, useMeasure, useUpdateEffect } from 'react-use';
 import { config, Transition } from '@lxjx/react-transition-spring';
 import { useFormState, useLockBodyScroll, useSameState } from '@lxjx/hooks';
 
 import cls from 'classnames';
+import { useDelayDerivedToggleStatus } from 'm78/hooks';
 
 // @lxjx\sass-base\var.scss line 128>
 const MODAL_Z_INDEX = 1800;
@@ -15,9 +16,10 @@ const DEFAULT_ALIGN: TupleNumber = [0.5, 0.5];
 
 const ModalBase: React.FC<ModalBaseProps> = props => {
   const {
-    namespace,
+    namespace = 'MODAL',
     alignment = DEFAULT_ALIGN,
     mask = true,
+    maskClassName,
     maskTheme,
     animationType = 'fade',
     mountOnEnter = true,
@@ -26,6 +28,9 @@ const ModalBase: React.FC<ModalBaseProps> = props => {
     lockScroll = true,
     className,
     style,
+    onRemoveDelay = 800,
+    onRemove,
+    onClose,
   } = props;
 
   /** 内容区域容器 */
@@ -34,11 +39,14 @@ const ModalBase: React.FC<ModalBaseProps> = props => {
   /** 代理defaultShow/show/onClose, 实现对应接口 */
   const [show, setShow] = useFormState<boolean>(props, false, {
     defaultValueKey: 'defaultShow',
-    triggerKey: 'onClose',
+    triggerKey: 'onChange',
     valueKey: 'show',
   });
 
-  const [cIndex, instances] = useSameState('fr_modal_metas', show, {
+  /** 延迟设置为false的show，用于防止组件从实例列表中被生硬的移除(会打乱zIndex状态等 ) */
+  const delayShow = useDelayDerivedToggleStatus(show, 300, { trailing: true, leading: false });
+
+  const [cIndex, instances] = useSameState('fr_modal_metas', delayShow, {
     mask,
     clickAwayClosable,
   });
@@ -51,15 +59,25 @@ const ModalBase: React.FC<ModalBaseProps> = props => {
   /** 内容区域的xy坐标 */
   const [pos, setPos] = useState([0, 0]);
 
+  const mss = maskShouldShow();
+
+  const stc = shouldTriggerClose();
+
   // 滚动锁定
   useLockBodyScroll(lockScroll && show);
 
   // 无遮罩时，通过ClickAway来触发关闭，需要延迟一定的时间，因为用户设置的Modal开关可能会与ClickAway区域重叠
   useClickAway(contRef, () => {
-    if ((clickAwayClosable && !mask && show) || shouldTriggerClose()) {
-      setTimeout(onClose, 150);
+    if ((clickAwayClosable && !mask && show) || (stc && !mss)) {
+      setTimeout(close, 150);
     }
   });
+
+  useUpdateEffect(() => {
+    if (!show && onRemove) {
+      setTimeout(onRemove, onRemoveDelay);
+    }
+  }, [show]);
 
   useEffect(() => {
     calcPos();
@@ -72,8 +90,11 @@ const ModalBase: React.FC<ModalBaseProps> = props => {
     setPos(calcAlignment(alignment, screenMeta));
   }
 
-  function onClose() {
-    shouldTriggerClose() && setShow(false);
+  function close() {
+    if (stc) {
+      setShow(false);
+      onClose?.();
+    }
   }
 
   /** 根据该组件所有已渲染实例判断是否应开启mask */
@@ -102,19 +123,17 @@ const ModalBase: React.FC<ModalBaseProps> = props => {
     return !afterHasAwayClosable;
   }
 
-  console.log(style, shouldTriggerClose());
-
   return (
     <Portal namespace={namespace}>
-      {maskShouldShow() && mask && (
+      {mss && mask && (
         <Transition
           // 有遮罩时点击遮罩来关闭
-          onClick={clickAwayClosable && onClose}
+          onClick={clickAwayClosable && close}
           toggle={show}
           type="fade"
           mountOnEnter
           unmountOnExit
-          className={maskTheme === 'dark' ? 'm78-mask-b' : 'm78-mask'}
+          className={cls(maskTheme === 'dark' ? 'm78-mask-b' : 'm78-mask', maskClassName)}
           style={{ zIndex: nowZIndex }}
         />
       )}
@@ -161,28 +180,28 @@ function Temp() {
         animationType="slideTop"
         style={{ border: '1px solid red' }}
         show={show}
-        onClose={() => setShow(false)}
+        onChange={() => setShow(false)}
       />
 
       <ModalBase
-        animationType="slideTop"
+        animationType="slideRight"
         style={{ border: '1px solid orange' }}
         show={show2}
-        onClose={() => setShow2(false)}
+        onChange={() => setShow2(false)}
       />
 
       <ModalBase
-        animationType="slideTop"
+        animationType="slideBottom"
         style={{ border: '1px solid green' }}
         show={show3}
-        onClose={() => setShow3(false)}
+        onChange={() => setShow3(false)}
       />
 
       <ModalBase
-        animationType="slideTop"
+        animationType="slideLeft"
         style={{ border: '1px solid blue' }}
         show={show4}
-        onClose={() => setShow4(false)}
+        onChange={() => setShow4(false)}
       />
 
       <div style={{ height: 2000 }} />

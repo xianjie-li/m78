@@ -5,9 +5,7 @@ import ShowFromMouse from 'm78/modal-base';
 const Base = () => {
   return (
     <div>
-      <ShowFromMouse>
-        <button>click</button>
-      </ShowFromMouse>
+      <ShowFromMouse />
     </div>
   );
 };

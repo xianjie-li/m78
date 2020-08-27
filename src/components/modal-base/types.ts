@@ -1,6 +1,6 @@
 import { TransitionTypes } from '@lxjx/react-transition-spring';
-import { useClickAway } from 'react-use';
 import { ComponentBaseProps } from 'm78/types/types';
+import React from 'react';
 
 export type TupleNumber = [number, number];
 
@@ -10,11 +10,15 @@ export interface ModalBaseProps extends ComponentBaseProps {
   /** 手动控制modal的显示/隐藏, 与onClose搭配作为受控模式使用 */
   show?: boolean;
   /** 显示状态发生改变时触发 */
-  onClose?: any;
-  /** 自定义挂载节点的明明空间 */
+  onChange?: any;
+  /** 可选, 传入一个占位节点来作为Modal的控制开关, 在非受控时会直接代理show的值，受控时通过onChange回传最新状态 */
+  triggerNode?: React.ReactElement;
+  /** 'MODAL' | 自定义挂载节点的明明空间 */
   namespace?: string;
   /** true | 是否显示遮罩 */
   mask?: boolean;
+  /** 设置到mask节点上的className */
+  maskClassName?: string;
   /** true | 点击内容区域以外是否关闭Modal */
   clickAwayClosable?: boolean;
   /** 'light' | mask主题色 */
@@ -29,8 +33,11 @@ export interface ModalBaseProps extends ComponentBaseProps {
   unmountOnExit?: boolean;
   /** true | modal出现时锁定滚动条 */
   lockScroll?: boolean;
-  /** TODO: 800 | 当传入onRemove时，会对其进行代理，当show为false在指定延迟内调用onRemove */
-  onRemoveDelay?: number;
-  /** TODO:  */
+  /* ========== 以下api用于搭配render api使用, 通常不会直接使用 ========== */
+  /** 通知关闭 */
+  onClose?: () => void;
+  /** 通常移除实例 */
   onRemove?: () => void;
+  /** 800 | 指定onRemove的调用延迟 */
+  onRemoveDelay?: number;
 }
