@@ -4,7 +4,6 @@
   position: fixed;
   left: 0;
   top: 0;
-  border: 1px dashed red;
   padding: 28px;
   background-color: #fff;
 }
@@ -16,4 +15,11 @@
   bottom: 0;
   top: 0;
   visibility: hidden;
+}
+
+.card {
+  border: 4px dashed red;
+  border-radius: 4px;
+  box-shadow: 2px 2px 6px rgba(#000, 0.45);
+  background-color: #fff;
 }

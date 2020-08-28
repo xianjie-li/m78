@@ -5,12 +5,14 @@ import React from 'react';
 export type TupleNumber = [number, number];
 
 export interface ModalBaseProps extends ComponentBaseProps {
+  /** Modal要展示的内容 */
+  children: React.ReactNode;
   /** 默认显示状态，与show同时使用时无效 */
   defaultShow?: boolean;
   /** 手动控制modal的显示/隐藏, 与onClose搭配作为受控模式使用 */
   show?: boolean;
   /** 显示状态发生改变时触发 */
-  onChange?: any;
+  onChange?: (currentShow: boolean) => void;
   /** 可选, 传入一个占位节点来作为Modal的控制开关, 在非受控时会直接代理show的值，受控时通过onChange回传最新状态 */
   triggerNode?: React.ReactElement;
   /** 'MODAL' | 自定义挂载节点的明明空间 */
