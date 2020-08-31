@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ModalBaseProps, TupleNumber } from 'm78/modal-base/types';
 import Portal from 'm78/portal';
 import { calcAlignment } from 'm78/modal-base/commons';
 import { useClickAway, useMeasure, useUpdateEffect } from 'react-use';
@@ -8,9 +7,9 @@ import { useFormState, useLockBodyScroll, useSameState, useRefize } from '@lxjx/
 
 import cls from 'classnames';
 import { useDelayDerivedToggleStatus } from 'm78/hooks';
-
-// modal的基础层级 ref: @lxjx\sass-base\var.scss line 128>
-const MODAL_Z_INDEX = 1800;
+import { useLifeCycle } from 'm78/modal-base/lifeCycle';
+import { ModalBaseProps, Share, TupleNumber } from './types';
+import { useMethods } from './methods';
 
 /** model的默认位置 */
 const DEFAULT_ALIGN: TupleNumber = [0.5, 0.5];
@@ -29,11 +28,10 @@ const ModalBase: React.FC<ModalBaseProps> = props => {
     lockScroll = true,
     className,
     style,
-    onRemoveDelay = 800,
-    onRemove,
     onClose,
     children,
     triggerNode,
+    baseZIndex = 1800,
   } = props;
 
   /** 内容区域容器 */
@@ -46,120 +44,62 @@ const ModalBase: React.FC<ModalBaseProps> = props => {
     valueKey: 'show',
   });
 
-  /** 延迟设置为false的show，用于防止组件从实例列表中被生硬的移除(会打乱zIndex状态等 ) */
+  /** 延迟设置为false的show，用于防止组件从实例列表中被生硬的移除(会打乱zIndex/动画状态等 ) */
   const delayShow = useDelayDerivedToggleStatus(show, 200, { trailing: true, leading: false });
 
+  /** 所有show为true的Modal组件 */
   const [cIndex, instances] = useSameState('fr_modal_metas', delayShow, {
     mask,
     clickAwayClosable,
+    namespace,
   });
 
-  const nowZIndex = cIndex === -1 ? MODAL_Z_INDEX : cIndex + MODAL_Z_INDEX;
+  /** 当前组件应该显示的zIndex */
+  const nowZIndex = cIndex === -1 ? baseZIndex : cIndex + baseZIndex;
 
-  /** 监听大小 */
+  /** 监听容器大小变更 */
   const [bind, { width, height }] = useMeasure();
 
   /** 内容区域的xy坐标 */
   const [pos, setPos] = useState([0, 0]);
 
-  const refState = useRefize({
+  const share: Share = {
+    cIndex,
+    instances,
+    namespace,
+    mask,
     show,
-    maskShouldShow: maskShouldShow(),
-    shouldTriggerClose: shouldTriggerClose(),
+    clickAwayClosable,
+    contRef,
+    alignment,
+    setPos,
+    refState: null as any,
+    setShow,
+    onClose,
+    triggerNode,
+    lockScroll,
+    modalSize: [width, height],
+    props,
+  };
+
+  const methods = useMethods(share);
+
+  useLifeCycle(share, methods);
+
+  share.refState = useRefize({
+    show,
+    maskShouldShow: methods.maskShouldShow(),
+    shouldTriggerClose: methods.shouldTriggerClose(),
   });
-
-  // 滚动锁定
-  useLockBodyScroll(lockScroll && show);
-
-  // 无遮罩时，通过ClickAway来触发关闭，需要延迟一定的时间，因为用户设置的Modal开关可能会与ClickAway区域重叠
-  useClickAway(contRef, () => {
-    if (!show) return;
-
-    if (
-      // 可点击关闭 + 无mask
-      (clickAwayClosable && !mask) ||
-      // 应触发点击关闭 + mask未显示
-      (refState.shouldTriggerClose && !refState.maskShouldShow)
-    ) {
-      setTimeout(close, 150);
-    }
-  });
-
-  useUpdateEffect(() => {
-    if (!show && onRemove) {
-      setTimeout(onRemove, onRemoveDelay);
-    }
-  }, [show]);
-
-  useEffect(() => {
-    calcPos();
-  }, [width, height]);
-
-  /** 屏幕尺寸改变/容器尺寸改变时调用 */
-  function calcPos() {
-    if (!show || !contRef.current) return;
-
-    // useMeasure获取的尺寸是无边框尺寸，这里手动获取带边框等的实际尺寸
-    const w = contRef.current.offsetWidth;
-    const h = contRef.current.offsetHeight;
-
-    const screenMeta: TupleNumber = [window.innerWidth - w, window.innerHeight - h];
-
-    setPos(calcAlignment(alignment, screenMeta));
-  }
-
-  function close() {
-    if (refState.shouldTriggerClose) {
-      setShow(false);
-      onClose?.();
-    }
-  }
-
-  function open() {
-    setShow(true);
-  }
-
-  /** 根据该组件所有已渲染实例判断是否应开启mask */
-  function maskShouldShow() {
-    if (!mask || !show) return false;
-
-    // 当前实例之前所有实例组成的数组
-    const beforeInstance = instances.slice(0, cIndex);
-
-    // 在该实例之前是否有任意一个实例包含mask
-    const beforeHasMask = beforeInstance.some(item => item.meta.mask);
-
-    return !beforeHasMask;
-  }
-
-  /** 根据前后实例判断是否需要触发Away点击关闭 */
-  function shouldTriggerClose() {
-    if (!show || !clickAwayClosable) return false;
-
-    // 当前实例之前所有实例组成的数组
-    const afterInstance = instances.slice(cIndex + 1);
-
-    // 在该实例之前是否有任意一个实例包含mask
-    const afterHasAwayClosable = afterInstance.some(item => item.meta.clickAwayClosable);
-
-    return !afterHasAwayClosable;
-  }
-
-  function sameAniTypeCount() {}
-
-  function onTriggerNodeClick(e: MouseEvent) {
-    triggerNode?.props?.onClick?.(e);
-    refState.show ? close() : open();
-  }
 
   return (
     <>
-      {triggerNode && React.cloneElement(triggerNode, { onClick: onTriggerNodeClick })}
+      {triggerNode && React.cloneElement(triggerNode, { onClick: methods.onTriggerNodeClick })}
       <Portal namespace={namespace}>
-        {refState.maskShouldShow && mask && (
+        {share.refState.maskShouldShow && mask && (
           <Transition
             // 有遮罩时点击遮罩来关闭
-            onClick={clickAwayClosable && close}
+            onClick={clickAwayClosable && methods.close}
             toggle={show}
             type="fade"
             mountOnEnter
@@ -176,7 +116,12 @@ const ModalBase: React.FC<ModalBaseProps> = props => {
           unmountOnExit={unmountOnExit}
           innerRef={contRef}
           className={cls('m78-modal-base', className)}
-          style={{ ...style, left: pos[0], top: pos[1], zIndex: nowZIndex }}
+          style={{
+            ...style,
+            left: pos[0],
+            top: pos[1],
+            zIndex: nowZIndex,
+          }}
         >
           <div className="m78-modal-base_calc-node" ref={bind} />
           {children}
@@ -208,12 +153,14 @@ function Temp() {
         animationType="slideRight"
         className="card"
         triggerNode={<button type="button">click</button>}
+        alignment={[0.3, 0.3]}
       >
         <div style={{ width: 300 }}>
           <ModalBase
             animationType="slideBottom"
             className="card"
             triggerNode={<button type="button">click</button>}
+            alignment={[0.7, 0.7]}
           >
             <div style={{ width: 300 }}>
               <ModalBase

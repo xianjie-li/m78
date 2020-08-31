@@ -4,6 +4,39 @@ import React from 'react';
 
 export type TupleNumber = [number, number];
 
+export interface InstanceItem {
+  id: string;
+  meta: {
+    mask: boolean;
+    clickAwayClosable: boolean;
+    namespace: string;
+  };
+}
+
+/** 组件中共享的一组数据 */
+export interface Share {
+  cIndex: number;
+  instances: InstanceItem[];
+  show: boolean;
+  mask: boolean;
+  namespace: string;
+  clickAwayClosable: boolean;
+  contRef: React.MutableRefObject<HTMLDivElement>;
+  alignment: TupleNumber;
+  setPos: React.Dispatch<React.SetStateAction<number[]>>;
+  refState: {
+    show: boolean;
+    maskShouldShow: boolean;
+    shouldTriggerClose: boolean;
+  };
+  setShow: React.Dispatch<React.SetStateAction<boolean>>;
+  onClose: ModalBaseProps['onClose'];
+  triggerNode: ModalBaseProps['triggerNode'];
+  lockScroll: boolean;
+  modalSize: [number, number];
+  props: ModalBaseProps;
+}
+
 export interface ModalBaseProps extends ComponentBaseProps {
   /** Modal要展示的内容 */
   children: React.ReactNode;
@@ -15,7 +48,7 @@ export interface ModalBaseProps extends ComponentBaseProps {
   onChange?: (currentShow: boolean) => void;
   /** 可选, 传入一个占位节点来作为Modal的控制开关, 在非受控时会直接代理show的值，受控时通过onChange回传最新状态 */
   triggerNode?: React.ReactElement;
-  /** 'MODAL' | 自定义挂载节点的明明空间 */
+  /** MODAL' | 自定义挂载节点的明明空间 */
   namespace?: string;
   /** true | 是否显示遮罩 */
   mask?: boolean;
@@ -42,4 +75,6 @@ export interface ModalBaseProps extends ComponentBaseProps {
   onRemove?: () => void;
   /** 800 | 指定onRemove的调用延迟 */
   onRemoveDelay?: number;
+  /** 1800 | 基准zIndex值，默认为Modal层 */
+  baseZIndex?: number;
 }
