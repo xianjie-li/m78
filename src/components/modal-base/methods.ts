@@ -15,6 +15,8 @@ export function useMethods(share: Share) {
     setShow,
     onClose,
     triggerNode,
+    modalSize,
+    self,
   } = share;
 
   /** 从传入的same instance中获取namespace相同的，只有它们才有比较的价值 */
@@ -50,15 +52,20 @@ export function useMethods(share: Share) {
 
   /** 屏幕尺寸改变/容器尺寸改变时调用 */
   function calcPos() {
-    if (!show || !contRef.current) return;
+    if (!show) return;
 
     // useMeasure获取的尺寸是无边框尺寸，这里手动获取带边框等的实际尺寸
-    const w = contRef.current.offsetWidth;
-    const h = contRef.current.offsetHeight;
+    const w = contRef.current ? contRef.current.offsetWidth : modalSize[0];
+    const h = contRef.current ? contRef.current.offsetHeight : modalSize[1];
 
     const screenMeta: TupleNumber = [window.innerWidth - w, window.innerHeight - h];
 
-    setPos(calcAlignment(alignment, screenMeta));
+    const pos = calcAlignment(alignment, screenMeta);
+
+    setPos(pos);
+
+    self.px = pos[0];
+    self.py = pos[1];
   }
 
   /** 在未被阻止时关闭此Modal */

@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Portal from 'm78/portal';
-import { calcAlignment } from 'm78/modal-base/commons';
-import { useClickAway, useMeasure, useUpdateEffect } from 'react-use';
+import { useMeasure } from 'react-use';
 import { config, Transition } from '@lxjx/react-transition-spring';
-import { useFormState, useLockBodyScroll, useSameState, useRefize } from '@lxjx/hooks';
+import { useFormState, useSameState, useRefize, useSelf } from '@lxjx/hooks';
+import { useSpring, animated, interpolate } from 'react-spring';
 
 import cls from 'classnames';
 import { useDelayDerivedToggleStatus } from 'm78/hooks';
@@ -63,6 +63,13 @@ const ModalBase: React.FC<ModalBaseProps> = props => {
   /** 内容区域的xy坐标 */
   const [pos, setPos] = useState([0, 0]);
 
+  const self = useSelf({
+    x: 0,
+    y: 0,
+    px: 0,
+    py: 0,
+  });
+
   const share: Share = {
     cIndex,
     instances,
@@ -80,6 +87,7 @@ const ModalBase: React.FC<ModalBaseProps> = props => {
     lockScroll,
     modalSize: [width, height],
     props,
+    self,
   };
 
   const methods = useMethods(share);
@@ -91,6 +99,96 @@ const ModalBase: React.FC<ModalBaseProps> = props => {
     maskShouldShow: methods.maskShouldShow(),
     shouldTriggerClose: methods.shouldTriggerClose(),
   });
+
+  const [sp, set] = useSpring(() => ({ x: 0, y: 0, scale: 0 }));
+
+  useEffect(() => {
+    methods.calcPos();
+
+    if (show) {
+      self.x = (window as any)._FR_LAST_CLICK_POSITION_X || 0;
+      self.y = (window as any)._FR_LAST_CLICK_POSITION_Y || 0;
+
+      (set as any)({
+        to: async (next: any) => {
+          await next({
+            x: self.x - self.px,
+            y: self.y - self.py,
+            scale: 0,
+            immediate: true,
+            reset: true,
+          });
+          await next({
+            x: 0,
+            y: 0,
+            scale: 1,
+            immediate: false,
+            config: config.stiff,
+            reset: false,
+          });
+        },
+      });
+    } else {
+      set({
+        x: self.x - self.px,
+        y: self.y - self.py,
+        scale: 0,
+        immediate: false,
+        config: config.stiff,
+        reset: false,
+      });
+      self.x = 0;
+      self.y = 0;
+    }
+    // eslint-disable-next-line
+  }, [show]);
+
+  function renderCont() {
+    if (animationType === 'fromMouse') {
+      return (
+        <animated.div
+          ref={contRef}
+          className={cls('m78-modal-base', className)}
+          style={{
+            ...style,
+            left: pos[0],
+            top: pos[1],
+            zIndex: nowZIndex,
+            transform: interpolate(
+              //  @ts-ignore
+              [sp.x, sp.y, sp.scale],
+              (x: number, y: number, scale: number) =>
+                `translate3d(${x}px,${y}px, 0px)  scale3d(${scale},${scale},${scale})`,
+            ),
+          }}
+        >
+          <div className="m78-modal-base_calc-node" ref={bind} />
+          {children}
+        </animated.div>
+      );
+    }
+
+    return (
+      <Transition
+        toggle={show}
+        type={animationType}
+        config={config.stiff}
+        mountOnEnter={mountOnEnter}
+        unmountOnExit={unmountOnExit}
+        innerRef={contRef}
+        className={cls('m78-modal-base', className)}
+        style={{
+          ...style,
+          left: pos[0],
+          top: pos[1],
+          zIndex: nowZIndex,
+        }}
+      >
+        <div className="m78-modal-base_calc-node" ref={bind} />
+        {children}
+      </Transition>
+    );
+  }
 
   return (
     <>
@@ -108,28 +206,36 @@ const ModalBase: React.FC<ModalBaseProps> = props => {
             style={{ zIndex: nowZIndex }}
           />
         )}
-        <Transition
-          toggle={show}
-          type={animationType}
-          config={config.stiff}
-          mountOnEnter={mountOnEnter}
-          unmountOnExit={unmountOnExit}
-          innerRef={contRef}
-          className={cls('m78-modal-base', className)}
-          style={{
-            ...style,
-            left: pos[0],
-            top: pos[1],
-            zIndex: nowZIndex,
-          }}
-        >
-          <div className="m78-modal-base_calc-node" ref={bind} />
-          {children}
-        </Transition>
+        {renderCont()}
       </Portal>
     </>
   );
 };
+
+/** 保存鼠标最后点击相对中心点的偏移位置 */
+function windowClickHandle(e: MouseEvent) {
+  const x = e.x || e.screenX; // screenX会有导航栏高度的偏移
+  const y = e.y || e.screenY;
+
+  // 页面中心点
+  const winHalfH = window.innerHeight / 2;
+  const winHalfW = window.innerWidth / 2;
+
+  (window as any)._FR_LAST_CLICK_POSITION_X = x;
+  (window as any)._FR_LAST_CLICK_POSITION_Y = y;
+}
+
+/**
+ * 在组件内记忆位置会导致以api形式调用时组件未装载从而无法获得鼠标位置，故将记忆位置的逻辑放到Base中, 也可以减少事件绑定
+ * 如果不提前调用此方法，ShowFromMouse永远都只会从页面中心出现
+ * */
+function registerPositionSave() {
+  window.removeEventListener('click', windowClickHandle, true);
+  // 启用事件捕获防止某个元素事件冒泡导致事件不触发
+  window.addEventListener('click', windowClickHandle, true);
+}
+
+registerPositionSave();
 
 function Temp() {
   const [show, setShow] = useState(true);
@@ -150,9 +256,13 @@ function Temp() {
         show
       </button>
       <ModalBase
-        animationType="slideRight"
+        animationType="fromMouse"
         className="card"
-        triggerNode={<button type="button">click</button>}
+        triggerNode={
+          <button type="button" style={{ marginLeft: 400, marginTop: 600 }}>
+            click
+          </button>
+        }
         alignment={[0.3, 0.3]}
       >
         <div style={{ width: 300 }}>

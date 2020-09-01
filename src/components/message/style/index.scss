@@ -63,10 +63,10 @@
     left: 0;
     bottom: 0;
     width: 0;
-    //height: 1px;
-    //background-color: $b-title;
+    height: 1.1px;
+    background-color: $b-second;
     //transform: scaleY(0.8);
-    border-bottom: 1px $b-second solid;
+    //border-bottom: 1px $b-second solid;
   }
 
   &_icon {

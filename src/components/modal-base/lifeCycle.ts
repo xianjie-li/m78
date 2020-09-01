@@ -5,7 +5,7 @@ import { useMethods } from './methods';
 import { Share } from './types';
 
 export function useLifeCycle(share: Share, methods: ReturnType<typeof useMethods>) {
-  const { props, modalSize } = share;
+  const { props, modalSize, show, contRef } = share;
 
   const { onRemove, onRemoveDelay = 800 } = props;
 
@@ -39,5 +39,5 @@ export function useLifeCycle(share: Share, methods: ReturnType<typeof useMethods
   /** TODO: 屏幕尺寸改变处理 */
   useEffect(() => {
     methods.calcPos();
-  }, [width, height]);
+  }, [width, height, contRef.current, show]);
 }

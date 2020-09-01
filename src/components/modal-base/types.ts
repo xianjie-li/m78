@@ -61,7 +61,7 @@ export interface ModalBaseProps extends ComponentBaseProps {
   /** [0.5, 0.5] | 指定x/y轴位置, 值为 -1 ~ 1, 例：[0.5, 0.5] -> 居中， [1, 0] -> 右上， [1, 1] -> 右下 */
   alignment?: TupleNumber;
   /** 动画类型, 默认从光标位置出现 */
-  animationType?: TransitionTypes;
+  animationType?: TransitionTypes | 'fromMouse';
   /** true | 开启后内容会在Modal开启时才进行渲染，关闭后内容随Modal一起渲染, 并根据show状态决定是否显示 */
   mountOnEnter?: boolean;
   /** false | Modal关闭后是否卸载其内容 */
