@@ -52,3 +52,31 @@ export function useDelayDerivedToggleStatus(
 
   return isDisabled ? toggle : innerState;
 }
+
+/** 用于便捷的实现mountOnEnter/unmountOnExit接口 */
+export function useMountInterface(init: boolean, { mountOnEnter = true, unmountOnExit = false }) {
+  const [mount, setMount] = useState(() => {
+    // mountOnEnter为false时，强制渲染, 否则取init
+    if (!mountOnEnter) return true;
+    return init;
+  });
+
+  function monkeySet(isMount: boolean) {
+    // 需要挂载但未挂载时对其进行挂载
+    if (isMount && !mount) {
+      console.log('init', isMount);
+      setMount(true);
+      return;
+    }
+
+    // 需要离场卸载且收到卸载通知且当前已挂载
+    if (unmountOnExit && !isMount && mount) {
+      console.log('init', isMount);
+      setMount(false);
+    }
+  }
+
+  console.log(mount, 111);
+
+  return [mount, monkeySet] as const;
+}

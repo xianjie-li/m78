@@ -39,5 +39,5 @@ export function useLifeCycle(share: Share, methods: ReturnType<typeof useMethods
   /** TODO: 屏幕尺寸改变处理 */
   useEffect(() => {
     methods.calcPos();
-  }, [width, height, contRef.current, show]);
+  }, [width, height]);
 }

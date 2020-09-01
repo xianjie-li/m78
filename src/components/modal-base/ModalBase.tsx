@@ -6,8 +6,9 @@ import { useFormState, useSameState, useRefize, useSelf } from '@lxjx/hooks';
 import { useSpring, animated, interpolate } from 'react-spring';
 
 import cls from 'classnames';
-import { useDelayDerivedToggleStatus } from 'm78/hooks';
+import { useDelayDerivedToggleStatus, useMountInterface } from 'm78/hooks';
 import { useLifeCycle } from 'm78/modal-base/lifeCycle';
+import { log } from 'util';
 import { ModalBaseProps, Share, TupleNumber } from './types';
 import { useMethods } from './methods';
 
@@ -68,6 +69,8 @@ const ModalBase: React.FC<ModalBaseProps> = props => {
     y: 0,
     px: 0,
     py: 0,
+    startXPos: 0,
+    startYPos: 0,
   });
 
   const share: Share = {
@@ -102,18 +105,33 @@ const ModalBase: React.FC<ModalBaseProps> = props => {
 
   const [sp, set] = useSpring(() => ({ x: 0, y: 0, scale: 0 }));
 
+  const [mount, setMount] = useMountInterface(show, { mountOnEnter, unmountOnExit });
+
+  const show2 = useDelayDerivedToggleStatus(show, 1, { trailing: false, leading: true });
+
   useEffect(() => {
-    methods.calcPos();
+    if (show) {
+      setMount(true);
+    }
+  }, [show]);
+
+  useEffect(() => {
+    console.log(contRef.current);
 
     if (show) {
-      self.x = (window as any)._FR_LAST_CLICK_POSITION_X || 0;
-      self.y = (window as any)._FR_LAST_CLICK_POSITION_Y || 0;
+      // methods.calcPos();
+
+      self.x = (window as any)._FR_LAST_CLICK_POSITION_X || self.px || 0;
+      self.y = (window as any)._FR_LAST_CLICK_POSITION_Y || self.px || 0;
+
+      self.startXPos = self.x - self.px - contRef.current.offsetWidth / 2;
+      self.startYPos = self.y - self.py - contRef.current.offsetHeight / 2;
 
       (set as any)({
         to: async (next: any) => {
           await next({
-            x: self.x - self.px,
-            y: self.y - self.py,
+            x: self.startXPos,
+            y: self.startYPos,
             scale: 0,
             immediate: true,
             reset: true,
@@ -123,48 +141,57 @@ const ModalBase: React.FC<ModalBaseProps> = props => {
             y: 0,
             scale: 1,
             immediate: false,
-            config: config.stiff,
+            config: { ...config.stiff, clamp: false },
             reset: false,
           });
         },
       });
     } else {
       set({
-        x: self.x - self.px,
-        y: self.y - self.py,
+        x: self.startXPos,
+        y: self.startYPos,
         scale: 0,
         immediate: false,
-        config: config.stiff,
+        config: { ...config.stiff, clamp: true },
         reset: false,
+        onRest() {
+          if (!share.refState.show) {
+            console.log('ff1');
+
+            setMount(false);
+          }
+        },
       });
       self.x = 0;
       self.y = 0;
     }
     // eslint-disable-next-line
-  }, [show]);
+  }, [show2]);
 
   function renderCont() {
     if (animationType === 'fromMouse') {
       return (
-        <animated.div
-          ref={contRef}
-          className={cls('m78-modal-base', className)}
-          style={{
-            ...style,
-            left: pos[0],
-            top: pos[1],
-            zIndex: nowZIndex,
-            transform: interpolate(
-              //  @ts-ignore
-              [sp.x, sp.y, sp.scale],
-              (x: number, y: number, scale: number) =>
-                `translate3d(${x}px,${y}px, 0px)  scale3d(${scale},${scale},${scale})`,
-            ),
-          }}
-        >
-          <div className="m78-modal-base_calc-node" ref={bind} />
-          {children}
-        </animated.div>
+        mount && (
+          <animated.div
+            ref={contRef}
+            className={cls('m78-modal-base', className)}
+            style={{
+              ...style,
+              left: pos[0],
+              top: pos[1],
+              zIndex: nowZIndex,
+              transform: interpolate(
+                //  @ts-ignore
+                [sp.x, sp.y, sp.scale],
+                (x: number, y: number, scale: number) =>
+                  `translate3d(${x}px,${y}px, 0px) scale3d(${scale},${scale},${scale})`,
+              ),
+            }}
+          >
+            <div className="m78-modal-base_calc-node" ref={bind} />
+            {children}
+          </animated.div>
+        )
       );
     }
 
@@ -212,17 +239,25 @@ const ModalBase: React.FC<ModalBaseProps> = props => {
   );
 };
 
+const timer: any = null;
+
 /** 保存鼠标最后点击相对中心点的偏移位置 */
 function windowClickHandle(e: MouseEvent) {
+  if (timer) {
+    clearTimeout(timer);
+  }
+
   const x = e.x || e.screenX; // screenX会有导航栏高度的偏移
   const y = e.y || e.screenY;
 
-  // 页面中心点
-  const winHalfH = window.innerHeight / 2;
-  const winHalfW = window.innerWidth / 2;
-
   (window as any)._FR_LAST_CLICK_POSITION_X = x;
   (window as any)._FR_LAST_CLICK_POSITION_Y = y;
+
+  // timer = setTimeout(() => {
+  //   console.log(123);
+  //   (window as any)._FR_LAST_CLICK_POSITION_X = undefined;
+  //   (window as any)._FR_LAST_CLICK_POSITION_Y = undefined;
+  // }, 3000);
 }
 
 /**
@@ -258,6 +293,7 @@ function Temp() {
       <ModalBase
         animationType="fromMouse"
         className="card"
+        defaultShow={false}
         triggerNode={
           <button type="button" style={{ marginLeft: 400, marginTop: 600 }}>
             click
