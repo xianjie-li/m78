@@ -1,12 +1,12 @@
 import React from 'react';
 
-import Modal from 'm78/modal';
+import Dialog from 'm78/dialog';
 import Button from 'm78/button';
 
 function mult(mask = true) {
   for (let i = 0; i < 6; i++) {
     setTimeout(() => {
-      const [refs, id] = Modal.api({
+      const [refs, id] = Dialog.api({
         title: `${i}通过api来调用modal`,
         mask,
         onConfirm() {
@@ -24,7 +24,7 @@ const Demo = () => (
   <div>
     <Button
       onClick={() => {
-        const [refs, id] = Modal.api({
+        const [refs, id] = Dialog.api({
           title: '通过api来调用modal',
           status: 'success',
           children: '配置与常规使用时的prop一样',

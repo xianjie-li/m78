@@ -64,8 +64,10 @@ export function useMethods(share: Share) {
 
     setPos(pos);
 
-    self.px = pos[0];
-    self.py = pos[1];
+    const [x, y] = pos;
+
+    self.px = x;
+    self.py = y;
   }
 
   /** 在未被阻止时关闭此Modal */

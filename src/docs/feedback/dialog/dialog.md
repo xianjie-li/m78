@@ -1,18 +1,18 @@
 ---
-title: Modal - 对话框
+title: Dialog - 对话框
 group:
   title: 反馈
   path: /feedback
   order: 2000
 ---
 
-# Modal 对话框
+# Dialog 对话框
 
 用于提示用户进行一组操作而不必跳转页面，或是给予用户一些快捷提示
 
 ## 基础示例
 
-Modal 组件的配置非常多样化，通过合理的配置可以实现绝大多数的 Modal 功能
+Dialog 组件的配置非常多样化，通过合理的配置可以实现绝大多数的 Dialog 功能
 
 <code src="./demo.tsx" />
 
@@ -28,36 +28,10 @@ Modal 组件的配置非常多样化，通过合理的配置可以实现绝大�
 
 <code src="./demo-custom.tsx" />
 
-`css`
-
-```css
-.modal {
-  text-align: center;
-  border-radius: 2px;
-  overflow: hidden;
-}
-.modal-img img {
-  width: 100%;
-}
-.modal-title {
-  margin: 24px 0 12px;
-  font-size: 18px;
-}
-.modal-cont {
-  padding: 0 24px;
-  font-size: 14px;
-  color: rgba(0, 0, 0, 0.45);
-}
-.modal-btn {
-  margin: 12px 12px 24px;
-  font-size: 18px;
-}
-```
-
 ## API
 
 ```tsx | pure
-interface ModalProps extends ReactRenderApiProps, ComponentBaseProps {
+interface DialogProps extends ReactRenderApiProps, ComponentBaseProps {
   /** 启用响应式按钮，按钮会根据底部的宽度平分剩余宽度 */
   flexBtn?: boolean;
   /** 内容区域的最大宽度, 默认为360 */
@@ -90,7 +64,7 @@ interface ModalProps extends ReactRenderApiProps, ComponentBaseProps {
   loading?: boolean;
   /** 使用自定义内容完全替换默认渲染内容，会覆盖掉footer、header、title区域并使相关的配置失效 */
   content?: React.ReactNode;
-  /** 设置modal的状态 */
+  /** 设置Dialog的状态 */
   status?: 'success' | 'error' | 'warning';
   /** 内容区域class */
   contentClassName?: string;

@@ -15,7 +15,7 @@ import createRenderApi, { ReactRenderApiProps } from '@lxjx/react-render-api';
 import cls from 'classnames';
 import { ComponentBaseProps } from '../types/types';
 
-export interface ModalProps extends ReactRenderApiProps, ComponentBaseProps {
+export interface DialogProps extends ReactRenderApiProps, ComponentBaseProps {
   /** 启用响应式按钮，按钮会根据底部的宽度平分剩余宽度 */
   flexBtn?: boolean;
   /** 内容区域的最大宽度, 默认为360 */
@@ -48,7 +48,7 @@ export interface ModalProps extends ReactRenderApiProps, ComponentBaseProps {
   loading?: boolean;
   /** 使用自定义内容完全替换默认渲染内容，会覆盖掉footer、header、title区域并使相关的配置失效 */
   content?: React.ReactNode;
-  /** 设置modal的状态 */
+  /** 设置Dialog的状态 */
   status?: 'success' | 'error' | 'warning';
   /** 内容区域class */
   contentClassName?: string;
@@ -60,10 +60,10 @@ export interface ModalProps extends ReactRenderApiProps, ComponentBaseProps {
 
 const zIndex = 1800;
 
-const _Modal: React.FC<ModalProps> = ({
+const _Dialog: React.FC<DialogProps> = ({
   show,
   onRemove = dumpFn,
-  onClose = dumpFn /* TODO: render-api中的onClose可能存在与用户传入的冲突 */,
+  onClose = dumpFn,
   flexBtn,
   maxWidth = 360,
   footer,
@@ -87,7 +87,7 @@ const _Modal: React.FC<ModalProps> = ({
   content,
   namespace,
 }) => {
-  const [cIndex, instances] = useSameState('fr_modal_metas', !!show, {
+  const [cIndex, instances] = useSameState('fr_dialog_metas', !!show, {
     mask,
   });
   const nowZIndex = cIndex === -1 ? zIndex : cIndex + zIndex;
@@ -126,11 +126,11 @@ const _Modal: React.FC<ModalProps> = ({
   function renderDefault() {
     return (
       <>
-        <div className={cls('m78-modal_title', headerClassName)}>
+        <div className={cls('m78-dialog_title', headerClassName)}>
           {header || <span>{title}</span>}
         </div>
-        <div className={cls('m78-modal_cont', contentClassName)}>{children}</div>
-        <div className={cls('m78-modal_footer', footerClassName, { __full: flexBtn })}>
+        <div className={cls('m78-dialog_cont', contentClassName)}>{children}</div>
+        <div className={cls('m78-dialog_footer', footerClassName, { __full: flexBtn })}>
           {footer || renderBtns() || renderDefaultFooter()}
         </div>
       </>
@@ -146,17 +146,17 @@ const _Modal: React.FC<ModalProps> = ({
       visible={!beforeHasMask}
       maskClosable={loading ? false : maskClosable}
       style={{ zIndex: nowZIndex, top: (cIndex * 20) / dpr, left: (cIndex * 20) / dpr }}
-      contClassName={cls('m78-modal', className)}
-      className="m78-modal_wrap"
+      contClassName={cls('m78-dialog', className)}
+      className="m78-dialog_wrap"
       contStyle={{ ...style, maxWidth, padding: content ? 0 : '' }}
       show={show}
       onRemove={onRemove}
       onClose={onClose}
     >
       {status && (
-        <div className="m78-modal_status-warp">
+        <div className="m78-dialog_status-warp">
           <Transition
-            className="m78-modal_status"
+            className="m78-dialog_status"
             alpha={false}
             toggle={show}
             type="slideLeft"
@@ -167,7 +167,7 @@ const _Modal: React.FC<ModalProps> = ({
         </div>
       )}
       {closeIcon && (
-        <Button icon className="m78-modal_close-icon" onClick={() => onClose()} size="small">
+        <Button icon className="m78-dialog_close-icon" onClick={() => onClose()} size="small">
           <CloseOutlined />
         </Button>
       )}
@@ -177,18 +177,18 @@ const _Modal: React.FC<ModalProps> = ({
   );
 };
 
-const api = createRenderApi<ModalProps>(_Modal, {
+const api = createRenderApi<DialogProps>(_Dialog, {
   namespace: 'MODAL',
 });
 
-type Modal = typeof _Modal;
+type Dialog = typeof _Dialog;
 
-interface ModalWithApi extends Modal {
+interface DialogWithApi extends Dialog {
   api: typeof api;
 }
 
-const Modal: ModalWithApi = Object.assign(_Modal, {
+const Dialog: DialogWithApi = Object.assign(_Dialog, {
   api,
 });
 
-export default Modal;
+export default Dialog;

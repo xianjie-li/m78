@@ -1,81 +1,16 @@
 @import '../../style/index';
 
 .m78-modal {
-  font-size: 14px;
-  position: relative;
-  padding: 20px 24px;
-  background-color: #fff;
-  box-shadow: $shadow-1;
-  border-radius: $border-radius;
-  width: 84%;
-  max-height: 90%;
-  overflow: auto;
-  min-height: 50px;
+  position: fixed;
+  left: 0;
+  top: 0;
+}
 
-  &_wrap {
-    transition: $animation-duration-slow left, $animation-duration-base top;
-    &:hover {
-      z-index: 9999 !important;
-    }
-  }
-
-  &_close-icon {
-    position: absolute !important;
-    right: 12px;
-    top: 12px;
-    cursor: pointer;
-    text-shadow: $stress-shadow-w;
-    font-size: $fs-12 !important;
-
-    &:hover {
-      font-weight: bold;
-    }
-  }
-
-  &_status-warp {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    overflow: hidden;
-    width: 50%;
-    height: 100%;
-    z-index: -1;
-    pointer-events: none;
-  }
-
-  &_status {
-    position: absolute;
-    left: -22px;
-    bottom: -32px;
-    font-size: 90px;
-    margin-right: 12px;
-    opacity: 0.7;
-    pointer-events: none;
-  }
-
-  &_title {
-    color: $b-title;
-    font-size: 18px;
-  }
-
-  &_cont {
-    position: relative;
-    padding: 0 0 16px;
-    margin: 8px 0;
-    font-size: 14px;
-    max-height: 60vh;
-    overflow: auto;
-  }
-
-  &_footer {
-    position: relative;
-    text-align: right;
-
-    &.__full {
-      display: flex;
-      .m78-btn {
-        flex: 1;
-      }
-    }
-  }
+.m78-modal_calc-node {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  visibility: hidden;
 }

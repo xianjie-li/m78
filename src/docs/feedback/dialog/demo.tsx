@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Modal from 'm78/modal';
+import Dialog from 'm78/dialog';
 import Button from 'm78/button';
 
 import './style.css';
@@ -21,7 +21,7 @@ const Demo = () => {
         <Button onClick={() => setShow2(p => !p)}>flex按钮</Button>
       </div>
 
-      <Modal
+      <Dialog
         title="基本示例"
         show={show}
         status="success"
@@ -38,9 +38,9 @@ const Demo = () => {
         }}
       >
         我是内容我是内容我是内容我是内容我是内容我是内容
-      </Modal>
+      </Dialog>
 
-      <Modal
+      <Dialog
         title="flex按钮"
         show={show2}
         flexBtn
@@ -53,9 +53,9 @@ const Demo = () => {
         }}
       >
         我是内容
-      </Modal>
+      </Dialog>
 
-      <Modal
+      <Dialog
         title="无遮罩层"
         status="error"
         show={show3}
@@ -68,9 +68,9 @@ const Demo = () => {
         }}
       >
         我是内容
-      </Modal>
+      </Dialog>
 
-      <Modal
+      <Dialog
         title="自定义按钮"
         status="warning"
         show={show4}
@@ -93,7 +93,7 @@ const Demo = () => {
         ]}
       >
         我是内容
-      </Modal>
+      </Dialog>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Modal from 'm78/modal';
+import Dialog from 'm78/dialog';
 import Button from 'm78/button';
 
 import img1 from '@/mock/img/1.jpg';
@@ -16,7 +16,7 @@ const Demo = () => {
         <Button onClick={() => setShow(p => !p)}>show </Button>
       </div>
 
-      <Modal
+      <Dialog
         show={show}
         onClose={() => setShow(false)}
         content={

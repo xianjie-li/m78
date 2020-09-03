@@ -22,7 +22,7 @@
     "dev": "dumi dev",
     "build:doc": "dumi build",
     "test": "jest ./test",
-    "ypublish": "yarn publish ./dist"
+    "ypublish": "yarn publish ./dist -f"
   },
   "repository": "https://github.com/Iixianjie/m78",
   "author": {
