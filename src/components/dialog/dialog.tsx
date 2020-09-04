@@ -1,55 +1,48 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 
 import 'm78/base';
-import ShowFromMouse from 'm78/show-from-mouse';
 import Button, { ButtonProps } from 'm78/button';
+import Modal from 'm78/modal';
 import { Transition } from '@lxjx/react-transition-spring';
 import { config } from 'react-spring';
 import { CloseOutlined, statusIcons } from 'm78/icon';
 import Spin from 'm78/spin';
-import { dumpFn } from 'm78/util';
-import { useSameState } from '@lxjx/hooks';
-
-import createRenderApi, { ReactRenderApiProps } from '@lxjx/react-render-api';
+import { useFormState } from '@lxjx/hooks';
 
 import cls from 'classnames';
-import { ComponentBaseProps } from '../types/types';
+import createRenderApi from '@lxjx/react-render-api';
+import { ModalBaseProps } from '../modal/types';
 
-export interface DialogProps extends ReactRenderApiProps, ComponentBaseProps {
+export interface DialogProps extends Omit<ModalBaseProps, 'children' | 'onClose'> {
   /** 启用响应式按钮，按钮会根据底部的宽度平分剩余宽度 */
   flexBtn?: boolean;
   /** 内容区域的最大宽度, 默认为360 */
   maxWidth?: number | string;
-  /** 自定义顶部内容，会覆盖title的配置 */
-  header?: React.ReactNode;
   /** '提示' | 标题文本 */
   title?: string;
   /** 内容区域 */
   children?: React.ReactNode;
-  /** 通过配置设置按钮组 */
-  btns?: (Pick<ButtonProps, 'color' | 'children' | 'onClick' | 'disabled' | 'icon' | 'link'> & {
-    text: string;
-  })[];
-  /** 自定义底部内容，与其他底部相关配置的优先级为 footer > btns > confirm、close */
-  footer?: React.ReactNode;
-  /** 默认的确认按钮被点击时 */
-  onConfirm?(): void;
+  /** 默认的关闭按钮/确认按钮/右上角关闭按钮点击, 或触发了clickAway时，如果是通过确认按钮点击的，isConfirm为true */
+  onClose?(isConfirm?: boolean): void;
   /** false | '取消' | 是否显示取消按钮，传入string时，为按钮文本 */
   close?: boolean | string;
   /** '确认' | 是否显示确认按钮，传入string时，为按钮文本 */
   confirm?: boolean | string;
-  /** true | 是否显示遮罩 */
-  mask?: boolean;
-  /** true | 是否允许点击mask进行关闭 */
-  maskClosable?: boolean;
   /** true | 是否显示关闭图标 */
   closeIcon?: boolean;
-  /** 设置弹层为loading状态，阻止操作(在loading结束前会阻止mask点击关闭以及防止弹层点击) */
+  /** 设置弹层为loading状态，阻止操作(在loading结束前会阻止clickAwayClosable) */
   loading?: boolean;
-  /** 使用自定义内容完全替换默认渲染内容，会覆盖掉footer、header、title区域并使相关的配置失效 */
-  content?: React.ReactNode;
   /** 设置Dialog的状态 */
   status?: 'success' | 'error' | 'warning';
+
+  /** 自定义顶部内容，会覆盖title的配置 */
+  header?: React.ReactNode;
+  /** 自定义底部内容，与其他底部相关配置的优先级为 footer > btns > confirm、close */
+  footer?: React.ReactNode;
+  /** 通过配置设置按钮组 */
+  btns?: (Pick<ButtonProps, 'color' | 'children' | 'onClick' | 'disabled' | 'icon' | 'link'> & {
+    text: string;
+  })[];
   /** 内容区域class */
   contentClassName?: string;
   /** 头部区域class */
@@ -58,46 +51,55 @@ export interface DialogProps extends ReactRenderApiProps, ComponentBaseProps {
   footerClassName?: string;
 }
 
-const zIndex = 1800;
+export interface DialogApi
+  extends Omit<
+    DialogProps,
+    | 'children'
+    | 'defaultShow'
+    | 'show'
+    | 'triggerNode'
+    | 'mountOnEnter'
+    | 'unmountOnExit'
+    | 'onRemove'
+    | 'onRemoveDelay'
+  > {
+  content: ModalBaseProps['children'];
+}
 
-const _Dialog: React.FC<DialogProps> = ({
-  show,
-  onRemove = dumpFn,
-  onClose = dumpFn,
-  flexBtn,
-  maxWidth = 360,
-  footer,
-  header,
-  title = '提示',
-  mask = true,
-  maskClosable = true,
-  onConfirm = dumpFn,
-  close = false,
-  confirm = '确认',
-  closeIcon = true,
-  loading = false,
-  btns = [],
-  children,
-  status,
-  contentClassName,
-  footerClassName,
-  headerClassName,
-  className,
-  style,
-  content,
-  namespace,
-}) => {
-  const [cIndex, instances] = useSameState('fr_dialog_metas', !!show, {
-    mask,
+const DialogBase: React.FC<DialogProps> = props => {
+  const {
+    flexBtn,
+    maxWidth = 360,
+    footer,
+    header,
+    title = '提示',
+    close = false,
+    confirm = '确认',
+    closeIcon = true,
+    loading = false,
+    btns = [],
+    children,
+    status,
+    contentClassName,
+    footerClassName,
+    headerClassName,
+    className,
+    style,
+    clickAwayClosable,
+    ...other
+  } = props;
+
+  /** 代理defaultShow/show/onChange, 实现对应接口 */
+  const [show, setShow] = useFormState<boolean>(props, false, {
+    defaultValueKey: 'defaultShow',
+    triggerKey: 'onChange',
+    valueKey: 'show',
   });
-  const nowZIndex = cIndex === -1 ? zIndex : cIndex + zIndex;
 
-  // 当前实例之前所有实例组成的数组
-  const beforeInstance = instances.slice(0, cIndex);
-  // 在该实例之前是否有任意一个实例包含mask
-  const beforeHasMask = beforeInstance.some(item => item.meta.mask);
-
-  const dpr = useMemo(() => window.devicePixelRatio || 1, []);
+  function onClose(isConfirm = false) {
+    setShow(false);
+    props.onClose?.(isConfirm);
+  }
 
   function renderDefaultFooter() {
     return (
@@ -106,7 +108,12 @@ const _Dialog: React.FC<DialogProps> = ({
           <Button onClick={() => onClose()}>{typeof close === 'string' ? close : '取消'}</Button>
         )}
         {confirm && (
-          <Button color="primary" onClick={() => onConfirm()}>
+          <Button
+            color="primary"
+            onClick={() => {
+              onClose(true); /* TODO: 需要在render-api中透传其他参数 */
+            }}
+          >
             {typeof confirm === 'string' ? confirm : '确认'}
           </Button>
         )}
@@ -140,18 +147,14 @@ const _Dialog: React.FC<DialogProps> = ({
   const StatusIcon = statusIcons[status!];
 
   return (
-    <ShowFromMouse
-      namespace={namespace}
-      mask={mask}
-      visible={!beforeHasMask}
-      maskClosable={loading ? false : maskClosable}
-      style={{ zIndex: nowZIndex, top: (cIndex * 20) / dpr, left: (cIndex * 20) / dpr }}
-      contClassName={cls('m78-dialog', className)}
-      className="m78-dialog_wrap"
-      contStyle={{ ...style, maxWidth, padding: content ? 0 : '' }}
+    <Modal
+      {...other}
+      onClose={props.onClose as () => void}
+      className={cls('m78-dialog m78-scroll-bar', className)}
+      style={{ ...style, maxWidth }}
+      clickAwayClosable={loading ? false : clickAwayClosable}
       show={show}
-      onRemove={onRemove}
-      onClose={onClose}
+      onChange={nShow => setShow(nShow)}
     >
       {status && (
         <div className="m78-dialog_status-warp">
@@ -168,27 +171,66 @@ const _Dialog: React.FC<DialogProps> = ({
       )}
       {closeIcon && (
         <Button icon className="m78-dialog_close-icon" onClick={() => onClose()} size="small">
-          <CloseOutlined />
+          <CloseOutlined className="m78-close-icon" />
         </Button>
       )}
       <Spin full show={loading} text="请稍后" />
-      {content || renderDefault()}
-    </ShowFromMouse>
+      {renderDefault()}
+    </Modal>
   );
 };
 
-const api = createRenderApi<DialogProps>(_Dialog, {
+const api = createRenderApi<DialogApi>(DialogBase, {
   namespace: 'MODAL',
 });
 
-type Dialog = typeof _Dialog;
+const baseApi: typeof api = ({ content, ...other }) => {
+  return api({
+    ...other,
+    children: content,
+    triggerNode: null,
+  } as any);
+};
+
+type Dialog = typeof DialogBase;
 
 interface DialogWithApi extends Dialog {
   api: typeof api;
 }
 
-const Dialog: DialogWithApi = Object.assign(_Dialog, {
-  api,
+const Dialog: DialogWithApi = Object.assign(DialogBase, {
+  api: baseApi,
 });
 
-export default Dialog;
+export default function TestModal() {
+  return (
+    <div>
+      <Dialog
+        triggerNode={<button type="button">click</button>}
+        close
+        title="测试标题"
+        onClose={flag => {
+          console.log('onClose', flag);
+        }}
+        status="warning"
+      >
+        <div>弹窗内容</div>
+      </Dialog>
+
+      <button
+        type="button"
+        onClick={() => {
+          Dialog.api({
+            content: <div>弹窗内容</div>,
+            close: '我不需要',
+            onClose: flag => {
+              console.log('onClose', flag);
+            },
+          });
+        }}
+      >
+        click
+      </button>
+    </div>
+  );
+}

@@ -10,7 +10,7 @@ group:
 
 Modal 是 Dialog 以及其他大多数弹层类组件的底层组件，用于便捷的创建提示层, 涵盖了大多数弹层场景所需的功能
 
-🤔 如果你需要一个开箱即用的对话框/提示组件等, 请使用[Dialog](/m78/docs/feedback/dialog)/[Message](/m78/docs/feedback/message)等, 如果需要对弹窗进行高度定制，请使用此组件
+🤔 如果你需要一个开箱即用的对话框/提示组件等, 请使用[Dialog](/m78/docs/feedback/dialog)/[Message](/m78/docs/feedback/message)等组件, 如果对弹窗有很强的定制意愿，请使用此组件
 
 ## 基本使用
 

@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import Portal from 'm78/portal';
+import { MODAL } from 'm78/util';
 import { useMeasure } from 'react-use';
 import { config, Transition, TransitionTypes } from '@lxjx/react-transition-spring';
 import { useFormState, useSameState, useRefize, useSelf } from '@lxjx/hooks';
@@ -7,9 +8,9 @@ import { animated, interpolate } from 'react-spring';
 
 import cls from 'classnames';
 import { useDelayDerivedToggleStatus } from 'm78/hooks';
-import { useLifeCycle } from 'm78/modal/lifeCycle';
-import { useFromMouse } from 'm78/modal/useFromMouse';
 import createRenderApi from '@lxjx/react-render-api';
+import { useLifeCycle } from './lifeCycle';
+import { useFromMouse } from './useFromMouse';
 import { ModalBaseApi, ModalBaseProps, Share, TupleNumber } from './types';
 import { useMethods } from './methods';
 import { registerPositionSave } from './commons';
@@ -40,7 +41,7 @@ const _ModalBase: React.FC<ModalBaseProps> = props => {
     onClose,
     children,
     triggerNode,
-    baseZIndex = 1800,
+    baseZIndex = MODAL,
   } = props;
 
   /** 内容区域容器 */

@@ -1,5 +1,11 @@
 @import '../../style/index';
 
+.m78-close-icon {
+  transform: scaleY(1.18) scaleX(1.3) !important;
+  color: $b-primary;
+}
+
+/*  ============= 所有组件共享的样式 ============= */
 @media (min-width: $sm) {
   .m78-scroll-bar {
     ::-webkit-scrollbar {

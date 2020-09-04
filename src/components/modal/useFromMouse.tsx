@@ -2,7 +2,7 @@ import { useSpring } from 'react-spring';
 import { useDelayDerivedToggleStatus, useMountInterface } from 'm78/hooks';
 import { useEffect } from 'react';
 import { config } from '@lxjx/react-transition-spring';
-import { useMethods } from 'm78/modal/methods';
+import { useMethods } from './methods';
 import { Share } from './types';
 
 /** ======== fromMouse实现 ======== */

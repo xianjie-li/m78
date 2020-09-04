@@ -8,7 +8,7 @@ import { Share } from './types';
 export function useLifeCycle(share: Share, methods: ReturnType<typeof useMethods>) {
   const { props, modalSize } = share;
 
-  const { onRemove, onRemoveDelay = 800 } = props;
+  const { onRemove, onRemoveDelay = 800, onClose } = props;
 
   const [width, height] = modalSize;
 
@@ -31,8 +31,14 @@ export function useLifeCycle(share: Share, methods: ReturnType<typeof useMethods
 
   // 用于搭配renderApi使用，在隐藏时通知renderApi进行实例移除
   useUpdateEffect(() => {
-    if (!share.show && onRemove) {
-      setTimeout(onRemove, onRemoveDelay);
+    if (!share.show) {
+      // if (onClose) {
+      //   onClose();
+      // }
+
+      if (onRemove) {
+        setTimeout(onRemove, onRemoveDelay);
+      }
     }
   }, [share.show]);
 

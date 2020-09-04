@@ -1,4 +1,4 @@
-import { TupleNumber } from 'm78/modal/types';
+import { TupleNumber } from './types';
 
 /** 根据alignment值获取x, y值 */
 export function calcAlignment(alignment: TupleNumber, screenMeta: TupleNumber) {

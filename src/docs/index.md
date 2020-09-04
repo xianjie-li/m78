@@ -2,7 +2,6 @@
 title: 快速上手
 order: 1
 ---
-
 <p align="center">
     <img src="https://gitee.com/llixianjie/docs/raw/master/fr/logo.png" width="160" align="center" />
 </p>
@@ -19,11 +18,12 @@ order: 1
 
 ## ✨Features
 
-- 全`hooks`编写, `0`类组件。
-- `antd`与`material`混搭风格。
-- 使用 `TypeScript` 开发，类型定义完整。
-- 标准化接口，大部分接口`color/value/onChange/size`等与社区约定一致，可方便集成。
-- 提炼至业务，大部分组件都是从实际业务中提取而来, 更接地气也更实用。
+* 完全使用`hooks`编写。
+* 设计风格上保持`antd`与`material`混搭, 可以作为两者的补充组件库使用。
+* 很多组件都进行了大小屏处理，移动端/PC端均可用
+* 使用 `TypeScript` 开发，包含完整的类型声明。
+* 标准化接口，size/受控/非受控/color等很多与社区大部分组件保持一致，使用成本更低。
+* 提炼至业务，大部分组件都是从实际业务中提取而来, 更接地气也更实用。
 
 <br>
 
@@ -55,9 +55,13 @@ function App() {
 }
 ```
 
-💡 默认是没有主入口的，所有组件都在独立的模块中维护, 这样可以做到天然的按需加载，`tree shake` 也更友好。
 
-打包组件目录支持使用[babel-plugin-import](https://github.com/ant-design/babel-plugin-import), 不过不推荐, 一是对这样对 idea 和 ts 来说很怪异，支持不好；二是，组件通常会包含多个命名导出，如 `import Form, { Item, Title, Footer, FormProps } from 'M78/form'`。
+
+💡 默认是没有主入口的，所有组件都在独立的模块中维护,  这样可以做到天然的按需加载，`tree shake` 也更友好。
+
+
+
+打包组件目录支持使用[babel-plugin-import](<https://github.com/ant-design/babel-plugin-import>),  不过不推荐, 一是对这样对idea和ts来说很怪异，支持不好；二是，组件通常会包含多个命名导出，如 `import Form, { Item, Title, Footer, FormProps } from 'M78/form'`。
 
 <br>
 
@@ -65,8 +69,10 @@ function App() {
 
 样式采用后编译(开发时编译), 你需要为你的`webpack`或其他打包器添加`scss`文件支持才能正常使用。
 
+
 <br>
 
-## 🎄 其他
+
+## 🎄其他
 
 还没想到.jpg

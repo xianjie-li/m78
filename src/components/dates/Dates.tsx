@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Button from 'm78/button';
 import Input from 'm78/input';
-import ShowFromMouse from 'm78/show-from-mouse';
+import Modal from 'm78/modal';
 import Popper from 'm78/popper';
 import { Z_INDEX_MESSAGE } from 'm78/util';
 import { useFormState, useSelf, useSetState } from '@lxjx/hooks';
@@ -203,14 +203,14 @@ function Dates(props: DatesProps | DatesRangeProps) {
     return (
       <>
         {renderInput()}
-        <ShowFromMouse
-          style={{ zIndex: Z_INDEX_MESSAGE }}
+        <Modal
+          baseZIndex={Z_INDEX_MESSAGE}
           show={state.show}
-          contStyle={{ width: '94%', padding: 12 }}
+          style={{ width: '94%', padding: 12 }}
           onClose={handlers.onHide}
         >
           {renderMain(true)}
-        </ShowFromMouse>
+        </Modal>
       </>
     );
   }
