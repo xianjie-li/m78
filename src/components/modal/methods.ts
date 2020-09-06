@@ -52,8 +52,6 @@ export function useMethods(share: Share) {
 
   /** 屏幕尺寸改变/容器尺寸改变时调用 */
   function calcPos() {
-    if (!show) return;
-
     // useMeasure获取的尺寸是无边框尺寸，这里手动获取带边框等的实际尺寸
     const w = contRef.current ? contRef.current.offsetWidth : modalSize[0];
     const h = contRef.current ? contRef.current.offsetHeight : modalSize[1];

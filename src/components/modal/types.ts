@@ -1,4 +1,4 @@
-import { TransitionTypes } from '@lxjx/react-transition-spring';
+import { TransitionTypes, TransitionProps } from '@lxjx/react-transition-spring';
 import { ComponentBaseProps } from 'm78/types/types';
 import React from 'react';
 
@@ -14,7 +14,7 @@ export interface InstanceItem {
 }
 
 export interface ModalBaseProps extends ComponentBaseProps {
-  /** Modal要展示的内容 */
+  /** 要展示的内容 */
   children: React.ReactNode;
   /** 默认显示状态，与show同时使用时无效 */
   defaultShow?: boolean;
@@ -38,6 +38,8 @@ export interface ModalBaseProps extends ComponentBaseProps {
   maskTheme?: 'dark' | 'light';
   /** [0.5, 0.5] | 指定x/y轴位置, 值为 -1 ~ 1, 例：[0.5, 0.5] -> 居中， [1, 0] -> 右上， [1, 1] -> 右下 */
   alignment?: TupleNumber;
+  /** 360 | 弹窗宽度 */
+  maxWidth?: number | string;
   /** 动画类型, 默认从光标位置出现 */
   animationType?: TransitionTypes | 'fromMouse';
   /** true | 开启后内容会在Modal开启时才进行渲染，关闭后内容随Modal一起渲染, 并根据show状态决定是否显示 */
@@ -46,6 +48,13 @@ export interface ModalBaseProps extends ComponentBaseProps {
   unmountOnExit?: boolean;
   /** true | modal出现时锁定滚动条 */
   lockScroll?: boolean;
+  /* ========== 在一些组件内部使用，用户一般不会会使用 ========== */
+  /** 动画配置，请参考react-spring */
+  animationConfig?: TransitionProps['config'];
+  /** true | 为所有类型的动画附加fade过渡，使其视觉效果更平滑, 对fromMouse类型无效  */
+  alpha?: boolean;
+  /** 指向Modal根节点的ref */
+  innerRef?: React.MutableRefObject<HTMLDivElement>;
   /* ========== 以下api用于搭配render api使用, 通常不会直接使用 ========== */
   /** 通知关闭 */
   onClose?: () => void;
@@ -105,4 +114,5 @@ export interface Share {
   };
   mountOnEnter: boolean;
   unmountOnExit: boolean;
+  animationConfig: TransitionProps['config'];
 }

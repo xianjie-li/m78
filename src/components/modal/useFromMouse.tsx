@@ -2,6 +2,7 @@ import { useSpring } from 'react-spring';
 import { useDelayDerivedToggleStatus, useMountInterface } from 'm78/hooks';
 import { useEffect } from 'react';
 import { config } from '@lxjx/react-transition-spring';
+import { getLastXKey, getLastYKey } from 'm78/modal/commons';
 import { useMethods } from './methods';
 import { Share } from './types';
 
@@ -11,7 +12,7 @@ export function useFromMouse(
   methods: ReturnType<typeof useMethods>,
   isFromMouse: boolean,
 ) {
-  const { show, mountOnEnter, unmountOnExit, contRef, self } = share;
+  const { show, mountOnEnter, unmountOnExit, contRef, self, animationConfig } = share;
 
   const [sp, set] = useSpring(() => ({ x: 0, y: 0, scale: 0, opacity: 1 }));
 
@@ -44,8 +45,8 @@ export function useFromMouse(
       // 先执行一次计算可以避免错位
       methods.calcPos();
 
-      const pointX = (window as any)._FR_LAST_CLICK_POSITION_X;
-      const pointY = (window as any)._FR_LAST_CLICK_POSITION_Y;
+      const pointX = getLastXKey();
+      const pointY = getLastYKey();
 
       self.pointX = pointX;
       self.pointY = pointY;
@@ -78,7 +79,7 @@ export function useFromMouse(
             scale: 1,
             opacity: 1,
             immediate: false,
-            config: { ...config.stiff, clamp: false },
+            config: { ...animationConfig, clamp: false },
             reset: false,
           });
         },
@@ -94,7 +95,7 @@ export function useFromMouse(
         scale: notPoint ? 1 : 0,
         opacity: notPoint ? 0 : 1,
         immediate: false,
-        config: { ...config.stiff, clamp: true },
+        config: { ...animationConfig, clamp: true },
         reset: false,
         onRest() {
           // 通知useMountInterface

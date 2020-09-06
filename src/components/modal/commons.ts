@@ -11,6 +11,17 @@ export function calcAlignment(alignment: TupleNumber, screenMeta: TupleNumber) {
   return [x, y];
 }
 
+export const LAST_X_KEY = 'FR_LAST_CLICK_POSITION_X';
+export const LAST_Y_KEY = 'FR_LAST_CLICK_POSITION_Y';
+
+export function getLastXKey() {
+  return (window as any)[LAST_X_KEY];
+}
+
+export function getLastYKey() {
+  return (window as any)[LAST_Y_KEY];
+}
+
 let timer: any = null;
 
 /** 保存鼠标最后点击位置 */
@@ -22,12 +33,12 @@ function windowClickHandle(e: MouseEvent) {
   const x = e.x || e.screenX; // screenX会有导航栏高度的偏移
   const y = e.y || e.screenY;
 
-  (window as any)._FR_LAST_CLICK_POSITION_X = x;
-  (window as any)._FR_LAST_CLICK_POSITION_Y = y;
+  (window as any)[LAST_X_KEY] = x;
+  (window as any)[LAST_Y_KEY] = y;
 
   timer = setTimeout(() => {
-    (window as any)._FR_LAST_CLICK_POSITION_X = undefined;
-    (window as any)._FR_LAST_CLICK_POSITION_Y = undefined;
+    (window as any)[LAST_X_KEY] = undefined;
+    (window as any)[LAST_Y_KEY] = undefined;
   }, 500);
 }
 

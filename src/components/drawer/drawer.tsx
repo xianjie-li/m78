@@ -1,89 +1,123 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 
-import Mask from 'm78/mask';
-import { CloseCircleOutlined } from 'm78/icon';
+import Modal from 'm78/modal';
+import Button from 'm78/button';
+import { CloseOutlined } from 'm78/icon';
 import { If } from 'm78/fork';
-import { Transition } from '@lxjx/react-transition-spring';
 
 import _capitalize from 'lodash/capitalize';
 import cls from 'classnames';
 
-import { useSameState } from '@lxjx/hooks';
+import { useFormState, useSameState } from '@lxjx/hooks';
+import { Z_INDEX_DRAWER } from 'm78/util';
 import { DrawerProps } from './type';
 
-const zIndex = 1400;
+const alignmentMap: { [key in NonNullable<DrawerProps['direction']>]: [number, number] } = {
+  top: [0, 0],
+  right: [1, 0],
+  bottom: [0, 1],
+  left: [0, 0],
+};
 
-const Drawer: React.FC<DrawerProps> = ({
-  show = true,
-  onClose,
-  onRemove,
-  hasCloseIcon = false,
-  direction = 'bottom',
-  fullScreen = false,
-  inside = false,
-  children,
-  className,
-  style,
-  namespace,
-  ...props
-}) => {
-  const [cIndex, instances, instanceId] = useSameState('fr_drawer_metas', show, {
-    direction,
+const spConfig = { clamp: true };
+
+const Drawer: React.FC<DrawerProps> = props => {
+  const {
+    closeIcon = false,
+    direction = 'bottom',
+    fullScreen = false,
+    className,
+    style,
+    children,
+    ...otherProps
+  } = props;
+
+  /** 代理defaultShow/show/onChange, 实现对应接口 */
+  const [show, setShow] = useFormState<boolean>(props, false, {
+    defaultValueKey: 'defaultShow',
+    triggerKey: 'onChange',
+    valueKey: 'show',
   });
 
-  const nowZIndex = cIndex === -1 ? zIndex : cIndex + zIndex;
+  const [___, instances, instanceId] = useSameState('fr_drawer_metas', {
+    enable: show,
+    meta: {
+      direction,
+    },
+  });
 
-  // 获取direction相同的实例
-  const sameInstances = instances.filter(item => item.meta.direction === direction);
-  // 当前在sameInstances实例中的位置
-  const nowCIndex = sameInstances.findIndex(item => item.id === instanceId);
-  // 当前实例之后有多少个实例 (总实例数 - 当前实例索引 + 1)
-  const afterInstanceLength = sameInstances.length - (nowCIndex + 1);
+  // 所有方向相同，未启用fullScreen的组件
+  const sames = instances.filter(item => item.meta.direction === direction && !fullScreen);
+
+  // 该实例后的实例总数
+  const afterInstanceLength = useMemo(() => {
+    if (!show || !sames.length) return 0;
+
+    const ind = sames.findIndex(item => item.id === instanceId);
+
+    const after = sames.slice(ind + 1);
+
+    return after.length > 0 ? after.length : 0;
+  }, [sames, ___]);
+
+  const capDirection = _capitalize(direction);
+
+  let marginType = 'left';
+
+  if (direction === 'bottom' || direction === 'top') {
+    marginType = 'top';
+  }
 
   // 当存在多个drawer时，前一个相对于后一个偏移60px, 不适用于全屏模式
-  const offsetStyle = fullScreen ? {} : { [direction]: show ? afterInstanceLength * 60 : 0 };
+  const offsetStyle =
+    !fullScreen && show && afterInstanceLength > 0
+      ? {
+          [`margin${_capitalize(marginType)}`]:
+            direction === 'right' || direction === 'bottom'
+              ? -afterInstanceLength * 50
+              : afterInstanceLength * 50,
+        }
+      : {};
 
-  function close() {
-    onClose && onClose();
+  function onClose() {
+    setShow(false);
+    props.onClose?.();
   }
 
   function render() {
     return (
-      <Mask
-        namespace={namespace}
+      <Modal
+        {...otherProps}
+        namespace="drawer"
+        className={cls(
+          'm78-drawer',
+          {
+            '__full-screen': fullScreen,
+          },
+          direction && !fullScreen && `__${direction}`,
+          className,
+        )}
+        style={{
+          ...style,
+          ...offsetStyle,
+        }}
+        baseZIndex={Z_INDEX_DRAWER}
         show={show}
-        visible={cIndex === 0}
-        style={{ zIndex: nowZIndex }}
-        onClose={close}
-        onRemove={onRemove}
-        portal={!inside}
-        dark
-        className={cls('m78-drawer_mask', { __inside: inside })}
+        onChange={nShow => setShow(nShow)}
+        animationType={(`slide${capDirection}` as any) || 'bottom'}
+        alignment={alignmentMap[direction]}
+        animationConfig={spConfig}
+        alpha={false}
       >
-        <Transition
-          {...props}
-          className={cls(
-            'm78-drawer',
-            direction && !fullScreen && `__${direction}`,
-            {
-              '__full-screen': fullScreen,
-              __inside: inside,
-            },
-            className,
-          )}
-          style={{ ...offsetStyle, boxShadow: show ? '' : 'none', ...style }}
-          type={`slide${_capitalize(direction)}` as any}
-          toggle={show}
-          alpha={false}
-          mountOnEnter
-          reset
-        >
-          <If when={hasCloseIcon || fullScreen}>
-            <CloseCircleOutlined className="m78-drawer_close" onClick={close} />
-          </If>
-          {children}
-        </Transition>
-      </Mask>
+        <If when={closeIcon || fullScreen}>
+          <div className="m78-drawer_close">
+            <Button icon onClick={onClose} size="small">
+              <CloseOutlined className="m78-close-icon" />
+            </Button>
+          </div>
+        </If>
+        {children}
+      </Modal>
     );
   }
 

@@ -7,23 +7,23 @@ import 'm78/button/style';
 
 const options = [
   {
-    name: '操作1',
-    id: 1,
+    label: '操作1',
+    value: 1,
   },
   {
-    name: '高亮操作',
-    id: 2,
+    label: '高亮操作',
+    value: 2,
     desc: '对此操作的详细描述',
     highlight: true,
   },
   {
-    name: '禁用',
-    id: 3,
+    label: '禁用',
+    value: 3,
     disabled: true,
   },
   {
-    name: '操作4',
-    id: 4,
+    label: '操作4',
+    value: 4,
   },
 ];
 
@@ -33,27 +33,8 @@ const Demo = () => {
 
   return (
     <div>
-      <Button onClick={() => setShow(prev => !prev)}>toggle</Button>
       <Button onClick={() => setShow2(prev => !prev)}>直接选择</Button>
-      <ActionSheet
-        title="标题"
-        show={show}
-        defaultValue={{ id: 1, name: '操作1' }}
-        onChange={option => console.log('change:', option)}
-        onConfirm={option => console.log('confirm:', option)}
-        onClose={() => setShow(false)}
-        options={options}
-      />
-      <ActionSheet
-        isConfirm={false}
-        title="选择后直接关闭"
-        show={show2}
-        defaultValue={{ id: 1, name: '操作1' }}
-        onChange={option => console.log('change:', option)}
-        onConfirm={option => console.log('confirm:', option)}
-        onClose={() => setShow2(false)}
-        options={options}
-      />
+      <ActionSheet />
     </div>
   );
 };

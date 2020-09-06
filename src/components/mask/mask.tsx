@@ -11,8 +11,6 @@ import cls from 'classnames';
 import { ReactRenderApiProps } from '@lxjx/react-render-api';
 import { ComponentBaseProps } from '../types/types';
 
-/* TODO: 编写一个新的弹窗辅助组件，管理显隐状态、弹窗位置、弹窗动画等 */
-
 export interface MaskProps extends ComponentBaseProps, ReactRenderApiProps {
   /** 是否显示mask */
   mask?: boolean;

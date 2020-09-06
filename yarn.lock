@@ -1572,6 +1572,24 @@
     react-spring "^8.0.27"
     react-use "^14.0.0"
 
+"@lxjx/hooks@^1.4.1":
+  version "1.4.1"
+  resolved "https://registry.npm.taobao.org/@lxjx/hooks/download/@lxjx/hooks-1.4.1.tgz#20bb78d52edc4c8b820542c76006ba72577b67f1"
+  integrity sha1-ILt41S7cTIuCBULHYAa6cld7Z/E=
+  dependencies:
+    "@lxjx/utils" "^1.3.4"
+    "@types/lodash" "^4.14.149"
+    "@types/react" "^16.9.23"
+    "@types/react-dom" "^16.9.5"
+    "@types/react-router-dom" "^5.1.3"
+    "@umijs/hooks" "^1.9.0"
+    lodash "^4.17.15"
+    lodash-es "^4.17.15"
+    query-string "^6.12.0"
+    react-router-dom "^5.1.2"
+    react-spring "^8.0.27"
+    react-use "^14.0.0"
+
 "@lxjx/preset-config@^0.1.0":
   version "0.1.0"
   resolved "https://registry.npm.taobao.org/@lxjx/preset-config/download/@lxjx/preset-config-0.1.0.tgz#f61a8edb37bb7d40628fda3fc8a545e1f129976f"

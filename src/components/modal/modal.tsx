@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react';
 import Portal from 'm78/portal';
-import { MODAL } from 'm78/util';
+import { Z_INDEX_MODAL } from 'm78/util';
 import { useMeasure } from 'react-use';
-import { config, Transition, TransitionTypes } from '@lxjx/react-transition-spring';
+import { config as spConfig, Transition, TransitionTypes } from '@lxjx/react-transition-spring';
 import { useFormState, useSameState, useRefize, useSelf } from '@lxjx/hooks';
 import { animated, interpolate } from 'react-spring';
 
@@ -18,9 +18,7 @@ import { registerPositionSave } from './commons';
 /** model的默认位置 */
 const DEFAULT_ALIGN: TupleNumber = [0.5, 0.5];
 
-/**
- * NO-SSR
- * */
+/* NO-SSR */
 
 registerPositionSave();
 
@@ -41,11 +39,16 @@ const _ModalBase: React.FC<ModalBaseProps> = props => {
     onClose,
     children,
     triggerNode,
-    baseZIndex = MODAL,
+    baseZIndex = Z_INDEX_MODAL,
+    animationConfig = spConfig.stiff,
+    alpha,
+    innerRef,
   } = props;
 
+  const _contRef = useRef<HTMLDivElement>(null!);
+
   /** 内容区域容器 */
-  const contRef = useRef<HTMLDivElement>(null!);
+  const contRef = innerRef || _contRef;
 
   /** 代理defaultShow/show/onChange, 实现对应接口 */
   const [show, setShow] = useFormState<boolean>(props, false, {
@@ -58,10 +61,13 @@ const _ModalBase: React.FC<ModalBaseProps> = props => {
   const delayShow = useDelayDerivedToggleStatus(show, 200, { trailing: true, leading: false });
 
   /** 管理所有show为true的Modal组件 */
-  const [cIndex, instances] = useSameState('fr_modal_metas', delayShow, {
-    mask,
-    clickAwayClosable,
-    namespace,
+  const [cIndex, instances] = useSameState('fr_modal_metas', {
+    enable: delayShow,
+    meta: {
+      mask,
+      clickAwayClosable,
+      namespace,
+    },
   });
 
   /** 当前组件应该显示的zIndex */
@@ -109,6 +115,7 @@ const _ModalBase: React.FC<ModalBaseProps> = props => {
     self,
     mountOnEnter,
     unmountOnExit,
+    animationConfig,
   };
 
   const methods = useMethods(share);
@@ -159,11 +166,12 @@ const _ModalBase: React.FC<ModalBaseProps> = props => {
       <Transition
         toggle={show}
         type={animationType as TransitionTypes}
-        config={config.stiff}
+        config={animationConfig}
         mountOnEnter={mountOnEnter}
         unmountOnExit={unmountOnExit}
         innerRef={contRef}
         className={cls('m78-modal', className)}
+        alpha={alpha}
         style={{
           ...style,
           left: pos[0],
@@ -184,13 +192,14 @@ const _ModalBase: React.FC<ModalBaseProps> = props => {
         {share.refState.maskShouldShow && mask && (
           <Transition
             // 有遮罩时点击遮罩来关闭
-            onClick={clickAwayClosable && methods.close}
+            onClick={clickAwayClosable ? methods.close : undefined}
             toggle={show}
             type="fade"
             mountOnEnter
             unmountOnExit
             className={cls(maskTheme === 'dark' ? 'm78-mask-b' : 'm78-mask', maskClassName)}
             style={{ zIndex: nowZIndex }}
+            reset
           />
         )}
         {renderCont()}

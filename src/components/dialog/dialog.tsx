@@ -14,8 +14,6 @@ import createRenderApi from '@lxjx/react-render-api';
 import { ModalBaseProps } from '../modal/types';
 
 export interface DialogProps extends Omit<ModalBaseProps, 'children' | 'onClose'> {
-  /** 启用响应式按钮，按钮会根据底部的宽度平分剩余宽度 */
-  flexBtn?: boolean;
   /** 内容区域的最大宽度, 默认为360 */
   maxWidth?: number | string;
   /** '提示' | 标题文本 */
@@ -34,6 +32,10 @@ export interface DialogProps extends Omit<ModalBaseProps, 'children' | 'onClose'
   loading?: boolean;
   /** 设置Dialog的状态 */
   status?: 'success' | 'error' | 'warning';
+  /** 启用响应式按钮，按钮会根据底部的宽度平分剩余宽度 */
+  flexBtn?: boolean;
+  /** true | 点击默认的确认按钮时，是否关闭弹窗 */
+  confirmClose?: boolean;
 
   /** 自定义顶部内容，会覆盖title的配置 */
   header?: React.ReactNode;
@@ -86,6 +88,7 @@ const DialogBase: React.FC<DialogProps> = props => {
     className,
     style,
     clickAwayClosable,
+    confirmClose = true,
     ...other
   } = props;
 
@@ -111,7 +114,7 @@ const DialogBase: React.FC<DialogProps> = props => {
           <Button
             color="primary"
             onClick={() => {
-              onClose(true); /* TODO: 需要在render-api中透传其他参数 */
+              confirmClose && onClose(true); /* TODO: 需要在render-api中透传其他参数 */
             }}
           >
             {typeof confirm === 'string' ? confirm : '确认'}
@@ -202,35 +205,4 @@ const Dialog: DialogWithApi = Object.assign(DialogBase, {
   api: baseApi,
 });
 
-export default function TestModal() {
-  return (
-    <div>
-      <Dialog
-        triggerNode={<button type="button">click</button>}
-        close
-        title="测试标题"
-        onClose={flag => {
-          console.log('onClose', flag);
-        }}
-        status="warning"
-      >
-        <div>弹窗内容</div>
-      </Dialog>
-
-      <button
-        type="button"
-        onClick={() => {
-          Dialog.api({
-            content: <div>弹窗内容</div>,
-            close: '我不需要',
-            onClose: flag => {
-              console.log('onClose', flag);
-            },
-          });
-        }}
-      >
-        click
-      </button>
-    </div>
-  );
-}
+export default Dialog;

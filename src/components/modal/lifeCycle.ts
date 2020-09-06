@@ -8,7 +8,7 @@ import { Share } from './types';
 export function useLifeCycle(share: Share, methods: ReturnType<typeof useMethods>) {
   const { props, modalSize } = share;
 
-  const { onRemove, onRemoveDelay = 800, onClose } = props;
+  const { onRemove, onRemoveDelay = 800 } = props;
 
   const [width, height] = modalSize;
 

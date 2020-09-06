@@ -20,7 +20,6 @@ group:
 
 api 形式使用，支持编程式渲染、更新、关闭等，具体见 render-api <!-- TODO: 添加链接  -->
 
-<code src="./demo-api.tsx" />
 
 ## API
 
