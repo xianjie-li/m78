@@ -1,29 +1,39 @@
 @import '../../style/index';
 
 .m78-grid {
-  border: 1px solid #ccc;
 
   &_item {
+    position: relative;
     display: inline-block;
-    //border-right: 1px solid #ccc;
-    //border-bottom: 1px solid #ccc;
-    //
-    //&.__fullBorder {
-    //  border-top: 1px solid #ccc;
-    //}
+    vertical-align: top;
+    color: $b-border;
+    border-color: currentColor;
+    border-style: solid;
+    border-width: 1px;
+    border-top-color: transparent;
+    border-left-color: transparent;
+    overflow: hidden;
 
-    &.__rowLast {
-      border-right: none;
+    &.__topBorder {
+      border-top-color: currentColor;
     }
 
-    &.__lastLine {
-      border-bottom: none;
+    &.__leftBorder {
+      border-left-color: currentColor;
     }
+
   }
 
-  &_item-inner {
-    height: 100%;
-    width: 100%;
-    border: 1px solid #ccc;
+  &_cont {
+    position: absolute;
+    z-index: 1;
+    color: $b-primary;
+    @include full;
+  }
+
+  &_scaffold {
+    float: left;
+    padding-top: 100%;
+    visibility: hidden;
   }
 }

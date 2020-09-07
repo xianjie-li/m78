@@ -12,7 +12,18 @@ import img5 from '@/mock/img/5.jpg';
 import img6 from '@/mock/img/6.jpg';
 import img7 from '@/mock/img/7.jpg';
 
-const imgs = [img1, img2, '', img3, img4, undefined, img5, img6, img7];
+const imgs = [
+  'https://img.3dmgame.com/uploads/allimg/170727/379-1FHGF517-50.jpg',
+  img1,
+  img2,
+  '',
+  img3,
+  img4,
+  undefined,
+  img5,
+  img6,
+  img7,
+];
 
 const imgStyle: React.CSSProperties = {
   width: 100,
