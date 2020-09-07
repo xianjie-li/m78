@@ -1,0 +1,29 @@
+@import '../../style/index';
+
+.m78-grid {
+  border: 1px solid #ccc;
+
+  &_item {
+    display: inline-block;
+    //border-right: 1px solid #ccc;
+    //border-bottom: 1px solid #ccc;
+    //
+    //&.__fullBorder {
+    //  border-top: 1px solid #ccc;
+    //}
+
+    &.__rowLast {
+      border-right: none;
+    }
+
+    &.__lastLine {
+      border-bottom: none;
+    }
+  }
+
+  &_item-inner {
+    height: 100%;
+    width: 100%;
+    border: 1px solid #ccc;
+  }
+}

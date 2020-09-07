@@ -14,6 +14,9 @@ const Api = () => {
             close: '不用了',
             confirm: '好的',
             loading: true,
+            onClose(isConfirm?: boolean) {
+              console.log(isConfirm);
+            },
           });
 
           setTimeout(() => {

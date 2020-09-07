@@ -13,4 +13,15 @@
     width: 100%;
     height: 100%;
   }
+
+  &_placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.16);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+  }
 }

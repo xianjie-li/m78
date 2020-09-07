@@ -8,6 +8,8 @@ import { useSetState } from '@lxjx/hooks';
 import cls from 'classnames';
 import { ComponentBaseProps } from '../types/types';
 
+/* 组件必须有实际的尺寸 */
+
 interface PictureProps
   extends ComponentBaseProps,
     React.PropsWithoutRef<JSX.IntrinsicElements['span']> {
@@ -17,6 +19,8 @@ interface PictureProps
   alt?: string;
   /** 使用指定的图片替换默认的错误占位图 */
   errorImg?: string;
+  /** 使用指定的文本节点替换默认的错误占位图 */
+  errorNode?: React.ReactNode;
   /** 挂载到生成的img上的className */
   imgClassName?: string;
   /** 挂载到生成的img上的style */
@@ -31,18 +35,23 @@ const Picture: React.FC<PictureProps> = ({
   imgClassName,
   imgStyle,
   errorImg,
+  errorNode,
   className,
   style,
   imgProps,
   ...props
 }) => {
   const wrap = useRef<HTMLSpanElement>(null!);
-  const cvs = useRef<HTMLCanvasElement>(null!);
+
   const [state, setState] = useSetState({
     error: false,
     loading: false,
+    style: undefined! as React.CSSProperties,
+    text: '' as React.ReactNode,
   });
+
   const { pictureErrorImg } = config.useConfig();
+
   const _errorImg = errorImg || pictureErrorImg;
 
   useEffect(() => {
@@ -65,8 +74,9 @@ const Picture: React.FC<PictureProps> = ({
         error: true,
         loading: false,
       });
-      !_errorImg && canvasSet();
+      !_errorImg && placeholderUpdate();
     }
+
     img.addEventListener('load', load);
 
     img.addEventListener('error', loadError);
@@ -81,29 +91,40 @@ const Picture: React.FC<PictureProps> = ({
     // eslint-disable-next-line
   }, [src]);
 
-  /** 图片加载错误，更新canvas */
-  function canvasSet() {
+  /** 图片加载错误，更新占位节点样式 */
+  function placeholderUpdate() {
     if (!wrap.current) return;
+
     const wrapW = wrap.current.offsetWidth;
     const wrapH = wrap.current.offsetHeight;
-    const canvas = cvs.current;
 
-    const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
-    const fontSize = wrapW / 8;
+    setState({
+      style: {
+        width: wrapW,
+        height: wrapH,
+        fontSize: wrapW / 8,
+      },
+      text: errorNode || `${wrapW}X${wrapH}`,
+    });
 
-    canvas.width = wrapW;
-    canvas.height = wrapH;
-
-    if (ctx) {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.16)';
-      ctx.fillRect(0, 0, wrapW, wrapH);
-
-      ctx.font = `${fontSize}px tabular-nums, Microsoft YaHei`;
-      ctx.fillStyle = '#fff';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(`${wrapW}X${wrapH}`, wrapW / 2, (wrapH / 2) * 1.04 /* 视觉上更居中 */);
-    }
+    // const canvas = cvs.current;
+    //
+    // const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
+    // const fontSize = wrapW / 8;
+    //
+    // canvas.width = wrapW;
+    // canvas.height = wrapH;
+    //
+    // if (ctx) {
+    //   ctx.fillStyle = 'rgba(0, 0, 0, 0.16)';
+    //   ctx.fillRect(0, 0, wrapW, wrapH);
+    //
+    //   ctx.font = `${fontSize}px tabular-nums, Microsoft YaHei`;
+    //   ctx.fillStyle = '#fff';
+    //   ctx.textAlign = 'center';
+    //   ctx.textBaseline = 'middle';
+    //   ctx.fillText(`${wrapW}X${wrapH}`, wrapW / 2, (wrapH / 2) * 1.04 /* 视觉上更居中 */);
+    // }
   }
 
   return (
@@ -111,8 +132,15 @@ const Picture: React.FC<PictureProps> = ({
       {!state.error && (
         <img {...imgProps} alt={alt} src={src} className={imgClassName} style={imgStyle} />
       )}
-      {state.error && (_errorImg ? <img src={_errorImg} alt="" /> : <canvas ref={cvs} />)}
-      <Spin show={state.loading} full text="图片加载中" />
+      {state.error &&
+        (_errorImg ? (
+          <img src={_errorImg} alt="" />
+        ) : (
+          <span style={state.style} className="m78-picture_placeholder">
+            {state.text}
+          </span>
+        ))}
+      <Spin loadingDelay={100} show={state.loading} full text="图片加载中" />
     </span>
   );
 };

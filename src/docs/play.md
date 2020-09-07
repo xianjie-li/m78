@@ -1,9 +1,9 @@
 ---
-title: FAQ - 常见问题
+title: Play
 group:
   title: 其他
   path: /other
   order: 10000
 ---
 
-还没有哦~
+<code src="./playDemo.tsx" />

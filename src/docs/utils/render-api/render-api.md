@@ -1,7 +1,7 @@
 ---
 title: RenderApi - 渲染api
 group:
-  title: 反馈
+  title: 工具
   path: /utils
   order: 5000
 ---
@@ -12,10 +12,7 @@ group:
 
 RenderApi在独立的包中维护，如果需要独立使用，请安装`@lxjx/react-render-api`
 
-* 不同组件的api调用会启用不同的实例来维护
-* 可以执行位置渲染节点的命名空间
-* api调用后，会返回一个实例对象，可以用来关闭、更新渲染的组件
-* 具体的使用见[react-render-api](https://github.com/Iixianjie/react-render-api)
+具体的使用见[react-render-api](https://github.com/Iixianjie/react-render-api)
 
 
 

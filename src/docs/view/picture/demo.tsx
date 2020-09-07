@@ -29,10 +29,15 @@ const Demo = () => (
     ))}
 
     <div className="mt-32">
+      <h4>使用自定义文本</h4>
+      <Picture style={imgStyle} src="" errorNode="出错啦!😭" />
+    </div>
+
+    <div className="mt-32">
       <h4>全局配置加载错误时展示的图片</h4>
       <Config.Provider
         value={{
-          pictureErrorImg: 'https://www.baidu.com/img/baidu_jgylogo3.gif',
+          pictureErrorImg: img1,
         }}
       >
         <div>

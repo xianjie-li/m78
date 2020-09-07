@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ActionSheet from 'm78/action-sheet';
 import 'm78/action-sheet/style';
 
@@ -28,13 +28,58 @@ const options = [
 ];
 
 const Demo = () => {
-  const [show, setShow] = React.useState(false);
-  const [show2, setShow2] = React.useState(false);
+  const [show, setShow] = useState(false);
 
   return (
     <div>
-      <Button onClick={() => setShow2(prev => !prev)}>直接选择</Button>
-      <ActionSheet />
+      <ActionSheet<number>
+        defaultValue={2}
+        onClose={(v, item) => {
+          console.log(v ? `选中值: ${v}` : '关闭了ActionSheet');
+          item && console.log('选项为:', item);
+        }}
+        options={options}
+        triggerNode={<Button>常规使用</Button>}
+      />
+
+      <ActionSheet<number>
+        confirm={false}
+        onClose={(v, item) => {
+          console.log(v ? `选中值: ${v}` : '关闭了ActionSheet');
+          item && console.log('选项为:', item);
+        }}
+        options={options}
+        triggerNode={<Button>直接选中模式</Button>}
+      />
+
+      <Button onClick={() => setShow(true)}>手动控制show</Button>
+      <ActionSheet<number>
+        show={show}
+        onShowChange={nShow => setShow(nShow)}
+        onClose={(v, item) => {
+          console.log(v ? `选中值: ${v}` : '关闭了ActionSheet');
+          item && console.log('选项为:', item);
+        }}
+        options={options}
+      />
+
+      <Button
+        onClick={() => {
+          ActionSheet.api({
+            defaultValue: 2,
+            options,
+            /** TODO: react-render-api 回传参数 */
+            onClose(v, item) {
+              console.log(v, item);
+
+              console.log(v ? `选中值: ${v}` : '关闭了ActionSheet');
+              item && console.log('选项为:', item);
+            },
+          });
+        }}
+      >
+        通过api调用
+      </Button>
     </div>
   );
 };

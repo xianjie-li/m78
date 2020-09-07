@@ -85,7 +85,7 @@ const NoticeBar: React.FC<NoticeBarProps> = ({
                 setShow(false);
               }}
             >
-              <CloseOutlined />
+              <CloseOutlined className="m78-close-icon" />
             </Button>
           </If>
         </div>

@@ -32,7 +32,7 @@ export function useDelayDerivedToggleStatus(
   });
 
   useEffect(() => {
-    if (isDisabled || toggle === innerState) {
+    if (isDisabled) {
       return;
     }
 
@@ -48,7 +48,7 @@ export function useDelayDerivedToggleStatus(
     return () => {
       self.toggleTimer && clearTimeout(self.toggleTimer);
     };
-  }, [toggle, ...deps]);
+  }, [toggle]);
 
   return isDisabled ? toggle : innerState;
 }

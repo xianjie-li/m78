@@ -2,7 +2,7 @@
 title: 约定
 group:
   title: 其他
-  path: /FAQ
+  path: /other
   order: 10000
 ---
 

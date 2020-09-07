@@ -1598,10 +1598,10 @@
     "@umijs/fabric" "2.2.0"
     prettier "^2.0.5"
 
-"@lxjx/react-render-api@^0.3.9":
-  version "0.3.9"
-  resolved "https://registry.npm.taobao.org/@lxjx/react-render-api/download/@lxjx/react-render-api-0.3.9.tgz#d3082a807ba2affb485e06adb631bd4cae30a322"
-  integrity sha1-0wgqgHuir/tIXgattjG9TK4woyI=
+"@lxjx/react-render-api@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.npm.taobao.org/@lxjx/react-render-api/download/@lxjx/react-render-api-0.4.0.tgz#db527747f50cf7f09984ee53052412418c9f03be"
+  integrity sha1-21J3R/UM9/CZhO5TBSQSQYyfA74=
   dependencies:
     "@babel/runtime" "^7.7.6"
     "@lxjx/utils" "^1.1.7"
@@ -1618,10 +1618,10 @@
     "@types/prop-types" "^15.7.3"
     react-spring "^8.0.27"
 
-"@lxjx/sass-base@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.npm.taobao.org/@lxjx/sass-base/download/@lxjx/sass-base-1.1.0.tgz#3b51c179da776a60376598132ffc3d2c791fef30"
-  integrity sha1-O1HBedp3amA3ZZgTL/w9LHkf7zA=
+"@lxjx/sass-base@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.npm.taobao.org/@lxjx/sass-base/download/@lxjx/sass-base-1.2.0.tgz?cache=0&sync_timestamp=1599468417184&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40lxjx%2Fsass-base%2Fdownload%2F%40lxjx%2Fsass-base-1.2.0.tgz#bd7b6a0618d2371ab68802c92db3f001d82e5eba"
+  integrity sha1-vXtqBhjSNxq2iALJLbPwAdguXro=
   dependencies:
     "@ant-design/colors" "^3.2.2"
 

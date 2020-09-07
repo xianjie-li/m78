@@ -30,6 +30,8 @@ interface PictureProps
   alt?: string;
   /** 使用指定的图片替换默认的错误占位图 */
   errorImg?: string;
+  /** 使用指定的文本节点替换默认的错误占位图 */
+  errorNode?: React.ReactNode;
   /** 挂载到生成的img上的className */
   imgClassName?: string;
   /** 挂载到生成的img上的style */

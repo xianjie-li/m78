@@ -30,25 +30,25 @@
   max-width: 888px;
 }
 
-/*::-webkit-scrollbar {*/
-/*  width: 5px;*/
-/*  height: 5px;*/
-/*}*/
+.__dumi-default-menu::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
 
-/*::-webkit-scrollbar-track {*/
-/*  border-radius: 6px;*/
-/*  background-color: rgba(0, 0, 0, 0.1);*/
-/*}*/
+.__dumi-default-menu::-webkit-scrollbar-track {
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.1);
+}
 
-/*::-webkit-scrollbar-thumb {*/
-/*  border-radius: 8px;*/
-/*  background: #9e9e9e;*/
-/*}*/
+.__dumi-default-menu::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background: #9e9e9e;
+}
 
-/*::-webkit-scrollbar-thumb:hover {*/
-/*  background: #878787;*/
-/*}*/
+.__dumi-default-menu::-webkit-scrollbar-thumb:hover {
+  background: #878787;
+}
 
-/*::-webkit-scrollbar-thumb:active {*/
-/*  background: #717171;*/
-/*}*/
+.__dumi-default-menu::-webkit-scrollbar-thumb:active {
+  background: #717171;
+}

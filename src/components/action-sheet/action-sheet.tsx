@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import Drawer from 'm78/drawer';
 import Check from 'm78/check';
@@ -127,81 +127,4 @@ interface ActionSheetWithApi extends ActionSheet {
 
 const ActionSheet: ActionSheetWithApi = Object.assign(_ActionSheet, { api: actionSheetApi });
 
-const options = [
-  {
-    label: '操作1',
-    value: 1,
-  },
-  {
-    label: '高亮操作',
-    value: 2,
-    desc: '对此操作的详细描述',
-    highlight: true,
-  },
-  {
-    label: '禁用',
-    value: 3,
-    disabled: true,
-  },
-  {
-    label: '操作4',
-    value: 4,
-  },
-];
-
-export default function Fff() {
-  const [show, setShow] = useState(false);
-
-  return (
-    <div>
-      <ActionSheet<number>
-        defaultValue={2}
-        onClose={(v, item) => {
-          console.log(v ? `选中值: ${v}` : '关闭了ActionSheet');
-          item && console.log('选项为:', item);
-        }}
-        options={options}
-        triggerNode={<Button>常规使用</Button>}
-      />
-
-      <ActionSheet<number>
-        confirm={false}
-        onClose={(v, item) => {
-          console.log(v ? `选中值: ${v}` : '关闭了ActionSheet');
-          item && console.log('选项为:', item);
-        }}
-        options={options}
-        triggerNode={<Button>直接选中模式</Button>}
-      />
-
-      <Button onClick={() => setShow(true)}>手动控制show</Button>
-      <ActionSheet<number>
-        show={show}
-        onShowChange={nShow => setShow(nShow)}
-        onClose={(v, item) => {
-          console.log(v ? `选中值: ${v}` : '关闭了ActionSheet');
-          item && console.log('选项为:', item);
-        }}
-        options={options}
-      />
-
-      <Button
-        onClick={() => {
-          ActionSheet.api({
-            defaultValue: 2,
-            options,
-            /** TODO: react-render-api 回传参数 */
-            onClose(v, item) {
-              console.log(v, item);
-
-              console.log(v ? `选中值: ${v}` : '关闭了ActionSheet');
-              item && console.log('选项为:', item);
-            },
-          });
-        }}
-      >
-        通过api调用
-      </Button>
-    </div>
-  );
-}
+export default ActionSheet;
