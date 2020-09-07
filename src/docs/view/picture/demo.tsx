@@ -4,13 +4,13 @@ import 'm78/picture/style';
 
 import Config from 'm78/config';
 
-import img1 from '@/mock/img/1.jpg';
-import img2 from '@/mock/img/2.jpg';
-import img3 from '@/mock/img/3.jpg';
-import img4 from '@/mock/img/4.jpg';
-import img5 from '@/mock/img/5.jpg';
-import img6 from '@/mock/img/6.jpg';
-import img7 from '@/mock/img/7.jpg';
+import img1 from '@/mock/img/1.png';
+import img2 from '@/mock/img/2.png';
+import img3 from '@/mock/img/3.png';
+import img4 from '@/mock/img/4.png';
+import img5 from '@/mock/img/5.png';
+import img6 from '@/mock/img/6.png';
+import img7 from '@/mock/img/7.png';
 
 const imgs = [
   'https://img.3dmgame.com/uploads/allimg/170727/379-1FHGF517-50.jpg',
@@ -27,7 +27,7 @@ const imgs = [
 
 const imgStyle: React.CSSProperties = {
   width: 100,
-  height: 100,
+  height: 220,
   objectFit: 'cover',
   margin: 2,
   borderRadius: '4px',

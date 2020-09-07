@@ -2,7 +2,7 @@ import React from 'react';
 import ArticleBox from 'm78/article-box';
 import 'm78/article-box/style';
 
-import img from '@/mock/img/4.jpg';
+import img from '@/mock/img/4.png';
 
 const htmlStr = `
   <div>

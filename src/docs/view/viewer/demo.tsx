@@ -8,7 +8,7 @@ import Button from 'm78/button';
 import 'm78/button/style';
 
 import { getRandRange } from '@lxjx/utils';
-import img1 from '@/mock/img/3.jpg';
+import img1 from '@/mock/img/3.png';
 
 const boxStyle: React.CSSProperties = {
   width: '240px',

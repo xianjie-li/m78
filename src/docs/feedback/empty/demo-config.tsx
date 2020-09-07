@@ -3,7 +3,7 @@ import React from 'react';
 import Empty from 'm78/empty';
 import 'm78/empty/style';
 
-import img from '@/mock/img/1.jpg';
+import img from '@/mock/img/1.png';
 import Config from 'm78/config';
 
 const newEmptyNode = <img src={img} alt="" />;

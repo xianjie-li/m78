@@ -6,7 +6,7 @@ import 'm78/empty/style';
 import Button from 'm78/button';
 import 'm78/button/style';
 
-import img from '@/mock/img/2.jpg';
+import img from '@/mock/img/2.png';
 
 const Demo = () => (
   <div>
