@@ -5,9 +5,9 @@ import 'm78/carousel/style';
 import Button from 'm78/button';
 import 'm78/button/style';
 
-import img1 from '@/mock/img/1.png';
-import img2 from '@/mock/img/2.png';
-import img3 from '@/mock/img/3.png';
+import img1 from '@/mock/img/111.jpg';
+import img2 from '@/mock/img/222.jpg';
+import img3 from '@/mock/img/333.jpg';
 
 const Demo = () => {
   const ref = React.useRef<CarouselRef>(null!);

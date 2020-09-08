@@ -2,6 +2,7 @@ import React from 'react';
 
 import cls from 'classnames';
 import { isArray } from '@lxjx/utils';
+import { AspectRatio } from 'm78/layout';
 import { ComponentBaseProps } from '../types/types';
 
 interface GridProps extends ComponentBaseProps {
@@ -89,30 +90,27 @@ const Grid = (props: GridProps & typeof defaultProps) => {
         // 除最后一项外主轴每项的间距
         const mainSpace = mainSpacing ? ((count - 1) * mainSpacing) / count : 0;
 
-        return (
-          <div
-            key={index}
-            style={{
+        return React.createElement(
+          size ? 'div' : AspectRatio,
+          {
+            ratio: aspectRatio,
+            key: index,
+            style: {
               color: borderColor,
               border: border ? undefined : 'none',
               width: mainSpacing ? `calc(${width}% - ${mainSpace}px)` : `${width}%`,
               height: size || undefined,
               marginBottom: !lastLine && crossSpacing ? crossSpacing : undefined,
               marginRight: hasMainSpace ? mainSpacing : undefined,
-              ...item.props.style,
-            }}
-            className={cls('m78-grid_item', item.props.className, {
+            },
+            className: cls('m78-grid_item', {
               __topBorder: border && (firstLine || crossSpacing),
               __leftBorder: border && (isFirst || mainSpacing),
-            })}
-          >
-            {!size && (
-              <div className="m78-grid_scaffold" style={{ paddingTop: `${aspectRatio * 100}%` }} />
-            )}
-            <div className={cls('m78-grid_cont', contClassName)} style={contStyle}>
-              {item}
-            </div>
-          </div>
+            }),
+          },
+          <div className={cls('m78-grid_cont', contClassName)} style={contStyle}>
+            {item}
+          </div>,
         );
       })}
     </div>

@@ -45,7 +45,9 @@ const imgStyle: React.CSSProperties = {
   height: 220,
   objectFit: 'cover',
   margin: 2,
-  borderRadius: '4px',
+  borderRadius: '6px',
+  border: '6px solid #fff',
+  boxShadow: '2px 2px 6px rgba(0,0,0,0.45)',
 };
 
 const Demo = () => (

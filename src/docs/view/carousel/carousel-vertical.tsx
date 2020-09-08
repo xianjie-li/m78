@@ -1,9 +1,9 @@
 import React from 'react';
 import Carousel from 'm78/carousel';
 
-import img1 from '@/mock/img/1.png';
-import img2 from '@/mock/img/2.png';
-import img3 from '@/mock/img/3.png';
+import img1 from '@/mock/img/3.png';
+import img2 from '@/mock/img/6.png';
+import img3 from '@/mock/img/10.png';
 
 const Demo = () => (
   <div>
