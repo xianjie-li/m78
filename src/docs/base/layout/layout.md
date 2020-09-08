@@ -8,6 +8,9 @@ group:
 
 # Layout 布局
 
+声明式的布局能提供很大的方便，但是传统的12列或24列网格局限性又太大，不适用于定制化很高的前端页面。
+
+所以，参考Flutter提供了几个比较基础的flex base布局组件，以及部分功能性布局组件, 用于完成行、列、对齐、网格、固定比例盒子等常见的布局场景。
 
 ## Flexible
 
@@ -23,13 +26,13 @@ group:
 
 ## AspectRatio
 
-轻松的获得一个永远保持固定宽高比的盒子!
+一个永远保持固定宽高比的盒子!
 
 <code src="./aspectRatioDemo.tsx" />
 
 ## Divider
 
-一个方便的分割线组件
+易于使用的分割线组件
 
 <code src="./DividerDemo.tsx" />
 
