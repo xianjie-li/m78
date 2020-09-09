@@ -2,7 +2,7 @@ import React from 'react';
 import { Divider, Spacer } from 'm78/layout';
 import Button from 'm78/button';
 
-const Play = () => {
+const SpacerDemo = () => {
   return (
     <div>
       <h3>用法1</h3>
@@ -44,4 +44,4 @@ const Play = () => {
   );
 };
 
-export default Play;
+export default SpacerDemo;

@@ -59,14 +59,12 @@
   background-color: rgba(0, 0, 0, 0.15);
   height: 0.5px;
   width: 100%;
-  margin: 12px 0;
 
   &.__vertical {
     display: inline-block;
     vertical-align: middle;
     height: 1.2em;
     width: 0.5px;
-    margin: 0 12px;
   }
 }
 
@@ -84,4 +82,13 @@
 
 .m78-self-end {
   align-self: flex-end;
+}
+
+.m78-spacer {
+
+  &.__inline {
+    display: inline-block;
+    vertical-align: middle;
+    min-height: 1em;
+  }
 }
