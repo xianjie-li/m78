@@ -8,11 +8,18 @@ group:
 
 # Layout 布局
 
+声明式的布局能提供很大的方便，但是传统的12列或24列网格局限性又太大，不适用于定制化很高的前端页面。
+
+所以，参考Flutter提供了几个比较基础的flex base布局组件，以及部分功能性布局组件, 用于完成行、列、对齐、网格等常见的布局场景。
+
 ## Flexible
 
-基于 flex 的一组布局组件
+基于flex的一组布局组件
 
 <code src="./flexDemo.tsx" />
+
+## 工具类
+内置了很多常用的工具类, 请查收 [util-class.scss](https://github.com/Iixianjie/sass-stater/blob/master/base/util-class.scss)
 
 ## Grid
 
@@ -22,21 +29,29 @@ group:
 
 ## AspectRatio
 
-轻松的获得一个永远保持固定宽高比的盒子!
+一个永远保持固定宽高比的盒子
 
 <code src="./aspectRatioDemo.tsx" />
 
 ## Divider
 
-一个方便的分割线组件
+易于使用的分割线组件
 
-<code src="./DividerDemo.tsx" />
+<code src="./dividerDemo.tsx" />
+
+## Spacer
+
+在元素之间填充空白
+
+<code src="./spacerDemo.tsx" />
+
 
 ## Center
 
 将子组件居中放置
 
-<code src="./CenterDemo.tsx" />
+<code src="./centerDemo.tsx" />
+
 
 ## API
 
@@ -52,6 +67,7 @@ interface FlexWrapProps extends ComponentBasePropsWithAny {
   children: React.ReactNode;
 }
 ```
+
 
 **`Flex`**
 
@@ -99,6 +115,7 @@ interface GridProps extends ComponentBaseProps {
 }
 ```
 
+
 **`AspectRatio`**
 
 ```tsx | pure
@@ -122,6 +139,19 @@ interface DividerProps extends ComponentBaseProps {
   height?: number;
   /** 颜色 */
   color?: string;
+}
+```
+
+**`Spacer`**
+
+```tsx | pure
+interface SpacerProps {
+  /** 宽度 */
+  width?: number;
+  /** 16 | 高度,  */
+  height?: number;
+  /** 如果子项传入一个列表，会在每一个子项间设置间距 */
+  children?: React.ReactElement[];
 }
 ```
 

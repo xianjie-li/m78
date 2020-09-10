@@ -11,13 +11,17 @@ interface DividerProps extends ComponentBaseProps {
   height?: number;
   /** 颜色 */
   color?: string;
+  /** 12 | 间距 */
+  margin?: number;
 }
 
-const Divider = ({ vertical, width, height, color }: DividerProps) => {
+const Divider = ({ vertical, width, height, color, margin = 12 }: DividerProps) => {
+  const marginStr = vertical ? `0 ${margin}px` : `${margin}px 0`;
+
   return (
     <div
       className={cls('m78-divider', vertical && '__vertical')}
-      style={{ width, height, backgroundColor: color }}
+      style={{ width, height, backgroundColor: color, margin: margin ? marginStr : undefined }}
     />
   );
 };
