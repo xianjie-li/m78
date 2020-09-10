@@ -16,7 +16,7 @@ interface DividerProps extends ComponentBaseProps {
 const Divider = ({ vertical, width, height, color }: DividerProps) => {
   return (
     <div
-      className={cls('m78-divider2', vertical && '__vertical')}
+      className={cls('m78-divider', vertical && '__vertical')}
       style={{ width, height, backgroundColor: color }}
     />
   );

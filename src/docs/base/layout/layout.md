@@ -8,10 +8,9 @@ group:
 
 # Layout 布局
 
-
 ## Flexible
 
-基于flex的一组布局组件
+基于 flex 的一组布局组件
 
 <code src="./flexDemo.tsx" />
 
@@ -39,7 +38,6 @@ group:
 
 <code src="./CenterDemo.tsx" />
 
-
 ## API
 
 **`Column/Row`**
@@ -54,7 +52,6 @@ interface FlexWrapProps extends ComponentBasePropsWithAny {
   children: React.ReactNode;
 }
 ```
-
 
 **`Flex`**
 
@@ -101,7 +98,6 @@ interface GridProps extends ComponentBaseProps {
   contStyle?: React.CSSProperties;
 }
 ```
-
 
 **`AspectRatio`**
 

@@ -20,13 +20,13 @@ Dialog 组件的配置非常多样化，通过合理的配置可以实现绝大�
 
 ## 通过 api 使用
 
-通过api使用方式来进行组件外渲染
+通过 api 使用方式来进行组件外渲染
 
 <code src="./api.tsx" />
 
 ## API
 
-该组件props继承至ModalBaseProps的子集, 完整配置等请参考 [Modal](/feedback/modal)
+该组件 props 继承至 ModalBaseProps 的子集, 完整配置等请参考 [Modal](/feedback/modal)
 
 ```tsx | pure
 interface DialogProps extends Omit<ModalBaseProps, 'children' | 'onClose'> {

@@ -18,7 +18,7 @@ group:
 
 ## API
 
-该组件props继承至ModalBaseProps的子集, 完整配置等请参考 [Modal](/feedback/modal)
+该组件 props 继承至 ModalBaseProps 的子集, 完整配置等请参考 [Modal](/feedback/modal)
 
 ```tsx | pure
 type OmitModalSpecific = Omit<

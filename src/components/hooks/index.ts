@@ -48,7 +48,7 @@ export function useDelayDerivedToggleStatus(
     return () => {
       self.toggleTimer && clearTimeout(self.toggleTimer);
     };
-  }, [toggle]);
+  }, [toggle, ...deps]);
 
   return isDisabled ? toggle : innerState;
 }

@@ -5,11 +5,7 @@
   padding: 12px;
   overflow: auto;
   box-shadow: $shadow-1;
-  transition:
-      0.6s margin-left,
-      0.6s margin-right,
-      0.6s margin-top,
-      0.6s margin-bottom;
+  transition: 0.6s margin-left, 0.6s margin-right, 0.6s margin-top, 0.6s margin-bottom;
 
   &_close {
     position: absolute;
