@@ -1,0 +1,14 @@
+@import '../../style/index';
+
+.m78-count-down {
+  &_time {
+    font-family: $font-variant-base;
+  }
+
+  &_text {
+    color: $b-second;
+    font-size: 0.6em;
+    margin-right: 4px;
+    margin-left: 2px;
+  }
+}

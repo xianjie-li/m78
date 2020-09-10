@@ -1,0 +1,113 @@
+{
+  "name": "m78",
+  "version": "1.0.0-beta.6",
+  "types": "./",
+  "license": "MIT",
+  "description": "components, hooks, utils, part of the react toolchain",
+  "keywords": [
+    "react",
+    "react-components",
+    "ui-components",
+    "typescript",
+    "react-toolkits"
+  ],
+  "scripts": {
+    "prebuild": "npm run lint && npm run typecheck && npm run test",
+    "build": "node script/build",
+    "lint:script": "eslint ./src --ext .js,.jsx,.ts,.tsx",
+    "lint:prettier": "prettier --check ./src/**/*",
+    "lint": "npm run lint:prettier && npm run lint:script",
+    "fix": "prettier --check ./src/**/* --write && eslint ./src --ext .js,.jsx,.ts,.tsx --fix",
+    "typecheck": "tsc --noEmit",
+    "dev": "dumi dev",
+    "build:doc": "dumi build",
+    "test": "jest ./test",
+    "ypublish": "yarn publish ./dist -f"
+  },
+  "repository": "https://github.com/Iixianjie/m78",
+  "author": {
+    "name": "lxj",
+    "email": "1073830130@qq.com"
+  },
+  "files": [
+    "**"
+  ],
+  "resolutions": {
+    "remark": "11.0.2"
+  },
+  "peerDependencies": {
+    "react": ">= 16.8.0",
+    "react-dom": ">= 16.8.0"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^4.1.0",
+    "@babel/runtime": "^7.7.2",
+    "@lxjx/async-filed-cn-template": "^1.0.1",
+    "@lxjx/auth": "^1.0.0",
+    "@lxjx/fr-click-effect": "^1.0.2",
+    "@lxjx/hooks": "^1.4.1",
+    "@lxjx/react-render-api": "^0.4.0",
+    "@lxjx/react-transition-spring": "^1.1.0",
+    "@lxjx/sass-base": "^1.3.0",
+    "@lxjx/utils": "^1.3.2",
+    "@lxjx/validate-tools": "^1.1.0",
+    "@types/classnames": "^2.2.9",
+    "@types/lodash": "^4.14.141",
+    "@types/node": "^12.7.5",
+    "@types/react": "^16.9.43",
+    "@types/react-dom": "^16.9.8",
+    "@types/react-window": "^1.8.2",
+    "async-validator": "^3.3.0",
+    "classnames": "^2.2.6",
+    "lodash": "^4.17.15",
+    "moment": "^2.27.0",
+    "prevent-top-pull-down": "^1.0.1",
+    "rc-field-form": "^1.9.4",
+    "react-spring": "^8.0.27",
+    "react-use": "^13.8.0",
+    "react-use-gesture": "^6.0.14",
+    "react-window": "^1.8.5",
+    "tslib": "^2.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-optional-chaining": "^7.2.0",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
+    "@babel/plugin-transform-runtime": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/preset-typescript": "^7.6.0",
+    "@lxjx/preset-config": "^0.1.0",
+    "@rollup/plugin-babel": "^5.1.0",
+    "@rollup/plugin-commonjs": "^13.0.1",
+    "@rollup/plugin-node-resolve": "^8.4.0",
+    "@rollup/plugin-replace": "^2.3.3",
+    "@testing-library/jest-dom": "^5.11.0",
+    "@testing-library/react": "^10.4.5",
+    "@types/jest": "^26.0.4",
+    "@umijs/plugin-sass": "^1.1.1",
+    "babel-jest": "^26.1.0",
+    "chalk": "^4.1.0",
+    "dumi": "^1.0.34",
+    "file-loader": "^4.2.0",
+    "fs-extra": "^9.0.1",
+    "glob": "^7.1.4",
+    "jest": "^26.1.0",
+    "node-sass": "^4.13.1",
+    "ora": "^4.0.4",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "rollup": "^2.21.0",
+    "rollup-plugin-copy": "^3.3.0",
+    "rollup-plugin-extensions": "^0.1.0",
+    "typescript": "^3.7.2"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "m78/(.*)": "<rootDir>/src/components/$1",
+      "\\.(css|scss)$": "<rootDir>/test/__mocks__/styleMock.ts",
+      "@lxjx/sass-base": "<rootDir>/test/__mocks__/fileMock.ts"
+    }
+  }
+}

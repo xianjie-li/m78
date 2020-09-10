@@ -1,0 +1,90 @@
+@import '../../style/index';
+
+.m78-notice-bar {
+  overflow: hidden;
+  font-size: $fs-14;
+  max-width: $sm;
+  pointer-events: none;
+
+  &_wrap {
+    pointer-events: auto;
+    background-color: #fff;
+    width: 100%;
+    display: flex;
+    align-items: start;
+    padding: 10px 12px;
+    border: 2px solid $b-border;
+    border-radius: $border-radius;
+    color: $b-border;
+  }
+
+  &.__info &_wrap {
+    border: 2px solid currentColor;
+    color: $color-info;
+  }
+
+  &.__error &_wrap {
+    border: 2px solid currentColor;
+    color: $color-error;
+  }
+
+  &.__success &_wrap {
+    border: 2px solid currentColor;
+    color: $color-success;
+  }
+
+  &.__warning &_wrap {
+    border: 2px solid currentColor;
+    color: $color-warn;
+  }
+
+  &.__fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    max-width: 100%;
+    z-index: $z-index;
+
+    .m78-notice-bar_wrap {
+      outline: none;
+      border: none;
+      box-shadow: $shadow-1;
+    }
+  }
+
+  &_left {
+    margin-right: 8px;
+    font-size: 1.4em;
+    line-height: 1;
+  }
+
+  &_right {
+    color: $b-primary;
+    max-height: 22px;
+  }
+
+  &_cont {
+    flex: 1;
+    overflow: hidden;
+  }
+
+  &_title {
+    color: $b-primary;
+    line-height: 1.3;
+    font-size: 16px;
+  }
+
+  &_desc {
+    color: $b-second;
+    margin-top: 6px;
+    font-size: $fs-14;
+    line-height: 1.4;
+  }
+
+  &_close {
+    top: -1px;
+    color: $b-second;
+    font-size: 14px;
+  }
+}
