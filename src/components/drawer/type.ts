@@ -1,4 +1,4 @@
-import { ModalBaseProps } from 'm78/modal/types';
+import { ModalBaseProps } from '../modal/types';
 
 type OmitModalSpecific = Omit<
   ModalBaseProps,

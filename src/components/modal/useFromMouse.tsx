@@ -1,7 +1,7 @@
 import { useSpring } from 'react-spring';
 import { useDelayDerivedToggleStatus, useMountInterface } from 'm78/hooks';
 import { useEffect } from 'react';
-import { getLastXKey, getLastYKey } from 'm78/modal/commons';
+import { getLastXKey, getLastYKey } from './commons';
 import { useMethods } from './methods';
 import { Share } from './types';
 
