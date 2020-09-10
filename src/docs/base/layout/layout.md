@@ -8,17 +8,18 @@ group:
 
 # Layout 布局
 
-声明式的布局能提供很大的方便，但是传统的12列或24列网格局限性又太大，不适用于定制化很高的前端页面。
+声明式的布局能提供很大的方便，但是传统的 12 列或 24 列网格局限性又太大，不适用于定制化很高的前端页面。
 
-所以，参考Flutter提供了几个比较基础的flex base布局组件，以及部分功能性布局组件, 用于完成行、列、对齐、网格等常见的布局场景。
+所以，参考 Flutter 提供了几个比较基础的 flex base 布局组件，以及部分功能性布局组件, 用于完成行、列、对齐、网格等常见的布局场景。
 
 ## Flexible
 
-基于flex的一组布局组件
+基于 flex 的一组布局组件
 
 <code src="./flexDemo.tsx" />
 
 ## 工具类
+
 内置了很多常用的工具类, 请查收 [util-class.scss](https://github.com/Iixianjie/sass-stater/blob/master/base/util-class.scss)
 
 ## Grid
@@ -45,13 +46,11 @@ group:
 
 <code src="./spacerDemo.tsx" />
 
-
 ## Center
 
 将子组件居中放置
 
 <code src="./centerDemo.tsx" />
-
 
 ## API
 
@@ -67,7 +66,6 @@ interface FlexWrapProps extends ComponentBasePropsWithAny {
   children: React.ReactNode;
 }
 ```
-
 
 **`Flex`**
 
@@ -114,7 +112,6 @@ interface GridProps extends ComponentBaseProps {
   contStyle?: React.CSSProperties;
 }
 ```
-
 
 **`AspectRatio`**
 
