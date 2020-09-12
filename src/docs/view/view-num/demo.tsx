@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Num from 'm78/num';
+import ViewNum from 'm78/view-num';
 
 const Demo = () => {
   const [num, setNum] = useState(999999);
@@ -7,18 +7,18 @@ const Demo = () => {
   return (
     <div className="fs-38">
       <div>
-        <Num>1000</Num> <span className="color-second fs-16">(数字)</span>
+        <ViewNum>1000</ViewNum> <span className="color-second fs-16">(数字)</span>
       </div>
       <div>
-        <Num pattern="3" precision={1}>
+        <ViewNum pattern="3" precision={1}>
           100000000
-        </Num>{' '}
+        </ViewNum>{' '}
         <span className="color-second fs-16">(金额)</span>
       </div>
       <div>
-        <Num pattern="3" transition precision={2}>
+        <ViewNum pattern="3" transition precision={2}>
           {num}
-        </Num>{' '}
+        </ViewNum>{' '}
         <span className="color-second fs-16">
           (动画)
           <button
@@ -31,29 +31,29 @@ const Demo = () => {
         </span>
       </div>
       <div>
-        <Num pattern="3" precision={2}>
+        <ViewNum pattern="3" precision={2}>
           100000000.0000
-        </Num>{' '}
+        </ViewNum>{' '}
         <span className="color-second fs-16">(小数)</span>
       </div>
       <div>
-        <Num pattern="3, 4" lastRepeat delimiter=" ">
+        <ViewNum pattern="3, 4" lastRepeat delimiter=" ">
           17500000000
-        </Num>
+        </ViewNum>
         <span className="color-second fs-16">(手机号)</span>
       </div>
       <div>
-        <Num pattern="3, 4" lastRepeat delimiter=" ">
+        <ViewNum pattern="3, 4" lastRepeat delimiter=" ">
           6220224051500000000
-        </Num>
+        </ViewNum>
         <span className="color-second fs-16">(打钱)</span>
       </div>
       <div>
-        <Num padLeftZero={8}>520</Num>
+        <ViewNum padLeftZero={8}>520</ViewNum>
         <span className="color-second fs-16">(左填充)</span>
       </div>
       <div>
-        <Num
+        <ViewNum
           format={str => {
             const colors = ['red', 'orange', 'yellow', 'green', 'cyan', 'blue', 'purple'];
             return str
@@ -66,11 +66,11 @@ const Demo = () => {
           }}
         >
           1000000
-        </Num>
+        </ViewNum>
         <span className="color-second fs-16">(自定义样式)</span>
       </div>
       <div>
-        <Num
+        <ViewNum
           transition
           precision={2}
           format={str => {
@@ -85,7 +85,7 @@ const Demo = () => {
           }}
         >
           {num}
-        </Num>
+        </ViewNum>
         <span className="color-second fs-16">(自定义样式2)</span>
       </div>
     </div>

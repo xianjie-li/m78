@@ -10,7 +10,7 @@ function parseN(num: string | number) {
   return isNaN(res) ? null : res;
 }
 
-function Num(props: NumProps) {
+function ViewNum(props: NumProps) {
   const {
     children = '',
     className,
@@ -93,4 +93,4 @@ function Num(props: NumProps) {
   return <span className={className} style={style} dangerouslySetInnerHTML={{ __html: target }} />;
 }
 
-export default Num;
+export default ViewNum;

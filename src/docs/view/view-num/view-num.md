@@ -1,12 +1,12 @@
 ---
-title: Nnum - 数字
+title: ViewNum - 数字
 group:
   title: 展示组件
   path: /view
   order: 4000
 ---
 
-# Num 数字
+# ViewNum 数字
 
 一个专门用来显示数字的组件，支持格式化、填充、动画等。
 
@@ -17,6 +17,7 @@ group:
 ## API
 
 **`props`**
+
 ```tsx | pure
 interface NumProps extends ComponentBaseProps {
   /** 数字动画 */
