@@ -15,7 +15,6 @@ import createRenderApi from '@lxjx/react-render-api';
 import _debounce from 'lodash/debounce';
 import _regeneratorRuntime from '@babel/runtime/regenerator';
 import _asyncToGenerator from '@babel/runtime/helpers/asyncToGenerator';
-import { getLastXKey, getLastYKey } from 'm78/modal/commons';
 
 function useLifeCycle(share, methods) {
   var props = share.props,
@@ -66,6 +65,57 @@ function useLifeCycle(share, methods) {
       return window.removeEventListener('resize', handler);
     };
   }, []);
+}
+
+/** 根据alignment值获取x, y值 */
+function calcAlignment(alignment, screenMeta) {
+  var _screenMeta = _slicedToArray(screenMeta, 2),
+      sW = _screenMeta[0],
+      sH = _screenMeta[1];
+
+  var _alignment = _slicedToArray(alignment, 2),
+      aX = _alignment[0],
+      aY = _alignment[1];
+
+  var x = sW * aX;
+  var y = sH * aY;
+  return [x, y];
+}
+var LAST_X_KEY = 'FR_LAST_CLICK_POSITION_X';
+var LAST_Y_KEY = 'FR_LAST_CLICK_POSITION_Y';
+function getLastXKey() {
+  return window[LAST_X_KEY];
+}
+function getLastYKey() {
+  return window[LAST_Y_KEY];
+}
+var timer = null;
+/** 保存鼠标最后点击位置 */
+
+function windowClickHandle(e) {
+  if (timer) {
+    clearTimeout(timer);
+  }
+
+  var x = e.x || e.screenX; // screenX会有导航栏高度的偏移
+
+  var y = e.y || e.screenY;
+  window[LAST_X_KEY] = x;
+  window[LAST_Y_KEY] = y;
+  timer = setTimeout(function () {
+    window[LAST_X_KEY] = undefined;
+    window[LAST_Y_KEY] = undefined;
+  }, 500);
+}
+/**
+ * 记录点击位置
+ * */
+
+
+function registerPositionSave() {
+  window.removeEventListener('click', windowClickHandle, true); // 启用事件捕获防止某个元素事件冒泡导致事件不触发
+
+  window.addEventListener('click', windowClickHandle, true);
 }
 
 /** ======== fromMouse实现 ======== */
@@ -209,51 +259,6 @@ function useFromMouse(share, methods, isFromMouse) {
 
   }, [show2]);
   return [sp, mount];
-}
-
-/** 根据alignment值获取x, y值 */
-function calcAlignment(alignment, screenMeta) {
-  var _screenMeta = _slicedToArray(screenMeta, 2),
-      sW = _screenMeta[0],
-      sH = _screenMeta[1];
-
-  var _alignment = _slicedToArray(alignment, 2),
-      aX = _alignment[0],
-      aY = _alignment[1];
-
-  var x = sW * aX;
-  var y = sH * aY;
-  return [x, y];
-}
-var LAST_X_KEY = 'FR_LAST_CLICK_POSITION_X';
-var LAST_Y_KEY = 'FR_LAST_CLICK_POSITION_Y';
-var timer = null;
-/** 保存鼠标最后点击位置 */
-
-function windowClickHandle(e) {
-  if (timer) {
-    clearTimeout(timer);
-  }
-
-  var x = e.x || e.screenX; // screenX会有导航栏高度的偏移
-
-  var y = e.y || e.screenY;
-  window[LAST_X_KEY] = x;
-  window[LAST_Y_KEY] = y;
-  timer = setTimeout(function () {
-    window[LAST_X_KEY] = undefined;
-    window[LAST_Y_KEY] = undefined;
-  }, 500);
-}
-/**
- * 记录点击位置
- * */
-
-
-function registerPositionSave() {
-  window.removeEventListener('click', windowClickHandle, true); // 启用事件捕获防止某个元素事件冒泡导致事件不触发
-
-  window.addEventListener('click', windowClickHandle, true);
 }
 
 function useMethods(share) {

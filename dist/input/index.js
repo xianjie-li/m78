@@ -564,3 +564,4 @@ var Input = /*#__PURE__*/React.forwardRef(function (_props, ref) {
 Input.displayName = 'FrInput';
 
 export default Input;
+export { formatMoney };

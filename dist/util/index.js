@@ -1,4 +1,7 @@
+import { isDom } from '@lxjx/utils';
+
 /** 与@lxjx/sass-base同步，用于js代码的常用屏幕尺寸 */
+
 var SM = 576;
 var MD = 768;
 var LG = 992;
@@ -27,6 +30,7 @@ var dumpFn = function dumpFn() {
 };
 /** 获取指定dom元素的指定样式值 */
 
+
 function getStyle(obj, attr) {
   if (!obj) return; // @ts-ignore
 
@@ -34,6 +38,7 @@ function getStyle(obj, attr) {
 
   return obj.currentStyle ? obj.currentStyle[attr] : window.getComputedStyle(obj)[attr];
 }
+
 function getFirstScrollParent(ele) {
   var node = null;
 
@@ -68,6 +73,7 @@ function getFirstScrollParent(ele) {
  * @param option.fullVisible - 默认完全不可见时才算不可见，设置为true只要元素有部分遮挡即视为不可见
  * @param option.wrapEl - 默认以视口计算可见性，通过此项指定元素
  * */
+
 
 function checkElementVisible(el, option) {
   var _ref = option || {},
@@ -107,10 +113,12 @@ function checkElementVisible(el, option) {
 }
 /** 如果入参为truthy或0则返回，否则返回false */
 
+
 function isTruthyOrZero(arg) {
   return !!arg || arg === 0;
 }
 /** 返回入参中第一个truthy值或0 */
+
 
 function getFirstTruthyOrZero() {
   for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
@@ -133,6 +141,7 @@ function getFirstTruthyOrZero() {
  * @param matcher - 匹配器，递归接收父节点，返回值决定是否匹配
  * @param depth - 询深度
  * */
+
 
 function getCurrentParent(node, matcher, depth) {
   var hasMatch = false;
@@ -166,4 +175,30 @@ function getCurrentParent(node, matcher, depth) {
   return hasMatch;
 }
 
-export { LG, MD, SM, XL, Z_INDEX, Z_INDEX_DRAWER, Z_INDEX_MESSAGE, Z_INDEX_MODAL, checkElementVisible, dumpFn, getCurrentParent, getFirstScrollParent, getFirstTruthyOrZero, getStyle, isTruthyOrZero, stopPropagation };
+function triggerHighlight(t, color) {
+  if (isDom(t)) {
+    mountHighlight(t, color);
+  } else {
+    var temp = document.querySelectorAll(t);
+
+    if (temp.length) {
+      Array.from(temp).forEach(function (item) {
+        return mountHighlight(item, color);
+      });
+    }
+  }
+}
+
+function mountHighlight(target) {
+  var color = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '#1890ff';
+  target.style.boxShadow = "0 0 0 4px ".concat(color);
+
+  function clickHandle() {
+    target.style.boxShadow = '';
+    document.removeEventListener('click', clickHandle);
+  }
+
+  document.addEventListener('click', clickHandle);
+}
+
+export { LG, MD, SM, XL, Z_INDEX, Z_INDEX_DRAWER, Z_INDEX_MESSAGE, Z_INDEX_MODAL, checkElementVisible, dumpFn, getCurrentParent, getFirstScrollParent, getFirstTruthyOrZero, getStyle, isTruthyOrZero, stopPropagation, triggerHighlight };

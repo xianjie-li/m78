@@ -68,7 +68,6 @@ const Demo = () => {
           ActionSheet.api({
             defaultValue: 2,
             options,
-            /** TODO: react-render-api 回传参数 */
             onClose(v, item) {
               console.log(v, item);
 

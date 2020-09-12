@@ -11,7 +11,7 @@ export { Footer, default as List, SubTitle, Title } from 'm78/list';
 import Schema from 'async-validator';
 import { isArray, isEmpty, createRandString, isFunction } from '@lxjx/utils';
 import { useScroll, useFn } from '@lxjx/hooks';
-import { getFirstScrollParent, checkElementVisible } from 'm78/util';
+import { getFirstScrollParent, checkElementVisible, triggerHighlight } from 'm78/util';
 import cls from 'classnames';
 import { createMessagesTemplate } from '@lxjx/validate-tools';
 import _toConsumableArray from '@babel/runtime/helpers/toConsumableArray';
@@ -382,9 +382,11 @@ var BaseForm = function BaseForm(props) {
       wrapEl: scrollParent || undefined,
       fullVisible: true
     });
-    /* TODO: 高亮组件完成后可以添加一个高亮效果 */
 
-    !visible && scrollToElement(el);
+    if (!visible) {
+      triggerHighlight(el);
+      scrollToElement(el);
+    }
   });
   return /*#__PURE__*/React.createElement(context.Provider, {
     value: _objectSpread(_objectSpread({}, contextValue), {}, {

@@ -114,7 +114,7 @@ const DialogBase: React.FC<DialogProps> = props => {
           <Button
             color="primary"
             onClick={() => {
-              confirmClose && onClose(true); /* TODO: 需要在render-api中透传其他参数 */
+              confirmClose && onClose(true);
             }}
           >
             {typeof confirm === 'string' ? confirm : '确认'}

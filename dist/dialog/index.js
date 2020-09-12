@@ -73,7 +73,6 @@ var DialogBase = function DialogBase(props) {
       color: "primary",
       onClick: function onClick() {
         confirmClose && onClose(true);
-        /* TODO: 需要在render-api中透传其他参数 */
       }
     }, typeof confirm === 'string' ? confirm : '确认'));
   }

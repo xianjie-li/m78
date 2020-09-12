@@ -12,5 +12,6 @@ module.exports = {
     'import/no-extraneous-dependencies': 'off',
     '@typescript-eslint/no-implied-eval': 'off',
     'no-alert': 'off',
+    'no-restricted-globals': 'off',
   },
 };

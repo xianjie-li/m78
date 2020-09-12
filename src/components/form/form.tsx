@@ -5,7 +5,7 @@ import Schema from 'async-validator';
 import { createRandString, isFunction } from '@lxjx/utils';
 import { useFn, useScroll } from '@lxjx/hooks';
 import { ValidateErrorEntity } from 'rc-field-form/es/interface';
-import { checkElementVisible, getFirstScrollParent } from 'm78/util';
+import { checkElementVisible, getFirstScrollParent, triggerHighlight } from 'm78/util';
 import cls from 'classnames';
 import { createMessagesTemplate } from '@lxjx/validate-tools';
 
@@ -94,8 +94,10 @@ const BaseForm: React.FC<FormProps> = props => {
       fullVisible: true,
     });
 
-    /* TODO: 高亮组件完成后可以添加一个高亮效果 */
-    !visible && scrollToElement(el);
+    if (!visible) {
+      triggerHighlight(el);
+      scrollToElement(el);
+    }
   });
 
   return (

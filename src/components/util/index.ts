@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { isDom } from '@lxjx/utils';
 
 /** 与@lxjx/sass-base同步，用于js代码的常用屏幕尺寸 */
 export const SM = 576;
@@ -13,17 +14,17 @@ export const Z_INDEX_MODAL = 1800;
 export const Z_INDEX_MESSAGE = 2200;
 
 /** 禁止冒泡的便捷扩展对象 */
-export const stopPropagation = {
+const stopPropagation = {
   onClick(e: React.SyntheticEvent) {
     e.stopPropagation();
   },
 };
 
 /** 占位函数 */
-export const dumpFn = (...arg: any[]): any => arg;
+const dumpFn = (...arg: any[]): any => arg;
 
 /** 获取指定dom元素的指定样式值 */
-export function getStyle(obj: HTMLElement, attr: keyof CSSStyleDeclaration) {
+function getStyle(obj: HTMLElement, attr: keyof CSSStyleDeclaration) {
   if (!obj) return;
   // @ts-ignore
   if (!obj.currentStyle && !window.getComputedStyle) return null;
@@ -31,7 +32,7 @@ export function getStyle(obj: HTMLElement, attr: keyof CSSStyleDeclaration) {
   return obj.currentStyle ? obj.currentStyle[attr] : window.getComputedStyle(obj)[attr];
 }
 
-export function getFirstScrollParent(ele: HTMLElement): HTMLElement | null {
+function getFirstScrollParent(ele: HTMLElement): HTMLElement | null {
   let node: Element | null = null;
 
   function handle(el: HTMLElement) {
@@ -69,7 +70,7 @@ export function getFirstScrollParent(ele: HTMLElement): HTMLElement | null {
  * @param option.fullVisible - 默认完全不可见时才算不可见，设置为true只要元素有部分遮挡即视为不可见
  * @param option.wrapEl - 默认以视口计算可见性，通过此项指定元素
  * */
-export function checkElementVisible(
+function checkElementVisible(
   el: HTMLElement,
   option?: {
     fullVisible?: boolean;
@@ -101,12 +102,12 @@ export function checkElementVisible(
 }
 
 /** 如果入参为truthy或0则返回，否则返回false */
-export function isTruthyOrZero(arg: any): boolean {
+function isTruthyOrZero(arg: any): boolean {
   return !!arg || arg === 0;
 }
 
 /** 返回入参中第一个truthy值或0 */
-export function getFirstTruthyOrZero(...args: any): any {
+function getFirstTruthyOrZero(...args: any): any {
   for (const arg of args) {
     if (isTruthyOrZero(arg)) {
       return arg;
@@ -121,11 +122,7 @@ export function getFirstTruthyOrZero(...args: any): any {
  * @param matcher - 匹配器，递归接收父节点，返回值决定是否匹配
  * @param depth - 询深度
  * */
-export function getCurrentParent(
-  node: Element,
-  matcher: (node: Element) => boolean,
-  depth: number,
-) {
+function getCurrentParent(node: Element, matcher: (node: Element) => boolean, depth: number) {
   let hasMatch = false;
 
   let cDepth = 0;
@@ -156,3 +153,40 @@ export function getCurrentParent(
 
   return hasMatch;
 }
+
+function triggerHighlight(target: HTMLElement, color?: string): void;
+function triggerHighlight(selector: string, color?: string): void;
+function triggerHighlight(t: string | HTMLElement, color?: string) {
+  if (isDom(t)) {
+    mountHighlight(t, color);
+  } else {
+    const temp = document.querySelectorAll(t);
+    if (temp.length) {
+      Array.from(temp).forEach(item => mountHighlight(item as HTMLElement, color));
+    }
+  }
+}
+
+function mountHighlight(target: HTMLElement, color = '#1890ff') {
+  target.style.boxShadow = `0 0 0 4px ${color}`;
+
+  function clickHandle() {
+    target.style.boxShadow = '';
+
+    document.removeEventListener('click', clickHandle);
+  }
+
+  document.addEventListener('click', clickHandle);
+}
+
+export {
+  stopPropagation,
+  dumpFn,
+  getStyle,
+  getFirstScrollParent,
+  checkElementVisible,
+  isTruthyOrZero,
+  getFirstTruthyOrZero,
+  getCurrentParent,
+  triggerHighlight,
+};
