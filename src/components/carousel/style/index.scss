@@ -8,7 +8,14 @@
 
   &.__vertical {
     .m78-carousel_wrap {
-      flex-wrap: wrap;
+      flex-direction: column;
+    }
+
+    // 防止内容被优化卸载后高度为0
+    .m78-carousel_item {
+      flex: 1 0 auto;
+      width: 100%;
+      height: 100%;
     }
 
     .m78-carousel_ctrl {
@@ -40,9 +47,7 @@
   }
 
   &_item {
-    flex: 0 0 auto;
-    //flex: 1 0 auto;
-    width: 100%;
+    flex: 1 0 100%;
     user-select: none;
     will-change: transform;
     box-shadow: $shadow-2;

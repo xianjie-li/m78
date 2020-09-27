@@ -9,6 +9,8 @@ import cls from 'classnames';
 import { dumpFn } from '@lxjx/utils';
 import { ComponentBaseProps } from '../types/types';
 
+/* TODO: 关闭拉动缩小动画，内置性能优化 */
+
 export interface CarouselProps extends ComponentBaseProps {
   /** 子元素，必须为多个直接子元素或子元素数组 */
   children: ReactElement[];
@@ -38,6 +40,12 @@ export interface CarouselProps extends ComponentBaseProps {
   onWillChange?: () => void;
   /** onPageSetup */
   onPageSetup?: () => void;
+  /** 禁用缩放动画 */
+  noScale?: boolean;
+  /** false | 将不可见内容卸载，只保留空容器(由于存在动画，当前项的前后容器总是会保持装载状态) */
+  invisibleUnmount?: boolean;
+  /** true | 元素不可见时，将其display设置为node(需要保证每项只包含一个子元素且能够设置style，注意事项与invisibleUnmount一致) */
+  invisibleHidden?: boolean;
 }
 
 export interface CarouselRef {
@@ -80,11 +88,13 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
       wheel = true,
       drag = true,
       onWillChange = dumpFn,
+      noScale = true,
     },
     ref,
   ) => {
     // 格式化children为适合loop的格式，后面一律以loopValid决定是否开启了loop
     const [children, loopValid] = loopChildrenHandle(_children, loop);
+
     // 获取包裹元素的尺寸等信息
     const [wrapRef, { width, height }] = useMeasure();
 
@@ -93,6 +103,7 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
 
     // 决定每页的尺寸
     const size = vertical ? height : width;
+
     // 当前页码，当为loop时，所有页码的基准值要+1
     const page = useRef(loopValid ? initPage + 1 : initPage);
 
@@ -115,7 +126,6 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
     useEffect(
       function resize() {
         goTo(page.current, true);
-        // eslint-disable-next-line
       },
       [size],
     );
@@ -259,7 +269,7 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
     }
 
     /** 根据指定页码计算实际页码，用于处理开启loop后页面顺序错乱的问题 */
-    function getPagenNmber(currentPage: number) {
+    function getPageNumber(currentPage: number) {
       if (!loopValid) {
         return currentPage;
       }
@@ -269,7 +279,7 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
     }
 
     function pageChange(currentPage: number, first?: boolean) {
-      onChange && onChange(getPagenNmber(currentPage), !!first);
+      onChange && onChange(getPageNumber(currentPage), !!first);
     }
 
     /** 暂时关闭自动轮播 */
@@ -308,12 +318,16 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
               key={i}
               className="m78-carousel_item"
               style={{
+                // 防止内容被优化卸载后高度为0
+                height: vertical ? height : undefined,
                 zIndex: page.current === i ? 1 : 0,
-                transform: spProp.scale.interpolate(_scale => {
-                  /* 指定当前不参与动画的页 */
-                  const skip = i < page.current - 1 || i > page.current + 1;
-                  return `scale(${skip ? 1 : _scale})`;
-                }),
+                transform: noScale
+                  ? undefined
+                  : spProp.scale.interpolate(_scale => {
+                      /* 指定当前不参与动画的页 */
+                      const skip = i < page.current - 1 || i > page.current + 1;
+                      return `scale(${skip ? 1 : _scale})`;
+                    }),
               }}
             >
               {item}
@@ -334,7 +348,7 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
                         stopAutoPlay();
                       }}
                       className={cls('m78-carousel_ctrl-item', {
-                        __active: i === getPagenNmber(page.current),
+                        __active: i === getPageNumber(page.current),
                       })}
                     />
                   )
@@ -342,7 +356,7 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
               })
             ) : (
               <span className="m78-carousel_ctrl-text">
-                {getPagenNmber(page.current) + 1} /{' '}
+                {getPageNumber(page.current) + 1} /{' '}
                 {loopValid ? children.length - 2 : children.length}
               </span>
             )}

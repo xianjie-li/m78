@@ -7,7 +7,7 @@ export default {
   },
   title: 'M78',
   description: 'components, hooks, utils, part of the react toolchain',
-  logo: 'https://gitee.com/llixianjie/docs/raw/master/fr/logo.png',
+  logo: 'https://gitee.com/llixianjie/m78/raw/master/public/logo.png',
   locales: [['zh-CN', '中文']],
   outputPath: 'docs',
   base: '/m78/',
