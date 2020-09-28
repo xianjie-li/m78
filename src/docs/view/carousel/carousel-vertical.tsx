@@ -7,10 +7,10 @@ import img3 from '@/mock/img/10.png';
 
 const Demo = () => (
   <div>
-    <Carousel wheel height={500} width={320} vertical>
-      <img src={img1} alt="" style={{ width: '100%', height: 500, objectFit: 'cover' }} />
-      <img src={img2} alt="" style={{ width: '100%', height: 500, objectFit: 'cover' }} />
-      <img src={img3} alt="" style={{ width: '100%', height: 500, objectFit: 'cover' }} />
+    <Carousel wheel height={590} width={320} vertical>
+      <img src={img1} alt="" style={{ width: '100%', height: 590, objectFit: 'cover' }} />
+      <img src={img2} alt="" style={{ width: '100%', height: 590, objectFit: 'cover' }} />
+      <img src={img3} alt="" style={{ width: '100%', height: 590, objectFit: 'cover' }} />
     </Carousel>
   </div>
 );

@@ -6,7 +6,7 @@ group:
   order: 2000
 ---
 
-# Skeleton 抽屉
+# Skeleton 骨架
 
 与`Spin`类似，用于对某个区域元素的占位加载提醒。
 

@@ -13,6 +13,7 @@
   }
 
   .m78-viewer_cont {
+    border-radius: 2px;
     border: 6px solid #fff;
     box-shadow: $shadow-1;
   }
@@ -74,7 +75,7 @@
 
       &.__disabled {
         color: $b-disable;
-        .m78-icon {
+        .anticon {
           transform: scale(1) !important;
         }
       }
@@ -87,7 +88,7 @@
         color: $color-error;
       }
 
-      .m78-icon {
+      .anticon {
         &:hover {
           transform: scale(1.1);
         }

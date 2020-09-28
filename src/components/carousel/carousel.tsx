@@ -9,8 +9,6 @@ import cls from 'classnames';
 import { dumpFn } from '@lxjx/utils';
 import { ComponentBaseProps } from '../types/types';
 
-/* TODO: 关闭拉动缩小动画，内置性能优化 */
-
 export interface CarouselProps extends ComponentBaseProps {
   /** 子元素，必须为多个直接子元素或子元素数组 */
   children: ReactElement[];
@@ -38,13 +36,11 @@ export interface CarouselProps extends ComponentBaseProps {
   onChange?: (currentPage: number, first?: boolean) => void;
   /** 当发生任何可能切换页面的操作(drag、滚动)时触发 */
   onWillChange?: () => void;
-  /** onPageSetup */
-  onPageSetup?: () => void;
   /** 禁用缩放动画 */
   noScale?: boolean;
-  /** false | 将不可见内容卸载，只保留空容器(由于存在动画，当前项的前后容器总是会保持装载状态) */
+  /** 将不可见内容卸载，只保留空容器(由于存在动画，当前项的前后容器总是会保持装载状态, 启用loop时会有额外规则，见注意事项) */
   invisibleUnmount?: boolean;
-  /** true | 元素不可见时，将其display设置为node(需要保证每项只包含一个子元素且能够设置style，注意事项与invisibleUnmount一致) */
+  /** 元素不可见时，将其display设置为node(需要保证每项只包含一个子元素且能够设置style，注意事项与invisibleUnmount一致) */
   invisibleHidden?: boolean;
 }
 
@@ -88,7 +84,9 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
       wheel = true,
       drag = true,
       onWillChange = dumpFn,
-      noScale = true,
+      noScale = false,
+      invisibleUnmount = false,
+      invisibleHidden = false,
     },
     ref,
   ) => {
@@ -298,6 +296,53 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
       }, 4000);
     }
 
+    function renderItem(item: ReactElement, i: number) {
+      // 是否需要render，取决于invisibleUnmount和当前页面
+      let needMount = true;
+
+      let renderNode = item;
+
+      if (invisibleUnmount || invisibleHidden) {
+        const pInd = getPageNumber(page.current);
+        // 启用了loop且为前两页和后两页
+        const isLoopAndFirstOrLast = loopValid && (i <= 1 || i >= children.length - 2);
+        // 不在前一页或后一页之间(根据loop状态调整)
+        const notBeforeAfterBetween =
+          i < pInd - (loopValid ? 0 : 1) || i > pInd + (loopValid ? 2 : 1);
+
+        const pass = !notBeforeAfterBetween || isLoopAndFirstOrLast;
+
+        if (invisibleUnmount) {
+          needMount = pass;
+        }
+
+        if (invisibleHidden && !pass && React.isValidElement<{ style: any }>(item)) {
+          renderNode = React.cloneElement(item, {
+            style: { ...item.props.style, display: 'none' },
+          });
+        }
+      }
+
+      return (
+        <animated.div
+          key={i}
+          className="m78-carousel_item"
+          style={{
+            zIndex: page.current === i ? 1 : 0,
+            transform: noScale
+              ? undefined
+              : spProp.scale.interpolate(_scale => {
+                  /* 指定当前不参与动画的页 */
+                  const skip = i < page.current - 1 || i > page.current + 1;
+                  return `scale(${skip ? 1 : _scale})`;
+                }),
+          }}
+        >
+          {needMount && renderNode}
+        </animated.div>
+      );
+    }
+
     return (
       <div
         className={cls('m78-carousel', className, { __vertical: vertical })}
@@ -313,26 +358,7 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
             ),
           }}
         >
-          {children.map((item, i) => (
-            <animated.div
-              key={i}
-              className="m78-carousel_item"
-              style={{
-                // 防止内容被优化卸载后高度为0
-                height: vertical ? height : undefined,
-                zIndex: page.current === i ? 1 : 0,
-                transform: noScale
-                  ? undefined
-                  : spProp.scale.interpolate(_scale => {
-                      /* 指定当前不参与动画的页 */
-                      const skip = i < page.current - 1 || i > page.current + 1;
-                      return `scale(${skip ? 1 : _scale})`;
-                    }),
-              }}
-            >
-              {item}
-            </animated.div>
-          ))}
+          {children.map(renderItem)}
         </animated.div>
         {control && (
           <div className="m78-carousel_ctrl m78-stress">

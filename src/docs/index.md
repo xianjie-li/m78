@@ -12,7 +12,7 @@ order: 1
 
 ## 🎉Introduction
 
-一套 react 基础库，包含常用组件、hooks、以及其他工具。[查看文档](https://iixianjie.github.io/m78/docs)
+一套 react 基础库，包含常用组件、hooks、以及其他工具。[查看文档](http://llixianjie.gitee.io/m78/docs)
 
 <br>
 
@@ -66,7 +66,7 @@ function App() {
 
 <br>
 
-### `样式` 
+### `样式`
 
 样式采用后编译(开发时编译), 你需要为你的`webpack`或其他打包器添加`scss`文件支持才能正常使用。
 

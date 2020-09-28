@@ -35,6 +35,8 @@ export interface ImagePreviewProps extends ReactRenderApiProps {
 /* 禁用内部图片的拖动 */
 const disabledDrag = (event: React.DragEvent) => event.preventDefault();
 
+/* TODO: 添加键盘操作 */
+
 const _ImagePreview: React.FC<ImagePreviewProps> = ({
   page = 0,
   images = [],
@@ -96,6 +98,10 @@ const _ImagePreview: React.FC<ImagePreviewProps> = ({
   );
 
   const bindDrag = useDrag(({ time, first, last, memo, movement: [x], direction: [direct] }) => {
+    if (direct === 0 && last) {
+      close();
+    }
+
     if (last && memo) {
       const isPrev = direct > 0;
       const distanceOver = Math.abs(x) > window.innerWidth / 2; // 滑动距离超过半屏
@@ -180,37 +186,41 @@ const _ImagePreview: React.FC<ImagePreviewProps> = ({
         toggle={show && images.length > 0}
         mountOnEnter
         className="m78-image-preview"
-        {...bindDrag()}
-        onDoubleClick={close}
       >
-        <Carousel
-          ref={carousel}
-          initPage={page}
-          wheel={false}
-          drag={false}
-          loop={false}
-          forceNumberControl
-          onChange={onChange}
+        <div {...bindDrag()}>
+          <Carousel
+            ref={carousel}
+            initPage={page}
+            wheel={false}
+            drag={false}
+            loop={false}
+            forceNumberControl
+            onChange={onChange}
+          >
+            {images.map((item, key) => (
+              <div key={key} className="m78-image-preview_img-wrap">
+                <Viewer ref={viewer => (self.viewers[key] = viewer!)}>
+                  <span>
+                    <If when={self.currentPage >= key - 1 && self.currentPage <= key + 1}>
+                      <Picture
+                        {...stopPropagation}
+                        src={item.img}
+                        alt="图片加载失败"
+                        className="m78-image-preview_img"
+                        imgProps={{ onDragStart: disabledDrag }}
+                      />
+                    </If>
+                  </span>
+                </Viewer>
+              </div>
+            ))}
+          </Carousel>
+        </div>
+        <div
+          className="m78-image-preview_ctrl-bar"
+          onClick={stopPropagation.onClick}
+          onDragStart={e => e.stopPropagation()}
         >
-          {images.map((item, key) => (
-            <div key={key} className="m78-image-preview_img-wrap">
-              <Viewer ref={viewer => (self.viewers[key] = viewer!)}>
-                <span>
-                  <If when={self.currentPage >= key - 1 && self.currentPage <= key + 1}>
-                    <Picture
-                      {...stopPropagation}
-                      src={item.img}
-                      alt="图片加载失败"
-                      className="m78-image-preview_img"
-                      imgProps={{ onDragStart: disabledDrag }}
-                    />
-                  </If>
-                </span>
-              </Viewer>
-            </div>
-          ))}
-        </Carousel>
-        <div className="m78-image-preview_ctrl-bar" onDoubleClick={stopPropagation.onClick}>
           <If when={images.length > 1}>
             <span
               className={cls({ __disabled: state.disabledPrev })}
