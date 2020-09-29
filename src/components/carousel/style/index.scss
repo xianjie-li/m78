@@ -6,6 +6,12 @@
   overflow: hidden;
   touch-action: none;
 
+  &.__noShadow {
+    .m78-carousel_item {
+      box-shadow: none;
+    }
+  }
+
   &.__vertical {
     .m78-carousel_wrap {
       flex-direction: column;

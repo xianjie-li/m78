@@ -29,8 +29,11 @@ const Demo = () => {
       <div className="mt-32">
         <Button onClick={() => ref.current.prev()}>上一页</Button>
         <Button onClick={() => ref.current.next()}>下一页</Button>
-        <Button onClick={() => ref.current.goTo(5)}>第5页</Button>
-        <Button onClick={() => ref.current.goTo(5, true)}>第5页(无动画)</Button>
+        <Button onClick={() => ref.current.goTo(0)}>第1页</Button>
+        <Button onClick={() => ref.current.goTo(1)}>第2页</Button>
+        <Button onClick={() => ref.current.goTo(4)}>第5页</Button>
+        <Button onClick={() => ref.current.goTo(8)}>第9页</Button>
+        <Button onClick={() => ref.current.goTo(4, true)}>第5页(无动画)</Button>
       </div>
     </div>
   );

@@ -190,3 +190,5 @@ export {
   getCurrentParent,
   triggerHighlight,
 };
+
+export * from './types';

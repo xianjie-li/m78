@@ -1547,10 +1547,10 @@
     "@lxjx/utils" "^1.4.5"
     tslib "^2.0.0"
 
-"@lxjx/fr-click-effect@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.npm.taobao.org/@lxjx/fr-click-effect/download/@lxjx/fr-click-effect-1.0.2.tgz#b3450eaf968ea738350b645f976dd27c7efe8603"
-  integrity sha1-s0UOr5aOpzg1C2Rfl23SfH7+hgM=
+"@lxjx/click-effect@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.npm.taobao.org/@lxjx/click-effect/download/@lxjx/click-effect-1.0.0.tgz#a12ff59794d709d8680abe22256310d948d4ad18"
+  integrity sha1-oS/1l5TXCdhoCr4iJWMQ2UjUrRg=
   dependencies:
     "@babel/runtime" "^7.5.5"
 

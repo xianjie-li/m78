@@ -38,6 +38,8 @@ export interface CarouselProps extends ComponentBaseProps {
   onWillChange?: () => void;
   /** 禁用缩放动画 */
   noScale?: boolean;
+  /** 禁用项阴影 */
+  noShadow?: boolean;
   /** 将不可见内容卸载，只保留空容器(由于存在动画，当前项的前后容器总是会保持装载状态, 启用loop时会有额外规则，见注意事项) */
   invisibleUnmount?: boolean;
   /** 元素不可见时，将其display设置为node(需要保证每项只包含一个子元素且能够设置style，注意事项与invisibleUnmount一致) */
@@ -87,6 +89,7 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
       noScale = false,
       invisibleUnmount = false,
       invisibleHidden = false,
+      noShadow,
     },
     ref,
   ) => {
@@ -148,7 +151,9 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
     useImperativeHandle(ref, () => ({
       prev,
       next,
-      goTo,
+      goTo(currentPage: number) {
+        goTo(loopValid ? currentPage + 1 : currentPage);
+      },
     }));
 
     useInterval(
@@ -328,6 +333,7 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
           key={i}
           className="m78-carousel_item"
           style={{
+            height: vertical ? _height : undefined,
             zIndex: page.current === i ? 1 : 0,
             transform: noScale
               ? undefined
@@ -345,7 +351,7 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
 
     return (
       <div
-        className={cls('m78-carousel', className, { __vertical: vertical })}
+        className={cls('m78-carousel', className, { __vertical: vertical, __noShadow: noShadow })}
         ref={wrapRef}
         style={{ height: vertical ? _height : 'auto', width: _width || 'auto', ...style }}
       >
