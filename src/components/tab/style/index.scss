@@ -1,11 +1,18 @@
 @import '../../style/index';
 
 .m78-tab {
+  font-size: $font-size;
   background-color: $component-background;
 
   &.__flexible {
     .m78-tab_tabs-item {
       flex: 1 0 auto;
+    }
+  }
+
+  &.__noSplitLine  {
+    .m78-tab_tabs::after {
+      display: none;
     }
   }
 
@@ -127,6 +134,8 @@
     .m78-tab_tabs {
       margin-top: 12px;
       margin-bottom: 0;
+      padding-bottom: 0;
+      padding-top: 2px;
     }
 
     .m78-tab_tabs::after {
@@ -204,7 +213,7 @@
 
     &.__active {
       color: $color;
-      font-weight: bold;
+      //font-weight: bold;
     }
   }
 

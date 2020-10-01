@@ -5,7 +5,7 @@ import { ComponentBaseProps } from '../types/types';
 
 export type TabItemElement = React.ReactElement<TabItemProps, typeof TabItem>;
 
-export interface TabProps {
+export interface TabProps extends ComponentBaseProps {
   /** 当前索引 */
   index?: number;
   /** 索引改变 */
@@ -27,21 +27,27 @@ export interface TabProps {
 
   /** 禁用 */
   disabled?: boolean;
-  /** 前置内容 */
-  prefix?: React.ReactNode;
-  /** 后置内容 */
-  suffix?: React.ReactNode;
   /** tab会在滚动隐藏时固定到顶部 */
   affix?: boolean;
   /** 将不可见内容卸载，只保留空容器(由于存在动画，当前项的前后容器总是会保持装载状态, 启用loop时会有额外规则，见注意事项) */
   invisibleUnmount?: boolean;
   /** 元素不可见时，将其display设置为node(需要保证每项只包含一个子元素且能够设置style，注意事项与invisibleUnmount一致) */
   invisibleHidden?: boolean;
+
+  /* ======== 样式定制 ======== */
+  /** extend ComponentBaseProps | 包裹元素的类名 */
+  // className?: string;
+  /** extend ComponentBaseProps | 包裹元素样式 */
+  // style?: React.CSSProperties;
+  /** 关闭分割线 */
+  noSplitLine?: boolean;
+  /** 关闭活动线 */
+  noActiveLine?: boolean;
 }
 
 export interface TabItemProps extends ComponentBaseProps {
   /** tab文本 */
-  label: string;
+  label: React.ReactNode;
   /** 表示该项的唯一值 */
   value: string | number;
   /** 禁用 */

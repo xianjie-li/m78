@@ -4,12 +4,16 @@ import { useFormState, useSelf } from '@lxjx/hooks';
 import { animated, useSpring } from 'react-spring';
 import { Position } from 'm78/util';
 import Carousel, { CarouselRef } from 'm78/carousel';
+import { DoubleLeftOutlined, DoubleRightOutlined } from 'm78/icon';
+import { useScrollbarWidth } from 'react-use';
 import { formatChild, getChildProps } from './common';
 import { TabItemProps, TabProps } from './type';
 
 const defaultProps = {
   loop: false,
 };
+
+/* 直接出现阴影，不使用点击控制，滚动条大于 6 ? 使用滚轮代理模式， 否则使用滚动条自由拖动 */
 
 const Tab: React.FC<TabProps> = props => {
   const {
@@ -22,6 +26,10 @@ const Tab: React.FC<TabProps> = props => {
     invisibleUnmount,
     disabled,
     loop,
+    noActiveLine,
+    noSplitLine,
+    className,
+    style,
   } = props as TabProps & typeof defaultProps;
 
   // TabItem列表
@@ -29,6 +37,10 @@ const Tab: React.FC<TabProps> = props => {
 
   // 所有item的prop配置
   const childProps = getChildProps(child);
+
+  const scrollBarW = useScrollbarWidth();
+
+  console.log(scrollBarW);
 
   // 纵向显示
   const isVertical = position === Position.left || position === Position.right;
@@ -48,9 +60,10 @@ const Tab: React.FC<TabProps> = props => {
     defaultValueKey: 'defaultIndex',
   });
 
+  // 更新活动线
   useEffect(() => {
-    setItemStyle(val);
-  }, [val]);
+    !noActiveLine && setItemStyle(val);
+  }, [val, size, position, child.length, flexible]);
 
   if (!childProps.length) {
     return null;
@@ -89,16 +102,20 @@ const Tab: React.FC<TabProps> = props => {
         {},
         size && `__${size}`,
         position && `__${position}`,
-        flexible && `__flexible`,
+        flexible && '__flexible',
+        noSplitLine && '__noSplitLine',
+        className,
+        '__hasPage',
       )}
+      style={style}
     >
       <div className="m78-tab_tabs">
-        {/* <div className="m78-tab_page-ctrl __left"> */}
-        {/*  <DoubleLeftOutlined /> */}
-        {/* </div> */}
-        {/* <div className="m78-tab_page-ctrl __right"> */}
-        {/*  <DoubleRightOutlined /> */}
-        {/* </div> */}
+        <div className="m78-tab_page-ctrl __left" title="上翻">
+          <DoubleLeftOutlined />
+        </div>
+        <div className="m78-tab_page-ctrl __right" title="下翻">
+          <DoubleRightOutlined />
+        </div>
 
         {childProps.map((item, index) => (
           <div
@@ -114,15 +131,17 @@ const Tab: React.FC<TabProps> = props => {
           </div>
         ))}
 
-        <animated.div
-          className="m78-tab_line"
-          style={{
-            [isVertical ? 'height' : 'width']: spProps.length.interpolate(w => `${w}px`),
-            transform: spProps.offset.interpolate(
-              ofs => `translate3d(${isVertical ? 0 : ofs}px, ${isVertical ? ofs : 0}px, 0px)`,
-            ),
-          }}
-        />
+        {!noActiveLine && (
+          <animated.div
+            className="m78-tab_line"
+            style={{
+              [isVertical ? 'height' : 'width']: spProps.length.interpolate(w => `${w}px`),
+              transform: spProps.offset.interpolate(
+                ofs => `translate3d(${isVertical ? 0 : ofs}px, ${isVertical ? ofs : 0}px, 0px)`,
+              ),
+            }}
+          />
+        )}
       </div>
 
       <Carousel

@@ -2,7 +2,9 @@ import React from 'react';
 import { TabItemProps } from 'm78/tab/type';
 
 const TabItem: React.FC<TabItemProps> = ({ children, disabled, value, label, ...oProps }) => {
-  return <div {...oProps}>{children}</div>;
+  return React.isValidElement(children)
+    ? React.cloneElement(children, { ...oProps })
+    : (children as any);
 };
 
 export default TabItem;
