@@ -136,9 +136,9 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
         page.current = loopValid ? initPage + 1 : initPage;
         goTo(page.current, true);
         // /* 解决图片的拖动问题 */
-        // Array.from(innerWrap.current.querySelectorAll('img')).forEach(item => {
-        //   item.setAttribute('draggable', 'false');
-        // });
+        Array.from(innerWrap.current.querySelectorAll('img')).forEach(item => {
+          item.ondragstart = e => e.preventDefault();
+        });
       },
       [children.length],
     );
@@ -171,17 +171,7 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
         onWheelStart() {
           onWillChange();
         },
-        onDrag({
-          event,
-          down,
-          movement: [xMove, yMove],
-          direction: [xDirect, yDirect],
-          cancel,
-          first,
-        }) {
-          event?.stopPropagation();
-          event?.preventDefault();
-
+        onDrag({ down, movement: [xMove, yMove], direction: [xDirect, yDirect], cancel, first }) {
           const move = vertical ? yMove : xMove;
           const distance = Math.abs(move);
           const direct = vertical ? yDirect : xDirect;

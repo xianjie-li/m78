@@ -2,7 +2,6 @@ import React from 'react';
 import Form, { Item } from 'm78/form';
 import Input from 'm78/input';
 import Button from 'm78/button';
-import { CloseOutlined } from 'm78/icon';
 
 const List = () => (
   <Form
@@ -26,8 +25,8 @@ const List = () => (
                 <Item noStyle style={{ width: 200 }} name={[filed.name, 'age']} required>
                   <Input />
                 </Item>
-                <Button className="ml-16" icon onClick={() => operations.remove(filed.name)}>
-                  <CloseOutlined />
+                <Button className="ml-16" color="red" onClick={() => operations.remove(filed.name)}>
+                  删除
                 </Button>
               </div>
             ))}

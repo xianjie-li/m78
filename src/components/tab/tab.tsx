@@ -1,14 +1,15 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import cls from 'classnames';
 import { useFormState, useScroll, useSelf, useSetState } from '@lxjx/hooks';
 import { animated, useSpring } from 'react-spring';
 import { Position } from 'm78/util';
 import Carousel, { CarouselRef } from 'm78/carousel';
-import { DoubleLeftOutlined, DoubleRightOutlined } from 'm78/icon';
-import { useScrollbarWidth } from 'react-use';
-import { isNumber } from '@lxjx/utils';
+import { CaretLeftOutlined, CaretRightOutlined } from 'm78/icon';
+import { If } from 'm78/fork';
 import { formatChild, getChildProps } from './common';
-import { TabItemProps, TabProps } from './type';
+import { Share, TabProps } from './type';
+import { useMethods } from './methods';
+import { useLifeCycle } from './life-cycle';
 
 const defaultProps = {
   loop: false,
@@ -33,53 +34,32 @@ const Tab: React.FC<TabProps> = props => {
     style,
   } = props as TabProps & typeof defaultProps;
 
-  // TabItem列表
+  // 格式化TabItem列表
   const child = formatChild(children);
 
   // 所有item的prop配置
   const childProps = getChildProps(child);
 
-  const scrollBarW = useScrollbarWidth();
-
-  const [state, setState] = useSetState({
+  // 内部状态
+  const [state, setState] = useSetState<Share['state']>({
     startFlag: false,
     endFlag: false,
+    hasTouch: false,
   });
 
-  // 纵向显示
+  // 是否纵向显示
   const isVertical = position === Position.left || position === Position.right;
 
-  const self = useSelf({
+  // 实例状态
+  const self = useSelf<Share['self']>({
     itemSpringSetCount: 0,
-    tabRefs: [] as HTMLDivElement[],
+    tabRefs: [],
   });
 
   const carouselRef = useRef<CarouselRef>(null!);
 
+  // 线条动画
   const [spProps, set] = useSpring(() => ({ length: 0, offset: 0 }));
-
-  const { ref: tabWrapRef, get: getScrollMeta, set: setScroll } = useScroll<HTMLDivElement>({
-    onScroll(meta) {
-      if (hasScroll(meta)) {
-        const nextStart = isVertical ? !meta.touchTop : !meta.touchLeft;
-        const nextEnd = isVertical ? !meta.touchBottom : !meta.touchRight;
-
-        if (nextStart !== state.startFlag || nextEnd !== state.endFlag) {
-          console.log('refresh');
-
-          setState({
-            endFlag: nextEnd,
-            startFlag: nextStart,
-          });
-        }
-      } else if (state.endFlag || state.startFlag) {
-        setState({
-          endFlag: false,
-          startFlag: false,
-        });
-      }
-    },
-  });
 
   // 控制tab显示
   const [val, setVal] = useFormState(props, 0, {
@@ -87,136 +67,78 @@ const Tab: React.FC<TabProps> = props => {
     defaultValueKey: 'defaultIndex',
   });
 
-  // 更新活动线
-  useEffect(() => {
-    !noActiveLine && refreshItemLine(val);
-  }, [val, size, position, child.length, flexible]);
+  const share: Share = {
+    isVertical,
+    self,
+    state,
+    setState,
+    val,
+    setVal,
+    set,
+    carouselRef,
+    disabled,
+    scroller: null as any,
+    child,
+  };
 
-  // 修正滚动位置
-  useEffect(() => {
-    const sm = getScrollMeta();
+  // 内部方法
+  const methods = useMethods(share);
 
-    if (!tabWrapRef.current) return;
+  const { onScroll, onTabClick } = methods;
 
-    const tabs = tabWrapRef.current.querySelectorAll<HTMLDivElement>('.m78-tab_tabs-item');
+  // 控制滚动
+  share.scroller = useScroll<HTMLDivElement>({
+    onScroll,
+    throttleTime: 50,
+  });
 
-    refreshScrollFlag(sm, tabs, val);
-  }, [val]);
+  // 挂载各种生命周期
+  useLifeCycle(share, methods, props);
 
   if (!childProps.length) {
     return null;
-  }
-
-  /** 根据索引设置活动线的状态 */
-  function refreshItemLine(index: number) {
-    const itemEl = self.tabRefs[index];
-
-    if (!itemEl) return;
-
-    const length = isVertical ? itemEl.offsetHeight : itemEl.offsetWidth;
-    const offset = isVertical ? itemEl.offsetTop : itemEl.offsetLeft;
-
-    set({ length, offset, immediate: self.itemSpringSetCount === 0 });
-
-    self.itemSpringSetCount++;
-  }
-
-  /** 根据当前滚动状态设置滚动内容指示器的状态 */
-  function refreshScrollFlag(
-    meta: ReturnType<typeof getScrollMeta>,
-    tabsEl: NodeListOf<HTMLDivElement>,
-    index: number,
-  ) {
-    console.log(hasScroll(meta));
-
-    if (!hasScroll(meta)) return;
-
-    const currentEl = tabsEl[index];
-    const nextEl = tabsEl[index + 1];
-    const prevEl = tabsEl[index - 1];
-
-    console.log(nextEl, prevEl);
-
-    if (!currentEl) return;
-    if (!nextEl && !prevEl) return;
-
-    let offset: number;
-
-    const scrollOffset = isVertical ? meta.y : meta.x;
-
-    if (prevEl) {
-      // 当前元素上一个元素不可见
-      const prevOffset = isVertical ? prevEl.offsetTop : prevEl.offsetLeft;
-
-      if (prevOffset < scrollOffset) {
-        offset = prevOffset;
-      }
-    } else {
-      // 处理第一个元素点击
-      offset = 0;
-    }
-
-    if (nextEl) {
-      // 当前元素下一个元素不可见
-      const wrapSize = isVertical ? meta.height : meta.width;
-      const nextOffset = isVertical ? nextEl.offsetTop : nextEl.offsetLeft;
-      const nextSize = isVertical ? nextEl.offsetHeight : nextEl.offsetWidth;
-
-      if (scrollOffset + wrapSize < nextOffset + nextSize) {
-        offset = nextOffset + nextSize - wrapSize;
-      }
-    } else {
-      // 处理最后一个元素点击
-      offset = isVertical ? meta.yMax : meta.xMax;
-    }
-
-    if (!isNumber(offset!)) return;
-
-    setScroll({ [isVertical ? 'y' : 'x']: offset });
-  }
-
-  /** 检测是否可滚动，接收 UseScrollMeta */
-  function hasScroll(meta: ReturnType<typeof getScrollMeta>) {
-    const _maxSize = isVertical ? meta.yMax : meta.xMax;
-
-    return !!_maxSize;
-  }
-
-  /** tab项点击 */
-  function onTabClick(itemProps: TabItemProps, index: number) {
-    if (val === index) return;
-    if (itemProps.disabled || disabled) return;
-
-    if (self.itemSpringSetCount !== 0) {
-      carouselRef.current.goTo(index);
-    }
-
-    setVal(index);
   }
 
   return (
     <div
       className={cls(
         'm78-tab',
-        {},
         size && `__${size}`,
         position && `__${position}`,
         flexible && '__flexible',
         noSplitLine && '__noSplitLine',
         className,
         '__hasPage',
+        'm78-scroll-bar',
       )}
       style={style}
     >
       <div className="m78-tab_tabs-wrap" style={{ height: isVertical ? height : undefined }}>
-        {state.endFlag && (
-          <div className={cls('m78-tab_scroll-flag', isVertical && '__isVertical')} />
-        )}
+        <If when={!state.hasTouch && state.startFlag}>
+          <CaretLeftOutlined
+            className="m78-tab_start-ctrl"
+            title="上翻"
+            onClick={methods.scrollPrev}
+          />
+        </If>
+
         {state.startFlag && (
           <div className={cls('m78-tab_scroll-flag __start', isVertical && '__isVertical')} />
         )}
 
-        <div className="m78-tab_tabs" ref={tabWrapRef}>
+        {state.endFlag && (
+          <div className={cls('m78-tab_scroll-flag', isVertical && '__isVertical')} />
+        )}
+
+        <If when={!state.hasTouch && state.endFlag}>
+          <CaretRightOutlined
+            className="m78-tab_end-ctrl"
+            title="下翻"
+            onClick={methods.scrollNext}
+          />
+        </If>
+
+        <div className="m78-tab_tabs" ref={share.scroller.ref as any}>
           {childProps.map((item, index) => (
             <div
               key={item.value}

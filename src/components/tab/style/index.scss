@@ -57,6 +57,20 @@
     &.__flexible .m78-tab_tabs-item {
       flex: none;
     }
+
+    .m78-tab_start-ctrl {
+      left: 50%;
+      top: -32px;
+      transform: translateX(-50%) rotate(90deg);
+    }
+
+    .m78-tab_end-ctrl {
+      left: 50%;
+      right: auto;
+      top: auto;
+      bottom: -32px;
+      transform: translateX(-50%) rotate(90deg);
+    }
   }
 
   &.__left {
@@ -223,6 +237,10 @@
     position: relative;
     margin-bottom: 12px;
 
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
     &::after {
       position: absolute;
       content: '';
@@ -234,6 +252,23 @@
     }
   }
 
-  &_cont-item {
+  &_start-ctrl, &_end-ctrl {
+    position: absolute;
+    top: 50%;
+    font-size: 24px;
+    cursor: pointer;
+    transform: translateY(-50%);
+    color: $b-second;
+    z-index: $z-index-base;
+
+    @include effect-font;
+  }
+
+  &_start-ctrl {
+    left: -28px;
+  }
+
+  &_end-ctrl {
+    right: -28px;
   }
 }
