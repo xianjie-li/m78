@@ -10,26 +10,34 @@
     }
   }
 
-  &.__noSplitLine  {
+  &.__noSplitLine {
     .m78-tab_tabs::after {
       display: none;
     }
   }
 
-  &.__left, &.__right {
+  &.__left,
+  &.__right {
     display: flex;
 
+    .m78-tab_tabs-wrap {
+      min-height: 100%;
+      margin-bottom: 0;
+    }
+
     .m78-tab_tabs {
+      height: 100%;
       flex-direction: column;
       border-bottom: none;
-      margin-bottom: 0;
+      overflow-x: hidden;
+      overflow-y: auto;
     }
 
     .m78-tab_cont {
       flex: 1;
     }
 
-    .m78-tab_tabs::after {
+    .m78-tab_tabs-wrap::after {
       top: 0;
       bottom: 0;
       width: 2px;
@@ -49,38 +57,18 @@
     &.__flexible .m78-tab_tabs-item {
       flex: none;
     }
-
-    &.__hasPage .m78-tab_tabs {
-      padding: 30px 0;
-    }
-
-    .m78-tab_page-ctrl {
-      width: 100%;
-      height: 30px;
-
-      .anticon {
-        transform: rotate(90deg);
-      }
-    }
-
-    .m78-tab_page-ctrl.__left {
-      top: 0;
-      box-shadow: 0 3px 4px $b-border;
-    }
-
-    .m78-tab_page-ctrl.__right {
-      bottom: 0;
-      box-shadow: 0 -3px 4px $b-border;
-    }
   }
 
   &.__left {
-    .m78-tab_tabs {
+    .m78-tab_tabs-wrap {
       margin-right: 12px;
+    }
+
+    .m78-tab_tabs {
       align-items: flex-end;
     }
 
-    .m78-tab_tabs::after {
+    .m78-tab_tabs-wrap::after {
       right: 0;
       left: auto;
     }
@@ -97,12 +85,11 @@
 
   &.__right {
     flex-direction: row-reverse;
-
-    .m78-tab_tabs {
+    .m78-tab_tabs-wrap {
       margin-left: 12px;
     }
 
-    .m78-tab_tabs::after {
+    .m78-tab_tabs-wrap::after {
       left: 0;
       right: auto;
     }
@@ -115,30 +102,23 @@
     .m78-tab_tabs-item {
       justify-content: flex-start;
     }
-
-    .m78-tab_page-ctrl.__left {
-      top: 0;
-      box-shadow: 0 3px 4px $b-border;
-    }
-
-    .m78-tab_page-ctrl.__right {
-      bottom: 0;
-      box-shadow: 0 -3px 4px $b-border;
-    }
   }
 
   &.__bottom {
     display: flex;
     flex-direction: column-reverse;
 
-    .m78-tab_tabs {
+    .m78-tab_tabs-wrap {
       margin-top: 12px;
       margin-bottom: 0;
+    }
+
+    .m78-tab_tabs {
       padding-bottom: 0;
       padding-top: 2px;
     }
 
-    .m78-tab_tabs::after {
+    .m78-tab_tabs-wrap::after {
       top: 0;
       bottom: auto;
     }
@@ -151,16 +131,9 @@
       top: 0;
       bottom: auto;
     }
-
-    &.__hasPage {
-      .m78-tab_tabs {
-        padding: 2px 24px 0;
-      }
-    }
   }
 
   &.__small {
-
     .m78-tab_tabs-item {
       height: 32px;
       padding: 0 12px;
@@ -168,7 +141,6 @@
   }
 
   &.__large {
-
     .m78-tab_tabs-item {
       height: 48px;
       padding: 0 20px;
@@ -179,19 +151,9 @@
     position: relative;
     display: flex;
     align-items: center;
-    margin-bottom: 12px;
     overflow: hidden;
     padding-bottom: 2px;
-
-    &::after {
-      position: absolute;
-      content: '';
-      height: 2px;
-      width: 100%;
-      background-color: $b-border;
-      bottom: 0;
-      left: 0;
-    }
+    overflow-x: auto;
   }
 
   &_tabs-item {
@@ -217,34 +179,6 @@
     }
   }
 
-  &.__hasPage {
-    .m78-tab_tabs {
-      padding: 0 24px 2px;
-    }
-  }
-
-  &_page-ctrl {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    cursor: pointer;
-    height: 100%;
-    width: 24px;
-
-    @include effect-bg;
-
-    &.__left {
-      left: 0;
-      box-shadow: 3px 0 4px $b-border;
-    }
-
-    &.__right {
-      right: 0;
-      box-shadow: -3px 0 4px $b-border;
-    }
-  }
-
   &_line {
     position: absolute;
     bottom: 0;
@@ -255,7 +189,51 @@
     z-index: $z-index-base;
   }
 
-  &_cont-item {
+  &_scroll-flag {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 12px;
+    background: linear-gradient(to left, $b-border, transparent);
 
+    &.__start {
+      left: 0;
+      right: auto;
+      transform: rotate(180deg);
+    }
+
+    &.__isVertical {
+      left: 0;
+      right: 0;
+      width: auto;
+      height: 12px;
+      background: linear-gradient(to top, $b-border, transparent);
+      bottom: 0;
+      top: auto;
+
+      &.__start {
+        top: 0;
+        bottom: auto;
+      }
+    }
+  }
+
+  &_tabs-wrap {
+    position: relative;
+    margin-bottom: 12px;
+
+    &::after {
+      position: absolute;
+      content: '';
+      height: 2px;
+      width: 100%;
+      background-color: $b-border;
+      bottom: 0;
+      left: 0;
+    }
+  }
+
+  &_cont-item {
   }
 }

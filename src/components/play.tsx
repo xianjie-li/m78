@@ -22,9 +22,39 @@ const Play = () => {
         <TabItem label="标签签4" value={4}>
           内容4
         </TabItem>
+        <TabItem label="标签签5" value={5}>
+          内容5
+        </TabItem>
+        <TabItem label="标签签6" value={6}>
+          内容6
+        </TabItem>
+        <TabItem label="标签签7" value={7}>
+          内容7
+        </TabItem>
+        <TabItem label="标签签8" value={8}>
+          内容8
+        </TabItem>
+        <TabItem label="标签签9" value={9}>
+          内容9
+        </TabItem>
+        <TabItem label="标签签10" value={10}>
+          内容10
+        </TabItem>
+        <TabItem label="标签签11" value={11}>
+          内容11
+        </TabItem>
+        <TabItem label="标签签12" value={12}>
+          内容12
+        </TabItem>
+        <TabItem label="标签签13" value={13}>
+          内容13
+        </TabItem>
+        <TabItem label="标签签14" value={14}>
+          内容14
+        </TabItem>
       </Tab>
 
-      <Tab position={Position.left} height={400}>
+      <Tab defaultIndex={2} position={Position.left} height={300}>
         <TabItem label="标签1" value={1}>
           内容1
         </TabItem>
@@ -36,6 +66,36 @@ const Play = () => {
         </TabItem>
         <TabItem label="标签签4" value={4}>
           内容4
+        </TabItem>
+        <TabItem label="标签签5" value={5}>
+          内容5
+        </TabItem>
+        <TabItem label="标签签6" value={6}>
+          内容6
+        </TabItem>
+        <TabItem label="标签签7" value={7}>
+          内容7
+        </TabItem>
+        <TabItem label="标签签8" value={8}>
+          内容8
+        </TabItem>
+        <TabItem label="标签签9" value={9}>
+          内容9
+        </TabItem>
+        <TabItem label="标签签10" value={10}>
+          内容10
+        </TabItem>
+        <TabItem label="标签签11" value={11}>
+          内容11
+        </TabItem>
+        <TabItem label="标签签12" value={12}>
+          内容12
+        </TabItem>
+        <TabItem label="标签签13" value={13}>
+          内容13
+        </TabItem>
+        <TabItem label="标签签14" value={14}>
+          内容14
         </TabItem>
       </Tab>
 
@@ -82,7 +142,40 @@ const Play = () => {
           }
           value={1}
         >
-          内容1
+          <div style={{ overflow: 'auto', height: 200, border: '1px solid red' }}>
+            <div>内容1内容1</div>
+            <div>内容1内容1</div>
+            <div>内容1内容1</div>
+            <div>内容1内容1</div>
+            <div>内容1内容1</div>
+            <div>内容1内容1</div>
+            <div>内容1内容1</div>
+            <div>内容1内容1</div>
+            <div>内容1内容1</div>
+            <div>内容1内容1</div>
+            <div>内容1内容1</div>
+            <div>内容1内容1</div>
+            <div>内容1内容1</div>
+            <div>内容1内容1</div>
+            <div>内容1内容1</div>
+            <div>内容1内容1</div>
+            <div>内容1内容1</div>
+            <div>内容1内容1</div>
+            <div>内容1内容1</div>
+            <div>内容1内容1</div>
+            <div>内容1内容1</div>
+            <div>内容1内容1</div>
+            <div>内容1内容1</div>
+            <div>内容1内容1</div>
+            <div>内容1内容1</div>
+            <div>内容1内容1</div>
+            <div>内容1内容1</div>
+            <div>内容1内容1</div>
+            <div>内容1内容1</div>
+            <div>内容1内容1</div>
+            <div>内容1内容1</div>
+            <div>内容1内容1</div>
+          </div>
         </TabItem>
         <TabItem
           label={
