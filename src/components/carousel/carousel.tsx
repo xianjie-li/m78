@@ -135,10 +135,8 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
       function childChange() {
         page.current = loopValid ? initPage + 1 : initPage;
         goTo(page.current, true);
-        // /* 解决图片的拖动问题 */
-        Array.from(innerWrap.current.querySelectorAll('img')).forEach(item => {
-          item.ondragstart = e => e.preventDefault();
-        });
+
+        preventImageDrag();
       },
       [children.length],
     );
@@ -172,9 +170,21 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
           onWillChange();
         },
         onDrag({ down, movement: [xMove, yMove], direction: [xDirect, yDirect], cancel, first }) {
-          const move = vertical ? yMove : xMove;
-          const distance = Math.abs(move);
           const direct = vertical ? yDirect : xDirect;
+          let move = vertical ? yMove : xMove;
+          let distance = Math.abs(move);
+
+          const aXMove = Math.abs(xMove);
+          const aYMove = Math.abs(yMove);
+
+          // 如果拖动反向明确与滚动反向相反(大于5), 则停止后续事件触发
+          if (aYMove > 5 || aXMove > 5) {
+            if ((!vertical && aYMove > aXMove) || (vertical && aXMove > aYMove)) {
+              cancel!();
+              distance = 0;
+              move = 0;
+            }
+          }
 
           if (down && distance > size / 2) {
             cancel!();
@@ -272,6 +282,10 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
     }
 
     function pageChange(currentPage: number, first?: boolean) {
+      if (invisibleUnmount) {
+        preventImageDrag();
+      }
+
       onChange && onChange(getPageNumber(currentPage), !!first);
     }
 
@@ -337,6 +351,16 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
           {needMount && renderNode}
         </animated.div>
       );
+    }
+
+    /** 禁止内部图片拖动 */
+    function preventImageDrag() {
+      if (!innerWrap.current) return;
+      // /* 解决图片的拖动问题 */
+      Array.from(innerWrap.current.querySelectorAll('img')).forEach(item => {
+        // 直接覆盖item.ondragstart可以省略事件移除步骤
+        item.ondragstart = e => e.preventDefault();
+      });
     }
 
     return (

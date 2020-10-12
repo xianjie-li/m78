@@ -110,8 +110,6 @@ export function useMethods(share: Share) {
       const nextEnd = isVertical ? !meta.touchBottom : !meta.touchRight;
 
       if (nextStart !== state.startFlag || nextEnd !== state.endFlag) {
-        console.log('refresh');
-
         setState({
           endFlag: nextEnd,
           startFlag: nextStart,

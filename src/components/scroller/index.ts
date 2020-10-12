@@ -1,4 +1,4 @@
-import 'm78/scroll/style';
+import 'm78/scroller/style';
 
-export * from './scroll';
-export { default } from './scroll';
+export * from './scroller';
+export { default } from './scroller';

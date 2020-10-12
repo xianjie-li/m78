@@ -97,27 +97,29 @@ const _ImagePreview: React.FC<ImagePreviewProps> = ({
     [page],
   );
 
-  const bindDrag = useDrag(({ time, first, last, memo, movement: [x], direction: [direct] }) => {
-    if (direct === 0 && last) {
-      close();
-    }
-
-    if (last && memo) {
-      const isPrev = direct > 0;
-      const distanceOver = Math.abs(x) > window.innerWidth / 2; // 滑动距离超过半屏
-      const timeOver = time! - memo < 220; // 220ms内
-
-      if (timeOver && distanceOver) {
-        isPrev ? prev() : next();
+  const bindDrag = useDrag(
+    ({ time, first, last, memo, movement: [x], direction: [direct, directY] }) => {
+      if (direct + directY === 0 && last) {
+        close();
       }
 
-      return undefined;
-    }
+      if (last && memo) {
+        const isPrev = direct > 0;
+        const distanceOver = Math.abs(x) > window.innerWidth / 2; // 滑动距离超过半屏
+        const timeOver = time! - memo < 220; // 220ms内
 
-    if (first) {
-      return time;
-    }
-  });
+        if (timeOver && distanceOver) {
+          isPrev ? prev() : next();
+        }
+
+        return undefined;
+      }
+
+      if (first) {
+        return time;
+      }
+    },
+  );
 
   function prev() {
     carousel.current.prev();

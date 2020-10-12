@@ -1,54 +1,35 @@
 import React from 'react';
-import ArticleBox from 'm78/article-box';
 import 'm78/article-box/style';
 
-import img from '@/mock/img/111.jpg';
+import Tab, { TabItem } from 'm78/tab';
 
-const htmlStr = `
-  <div>
-    <h2><center>一篇关于橘子的文章</center></h2>
-  
-    <img src="${img}" />
-    
-    <h3 style="margin-top: 16px">橘子的营养成分:</h3>
-    <table border="1">
-      <tr>
-        <td>iam. Accusamus deciatis, sed.</td>
-        <td>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem sint, ven</td>
-        <td>niti dicta eaque facilis fugiat, ipsum mollitia nisi porro possimus q</td>
-        <td>leuod recusandae sequi sit voluptate. Ipsum perspi</td>
-      </tr>
-      <tr>
-        <td>1</td>
-        <td>2</td>
-        <td>3</td>
-        <td>4</td>
-      </tr>
-      <tr>
-        <td>1</td>
-        <td>2</td>
-        <td>3</td>
-        <td>4</td>
-      </tr>
-      <tr>
-        <td>1</td>
-        <td>2</td>
-        <td>3</td>
-        <td>4</td>
-      </tr>
-    </table>
-    
-    <h3 style="margin-top: 16px">历史:</h3>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus beatae dolorum, ea enim eos exercitationem libero molestiae, natus nobis officiis pariatur quaerat quas ratione repellendus sit tempora unde vel, vitae.</p>
-    <img src="${img}" style="width: 250px;float: left;margin-right: 12px" />
-    <p><span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi fugit quo rerum? Ab accusamus consequatur culpa cumque debitis, dolorum eum exercitationem in ipsa iure quod rem saepe sed sit ullam.</span><span>Dicta, incidunt iusto libero neque omnis quas reprehenderit unde! Aspernatur beatae cumque eaque esse ex, fugit laboriosam laborum libero numquam officia pariatur perferendis placeat quidem sapiente suscipit unde, vero voluptate?</span><span>Ad aliquid esse fugiat fugit numquam rem, reprehenderit totam vitae. Hic nobis officiis quis quisquam repellat. Adipisci, dolore eum excepturi inventore libero numquam odit, pariatur quia repellat repellendus sunt voluptas!</span><span>Dicta iure odit officiis perferendis tempore. A ad aliquam animi aspernatur at delectus dolor, nobis quisquam, quos reiciendis saepe sunt tenetur vero? Doloribus inventore natus neque reprehenderit velit vero voluptatem!</span><span>Accusamus dolorem doloribus esse facilis impedit natus neque nulla provident, quia ratione rem rerum voluptate! Ab aliquam amet cum ea id illum magni molestiae quia repellendus, sed sit totam vero!</span></p>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus beatae dolorum, ea enim eos exercitationem libero molestiae, natus nobis officiis pariatur quaerat quas ratione repellendus sit tempora unde vel, vitae.</p>
-  </div>
-`;
+import sty from './sty.module.scss';
 
 const Demo = () => (
   <div>
-    <ArticleBox watermark="我是水印" html={htmlStr} />
+    <Tab defaultIndex={2}>
+      <TabItem label="Vanilla JS" value={1}>
+        <div className={sty.H300BorderBox}>一个功能强大，使用及其广泛的框架</div>
+      </TabItem>
+      <TabItem label="Dart" value={2}>
+        <div className={sty.H300BorderBox}>
+          Dart是面向对象的、类定义的、单继承的语言。它的语法类似C语言，可以转译为JavaScript，支持接口(interfaces)、混入(mixins)、抽象类(abstract
+          classes)、具体化泛型(reified generics)、可选类型(optional typing)和sound type system
+        </div>
+      </TabItem>
+      <TabItem label="Node" value={3}>
+        <div className={sty.H300BorderBox}>
+          Node.js 是一个基于 Chrome V8 引擎的 JavaScript 运行环境。 Node.js
+          使用了一个事件驱动、非阻塞式 I/O 的模型。
+        </div>
+      </TabItem>
+      <TabItem label="Kotlin" value={4}>
+        <div className={sty.H300BorderBox}>
+          Kotlin可以编译成Java字节码，也可以编译成JavaScript，方便在没有JVM的设备上运行。除此之外Kotlin还可以编译成二进制代码直接运行在机器上（例如嵌入式设备或
+          iOS）。
+        </div>
+      </TabItem>
+    </Tab>
   </div>
 );
 

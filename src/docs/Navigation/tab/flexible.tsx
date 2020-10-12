@@ -7,7 +7,7 @@ import sty from './sty.module.scss';
 
 const Demo = () => (
   <div>
-    <Tab defaultIndex={2}>
+    <Tab flexible>
       <TabItem label="Vanilla JS" value={1}>
         <div className={sty.H300BorderBox}>一个功能强大，使用及其广泛的框架</div>
       </TabItem>

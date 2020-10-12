@@ -15,8 +15,6 @@ const defaultProps = {
   loop: false,
 };
 
-/* 直接出现阴影，不使用点击控制，滚动条大于 6 ? 使用滚轮代理模式， 否则使用滚动条自由拖动 */
-
 const Tab: React.FC<TabProps> = props => {
   const {
     size,
@@ -90,6 +88,7 @@ const Tab: React.FC<TabProps> = props => {
   share.scroller = useScroll<HTMLDivElement>({
     onScroll,
     throttleTime: 50,
+    touchOffset: 6,
   });
 
   // 挂载各种生命周期
