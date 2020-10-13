@@ -27,7 +27,6 @@
     will-change: transform;
     touch-action: none;
     background-color: $component-background;
-    z-index: 0;
     box-shadow: 0 0 4px $b-divider;
   }
 
@@ -39,6 +38,7 @@
     bottom: 0;
     overflow: auto;
     white-space: nowrap;
+    -webkit-overflow-scrolling:touch;
     // TODO: 为触底项添加
     //touch-action: none;
   }
@@ -51,11 +51,41 @@
     height: 2px;
     background-color: $color;
     border-radius: 12px;
-    z-index: 1;
 
     &.__left {
       width: 3px;
       height: 0;
+    }
+  }
+
+  &_scroll-flag {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 12px;
+    background: linear-gradient(to left, $b-border, transparent);
+    pointer-events: none;
+
+    &.__start {
+      left: 0;
+      right: auto;
+      transform: rotate(180deg);
+    }
+
+    &.__isVertical {
+      left: 0;
+      right: 0;
+      width: auto;
+      height: 12px;
+      background: linear-gradient(to top, $b-border, transparent);
+      bottom: 0;
+      top: auto;
+
+      &.__start {
+        top: 0;
+        bottom: auto;
+      }
     }
   }
 }
