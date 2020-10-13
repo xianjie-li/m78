@@ -11,24 +11,20 @@
     ::-webkit-scrollbar {
       width: 6px;
       height: 6px;
-    }
-
-    ::-webkit-scrollbar-track {
-      border-radius: 6px;
-      //background: rgba(0, 0, 0, 0.1);
+      background: transparent;
     }
 
     ::-webkit-scrollbar-thumb {
       border-radius: 6px;
-      background: $b-disable;
+      background: $b-second;
     }
 
     ::-webkit-scrollbar-thumb:hover {
-      background: $b-second;
+      background: $b-primary;
     }
 
     ::-webkit-scrollbar-thumb:active {
-      background: $b-second;
+      background: $b-primary;
     }
   }
 }

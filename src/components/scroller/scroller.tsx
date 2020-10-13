@@ -4,8 +4,10 @@ import { useScroll, useSelf, useSetState } from '@lxjx/hooks';
 import { useGesture } from 'react-use-gesture';
 import { config, useSpring, animated, interpolate } from 'react-spring';
 import _clamp from 'lodash/clamp';
-import { Direction } from 'm78/util';
-import { ComponentBaseProps, Size } from '../types/types';
+import cls from 'classnames';
+import { ScrollerProps } from './type';
+
+type UseScrollMeta = ReturnType<ReturnType<typeof useScroll>['get']>;
 
 export interface ScrollRef {
   /** 结束下拉刷新，将刷新是否成功作为第一个参数传入, 默认成功 */
@@ -31,36 +33,7 @@ export interface ScrollRef {
   el: HTMLDivElement;
 }
 
-const bounceThreshold = 80;
-
-const zeroPosition = {
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-};
-
-export interface ScrollerProps extends ComponentBaseProps {
-  /** 启用下拉刷新并在触发时通过回调通知 */
-  onPullDown?: () => void;
-  /** 启用上拉加载并在触发时通过回调通知 */
-  onPullUp?: () => void;
-  /** 滚动时触发 */
-  onScroll?: () => void;
-  /** false | 是否显示滚动条 */
-  hideScrollbar?: () => void;
-  /** true | 在支持::-webkit-scrollbar且非移动端的情况下，使用其定制滚动条 */
-  webkitScrollBar?: boolean;
-  /** 是否显示返回顶部按钮 */
-  backTop?: boolean;
-  /** 提供整页滚动能力 */
-  slide?: boolean;
-  /** 滚轮增强 */
-  /** 无限滚动 */
-  /** 方向 */
-  direction?: Direction;
-}
-
+/* TODO: 提到utils包中 */
 function getScrollBarWidth(nodeTarget: HTMLElement) {
   const node = nodeTarget || document.body;
 
@@ -78,21 +51,61 @@ function getScrollBarWidth(nodeTarget: HTMLElement) {
   return scrollbarWidth;
 }
 
-function Scroller(props: ScrollerProps) {
-  const { hideScrollbar = false } = props;
+/* TODO: 提到utils包中 */
+function decimalPrecision(num: number, precision = 1) {
+  const mid = +`1${Array.from({ length: precision })
+    .map(() => '0')
+    .join('')}`;
 
+  return Math.round(num * mid) / mid;
+}
+
+/**
+ * 拖动位置超过threshold时，会出现橡皮效果，此函数用于计算出一个合理的弹性值
+ * @param overSize - 超出threshold的值
+ * @param maxSize - 允许超出的最大值
+ * @param minFactor - 0 | 允许的最小弹性系数
+ * @param initFactor - 初始弹性系数
+ * */
+function rubberFactor(overSize: number, maxSize: number, minFactor = 0, initFactor = 1) {
+  let d = initFactor - overSize / maxSize;
+
+  d = Math.max(d, minFactor);
+
+  if (d < 0) d = 0;
+  if (d > 1) d = 1;
+
+  return d;
+}
+
+const defaultProps = {
+  soap: 0.5,
+  threshold: 80,
+  rubber: 30,
+  hideScrollbar: false,
+  webkitScrollBar: true,
+  progressBar: 500,
+};
+
+function Scroller(props: ScrollerProps & typeof defaultProps) {
+  const { hideScrollbar, webkitScrollBar, soap, threshold, rubber, progressBar } = props;
+
+  /** 根元素 */
   const rootEl = useRef<HTMLDivElement>(null!);
 
   const [state, setState] = useSetState({
+    // 当前环境下的滚动条宽度
     scrollBarWidth: 0,
-    tempThreshold: zeroPosition,
   });
 
   const self = useSelf({
-    memoScrollMeta: undefined as any,
-    memoTriggerOffset: {} as any,
+    // 记录最后一次设置的x轴拖动位置, 拖动松开后重置为0
+    memoX: 0,
+    // 记录最后一次设置的y轴拖动位置, 拖动松开后重置为0
+    memoY: 0,
   });
 
+  // 计算被设置滚动条位置
   useEffect(() => {
     if (!hideScrollbar) return;
 
@@ -105,77 +118,70 @@ function Scroller(props: ScrollerProps) {
     });
   }, []);
 
-  const { ref: scrollEl, ...sHelper } = useScroll<HTMLDivElement>({});
+  const { ref: scrollEl, ...sHelper } = useScroll<HTMLDivElement>({
+    throttleTime: 40,
+    onScroll: scrollHandle,
+  });
 
+  // 拖动元素动画
   const [spSty, setSp] = useSpring(() => ({
     y: 0,
     x: 0,
     over: 0,
     scroll: 1,
-    config: config.stiff,
+    config: { ...config.stiff, precision: 0.1 },
+  }));
+
+  // 进度条动画
+  const [spPgSty, setPgSp] = useSpring(() => ({
+    x: 0,
+    y: 0,
+    config: { clamp: true, precision: 0.1 },
   }));
 
   const bind = useGesture(
     {
-      onDrag({ movement: [moveX, moveY], offset: [ox, oy], down, cancel }) {
+      onDrag({ event, direction: [dx, dy], delta: [dex, dey], down, cancel }) {
         const sMeta = sHelper.get();
 
-        const prevSMeta = self.memoScrollMeta;
+        const yPrevent = (dy > 0 && sMeta.touchTop) || (dy < 0 && sMeta.touchBottom);
+        const xPrevent = (dx > 0 && sMeta.touchLeft) || (dx < 0 && sMeta.touchRight);
 
-        self.memoScrollMeta = sMeta;
-
-        let yOffset = moveY;
-        const xOffset = moveX;
-
-        if (prevSMeta) {
-          if (!prevSMeta.touchTop && sMeta.touchTop) {
-            self.memoTriggerOffset.top = moveY;
-            console.log('trigger');
-          }
+        /* 触边拖动时禁用默认事件 */
+        if (yPrevent || xPrevent) {
+          event?.preventDefault();
         }
 
-        if (self.memoTriggerOffset.top) {
-          // console.log(moveY, self.memoTriggerOffset.top);
-          yOffset -= self.memoTriggerOffset.top;
-        }
-
-        if (!sMeta.touchTop && !sMeta.touchBottom && !sMeta.touchLeft && !sMeta.touchRight) {
-          cancel!();
-          return;
-        }
-
-        // if (yOffset > 0 && !sMeta.touchTop) {
-        //   cancel!();
-        //   return;
-        // }
-
+        /* 松开时，还原位置 */
         if (!down) {
-          self.memoScrollMeta = undefined;
-          self.memoTriggerOffset = {};
-
-          setState({
-            tempThreshold: zeroPosition,
-          });
-
           cancel!();
+
+          self.memoX = 0;
+          self.memoY = 0;
+
           setSp({
-            y: 0,
-            x: 0,
+            y: self.memoY,
+            x: self.memoX,
           });
           return;
         }
 
-        if ((yOffset > 0 && sMeta.touchTop) || (yOffset < 0 && sMeta.touchBottom)) {
-          setSp({
-            y: yOffset,
-          });
-          return;
+        /* 根据拖动信息设置元素位置 */
+        const dragPosArg: SetDragPosArg = {
+          dey,
+          dex,
+          touchBottom: sMeta.touchBottom,
+          touchLeft: sMeta.touchLeft,
+          touchRight: sMeta.touchRight,
+          touchTop: sMeta.touchTop,
+        };
+
+        if (sMeta.touchTop || sMeta.touchBottom) {
+          setDragPos({ isVertical: true, ...dragPosArg });
         }
 
-        if ((xOffset > 0 && sMeta.touchLeft) || (xOffset < 0 && sMeta.touchRight)) {
-          setSp({
-            x: xOffset,
-          });
+        if (sMeta.touchLeft || sMeta.touchRight) {
+          setDragPos(dragPosArg);
         }
       },
     },
@@ -183,29 +189,103 @@ function Scroller(props: ScrollerProps) {
       domTarget: rootEl,
       eventOptions: { passive: false },
       drag: {
-        // bounds: {
-        //   top: -(bounceThreshold + state.tempThreshold.top),
-        //   bottom: bounceThreshold + state.tempThreshold.bottom,
-        //   left: -(bounceThreshold + state.tempThreshold.left),
-        //   right: bounceThreshold + state.tempThreshold.right,
-        // },
         lockDirection: true,
         filterTaps: true,
-        rubberband: true,
       },
     },
   );
 
-  console.log(bounceThreshold + state.tempThreshold.top, state.tempThreshold.top);
-
   useEffect(bind as any, [bind]);
 
+  /** 根据drag信息设置元素的拖动状态 */
+  function setDragPos({
+    isVertical,
+    dey,
+    dex,
+    touchTop,
+    touchLeft,
+    touchBottom,
+    touchRight,
+  }: SetDragPosArg) {
+    const cDelta = isVertical ? dey : dex;
+    const startTouch = isVertical ? touchTop : touchLeft;
+    const endTouch = isVertical ? touchBottom : touchRight;
+
+    const posKey = isVertical ? 'memoY' : 'memoX';
+
+    const spKey = isVertical ? 'y' : 'x';
+
+    const minRubberFactor = threshold - rubber;
+
+    // 根据滚动距离和方向等状态设置拖动位置, 并在达到阈值时通过rubberFactor设置橡皮筋效果
+    if (cDelta > 0 && startTouch) {
+      self[posKey] +=
+        cDelta *
+        (self[posKey] > minRubberFactor
+          ? rubberFactor(self[posKey] - minRubberFactor, threshold, 0.1, soap)
+          : soap);
+
+      setSp({
+        [spKey]: _clamp(self[posKey], 0, threshold + rubber),
+      });
+    } else if (cDelta < 0 && endTouch) {
+      self[posKey] +=
+        cDelta *
+        (self[posKey] < -minRubberFactor
+          ? rubberFactor(Math.abs(self[posKey]) - minRubberFactor, threshold, 0.1, soap)
+          : soap);
+
+      setSp({
+        [spKey]: _clamp(self[posKey], -threshold - rubber, 0),
+      });
+    }
+  }
+
+  function scrollHandle(meta: UseScrollMeta) {
+    console.log(meta);
+
+    if (progressBar) {
+      const thresholdSize = typeof progressBar === 'number' ? progressBar : 300;
+
+      if (meta.xMax >= thresholdSize) {
+        setProgressBar('x', meta.x, meta.xMax);
+      }
+
+      if (meta.yMax >= thresholdSize) {
+        setProgressBar('y', meta.y, meta.yMax);
+      }
+    }
+  }
+
+  function setProgressBar(type: 'x' | 'y', current: number, max: number) {
+    const percentage = _clamp((current / max) * 100, 0, 100);
+
+    setPgSp({
+      [type]: percentage,
+    });
+  }
+
+  /** 推送一条消息 */
   function sendMsg() {}
 
   const hideOffset = hideScrollbar && state.scrollBarWidth ? -state.scrollBarWidth : undefined;
 
   return (
-    <div className="m78-scroller m78-scroll-bar" ref={rootEl}>
+    <div
+      className={cls('m78-scroller', {
+        'm78-scroll-bar': webkitScrollBar,
+        __hideScrollBar: hideScrollbar,
+      })}
+      ref={rootEl}
+    >
+      <animated.div
+        style={{ width: spPgSty.y.interpolate(width => `${width}%`) }}
+        className="m78-scroller_progress-bar"
+      />
+      <animated.div
+        style={{ height: spPgSty.x.interpolate(height => `${height}%`) }}
+        className="m78-scroller_progress-bar __left"
+      />
       <animated.div
         className="m78-scroller_inner"
         style={{
@@ -229,5 +309,7 @@ function Scroller(props: ScrollerProps) {
     </div>
   );
 }
+
+Scroller.defaultProps = defaultProps;
 
 export default Scroller;

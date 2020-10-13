@@ -4,17 +4,31 @@
   position: relative;
   width: 100%;
   height: 100%;
-  border: 1px solid red;
+  //border: 1px solid red;
   user-select: none;
-  background: linear-gradient(to bottom, pink 120px, transparent) no-repeat top/100% 80px;
+  background-color: #f6f6f6;
+  overflow: hidden;
+  //background:
+  //    linear-gradient(to bottom, pink 120px, transparent) no-repeat top/100% 80px,
+  //    linear-gradient(to top, pink 120px, transparent) no-repeat bottom/100% 80px,
+  //    linear-gradient(to left, pink 120px, transparent) no-repeat left/80px 100%,
+  //    linear-gradient(to right, pink 120px, transparent) no-repeat right/80px 100%;
+
+  &.__hideScrollBar {
+    .m78-scroller_inner {
+      overflow: hidden;
+    }
+  }
 
   &_inner {
     position: relative;
     width: 100%;
     height: 100%;
-    //overflow: hidden;
     will-change: transform;
     touch-action: none;
+    background-color: $component-background;
+    z-index: 0;
+    box-shadow: 0 0 4px $b-divider;
   }
 
   &_wrap {
@@ -25,5 +39,23 @@
     bottom: 0;
     overflow: auto;
     white-space: nowrap;
+    // TODO: 为触底项添加
+    //touch-action: none;
+  }
+
+  &_progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: $color;
+    border-radius: 12px;
+    z-index: 1;
+
+    &.__left {
+      width: 3px;
+      height: 0;
+    }
   }
 }
