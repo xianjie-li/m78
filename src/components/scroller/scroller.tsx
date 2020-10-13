@@ -1,10 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 
-import { useScroll, useSetState } from '@lxjx/hooks';
+import { useScroll, useSelf, useSetState } from '@lxjx/hooks';
 import { useGesture } from 'react-use-gesture';
 import { config, useSpring, animated, interpolate } from 'react-spring';
 import _clamp from 'lodash/clamp';
-import { ComponentBaseProps } from '../types/types';
+import { Direction } from 'm78/util';
+import { ComponentBaseProps, Size } from '../types/types';
 
 export interface ScrollRef {
   /** 结束下拉刷新，将刷新是否成功作为第一个参数传入, 默认成功 */
@@ -32,6 +33,13 @@ export interface ScrollRef {
 
 const bounceThreshold = 80;
 
+const zeroPosition = {
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+};
+
 export interface ScrollerProps extends ComponentBaseProps {
   /** 启用下拉刷新并在触发时通过回调通知 */
   onPullDown?: () => void;
@@ -49,6 +57,8 @@ export interface ScrollerProps extends ComponentBaseProps {
   slide?: boolean;
   /** 滚轮增强 */
   /** 无限滚动 */
+  /** 方向 */
+  direction?: Direction;
 }
 
 function getScrollBarWidth(nodeTarget: HTMLElement) {
@@ -69,12 +79,18 @@ function getScrollBarWidth(nodeTarget: HTMLElement) {
 }
 
 function Scroller(props: ScrollerProps) {
-  const { hideScrollbar = true } = props;
+  const { hideScrollbar = false } = props;
 
   const rootEl = useRef<HTMLDivElement>(null!);
 
   const [state, setState] = useSetState({
     scrollBarWidth: 0,
+    tempThreshold: zeroPosition,
+  });
+
+  const self = useSelf({
+    memoScrollMeta: undefined as any,
+    memoTriggerOffset: {} as any,
   });
 
   useEffect(() => {
@@ -101,75 +117,99 @@ function Scroller(props: ScrollerProps) {
 
   const bind = useGesture(
     {
-      onDrag({ memo, movement: [, moveY], direction: [xD, yD], down, cancel }) {
+      onDrag({ movement: [moveX, moveY], offset: [ox, oy], down, cancel }) {
         const sMeta = sHelper.get();
 
-        const [ox, oy] = memo || [0, 0];
+        const prevSMeta = self.memoScrollMeta;
 
-        const atTop = sMeta.touchTop;
-        const atBottom = sMeta.touchBottom;
-        const atRight = sMeta.touchRight;
+        self.memoScrollMeta = sMeta;
 
-        let yOffset = oy;
-        let xOffset = ox;
+        let yOffset = moveY;
+        const xOffset = moveX;
 
-        // if (targetOffset > bounceThreshold) {
-        // targetOffset = _clamp(
-        //   targetOffset * (1 - targetOffset / bounceThreshold),
-        //   0,
-        //   bounceThreshold,
-        // );
+        if (prevSMeta) {
+          if (!prevSMeta.touchTop && sMeta.touchTop) {
+            self.memoTriggerOffset.top = moveY;
+            console.log('trigger');
+          }
+        }
 
-        // const gg = yD > 0 && yOffset > bounceThreshold / 3 ? 0.3 : 0.6;
-        //
-        yOffset = yD > 0 ? yOffset + 1 : yOffset - 1;
-        xOffset = xD > 0 ? xOffset + 1 : xOffset - 1;
-        //
-        // if (yOffset > bounceThreshold) {
-        //   yOffset = bounceThreshold;
+        if (self.memoTriggerOffset.top) {
+          // console.log(moveY, self.memoTriggerOffset.top);
+          yOffset -= self.memoTriggerOffset.top;
+        }
+
+        if (!sMeta.touchTop && !sMeta.touchBottom && !sMeta.touchLeft && !sMeta.touchRight) {
+          cancel!();
+          return;
+        }
+
+        // if (yOffset > 0 && !sMeta.touchTop) {
+        //   cancel!();
+        //   return;
         // }
 
         if (!down) {
+          self.memoScrollMeta = undefined;
+          self.memoTriggerOffset = {};
+
+          setState({
+            tempThreshold: zeroPosition,
+          });
+
           cancel!();
-          yOffset = 0;
-          xOffset = 0;
+          setSp({
+            y: 0,
+            x: 0,
+          });
+          return;
         }
 
-        //
-        // const diff = 1 - targetOffset / bounceThreshold;
-
-        // if (targetOffset > bounceThreshold) {
-        //   targetOffset = bounceThreshold;
-        // }
-
-        // console.log(moveY, targetOffset);
-
-        if (atTop || atBottom) {
+        if ((yOffset > 0 && sMeta.touchTop) || (yOffset < 0 && sMeta.touchBottom)) {
           setSp({
             y: yOffset,
+          });
+          return;
+        }
+
+        if ((xOffset > 0 && sMeta.touchLeft) || (xOffset < 0 && sMeta.touchRight)) {
+          setSp({
             x: xOffset,
           });
         }
-
-        return [xOffset, yOffset];
       },
     },
     {
       domTarget: rootEl,
-      event: { passive: false },
+      eventOptions: { passive: false },
+      drag: {
+        // bounds: {
+        //   top: -(bounceThreshold + state.tempThreshold.top),
+        //   bottom: bounceThreshold + state.tempThreshold.bottom,
+        //   left: -(bounceThreshold + state.tempThreshold.left),
+        //   right: bounceThreshold + state.tempThreshold.right,
+        // },
+        lockDirection: true,
+        filterTaps: true,
+        rubberband: true,
+      },
     },
   );
 
-  useEffect(bind, [bind]);
+  console.log(bounceThreshold + state.tempThreshold.top, state.tempThreshold.top);
+
+  useEffect(bind as any, [bind]);
+
+  function sendMsg() {}
 
   const hideOffset = hideScrollbar && state.scrollBarWidth ? -state.scrollBarWidth : undefined;
 
   return (
-    <div className="m78-scroller" ref={rootEl}>
+    <div className="m78-scroller m78-scroll-bar" ref={rootEl}>
       <animated.div
         className="m78-scroller_inner"
         style={{
-          transform: interpolate([spSty.x, spSty.y], (x, y) => `translate3d(${0}px, ${y}px, 0)`),
+          transform: interpolate([spSty.x, spSty.y], (x, y) => `translate3d(${x}px, ${y}px, 0)`),
         }}
       >
         <div

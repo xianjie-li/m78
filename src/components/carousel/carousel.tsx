@@ -207,13 +207,12 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
             scale: down ? 1 - distance / size / 2 : 1, // 收缩比例为在元素上滚动距离相对于元素本身的比例
           });
         },
-        // eslint-disable-next-line
-        onWheel({ event, memo, direction: [, directY], time }) {
+        onWheel({ event, memo, direction: [, directY], timeStamp }) {
           event?.preventDefault();
           if (memo) return;
           directY < 0 ? prev() : next();
           stopAutoPlay();
-          return time;
+          return timeStamp;
         },
         onHover({ hovering }) {
           hovering && stopAutoPlay();
@@ -221,13 +220,17 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
       },
       {
         domTarget: innerWrap,
-        wheel,
-        drag,
-        event: { passive: false },
+        wheel: {
+          enabled: wheel,
+        },
+        drag: {
+          enabled: drag,
+        },
+        eventOptions: { passive: false },
       },
     );
 
-    useEffect(bind, [bind]);
+    useEffect(bind as any, [bind]);
 
     /** 跳转至上一页 */
     function prev() {

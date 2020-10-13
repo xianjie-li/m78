@@ -1,11 +1,14 @@
 import React, { useEffect, useImperativeHandle, useRef } from 'react';
-import { useMeasure } from 'react-use';
 import { animated, useSpring, interpolate, config } from 'react-spring';
 import { useGesture } from 'react-use-gesture';
 import _clamp from 'lodash/clamp';
-import { useSelf } from '@lxjx/hooks';
+import { useSelf, useSetState } from '@lxjx/hooks';
+import { getBoundMeta } from 'm78/viewer/utils';
+import { AxisBounds } from 'react-use-gesture/dist/types';
+import { ComponentBaseProps } from 'm78/types/types';
+import cls from 'classnames';
 
-export interface ViewerProps {
+export interface ViewerProps extends ComponentBaseProps {
   /** 任何react可渲染的东西 */
   children: React.ReactNode;
   /** false | 禁用任何手势或实例方法 */
@@ -54,21 +57,37 @@ const initSpring = {
 };
 
 const Viewer = React.forwardRef<ViewerRef, ViewerProps>(
-  ({ children, disabled = false, bound, drag = true, pinch = true, wheel = true }, ref) => {
-    const [wrap, { width, height }] = useMeasure();
+  (
+    {
+      children,
+      disabled = false,
+      bound,
+      drag = true,
+      pinch = true,
+      wheel = true,
+      className,
+      style,
+    },
+    ref,
+  ) => {
     const innerWrap = useRef<HTMLDivElement>(null!);
     const eventEl = useRef<HTMLDivElement>(null!);
 
     const [sp, set] = useSpring(() => initSpring);
+
     const self = useSelf({
       ...initSpring,
-      /* 这三个开关只作用于组件内部，不与prop上的同名属性相关, 因为某些情况下需要在不触发组件render的情况下更改状态 */
+      /* 这三个开关只作用于组件内部，不与prop上的同名属性相关, 因为某些情况下需要在不触发组件render的情况下更改状态(提升性能) */
       drag: true,
       pinch: true,
       wheel: true,
     });
 
     const [scaleMin, scaleMax] = scaleBound;
+
+    const [state, setState] = useSetState<{ bound?: AxisBounds }>({
+      bound: undefined,
+    });
 
     useImperativeHandle(ref, () => ({
       setRotate,
@@ -79,38 +98,17 @@ const Viewer = React.forwardRef<ViewerRef, ViewerProps>(
 
     const bind = useGesture(
       {
-        onDrag({ event, delta: [offsetX, offsetY] }) {
+        onDrag({ event, movement: [offsetX, offsetY], first }) {
           event?.preventDefault();
+
           if (!self.drag) return;
 
-          let boundX;
-          let boundXMax;
-          let boundY;
-          let boundYMax;
-
-          if (bound) {
-            let boundNode;
-            if ('getBoundingClientRect' in bound) {
-              boundNode = bound;
-            } else {
-              boundNode = bound.current;
-            }
-
-            const bound1 = boundNode.getBoundingClientRect();
-            const bound2 = innerWrap.current.getBoundingClientRect();
-            boundY = -(bound2.top - bound1.top);
-            boundYMax = -(bound2.bottom - bound1.bottom);
-            boundX = -(bound2.left - bound1.left);
-            boundXMax = -(bound2.right - bound1.right);
-          } else {
-            boundXMax = width * self.scale;
-            boundX = -boundXMax;
-            boundYMax = height * self.scale;
-            boundY = -boundYMax;
+          if (first) {
+            refreshBound();
           }
 
-          self.x = _clamp(self.x + offsetX, boundX, boundXMax);
-          self.y = _clamp(self.y + offsetY, boundY, boundYMax);
+          self.x = offsetX;
+          self.y = offsetY;
 
           set({ x: self.x, y: self.y, config: { mass: 3, tension: 350, friction: 40 } });
         },
@@ -134,17 +132,27 @@ const Viewer = React.forwardRef<ViewerRef, ViewerProps>(
         },
       },
       {
-        enabled: !disabled,
-        drag,
-        pinch,
-        wheel,
         domTarget: eventEl,
-        event: { passive: false },
+        enabled: !disabled,
+        drag: {
+          enabled: drag,
+          bounds: state.bound,
+          rubberband: true,
+          initial: () => [self.x, self.y],
+        },
+        pinch: {
+          enabled: pinch,
+        },
+        wheel: {
+          enabled: wheel,
+        },
+        eventOptions: { passive: false },
       },
     );
 
-    useEffect(bind, [bind]);
+    useEffect(bind as any, [bind]);
 
+    /** 根据缩放反向和缩放值返回一个在合法缩放区域的缩放值 */
     function getScale(direct: number, value: number): number {
       const diff = direct > 0 ? +value : -value;
       let scale = Math.round((self.scale + diff) * 100) / 100; // 去小数
@@ -160,7 +168,6 @@ const Viewer = React.forwardRef<ViewerRef, ViewerProps>(
       self.drag = true;
     }
 
-    /** 根据传入的缩放比返回一个限定边界的缩放比 */
     function setScale(scale: number) {
       if (disabled) return;
       self.scale = _clamp(scale, scaleMin, scaleMax);
@@ -174,6 +181,7 @@ const Viewer = React.forwardRef<ViewerRef, ViewerProps>(
 
     function reset() {
       if (disabled) return;
+
       set({
         scale: self.scale = initSpring.scale,
         rotateZ: self.rotateZ = initSpring.rotateZ,
@@ -182,27 +190,45 @@ const Viewer = React.forwardRef<ViewerRef, ViewerProps>(
       });
     }
 
+    function refreshBound() {
+      if (!bound || !innerWrap.current) return;
+
+      let boundNode;
+
+      if ('getBoundingClientRect' in bound) {
+        boundNode = bound;
+      } else {
+        boundNode = bound.current;
+      }
+
+      if (!boundNode) return;
+
+      const boundMeta = getBoundMeta(boundNode, innerWrap.current);
+
+      if (boundMeta === state.bound) return;
+
+      setState({
+        bound: boundMeta,
+      });
+    }
+
     return (
-      <div ref={wrap} className="m78-viewer" id="t-inner">
-        <div ref={innerWrap}>
-          {' '}
-          {/* useMeasure目前不能取到实际的ref，这里需要获取到wrap的bound信息 */}
-          <animated.div
-            ref={eventEl}
-            className="m78-viewer_cont"
-            style={{
-              transform: interpolate(
-                //  @ts-ignore
-                [sp.x, sp.y, sp.scale, sp.rotateZ],
-                //  @ts-ignore
-                (x, y, scale, rotateZ) =>
-                  `translate3d(${x}px, ${y}px, 0px) scale(${scale}) rotateZ(${rotateZ}deg)`,
-              ),
-            }}
-          >
-            {children}
-          </animated.div>
-        </div>
+      <div ref={innerWrap} className={cls('m78-viewer', className)} style={style}>
+        <animated.div
+          ref={eventEl}
+          className="m78-viewer_cont"
+          style={{
+            transform: interpolate(
+              //  @ts-ignore
+              [sp.x, sp.y, sp.scale, sp.rotateZ],
+              //  @ts-ignore
+              (x, y, scale, rotateZ) =>
+                `translate3d(${x}px, ${y}px, 0px) scale(${scale}) rotateZ(${rotateZ}deg)`,
+            ),
+          }}
+        >
+          {children}
+        </animated.div>
       </div>
     );
   },

@@ -47,6 +47,8 @@ const _ImagePreview: React.FC<ImagePreviewProps> = ({
 }) => {
   const carousel = useRef<CarouselRef>(null!);
 
+  const wrapEl = useRef<HTMLDivElement>(null!);
+
   /* 锁定滚动条 + 防止页面抖动 */
   const [lock, toggleLock] = useToggle(!!show);
   useLockBodyScroll(lock);
@@ -98,7 +100,7 @@ const _ImagePreview: React.FC<ImagePreviewProps> = ({
   );
 
   const bindDrag = useDrag(
-    ({ time, first, last, memo, movement: [x], direction: [direct, directY] }) => {
+    ({ timeStamp, first, last, memo, movement: [x], direction: [direct, directY] }) => {
       if (direct + directY === 0 && last) {
         close();
       }
@@ -106,7 +108,7 @@ const _ImagePreview: React.FC<ImagePreviewProps> = ({
       if (last && memo) {
         const isPrev = direct > 0;
         const distanceOver = Math.abs(x) > window.innerWidth / 2; // 滑动距离超过半屏
-        const timeOver = time! - memo < 220; // 220ms内
+        const timeOver = timeStamp! - memo < 220; // 220ms内
 
         if (timeOver && distanceOver) {
           isPrev ? prev() : next();
@@ -116,7 +118,7 @@ const _ImagePreview: React.FC<ImagePreviewProps> = ({
       }
 
       if (first) {
-        return time;
+        return timeStamp;
       }
     },
   );
@@ -188,6 +190,7 @@ const _ImagePreview: React.FC<ImagePreviewProps> = ({
         toggle={show && images.length > 0}
         mountOnEnter
         className="m78-image-preview"
+        innerRef={wrapEl}
       >
         <div {...bindDrag()}>
           <Carousel
@@ -201,7 +204,7 @@ const _ImagePreview: React.FC<ImagePreviewProps> = ({
           >
             {images.map((item, key) => (
               <div key={key} className="m78-image-preview_img-wrap">
-                <Viewer ref={viewer => (self.viewers[key] = viewer!)}>
+                <Viewer ref={viewer => (self.viewers[key] = viewer!)} bound={wrapEl}>
                   <span>
                     <If when={self.currentPage >= key - 1 && self.currentPage <= key + 1}>
                       <Picture
