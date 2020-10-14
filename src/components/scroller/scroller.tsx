@@ -3,6 +3,7 @@ import React, { useRef } from 'react';
 import { useScroll, useSelf, useSetState } from '@lxjx/hooks';
 import { config, useSpring, animated, interpolate } from 'react-spring';
 import cls from 'classnames';
+import { WindmillIcon } from 'm78/icon';
 import { Share } from './type';
 import { useMethods } from './methods';
 import { useHooks } from './hooks';
@@ -97,6 +98,16 @@ function Scroller(props: Share['props']) {
           transform: interpolate([spSty.x, spSty.y], (x, y) => `translate3d(${x}px, ${y}px, 0)`),
         }}
       >
+        {/* 下拉指示器 */}
+        <animated.div className="m78-scroller_pulldown">
+          <div className="m78-scroller_pulldown-wrap">
+            <span className="m78-scroller_pulldown-icon">
+              <WindmillIcon />
+            </span>
+            <span className="m78-scroller_pulldown-text">下拉刷新</span>
+          </div>
+        </animated.div>
+
         <div
           className="m78-scroller_wrap"
           ref={scrollEl as any}

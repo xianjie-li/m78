@@ -24,23 +24,24 @@ export function useMethods(share: Share) {
 
     const spKey = isVertical ? 'y' : 'x';
 
+    /** 橡皮滑动最小开始点 */
     const minRubberFactor = threshold - rubber;
 
     // 根据滚动距离和方向等状态设置拖动位置, 并在达到阈值时通过rubberFactor设置橡皮筋效果
-    if (cDelta > 0 && startTouch) {
+    if (startTouch) {
       self[posKey] +=
         cDelta *
-        (self[posKey] > minRubberFactor
+        (self[posKey] > minRubberFactor && cDelta > 0 /* 只在向下/右滑时 */
           ? rubberFactor(self[posKey] - minRubberFactor, threshold, 0.1, soap)
           : soap);
 
       setSp({
         [spKey]: _clamp(self[posKey], 0, threshold + rubber),
       });
-    } else if (cDelta < 0 && endTouch) {
+    } else if (endTouch) {
       self[posKey] +=
         cDelta *
-        (self[posKey] < -minRubberFactor
+        (self[posKey] < -minRubberFactor && cDelta < 0 /* 只在向上/左滑时 */
           ? rubberFactor(Math.abs(self[posKey]) - minRubberFactor, threshold, 0.1, soap)
           : soap);
 
