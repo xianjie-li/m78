@@ -49,7 +49,7 @@ export function rubberFactor(overSize: number, maxSize: number, minFactor = 0, i
  * @param max - 最大移动距离
  * @param allTurn - 可选值的总圈数
  * */
-export function offset2Rotate(offset: number, max: number, allTurn = 2) {
+export function offset2Rotate(offset: number, max: number, allTurn = 1.5) {
   const oMax = Math.min(359, max);
 
   const times = 360 / oMax;
@@ -59,3 +59,17 @@ export function offset2Rotate(offset: number, max: number, allTurn = 2) {
 
   return Math.min(current, all);
 }
+
+/** 表示下拉刷新的所有阶段 */
+export enum PullDownStatus {
+  TIP,
+  RELEASE_TIP,
+  LOADING,
+}
+
+/** 下拉刷新各阶段的提示文本 */
+export const pullDownText = {
+  [PullDownStatus.TIP]: '下拉刷新',
+  [PullDownStatus.RELEASE_TIP]: '松开刷新',
+  [PullDownStatus.LOADING]: '正在刷新',
+};

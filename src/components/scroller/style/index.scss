@@ -108,11 +108,14 @@
     &-icon {
       display: inline-block;
       font-size: 34px;
+      line-height: 0;
+      text-align: center;
     }
 
     &-text {
       display: block;
       text-align: center;
+      margin-top: 4px;
     }
   }
 }

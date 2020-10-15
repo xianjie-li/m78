@@ -4,6 +4,7 @@ import { AnyFunction } from '@lxjx/utils';
 import { SetUpdateFn } from 'react-spring';
 import { useScroll } from '@lxjx/hooks';
 import { SetState } from '@lxjx/hooks/dist/type';
+import { PullDownStatus } from 'm78/scroller/common';
 import { defaultProps } from './scroller';
 import { ComponentBaseProps } from '../types/types';
 
@@ -21,27 +22,31 @@ export interface SetDragPosArg {
 export interface Share {
   props: ScrollerProps & typeof defaultProps;
   state: {
-    // 当前环境下的滚动条宽度
+    /** 当前环境下的滚动条宽度 */
     scrollBarWidth: number;
-    // 是否支持touch事件
+    /** 是否支持touch事件 */
     hasTouch: boolean;
-    // 各位置的滚动标识
+    /** 各位置的滚动标识 */
     topFlag: boolean;
     rightFlag: boolean;
     bottomFlag: boolean;
     leftFlag: boolean;
+    /** 下拉刷新状态 */
+    pullDownStatus: PullDownStatus;
   };
   setState: SetState<Share['state']>;
   self: {
-    // 记录最后一次设置的x轴拖动位置, 拖动松开后重置为0
+    /** 记录最后一次设置的x轴拖动位置, 拖动松开后重置为0 */
     memoX: number;
-    // 记录最后一次设置的y轴拖动位置, 拖动松开后重置为0
+    /** 记录最后一次设置的y轴拖动位置, 拖动松开后重置为0 */
     memoY: number;
   };
   /** 设置元素动画 */
   setSp: SetUpdateFn<any>;
   /** 进度条动画 */
   setPgSp: SetUpdateFn<any>;
+  /** 额外的设置下拉指示器旋转角度动画(用于下拉已触发时的加载动画) */
+  setPullDownSp: SetUpdateFn<any>;
   /** 滚动控制器 */
   sHelper: ReturnType<typeof useScroll>;
   /** 根元素ref */
@@ -66,6 +71,9 @@ export interface ScrollerRef {
 }
 
 export interface ScrollerProps extends ComponentBaseProps {
+  /** Direction.vertical | 滚动方向 */
+  direction?: Direction;
+
   /** 启用下拉并在触发时通过回调通知, 根据Promise的解析结果决定成功或失败 */
   onPullDown?: () => Promise<void>;
   /**
@@ -104,7 +112,7 @@ export interface ScrollerProps extends ComponentBaseProps {
   /** false | 仅在鼠标悬停在滚动容器上时显示webkitScrollBar */
   hoverWebkitScrollBar?: boolean;
 
-  /** 80 | 各方向到达顶部或底部后可拖动的最大距离(不包含rubber产生的额外拖动距离) */
+  /** 80 | 各方向到达顶部或底部后可拖动的最大距离(不包含rubber产生的额外拖动距离), 此距离也是下拉刷新的触发距离 */
   threshold?: number;
   /** 0.5 | 肥皂力，值越大则越顺滑, 拖动每px移动的距离也更大 */
   soap?: number;

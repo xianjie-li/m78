@@ -4,7 +4,7 @@ import { useScroll, useSelf, useSetState } from '@lxjx/hooks';
 import { config, useSpring, animated, interpolate } from 'react-spring';
 import cls from 'classnames';
 import { WindmillIcon } from 'm78/icon';
-import { offset2Rotate } from 'm78/scroller/common';
+import { offset2Rotate, PullDownStatus, pullDownText } from 'm78/scroller/common';
 import { Share } from './type';
 import { useMethods } from './methods';
 import { useHooks } from './hooks';
@@ -28,10 +28,13 @@ function Scroller(props: Share['props']) {
   const [state, setState] = useSetState<Share['state']>({
     scrollBarWidth: 0,
     hasTouch: false,
+
     topFlag: false,
     rightFlag: false,
     bottomFlag: false,
     leftFlag: false,
+
+    pullDownStatus: PullDownStatus.TIP,
   });
 
   const self = useSelf<Share['self']>({
@@ -43,8 +46,12 @@ function Scroller(props: Share['props']) {
   const [spSty, setSp] = useSpring(() => ({
     y: 0,
     x: 0,
-    over: 0,
-    scroll: 1,
+    config: { ...config.stiff, precision: 0.1 },
+  }));
+
+  // 额外的设置下拉指示器旋转角度动画(用于下拉已触发时的加载动画)
+  const [spPullDownSty, setPullDownSp] = useSpring(() => ({
+    r: 0,
     config: { ...config.stiff, precision: 0.1 },
   }));
 
@@ -65,6 +72,7 @@ function Scroller(props: Share['props']) {
     setSp,
     setState,
     state,
+    setPullDownSp,
   };
 
   // 方法拆分
@@ -100,21 +108,27 @@ function Scroller(props: Share['props']) {
         }}
       >
         {/* 下拉指示器 */}
-        <animated.div className="m78-scroller_pulldown">
-          <div className="m78-scroller_pulldown-wrap">
-            <animated.div
-              className="m78-scroller_pulldown-icon"
-              style={{
-                transform: spSty.y.interpolate(
-                  y => `rotate3d(0, 0, 1, ${-offset2Rotate(y, props.threshold + props.rubber)}deg)`,
-                ),
-              }}
-            >
-              <WindmillIcon />
-            </animated.div>
-            <span className="m78-scroller_pulldown-text">下拉刷新</span>
-          </div>
-        </animated.div>
+        {props.onPullDown && (
+          <animated.div className="m78-scroller_pulldown">
+            <div className="m78-scroller_pulldown-wrap">
+              <animated.div
+                className="m78-scroller_pulldown-icon"
+                style={{
+                  transform: interpolate(
+                    [spSty.y, spPullDownSty.r],
+                    (y, r) =>
+                      `rotate3d(0, 0, 1, ${-(
+                        offset2Rotate(y, props.threshold + props.rubber) + r
+                      )}deg)`,
+                  ),
+                }}
+              >
+                <WindmillIcon />
+              </animated.div>
+              <span className="m78-scroller_pulldown-text">{methods.getPullDownText()}</span>
+            </div>
+          </animated.div>
+        )}
 
         <div
           className="m78-scroller_wrap"

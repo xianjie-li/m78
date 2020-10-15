@@ -24,7 +24,7 @@ export function useHooks(methods: ReturnType<typeof useMethods>, share: Share) {
   // Drag事件处理
   const bind = useGesture(
     {
-      onDrag({ event, direction: [dx, dy], delta: [dex, dey], down, cancel }) {
+      onDrag({ event, direction: [dx, dy], delta: [dex, dey], down, cancel, last }) {
         const sMeta = sHelper.get();
 
         const yPrevent = (dy > 0 && sMeta.touchTop) || (dy < 0 && sMeta.touchBottom);
@@ -37,9 +37,13 @@ export function useHooks(methods: ReturnType<typeof useMethods>, share: Share) {
           }
         }
 
+        const preventDefaultUp = methods.pullDownHandler({ down });
+
         /* 松开时，还原位置 */
         if (!down) {
-          cancel!();
+          // cancel!();
+
+          if (preventDefaultUp) return;
 
           self.memoX = 0;
           self.memoY = 0;
@@ -48,6 +52,7 @@ export function useHooks(methods: ReturnType<typeof useMethods>, share: Share) {
             y: self.memoY,
             x: self.memoX,
           });
+
           return;
         }
 
