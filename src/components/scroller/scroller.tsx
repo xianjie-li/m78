@@ -4,6 +4,7 @@ import { useScroll, useSelf, useSetState } from '@lxjx/hooks';
 import { config, useSpring, animated, interpolate } from 'react-spring';
 import cls from 'classnames';
 import { WindmillIcon } from 'm78/icon';
+import { offset2Rotate } from 'm78/scroller/common';
 import { Share } from './type';
 import { useMethods } from './methods';
 import { useHooks } from './hooks';
@@ -101,9 +102,16 @@ function Scroller(props: Share['props']) {
         {/* 下拉指示器 */}
         <animated.div className="m78-scroller_pulldown">
           <div className="m78-scroller_pulldown-wrap">
-            <span className="m78-scroller_pulldown-icon">
+            <animated.div
+              className="m78-scroller_pulldown-icon"
+              style={{
+                transform: spSty.y.interpolate(
+                  y => `rotate3d(0, 0, 1, ${-offset2Rotate(y, props.threshold + props.rubber)}deg)`,
+                ),
+              }}
+            >
               <WindmillIcon />
-            </span>
+            </animated.div>
             <span className="m78-scroller_pulldown-text">下拉刷新</span>
           </div>
         </animated.div>

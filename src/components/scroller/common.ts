@@ -42,3 +42,20 @@ export function rubberFactor(overSize: number, maxSize: number, minFactor = 0, i
 
   return d;
 }
+
+/**
+ * 根据移动的offset和可移动总量计算出一个合理的旋转角度
+ * @param offset - 当前距离
+ * @param max - 最大移动距离
+ * @param allTurn - 可选值的总圈数
+ * */
+export function offset2Rotate(offset: number, max: number, allTurn = 2) {
+  const oMax = Math.min(359, max);
+
+  const times = 360 / oMax;
+  const oneTurn = max * times;
+  const all = oneTurn * allTurn;
+  const current = offset * times * allTurn;
+
+  return Math.min(current, all);
+}
