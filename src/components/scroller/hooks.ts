@@ -1,10 +1,12 @@
 import { useEffect } from 'react';
 import { useGesture } from 'react-use-gesture';
+import preventTopPullDown from 'prevent-top-pull-down';
+import { Direction } from 'm78/util';
 import { SetDragPosArg, Share } from './type';
 import { useMethods } from './methods';
 
 export function useHooks(methods: ReturnType<typeof useMethods>, share: Share) {
-  const { setState, sHelper, self, rootEl, setSp } = share;
+  const { setState, sHelper, self, rootEl, setSp, props } = share;
 
   // 获取滚动条宽度
   useEffect(methods.getScrollWidth, []);
@@ -21,10 +23,13 @@ export function useHooks(methods: ReturnType<typeof useMethods>, share: Share) {
     }
   }, []);
 
+  /* 禁用一些默认事件，如、qq 微信 ios 的顶部下拉 */
+  useEffect(() => preventTopPullDown(sHelper.ref.current!), []);
+
   // Drag事件处理
   const bind = useGesture(
     {
-      onDrag({ event, direction: [dx, dy], delta: [dex, dey], down, cancel, last }) {
+      onDrag({ event, direction: [dx, dy], delta: [dex, dey], down }) {
         const sMeta = sHelper.get();
 
         const yPrevent = (dy > 0 && sMeta.touchTop) || (dy < 0 && sMeta.touchBottom);
@@ -79,6 +84,7 @@ export function useHooks(methods: ReturnType<typeof useMethods>, share: Share) {
       domTarget: rootEl,
       eventOptions: { passive: false },
       drag: {
+        axis: props.direction === Direction.vertical ? 'y' : 'x',
         lockDirection: true,
         filterTaps: true,
       },

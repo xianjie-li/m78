@@ -35,10 +35,7 @@
     top: 0;
     right: 0;
     bottom: 0;
-    overflow: auto;
     -webkit-overflow-scrolling:touch;
-    // TODO: 为触底项添加
-    //touch-action: none;
   }
 
   &_progress-bar {
@@ -97,7 +94,6 @@
     width: 100%;
     top: -110px;
     left: 0;
-    border: 1px solid pink;
 
     &-wrap {
       line-height: 1.2;

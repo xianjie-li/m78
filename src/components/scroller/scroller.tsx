@@ -1,11 +1,12 @@
-import React, { useRef } from 'react';
+import React, { useImperativeHandle, useRef } from 'react';
 
 import { useScroll, useSelf, useSetState } from '@lxjx/hooks';
-import { config, useSpring, animated, interpolate } from 'react-spring';
+import { animated, config, interpolate, useSpring } from 'react-spring';
 import cls from 'classnames';
 import { WindmillIcon } from 'm78/icon';
-import { offset2Rotate, PullDownStatus, pullDownText } from 'm78/scroller/common';
-import { Share } from './type';
+import { Direction } from 'm78/util';
+import { offset2Rotate, PullDownStatus } from './common';
+import { ScrollerProps, ScrollerRef, Share } from './type';
 import { useMethods } from './methods';
 import { useHooks } from './hooks';
 
@@ -17,10 +18,18 @@ export const defaultProps = {
   webkitScrollBar: true,
   progressBar: false,
   scrollFlag: false,
+  direction: Direction.vertical,
 };
 
-function Scroller(props: Share['props']) {
-  const { hideScrollbar, webkitScrollBar, hoverWebkitScrollBar } = props;
+const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
+  const {
+    hideScrollbar,
+    webkitScrollBar,
+    hoverWebkitScrollBar,
+    direction,
+    threshold,
+    rubber,
+  } = props as Share['props'];
 
   /** 根元素 */
   const rootEl = useRef<HTMLDivElement>(null!);
@@ -65,7 +74,7 @@ function Scroller(props: Share['props']) {
   // 共享状态
   const share: Share = {
     sHelper: null as any,
-    props,
+    props: props as Share['props'],
     rootEl,
     self,
     setPgSp,
@@ -88,6 +97,10 @@ function Scroller(props: Share['props']) {
   // 事件绑定/声明周期
   useHooks(methods, share);
 
+  useImperativeHandle(ref, () => ({
+    triggerPullDown: methods.triggerPullDown,
+  }));
+
   const hideOffset =
     hideScrollbar && state.scrollBarWidth && !state.hasTouch ? -state.scrollBarWidth : undefined;
 
@@ -98,6 +111,9 @@ function Scroller(props: Share['props']) {
         __hideScrollBar: hideScrollbar,
         __hover: !state.hasTouch && hoverWebkitScrollBar,
       })}
+      style={{
+        backgroundColor: props.bgColor,
+      }}
       ref={rootEl}
     >
       {/* 滚动容器 */}
@@ -109,23 +125,28 @@ function Scroller(props: Share['props']) {
       >
         {/* 下拉指示器 */}
         {props.onPullDown && (
-          <animated.div className="m78-scroller_pulldown">
+          <animated.div
+            className="m78-scroller_pulldown"
+            style={{ padding: props.pullDownNode ? 0 : undefined }}
+          >
             <div className="m78-scroller_pulldown-wrap">
-              <animated.div
-                className="m78-scroller_pulldown-icon"
-                style={{
-                  transform: interpolate(
-                    [spSty.y, spPullDownSty.r],
-                    (y, r) =>
-                      `rotate3d(0, 0, 1, ${-(
-                        offset2Rotate(y, props.threshold + props.rubber) + r
-                      )}deg)`,
-                  ),
-                }}
-              >
-                <WindmillIcon />
-              </animated.div>
-              <span className="m78-scroller_pulldown-text">{methods.getPullDownText()}</span>
+              {props.pullDownNode || (
+                <>
+                  <animated.div
+                    className="m78-scroller_pulldown-icon"
+                    style={{
+                      transform: interpolate(
+                        [spSty.y, spPullDownSty.r],
+                        (y, r) =>
+                          `rotate3d(0, 0, 1, ${-(offset2Rotate(y, threshold + rubber) + r)}deg)`,
+                      ),
+                    }}
+                  >
+                    {props.pullDownIndicator || <WindmillIcon />}
+                  </animated.div>
+                  <span className="m78-scroller_pulldown-text">{methods.getPullDownText()}</span>
+                </>
+              )}
             </div>
           </animated.div>
         )}
@@ -133,7 +154,11 @@ function Scroller(props: Share['props']) {
         <div
           className="m78-scroller_wrap"
           ref={scrollEl as any}
-          style={{ right: hideOffset, bottom: hideOffset }}
+          style={{
+            right: hideOffset,
+            bottom: hideOffset,
+            [direction === Direction.vertical ? 'overflowY' : 'overflowX']: 'auto',
+          }}
         >
           {Array.from({ length: 100 }).map((item, ind) => (
             <div key={ind}>
@@ -173,7 +198,7 @@ function Scroller(props: Share['props']) {
       )}
     </div>
   );
-}
+});
 
 Scroller.defaultProps = defaultProps;
 

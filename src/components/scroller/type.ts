@@ -20,7 +20,7 @@ export interface SetDragPosArg {
 }
 
 export interface Share {
-  props: ScrollerProps & typeof defaultProps;
+  props: typeof defaultProps & ScrollerProps;
   state: {
     /** 当前环境下的滚动条宽度 */
     scrollBarWidth: number;
@@ -56,18 +56,18 @@ export interface Share {
 export interface ScrollerRef {
   /** 手动触发onPullDown，当正在进行下拉或上拉中的任意操作时，调用无效 */
   triggerPullDown(): void;
-  /** 手动触发onPullUp，当正在进行下拉或上拉中的任意操作时，调用无效 */
-  triggerPullUp(isRefresh?: boolean): void;
-  /** 重置上拉加载, 当没有数据时，上拉加载会被禁用，通过此方法可重新开启 */
-  resetPullUp(): void;
-  /** 滚动到指定位置, 传immediate则跳过动画 */
-  scrollTo(to: number, immediate?: boolean): void;
-  /** 根据当前位置滚动指定距离, 正数或负数, 传immediate则跳过动画  */
-  scrollBy(offset: number, immediate?: boolean): void;
-  /** 滚动到指定元素位置，如果是字符，会调用querySelector进行获取，没有找到时不会执行任何操作 */
-  scrollToElement(el: HTMLElement | string): void;
-  /** 对滚动节点的引用 */
-  el: HTMLDivElement;
+  // /** 手动触发onPullUp，当正在进行下拉或上拉中的任意操作时，调用无效 */
+  // triggerPullUp(isRefresh?: boolean): void;
+  // /** 重置上拉加载, 当没有数据时，上拉加载会被禁用，通过此方法可重新开启 */
+  // resetPullUp(): void;
+  // /** 滚动到指定位置, 传immediate则跳过动画 */
+  // scrollTo(to: number, immediate?: boolean): void;
+  // /** 根据当前位置滚动指定距离, 正数或负数, 传immediate则跳过动画  */
+  // scrollBy(offset: number, immediate?: boolean): void;
+  // /** 滚动到指定元素位置，如果是字符，会调用querySelector进行获取，没有找到时不会执行任何操作 */
+  // scrollToElement(el: HTMLElement | string): void;
+  // /** 对滚动节点的引用 */
+  // el: HTMLDivElement;
 }
 
 export interface ScrollerProps extends ComponentBaseProps {
@@ -76,6 +76,10 @@ export interface ScrollerProps extends ComponentBaseProps {
 
   /** 启用下拉并在触发时通过回调通知, 根据Promise的解析结果决定成功或失败 */
   onPullDown?: () => Promise<void>;
+  /** 自定义下拉指示器 */
+  pullDownIndicator?: React.ReactNode;
+  /** 完全替换下拉区域的内容 */
+  pullDownNode?: React.ReactNode;
   /**
    * 启用上拉加载并在触发时通过回调通知
    * * 如果Promise resolve且返回了数字, 会以该数字发出一条数据加载条数通知
@@ -101,12 +105,14 @@ export interface ScrollerProps extends ComponentBaseProps {
   /** 滚动容器下额外的内容 */
   extraNode?: React.ReactNode;
 
+  /** 拖动层下层的背景色 */
+  bgColor?: string;
   /** 显示滚动进度条, 为number时当可滚动区域大于此值时才出现progressBar, 若传入true，滚动区域大于500时出现进度条 */
   progressBar?: boolean | number;
   /** 对应方向包含可滚动区域时显示可滚动阴影标识 */
   scrollFlag?: boolean;
   /** false | 是否显示滚动条 */
-  hideScrollbar?: () => void;
+  hideScrollbar?: boolean;
   /** true | 在支持::-webkit-scrollbar且非移动端的情况下，使用其定制滚动条 */
   webkitScrollBar?: boolean;
   /** false | 仅在鼠标悬停在滚动容器上时显示webkitScrollBar */

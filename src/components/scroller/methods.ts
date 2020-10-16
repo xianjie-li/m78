@@ -188,26 +188,25 @@ export function useMethods(share: Share) {
     return true;
   }
 
-  /** 触发下拉刷新、设置位置到threshold、下拉icon启用旋转动画、设置下拉状态为加载中, 并触发onPullDown */
+  /** 触发下拉刷新, 处于加载状态时无效 */
   function triggerPullDown() {
+    if (state.pullDownStatus === PullDownStatus.LOADING) return;
+
     pullDownToThreshold();
 
-    if (state.pullDownStatus !== PullDownStatus.LOADING) {
-      setPullDownSp({
-        to: async (next: any) => {
-          while (state.pullDownStatus === PullDownStatus.LOADING) {
-            await next({ r: 360, immediate: false, config: { duration: 1000 } });
-            await next({ r: 1, immediate: true });
-          }
-        },
-      });
-    }
+    setPullDownSp({
+      to: async (next: any) => {
+        while (state.pullDownStatus === PullDownStatus.LOADING) {
+          console.log('ani', state.pullDownStatus);
+          await next({ r: 360, immediate: false, config: { duration: 1000 } });
+          await next({ r: 1, immediate: true });
+        }
+      },
+    });
 
-    if (state.pullDownStatus !== PullDownStatus.LOADING) {
-      setState({
-        pullDownStatus: PullDownStatus.LOADING,
-      });
-    }
+    setState({
+      pullDownStatus: PullDownStatus.LOADING,
+    });
 
     props.onPullDown!()
       .then(() => {
@@ -256,5 +255,6 @@ export function useMethods(share: Share) {
     sendMsg,
     pullDownHandler,
     getPullDownText,
+    triggerPullDown,
   };
 }
