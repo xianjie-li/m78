@@ -7,6 +7,7 @@ import _clamp from 'lodash/clamp';
 import cls from 'classnames';
 
 import { dumpFn } from '@lxjx/utils';
+import { useSelf } from '@lxjx/hooks';
 import { ComponentBaseProps } from '../types/types';
 
 export interface CarouselProps extends ComponentBaseProps {
@@ -102,17 +103,25 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
     // 用于阻止轮播组件内图片的drag操作
     const innerWrap = useRef<HTMLDivElement>(null!);
 
+    const calcNodeRef = useRef<HTMLDivElement>(null!);
+
     // 决定每页的尺寸
     const size = vertical ? height : width;
 
     // 当前页码，当为loop时，所有页码的基准值要+1
     const page = useRef(loopValid ? initPage + 1 : initPage);
 
+    const self = useSelf({
+      // 为true时，drag的动画设置阶段跳过
+      disabledDrag: false,
+    });
+
     // 切换动画相关
     const [spProp, set] = useSpring(() => ({
       offset: page.current * size,
       scale: 1,
       config: { clamp: true },
+      reset: false,
     }));
 
     const update = useUpdate();
@@ -149,8 +158,8 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
     useImperativeHandle(ref, () => ({
       prev,
       next,
-      goTo(currentPage: number) {
-        goTo(loopValid ? currentPage + 1 : currentPage);
+      goTo(currentPage: number, im) {
+        goTo(loopValid ? currentPage + 1 : currentPage, im);
       },
     }));
 
@@ -177,7 +186,7 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
           const aXMove = Math.abs(xMove);
           const aYMove = Math.abs(yMove);
 
-          // 如果拖动反向明确与滚动反向相反(大于5), 则停止后续事件触发
+          // 如果拖动方向明确与滚动反向相反(大于5), 则停止后续事件触发
           if (aYMove > 5 || aXMove > 5) {
             if ((!vertical && aYMove > aXMove) || (vertical && aXMove > aYMove)) {
               cancel!();
@@ -190,22 +199,50 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
             cancel!();
             stopAutoPlay();
             direct < 0 ? next() : prev();
+            return;
           }
+
+          const firstLoopHandle = loopValid && first && page.current === 0;
+          const lastLoopHandle = loopValid && first && page.current === children.length - 1;
 
           /* loop 处理 */
-          if (loopValid && first && page.current === 0) {
-            goTo(children.length - 2, true);
+          if (firstLoopHandle) {
+            loopHandle(children.length - 2);
+            return;
           }
 
-          if (loopValid && first && page.current === children.length - 1) {
-            goTo(1, true);
+          if (lastLoopHandle) {
+            loopHandle(1);
+            return;
           }
 
-          set({
-            offset: -(page.current * size + (down ? -move : 0)),
-            immediate: false,
-            scale: down ? 1 - distance / size / 2 : 1, // 收缩比例为在元素上滚动距离相对于元素本身的比例
-          });
+          function loopHandle(nextPage: number) {
+            self.disabledDrag = true;
+
+            const o = page.current * size + spProp.offset.get();
+
+            animate(-(nextPage * size - o));
+
+            page.current = nextPage;
+          }
+
+          function animate(cOffset?: number) {
+            set({
+              offset: cOffset || -(page.current * size + (down ? -move : 0)),
+              immediate: !!cOffset || false,
+              scale: down ? 1 - distance / size / 2 : 1, // 收缩比例为在元素上滚动距离相对于元素本身的比例
+              default: true,
+              onRest() {
+                if (cOffset) {
+                  self.disabledDrag = false;
+                }
+              },
+            });
+          }
+
+          if (self.disabledDrag) return;
+
+          animate();
         },
         onWheel({ event, memo, direction: [, directY], timeStamp }) {
           event?.preventDefault();
@@ -235,16 +272,24 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
     /** 跳转至上一页 */
     function prev() {
       if (loopValid && page.current === 0) {
-        goTo(children.length - 2, true);
+        goTo(children.length - 2, true, () => {
+          goTo(calcPage(page.current - 1));
+        });
+        return;
       }
+
       goTo(calcPage(page.current - 1));
     }
 
     /** 跳转至下一页 */
     function next() {
       if (loopValid && page.current === children.length - 1) {
-        goTo(1, true);
+        goTo(1, true, () => {
+          goTo(calcPage(page.current + 1));
+        });
+        return;
       }
+
       goTo(calcPage(page.current + 1));
     }
 
@@ -252,21 +297,28 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
      * @description - 跳转到指定页
      * @param currentPage - 待调跳转的页面
      * @param immediate - 跳过动画
+     * @param onRest - 动画完成
      * */
-    function goTo(currentPage: number, immediate = false) {
+    function goTo(currentPage: number, immediate = false, onRest?: () => void) {
       currentPage = calcPage(currentPage);
       if (!immediate && currentPage !== page.current) {
         pageChange(currentPage);
       }
+
       page.current = currentPage;
-      update();
+
       set({
         offset: -(currentPage * size),
+        scale: 1,
         immediate,
-        // onFrame(ds) {
-        //   console.log(111, ds);
-        // },
+        default: true,
+        // 必须要每次都传入防止继承
+        onRest() {
+          onRest && onRest();
+        },
       });
+
+      update();
     }
 
     /** 防止上下页超出页码区间 */
@@ -344,7 +396,7 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
             zIndex: page.current === i ? 1 : 0,
             transform: noScale
               ? undefined
-              : spProp.scale.interpolate(_scale => {
+              : spProp.scale.to(_scale => {
                   /* 指定当前不参与动画的页 */
                   const skip = i < page.current - 1 || i > page.current + 1;
                   return `scale(${skip ? 1 : _scale})`;
@@ -372,11 +424,12 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
         ref={wrapRef}
         style={{ height: vertical ? _height : 'auto', width: _width || 'auto', ...style }}
       >
+        <div ref={calcNodeRef} className="m78-carousel_calc-node" />
         <animated.div
           className="m78-carousel_wrap"
           ref={innerWrap}
           style={{
-            transform: spProp.offset.interpolate(
+            transform: spProp.offset.to(
               _offset => `translate3d(${vertical ? `0,${_offset}px` : `${_offset}px,0`},0)`,
             ),
           }}

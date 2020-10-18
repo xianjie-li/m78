@@ -73,9 +73,7 @@ export function useHooks(methods: ReturnType<typeof useMethods>, share: Share) {
 
         if (sMeta.touchTop || sMeta.touchBottom) {
           methods.setDragPos({ isVertical: true, ...dragPosArg });
-        }
-
-        if (sMeta.touchLeft || sMeta.touchRight) {
+        } else if (sMeta.touchLeft || sMeta.touchRight) {
           methods.setDragPos(dragPosArg);
         }
       },
@@ -85,7 +83,6 @@ export function useHooks(methods: ReturnType<typeof useMethods>, share: Share) {
       eventOptions: { passive: false },
       drag: {
         axis: props.direction === Direction.vertical ? 'y' : 'x',
-        lockDirection: true,
         filterTaps: true,
       },
     },

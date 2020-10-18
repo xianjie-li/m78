@@ -78,7 +78,7 @@ function ViewNum(props: NumProps) {
           from={{ number: 0 }}
         >
           {({ number: num }: any) =>
-            num.interpolate((n: any) => {
+            num.to((n: any) => {
               if (spanEl.current) {
                 spanEl.current.innerHTML = format(n);
               }

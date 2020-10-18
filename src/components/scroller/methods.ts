@@ -1,6 +1,12 @@
 import _clamp from 'lodash/clamp';
 import { SetDragPosArg, Share } from './type';
-import { getScrollBarWidth, PullDownStatus, pullDownText, rubberFactor } from './common';
+import {
+  decimalPrecision,
+  getScrollBarWidth,
+  PullDownStatus,
+  pullDownText,
+  rubberFactor,
+} from './common';
 
 export function useMethods(share: Share) {
   const { self, state, setState, props, setSp, setPgSp, setPullDownSp, sHelper, rootEl } = share;
@@ -35,8 +41,10 @@ export function useMethods(share: Share) {
           ? rubberFactor(self[posKey] - minRubberFactor, threshold, 0.1, soap)
           : soap);
 
+      self[posKey] = _clamp(decimalPrecision(self[posKey]), 0, threshold + rubber);
+
       setSp({
-        [spKey]: _clamp(self[posKey], 0, threshold + rubber),
+        [spKey]: self[posKey],
       });
     } else if (endTouch) {
       self[posKey] +=
@@ -45,8 +53,10 @@ export function useMethods(share: Share) {
           ? rubberFactor(Math.abs(self[posKey]) - minRubberFactor, threshold, 0.1, soap)
           : soap);
 
+      self[posKey] = _clamp(self[posKey], -threshold - rubber, 0);
+
       setSp({
-        [spKey]: _clamp(self[posKey], -threshold - rubber, 0),
+        [spKey]: self[posKey],
       });
     }
   }
@@ -172,7 +182,7 @@ export function useMethods(share: Share) {
     }
 
     // 按下且已达到触发刷新距离
-    if (down && inThreshold) {
+    if (down && inThreshold && state.pullDownStatus !== PullDownStatus.RELEASE_TIP) {
       setState({
         pullDownStatus: PullDownStatus.RELEASE_TIP,
       });
@@ -192,20 +202,18 @@ export function useMethods(share: Share) {
   function triggerPullDown() {
     if (state.pullDownStatus === PullDownStatus.LOADING) return;
 
+    setState({
+      pullDownStatus: PullDownStatus.LOADING,
+    });
+
     pullDownToThreshold();
 
     setPullDownSp({
-      to: async (next: any) => {
-        while (state.pullDownStatus === PullDownStatus.LOADING) {
-          console.log('ani', state.pullDownStatus);
-          await next({ r: 360, immediate: false, config: { duration: 1000 } });
-          await next({ r: 1, immediate: true });
-        }
-      },
-    });
-
-    setState({
-      pullDownStatus: PullDownStatus.LOADING,
+      from: { r: 0 },
+      to: { r: 360 },
+      immediate: false,
+      loop: () => state.pullDownStatus === PullDownStatus.LOADING,
+      config: { duration: 1000 },
     });
 
     props.onPullDown!()
@@ -218,6 +226,8 @@ export function useMethods(share: Share) {
         console.log('失败');
       });
   }
+
+  function loop() {}
 
   /** 设置到下拉位置到threshold处 */
   function pullDownToThreshold() {

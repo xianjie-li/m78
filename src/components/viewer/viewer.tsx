@@ -1,5 +1,5 @@
 import React, { useEffect, useImperativeHandle, useRef } from 'react';
-import { animated, useSpring, interpolate, config } from 'react-spring';
+import { animated, useSpring, to, config } from 'react-spring';
 import { useGesture } from 'react-use-gesture';
 import _clamp from 'lodash/clamp';
 import { useSelf, useSetState } from '@lxjx/hooks';
@@ -81,6 +81,9 @@ const Viewer = React.forwardRef<ViewerRef, ViewerProps>(
       drag: true,
       pinch: true,
       wheel: true,
+
+      /** 手势结束并重启drag的计时器 */
+      pinchTimer: null as any,
     });
 
     const [scaleMin, scaleMax] = scaleBound;
@@ -110,13 +113,20 @@ const Viewer = React.forwardRef<ViewerRef, ViewerProps>(
           self.x = offsetX;
           self.y = offsetY;
 
-          set({ x: self.x, y: self.y, config: { mass: 3, tension: 350, friction: 40 } });
+          set({ x: self.x, y: self.y, config: config.default });
         },
         onPinchStart: disableDrag,
-        onPinchEnd: enableDrag,
+        onPinchEnd() {
+          // 防止pinch结束后收到drag影响移动位置
+          clearTimeout(self.pinchTimer);
+          self.pinchTimer = setTimeout(() => {
+            enableDrag();
+          }, 100);
+        },
         onPinch({ direction: [direct], delta: [, y] }) {
-          self.scale = getScale(direct, 0.06);
+          self.scale = getScale(direct, 0.03);
           self.rotateZ += y;
+
           set({
             rotateZ: self.rotateZ,
             scale: self.scale,
@@ -152,7 +162,7 @@ const Viewer = React.forwardRef<ViewerRef, ViewerProps>(
 
     useEffect(bind as any, [bind]);
 
-    /** 根据缩放反向和缩放值返回一个在合法缩放区域的缩放值 */
+    /** 根据缩放方向和缩放值返回一个在合法缩放区域的缩放值 */
     function getScale(direct: number, value: number): number {
       const diff = direct > 0 ? +value : -value;
       let scale = Math.round((self.scale + diff) * 100) / 100; // 去小数
@@ -218,10 +228,8 @@ const Viewer = React.forwardRef<ViewerRef, ViewerProps>(
           ref={eventEl}
           className="m78-viewer_cont"
           style={{
-            transform: interpolate(
-              //  @ts-ignore
+            transform: to(
               [sp.x, sp.y, sp.scale, sp.rotateZ],
-              //  @ts-ignore
               (x, y, scale, rotateZ) =>
                 `translate3d(${x}px, ${y}px, 0px) scale(${scale}) rotateZ(${rotateZ}deg)`,
             ),

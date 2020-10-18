@@ -156,8 +156,8 @@ const Tab: React.FC<TabProps> = props => {
             <animated.div
               className="m78-tab_line"
               style={{
-                [isVertical ? 'height' : 'width']: spProps.length.interpolate(w => `${w}px`),
-                transform: spProps.offset.interpolate(
+                [isVertical ? 'height' : 'width']: spProps.length.to(w => `${w}px`),
+                transform: spProps.offset.to(
                   ofs => `translate3d(${isVertical ? 0 : ofs}px, ${isVertical ? ofs : 0}px, 0px)`,
                 ),
               }}

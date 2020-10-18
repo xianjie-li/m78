@@ -1,5 +1,7 @@
 import { isDom } from '@lxjx/utils';
 
+/* TODO: 所有位置都不可见时，保持前一个位置、当前位置仍然可用时，在推荐位置可用时不切换 */
+
 /** 用来描述尺寸信息 */
 interface GetPopperMetasSource {
   width: number;

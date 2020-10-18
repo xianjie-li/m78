@@ -26,7 +26,7 @@ const Demo = () => {
       <div
         ref={wrap}
         className="tc p-32"
-        style={{ width: '80%', height: '80%', border: '1px solid #ccc', margin: '10vh auto' }}
+        style={{ width: '100%', height: '100%', border: '1px solid #ccc', margin: '10vh auto' }}
       >
         <Viewer ref={ref} bound={wrap} disabled={disable}>
           <div style={boxStyle}>

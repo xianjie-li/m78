@@ -70,7 +70,6 @@ const Message: React.FC<MessageProps> = ({
         () => {
           self.lastShowTime = Date.now();
           set({
-            // @ts-ignore
             to: async next => {
               await next({
                 // height + 内外边距
@@ -150,7 +149,7 @@ const Message: React.FC<MessageProps> = ({
         <If when={!loading && duration < 1000000}>
           {() => (
             <animated.div
-              style={{ width: life ? life.interpolate(x => `${x.toFixed(2)}%`) : 0 }}
+              style={{ width: life ? life.to(x => `${x.toFixed(2)}%`) : 0 }}
               className="m78-message_process"
             />
           )}

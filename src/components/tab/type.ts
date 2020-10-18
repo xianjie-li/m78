@@ -1,7 +1,7 @@
 import React from 'react';
 import { Position, Size } from 'm78/util';
 import { TabItem } from 'm78/tab';
-import { SetUpdateFn } from 'react-spring';
+import { SpringStartFn } from 'react-spring';
 import { useScroll } from '@lxjx/hooks';
 import { CarouselRef } from 'm78/carousel';
 import { SetState } from '@lxjx/hooks/dist/type';
@@ -85,7 +85,7 @@ export interface Share {
   /** 设置当前tab索引 */
   setVal: (arg: any) => void;
   /** 设置线条动画 */
-  set: SetUpdateFn<{ length: number; offset: number } & React.CSSProperties>;
+  set: SpringStartFn<{ length: number; offset: number } & React.CSSProperties>;
   /** carousel ref */
   carouselRef: React.MutableRefObject<CarouselRef>;
   /** 是否被禁用 */

@@ -1,7 +1,7 @@
 import { Direction } from 'm78/util';
 import React from 'react';
 import { AnyFunction } from '@lxjx/utils';
-import { SetUpdateFn } from 'react-spring';
+import { SpringStartFn } from 'react-spring';
 import { useScroll } from '@lxjx/hooks';
 import { SetState } from '@lxjx/hooks/dist/type';
 import { PullDownStatus } from 'm78/scroller/common';
@@ -42,11 +42,11 @@ export interface Share {
     memoY: number;
   };
   /** 设置元素动画 */
-  setSp: SetUpdateFn<any>;
+  setSp: SpringStartFn<any>;
   /** 进度条动画 */
-  setPgSp: SetUpdateFn<any>;
+  setPgSp: SpringStartFn<any>;
   /** 额外的设置下拉指示器旋转角度动画(用于下拉已触发时的加载动画) */
-  setPullDownSp: SetUpdateFn<any>;
+  setPullDownSp: SpringStartFn<any>;
   /** 滚动控制器 */
   sHelper: ReturnType<typeof useScroll>;
   /** 根元素ref */

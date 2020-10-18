@@ -1,12 +1,12 @@
 import Portal from 'm78/portal';
 import React, { useEffect, useMemo, useRef, useImperativeHandle } from 'react';
 import { useFn, useFormState, useSelf, useSetState } from '@lxjx/hooks';
-import { animated, interpolate, useSpring } from 'react-spring';
+import { animated, to, useSpring } from 'react-spring';
 import cls from 'classnames';
 import { useClickAway, useMeasure, useUpdateEffect } from 'react-use';
 import _throttle from 'lodash/throttle';
 import { createRandString, isDom, isNumber } from '@lxjx/utils';
-import { getFirstScrollParent } from 'm78//util';
+import { getFirstScrollParent } from 'm78/util';
 import { getRefDomOrDom, isPopperMetasBound, getTriggerType } from './utils';
 import { GetBoundMetasDirectionKeys, getPopperMetas, GetPopperMetasBound } from './getPopperMetas';
 import { PopperProps, PopperRef } from './types';
@@ -419,17 +419,17 @@ const Popper = React.forwardRef<PopperRef, PopperProps>((props, fRef) => {
             ref={popperEl}
             style={{
               ...style,
-              transform: interpolate(
-                [spProps.xy, spProps.scale] as number[],
+              transform: to(
+                [spProps.xy, spProps.scale],
                 ([x, y]: any, sc) =>
                   /* 使用toFixed防止chrome字体模糊 */
                   `translate3d(${x.toFixed(0)}px, ${y.toFixed(
                     0,
                   )}px, 0) scale3d(${sc}, ${sc}, ${sc})`,
               ),
-              opacity: spProps.opacity.interpolate(o => o),
-              visibility: spProps.opacity.interpolate(o => (o === 0 ? 'hidden' : undefined)),
-              pointerEvents: spProps.opacity.interpolate(o => (o! < 0.7 ? 'none' : undefined)),
+              opacity: spProps.opacity.to(o => o),
+              visibility: spProps.opacity.to(o => (o === 0 ? 'hidden' : undefined!)),
+              pointerEvents: spProps.opacity.to(o => (o! < 0.7 ? 'none' : undefined!)),
             }}
             className={cls('m78-popper', state.direction && `__${state.direction}`, className)}
             onMouseEnter={triggerType.hover ? mouseEnterHandle : undefined}

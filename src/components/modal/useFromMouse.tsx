@@ -62,15 +62,15 @@ export function useFromMouse(
       const notPoint = !pointY && !pointX;
 
       // 无动画设置起始位置 + 动画到显示位置
-      (set as any)({
-        to: async (next: any) => {
+      set({
+        to: async next => {
           await next({
             x: notPoint ? 0 : self.startXPos,
             y: notPoint ? -100 : self.startYPos,
             scale: notPoint ? 1 : 0,
             opacity: notPoint ? 0 : 1,
             immediate: true,
-            reset: true,
+            default: true,
           });
           await next({
             x: 0,
@@ -80,6 +80,7 @@ export function useFromMouse(
             immediate: false,
             config: { ...animationConfig, clamp: false },
             reset: false,
+            default: true,
           });
         },
       });
@@ -96,6 +97,7 @@ export function useFromMouse(
         immediate: false,
         config: { ...animationConfig, clamp: true },
         reset: false,
+        default: true,
         onRest() {
           // 通知useMountInterface
           if (!share.refState.show) {
@@ -110,5 +112,5 @@ export function useFromMouse(
     // eslint-disable-next-line
   }, [show2]);
 
-  return [sp, mount];
+  return [sp, mount] as const;
 }

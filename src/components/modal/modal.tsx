@@ -4,7 +4,7 @@ import { Z_INDEX_MODAL } from 'm78/util';
 import { useMeasure } from 'react-use';
 import { config as spConfig, Transition, TransitionTypes } from '@lxjx/react-transition-spring';
 import { useFormState, useSameState, useRefize, useSelf } from '@lxjx/hooks';
-import { animated, interpolate } from 'react-spring';
+import { animated, to } from 'react-spring';
 
 import cls from 'classnames';
 import { useDelayDerivedToggleStatus } from 'm78/hooks';
@@ -145,13 +145,11 @@ const _ModalBase: React.FC<ModalBaseProps> = props => {
               left: pos[0],
               top: pos[1],
               zIndex: nowZIndex,
-              transform: interpolate(
-                //  @ts-ignore
+              transform: to(
                 [sp.x, sp.y, sp.scale],
-                (x: number, y: number, scale: number) =>
+                (x, y, scale) =>
                   `translate3d(${x}px,${y}px,0px) scale3d(${scale},${scale},${scale})`,
               ),
-              //  @ts-ignore
               opacity: sp.opacity,
             }}
           >

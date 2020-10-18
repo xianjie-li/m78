@@ -1,7 +1,7 @@
 import React, { useImperativeHandle, useRef } from 'react';
 
 import { useScroll, useSelf, useSetState } from '@lxjx/hooks';
-import { animated, config, interpolate, useSpring } from 'react-spring';
+import { animated, config, to, useSpring } from 'react-spring';
 import cls from 'classnames';
 import { WindmillIcon } from 'm78/icon';
 import { Direction } from 'm78/util';
@@ -30,6 +30,8 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
     threshold,
     rubber,
   } = props as Share['props'];
+
+  console.log('update');
 
   /** 根元素 */
   const rootEl = useRef<HTMLDivElement>(null!);
@@ -120,7 +122,7 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
       <animated.div
         className="m78-scroller_inner"
         style={{
-          transform: interpolate([spSty.x, spSty.y], (x, y) => `translate3d(${x}px, ${y}px, 0)`),
+          transform: to([spSty.x, spSty.y], (x, y) => `translate3d(${x}px, ${y}px, 0)`),
         }}
       >
         {/* 下拉指示器 */}
@@ -135,7 +137,7 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
                   <animated.div
                     className="m78-scroller_pulldown-icon"
                     style={{
-                      transform: interpolate(
+                      transform: to(
                         [spSty.y, spPullDownSty.r],
                         (y, r) =>
                           `rotate3d(0, 0, 1, ${-(offset2Rotate(y, threshold + rubber) + r)}deg)`,
@@ -172,11 +174,11 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
 
       {/* 滚动进度 */}
       <animated.div
-        style={{ width: spPgSty.y.interpolate(width => `${width}%`) }}
+        style={{ width: spPgSty.y.to(width => `${width}%`) }}
         className="m78-scroller_progress-bar"
       />
       <animated.div
-        style={{ height: spPgSty.x.interpolate(height => `${height}%`) }}
+        style={{ height: spPgSty.x.to(height => `${height}%`) }}
         className="m78-scroller_progress-bar __left"
       />
 

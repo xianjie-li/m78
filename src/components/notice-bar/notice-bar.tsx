@@ -44,7 +44,7 @@ const NoticeBar: React.FC<NoticeBarProps> = ({
   });
 
   const [spStyle, set] = useSpring(() => ({
-    height: 'auto',
+    height: 'auto' as number | string,
     config: { ...config.stiff, clamp: true },
   }));
 

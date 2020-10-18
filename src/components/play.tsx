@@ -1,8 +1,12 @@
 import React, { useRef } from 'react';
 import Scroller, { ScrollerRef } from 'm78/scroller';
 import { UndoOutlined } from 'm78/icon';
-import testImg from '../mock/img/test.jpg';
+import img1 from '@/mock/img/11.jpg';
+import img2 from '@/mock/img/22.jpg';
+import img3 from '@/mock/img/33.jpg';
+import Carousel from 'm78/carousel';
 import sty from './play.module.scss';
+import testImg from '../mock/img/test.jpg';
 
 /* TODO: 添加到utils */
 /**
@@ -18,9 +22,7 @@ const Play = () => {
 
   return (
     <div>
-      <div
-        style={{ position: 'fixed', width: '100%', height: '100%', left: 0, top: 0, zIndex: 1000 }}
-      >
+      <div style={{ width: '320px', height: '600px' }}>
         <button
           style={{ position: 'fixed', left: 0, top: 0, zIndex: 1000 }}
           onClick={() => scroller.current!.triggerPullDown()}
