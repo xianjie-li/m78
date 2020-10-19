@@ -65,6 +65,17 @@ export enum PullDownStatus {
   TIP,
   RELEASE_TIP,
   LOADING,
+  ERROR,
+  SUCCESS,
+}
+
+/** 表示上拉加载的所有阶段 */
+export enum PullUpStatus {
+  TIP,
+  LOADING,
+  NOT_DATA,
+  ERROR,
+  SUCCESS,
 }
 
 /** 下拉刷新各阶段的提示文本 */
@@ -72,4 +83,15 @@ export const pullDownText = {
   [PullDownStatus.TIP]: '下拉刷新',
   [PullDownStatus.RELEASE_TIP]: '松开刷新',
   [PullDownStatus.LOADING]: '正在刷新',
+  [PullDownStatus.ERROR]: '刷新失败',
+  [PullDownStatus.SUCCESS]: '数据已更新',
+};
+
+/** 上拉加载各阶段的提示文本 */
+export const pullUpText = {
+  [PullUpStatus.TIP]: '上拉加载更多',
+  [PullUpStatus.LOADING]: '加载中',
+  [PullUpStatus.NOT_DATA]: '没有更多了',
+  [PullUpStatus.ERROR]: '加载失败,',
+  [PullUpStatus.SUCCESS]: '获取到{num}条新数据',
 };

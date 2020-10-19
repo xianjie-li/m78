@@ -4,8 +4,13 @@ import { useScroll, useSelf, useSetState } from '@lxjx/hooks';
 import { animated, config, to, useSpring } from 'react-spring';
 import cls from 'classnames';
 import { WindmillIcon } from 'm78/icon';
+import Button from 'm78/button';
 import { Direction } from 'm78/util';
-import { offset2Rotate, PullDownStatus } from './common';
+import Spin from 'm78/spin';
+import { If } from 'm78/fork';
+import { isBoolean } from '@lxjx/utils';
+import { Spacer } from 'm78/layout';
+import { offset2Rotate, PullDownStatus, PullUpStatus } from './common';
 import { ScrollerProps, ScrollerRef, Share } from './type';
 import { useMethods } from './methods';
 import { useHooks } from './hooks';
@@ -19,6 +24,8 @@ export const defaultProps = {
   progressBar: false,
   scrollFlag: false,
   direction: Direction.vertical,
+  pullUpThreshold: 120,
+  pullDownTips: true,
 };
 
 const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
@@ -30,8 +37,6 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
     threshold,
     rubber,
   } = props as Share['props'];
-
-  console.log('update');
 
   /** 根元素 */
   const rootEl = useRef<HTMLDivElement>(null!);
@@ -46,6 +51,7 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
     leftFlag: false,
 
     pullDownStatus: PullDownStatus.TIP,
+    pullUpStatus: PullUpStatus.TIP,
   });
 
   const self = useSelf<Share['self']>({
@@ -106,6 +112,8 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
   const hideOffset =
     hideScrollbar && state.scrollBarWidth && !state.hasTouch ? -state.scrollBarWidth : undefined;
 
+  const isPullUpIng = methods.isPullUpIng();
+
   return (
     <div
       className={cls('m78-scroller', {
@@ -162,13 +170,36 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
             [direction === Direction.vertical ? 'overflowY' : 'overflowX']: 'auto',
           }}
         >
-          {Array.from({ length: 100 }).map((item, ind) => (
-            <div key={ind}>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquid dolorem
-              excepturi iure laboriosam magnam modi, sequi. Accusantium ad exercitationem, fugiat
-              illo labore, necessitatibus officiis optio quas repudiandae sequi temporibus.
-            </div>
-          ))}
+          {props.children}
+          {/* 上拉提示区域 */}
+          {props.onPullUp && (
+            <>
+              {/* 优化显示 */}
+              <If when={isBoolean(props.hasData) && !props.hasData}>
+                <Spacer height={100} />
+              </If>
+              <div className="m78-scroller_pullup">
+                <div className="m78-scroller_pullup-wrap">
+                  {!isPullUpIng && (
+                    <span className="m78-scroller_pullup-text">
+                      {methods.getPullUpText()}
+                      <If when={state.pullUpStatus === PullUpStatus.ERROR}>
+                        <Button
+                          size="small"
+                          link
+                          color="primary"
+                          onClick={() => methods.triggerPullUp(true)}
+                        >
+                          重试
+                        </Button>
+                      </If>
+                    </span>
+                  )}
+                  {isPullUpIng && <Spin inline size="small" />}
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </animated.div>
 

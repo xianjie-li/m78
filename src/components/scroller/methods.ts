@@ -1,10 +1,17 @@
 import _clamp from 'lodash/clamp';
+import { UseScrollMeta } from '@lxjx/hooks';
+import { isNumber } from '@lxjx/utils';
+import Button from 'm78/button';
+import Message from 'm78/message';
+import React from 'react';
 import { SetDragPosArg, Share } from './type';
 import {
   decimalPrecision,
   getScrollBarWidth,
   PullDownStatus,
   pullDownText,
+  PullUpStatus,
+  pullUpText,
   rubberFactor,
 } from './common';
 
@@ -62,11 +69,13 @@ export function useMethods(share: Share) {
   }
 
   /** 容器滚动处理函数 */
-  function scrollHandle() {
+  function scrollHandle(meta: UseScrollMeta) {
     refreshProgressBar('x');
     refreshProgressBar('y');
 
     refreshScrollFlag();
+
+    pullUpHandler(meta);
   }
 
   /** 如果启用，刷新进度条状态 */
@@ -162,14 +171,18 @@ export function useMethods(share: Share) {
     const inThreshold = self.memoY >= threshold;
 
     // 正在加载时不走后续逻辑
-    if (state.pullDownStatus === PullDownStatus.LOADING) {
-      if (!down) {
-        if (inThreshold) {
-          pullDownToThreshold();
-        } else {
-          stopPullDown();
+    if (isPullActioning()) {
+      if (isPullDowning()) {
+        if (!down) {
+          if (inThreshold) {
+            pullDownToThreshold();
+          } else {
+            stopPullDown();
+          }
         }
       }
+
+      if (isPullUpIng()) return;
 
       return true;
     }
@@ -198,9 +211,13 @@ export function useMethods(share: Share) {
     return true;
   }
 
+  function isPullDowning() {
+    return state.pullDownStatus === PullDownStatus.LOADING;
+  }
+
   /** 触发下拉刷新, 处于加载状态时无效 */
   function triggerPullDown() {
-    if (state.pullDownStatus === PullDownStatus.LOADING) return;
+    if (isPullActioning() || !props.onPullDown) return;
 
     setState({
       pullDownStatus: PullDownStatus.LOADING,
@@ -212,18 +229,53 @@ export function useMethods(share: Share) {
       from: { r: 0 },
       to: { r: 360 },
       immediate: false,
-      loop: () => state.pullDownStatus === PullDownStatus.LOADING,
+      loop: isPullDowning,
       config: { duration: 1000 },
     });
 
-    props.onPullDown!()
+    props
+      .onPullDown()
       .then(() => {
-        stopPullDown();
-        console.log('成功');
+        console.log('成功'); /* TODO: 添加消息提示组件 */
+        if (props.pullDownTips) {
+          Message.tips({
+            content: pullDownText[PullDownStatus.SUCCESS],
+          });
+        }
+
+        // 刷新成功时，还原上拉加载状态、触发上拉加载
+        if (props.onPullUp) {
+          setTimeout(() => {
+            setState({
+              pullUpStatus: PullUpStatus.TIP,
+            });
+          }, 50);
+        }
       })
       .catch(() => {
+        console.log('失败'); /* TODO: 添加消息提示组件 */
+        if (props.pullDownTips) {
+          Message.tips({
+            content: React.createElement('span', null, [
+              pullDownText[PullDownStatus.ERROR],
+              React.createElement(
+                Button,
+                {
+                  color: 'primary',
+                  size: 'small',
+                  link: true,
+                  key: 'actionBtn',
+                  onClick: triggerPullDown,
+                },
+                '重试',
+              ),
+            ]),
+            duration: 10000,
+          });
+        }
+      })
+      .finally(() => {
         stopPullDown();
-        console.log('失败');
       });
   }
 
@@ -252,6 +304,68 @@ export function useMethods(share: Share) {
     return pullDownText[state.pullDownStatus] || '';
   }
 
+  function isPullActioning() {
+    return isPullUpIng() || isPullDowning();
+  }
+
+  function isPullUpIng() {
+    return state.pullUpStatus === PullUpStatus.LOADING;
+  }
+
+  /** 处理上拉加载逻辑 */
+  function pullUpHandler(meta: UseScrollMeta) {
+    if (!props.onPullUp) return;
+    // 未达到触发距离
+    if (meta.y + props.pullUpThreshold < meta.yMax) return;
+
+    // 不在提示阶段时阻止滚动触发加载(依然可以手动触发)
+    if (state.pullUpStatus !== PullUpStatus.TIP) return;
+
+    triggerPullUp();
+  }
+
+  /** 获取当前上拉状态的文本 */
+  function getPullUpText() {
+    return pullUpText[state.pullUpStatus] || '';
+  }
+
+  /**
+   * 触发上拉加载
+   * @param isRefresh - 由组件内部触发(点击重试、triggerPullUp(true))等方式触发, 一般用于标记是否应该增加页码
+   * */
+  function triggerPullUp(isRefresh?: boolean) {
+    // 正在进行其他操作/未开启上拉
+    if (isPullActioning() || !props.onPullUp) return;
+
+    setState({
+      pullUpStatus: PullUpStatus.LOADING,
+    });
+
+    props
+      .onPullUp({ isRefresh })
+      .then(num => {
+        if (isNumber(num) && num > 0) {
+          /* TODO: 加载提示 */
+          Message.tips({
+            content: pullUpText[PullUpStatus.SUCCESS].replace('{num}', String(num)),
+          });
+
+          setState({
+            pullUpStatus: PullUpStatus.TIP,
+          });
+        } else {
+          setState({
+            pullUpStatus: PullUpStatus.NOT_DATA,
+          });
+        }
+      })
+      .catch(() => {
+        setState({
+          pullUpStatus: PullUpStatus.ERROR,
+        });
+      });
+  }
+
   /** 推送一条消息 */
   function sendMsg() {}
 
@@ -265,6 +379,9 @@ export function useMethods(share: Share) {
     sendMsg,
     pullDownHandler,
     getPullDownText,
+    getPullUpText,
+    isPullUpIng,
     triggerPullDown,
+    triggerPullUp,
   };
 }

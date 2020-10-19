@@ -98,7 +98,6 @@
     &-wrap {
       line-height: 1.2;
       text-align: center;
-      font-size: 12px;
     }
 
     &-icon {
@@ -112,6 +111,20 @@
       display: block;
       text-align: center;
       margin-top: 4px;
+      color: $b-second;
+      font-size: 14px;
+    }
+  }
+
+  &_pullup {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+
+    &-text {
+      font-size: 14px;
+      color: $b-second;
     }
   }
 }

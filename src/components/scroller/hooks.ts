@@ -26,6 +26,11 @@ export function useHooks(methods: ReturnType<typeof useMethods>, share: Share) {
   /* 禁用一些默认事件，如、qq 微信 ios 的顶部下拉 */
   useEffect(() => preventTopPullDown(sHelper.ref.current!), []);
 
+  // 初始化调用上拉加载
+  useEffect(() => {
+    methods.triggerPullUp(true);
+  }, []);
+
   // Drag事件处理
   const bind = useGesture(
     {
