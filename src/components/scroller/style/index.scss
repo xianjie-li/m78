@@ -112,7 +112,7 @@
       text-align: center;
       margin-top: 4px;
       color: $b-second;
-      font-size: 14px;
+      font-size: 13px;
     }
   }
 
@@ -123,8 +123,22 @@
     height: 50px;
 
     &-text {
-      font-size: 14px;
+      display: flex;
+      align-items: center;
+      font-size: 13px;
       color: $b-second;
+
+      .m78-btn {
+        top: -2px;
+      }
     }
   }
+
+  &_empty-nodata {
+
+    .m78-btn {
+      top: -1px;
+    }
+  }
+
 }

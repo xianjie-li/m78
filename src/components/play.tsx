@@ -22,7 +22,7 @@ function delay<T = any>(ms: number, payload?: T) {
 function mockData(length = 12) {
   return new Promise<string[]>((res, rej) => {
     setTimeout(() => {
-      Math.random() > 0.8 ? rej() : res(Array.from({ length }).map(() => createRandString()));
+      Math.random() > 0.7 ? rej() : res(Array.from({ length }).map(() => createRandString()));
     }, 1000);
   });
 }
@@ -56,7 +56,7 @@ const Play = () => {
           onPullUp={async ({ isRefresh }) => {
             console.log('上拉加载触发:', isRefresh ? '刷新' : '加载');
 
-            const _list = await mockData(10);
+            const _list = await mockData(Math.random() > 0.7 ? 0 : 10);
 
             setList(prev => [...prev, ..._list]);
 

@@ -270,7 +270,6 @@ export function useMethods(share: Share) {
                 '重试',
               ),
             ]),
-            duration: 10000,
           });
         }
       })

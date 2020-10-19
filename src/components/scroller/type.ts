@@ -106,7 +106,7 @@ export interface ScrollerProps extends ComponentBaseProps {
     /** 由组件内部触发(点击重试、triggerPullUp(true)、初始化执行)等方式触发, 为true时应该调过增加页码等操作，仅做数据更新 */
     isRefresh?: boolean;
   }) => Promise<number | void>;
-  /** 当前是否有已加载的数据，一个可选的优化属性, 用于优化数据为空时加载指示器、文本等的显示 */
+  /** 当前是否有已加载的数据，一个可选的优化属性, 可以更友好的显示初次加载时的加载、错误、空数据状态显示 */
   hasData?: boolean;
   /** 120 | 触发上拉加载的距离 */
   pullUpThreshold?: number;
@@ -114,16 +114,12 @@ export interface ScrollerProps extends ComponentBaseProps {
   /* ############# 上下拉相关配置 ############# */
   /** 80 | 各方向到达顶部或底部后可拖动的最大距离(不包含rubber产生的额外拖动距离), 此距离也是下拉刷新的触发距离 */
   threshold?: number;
+  /** 0.5 | 肥皂力，值越大则越顺滑, 拖动每px移动的距离也更大 */
+  soap?: number;
+  /** 40 | 触发橡皮筋效果的阈值, 会在 threshold 的 -rubber 位置开始逐渐减小soap, 并在拖动到+rubber位置时完全停止 */
+  rubber?: number;
 
-  /** 滚动时触发 */
-  onScroll?: () => void;
-  /** 是否显示返回顶部按钮 */
-  backTop?: boolean;
-  /** 提供整页滚动能力 */
-  slide?: boolean;
-  /** 虚拟滚动 */
-  /** 滚动容器下额外的内容 */
-  extraNode?: React.ReactNode;
+  /* ############# 定制配置 ############# */
 
   /** 拖动层下层的背景色 */
   bgColor?: string;
@@ -137,9 +133,17 @@ export interface ScrollerProps extends ComponentBaseProps {
   webkitScrollBar?: boolean;
   /** false | 仅在鼠标悬停在滚动容器上时显示webkitScrollBar */
   hoverWebkitScrollBar?: boolean;
+  /** 继承配置 */
+  // className: string;
+  // style: React.CSSProperties;
 
-  /** 0.5 | 肥皂力，值越大则越顺滑, 拖动每px移动的距离也更大 */
-  soap?: number;
-  /** 40 | 触发橡皮筋效果的阈值, 会在 threshold 的 -rubber 位置开始逐渐减小soap, 并在拖动到+rubber位置时完全停止 */
-  rubber?: number;
+  /** 滚动时触发 */
+  onScroll?: () => void;
+  /** 是否显示返回顶部按钮 */
+  backTop?: boolean;
+  /** 提供整页滚动能力 */
+  slide?: boolean;
+  /** 虚拟滚动 */
+  /** 滚动容器下额外的内容 */
+  extraNode?: React.ReactNode;
 }

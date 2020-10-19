@@ -3,13 +3,14 @@ import React, { useImperativeHandle, useRef } from 'react';
 import { useScroll, useSelf, useSetState } from '@lxjx/hooks';
 import { animated, config, to, useSpring } from 'react-spring';
 import cls from 'classnames';
-import { WindmillIcon } from 'm78/icon';
+import { ErrorIcon, WindmillIcon } from 'm78/icon';
 import Button from 'm78/button';
 import { Direction } from 'm78/util';
 import Spin from 'm78/spin';
 import { If } from 'm78/fork';
 import { isBoolean } from '@lxjx/utils';
 import { Spacer } from 'm78/layout';
+import Empty from 'm78/empty';
 import { offset2Rotate, PullDownStatus, PullUpStatus } from './common';
 import { ScrollerProps, ScrollerRef, Share } from './type';
 import { useMethods } from './methods';
@@ -114,6 +115,18 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
 
   const isPullUpIng = methods.isPullUpIng();
 
+  function renderPullUpRetryBtn() {
+    return (
+      <Button size="small" link color="primary" onClick={() => methods.triggerPullUp(true)}>
+        重试
+      </Button>
+    );
+  }
+
+  // 是否正确传递了hasData
+  const passHasDataKey = isBoolean(props.hasData);
+  const hasData = passHasDataKey && props.hasData;
+
   return (
     <div
       className={cls('m78-scroller', {
@@ -174,27 +187,42 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
           {/* 上拉提示区域 */}
           {props.onPullUp && (
             <>
-              {/* 优化显示 */}
-              <If when={isBoolean(props.hasData) && !props.hasData}>
+              {/* 优化显示, 主要处理的是无数据、加载失败、加载中三种状态，在初始化加载即为空时，对其进行优化显示 */}
+              <If when={passHasDataKey && !hasData}>
                 <Spacer height={100} />
+                <If when={!isPullUpIng && state.pullUpStatus === PullUpStatus.NOT_DATA}>
+                  <Empty
+                    desc={
+                      <span className="m78-scroller_empty-nodata">
+                        <span>暂无数据</span>
+                        {renderPullUpRetryBtn()}
+                      </span>
+                    }
+                  />
+                </If>
+                <If when={!isPullUpIng && state.pullUpStatus === PullUpStatus.ERROR}>
+                  <Empty
+                    emptyNode={<ErrorIcon />}
+                    desc={
+                      <span className="m78-scroller_empty-nodata">
+                        <span>{methods.getPullUpText()}</span>
+                        {renderPullUpRetryBtn()}
+                      </span>
+                    }
+                  />
+                </If>
               </If>
               <div className="m78-scroller_pullup">
                 <div className="m78-scroller_pullup-wrap">
-                  {!isPullUpIng && (
+                  {/* 未传hasData，或者传入且有值hasData */}
+                  <If when={!isPullUpIng && (!passHasDataKey || hasData)}>
                     <span className="m78-scroller_pullup-text">
-                      {methods.getPullUpText()}
+                      <span>{methods.getPullUpText()}</span>
                       <If when={state.pullUpStatus === PullUpStatus.ERROR}>
-                        <Button
-                          size="small"
-                          link
-                          color="primary"
-                          onClick={() => methods.triggerPullUp(true)}
-                        >
-                          重试
-                        </Button>
+                        {renderPullUpRetryBtn()}
                       </If>
                     </span>
-                  )}
+                  </If>
                   {isPullUpIng && <Spin inline size="small" />}
                 </div>
               </div>
