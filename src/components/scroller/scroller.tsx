@@ -137,7 +137,7 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
         'm78-scroller',
         {
           'm78-scrollbar': !state.hasTouch && webkitScrollBar,
-          __hideScrollBar: hideScrollbar,
+          // __hideScrollBar: hideScrollbar,
           __hover: !state.hasTouch && hoverWebkitScrollBar,
         },
         props.className,

@@ -8,11 +8,11 @@ import sty from './style.module.scss';
 
 const list = mockData(50);
 
-const Demo = () => (
+const Flags = () => (
   <div>
-    <h3>纵向滚动</h3>
+    <h3>进度条</h3>
 
-    <Scroller style={{ width: 300, height: 300, border: '1px solid #ccc' }}>
+    <Scroller progressBar style={{ width: 300, height: 300, border: '1px solid #ccc' }}>
       {list.map(item => (
         <div key={item} className={sty.Item}>
           {item}
@@ -22,14 +22,11 @@ const Demo = () => (
 
     <Divider margin={30} />
 
-    <h3>横向滚动</h3>
+    <h3>内容指示器</h3>
 
-    <Scroller
-      direction={Direction.horizontal}
-      style={{ width: 300, height: 60, border: '1px solid #ccc', whiteSpace: 'nowrap' }}
-    >
+    <Scroller scrollFlag style={{ width: 300, height: 300, border: '1px solid #ccc' }}>
       {list.map(item => (
-        <div key={item} className={sty.HItem}>
+        <div key={item} className={sty.Item}>
           {item}
         </div>
       ))}
@@ -37,4 +34,4 @@ const Demo = () => (
   </div>
 );
 
-export default Demo;
+export default Flags;

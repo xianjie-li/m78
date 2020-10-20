@@ -1,15 +1,37 @@
 import { useEffect } from 'react';
 import { useGesture } from 'react-use-gesture';
 import preventTopPullDown from 'prevent-top-pull-down';
+import _clamp from 'lodash/clamp';
 import { Direction } from 'm78/util';
+import { isNumber } from '@lxjx/utils';
 import { SetDragPosArg, Share } from './type';
 import { useMethods } from './methods';
 
 export function useHooks(methods: ReturnType<typeof useMethods>, share: Share) {
-  const { setState, sHelper, self, rootEl, setSp, props } = share;
+  const { setState, sHelper, self, rootEl, setSp, setPgSp, props } = share;
 
   // 获取滚动条宽度
   useEffect(methods.getScrollWidth, []);
+
+  // 手动控制进度条宽度
+  useEffect(() => {
+    const xHas = isNumber(props.xProgress);
+    const yHas = isNumber(props.yProgress);
+
+    if (!isNumber(props.xProgress) && !isNumber(props.yProgress)) return;
+
+    const aniTo: any = {};
+
+    if (xHas) {
+      aniTo.x = _clamp(props.xProgress! * 100, 0, 100);
+    }
+
+    if (yHas) {
+      aniTo.y = _clamp(props.yProgress! * 100, 0, 100);
+    }
+
+    setPgSp(aniTo);
+  }, [props.xProgress, props.yProgress]);
 
   // 初始化滚动标识
   useEffect(methods.refreshScrollFlag, []);
@@ -53,7 +75,6 @@ export function useHooks(methods: ReturnType<typeof useMethods>, share: Share) {
         /* 触边拖动时禁用默认事件 */
         if (yPrevent || xPrevent) {
           if (event) {
-            console.log('prevent');
             event.cancelable && event.preventDefault();
           }
         }
@@ -95,7 +116,6 @@ export function useHooks(methods: ReturnType<typeof useMethods>, share: Share) {
 
         if (props.direction === Direction.horizontal) {
           if (sMeta.touchLeft || sMeta.touchRight) {
-            console.log(sMeta);
             methods.setDragPos(dragPosArg);
           }
         }

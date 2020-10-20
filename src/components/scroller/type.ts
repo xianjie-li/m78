@@ -80,7 +80,7 @@ export interface ScrollerProps extends ComponentBaseProps {
   /* ############# 下拉配置 ############# */
 
   /** 启用下拉并在触发时通知, 根据Promise的解析结果决定成功或失败 */
-  onPullDown?: () => Promise<void>;
+  onPullDown?: (triggerPullDown: ScrollerRef['triggerPullUp']) => Promise<void>;
   /** true | 是否在刷新结束后根据结果进行提示 */
   pullDownTips?: boolean;
   /** 自定义下拉指示器 */
@@ -92,18 +92,18 @@ export interface ScrollerProps extends ComponentBaseProps {
 
   /**
    * 启用上拉加载并在触发时通知
-   * - 如果Promise resolve, 解析数字且大于0时，可以继续上拉，无解析或等于0时，设置为无数据状态
+   * - 如果Promise resolve, 解析包含length和isEmpty的对象，length表示该次请求到的数据总条数，isEmpty表示已无数据可加载
    * - 如果Promise reject, 会发出一个加载失败通知
    * - onPullUp有4 种方式触发，组件初始化时(isRefresh为true)、下拉刷新执行成功时、上拉到触发点时、调用triggerPullUp(组件内/外)
    *
    * 上拉加载与下拉刷新有以下关联行为
-   * - 下拉刷新成功时，上拉状态会被还原
+   * - 开始刷新时，上拉状态会被还原
    * - 如果列表包含依赖状态，页码、查询等，应在下拉刷新时将其重置
    * */
   onPullUp?: (args: {
     /** 由组件内部触发(点击重试、triggerPullUp(true)、初始化执行)等方式触发, 为true时应该调过增加页码等操作，仅做数据更新 */
     isRefresh?: boolean;
-  }) => Promise<number | void>;
+  }) => Promise<{ length?: number; isEmpty: boolean }>;
   /** 当前是否有已加载的数据，一个可选的优化属性, 可以更友好的显示初次加载时的加载、错误、空数据状态显示 */
   hasData?: boolean;
   /** 120 | 触发上拉加载的距离 */
@@ -124,6 +124,10 @@ export interface ScrollerProps extends ComponentBaseProps {
   bgColor?: string;
   /** 显示滚动进度条, 为number时当可滚动区域大于此值时才出现progressBar, 若传入true，滚动区域大于500时出现进度条 */
   progressBar?: boolean | number;
+  /** 0 ~ 1 手动控制x轴进度条进度 */
+  xProgress?: number;
+  /** 0 ~ 1 手动控制y轴进度条进度 */
+  yProgress?: number;
   /** 对应方向包含可滚动区域时显示可滚动阴影标识 */
   scrollFlag?: boolean;
   /** false | 是否显示滚动条 */

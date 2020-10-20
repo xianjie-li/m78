@@ -8,7 +8,7 @@ import Carousel from 'm78/carousel';
 import { createRandString } from '@lxjx/utils';
 import { FixedSizeList, FixedSizeListProps } from 'react-window';
 import sty from './play.module.scss';
-import testImg from '../mock/img/test.jpg';
+import testImg from '../docs/view/scroller/test.jpg';
 
 /* TODO: 添加到utils */
 /**

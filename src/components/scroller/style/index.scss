@@ -8,11 +8,11 @@
   background-color: #f6f6f6;
   overflow: hidden;
 
-  &.__hideScrollBar {
-    .m78-scroller_inner {
-      overflow: hidden;
-    }
-  }
+  //&.__hideScrollBar {
+  //  .m78-scroller_inner {
+  //    //overflow: hidden;
+  //  }
+  //}
 
   &_inner {
     position: relative;
@@ -30,7 +30,6 @@
     top: 0;
     right: 0;
     bottom: 0;
-    overflow: hidden;
     -webkit-overflow-scrolling:touch;
   }
 

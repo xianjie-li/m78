@@ -84,6 +84,7 @@ export function useMethods(share: Share) {
   /** 如果启用，刷新进度条状态 */
   function refreshProgressBar(type: 'x' | 'y') {
     if (!progressBar) return;
+    if (hasProgressCtrl(type)) return;
 
     const thresholdSize = typeof progressBar === 'number' ? progressBar : 500;
 
@@ -99,6 +100,12 @@ export function useMethods(share: Share) {
     setPgSp({
       [type]: percentage,
     });
+  }
+
+  /** 是否手动控制指定轴的滚动条 */
+  function hasProgressCtrl(type: 'x' | 'y') {
+    if (type === 'x') return props.xProgress !== undefined;
+    if (type === 'y') return props.yProgress !== undefined;
   }
 
   /** 如果启用，刷新标识状态 */
@@ -216,7 +223,7 @@ export function useMethods(share: Share) {
 
   /** 触发下拉刷新, 处于任意加载状态时无效 */
   function triggerPullDown() {
-    if (isPullActioning() || !props.onPullDown) return;
+    if (isPullDowning() || !props.onPullDown) return;
 
     setState({
       pullDownStatus: PullDownStatus.LOADING,
@@ -232,27 +239,25 @@ export function useMethods(share: Share) {
       config: { duration: 1000 },
     });
 
+    // 还原上拉加载状态、触发上拉加载
+    if (props.onPullUp) {
+      setState({
+        pullUpStatus: PullUpStatus.TIP,
+      });
+    }
+
     props
-      .onPullDown()
+      .onPullDown(triggerPullUp)
       .then(() => {
-        console.log('成功'); /* TODO: 添加消息提示组件 */
+        /* TODO: 添加消息提示组件 */
         if (props.pullDownTips) {
           Message.tips({
             content: pullDownText[PullDownStatus.SUCCESS],
           });
         }
-
-        // 刷新成功时，还原上拉加载状态、触发上拉加载
-        if (props.onPullUp) {
-          setTimeout(() => {
-            setState({
-              pullUpStatus: PullUpStatus.TIP,
-            });
-          }, 50);
-        }
       })
       .catch(() => {
-        console.log('失败'); /* TODO: 添加消息提示组件 */
+        /* TODO: 添加消息提示组件 */
         if (props.pullDownTips) {
           Message.tips({
             content: React.createElement('span', null, [
@@ -333,7 +338,7 @@ export function useMethods(share: Share) {
   /** 触发上拉加载, 参数见props */
   function triggerPullUp(isRefresh?: boolean) {
     // 正在进行其他操作/未开启上拉
-    if (isPullActioning() || !props.onPullUp) return;
+    if (isPullUpIng() || !props.onPullUp) return;
 
     setState({
       pullUpStatus: PullUpStatus.LOADING,
@@ -341,19 +346,21 @@ export function useMethods(share: Share) {
 
     props
       .onPullUp({ isRefresh })
-      .then(num => {
-        if (isNumber(num) && num > 0) {
+      .then(({ length, isEmpty }) => {
+        if (isNumber(length) && length > 0) {
           /* TODO: 加载提示 */
           Message.tips({
-            content: pullUpText[PullUpStatus.SUCCESS].replace('{num}', String(num)),
+            content: pullUpText[PullUpStatus.SUCCESS].replace('{num}', String(length)),
           });
+        }
 
+        if (isEmpty) {
           setState({
-            pullUpStatus: PullUpStatus.TIP,
+            pullUpStatus: PullUpStatus.NOT_DATA,
           });
         } else {
           setState({
-            pullUpStatus: PullUpStatus.NOT_DATA,
+            pullUpStatus: PullUpStatus.TIP,
           });
         }
       })
@@ -361,6 +368,9 @@ export function useMethods(share: Share) {
         setState({
           pullUpStatus: PullUpStatus.ERROR,
         });
+      })
+      .finally(() => {
+        refreshProgressBar('y');
       });
   }
 
