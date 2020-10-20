@@ -7,11 +7,6 @@
   user-select: none;
   background-color: #f6f6f6;
   overflow: hidden;
-  //background:
-  //    linear-gradient(to bottom, pink 120px, transparent) no-repeat top/100% 80px,
-  //    linear-gradient(to top, pink 120px, transparent) no-repeat bottom/100% 80px,
-  //    linear-gradient(to left, pink 120px, transparent) no-repeat left/80px 100%,
-  //    linear-gradient(to right, pink 120px, transparent) no-repeat right/80px 100%;
 
   &.__hideScrollBar {
     .m78-scroller_inner {
@@ -24,17 +19,18 @@
     width: 100%;
     height: 100%;
     will-change: transform;
-    touch-action: none;
+    //touch-action: none;
     background-color: $component-background;
     box-shadow: 0 0 4px $b-divider;
   }
 
   &_wrap {
-    position: absolute;
+    position: absolute !important;
     left: 0;
     top: 0;
     right: 0;
     bottom: 0;
+    overflow: hidden;
     -webkit-overflow-scrolling:touch;
   }
 
@@ -129,7 +125,7 @@
       color: $b-second;
 
       .m78-btn {
-        top: -2px;
+        top: -1px;
       }
     }
   }

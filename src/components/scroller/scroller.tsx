@@ -108,6 +108,10 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
 
   useImperativeHandle(ref, () => ({
     triggerPullDown: methods.triggerPullDown,
+    triggerPullUp: methods.triggerPullUp,
+    slideNext: methods.slideNext,
+    slidePrev: methods.slidePrev,
+    ...share.sHelper,
   }));
 
   const hideOffset =
@@ -129,13 +133,18 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
 
   return (
     <div
-      className={cls('m78-scroller', {
-        'm78-scrollbar': !state.hasTouch && webkitScrollBar,
-        __hideScrollBar: hideScrollbar,
-        __hover: !state.hasTouch && hoverWebkitScrollBar,
-      })}
+      className={cls(
+        'm78-scroller',
+        {
+          'm78-scrollbar': !state.hasTouch && webkitScrollBar,
+          __hideScrollBar: hideScrollbar,
+          __hover: !state.hasTouch && hoverWebkitScrollBar,
+        },
+        props.className,
+      )}
       style={{
         backgroundColor: props.bgColor,
+        ...props.style,
       }}
       ref={rootEl}
     >
@@ -180,7 +189,9 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
           style={{
             right: hideOffset,
             bottom: hideOffset,
-            [direction === Direction.vertical ? 'overflowY' : 'overflowX']: 'auto',
+            [direction === Direction.vertical ? 'overflowY' : 'overflowX']: props.disableScroll
+              ? undefined
+              : 'auto',
           }}
         >
           {props.children}
@@ -246,7 +257,10 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
       {state.rightFlag && (
         <div
           className="m78-scroller_scroll-flag"
-          style={{ right: state.scrollBarWidth ? state.scrollBarWidth : undefined }}
+          style={{
+            right:
+              methods.hasScroll('y') && state.scrollBarWidth ? state.scrollBarWidth : undefined,
+          }}
         />
       )}
 
@@ -254,9 +268,14 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
       {state.bottomFlag && (
         <div
           className="m78-scroller_scroll-flag __isVertical"
-          style={{ bottom: state.scrollBarWidth ? state.scrollBarWidth : undefined }}
+          style={{
+            bottom:
+              methods.hasScroll('x') && state.scrollBarWidth ? state.scrollBarWidth : undefined,
+          }}
         />
       )}
+
+      {props.extraNode}
     </div>
   );
 });

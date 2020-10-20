@@ -24,7 +24,13 @@ export function useHooks(methods: ReturnType<typeof useMethods>, share: Share) {
   }, []);
 
   /* 禁用一些默认事件，如、qq 微信 ios 的顶部下拉 */
-  useEffect(() => preventTopPullDown(sHelper.ref.current!), []);
+  useEffect(() => {
+    if (props.direction !== Direction.vertical) {
+      return;
+    }
+
+    return preventTopPullDown(sHelper.ref.current!);
+  }, []);
 
   // 初始化调用上拉加载
   useEffect(() => {
@@ -37,12 +43,17 @@ export function useHooks(methods: ReturnType<typeof useMethods>, share: Share) {
       onDrag({ event, direction: [dx, dy], delta: [dex, dey], down }) {
         const sMeta = sHelper.get();
 
-        const yPrevent = (dy > 0 && sMeta.touchTop) || (dy < 0 && sMeta.touchBottom);
-        const xPrevent = (dx > 0 && sMeta.touchLeft) || (dx < 0 && sMeta.touchRight);
+        const yPrevent =
+          props.direction === Direction.vertical &&
+          ((dy > 0 && sMeta.touchTop) || (dy < 0 && sMeta.touchBottom));
+        const xPrevent =
+          props.direction === Direction.horizontal &&
+          ((dx > 0 && sMeta.touchLeft) || (dx < 0 && sMeta.touchRight));
 
         /* 触边拖动时禁用默认事件 */
         if (yPrevent || xPrevent) {
           if (event) {
+            console.log('prevent');
             event.cancelable && event.preventDefault();
           }
         }
@@ -76,10 +87,17 @@ export function useHooks(methods: ReturnType<typeof useMethods>, share: Share) {
           touchTop: sMeta.touchTop,
         };
 
-        if (sMeta.touchTop || sMeta.touchBottom) {
-          methods.setDragPos({ isVertical: true, ...dragPosArg });
-        } else if (sMeta.touchLeft || sMeta.touchRight) {
-          methods.setDragPos(dragPosArg);
+        if (props.direction === Direction.vertical) {
+          if (sMeta.touchTop || sMeta.touchBottom) {
+            methods.setDragPos({ isVertical: true, ...dragPosArg });
+          }
+        }
+
+        if (props.direction === Direction.horizontal) {
+          if (sMeta.touchLeft || sMeta.touchRight) {
+            console.log(sMeta);
+            methods.setDragPos(dragPosArg);
+          }
         }
       },
     },

@@ -1,11 +1,9 @@
 import { Direction } from 'm78/util';
 import React from 'react';
-import { AnyFunction } from '@lxjx/utils';
 import { SpringStartFn } from 'react-spring';
-import { useScroll } from '@lxjx/hooks';
+import { useScroll, UseScrollMeta } from '@lxjx/hooks';
 import { SetState } from '@lxjx/hooks/dist/type';
-import { PullDownStatus } from 'm78/scroller';
-import { PullUpStatus } from 'm78/scroller/common';
+import { PullDownStatus, PullUpStatus } from 'm78/scroller';
 import { defaultProps } from './scroller';
 import { ComponentBaseProps } from '../types/types';
 
@@ -56,21 +54,17 @@ export interface Share {
   rootEl: React.MutableRefObject<HTMLDivElement>;
 }
 
-export interface ScrollerRef {
-  /** 手动触发onPullDown，当正在进行下拉或上拉中的任意操作时，调用无效 */
+type UseScrollReturns = Omit<ReturnType<typeof useScroll>, 'ref'>;
+
+export interface ScrollerRef extends UseScrollReturns {
+  /** 手动触发onPullDown，可用于刷新上拉加载的状态，当正在进行下拉或上拉中的任意操作时，调用无效 */
   triggerPullDown(): void;
-  // /** 手动触发onPullUp，当正在进行下拉或上拉中的任意操作时，调用无效 */
-  // triggerPullUp(isRefresh?: boolean): void;
-  // /** 重置上拉加载, 当没有数据时，上拉加载会被禁用，通过此方法可重新开启 */
-  // resetPullUp(): void;
-  // /** 滚动到指定位置, 传immediate则跳过动画 */
-  // scrollTo(to: number, immediate?: boolean): void;
-  // /** 根据当前位置滚动指定距离, 正数或负数, 传immediate则跳过动画  */
-  // scrollBy(offset: number, immediate?: boolean): void;
-  // /** 滚动到指定元素位置，如果是字符，会调用querySelector进行获取，没有找到时不会执行任何操作 */
-  // scrollToElement(el: HTMLElement | string): void;
-  // /** 对滚动节点的引用 */
-  // el: HTMLDivElement;
+  /** 手动触发onPullUp，参数细节见props.onPullUp ，当正在进行下拉或上拉中的任意操作时，调用无效 */
+  triggerPullUp(isRefresh?: boolean): void;
+  // 向上滚动整页(不需要开启slide)
+  slidePrev(): void;
+  // 向下滚动整页(不需要开启slide)
+  slideNext(): void;
 }
 
 export interface ScrollerProps extends ComponentBaseProps {
@@ -78,6 +72,10 @@ export interface ScrollerProps extends ComponentBaseProps {
   direction?: Direction;
   /** 内容, 是否可滚动的依据是滚动内容尺寸大于滚动容器尺寸 */
   children?: React.ReactNode;
+  /** 滚动时触发 */
+  onScroll?: (meta: UseScrollMeta) => void;
+  /** 禁止滚动(仍可通过ref api控制滚动) */
+  disableScroll?: boolean;
 
   /* ############# 下拉配置 ############# */
 
@@ -112,6 +110,7 @@ export interface ScrollerProps extends ComponentBaseProps {
   pullUpThreshold?: number;
 
   /* ############# 上下拉相关配置 ############# */
+
   /** 80 | 各方向到达顶部或底部后可拖动的最大距离(不包含rubber产生的额外拖动距离), 此距离也是下拉刷新的触发距离 */
   threshold?: number;
   /** 0.5 | 肥皂力，值越大则越顺滑, 拖动每px移动的距离也更大 */
@@ -137,13 +136,10 @@ export interface ScrollerProps extends ComponentBaseProps {
   // className: string;
   // style: React.CSSProperties;
 
-  /** 滚动时触发 */
-  onScroll?: () => void;
-  /** 是否显示返回顶部按钮 */
-  backTop?: boolean;
-  /** 提供整页滚动能力 */
-  slide?: boolean;
-  /** 虚拟滚动 */
-  /** 滚动容器下额外的内容 */
+  /* ############# 扩展 ############# */
+
+  /** TODO: 是否显示返回顶部按钮 */
+  // backTop?: boolean;
+  /** 滚动容器外层额外的内容, 和滚动提示等组件一级，用于扩展其他滚动配件 */
   extraNode?: React.ReactNode;
 }

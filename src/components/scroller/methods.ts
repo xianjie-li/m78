@@ -4,6 +4,7 @@ import { isNumber } from '@lxjx/utils';
 import Button from 'm78/button';
 import Message from 'm78/message';
 import React from 'react';
+import { Direction } from 'm78/util';
 import { SetDragPosArg, Share } from './type';
 import {
   decimalPrecision,
@@ -16,7 +17,7 @@ import {
 } from './common';
 
 export function useMethods(share: Share) {
-  const { self, state, setState, props, setSp, setPgSp, setPullDownSp, sHelper, rootEl } = share;
+  const { self, state, setState, props, setSp, setPgSp, setPullDownSp, rootEl } = share;
   const { soap, threshold, rubber, progressBar, scrollFlag, hideScrollbar } = props;
 
   /** 根据drag信息设置元素的拖动状态 */
@@ -70,6 +71,8 @@ export function useMethods(share: Share) {
 
   /** 容器滚动处理函数 */
   function scrollHandle(meta: UseScrollMeta) {
+    props.onScroll?.(meta);
+
     refreshProgressBar('x');
     refreshProgressBar('y');
 
@@ -84,7 +87,7 @@ export function useMethods(share: Share) {
 
     const thresholdSize = typeof progressBar === 'number' ? progressBar : 500;
 
-    const meta = sHelper.get();
+    const meta = share.sHelper.get();
 
     const current = meta[type];
     const max = meta[`${type}Max` as 'xMax'];
@@ -98,11 +101,11 @@ export function useMethods(share: Share) {
     });
   }
 
-  /** 如果启用，滚动表示状态 */
+  /** 如果启用，刷新标识状态 */
   function refreshScrollFlag() {
     if (!scrollFlag) return;
 
-    const meta = sHelper.get();
+    const meta = share.sHelper.get();
 
     const xHas = hasScroll('x');
     const yHas = hasScroll('y');
@@ -141,7 +144,7 @@ export function useMethods(share: Share) {
 
   /** 指定轴是否包含滚动区域 */
   function hasScroll(type: 'x' | 'y') {
-    const meta = sHelper.get();
+    const meta = share.sHelper.get();
 
     const max = type === 'x' ? meta.xMax : meta.yMax;
 
@@ -162,7 +165,7 @@ export function useMethods(share: Share) {
   }
 
   /**
-   * 处理下拉刷新逻辑
+   * 处理下拉刷新逻辑，down表示是否按下
    * @return 可以返回true来在事件绑定器中阻止默认的松开还原操作
    * */
   function pullDownHandler({ down }: { down: boolean }) {
@@ -211,11 +214,7 @@ export function useMethods(share: Share) {
     return true;
   }
 
-  function isPullDowning() {
-    return state.pullDownStatus === PullDownStatus.LOADING;
-  }
-
-  /** 触发下拉刷新, 处于加载状态时无效 */
+  /** 触发下拉刷新, 处于任意加载状态时无效 */
   function triggerPullDown() {
     if (isPullActioning() || !props.onPullDown) return;
 
@@ -278,8 +277,6 @@ export function useMethods(share: Share) {
       });
   }
 
-  function loop() {}
-
   /** 设置到下拉位置到threshold处 */
   function pullDownToThreshold() {
     setSp({
@@ -303,12 +300,17 @@ export function useMethods(share: Share) {
     return pullDownText[state.pullDownStatus] || '';
   }
 
-  function isPullActioning() {
-    return isPullUpIng() || isPullDowning();
+  function isPullDowning() {
+    return state.pullDownStatus === PullDownStatus.LOADING;
   }
 
   function isPullUpIng() {
     return state.pullUpStatus === PullUpStatus.LOADING;
+  }
+
+  /** 正在上拉或下拉操作中 */
+  function isPullActioning() {
+    return isPullUpIng() || isPullDowning();
   }
 
   /** 处理上拉加载逻辑 */
@@ -328,10 +330,7 @@ export function useMethods(share: Share) {
     return pullUpText[state.pullUpStatus] || '';
   }
 
-  /**
-   * 触发上拉加载
-   * @param isRefresh - 由组件内部触发(点击重试、triggerPullUp(true))等方式触发, 一般用于标记是否应该增加页码
-   * */
+  /** 触发上拉加载, 参数见props */
   function triggerPullUp(isRefresh?: boolean) {
     // 正在进行其他操作/未开启上拉
     if (isPullActioning() || !props.onPullUp) return;
@@ -365,22 +364,44 @@ export function useMethods(share: Share) {
       });
   }
 
-  /** 推送一条消息 */
-  function sendMsg() {}
+  /** 向前或向后滚动整页 */
+  function slide(isPrev?: boolean) {
+    const isVertical = props.direction === Direction.vertical;
+    const pos = isVertical ? 'y' : 'x';
+    const sizeKey = isVertical ? 'height' : 'width';
+
+    const meta = share.sHelper.get();
+
+    let pageSize = meta[sizeKey];
+
+    if (isPrev) {
+      pageSize = -pageSize;
+    }
+
+    share.sHelper.set({ [pos]: pageSize, raise: true });
+  }
+
+  function slidePrev() {
+    slide(true);
+  }
+
+  function slideNext() {
+    slide();
+  }
 
   return {
     setDragPos,
     scrollHandle,
-    refreshProgressBar,
     refreshScrollFlag,
     hasScroll,
     getScrollWidth,
-    sendMsg,
     pullDownHandler,
     getPullDownText,
     getPullUpText,
     isPullUpIng,
     triggerPullDown,
     triggerPullUp,
+    slidePrev,
+    slideNext,
   };
 }
