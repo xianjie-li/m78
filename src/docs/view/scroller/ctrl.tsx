@@ -30,7 +30,7 @@ const Ctrl = () => {
       <Button onClick={() => ref.current.set({ y: 100 })}>滚动到100</Button>
       <Button onClick={() => ref.current.set({ y: 100, raise: true })}>当前位置 +100</Button>
       <Button onClick={() => ref.current.scrollToElement(`.${sty.Item + 30}`)}>
-        滚动到第50个项
+        滚动到第30个项
       </Button>
     </div>
   );

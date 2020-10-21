@@ -1,0 +1,42 @@
+@import '../../style/index';
+
+.m78-tips {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  line-height: $line-height-base;
+
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 100%;
+  padding: 8px 12px;
+  background-color: $component-background;
+  box-shadow: $shadow-1;
+  max-height: 150px;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  &_content {
+    flex: 1;
+  }
+
+  &_action {
+    margin-left: 12px;
+
+    .m78-btn + .m78-btn {
+      margin-left: 0;
+    }
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  &.__card {
+    width: 90%;
+    top: 16px;
+    border-radius: $border-radius;
+  }
+
+}
