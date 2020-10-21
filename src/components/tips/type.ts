@@ -6,7 +6,7 @@ import { ComponentBaseProps } from '../types/types';
  * tips()
  * const { tips, ref } = useTips({ target: el | ref });
  *
- * push(msg) 推入一条消息, 如果当前没有消息，执行next()
+ * push(...msg) 推入一条消息, 如果当前没有消息，执行next()
  *
  * next() 关闭当前消息, 然后从列表取出第一条消息显示，并设置倒计时，计时结束后
  * 拉取下一条消息进行显示, 直到队列为空
@@ -16,7 +16,10 @@ import { ComponentBaseProps } from '../types/types';
  * clear() 移除所有消息
  * */
 
-export interface TipsProps {}
+export interface TipsProps {
+  list?: TipsItem[];
+  defaultOption?: any;
+}
 
 export interface TipsItem {
   /** 表示消息的唯一id，由组件内部生成 */
@@ -27,6 +30,8 @@ export interface TipsItem {
   duration?: number;
   /** 显示关闭按钮, 如果有下一条消息，显示文本为`下一条` */
   closeable?: boolean;
+  /** 是否可切换上一条 */
+  prevable?: boolean;
   /** 'card' | 显示类型, 默认显示为状态栏样式 */
   type?: 'card' | 'bar';
   /** 宽度 */

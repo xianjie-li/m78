@@ -3,7 +3,8 @@ import { useSelf, useSetState, useFn } from '@lxjx/hooks';
 import { useTransition, animated } from 'react-spring';
 import { Divider } from 'm78/layout';
 import Button from 'm78/button';
-import { createRandString } from '@lxjx/utils';
+import { AnyObject, createRandString, isArray } from '@lxjx/utils';
+import { useUpdate } from 'react-use';
 import { TipsItem } from './type';
 
 const defaultOptions = {
@@ -13,7 +14,22 @@ const defaultOptions = {
 
 let count = 0;
 
-function Tips() {
+interface UseQueueConfig {
+  list?: UseQueueItem[];
+  defaultItemOption?: any;
+}
+
+interface UseQueueItem {
+  /** 如果传入，会在指定延迟ms后自动跳转到下一条 */
+  duration?: number;
+}
+
+interface UseQueueItemWithId extends UseQueueItem {
+  /** 唯一id，由组件内部生成 */
+  id?: string;
+}
+
+function useQueue<Item extends AnyObject = {}>({ defaultItemOption, list }: UseQueueConfig) {
   const self = useSelf({
     /** 消息队列 */
     list: [] as TipsItem[],
@@ -28,12 +44,7 @@ function Tips() {
     current: null as TipsItem | null,
   });
 
-  const transition = useTransition<TipsItem, any>(state.current!, {
-    key: state.current?.id,
-    from: { y: '-100%', x: '-50%', opacity: 0 },
-    enter: { y: '0%', opacity: 1 },
-    leave: { y: '-100%', opacity: 0 },
-  });
+  const update = useUpdate();
 
   // 清理
   useEffect(() => clearTimer, []);
@@ -58,34 +69,22 @@ function Tips() {
 
     self.oldList.push(...del);
 
-    const mergeOpt = {
-      ...defaultOptions,
-      ...nextCurrent,
-    };
-
     setState({
-      current: mergeOpt,
+      current: nextCurrent,
     });
 
-    self.timer = setTimeout(next, mergeOpt.duration);
+    self.timer = setTimeout(next, nextCurrent.duration);
   });
 
   const prev = useFn(() => {
-    console.log(self);
+    const lastOldInd = self.oldList.length - 2; // 最后一条是当前消息
 
-    return;
-
-    const lastOldInd = self.oldList.length - 1;
-
-    const old = self.oldList.splice(lastOldInd, 1);
-
-    console.log(old);
+    const old = self.oldList.splice(lastOldInd, 2);
 
     if (!old.length) return;
 
-    // 当前消息重新返回队列, 历史中最后一条放到第一条
-    state.current && self.list.unshift(state.current);
-    self.list.unshift(old[0]);
+    // 当前消息和上一条消息重新放回队列
+    self.list.unshift(...old);
 
     next();
   });
@@ -93,14 +92,20 @@ function Tips() {
   /**
    * 推入一条消息, 如果当前没有消息，执行next()
    * */
-  const push = useFn((opt: TipsItem) => {
-    self.list.push({ ...opt, id: createRandString() });
+  const push = useFn((opt: TipsItem | TipsItem[]) => {
+    if (isArray(opt)) {
+      const ls = opt.map(item => ({ ...defaultOptions, ...item, id: createRandString() }));
+      self.list.push(...ls);
+    } else {
+      self.list.push({ ...defaultOptions, ...opt, id: createRandString() });
+    }
 
-    if (!state.current) next();
+    state.current ? update() : next();
   });
 
   const clear = useFn(() => {
     self.list = [];
+    self.oldList = [];
     clearTimer();
     setState({
       current: null,
@@ -128,6 +133,30 @@ function Tips() {
     return all.findIndex(item => item.id === id);
   }
 
+  return [
+    state.current,
+    {
+      push,
+      prev,
+      next,
+      hasNext,
+      hasPrev,
+      clear,
+      findIndexById,
+    },
+  ] as const;
+}
+
+function Tips() {
+  const [current, queue] = useQueue({});
+
+  const transition = useTransition<TipsItem, any>(current!, {
+    key: current?.id,
+    from: { y: '-100%', x: '-50%', opacity: 0 },
+    enter: { y: '0%', opacity: 1 },
+    leave: { y: '-100%', opacity: 0 },
+  });
+
   const fragment = transition((style, item) => {
     if (!item) return null;
 
@@ -135,14 +164,14 @@ function Tips() {
       <animated.div className="m78-tips __card" style={style}>
         <span className="m78-tips_content">{item.message}</span>
         <span className="m78-tips_action">
-          {item.closeable && hasPrev(item.id!) && (
-            <Button link size="small" color="red" onClick={prev}>
+          {item.prevable && queue.hasPrev(item.id!) && (
+            <Button link size="small" color="red" onClick={queue.prev}>
               上一条
             </Button>
           )}
           {item.closeable && (
-            <Button link size="small" color="red" onClick={next}>
-              {hasNext(item.id!) ? '下一条' : '关闭'}
+            <Button link size="small" color="red" onClick={queue.next}>
+              {queue.hasNext(item.id!) ? '下一条' : '关闭'}
             </Button>
           )}
         </span>
@@ -151,10 +180,23 @@ function Tips() {
   });
 
   function addOne() {
-    push({
-      message: `这是第${++count}条消息`,
-      closeable: true,
-    });
+    queue.push([
+      {
+        message: `这是第${++count}条消息`,
+        closeable: true,
+        duration: 3000,
+      },
+      {
+        message: `这是第${++count}条消息`,
+        closeable: true,
+        duration: 3000,
+      },
+      {
+        message: `这是第${++count}条消息`,
+        closeable: true,
+        duration: 3000,
+      },
+    ]);
   }
 
   return (
@@ -165,8 +207,9 @@ function Tips() {
 
       <div>
         <button onClick={addOne}>addOne</button>
-        <button onClick={next}>next</button>
-        <button onClick={clear}>clear</button>
+        <button onClick={queue.prev}>prev</button>
+        <button onClick={queue.next}>next</button>
+        <button onClick={queue.clear}>clear</button>
       </div>
     </div>
   );
