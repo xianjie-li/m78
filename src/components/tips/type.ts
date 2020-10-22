@@ -1,23 +1,7 @@
 import React from 'react';
+import { UseQueueItem } from '@lxjx/hooks';
 import { ButtonProps } from 'm78/button';
 import { AnyFunction } from '@lxjx/utils';
-
-export interface UseQueueConfig<ItemOption> {
-  /** 初始列表 */
-  list?: (ItemOption & UseQueueItem)[];
-  /** 默认项配置 */
-  defaultItemOption?: Partial<ItemOption & UseQueueItem>;
-}
-
-export interface UseQueueItem {
-  /** 如果传入，会在指定延迟ms后自动跳转到下一条 */
-  duration?: number;
-}
-
-export interface UseQueueItemWithId extends UseQueueItem {
-  /** 唯一id，由组件内部生成 */
-  id: string;
-}
 
 export interface TipsProps {
   controller: any;
@@ -47,4 +31,6 @@ export interface TipsItem extends UseQueueItem {
   }[];
   /** 操作区域内容, 覆盖actions */
   actionsNode?: React.ReactNode;
+  /** 是否用于全局显示(挂载到根节点)，定位方式会稍有不同 */
+  global?: boolean;
 }

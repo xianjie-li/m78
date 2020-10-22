@@ -15,7 +15,11 @@ import testImg from '../docs/view/scroller/test.jpg';
 let count = 0;
 
 const Play = () => {
-  const queue = Tips.useTipsController({});
+  const queue = Tips.useTipsController({
+    defaultItemOption: {
+      width: 200,
+    },
+  });
 
   function addOne() {
     queue.push([
@@ -54,6 +58,21 @@ const Play = () => {
           start
         </button>
         <button onClick={queue.pause}>pause</button>
+        <button
+          onClick={() => {
+            Tips.push({
+              message: '这是一条全局消息',
+              nextable: true,
+              actions: [
+                {
+                  text: '点击一下',
+                },
+              ],
+            });
+          }}
+        >
+          push
+        </button>
       </div>
     </div>
   );

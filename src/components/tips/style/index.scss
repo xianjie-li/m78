@@ -16,6 +16,7 @@
   max-height: 150px;
   overflow-y: auto;
   overflow-x: hidden;
+  z-index: $z-index;
 
   &_content {
     flex: 1;
@@ -41,7 +42,18 @@
 
   &.__fitWidth {
     width: auto;
-    min-width: 200px;
+    top: 48px;
     white-space: nowrap;
+  }
+
+  &.__global {
+    position: fixed;
+    z-index: $z-index-message;
+    max-width: 90vw;
+    text-align: center;
+
+    &.__hasAction {
+      text-align: left;
+    }
   }
 }
