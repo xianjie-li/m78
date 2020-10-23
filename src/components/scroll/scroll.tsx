@@ -4,7 +4,7 @@ import { Coordinates, FullGestureState } from 'react-use-gesture/dist/types';
 
 import { animated, useSpring, interpolate, config } from 'react-spring';
 
-import { isNumber } from '@lxjx/utils';
+import { isNumber, dumpFn } from '@lxjx/utils';
 import { Transition } from '@lxjx/react-transition-spring';
 import { useSelf, useSetState, useScroll } from '@lxjx/hooks';
 import preventTopPullDown from 'prevent-top-pull-down';
@@ -14,7 +14,6 @@ import Spin from 'm78/spin';
 import Empty from 'm78/empty';
 import Button from 'm78/button';
 import { CaretUpOutlined, WindmillIcon } from 'm78/icon';
-import { dumpFn } from 'm78/util';
 import _debounce from 'lodash/debounce';
 
 import cls from 'classnames';

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { getStyle } from 'm78/util';
+import { getStyle } from '@lxjx/utils';
 import cls from 'classnames';
 
 export interface MaskProps extends React.PropsWithoutRef<JSX.IntrinsicElements['div']> {
@@ -49,7 +49,7 @@ const Ellipsis: React.FC<MaskProps> = ({
   }, [shouldAddShadow]);
 
   function addShadowBlock() {
-    const lineHeight = getStyle(el.current, 'lineHeight');
+    const { lineHeight } = getStyle(el.current);
     let calcHeight = `${line}em`; // 不兼容时使用em进行退级处理
     let oneHeight = 0; // 退级处理
     if (lineHeight) {

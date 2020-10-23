@@ -1641,8 +1641,17 @@
 
 "@lxjx/utils@^1.5.6":
   version "1.5.6"
-  resolved "https://registry.npm.taobao.org/@lxjx/utils/download/@lxjx/utils-1.5.6.tgz?cache=0&sync_timestamp=1603245974824&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40lxjx%2Futils%2Fdownload%2F%40lxjx%2Futils-1.5.6.tgz#89045ee1c88673fa5f26edf2f1b2848a4da04ad1"
+  resolved "https://registry.npm.taobao.org/@lxjx/utils/download/@lxjx/utils-1.5.6.tgz#89045ee1c88673fa5f26edf2f1b2848a4da04ad1"
   integrity sha1-iQRe4ciGc/pfJu3y8bKEik2gStE=
+  dependencies:
+    "@babel/runtime" "^7.7.6"
+    "@types/node" "^13.11.0"
+    uuid "^7.0.2"
+
+"@lxjx/utils@^1.6.0":
+  version "1.6.0"
+  resolved "https://registry.npm.taobao.org/@lxjx/utils/download/@lxjx/utils-1.6.0.tgz#95d8ef8788c575243d865f6ded6a7953211cb318"
+  integrity sha1-ldjvh4jFdSQ9hl9t7Wp5UyEcsxg=
   dependencies:
     "@babel/runtime" "^7.7.6"
     "@types/node" "^13.11.0"

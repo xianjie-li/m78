@@ -20,18 +20,17 @@ const stopPropagation = {
   },
 };
 
-/** 占位函数 */
-const dumpFn = (...arg: any[]): any => arg;
-
-/** 获取指定dom元素的指定样式值 */
-function getStyle(obj: HTMLElement, attr: keyof CSSStyleDeclaration) {
-  if (!obj) return;
+/* TODO: 提到util (等待提交) */
+/** 获取指定dom元素的样式值 */
+function getStyle(obj: HTMLElement): Partial<CSSStyleDeclaration> {
+  if (!obj) return {};
   // @ts-ignore
-  if (!obj.currentStyle && !window.getComputedStyle) return null;
+  if (!obj.currentStyle && !window.getComputedStyle) return {};
   // @ts-ignore currentStyle非标准属性
-  return obj.currentStyle ? obj.currentStyle[attr] : window.getComputedStyle(obj)[attr];
+  return obj.currentStyle ? obj.currentStyle : window.getComputedStyle(obj);
 }
 
+/* TODO: 提到util (同步useScroll修改) */
 function getFirstScrollParent(ele: HTMLElement): HTMLElement | null {
   let node: Element | null = null;
 
@@ -40,11 +39,17 @@ function getFirstScrollParent(ele: HTMLElement): HTMLElement | null {
 
     if (parent) {
       const e = parent as HTMLElement;
-      const h = e.offsetHeight;
+      const h = e.clientHeight;
       const sH = e.scrollHeight;
 
       if (sH > h) {
-        const overflow = getStyle(e, 'overflow');
+        const { overflow } = getStyle(e);
+
+        /* 同步utils中的修改 */
+        // if (e === document.documentElement || e === document.body) {
+        //   node = e;
+        //   return;
+        // }
 
         if (overflow === 'scroll' || overflow === 'auto') {
           node = e;
@@ -63,6 +68,7 @@ function getFirstScrollParent(ele: HTMLElement): HTMLElement | null {
   return node;
 }
 
+/* TODO: 提到util  */
 /**
  * 元素是否在视口可见位置
  * @param el - 待检测元素
@@ -101,11 +107,13 @@ function checkElementVisible(
   return topPass && rightPass && bottomPass && leftPass;
 }
 
-/** 如果入参为truthy或0则返回，否则返回false */
+/* TODO: 提到util  */
+/** 如果入参为truthy或0则返回true，否则返回false, 用于检测 */
 function isTruthyOrZero(arg: any): boolean {
   return !!arg || arg === 0;
 }
 
+/* TODO: 提到util  */
 /** 返回入参中第一个truthy值或0 */
 function getFirstTruthyOrZero(...args: any): any {
   for (const arg of args) {
@@ -116,11 +124,12 @@ function getFirstTruthyOrZero(...args: any): any {
   return false;
 }
 
+/* TODO: 提到util  */
 /**
  * 根据传入的node节点查询其所有父节点中是否存在指定节点
  * @param node - 待查询的节点
  * @param matcher - 匹配器，递归接收父节点，返回值决定是否匹配
- * @param depth - 询深度
+ * @param depth - 查询最大深度
  * */
 function getCurrentParent(node: Element, matcher: (node: Element) => boolean, depth: number) {
   let hasMatch = false;
@@ -181,7 +190,6 @@ function mountHighlight(target: HTMLElement, color = '#1890ff') {
 
 export {
   stopPropagation,
-  dumpFn,
   getStyle,
   getFirstScrollParent,
   checkElementVisible,

@@ -4,8 +4,7 @@ import { CloseCircleOutlined, EyeOutlined, EyeInvisibleOutlined, SearchOutlined 
 import Spin from 'm78/spin';
 import Button from 'm78/button';
 import { If } from 'm78/fork';
-import { dumpFn } from 'm78/util';
-import { isNumber, formatString, validateFormatString } from '@lxjx/utils';
+import { isNumber, formatString, validateFormatString, dumpFn } from '@lxjx/utils';
 
 import cls from 'classnames';
 
