@@ -1,20 +1,12 @@
 import _clamp from 'lodash/clamp';
 import { UseScrollMeta } from '@lxjx/hooks';
-import { isNumber } from '@lxjx/utils';
+import { isNumber, decimalPrecision, getScrollBarWidth } from '@lxjx/utils';
 import Button from 'm78/button';
 import Message from 'm78/message';
 import React from 'react';
 import { Direction } from 'm78/util';
 import { SetDragPosArg, Share } from './type';
-import {
-  decimalPrecision,
-  getScrollBarWidth,
-  PullDownStatus,
-  pullDownText,
-  PullUpStatus,
-  pullUpText,
-  rubberFactor,
-} from './common';
+import { PullDownStatus, pullDownText, PullUpStatus, pullUpText, rubberFactor } from './common';
 
 export function useMethods(share: Share) {
   const { self, state, setState, props, setSp, setPgSp, setPullDownSp, rootEl } = share;

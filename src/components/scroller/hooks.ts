@@ -38,7 +38,7 @@ export function useHooks(methods: ReturnType<typeof useMethods>, share: Share) {
 
   // touch事件监测
   useEffect(() => {
-    if ('ontouchstart' in window) {
+    if (typeof window !== 'undefined' && 'ontouchstart' in window) {
       setState({
         hasTouch: true,
       });

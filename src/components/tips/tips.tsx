@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useQueue, UseQueueConfig, UseQueueItem, UseQueueItemWithId } from '@lxjx/hooks';
 import { animated, useTransition } from 'react-spring';
 import Button from 'm78/button';
@@ -22,6 +22,10 @@ function Tips({ controller: queue }: TipsProps) {
     leave: { y: '-100%', opacity: 0 },
   });
 
+  const hasTouch = useMemo(() => {
+    return typeof window !== 'undefined' && 'ontouchstart' in window;
+  }, []);
+
   /** 暂停行为 */
   const bind = useGesture(
     {
@@ -41,6 +45,7 @@ function Tips({ controller: queue }: TipsProps) {
     {
       drag: {
         filterTaps: true,
+        enabled: hasTouch,
       },
     },
   );
@@ -116,6 +121,7 @@ function GlobalTips({ item }: any) {
   const queue = Tips.useTipsController({
     defaultItemOption: {
       fitWidth: true,
+      nextable: true,
       global: true,
     },
   });
@@ -133,8 +139,21 @@ Tips.useTipsController = useTipsController;
 
 type MixItem = UseQueueItem & TipsItem;
 
+/**
+ * 推送一条全局消息
+ * */
 Tips.push = (opt: MixItem | MixItem[]) => {
   ReactDOM.render(<GlobalTips item={opt} />, getPortalsNode('global_tips'));
+};
+
+/**
+ * Tips.push的快捷方式，接收消息和持续时间
+ * */
+Tips.tip = (message: React.ReactNode, duration?: number) => {
+  Tips.push({
+    message,
+    duration,
+  });
 };
 
 export default Tips;
