@@ -169,7 +169,7 @@ function Dates(props: DatesProps | DatesRangeProps) {
         onFocus={state.mobile ? undefined : handlers.onShow}
         onClick={handlers.onShow}
         onKeyDown={handlers.onKeyDown}
-        readOnly={state.mobile}
+        readOnly
         size={size}
         disabled={disabled}
       />

@@ -4,6 +4,7 @@ import { SpringStartFn } from 'react-spring';
 import { useScroll, UseScrollMeta } from '@lxjx/hooks';
 import { SetState } from '@lxjx/hooks/dist/type';
 import { PullDownStatus, PullUpStatus } from 'm78/scroller';
+import Tips from 'm78/tips';
 import { defaultProps } from './scroller';
 import { ComponentBaseProps } from '../types/types';
 
@@ -34,6 +35,8 @@ export interface Share {
     pullDownStatus: PullDownStatus;
     /** 上拉刷新状态 */
     pullUpStatus: PullUpStatus;
+    /** 标记是否有数据，用于优化无数据时的状态显示样式，在上拉加载完成后和下拉刷新后更新 */
+    hasData: boolean;
   };
   setState: SetState<Share['state']>;
   self: {
@@ -41,6 +44,8 @@ export interface Share {
     memoX: number;
     /** 记录最后一次设置的y轴拖动位置, 拖动松开后重置为0 */
     memoY: number;
+    /** 每次加载完成后添加计数, 刷新时重置 */
+    upLoadCount: number;
   };
   /** 设置元素动画 */
   setSp: SpringStartFn<any>;
@@ -52,6 +57,8 @@ export interface Share {
   sHelper: ReturnType<typeof useScroll>;
   /** 根元素ref */
   rootEl: React.MutableRefObject<HTMLDivElement>;
+  /** 消息管理 */
+  queue: ReturnType<typeof Tips.useTipsController>;
 }
 
 type UseScrollReturns = Omit<ReturnType<typeof useScroll>, 'ref'>;
@@ -104,8 +111,6 @@ export interface ScrollerProps extends ComponentBaseProps {
     /** 由组件内部触发(点击重试、triggerPullUp(true)、初始化执行)等方式触发, 为true时应该调过增加页码等操作，仅做数据更新 */
     isRefresh?: boolean;
   }) => Promise<{ length?: number; isEmpty: boolean }>;
-  /** 当前是否有已加载的数据，一个可选的优化属性, 可以更友好的显示初次加载时的加载、错误、空数据状态显示 */
-  hasData?: boolean;
   /** 120 | 触发上拉加载的距离 */
   pullUpThreshold?: number;
 
@@ -142,8 +147,8 @@ export interface ScrollerProps extends ComponentBaseProps {
 
   /* ############# 扩展 ############# */
 
-  /** TODO: 是否显示返回顶部按钮 */
-  // backTop?: boolean;
+  /** 是否显示返回顶部按钮 */
+  backTop?: boolean;
   /** 滚动容器外层额外的内容, 和滚动提示等组件一级，用于扩展其他滚动配件 */
   extraNode?: React.ReactNode;
 }

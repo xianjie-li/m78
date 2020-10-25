@@ -1577,12 +1577,12 @@
     react-spring "^8.0.27"
     react-use "^14.0.0"
 
-"@lxjx/hooks@^1.6.1":
-  version "1.6.1"
-  resolved "https://registry.npm.taobao.org/@lxjx/hooks/download/@lxjx/hooks-1.6.1.tgz#a9be1e541682816148932748d7bd0e1fdb6fd810"
-  integrity sha1-qb4eVBaCgWFIkydI170OH9tv2BA=
+"@lxjx/hooks@^1.7.0":
+  version "1.7.0"
+  resolved "https://registry.npm.taobao.org/@lxjx/hooks/download/@lxjx/hooks-1.7.0.tgz#b4b87f5ae0eb457c408f24edbbdff20d14ff843e"
+  integrity sha1-tLh/WuDrRXxAjyTtu9/yDRT/hD4=
   dependencies:
-    "@lxjx/utils" "^1.5.6"
+    "@lxjx/utils" "^1.7.1"
     "@types/lodash" "^4.14.149"
     "@types/react" "^16.9.23"
     "@types/react-dom" "^16.9.5"
@@ -1639,19 +1639,19 @@
     "@types/node" "^13.11.0"
     uuid "^7.0.2"
 
-"@lxjx/utils@^1.5.6":
-  version "1.5.6"
-  resolved "https://registry.npm.taobao.org/@lxjx/utils/download/@lxjx/utils-1.5.6.tgz#89045ee1c88673fa5f26edf2f1b2848a4da04ad1"
-  integrity sha1-iQRe4ciGc/pfJu3y8bKEik2gStE=
+"@lxjx/utils@^1.7.1":
+  version "1.7.1"
+  resolved "https://registry.npm.taobao.org/@lxjx/utils/download/@lxjx/utils-1.7.1.tgz#44b721ff540e3c813f3c527b7e33940eaa66eba1"
+  integrity sha1-RLch/1QOPIE/PFJ7fjOUDqpm66E=
   dependencies:
     "@babel/runtime" "^7.7.6"
     "@types/node" "^13.11.0"
     uuid "^7.0.2"
 
-"@lxjx/utils@^1.6.0":
-  version "1.6.0"
-  resolved "https://registry.npm.taobao.org/@lxjx/utils/download/@lxjx/utils-1.6.0.tgz#95d8ef8788c575243d865f6ded6a7953211cb318"
-  integrity sha1-ldjvh4jFdSQ9hl9t7Wp5UyEcsxg=
+"@lxjx/utils@^1.7.3":
+  version "1.7.3"
+  resolved "https://registry.npm.taobao.org/@lxjx/utils/download/@lxjx/utils-1.7.3.tgz?cache=0&sync_timestamp=1603534526548&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40lxjx%2Futils%2Fdownload%2F%40lxjx%2Futils-1.7.3.tgz#3986ca9362b557a19d01ebbb1dcfea9b680c7cd9"
+  integrity sha1-OYbKk2K1V6GdAeu7Hc/qm2gMfNk=
   dependencies:
     "@babel/runtime" "^7.7.6"
     "@types/node" "^13.11.0"

@@ -1,7 +1,5 @@
 import { isDom } from '@lxjx/utils';
 
-/* TODO: 所有位置都不可见时，保持前一个位置、当前位置仍然可用时，在推荐位置可用时不切换 */
-
 /** 用来描述尺寸信息 */
 interface GetPopperMetasSource {
   width: number;
@@ -47,9 +45,9 @@ export type GetBoundMetasDirectionKeys =
 export interface GetBoundDirectionItem {
   /** 该方向是否安全可用 */
   safe: boolean;
-  /** 改元素在x轴上放置的位置 */
+  /** 该元素在x轴上放置的位置 */
   x: number;
-  /** 改元素在x轴上放置的位置 */
+  /** 该元素在x轴上放置的位置 */
   y: number;
   [key: string]: any;
 }
@@ -309,6 +307,7 @@ export function getPopperMetas(
   };
 
   const current = getPopperDirectionForMeta(dMeta, direction, prevDirection || direction);
+
   let currentMeta = current[0];
   let currentDirection = current[1];
   const notValidDirection = current[2];
@@ -423,17 +422,17 @@ export function getPopperDirectionForMeta(
   direction: GetBoundMetasDirectionKeys,
   prevDirection: GetBoundMetasDirectionKeys,
 ): [GetBoundDirectionItem, GetBoundMetasDirectionKeys, boolean?] {
-  // 当前位置可用时优先选取
-  if (meta[direction].safe) {
-    return [meta[direction], direction];
-  }
-
   // 前一位可用时选取
   if (meta[prevDirection].safe) {
     return [meta[prevDirection], prevDirection];
   }
 
-  // 为top、bottom时优先取方向
+  // 当前位置可用时优先选取
+  if (meta[direction].safe) {
+    return [meta[direction], direction];
+  }
+
+  // 为top、bottom时优先取反方向
   if (direction === 'top' && meta.bottom.safe) {
     return [meta.bottom, 'bottom'];
   }

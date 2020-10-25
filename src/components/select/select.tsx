@@ -7,7 +7,7 @@ import Empty from 'm78/empty';
 import Button from 'm78/button';
 import { DownOutlined } from 'm78/icon';
 import { If } from 'm78/fork';
-import { getCurrentParent } from 'm78/util';
+import { getCurrentParent } from '@lxjx/utils';
 import _debounce from 'lodash/debounce';
 
 import { VariableSizeList as FixedList } from 'react-window';

@@ -8,9 +8,10 @@ import Button from 'm78/button';
 import { Direction } from 'm78/util';
 import Spin from 'm78/spin';
 import { If } from 'm78/fork';
-import { isBoolean } from '@lxjx/utils';
 import { Spacer } from 'm78/layout';
 import Empty from 'm78/empty';
+import Tips from 'm78/tips';
+import BackTop from 'm78/back-top';
 import { offset2Rotate, PullDownStatus, PullUpStatus } from './common';
 import { ScrollerProps, ScrollerRef, Share } from './type';
 import { useMethods } from './methods';
@@ -39,6 +40,12 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
     rubber,
   } = props as Share['props'];
 
+  const queue = Tips.useTipsController({
+    defaultItemOption: {
+      duration: 1200,
+    },
+  });
+
   /** 根元素 */
   const rootEl = useRef<HTMLDivElement>(null!);
 
@@ -53,18 +60,21 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
 
     pullDownStatus: PullDownStatus.TIP,
     pullUpStatus: PullUpStatus.TIP,
+    hasData: false,
   });
 
   const self = useSelf<Share['self']>({
     memoX: 0,
     memoY: 0,
+
+    upLoadCount: 0,
   });
 
   // 拖动元素动画
   const [spSty, setSp] = useSpring(() => ({
     y: 0,
     x: 0,
-    config: { ...config.stiff, precision: 0.1 },
+    config: { ...config.stiff, precision: 0.1 }, // TODO: 调整
   }));
 
   // 额外的设置下拉指示器旋转角度动画(用于下拉已触发时的加载动画)
@@ -91,6 +101,7 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
     setState,
     state,
     setPullDownSp,
+    queue,
   };
 
   // 方法拆分
@@ -126,10 +137,6 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
       </Button>
     );
   }
-
-  // 是否正确传递了hasData
-  const passHasDataKey = isBoolean(props.hasData);
-  const hasData = passHasDataKey && props.hasData;
 
   return (
     <div
@@ -199,7 +206,7 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
           {props.onPullUp && (
             <>
               {/* 优化显示, 主要处理的是无数据、加载失败、加载中三种状态，在初始化加载即为空时，对其进行优化显示 */}
-              <If when={passHasDataKey && !hasData}>
+              <If when={!state.hasData}>
                 <Spacer height={100} />
                 <If when={!isPullUpIng && state.pullUpStatus === PullUpStatus.NOT_DATA}>
                   <Empty
@@ -226,7 +233,7 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
               <div className="m78-scroller_pullup">
                 <div className="m78-scroller_pullup-wrap">
                   {/* 未传hasData，或者传入且有值hasData */}
-                  <If when={!isPullUpIng && (!passHasDataKey || hasData)}>
+                  <If when={!isPullUpIng && state.hasData}>
                     <span className="m78-scroller_pullup-text">
                       <span>{methods.getPullUpText()}</span>
                       <If when={state.pullUpStatus === PullUpStatus.ERROR}>
@@ -273,6 +280,12 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
               methods.hasScroll('x') && state.scrollBarWidth ? state.scrollBarWidth : undefined,
           }}
         />
+      )}
+
+      <Tips controller={queue} />
+
+      {props.backTop && (
+        <BackTop target={scrollEl} style={{ position: 'absolute', right: 28, bottom: 38 }} />
       )}
 
       {props.extraNode}

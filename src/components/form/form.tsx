@@ -2,10 +2,15 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import RForm, { useForm, FormProvider, List as FormList } from 'rc-field-form';
 import List, { Title, SubTitle, Footer } from 'm78/list';
 import Schema from 'async-validator';
-import { createRandString, isFunction } from '@lxjx/utils';
+import {
+  createRandString,
+  isFunction,
+  getFirstScrollParent,
+  checkElementVisible,
+  triggerHighlight,
+} from '@lxjx/utils';
 import { useFn, useScroll } from '@lxjx/hooks';
 import { ValidateErrorEntity } from 'rc-field-form/es/interface';
-import { checkElementVisible, getFirstScrollParent, triggerHighlight } from 'm78/util';
 import cls from 'classnames';
 import { createMessagesTemplate } from '@lxjx/validate-tools';
 
@@ -89,8 +94,8 @@ const BaseForm: React.FC<FormProps> = props => {
 
     if (!el) return;
 
-    const visible = checkElementVisible(el, {
-      wrapEl: scrollParent || undefined,
+    const { visible } = checkElementVisible(el, {
+      wrapEl: scrollParent,
       fullVisible: true,
     });
 

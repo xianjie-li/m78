@@ -1,1 +1,18 @@
 @import '../../style/index';
+
+.m78-back-top {
+  position: fixed;
+  right: 48px;
+  bottom: 48px;
+  cursor: pointer;
+  user-select: none;
+  z-index: $z-index;
+
+  .m78-btn {
+    width: $size-default;
+    height: $size-default;
+    border-radius: 50%;
+    padding: 0;
+    box-shadow: $shadow-3 !important;
+  }
+}

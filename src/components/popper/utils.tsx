@@ -1,17 +1,5 @@
-import React from 'react';
-import { isDom } from '@lxjx/utils';
 import { GetPopperMetasBound } from './getPopperMetas';
 import { PopperTriggerType } from './types';
-
-/** 传入dom时原样返回，传入包含dom对象的ref时返回current，否则返回undefined */
-export function getRefDomOrDom(
-  target?: HTMLElement | React.MutableRefObject<any>,
-): HTMLElement | undefined {
-  if (!target) return undefined;
-  if (isDom(target)) return target;
-  if (isDom(target.current)) return target.current as HTMLElement;
-  return undefined;
-}
 
 /** 检测是否为合法的GetPopperMetasBound */
 export function isPopperMetasBound(arg: any) {

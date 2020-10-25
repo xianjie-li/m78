@@ -2,9 +2,10 @@ import React from 'react';
 import { UseQueueItem } from '@lxjx/hooks';
 import { ButtonProps } from 'm78/button';
 import { AnyFunction } from '@lxjx/utils';
+import Tips from 'm78/tips';
 
 export interface TipsProps {
-  controller: any;
+  controller: ReturnType<typeof Tips.useTipsController>;
 }
 
 export interface TipsItem extends UseQueueItem {

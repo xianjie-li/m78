@@ -32,6 +32,7 @@ $unitSpace: 8px;
   color: #000000;
   background-color: transparent;
   @include ellipsis-x;
+  line-height: $line-height-base;
 
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {

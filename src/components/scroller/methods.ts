@@ -1,15 +1,12 @@
 import _clamp from 'lodash/clamp';
 import { UseScrollMeta } from '@lxjx/hooks';
 import { isNumber, decimalPrecision, getScrollBarWidth } from '@lxjx/utils';
-import Button from 'm78/button';
-import Message from 'm78/message';
-import React from 'react';
 import { Direction } from 'm78/util';
 import { SetDragPosArg, Share } from './type';
 import { PullDownStatus, pullDownText, PullUpStatus, pullUpText, rubberFactor } from './common';
 
 export function useMethods(share: Share) {
-  const { self, state, setState, props, setSp, setPgSp, setPullDownSp, rootEl } = share;
+  const { self, state, setState, props, setSp, setPgSp, setPullDownSp, rootEl, queue } = share;
   const { soap, threshold, rubber, progressBar, scrollFlag, hideScrollbar } = props;
 
   /** 根据drag信息设置元素的拖动状态 */
@@ -241,31 +238,27 @@ export function useMethods(share: Share) {
     props
       .onPullDown(triggerPullUp)
       .then(() => {
-        /* TODO: 添加消息提示组件 */
+        state.hasData &&
+          setState({
+            hasData: false,
+          });
+
         if (props.pullDownTips) {
-          Message.tips({
-            content: pullDownText[PullDownStatus.SUCCESS],
+          queue.push({
+            message: pullDownText[PullDownStatus.SUCCESS],
           });
         }
       })
       .catch(() => {
-        /* TODO: 添加消息提示组件 */
         if (props.pullDownTips) {
-          Message.tips({
-            content: React.createElement('span', null, [
-              pullDownText[PullDownStatus.ERROR],
-              React.createElement(
-                Button,
-                {
-                  color: 'primary',
-                  size: 'small',
-                  link: true,
-                  key: 'actionBtn',
-                  onClick: triggerPullDown,
-                },
-                '重试',
-              ),
-            ]),
+          queue.push({
+            message: pullDownText[PullDownStatus.ERROR],
+            actions: [
+              {
+                text: '重试',
+                handler: triggerPullDown,
+              },
+            ],
           });
         }
       })
@@ -339,10 +332,9 @@ export function useMethods(share: Share) {
     props
       .onPullUp({ isRefresh })
       .then(({ length, isEmpty }) => {
-        if (isNumber(length) && length > 0) {
-          /* TODO: 加载提示 */
-          Message.tips({
-            content: pullUpText[PullUpStatus.SUCCESS].replace('{num}', String(length)),
+        if (isNumber(length) && length > 0 && state.hasData) {
+          queue.push({
+            message: pullUpText[PullUpStatus.SUCCESS].replace('{num}', String(length)),
           });
         }
 
@@ -353,6 +345,7 @@ export function useMethods(share: Share) {
         } else {
           setState({
             pullUpStatus: PullUpStatus.TIP,
+            hasData: true,
           });
         }
       })

@@ -1,57 +1,50 @@
 import React, { useEffect, useRef } from 'react';
-import Tips from 'm78/tips';
-import { Divider } from 'm78/layout';
 import Button from 'm78/button';
-import { getFirstScrollParent, getStyle } from 'm78/util';
-import { useScroll } from '@lxjx/hooks';
-
-/* 用于发出轻量的提示消息
- * 轻消息提示，与Message的区别是:
- * - 可用于局部提示，Message偏向于全局提示, 此特性可用于为某些组件创建内部提示(如Scroller组件)
- * - 同样维护一个队列，但是不会同时出现多条，而是根据持续时间逐条显示
- * */
+import Popper from 'm78/popver';
 
 const Play = () => {
-  const ref = useRef<any>(null!);
-
-  const sc = useScroll({
-    el: document.body,
-  });
-
-  useEffect(() => {
-    const e = getFirstScrollParent(ref.current);
-
-    console.log(e);
-  }, []);
+  const wrapEl = useRef(null!);
 
   return (
-    <div>
+    <div style={{ paddingTop: 500 }}>
+      <Popper content="消息提示文本" trigger={['click']}>
+        <button type="button">按钮</button>
+      </Popper>
+
       <div
         style={{
           position: 'relative',
           width: 300,
+          height: 500,
           border: '1px solid #ccc',
-          overflow: 'hidden',
-          padding: 12,
+          overflow: 'auto',
         }}
+        ref={wrapEl}
       >
-        <button ref={ref} onClick={() => sc.set({ y: 500, raise: true })}>
-          btn
-        </button>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem eum ex incidunt minus
-          officia officiis perspiciatis qui sed. Amet cumque impedit, incidunt mollitia
-          necessitatibus odio possimus. Autem eveniet sequi suscipit?
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem eum ex incidunt minus
-          officia officiis perspiciatis qui sed. Amet cumque impedit, incidunt mollitia
-          necessitatibus odio possimus. Autem eveniet sequi suscipit? Lorem ipsum dolor sit amet,
-          consectetur adipisicing elit. Dolorem eum ex incidunt minus officia officiis perspiciatis
-          qui sed. Amet cumque impedit, incidunt mollitia necessitatibus odio possimus. Autem
-          eveniet sequi suscipit?
-        </p>
+        <div
+          style={{
+            position: 'relative',
+            width: 300,
+            height: 5000,
+            border: '1px solid pink',
+          }}
+        >
+          <span style={{ position: 'relative', top: 100, left: 100 }}>
+            <Popper content="消息提示文本" trigger={['click']}>
+              <button type="button">按钮</button>
+            </Popper>
+          </span>
+        </div>
       </div>
+
+      <div
+        style={{
+          position: 'relative',
+          width: 300,
+          height: 5000,
+          border: '1px solid #ccc',
+        }}
+      />
     </div>
   );
 };

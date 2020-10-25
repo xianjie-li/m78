@@ -5,9 +5,9 @@ import { animated, to, useSpring } from 'react-spring';
 import cls from 'classnames';
 import { useClickAway, useMeasure, useUpdateEffect } from 'react-use';
 import _throttle from 'lodash/throttle';
-import { createRandString, isDom, isNumber } from '@lxjx/utils';
-import { getFirstScrollParent } from 'm78/util';
-import { getRefDomOrDom, isPopperMetasBound, getTriggerType } from './utils';
+import { createRandString, isDom, isNumber, getFirstScrollParent } from '@lxjx/utils';
+import { getRefDomOrDom } from 'm78/util';
+import { isPopperMetasBound, getTriggerType } from './utils';
 import { GetBoundMetasDirectionKeys, getPopperMetas, GetPopperMetasBound } from './getPopperMetas';
 import { PopperProps, PopperRef } from './types';
 import { buildInComponent } from './builtInComponent';
@@ -31,13 +31,16 @@ const Popper = React.forwardRef<PopperRef, PopperProps>((props, fRef) => {
     customer,
   } = props;
 
+  /** 气泡包裹元素 */
   const popperEl = useRef<HTMLDivElement>(null!);
 
   const Component = customer || buildInComponent[type];
 
   const id = useMemo(() => createRandString(1), []);
+
   /** 在未传入target时，用于标识出目标所在元素 */
   const targetSelector = `m78-popper_${id}`;
+
   /** 获取启用的事件类型 */
   const triggerType = getTriggerType(trigger);
 
@@ -53,7 +56,7 @@ const Popper = React.forwardRef<PopperRef, PopperProps>((props, fRef) => {
     lastX: (undefined as unknown) as number,
     /** 气泡最近一次获取的y轴位置，用于减少更新 */
     lastY: (undefined as unknown) as number,
-    /** 最近一次的可见状态，用于：优化显示效果、提高性能 */
+    /** 最近一次的可见状态，用于优化显示效果、提高性能 */
     lastVisible: true,
     /** 最后获取到的气泡宽度 */
     lastPopperW: 0,
@@ -72,18 +75,15 @@ const Popper = React.forwardRef<PopperRef, PopperProps>((props, fRef) => {
   const [state, setState] = useSetState({
     /** 气泡所在方向 */
     direction: direction as GetBoundMetasDirectionKeys,
-    /** 用于修补的箭头位置 */
+    /** TODO: 用于修补的箭头位置 */
     arrowX: 0,
-    /** content是否渲染，用于实现mountOnEnter、unmountOnExit */
     contentShow: !mountOnEnter || show,
   });
 
-  // 监听尺寸变化并更新气泡位置
   const [ref, { width: mWidth, height: mHeight }] = useMeasure();
 
   const showBase = show ? 1 : MIN_SCALE;
 
-  // click下点击它处关闭气泡
   useClickAway(popperEl, ({ target: _target }) => {
     if (triggerType.click && show) {
       const targetEl: any = self.target;
@@ -219,6 +219,7 @@ const Popper = React.forwardRef<PopperRef, PopperProps>((props, fRef) => {
           offset,
           wrap: getWrapEl(),
           direction,
+          prevDirection: state.direction,
         },
       );
 
@@ -296,7 +297,6 @@ const Popper = React.forwardRef<PopperRef, PopperProps>((props, fRef) => {
     refresh();
   });
 
-  /** 初始化定位、默认触发气泡更新方式(wrap滚动触发) */
   useEffect(() => {
     refresh();
 
@@ -341,6 +341,7 @@ const Popper = React.forwardRef<PopperRef, PopperProps>((props, fRef) => {
     show && refresh();
   }, [mWidth, mHeight]);
 
+  /** TODO: 实现ref */
   useImperativeHandle(
     fRef,
     () => ({
@@ -349,16 +350,17 @@ const Popper = React.forwardRef<PopperRef, PopperProps>((props, fRef) => {
     [],
   );
 
-  /** 获取包含滚动条的父元素或wrapEl */
   function getWrapEl() {
+    let sp: HTMLElement | undefined;
+
     if (isDom(self.target)) {
-      const sp = getFirstScrollParent(self.target);
-      if (sp) {
-        return sp;
-      }
+      sp = getFirstScrollParent(self.target)!;
+    } else {
+      sp = getRefDomOrDom(wrapEl);
     }
 
-    return getRefDomOrDom(wrapEl);
+    // 为html或body时直接取窗口位置
+    return sp === document.documentElement || sp === document.body ? undefined : sp;
   }
 
   /** 根据props.target获取作为目标的GetPopperMetasBound对象或dom元素 */
@@ -439,7 +441,7 @@ const Popper = React.forwardRef<PopperRef, PopperProps>((props, fRef) => {
               <Component show={show} setShow={setShow} {...props} />
               <span
                 className={cls('m78-popper_arrow', state.direction && `__${state.direction}`)}
-                style={{ left: state.arrowX || undefined }}
+                style={{ left: state.arrowX || undefined }} /* TODO: 箭头位置调整 */
               />
             </div>
           </animated.div>
