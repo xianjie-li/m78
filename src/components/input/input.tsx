@@ -12,7 +12,6 @@ import { useFormState, useDerivedStateFromProps, useSelf } from '@lxjx/hooks';
 import { TransitionBase } from '@lxjx/react-transition-spring';
 import { useUpdateEffect } from 'react-use';
 import { InputProps, InputRef } from './type';
-
 import {
   buildInPattern,
   formatMoney,
@@ -216,8 +215,8 @@ const Input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
     // 浏览器支持且存在formatArg配置或传入parser时，还原光标位置
     if (
       typeof saveSelectInd === 'number' &&
-      target.setSelectionRange &&
-      (formatArg || typeof _parser === 'function')
+      target.setSelectionRange
+      // && (formatArg || typeof _parser === 'function') TODO: 暂时去掉限制, 文本中间输入光标会跳到末尾(Form中使用时)，有时间再研究
     ) {
       setTimeout(() => {
         const diff = target.value.length - oldValueLength; // 基于新值计算差异长度，还原位置需要减去此差值
@@ -296,7 +295,8 @@ const Input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
   function formatVal(val: string) {
     /* 启用了formatArg时，对其格式化，否则返回原value */
     // eslint-disable-next-line
-    let formatValue = formatArg ? formatString(val, ...formatArg) : val;
+    let formatValue =
+      formatArg && val /* TODO: 验证是否还会破坏热更新 */ ? formatString(val, ...formatArg) : val;
 
     // 对money类型特殊处理
     if (formatArg && memoFormat === 'money') {
@@ -310,7 +310,11 @@ const Input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
   /** 设置input的值 */
   function setInputVal(val: string, skipSet?: boolean) {
     !skipSet && setValue(val);
-    input.current.value = formatVal(val);
+
+    const fVal = formatVal(val);
+    if (fVal !== input.current.value) {
+      input.current.value = formatVal(val);
+    }
   }
 
   const isDisabled = disabled || blockLoading;
@@ -363,13 +367,10 @@ const Input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
             }
           : {},
       })}
-      <Spin
-        className="m78-input_loading"
-        size="small"
-        text=""
-        show={loading || blockLoading}
-        full={blockLoading}
-      />
+      {(loading || blockLoading) && (
+        <Spin className="m78-input_loading" size="small" text="" full={blockLoading} />
+      )}
+
       <If when={hasClearBtn}>
         <CloseCircleOutlined
           onClick={clearHandle}

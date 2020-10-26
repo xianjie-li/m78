@@ -74,20 +74,20 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
   const [spSty, setSp] = useSpring(() => ({
     y: 0,
     x: 0,
-    config: { ...config.stiff, precision: 0.1 }, // TODO: 调整
+    config: { ...config.stiff }, // TODO: 调整
   }));
 
   // 额外的设置下拉指示器旋转角度动画(用于下拉已触发时的加载动画)
   const [spPullDownSty, setPullDownSp] = useSpring(() => ({
     r: 0,
-    config: { ...config.stiff, precision: 0.1 },
+    config: { ...config.stiff },
   }));
 
   // 进度条动画
   const [spPgSty, setPgSp] = useSpring(() => ({
     x: 0,
     y: 0,
-    config: { clamp: true, precision: 0.1 },
+    config: { clamp: true },
   }));
 
   // 共享状态

@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import Button from 'm78/button';
-import Popper from 'm78/popver';
+import Popper from 'm78/popper';
 
 const Play = () => {
   const wrapEl = useRef(null!);
@@ -24,15 +23,15 @@ const Play = () => {
         <div
           style={{
             position: 'relative',
-            width: 300,
+            width: 5000,
             height: 5000,
             border: '1px solid pink',
           }}
         >
-          <span style={{ position: 'relative', top: 100, left: 100 }}>
-            <Popper content="消息提示文本" trigger={['click']}>
-              <button type="button">按钮</button>
-            </Popper>
+          <span style={{ position: 'relative', top: 500, left: 500 }}>
+            {/* <Popper content="消息提示文本" trigger={['click']}> */}
+            {/*  <button type="button">按钮</button> */}
+            {/* </Popper> */}
           </span>
         </div>
       </div>
