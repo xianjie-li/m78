@@ -63,17 +63,6 @@ export interface Share {
 
 type UseScrollReturns = Omit<ReturnType<typeof useScroll>, 'ref'>;
 
-export interface ScrollerRef extends UseScrollReturns {
-  /** 手动触发onPullDown，可用于刷新上拉加载的状态，当正在进行下拉或上拉中的任意操作时，调用无效 */
-  triggerPullDown(): void;
-  /** 手动触发onPullUp，参数细节见props.onPullUp ，当正在进行下拉或上拉中的任意操作时，调用无效 */
-  triggerPullUp(isRefresh?: boolean): void;
-  // 向上滚动整页(不需要开启slide)
-  slidePrev(): void;
-  // 向下滚动整页(不需要开启slide)
-  slideNext(): void;
-}
-
 export interface ScrollerProps extends ComponentBaseProps {
   /** Direction.vertical | 滚动方向 */
   direction?: Direction;
@@ -151,4 +140,15 @@ export interface ScrollerProps extends ComponentBaseProps {
   backTop?: boolean;
   /** 滚动容器外层额外的内容, 和滚动提示等组件一级，用于扩展其他滚动配件 */
   extraNode?: React.ReactNode;
+}
+
+export interface ScrollerRef extends UseScrollReturns {
+  /** 手动触发onPullDown，可用于刷新上拉加载的状态，当正在进行下拉或上拉中的任意操作时，调用无效 */
+  triggerPullDown(): void;
+  /** 手动触发onPullUp，参数细节见props.onPullUp ，当正在进行下拉或上拉中的任意操作时，调用无效 */
+  triggerPullUp(isRefresh?: boolean): void;
+  // 向上滚动整页(不需要开启slide)
+  slidePrev(): void;
+  // 向下滚动整页(不需要开启slide)
+  slideNext(): void;
 }
