@@ -24,14 +24,12 @@ group:
 
 ## 性能
 
-* 开启了`invisibleUnmount`或`invisibleHidden`进行性能优化时，建议不要启用loop，因为它会复制渲染首尾两页的克隆并且一直渲染前两页和后两页来保证动画连贯,
-此时是否启用loop开启的权衡点是: 页面总数多，但是页面内容少, 启用； 页面总数少，但是渲染的内容量大则关闭
-* 如果作为与安卓'PageView'类似功能的组件来使用，并且内容为无限加载的列表，应该采用虚拟滚动或惰性加载等优化方式对内容进行优化，否则可能在数据量过大时产生页切换卡顿的问题
+- 开启了`invisibleUnmount`或`invisibleHidden`进行性能优化时，建议不要启用 loop，因为它会复制渲染首尾两页的克隆并且一直渲染前两页和后两页来保证动画连贯, 此时是否启用 loop 开启的权衡点是: 页面总数多，但是页面内容少, 启用； 页面总数少，但是渲染的内容量大则关闭
+- 如果作为与安卓'PageView'类似功能的组件来使用，并且内容为无限加载的列表，应该采用虚拟滚动或惰性加载等优化方式对内容进行优化，否则可能在数据量过大时产生页切换卡顿的问题
 
-以下是`invisibleUnmount`和`invisibleHidden`带loop和不带loop的实例，可以通过控制台查看它们是如何渲染的
+以下是`invisibleUnmount`和`invisibleHidden`带 loop 和不带 loop 的实例，可以通过控制台查看它们是如何渲染的
 
 <code src="./carousel-performance.tsx" />
-
 
 ## props
 

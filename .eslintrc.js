@@ -13,5 +13,6 @@ module.exports = {
     '@typescript-eslint/no-implied-eval': 'off',
     'no-alert': 'off',
     'no-restricted-globals': 'off',
+    'react/no-unescaped-entities': 'off'
   },
 };

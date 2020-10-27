@@ -1,6 +1,8 @@
 import 'm78/scroller/style';
+import Scroller from './scroller';
 
-export * from './scroller';
-export { ScrollerProps, ScrollerRef } from './type';
-export { PullDownStatus, PullUpStatus } from './common';
-export { default } from './scroller';
+import { ScrollerProps, ScrollerRef } from './types';
+import { PullDownStatus, PullUpStatus } from './common';
+
+export { ScrollerProps, ScrollerRef, PullDownStatus, PullUpStatus };
+export default Scroller;

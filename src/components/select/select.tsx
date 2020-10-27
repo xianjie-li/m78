@@ -410,7 +410,7 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
       direction="bottomStart"
       trigger="click"
       customer={CustomPopper}
-      ref={popperRef}
+      instanceRef={popperRef}
       show={show}
       onChange={onPopperClose}
     >

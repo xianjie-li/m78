@@ -1,0 +1,49 @@
+@import '../../style/index';
+
+.m78-article-box {
+  position: relative;
+  line-height: 1.5;
+  overflow: hidden;
+  background-color: #fff;
+  word-break: break-word;
+
+  table,
+  img,
+  video,
+  audio,
+  pre,
+  iframe {
+    max-width: 100%;
+  }
+
+  table {
+    overflow: auto;
+  }
+
+  &_html {
+    position: relative;
+  }
+
+  &_watermark {
+    position: absolute;
+    width: 100%;
+    top: -260px;
+    color: rgba(0, 0, 0, 0.08);
+    font-size: 24px;
+    line-height: 240px;
+    font-weight: bold;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  &_watermark_item {
+    display: flex;
+    justify-content: space-around;
+    transform: rotate(-30deg);
+
+    span:nth-child(2n - 1) {
+      position: relative;
+      transform: translateY(-26%);
+    }
+  }
+}

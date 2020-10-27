@@ -35,7 +35,7 @@ group:
   - tabindex
   - [ ] 键盘操作
 - 复杂的条件渲染(参与验证的条件超过两个)，使用 If, Toggle 等组件。
-- 对于需要将内部 dom 元素通过 ref 转发的，使用名为`innerRef`的 prop, 必要时再使用`forwordRef`转发获取组件实例。
+- 对于需要将内部 dom 元素通过 ref 转发的，使用名为`innerRef`的 prop, 必要时再使用`forwordRef`转发获取组件实例, 组件实例也可以通过`instanceRef`传递。
 - 默认最优配置，尽量减少配置项，API 数，这样可以大大减少学习成本，并且降低出现破坏性变更的可能性。
 
 ## 项目组织

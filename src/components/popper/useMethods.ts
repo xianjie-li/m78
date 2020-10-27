@@ -8,18 +8,7 @@ import { isPopperBound } from './utils';
 import { Share } from './types';
 
 export function useMethods(share: Share) {
-  const {
-    props,
-    setState,
-    targetSelector,
-    state,
-    mount,
-    popperEl,
-    show,
-    self,
-    set,
-    spProps,
-  } = share;
+  const { props, setState, targetSelector, state, mount, popperEl, show, self, set } = share;
   const { target } = props;
 
   /** 获取目标元素 */

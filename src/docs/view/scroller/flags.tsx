@@ -1,6 +1,5 @@
 import React from 'react';
 import Scroller from 'm78/scroller';
-import { Direction } from 'm78/util';
 import { Divider } from 'm78/layout';
 import { mockData } from './util';
 

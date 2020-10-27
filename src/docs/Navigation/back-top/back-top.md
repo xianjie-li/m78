@@ -5,14 +5,14 @@ group:
   path: /Navigation
   order: 4000
 ---
- 
+
 # BackTop 返回顶部
 
 用于长页面的返回顶部按钮
 
 ## 示例
 
-默认情况下，`BackTop`挂载在body下，并会从当前节点开始查找父级第一个可滚动元素作为监听节点
+默认情况下，`BackTop`挂载在 body 下，并会从当前节点开始查找父级第一个可滚动元素作为监听节点
 
 <code src="./demo.tsx" />
 
@@ -21,7 +21,6 @@ group:
 可以直接指定元素作为监听点，然后搭配`style`或`className`将其作用域滚动区局部
 
 <code src="./demo2.tsx" />
-
 
 ## props
 

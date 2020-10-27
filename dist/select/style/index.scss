@@ -1,0 +1,216 @@
+@import '../../style/index';
+
+.m78-select {
+  .m78-input_prefix {
+    //z-index: 1000;
+  }
+
+  &.__has-multiple-tag {
+    height: auto;
+    flex-wrap: wrap;
+    min-height: 32px;
+    padding: 6px 10px;
+    .m78-input_prefix {
+      flex: 1 0 auto;
+      width: 100%;
+    }
+    .m78-input {
+      margin-top: 4px;
+    }
+
+    &.__not-search {
+      padding: 0 10px;
+    }
+
+    &.__not-search .m78-input {
+      display: none;
+    }
+
+    &.__not-search .m78-input_suffix {
+      display: none;
+    }
+  }
+
+  &.__not-search {
+    border-style: solid !important;
+  }
+
+  &.__text-value {
+    .m78-input::placeholder {
+      color: #000000;
+    }
+
+    &.__empty,
+    &.__focus {
+      .m78-input::placeholder {
+        color: $b-second !important;
+      }
+    }
+  }
+
+  &_popper {
+    & + .m78-popper_arrow {
+      display: none;
+    }
+  }
+
+  &_list {
+    position: relative;
+    min-width: 280px;
+    max-width: 90vw;
+
+    .m78-empty {
+      padding: 8px 12px;
+    }
+
+    &.__disabled {
+      &::after {
+        content: '';
+        position: absolute;
+        background-color: $w-primary;
+        cursor: not-allowed;
+        @include full;
+      }
+    }
+  }
+
+  &_item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 $space-12;
+    cursor: pointer;
+    user-select: none;
+    @include ellipsis-x;
+    background-color: $component-background;
+    overflow-y: auto;
+
+    &:hover {
+      background-color: rgba($color-1, 0.5);
+    }
+
+    &:active {
+      background-color: rgba($color-2, 0.5);
+    }
+
+    &.__title,
+    &.__divider,
+    &.__disabled {
+      background-color: $component-background !important;
+      cursor: auto;
+    }
+
+    &.__active {
+      background-color: $color-1;
+      font-weight: $fw-600;
+    }
+
+    &.__title {
+      font-size: $fs-12;
+      color: $b-second;
+    }
+
+    &.__divider {
+      height: 1px;
+    }
+
+    &.__disabled {
+      color: $b-disable;
+      cursor: not-allowed;
+    }
+  }
+
+  &_check-icon {
+    color: $color;
+    margin-left: 4px;
+  }
+
+  &_tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  &_tag {
+    max-width: 40%;
+    display: flex;
+    align-items: center;
+    position: relative;
+    line-height: $line-height-base;
+    border: 1px dashed $b-border;
+    margin: 4px 8px 4px 0;
+    height: 28px;
+    padding: 4px $space-12;
+    padding-right: 28px;
+    font-size: 12px;
+    background: $b-bg;
+    border-radius: $border-radius;
+
+    &.__small {
+      height: $size-small;
+    }
+
+    &.__large,
+    &.__big {
+      height: $size-large;
+      font-size: $fs-18;
+    }
+
+    &.__disabled {
+      .m78-select_close-btn {
+        pointer-events: none;
+      }
+    }
+  }
+
+  &_toolbar {
+    -webkit-filter: blur(0); // chrome模糊
+    overflow: hidden;
+
+    &-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 40px;
+      padding: 0 $space-12;
+    }
+  }
+
+  &_down-icon {
+    position: relative;
+    top: 0.1em;
+    color: $b-second;
+    transition: 0.3s transform;
+
+    &.__reverse {
+      transform: rotate(180deg);
+    }
+  }
+
+  &_prefix {
+    margin-right: 4px;
+  }
+
+  &_suffix {
+    margin-left: 4px;
+  }
+
+  &_close-btn {
+    line-height: 1;
+    position: absolute;
+    right: 6px;
+    background-color: $w-primary;
+    cursor: pointer;
+    font-size: 18px;
+    margin-left: 6px;
+    color: $b-second;
+    border-radius: 50%;
+
+    @include effect-font;
+  }
+}

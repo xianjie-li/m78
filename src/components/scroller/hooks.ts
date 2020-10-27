@@ -4,7 +4,7 @@ import preventTopPullDown from 'prevent-top-pull-down';
 import _clamp from 'lodash/clamp';
 import { Direction } from 'm78/util';
 import { isNumber } from '@lxjx/utils';
-import { SetDragPosArg, Share } from './type';
+import { SetDragPosArg, Share } from './types';
 import { useMethods } from './methods';
 
 export function useHooks(methods: ReturnType<typeof useMethods>, share: Share) {

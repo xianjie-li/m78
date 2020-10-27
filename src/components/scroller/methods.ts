@@ -2,7 +2,7 @@ import _clamp from 'lodash/clamp';
 import { UseScrollMeta } from '@lxjx/hooks';
 import { isNumber, decimalPrecision, getScrollBarWidth } from '@lxjx/utils';
 import { Direction } from 'm78/util';
-import { SetDragPosArg, Share } from './type';
+import { SetDragPosArg, Share } from './types';
 import { PullDownStatus, pullDownText, PullUpStatus, pullUpText, rubberFactor } from './common';
 
 export function useMethods(share: Share) {

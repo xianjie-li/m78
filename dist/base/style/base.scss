@@ -1,0 +1,63 @@
+@import '../../style/index';
+
+.m78-close-icon {
+  transform: scaleY(0.9) scaleX(1) !important;
+  color: $b-primary;
+}
+
+/*  ============= 所有组件共享的样式 ============= */
+@media (min-width: $sm) {
+  .m78-scroll-bar {
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      border-radius: 6px;
+      background: $b-second;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: $b-primary;
+    }
+
+    ::-webkit-scrollbar-thumb:active {
+      background: $b-primary;
+    }
+  }
+}
+
+.m78-scrollbar {
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 6px;
+    background: $b-second;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: $b-primary;
+  }
+
+  ::-webkit-scrollbar-thumb:active {
+    background: $b-primary;
+  }
+
+  &.__hover {
+    ::-webkit-scrollbar-thumb {
+      display: none;
+    }
+
+    &:hover {
+      ::-webkit-scrollbar-thumb {
+        display: block;
+      }
+    }
+  }
+}

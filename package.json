@@ -12,8 +12,9 @@
     "react-toolkits"
   ],
   "scripts": {
-    "prebuild": "npm run lint && npm run typecheck && npm run test",
+    "prebuild": "npm run lint && npm run typecheck",
     "build": "node script/build",
+    "onlyBuild": "node script/build",
     "lint:script": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "lint:prettier": "prettier --check ./src/**/*",
     "lint": "npm run lint:prettier && npm run lint:script",

@@ -3,7 +3,7 @@ import 'm78/article-box/style';
 
 import Tab, { TabItem } from 'm78/tab';
 
-import { Position, Size } from 'm78/util';
+import { Position } from 'm78/util';
 import { Spacer } from 'm78/layout';
 import sty from './sty.module.scss';
 

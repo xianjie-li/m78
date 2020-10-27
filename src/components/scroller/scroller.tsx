@@ -13,7 +13,7 @@ import Empty from 'm78/empty';
 import Tips from 'm78/tips';
 import BackTop from 'm78/back-top';
 import { offset2Rotate, PullDownStatus, PullUpStatus } from './common';
-import { ScrollerProps, ScrollerRef, Share } from './type';
+import { ScrollerProps, ScrollerRef, Share } from './types';
 import { useMethods } from './methods';
 import { useHooks } from './hooks';
 

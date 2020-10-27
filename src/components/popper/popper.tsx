@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useImperativeHandle, useMemo, useRef } from 'react';
 import Portal from 'm78/portal';
 import cls from 'classnames';
 import { useFormState, useSelf, useSetState } from '@lxjx/hooks';
@@ -8,23 +8,24 @@ import { useMeasure } from 'react-use';
 import { useDelayDerivedToggleStatus } from 'm78/hooks';
 import { useEventBind } from './useEventBind';
 import { useMountExist, getTriggerType } from './utils';
-import { Share } from './types';
+import { PopperProps, Share } from './types';
 import { buildInComponent } from './builtInComponent';
 import { useEffects } from './useEffects';
 import { useMethods } from './useMethods';
 
 export const defaultProps = {
   offset: 12,
-  direction: 'top',
-  type: 'tooltip',
-  trigger: ['hover'],
+  direction: 'top' as const,
+  type: 'tooltip' as const,
+  trigger: ['hover'] as const,
   mountOnEnter: true,
   unmountOnExit: false,
   disabled: false,
 };
 
-const Popper = (props: Share['props']) => {
-  const { children, type, trigger, mountOnEnter, unmountOnExit } = props;
+const Popper = (_props: PopperProps) => {
+  const props = _props as Share['props'];
+  const { children, type, trigger, mountOnEnter, unmountOnExit, instanceRef } = props;
 
   /** 显示状态 */
   const [_show, setShow] = useFormState(props, false, {
@@ -100,6 +101,11 @@ const Popper = (props: Share['props']) => {
 
   /* ############ 内部方法 ############ */
   const methods = useMethods(share);
+
+  /** 暴露实例 */
+  useImperativeHandle(instanceRef, () => ({
+    refresh: methods.refresh,
+  }));
 
   /**
    * ############## 钩子、监听器 ##############

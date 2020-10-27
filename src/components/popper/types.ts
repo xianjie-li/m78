@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Ref } from 'react';
 import { SetState } from '@lxjx/hooks/dist/type';
 import { SpringStartFn, SpringValue } from 'react-spring';
 import { ComponentBaseProps } from '../types/types';
@@ -6,6 +6,14 @@ import { defaultProps } from './popper';
 import { getTriggerType } from './utils';
 
 export type PopperTriggerType = 'hover' | 'click' | 'focus';
+
+export interface PopperRef {
+  /**
+   * 刷新气泡状态
+   * @param animation - 决定是否开启动画
+   * */
+  refresh(animation?: boolean): void;
+}
 
 /** 自定义Popper组件 */
 export interface PopperPropsCustom extends PopperProps {
@@ -131,6 +139,8 @@ export interface PopperProps extends ComponentBaseProps {
   disabled?: boolean;
   /** 标题，type为popper时生效 */
   title?: React.ReactNode;
+  /** 获取实例对象 */
+  instanceRef?: Ref<PopperRef>;
 
   /* ############ 显示 / mount状态 控制 ############ */
   /** 通过show/onChange手动控制显示、隐藏 */

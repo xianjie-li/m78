@@ -12,7 +12,7 @@ group:
 
 与[Message](/docs/feedback/message)的区别是:
 
-- 可用于局部提示，Message偏向于全局提示, 此特性可用于为某些组件创建内部提示(如Scroller组件)
+- 可用于局部提示，Message 偏向于全局提示, 此特性可用于为某些组件创建内部提示(如 Scroller 组件)
 - 同样维护一个队列，但是不会同时出现多条，而是根据持续时间逐条显示
 
 ## 示例
@@ -39,10 +39,10 @@ const tipsController = Tips.useTipsController(config);
 
 ```tsx | pure
 interface UseQueueConfig<ItemOption> {
-    /** 初始列表 */
-    list?: TipsItem[];
-    /** 默认项配置 */
-    defaultItemOption?: Partial<TipsItem>;
+  /** 初始列表 */
+  list?: TipsItem[];
+  /** 默认项配置 */
+  defaultItemOption?: Partial<TipsItem>;
 }
 ```
 
@@ -85,13 +85,12 @@ interface TipsController {
 }
 ```
 
-
 **`消息配置项`**
 
 ```tsx | pure
 interface UseQueueItem {
-    /** 如果传入，会在指定延迟ms后自动跳转到下一条 */
-    duration?: number;
+  /** 如果传入，会在指定延迟ms后自动跳转到下一条 */
+  duration?: number;
 }
 
 interface TipsItem extends UseQueueItem {

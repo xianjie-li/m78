@@ -10,10 +10,9 @@ group:
 
 用于展示一组可切换的内容区域，也可以作为单独的选项卡组件使用
 
-
 ## 示例
 
-最基础的使用示例，通过`index`、`onChange`、`defaultIndex`等属性控制显示内容,  `TabItem`子项来生选项
+最基础的使用示例，通过`index`、`onChange`、`defaultIndex`等属性控制显示内容, `TabItem`子项来生选项
 
 <code src="./demo.tsx" />
 
@@ -35,7 +34,7 @@ group:
 
 ## 自定义样式
 
-目前支持的定制方式是为根级传入`className`, 通过css选择器更改内置组件的样式，并搭配`noSplitLine`、`noActiveLine`等属性调整样式。
+目前支持的定制方式是为根级传入`className`, 通过 css 选择器更改内置组件的样式，并搭配`noSplitLine`、`noActiveLine`等属性调整样式。
 
 <code src="./coustom-style.tsx" />
 
