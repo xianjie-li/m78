@@ -3,8 +3,8 @@ import React from 'react';
 import { SpringStartFn } from 'react-spring';
 import { useScroll, UseScrollMeta } from '@lxjx/hooks';
 import { SetState } from '@lxjx/hooks/dist/type';
-import { PullDownStatus, PullUpStatus } from 'm78/scroller';
 import Tips from 'm78/tips';
+import { PullDownStatus, PullUpStatus } from './common';
 import { defaultProps } from './scroller';
 import { ComponentBaseProps } from '../types/types';
 

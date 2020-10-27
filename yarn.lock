@@ -1603,10 +1603,10 @@
     "@umijs/fabric" "2.2.0"
     prettier "^2.0.5"
 
-"@lxjx/react-render-api@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.npm.taobao.org/@lxjx/react-render-api/download/@lxjx/react-render-api-0.4.0.tgz#db527747f50cf7f09984ee53052412418c9f03be"
-  integrity sha1-21J3R/UM9/CZhO5TBSQSQYyfA74=
+"@lxjx/react-render-api@^0.5.0":
+  version "0.5.0"
+  resolved "https://registry.npm.taobao.org/@lxjx/react-render-api/download/@lxjx/react-render-api-0.5.0.tgz#944328dbfc823f524c3e61e07cd37be6c0008633"
+  integrity sha1-lEMo2/yCP1JMPmHgfNN75sAAhjM=
   dependencies:
     "@babel/runtime" "^7.7.6"
     "@lxjx/utils" "^1.1.7"
