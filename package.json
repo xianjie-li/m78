@@ -1,6 +1,6 @@
 {
   "name": "m78",
-  "version": "1.0.0-beta.7",
+  "version": "1.0.0-beta.9",
   "types": "./",
   "license": "MIT",
   "description": "components, hooks, utils, part of the react toolchain",
@@ -23,7 +23,8 @@
     "dev": "dumi dev",
     "build:doc": "dumi build",
     "test": "jest ./test",
-    "ypublish": "yarn publish ./dist -f"
+    "ypublish": "yarn publish ./dist -f",
+    "postypublish": "console.log(111)"
   },
   "repository": "https://github.com/Iixianjie/m78",
   "author": {
