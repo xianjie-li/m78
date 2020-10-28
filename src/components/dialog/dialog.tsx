@@ -184,7 +184,7 @@ const DialogBase: React.FC<DialogProps> = props => {
 };
 
 const api = createRenderApi<DialogApi>(DialogBase, {
-  namespace: 'MODAL',
+  namespace: 'DIALOG',
 });
 
 const baseApi: typeof api = ({ content, ...other }) => {

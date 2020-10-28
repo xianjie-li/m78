@@ -138,7 +138,7 @@ var DialogBase = function DialogBase(props) {
 };
 
 var api = createRenderApi(DialogBase, {
-  namespace: 'MODAL'
+  namespace: 'DIALOG'
 });
 
 var baseApi = function baseApi(_ref2) {

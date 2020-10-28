@@ -1,6 +1,6 @@
 {
   "name": "m78",
-  "version": "1.0.0-beta.9",
+  "version": "1.0.0-beta.10",
   "types": "./",
   "license": "MIT",
   "description": "components, hooks, utils, part of the react toolchain",
@@ -24,7 +24,7 @@
     "build:doc": "dumi build",
     "test": "jest ./test",
     "ypublish": "yarn publish ./dist -f",
-    "postypublish": "console.log(111)"
+    "postypublish": "node script/syncPkg"
   },
   "repository": "https://github.com/Iixianjie/m78",
   "author": {

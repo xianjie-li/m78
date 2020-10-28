@@ -1,18 +1,11 @@
 import React from 'react';
 import Dialog from 'm78/dialog';
+import Modal from 'm78/modal';
 
 const Play = () => {
   function model() {
-    const [ref, id] = Dialog.api({
-      title: '提示',
+    const [ref, id] = Modal.api({
       content: '这是弹窗内容',
-    });
-
-    console.log(ref, id);
-
-    Dialog.api({
-      title: '提示',
-      content: '这是弹窗内容2',
     });
 
     console.log(ref, id);
