@@ -19,6 +19,7 @@ const stopPropagation = {
     e.stopPropagation();
   },
 };
+
 /** 传入dom时原样返回，传入包含dom对象的ref时返回current，否则返回undefined */
 export function getRefDomOrDom(target?: any): HTMLElement | undefined {
   if (!target) return undefined;
@@ -27,8 +28,20 @@ export function getRefDomOrDom(target?: any): HTMLElement | undefined {
   return undefined;
 }
 
-export function throwError(errorMsg: string, type?: string): never {
-  throw new Error((type ? `${type} -> ` : '') + errorMsg);
+/** 获取窗口的滚动位置 */
+export function getDocScrollOffset() {
+  const doc = document.documentElement;
+  const body = document.body;
+
+  return {
+    x: doc.scrollLeft + body.scrollLeft,
+    y: doc.scrollTop + body.scrollTop,
+  };
+}
+
+/** 指定错误消息和组件命名空间来抛出一个错误 */
+export function throwError(errorMsg: string, namespace?: string): never {
+  throw new Error((namespace ? `${namespace} -> ` : '') + errorMsg);
 }
 
 export { stopPropagation };

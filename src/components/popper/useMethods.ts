@@ -131,7 +131,6 @@ export function useMethods(share: Share) {
         opacity: isShow ? 1 : 0,
         scale: isShow ? 1 : 0,
         immediate: self.allHide || !animation,
-        reset: false,
       });
 
       if (self.allHide) {
@@ -143,13 +142,16 @@ export function useMethods(share: Share) {
       if (self.lastShow) {
         toggle();
       } else {
-        set({
-          xy: [direct.left, direct.top],
-          opacity: 0,
-          scale: 0.7,
-          immediate: true,
-          reset: false,
-          onRest: () => toggle(),
+        stop();
+        // rc版执行太紧凑会导致immediate失效？
+        setTimeout(() => {
+          set({
+            xy: [direct.left, direct.top],
+            opacity: 0,
+            scale: 0.7,
+            immediate: true,
+            onRest: () => toggle(),
+          });
         });
       }
     } else {

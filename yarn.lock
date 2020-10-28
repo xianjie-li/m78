@@ -1648,10 +1648,10 @@
     "@types/node" "^13.11.0"
     uuid "^7.0.2"
 
-"@lxjx/utils@^1.7.4":
-  version "1.7.4"
-  resolved "https://registry.npm.taobao.org/@lxjx/utils/download/@lxjx/utils-1.7.4.tgz#33cfc673fe5555b2b7ff3ac8509c6999134367e1"
-  integrity sha1-M8/Gc/5VVbK3/zrIUJxpmRNDZ+E=
+"@lxjx/utils@^1.8.1":
+  version "1.8.1"
+  resolved "https://registry.npm.taobao.org/@lxjx/utils/download/@lxjx/utils-1.8.1.tgz#ec6228ce08c40c494c79d6f07a2faa3a4ff3b60d"
+  integrity sha1-7GIozgjEDElMedbwei+qOk/ztg0=
   dependencies:
     "@babel/runtime" "^7.7.6"
     "@types/node" "^13.11.0"

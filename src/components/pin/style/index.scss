@@ -1,0 +1,16 @@
+@import '../../style/index';
+
+.m78-pin {
+  position: relative;
+  z-index: 10000;
+  transition: 1s;
+
+  &_shadow {
+    position: absolute;
+    //left: -100000px;
+    width: 200px;
+    margin-left: 12px;
+    border: 1px solid red;
+    //display: none;
+  }
+}

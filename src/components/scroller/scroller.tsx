@@ -74,7 +74,7 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
   const [spSty, setSp] = useSpring(() => ({
     y: 0,
     x: 0,
-    config: { ...config.stiff }, // TODO: 调整
+    config: { ...config.stiff },
   }));
 
   // 额外的设置下拉指示器旋转角度动画(用于下拉已触发时的加载动画)

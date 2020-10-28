@@ -1,21 +1,17 @@
-import React from 'react';
-import Dialog from 'm78/dialog';
-import Modal from 'm78/modal';
+import React, { useRef } from 'react';
+import Pin from 'm78/pin';
 
 const Play = () => {
-  function model() {
-    const [ref, id] = Modal.api({
-      content: '这是弹窗内容',
-    });
-
-    console.log(ref, id);
-  }
+  const el = useRef<HTMLDivElement>();
 
   return (
     <div>
-      <button type="button" onClick={model}>
-        按钮
-      </button>
+      <div ref={el} style={{ height: 500, overflow: 'auto', border: '1px solid red' }}>
+        <div style={{ position: 'relative', height: 5000, paddingTop: 500 }}>
+          <Pin target={el} />
+        </div>
+      </div>
+      <div style={{ height: 5000 }} />
     </div>
   );
 };
