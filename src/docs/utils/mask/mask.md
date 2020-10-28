@@ -8,6 +8,10 @@ group:
 
 # Mask 遮罩
 
+# deprecated 已弃用
+
+请使用Modal组件
+
 与 RenderApi 配合使用, 为弹层类组件提供 mask 并且支持代理 RenderApi 的部分操作
 
 - mask 层和内容是分开渲染的，否则 mask 的 fade 动画会影响到内容
