@@ -37,7 +37,7 @@ group:
 - 复杂的条件渲染(参与验证的条件超过两个)，使用 If, Toggle 等组件。
 - 对于需要将内部 dom 元素通过 ref 转发的，使用名为`innerRef`的 prop, 必要时再使用`forwordRef`转发获取组件实例, 组件实例也可以通过`instanceRef`传递。
 - 默认最优配置，尽量减少配置项，API 数，这样可以大大减少学习成本，并且降低出现破坏性变更的可能性。
-- 在可能需要SSR的组件中不要在render中使用`document`、`window`等浏览器对象，dom操作都放到`effect`钩子
+- 在可能需要 SSR 的组件中不要在 render 中使用`document`、`window`等浏览器对象，dom 操作都放到`effect`钩子
 
 ## 项目组织
 

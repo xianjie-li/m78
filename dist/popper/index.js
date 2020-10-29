@@ -720,8 +720,7 @@ function useMethods(share) {
         xy: [direct.left, direct.top],
         opacity: isShow ? 1 : 0,
         scale: isShow ? 1 : 0,
-        immediate: self.allHide || !animation,
-        reset: false
+        immediate: self.allHide || !animation
       });
 
       if (self.allHide) {
@@ -733,15 +732,18 @@ function useMethods(share) {
       if (self.lastShow) {
         toggle();
       } else {
-        set({
-          xy: [direct.left, direct.top],
-          opacity: 0,
-          scale: 0.7,
-          immediate: true,
-          reset: false,
-          onRest: function onRest() {
-            return toggle();
-          }
+        stop(); // rc版执行太紧凑会导致immediate失效？
+
+        setTimeout(function () {
+          set({
+            xy: [direct.left, direct.top],
+            opacity: 0,
+            scale: 0.7,
+            immediate: true,
+            onRest: function onRest() {
+              return toggle();
+            }
+          });
         });
       }
     } else {

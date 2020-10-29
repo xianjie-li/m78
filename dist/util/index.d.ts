@@ -15,6 +15,12 @@ declare const stopPropagation: {
 };
 /** 传入dom时原样返回，传入包含dom对象的ref时返回current，否则返回undefined */
 export declare function getRefDomOrDom(target?: any): HTMLElement | undefined;
-export declare function throwError(errorMsg: string, type?: string): never;
+/** 获取窗口的滚动位置 */
+export declare function getDocScrollOffset(): {
+    x: number;
+    y: number;
+};
+/** 指定错误消息和组件命名空间来抛出一个错误 */
+export declare function throwError(errorMsg: string, namespace?: string): never;
 export { stopPropagation };
 export * from './types';

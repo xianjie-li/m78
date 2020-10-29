@@ -10,7 +10,7 @@ group:
 
 # deprecated 已弃用
 
-请使用Modal组件
+请使用 Modal 组件
 
 与 RenderApi 配合使用, 为弹层类组件提供 mask 并且支持代理 RenderApi 的部分操作
 

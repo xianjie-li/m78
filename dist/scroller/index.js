@@ -640,8 +640,7 @@ var Scroller = /*#__PURE__*/React.forwardRef(function (props, ref) {
     return {
       y: 0,
       x: 0,
-      config: _objectSpread({}, config.stiff) // TODO: 调整
-
+      config: _objectSpread({}, config.stiff)
     };
   }),
       _useSpring2 = _slicedToArray(_useSpring, 2),
