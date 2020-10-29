@@ -20,11 +20,11 @@ order: 1
 ## ✨Features
 
 - 完全使用`hooks`编写。
-- 设计风格上保持`antd`与`material`混搭, 可以作为两者的补充组件库使用。
+- 设计风格上采用`antd`与`material`混搭, 基础样式兼容`antd`, 可作为其的补充组件库使用。
 - 很多组件都进行了大小屏处理，移动端/PC 端均可用
 - 使用 `TypeScript` 开发，包含完整的类型声明。
 - 标准化接口，size/受控/非受控/color 等很多与社区大部分组件保持一致，使用成本更低。
-- 提炼至业务，大部分组件都是从实际业务中提取而来, 更接地气也更实用。
+- 贴近前端业务，相比其他组件库可能会更适用于前台。
 
 <br>
 
@@ -38,11 +38,11 @@ npm install m78
 
 <br>
 
-## 🍭Usage
+## 📘Usage
 
-### `import组件`
+### `导入组件`
 
-`M78` 使用 `es modules` 模块，通过`m78/*` 来导入主包下的各个模块
+`M78` 使用 `es modules` 模块，你可以通过`m78/*` 来导入主包下的各个模块
 
 ```js
 import Button, { ButtonProps } from 'm78/button';
@@ -58,13 +58,42 @@ function App() {
 
 💡 默认是没有主入口的，所有组件都在独立的模块中维护, 这样可以做到天然的按需加载，`tree shake` 也更友好。
 
-打包组件目录支持使用[babel-plugin-import](https://github.com/ant-design/babel-plugin-import), 不过不推荐, 一是对这样对 idea 和 ts 来说很怪异，支持不好；二是，组件通常会包含多个命名导出，如 `import Form, { Item, Title, Footer, FormProps } from 'M78/form'`。
+打包组件目录支持使用[babel-plugin-import](https://github.com/ant-design/babel-plugin-import), 不过不推荐, 一是对这样对 idea 和 ts 来说很怪异，支持不好；二是，组件通常会包含多个命名导出，如 `import Form, { Item, Title, Footer, FormProps } from 'M78/form'`， 直接导入会更复合直觉。
 
 <br>
 
 ### `样式`
 
 样式采用后编译(开发时编译), 你需要为你的`webpack`或其他打包器添加`scss`文件支持才能正常使用。
+
+如果要自定义主题色和其他样式变量，可以通过`webpack`配置`sass-loader`的`prependData`选项，并导入自定义的变量文件, 步骤如下:
+
+1. 自定义 sass 变量
+
+```scss
+// custom.scss
+@import '~@lxjx/sass-base/var/index.scss';
+
+// 主题色更改为红色
+$color: red;
+
+// 自定义信息色
+$color-info: blue;
+$color-success: green;
+$color-error: red;
+$color-warn: yellow;
+```
+
+更多变量请查看[var.scss](https://github.com/Iixianjie/sass-stater/blob/master/var/var.scss)
+
+2. 修改`webpack` -> `sass-loader`配置(也可以跳过此步，在每个 sass 文件顶部自行引入)
+
+```
+// 你的webpack配置文件.js (每个脚手架配置方式可能会有所不同，请自行查阅)
+{
+  prependData: '@import "@/[文件路径]/custom.scss;',
+}
+```
 
 <br>
 
