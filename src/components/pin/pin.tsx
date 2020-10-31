@@ -191,9 +191,9 @@ const Pin = ({
 
     const sty = getStyle(pinEl.current);
 
-    // position为fixed时会定位失败，主动抛出异常
+    // position为fixed时会定位失败
     if (sty.position === 'fixed') {
-      throwError('The target element cannot be positioned for fixed', 'Pin');
+      return;
     }
 
     const styleObj: any = {};

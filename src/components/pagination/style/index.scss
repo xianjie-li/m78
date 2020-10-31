@@ -1,0 +1,137 @@
+@import '../../style/index';
+
+.m78-pagination {
+  display: flex;
+  align-items: center;
+  line-height: 3;
+  font-size: $font-size;
+  text-align: center;
+
+  &_item {
+    &.m78-btn, &.m78-btn.__link {
+      min-width: $size-default;
+      height: $size-default;
+      padding: 0 8px;
+    }
+
+    &.m78-btn.__ellipsis {
+      height: $size-default;
+      font-size: 15px;
+      color: $b-second;
+
+      .anticon {
+        margin: 0 !important;
+      }
+    }
+
+    &.__ellipsisPrev .anticon-double-left {
+      display: none;
+      transform: scale(1.1);
+    }
+
+    &.__ellipsisPrev:not(.__disabled):hover {
+      .anticon-double-left {
+        display: block;
+      }
+      .anticon-ellipsis {
+        display: none;
+      }
+    }
+
+    &.__ellipsisNext .anticon-double-right {
+      display: none;
+      transform: scale(1.1);
+    }
+
+    &.__ellipsisNext:not(.__disabled):hover {
+      .anticon-double-right {
+        display: block;
+      }
+      .anticon-ellipsis {
+        display: none;
+      }
+    }
+
+
+    & + & {
+      margin-left: 10px;
+    }
+
+    &.__prev, &.__next {
+      .anticon.anticon-right, .anticon.anticon-left {
+        font-size: 10px;
+      }
+    }
+  }
+
+  &_jumper {
+    display: flex;
+    align-items: center;
+
+    .m78-input_wrap {
+      width: 48px;
+      margin: 0 8px;
+      padding: 0 6px;
+      text-align: center;
+
+      input {
+        text-align: center;
+      }
+    }
+  }
+
+  &.__small {
+    .m78-pagination_item {
+      &.m78-btn {
+        min-width: $size-small;
+        height: $size-small;
+        padding: 0 4px;
+      }
+
+      &.m78-btn.__ellipsis {
+        height: $size-small;
+        font-size: 14px;
+      }
+
+    }
+
+    .m78-pagination_item + .m78-pagination_item {
+      margin-left: 8px;
+    }
+
+    .m78-pagination_jumper .m78-input_wrap {
+      width: 36px;
+    }
+  }
+
+  &.__simple {
+    .m78-pagination_jumper .m78-input_wrap {
+      width: $size-default;
+      height: $size-small;
+      padding: 0;
+      font-size: 17px;
+    }
+  }
+
+  &.__plain {
+    .m78-pagination_item + .m78-pagination_item {
+      margin-left: 4px;
+
+    }
+  }
+
+  &_simple-total {
+    margin: 0 10px;
+    font-size: 17px;
+  }
+
+  &_link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    color: inherit !important;
+
+    @include full;
+  }
+}

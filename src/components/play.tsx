@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Pagination from 'm78/pagination';
+import { Divider } from 'm78/layout';
 
 const Play = () => {
   return (
     <div>
-      <div>Play</div>
+      <h2>定制</h2>
     </div>
   );
 };
