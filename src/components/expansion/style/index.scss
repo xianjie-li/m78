@@ -1,0 +1,116 @@
+@import '../../style/index';
+
+.m78-expansion {
+  line-height: $line-height-base;
+  font-size: $font-size;
+  background-color: $component-background;
+  text-align: left;
+
+  & & {
+    margin-right: -13px;
+  }
+
+  &.__style {
+    border-radius: $border-radius;
+    border: 1px solid $b-border;
+  }
+
+  &_item {
+    position: relative;
+
+    &.__disabled {
+      .m78-expansion_header {
+        color: $b-disable;
+        background-color: transparent !important;
+        cursor: not-allowed;
+      }
+    }
+
+
+    &.__style {
+
+      .m78-expansion_header {
+        border-bottom: 1px dashed transparent;
+      }
+
+      &.__active .m78-expansion_header {
+        border-bottom: 1px dashed $b-divider;
+      }
+
+      .m78-expansion_header {
+        padding: 10px 12px;
+        user-select: none;
+
+        @include effect-bg;
+      }
+
+      & + & {
+        border-top: 1px solid $b-border;
+      }
+
+      .m78-expansion_content {
+        padding: 12px;
+      }
+    }
+  }
+
+  &_header {
+    display: flex;
+  }
+
+  &_header-leading {
+    transition: $animation-duration-base;
+    margin-right: 10px;
+
+    &.__open {
+      transform: rotate(90deg);
+    }
+
+    &.__right {
+      order: 10;
+      margin-right: 0;
+      transform: rotate(180deg);
+      margin-left: 10px;
+    }
+
+    &.__right.__open {
+      transform: rotate(180deg) rotate(-90deg);
+    }
+  }
+
+  &_header-body {
+    flex: 1;
+  }
+
+  &_header-action {
+    padding-left: 12px;
+  }
+
+  &_bottom-flag {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    z-index: $z-index-base;
+    transition: $animation-duration-base;
+
+    .anticon-caret-down {
+      top: 1px;
+    }
+  }
+
+  &_content {
+    position: relative;
+  }
+
+  &_content-wrap {
+    overflow: hidden;
+  }
+
+  &_calc-node {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
+  }
+}

@@ -14,7 +14,7 @@ import { useFormState } from '@lxjx/hooks';
 import { If } from 'm78/fork';
 import _clamp from 'lodash/clamp';
 import { dumpFn, isNumber } from '@lxjx/utils';
-import { useNoSSR } from 'm78/util';
+import { useNoSSR } from 'm78/no-ssr';
 
 interface PaginationProps {
   /** 当前页码 */

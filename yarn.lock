@@ -1577,10 +1577,10 @@
     react-spring "^8.0.27"
     react-use "^14.0.0"
 
-"@lxjx/hooks@^1.7.0":
-  version "1.7.0"
-  resolved "https://registry.npm.taobao.org/@lxjx/hooks/download/@lxjx/hooks-1.7.0.tgz#b4b87f5ae0eb457c408f24edbbdff20d14ff843e"
-  integrity sha1-tLh/WuDrRXxAjyTtu9/yDRT/hD4=
+"@lxjx/hooks@^1.8.0":
+  version "1.8.0"
+  resolved "https://registry.npm.taobao.org/@lxjx/hooks/download/@lxjx/hooks-1.8.0.tgz?cache=0&sync_timestamp=1604248014971&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40lxjx%2Fhooks%2Fdownload%2F%40lxjx%2Fhooks-1.8.0.tgz#d81b769ffcd8b9fbb5c1856653aa4392298008d6"
+  integrity sha1-2Bt2n/zYufu1wYVmU6pDkimACNY=
   dependencies:
     "@lxjx/utils" "^1.7.1"
     "@types/lodash" "^4.14.149"
@@ -1594,6 +1594,7 @@
     react-router-dom "^5.1.2"
     react-spring "^9.0.0-rc.3"
     react-use "^14.0.0"
+    resize-observer-polyfill "^1.5.1"
 
 "@lxjx/preset-config@^0.1.0":
   version "0.1.0"
@@ -5621,8 +5622,8 @@ dotenv@8.2.0:
 
 dumi@^1.0.34:
   version "1.0.34"
-  resolved "https://registry.npm.taobao.org/dumi/download/dumi-1.0.34.tgz#6e071006dcdb6f09ba8963cc08aa776cb9e7f4f4"
-  integrity sha1-bgcQBtzbbwm6iWPMCKp3bLnn9PQ=
+  resolved "https://registry.npmjs.org/dumi/-/dumi-1.0.34.tgz#6e071006dcdb6f09ba8963cc08aa776cb9e7f4f4"
+  integrity sha512-nvd2VedZazLioOK7NYufrAJM8+G7sdOD/XGxQNQOwKhrEDhiHLY/YLv0xznD14bQsJJYz/kJ1EZhM9Oj8BQeLg==
   dependencies:
     "@umijs/preset-dumi" "1.0.34"
     umi "^3.0.0"

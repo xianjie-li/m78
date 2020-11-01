@@ -1,13 +1,13 @@
 import React, { useImperativeHandle, useMemo, useRef } from 'react';
 import Portal from 'm78/portal';
 import cls from 'classnames';
-import { useFormState, useSelf, useSetState } from '@lxjx/hooks';
+import { useFormState, useSelf, useSetState, useMountExist } from '@lxjx/hooks';
 import { createRandString, decimalPrecision } from '@lxjx/utils';
 import { useSpring, animated, to } from 'react-spring';
 import { useMeasure } from 'react-use';
 import { useDelayDerivedToggleStatus } from 'm78/hooks';
 import { useEventBind } from './useEventBind';
-import { useMountExist, getTriggerType } from './utils';
+import { getTriggerType } from './utils';
 import { PopperProps, Share } from './types';
 import { buildInComponent } from './builtInComponent';
 import { useEffects } from './useEffects';

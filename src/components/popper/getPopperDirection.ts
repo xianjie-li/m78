@@ -1,5 +1,5 @@
 import React from 'react';
-import { getRefDomOrDom, throwError } from 'm78/util';
+import { getRefDomOrDom } from '@lxjx/hooks';
 import { isPopperBound } from './utils';
 import { Size, Bound, DirectionKeys, PopperDirectionInfo } from './types';
 
@@ -15,7 +15,7 @@ export function getPopperDirection(
   popperSize: Size,
   target: Bound | React.RefObject<HTMLElement> | HTMLElement,
   options = {} as { offset: number },
-): PopperDirectionInfo {
+): PopperDirectionInfo | null {
   const { offset = 0 } = options;
 
   const size = popperSize;
@@ -33,7 +33,8 @@ export function getPopperDirection(
     if (domTarget) {
       tg = domTarget.getBoundingClientRect();
     } else {
-      throwError('target resolve error', 'popper');
+      // throwError('target resolve error', 'popper');
+      return null;
     }
   }
 

@@ -1,6 +1,5 @@
 import { getFirstScrollParent, isDom } from '@lxjx/utils';
-import { getRefDomOrDom } from 'm78/util';
-import { useFn } from '@lxjx/hooks';
+import { useFn, getRefDomOrDom } from '@lxjx/hooks';
 import { patchVisible } from './patchVisible';
 import { getPopperDirection } from './getPopperDirection';
 import { selectDirection } from './selectDirection';
@@ -93,6 +92,8 @@ export function useMethods(share: Share) {
         offset: props.offset,
       },
     );
+
+    if (!directionBounds) return;
 
     // 检测各气泡位置可见性
     const directionInfo = patchVisible(directionBounds, state.wrapEl);

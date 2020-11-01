@@ -1,6 +1,5 @@
 import React, { RefObject, useEffect, useRef } from 'react';
-import { getRefDomOrDom, throwError } from 'm78/util';
-import { useFn, useScroll, useSetState } from '@lxjx/hooks';
+import { useFn, useScroll, useSetState, getRefDomOrDom } from '@lxjx/hooks';
 import { checkElementVisible, getFirstScrollParent, getStyle } from '@lxjx/utils';
 import _debounce from 'lodash/debounce';
 
