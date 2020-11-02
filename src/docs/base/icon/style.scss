@@ -1,0 +1,37 @@
+@import '~@/components/style';
+
+.d-antd-icons-demo {
+  font-size: 24px;
+}
+
+.d-icon-view-item {
+  display: inline-block;
+  font-size: 20px;
+  width: 98px;
+  text-align: center;
+  padding: 20px 8px;
+  margin: 8px;
+  border-radius: 2px;
+  box-shadow: $shadow-1;
+
+  .anticon {
+    font-size: 80px;
+  }
+
+  &.__svg {
+    width: 150px;
+  }
+
+  &:hover {
+    cursor: pointer;
+    box-shadow: $shadow-hover;
+  }
+
+  &:active {
+    box-shadow: $shadow-1-half;
+  }
+
+  &_text {
+    color: $b-primary;
+  }
+}

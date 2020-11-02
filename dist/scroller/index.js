@@ -22,13 +22,6 @@ import preventTopPullDown from 'prevent-top-pull-down';
 
 var _pullDownText, _pullUpText;
 
-/**
- * 拖动位置超过threshold时，会出现橡皮效果，此函数用于计算出一个合理的弹性值
- * @param overSize - 超出threshold的值
- * @param maxSize - 允许超出的最大值
- * @param minFactor - 0 | 允许的最小弹性系数
- * @param initFactor - 初始弹性系数
- * */
 function rubberFactor(overSize, maxSize) {
   var minFactor = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
   var initFactor = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1;

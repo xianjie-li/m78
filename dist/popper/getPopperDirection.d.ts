@@ -10,4 +10,4 @@ import { Size, Bound, PopperDirectionInfo } from './types';
  * */
 export declare function getPopperDirection(popperSize: Size, target: Bound | React.RefObject<HTMLElement> | HTMLElement, options?: {
     offset: number;
-}): PopperDirectionInfo;
+}): PopperDirectionInfo | null;

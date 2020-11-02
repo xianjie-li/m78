@@ -15,7 +15,7 @@ group:
 - 组件`z-index`统一使用内部提供的四种, 可以在`componet/util`中或 sass 中通过对应变量获取
 - 保持组件样式隔离，组件应包含独立的[背景色、字号、行高、文字方向], 防止受使用环境影响而导致样式错乱
 - 需要高度定制扩展的组件，支持添加`noStyle`选项来关闭所有非必要样式，并且每个关键组件部位都包含用于定制的类名
- 
+
 ## 组件约定
 
 - 某些包含选项的组件, 选项格式为`{ label: ReactNode, value: any }`, 对应`components/types`中的`DataSourceItem`

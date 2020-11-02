@@ -12714,10 +12714,10 @@ rollup-plugin-extensions@^0.1.0:
   resolved "https://registry.npm.taobao.org/rollup-plugin-extensions/download/rollup-plugin-extensions-0.1.0.tgz#a2e6922232245e1355ebe6972a89e57390d29cbb"
   integrity sha1-ouaSIjIkXhNV6+aXKonlc5DSnLs=
 
-rollup@^2.21.0:
-  version "2.23.0"
-  resolved "https://registry.npm.taobao.org/rollup/download/rollup-2.23.0.tgz?cache=0&sync_timestamp=1595563586803&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Frollup%2Fdownload%2Frollup-2.23.0.tgz#b7ab1fee0c0e60132fd0553c4df1e9cdacfada9d"
-  integrity sha1-t6sf7gwOYBMv0FU8TfHpzaz62p0=
+rollup@^2.33.1:
+  version "2.33.1"
+  resolved "https://registry.npm.taobao.org/rollup/download/rollup-2.33.1.tgz?cache=0&sync_timestamp=1604302005760&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Frollup%2Fdownload%2Frollup-2.33.1.tgz#802795164164ee63cd47769d8879c33ec8ae0c40"
+  integrity sha1-gCeVFkFk7mPNR3adiHnDPsiuDEA=
   optionalDependencies:
     fsevents "~2.1.2"
 

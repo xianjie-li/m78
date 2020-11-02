@@ -2,8 +2,7 @@ import 'm78/pin/style';
 import _objectSpread from '@babel/runtime/helpers/objectSpread2';
 import _slicedToArray from '@babel/runtime/helpers/slicedToArray';
 import React, { useRef, useEffect } from 'react';
-import { getRefDomOrDom, throwError } from 'm78/util';
-import { useSetState, useScroll, useFn } from '@lxjx/hooks';
+import { useSetState, getRefDomOrDom, useScroll, useFn } from '@lxjx/hooks';
 import { getFirstScrollParent, checkElementVisible, getStyle } from '@lxjx/utils';
 import _debounce from 'lodash/debounce';
 import cls from 'classnames';
@@ -158,10 +157,10 @@ var Pin = function Pin(_ref) {
       return;
     }
 
-    var sty = getStyle(pinEl.current); // position为fixed时会定位失败，主动抛出异常
+    var sty = getStyle(pinEl.current); // position为fixed时会定位失败
 
     if (sty.position === 'fixed') {
-      throwError('The target element cannot be positioned for fixed', 'Pin');
+      return;
     }
 
     var styleObj = {};

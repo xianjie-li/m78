@@ -1,10 +1,3 @@
-/**
- * 拖动位置超过threshold时，会出现橡皮效果，此函数用于计算出一个合理的弹性值
- * @param overSize - 超出threshold的值
- * @param maxSize - 允许超出的最大值
- * @param minFactor - 0 | 允许的最小弹性系数
- * @param initFactor - 初始弹性系数
- * */
 export declare function rubberFactor(overSize: number, maxSize: number, minFactor?: number, initFactor?: number): number;
 /**
  * 根据移动的offset和可移动总量计算出一个合理的旋转角度

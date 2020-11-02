@@ -2,18 +2,17 @@ import 'm78/popper/style';
 import _extends from '@babel/runtime/helpers/extends';
 import _objectSpread from '@babel/runtime/helpers/objectSpread2';
 import _slicedToArray from '@babel/runtime/helpers/slicedToArray';
-import React, { useEffect, useState, useRef, useMemo, useImperativeHandle } from 'react';
+import React, { useEffect, useMemo, useRef, useImperativeHandle } from 'react';
 import Portal from 'm78/portal';
 import cls from 'classnames';
-import { useFn, useFormState, useSetState, useSelf } from '@lxjx/hooks';
-import { isNumber, checkElementVisible, isDom, getFirstScrollParent, createRandString, decimalPrecision } from '@lxjx/utils';
+import { useFn, getRefDomOrDom, useFormState, useMountExist, useSetState, useSelf } from '@lxjx/hooks';
+import { checkElementVisible, isDom, getFirstScrollParent, createRandString, decimalPrecision } from '@lxjx/utils';
 import { useSpring, animated, to } from 'react-spring';
 import { useClickAway, useUpdateEffect, useMeasure } from 'react-use';
 import { useDelayDerivedToggleStatus } from 'm78/hooks';
 import _throttle from 'lodash/throttle';
 import { WarningIcon } from 'm78/icon';
 import Button from 'm78/button';
-import { getRefDomOrDom, throwError } from 'm78/util';
 
 /** 绑定事件，由于要支持不同的target类型，所以一律使用原生api进行绑定 */
 function useEventBind(share, methods) {
@@ -167,44 +166,6 @@ function getTriggerType(type) {
     click: types.includes('click'),
     focus: types.includes('focus')
   };
-}
-
-/**
- * 用于便捷的实现mountOnEnter、unmountOnExit接口
- * */
-function useMountExist(_ref) {
-  var toggle = _ref.toggle,
-      _ref$mountOnEnter = _ref.mountOnEnter,
-      mountOnEnter = _ref$mountOnEnter === void 0 ? true : _ref$mountOnEnter,
-      unmountOnExit = _ref.unmountOnExit,
-      exitDelay = _ref.exitDelay;
-
-  var _useState = useState(toggle),
-      _useState2 = _slicedToArray(_useState, 2),
-      mount = _useState2[0],
-      set = _useState2[1];
-
-  var timer = useRef();
-  useEffect(function () {
-    timer.current && clearTimeout(timer.current);
-
-    if (toggle && mountOnEnter) {
-      !mount && set(true);
-    }
-
-    if (!toggle && unmountOnExit) {
-      if (mount) {
-        if (isNumber(exitDelay)) {
-          timer.current = setTimeout(function () {
-            set(false);
-          }, exitDelay);
-        } else {
-          set(false);
-        }
-      }
-    }
-  }, [toggle]);
-  return [mount];
 }
 
 function Tooltip(props) {
@@ -385,7 +346,8 @@ function getPopperDirection(popperSize, target) {
     if (domTarget) {
       tg = domTarget.getBoundingClientRect();
     } else {
-      throwError('target resolve error', 'popper');
+      // throwError('target resolve error', 'popper');
+      return null;
     }
   }
   /** 目标元素的宽 */
@@ -683,7 +645,8 @@ function useMethods(share) {
       height: height
     }, state.elTarget || state.boundTarget, {
       offset: props.offset
-    }); // 检测各气泡位置可见性
+    });
+    if (!directionBounds) return; // 检测各气泡位置可见性
 
     var directionInfo = patchVisible(directionBounds, state.wrapEl); // 选择一个合适的当前位置
 

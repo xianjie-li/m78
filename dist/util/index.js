@@ -1,5 +1,3 @@
-import { isDom } from '@lxjx/utils';
-
 var Status;
 /* 40 | 32 | 24 */
 
@@ -42,7 +40,6 @@ var Direction;
 })(Direction || (Direction = {}));
 
 /** 与@lxjx/sass-base同步，用于js代码的常用屏幕尺寸 */
-
 var SM = 576;
 var MD = 768;
 var LG = 992;
@@ -60,14 +57,8 @@ var stopPropagation = {
     e.stopPropagation();
   }
 };
-/** 传入dom时原样返回，传入包含dom对象的ref时返回current，否则返回undefined */
+/* TODO: 提到utils */
 
-function getRefDomOrDom(target) {
-  if (!target) return undefined;
-  if (isDom(target)) return target;
-  if (isDom(target.current)) return target.current;
-  return undefined;
-}
 /** 获取窗口的滚动位置 */
 
 function getDocScrollOffset() {
@@ -84,4 +75,4 @@ function throwError(errorMsg, namespace) {
   throw new Error((namespace ? "".concat(namespace, " -> ") : '') + errorMsg);
 }
 
-export { Direction, FullSize, LG, MD, Position, SM, Size, Status, XL, Z_INDEX, Z_INDEX_DRAWER, Z_INDEX_MESSAGE, Z_INDEX_MODAL, getDocScrollOffset, getRefDomOrDom, stopPropagation, throwError };
+export { Direction, FullSize, LG, MD, Position, SM, Size, Status, XL, Z_INDEX, Z_INDEX_DRAWER, Z_INDEX_MESSAGE, Z_INDEX_MODAL, getDocScrollOffset, stopPropagation, throwError };

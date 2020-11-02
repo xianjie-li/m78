@@ -46,6 +46,8 @@ const ExpansionPane = (props: ExpansionPaneProps) => {
     transition = true,
     mountOnEnter,
     unmountOnExit,
+    className,
+    style,
   } = mixProps;
 
   const [open, set] = useFormState(mixProps, false, {
@@ -125,7 +127,9 @@ const ExpansionPane = (props: ExpansionPaneProps) => {
         __active: open,
         __disabled: disabled,
         __style: !noStyle,
+        className,
       })}
+      style={style}
     >
       {iconPos === ExpandIconPosition.bottom && (
         <div

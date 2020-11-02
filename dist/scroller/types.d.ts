@@ -1,12 +1,12 @@
-import { Direction } from 'm78/util';
 import React from 'react';
 import { SpringStartFn } from 'react-spring';
 import { useScroll, UseScrollMeta } from '@lxjx/hooks';
 import { SetState } from '@lxjx/hooks/dist/type';
 import Tips from 'm78/tips';
+import { ComponentBaseProps } from 'm78/types/types';
+import { Direction } from 'm78/util';
 import { PullDownStatus, PullUpStatus } from './common';
 import { defaultProps } from './scroller';
-import { ComponentBaseProps } from '../types/types';
 /** setDragPos依赖的必须参数 */
 export interface SetDragPosArg {
     isVertical?: boolean;
@@ -58,7 +58,6 @@ export interface Share {
     /** 消息管理 */
     queue: ReturnType<typeof Tips.useTipsController>;
 }
-declare type UseScrollReturns = Omit<ReturnType<typeof useScroll>, 'ref'>;
 export interface ScrollerProps extends ComponentBaseProps {
     /** Direction.vertical | 滚动方向 */
     direction?: Direction;
@@ -123,6 +122,7 @@ export interface ScrollerProps extends ComponentBaseProps {
     /** 滚动容器外层额外的内容, 和滚动提示等组件一级，用于扩展其他滚动配件 */
     extraNode?: React.ReactNode;
 }
+declare type UseScrollReturns = Omit<ReturnType<typeof useScroll>, 'ref'>;
 export interface ScrollerRef extends UseScrollReturns {
     /** 手动触发onPullDown，可用于刷新上拉加载的状态，当正在进行下拉或上拉中的任意操作时，调用无效 */
     triggerPullDown(): void;

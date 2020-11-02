@@ -26,7 +26,6 @@ order: 1
 - 标准化接口，size/value/defaultValue/onChange/color 等很多配置与社区大部分组件保持一致，学习成本更低。
 - 贴近前台业务，相比其他为中后台设计的组件库可能会更适用于前台。
 
-
 <br>
 
 ## 📦Install

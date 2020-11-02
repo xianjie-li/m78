@@ -13,8 +13,6 @@ export declare const Z_INDEX_MESSAGE = 2200;
 declare const stopPropagation: {
     onClick(e: React.SyntheticEvent): void;
 };
-/** 传入dom时原样返回，传入包含dom对象的ref时返回current，否则返回undefined */
-export declare function getRefDomOrDom(target?: any): HTMLElement | undefined;
 /** 获取窗口的滚动位置 */
 export declare function getDocScrollOffset(): {
     x: number;

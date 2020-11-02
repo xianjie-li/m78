@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { isDom } from '@lxjx/utils';
 
 /** 与@lxjx/sass-base同步，用于js代码的常用屏幕尺寸 */
 export const SM = 576;

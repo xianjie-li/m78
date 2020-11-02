@@ -7,7 +7,16 @@ import { Provider } from './ctx';
 /* 嵌套时，将控制交给最外层 */
 const Expansion = (props: ExpansionProps) => {
   /* baseProps是共享给子级ExpansionPane的ExpansionBase，其他的是Expansion自有的prop */
-  const { opens, defaultOpens, onChange, accordion = false, children, ...baseProps } = props;
+  const {
+    opens,
+    defaultOpens,
+    onChange,
+    accordion = false,
+    children,
+    className,
+    style,
+    ...baseProps
+  } = props;
 
   /** 处理useCheck配置， */
   const checkConf = useMemo<UseCheckConf<string, string>>(() => {
@@ -41,7 +50,12 @@ const Expansion = (props: ExpansionProps) => {
 
   return (
     <Provider value={ctxProps}>
-      <div className={classNames('m78-expansion', !props.noStyle && '__style')}>{children}</div>
+      <div
+        className={classNames('m78-expansion', !props.noStyle && '__style', className)}
+        style={style}
+      >
+        {children}
+      </div>
     </Provider>
   );
 };
