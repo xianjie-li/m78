@@ -1,12 +1,13 @@
 import React, { useMemo } from 'react';
 import { useCheck, UseCheckConf } from '@lxjx/hooks';
+import classNames from 'classnames';
 import { ExpansionProps } from './types';
 import { Provider } from './ctx';
 
 /* 嵌套时，将控制交给最外层 */
 const Expansion = (props: ExpansionProps) => {
   /* baseProps是共享给子级ExpansionPane的ExpansionBase，其他的是Expansion自有的prop */
-  const { opens, defaultOpens, onChange, accordion, children, ...baseProps } = props;
+  const { opens, defaultOpens, onChange, accordion = false, children, ...baseProps } = props;
 
   /** 处理useCheck配置， */
   const checkConf = useMemo<UseCheckConf<string, string>>(() => {
@@ -31,6 +32,7 @@ const Expansion = (props: ExpansionProps) => {
   const ctxProps = {
     // 默认配置
     transition: true,
+    accordion,
     // 用户传入配置
     ...baseProps,
     // 展开状态控制
@@ -39,7 +41,7 @@ const Expansion = (props: ExpansionProps) => {
 
   return (
     <Provider value={ctxProps}>
-      <div className="m78-expansion __style">{children}</div>
+      <div className={classNames('m78-expansion', !props.noStyle && '__style')}>{children}</div>
     </Provider>
   );
 };

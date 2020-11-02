@@ -36,7 +36,7 @@ export interface ExpansionProps extends ExpansionBase, ComponentBaseProps {
   /** 默认的展开项name数组(不受控) */
   defaultOpens?: string[];
   /** 展开项改变时触发 */
-  onChange?: (nextOpens?: string[]) => void;
+  onChange?: (nextOpens: string[]) => void;
   /** 开启手风琴效果，所有Pane同时只会有一个被打开 */
   accordion?: boolean;
   /** 渲染在内部的元素，内部所有带name的ExpansionPane会受此组件控制 */
@@ -56,7 +56,7 @@ export interface ExpansionPaneProps extends ExpansionBase, ComponentBaseProps {
   /** 默认是否展开 */
   defaultOpen?: boolean;
   /** 展开状态改变 */
-  onChange?: (open?: boolean) => void;
+  onChange?: (open: boolean) => void;
   /** 顶部内容 */
   header?: React.ReactNode;
   /** 面板内容 */

@@ -7,12 +7,11 @@ import { CaretRightOutlined, CaretUpOutlined, CaretDownOutlined } from 'm78/icon
 import { If } from 'm78/fork';
 import { stopPropagation } from 'm78/util';
 import { useSpring, animated, config } from 'react-spring';
-import { useFirstMountState } from 'react-use';
 import { ExpansionPaneProps, ExpandIconPosition } from './types';
 import { useCtx } from './ctx';
 
 const ExpansionPane = (props: ExpansionPaneProps) => {
-  const { checker, ...ctxBaseProps } = useCtx();
+  const { checker, accordion, ...ctxBaseProps } = useCtx();
 
   /** 如果包含Expansion父级，则转交控制权 */
   const mixProps = useMemo(() => {
@@ -26,7 +25,11 @@ const ExpansionPane = (props: ExpansionPaneProps) => {
         open: checker.isChecked(name),
         onChange(open: boolean) {
           props.onChange?.(open);
-          checker.setCheckBy(name, open);
+          if (accordion) {
+            checker.setChecked(open ? [name] : []);
+          } else {
+            checker.setCheckBy(name, open);
+          }
         },
       };
     }
@@ -41,6 +44,8 @@ const ExpansionPane = (props: ExpansionPaneProps) => {
     expandIcon,
     noStyle,
     transition = true,
+    mountOnEnter,
+    unmountOnExit,
   } = mixProps;
 
   const [open, set] = useFormState(mixProps, false, {
@@ -58,8 +63,8 @@ const ExpansionPane = (props: ExpansionPaneProps) => {
   // 实现mountOnEnter/unmountOnExit
   const [mound] = useMountExist({
     toggle: open,
-    mountOnEnter: true,
-    unmountOnExit: false,
+    mountOnEnter,
+    unmountOnExit,
     exitDelay: 800,
   });
 

@@ -1577,10 +1577,10 @@
     react-spring "^8.0.27"
     react-use "^14.0.0"
 
-"@lxjx/hooks@^1.8.0":
-  version "1.8.0"
-  resolved "https://registry.npm.taobao.org/@lxjx/hooks/download/@lxjx/hooks-1.8.0.tgz?cache=0&sync_timestamp=1604248014971&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40lxjx%2Fhooks%2Fdownload%2F%40lxjx%2Fhooks-1.8.0.tgz#d81b769ffcd8b9fbb5c1856653aa4392298008d6"
-  integrity sha1-2Bt2n/zYufu1wYVmU6pDkimACNY=
+"@lxjx/hooks@^1.8.1":
+  version "1.8.1"
+  resolved "https://registry.npm.taobao.org/@lxjx/hooks/download/@lxjx/hooks-1.8.1.tgz#bd932d792dd760f4cdb3c7667e7f403a5eb77c1b"
+  integrity sha1-vZMteS3XYPTNs8dmfn9AOl63fBs=
   dependencies:
     "@lxjx/utils" "^1.7.1"
     "@types/lodash" "^4.14.149"

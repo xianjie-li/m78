@@ -28,6 +28,7 @@
   "include": [
     "src/components/**/*",
     "src/docs/**/*",
+    "src/mock/**/*",
     ".babelrc.js",
     "test/**/*",
     "./app.d.ts",

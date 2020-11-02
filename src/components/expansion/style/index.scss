@@ -3,7 +3,6 @@
 .m78-expansion {
   line-height: $line-height-base;
   font-size: $font-size;
-  background-color: $component-background;
   text-align: left;
 
   & & {
@@ -13,6 +12,7 @@
   &.__style {
     border-radius: $border-radius;
     border: 1px solid $b-border;
+    background-color: $component-background;
   }
 
   &_item {
