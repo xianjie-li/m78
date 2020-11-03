@@ -120,6 +120,7 @@ const useTipsController = (opt?: UseQueueConfig<TipsItem>) => {
 function GlobalTips({ item }: any) {
   const queue = Tips.useTipsController({
     defaultItemOption: {
+      ...defaultOpt,
       fitWidth: true,
       nextable: true,
       global: true,
@@ -149,7 +150,7 @@ Tips.push = (opt: MixItem | MixItem[]) => {
 /**
  * Tips.push的快捷方式，接收消息和持续时间
  * */
-Tips.tip = (message: React.ReactNode, duration?: number) => {
+Tips.tip = (message: React.ReactNode, duration = defaultOpt.duration) => {
   Tips.push({
     message,
     duration,

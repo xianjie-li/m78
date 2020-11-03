@@ -1624,10 +1624,10 @@
     "@types/prop-types" "^15.7.3"
     react-spring "^9.0.0-rc.3"
 
-"@lxjx/sass-base@^1.3.1":
-  version "1.3.1"
-  resolved "https://registry.npmjs.org/@lxjx/sass-base/-/sass-base-1.3.1.tgz#1f39ff7d0b2ae0afc16af4a174310a10a5b1bb38"
-  integrity sha512-WjRgW1T47H3E0YLx84S8smDP5sY0dxVh9BMzUKpsKVcxlDJJKFMX/yg1vWDW5vxjXqOxDJgTbbdShbm/xyKZ4Q==
+"@lxjx/sass-base@^1.4.0":
+  version "1.4.0"
+  resolved "https://registry.npmjs.org/@lxjx/sass-base/-/sass-base-1.4.0.tgz#3f48fc63e2bf9771d46c4fc98678351bd3012dd7"
+  integrity sha512-B0E5ZASoPjr0OTWir/Dcxx3N85Fp4vmjgbGtcPLT6W9mYvHbS1PVy5GhVj0tRa+PPovJ10yKJwDyNS5Sm9Mang==
   dependencies:
     "@ant-design/colors" "^3.2.2"
 
@@ -1649,10 +1649,10 @@
     "@types/node" "^13.11.0"
     uuid "^7.0.2"
 
-"@lxjx/utils@^1.8.1":
-  version "1.8.1"
-  resolved "https://registry.npm.taobao.org/@lxjx/utils/download/@lxjx/utils-1.8.1.tgz#ec6228ce08c40c494c79d6f07a2faa3a4ff3b60d"
-  integrity sha1-7GIozgjEDElMedbwei+qOk/ztg0=
+"@lxjx/utils@^1.9.0":
+  version "1.9.0"
+  resolved "https://registry.npmjs.org/@lxjx/utils/-/utils-1.9.0.tgz#3627fe5145fab805831f5adc7a004d6c481684ba"
+  integrity sha512-j1NbJKmVfnkXLahYY3I0/oKiutUhQ9rSNJVAX1HtPpnBieaImxSazs90U0LVCQt64lBbdPSSs7fjiMr8TF6TVg==
   dependencies:
     "@babel/runtime" "^7.7.6"
     "@types/node" "^13.11.0"

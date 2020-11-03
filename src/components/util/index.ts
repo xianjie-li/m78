@@ -19,18 +19,6 @@ const stopPropagation = {
   },
 };
 
-/* TODO: 提到utils */
-/** 获取窗口的滚动位置 */
-export function getDocScrollOffset() {
-  const doc = document.documentElement;
-  const body = document.body;
-
-  return {
-    x: doc.scrollLeft + body.scrollLeft,
-    y: doc.scrollTop + body.scrollTop,
-  };
-}
-
 /** 指定错误消息和组件命名空间来抛出一个错误 */
 export function throwError(errorMsg: string, namespace?: string): never {
   throw new Error((namespace ? `${namespace} -> ` : '') + errorMsg);

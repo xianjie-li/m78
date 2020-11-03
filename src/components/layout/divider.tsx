@@ -21,7 +21,7 @@ const Divider = ({ vertical, width, height, color, margin = 12 }: DividerProps) 
   return (
     <div
       className={cls('m78-divider', vertical && '__vertical')}
-      style={{ width, height, backgroundColor: color, margin: margin ? marginStr : undefined }}
+      style={{ width, height, backgroundColor: color, margin: marginStr }}
     />
   );
 };
