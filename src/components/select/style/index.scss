@@ -48,15 +48,15 @@
     }
   }
 
-  &_popper {
-    & + .m78-popper_arrow {
+  &_popper:not(.__hasArrow) {
+    .m78-popper_arrow {
       display: none;
     }
   }
 
   &_list {
     position: relative;
-    min-width: 280px;
+    //min-width: 280px;
     max-width: 90vw;
 
     .m78-empty {

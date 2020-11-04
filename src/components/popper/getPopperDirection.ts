@@ -1,7 +1,7 @@
 import React from 'react';
 import { getRefDomOrDom } from '@lxjx/hooks';
 import { isPopperBound } from './utils';
-import { Size, Bound, DirectionKeys, PopperDirectionInfo } from './types';
+import { Size, Bound, PopperDirectionKeys, PopperDirectionInfo } from './types';
 
 /**
  * 根据popper尺寸，目标的位置信息计算气泡位置
@@ -130,13 +130,13 @@ export function getPopperDirection(
 
 /** 将一组包含left、top的方向对象值根据尺寸信息转换为包含left, top, right, bottom的值(改变原对象) */
 function getRBObjForLTObj(
-  obj: { [key in DirectionKeys]: { top: number; left: number } },
+  obj: { [key in PopperDirectionKeys]: { top: number; left: number } },
   { width, height }: Size,
 ) {
   const o = {} as PopperDirectionInfo;
 
   Object.entries(obj).forEach(([key, item]) => {
-    o[key as DirectionKeys] = {
+    o[key as PopperDirectionKeys] = {
       ...item,
       right: item.left + width,
       bottom: item.top + height,

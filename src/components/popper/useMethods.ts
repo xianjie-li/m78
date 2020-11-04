@@ -143,15 +143,23 @@ export function useMethods(share: Share) {
       if (self.lastShow) {
         toggle();
       } else {
+        console.log(3);
         stop();
         // rc版执行太紧凑会导致immediate失效？
         setTimeout(() => {
           set({
-            xy: [direct.left, direct.top],
-            opacity: 0,
-            scale: 0.7,
-            immediate: true,
-            onRest: () => toggle(),
+            from: {
+              xy: [direct.left, direct.top],
+              opacity: 0,
+              scale: 0.7,
+            },
+            to: {
+              xy: [direct.left, direct.top],
+              opacity: 1,
+              scale: 1,
+              // immediate: self.allHide || !animation,
+            },
+            // onRest: () => toggle(),
           });
         });
       }

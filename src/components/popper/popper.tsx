@@ -19,7 +19,7 @@ export const defaultProps = {
   type: 'tooltip' as const,
   trigger: ['hover'] as const,
   mountOnEnter: true,
-  unmountOnExit: false,
+  unmountOnExit: true,
   disabled: false,
 };
 

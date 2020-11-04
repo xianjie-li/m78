@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import Input from 'm78/input';
-import Popper, { PopperRef } from 'm78/popper';
+import Popper, { PopperDirectionEnum, PopperRef, PopperTriggerEnum } from 'm78/popper';
 import Spin from 'm78/spin';
 import Empty from 'm78/empty';
 import Button from 'm78/button';
@@ -63,6 +63,11 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
     debounceTime = 300,
     onSearch,
     onAddTag,
+    direction = PopperDirectionEnum.bottomStart,
+    trigger = PopperTriggerEnum.click,
+    arrow,
+    checkIcon = true,
+    children,
   } = props;
 
   const self = useSelf({
@@ -70,12 +75,12 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
   });
 
   const [state, setState] = useSetState({
-    inputWidth: 280,
+    inputWidth: 0,
   });
 
   const popperRef = useRef<PopperRef>(null!);
 
-  const conf = getUseCheckConf(props);
+  const conf = useMemo(() => getUseCheckConf(props), [props.value]);
 
   const [show, setShow] = useFormState(props, false, {
     triggerKey: 'onShowChange',
@@ -96,6 +101,8 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
     notExistValueTrigger,
     disables: disabledOption,
   });
+
+  const isDropDown = !!children;
 
   const {
     checked,
@@ -127,7 +134,7 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
 
   /** 获取输入框宽度 */
   useEffect(() => {
-    if (!inpRef.current || listWidth) return;
+    if (!inpRef.current || listWidth || isDropDown) return;
 
     const pNode = inpRef.current.parentNode as HTMLElement;
 
@@ -186,6 +193,7 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
     options: filterOptions,
     labelKey,
     valueKey,
+    checkIcon: isDropDown ? false : checkIcon,
   };
 
   const onFocus = useFn(() => {
@@ -265,6 +273,7 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
         itemData={itemData}
         width="100%"
         key="virtual"
+        className="m78-scrollbar"
       >
         {RenderItem}
       </FixedList>
@@ -303,12 +312,13 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
 
     return (
       <div
-        className={cls('m78-select_list m78-scroll-bar', { __disabled: disabled })}
-        style={{ width: listWidth || state.inputWidth }}
+        className={cls('m78-select_list', { __disabled: disabled })}
+        style={{ width: listWidth || state.inputWidth || undefined }}
       >
         {(listLoading || loading) && <Spin full size="small" text={null} />}
         {!filterOptions.length && <Empty size="small" desc="暂无相关内容" />}
         <div
+          className="m78-scrollbar"
           style={{ maxHeight: listMaxHeight, overflow: 'auto' }}
           onClick={multiple ? undefined : onHide}
         >
@@ -392,28 +402,18 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
     );
   }
 
-  /** 多选 + 显示标签 */
-  const showMultipleTag = multiple && showTag;
-  /** 用placeholder来显示已选值 */
-  const showSelectString = !showMultipleTag;
-  /** 根据showSelectString获取placeholder值 */
-  const _placeholder = showSelectString
-    ? showMultipleString(originalChecked, multipleMaxShowLength, labelKey, valueKey)
-    : placeholder;
+  /** input */
+  function renderInput() {
+    /** 多选 + 显示标签 */
+    const showMultipleTag = multiple && showTag;
+    /** 用placeholder来显示已选值 */
+    const showSelectString = !showMultipleTag;
+    /** 根据showSelectString获取placeholder值 */
+    const _placeholder = showSelectString
+      ? showMultipleString(originalChecked, multipleMaxShowLength, labelKey, valueKey)
+      : placeholder;
 
-  return (
-    <Popper
-      offset={4}
-      style={listStyle}
-      className={cls(listClassName)}
-      content={renderList()}
-      direction="bottomStart"
-      trigger="click"
-      customer={CustomPopper}
-      instanceRef={popperRef}
-      show={show}
-      onChange={onPopperClose}
-    >
+    return (
       <Input
         innerRef={inpRef}
         onClick={onShow}
@@ -441,6 +441,36 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
         underline={underline}
         notBorder={notBorder}
       />
+    );
+  }
+
+  /** 传入children时，作为dropdown使用，渲染children */
+  function renderChildren() {
+    return (
+      <span className={cls('m78-select', className)} style={style}>
+        {children}
+      </span>
+    );
+  }
+
+  return (
+    <Popper
+      offset={arrow ? 12 : 4}
+      style={listStyle}
+      className={cls('m78-select_popper', listClassName, {
+        __hasArrow: arrow,
+        __dropdown: isDropDown,
+      })}
+      content={renderList()}
+      direction={direction}
+      trigger={trigger}
+      customer={CustomPopper}
+      instanceRef={popperRef}
+      show={show}
+      onChange={onPopperClose}
+      unmountOnExit={false}
+    >
+      {isDropDown ? renderChildren() : renderInput()}
     </Popper>
   );
 }

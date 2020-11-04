@@ -2,7 +2,7 @@ import { checkElementVisible } from '@lxjx/utils';
 
 import {
   Bound,
-  DirectionKeys,
+  PopperDirectionKeys,
   PopperDirectionInfo,
   PopperDirectionInfoWidthVisible,
 } from './types';
@@ -21,16 +21,18 @@ export function patchVisible(
     const removeScrollOffsetItem = decreaseScrollOffset(item);
 
     const { visible } = checkElementVisible(removeScrollOffsetItem, {
+      offset: 0,
       wrapEl,
       fullVisible: true,
     });
 
     const { visible: fullVisible } = checkElementVisible(removeScrollOffsetItem, {
+      offset: 0,
       wrapEl,
       fullVisible: false,
     });
 
-    dv[key as DirectionKeys] = {
+    dv[key as PopperDirectionKeys] = {
       ...item,
       visible,
       hidden: !fullVisible,

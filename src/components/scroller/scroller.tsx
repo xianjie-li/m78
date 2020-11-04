@@ -142,11 +142,7 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
     <div
       className={cls(
         'm78-scroller',
-        {
-          'm78-scrollbar': !state.hasTouch && webkitScrollBar,
-          // __hideScrollBar: hideScrollbar,
-          __hover: !state.hasTouch && hoverWebkitScrollBar,
-        },
+
         props.className,
       )}
       style={{
@@ -191,7 +187,10 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
         )}
 
         <div
-          className="m78-scroller_wrap"
+          className={cls('m78-scroller_wrap', {
+            'm78-scrollbar': !state.hasTouch && webkitScrollBar,
+            __hover: !state.hasTouch && hoverWebkitScrollBar,
+          })}
           ref={scrollEl as any}
           style={{
             right: hideOffset,

@@ -15,6 +15,13 @@ group:
 
 <code src="./multiple.tsx" />
 
+## Dropdown模式
+
+如果传入了`children`，会替换调掉默认的`Input`并以`dropdown`模式开启
+
+<code src="./dropdown.tsx" />
+
+
 ## 搜索/添加 tag
 
 <code src="./search.tsx" />
@@ -145,7 +152,7 @@ interface FormLikeWithExtra<T, Ext = any> {
 }
 
 interface SelectOptionItem {
-  /** 类目名 */
+  /** 类目名, 如果不传入，将使用value作为label */
   label?: string;
   /** 值 */
   value?: any;

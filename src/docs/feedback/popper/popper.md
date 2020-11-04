@@ -71,7 +71,7 @@ interface PopperProps extends ComponentBaseProps {
    * */
   children?: React.ReactElement;
   /** 'top' | 气泡方向, 会根据气泡的遮挡情况自动调整 */
-  direction?: DirectionKeys;
+  direction?: PopperDirectionKeys;
   /** 'hover' | 气泡的触发方式 */
   trigger?: PopperTriggerType | PopperTriggerType[];
   /**
@@ -94,7 +94,7 @@ interface PopperProps extends ComponentBaseProps {
   defaultShow?: boolean;
   /** true | 默认content会在气泡显示时才进行渲染，设置为false后会将content随组件一起预渲染 */
   mountOnEnter?: boolean;
-  /** false | 在气泡隐藏会是否销毁content */
+  /** true | 在气泡隐藏会是否销毁content */
   unmountOnExit?: boolean;
 
   /* ############ confirm 特有配置 ############ */

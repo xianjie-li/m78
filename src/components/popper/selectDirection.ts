@@ -1,7 +1,7 @@
-import { BoundWithVisible, DirectionKeys, PopperDirectionInfoWidthVisible } from './types';
+import { BoundWithVisible, PopperDirectionKeys, PopperDirectionInfoWidthVisible } from './types';
 
 /** 关联的方向，用于帮助猜测下一个Direction的合理位置 */
-const relateDirectionMap: { [key in DirectionKeys]: DirectionKeys[] } = {
+const relateDirectionMap: { [key in PopperDirectionKeys]: PopperDirectionKeys[] } = {
   topStart: ['top', 'topEnd', 'bottomStart'],
   top: ['bottom', 'topStart', 'topEnd'],
   topEnd: ['top', 'topStart', 'bottomEnd'],
@@ -18,9 +18,9 @@ const relateDirectionMap: { [key in DirectionKeys]: DirectionKeys[] } = {
 
 interface Options {
   /** 目标方向 */
-  direction: DirectionKeys;
+  direction: PopperDirectionKeys;
   /** 前一个方向 */
-  prevDirection: DirectionKeys;
+  prevDirection: PopperDirectionKeys;
   /** 包含可见信息的所有方向信息 */
   directionInfo: PopperDirectionInfoWidthVisible;
 }
@@ -41,7 +41,7 @@ export function selectDirection({
   direction,
   prevDirection,
   directionInfo,
-}: Options): [BoundWithVisible, DirectionKeys] | null {
+}: Options): [BoundWithVisible, PopperDirectionKeys] | null {
   // 前一个方向
   const prev = directionInfo[prevDirection];
 
@@ -54,7 +54,7 @@ export function selectDirection({
 
   // 根据前一个方向获取关联方向
   const relates = relateDirectionMap[prevDirection];
-  const relateDirection = relates.reduce<[BoundWithVisible, DirectionKeys] | undefined>(
+  const relateDirection = relates.reduce<[BoundWithVisible, PopperDirectionKeys] | undefined>(
     (pr, key) => {
       if (directionInfo[key].visible && !pr) {
         return [directionInfo[key], key];
@@ -69,7 +69,7 @@ export function selectDirection({
   // 指定方向获取关联方向
   const currentRelates = relateDirectionMap[direction];
   const currentRelateDirection = currentRelates.reduce<
-    [BoundWithVisible, DirectionKeys] | undefined
+    [BoundWithVisible, PopperDirectionKeys] | undefined
   >((pr, key) => {
     if (directionInfo[key].visible && !pr) {
       return [directionInfo[key], key];
@@ -82,7 +82,7 @@ export function selectDirection({
   // 获取第一个visible方向
   for (const [key, val] of Object.entries(directionInfo)) {
     if (val.visible) {
-      return [val, key] as [BoundWithVisible, DirectionKeys];
+      return [val, key] as [BoundWithVisible, PopperDirectionKeys];
     }
   }
 

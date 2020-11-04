@@ -187,6 +187,7 @@ function Dates(props: DatesProps | DatesRangeProps) {
         show={state.show}
         type="popper"
         disabled={disabled}
+        unmountOnExit={false}
         onChange={_show => {
           setState({
             show: _show,

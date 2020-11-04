@@ -23,10 +23,9 @@ const opt: SelectOptionItem[] = [
   },
 ];
 
-const Play = () => {
+const Dropdown = () => {
   return (
     <div>
-      <div>play</div>
       <Select
         value="" /* 使值不会被选中 */
         onChange={val => {
@@ -58,4 +57,4 @@ const Play = () => {
   );
 };
 
-export default Play;
+export default Dropdown;

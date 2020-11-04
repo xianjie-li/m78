@@ -5,7 +5,15 @@ import { ComponentBaseProps } from '../types/types';
 import { defaultProps } from './popper';
 import { getTriggerType } from './utils';
 
-export type PopperTriggerType = 'hover' | 'click' | 'focus';
+type PopperTriggerKeys = 'hover' | 'click' | 'focus';
+
+export enum PopperTriggerEnum {
+  hover = 'hover',
+  click = 'click',
+  focus = 'focus',
+}
+
+export type PopperTriggerType = PopperTriggerKeys | PopperTriggerEnum;
 
 export interface PopperRef {
   /**
@@ -46,16 +54,32 @@ export interface Size {
 
 /** 描述了所有方向气泡位置信息的对象 */
 export type PopperDirectionInfo = {
-  [key in DirectionKeys]: Bound;
+  [key in PopperDirectionKeys]: Bound;
 };
 
 /** 包含了具体可见性的PopperDirectionInfo */
 export type PopperDirectionInfoWidthVisible = {
-  [key in DirectionKeys]: BoundWithVisible;
+  [key in PopperDirectionKeys]: BoundWithVisible;
 };
 
 /** 所有可能出现的方向 */
-export type DirectionKeys =
+export enum PopperDirectionEnum {
+  topStart = 'topStart',
+  top = 'top',
+  topEnd = 'topEnd',
+  leftStart = 'leftStart',
+  left = 'left',
+  leftEnd = 'leftEnd',
+  bottomStart = 'bottomStart',
+  bottom = 'bottom',
+  bottomEnd = 'bottomEnd',
+  rightStart = 'rightStart',
+  right = 'right',
+  rightEnd = 'rightEnd',
+}
+
+/** 所有可能出现的方向 */
+export type PopperDirectionKeys =
   | 'topStart'
   | 'top'
   | 'topEnd'
@@ -79,7 +103,7 @@ export interface Share {
     /** 滚动元素 */
     wrapEl?: HTMLElement;
     /** 当前方向 */
-    direction: DirectionKeys;
+    direction: PopperDirectionKeys | PopperDirectionEnum;
   };
   setState: SetState<Share['state']>;
   self: {
@@ -126,7 +150,7 @@ export interface PopperProps extends ComponentBaseProps {
    * */
   children?: React.ReactElement;
   /** 'top' | 气泡方向, 会根据气泡的遮挡情况自动调整 */
-  direction?: DirectionKeys;
+  direction?: PopperDirectionKeys;
   /** 'hover' | 气泡的触发方式 */
   trigger?: PopperTriggerType | PopperTriggerType[];
   /**
@@ -151,7 +175,7 @@ export interface PopperProps extends ComponentBaseProps {
   defaultShow?: boolean;
   /** true | 默认content会在气泡显示时才进行渲染，设置为false后会将content随组件一起预渲染 */
   mountOnEnter?: boolean;
-  /** false | 在气泡隐藏会是否销毁content */
+  /** true | 在气泡隐藏会是否销毁content */
   unmountOnExit?: boolean;
 
   /* ############ confirm 特有配置 ############ */

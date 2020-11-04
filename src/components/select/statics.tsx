@@ -9,7 +9,7 @@ import { RenderItemData, SelectCustomTag, SelectOptionItem, SelectProps } from '
 /** 自定义popper样式 */
 export function CustomPopper(props: PopperPropsCustom) {
   const { content } = props;
-  return <div className="m78-popper_content m78-select_popper">{content}</div>;
+  return <div className="m78-popper_content">{content}</div>;
 }
 
 /** 根据SelectOptionItem取value */
@@ -65,7 +65,7 @@ interface Item extends ListChildComponentProps {
 
 /** 渲染选项, 用于实现虚拟滚动 */
 export function RenderItem({ index, style, data }: Item) {
-  const { options, labelKey, valueKey } = data;
+  const { options, labelKey, valueKey, checkIcon } = data;
   const item = options[index];
 
   const label = getLabel(item, labelKey, valueKey);
@@ -100,7 +100,7 @@ export function RenderItem({ index, style, data }: Item) {
         </span>
       )}
       <span>
-        {_isChecked && <CheckOutlined className="m78-select_check-icon" />}
+        {_isChecked && checkIcon && <CheckOutlined className="m78-select_check-icon" />}
         {item.suffix && <span className="m78-select_suffix">{item.suffix}</span>}
       </span>
     </div>
