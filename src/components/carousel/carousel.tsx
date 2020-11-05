@@ -8,7 +8,7 @@ import cls from 'classnames';
 
 import { dumpFn } from '@lxjx/utils';
 import { useSelf } from '@lxjx/hooks';
-import { ComponentBaseProps } from '../types/types';
+import { ComponentBaseProps } from 'm78/types';
 
 export interface CarouselProps extends ComponentBaseProps {
   /** 子元素，必须为多个直接子元素或子元素数组 */

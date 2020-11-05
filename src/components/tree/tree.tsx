@@ -1,10 +1,10 @@
-import React from 'react';
-import { CaretRightOutlined } from 'm78/icon';
+import React, { useMemo } from 'react';
 import { isArray, isTruthyOrZero } from '@lxjx/utils';
-import { If } from 'm78/fork';
-import cls from 'classnames';
-import { FlatMetas, OptionsItem } from 'm78/tree/types';
-import TreeItem from 'm78/tree/item';
+import { useCheck } from '@lxjx/hooks';
+import { FlatMetas, OptionsItem, Share, TreeProps, TreeValueType } from './types';
+import TreeItem from './item';
+import { defaultValueGetter, isNonEmptyArray } from './common';
+import { useMethods } from './useMethods';
 
 const opt: OptionsItem[] = [
   {
@@ -77,50 +77,126 @@ const connectVal2Array = (val: any, array?: any[]) => {
   return [...array, val];
 };
 
-/** 将OptionsItem[]的每一项转换为FlatMetas并平铺至目标数组 */
-function flat(target = [] as FlatMetas[], optList: OptionsItem[], zIndex = 0, parent?: FlatMetas) {
-  if (isArray(optList)) {
-    const siblings: FlatMetas[] = [];
+/** 将OptionsItem[]的每一项转换为FlatMetas并平铺至目标数组, 关键词 */
+function flatTreeData(
+  optionList: OptionsItem[],
+  conf: {
+    valueGetter: NonNullable<TreeProps['valueGetter']>;
+  },
+) {
+  const list: FlatMetas[] = [];
+  const { valueGetter } = conf;
 
-    optList.forEach((item, index) => {
-      const current: FlatMetas = {
-        ...item,
-        zIndex,
-        values: connectVal2Array(item.value, parent?.values)! /* value取值方式更换 */,
-        indexes: connectVal2Array(index, parent?.indexes)!,
-        parents: connectVal2Array(parent, parent?.parents),
-        siblings: null!,
-      };
-
-      siblings.push(current);
-
-      current.siblings = siblings;
-
-      target.push(current);
-
-      if (isArray(item.children)) {
-        flat(target, item.children, zIndex + 1, current);
-      }
+  // 将指定的FlatMetas添加到它所有父级的descendants列表中
+  function fillParentsDescendants(item: FlatMetas) {
+    if (!isNonEmptyArray(item.parents)) return;
+    item.parents!.forEach(p => {
+      p.descendants && p.descendants.push(item);
+      p.descendantsValues && p.descendantsValues.push(item.value);
     });
   }
+
+  // 平铺data树, 获取总层级，所有可展开项id
+  function flat(
+    target = [] as FlatMetas[],
+    optList: OptionsItem[],
+    zIndex = 0,
+    parent?: FlatMetas,
+  ) {
+    if (isArray(optList)) {
+      const siblings: FlatMetas[] = [];
+      const siblingsValues: TreeValueType[] = [];
+
+      optList.forEach((item, index) => {
+        const val = valueGetter(item);
+
+        const current: FlatMetas = {
+          ...item,
+          zIndex,
+          values: connectVal2Array(val, parent?.values)! /* value取值方式更换 */,
+          indexes: connectVal2Array(index, parent?.indexes)!,
+          parents: connectVal2Array(parent, parent?.parents),
+          siblings: null!,
+          siblingsValues: null!,
+          value: val,
+          descendants: item.children ? [] : undefined,
+          descendantsValues: item.children ? [] : undefined,
+        };
+
+        // 添加兄弟节点
+        siblings.push(current);
+        siblingsValues.push(val);
+        current.siblings = siblings;
+        current.siblingsValues = siblingsValues;
+
+        // 添加父级节点value
+        if (isArray(current.parents)) {
+          current.parentsValues = current.parents.map(valueGetter);
+        }
+
+        // 添加到所有父节点的子孙列表
+        fillParentsDescendants(current);
+
+        target.push(current);
+
+        if (isArray(item.children)) {
+          flat(target, item.children, zIndex + 1, current);
+        }
+      });
+    }
+  }
+
+  flat(list, optionList);
+
+  console.log(list);
+
+  return list;
 }
 
-const list: FlatMetas[] = [];
+export const defaultProps = {
+  valueGetter: defaultValueGetter,
+};
 
-flat(list, opt);
+const Tree = (props: Share['props']) => {
+  const { valueGetter } = props;
 
-console.log(list);
+  const list = useMemo(() => {
+    return flatTreeData(opt, {
+      valueGetter,
+    });
+  }, []);
 
-const Tree = () => {
+  const openCheck = useCheck<string | number, FlatMetas>({
+    options: list,
+    collector: valueGetter,
+  });
+
+  console.log(openCheck, openCheck.checked);
+
+  const share: Share = {
+    openCheck,
+    props,
+  };
+
+  const methods = useMethods(share);
+
   return (
     <div className="m78-tree __hoverEffect">
       <div className="m78-tree_nodes">
         {list.map(item => (
-          <TreeItem open data={item} key={item.value} />
+          <TreeItem
+            open={methods.isOpen(item)}
+            data={item}
+            key={item.value}
+            share={share}
+            methods={methods}
+          />
         ))}
       </div>
     </div>
   );
 };
+
+Tree.defaultProps = defaultProps;
 
 export default Tree;

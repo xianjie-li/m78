@@ -13,7 +13,7 @@ export const Z_INDEX_MODAL = 1800;
 export const Z_INDEX_MESSAGE = 2200;
 
 /** 禁止冒泡的便捷扩展对象 */
-const stopPropagation = {
+export const stopPropagation = {
   onClick(e: React.SyntheticEvent) {
     e.stopPropagation();
   },
@@ -23,7 +23,3 @@ const stopPropagation = {
 export function throwError(errorMsg: string, namespace?: string): never {
   throw new Error((namespace ? `${namespace} -> ` : '') + errorMsg);
 }
-
-export { stopPropagation };
-
-export * from './types';

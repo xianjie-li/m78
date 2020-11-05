@@ -4,7 +4,7 @@ import { NamePath, FormInstance, RuleObject, Meta, Rule } from 'rc-field-form/es
 import React from 'react';
 import { ListFormType } from 'm78/list';
 import { AnyObject } from '@lxjx/utils';
-import { ComponentBaseProps } from '../types/types';
+import { ComponentBaseProps } from 'm78/types';
 
 export interface FormItemCustomMeta extends Meta {
   disabled: boolean;

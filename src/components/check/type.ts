@@ -1,4 +1,4 @@
-import { ComponentBaseProps } from '../types/types';
+import { ComponentBaseProps } from 'm78/types';
 import { CheckCustom } from './check';
 
 export interface CheckProps<Val> extends ComponentBaseProps {

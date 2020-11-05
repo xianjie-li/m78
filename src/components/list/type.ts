@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentBasePropsWithAny } from '../types/types';
+import { ComponentBasePropsWithAny } from 'm78/types';
 
 export interface ListFormType extends ComponentBasePropsWithAny {
   /** false | 是否去掉列表项边框 */

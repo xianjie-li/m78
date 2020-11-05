@@ -7,7 +7,7 @@ import { lineStatusIcons, CloseOutlined } from 'm78/icon';
 import { If } from 'm78/fork';
 import Button from 'm78/button';
 import cls from 'classnames';
-import { Status } from '../types/types';
+import { Status } from 'm78/types';
 
 export interface NoticeBarProps {
   /** 关闭回调 */

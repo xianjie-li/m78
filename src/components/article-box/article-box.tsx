@@ -2,7 +2,7 @@ import React from 'react';
 import { useMeasure } from 'react-use';
 import { If } from 'm78/fork';
 import cls from 'classnames';
-import { ComponentBaseProps } from '../types/types';
+import { ComponentBaseProps } from 'm78/types';
 
 export interface ArticleBoxProps extends ComponentBaseProps {
   /** 合法的html字符串 */

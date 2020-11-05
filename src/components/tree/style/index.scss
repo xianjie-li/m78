@@ -19,8 +19,9 @@ $ident-w: 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 $ident-w 0 $ident-w - 6;
+    padding: 0 4px 0 0;
     border-radius: $border-radius;
+    min-height: $base-h;
 
     &.__active {
       background-color: rgba($color, 0.1);
@@ -31,7 +32,6 @@ $ident-w: 20px;
   &_main {
     display: flex;
     flex: 1;
-    min-height: $base-h;
     border-radius: $border-radius;
   }
 
@@ -80,5 +80,9 @@ $ident-w: 20px;
       left: 50%;
       background-color: $b-border;
     }
+  }
+
+  &_action {
+    margin-left: 12px;
   }
 }

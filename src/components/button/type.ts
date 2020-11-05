@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentBasePropsWithAny, Size } from '../types/types';
+import { ComponentBasePropsWithAny, Size } from 'm78/types';
 
 export interface ButtonProps
   extends ComponentBasePropsWithAny,

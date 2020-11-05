@@ -1,6 +1,6 @@
 import { FormLikeWithExtra } from '@lxjx/hooks';
 import React from 'react';
-import { DataSourceItem } from '../types/types';
+import { DataSourceItem } from 'm78/types';
 
 export interface ActionSheetItem extends DataSourceItem {
   /* 详情 */

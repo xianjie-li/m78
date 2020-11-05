@@ -1,7 +1,7 @@
 import React, { Ref } from 'react';
 import { SetState } from '@lxjx/hooks/dist/type';
 import { SpringStartFn, SpringValue } from 'react-spring';
-import { ComponentBaseProps } from '../types/types';
+import { ComponentBaseProps } from 'm78/types';
 import { defaultProps } from './popper';
 import { getTriggerType } from './utils';
 

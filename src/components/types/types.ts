@@ -14,9 +14,40 @@ export interface ComponentBaseProps {
 
 export type Status = 'info' | 'success' | 'warning' | 'error';
 
+export enum StatusEnum {
+  info = 'info',
+  success = 'success',
+  warning = 'warning',
+  error = 'error',
+}
+
 export type Size = 'large' | 'small' /* 40 | 32 | 24 */;
 
+/* 40 | 32 | 24 */
+export enum SizeEnum {
+  large = 'large',
+  small = 'small',
+}
+
 export type FullSize = 'big' | Size;
+
+export enum FullSizeEnum {
+  large = 'large',
+  small = 'small',
+  big = 'big',
+}
+
+export enum PositionEnum {
+  left = 'left',
+  top = 'top',
+  right = 'right',
+  bottom = 'bottom',
+}
+
+export enum DirectionEnum {
+  horizontal = 'horizontal',
+  vertical = 'vertical',
+}
 
 export interface DataSourceItem<ValType = any> {
   /** 选项名 */

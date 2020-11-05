@@ -38,6 +38,7 @@ group:
 - 默认最优配置，尽量减少配置项，API 数，这样可以大大减少学习成本，并且降低出现破坏性变更的可能性。
 - 在需要 `SSR` 的组件中不要在 render 中使用`document`、`window`等浏览器对象，dom 操作都放到`effect`中
 - 组件的字符类参数应同时支持传入 string key 和 enum, 例如: `<Button type="large" />` | `<Button type={Size.large} />`, 以 Button 为例, 两种类型的命名应为`ButtonSizeKeys`/`ButtonSizeEnum`
+- 某些依赖于数据源的组件除如不需要特殊含义，均命名为`dataSource`, 如`tree`组件
 
 ## 文档
 

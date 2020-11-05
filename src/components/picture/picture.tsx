@@ -6,7 +6,7 @@ import config from 'm78/config';
 import { useSetState } from '@lxjx/hooks';
 
 import cls from 'classnames';
-import { ComponentBaseProps } from '../types/types';
+import { ComponentBaseProps } from 'm78/types';
 
 /* 组件必须有实际的尺寸 */
 

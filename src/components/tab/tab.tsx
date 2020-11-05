@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import cls from 'classnames';
 import { useFormState, useScroll, useSelf, useSetState } from '@lxjx/hooks';
 import { animated, useSpring } from 'react-spring';
-import { Position } from 'm78/util';
+import { PositionEnum } from 'm78/types';
 import Carousel, { CarouselRef } from 'm78/carousel';
 import { CaretLeftOutlined, CaretRightOutlined } from 'm78/icon';
 import { If } from 'm78/fork';
@@ -46,7 +46,7 @@ const Tab: React.FC<TabProps> = props => {
   });
 
   // 是否纵向显示
-  const isVertical = position === Position.left || position === Position.right;
+  const isVertical = position === PositionEnum.left || position === PositionEnum.right;
 
   // 实例状态
   const self = useSelf<Share['self']>({

@@ -7,7 +7,7 @@ import _debounce from 'lodash/debounce';
 import { Transition } from '@lxjx/react-transition-spring';
 import cls from 'classnames';
 import Portal from 'm78/portal';
-import { ComponentBaseProps } from '../types/types';
+import { ComponentBaseProps } from 'm78/types';
 
 interface BackTopProps extends ComponentBaseProps {
   /**

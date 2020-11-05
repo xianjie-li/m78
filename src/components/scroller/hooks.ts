@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useGesture } from 'react-use-gesture';
 import preventTopPullDown from 'prevent-top-pull-down';
 import _clamp from 'lodash/clamp';
-import { Direction } from 'm78/util';
+import { DirectionEnum } from 'm78/types';
 import { isNumber } from '@lxjx/utils';
 import { SetDragPosArg, Share } from './types';
 import { useMethods } from './methods';
@@ -47,7 +47,7 @@ export function useHooks(methods: ReturnType<typeof useMethods>, share: Share) {
 
   /* 禁用一些默认事件，如、qq 微信 ios 的顶部下拉 */
   useEffect(() => {
-    if (props.direction !== Direction.vertical) {
+    if (props.direction !== DirectionEnum.vertical) {
       return;
     }
 
@@ -66,10 +66,10 @@ export function useHooks(methods: ReturnType<typeof useMethods>, share: Share) {
         const sMeta = sHelper.get();
 
         const yPrevent =
-          props.direction === Direction.vertical &&
+          props.direction === DirectionEnum.vertical &&
           ((dy > 0 && sMeta.touchTop) || (dy < 0 && sMeta.touchBottom));
         const xPrevent =
-          props.direction === Direction.horizontal &&
+          props.direction === DirectionEnum.horizontal &&
           ((dx > 0 && sMeta.touchLeft) || (dx < 0 && sMeta.touchRight));
 
         /* 触边拖动时禁用默认事件 */
@@ -108,13 +108,13 @@ export function useHooks(methods: ReturnType<typeof useMethods>, share: Share) {
           touchTop: sMeta.touchTop,
         };
 
-        if (props.direction === Direction.vertical) {
+        if (props.direction === DirectionEnum.vertical) {
           if (sMeta.touchTop || sMeta.touchBottom) {
             methods.setDragPos({ isVertical: true, ...dragPosArg });
           }
         }
 
-        if (props.direction === Direction.horizontal) {
+        if (props.direction === DirectionEnum.horizontal) {
           if (sMeta.touchLeft || sMeta.touchRight) {
             methods.setDragPos(dragPosArg);
           }
@@ -125,7 +125,7 @@ export function useHooks(methods: ReturnType<typeof useMethods>, share: Share) {
       domTarget: rootEl,
       eventOptions: { passive: false },
       drag: {
-        axis: props.direction === Direction.vertical ? 'y' : 'x',
+        axis: props.direction === DirectionEnum.vertical ? 'y' : 'x',
         filterTaps: true,
       },
     },

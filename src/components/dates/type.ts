@@ -3,8 +3,8 @@ import { FormLike } from '@lxjx/hooks';
 import React from 'react';
 import { SetState } from '@lxjx/hooks/dist/type';
 import { AnyFunction } from '@lxjx/utils';
+import { ComponentBaseProps } from 'm78/types';
 import { InputProps } from '../input';
-import { ComponentBaseProps } from '../types/types';
 
 export enum DateType {
   DATE = 'date',

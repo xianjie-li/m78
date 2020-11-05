@@ -1,11 +1,10 @@
 import React from 'react';
-import { Position, Size } from 'm78/util';
+import { PositionEnum, SizeEnum, ComponentBaseProps } from 'm78/types';
 import { TabItem } from 'm78/tab';
 import { SpringStartFn } from 'react-spring';
 import { useScroll } from '@lxjx/hooks';
 import { CarouselRef } from 'm78/carousel';
 import { SetState } from '@lxjx/hooks/dist/type';
-import { ComponentBaseProps } from '../types/types';
 
 export type TabItemElement = React.ReactElement<TabItemProps, typeof TabItem>;
 
@@ -19,9 +18,9 @@ export interface TabProps extends ComponentBaseProps {
   /** 一组TabItem */
   children?: TabItemElement[] | TabItemElement;
   /** tab的尺寸 */
-  size?: Size;
+  size?: SizeEnum;
   /** tab的位置 */
-  position?: Position;
+  position?: PositionEnum;
   /** tab项的每一项平分宽度，如果tab过多不建议开启, position为left和right时无效 */
   flexible?: boolean;
   /** 高度，position为left和right时必传 */

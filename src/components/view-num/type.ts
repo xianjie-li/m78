@@ -1,4 +1,4 @@
-import { ComponentBaseProps } from '../types/types';
+import { ComponentBaseProps } from 'm78/types';
 
 export interface NumProps extends ComponentBaseProps {
   /** 数字动画 */

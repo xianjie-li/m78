@@ -1,7 +1,7 @@
 import _clamp from 'lodash/clamp';
 import { UseScrollMeta } from '@lxjx/hooks';
 import { isNumber, decimalPrecision, getScrollBarWidth } from '@lxjx/utils';
-import { Direction } from 'm78/util';
+import { DirectionEnum } from 'm78/types';
 import { SetDragPosArg, Share } from './types';
 import { PullDownStatus, pullDownText, PullUpStatus, pullUpText, rubberFactor } from './common';
 
@@ -361,7 +361,7 @@ export function useMethods(share: Share) {
 
   /** 向前或向后滚动整页 */
   function slide(isPrev?: boolean) {
-    const isVertical = props.direction === Direction.vertical;
+    const isVertical = props.direction === DirectionEnum.vertical;
     const pos = isVertical ? 'y' : 'x';
     const sizeKey = isVertical ? 'height' : 'width';
 

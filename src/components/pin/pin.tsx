@@ -4,7 +4,7 @@ import { checkElementVisible, getFirstScrollParent, getStyle } from '@lxjx/utils
 import _debounce from 'lodash/debounce';
 
 import cls from 'classnames';
-import { ComponentBaseProps } from '../types/types';
+import { ComponentBaseProps } from 'm78/types';
 
 interface PinProps extends ComponentBaseProps {
   /** 指定目标元素，默认为第一个可滚动父元素 */

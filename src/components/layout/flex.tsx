@@ -1,6 +1,6 @@
 import React from 'react';
 import cls from 'classnames';
-import { ComponentBasePropsWithAny } from '../types/types';
+import { ComponentBasePropsWithAny } from 'm78/types';
 
 interface FlexWrapProps extends ComponentBasePropsWithAny {
   /** 'start' | 主轴对齐方式 */

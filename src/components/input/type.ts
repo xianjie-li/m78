@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormLike } from '@lxjx/hooks';
 import { ButtonProps } from 'm78/button';
-import { Status, FullSize } from '../types/types';
+import { Status, FullSize } from 'm78/types';
 
 export type InputPropsExtends = Omit<
   React.PropsWithoutRef<JSX.IntrinsicElements['input']>,

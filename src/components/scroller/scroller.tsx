@@ -5,7 +5,7 @@ import { animated, config, to, useSpring } from 'react-spring';
 import cls from 'classnames';
 import { ErrorIcon, WindmillIcon } from 'm78/icon';
 import Button from 'm78/button';
-import { Direction } from 'm78/util';
+import { DirectionEnum } from 'm78/types';
 import Spin from 'm78/spin';
 import { If } from 'm78/fork';
 import { Spacer } from 'm78/layout';
@@ -25,7 +25,7 @@ export const defaultProps = {
   webkitScrollBar: true,
   progressBar: false,
   scrollFlag: false,
-  direction: Direction.vertical,
+  direction: DirectionEnum.vertical,
   pullUpThreshold: 120,
   pullDownTips: true,
 };
@@ -128,7 +128,7 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
   const hideOffset =
     hideScrollbar && state.scrollBarWidth && !state.hasTouch ? -state.scrollBarWidth : undefined;
 
-  const isVertical = direction === Direction.vertical;
+  const isVertical = direction === DirectionEnum.vertical;
 
   const isPullUpIng = methods.isPullUpIng();
 
