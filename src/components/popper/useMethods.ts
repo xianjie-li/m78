@@ -126,47 +126,42 @@ export function useMethods(share: Share) {
       });
     }
 
-    function toggle(isShow = true) {
-      set({
-        xy: [direct.left, direct.top],
-        opacity: isShow ? 1 : 0,
-        scale: isShow ? 1 : 0,
-        immediate: self.allHide || !animation,
-      });
+    const showConf = {
+      xy: [direct.left, direct.top],
+      opacity: 1,
+      scale: 1,
+    };
 
-      if (self.allHide) {
-        self.allHide = false;
-      }
-    }
+    const hideConf = {
+      xy: [direct.left, direct.top],
+      opacity: 0,
+      scale: 0,
+      immediate: self.allHide || !animation,
+    };
 
     if (show) {
       if (self.lastShow) {
-        toggle();
+        set({ ...showConf, immediate: self.allHide || !animation });
       } else {
-        console.log(3);
-        stop();
-        // rc版执行太紧凑会导致immediate失效？
-        setTimeout(() => {
-          set({
-            from: {
-              xy: [direct.left, direct.top],
-              opacity: 0,
-              scale: 0.7,
-            },
-            to: {
-              xy: [direct.left, direct.top],
-              opacity: 1,
-              scale: 1,
-              // immediate: self.allHide || !animation,
-            },
-            // onRest: () => toggle(),
-          });
+        // stop();
+
+        // setTimeout(() => {
+        set({
+          immediate: self.allHide || !animation,
+          from: {
+            xy: [direct.left, direct.top],
+            opacity: 0,
+            scale: 0.7,
+          },
+          to: showConf,
         });
+        // });
       }
     } else {
-      toggle(false);
+      set(hideConf);
     }
 
+    self.allHide && (self.allHide = false);
     self.lastShow = show;
   });
 

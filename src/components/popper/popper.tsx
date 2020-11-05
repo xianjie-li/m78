@@ -2,7 +2,7 @@ import React, { useImperativeHandle, useMemo, useRef } from 'react';
 import Portal from 'm78/portal';
 import cls from 'classnames';
 import { useFormState, useSelf, useSetState, useMountExist } from '@lxjx/hooks';
-import { createRandString, decimalPrecision } from '@lxjx/utils';
+import { createRandString } from '@lxjx/utils';
 import { useSpring, animated, to } from 'react-spring';
 import { useMeasure } from 'react-use';
 import { useDelayDerivedToggleStatus } from 'm78/hooks';
@@ -52,7 +52,7 @@ const Popper = (_props: PopperProps) => {
   });
 
   const self = useSelf<Share['self']>({
-    lastShow: show,
+    lastShow: false,
     allHide: false,
   });
 
@@ -79,7 +79,10 @@ const Popper = (_props: PopperProps) => {
     xy: [0, 0],
     opacity: 0,
     scale: 0,
-    config: { mass: 1, tension: 440, friction: 22 },
+    config: {
+      tension: 280,
+      friction: 24,
+    },
   }));
 
   const share: Share = {
@@ -144,12 +147,8 @@ const Popper = (_props: PopperProps) => {
           style={{
             ...props.style,
             transform: to([spProps.xy, spProps.scale], ([x, y]: any, sc) => {
-              const scale = decimalPrecision(sc as number, 4);
-
               /* 使用toFixed防止chrome字体模糊 */
-              return `translate3d(${decimalPrecision(x)}px, ${decimalPrecision(
-                y,
-              )}px, 0) scale3d(${scale}, ${scale}, ${scale})`;
+              return `translate3d(${x}px, ${y}px, 0) scale3d(${sc}, ${sc}, ${sc})`;
             }),
             opacity: spProps.opacity.to(o => o),
             // 隐藏

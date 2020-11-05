@@ -97,6 +97,7 @@ const BaseForm: React.FC<FormProps> = props => {
     const { visible } = checkElementVisible(el, {
       wrapEl: scrollParent,
       fullVisible: true,
+      offset: 0,
     });
 
     if (!visible) {

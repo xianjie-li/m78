@@ -15,12 +15,11 @@ group:
 
 <code src="./multiple.tsx" />
 
-## Dropdown模式
+## Dropdown 模式
 
 如果传入了`children`，会替换调掉默认的`Input`并以`dropdown`模式开启
 
 <code src="./dropdown.tsx" />
-
 
 ## 搜索/添加 tag
 
@@ -62,6 +61,8 @@ interface SelectProps<ValType, Options = any>
   defaultShow?: boolean;
   /** show触发改变, 类似表单控件onChange用法 */
   onShowChange?(show: boolean): void;
+  /** 通常不会传入，传入时，select会作为下拉菜单使用，并且部分针对输入框的选项会失效 */
+  children?: React.ReactNode;
 
   /* ================= 多选 ================ */
   /** false | 开启多选 */
@@ -114,7 +115,7 @@ interface SelectProps<ValType, Options = any>
    * */
   onAddTag?(key: string, check: (val: any) => void): void;
 
-  /* ================= 样式 ================ */
+  /* ================= 样式/定制 ================ */
   /** 为列表设置style */
   listStyle?: React.CSSProperties;
   /** 为列表设置className */
@@ -123,12 +124,20 @@ interface SelectProps<ValType, Options = any>
   notBorder?: boolean;
   /** 只有下边框 */
   underline?: boolean;
-  /** 列表宽度，默认与输入框等宽 */
+  /** 列表宽度，默认与输入框等宽(非dropdown模式下) */
   listWidth?: number | string;
   /** 320 | 列表最大高度, 超出时出现滚动条 */
   listMaxHeight?: number | string;
   /** 32 | 虚拟滚动需要确定的高度(px)，如果列表项通过其他配置修改过，通过此项设置修改后的高度 */
   listItemHeight?: number;
+  /** bottomStart | 列表展开方向 */
+  direction?: PopperDirectionKeys | PopperDirectionEnum;
+  /** 'click' | 气泡的触发方式 */
+  trigger?: PopperTriggerType | PopperTriggerType[];
+  /** 是否显示气泡箭头 */
+  arrow?: boolean;
+  /** true | 是否显示选中的勾选图标, 传入children时不显示 */
+  checkIcon?: boolean;
 
   /* ================= 态 ================ */
   /** 设置为禁用状态 */

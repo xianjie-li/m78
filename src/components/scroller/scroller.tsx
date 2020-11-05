@@ -128,6 +128,8 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
   const hideOffset =
     hideScrollbar && state.scrollBarWidth && !state.hasTouch ? -state.scrollBarWidth : undefined;
 
+  const isVertical = direction === Direction.vertical;
+
   const isPullUpIng = methods.isPullUpIng();
 
   function renderPullUpRetryBtn() {
@@ -193,11 +195,9 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
           })}
           ref={scrollEl as any}
           style={{
-            right: hideOffset,
-            bottom: hideOffset,
-            [direction === Direction.vertical ? 'overflowY' : 'overflowX']: props.disableScroll
-              ? undefined
-              : 'auto',
+            right: isVertical ? hideOffset : undefined,
+            bottom: !isVertical ? hideOffset : undefined,
+            [isVertical ? 'overflowY' : 'overflowX']: props.disableScroll ? undefined : 'auto',
           }}
         >
           {props.children}

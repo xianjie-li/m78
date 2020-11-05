@@ -1,6 +1,5 @@
 import { useClickAway, useUpdateEffect } from 'react-use';
 import { useEffect } from 'react';
-import { usePrev } from '@lxjx/hooks';
 import { Share } from './types';
 import { useMethods } from './useMethods';
 
@@ -39,8 +38,8 @@ export function useEffects(share: Share, methods: ReturnType<typeof useMethods>)
     show && refresh(false);
   }, [state.elTarget, state.boundTarget]);
 
+  /** mount进入时刷新 */
   useUpdateEffect(() => {
-    console.log(2, mount);
     if (mount && show) {
       self.lastShow = false; // 强制重置
       setTimeout(refresh, 1);
@@ -49,7 +48,6 @@ export function useEffects(share: Share, methods: ReturnType<typeof useMethods>)
 
   // 显示状态/尺寸变更，刷新气泡
   useUpdateEffect(() => {
-    console.log(1, mount);
     if (!mount) return;
     refresh();
   }, [show]);

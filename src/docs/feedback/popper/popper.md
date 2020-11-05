@@ -84,6 +84,8 @@ interface PopperProps extends ComponentBaseProps {
   disabled?: boolean;
   /** 标题，type为popper时生效 */
   title?: React.ReactNode;
+  /** 获取实例对象 */
+  instanceRef?: Ref<PopperRef>;
 
   /* ############ 显示 / mount状态 控制 ############ */
   /** 通过show/onChange手动控制显示、隐藏 */
@@ -121,7 +123,7 @@ interface PopperProps extends ComponentBaseProps {
 
 ```ts
 /** 触发类型 */
-type PopperTriggerType = 'hover' | 'click' | 'focus';
+type PopperTriggerKeys = 'hover' | 'click' | 'focus';
 
 /** 方向 */
 type GetBoundMetasDirectionKeys =
