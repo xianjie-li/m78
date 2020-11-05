@@ -19,7 +19,7 @@ declare namespace Tips {
         index: number | null;
     };
     var push: (opt: MixItem | MixItem[]) => void;
-    var tip: (message: React.ReactNode, duration?: number | undefined) => void;
+    var tip: (message: React.ReactNode, duration?: number) => void;
 }
 declare type MixItem = UseQueueItem & TipsItem;
 export default Tips;

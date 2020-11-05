@@ -4,7 +4,13 @@ import { SpringStartFn, SpringValue } from 'react-spring';
 import { ComponentBaseProps } from '../types/types';
 import { defaultProps } from './popper';
 import { getTriggerType } from './utils';
-export declare type PopperTriggerType = 'hover' | 'click' | 'focus';
+declare type PopperTriggerKeys = 'hover' | 'click' | 'focus';
+export declare enum PopperTriggerEnum {
+    hover = "hover",
+    click = "click",
+    focus = "focus"
+}
+export declare type PopperTriggerType = PopperTriggerKeys | PopperTriggerEnum;
 export interface PopperRef {
     /**
      * 刷新气泡状态
@@ -39,14 +45,29 @@ export interface Size {
 }
 /** 描述了所有方向气泡位置信息的对象 */
 export declare type PopperDirectionInfo = {
-    [key in DirectionKeys]: Bound;
+    [key in PopperDirectionKeys]: Bound;
 };
 /** 包含了具体可见性的PopperDirectionInfo */
 export declare type PopperDirectionInfoWidthVisible = {
-    [key in DirectionKeys]: BoundWithVisible;
+    [key in PopperDirectionKeys]: BoundWithVisible;
 };
 /** 所有可能出现的方向 */
-export declare type DirectionKeys = 'topStart' | 'top' | 'topEnd' | 'leftStart' | 'left' | 'leftEnd' | 'bottomStart' | 'bottom' | 'bottomEnd' | 'rightStart' | 'right' | 'rightEnd';
+export declare enum PopperDirectionEnum {
+    topStart = "topStart",
+    top = "top",
+    topEnd = "topEnd",
+    leftStart = "leftStart",
+    left = "left",
+    leftEnd = "leftEnd",
+    bottomStart = "bottomStart",
+    bottom = "bottom",
+    bottomEnd = "bottomEnd",
+    rightStart = "rightStart",
+    right = "right",
+    rightEnd = "rightEnd"
+}
+/** 所有可能出现的方向 */
+export declare type PopperDirectionKeys = 'topStart' | 'top' | 'topEnd' | 'leftStart' | 'left' | 'leftEnd' | 'bottomStart' | 'bottom' | 'bottomEnd' | 'rightStart' | 'right' | 'rightEnd';
 export interface Share {
     props: PopperProps & typeof defaultProps;
     state: {
@@ -57,7 +78,7 @@ export interface Share {
         /** 滚动元素 */
         wrapEl?: HTMLElement;
         /** 当前方向 */
-        direction: DirectionKeys;
+        direction: PopperDirectionKeys | PopperDirectionEnum;
     };
     setState: SetState<Share['state']>;
     self: {
@@ -111,7 +132,7 @@ export interface PopperProps extends ComponentBaseProps {
      * */
     children?: React.ReactElement;
     /** 'top' | 气泡方向, 会根据气泡的遮挡情况自动调整 */
-    direction?: DirectionKeys;
+    direction?: PopperDirectionKeys;
     /** 'hover' | 气泡的触发方式 */
     trigger?: PopperTriggerType | PopperTriggerType[];
     /**
@@ -134,7 +155,7 @@ export interface PopperProps extends ComponentBaseProps {
     defaultShow?: boolean;
     /** true | 默认content会在气泡显示时才进行渲染，设置为false后会将content随组件一起预渲染 */
     mountOnEnter?: boolean;
-    /** false | 在气泡隐藏会是否销毁content */
+    /** true | 在气泡隐藏会是否销毁content */
     unmountOnExit?: boolean;
     /** 确认 | 类型为confirm时，确认按钮的文字 */
     confirmText?: React.ReactNode;
@@ -151,3 +172,4 @@ export interface PopperProps extends ComponentBaseProps {
     /** 12 | 气泡的偏移位置 */
     offset?: number;
 }
+export {};

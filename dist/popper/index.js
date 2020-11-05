@@ -6,13 +6,40 @@ import React, { useEffect, useMemo, useRef, useImperativeHandle } from 'react';
 import Portal from 'm78/portal';
 import cls from 'classnames';
 import { useFn, getRefDomOrDom, useFormState, useMountExist, useSetState, useSelf } from '@lxjx/hooks';
-import { checkElementVisible, isDom, getFirstScrollParent, createRandString, decimalPrecision } from '@lxjx/utils';
+import { checkElementVisible, isDom, getFirstScrollParent, createRandString } from '@lxjx/utils';
 import { useSpring, animated, to } from 'react-spring';
 import { useClickAway, useUpdateEffect, useMeasure } from 'react-use';
 import { useDelayDerivedToggleStatus } from 'm78/hooks';
 import _throttle from 'lodash/throttle';
 import { WarningIcon } from 'm78/icon';
 import Button from 'm78/button';
+
+var PopperTriggerEnum;
+
+(function (PopperTriggerEnum) {
+  PopperTriggerEnum["hover"] = "hover";
+  PopperTriggerEnum["click"] = "click";
+  PopperTriggerEnum["focus"] = "focus";
+})(PopperTriggerEnum || (PopperTriggerEnum = {}));
+
+/** 所有可能出现的方向 */
+var PopperDirectionEnum;
+/** 所有可能出现的方向 */
+
+(function (PopperDirectionEnum) {
+  PopperDirectionEnum["topStart"] = "topStart";
+  PopperDirectionEnum["top"] = "top";
+  PopperDirectionEnum["topEnd"] = "topEnd";
+  PopperDirectionEnum["leftStart"] = "leftStart";
+  PopperDirectionEnum["left"] = "left";
+  PopperDirectionEnum["leftEnd"] = "leftEnd";
+  PopperDirectionEnum["bottomStart"] = "bottomStart";
+  PopperDirectionEnum["bottom"] = "bottom";
+  PopperDirectionEnum["bottomEnd"] = "bottomEnd";
+  PopperDirectionEnum["rightStart"] = "rightStart";
+  PopperDirectionEnum["right"] = "right";
+  PopperDirectionEnum["rightEnd"] = "rightEnd";
+})(PopperDirectionEnum || (PopperDirectionEnum = {}));
 
 /** 绑定事件，由于要支持不同的target类型，所以一律使用原生api进行绑定 */
 function useEventBind(share, methods) {
@@ -235,7 +262,9 @@ function useEffects(share, methods) {
       popperEl = share.popperEl,
       mHeight = share.mHeight,
       mWidth = share.mWidth,
-      props = share.props;
+      props = share.props,
+      mount = share.mount,
+      self = share.self;
   var refresh = methods.refresh;
   /** 点击气泡外位置关闭 */
 
@@ -257,9 +286,19 @@ function useEffects(share, methods) {
 
   useEffect(function () {
     show && refresh(false);
-  }, [state.elTarget, state.boundTarget]); // 显示状态/尺寸变更，刷新气泡
+  }, [state.elTarget, state.boundTarget]);
+  /** mount进入时刷新 */
 
   useUpdateEffect(function () {
+    if (mount && show) {
+      self.lastShow = false; // 强制重置
+
+      setTimeout(refresh, 1);
+    }
+  }, [mount]); // 显示状态/尺寸变更，刷新气泡
+
+  useUpdateEffect(function () {
+    if (!mount) return;
     refresh();
   }, [show]);
   useUpdateEffect(function () {
@@ -285,12 +324,14 @@ function patchVisible(directionInfo, wrapEl) {
     var removeScrollOffsetItem = decreaseScrollOffset(item);
 
     var _checkElementVisible = checkElementVisible(removeScrollOffsetItem, {
+      offset: 0,
       wrapEl: wrapEl,
       fullVisible: true
     }),
         visible = _checkElementVisible.visible;
 
     var _checkElementVisible2 = checkElementVisible(removeScrollOffsetItem, {
+      offset: 0,
       wrapEl: wrapEl,
       fullVisible: false
     }),
@@ -677,42 +718,41 @@ function useMethods(share) {
       });
     }
 
-    function toggle() {
-      var isShow = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-      set({
-        xy: [direct.left, direct.top],
-        opacity: isShow ? 1 : 0,
-        scale: isShow ? 1 : 0,
-        immediate: self.allHide || !animation
-      });
-
-      if (self.allHide) {
-        self.allHide = false;
-      }
-    }
+    var showConf = {
+      xy: [direct.left, direct.top],
+      opacity: 1,
+      scale: 1
+    };
+    var hideConf = {
+      xy: [direct.left, direct.top],
+      opacity: 0,
+      scale: 0,
+      immediate: self.allHide || !animation
+    };
 
     if (show) {
       if (self.lastShow) {
-        toggle();
+        set(_objectSpread(_objectSpread({}, showConf), {}, {
+          immediate: self.allHide || !animation
+        }));
       } else {
-        stop(); // rc版执行太紧凑会导致immediate失效？
-
-        setTimeout(function () {
-          set({
+        // stop();
+        // setTimeout(() => {
+        set({
+          immediate: self.allHide || !animation,
+          from: {
             xy: [direct.left, direct.top],
             opacity: 0,
-            scale: 0.7,
-            immediate: true,
-            onRest: function onRest() {
-              return toggle();
-            }
-          });
-        });
+            scale: 0.7
+          },
+          to: showConf
+        }); // });
       }
     } else {
-      toggle(false);
+      set(hideConf);
     }
 
+    self.allHide && (self.allHide = false);
     self.lastShow = show;
   });
   return {
@@ -728,7 +768,7 @@ var defaultProps = {
   type: 'tooltip',
   trigger: ['hover'],
   mountOnEnter: true,
-  unmountOnExit: false,
+  unmountOnExit: true,
   disabled: false
 };
 
@@ -775,7 +815,7 @@ var Popper$1 = function Popper(_props) {
       setState = _useSetState2[1];
 
   var self = useSelf({
-    lastShow: show,
+    lastShow: false,
     allHide: false
   });
   /** 唯一id */
@@ -812,9 +852,8 @@ var Popper$1 = function Popper(_props) {
       opacity: 0,
       scale: 0,
       config: {
-        mass: 1,
-        tension: 440,
-        friction: 22
+        tension: 280,
+        friction: 24
       }
     };
   }),
@@ -890,10 +929,8 @@ var Popper$1 = function Popper(_props) {
               x = _ref2[0],
               y = _ref2[1];
 
-          var scale = decimalPrecision(sc, 4);
           /* 使用toFixed防止chrome字体模糊 */
-
-          return "translate3d(".concat(decimalPrecision(x), "px, ").concat(decimalPrecision(y), "px, 0) scale3d(").concat(scale, ", ").concat(scale, ", ").concat(scale, ")");
+          return "translate3d(".concat(x, "px, ").concat(y, "px, 0) scale3d(").concat(sc, ", ").concat(sc, ", ").concat(sc, ")");
         }),
         opacity: spProps.opacity.to(function (o) {
           return o;
@@ -923,3 +960,4 @@ var Popper$1 = function Popper(_props) {
 Popper$1.defaultProps = defaultProps;
 
 export default Popper$1;
+export { PopperDirectionEnum, PopperTriggerEnum };

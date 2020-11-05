@@ -1,9 +1,9 @@
-import { BoundWithVisible, DirectionKeys, PopperDirectionInfoWidthVisible } from './types';
+import { BoundWithVisible, PopperDirectionKeys, PopperDirectionInfoWidthVisible } from './types';
 interface Options {
     /** 目标方向 */
-    direction: DirectionKeys;
+    direction: PopperDirectionKeys;
     /** 前一个方向 */
-    prevDirection: DirectionKeys;
+    prevDirection: PopperDirectionKeys;
     /** 包含可见信息的所有方向信息 */
     directionInfo: PopperDirectionInfoWidthVisible;
 }
@@ -18,5 +18,5 @@ interface Options {
  * 无任何visible方向时，获取第一个非hidden方向 ->
  * 使用指定方向
  * */
-export declare function selectDirection({ direction, prevDirection, directionInfo, }: Options): [BoundWithVisible, DirectionKeys] | null;
+export declare function selectDirection({ direction, prevDirection, directionInfo, }: Options): [BoundWithVisible, PopperDirectionKeys] | null;
 export {};

@@ -696,6 +696,7 @@ var Scroller = /*#__PURE__*/React.forwardRef(function (props, ref) {
     }, share.sHelper);
   });
   var hideOffset = hideScrollbar && state.scrollBarWidth && !state.hasTouch ? -state.scrollBarWidth : undefined;
+  var isVertical = direction === Direction.vertical;
   var isPullUpIng = methods.isPullUpIng();
 
   function renderPullUpRetryBtn() {
@@ -710,11 +711,7 @@ var Scroller = /*#__PURE__*/React.forwardRef(function (props, ref) {
   }
 
   return /*#__PURE__*/React.createElement("div", {
-    className: cls('m78-scroller', {
-      'm78-scrollbar': !state.hasTouch && webkitScrollBar,
-      // __hideScrollBar: hideScrollbar,
-      __hover: !state.hasTouch && hoverWebkitScrollBar
-    }, props.className),
+    className: cls('m78-scroller', props.className),
     style: _objectSpread({
       backgroundColor: props.bgColor
     }, props.style),
@@ -743,12 +740,15 @@ var Scroller = /*#__PURE__*/React.forwardRef(function (props, ref) {
   }, props.pullDownIndicator || /*#__PURE__*/React.createElement(WindmillIcon, null)), /*#__PURE__*/React.createElement("span", {
     className: "m78-scroller_pulldown-text"
   }, methods.getPullDownText())))), /*#__PURE__*/React.createElement("div", {
-    className: "m78-scroller_wrap",
+    className: cls('m78-scroller_wrap', {
+      'm78-scrollbar': !state.hasTouch && webkitScrollBar,
+      __hover: !state.hasTouch && hoverWebkitScrollBar
+    }),
     ref: scrollEl,
     style: _defineProperty({
-      right: hideOffset,
-      bottom: hideOffset
-    }, direction === Direction.vertical ? 'overflowY' : 'overflowX', props.disableScroll ? undefined : 'auto')
+      right: isVertical ? hideOffset : undefined,
+      bottom: !isVertical ? hideOffset : undefined
+    }, isVertical ? 'overflowY' : 'overflowX', props.disableScroll ? undefined : 'auto')
   }, props.children, props.onPullUp && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(If, {
     when: !state.hasData
   }, /*#__PURE__*/React.createElement(Spacer, {

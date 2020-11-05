@@ -13,11 +13,6 @@ export declare const Z_INDEX_MESSAGE = 2200;
 declare const stopPropagation: {
     onClick(e: React.SyntheticEvent): void;
 };
-/** 获取窗口的滚动位置 */
-export declare function getDocScrollOffset(): {
-    x: number;
-    y: number;
-};
 /** 指定错误消息和组件命名空间来抛出一个错误 */
 export declare function throwError(errorMsg: string, namespace?: string): never;
 export { stopPropagation };

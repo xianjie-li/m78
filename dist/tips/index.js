@@ -129,11 +129,11 @@ var useTipsController = function useTipsController(opt) {
 function GlobalTips(_ref5) {
   var item = _ref5.item;
   var queue = Tips.useTipsController({
-    defaultItemOption: {
+    defaultItemOption: _objectSpread(_objectSpread({}, defaultOpt), {}, {
       fitWidth: true,
       nextable: true,
       global: true
-    }
+    })
   });
   useEffect(function () {
     if (!item) return;
@@ -159,7 +159,8 @@ Tips.push = function (opt) {
  * */
 
 
-Tips.tip = function (message, duration) {
+Tips.tip = function (message) {
+  var duration = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultOpt.duration;
   Tips.push({
     message: message,
     duration: duration

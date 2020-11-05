@@ -1548,6 +1548,7 @@ function Dates(props) {
       show: state.show,
       type: "popper",
       disabled: disabled,
+      unmountOnExit: false,
       onChange: function onChange(_show) {
         setState({
           show: _show

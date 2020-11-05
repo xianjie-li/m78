@@ -1,9 +1,9 @@
 import 'm78/select/style';
 import _objectSpread from '@babel/runtime/helpers/objectSpread2';
 import _slicedToArray from '@babel/runtime/helpers/slicedToArray';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useMemo, useState, useEffect } from 'react';
 import Input from 'm78/input';
-import Popper from 'm78/popper';
+import Popper, { PopperDirectionEnum, PopperTriggerEnum } from 'm78/popper';
 import Spin from 'm78/spin';
 import Empty from 'm78/empty';
 import Button from 'm78/button';
@@ -19,7 +19,7 @@ import { useSelf, useSetState, useFormState, useCheck, useFn } from '@lxjx/hooks
 function CustomPopper(props) {
   var content = props.content;
   return /*#__PURE__*/React.createElement("div", {
-    className: "m78-popper_content m78-select_popper"
+    className: "m78-popper_content"
   }, content);
 }
 /** 根据SelectOptionItem取value */
@@ -69,7 +69,8 @@ function RenderItem(_ref) {
       data = _ref.data;
   var options = data.options,
       labelKey = data.labelKey,
-      valueKey = data.valueKey;
+      valueKey = data.valueKey,
+      checkIcon = data.checkIcon;
   var item = options[index];
   var label = getLabel(item, labelKey, valueKey);
   var value = getValue(item, valueKey);
@@ -98,7 +99,7 @@ function RenderItem(_ref) {
     className: "ellipsis"
   }, item.prefix && /*#__PURE__*/React.createElement("span", {
     className: "m78-select_prefix"
-  }, item.prefix), label), /*#__PURE__*/React.createElement("span", null, _isChecked && /*#__PURE__*/React.createElement(CheckOutlined, {
+  }, item.prefix), label), /*#__PURE__*/React.createElement("span", null, _isChecked && checkIcon && /*#__PURE__*/React.createElement(CheckOutlined, {
     className: "m78-select_check-icon"
   }), item.suffix && /*#__PURE__*/React.createElement("span", {
     className: "m78-select_suffix"
@@ -209,20 +210,30 @@ function Select(props) {
       _props$debounceTime = props.debounceTime,
       debounceTime = _props$debounceTime === void 0 ? 300 : _props$debounceTime,
       onSearch = props.onSearch,
-      onAddTag = props.onAddTag;
+      onAddTag = props.onAddTag,
+      _props$direction = props.direction,
+      direction = _props$direction === void 0 ? PopperDirectionEnum.bottomStart : _props$direction,
+      _props$trigger = props.trigger,
+      trigger = _props$trigger === void 0 ? PopperTriggerEnum.click : _props$trigger,
+      arrow = props.arrow,
+      _props$checkIcon = props.checkIcon,
+      checkIcon = _props$checkIcon === void 0 ? true : _props$checkIcon,
+      children = props.children;
   var self = useSelf({
     isFocus: false
   });
 
   var _useSetState = useSetState({
-    inputWidth: 280
+    inputWidth: 0
   }),
       _useSetState2 = _slicedToArray(_useSetState, 2),
       state = _useSetState2[0],
       setState = _useSetState2[1];
 
   var popperRef = useRef(null);
-  var conf = getUseCheckConf(props);
+  var conf = useMemo(function () {
+    return getUseCheckConf(props);
+  }, [props.value]);
 
   var _useFormState = useFormState(props, false, {
     triggerKey: 'onShowChange',
@@ -251,6 +262,7 @@ function Select(props) {
     notExistValueTrigger: notExistValueTrigger,
     disables: disabledOption
   }));
+  var isDropDown = !!children;
   var checked = checkHelper.checked,
       check = checkHelper.check,
       toggle = checkHelper.toggle,
@@ -290,7 +302,7 @@ function Select(props) {
 
 
   useEffect(function () {
-    if (!inpRef.current || listWidth) return;
+    if (!inpRef.current || listWidth || isDropDown) return;
     var pNode = inpRef.current.parentNode;
     if (!pNode) return;
     var w = pNode.offsetWidth;
@@ -342,7 +354,8 @@ function Select(props) {
     onCheckItem: onCheckItem,
     options: filterOptions,
     labelKey: labelKey,
-    valueKey: valueKey
+    valueKey: valueKey,
+    checkIcon: isDropDown ? false : checkIcon
   };
   var onFocus = useFn(function () {
     self.isFocus = true;
@@ -417,7 +430,8 @@ function Select(props) {
       },
       itemData: itemData,
       width: "100%",
-      key: "virtual"
+      key: "virtual",
+      className: "m78-scrollbar"
     }, RenderItem);
   }
 
@@ -454,11 +468,11 @@ function Select(props) {
     }
 
     return /*#__PURE__*/React.createElement("div", {
-      className: cls('m78-select_list m78-scroll-bar', {
+      className: cls('m78-select_list', {
         __disabled: disabled
       }),
       style: {
-        width: listWidth || state.inputWidth
+        width: listWidth || state.inputWidth || undefined
       }
     }, (listLoading || loading) && /*#__PURE__*/React.createElement(Spin, {
       full: true,
@@ -468,6 +482,7 @@ function Select(props) {
       size: "small",
       desc: "\u6682\u65E0\u76F8\u5173\u5185\u5BB9"
     }), /*#__PURE__*/React.createElement("div", {
+      className: "m78-scrollbar",
       style: {
         maxHeight: listMaxHeight,
         overflow: 'auto'
@@ -544,60 +559,78 @@ function Select(props) {
       return customTag ? customTag(meta, props) : buildInTagRender(meta);
     }), hasSlice && isMax && /*#__PURE__*/React.createElement("span", null, "...\u7B49".concat(originalChecked.length, "\u4E2A\u9009\u9879")));
   }
-  /** 多选 + 显示标签 */
+  /** input */
 
 
-  var showMultipleTag = multiple && showTag;
-  /** 用placeholder来显示已选值 */
+  function renderInput() {
+    /** 多选 + 显示标签 */
+    var showMultipleTag = multiple && showTag;
+    /** 用placeholder来显示已选值 */
 
-  var showSelectString = !showMultipleTag;
-  /** 根据showSelectString获取placeholder值 */
+    var showSelectString = !showMultipleTag;
+    /** 根据showSelectString获取placeholder值 */
 
-  var _placeholder = showSelectString ? showMultipleString(originalChecked, multipleMaxShowLength, labelKey, valueKey) : placeholder;
+    var _placeholder = showSelectString ? showMultipleString(originalChecked, multipleMaxShowLength, labelKey, valueKey) : placeholder;
+
+    return /*#__PURE__*/React.createElement(Input, {
+      innerRef: inpRef,
+      onClick: onShow,
+      className: cls('m78-select', className, {
+        __disabled: disabled,
+        // 要同时为list设置
+        __empty: checked.length === 0,
+        '__not-search': !search,
+        '__text-value': showSelectString,
+        '__has-multiple-tag': showMultipleTag && originalChecked.length
+      }),
+      status: status,
+      style: style,
+      onKeyDown: onKeyDown,
+      placeholder: _placeholder || placeholder,
+      prefix: showMultipleTag && originalChecked.length && renderPrefix(),
+      suffix: /*#__PURE__*/React.createElement(DownOutlined, {
+        className: cls('m78-select_down-icon', {
+          __reverse: show
+        })
+      }),
+      value: inpVal,
+      onChange: onKeyChange,
+      loading: inputLoading,
+      blockLoading: loading || blockLoading,
+      disabled: disabled,
+      size: size,
+      readOnly: !search,
+      onFocus: onFocus,
+      underline: underline,
+      notBorder: notBorder
+    });
+  }
+  /** 传入children时，作为dropdown使用，渲染children */
+
+
+  function renderChildren() {
+    return /*#__PURE__*/React.createElement("span", {
+      className: cls('m78-select', className),
+      style: style
+    }, children);
+  }
 
   return /*#__PURE__*/React.createElement(Popper, {
-    offset: 4,
+    offset: arrow ? 12 : 4,
     style: listStyle,
-    className: cls(listClassName),
+    className: cls('m78-select_popper', listClassName, {
+      __hasArrow: arrow,
+      __dropdown: isDropDown
+    }),
     content: renderList(),
-    direction: "bottomStart",
-    trigger: "click",
+    direction: direction,
+    trigger: trigger,
     customer: CustomPopper,
     instanceRef: popperRef,
     show: show,
-    onChange: onPopperClose
-  }, /*#__PURE__*/React.createElement(Input, {
-    innerRef: inpRef,
-    onClick: onShow,
-    className: cls('m78-select', className, {
-      __disabled: disabled,
-      // 要同时为list设置
-      __empty: checked.length === 0,
-      '__not-search': !search,
-      '__text-value': showSelectString,
-      '__has-multiple-tag': showMultipleTag && originalChecked.length
-    }),
-    status: status,
-    style: style,
-    onKeyDown: onKeyDown,
-    placeholder: _placeholder || placeholder,
-    prefix: showMultipleTag && originalChecked.length && renderPrefix(),
-    suffix: /*#__PURE__*/React.createElement(DownOutlined, {
-      className: cls('m78-select_down-icon', {
-        __reverse: show
-      })
-    }),
-    value: inpVal,
-    onChange: onKeyChange,
-    loading: inputLoading,
-    blockLoading: loading || blockLoading,
-    disabled: disabled,
-    size: size,
-    readOnly: !search,
-    onFocus: onFocus,
-    underline: underline,
-    notBorder: notBorder
-  }));
+    onChange: onPopperClose,
+    unmountOnExit: false
+  }, isDropDown ? renderChildren() : renderInput());
 }
 
 Select.displayName = 'FrSelect';

@@ -193,7 +193,7 @@ var Divider = function Divider(_ref) {
       width: width,
       height: height,
       backgroundColor: color,
-      margin: margin ? marginStr : undefined
+      margin: marginStr
     }
   });
 };
