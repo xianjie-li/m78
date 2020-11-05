@@ -24,17 +24,17 @@ export declare enum PullUpStatus {
 }
 /** 下拉刷新各阶段的提示文本 */
 export declare const pullDownText: {
-    0: string;
-    1: string;
-    2: string;
-    3: string;
-    4: string;
+    [PullDownStatus.TIP]: string;
+    [PullDownStatus.RELEASE_TIP]: string;
+    [PullDownStatus.LOADING]: string;
+    [PullDownStatus.ERROR]: string;
+    [PullDownStatus.SUCCESS]: string;
 };
 /** 上拉加载各阶段的提示文本 */
 export declare const pullUpText: {
-    0: string;
-    1: string;
-    2: string;
-    3: string;
-    4: string;
+    [PullUpStatus.TIP]: string;
+    [PullUpStatus.LOADING]: string;
+    [PullUpStatus.NOT_DATA]: string;
+    [PullUpStatus.ERROR]: string;
+    [PullUpStatus.SUCCESS]: string;
 };

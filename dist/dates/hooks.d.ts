@@ -3,7 +3,7 @@ import React from 'react';
 import { ShareMetas, TimeValue } from './type';
 /** 获取更新当前选择器数据和位置的一些操作函数 */
 export declare function useDateUIController({ state, setState }: ShareMetas): {
-    changeDate: (cType: 1 | 2, number?: number, dateType?: unitOfTime.Base) => void;
+    changeDate: (cType: 2 | 1, number?: number, dateType?: unitOfTime.Base) => void;
     prev: () => void;
     next: () => void;
     prevY: () => void;

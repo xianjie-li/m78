@@ -4,7 +4,7 @@ export declare function useMethods(share: Share): {
     setDragPos: ({ isVertical, dey, dex, touchTop, touchLeft, touchBottom, touchRight, }: SetDragPosArg) => void;
     scrollHandle: (meta: UseScrollMeta) => void;
     refreshScrollFlag: () => void;
-    hasScroll: (type: 'x' | 'y') => boolean;
+    hasScroll: (type: "x" | "y") => boolean;
     getScrollWidth: () => void;
     pullDownHandler: ({ down }: {
         down: boolean;

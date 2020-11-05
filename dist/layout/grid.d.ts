@@ -26,15 +26,14 @@ interface GridProps extends ComponentBaseProps {
     /** 表格项的样式 */
     contStyle?: React.CSSProperties;
 }
-declare const defaultProps: {
-    count: number;
-    children: React.ReactElement<any, string | ((props: any) => React.ReactElement<any, string | any | (new (props: any) => React.Component<any, any, any>)> | null) | (new (props: any) => React.Component<any, any, any>)>[];
-    aspectRatio: number;
-    border: boolean;
-    borderColor: string;
-};
 declare const Grid: {
-    (props: GridProps & typeof defaultProps): JSX.Element;
+    (props: GridProps & {
+        count: number;
+        children: React.ReactElement<any, string | ((props: any) => React.ReactElement<any, string | any | (new (props: any) => React.Component<any, any, any>)> | null) | (new (props: any) => React.Component<any, any, any>)>[];
+        aspectRatio: number;
+        border: boolean;
+        borderColor: string;
+    }): JSX.Element;
     defaultProps: {
         count: number;
         children: React.ReactElement<any, string | ((props: any) => React.ReactElement<any, string | any | (new (props: any) => React.Component<any, any, any>)> | null) | (new (props: any) => React.Component<any, any, any>)>[];

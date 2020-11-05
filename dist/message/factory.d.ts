@@ -5,7 +5,7 @@ export declare type MessageOption = Omit<MessageProps, keyof ReactRenderApiProps
 declare const messageApi: ({ singleton, ...props }: Pick<MessageProps, "loading" | "mask" | "content" | "type" | "loadingDelay" | "duration" | "hasCancel"> & import("@lxjx/react-render-api/dist").ReactRenderApiExtraProps) => [import("@lxjx/react-render-api/dist").ReactRenderApiInstance<Pick<MessageProps, "loading" | "mask" | "content" | "type" | "loadingDelay" | "duration" | "hasCancel">>, string];
 export declare type TipsOption = Omit<MessageOption, 'loading' | 'hasCancel' | 'loadingDelay'>;
 /** 文本提示 */
-declare const tips: ({ ...options }: TipsOption) => [import("@lxjx/react-render-api/dist").ReactRenderApiInstance<Pick<MessageProps, "loading" | "mask" | "content" | "type" | "loadingDelay" | "duration" | "hasCancel">>, string];
+declare const tips: ({ ...options }: Pick<Pick<MessageProps, "loading" | "mask" | "content" | "type" | "loadingDelay" | "duration" | "hasCancel">, "mask" | "content" | "type" | "duration">) => [import("@lxjx/react-render-api/dist").ReactRenderApiInstance<Pick<MessageProps, "loading" | "mask" | "content" | "type" | "loadingDelay" | "duration" | "hasCancel">>, string];
 export declare type LoadingOption = Omit<MessageOption, 'type' | 'loading' | 'hasCancel'>;
 /** 加载中提示 */
 declare const loading: ({ ...options }?: Pick<Pick<MessageProps, "loading" | "mask" | "content" | "type" | "loadingDelay" | "duration" | "hasCancel">, "mask" | "content" | "loadingDelay" | "duration">) => [import("@lxjx/react-render-api/dist").ReactRenderApiInstance<Pick<MessageProps, "loading" | "mask" | "content" | "type" | "loadingDelay" | "duration" | "hasCancel">>, string];

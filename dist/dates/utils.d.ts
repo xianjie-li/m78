@@ -7,16 +7,16 @@ export declare const DATE_FORMAT_TIME = "HH:mm:ss";
 export declare const DATE_FORMAT_DATE_TIME: string;
 export declare const DATE_DEFAULT_PARSE: string[];
 export declare const formatMap: {
-    date: string;
-    month: string;
-    year: string;
-    time: string;
+    [DateType.DATE]: string;
+    [DateType.MONTH]: string;
+    [DateType.YEAR]: string;
+    [DateType.TIME]: string;
 };
 export declare const placeholderMaps: {
-    year: string;
-    month: string;
-    date: string;
-    time: string;
+    [DateType.YEAR]: string;
+    [DateType.MONTH]: string;
+    [DateType.DATE]: string;
+    [DateType.TIME]: string;
 };
 /** 根据年、月获取用于显示的moment列表 */
 export declare function getDates(year: number, month: number): moment.Moment[];
