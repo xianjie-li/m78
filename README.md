@@ -55,7 +55,7 @@ function App() {
 
 💡 默认是没有主入口的，所有组件都在独立的模块中维护, 这样可以做到天然的按需加载，`tree shake` 也更友好。
 
-打包组件目录支持使用[babel-plugin-import](https://github.com/ant-design/babel-plugin-import), 不过不推荐, 一是对这样对 idea 和 ts 来说很怪异，支持不好；二是，组件通常会包含多个命名导出，如 `import Form, { Item, Title, Footer, FormProps } from 'M78/form'`， 直接导入会更复合直觉。
+打包组件目录支持使用[babel-plugin-import](https://github.com/ant-design/babel-plugin-import), 不过不推荐, 一是对这样对 idea 和 ts 来说很怪异，支持不好；二是，组件通常会包含多个命名导出，如 `import Form, { TreeItem, Title, Footer, FormProps } from 'M78/form'`， 直接导入会更复合直觉。
 
 <br>
 
