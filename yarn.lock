@@ -1559,6 +1559,24 @@
   dependencies:
     "@babel/runtime" "^7.5.5"
 
+"@lxjx/hooks@^1.10.2":
+  version "1.10.2"
+  resolved "https://registry.npmjs.org/@lxjx/hooks/-/hooks-1.10.2.tgz#82f96db186327ed7fd98593133bd298de789dceb"
+  integrity sha512-mK8yl6FIuLdlEAo5qCyv3sZjywfpSop0aYRZ9JaHInpKyIRKvFUqQVlxQ3T1UP0teggB5YA07OLnES0dfZfyoA==
+  dependencies:
+    "@lxjx/utils" "^1.7.1"
+    "@types/lodash" "^4.14.149"
+    "@types/react" "^16.9.23"
+    "@types/react-dom" "^16.9.5"
+    "@types/react-router-dom" "^5.1.3"
+    lodash "^4.17.15"
+    lodash-es "^4.17.15"
+    query-string "^6.12.0"
+    react-router-dom "^5.1.2"
+    react-spring "^9.0.0-rc.3"
+    react-use "^14.0.0"
+    resize-observer-polyfill "^1.5.1"
+
 "@lxjx/hooks@^1.4.0":
   version "1.4.0"
   resolved "https://registry.npm.taobao.org/@lxjx/hooks/download/@lxjx/hooks-1.4.0.tgz#2cbb99a61e7aa44610a64b06b458a6413d8bc75d"
@@ -1576,25 +1594,6 @@
     react-router-dom "^5.1.2"
     react-spring "^8.0.27"
     react-use "^14.0.0"
-
-"@lxjx/hooks@^1.9.0":
-  version "1.9.0"
-  resolved "https://registry.npm.taobao.org/@lxjx/hooks/download/@lxjx/hooks-1.9.0.tgz#92aee8f364efca78bb811158abd2b1e328186f6c"
-  integrity sha1-kq7o82Tvyni7gRFYq9Kx4ygYb2w=
-  dependencies:
-    "@lxjx/utils" "^1.7.1"
-    "@types/lodash" "^4.14.149"
-    "@types/react" "^16.9.23"
-    "@types/react-dom" "^16.9.5"
-    "@types/react-router-dom" "^5.1.3"
-    "@umijs/hooks" "^1.9.0"
-    lodash "^4.17.15"
-    lodash-es "^4.17.15"
-    query-string "^6.12.0"
-    react-router-dom "^5.1.2"
-    react-spring "^9.0.0-rc.3"
-    react-use "^14.0.0"
-    resize-observer-polyfill "^1.5.1"
 
 "@lxjx/preset-config@^0.1.0":
   version "0.1.0"

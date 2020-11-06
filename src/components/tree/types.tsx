@@ -1,6 +1,7 @@
 import { FormLikeWithExtra, UseCheckReturns } from '@lxjx/hooks';
-import { DataSourceItem, Size } from 'm78/types';
+import { ComponentBaseProps, DataSourceItem, Size } from 'm78/types';
 import React from 'react';
+import { flatTreeData } from 'm78/tree/common';
 import { defaultProps } from './tree';
 
 /**
@@ -10,20 +11,20 @@ import { defaultProps } from './tree';
 /** value允许类型 */
 export type TreeValueType = string | number;
 
-export interface TreeProps {
+export interface TreeProps extends ComponentBaseProps {
   /** 指定打开节点 (受控) */
   opens?: TreeValueType[];
   /** 指定默认打开节点 (非受控) */
   defaultOpens?: TreeValueType[];
   /** 打开节点变更时触发 */
-  onOpensChange?: (nextOpens?: TreeValueType[]) => void;
+  onOpensChange?: (nextOpens: TreeValueType[], metas: FlatMetas[]) => void;
   /** 默认展开所有节点, (通过api调用?)  */
-  defaultOpenAll?: () => void;
+  defaultOpenAll?: boolean;
   /** 默认展开到第几级, (通过api调用?) */
   defaultOpenZIndex?: number;
-  /** 决定如何从选项中拿到value，默认是 item => item.value */
+  /** 如何从选项中拿到value，默认是 item => item.value */
   valueGetter?: (optItem: OptionsItem) => TreeValueType;
-  /** 决定如何从选项中拿到label，默认是 item => item.label */
+  /** 如何从选项中拿到label，默认是 item => item.label */
   labelGetter?: (optItem: OptionsItem) => React.ReactNode;
   /** 尺寸 */
   size?: Size;
@@ -45,6 +46,8 @@ export interface TreeProps {
   expansionIcon?: React.ReactNode | ((open?: boolean) => React.ReactNode);
   /** 开启异步加载数据，搭配OptionsItem.isLeaf使用 */
   onLazyLoad?: (opt: FlatMetas) => Promise<OptionsItem>;
+  /** [all, reverse, 'unCheckAll'...] | boolean */
+  toolbar?: boolean;
 }
 
 export interface TreePropsSingleChoice
@@ -104,4 +107,5 @@ export interface FlatMetas extends OptionsItem {
 export interface Share {
   openCheck: UseCheckReturns<string | number, FlatMetas>;
   props: TreeProps & typeof defaultProps;
+  flatMetas: ReturnType<typeof flatTreeData>;
 }

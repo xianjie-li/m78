@@ -3,11 +3,48 @@
 $base-h: 26px;
 $ident-w: 20px;
 
+$base-h-s: 20px;
+$ident-w-s: 16px;
+
+$base-h-l: 34px;
+$ident-w-l: 24px;
+
 .m78-tree {
   width: 500px;
   line-height: $line-height-base;
   font-size: $fs-14;
   text-align: left;
+
+  &.__small {
+    .m78-tree_item {
+      min-height: $base-h-s;
+    }
+
+    .m78-tree_icon {
+      width: $ident-w-s;
+      height: $base-h-s;
+    }
+
+    .m78-tree_ident-unit {
+      width: $ident-w-s;
+    }
+  }
+
+  &.__large {
+    .m78-tree_item {
+      min-height: $base-h-l;
+      padding: 0 12px 0 4px;
+    }
+
+    .m78-tree_icon {
+      width: $ident-w-l;
+      height: $base-h-l;
+    }
+
+    .m78-tree_ident-unit {
+      width: $ident-w-l;
+    }
+  }
 
   &.__hoverEffect {
     .m78-tree_item {

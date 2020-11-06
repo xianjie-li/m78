@@ -3,10 +3,10 @@ import cls from 'classnames';
 import { If } from 'm78/fork';
 import { CaretRightOutlined } from 'm78/icon';
 import { useFn } from '@lxjx/hooks';
-import { isNonEmptyArray } from 'm78/tree/common';
+import { isTruthyArray } from 'm78/tree/common';
 import { isArray } from '@lxjx/utils';
 import { FlatMetas, Share } from './types';
-import { useMethods } from './useMethods';
+import { useMethods } from './methods';
 
 interface ItemProps {
   open: boolean;
@@ -31,7 +31,7 @@ const TreeItem = ({ open, data, share }: ItemProps) => {
   /** 开启或关闭该节点，关闭时，会将该节点下所有展开节点一并关闭 */
   const toggleHandler = useFn(() => {
     const child = data.children;
-    if (!isNonEmptyArray(child)) return;
+    if (!isTruthyArray(child)) return;
 
     if (openCheck.isChecked(value)) {
       const all = [data.value];
