@@ -1,14 +1,40 @@
-import { isArray, isTruthyOrZero } from '@lxjx/utils';
-import { FlatMetas, OptionsItem, TreeProps, TreeValueType } from './types';
+import {
+  heightLightMatchString,
+  isArray,
+  isBoolean,
+  isTruthyOrZero,
+  isTruthyArray,
+} from '@lxjx/utils';
+import { useMemo } from 'react';
+import {
+  FlatMetas,
+  OptionsItem,
+  ToolbarConf,
+  TreeProps,
+  TreePropsMultipleChoice,
+  TreePropsSingleChoice,
+  TreeValueType,
+} from './types';
 
 export const defaultValueGetter = (item: OptionsItem) => item.value!;
 
 export const defaultLabelGetter = (item: OptionsItem) => item.label!;
 
-export function isTruthyArray(arg: any): boolean {
-  if (!isArray(arg)) return false;
-  return arg.length !== 0;
-}
+/** 预设尺寸 */
+export const sizeMap = {
+  default: {
+    h: 26,
+    identW: 20,
+  },
+  small: {
+    h: 20,
+    identW: 16,
+  },
+  large: {
+    h: 36,
+    identW: 24,
+  },
+};
 
 /* 将一个值合并到一个可能存在的数组中，并返回一个新数组，如果两个参数为falsy，返回undefined */
 const connectVal2Array = (val: any, array?: any[]) => {
@@ -17,10 +43,12 @@ const connectVal2Array = (val: any, array?: any[]) => {
 };
 
 /**
- * 将OptionsItem[]的每一项转换为FlatMetas并平铺到数组返回, 同时返回一些实用信息 返回禁用项关键词
+ * 将OptionsItem[]的每一项转换为FlatMetas并平铺到数组返回, 同时返回一些实用信息
  * @param optionList - OptionsItem选项组，为空或不存在时返回空数组
  * @param conf
  * @param conf.valueGetter - 获取value的方法
+ * @param conf.labelGetter - 获取label的方法
+ * @param conf.skipSearchKeySplicing - 关闭关键词拼接，不需要时关闭以提升性能
  * @returns returns
  * @returns returns.list - 平铺的列表
  * @returns returns.expandableList - 所有可展开节点(不包括isLeaf)
@@ -28,21 +56,24 @@ const connectVal2Array = (val: any, array?: any[]) => {
  * @returns returns.zList - 一个二维数组，第一级中的每一项都是对应索引层级的所有数据
  * @returns returns.zListValues - 一个二维数组，第一级中的每一项都是对应索引层级的所有数据的value
  * @returns returns.disabledValues - 所有禁用项的value
+ * @returns returns.disables - 所有禁用项
  * */
 export function flatTreeData(
   optionList: OptionsItem[],
   conf: {
     valueGetter: NonNullable<TreeProps['valueGetter']>;
     labelGetter: NonNullable<TreeProps['labelGetter']>;
+    skipSearchKeySplicing?: boolean;
   },
 ) {
   const list: FlatMetas[] = [];
   const expandableList: FlatMetas[] = [];
   const expandableValues: TreeValueType[] = [];
+  const disables: FlatMetas[] = [];
   const disabledValues: TreeValueType[] = [];
   const zList: FlatMetas[][] = [];
   const zListValues: TreeValueType[][] = [];
-  const { valueGetter, labelGetter } = conf;
+  const { valueGetter, labelGetter, skipSearchKeySplicing } = conf;
 
   // 将指定的FlatMetas添加到它所有父级的descendants列表中
   function fillParentsDescendants(item: FlatMetas) {
@@ -50,6 +81,10 @@ export function flatTreeData(
     item.parents!.forEach(p => {
       p.descendants && p.descendants.push(item);
       p.descendantsValues && p.descendantsValues.push(item.value);
+      if (!isTruthyArray(item.children)) {
+        p.descendantsWithoutTwigValues && p.descendantsWithoutTwigValues.push(item.value);
+        p.descendantsWithoutTwig && p.descendantsWithoutTwig.push(item);
+      }
     });
   }
 
@@ -80,6 +115,11 @@ export function flatTreeData(
           label,
           descendants: item.children ? [] : undefined,
           descendantsValues: item.children ? [] : undefined,
+          descendantsWithoutTwig: item.children ? [] : undefined,
+          descendantsWithoutTwigValues: item.children ? [] : undefined,
+          fullSearchKey: typeof label === 'string' ? label : '',
+          disabledChildren: [],
+          disabledChildrenValues: [],
         };
 
         // 添加兄弟节点
@@ -107,6 +147,14 @@ export function flatTreeData(
         // 禁用列表
         if (current.disabled) {
           disabledValues.push(current.value);
+          disables.push(current);
+
+          if (isTruthyArray(current.parents)) {
+            current.parents.forEach(p => {
+              p.disabledChildren.push(current);
+              p.disabledChildrenValues.push(current.value);
+            });
+          }
         }
 
         // 层级列表
@@ -117,6 +165,11 @@ export function flatTreeData(
 
         zList[zIndex].push(current);
         zListValues[zIndex].push(current.value);
+
+        // 拼接关键词
+        if (!skipSearchKeySplicing && current.fullSearchKey && isTruthyArray(current.parents)) {
+          current.parents!.forEach(p => (p.fullSearchKey += current.fullSearchKey));
+        }
 
         if (isArray(item.children)) {
           flat(target, item.children, zIndex + 1, current);
@@ -134,5 +187,90 @@ export function flatTreeData(
     zList,
     zListValues,
     disabledValues,
+    disables,
   };
 }
+
+export function isMultipleCheck(
+  props: TreePropsSingleChoice | TreePropsMultipleChoice,
+): props is TreePropsMultipleChoice {
+  if ('multipleCheckable' in props) {
+    return !!props.multipleCheckable;
+  }
+  return false;
+}
+
+export function isCheck(
+  props: TreePropsSingleChoice | TreePropsMultipleChoice,
+): props is TreePropsSingleChoice {
+  if ('checkable' in props) {
+    return !!props.checkable;
+  }
+  return false;
+}
+
+/** 单选时包装props以匹配useCheck */
+export function useValCheckArgDispose(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
+  return useMemo(() => {
+    const _p = { ...props };
+
+    if (isCheck(props)) {
+      if ('value' in props && props.value !== undefined) {
+        _p.value = [props.value];
+      }
+
+      if ('defaultValue' in props && props.defaultValue !== undefined) {
+        _p.defaultValue = [props.defaultValue];
+      }
+
+      _p.onChange = (value: any, extra: any) => {
+        props.onChange?.(value[0], extra[0]);
+      };
+
+      return _p as TreePropsMultipleChoice;
+    }
+
+    return props;
+  }, [props]);
+}
+
+/** 如果传入值为字符，根据关键词裁剪并高亮字符中的所有字符 */
+export function highlightKeyword(label: any, keyword?: string) {
+  if (typeof label !== 'string' || !keyword) return '';
+
+  return heightLightMatchString(label, keyword);
+}
+
+/** 帮助函数，过滤节点列表中所有包含禁用子项的节点并返回所有可用节点的value数组 */
+export function filterIncludeDisableChildNode(ls: FlatMetas[]) {
+  const next: TreeValueType[] = [];
+
+  ls.forEach(item => {
+    if (!item.disabledChildrenValues.length) {
+      next.push(item.value);
+    }
+  });
+
+  return next;
+}
+
+/** 根据传入配置获取toolbar实际配置，如果启用会返回各项的启用配置对象 */
+export function getToolbarConf(toolbar?: TreeProps['toolbar']) {
+  if (!toolbar) return;
+
+  const def: ToolbarConf = {
+    check: true,
+    fold: true,
+    search: true,
+    checkCount: true,
+  };
+
+  if (isBoolean(toolbar)) return def;
+
+  return {
+    ...def,
+    ...toolbar,
+  };
+}
+
+export { isTruthyArray };

@@ -17,6 +17,7 @@
     ::-webkit-scrollbar-thumb {
       border-radius: 6px;
       background: $b-second;
+      min-height: 70px;
     }
 
     ::-webkit-scrollbar-thumb:hover {
@@ -39,6 +40,7 @@
   &::-webkit-scrollbar-thumb {
     border-radius: 6px;
     background: $b-second;
+    min-height: 70px;
   }
 
   &::-webkit-scrollbar-thumb:hover {

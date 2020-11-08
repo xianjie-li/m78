@@ -3,46 +3,48 @@
 $base-h: 26px;
 $ident-w: 20px;
 
-$base-h-s: 20px;
-$ident-w-s: 16px;
-
-$base-h-l: 34px;
-$ident-w-l: 24px;
-
 .m78-tree {
-  width: 500px;
+  position: relative;
   line-height: $line-height-base;
   font-size: $fs-14;
   text-align: left;
 
-  &.__small {
-    .m78-tree_item {
-      min-height: $base-h-s;
+  &.__style {
+    border: 1px solid $b-border;
+    border-radius: $border-radius;
+    padding: 12px;
+
+    .m78-tree_toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px dashed $b-divider;
+      padding-bottom: 12px;
+      margin-bottom: 12px;
+
+      .m78-btn {
+        margin-left: 0;
+      }
     }
 
-    .m78-tree_icon {
-      width: $ident-w-s;
-      height: $base-h-s;
+    .m78-tree_toolbar-left {
+      flex: 1;
     }
 
-    .m78-tree_ident-unit {
-      width: $ident-w-s;
+    .m78-tree_toolbar-right {
+      flex: 0.6;
+      margin-left: 12px;
     }
+  }
+
+  &_nodes {
+
   }
 
   &.__large {
     .m78-tree_item {
-      min-height: $base-h-l;
+      font-size: $fs-16;
       padding: 0 12px 0 4px;
-    }
-
-    .m78-tree_icon {
-      width: $ident-w-l;
-      height: $base-h-l;
-    }
-
-    .m78-tree_ident-unit {
-      width: $ident-w-l;
     }
   }
 
@@ -54,15 +56,15 @@ $ident-w-l: 24px;
 
   &_item {
     display: flex;
-    align-items: center;
     justify-content: space-between;
     padding: 0 4px 0 0;
     border-radius: $border-radius;
-    min-height: $base-h;
+    user-select: none;
 
-    &.__active {
-      background-color: rgba($color, 0.1);
-      box-shadow: 0 0 0 2px $color;
+    &.__disabled {
+      color: $b-disable;
+      background-color: transparent !important;
+      cursor: not-allowed !important;
     }
   }
 
@@ -73,53 +75,119 @@ $ident-w-l: 24px;
   }
 
   &_cont {
+    //flex: 1;
     display: flex;
     align-items: center;
+    overflow: hidden;
   }
 
   &_ident {
     display: flex;
     flex: 0 0 auto;
+    align-items: center;
   }
 
   &_icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: $ident-w;
-    height: $base-h;
     cursor: pointer;
+
+    &.__open {
+      .m78-tree_open-icon {
+        transform: rotate(90deg);
+      }
+    }
+  }
+
+  &_open-icon {
+    transition: $animation-duration-base;
+  }
+
+  // 直接渲染节点会比伪类空白时间更短?
+  &_turn-line {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    top: 0;
+    left: 50%;
+    border-left: 1px solid $b-border;
+    border-bottom: 1px solid $b-border;
+    background-color: transparent !important;
+  }
+
+  &_line {
+    content: '';
+    position: absolute;
+    width: 1px;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    background-color: $b-border;
+    border-color: transparent !important;
   }
 
   &_ident-unit {
     position: relative;
     display: inline-block;
     height: 100%;
-    width: $ident-w;
+    //width: $ident-w;
 
-    &.__turnLine::after {
-      content: '';
-      position: absolute;
-      width: 50%;
-      height: 50%;
-      top: 0;
-      left: 50%;
-      border-left: 1px solid $b-border;
-      border-bottom: 1px solid $b-border;
+    &.__c0 .m78-tree_line-node {
+      border-color: rgba($red-6, 0.25);
+      background-color: rgba($red-6, 0.25);
     }
 
-    &.__line::after {
-      content: '';
-      position: absolute;
-      width: 1px;
-      top: 0;
-      bottom: 0;
-      left: 50%;
-      background-color: $b-border;
+    &.__c1 .m78-tree_line-node{
+      border-color: rgba($orange-6, 0.25);
+      background-color: rgba($orange-6, 0.25);
+    }
+
+    &.__c2 .m78-tree_line-node {
+      border-color: rgba($green-6, 0.25);
+      background-color: rgba($green-6, 0.25);
+    }
+
+    &.__c3 .m78-tree_line-node {
+      border-color: rgba($cyan-6, 0.25);
+      background-color: rgba($cyan-6, 0.25);
+    }
+
+    &.__c4 .m78-tree_line-node {
+      border-color: rgba($purple-6, 0.25);
+      background-color: rgba($purple-6, 0.25);
     }
   }
 
   &_action {
     margin-left: 12px;
+  }
+
+  &_skeleton {
+    display: flex;
+  }
+
+  &_skeleton-bar {
+    background-color: #f3f3f3;
+    height: 68%;
+    margin-right: 10px;
+    color: transparent;
+    border-radius: $border-radius;
+  }
+
+  &_checked {
+    position: absolute;
+    border: 2px solid $color;
+    background-color: rgba($color, 0.1);
+    border-radius: $border-radius;
+    z-index: -1;
+    pointer-events: none;
+
+    @include full;
+  }
+
+  &_empty {
+    margin: 32px auto;
+    text-align: center;
   }
 }

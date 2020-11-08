@@ -18,6 +18,8 @@ const matchIcon = /.?(Outlined|Filled|TwoTone|Icon)$/;
 
 /* 该函数用于遍历Button的children，当存在Icon和SvgIcon时(非函数匹配, 函数组件name能就会添加)，为其添加适当边距并返回 */
 function formatChildren(children: React.ReactNode) {
+  const offset = 4;
+
   if (isArray(children)) {
     return children.map((child, index) => {
       const type = (child as any)?.type;
@@ -29,13 +31,13 @@ function formatChildren(children: React.ReactNode) {
 
       /* 为满足matchIcon规则的子元素添加边距 */
       if (name && React.isValidElement(child) && matchIcon.test(name)) {
-        let injectStyle: React.CSSProperties = { marginLeft: 8, marginRight: 8 };
+        let injectStyle: React.CSSProperties = { marginLeft: offset, marginRight: offset };
         if (index === 0) {
-          injectStyle = { marginRight: 8 };
+          injectStyle = { marginRight: offset };
         }
 
         if (index === children.length - 1) {
-          injectStyle = { marginLeft: 8 };
+          injectStyle = { marginLeft: offset };
         }
 
         const newStyle = { ...child.props.style, ...injectStyle };

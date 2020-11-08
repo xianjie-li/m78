@@ -1559,10 +1559,10 @@
   dependencies:
     "@babel/runtime" "^7.5.5"
 
-"@lxjx/hooks@^1.10.2":
-  version "1.10.2"
-  resolved "https://registry.npmjs.org/@lxjx/hooks/-/hooks-1.10.2.tgz#82f96db186327ed7fd98593133bd298de789dceb"
-  integrity sha512-mK8yl6FIuLdlEAo5qCyv3sZjywfpSop0aYRZ9JaHInpKyIRKvFUqQVlxQ3T1UP0teggB5YA07OLnES0dfZfyoA==
+"@lxjx/hooks@^1.10.3":
+  version "1.10.3"
+  resolved "https://registry.npm.taobao.org/@lxjx/hooks/download/@lxjx/hooks-1.10.3.tgz#43c1d826f42f949d71f072eec5d45c333986976b"
+  integrity sha1-Q8HYJvQvlJ1x8HLuxdRcMzmGl2s=
   dependencies:
     "@lxjx/utils" "^1.7.1"
     "@types/lodash" "^4.14.149"
@@ -1639,19 +1639,19 @@
     "@types/node" "^13.11.0"
     uuid "^7.0.2"
 
-"@lxjx/utils@^1.7.1":
-  version "1.7.1"
-  resolved "https://registry.npm.taobao.org/@lxjx/utils/download/@lxjx/utils-1.7.1.tgz#44b721ff540e3c813f3c527b7e33940eaa66eba1"
-  integrity sha1-RLch/1QOPIE/PFJ7fjOUDqpm66E=
+"@lxjx/utils@^1.10.1":
+  version "1.10.1"
+  resolved "https://registry.npm.taobao.org/@lxjx/utils/download/@lxjx/utils-1.10.1.tgz#9f6a629f6fe3e9217aef51425a79547f17cdeda6"
+  integrity sha1-n2pin2/j6SF671FCWnlUfxfN7aY=
   dependencies:
     "@babel/runtime" "^7.7.6"
     "@types/node" "^13.11.0"
     uuid "^7.0.2"
 
-"@lxjx/utils@^1.9.0":
-  version "1.9.0"
-  resolved "https://registry.npmjs.org/@lxjx/utils/-/utils-1.9.0.tgz#3627fe5145fab805831f5adc7a004d6c481684ba"
-  integrity sha512-j1NbJKmVfnkXLahYY3I0/oKiutUhQ9rSNJVAX1HtPpnBieaImxSazs90U0LVCQt64lBbdPSSs7fjiMr8TF6TVg==
+"@lxjx/utils@^1.7.1":
+  version "1.7.1"
+  resolved "https://registry.npm.taobao.org/@lxjx/utils/download/@lxjx/utils-1.7.1.tgz#44b721ff540e3c813f3c527b7e33940eaa66eba1"
+  integrity sha1-RLch/1QOPIE/PFJ7fjOUDqpm66E=
   dependencies:
     "@babel/runtime" "^7.7.6"
     "@types/node" "^13.11.0"

@@ -143,6 +143,7 @@ $unitSpace: 8px;
     &.__small {
       height: $size-small;
       font-size: 14px;
+      padding: 0 6px;
       .m78-input_suffix,
       .m78-input_prefix {
         font-size: 12px;
@@ -275,6 +276,7 @@ $unitSpace: 8px;
     //height: calc(100% - 6px);
     right: -10px;
     padding: 0 12px;
+    border-radius: 0;
   }
 
   &_prefix-btn {
