@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
-import { useQueue, UseQueueConfig, UseQueueItem, UseQueueItemWithId } from '@lxjx/hooks';
+import { useQueue, UseQueueConfig, UseQueueItem } from '@lxjx/hooks';
 import { animated, useTransition } from 'react-spring';
 import Button from 'm78/button';
 import { getPortalsNode } from '@lxjx/utils';
@@ -15,7 +15,7 @@ const defaultOpt = {
 };
 
 function Tips({ controller: queue }: TipsProps) {
-  const transition = useTransition<TipsItem & UseQueueItemWithId, any>(queue.current!, {
+  const transition = useTransition<TipsItem & UseQueueItem, any>(queue.current!, {
     key: queue.current?.id,
     from: { y: '-100%', x: '-50%', opacity: 0 },
     enter: { y: '0%', opacity: 1 },
@@ -30,15 +30,15 @@ function Tips({ controller: queue }: TipsProps) {
   const bind = useGesture(
     {
       onHover({ hovering }) {
-        hovering ? queue.pause() : queue.start();
+        hovering ? queue.manual() : queue.auto();
       },
       onDrag({ down, first, last }) {
-        if (first && down && !queue.isPause) {
-          queue.pause();
+        if (first && down && !queue.isManual) {
+          queue.manual();
         }
 
-        if (last && queue.isPause) {
-          queue.start();
+        if (last && queue.isManual) {
+          queue.auto();
         }
       },
     },

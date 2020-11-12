@@ -47,7 +47,7 @@
     "@lxjx/async-filed-cn-template": "^1.0.1",
     "@lxjx/auth": "^1.0.0",
     "@lxjx/click-effect": "^1.0.0",
-    "@lxjx/hooks": "^1.10.3",
+    "@lxjx/hooks": "^1.11.0",
     "@lxjx/react-render-api": "^0.5.0",
     "@lxjx/react-transition-spring": "^1.2.1",
     "@lxjx/sass-base": "^1.4.0",

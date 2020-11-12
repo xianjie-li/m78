@@ -41,7 +41,6 @@ const Play = () => {
       <Tree
         size={SizeEnum.large}
         checkable
-        checkTwig
         defaultValue="1-1-1-1-1-1"
         rainbowIndicatorLine
         onChange={(a, b) => {

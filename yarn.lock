@@ -1559,10 +1559,10 @@
   dependencies:
     "@babel/runtime" "^7.5.5"
 
-"@lxjx/hooks@^1.10.3":
-  version "1.10.3"
-  resolved "https://registry.npm.taobao.org/@lxjx/hooks/download/@lxjx/hooks-1.10.3.tgz#43c1d826f42f949d71f072eec5d45c333986976b"
-  integrity sha1-Q8HYJvQvlJ1x8HLuxdRcMzmGl2s=
+"@lxjx/hooks@^1.11.0":
+  version "1.11.0"
+  resolved "https://registry.npm.taobao.org/@lxjx/hooks/download/@lxjx/hooks-1.11.0.tgz#2951bb3ab84632a6c38c43103e874a5aa4f7b4c6"
+  integrity sha1-KVG7OrhGMqbDjEMQPodKWqT3tMY=
   dependencies:
     "@lxjx/utils" "^1.7.1"
     "@types/lodash" "^4.14.149"
