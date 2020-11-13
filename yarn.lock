@@ -1639,10 +1639,10 @@
     "@types/node" "^13.11.0"
     uuid "^7.0.2"
 
-"@lxjx/utils@^1.10.1":
-  version "1.10.1"
-  resolved "https://registry.npm.taobao.org/@lxjx/utils/download/@lxjx/utils-1.10.1.tgz#9f6a629f6fe3e9217aef51425a79547f17cdeda6"
-  integrity sha1-n2pin2/j6SF671FCWnlUfxfN7aY=
+"@lxjx/utils@^1.10.2":
+  version "1.10.2"
+  resolved "https://registry.npmjs.org/@lxjx/utils/-/utils-1.10.2.tgz#8db8ba33c9a2a3debe8a89e23aa15d07ace7fdb6"
+  integrity sha512-EWWc1S/f+RiUmkNM/aq/eaOtEFNcygHgJn+aTv//riXEA5EjNXiK142y//bTIGAuRdontt53ID0U6CaXo8UoQQ==
   dependencies:
     "@babel/runtime" "^7.7.6"
     "@types/node" "^13.11.0"

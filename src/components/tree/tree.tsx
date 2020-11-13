@@ -3,7 +3,7 @@ import { useCheck, useSelf, useSetState } from '@lxjx/hooks';
 import cls from 'classnames';
 import { VariableSizeList as List } from 'react-window';
 import Spin from 'm78/spin';
-import { VirtualItem } from 'm78/tree/virtual-item';
+import { VirtualItem } from './virtual-item';
 import Empty from 'm78/empty';
 import {
   FlatMetas,

@@ -6,7 +6,7 @@ const path = require('path');
  * */
 module.exports = function generateEntry() {
   // 忽略的目录
-  const ignoreDir = ['style', 'assets', 'types'];
+  const ignoreDir = ['style', 'assets'];
 
   // 基础目录
   const baseEntry = {
