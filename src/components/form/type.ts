@@ -15,24 +15,36 @@ export interface FormItemCustomMeta extends Meta {
   errorString?: string;
 }
 
-export interface FormProps extends ComponentBaseProps, RFormProps, ListFormType {
+export interface FormRenderChild {
+  (control: AnyObject, meta: FormItemCustomMeta, form: FormInstance): React.ReactNode;
+}
+
+export interface FormProps<Values = any> extends ComponentBaseProps, RFormProps, ListFormType {
   /** false | 隐藏所有必选标记 */
   hideRequiredMark?: boolean;
   /** 直接传入rules配置来进行表单验证 */
   rules?: {
     [key: string]: Rule | Rule[];
   };
+  /** 关闭默认的样式，开启后只会保护一个无样式的包裹容器，并且column、layout等布局配置失效，不会影响FormItem的样式 */
+  notStyle?: boolean;
+  /** 获取表单控制实例 */
+  instanceRef?: React.Ref<FormInstance<Values>>;
 }
 
+/* 不带name的Item会作为布局组件使用 */
 export interface FormItemProps
   extends ComponentBaseProps,
+    /* 支持rc-form-field所有参数 */
     Omit<FieldProps, 'children'>,
+    /* 支持平铺式的传入验证项 */
     Omit<RuleObject, 'validateTrigger'> {
-  /** 一个作为表单控件的直接子元素, 需要支持value/onChange接口或通过其他配置指定 */
-  children:
-    | React.ReactElement
-    | ((control: AnyObject, meta: FormItemCustomMeta, form: FormInstance) => React.ReactNode)
-    | React.ReactNode;
+  /**
+   * 一个作为表单控件的直接子元素, 需要支持value/onChange接口或通过自己配置相关key
+   * - 可以通过FormRenderChild和可选的noStyle手动实现更精细的状态和样式控制
+   * - 如果传入的不是合法的ReactElement或FormRenderChild, 会不做任何处理直接渲染
+   * */
+  children: React.ReactElement | FormRenderChild | React.ReactNode;
   /** 表单项标题 */
   label?: string;
   /** 位于输入控件下方的描述文本 */
@@ -41,9 +53,12 @@ export interface FormItemProps
   desc?: React.ReactNode;
   /** 禁用表单，如果表单控件不识别disabled属性，此项仅在样式上表现为"禁用" */
   disabled?: boolean;
-  /** 禁用样式，直接渲染表单控件 */
+  /**
+   * 禁用样式/默认的验证样式，直接渲染表单控件, 只包含一个无样式的包装容器，可通过className和style控制容器样式
+   * - 一般启用此项后都会通过children: FormRenderChild 自定义布局、验证样式
+   * */
   noStyle?: boolean;
-  /** true | 为false时将组件以及组件状态都会被移除, 使用List的嵌套表单状态不会移除，请直接使用List相关API操作 */
+  /** true | 为false时组件以及组件状态都会被移除, 如果通过Form.List渲染表单，请使用其对于的字段控制api */
   valid?: boolean | ((namePath: NamePath, form: FormInstance) => boolean);
   /** true | 是否可见，不影响组件状态 */
   visible?: boolean | ((namePath: NamePath, form: FormInstance) => boolean);

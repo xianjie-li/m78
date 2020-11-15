@@ -81,7 +81,7 @@ export function getFlatRules(props: FormItemProps, fullRules?: FormProps['rules'
   }
 
   // validator需要放到单独的rule中
-  // 验证器永远在最后验证，因为可能会是异步验证器
+  // 永远在最后验证，因为可能会是异步验证器
   if (validator !== undefined) {
     nextRule.push({
       validator,

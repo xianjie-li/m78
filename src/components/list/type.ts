@@ -2,7 +2,7 @@ import React from 'react';
 import { ComponentBasePropsWithAny } from 'm78/types';
 
 export interface ListFormType extends ComponentBasePropsWithAny {
-  /** false | 是否去掉列表项边框 */
+  /** false | 是否去掉容器边框和列表项边框 */
   notBorder?: boolean;
   /** 'vertical' | 横向表单/纵向表单 */
   layout?: 'horizontal' | 'vertical';

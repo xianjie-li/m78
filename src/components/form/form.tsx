@@ -19,6 +19,19 @@ import { getNameString } from './utils';
 import FormContext from './context';
 import Item from './item';
 
+/*
+ * 增加样式定制文档
+ * 异步验证剥离到单独示例
+ *
+ *
+ *文档整体优化
+ * api部分抽取部分常用的字段加以说明
+ * 调整示例顺序
+ * 获取表单实例
+ * 嵌套结构、复杂动态结构
+ *
+ * */
+
 const msgTpl = createMessagesTemplate({ hasName: false /* nameKey: 'label' */ });
 
 // @ts-ignore
@@ -38,6 +51,8 @@ const BaseForm: React.FC<FormProps> = props => {
     onValuesChange,
     hideRequiredMark = false,
     rules,
+    notStyle,
+    instanceRef,
     ...otherProps
   } = props;
   /** 该表单的唯一id */
@@ -94,6 +109,8 @@ const BaseForm: React.FC<FormProps> = props => {
 
     if (!el) return;
 
+    triggerHighlight(el);
+
     const { visible } = checkElementVisible(el, {
       wrapEl: scrollParent,
       fullVisible: true,
@@ -101,13 +118,27 @@ const BaseForm: React.FC<FormProps> = props => {
     });
 
     if (!visible) {
-      triggerHighlight(el);
       scrollToElement(el);
     }
   });
 
-  return (
-    <FormContext.Provider value={{ ...contextValue, rules, disabled, hideRequiredMark }}>
+  function renderWrap(node: React.ReactNode) {
+    if (notStyle) {
+      return (
+        <div
+          style={style}
+          className={cls(
+            className,
+            'm78-form',
+            contextValue.hideRequiredMark && '__hide-required-mark',
+          )}
+        >
+          {node}
+        </div>
+      );
+    }
+
+    return (
       <List
         form
         style={style}
@@ -122,20 +153,31 @@ const BaseForm: React.FC<FormProps> = props => {
         fullWidth={fullWidth}
         disabled={disabled}
       >
-        {/* <Button icon className="m78-form_setting" title="表单设置"> */}
-        {/*  <SettingOutlined /> */}
-        {/* </Button> */}
-        <RForm
-          validateMessages={msgTpl}
-          {...otherProps}
-          onValuesChange={changeHandle}
-          form={form}
-          onFinishFailed={finishFailedHandle}
-        >
-          {children}
-        </RForm>
-        <span ref={flagEl} />
+        {node}
       </List>
+    );
+  }
+
+  return (
+    <FormContext.Provider value={{ ...contextValue, rules, disabled, hideRequiredMark }}>
+      {renderWrap(
+        <>
+          {/* <Button icon className="m78-form_setting" title="表单设置"> */}
+          {/* <SettingOutlined /> */}
+          {/* </Button> */}
+          <RForm<{ name: string }>
+            ref={instanceRef}
+            validateMessages={msgTpl}
+            {...otherProps}
+            onValuesChange={changeHandle}
+            form={form}
+            onFinishFailed={finishFailedHandle}
+          >
+            {children}
+          </RForm>
+          <span ref={flagEl} />
+        </>,
+      )}
     </FormContext.Provider>
   );
 };

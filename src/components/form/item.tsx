@@ -112,6 +112,7 @@ const Item: React.FC<FormItemProps> = props => {
       name: nameString,
       disabled: meta.disabled,
       status: meta.status,
+      // loading会有很多组件支持
       loading: children.type === 'input' ? undefined : meta.validating,
       ...control,
     });
@@ -145,13 +146,15 @@ const Item: React.FC<FormItemProps> = props => {
         if (noStyle) {
           return (
             <div id={selector} className={cls('m78-form_item', className)} style={_style}>
-              <div>{child}</div>
-              {isRequired && (
-                <span className="m78-list_require m78-form_item-mark" title="必填项">
-                  *
-                </span>
-              )}
-              {errorString && <div className="m78-form_item-extra">{errorString}</div>}
+              {child}
+              {/* 综合考虑，noStyle模式下还是不要包含太多的样式，因为传入此配置说明用户可能想要充分定制 */}
+              {/* <div>{child}</div> */}
+              {/* {isRequired && ( */}
+              {/*  <span className="m78-list_require m78-form_item-mark" title="必填项"> */}
+              {/*    * */}
+              {/*  </span> */}
+              {/* )} */}
+              {/* {errorString && <div className="m78-form_item-extra">{errorString}</div>} */}
             </div>
           );
         }

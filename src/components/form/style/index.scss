@@ -9,25 +9,25 @@
 
   // 为noStyle定制简单样式
   &_item {
-    position: relative;
-    display: inline-block;
-    vertical-align: top;
-
-    & + & {
-      margin-left: 12px;
-    }
-
-    &-extra {
-      font-size: $fs-14;
-      color: $color-error;
-    }
-
-    &-mark {
-      line-height: 1;
-      position: absolute !important;
-      right: -4px;
-      top: -12px !important;
-    }
+    //position: relative;
+    //display: inline-block;
+    //vertical-align: top;
+    //
+    //& + & {
+    //  margin-left: 12px;
+    //}
+    //
+    //&-extra {
+    //  font-size: $fs-14;
+    //  color: $color-error;
+    //}
+    //
+    //&-mark {
+    //  line-height: 1;
+    //  position: absolute !important;
+    //  right: -4px;
+    //  top: -12px !important;
+    //}
   }
 
   //&:hover {

@@ -118,11 +118,11 @@ const Item: React.FC<ListItemProps> = ({
           </If>
         </Switch>
       </div>
-      <If when={extra && isForm}>
+      <If when={isForm && extra}>
         <div className="m78-list_extra __gray">{extra}</div>
       </If>
-      <If when={!!footLeft || !!footRight}>
-        <div className="m78-list_extra">
+      <If when={isForm || !!footLeft || !!footRight}>
+        <div className="m78-list_extra m78-list_foot">
           <div>{footLeft}</div>
           <div className="m78-list_extra-second">{footRight}</div>
         </div>
