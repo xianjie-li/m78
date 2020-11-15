@@ -3,8 +3,8 @@ import { useCheck, useSelf, useSetState } from '@lxjx/hooks';
 import cls from 'classnames';
 import { VariableSizeList as List } from 'react-window';
 import Spin from 'm78/spin';
-import { VirtualItem } from './virtual-item';
 import Empty from 'm78/empty';
+import { VirtualItem } from './virtual-item';
 import {
   FlatMetas,
   Share,
@@ -142,7 +142,13 @@ function Tree(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
     );
   }
 
+  function renderList() {
+    return isVirtual ? renderVirtualList() : renderNormalList();
+  }
+
   const isSearchAndNoList = state.keyword && !isTruthyArray(showList);
+
+  const isEmpty = isSearchAndNoList || !isTruthyArray(props.dataSource);
 
   return (
     <div className={cls('m78-tree m78-scroll-bar __hoverEffect __style', size && `__${size}`)}>
@@ -150,11 +156,9 @@ function Tree(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
 
       {share.toolbar && <Toolbar {...share} methods={methods} />}
 
-      {(isSearchAndNoList || !isTruthyArray(props.dataSource)) && (
-        <Empty desc="暂无数据" className="m78-tree_empty" />
-      )}
+      {isEmpty && <Empty desc="暂无数据" className="m78-tree_empty" />}
 
-      {isVirtual ? renderVirtualList() : renderNormalList()}
+      {!isEmpty && renderList()}
     </div>
   );
 }

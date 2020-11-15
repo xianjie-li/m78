@@ -11,8 +11,6 @@ declare namespace NodeJS {
 
 declare module 'vfile-message';
 
-declare module '@lxjx/click-effect';
-
 declare module '*.bmp' {
   const src: string;
   export default src;

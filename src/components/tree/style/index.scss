@@ -55,6 +55,7 @@ $ident-w: 20px;
   }
 
   &_item {
+    position: relative;
     display: flex;
     justify-content: space-between;
     padding: 0 4px 0 0;
@@ -97,6 +98,10 @@ $ident-w: 20px;
       .m78-tree_open-icon {
         transform: rotate(90deg);
       }
+    }
+
+    &.__empty {
+      color: $b-disable;
     }
   }
 

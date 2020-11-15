@@ -32,7 +32,7 @@
     pointer-events: all;
     position: relative;
     background: #fff;
-    padding: 10px 24px;
+    padding: 10px 26px;
     display: inline-block;
     border-radius: $border-radius;
     box-shadow: $shadow-2;
@@ -63,8 +63,8 @@
     left: 0;
     bottom: 0;
     width: 0;
-    height: 1px;
-    background-color: $b-second;
+    height: 2px;
+    background-color: $b-disable;
     //transform: scaleY(0.8);
     //border-bottom: 1px $b-second solid;
   }

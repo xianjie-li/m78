@@ -1,9 +1,10 @@
 import { FormLike } from '@lxjx/hooks';
 import { CheckCustom } from 'm78/check';
+import React from 'react';
 
-interface Item<Val> {
-  label?: string;
-  beforeLabel?: string;
+export interface CheckOptionItem<Val> {
+  label?: React.ReactNode;
+  beforeLabel?: React.ReactNode;
   value: Val;
   disabled?: boolean;
 }
@@ -18,5 +19,5 @@ export interface CheckBoxProps<Val> extends FormLike<Val[]> {
   /** 用于定制选框样式 */
   customer?: CheckCustom;
   /** 透传至Check组件的选项 */
-  options: Array<Item<Val>>;
+  options: Array<CheckOptionItem<Val>>;
 }

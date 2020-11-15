@@ -7,9 +7,9 @@ import { lineStatusIcons, CloseOutlined } from 'm78/icon';
 import { If } from 'm78/fork';
 import Button from 'm78/button';
 import cls from 'classnames';
-import { Status } from 'm78/types';
+import { ComponentBaseProps, Status } from 'm78/types';
 
-export interface NoticeBarProps {
+export interface NoticeBarProps extends ComponentBaseProps {
   /** 关闭回调 */
   onClose?(): void;
   /** true | 是否显示关闭按钮 */
@@ -35,6 +35,8 @@ const NoticeBar: React.FC<NoticeBarProps> = ({
   status,
   fixedTop,
   right,
+  className,
+  style,
   ...props
 }) => {
   const [ref, { height }] = useMeasure();
@@ -57,8 +59,8 @@ const NoticeBar: React.FC<NoticeBarProps> = ({
 
   return (
     <animated.div
-      style={spStyle}
-      className={cls('m78-notice-bar', status && `__${status}`, { __fixed: fixedTop })}
+      style={{ ...spStyle, ...style }}
+      className={cls('m78-notice-bar', status && `__${status}`, { __fixed: fixedTop }, className)}
     >
       <div ref={ref} className="m78-notice-bar_wrap">
         <If when={status}>

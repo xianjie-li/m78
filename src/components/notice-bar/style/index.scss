@@ -19,22 +19,34 @@
   }
 
   &.__info &_wrap {
-    border: 2px solid currentColor;
+    border: 2px solid $color-info;
+  }
+
+  &.__info &_left {
     color: $color-info;
   }
 
   &.__error &_wrap {
-    border: 2px solid currentColor;
+    border: 2px solid $color-error;
+  }
+
+  &.__error &_left {
     color: $color-error;
   }
 
   &.__success &_wrap {
-    border: 2px solid currentColor;
+    border: 2px solid $color-success;
+  }
+
+  &.__success &_left {
     color: $color-success;
   }
 
   &.__warning &_wrap {
-    border: 2px solid currentColor;
+    border: 2px solid $color-warn;
+  }
+
+  &.__warning &_left {
     color: $color-warn;
   }
 

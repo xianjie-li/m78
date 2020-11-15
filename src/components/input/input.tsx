@@ -65,6 +65,7 @@ const Input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
     autoSize = true,
     charCount = false,
     innerRef,
+    onClear,
     ...props
   } = _props;
 
@@ -230,6 +231,7 @@ const Input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
   /* 清空输入框 */
   function clearHandle() {
     setInputVal('');
+    onClear?.();
     setTimeout(() => {
       // 清空后、触发搜索，并且在autoSize启用时时更新高度
       searchHandle();

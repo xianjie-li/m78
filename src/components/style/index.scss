@@ -12,6 +12,8 @@ $size-small: 24px !default;
 
 $size-big: 70px !default;
 
+$border-radius-large: 12px;
+
 @mixin effect-font {
   cursor: pointer;
   font-weight: 400;

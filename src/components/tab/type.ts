@@ -2,9 +2,8 @@ import React from 'react';
 import { PositionEnum, SizeEnum, ComponentBaseProps } from 'm78/types';
 import { TabItem } from 'm78/tab';
 import { SpringStartFn } from 'react-spring';
-import { useScroll } from '@lxjx/hooks';
+import { useScroll, SetState } from '@lxjx/hooks';
 import { CarouselRef } from 'm78/carousel';
-import { SetState } from '@lxjx/hooks/dist/type';
 
 export type TabItemElement = React.ReactElement<TabItemProps, typeof TabItem>;
 

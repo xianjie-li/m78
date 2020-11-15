@@ -1,4 +1,5 @@
 import { ComponentBaseProps } from 'm78/types';
+import React from 'react';
 import { CheckCustom } from './check';
 
 export interface CheckProps<Val> extends ComponentBaseProps {
@@ -13,9 +14,9 @@ export interface CheckProps<Val> extends ComponentBaseProps {
   /** 表单值，在onChange时以第二个参数传入 */
   value?: Val;
   /** 后置label文本 */
-  label?: string;
+  label?: React.ReactNode;
   /** 前置label文本 */
-  beforeLabel?: string;
+  beforeLabel?: React.ReactNode;
   /** type=switch时生效，设置开启状态的handle文本, 一个汉字或4个字母以内 */
   switchOn?: string;
   /** type=switch时生效，设置关闭状态的handle文本, 一个汉字或4个字母以内 */

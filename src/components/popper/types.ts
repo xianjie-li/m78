@@ -1,5 +1,5 @@
 import React, { Ref } from 'react';
-import { SetState } from '@lxjx/hooks/dist/type';
+import { SetState } from '@lxjx/hooks';
 import { SpringStartFn, SpringValue } from 'react-spring';
 import { ComponentBaseProps } from 'm78/types';
 import { defaultProps } from './popper';

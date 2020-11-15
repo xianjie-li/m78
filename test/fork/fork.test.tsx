@@ -49,7 +49,7 @@ test('Fork .loading', () => {
 
 test('Fork .forceRenderChild', () => {
   const loading = render(
-    <Fork hasData loading forceRenderChild>
+    <Fork hasData loading forceRender>
       <span>Fork child</span>
     </Fork>,
   );

@@ -2,9 +2,10 @@ import React from 'react';
 import Fork from 'm78/fork';
 import { useFetch } from '@lxjx/hooks';
 
+import Button from 'm78/button';
 import { mockData, listItemStyle } from './utils';
 
-const ForkDemo = () => {
+const ForkCustomDemo = () => {
   const meta = useFetch<number[]>(mockData, {
     timeout: Math.random() > 0.7 ? 500 : 8000, // 模拟超时状态
   });
@@ -16,7 +17,23 @@ const ForkDemo = () => {
           {meta.loading ? '加载中' : '发起请求'}
         </button>
       </div>
-      <Fork hasData={meta.data && meta.data.length} {...meta}>
+      <Fork
+        hasData={meta.data?.length}
+        {...meta}
+        customLoading={<span>⏳ 加载中...</span>}
+        customNotice={(title, message) => (
+          <div>
+            <h3 className="color-error">
+              {title}
+              <span className="mlr-12 color-second fs-14">{message}</span>
+              <Button className="fs-14" onClick={meta.send} size="small" color="primary" link>
+                重试
+              </Button>
+            </h3>
+          </div>
+        )}
+        customEmpty={<span>😐 没有数据喔~</span>}
+      >
         {() => (
           <ul>
             {meta.data!.map(item => (
@@ -31,4 +48,4 @@ const ForkDemo = () => {
   );
 };
 
-export default ForkDemo;
+export default ForkCustomDemo;

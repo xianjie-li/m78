@@ -5,49 +5,58 @@ import Button from 'm78/button';
 
 import NoticeBar from 'm78/notice-bar';
 import Empty from 'm78/empty';
+import classNames from 'classnames';
 import { IfProps, ToggleProps, SwitchProps, ForkProps } from './type';
 
-const Fork: React.FC<ForkProps> = ({
+const ForkImpl: React.FC<ForkProps> = ({
   children,
   send,
-  loadingFull,
   loading,
   error,
   timeout,
   hasData,
-  forceRenderChild,
-  loadingStyle,
-
+  forceRender,
+  loadingFull,
+  className,
+  style,
+  loadingText,
   emptyText = '暂无数据',
   errorText = '请求异常',
   timeoutText = '请求超时',
+  customLoading,
+  customNotice,
+  customEmpty,
 }) => {
-  const renderChild = () => (isFunction(children) ? (children() as any) : children);
+  const renderChild = () => (isFunction(children) ? children() : children);
 
+  // 重试按钮
   const reloadBtn = send ? (
     <Button onClick={send} color="primary" link size="small" style={{ top: -1 /* 视觉居中 */ }}>
       重新加载
     </Button>
   ) : null;
 
+  const feedbackNode = renderForks();
+
   function renderForks() {
     if (loading) {
-      return (
-        <>
-          <Spin className="ptb-12" style={{ width: '100%', ...loadingStyle }} full={loadingFull} />
-          {(forceRenderChild || loadingFull) && renderChild()}
-        </>
-      );
+      return customLoading || <Spin text={loadingText} className="ptb-12" full={loadingFull} />;
     }
 
     if (error || timeout) {
-      return (
+      const title = timeout ? timeoutText : errorText;
+      const msg = error?.message || (typeof error === 'string' ? error : '');
+
+      return customNotice ? (
+        customNotice(title, msg)
+      ) : (
         <NoticeBar
+          className="m78-fork_notice"
           status="error"
-          message={timeout ? timeoutText : errorText}
+          message={title}
           desc={
             <div>
-              {error?.message && <div className="color-error mb-8">{error.message}</div>}
+              {msg && <div className="color-error mb-8">{msg}</div>}
               <span>请稍后重试{send ? '或' : null} </span>
               {reloadBtn}
             </div>
@@ -57,11 +66,30 @@ const Fork: React.FC<ForkProps> = ({
     }
 
     if (!hasData && !loading) {
-      return <Empty desc={emptyText}>{reloadBtn}</Empty>;
+      return (
+        customEmpty || (
+          <Empty desc={emptyText} style={{ padding: 0 }}>
+            {reloadBtn}
+          </Empty>
+        )
+      );
     }
   }
 
-  return renderForks() || renderChild();
+  function renderFeedback() {
+    return (
+      <div className={classNames('m78-fork', className)} style={style}>
+        {feedbackNode}
+      </div>
+    );
+  }
+
+  return (
+    <>
+      {(!feedbackNode || forceRender) && renderChild()}
+      {feedbackNode && renderFeedback()}
+    </>
+  );
 };
 
 /* 根据条件渲染或卸载内部的组件 */
@@ -117,4 +145,4 @@ const Switch: React.FC<SwitchProps> = ({ children }) => {
 };
 
 export { If, Switch, Toggle };
-export default Fork;
+export default ForkImpl;

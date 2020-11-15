@@ -140,7 +140,7 @@ const Message: React.FC<MessageProps> = ({
         </Toggle>
         <If when={loading}>
           <div className="m78-message_loading">
-            <Spin show loadingDelay={0} text={content} />
+            <Spin show text={content} />
           </div>
         </If>
         <If when={!loading}>

@@ -12,6 +12,7 @@ const TipsDemo = () => {
         style={{
           position: 'relative',
           width: 300,
+          height: 400,
           border: '1px solid #ccc',
           overflow: 'hidden',
           padding: 12,

@@ -17,7 +17,7 @@ group:
 ## API
 
 ```tsx | pure
-interface NoticeBarProps {
+interface NoticeBarProps extends ComponentBaseProps {
   /** 关闭回调 */
   onClose?(): void;
   /** true | 是否显示关闭按钮 */
@@ -29,7 +29,7 @@ interface NoticeBarProps {
   /** 详细说明文本 */
   desc?: React.ReactNode;
   /** 状态 */
-  status?: 'success' | 'info' | 'warn' | 'error';
+  status?: Status;
   /** 定位到元素最顶部 */
   fixedTop?: boolean;
   /** 替换右侧关闭图标的内容 */

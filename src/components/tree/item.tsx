@@ -1,9 +1,9 @@
 import React from 'react';
 import cls from 'classnames';
-import { If } from 'm78/fork';
+import { If, Switch } from 'm78/fork';
 import { CaretRightOutlined } from 'm78/icon';
 import { useFn } from '@lxjx/hooks';
-import { isFunction } from '@lxjx/utils';
+import { isArray, isFunction } from '@lxjx/utils';
 import { stopPropagation } from 'm78/util';
 import Check from 'm78/check';
 import {
@@ -40,6 +40,11 @@ const TreeItem = ({ data, share, methods, className, style, size }: ItemProps) =
   /** 是否包含children */
   const hasChildren = !!data.children?.length;
 
+  /** 是否为树枝节点 */
+  const isTwig = isArray(data.children);
+
+  const isEmptyTwig = isTwig && !hasChildren;
+
   /** 是否是同级中最后一项 */
   const isLast =
     indicatorLine /* 不显示时跳过检测 */ && data.siblings[data.siblings.length - 1] === data;
@@ -53,7 +58,7 @@ const TreeItem = ({ data, share, methods, className, style, size }: ItemProps) =
     if (isDisabled) return;
 
     if (isSCheck) {
-      if (!hasChildren || props.checkTwig) {
+      if (!isTwig || props.checkTwig) {
         valCheck.setChecked([value]);
       }
     }
@@ -95,7 +100,8 @@ const TreeItem = ({ data, share, methods, className, style, size }: ItemProps) =
     // 单选时共享此事件
     isSCheck && valueCheckHandle();
 
-    if (!isTruthyArray(child)) return;
+    // if (!isTruthyArray(child)) return;
+    if (!isTwig) return;
 
     if (isOpen) {
       // 已选中，移除当前级和所有子级
@@ -186,25 +192,33 @@ const TreeItem = ({ data, share, methods, className, style, size }: ItemProps) =
       })}
       style={{ [isVirtual ? 'height' : 'minHeight']: itemHeight, ...style }}
       onClick={toggleHandle}
+      title={isEmptyTwig ? '空节点' : ''}
     >
       {isSCheck && isChecked && <div className="m78-tree_checked" />}
       <div className="m78-tree_main">
         <div className="m78-tree_ident">
           {data.parents && data.parents.map(renderIdent)}
 
-          <If when={!hasChildren}>
-            <span className="m78-tree_icon" style={iconStyle}>
-              {data.icon || props.icon || (
-                <span className="m78-dot" style={{ width: 3, height: 3 }} />
-              )}
-            </span>
-          </If>
-
-          <If when={hasChildren}>
-            <span className={cls('m78-tree_icon', isOpen && '__open')} style={iconStyle}>
-              {renderExpansionIcon()}
-            </span>
-          </If>
+          <Switch>
+            <If when={isTwig}>
+              <span
+                className={cls('m78-tree_icon', {
+                  __open: isOpen,
+                  __empty: isEmptyTwig,
+                })}
+                style={iconStyle}
+              >
+                {renderExpansionIcon()}
+              </span>
+            </If>
+            <If when={!hasChildren}>
+              <span className="m78-tree_icon" style={iconStyle}>
+                {data.icon || props.icon || (
+                  <span className="m78-dot" style={{ width: 3, height: 3 }} />
+                )}
+              </span>
+            </If>
+          </Switch>
         </div>
         <span className={cls('m78-tree_cont', isVirtual && 'ellipsis')}>
           <span {...stopPropagation}>

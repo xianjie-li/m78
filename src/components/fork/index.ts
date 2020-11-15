@@ -1,5 +1,5 @@
 import 'm78/fork/style';
-import InternalFork, { If, Toggle, Switch } from './fork';
+import InternalFork, { If, Toggle, Switch } from './fork-impl';
 
 type ForkType = typeof InternalFork;
 
@@ -16,5 +16,5 @@ Fork.Toggle = Toggle;
 Fork.Switch = Switch;
 
 export * from './type';
-export * from './fork';
+export * from './fork-impl';
 export default Fork;
