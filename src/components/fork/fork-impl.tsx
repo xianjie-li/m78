@@ -17,51 +17,51 @@ const Fork: React.FC<ForkProps> = ({
   hasData,
   forceRenderChild,
   loadingStyle,
+
   emptyText = '暂无数据',
+  errorText = '请求异常',
+  timeoutText = '请求超时',
 }) => {
   const renderChild = () => (isFunction(children) ? (children() as any) : children);
 
-  if (loading) {
-    return (
-      <>
-        <Spin
-          className="ptb-12"
-          style={{ width: '100%', ...loadingStyle }}
-          full={loadingFull}
-          loadingDelay={300}
-        />
-        {(forceRenderChild || loadingFull) && renderChild()}
-      </>
-    );
-  }
-
   const reloadBtn = send ? (
     <Button onClick={send} color="primary" link size="small" style={{ top: -1 /* 视觉居中 */ }}>
-      点击重新加载
+      重新加载
     </Button>
   ) : null;
 
-  if (error || timeout) {
-    return (
-      <NoticeBar
-        status="error"
-        message={timeout ? '请求超时' : '数据加载失败'}
-        desc={
-          <div>
-            {error?.message && <div className="color-error mb-8">{error.message}</div>}
-            <span>请稍后重试{send ? '或' : null} </span>
-            {reloadBtn}
-          </div>
-        }
-      />
-    );
+  function renderForks() {
+    if (loading) {
+      return (
+        <>
+          <Spin className="ptb-12" style={{ width: '100%', ...loadingStyle }} full={loadingFull} />
+          {(forceRenderChild || loadingFull) && renderChild()}
+        </>
+      );
+    }
+
+    if (error || timeout) {
+      return (
+        <NoticeBar
+          status="error"
+          message={timeout ? timeoutText : errorText}
+          desc={
+            <div>
+              {error?.message && <div className="color-error mb-8">{error.message}</div>}
+              <span>请稍后重试{send ? '或' : null} </span>
+              {reloadBtn}
+            </div>
+          }
+        />
+      );
+    }
+
+    if (!hasData && !loading) {
+      return <Empty desc={emptyText}>{reloadBtn}</Empty>;
+    }
   }
 
-  if (!hasData && !loading) {
-    return <Empty desc={emptyText}>{reloadBtn}</Empty>;
-  }
-
-  return renderChild();
+  return renderForks() || renderChild();
 };
 
 /* 根据条件渲染或卸载内部的组件 */
