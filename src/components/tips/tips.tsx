@@ -136,7 +136,7 @@ function GlobalTips({ item }: any) {
   return <Tips controller={queue} />;
 }
 
-Tips.useTipsController = useTipsController;
+Tips.useTipsController = useTipsController as any;
 
 type MixItem = UseQueueItem & TipsItem;
 

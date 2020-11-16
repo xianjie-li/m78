@@ -12,14 +12,15 @@ const Linkage = () => (
     }}
   >
     <Form.Item label="登录凭证" name="code" required>
-      <Input placeholder="输入`1111`" />
+      <Input placeholder="输入`111`" />
     </Form.Item>
+
     <Form.Item
       label="输入密码"
       name="psw"
       required
       dependencies={['code']}
-      valid={(name, form) => form.getFieldValue('code') === '1111'}
+      valid={(name, form) => form.getFieldValue('code') === '111'}
     >
       <Input placeholder="输入密码" type="password" />
     </Form.Item>
@@ -27,10 +28,10 @@ const Linkage = () => (
     <Form.Item noStyle name="other" valuePropName="checked">
       <Check className="ml-8" label="填点其他的" />
     </Form.Item>
+
     <Form.Item
       label="你是?"
       name="whoAreYou"
-      required
       dependencies={['other']}
       visible={(name, form) => !!form.getFieldValue('other')}
     >

@@ -33,7 +33,7 @@ const TreeItem = ({ data, share, methods, className, style, size }: ItemProps) =
 
   /** 单选多选类型检测 */
   const isSCheck = isCheck(props);
-  const isMCheck = isMultipleCheck(props) && !isSCheck /* 权重低于单选 */;
+  const isMCheck = isMultipleCheck(props) && !isSCheck; /* 权重低于单选 */
 
   const isDisabled = props.disabled || valCheck.isDisabled(value);
 
@@ -95,7 +95,7 @@ const TreeItem = ({ data, share, methods, className, style, size }: ItemProps) =
   const toggleHandle = useFn(() => {
     if (isDisabled) return;
 
-    const child = data.children;
+    // const child = data.children;
 
     // 单选时共享此事件
     isSCheck && valueCheckHandle();

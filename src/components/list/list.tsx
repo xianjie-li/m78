@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 
 import 'm78/base';
 import { Switch, If } from 'm78/fork';
-import { statusIcons, RightOutlined, LoadingOutlined } from 'm78/icon';
+import { /* statusIcons, */ RightOutlined /* LoadingOutlined */ } from 'm78/icon';
 
 import Ellipsis from 'm78/ellipsis';
 
@@ -33,6 +33,7 @@ const _List: React.FC<ListType> = ({
       __form: form,
       '__not-border': notBorder,
       __vertical: layout === 'vertical',
+      __horizontal: layout === 'horizontal',
       __inline: column > 1,
       '__full-width': fullWidth,
       __disabled: disabled,
@@ -69,7 +70,7 @@ const Item: React.FC<ListItemProps> = ({
   const hasEffect = !isForm && !disabled && (arrow || props.onClick || effect);
   const itemStyle = column > 1 ? { width: `${100 / column}%` } : {};
 
-  const StatusIcon = (statusIcons as any)[status!];
+  // const StatusIcon = (statusIcons as any)[status!];
 
   return (
     <div
@@ -82,36 +83,39 @@ const Item: React.FC<ListItemProps> = ({
     >
       <div className={cls('m78-list_left', leftAlign && `__${leftAlign}`)}>{left}</div>
       <div className="m78-list_cont">
-        <div className="m78-list_cont-left">
-          <Ellipsis line={titleEllipsis} className={cls('m78-list_title')}>
-            {title}
-            {required && (
-              <i className="m78-list_require" title="必填项">
-                *
-              </i>
-            )}
-          </Ellipsis>
-          {desc && (
-            <Ellipsis className={cls('m78-list_desc')} line={descEllipsis}>
-              {desc}
+        {/* 表单布局时，title不存在直接不渲染 */}
+        {(!isForm || (isForm && title)) && (
+          <div className="m78-list_cont-left">
+            <Ellipsis line={titleEllipsis} className={cls('m78-list_title')}>
+              {title}
+              {required && (
+                <i className="m78-list_require" title="必填项">
+                  *
+                </i>
+              )}
             </Ellipsis>
-          )}
-        </div>
+            {desc && (
+              <Ellipsis className={cls('m78-list_desc')} line={descEllipsis}>
+                {desc}
+              </Ellipsis>
+            )}
+          </div>
+        )}
         {isForm && <div className="m78-list_cont-right">{children}</div>}
       </div>
       <div className="m78-list_right">{extra}</div>
       <div className="m78-list_icon">
         {/* icon显示优先级: 状态 > icon > arrow */}
         <Switch>
-          <If when={status}>
-            {() =>
-              status === 'loading' ? (
-                <LoadingOutlined spin />
-              ) : (
-                <StatusIcon className="m78-list_extra-icon m78-svg-icon" />
-              )
-            }
-          </If>
+          {/* <If when={status}> */}
+          {/*  {() => */}
+          {/*    status === 'loading' ? ( */}
+          {/*      <LoadingOutlined spin /> */}
+          {/*    ) : ( */}
+          {/*      <StatusIcon className="m78-list_extra-icon m78-svg-icon" /> */}
+          {/*    ) */}
+          {/*  } */}
+          {/* </If> */}
           <If when={icon}>{icon}</If>
           <If when={arrow && !icon}>
             <RightOutlined />

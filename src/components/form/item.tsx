@@ -55,7 +55,7 @@ const Item: React.FC<FormItemProps> = props => {
       if (dependencies && dependencies.length && changeValue) {
         const isDepsChange = dependencies.some(item => {
           if (isArray(item)) {
-            return _has(changeValue, item);
+            return _has(changeValue, item); // 路径检查
           }
           return item in changeValue;
         });
@@ -79,19 +79,17 @@ const Item: React.FC<FormItemProps> = props => {
 
   const isDisabled = disabled || contextDisabled;
 
-  const title = label || nameString;
-
   // 无name时仅作为布局组件使用
   if (!name) {
     return (
       <List.Item
         desc={desc}
         extra={extra}
-        title={title}
+        title={label}
         disabled={isDisabled}
         required={isRequired}
         style={_style}
-        className={className}
+        className={cls(className, '__layout')}
       >
         {children}
       </List.Item>
@@ -139,6 +137,7 @@ const Item: React.FC<FormItemProps> = props => {
           required: isRequired,
           status,
           errorString,
+          label,
         };
 
         const child = renderChildren(control, customMeta, _form);
@@ -147,14 +146,6 @@ const Item: React.FC<FormItemProps> = props => {
           return (
             <div id={selector} className={cls('m78-form_item', className)} style={_style}>
               {child}
-              {/* 综合考虑，noStyle模式下还是不要包含太多的样式，因为传入此配置说明用户可能想要充分定制 */}
-              {/* <div>{child}</div> */}
-              {/* {isRequired && ( */}
-              {/*  <span className="m78-list_require m78-form_item-mark" title="必填项"> */}
-              {/*    * */}
-              {/*  </span> */}
-              {/* )} */}
-              {/* {errorString && <div className="m78-form_item-extra">{errorString}</div>} */}
             </div>
           );
         }
@@ -164,7 +155,7 @@ const Item: React.FC<FormItemProps> = props => {
             id={selector}
             desc={desc}
             extra={extra}
-            title={title}
+            title={label}
             disabled={isDisabled}
             required={isRequired}
             style={_style}

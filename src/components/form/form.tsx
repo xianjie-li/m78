@@ -19,19 +19,6 @@ import { getNameString } from './utils';
 import FormContext from './context';
 import Item from './item';
 
-/*
- * 增加样式定制文档
- * 异步验证剥离到单独示例
- *
- *
- *文档整体优化
- * api部分抽取部分常用的字段加以说明
- * 调整示例顺序
- * 获取表单实例
- * 嵌套结构、复杂动态结构
- *
- * */
-
 const msgTpl = createMessagesTemplate({ hasName: false /* nameKey: 'label' */ });
 
 // @ts-ignore
@@ -51,8 +38,9 @@ const BaseForm: React.FC<FormProps> = props => {
     onValuesChange,
     hideRequiredMark = false,
     rules,
-    notStyle,
+    noStyle,
     instanceRef,
+    border,
     ...otherProps
   } = props;
   /** 该表单的唯一id */
@@ -123,7 +111,7 @@ const BaseForm: React.FC<FormProps> = props => {
   });
 
   function renderWrap(node: React.ReactNode) {
-    if (notStyle) {
+    if (noStyle) {
       return (
         <div
           style={style}
@@ -146,6 +134,7 @@ const BaseForm: React.FC<FormProps> = props => {
           className,
           'm78-form',
           contextValue.hideRequiredMark && '__hide-required-mark',
+          !border && '__not-border',
         )}
         notBorder={notBorder}
         layout={layout}

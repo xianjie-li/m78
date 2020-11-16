@@ -118,8 +118,8 @@ interface InputProps extends FormLike<string>, InputPropsExtends {
  * @type <Ext> - onChange接收的额外参数的类型
  * */
 export interface FormLikeWithExtra<T, Ext = any> {
-    value?: T;
-    onChange?: (value: T, extra: Ext) => void;
-    defaultValue?: T;
+  value?: T;
+  onChange?: (value: T, extra: Ext) => void;
+  defaultValue?: T;
 }
 ```

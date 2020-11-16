@@ -6,7 +6,6 @@ import Button from 'm78/button';
 const Base = () => (
   <Form
     onFinish={e => {
-      // eslint-disable-next-line no-alert
       alert(JSON.stringify(e, null, 4));
     }}
   >

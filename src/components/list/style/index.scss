@@ -45,33 +45,73 @@
   &.__form {
     margin: 0;
 
-    &.__vertical {
-      .m78-list_item {
-        padding-top: 16px;
-      }
-    }
-
     &.__not-border .m78-list_item {
       padding-top: 4px;
     }
 
+    &.__horizontal {
+      .m78-list_item {
+        &.__layout {
+          & > .m78-list_cont > .m78-list_cont-left {
+            align-items: flex-start;
+            .m78-list_title {
+              padding-top: 8px !important;
+            }
+          }
+        }
+
+        .m78-list_item {
+          .m78-list_extra {
+            padding-left: 0;
+          }
+        }
+      }
+    }
+
     .m78-list_item {
       padding: 26px 16px 0;
+
+      // 属性配置
+      &.__layout {
+        & > .m78-list_foot {
+          display: none;
+        }
+      }
+
+      // 嵌套结构
+      .m78-list_item {
+        padding: 0;
+        flex: 1;
+
+        &::before {
+          display: none;
+        }
+
+        .m78-list_icon {
+          display: none;
+        }
+
+        .m78-list_cont-right {
+          margin-left: 0;
+          align-items: flex-start;
+        }
+
+        &:not(.__layout) + .m78-list_item {
+          margin-left: 12px;
+        }
+      }
     }
 
     .m78-list_foot {
       margin: 0;
-      min-height: 28px;
-      padding: 6px 0;
+      min-height: 26px;
+      padding: 4px 0;
+      line-height: 1.2;
     }
 
     .m78-list_cont-left {
       width: 5em;
       flex: 0 0 auto;
-    }
-
-    .m78-list_cont-right {
-      display: block;
     }
 
     &:not(.__inline) {
@@ -106,9 +146,11 @@
     .m78-list_cont-right {
       width: 100%;
     }
+    .m78-list_cont-left {
+      margin-bottom: 8px;
+    }
     .m78-list_cont-right {
       margin-left: 0;
-      margin-top: 8px;
     }
     &:not(.__inline) {
       .m78-list_extra {
@@ -363,7 +405,7 @@
 
   &_sub-title {
     position: relative;
-    padding: 20px 16px 12px;
+    padding: 20px 16px;
     margin: 0;
     font-size: 16px;
     font-weight: 600;

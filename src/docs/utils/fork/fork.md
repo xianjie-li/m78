@@ -26,7 +26,7 @@ group:
 
 ## Fork Custom
 
-每个状态的反馈节点都是可定制的，此外，你也可以通过`className`、`style`和一些其他文本定制项来进行轻度定制, 具体请见页尾的api说明
+每个状态的反馈节点都是可定制的，此外，你也可以通过`className`、`style`和一些其他文本定制项来进行轻度定制, 具体请见页尾的 api 说明
 
 <code src="./fork-custom-demo.tsx" />
 

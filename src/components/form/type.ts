@@ -9,6 +9,7 @@ import { ComponentBaseProps } from 'm78/types';
 export interface FormItemCustomMeta extends Meta {
   disabled: boolean;
   required: boolean;
+  label?: string;
   /** 表单状态 */
   status?: 'error' | 'loading';
   /** 描述错误的字符，存在此项时说明包含错误 */
@@ -27,7 +28,9 @@ export interface FormProps<Values = any> extends ComponentBaseProps, RFormProps,
     [key: string]: Rule | Rule[];
   };
   /** 关闭默认的样式，开启后只会保护一个无样式的包裹容器，并且column、layout等布局配置失效，不会影响FormItem的样式 */
-  notStyle?: boolean;
+  noStyle?: boolean;
+  /** 是否启用带边框的布局` */
+  border?: boolean;
   /** 获取表单控制实例 */
   instanceRef?: React.Ref<FormInstance<Values>>;
 }
@@ -58,7 +61,7 @@ export interface FormItemProps
    * - 一般启用此项后都会通过children: FormRenderChild 自定义布局、验证样式
    * */
   noStyle?: boolean;
-  /** true | 为false时组件以及组件状态都会被移除, 如果通过Form.List渲染表单，请使用其对于的字段控制api */
+  /** true | 为false时组件以及组件状态都会被移除, 如果通过Form.List渲染表单，请使用其对应的字段控制api */
   valid?: boolean | ((namePath: NamePath, form: FormInstance) => boolean);
   /** true | 是否可见，不影响组件状态 */
   visible?: boolean | ((namePath: NamePath, form: FormInstance) => boolean);
