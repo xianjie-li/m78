@@ -41,6 +41,8 @@ export interface TreeProps extends ComponentBaseProps {
   defaultOpenAll?: boolean;
   /** 默认展开到第几级, (通过api调用?) */
   defaultOpenZIndex?: number;
+  /** 将包含children但值为`[]`的数组视为子节点, 使其可在单选模式下不开启checkTwig的情况下选中 */
+  emptyTwigAsNode?: boolean;
 
   /* ############## 定制选项 ############## */
   /** 自定义所有节点的默认前导图标，权重小于option中单独设置的 */

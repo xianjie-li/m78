@@ -2,6 +2,8 @@ import React from 'react';
 import Tree from 'm78/tree';
 import { SizeEnum } from 'm78/types';
 import { OptionsItem } from 'm78/tree/types';
+import Form from 'm78/form';
+import { Flex } from 'm78/layout';
 
 function mockTreeData(length: number, z: number, label = '选项') {
   const ls: OptionsItem[] = [];
@@ -37,7 +39,6 @@ const Play = () => {
   return (
     <div>
       <Tree
-        size={SizeEnum.large}
         multipleCheckable
         defaultValue={['1-1-1-1-1-1']}
         rainbowIndicatorLine

@@ -88,6 +88,8 @@ const Check = <Val extends unknown = undefined>(_props: CheckProps<Val>) => {
     className,
     style,
     customer,
+    waveWrap = true,
+    size = 'large',
   } = _props;
 
   const [checked, setChecked] = useFormState<boolean, Val>(_props, false, {
@@ -134,7 +136,9 @@ const Check = <Val extends unknown = undefined>(_props: CheckProps<Val>) => {
   return (
     /* eslint-disable-next-line jsx-a11y/label-has-associated-control,jsx-a11y/label-has-for */
     <label
-      className={cls('m78-check', statusCls, className)}
+      className={cls('m78-check', statusCls, className, size && `__${size}`, {
+        '__wave-wrap': waveWrap,
+      })}
       style={style}
       onKeyPress={mouseUpHandel}
       onClick={blurHandle}
@@ -161,6 +165,10 @@ const Check = <Val extends unknown = undefined>(_props: CheckProps<Val>) => {
       </If>
     </label>
   );
+};
+
+Check.Group = ({ children }: { children: React.ReactNode }) => {
+  return <div className="m78-check_group">{children}</div>;
 };
 
 export default Check;

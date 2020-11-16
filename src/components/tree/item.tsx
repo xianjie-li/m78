@@ -6,6 +6,7 @@ import { useFn } from '@lxjx/hooks';
 import { isArray, isFunction } from '@lxjx/utils';
 import { stopPropagation } from 'm78/util';
 import Check from 'm78/check';
+import { SizeEnum } from 'm78/types';
 import {
   filterIncludeDisableChildNode,
   highlightKeyword,
@@ -20,7 +21,7 @@ const openRotateClassName = 'm78-tree_open-icon';
 const TreeItem = ({ data, share, methods, className, style, size }: ItemProps) => {
   const { openCheck, valCheck, props, isVirtual, state } = share;
   const { itemHeight, identWidth } = size;
-  const { indicatorLine, expansionIcon, checkStrictly } = props;
+  const { indicatorLine, expansionIcon, checkStrictly, emptyTwigAsNode } = props;
 
   const value = data.value;
   const actions = data.actions;
@@ -41,8 +42,9 @@ const TreeItem = ({ data, share, methods, className, style, size }: ItemProps) =
   const hasChildren = !!data.children?.length;
 
   /** 是否为树枝节点 */
-  const isTwig = isArray(data.children);
+  const isTwig = checkIsTwig();
 
+  /** 是否为空的树枝节点 */
   const isEmptyTwig = isTwig && !hasChildren;
 
   /** 是否是同级中最后一项 */
@@ -64,7 +66,7 @@ const TreeItem = ({ data, share, methods, className, style, size }: ItemProps) =
     }
 
     if (isMCheck) {
-      /** 选中树枝节点 */
+      /** 选中树枝节点时，更新子级选中状态 */
       if (hasChildren && checkStrictly) {
         if (isChecked || checkIsPartial()) {
           // 取消当前节点和所有子节点选中
@@ -84,7 +86,7 @@ const TreeItem = ({ data, share, methods, className, style, size }: ItemProps) =
         return;
       }
 
-      // 启用关联时，选中同时需要更新所有父节点状态
+      // 选中同时需要更新所有父节点状态
       checkStrictly
         ? methods.syncParentsChecked(data, !isChecked) // 兄弟节点全选、反选时同步所有父级
         : valCheck.toggle(value);
@@ -100,7 +102,6 @@ const TreeItem = ({ data, share, methods, className, style, size }: ItemProps) =
     // 单选时共享此事件
     isSCheck && valueCheckHandle();
 
-    // if (!isTruthyArray(child)) return;
     if (!isTwig) return;
 
     if (isOpen) {
@@ -126,6 +127,17 @@ const TreeItem = ({ data, share, methods, className, style, size }: ItemProps) =
     if (!isTruthyArray(des)) return false;
 
     return des!.some(valCheck.isChecked);
+  }
+
+  /** 检测是否为树枝节点 */
+  function checkIsTwig() {
+    if (!isArray(data.children)) return false;
+
+    if (emptyTwigAsNode) {
+      if (data.children.length === 0) return false;
+    }
+
+    return true;
   }
 
   function renderIdent(parent: FlatMetas, identInd: number) {
@@ -211,7 +223,7 @@ const TreeItem = ({ data, share, methods, className, style, size }: ItemProps) =
                 {renderExpansionIcon()}
               </span>
             </If>
-            <If when={!hasChildren}>
+            <If>
               <span className="m78-tree_icon" style={iconStyle}>
                 {data.icon || props.icon || (
                   <span className="m78-dot" style={{ width: 3, height: 3 }} />
@@ -224,6 +236,7 @@ const TreeItem = ({ data, share, methods, className, style, size }: ItemProps) =
           <span {...stopPropagation}>
             {isMCheck && (
               <Check
+                size={SizeEnum.small}
                 type="checkbox"
                 partial={checkIsPartial()}
                 checked={isChecked}

@@ -1,4 +1,4 @@
-import { ComponentBaseProps } from 'm78/types';
+import { ComponentBaseProps, Size, SizeEnum } from 'm78/types';
 import React from 'react';
 import { CheckCustom } from './check';
 
@@ -33,4 +33,8 @@ export interface CheckProps<Val> extends ComponentBaseProps {
   defaultChecked?: boolean;
   /** checked触发改变的钩子，回传值为checked状态和value(未传入时为'') */
   onChange?: (checked: boolean, value: Val) => void;
+  /** true | 是否启用外层的交互波纹效果，关闭后会让组件的整体大小更小 */
+  waveWrap?: boolean;
+  /** 组件尺寸, 目前支持两个尺寸，默认/小尺寸 */
+  size?: 'small' | SizeEnum.small;
 }

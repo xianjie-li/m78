@@ -8,7 +8,7 @@ import { CheckBoxProps } from './type';
 
 const CheckBox = React.forwardRef<UseCheckReturns<any, any>, CheckBoxProps<any>>(
   <Val extends unknown>(props: CheckBoxProps<Val>, ref: any) => {
-    const { options, disabled, name, block, customer } = props;
+    const { options, disabled, name, block, customer, waveWrap, size } = props;
 
     const disables = useMemo(
       () =>
@@ -30,7 +30,7 @@ const CheckBox = React.forwardRef<UseCheckReturns<any, any>, CheckBoxProps<any>>
     useImperativeHandle(ref, () => ck);
 
     return (
-      <div className="m78-radio-box">
+      <div className="m78-radio-box m78-check_group">
         {options.map((item, index) => (
           <Check<Val>
             key={index}
@@ -44,6 +44,8 @@ const CheckBox = React.forwardRef<UseCheckReturns<any, any>, CheckBoxProps<any>>
             checked={ck.checked.includes(item.value)}
             disabled={disabled || item.disabled}
             onChange={(check, value) => ck.setCheckBy(value, check)}
+            waveWrap={waveWrap}
+            size={size}
           />
         ))}
       </div>

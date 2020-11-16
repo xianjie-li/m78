@@ -19,10 +19,12 @@ const myCheck: CheckCustom = ({ checked, disabled, focus }, props) => (
 const Demo2 = () => (
   <div>
     <h3>还是选择你最爱的水果</h3>
-    <Check label="🍉西瓜" customer={myCheck} />
-    <Check label="🍌香蕉" customer={myCheck} />
-    <Check disabled label="🍎苹果(缺货)" customer={myCheck} />
-    <Check label="🍇葡萄" customer={myCheck} />
+    <Check.Group>
+      <Check label="🍉西瓜" customer={myCheck} />
+      <Check label="🍌香蕉" customer={myCheck} />
+      <Check disabled label="🍎苹果(缺货)" customer={myCheck} />
+      <Check label="🍇葡萄" customer={myCheck} />
+    </Check.Group>
   </div>
 );
 
