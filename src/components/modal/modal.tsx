@@ -151,6 +151,7 @@ const _ModalBase: React.FC<ModalBaseProps> = props => {
                   `translate3d(${x}px,${y}px,0px) scale3d(${scale},${scale},${scale})`,
               ),
               opacity: sp.opacity,
+              display: sp.opacity.to(o => (o <= 0.2 ? 'none' : '')),
             }}
           >
             <div className="m78-modal_calc-node" ref={bind} />

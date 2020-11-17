@@ -1,6 +1,9 @@
 import React from 'react';
 import Tree from 'm78/tree';
 import { OptionsItem } from 'm78/tree/types';
+import Modal from 'm78/modal';
+import ErrorBoundary from 'm78/error-boundary';
+import { Divider } from 'm78/layout';
 
 function mockTreeData(length: number, z: number, label = '选项') {
   const ls: OptionsItem[] = [];
@@ -32,9 +35,48 @@ function mockTreeData(length: number, z: number, label = '选项') {
 
 const opt = mockTreeData(5, 5);
 
+function SomeError() {
+  const a: any;
+
+  console.log(a.b);
+
+  return null;
+}
+
 const Play = () => {
   return (
     <div>
+      <h3>简单样式</h3>
+      <ErrorBoundary
+        customLoadingNode="加载中..."
+        customer={({ error, reload, reset }) => (
+          <div style={{ border: '1px solid #eee', borderRadius: 4, padding: 12 }}>
+            <h3>{error?.message}</h3>
+            <pre
+              style={{
+                padding: 12,
+                background: '#efefef',
+                maxHeight: 200,
+                overflow: 'auto',
+                color: 'red',
+              }}
+            >
+              {error?.stack}
+            </pre>
+            <div>
+              <button type="button" onClick={reload}>
+                刷新页面
+              </button>
+              <button type="button" onClick={reset}>
+                重载组件
+              </button>
+            </div>
+          </div>
+        )}
+      >
+        <SomeError />
+      </ErrorBoundary>
+
       <Tree
         multipleCheckable
         defaultValue={['1-1-1-1-1-1']}
