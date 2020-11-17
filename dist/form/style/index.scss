@@ -1,0 +1,46 @@
+@import '../../style/index';
+
+.m78-form {
+  &.__hide-required-mark {
+    .m78-list_require {
+      display: none;
+    }
+  }
+
+  // 为noStyle定制简单样式
+  &_item {
+    //position: relative;
+    //display: inline-block;
+    //vertical-align: top;
+    //
+    //& + & {
+    //  margin-left: 12px;
+    //}
+    //
+    //&-extra {
+    //  font-size: $fs-14;
+    //  color: $color-error;
+    //}
+    //
+    //&-mark {
+    //  line-height: 1;
+    //  position: absolute !important;
+    //  right: -4px;
+    //  top: -12px !important;
+    //}
+  }
+
+  //&:hover {
+  //  .m78-form_setting {
+  //    visibility: visible;
+  //    opacity: 1;
+  //  }
+  //}
+  //
+  //&_setting {
+  //  position: absolute !important;
+  //  right: -18px;
+  //  top: 4px;
+  //  cursor: pointer;
+  //}
+}

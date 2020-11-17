@@ -1,4 +1,4 @@
-import { ComponentBaseProps, Size, SizeEnum } from 'm78/types';
+import { ComponentBaseProps, SizeEnum } from 'm78/types';
 import React from 'react';
 import { CheckCustom } from './check';
 

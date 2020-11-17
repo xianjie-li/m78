@@ -1,0 +1,95 @@
+@import '../../style/index';
+
+.m78-page-header {
+  background-color: #fff;
+
+  /* 需要固定左右宽度 */
+  &.__center {
+    .m78-page-header_main {
+      text-align: center;
+      line-height: 1.1;
+    }
+
+    .m78-page-header_title {
+      display: block;
+      margin-right: 0;
+    }
+  }
+
+  &.__shadow {
+    box-shadow: $shadow-1;
+  }
+
+  &.__border {
+    border: 1px solid $b-border;
+    box-shadow: none;
+  }
+
+  &.__color {
+    background-color: $color;
+  }
+
+  &.__white {
+    color: $w-title;
+
+    .anticon {
+      color: $w-title;
+    }
+
+    .m78-page-header_desc {
+      color: $w-primary;
+    }
+
+    .m78-page-header_bottom {
+      border-top: 1px solid $w-second;
+    }
+  }
+
+  &_bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 50px;
+    padding: 0 $space-8;
+    line-height: 1;
+
+    .anticon {
+      font-size: 18px;
+      cursor: pointer;
+    }
+  }
+
+  &_main {
+    font-size: 17px;
+    font-weight: bold;
+    margin: 0 $space-12;
+    flex: 1;
+    white-space: nowrap;
+    @include ellipsis-x;
+  }
+
+  &_title {
+    margin-right: 10px;
+  }
+
+  &_desc {
+    font-size: 14px;
+    font-weight: 400;
+    color: $b-second;
+  }
+
+  &_leading {
+    display: flex;
+    align-items: center;
+    text-align: left;
+  }
+
+  &_actions {
+    text-align: right;
+  }
+
+  &_bottom {
+    padding: $space-12;
+    border-top: 1px solid $b-border;
+  }
+}
