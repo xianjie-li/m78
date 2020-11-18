@@ -158,6 +158,8 @@ const Input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
       if (parent) {
         parent.appendChild(cloneText.current);
       }
+
+      calcTextHeight();
     }
     // eslint-disable-next-line
   }, []);

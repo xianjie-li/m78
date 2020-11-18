@@ -1,14 +1,13 @@
 import React, { useEffect } from 'react';
-import { useEffectEqual, useFn, useSelf, useSetState } from '@lxjx/hooks';
-import { Auth, ValidMeta } from '@lxjx/auth';
-import { useDelayDerivedToggleStatus } from 'm78/hooks';
+import { useSelf } from '@lxjx/hooks';
+import { Auth } from '@lxjx/auth';
 import Spin from 'm78/spin';
 import Button from 'm78/button';
 import Result from 'm78/result';
 import Popper from 'm78/popper';
-import { AuthProps } from './type';
+import { AuthProps, ExpandAuth } from './type';
 
-export function createAuth<D, V>(auth: Auth<D, V>) {
+export function createAuth<D, V>(auth: Auth<D, V>, useAuth: ExpandAuth<D, V>['useAuth']) {
   const AuthComponent: React.FC<AuthProps<D, V>> = props => {
     const {
       children,
@@ -22,48 +21,22 @@ export function createAuth<D, V>(auth: Auth<D, V>) {
       feedback,
     } = props;
 
-    const [state, setState] = useSetState({
-      pending: true,
-      rejects: (null as unknown) as ValidMeta[] | null,
-    });
-
     const self = useSelf({
       /** 在实际进行验证前阻止渲染 */
       flag: true,
     });
 
-    const loading = useDelayDerivedToggleStatus(state.pending);
-
-    const authHandler = useFn(() => {
-      if (disabled) return;
-
-      !state.pending && setState({ pending: true });
-
-      self.flag = false;
-
-      auth
-        .auth(keys, { extra, validators })
-        .then(rejects => {
-          setState({
-            rejects,
-          });
-        })
-        .finally(() => {
-          setState({ pending: false });
-        });
-    });
-
-    useEffectEqual(authHandler, [keys, extra]);
-
     useEffect(() => {
-      return auth.subscribe(authHandler);
+      self.flag = false;
     }, []);
+
+    const state = useAuth(keys, { extra, validators, disabled });
 
     if (disabled) return children;
 
     if (self.flag) return null;
 
-    if (loading) {
+    if (state.pending) {
       return pendingNode || <Spin text="验证中" />;
     }
 

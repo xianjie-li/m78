@@ -1,27 +1,61 @@
 import React from 'react';
 import { ButtonProps } from 'm78/button';
-import { AuthKeys, Auth, CreateAuthConfig, Validators, Action, ValidMeta } from '@lxjx/auth';
+import {
+  AuthKeys,
+  Auth,
+  CreateAuthConfig,
+  Validators,
+  Action,
+  ValidMeta,
+  PromiseBack,
+  AuthConfig,
+} from '@lxjx/auth';
 import { AnyObject } from '@lxjx/utils';
 
 declare module '@lxjx/auth' {
   export interface Action extends ButtonProps {}
 }
 
-interface ExpandAuth<D, V> extends Auth<D, V> {
-  /** 权限组件 */
+export interface ExpandAuth<D, V> extends Auth<D, V> {
+  /** 权限检测组件 */
   Auth: React.FC<AuthProps<D, V>>;
-  /** 权限高阶组件 */
+  /** 创建带权限检测的高阶组件 */
   withAuth: <P>(
     conf: Omit<AuthProps<D, V>, 'children'>,
   ) => (Component: React.ComponentType<P>) => React.FC<P>;
+  /** 权限验证hook */
+  useAuth: (
+    keys: AuthKeys<V>,
+    config?: { disabled?: boolean } & AuthConfig<D>,
+  ) => {
+    /** 是否正处于验证状态 */
+    pending: boolean;
+    /** 所有未通过验证器返回的ValidMeta，如果为null则说明验证通过 */
+    rejects: PromiseBack;
+  };
+  /** 获取当前deps的hook，会跟踪deps变更并进行更新 */
+  useDeps: <ScopeDep = D>(
+    /**
+     * 从deps中选择部分deps并返回，如果省略，会返回整个deps对象
+     * - 如果未通过selector选取deps，hook会在每一次deps变更时更新，选取局部deps时只在选取部分变更时更新
+     * - 尽量只通过selector返回必要值，减少hook所在组件的更新次数
+     * - 如果选取的依赖值是对象等引用类型值，直接`deps => deps.xxx`返回即可，如果类似`deps => ({ ...deps.xxx })`这样更新引用地址，会造成不必要的更新
+     * */
+    selector?: (deps: D) => ScopeDep,
+    /**
+     * 每次deps变更时会简单通过`===`比前后的值，如果相等则不会更新hook，你可以通过此函数来增强对比行为，如使用_.isEqual进行深对比
+     * - 即使传入了自定义对比函数，依然会先执行 `===` 对比
+     * */
+    equalFn?: (next: ScopeDep, prev?: ScopeDep) => boolean,
+  ) => ScopeDep;
+  /** 通过render children获取deps并跟踪变更 */
+  Deps: React.FC<{ children: (deps: D) => React.ReactNode }>;
 }
 
 export interface ExpandCreate {
-  <D extends AnyObject = AnyObject, V extends Validators<D> = Validators<D>>({
-    dependency,
-    validators,
-    validFirst,
-  }: CreateAuthConfig<D, V>): ExpandAuth<D, V>;
+  <D extends AnyObject = AnyObject, V extends Validators<D> = Validators<D>>(
+    conf: CreateAuthConfig<D, V>,
+  ): ExpandAuth<D, V>;
 }
 
 export interface AuthProps<D, V> {

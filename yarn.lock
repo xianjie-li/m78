@@ -1544,10 +1544,10 @@
   dependencies:
     tslib "^2.0.0"
 
-"@lxjx/auth@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.npm.taobao.org/@lxjx/auth/download/@lxjx/auth-1.0.0.tgz#ffa866b4970d443bc2d479f64ff3ef0380c06dcc"
-  integrity sha1-/6hmtJcNRDvC1Hn2T/PvA4DAbcw=
+"@lxjx/auth@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.npm.taobao.org/@lxjx/auth/download/@lxjx/auth-1.1.0.tgz#d9c55cb4be0adb1238130f55b5978e357a4acca6"
+  integrity sha1-2cVctL4K2xI4Ew9VtZeONXpKzKY=
   dependencies:
     "@lxjx/utils" "^1.4.5"
     tslib "^2.0.0"
