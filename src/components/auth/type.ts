@@ -24,17 +24,30 @@ export interface ExpandAuth<D, V> extends Auth<D, V> {
     conf: Omit<AuthProps<D, V>, 'children'>,
   ) => (Component: React.ComponentType<P>) => React.FC<P>;
   /** 权限验证hook */
-  useAuth: (
-    keys: AuthKeys<V>,
-    config?: { disabled?: boolean } & AuthConfig<D>,
-  ) => {
+  useAuth: UseAuth<D, V>;
+  /** 获取当前deps的hook */
+  useDeps: UseDeps<D>;
+  /** 通过render children获取deps */
+  Deps: Deps<D>;
+}
+
+export interface ExpandCreate {
+  <D extends AnyObject = AnyObject, V extends Validators<D> = Validators<D>>(
+    conf: CreateAuthConfig<D, V>,
+  ): ExpandAuth<D, V>;
+}
+
+export interface UseAuth<D, V> {
+  (keys: AuthKeys<V>, config?: { disabled?: boolean } & AuthConfig<D>): {
     /** 是否正处于验证状态 */
     pending: boolean;
-    /** 所有未通过验证器返回的ValidMeta，如果为null则说明验证通过 */
+    /** 所有未通过验证器返回的ValidMeta，如果为null则表示验证通过 */
     rejects: PromiseBack;
   };
-  /** 获取当前deps的hook，会跟踪deps变更并进行更新 */
-  useDeps: <ScopeDep = D>(
+}
+
+export interface UseDeps<D> {
+  <ScopeDep = any>(
     /**
      * 从deps中选择部分deps并返回，如果省略，会返回整个deps对象
      * - 如果未通过selector选取deps，hook会在每一次deps变更时更新，选取局部deps时只在选取部分变更时更新
@@ -44,18 +57,21 @@ export interface ExpandAuth<D, V> extends Auth<D, V> {
     selector?: (deps: D) => ScopeDep,
     /**
      * 每次deps变更时会简单通过`===`比前后的值，如果相等则不会更新hook，你可以通过此函数来增强对比行为，如使用_.isEqual进行深对比
+     * - 如果在selector中正确保留了引用，很少会直接用到此参数
      * - 即使传入了自定义对比函数，依然会先执行 `===` 对比
      * */
     equalFn?: (next: ScopeDep, prev?: ScopeDep) => boolean,
-  ) => ScopeDep;
-  /** 通过render children获取deps并跟踪变更 */
-  Deps: React.FC<{ children: (deps: D) => React.ReactNode }>;
+  ): ScopeDep;
 }
 
-export interface ExpandCreate {
-  <D extends AnyObject = AnyObject, V extends Validators<D> = Validators<D>>(
-    conf: CreateAuthConfig<D, V>,
-  ): ExpandAuth<D, V>;
+export interface Deps<D> {
+  (props: { children: (deps: D) => React.ReactNode }): React.ReactElement | null;
+}
+
+export enum AuthTypeEnum {
+  feedback = 'feedback',
+  hidden = 'hidden',
+  popper = 'popper',
 }
 
 export interface AuthProps<D, V> {

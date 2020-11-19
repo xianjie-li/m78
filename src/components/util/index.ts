@@ -19,7 +19,7 @@ export const stopPropagation = {
   },
 };
 
-/** 指定错误消息和组件命名空间来抛出一个错误 */
+/** throw error */
 export function throwError(errorMsg: string, namespace?: string): never {
-  throw new Error((namespace ? `${namespace} -> ` : '') + errorMsg);
+  throw new Error(`M78 -> ${namespace ? `${namespace} -> ` : ''} ${errorMsg}`);
 }

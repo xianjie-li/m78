@@ -1,43 +1,7 @@
-import React, { useEffect } from 'react';
-import Tree from 'm78/tree';
-import { OptionsItem } from 'm78/tree/types';
-import Modal from 'm78/modal';
-import ErrorBoundary from 'm78/error-boundary';
-import { Divider } from 'm78/layout';
-import create, { AuthTypeEnum } from 'm78/auth';
+import React from 'react';
+import create from 'm78/auth';
 import Button from 'm78/button';
 import Message from 'm78/message';
-import { delay } from '@lxjx/utils';
-
-function mockTreeData(length: number, z: number, label = '选项') {
-  const ls: OptionsItem[] = [];
-
-  function gn(list: OptionsItem = [], vp: string, cZInd = 0) {
-    Array.from({ length }).forEach((_, index) => {
-      const v = vp ? `${vp}-${index + 1}` : String(index + 1);
-      const children: OptionsItem[] = [];
-
-      const current: OptionsItem = {
-        label: `${label} ${v}`,
-        value: v,
-        children: Math.random() > 0.5 ? [] : undefined,
-      };
-
-      list.push(current);
-
-      if (cZInd !== z) {
-        current.children = children;
-        gn(children, v, cZInd + 1);
-      }
-    });
-  }
-
-  gn(ls, '');
-
-  return ls;
-}
-
-const opt = mockTreeData(5, 5);
 
 const { Auth, setDeps } = create({
   /* 被所有验证器依赖数据 */
@@ -51,7 +15,7 @@ const { Auth, setDeps } = create({
   validators: {},
 });
 
-const Play = () => {
+const ScopeDemo = () => {
   return (
     <div>
       <Button size="small" onClick={() => setDeps({ user: 'lxj' })}>
@@ -101,20 +65,8 @@ const Play = () => {
           <div className="fs-14 color-second mt-8">这里是需要权限验证的内容</div>
         </div>
       </Auth>
-
-      {/* <Tree */}
-      {/*  multipleCheckable */}
-      {/*  defaultValue={['1-1-1-1-1-1']} */}
-      {/*  rainbowIndicatorLine */}
-      {/*  onChange={(a, b) => { */}
-      {/*    console.log('change', a, b); */}
-      {/*  }} */}
-      {/*  dataSource={opt} */}
-      {/*  height={400} */}
-      {/*  toolbar */}
-      {/* /> */}
     </div>
   );
 };
 
-export default Play;
+export default ScopeDemo;

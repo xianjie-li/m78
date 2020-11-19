@@ -1,17 +1,17 @@
 import { Auth } from '@lxjx/auth';
 import { useEffect, useState } from 'react';
 import { useFn } from '@lxjx/hooks';
-import { ExpandAuth } from './type';
+import { UseDeps } from './type';
 
 export function createUseDeps<D, V>(auth: Auth<D, V>) {
   const defSelector = (d: any) => d;
 
-  const useDeps: ExpandAuth<D, V>['useDeps'] = <ScopeDep = D>(selector = defSelector, equalFn) => {
+  const useDeps: UseDeps<D> = (selector = defSelector, equalFn) => {
     const select = useFn(() => {
       return selector(auth.getDeps());
     });
 
-    const [deps, setDeps] = useState<ScopeDep>(select);
+    const [deps, setDeps] = useState(select);
 
     const handle = useFn(() => {
       const selected = select();
