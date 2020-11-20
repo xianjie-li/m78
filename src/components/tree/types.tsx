@@ -16,12 +16,22 @@ export type TreeValueType = string | number;
 export interface TreeProps extends ComponentBaseProps {
   /** 数据源 (每次更改时会解析树数据并缓存关联信息以提升后续操作速度，所以最好将dataSource通过useState或useMemo等进行管理，不要直接内联式传入) */
   dataSource?: OptionsItem[];
+  /**
+   * 组件内部更改了数据源时，通过此方法通知
+   * - 仅在启用了动态加载子节点、拖拽功能时触发，它们的共同点是都会更改传入的dataSource
+   * - 此选项存在的意义是让动态加载、拖拽排序等功能使用更简单，目前常见组件库中的tree均是只做节点变更通知，需要由用户手动根据节点层级
+   * 将新数据/节点顺序设置到DataSource后再更新数据源，但是多层级的树形数据操作是非常麻烦且费时的，所以组件将这些更新操作放到内部进行，用户仅需监听
+   * onDataSourceChange并将新的DataSource合并即可
+   * - 出于性能考虑，在存在超大数据量的树形数据时，深拷贝非常耗时，组件会直接更改传入的dataSource，并在更新引用后传入onDataSourceChange
+   * 所以在开启了动态加载子节点、拖拽功能时，必须传入此项来同步dataSource
+   * */
+  onDataSourceChange?: (ds: OptionsItem[]) => void;
   /** 指定打开的节点 (受控) */
   opens?: TreeValueType[];
   /** 指定默认打开的节点 (非受控) */
   defaultOpens?: TreeValueType[];
   /** 打开节点变更时触发 */
-  onOpensChange?: (nextOpens: TreeValueType[], metas: FlatMetas[]) => void;
+  onOpensChange?: (nextOpens: TreeValueType[], nodes: TreeNode[]) => void;
   /**
    * 容器高度, 节点数据量过大时使用，传入此项时:
    * - 开启虚拟滚动
@@ -31,8 +41,8 @@ export interface TreeProps extends ComponentBaseProps {
   height?: number;
 
   /* ############## 其他常用配置 ############## */
-  /** TODO: 开启异步加载数据，启用后，除了配置了OptionsItem.isLeaf的叶子节点外，一律可展开，并在展开时触发此回调 */
-  onLazyLoad?: (opt: FlatMetas) => Promise<OptionsItem>;
+  /** 开启异步加载数据，启用后，除了配置了OptionsItem.isLeaf的节点和已有含值子级的节点外，一律可展开，并在展开时触发此回调 */
+  onLoad?: (node: TreeNode) => Promise<OptionsItem[]>;
   /** 禁用(工具条、展开、选中) */
   disabled?: boolean;
   /** 手风琴模式，同级只会有一个节点被展开 */
@@ -67,6 +77,9 @@ export interface TreeProps extends ComponentBaseProps {
   indicatorLine?: boolean;
   /** 彩虹色连接指示线 */
   rainbowIndicatorLine?: boolean;
+
+  /** 公用的action, 渲染在每个节点的右侧 */
+  // commonActions?: React.ReactNode;
 }
 
 /** 工具条配置 */
@@ -84,7 +97,7 @@ export interface ToolbarConf {
 /** 单选props */
 export interface TreePropsSingleChoice
   extends TreeProps,
-    FormLikeWithExtra<TreeValueType, FlatMetas> {
+    FormLikeWithExtra<TreeValueType, TreeNode> {
   /** 是否可单选 (使用高亮样式) */
   checkable?: boolean;
   /** false | 是否可选中目录级 */
@@ -96,7 +109,7 @@ export interface TreePropsSingleChoice
 /** 多选props */
 export interface TreePropsMultipleChoice
   extends TreeProps,
-    FormLikeWithExtra<TreeValueType[], FlatMetas[]> {
+    FormLikeWithExtra<TreeValueType[], TreeNode[]> {
   /** 是否可多选，启用后onChange/value/defaultValue接受数组，此配置的权重低于单选配置checkable  */
   multipleCheckable?: boolean;
   /**
@@ -124,11 +137,11 @@ export interface OptionsItem extends Partial<DataSourceItem<TreeValueType>> {
   /** 在开启虚拟滚动时，可通过此项单独制定项高度 */
   height?: number;
   /** 操作区内容 */
-  actions?: React.ReactNode | ((current: FlatMetas) => React.ReactNode);
+  actions?: React.ReactNode | ((current: TreeNode) => React.ReactNode);
   /**
    * 是否为叶子节点
-   * - 设置onLazyLoad异步加载数据后，所有项都会显示展开图标，如果项被指定为叶子节点，则视为无下级且不显示展开图标
-   * - 传入onLazyLoad时生效
+   * - 设置onLoad开启异步加载数据后，所有项都会显示展开图标，如果项被指定为叶子节点，则视为无下级且不显示展开图标
+   * - 传入onLoad时生效
    * */
   isLeaf?: boolean;
   /** 在需要自行指定value或label的key时使用 */
@@ -136,25 +149,25 @@ export interface OptionsItem extends Partial<DataSourceItem<TreeValueType>> {
 }
 
 /** 根据DataSource展开得到的列表项，包含大量树操作的帮助信息 */
-export interface FlatMetas extends OptionsItem {
+export interface TreeNode extends OptionsItem {
   /** 通过flatTreeData确保存在 */
   value: TreeValueType;
   /** 当前层级 */
   zIndex: number;
   /** 所有父级节点 */
-  parents?: FlatMetas[];
+  parents?: TreeNode[];
   /** 所有父级节点的value */
   parentsValues?: TreeValueType[];
   /** 所有兄弟节点(包含本身) */
-  siblings: FlatMetas[];
+  siblings: TreeNode[];
   /** 所有兄弟节点的value */
   siblingsValues: TreeValueType[];
   /** 所有子孙节点 */
-  descendants?: FlatMetas[];
+  descendants?: TreeNode[];
   /** 所有子孙节点的value */
   descendantsValues?: TreeValueType[];
   /** 所有除树枝节点外的子孙节点 */
-  descendantsWithoutTwig?: FlatMetas[];
+  descendantsWithoutTwig?: TreeNode[];
   /** 所有除树枝节点外的子孙节点的value */
   descendantsWithoutTwigValues?: TreeValueType[];
   /** 从第一级到当前级的value */
@@ -164,28 +177,34 @@ export interface FlatMetas extends OptionsItem {
   /** 以该项关联的所有选项的关键词拼接字符 */
   fullSearchKey: string;
   /** 该项子级的所有禁用项 */
-  disabledChildren: FlatMetas[];
+  disabledChildren: TreeNode[];
   /** 该项子级的所有禁用项的value */
   disabledChildrenValues: TreeValueType[];
+  /** 未更改的原对象 */
+  origin: OptionsItem;
+  /** 子节点列表, 区别于children，children是未经过处理的原始值 */
+  child?: TreeNode[];
 }
 
 /** 共享配置 */
 export interface Share {
   /** 平铺列表 */
-  list: FlatMetas[];
+  list: TreeNode[];
   /** 管理展开状态的checker */
-  openCheck: UseCheckReturns<string | number, FlatMetas>;
-  /** 管理value选中状态的check */
-  valCheck: UseCheckReturns<string | number, FlatMetas>;
+  openCheck: UseCheckReturns<TreeValueType, TreeNode>;
+  /** 管理value选中状态的checker */
+  valCheck: UseCheckReturns<TreeValueType, TreeNode>;
+  /** 管理节点加载状态的checker */
+  loadingCheck: UseCheckReturns<TreeValueType, TreeValueType>;
   /** Tree组件props */
   props: TreePropsSingleChoice & TreePropsMultipleChoice & typeof defaultProps;
   /** 扁平化的tree */
-  flatMetas?: ReturnType<typeof flatTreeData>;
+  nodes?: ReturnType<typeof flatTreeData>;
   state: {
     /** 初始化状态 */
     loading: boolean;
     /** 扁平化的tree */
-    flatMetas: ReturnType<typeof flatTreeData> | undefined;
+    nodes: ReturnType<typeof flatTreeData> | undefined;
     /** 当前搜索关键词 */
     keyword: string;
   };
@@ -206,7 +225,7 @@ export interface Share {
 
 export interface ItemProps extends ComponentBaseProps {
   /** 该项的对应数据 */
-  data: FlatMetas;
+  data: TreeNode;
   /** 共享数据 */
   share: Share;
   /** Tree内部方法 */
@@ -224,6 +243,6 @@ export interface VirtualItemProps extends ListChildComponentProps {
   /** 当前列表和其他要传给ItemProps的props */
   data: {
     /**  当前列表 */
-    data: FlatMetas[];
+    data: TreeNode[];
   } & Omit<ItemProps, 'data'>;
 }

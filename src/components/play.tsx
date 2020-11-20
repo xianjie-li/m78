@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Tree from 'm78/tree';
 import { OptionsItem } from 'm78/tree/types';
+import { delay, getRandRange } from '@lxjx/utils';
 
 function mockTreeData(length: number, z: number, label = '选项') {
   const ls: OptionsItem[] = [];
@@ -32,19 +33,60 @@ function mockTreeData(length: number, z: number, label = '选项') {
 
 const opt = mockTreeData(5, 5);
 
+const dsList: OptionsItem[] = [
+  {
+    label: '选项1',
+    children: [
+      {
+        label: '选项1-1',
+      },
+      {
+        label: '选项1-2',
+        isLeaf: true,
+      },
+    ],
+  },
+  {
+    label: '选项2',
+  },
+  {
+    label: '选项3',
+    children: [],
+  },
+];
+
+const generateChildren = (pLabel = '') => {
+  const length = getRandRange(0, 5);
+
+  return Array.from({ length }).map((_, ind) => ({
+    label: `${pLabel}-${ind + 1}`,
+    isLeaf: Math.random() > 0.3,
+  }));
+};
+
 const Play = () => {
+  const [ds, setDs] = useState(dsList);
+
   return (
     <div>
       <Tree
         multipleCheckable
-        defaultValue={['1-1-1-1-1-1']}
         rainbowIndicatorLine
         onChange={(a, b) => {
           console.log('change', a, b);
         }}
-        dataSource={opt}
         height={400}
         toolbar
+        dataSource={ds}
+        defaultOpenAll
+        onDataSourceChange={_ds => {
+          setDs(_ds);
+        }}
+        onLoad={async node => {
+          await delay(600);
+
+          return generateChildren(node.label as string);
+        }}
       />
     </div>
   );

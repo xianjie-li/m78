@@ -14,6 +14,12 @@ export function useLifeCycle(share: Share, methods: ReturnType<typeof useMethods
   useEffect(() => {
     if (!dataSource) return;
 
+    if (!state.loading) {
+      setState({
+        loading: true,
+      });
+    }
+
     setTimeout(() => {
       const flatTree = flatTreeData(dataSource, {
         valueGetter,
@@ -22,7 +28,7 @@ export function useLifeCycle(share: Share, methods: ReturnType<typeof useMethods
       });
 
       setState({
-        flatMetas: flatTree,
+        nodes: flatTree,
         loading: false,
       });
     });
@@ -30,12 +36,12 @@ export function useLifeCycle(share: Share, methods: ReturnType<typeof useMethods
 
   // 启用默认展开全部行为
   useEffect(() => {
-    // flatMetas第一次初始化时执行
-    if (defaultOpenAll && state.flatMetas && !self.defaultOpenTriggered) {
+    // nodes第一次初始化时执行
+    if (defaultOpenAll && state.nodes && !self.defaultOpenTriggered) {
       methods.openAll();
       self.defaultOpenTriggered = true;
     }
-  }, [defaultOpenAll, state.flatMetas]);
+  }, [defaultOpenAll, state.nodes]);
 
   // 搜索时自动展开全部
   useUpdateEffect(() => {
@@ -44,10 +50,10 @@ export function useLifeCycle(share: Share, methods: ReturnType<typeof useMethods
 
   // 默认展开到指定层级
   useEffect(() => {
-    // flatMetas第一次初始化时执行
-    if (isNumber(defaultOpenZIndex) && state.flatMetas && !self.defaultOpenZIndexTriggered) {
+    // nodes第一次初始化时执行
+    if (isNumber(defaultOpenZIndex) && state.nodes && !self.defaultOpenZIndexTriggered) {
       methods.openToZ(defaultOpenZIndex);
       self.defaultOpenZIndexTriggered = true;
     }
-  }, [defaultOpenZIndex, state.flatMetas]);
+  }, [defaultOpenZIndex, state.nodes]);
 }

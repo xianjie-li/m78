@@ -3,14 +3,14 @@ import _clamp from 'lodash/clamp';
 import _debounce from 'lodash/debounce';
 import { useFn } from '@lxjx/hooks';
 import { isTruthyArray, sizeMap } from './common';
-import { FlatMetas, Share, TreeValueType } from './types';
+import { TreeNode, Share, TreeValueType } from './types';
 
 export function useMethods(share: Share) {
-  const { props, openCheck, valCheck, flatMetas, self, setState } = share;
+  const { props, openCheck, valCheck, nodes, self, setState } = share;
   const { itemHeight, identWidth } = props;
 
   /** 检测某项是否展开 */
-  function isShow(item: FlatMetas) {
+  function isShow(item: TreeNode) {
     if (item.zIndex === 0) return true;
 
     const parents = item.parents;
@@ -24,7 +24,7 @@ export function useMethods(share: Share) {
   }
 
   /** 获取传入节点和它的子孙节点的value数组 */
-  function getSelfAndDescendants(item: FlatMetas) {
+  function getSelfAndDescendants(item: TreeNode) {
     const all = [item.value];
 
     if (isArray(item.descendantsValues)) {
@@ -35,7 +35,7 @@ export function useMethods(share: Share) {
   }
 
   /** 获取传入节点和它的子孙节点的数组 */
-  function getSelfAndDescendantsItem(item: FlatMetas) {
+  function getSelfAndDescendantsItem(item: TreeNode) {
     const all = [item];
 
     if (isArray(item.descendants)) {
@@ -46,7 +46,7 @@ export function useMethods(share: Share) {
   }
 
   /** 获取传入节点和它的父节点点的数组 */
-  function getSelfAndParents(item: FlatMetas) {
+  function getSelfAndParents(item: TreeNode) {
     const all = [item.value];
 
     if (isArray(item.parentsValues)) {
@@ -84,7 +84,7 @@ export function useMethods(share: Share) {
   }
 
   /** 获取要显示的列表 */
-  function getShowList(list: FlatMetas[], keyword?: string) {
+  function getShowList(list: TreeNode[], keyword?: string) {
     if (keyword) {
       const filterList = list.filter(item => {
         return item.fullSearchKey.indexOf(keyword) !== -1;
@@ -97,16 +97,16 @@ export function useMethods(share: Share) {
 
   /** 展开所有项 */
   function openAll() {
-    if (!flatMetas) return;
-    openCheck.setChecked(flatMetas.expandableValues);
+    if (!nodes) return;
+    openCheck.setChecked(nodes.expandableValues);
   }
 
   /** 展开到第几级(0开始)，超出或小于时会自动限定在界定层级 */
   function openToZ(z: number) {
-    if (!flatMetas) return;
+    if (!nodes) return;
     if (!isNumber(z)) return;
 
-    const zList = flatMetas.zListValues;
+    const zList = nodes.zListValues;
 
     const _z = _clamp(z, 0, zList.length - 1);
 
@@ -116,7 +116,7 @@ export function useMethods(share: Share) {
   }
 
   /** 设置指定节点状态，并同步更新其所有父节点的选中状态，如果省略checked参数，则仅对父节点进行更新 */
-  function syncParentsChecked(item: FlatMetas, checked?: boolean) {
+  function syncParentsChecked(item: TreeNode, checked?: boolean) {
     const checkList: TreeValueType[] = [];
     const unCheckList: TreeValueType[] = [];
 

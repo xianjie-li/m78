@@ -1,7 +1,7 @@
 import React from 'react';
 import cls from 'classnames';
 import { If, Switch } from 'm78/fork';
-import { CaretRightOutlined } from 'm78/icon';
+import { CaretRightOutlined, LoadingOutlined } from 'm78/icon';
 import { useFn } from '@lxjx/hooks';
 import { isArray, isFunction } from '@lxjx/utils';
 import { stopPropagation } from 'm78/util';
@@ -14,17 +14,28 @@ import {
   isMultipleCheck,
   isTruthyArray,
 } from './common';
-import { FlatMetas, ItemProps } from './types';
+import { TreeNode, ItemProps } from './types';
 
 const openRotateClassName = 'm78-tree_open-icon';
 
 const TreeItem = ({ data, share, methods, className, style, size }: ItemProps) => {
-  const { openCheck, valCheck, props, isVirtual, state } = share;
+  const { openCheck, valCheck, props, isVirtual, state, setState, loadingCheck } = share;
   const { itemHeight, identWidth } = size;
-  const { indicatorLine, expansionIcon, checkStrictly, emptyTwigAsNode } = props;
+  const {
+    indicatorLine,
+    expansionIcon,
+    checkStrictly,
+    emptyTwigAsNode,
+    onLoad,
+    onDataSourceChange,
+    dataSource = [],
+  } = props;
 
   const value = data.value;
   const actions = data.actions;
+
+  /** 是否包含children */
+  const hasChildren = !!data.children?.length;
 
   /** 是否展开 */
   const isOpen = openCheck.isChecked(value);
@@ -36,13 +47,15 @@ const TreeItem = ({ data, share, methods, className, style, size }: ItemProps) =
   const isSCheck = isCheck(props);
   const isMCheck = isMultipleCheck(props) && !isSCheck; /* 权重低于单选 */
 
-  const isDisabled = props.disabled || valCheck.isDisabled(value);
+  const isLoading = loadingCheck.isChecked(value);
 
-  /** 是否包含children */
-  const hasChildren = !!data.children?.length;
+  const isDisabled = props.disabled || valCheck.isDisabled(value) || isLoading;
 
   /** 是否为树枝节点 */
   const isTwig = checkIsTwig();
+
+  /** 是否为动态加载树 */
+  const isLoadTwig = checkIsLoadTwig();
 
   /** 是否为空的树枝节点 */
   const isEmptyTwig = isTwig && !hasChildren;
@@ -97,12 +110,14 @@ const TreeItem = ({ data, share, methods, className, style, size }: ItemProps) =
   const toggleHandle = useFn(() => {
     if (isDisabled) return;
 
-    // const child = data.children;
-
     // 单选时共享此事件
     isSCheck && valueCheckHandle();
 
-    if (!isTwig) return;
+    if (!isTwig && !isLoadTwig) return;
+
+    if (isLoadTwig && !isOpen) {
+      loadHandle();
+    }
 
     if (isOpen) {
       // 已选中，移除当前级和所有子级
@@ -140,11 +155,45 @@ const TreeItem = ({ data, share, methods, className, style, size }: ItemProps) =
     return true;
   }
 
-  function renderIdent(parent: FlatMetas, identInd: number) {
+  /** 检测是否为需要动态加载的树枝节点 */
+  function checkIsLoadTwig() {
+    // 是否开启
+    if (!isFunction(onLoad)) return false;
+    // 已有子级的树枝节点排除
+    if (isTwig && hasChildren) return false;
+    // 标记为树叶节点的排除
+    return !data.isLeaf;
+  }
+
+  /** 触发加载子级时的处理程序 */
+  async function loadHandle() {
+    if (!onLoad) return;
+
+    loadingCheck.check(value);
+
+    try {
+      const _children = await onLoad(data);
+
+      if (isTruthyArray(_children)) {
+        data.origin.children = _children;
+
+        const newDs = [...dataSource];
+
+        onDataSourceChange?.(newDs);
+      }
+    } catch (e) {
+      // nothing
+    } finally {
+      console.log('加载结束');
+      loadingCheck.unCheck(value);
+    }
+  }
+
+  function renderIdent(parent: TreeNode, identInd: number) {
     // 当前层最后一个
     const currentLast = indicatorLine && isLast && identInd + 1 === data.zIndex;
 
-    const child = parent.children;
+    const child = parent.child;
 
     // 动态标识是否开启线
     let flag = true;
@@ -212,11 +261,16 @@ const TreeItem = ({ data, share, methods, className, style, size }: ItemProps) =
           {data.parents && data.parents.map(renderIdent)}
 
           <Switch>
-            <If when={isTwig}>
+            <If when={isLoading}>
+              <span className="m78-tree_icon color-primary" style={iconStyle}>
+                <LoadingOutlined />
+              </span>
+            </If>
+            <If when={isTwig || isLoadTwig}>
               <span
                 className={cls('m78-tree_icon', {
                   __open: isOpen,
-                  __empty: isEmptyTwig,
+                  __empty: isEmptyTwig && !isLoadTwig,
                 })}
                 style={iconStyle}
               >

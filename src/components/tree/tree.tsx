@@ -4,13 +4,15 @@ import cls from 'classnames';
 import { VariableSizeList as List } from 'react-window';
 import Spin from 'm78/spin';
 import Empty from 'm78/empty';
+import { useDelayDerivedToggleStatus } from 'm78/hooks';
 import { VirtualItem } from './virtual-item';
 import {
-  FlatMetas,
+  TreeNode,
   Share,
   TreePropsMultipleChoice,
   TreePropsSingleChoice,
   VirtualItemProps,
+  TreeValueType,
 } from './types';
 import TreeItem from './item';
 import {
@@ -31,6 +33,17 @@ export const defaultProps = {
   checkStrictly: true,
 };
 
+/**
+ * 维护一个便利更新tree data的方法
+ *  onDataSourceChange(ds) {}
+ *
+ *  move({ indexes: [1, 5, 7], t1 }, { indexes: [1, 2, 7], t2 });
+ *  insert([1, 5, 7], t1, t2, t3, ...);
+ *  push([1, 5, 7], t1, t2, ...);
+ *  unshift([1, 5, 7, t1, t2, ...])
+ *
+ * */
+
 function Tree(props: TreePropsSingleChoice): JSX.Element;
 function Tree(props: TreePropsMultipleChoice): JSX.Element;
 function Tree(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
@@ -40,7 +53,7 @@ function Tree(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
   const virtualList = useRef<List>(null!);
 
   const [state, setState] = useSetState<Share['state']>({
-    flatMetas: undefined,
+    nodes: undefined,
     loading: true,
     keyword: '',
   });
@@ -50,13 +63,16 @@ function Tree(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
   });
 
   /** 平铺列表 */
-  const list = state.flatMetas ? state.flatMetas.list : [];
+  const list = state.nodes ? state.nodes.list : [];
+
+  /** 延迟设置的加载状态, 防止数据量较少时loading一闪而过 */
+  const loading = useDelayDerivedToggleStatus(state.loading, 150);
 
   /** 是否开启虚拟滚动 */
   const isVirtual = !!(height && height > 0);
 
   /** 展开状态 */
-  const openCheck = useCheck<string | number, FlatMetas>({
+  const openCheck = useCheck<TreeValueType, TreeNode>({
     ...props,
     options: list,
     collector: props.valueGetter,
@@ -71,20 +87,24 @@ function Tree(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
   /** 如果是单选类型，将props调整为兼容useCheck的格式并代理onChange */
   const checkProps = useValCheckArgDispose(props);
 
-  /** 展开状态 */
-  const valCheck = useCheck<string | number, FlatMetas>({
+  /** 选中状态 */
+  const valCheck = useCheck<TreeValueType, TreeNode>({
     ...checkProps,
     options: list,
     collector: props.valueGetter,
-    disables: state.flatMetas?.disabledValues,
+    disables: state.nodes?.disabledValues,
   });
+
+  /** 节点加载状态 */
+  const loadingCheck = useCheck<TreeValueType>({});
 
   /** 共享状态 */
   const share: Share = {
     openCheck,
     valCheck,
+    loadingCheck,
     props: props as Share['props'],
-    flatMetas: state.flatMetas,
+    nodes: state.nodes,
     state,
     setState,
     self,
@@ -152,7 +172,7 @@ function Tree(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
 
   return (
     <div className={cls('m78-tree m78-scroll-bar __hoverEffect __style', size && `__${size}`)}>
-      {state.loading && <Spin full text="初始化中..." />}
+      {loading && <Spin full text="索引数据中..." />}
 
       {share.toolbar && <Toolbar {...share} methods={methods} />}
 

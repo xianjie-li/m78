@@ -15,7 +15,7 @@ const FOLD_ALL = 'FOLD_ALL';
 const Toolbar = ({
   valCheck,
   list,
-  flatMetas,
+  nodes,
   methods,
   props,
   toolbar,
@@ -28,7 +28,7 @@ const Toolbar = ({
 
   /** 生成展开选项 */
   const expansionOpt = useMemo(() => {
-    if (!flatMetas) return [];
+    if (!nodes) return [];
 
     const base = [
       {
@@ -41,7 +41,7 @@ const Toolbar = ({
       },
     ];
 
-    Array.from({ length: flatMetas.zList.length }).forEach((_, ind) => {
+    Array.from({ length: nodes.zList.length }).forEach((_, ind) => {
       base.push({
         label: `展开到${ind + 1}级`,
         value: String(ind),
@@ -49,7 +49,7 @@ const Toolbar = ({
     });
 
     return base;
-  }, [flatMetas]);
+  }, [nodes]);
 
   /** 展开控制 */
   const expansionHandle = useFn(val => {

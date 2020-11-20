@@ -7,7 +7,7 @@ import {
 } from '@lxjx/utils';
 import { useMemo } from 'react';
 import {
-  FlatMetas,
+  TreeNode,
   OptionsItem,
   ToolbarConf,
   TreeProps,
@@ -16,7 +16,7 @@ import {
   TreeValueType,
 } from './types';
 
-export const defaultValueGetter = (item: OptionsItem) => item.value!;
+export const defaultValueGetter = (item: OptionsItem) => item.value! || item.label;
 
 export const defaultLabelGetter = (item: OptionsItem) => item.label!;
 
@@ -43,7 +43,7 @@ const connectVal2Array = (val: any, array?: any[]) => {
 };
 
 /**
- * 将OptionsItem[]的每一项转换为FlatMetas并平铺到数组返回, 同时返回一些实用信息
+ * 将OptionsItem[]的每一项转换为treeNode并平铺到数组返回, 同时返回一些实用信息
  * @param optionList - OptionsItem选项组，为空或不存在时返回空数组
  * @param conf
  * @param conf.valueGetter - 获取value的方法
@@ -66,17 +66,17 @@ export function flatTreeData(
     skipSearchKeySplicing?: boolean;
   },
 ) {
-  const list: FlatMetas[] = [];
-  const expandableList: FlatMetas[] = [];
+  const list: TreeNode[] = [];
+  const expandableList: TreeNode[] = [];
   const expandableValues: TreeValueType[] = [];
-  const disables: FlatMetas[] = [];
+  const disables: TreeNode[] = [];
   const disabledValues: TreeValueType[] = [];
-  const zList: FlatMetas[][] = [];
+  const zList: TreeNode[][] = [];
   const zListValues: TreeValueType[][] = [];
   const { valueGetter, labelGetter, skipSearchKeySplicing } = conf;
 
-  // 将指定的FlatMetas添加到它所有父级的descendants列表中
-  function fillParentsDescendants(item: FlatMetas) {
+  // 将指定的TreeNode添加到它所有父级的descendants列表中
+  function fillParentsDescendants(item: TreeNode) {
     if (!isTruthyArray(item.parents)) return;
     item.parents!.forEach(p => {
       p.descendants && p.descendants.push(item);
@@ -89,22 +89,18 @@ export function flatTreeData(
   }
 
   // 平铺data树, 获取总层级，所有可展开项id
-  function flat(
-    target = [] as FlatMetas[],
-    optList: OptionsItem[],
-    zIndex = 0,
-    parent?: FlatMetas,
-  ) {
+  function flat(target = [] as TreeNode[], optList: OptionsItem[], zIndex = 0, parent?: TreeNode) {
     if (isArray(optList)) {
-      const siblings: FlatMetas[] = [];
+      const siblings: TreeNode[] = [];
       const siblingsValues: TreeValueType[] = [];
 
       optList.forEach((item, index) => {
         const val = valueGetter(item);
         const label = labelGetter(item);
 
-        const current: FlatMetas = {
+        const current: TreeNode = {
           ...item,
+          origin: item,
           zIndex,
           values: connectVal2Array(val, parent?.values)! /* value取值方式更换 */,
           indexes: connectVal2Array(index, parent?.indexes)!,
@@ -131,6 +127,12 @@ export function flatTreeData(
         // 添加父级节点value
         if (isArray(current.parents)) {
           current.parentsValues = current.parents.map(valueGetter);
+        }
+
+        // 为父节点添加child
+        if (parent) {
+          if (!parent.child) parent.child = [];
+          parent.child.push(current);
         }
 
         // 添加到所有父节点的子孙列表
@@ -242,7 +244,7 @@ export function highlightKeyword(label: any, keyword?: string) {
 }
 
 /** 帮助函数，过滤节点列表中所有包含禁用子项的节点并返回所有可用节点的value数组 */
-export function filterIncludeDisableChildNode(ls: FlatMetas[]) {
+export function filterIncludeDisableChildNode(ls: TreeNode[]) {
   const next: TreeValueType[] = [];
 
   ls.forEach(item => {
