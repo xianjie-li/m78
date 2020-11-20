@@ -1,0 +1,14 @@
+@import '~@/components/style';
+
+.d-spin-full-wrap {
+  position: relative;
+  width: 260px;
+  height: 260px;
+  border: 1px solid $b-border;
+  border-radius: $border-radius;
+  padding: 8px;
+
+  & + & {
+    margin-top: 32px;
+  }
+}
