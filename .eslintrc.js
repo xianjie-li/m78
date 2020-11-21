@@ -15,5 +15,6 @@ module.exports = {
     'no-restricted-globals': 'off',
     'react/no-unescaped-entities': 'off',
     'prefer-destructuring': 'off',
+    'class-methods-use-this': 'off',
   },
 };

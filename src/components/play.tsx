@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import Tree from 'm78/tree';
-import { OptionsItem } from 'm78/tree/types';
+import Tree, { OptionsItem, DataSourceUtils } from 'm78/tree';
 import { delay, getRandRange } from '@lxjx/utils';
 
 function mockTreeData(length: number, z: number, label = '选项') {
@@ -55,6 +54,11 @@ const dsList: OptionsItem[] = [
   },
 ];
 
+const du = new DataSourceUtils(dsList);
+
+console.log(du.getTargetByIndexes([0, 2]));
+
+
 const generateChildren = (pLabel = '') => {
   const length = getRandRange(0, 5);
 
@@ -85,7 +89,12 @@ const Play = () => {
         onLoad={async node => {
           await delay(600);
 
-          return generateChildren(node.label as string);
+          const ls = generateChildren(node.label as string);
+
+          console.log(ls);
+        
+
+          return ls;
         }}
       />
     </div>

@@ -41,7 +41,10 @@ export interface TreeProps extends ComponentBaseProps {
   height?: number;
 
   /* ############## 其他常用配置 ############## */
-  /** 开启异步加载数据，启用后，除了配置了OptionsItem.isLeaf的节点和已有含值子级的节点外，一律可展开，并在展开时触发此回调 */
+  /** 
+   * 开启异步加载数据，启用后，除了配置了OptionsItem.isLeaf的节点和已有含值子级的节点外，一律可展开，并在展开时触发此回调
+   * promise异常或返回空数组都会被忽略
+   *  */
   onLoad?: (node: TreeNode) => Promise<OptionsItem[]>;
   /** 禁用(工具条、展开、选中) */
   disabled?: boolean;
