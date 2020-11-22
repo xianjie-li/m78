@@ -2,12 +2,17 @@ import { FormLikeWithExtra, SetState, UseCheckReturns } from '@lxjx/hooks';
 import { ComponentBaseProps, DataSourceItem, Size } from 'm78/types';
 import React from 'react';
 import { ListChildComponentProps } from 'react-window';
+import { DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 import { flatTreeData } from './common';
 import { useMethods } from './methods';
 import { defaultProps } from './tree';
 
 /**
  * 拖拽
+ * 拖动开始时，关闭开启状态
+ * 停止在一个可展开节点上时，延迟一定时间后展开该节点
+ * 放置时根据拖动位置调整左侧缩进
+ * 拖放到元素上时，将其合并到元素末尾
  * */
 
 /** value允许类型 */
@@ -41,7 +46,7 @@ export interface TreeProps extends ComponentBaseProps {
   height?: number;
 
   /* ############## 其他常用配置 ############## */
-  /** 
+  /**
    * 开启异步加载数据，启用后，除了配置了OptionsItem.isLeaf的节点和已有含值子级的节点外，一律可展开，并在展开时触发此回调
    * promise异常或返回空数组都会被忽略
    *  */
@@ -81,8 +86,11 @@ export interface TreeProps extends ComponentBaseProps {
   /** 彩虹色连接指示线 */
   rainbowIndicatorLine?: boolean;
 
+  /** 开启拖拽 */
+  draggable?: boolean;
+
   /** 公用的action, 渲染在每个节点的右侧 */
-  // commonActions?: React.ReactNode;
+  // commonActions?: node => React.ReactNode;
 }
 
 /** 工具条配置 */
@@ -240,6 +248,11 @@ export interface ItemProps extends ComponentBaseProps {
     /** 缩进格和前导图标容器的宽度 */
     identWidth: number;
   };
+  /** 该项索引 */
+  index: number;
+  /** dnd */
+  provided?: DraggableProvided;
+  snapshot?: DraggableStateSnapshot;
 }
 
 export interface VirtualItemProps extends ListChildComponentProps {
@@ -247,5 +260,7 @@ export interface VirtualItemProps extends ListChildComponentProps {
   data: {
     /**  当前列表 */
     data: TreeNode[];
-  } & Omit<ItemProps, 'data'>;
+  } & Omit<ItemProps, 'data' | 'index' | 'provided'>;
 }
+
+export type DragItemProps = Omit<ItemProps, 'provided' | 'snapshot'>;

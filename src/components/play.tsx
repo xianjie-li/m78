@@ -30,7 +30,7 @@ function mockTreeData(length: number, z: number, label = '选项') {
   return ls;
 }
 
-const opt = mockTreeData(5, 5);
+const opt = mockTreeData(4, 2);
 
 const dsList: OptionsItem[] = [
   {
@@ -58,7 +58,6 @@ const du = new DataSourceUtils(dsList);
 
 console.log(du.getTargetByIndexes([0, 2]));
 
-
 const generateChildren = (pLabel = '') => {
   const length = getRandRange(0, 5);
 
@@ -69,32 +68,20 @@ const generateChildren = (pLabel = '') => {
 };
 
 const Play = () => {
-  const [ds, setDs] = useState(dsList);
+  const [ds, setDs] = useState(opt);
 
   return (
     <div>
       <Tree
-        multipleCheckable
+        draggable
+        checkable
         rainbowIndicatorLine
-        onChange={(a, b) => {
-          console.log('change', a, b);
-        }}
         height={400}
         toolbar
         dataSource={ds}
         defaultOpenAll
         onDataSourceChange={_ds => {
           setDs(_ds);
-        }}
-        onLoad={async node => {
-          await delay(600);
-
-          const ls = generateChildren(node.label as string);
-
-          console.log(ls);
-        
-
-          return ls;
         }}
       />
     </div>

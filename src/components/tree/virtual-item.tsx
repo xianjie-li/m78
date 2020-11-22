@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
+import { DragItem } from 'm78/tree/drag-item';
 import TreeItem from './item';
 import { VirtualItemProps } from './types';
 
 export const VirtualItem = ({ index, style, data }: VirtualItemProps) => {
   const { data: list, ...itemProps } = data;
+  const { draggable } = itemProps.share.props;
 
   const item = list[index];
 
@@ -35,5 +38,9 @@ export const VirtualItem = ({ index, style, data }: VirtualItemProps) => {
     );
   }
 
-  return <TreeItem data={item} key={item.value} {...itemProps} style={style} />;
+  if (!draggable) {
+    return <TreeItem data={item} key={item.value} {...itemProps} style={style} index={index} />;
+  }
+
+  return <DragItem data={item} key={item.value} {...itemProps} style={style} index={index} />;
 };

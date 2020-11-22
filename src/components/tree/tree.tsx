@@ -5,6 +5,16 @@ import { VariableSizeList as List } from 'react-window';
 import Spin from 'm78/spin';
 import Empty from 'm78/empty';
 import { useDelayDerivedToggleStatus } from 'm78/hooks';
+import {
+  DraggableRubric,
+  DragDropContext,
+  Droppable,
+  DraggableProvided,
+  DraggableStateSnapshot,
+  DroppableProvided,
+  DroppableProps,
+} from 'react-beautiful-dnd';
+import { DragItem } from 'm78/tree/drag-item';
 import { VirtualItem } from './virtual-item';
 import {
   TreeNode,
@@ -47,7 +57,7 @@ export const defaultProps = {
 function Tree(props: TreePropsSingleChoice): JSX.Element;
 function Tree(props: TreePropsMultipleChoice): JSX.Element;
 function Tree(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
-  const { size, height } = props as Share['props'];
+  const { size, height, draggable } = props as Share['props'];
 
   // 虚拟列表实例
   const virtualList = useRef<List>(null!);
@@ -137,28 +147,76 @@ function Tree(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
   };
 
   function renderNormalList() {
-    return showList.map(item => {
-      return <TreeItem key={item.value} {...itemData} data={item} />;
-    });
+    if (!draggable) {
+      return showList.map((item, index) => (
+        <TreeItem key={item.value} {...itemData} data={item} index={index} />
+      ));
+    }
+
+    return renderDragList((provided: DroppableProvided) => (
+      <div ref={provided.innerRef}>
+        {showList.map((item, index) => (
+          <DragItem key={item.value} {...itemData} data={item} index={index} />
+        ))}
+        {provided.placeholder}
+      </div>
+    ));
   }
 
   function renderVirtualList() {
+    const getList = (provided?: DroppableProvided) => {
+      return (
+        <List
+          ref={virtualList}
+          height={height || 0}
+          itemCount={showList.length}
+          itemSize={index => showList[index].height || sizeInfo.itemHeight}
+          estimatedItemSize={sizeInfo.itemHeight}
+          width="auto"
+          className="m78-tree_nodes"
+          overscanCount={3}
+          itemData={itemData}
+          itemKey={index => showList[index].value}
+          onScroll={methods.scrollHandle}
+          // 拖动
+          outerRef={provided ? provided.innerRef : undefined}
+        >
+          {VirtualItem}
+        </List>
+      );
+    };
+
+    if (!draggable) return getList();
+
+    return renderDragList(getList);
+  }
+
+  function renderDragPlaceHolder(
+    provided: DraggableProvided,
+    snapshot: DraggableStateSnapshot,
+    rubric: DraggableRubric,
+  ) {
     return (
-      <List
-        ref={virtualList}
-        height={height || 0}
-        itemCount={showList.length}
-        itemSize={index => showList[index].height || sizeInfo.itemHeight}
-        estimatedItemSize={sizeInfo.itemHeight}
-        width="auto"
-        className="m78-tree_nodes"
-        overscanCount={3}
-        itemData={itemData}
-        itemKey={index => showList[index].value}
-        onScroll={methods.scrollHandle}
+      <TreeItem
+        {...itemData}
+        provided={provided}
+        snapshot={snapshot}
+        data={showList[rubric.source.index]}
+        index={rubric.source.index}
+      />
+    );
+  }
+
+  function renderDragList(renderChildren: DroppableProps['children']) {
+    return (
+      <Droppable
+        droppableId="m78-tree-droppable"
+        mode={isVirtual ? 'virtual' : 'standard'}
+        isCombineEnabled
+        renderClone={isVirtual ? renderDragPlaceHolder : undefined}
       >
-        {VirtualItem}
-      </List>
+        {renderChildren}
+      </Droppable>
     );
   }
 
@@ -171,15 +229,21 @@ function Tree(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
   const isEmpty = isSearchAndNoList || !isTruthyArray(props.dataSource);
 
   return (
-    <div className={cls('m78-tree m78-scroll-bar __hoverEffect __style', size && `__${size}`)}>
-      {loading && <Spin full text="索引数据中..." />}
+    <DragDropContext
+      onDragEnd={(...args) => {
+        console.log(args);
+      }}
+    >
+      <div className={cls('m78-tree m78-scroll-bar __hoverEffect __style', size && `__${size}`)}>
+        {loading && <Spin full text="索引数据中..." />}
 
-      {share.toolbar && <Toolbar {...share} methods={methods} />}
+        {share.toolbar && <Toolbar {...share} methods={methods} />}
 
-      {isEmpty && <Empty desc="暂无数据" className="m78-tree_empty" />}
+        {isEmpty && <Empty desc="暂无数据" className="m78-tree_empty" />}
 
-      {!isEmpty && renderList()}
-    </div>
+        {!isEmpty && renderList()}
+      </div>
+    </DragDropContext>
   );
 }
 
