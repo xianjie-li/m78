@@ -15,6 +15,7 @@ import {
   DroppableProps,
 } from 'react-beautiful-dnd';
 import { DragItem } from 'm78/tree/drag-item';
+import { useDragHandle } from 'm78/tree/useDragHandle';
 import { VirtualItem } from './virtual-item';
 import {
   TreeNode,
@@ -52,6 +53,11 @@ export const defaultProps = {
  *  push([1, 5, 7], t1, t2, ...);
  *  unshift([1, 5, 7, t1, t2, ...])
  *
+ * 拖拽
+ * 拖动开始时，关闭开启状态
+ * 停止在一个可展开节点上时，延迟一定时间后展开该节点
+ * 放置时根据拖动位置调整左侧缩进
+ * 拖放到元素上时，将其合并到元素末尾
  * */
 
 function Tree(props: TreePropsSingleChoice): JSX.Element;
@@ -135,6 +141,9 @@ function Tree(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
     openCheck.checked,
     state.keyword,
   ]);
+
+  /** 拖动相关 */
+  const dragMetas = useDragHandle(share, methods, showList);
 
   /** item的尺寸信息(高度、缩进) */
   const sizeInfo = methods.getSize();
@@ -229,11 +238,7 @@ function Tree(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
   const isEmpty = isSearchAndNoList || !isTruthyArray(props.dataSource);
 
   return (
-    <DragDropContext
-      onDragEnd={(...args) => {
-        console.log(args);
-      }}
-    >
+    <DragDropContext onDragEnd={() => {}} onBeforeCapture={dragMetas.beforeDragHandle}>
       <div className={cls('m78-tree m78-scroll-bar __hoverEffect __style', size && `__${size}`)}>
         {loading && <Spin full text="索引数据中..." />}
 

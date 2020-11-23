@@ -275,4 +275,20 @@ export function getToolbarConf(toolbar?: TreeProps['toolbar']) {
   };
 }
 
+/** 根据value和索引拼接字符串，用于onBeforeCapture等回调中更方便获取 */
+export function getValueIndexJointString(value: TreeValueType, index: number) {
+  return `${typeof value}##${value}##${index}`;
+}
+
+/** 将splitValueIndexJointString处理过的字符裁剪为原始值 */
+export function splitValueIndexJointString(str: string) {
+  const sp = str.split('##');
+
+  if (sp.length !== 3) return null;
+
+  const [type, value, index] = sp;
+
+  return [type === 'number' ? Number(value) : value, Number(index)] as [TreeValueType, number];
+}
+
 export { isTruthyArray };

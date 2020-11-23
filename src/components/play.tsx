@@ -30,7 +30,7 @@ function mockTreeData(length: number, z: number, label = '选项') {
   return ls;
 }
 
-const opt = mockTreeData(4, 2);
+const opt = mockTreeData(3, 3);
 
 const dsList: OptionsItem[] = [
   {
@@ -74,7 +74,7 @@ const Play = () => {
     <div>
       <Tree
         draggable
-        checkable
+        multipleCheckable
         rainbowIndicatorLine
         height={400}
         toolbar

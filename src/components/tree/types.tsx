@@ -7,14 +7,6 @@ import { flatTreeData } from './common';
 import { useMethods } from './methods';
 import { defaultProps } from './tree';
 
-/**
- * 拖拽
- * 拖动开始时，关闭开启状态
- * 停止在一个可展开节点上时，延迟一定时间后展开该节点
- * 放置时根据拖动位置调整左侧缩进
- * 拖放到元素上时，将其合并到元素末尾
- * */
-
 /** value允许类型 */
 export type TreeValueType = string | number;
 

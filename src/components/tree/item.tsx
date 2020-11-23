@@ -288,7 +288,7 @@ const TreeItem = React.memo(
         title={isEmptyTwig ? '空节点' : ''}
         {...getDragProps()}
         style={{
-          [isVirtual ? 'height' : 'minHeight']: itemHeight,
+          height: itemHeight,
           ...getStyle(),
         }}
       >
