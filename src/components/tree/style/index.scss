@@ -50,7 +50,6 @@ $ident-w: 20px;
   &.__hoverEffect {
     .m78-tree_item {
       @include effect-bg;
-      transition: $animation-duration-base;
     }
   }
 
@@ -176,6 +175,8 @@ $ident-w: 20px;
   }
 
   &_action {
+    display: flex;
+    align-items: center;
     margin-left: 12px;
   }
 

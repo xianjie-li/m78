@@ -47,9 +47,9 @@ export interface TreeProps extends ComponentBaseProps {
   disabled?: boolean;
   /** 手风琴模式，同级只会有一个节点被展开 */
   accordion?: boolean;
-  /** 默认展开所有节点, (通过api调用?)  */
+  /** 默认展开所有节点  */
   defaultOpenAll?: boolean;
-  /** 默认展开到第几级, (通过api调用?) */
+  /** 默认展开到第几级 */
   defaultOpenZIndex?: number;
   /** 将包含children但值为`[]`的数组视为子节点, 使其可在单选模式下不开启checkTwig的情况下选中 */
   emptyTwigAsNode?: boolean;
@@ -81,7 +81,7 @@ export interface TreeProps extends ComponentBaseProps {
   /** 开启拖拽 */
   draggable?: boolean;
 
-  /** 公用的action, 渲染在每个节点的右侧 */
+  /** TODO: 公用的action, 渲染在每个节点的右侧 */
   // commonActions?: node => React.ReactNode;
 }
 

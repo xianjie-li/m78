@@ -12,7 +12,12 @@ export function useLifeCycle(share: Share, methods: ReturnType<typeof useMethods
 
   // 同步平铺dataSource
   useEffect(() => {
-    if (!dataSource) return;
+    if (!dataSource) {
+      setState({
+        loading: false,
+      });
+      return;
+    }
 
     if (!state.loading) {
       setState({
