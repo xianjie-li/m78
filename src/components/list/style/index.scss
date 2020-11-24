@@ -135,6 +135,13 @@
     & .m78-list_extra.__gray {
       color: $b-second;
     }
+
+    &.__vertical {
+      .m78-list_cont-left {
+        margin-bottom: 8px;
+      }
+    }
+
   }
 
   &.__vertical {
@@ -146,9 +153,7 @@
     .m78-list_cont-right {
       width: 100%;
     }
-    .m78-list_cont-left {
-      margin-bottom: 8px;
-    }
+
     .m78-list_cont-right {
       margin-left: 0;
     }
