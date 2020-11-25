@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { DragItem } from 'm78/tree/drag-item';
+import { DragItem } from './drag-item';
 import TreeItem from './item';
 import { VirtualItemProps } from './types';
 

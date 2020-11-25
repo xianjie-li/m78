@@ -17,7 +17,7 @@ import _toConsumableArray from '@babel/runtime/helpers/toConsumableArray';
 import _get from 'lodash/get';
 import { useUpdate } from 'react-use';
 import _has from 'lodash/has';
-export { FormInstance, Meta, Rule } from 'rc-field-form/es/interface';
+export { FormInstance, Meta, Rule, RuleRender } from 'rc-field-form/es/interface';
 
 /** 从错误字符数组中取第一位 */
 function getFirstError(errors) {

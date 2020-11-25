@@ -37,7 +37,7 @@ function useDelayDerivedToggleStatus(toggle) {
     }
 
     if (toggle && !leading || !toggle && !trailing) {
-      setInnerState(toggle);
+      toggle !== innerState && setInnerState(toggle);
       return;
     }
 

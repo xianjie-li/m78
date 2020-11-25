@@ -524,7 +524,10 @@ var _ModalBase = function _ModalBase(props) {
           transform: to([sp.x, sp.y, sp.scale], function (x, y, scale) {
             return "translate3d(".concat(x, "px,").concat(y, "px,0px) scale3d(").concat(scale, ",").concat(scale, ",").concat(scale, ")");
           }),
-          opacity: sp.opacity
+          opacity: sp.opacity,
+          display: sp.opacity.to(function (o) {
+            return o <= 0.2 ? 'none' : '';
+          })
         })
       }, /*#__PURE__*/React.createElement("div", {
         className: "m78-modal_calc-node",

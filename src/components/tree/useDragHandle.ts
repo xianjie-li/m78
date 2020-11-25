@@ -1,6 +1,6 @@
 import { useFn } from '@lxjx/hooks';
 import { BeforeCapture } from 'react-beautiful-dnd';
-import { splitValueIndexJointString } from 'm78/tree/common';
+import { splitValueIndexJointString } from './common';
 import { Share, TreeNode } from './types';
 import { useMethods } from './methods';
 
@@ -16,7 +16,7 @@ export function useDragHandle(
 
     if (!infos) return;
 
-    const [value, index] = infos;
+    const [, index] = infos;
 
     const current = showList[index];
 

@@ -7,9 +7,9 @@ export interface ResultProps extends ComponentBaseProps {
     /** 'success' | 类型 */
     type?: ResultTypes;
     /** '操作成功' | 标题 */
-    title?: string;
+    title?: React.ReactNode;
     /** 描述 */
-    desc?: string;
+    desc?: React.ReactNode;
     /** 子元素会作为说明区域显示 */
     children?: React.ReactNode;
     /** 操作区，一般会传递一组按钮或连接 */

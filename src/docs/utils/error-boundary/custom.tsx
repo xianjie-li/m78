@@ -1,6 +1,5 @@
 import React from 'react';
 import ErrorBoundary from 'm78/error-boundary';
-import { Divider } from 'm78/layout';
 
 function SomeError() {
   let a: any;

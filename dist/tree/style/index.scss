@@ -60,11 +60,22 @@ $ident-w: 20px;
     padding: 0 4px 0 0;
     border-radius: $border-radius;
     user-select: none;
+    background-color: transparent;
+
+    &.__dragging {
+      background-color: rgba($color, 0.1) !important;
+      border: 1px solid rgba($color, 0.6);
+    }
 
     &.__disabled {
       color: $b-disable;
       background-color: transparent !important;
       cursor: not-allowed !important;
+    }
+
+    &.__combine {
+      background-color: rgba($green-6, 0.2);
+      transition: background-color 0s 0.3s !important;
     }
   }
 
@@ -164,6 +175,8 @@ $ident-w: 20px;
   }
 
   &_action {
+    display: flex;
+    align-items: center;
     margin-left: 12px;
   }
 

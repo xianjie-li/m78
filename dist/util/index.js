@@ -16,10 +16,10 @@ var stopPropagation = {
     e.stopPropagation();
   }
 };
-/** 指定错误消息和组件命名空间来抛出一个错误 */
+/** throw error */
 
 function throwError(errorMsg, namespace) {
-  throw new Error((namespace ? "".concat(namespace, " -> ") : '') + errorMsg);
+  throw new Error("M78 -> ".concat(namespace ? "".concat(namespace, " -> ") : '', " ").concat(errorMsg));
 }
 
 export { LG, MD, SM, XL, Z_INDEX, Z_INDEX_DRAWER, Z_INDEX_MESSAGE, Z_INDEX_MODAL, stopPropagation, throwError };

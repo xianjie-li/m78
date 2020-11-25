@@ -1,18 +1,76 @@
 import 'm78/auth/style';
+export { default as cacheMiddleware } from '@lxjx/auth/cacheMiddleware';
 import _objectSpread from '@babel/runtime/helpers/objectSpread2';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import createApi from '@lxjx/auth';
+export { Action, Middleware, PromiseBack, ValidMeta, Validator } from '@lxjx/auth';
+import { isFunction } from '@lxjx/utils';
+import _slicedToArray from '@babel/runtime/helpers/slicedToArray';
+import { useSetState, useFn, useEffectEqual, useSelf } from '@lxjx/hooks';
+import { useDelayDerivedToggleStatus } from 'm78/hooks';
 import _extends from '@babel/runtime/helpers/extends';
 import _objectWithoutProperties from '@babel/runtime/helpers/objectWithoutProperties';
-import _slicedToArray from '@babel/runtime/helpers/slicedToArray';
-import { useSetState, useSelf, useFn, useEffectEqual } from '@lxjx/hooks';
-import { useDelayDerivedToggleStatus } from 'm78/hooks';
 import Spin from 'm78/spin';
 import Button from 'm78/button';
 import Result from 'm78/result';
 import Popper from 'm78/popper';
 
-function createAuth(auth) {
+function createDeps(auth, useDeps) {
+  var _Deps = function _Deps(_ref) {
+    var children = _ref.children;
+    var deps = useDeps();
+
+    if (isFunction(children)) {
+      return children(deps);
+    }
+
+    return null;
+  };
+
+  return _Deps;
+}
+
+function createUseAuth(auth) {
+  var useAuth = function useAuth(keys, config) {
+    var _ref = config || {},
+        _ref$disabled = _ref.disabled,
+        disabled = _ref$disabled === void 0 ? false : _ref$disabled;
+
+    var _useSetState = useSetState({
+      pending: false,
+      rejects: null
+    }),
+        _useSetState2 = _slicedToArray(_useSetState, 2),
+        state = _useSetState2[0],
+        setState = _useSetState2[1];
+
+    var _pending = useDelayDerivedToggleStatus(state.pending, 100);
+
+    var authHandler = useFn(function () {
+      if (disabled) return;
+      !state.pending && setState({
+        pending: true
+      });
+      auth.auth(keys, config).then(function (rejects) {
+        setState({
+          rejects: rejects,
+          pending: false
+        });
+      });
+    });
+    useEffectEqual(authHandler, [keys, config === null || config === void 0 ? void 0 : config.extra]);
+    useEffect(function () {
+      return auth.subscribe(authHandler);
+    }, []);
+    return _objectSpread(_objectSpread({}, state), {}, {
+      pending: _pending
+    });
+  };
+
+  return useAuth;
+}
+
+function createAuth(auth, useAuth) {
   var AuthComponent = function AuthComponent(props) {
     var children = props.children,
         keys = props.keys,
@@ -24,47 +82,22 @@ function createAuth(auth) {
         pendingNode = props.pendingNode,
         disabled = props.disabled,
         feedback = props.feedback;
-
-    var _useSetState = useSetState({
-      pending: true,
-      rejects: null
-    }),
-        _useSetState2 = _slicedToArray(_useSetState, 2),
-        state = _useSetState2[0],
-        setState = _useSetState2[1];
-
     var self = useSelf({
       /** 在实际进行验证前阻止渲染 */
       flag: true
     });
-    var loading = useDelayDerivedToggleStatus(state.pending);
-    var authHandler = useFn(function () {
-      if (disabled) return;
-      !state.pending && setState({
-        pending: true
-      });
-      self.flag = false;
-      auth.auth(keys, {
-        extra: extra,
-        validators: validators
-      }).then(function (rejects) {
-        setState({
-          rejects: rejects
-        });
-      })["finally"](function () {
-        setState({
-          pending: false
-        });
-      });
-    });
-    useEffectEqual(authHandler, [keys, extra]);
     useEffect(function () {
-      return auth.subscribe(authHandler);
+      self.flag = false;
     }, []);
+    var state = useAuth(keys, {
+      extra: extra,
+      validators: validators,
+      disabled: disabled
+    });
     if (disabled) return children;
     if (self.flag) return null;
 
-    if (loading) {
+    if (state.pending) {
       return pendingNode || /*#__PURE__*/React.createElement(Spin, {
         text: "\u9A8C\u8BC1\u4E2D"
       });
@@ -123,9 +156,46 @@ function createAuth(auth) {
   return AuthComponent;
 }
 
+function createUseDeps(auth) {
+  var defSelector = function defSelector(d) {
+    return d;
+  };
+
+  var useDeps = function useDeps() {
+    var selector = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : defSelector;
+    var equalFn = arguments.length > 1 ? arguments[1] : undefined;
+    var select = useFn(function () {
+      return selector(auth.getDeps());
+    });
+
+    var _useState = useState(select),
+        _useState2 = _slicedToArray(_useState, 2),
+        deps = _useState2[0],
+        setDeps = _useState2[1];
+
+    var handle = useFn(function () {
+      var selected = select();
+
+      if (selected !== deps) {
+        if (equalFn && equalFn(selected, deps)) return;
+        setDeps(selected);
+      }
+    });
+    useEffect(function () {
+      return auth.subscribe(handle);
+    }, []);
+    return deps;
+  };
+
+  return useDeps;
+}
+
 var create = function create(config) {
   var auth = createApi(config);
-  var Auth = createAuth(auth);
+  var useAuth = createUseAuth(auth);
+  var Auth = createAuth(auth, useAuth);
+  var useDeps = createUseDeps(auth);
+  var Deps = createDeps(auth, useDeps);
 
   var withAuth = function withAuth(conf) {
     return function (Component) {
@@ -142,8 +212,20 @@ var create = function create(config) {
 
   return _objectSpread(_objectSpread({}, auth), {}, {
     Auth: Auth,
-    withAuth: withAuth
+    withAuth: withAuth,
+    useAuth: useAuth,
+    useDeps: useDeps,
+    Deps: Deps
   });
 };
 
+var AuthTypeEnum;
+
+(function (AuthTypeEnum) {
+  AuthTypeEnum["feedback"] = "feedback";
+  AuthTypeEnum["hidden"] = "hidden";
+  AuthTypeEnum["popper"] = "popper";
+})(AuthTypeEnum || (AuthTypeEnum = {}));
+
 export default create;
+export { AuthTypeEnum };

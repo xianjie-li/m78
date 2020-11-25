@@ -14,8 +14,8 @@ import {
   DroppableProvided,
   DroppableProps,
 } from 'react-beautiful-dnd';
-import { DragItem } from 'm78/tree/drag-item';
-import { useDragHandle } from 'm78/tree/useDragHandle';
+import { DragItem } from './drag-item';
+import { useDragHandle } from './useDragHandle';
 import { VirtualItem } from './virtual-item';
 import {
   TreeNode,

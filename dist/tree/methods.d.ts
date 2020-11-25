@@ -1,17 +1,17 @@
-import { FlatMetas, Share } from './types';
+import { TreeNode, Share } from './types';
 export declare function useMethods(share: Share): {
-    isShow: (item: FlatMetas) => boolean;
+    isShow: (item: TreeNode) => boolean;
     openAll: () => void;
     openToZ: (z: number) => void;
-    getSelfAndDescendants: (item: FlatMetas) => (string | number)[];
-    getSelfAndParents: (item: FlatMetas) => (string | number)[];
+    getSelfAndDescendants: (item: TreeNode) => (string | number)[];
+    getSelfAndParents: (item: TreeNode) => (string | number)[];
     getSize: () => {
         itemHeight: number;
         identWidth: number;
     };
-    getShowList: (list: FlatMetas[], keyword?: string | undefined) => FlatMetas[];
+    getShowList: (list: TreeNode[], keyword?: string | undefined) => TreeNode[];
     scrollHandle: () => void;
     keywordChangeHandle: (keyword: any) => void;
-    syncParentsChecked: (item: FlatMetas, checked?: boolean | undefined) => void;
-    getSelfAndDescendantsItem: (item: FlatMetas) => FlatMetas[];
+    syncParentsChecked: (item: TreeNode, checked?: boolean | undefined) => void;
+    getSelfAndDescendantsItem: (item: TreeNode) => TreeNode[];
 };

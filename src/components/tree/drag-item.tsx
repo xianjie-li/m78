@@ -1,6 +1,6 @@
 import React from 'react';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
-import { getValueIndexJointString } from 'm78/tree/common';
+import { getValueIndexJointString } from './common';
 import TreeItem from './item';
 import { DragItemProps } from './types';
 

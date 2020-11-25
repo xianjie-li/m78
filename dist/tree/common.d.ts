@@ -1,7 +1,7 @@
 /// <reference types="react" />
 import { isTruthyArray } from '@lxjx/utils';
-import { FlatMetas, OptionsItem, ToolbarConf, TreeProps, TreePropsMultipleChoice, TreePropsSingleChoice } from './types';
-export declare const defaultValueGetter: (item: OptionsItem) => string | number;
+import { TreeNode, OptionsItem, ToolbarConf, TreeProps, TreePropsMultipleChoice, TreePropsSingleChoice, TreeValueType } from './types';
+export declare const defaultValueGetter: (item: OptionsItem) => {} | null | undefined;
 export declare const defaultLabelGetter: (item: OptionsItem) => string | number | boolean | {} | import("react").ReactElement<any, string | ((props: any) => import("react").ReactElement<any, string | any | (new (props: any) => import("react").Component<any, any, any>)> | null) | (new (props: any) => import("react").Component<any, any, any>)> | import("react").ReactNodeArray | import("react").ReactPortal;
 /** 预设尺寸 */
 export declare const sizeMap: {
@@ -19,7 +19,7 @@ export declare const sizeMap: {
     };
 };
 /**
- * 将OptionsItem[]的每一项转换为FlatMetas并平铺到数组返回, 同时返回一些实用信息
+ * 将OptionsItem[]的每一项转换为treeNode并平铺到数组返回, 同时返回一些实用信息
  * @param optionList - OptionsItem选项组，为空或不存在时返回空数组
  * @param conf
  * @param conf.valueGetter - 获取value的方法
@@ -39,13 +39,13 @@ export declare function flatTreeData(optionList: OptionsItem[], conf: {
     labelGetter: NonNullable<TreeProps['labelGetter']>;
     skipSearchKeySplicing?: boolean;
 }): {
-    list: FlatMetas[];
-    expandableList: FlatMetas[];
+    list: TreeNode[];
+    expandableList: TreeNode[];
     expandableValues: (string | number)[];
-    zList: FlatMetas[][];
+    zList: TreeNode[][];
     zListValues: (string | number)[][];
     disabledValues: (string | number)[];
-    disables: FlatMetas[];
+    disables: TreeNode[];
 };
 export declare function isMultipleCheck(props: TreePropsSingleChoice | TreePropsMultipleChoice): props is TreePropsMultipleChoice;
 export declare function isCheck(props: TreePropsSingleChoice | TreePropsMultipleChoice): props is TreePropsSingleChoice;
@@ -54,7 +54,11 @@ export declare function useValCheckArgDispose(props: TreePropsSingleChoice | Tre
 /** 如果传入值为字符，根据关键词裁剪并高亮字符中的所有字符 */
 export declare function highlightKeyword(label: any, keyword?: string): string;
 /** 帮助函数，过滤节点列表中所有包含禁用子项的节点并返回所有可用节点的value数组 */
-export declare function filterIncludeDisableChildNode(ls: FlatMetas[]): (string | number)[];
+export declare function filterIncludeDisableChildNode(ls: TreeNode[]): (string | number)[];
 /** 根据传入配置获取toolbar实际配置，如果启用会返回各项的启用配置对象 */
 export declare function getToolbarConf(toolbar?: TreeProps['toolbar']): ToolbarConf | undefined;
+/** 根据value和索引拼接字符串，用于onBeforeCapture等回调中更方便获取 */
+export declare function getValueIndexJointString(value: TreeValueType, index: number): string;
+/** 将splitValueIndexJointString处理过的字符裁剪为原始值 */
+export declare function splitValueIndexJointString(str: string): [string | number, number] | null;
 export { isTruthyArray };

@@ -289,6 +289,8 @@ var Input = /*#__PURE__*/React.forwardRef(function (_props, ref) {
       if (parent) {
         parent.appendChild(cloneText.current);
       }
+
+      calcTextHeight();
     } // eslint-disable-next-line
 
   }, []);

@@ -5,18 +5,22 @@ import _slicedToArray from '@babel/runtime/helpers/slicedToArray';
 import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { useFn, useSetState, useSelf, useCheck } from '@lxjx/hooks';
 import cls from 'classnames';
-import { VariableSizeList } from 'react-window';
+import { areEqual, VariableSizeList } from 'react-window';
 import Spin from 'm78/spin';
 import Empty from 'm78/empty';
-import _objectWithoutProperties from '@babel/runtime/helpers/objectWithoutProperties';
-import _defineProperty from '@babel/runtime/helpers/defineProperty';
+import { useDelayDerivedToggleStatus } from 'm78/hooks';
+import { Draggable, DragDropContext, Droppable } from 'react-beautiful-dnd';
+import _typeof from '@babel/runtime/helpers/typeof';
+import _toConsumableArray from '@babel/runtime/helpers/toConsumableArray';
+import { isBoolean, isArray, isTruthyArray, isTruthyOrZero, heightLightMatchString, isFunction, isNumber } from '@lxjx/utils';
+import _regeneratorRuntime from '@babel/runtime/regenerator';
+import _asyncToGenerator from '@babel/runtime/helpers/asyncToGenerator';
 import { Switch, If } from 'm78/fork';
-import { CaretRightOutlined, DownOutlined } from 'm78/icon';
-import { isBoolean, isArray, isTruthyArray, heightLightMatchString, isTruthyOrZero, isFunction, isNumber } from '@lxjx/utils';
+import { LoadingOutlined, CaretRightOutlined, DownOutlined } from 'm78/icon';
 import { stopPropagation } from 'm78/util';
 import Check from 'm78/check';
 import { SizeEnum } from 'm78/types';
-import _toConsumableArray from '@babel/runtime/helpers/toConsumableArray';
+import _objectWithoutProperties from '@babel/runtime/helpers/objectWithoutProperties';
 import _clamp from 'lodash/clamp';
 import _debounce from 'lodash/debounce';
 import { useUpdateEffect } from 'react-use';
@@ -25,7 +29,7 @@ import Select from 'm78/select';
 import Input from 'm78/input';
 
 var defaultValueGetter = function defaultValueGetter(item) {
-  return item.value;
+  return item.value || item.label;
 };
 var defaultLabelGetter = function defaultLabelGetter(item) {
   return item.label;
@@ -53,7 +57,7 @@ var connectVal2Array = function connectVal2Array(val, array) {
   return [].concat(_toConsumableArray(array), [val]);
 };
 /**
- * 将OptionsItem[]的每一项转换为FlatMetas并平铺到数组返回, 同时返回一些实用信息
+ * 将OptionsItem[]的每一项转换为treeNode并平铺到数组返回, 同时返回一些实用信息
  * @param optionList - OptionsItem选项组，为空或不存在时返回空数组
  * @param conf
  * @param conf.valueGetter - 获取value的方法
@@ -80,7 +84,7 @@ function flatTreeData(optionList, conf) {
   var zListValues = [];
   var valueGetter = conf.valueGetter,
       labelGetter = conf.labelGetter,
-      skipSearchKeySplicing = conf.skipSearchKeySplicing; // 将指定的FlatMetas添加到它所有父级的descendants列表中
+      skipSearchKeySplicing = conf.skipSearchKeySplicing; // 将指定的TreeNode添加到它所有父级的descendants列表中
 
   function fillParentsDescendants(item) {
     if (!isTruthyArray(item.parents)) return;
@@ -110,6 +114,7 @@ function flatTreeData(optionList, conf) {
         var label = labelGetter(item);
 
         var current = _objectSpread(_objectSpread({}, item), {}, {
+          origin: item,
           zIndex: zIndex,
           values: connectVal2Array(val, parent === null || parent === void 0 ? void 0 : parent.values)
           /* value取值方式更换 */
@@ -137,6 +142,12 @@ function flatTreeData(optionList, conf) {
 
         if (isArray(current.parents)) {
           current.parentsValues = current.parents.map(valueGetter);
+        } // 为父节点添加child
+
+
+        if (parent) {
+          if (!parent.child) parent.child = [];
+          parent.child.push(current);
         } // 添加到所有父节点的子孙列表
 
 
@@ -265,10 +276,27 @@ function getToolbarConf(toolbar) {
   if (isBoolean(toolbar)) return def;
   return _objectSpread(_objectSpread({}, def), toolbar);
 }
+/** 根据value和索引拼接字符串，用于onBeforeCapture等回调中更方便获取 */
+
+function getValueIndexJointString(value, index) {
+  return "".concat(_typeof(value), "##").concat(value, "##").concat(index);
+}
+/** 将splitValueIndexJointString处理过的字符裁剪为原始值 */
+
+function splitValueIndexJointString(str) {
+  var sp = str.split('##');
+  if (sp.length !== 3) return null;
+
+  var _sp = _slicedToArray(sp, 3),
+      type = _sp[0],
+      value = _sp[1],
+      index = _sp[2];
+
+  return [type === 'number' ? Number(value) : value, Number(index)];
+}
 
 var openRotateClassName = 'm78-tree_open-icon';
-
-var TreeItem = function TreeItem(_ref) {
+var TreeItem = /*#__PURE__*/React.memo(function (_ref) {
   var _data$children;
 
   var data = _ref.data,
@@ -276,20 +304,32 @@ var TreeItem = function TreeItem(_ref) {
       methods = _ref.methods,
       className = _ref.className,
       style = _ref.style,
-      size = _ref.size;
+      size = _ref.size,
+      provided = _ref.provided,
+      snapshot = _ref.snapshot;
   var openCheck = share.openCheck,
       valCheck = share.valCheck,
       props = share.props,
       isVirtual = share.isVirtual,
-      state = share.state;
+      state = share.state,
+      loadingCheck = share.loadingCheck;
   var itemHeight = size.itemHeight,
       identWidth = size.identWidth;
   var indicatorLine = props.indicatorLine,
       expansionIcon = props.expansionIcon,
       checkStrictly = props.checkStrictly,
-      emptyTwigAsNode = props.emptyTwigAsNode;
+      emptyTwigAsNode = props.emptyTwigAsNode,
+      onLoad = props.onLoad,
+      onDataSourceChange = props.onDataSourceChange,
+      _props$dataSource = props.dataSource,
+      dataSource = _props$dataSource === void 0 ? [] : _props$dataSource,
+      draggable = props.draggable;
+  var isDraggable = provided && draggable;
   var value = data.value;
   var actions = data.actions;
+  /** 是否包含children */
+
+  var hasChildren = !!((_data$children = data.children) === null || _data$children === void 0 ? void 0 : _data$children.length);
   /** 是否展开 */
 
   var isOpen = openCheck.isChecked(value);
@@ -302,13 +342,14 @@ var TreeItem = function TreeItem(_ref) {
   var isMCheck = isMultipleCheck(props) && !isSCheck;
   /* 权重低于单选 */
 
-  var isDisabled = props.disabled || valCheck.isDisabled(value);
-  /** 是否包含children */
-
-  var hasChildren = !!((_data$children = data.children) === null || _data$children === void 0 ? void 0 : _data$children.length);
+  var isLoading = loadingCheck.isChecked(value);
+  var isDisabled = props.disabled || valCheck.isDisabled(value) || isLoading;
   /** 是否为树枝节点 */
 
   var isTwig = checkIsTwig();
+  /** 是否为动态加载树 */
+
+  var isLoadTwig = checkIsLoadTwig();
   /** 是否为空的树枝节点 */
 
   var isEmptyTwig = isTwig && !hasChildren;
@@ -362,11 +403,14 @@ var TreeItem = function TreeItem(_ref) {
   /** 处理展开关闭逻辑 */
 
   var toggleHandle = useFn(function () {
-    if (isDisabled) return; // const child = data.children;
-    // 单选时共享此事件
+    if (isDisabled) return; // 单选时共享此事件
 
     isSCheck && valueCheckHandle();
-    if (!isTwig) return;
+    if (!isTwig && !isLoadTwig) return;
+
+    if (isLoadTwig && !isOpen) {
+      loadHandle();
+    }
 
     if (isOpen) {
       // 已选中，移除当前级和所有子级
@@ -401,11 +445,81 @@ var TreeItem = function TreeItem(_ref) {
 
     return true;
   }
+  /** 检测是否为需要动态加载的树枝节点 */
+
+
+  function checkIsLoadTwig() {
+    // 是否开启
+    if (!isFunction(onLoad)) return false; // 已有子级的树枝节点排除
+
+    if (isTwig && hasChildren) return false; // 标记为树叶节点的排除
+
+    return !data.isLeaf;
+  }
+  /** 触发加载子级时的处理程序 */
+
+
+  function loadHandle() {
+    return _loadHandle.apply(this, arguments);
+  }
+
+  function _loadHandle() {
+    _loadHandle = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee() {
+      var _children, newDs;
+
+      return _regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              if (onLoad) {
+                _context.next = 2;
+                break;
+              }
+
+              return _context.abrupt("return");
+
+            case 2:
+              loadingCheck.check(value);
+              _context.prev = 3;
+              _context.next = 6;
+              return onLoad(data);
+
+            case 6:
+              _children = _context.sent;
+
+              if (isTruthyArray(_children)) {
+                data.origin.children = _children;
+                newDs = _toConsumableArray(dataSource);
+                onDataSourceChange === null || onDataSourceChange === void 0 ? void 0 : onDataSourceChange(newDs);
+              }
+
+              _context.next = 12;
+              break;
+
+            case 10:
+              _context.prev = 10;
+              _context.t0 = _context["catch"](3);
+
+            case 12:
+              _context.prev = 12;
+              console.log('加载结束');
+              loadingCheck.unCheck(value);
+              return _context.finish(12);
+
+            case 16:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, null, [[3, 10, 12, 16]]);
+    }));
+    return _loadHandle.apply(this, arguments);
+  }
 
   function renderIdent(parent, identInd) {
     // 当前层最后一个
     var currentLast = indicatorLine && isLast && identInd + 1 === data.zIndex;
-    var child = parent.children; // 动态标识是否开启线
+    var child = parent.child; // 动态标识是否开启线
 
     var flag = true;
 
@@ -453,27 +567,62 @@ var TreeItem = function TreeItem(_ref) {
 
     return /*#__PURE__*/React.createElement("span", null, data.label);
   }
+  /** 合并虚拟滚动style和拖拽style */
 
-  return /*#__PURE__*/React.createElement("div", {
+
+  function getStyle() {
+    var sty = _objectSpread({}, style);
+
+    if (isDraggable) {
+      var _provided$draggablePr;
+
+      var _sty = provided === null || provided === void 0 ? void 0 : (_provided$draggablePr = provided.draggableProps) === null || _provided$draggablePr === void 0 ? void 0 : _provided$draggablePr.style;
+
+      Object.assign(sty, _sty);
+    }
+
+    return sty;
+  }
+  /** 获取拖动时用于展开的props */
+
+
+  function getDragProps() {
+    if (isDraggable) return _objectSpread(_objectSpread(_objectSpread({}, provided.draggableProps), provided.dragHandleProps), {}, {
+      ref: provided.innerRef
+    });
+    return {};
+  }
+
+  return /*#__PURE__*/React.createElement("div", _extends({
     className: cls('m78-tree_item', className, {
       __active: isChecked,
-      __disabled: isDisabled
+      __disabled: isDisabled,
+      __dragging: snapshot === null || snapshot === void 0 ? void 0 : snapshot.isDragging,
+      __combine: snapshot === null || snapshot === void 0 ? void 0 : snapshot.combineTargetFor
     }),
-    style: _objectSpread(_defineProperty({}, isVirtual ? 'height' : 'minHeight', itemHeight), style),
     onClick: toggleHandle,
     title: isEmptyTwig ? '空节点' : ''
-  }, isSCheck && isChecked && /*#__PURE__*/React.createElement("div", {
+  }, getDragProps(), {
+    style: _objectSpread({
+      height: itemHeight
+    }, getStyle())
+  }), isSCheck && isChecked && /*#__PURE__*/React.createElement("div", {
     className: "m78-tree_checked"
   }), /*#__PURE__*/React.createElement("div", {
     className: "m78-tree_main"
   }, /*#__PURE__*/React.createElement("div", {
     className: "m78-tree_ident"
   }, data.parents && data.parents.map(renderIdent), /*#__PURE__*/React.createElement(Switch, null, /*#__PURE__*/React.createElement(If, {
-    when: isTwig
+    when: isLoading
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "m78-tree_icon color-primary",
+    style: iconStyle
+  }, /*#__PURE__*/React.createElement(LoadingOutlined, null))), /*#__PURE__*/React.createElement(If, {
+    when: isTwig || isLoadTwig
   }, /*#__PURE__*/React.createElement("span", {
     className: cls('m78-tree_icon', {
       __open: isOpen,
-      __empty: isEmptyTwig
+      __empty: isEmptyTwig && !isLoadTwig
     }),
     style: iconStyle
   }, renderExpansionIcon())), /*#__PURE__*/React.createElement(If, null, /*#__PURE__*/React.createElement("span", {
@@ -497,7 +646,41 @@ var TreeItem = function TreeItem(_ref) {
   })), renderLabel())), actions && /*#__PURE__*/React.createElement("div", _extends({
     className: "m78-tree_action"
   }, stopPropagation), isFunction(actions) ? actions(data) : actions));
+}, areEqual);
+
+var DragItem = function DragItem(props) {
+  var data = props.data,
+      index = props.index;
+  return /*#__PURE__*/React.createElement(Draggable, {
+    draggableId: getValueIndexJointString(data.value, index),
+    index: index,
+    key: data.value
+  }, function (provided, snapshot) {
+    return /*#__PURE__*/React.createElement(TreeItem, _extends({}, props, {
+      provided: provided,
+      snapshot: snapshot,
+      index: index
+    }));
+  });
 };
+
+function useDragHandle(share, methods, showList) {
+  var openCheck = share.openCheck;
+  var beforeDragHandle = useFn(function (before) {
+    var infos = splitValueIndexJointString(before.draggableId);
+    if (!infos) return;
+
+    var _infos = _slicedToArray(infos, 2),
+        index = _infos[1];
+
+    var current = showList[index];
+    if (!current) return;
+    openCheck.unCheckList(methods.getSelfAndDescendants(current));
+  });
+  return {
+    beforeDragHandle: beforeDragHandle
+  };
+}
 
 var VirtualItem = function VirtualItem(_ref) {
   var index = _ref.index,
@@ -507,6 +690,7 @@ var VirtualItem = function VirtualItem(_ref) {
   var list = data.data,
       itemProps = _objectWithoutProperties(data, ["data"]);
 
+  var draggable = itemProps.share.props.draggable;
   var item = list[index]; // 使用低消耗的渲染占位，一定延迟后再切换真实节点，防止快速滚动、拖动造成不必要的计算消耗
 
   var _useState = useState(!itemProps.share.self.scrolling),
@@ -545,11 +729,22 @@ var VirtualItem = function VirtualItem(_ref) {
     }, item.label));
   }
 
-  return /*#__PURE__*/React.createElement(TreeItem, _extends({
+  if (!draggable) {
+    return /*#__PURE__*/React.createElement(TreeItem, _extends({
+      data: item,
+      key: item.value
+    }, itemProps, {
+      style: style,
+      index: index
+    }));
+  }
+
+  return /*#__PURE__*/React.createElement(DragItem, _extends({
     data: item,
     key: item.value
   }, itemProps, {
-    style: style
+    style: style,
+    index: index
   }));
 };
 
@@ -557,7 +752,7 @@ function useMethods(share) {
   var props = share.props,
       openCheck = share.openCheck,
       valCheck = share.valCheck,
-      flatMetas = share.flatMetas,
+      nodes = share.nodes,
       self = share.self,
       setState = share.setState;
   var itemHeight = props.itemHeight,
@@ -650,16 +845,16 @@ function useMethods(share) {
 
 
   function openAll() {
-    if (!flatMetas) return;
-    openCheck.setChecked(flatMetas.expandableValues);
+    if (!nodes) return;
+    openCheck.setChecked(nodes.expandableValues);
   }
   /** 展开到第几级(0开始)，超出或小于时会自动限定在界定层级 */
 
 
   function openToZ(z) {
-    if (!flatMetas) return;
+    if (!nodes) return;
     if (!isNumber(z)) return;
-    var zList = flatMetas.zListValues;
+    var zList = nodes.zListValues;
 
     var _z = _clamp(z, 0, zList.length - 1);
 
@@ -773,7 +968,19 @@ function useLifeCycle(share, methods) {
       labelGetter = props.labelGetter; // 同步平铺dataSource
 
   useEffect(function () {
-    if (!dataSource) return;
+    if (!dataSource) {
+      setState({
+        loading: false
+      });
+      return;
+    }
+
+    if (!state.loading) {
+      setState({
+        loading: true
+      });
+    }
+
     setTimeout(function () {
       var _share$toolbar;
 
@@ -783,31 +990,31 @@ function useLifeCycle(share, methods) {
         skipSearchKeySplicing: !((_share$toolbar = share.toolbar) === null || _share$toolbar === void 0 ? void 0 : _share$toolbar.search)
       });
       setState({
-        flatMetas: flatTree,
+        nodes: flatTree,
         loading: false
       });
     });
   }, [dataSource]); // 启用默认展开全部行为
 
   useEffect(function () {
-    // flatMetas第一次初始化时执行
-    if (defaultOpenAll && state.flatMetas && !self.defaultOpenTriggered) {
+    // nodes第一次初始化时执行
+    if (defaultOpenAll && state.nodes && !self.defaultOpenTriggered) {
       methods.openAll();
       self.defaultOpenTriggered = true;
     }
-  }, [defaultOpenAll, state.flatMetas]); // 搜索时自动展开全部
+  }, [defaultOpenAll, state.nodes]); // 搜索时自动展开全部
 
   useUpdateEffect(function () {
     setTimeout(methods.openAll);
   }, [state.keyword]); // 默认展开到指定层级
 
   useEffect(function () {
-    // flatMetas第一次初始化时执行
-    if (isNumber(defaultOpenZIndex) && state.flatMetas && !self.defaultOpenZIndexTriggered) {
+    // nodes第一次初始化时执行
+    if (isNumber(defaultOpenZIndex) && state.nodes && !self.defaultOpenZIndexTriggered) {
       methods.openToZ(defaultOpenZIndex);
       self.defaultOpenZIndexTriggered = true;
     }
-  }, [defaultOpenZIndex, state.flatMetas]);
+  }, [defaultOpenZIndex, state.nodes]);
 }
 
 var OPEN_ALL = 'OPEN_ALL';
@@ -816,7 +1023,7 @@ var FOLD_ALL = 'FOLD_ALL';
 var Toolbar = function Toolbar(_ref) {
   var valCheck = _ref.valCheck,
       list = _ref.list,
-      flatMetas = _ref.flatMetas,
+      nodes = _ref.nodes,
       methods = _ref.methods,
       props = _ref.props,
       toolbar = _ref.toolbar;
@@ -826,7 +1033,7 @@ var Toolbar = function Toolbar(_ref) {
   /** 生成展开选项 */
 
   var expansionOpt = useMemo(function () {
-    if (!flatMetas) return [];
+    if (!nodes) return [];
     var base = [{
       label: '全部展开',
       value: OPEN_ALL
@@ -835,7 +1042,7 @@ var Toolbar = function Toolbar(_ref) {
       value: FOLD_ALL
     }];
     Array.from({
-      length: flatMetas.zList.length
+      length: nodes.zList.length
     }).forEach(function (_, ind) {
       base.push({
         label: "\u5C55\u5F00\u5230".concat(ind + 1, "\u7EA7"),
@@ -843,7 +1050,7 @@ var Toolbar = function Toolbar(_ref) {
       });
     });
     return base;
-  }, [flatMetas]);
+  }, [nodes]);
   /** 展开控制 */
 
   var expansionHandle = useFn(function (val) {
@@ -923,18 +1130,34 @@ var defaultProps = {
   indicatorLine: true,
   checkStrictly: true
 };
+/**
+ * 维护一个便利更新tree data的方法
+ *  onDataSourceChange(ds) {}
+ *
+ *  move({ indexes: [1, 5, 7], t1 }, { indexes: [1, 2, 7], t2 });
+ *  insert([1, 5, 7], t1, t2, t3, ...);
+ *  push([1, 5, 7], t1, t2, ...);
+ *  unshift([1, 5, 7, t1, t2, ...])
+ *
+ * 拖拽
+ * 拖动开始时，关闭开启状态
+ * 停止在一个可展开节点上时，延迟一定时间后展开该节点
+ * 放置时根据拖动位置调整左侧缩进
+ * 拖放到元素上时，将其合并到元素末尾
+ * */
 
 function Tree(props) {
-  var _state$flatMetas;
+  var _state$nodes;
 
   var _ref = props,
       size = _ref.size,
-      height = _ref.height; // 虚拟列表实例
+      height = _ref.height,
+      draggable = _ref.draggable; // 虚拟列表实例
 
   var virtualList = useRef(null);
 
   var _useSetState = useSetState({
-    flatMetas: undefined,
+    nodes: undefined,
     loading: true,
     keyword: ''
   }),
@@ -947,7 +1170,10 @@ function Tree(props) {
   });
   /** 平铺列表 */
 
-  var list = state.flatMetas ? state.flatMetas.list : [];
+  var list = state.nodes ? state.nodes.list : [];
+  /** 延迟设置的加载状态, 防止数据量较少时loading一闪而过 */
+
+  var loading = useDelayDerivedToggleStatus(state.loading, 150);
   /** 是否开启虚拟滚动 */
 
   var isVirtual = !!(height && height > 0);
@@ -966,20 +1192,24 @@ function Tree(props) {
   /** 如果是单选类型，将props调整为兼容useCheck的格式并代理onChange */
 
   var checkProps = useValCheckArgDispose(props);
-  /** 展开状态 */
+  /** 选中状态 */
 
   var valCheck = useCheck(_objectSpread(_objectSpread({}, checkProps), {}, {
     options: list,
     collector: props.valueGetter,
-    disables: (_state$flatMetas = state.flatMetas) === null || _state$flatMetas === void 0 ? void 0 : _state$flatMetas.disabledValues
+    disables: (_state$nodes = state.nodes) === null || _state$nodes === void 0 ? void 0 : _state$nodes.disabledValues
   }));
+  /** 节点加载状态 */
+
+  var loadingCheck = useCheck({});
   /** 共享状态 */
 
   var share = {
     openCheck: openCheck,
     valCheck: valCheck,
+    loadingCheck: loadingCheck,
     props: props,
-    flatMetas: state.flatMetas,
+    nodes: state.nodes,
     state: state,
     setState: setState,
     self: self,
@@ -998,6 +1228,9 @@ function Tree(props) {
   var showList = useMemo(function () {
     return methods.getShowList(list, state.keyword);
   }, [list, openCheck.checked, state.keyword]);
+  /** 拖动相关 */
+
+  var dragMetas = useDragHandle(share, methods, showList);
   /** item的尺寸信息(高度、缩进) */
 
   var sizeInfo = methods.getSize();
@@ -1009,33 +1242,74 @@ function Tree(props) {
   };
 
   function renderNormalList() {
-    return showList.map(function (item) {
-      return /*#__PURE__*/React.createElement(TreeItem, _extends({
-        key: item.value
-      }, itemData, {
-        data: item
-      }));
+    if (!draggable) {
+      return showList.map(function (item, index) {
+        return /*#__PURE__*/React.createElement(TreeItem, _extends({
+          key: item.value
+        }, itemData, {
+          data: item,
+          index: index
+        }));
+      });
+    }
+
+    return renderDragList(function (provided) {
+      return /*#__PURE__*/React.createElement("div", {
+        ref: provided.innerRef
+      }, showList.map(function (item, index) {
+        return /*#__PURE__*/React.createElement(DragItem, _extends({
+          key: item.value
+        }, itemData, {
+          data: item,
+          index: index
+        }));
+      }), provided.placeholder);
     });
   }
 
   function renderVirtualList() {
-    return /*#__PURE__*/React.createElement(VariableSizeList, {
-      ref: virtualList,
-      height: height || 0,
-      itemCount: showList.length,
-      itemSize: function itemSize(index) {
-        return showList[index].height || sizeInfo.itemHeight;
-      },
-      estimatedItemSize: sizeInfo.itemHeight,
-      width: "auto",
-      className: "m78-tree_nodes",
-      overscanCount: 3,
-      itemData: itemData,
-      itemKey: function itemKey(index) {
-        return showList[index].value;
-      },
-      onScroll: methods.scrollHandle
-    }, VirtualItem);
+    var getList = function getList(provided) {
+      return /*#__PURE__*/React.createElement(VariableSizeList, {
+        ref: virtualList,
+        height: height || 0,
+        itemCount: showList.length,
+        itemSize: function itemSize(index) {
+          return showList[index].height || sizeInfo.itemHeight;
+        },
+        estimatedItemSize: sizeInfo.itemHeight,
+        width: "auto",
+        className: "m78-tree_nodes",
+        overscanCount: 3,
+        itemData: itemData,
+        itemKey: function itemKey(index) {
+          return showList[index].value;
+        },
+        onScroll: methods.scrollHandle // 拖动
+        ,
+        outerRef: provided ? provided.innerRef : undefined
+      }, VirtualItem);
+    };
+
+    if (!draggable) return getList();
+    return renderDragList(getList);
+  }
+
+  function renderDragPlaceHolder(provided, snapshot, rubric) {
+    return /*#__PURE__*/React.createElement(TreeItem, _extends({}, itemData, {
+      provided: provided,
+      snapshot: snapshot,
+      data: showList[rubric.source.index],
+      index: rubric.source.index
+    }));
+  }
+
+  function renderDragList(renderChildren) {
+    return /*#__PURE__*/React.createElement(Droppable, {
+      droppableId: "m78-tree-droppable",
+      mode: isVirtual ? 'virtual' : 'standard',
+      isCombineEnabled: true,
+      renderClone: isVirtual ? renderDragPlaceHolder : undefined
+    }, renderChildren);
   }
 
   function renderList() {
@@ -1044,17 +1318,20 @@ function Tree(props) {
 
   var isSearchAndNoList = state.keyword && !isTruthyArray(showList);
   var isEmpty = isSearchAndNoList || !isTruthyArray(props.dataSource);
-  return /*#__PURE__*/React.createElement("div", {
+  return /*#__PURE__*/React.createElement(DragDropContext, {
+    onDragEnd: function onDragEnd() {},
+    onBeforeCapture: dragMetas.beforeDragHandle
+  }, /*#__PURE__*/React.createElement("div", {
     className: cls('m78-tree m78-scroll-bar __hoverEffect __style', size && "__".concat(size))
-  }, state.loading && /*#__PURE__*/React.createElement(Spin, {
+  }, loading && /*#__PURE__*/React.createElement(Spin, {
     full: true,
-    text: "\u521D\u59CB\u5316\u4E2D..."
+    text: "\u7D22\u5F15\u6570\u636E\u4E2D..."
   }), share.toolbar && /*#__PURE__*/React.createElement(Toolbar, _extends({}, share, {
     methods: methods
   })), isEmpty && /*#__PURE__*/React.createElement(Empty, {
     desc: "\u6682\u65E0\u6570\u636E",
     className: "m78-tree_empty"
-  }), !isEmpty && renderList());
+  }), !isEmpty && renderList()));
 }
 
 Tree.defaultProps = defaultProps;

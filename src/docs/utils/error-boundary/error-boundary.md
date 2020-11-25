@@ -8,8 +8,7 @@ group:
 
 # ErrorBoundary 错误边界
 
-`Error Boundaries` API的简单封装
-
+`Error Boundaries` API 的简单封装
 
 ## 示例
 

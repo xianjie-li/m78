@@ -6,7 +6,7 @@ group:
   order: 3000
 ---
 
-# Tree  树形菜单
+# Tree 树形菜单
 
 一个高性能的树形菜单
 
@@ -30,26 +30,25 @@ group:
 
 ## 展开行为
 
-有4种展开控制方式: 不受控、受控、默认展开全部、默认展开几级
+有 4 种展开控制方式: 不受控、受控、默认展开全部、默认展开几级
 
 <code src="./open-demo.tsx" />
 
 ## 十万级数据渲染
 
-得益于虚拟滚动/字典查询/亲属节点查询等优化，Tree组件能够轻松支持10万以上数据节点的渲染和选中，在关闭多选时这个数值会更高😀!
+得益于虚拟滚动/字典查询/亲属节点查询等优化，Tree 组件能够轻松支持 10 万以上数据节点的渲染和选中，在关闭多选时这个数值会更高 😀!
 
-你所要做的就是传入`height`为tree组件配置一个高度，以上优化就会自动启用。
+你所要做的就是传入`height`为 tree 组件配置一个高度，以上优化就会自动启用。
 
 <code src="./big-data.tsx" />
 
-🤔 大数据量渲染应该只作为防止组件崩溃的一个回退手段，通常，如果你要展示的数据超过1万条，就应该考虑对数据的展现形式进行优化了(通过分页、搜索、智能推送等)。
+🤔 大数据量渲染应该只作为防止组件崩溃的一个回退手段，通常，如果你要展示的数据超过 1 万条，就应该考虑对数据的展现形式进行优化了(通过分页、搜索、智能推送等)。
 
 ## 动态加载
 
-传入`onLoad`开启异步加载子项数据，它返回Promise，该Promise resolve树节点的子项
+传入`onLoad`开启异步加载子项数据，它返回 Promise，该 Promise resolve 树节点的子项
 
 <code src="./dynamic-demo.tsx" />
-
 
 ## 手风琴模式
 
@@ -57,13 +56,11 @@ group:
 
 <code src="./accordion-demo.tsx" />
 
-
 ## 尺寸
 
 不同尺寸，你还可以通过`itemHeight`和`identWidth`自行设置缩进、项高
 
 <code src="./size-demo.tsx" />
-
 
 ## 工具条
 
@@ -83,10 +80,9 @@ group:
 
 ## 拖拽模式
 
-🚧此功能尚处于开发阶段，会在后续版本放出🚧
+🚧 此功能尚处于开发阶段，会在后续版本放出 🚧
 
 <code src="./draggable-demo.tsx" />
-
 
 ## API
 
@@ -104,7 +100,6 @@ export interface TreePropsSingleChoice
   /** extend(FormLikeWithExtra) | 控制选中值 */
   // value/defaultValue/onChange
 }
-
 
 /** 多选特有props */
 export interface TreePropsMultipleChoice

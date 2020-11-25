@@ -1,15 +1,30 @@
 import React from 'react';
 import { TreePropsMultipleChoice, TreePropsSingleChoice } from './types';
 export declare const defaultProps: {
-    valueGetter: (item: import("./types").OptionsItem) => string | number;
+    valueGetter: (item: import("./types").OptionsItem) => {} | null | undefined;
     labelGetter: (item: import("./types").OptionsItem) => string | number | boolean | {} | React.ReactElement<any, string | ((props: any) => React.ReactElement<any, string | any | (new (props: any) => React.Component<any, any, any>)> | null) | (new (props: any) => React.Component<any, any, any>)> | React.ReactNodeArray | React.ReactPortal;
     indicatorLine: boolean;
     checkStrictly: boolean;
 };
+/**
+ * 维护一个便利更新tree data的方法
+ *  onDataSourceChange(ds) {}
+ *
+ *  move({ indexes: [1, 5, 7], t1 }, { indexes: [1, 2, 7], t2 });
+ *  insert([1, 5, 7], t1, t2, t3, ...);
+ *  push([1, 5, 7], t1, t2, ...);
+ *  unshift([1, 5, 7, t1, t2, ...])
+ *
+ * 拖拽
+ * 拖动开始时，关闭开启状态
+ * 停止在一个可展开节点上时，延迟一定时间后展开该节点
+ * 放置时根据拖动位置调整左侧缩进
+ * 拖放到元素上时，将其合并到元素末尾
+ * */
 declare function Tree(props: TreePropsSingleChoice): JSX.Element;
 declare namespace Tree {
     var defaultProps: {
-        valueGetter: (item: import("./types").OptionsItem) => string | number;
+        valueGetter: (item: import("./types").OptionsItem) => {} | null | undefined;
         labelGetter: (item: import("./types").OptionsItem) => string | number | boolean | {} | React.ReactElement<any, string | ((props: any) => React.ReactElement<any, string | any | (new (props: any) => React.Component<any, any, any>)> | null) | (new (props: any) => React.Component<any, any, any>)> | React.ReactNodeArray | React.ReactPortal;
         indicatorLine: boolean;
         checkStrictly: boolean;
@@ -18,7 +33,7 @@ declare namespace Tree {
 declare function Tree(props: TreePropsMultipleChoice): JSX.Element;
 declare namespace Tree {
     var defaultProps: {
-        valueGetter: (item: import("./types").OptionsItem) => string | number;
+        valueGetter: (item: import("./types").OptionsItem) => {} | null | undefined;
         labelGetter: (item: import("./types").OptionsItem) => string | number | boolean | {} | React.ReactElement<any, string | ((props: any) => React.ReactElement<any, string | any | (new (props: any) => React.Component<any, any, any>)> | null) | (new (props: any) => React.Component<any, any, any>)> | React.ReactNodeArray | React.ReactPortal;
         indicatorLine: boolean;
         checkStrictly: boolean;
