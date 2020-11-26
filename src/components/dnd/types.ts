@@ -1,4 +1,5 @@
 import React from 'react';
+import { SetState } from '@lxjx/hooks';
 
 /*
  * 只有id对应的才触发事件
@@ -16,7 +17,7 @@ import React from 'react';
  * 通过context检测子树
  * */
 
-interface DragStatus {
+export interface DragStatus {
   /* ####### 作为拖动元素时 ####### */
   /** 是否正在拖动 */
   dragging: boolean;
@@ -49,8 +50,9 @@ interface DragBonus {
 }
 
 interface DNDNode {
-  // id?: string;
-  groupId?: string;
+  /** 该项的id */
+  id?: string;
+  /** 该项的data */
   data?: any;
 }
 
@@ -78,7 +80,7 @@ interface DragPosEvent extends DragBaseEvent {
 interface DragFullEvent extends Required<DragPosEvent> {}
 
 /** 监听内部所有的所有未被其他Context接管的DND的拖动开始、移动、接收事件 */
-interface DNDContext {
+export interface DNDContextProps {
   /** 拖动开始 */
   onStart?: (event: DragPosEvent) => void;
   /** 拖动过程中持续触发 */
@@ -87,13 +89,26 @@ interface DNDContext {
   onAccept?: (event: DragFullEvent) => void;
 }
 
-interface DNDProps {
+/** 某个DND正在滚动，传入当前指针位置 */
+export interface ChangeHandle {
+  (x: number, y: number, last: boolean): void;
+}
+
+/** 内部使用的完整context */
+export interface DNDContext extends Required<DNDContextProps> {
+  listeners: {
+    handler: ChangeHandle;
+    id: string;
+  }[];
+}
+
+export interface DNDProps {
   enableDrag?: boolean;
   enableDrop?: boolean;
   // /** 标识当前拖动元素的唯一id */
   // id?: string;
   /** 只有id相同的DND会触发互动行为 */
-  groupId: string;
+  // groupId: string;
   /** 绑定到该拖动目标的数据，随拖动目标一起传入 */
   data?: any;
   /**
@@ -101,7 +116,7 @@ interface DNDProps {
    * 包含5个方向上的拖动信息和是否位于元素上信息
    * 拖动信息
    * */
-  children: (bonus: DragBonus) => React.ReactNode;
+  children: (bonus: DragBonus) => React.ReactElement;
   /** 拖动时显示的节点, 可以获取到节点尺寸等信息 */
   feedback?: (bonus: DragBonus) => React.ReactNode;
   /** 拖动时显示在指针下方的元素, 可以获取到节点尺寸等信息 */
@@ -130,6 +145,7 @@ interface DNDProps {
   preventDefault?: boolean;
   /** 禁用拖放 */
   disabled?: boolean;
+  withDisabled?: boolean;
   /**
    * 允许放置的位置
    * - 为对象时，只有对象中指定为true的位置支持放置
@@ -144,4 +160,17 @@ interface DNDProps {
         top?: boolean;
         center?: boolean;
       };
+}
+
+export interface Share {
+  props: DNDProps;
+  elRef: React.MutableRefObject<HTMLElement>;
+  status: DragStatus;
+  setStatus: SetState<Share['status']>;
+  self: {
+    cloneNode: HTMLElement | null;
+    clearCloneTimer: any;
+  };
+  id: string;
+  ctx: DNDContext;
 }

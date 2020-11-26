@@ -1,138 +1,57 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useContext, useEffect, useMemo, useRef } from 'react';
 import { useDrag } from 'react-use-gesture';
-import { useUpdate } from 'react-use';
 import { createRandString } from '@lxjx/utils';
-import { useFn, useSetState } from '@lxjx/hooks';
+import { useFn, useSelf, useSetState } from '@lxjx/hooks';
+import { initStatus } from 'm78/dnd/consts';
+import DNDCtx from './context';
+import { DNDProps, Share } from './types';
+import { useMethods } from './useMethods';
 
 const listener: any = {};
 
-const someRatio = 0.2;
+const DND = (props: DNDProps) => {
+  const { children } = props;
 
-const DND = ({ children }) => {
   const id = useMemo(() => createRandString(2), []);
 
-  const [status, setStatus] = useSetState({
-    dragOver: false,
-    dragLeft: false,
-    dragRight: false,
-    dragBottom: false,
-    dragTop: false,
-    dragCenter: false,
-    dragging: false,
-  });
+  const ctx = useContext(DNDCtx);
 
   const elRef = useRef<HTMLElement>(null!);
+
   const handleRef = useRef<HTMLElement>(null!);
 
-  const cloneNode = useRef<HTMLElement>(null!);
-
-  const change = useFn((x1, y1) => {
-    const { left, top, right, bottom } = elRef.current.getBoundingClientRect();
-
-    const width = right - left;
-    const height = bottom - top;
-
-    const triggerXOffset = width * someRatio;
-    const triggerYOffset = height * someRatio;
-
-    const dragOver = x1 > left && x1 < right && y1 > top && y1 < bottom;
-    const dragTop = dragOver && y1 < top + triggerYOffset;
-    const dragBottom = dragOver && !dragTop && y1 > bottom - triggerYOffset;
-    const dragLeft = dragOver && !dragBottom && x1 < left + triggerXOffset;
-    const dragRight = dragOver && !dragLeft && x1 > right - triggerXOffset;
-    const dragCenter = dragOver && !dragTop && !dragBottom && !dragRight && !dragLeft;
-
-    if (
-      status.dragOver === dragOver &&
-      status.dragTop === dragTop &&
-      status.dragBottom === dragBottom &&
-      status.dragLeft === dragLeft &&
-      status.dragRight === dragRight &&
-      status.dragCenter === dragCenter
-    ) {
-      return;
-    }
-
-    setStatus({
-      dragOver,
-      dragTop,
-      dragBottom,
-      dragLeft,
-      dragRight,
-      dragCenter,
-    });
+  const self = useSelf({
+    cloneNode: null,
+    clearCloneTimer: null,
   });
 
-  console.log(status);
+  const [status, setStatus] = useSetState(() => ({ ...initStatus }));
 
-  useEffect(() => {
-    listener[id] = change;
-  }, [change]);
+  const share: Share = {
+    elRef,
+    status,
+    setStatus,
+    props,
+    self,
+    id,
+    ctx,
+  };
 
-  useDrag(
-    ({ movement: [moveX, moveY], xy: [x, y], down, first, tap, event }) => {
-      if (tap) return;
+  const methods = useMethods(share);
 
-      event?.preventDefault();
-
-      if (first) {
-        startHandle();
-      }
-
-      if (!down) {
-        endHandle();
-        return;
-      }
-
-      Object.entries(listener).forEach(([key, fnc]) => {
-        if (key !== id) fnc(x, y);
-      });
-
-      cloneNode.current.style.transform = `translate(${moveX}px, ${moveY}px)`;
-
-      // console.log(cloneNode.current.getBoundingClientRect());
+  const bind = useDrag(methods.dragHandle, {
+    domTarget: elRef,
+    filterTaps: true,
+    eventOptions: {
+      passive: false,
     },
-    {
-      domTarget: elRef,
-      filterTaps: true,
-      eventOptions: {
-        passive: false,
-      },
-    },
-  );
+  });
 
-  function startHandle() {
-    setStatus({
-      dragging: true,
-    });
-
-    cloneNode.current = elRef.current.cloneNode(true) as HTMLElement;
-
-    const { x, y } = elRef.current.getBoundingClientRect();
-
-    cloneNode.current.style.position = 'fixed';
-    cloneNode.current.style.left = `${x}px`;
-    cloneNode.current.style.top = `${y}px`;
-    cloneNode.current.style.opacity = '0.7';
-
-    document.body.appendChild(cloneNode.current);
-  }
-
-  function endHandle() {
-    setStatus({
-      dragging: false,
-    });
-
-    cloneNode.current.style.transition = `0.3s`;
-    cloneNode.current.style.transform = `translate(0, 0)`;
-
-    setTimeout(() => {
-      cloneNode.current.parentNode.removeChild(cloneNode.current);
-    }, 400);
-  }
+  useEffect(bind, [bind]);
 
   return children({
     innerRef: elRef,
+    status,
   });
 };
 

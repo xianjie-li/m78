@@ -1,1 +1,27 @@
 @import '../../style/index';
+
+.dndBox {
+  width: 140px;
+  height: 140px;
+  border: 1px solid red;
+
+  &.__active {
+    background-color: pink;
+  }
+
+  &.__left {
+    border-left: 2px solid blue;
+  }
+
+  &.__top {
+    border-top: 2px solid blue;
+  }
+
+  &.__right {
+    border-right: 2px solid blue;
+  }
+
+  &.__bottom {
+    border-bottom: 2px solid blue;
+  }
+}

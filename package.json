@@ -69,7 +69,7 @@
     "react-beautiful-dnd": "^13.0.0",
     "react-spring": "^9.0.0-rc.3",
     "react-use": "^13.8.0",
-    "react-use-gesture": "^8.0.1",
+    "react-use-gesture": "7.0.16",
     "react-window": "^1.8.5",
     "tslib": "^2.0.0"
   },
