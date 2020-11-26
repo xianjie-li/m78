@@ -4,6 +4,8 @@
   width: 140px;
   height: 140px;
   border: 1px solid red;
+  touch-action: none;
+  user-select: none;
 
   &.__active {
     background-color: pink;

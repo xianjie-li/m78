@@ -9,7 +9,7 @@
 
 ## 🎉Introduction
 
-一套 react 基础库，包含常用组件、hooks、以及其他工具。[查看文档](http://llixianjie.gitee.io/m78/docs)
+一个 react 基础库，包含常用组件、hooks、以及其他工具。[查看文档](http://llixianjie.gitee.io/m78/docs)
 
 <br>
 

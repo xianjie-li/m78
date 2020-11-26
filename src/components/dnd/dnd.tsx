@@ -7,7 +7,11 @@ import DNDCtx from './context';
 import { DNDProps, Share } from './types';
 import { useMethods } from './useMethods';
 
-const listener: any = {};
+/**
+ * 网格拖动动画demo
+ * 同时指出移动、pc
+ * 启发式的拖动组件
+ * */
 
 const DND = (props: DNDProps) => {
   const { children } = props;
@@ -23,6 +27,7 @@ const DND = (props: DNDProps) => {
   const self = useSelf({
     cloneNode: null,
     clearCloneTimer: null,
+    lastOverStatus: false,
   });
 
   const [status, setStatus] = useSetState(() => ({ ...initStatus }));
@@ -35,6 +40,10 @@ const DND = (props: DNDProps) => {
     self,
     id,
     ctx,
+    currentNode: {
+      id,
+      data: props.data,
+    },
   };
 
   const methods = useMethods(share);

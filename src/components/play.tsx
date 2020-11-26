@@ -15,7 +15,13 @@ const style = {
 const Play = () => {
   return (
     <div>
-      <DND>
+      <DND
+        data="A"
+        // onSourceEnter={e => console.log('onSourceEnter', JSON.stringify(e))}
+        // onSourceLeave={e => console.log('onSourceLeave', JSON.stringify(e))}
+        // onSourceMove={e => console.log('onSourceMove', JSON.stringify(e))}
+        // onSourceAccept={e => console.log('onSourceAccept', JSON.stringify(e))}
+      >
         {({ innerRef, status }) => {
           return (
             <div
@@ -38,13 +44,32 @@ const Play = () => {
       <Spacer height={100} />
 
       <DND
-        onDrag={() => {
-          console.log('onDrag');
-        }}
+        data="B"
+        // onDrag={e => {
+        //   console.log('onDrag', e);
+        // }}
+        // onMove={e => {
+        //   console.log('onMove', JSON.stringify(e));
+        // }}
+        // onDrop={e => {
+        //   console.log('onDrop', JSON.stringify(e));
+        // }}
+        // onCancel={e => {
+        //   console.log('onCancel', JSON.stringify(e));
+        // }}
       >
-        {({ innerRef }) => {
+        {({ innerRef, status }) => {
           return (
-            <div ref={innerRef} className={cls('dndBox')}>
+            <div
+              ref={innerRef}
+              className={cls('dndBox', {
+                __left: status.dragLeft,
+                __right: status.dragRight,
+                __bottom: status.dragBottom,
+                __top: status.dragTop,
+                __active: status.dragCenter,
+              })}
+            >
               <h3>title2</h3>
               <span className="color-second">hehe2</span>
             </div>
