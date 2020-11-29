@@ -1,11 +1,71 @@
 @import '../../style/index';
 
+.m78-dnd {
+
+  &_drag-node {
+    position: fixed !important;
+    z-index: 100000 !important;
+    user-select: none;
+    touch-action: none;
+  }
+
+  &_placeholder {
+    background-color: $color;
+    height: 12px;
+  }
+}
+
+.m78-dnd-box {
+  position: relative;
+  //cursor: grab;
+
+  &_left, &_right, &_top, &_bottom {
+    position: absolute;
+    background-color: $color;
+    border-radius: $border-radius;
+  }
+
+  &_left {
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+  }
+
+  &_right {
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+  }
+
+  &_top {
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 3px;
+  }
+
+  &_bottom {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 3px;
+  }
+
+  &.__active {
+    background-color: rgba($color, 0.2);
+  }
+
+  &.__disabled {
+    opacity: 0.6;
+  }
+}
+
 .dndBox {
   width: 140px;
-  height: 140px;
+  min-height: 140px;
   border: 1px solid red;
-  touch-action: none;
-  user-select: none;
 
   &.__active {
     background-color: pink;

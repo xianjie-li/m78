@@ -1,14 +1,53 @@
-.Item {
-  height: 38px;
+@import './style/index';
+
+.column {
+  display: inline-block;
+  width: 200px;
+  margin-right: 12px;
+  border-radius: $border-radius;
+  border: 6px solid #fff;
+  box-shadow: $shadow-1;
+  margin-bottom: 12px;
+  user-select: none;
+
+  &Title {
+    font-size: 16px;
+    font-weight: bold;
+    padding: 8px;
+  }
+
+  &List {
+    padding: 4px 8px 120px;
+    height: 380px;
+    overflow: auto;
+    background-color: $b-bg;
+    border-radius: 4px;
+    box-shadow: -1px -1px 6px $b-border inset;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}
+
+.todo {
   background-color: #fff;
-  font-size: 20px;
-  display: flex;
-  align-items: center;
-  text-align: center;
-  padding: 0 12px;
+  box-shadow: $shadow-1;
+  padding: 8px 16px;
+  font-size: 14px;
+  user-select: none;
+  border-radius: 2px;
+
+  > div:nth-child(2) {
+    font-size: 12px;
+    color: $b-second;
+  }
+
+  &:hover {
+    box-shadow: $shadow-3;
+  }
 
   & + & {
-    border-top: 1px solid #ccc;
-    margin-top: 1px;
+    margin-top: 10px;
   }
 }

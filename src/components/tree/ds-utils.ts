@@ -15,7 +15,7 @@
 
 //     const path = inds.reduce((p, i, ind) => {
 //       if (ind >= inds.length - offset) return p;
-//       return `${p}[${i}].children`;
+//       return `${p}[${i}].childrens`;
 //     }, '');
 
 //     return [_get(this.ds, path), last];
@@ -32,12 +32,12 @@
 //   insert(inds: number[], ...source: OptionsItem[]) {}
 
 //   /**
-//    * 将一组选项新增到目标的`children`末尾， children不存在时会手动添加
+//    * 将一组选项新增到目标的`childrens`末尾， children不存在时会手动添加
 //    */
 //   push(inds: number[], ...source: OptionsItem[]) {}
 
 //   /**
-//    * 将一组选项新增到目标的`children`顶部
+//    * 将一组选项新增到目标的`childrens`顶部
 //    */
 //   unshift(inds: number[], ...source: OptionsItem[]) {}
 

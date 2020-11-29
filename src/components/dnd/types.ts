@@ -3,19 +3,9 @@ import { SetState } from '@lxjx/hooks';
 import { FullGestureState } from 'react-use-gesture/dist/types';
 
 /*
- * 只有id对应的才触发事件
- * 便捷的方向识别(上下左右中心)， 启用方向
- * 自动滚动
- * 是否启用
- * 指定把手
- * 无入侵
- * 拖动到拖动目标、拖动到放置目标
- * 占位符
- * 冒泡机制，如果 DND内部包含其他DND，则内部DND触发时不会触发它的事件
- *
- * 通过context标识组
- *
- * 通过context检测子树, 当子树包含正在拖放的元素时，禁用该组件的拖动行为
+ * TODO: 自动滚动
+ * TODO: 过滤input等元素的拖动
+ * TODO: 拖动完成后自身的禁用未刷新
  * */
 
 /** 表示一个DND实例的拖动相关状态 */
@@ -24,48 +14,46 @@ export interface DragStatus {
   /** 是否正在拖动 */
   dragging: boolean;
   /* ####### 作为放置目标时 ####### */
-  /** 是否有目标拖动到其上方 */
+  /** 是否有拖动目标正位于其上方, 用于无其他指定方向的配置时 */
   dragOver: boolean;
+  /** 左侧有可用拖动目标 */
   dragLeft: boolean;
+  /** 右侧有可用拖动目标 */
   dragRight: boolean;
+  /** 下方有可用拖动目标 */
   dragBottom: boolean;
+  /** 上方有可用拖动目标 */
   dragTop: boolean;
+  /** 中间部分有可用拖动目标, 一般用于合并项 */
   dragCenter: boolean;
 }
 
 /** 传递给DND组件render children的对象 */
 interface DragBonus {
   /** 传递给拖动目标的ref */
-  innerRef: React.Ref<any>;
+  innerRef: React.MutableRefObject<any>;
   /** 传递给拖动把手的ref, 未在此项上获取到节点时，会以innerRef作为拖动节点 */
-  handleRef: React.Ref<any>;
+  handleRef: React.MutableRefObject<any>;
   /** 拖动状态 */
   status: DragStatus;
-  /** 扩展传递给目标元素的props */
-  props: {
-    /** 传递给组件的样式 */
-    style: React.CSSProperties;
-  };
-  /** 作为拖动目标时，位于目标上方的拖动元素data */
-  targetWith?: any;
-  /** 作为拖动元素时，其正处于的目标元素上方的data */
-  targetFor?: any;
+  /** 允许放置的信息 */
+  enables: EnableInfos;
 }
 
 /** 表示一个唯一的DND节点 */
-export interface DNDNode {
+export interface DNDNode<Data = any> {
   /** 该项的id */
   id: string;
   /** 该项的data */
-  data: any;
+  data: Data;
 }
 
 /** 仅包含部分必要信息的拖动事件对象，非必要信息会根据事件执行情况传入(通常是拖动到放置目标上时) */
-export interface DragPartialEvent {
+export interface DragPartialEvent<Data = any, TData = Data> {
   /** 拖动目标 */
-  source: DNDNode;
+  source: DNDNode<Data>;
   /** 放置目标 */
-  target?: DNDNode;
+  target?: DNDNode<TData>;
   /** 相对于目标左上角的x坐标 */
   offsetX?: number;
   /** 相对于目标左上角的y坐标 */
@@ -79,7 +67,8 @@ export interface DragPartialEvent {
 }
 
 /** 包含拖拽目标、放置目标、放置状态、位置等的完整事件对象 */
-export interface DragFullEvent extends Required<DragPartialEvent> {}
+export interface DragFullEvent<Data = any, TData = Data>
+  extends Required<DragPartialEvent<Data, TData>> {}
 
 /** 响应某个DND拖动的事件 */
 export interface ChangeHandle {
@@ -115,83 +104,117 @@ export interface DNDContext extends Required<DNDContextProps> {
   currentStatus?: DragStatus;
 }
 
-/**
- * 放置目标允许放置的位置，值为boolean同时设置所有方向，否则表示对应方向，未设置的方向默认不可放置
- * */
-export type AllowPosition =
-  | boolean
-  | {
-      left?: boolean;
-      right?: boolean;
-      bottom?: boolean;
-      top?: boolean;
-      center?: boolean;
-    };
+/** 用于关联父子关系的Context对象  */
+export interface DNDRelationContext {
+  /** 用于某个子级触发over时，通知所有父级移除自身的lockDropID */
+  onLockDrop?: () => void;
+  /** 锁定状态发生改变 */
+  onLockChange?: (lock: boolean) => void;
+  /** 该组件的所有子级id */
+  childrens: string[];
+}
 
-export interface DNDProps<Data = any> {
-  /** 绑定到该拖动/放置目标的数据，会在目标拖动、放置等行中传递，通常是能表示该DND实例的唯一值(索引、id、描述对象等) */
+/**
+ * 放置目标允许放置的位置
+ * */
+export interface AllowPosition {
+  left: boolean;
+  right: boolean;
+  bottom: boolean;
+  top: boolean;
+  center: boolean;
+}
+
+/**
+ * 可用防止位置位置信息
+ * */
+export interface EnableInfos extends AllowPosition {
+  /** 至少有一个方向启用 */
+  enable: boolean;
+  /** 任意方向都可放置，设置后其他方向配置值都会为false */
+  all: boolean;
+}
+
+/**
+ * 放置目标允许放置的位置，值为boolean时，true表示任意位置都可放置，false表示任意位置都不可放置
+ * */
+type MixAllowDrop = boolean | Partial<AllowPosition>;
+
+export interface DNDProps<Data = any, TData = Data> {
+  /* ####### 常用 ####### */
+  /** 绑定到该拖动/放置目标的数据，会在目标拖动、放置等操作中传递，通常是能表示该DND实例的唯一值(索引、id、描述对象等) */
   data: Data;
   /**
-   * 用于绑定拖动元素的dragProps
-   * 包含5个方向上的拖动信息和是否位于元素上信息
-   * 拖动信息
+   * 用于绑定拖动元素的render children, 接收:
+   * - 拖放元素、拖动把手的ref(默认为拖放元素)
+   * - 拖动中、当前拖动位置、是否正被拖动元素覆盖
+   * - 某个方向上的启用信息等
    * */
   children: (bonus: DragBonus) => React.ReactElement;
-  /** 拖动时显示的节点, 可以获取到节点尺寸等信息 */
-  feedback?: (bonus: DragBonus) => React.ReactNode;
-  /** 拖动时显示在指针下方的元素, 可以获取到节点尺寸等信息 */
-  dragFeedback?: React.ReactNode;
-
-  /* ####### 作为拖动目标的事件 ####### */
-  /** 开始拖动的第一帧触发 */
-  onDrag?: (event: DragPartialEvent) => void;
-  /** 开始拖动并移动, 如果在放置目标上拖动，会传入偏移位置、放置目标信息 */
-  onMove?: (event: DragPartialEvent) => void;
-  /** 拖动结束但是未拖动到目标 */
-  onCancel?: (event: DragPartialEvent) => void;
-  /** 拖动到目标并放置, 传入data、位置等 */
-  onDrop?: (event: DragFullEvent) => void;
+  /** 是否可拖动，可以是返回此状态的函数, 接收当前节点 */
+  enableDrag?: boolean | ((node: DNDNode<Data>) => boolean);
+  /** 是否可放置，可以是返回此状态的函数, 接收当前的拖动和放置目标 */
+  enableDrop?:
+    | MixAllowDrop
+    | ((dragNode?: DNDNode<Data>, dropNode?: DNDNode<TData>) => MixAllowDrop);
 
   /* ####### 作为放置目标的事件 ####### */
   /** 拖动目标进入时 */
-  onSourceEnter?: (event: DragFullEvent) => void;
+  onSourceEnter?: (event: DragFullEvent<Data, TData>) => void;
   /** 拖动目标离开时 */
-  onSourceLeave?: (event: DragPartialEvent) => void;
+  onSourceLeave?: (event: DragPartialEvent<Data, TData>) => void;
   /** 拖动目标在上方移动时 */
-  onSourceMove?: (event: DragFullEvent) => void;
+  onSourceMove?: (event: DragFullEvent<Data, TData>) => void;
   /** 成功接收到一个拖动目标时 */
-  onSourceAccept?: (event: DragFullEvent) => void;
+  onSourceAccept?: (event: DragFullEvent<Data, TData>) => void;
 
-  /** 禁用拖放 */
-  disabled?: boolean;
-  /** 是否可拖动，可以是返回此状态的函数 */
-  enableDrag?: boolean | (() => boolean);
-  /** 是否可放置，可以是返回此状态的函数 */
-  enableDrop?: AllowPosition | (() => AllowPosition);
+  /* ####### 作为拖动目标的事件 ####### */
+  /** 开始拖动的第一帧触发 */
+  onDrag?: (event: DragPartialEvent<Data, TData>) => void;
+  /** 开始拖动并移动, 如果在放置目标上拖动，事件对象会包含target */
+  onMove?: (event: DragPartialEvent<Data, TData>) => void;
+  /** 已经开始拖动并放开目标, 如果在放置目标上放开，事件对象会包含target */
+  onDrop?: (event: DragPartialEvent<Data, TData>) => void;
 
-  /** 长按时才允许拖动 */
-  longPress?: boolean;
-  /** 拖动时阻止互动 */
-  preventDefault?: boolean;
-  /** 标识当前拖动元素的唯一id, 不传时组件内部会随机指定一个 */
+  /** 标识当前拖动元素的唯一id, 不传时组件内部会随机指定一个, 通常会在debug的时候使用 */
   id?: string;
+  /** 拖动时显示在指针下方的元素 */
+  dragFeedback?: React.ReactNode;
+  /** 拖动反馈节点的基础样式 */
+  dragFeedbackStyle?: React.CSSProperties;
 }
 
 export interface Share {
   props: DNDProps;
   elRef: React.MutableRefObject<HTMLElement>;
+  handleRef: React.MutableRefObject<HTMLElement | undefined>;
   status: DragStatus;
   setStatus: SetState<Share['status']>;
   self: {
-    /** 保存克隆节点 */
-    cloneNode: HTMLElement | null;
+    /** 保存拖拽过程中显示的反馈节点 */
+    dragFeedbackEl: HTMLElement | null;
     /** 清理克隆节点的计时器 */
     clearCloneTimer: any;
     /** 保存在上一次事件中的dragOver状态 */
     lastOverStatus: boolean;
+    /** 锁定并禁止drop */
+    lockDrop?: boolean;
+    /** 导致lockDrop锁定的节点id */
+    lockDropID?: string | null;
+    /** 组件已卸载，阻止某些延迟触发的状态更新 */
+    ignore: boolean;
   };
+  state: {
+    /** 节点的挂载元素 */
+    nodeEl: HTMLElement;
+    /** 节点的拖拽元素, 默认为nodeEl */
+    handleEl: null | HTMLElement;
+  };
+  setState: SetState<Share['state']>;
   id: string;
   ctx: DNDContext;
+  relationCtx: DNDRelationContext;
+  relationCtxValue: DNDRelationContext;
   /** 表示当前节实例的DND节点对象 */
   currentNode: DNDNode;
 }

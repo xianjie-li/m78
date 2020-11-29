@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { DNDContext } from 'm78/dnd/types';
+import { DNDContext, DNDRelationContext } from 'm78/dnd/types';
 import { dumpFn } from '@lxjx/utils';
 
 const defaultContext: DNDContext = {
@@ -11,8 +11,14 @@ const defaultContext: DNDContext = {
 
 const context = createContext<DNDContext>(defaultContext);
 
-context.displayName = 'DND-context';
+context.displayName = 'DNDContext';
 
-export { defaultContext };
+const relationContext = createContext<DNDRelationContext>({
+  childrens: [],
+});
+
+relationContext.displayName = 'DNDRelationContext';
+
+export { defaultContext, relationContext };
 
 export default context;

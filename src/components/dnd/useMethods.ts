@@ -1,22 +1,77 @@
 import { useFn } from '@lxjx/hooks';
 import { FullGestureState, Handler } from 'react-use-gesture/dist/types';
-import { useEffect } from 'react';
-import { isNumber } from '@lxjx/utils';
-import { ChangeHandle, DNDNode, DragFullEvent, DragPartialEvent, DragStatus, Share } from './types';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { defer, isBoolean, isFunction, isNumber, isObject } from '@lxjx/utils';
+import { allPropertyIsEqual, allPropertyHasTrue } from 'm78/dnd/common';
+import {
+  AllowPosition,
+  ChangeHandle,
+  DragFullEvent,
+  DragPartialEvent,
+  DragStatus,
+  Share,
+  EnableInfos,
+} from './types';
 
-import { edgeRatio, initStatus } from './consts';
+import { edgeRatio, initEnableDragsDeny, initEnableDragsPass, initStatus } from './consts';
 
 export function useMethods(share: Share) {
-  const { elRef, status, setStatus, self, id, ctx, props, currentNode } = share;
+  const {
+    state,
+    status,
+    setStatus,
+    self,
+    id,
+    ctx,
+    props,
+    currentNode,
+    relationCtx,
+    relationCtxValue,
+  } = share;
+  const { enableDrop, dragFeedbackStyle } = props;
+
+  // 对于非函数的enable配置，加载时获取一次初始值, 后面可以直接都是用本次获取
+  const [enableDropInfo, setEnableDropInfo] = useState(formatEnableDrag);
+
+  // 变更且启用配置非函数时时重新获取
+  useEffect(() => {
+    if (!isFunction(enableDrop)) {
+      setEnableDropInfo(formatEnableDrag());
+    }
+  }, [enableDrop]);
 
   // 放置目标响应拖动目标的拖动事件
   const changeHandle: ChangeHandle = useFn(dragE => {
+    const { lockDropID } = self;
+
     const {
       xy: [x, y],
       down,
     } = dragE;
 
-    const { left, top, right, bottom } = elRef.current.getBoundingClientRect();
+    const enableDropIsFn = isFunction(enableDrop);
+
+    // 如果enableDrop为函数，则需要在每次执行时判断
+    const _enableDropInfo = isFunction(enableDrop) ? formatEnableDrag() : enableDropInfo;
+
+    // 如果前后两次的启用状态不同，则更新
+    if (enableDropIsFn) {
+      if (down) {
+        // 如果禁用状态与当前保存的不一致则同步
+        if (!allPropertyIsEqual(enableDropInfo, _enableDropInfo)) {
+          setEnableDropInfo(_enableDropInfo);
+        }
+        // 松开且不可用时，还原配置
+      } else if (!_enableDropInfo.enable) {
+        setEnableDropInfo(formatEnableDrag(true));
+      }
+    }
+
+    if (self.lockDrop) return;
+    if (!state.nodeEl) return;
+    if (!_enableDropInfo.enable) return;
+
+    const { left, top, right, bottom } = state.nodeEl.getBoundingClientRect();
 
     // 尺寸
     const width = right - left;
@@ -38,18 +93,45 @@ export function useMethods(share: Share) {
     const dragCenter = nextShouldPass && !dragRight && !dragLeft;
 
     const nextStatus: DragStatus = {
-      dragOver,
-      dragTop,
-      dragBottom,
-      dragLeft,
-      dragRight,
-      dragCenter,
+      dragOver: dragOver && _enableDropInfo.all,
+      dragTop: _enableDropInfo.top && dragTop,
+      dragBottom: _enableDropInfo.bottom && dragBottom,
+      dragLeft: _enableDropInfo.left && dragLeft,
+      dragRight: _enableDropInfo.right && dragRight,
+      dragCenter: _enableDropInfo.center && dragCenter,
       dragging: status.dragging,
     };
 
+    // 处理父子级关联锁定
+    if (dragOver) {
+      relationCtx.onLockDrop?.(); // 清空所有父级的lockDropID
+
+      if (relationCtx.onLockChange && !lockDropID) {
+        defer(() => {
+          self.lockDropID = id;
+          // 无已设置的lockDropID且父级传入了isLock, 将其标记为锁定
+          relationCtx.onLockChange && relationCtx.onLockChange(true);
+        });
+      }
+    } else if (lockDropID) {
+      self.lockDropID = null;
+      relationCtx.onLockChange?.(false);
+    }
+
+    const { dragOver: _, ...willChecks } = nextStatus;
+
+    // 是否有任意一个真实可用的位置被激活
+    const hasOver = _enableDropInfo.all ? dragOver : allPropertyHasTrue(willChecks);
+
     // 松开时，还原状态、并在处于over状态时触发onSourceAccept
-    if (!down) {
-      dragOver && props.onSourceAccept?.(getEventObj(dragE, nextStatus) as DragFullEvent);
+    if (!down && self.lastOverStatus) {
+      if (hasOver) {
+        const acceptE = getEventObj(dragE, nextStatus) as DragFullEvent;
+        defer(() => {
+          props.onSourceAccept?.(acceptE);
+          ctx.onAccept(acceptE);
+        });
+      }
 
       // 重置状态
       self.lastOverStatus = false;
@@ -58,8 +140,7 @@ export function useMethods(share: Share) {
       return;
     }
 
-    /** TODO: disabled处理 */
-    if (dragOver) {
+    if (hasOver) {
       // 保存当前放置目标状态
       ctx.currentTarget = currentNode;
       ctx.currentOffsetX = x - left;
@@ -79,30 +160,22 @@ export function useMethods(share: Share) {
       props.onSourceLeave?.(getEventObj(dragE, nextStatus));
     }
     // 保存本次放置状态
-    self.lastOverStatus = dragOver;
+    self.lastOverStatus = hasOver /* dragOver */;
 
     // 状态完全相等时不进行更新
     if (
-      status.dragOver === dragOver &&
-      status.dragTop === dragTop &&
-      status.dragBottom === dragBottom &&
-      status.dragLeft === dragLeft &&
-      status.dragRight === dragRight &&
-      status.dragCenter === dragCenter
+      status.dragOver === nextStatus.dragOver &&
+      status.dragTop === nextStatus.dragTop &&
+      status.dragBottom === nextStatus.dragBottom &&
+      status.dragLeft === nextStatus.dragLeft &&
+      status.dragRight === nextStatus.dragRight &&
+      status.dragCenter === nextStatus.dragCenter
     ) {
       return;
     }
 
     setStatus(nextStatus);
   });
-
-  // 将当前实例的监听器推入列表
-  useEffect(() => {
-    ctx.listeners.push({
-      id,
-      handler: changeHandle,
-    });
-  }, []);
 
   /** 拖动目标拖动事件处理 */
   const dragHandle: Handler<'drag'> = useFn(dragE => {
@@ -111,12 +184,15 @@ export function useMethods(share: Share) {
       down,
       first,
       tap,
-      // event,
+      memo,
+      event,
     } = dragE;
+
+    let isDrop = false;
 
     if (tap) return;
 
-    // event?.preventDefault(); TODO: 检查是否需要
+    event?.preventDefault();
 
     // 开始
     if (first) {
@@ -124,35 +200,47 @@ export function useMethods(share: Share) {
       startHandle(dragE);
     }
 
-    // 在listeners移除状态前执行onCancel或onDrop通知
     if (!down) {
+      props.onDrop?.(getEventObj(dragE));
+
       if (ctx.currentTarget) {
-        props.onDrop?.(getEventObj(dragE) as DragFullEvent);
-      } else {
-        props.onCancel?.(getEventObj(dragE));
+        isDrop = true;
       }
     }
 
+    const childAndSelf = [...relationCtxValue.childrens, id];
+
     // 将拖动操作派发到其他同组DND组件
     ctx.listeners.forEach(cItem => {
-      if (cItem.id !== id) cItem.handler(dragE);
+      if (!childAndSelf.includes(cItem.id)) cItem.handler(dragE);
     });
 
+    const moveE = getEventObj(dragE);
+
     // 派发move事件
-    props.onMove?.(getEventObj(dragE));
+    props.onMove?.(moveE);
+    ctx.onMove(moveE);
 
     // 结束
     if (!down) {
-      endHandle(dragE);
+      endHandle(isDrop);
       return;
     }
 
     // 更新拖动元素动画状态
-    window.requestAnimationFrame(() => {
-      self.cloneNode.style.transform = `translate(${moveX}px, ${moveY}px)`;
-    });
+    const dragFeedback = getDragFeedbackNode();
 
-    // console.log(cloneNode.current.getBoundingClientRect());
+    if (dragFeedback) {
+      // 第一次获取到dragFeedback, 添加初始化样式
+      if (!memo) {
+        initDragFeedbackNode(dragE);
+      }
+
+      dragFeedback.style.transform = `translate3d(${moveX}px, ${moveY}px, 0)`;
+    }
+
+    // 标记用于判断dragFeedback是否是第一次获取
+    return dragFeedback;
   });
 
   /** 开始拖动 */
@@ -160,50 +248,98 @@ export function useMethods(share: Share) {
     // 记录拖动目标
     ctx.currentSource = currentNode;
 
-    props.onDrag?.(getEventObj(dragE));
+    const e = getEventObj(dragE);
+
+    props.onDrag?.(e);
+
+    ctx.onStart(e);
 
     // 移除克隆拖动元素清理计时器
     clearTimeout(self.clearCloneTimer);
 
-    setStatus({
-      dragging: true,
+    // 延迟一段时间执行，防止克隆节点获取到用户根据拖动状态更改过的节点
+    defer(() => {
+      setStatus({
+        dragging: true,
+      });
     });
-
-    // 克隆目标，实际拖动的是克隆元素
-    self.cloneNode = elRef.current.cloneNode(true) as HTMLElement;
-
-    const { x, y } = elRef.current.getBoundingClientRect();
-
-    // TODO: 拖动动画
-    self.cloneNode.style.position = 'fixed';
-    self.cloneNode.style.left = `${x}px`;
-    self.cloneNode.style.top = `${y}px`;
-    self.cloneNode.style.opacity = '0.7';
-    self.cloneNode.style.pointerEvents = 'none';
-    self.cloneNode.style.zIndex = '10000';
-
-    document.body.appendChild(self.cloneNode);
   }
 
   /** 结束拖动 */
-  function endHandle(dragE: FullGestureState<'drag'>) {
-    setStatus(initStatus);
+  function endHandle(isDrop: boolean) {
+    if (!self.ignore) {
+      setStatus(initStatus);
+    }
 
-    // TODO: 拖动动画
-    if (self.cloneNode) {
-      self.cloneNode.style.transition = `0.1s`;
-      self.cloneNode.style.transform = `translate(0, 0)`;
+    if (self.dragFeedbackEl) {
+      if (isDrop) {
+        self.dragFeedbackEl.style.display = 'none';
+      } else {
+        const { left, top } = state.nodeEl.getBoundingClientRect();
+        // 修正位置
+        self.dragFeedbackEl.style.top = `${top}px`;
+        self.dragFeedbackEl.style.left = `${left}px`;
+        // 还原
+        self.dragFeedbackEl.style.transition = `0.3s ease-in-out`;
+        self.dragFeedbackEl.style.opacity = '0.3';
+        self.dragFeedbackEl.style.transform = `translate3d(0, 0, 0)`;
+      }
     }
 
     // 预估动画结束时间并进行清理
-    self.clearCloneTimer = setTimeout(clearCloneNode, 400);
+    self.clearCloneTimer = setTimeout(clearCloneNode, 300);
   }
 
-  /** 清理克隆节点 */
+  /** 返回当前的拖动反馈元素，自定义dragFeedback时，拖动开始到元素渲染完成期间可能会返回null，需要做空值处理 */
+  function getDragFeedbackNode() {
+    if (!props.dragFeedback && !self.dragFeedbackEl) {
+      self.dragFeedbackEl = state.nodeEl.cloneNode(true) as HTMLElement;
+      document.body.appendChild(self.dragFeedbackEl);
+    }
+
+    return self.dragFeedbackEl;
+  }
+
+  /** 初始化拖动反馈节点的样式/位置等 */
+  function initDragFeedbackNode(dragE: FullGestureState<'drag'>) {
+    // 克隆目标，实际拖动的是克隆元素
+    const dragFeedback = getDragFeedbackNode();
+
+    if (dragFeedback) {
+      let { x, y } = state.nodeEl.getBoundingClientRect();
+      const { width, height } = dragFeedback.getBoundingClientRect();
+
+      if (props.dragFeedback) {
+        x = dragE.xy[0] - width / 2;
+        y = dragE.xy[1] - height / 2;
+      }
+
+      dragFeedback.className += ' m78-dnd_drag-node';
+
+      // 可覆盖的基础样式
+      dragFeedback.style.opacity = '0.4';
+      dragFeedback.style.cursor = 'grabbing';
+
+      if (isObject(dragFeedbackStyle)) {
+        Object.entries(dragFeedbackStyle).forEach(([key, sty]) => {
+          dragFeedback.style[key as any] = sty;
+        });
+      }
+
+      // 不可覆盖的基础样式
+      dragFeedback.style.left = `${x}px`;
+      dragFeedback.style.top = `${y}px`;
+      dragFeedback.style.width = `${state.nodeEl.offsetWidth}px`;
+      dragFeedback.style.height = `${state.nodeEl.offsetHeight}px`;
+    }
+  }
+
+  /** 存在克隆节点时将其清除 */
   function clearCloneNode() {
-    if (self.cloneNode) {
-      const parentNode = self.cloneNode.parentNode;
-      parentNode && parentNode.removeChild(self.cloneNode);
+    if (!props.dragFeedback && self.dragFeedbackEl) {
+      const parentNode = self.dragFeedbackEl.parentNode;
+      parentNode && parentNode.removeChild(self.dragFeedbackEl);
+      self.dragFeedbackEl = null;
     }
   }
 
@@ -252,8 +388,45 @@ export function useMethods(share: Share) {
     ctx.currentStatus = undefined;
   }
 
+  /** 根据配置获取对象形式的enableDrag, 传入isClean时会不传递ctx.currentXX来从enableDrop中获取初始化值 */
+  function formatEnableDrag(isClean = false): EnableInfos {
+    const enable = enableDrop;
+    let posInfos: any = enable;
+
+    if (isFunction(enable)) {
+      posInfos = isClean ? enable() : enable(ctx.currentSource, ctx.currentTarget);
+    }
+
+    if (isBoolean(posInfos)) {
+      return { ...initEnableDragsDeny, enable: posInfos, all: posInfos };
+    }
+
+    // 设置了all时，其他方向都不进行标记
+    if (posInfos.all) {
+      posInfos = {
+        ...posInfos,
+        ...initEnableDragsDeny,
+        all: true,
+      };
+    } else {
+      posInfos = {
+        ...initEnableDragsDeny,
+        ...posInfos,
+        all: false,
+      };
+    }
+
+    return {
+      ...posInfos,
+      enable: allPropertyHasTrue(posInfos),
+    };
+  }
+
   return {
     changeHandle,
     dragHandle,
+    enableDropInfo,
   };
 }
+
+export type UseMethodsReturns = ReturnType<typeof useMethods>;
