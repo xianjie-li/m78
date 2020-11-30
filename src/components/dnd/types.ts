@@ -72,7 +72,8 @@ export interface DragFullEvent<Data = any, TData = Data>
 
 /** 响应某个DND拖动的事件 */
 export interface ChangeHandle {
-  (dragE: FullGestureState<'drag'>): void;
+  // 传入isCancel时，表示这是一个取消事件，只进行状态还原
+  (dragE: FullGestureState<'drag'>, isCancel?: boolean): void;
 }
 
 /** 监听内部所有的所有未被其他Context接管的DND的拖动开始、移动、接收事件 */
@@ -182,6 +183,11 @@ export interface DNDProps<Data = any, TData = Data> {
   dragFeedback?: React.ReactNode;
   /** 拖动反馈节点的基础样式 */
   dragFeedbackStyle?: React.CSSProperties;
+  /**
+   * 额外添加要禁止拖动的元素, 返回true表示禁止拖动
+   * 默认情况下，会禁止 tagName为INPUT|TEXTAREA|BUTTON|SELECT|AUDIO|VIDEO的元素或设置了contenteditable的元素
+   * */
+  ignoreElFilter?: (el: HTMLElement) => boolean;
 }
 
 export interface Share {

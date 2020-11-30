@@ -1,10 +1,16 @@
 import { useFn } from '@lxjx/hooks';
 import { FullGestureState, Handler } from 'react-use-gesture/dist/types';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
+import _throttle from 'lodash/throttle';
 import { defer, isBoolean, isFunction, isNumber, isObject } from '@lxjx/utils';
-import { allPropertyIsEqual, allPropertyHasTrue } from 'm78/dnd/common';
 import {
-  AllowPosition,
+  allPropertyIsEqual,
+  allPropertyHasTrue,
+  isIgnoreEl,
+  getOverStatus,
+  isBetween,
+} from 'm78/dnd/common';
+import {
   ChangeHandle,
   DragFullEvent,
   DragPartialEvent,
@@ -13,7 +19,7 @@ import {
   EnableInfos,
 } from './types';
 
-import { edgeRatio, initEnableDragsDeny, initEnableDragsPass, initStatus } from './consts';
+import { initEnableDragsDeny, initStatus } from './consts';
 
 export function useMethods(share: Share) {
   const {
@@ -28,7 +34,7 @@ export function useMethods(share: Share) {
     relationCtx,
     relationCtxValue,
   } = share;
-  const { enableDrop, dragFeedbackStyle } = props;
+  const { enableDrop, dragFeedbackStyle, ignoreElFilter } = props;
 
   // 对于非函数的enable配置，加载时获取一次初始值, 后面可以直接都是用本次获取
   const [enableDropInfo, setEnableDropInfo] = useState(formatEnableDrag);
@@ -41,156 +47,140 @@ export function useMethods(share: Share) {
   }, [enableDrop]);
 
   // 放置目标响应拖动目标的拖动事件
-  const changeHandle: ChangeHandle = useFn(dragE => {
-    const { lockDropID } = self;
+  const changeHandle: ChangeHandle = useFn(
+    dragE => {
+      const { lockDropID } = self;
 
-    const {
-      xy: [x, y],
-      down,
-    } = dragE;
+      const {
+        xy: [x, y],
+        down,
+      } = dragE;
 
-    const enableDropIsFn = isFunction(enableDrop);
+      const enableDropIsFn = isFunction(enableDrop);
 
-    // 如果enableDrop为函数，则需要在每次执行时判断
-    const _enableDropInfo = isFunction(enableDrop) ? formatEnableDrag() : enableDropInfo;
+      // 如果enableDrop为函数，则需要在每次执行时判断
+      const _enableDropInfo = isFunction(enableDrop) ? formatEnableDrag() : enableDropInfo;
 
-    // 如果前后两次的启用状态不同，则更新
-    if (enableDropIsFn) {
-      if (down) {
-        // 如果禁用状态与当前保存的不一致则同步
-        if (!allPropertyIsEqual(enableDropInfo, _enableDropInfo)) {
-          setEnableDropInfo(_enableDropInfo);
+      // 如果前后两次的启用状态不同，则更新
+      if (enableDropIsFn) {
+        if (down) {
+          // 如果禁用状态与当前保存的不一致则同步
+          if (!allPropertyIsEqual(enableDropInfo, _enableDropInfo)) {
+            setEnableDropInfo(_enableDropInfo);
+          }
+          // 松开且不可用时，还原配置
+        } else if (!_enableDropInfo.enable) {
+          setEnableDropInfo(formatEnableDrag(true));
         }
-        // 松开且不可用时，还原配置
-      } else if (!_enableDropInfo.enable) {
-        setEnableDropInfo(formatEnableDrag(true));
       }
-    }
 
-    if (self.lockDrop) return;
-    if (!state.nodeEl) return;
-    if (!_enableDropInfo.enable) return;
+      if (self.lockDrop) return;
+      if (!state.nodeEl) return;
+      if (!_enableDropInfo.enable) return;
 
-    const { left, top, right, bottom } = state.nodeEl.getBoundingClientRect();
+      const { dragOver, left, top, ...otherS } = getOverStatus(state.nodeEl, x, y);
 
-    // 尺寸
-    const width = right - left;
-    const height = bottom - top;
+      const nextStatus: DragStatus = {
+        dragOver: dragOver && _enableDropInfo.all,
+        dragTop: _enableDropInfo.top && otherS.dragTop,
+        dragBottom: _enableDropInfo.bottom && otherS.dragBottom,
+        dragLeft: _enableDropInfo.left && otherS.dragLeft,
+        dragRight: _enableDropInfo.right && otherS.dragRight,
+        dragCenter: _enableDropInfo.center && otherS.dragCenter,
+        dragging: status.dragging,
+      };
 
-    // 触发边缘放置的偏移距离
-    const triggerXOffset = width * edgeRatio;
-    const triggerYOffset = height * edgeRatio;
+      // 处理父子级关联锁定
+      if (dragOver) {
+        relationCtx.onLockDrop?.(); // 清空所有父级的lockDropID
 
-    // 各方向上的拖动状态
-    const dragOver = x > left && x < right && y > top && y < bottom;
-    const dragTop = dragOver && y < top + triggerYOffset;
-    const dragBottom = dragOver && !dragTop && y > bottom - triggerYOffset;
-
-    const nextShouldPass = dragOver && !dragTop && !dragBottom;
-
-    const dragRight = nextShouldPass && x > right - triggerXOffset;
-    const dragLeft = nextShouldPass && x < left + triggerXOffset;
-    const dragCenter = nextShouldPass && !dragRight && !dragLeft;
-
-    const nextStatus: DragStatus = {
-      dragOver: dragOver && _enableDropInfo.all,
-      dragTop: _enableDropInfo.top && dragTop,
-      dragBottom: _enableDropInfo.bottom && dragBottom,
-      dragLeft: _enableDropInfo.left && dragLeft,
-      dragRight: _enableDropInfo.right && dragRight,
-      dragCenter: _enableDropInfo.center && dragCenter,
-      dragging: status.dragging,
-    };
-
-    // 处理父子级关联锁定
-    if (dragOver) {
-      relationCtx.onLockDrop?.(); // 清空所有父级的lockDropID
-
-      if (relationCtx.onLockChange && !lockDropID) {
-        defer(() => {
-          self.lockDropID = id;
-          // 无已设置的lockDropID且父级传入了isLock, 将其标记为锁定
-          relationCtx.onLockChange && relationCtx.onLockChange(true);
-        });
+        if (relationCtx.onLockChange && !lockDropID) {
+          defer(() => {
+            self.lockDropID = id;
+            // 无已设置的lockDropID且父级传入了isLock, 将其标记为锁定
+            relationCtx.onLockChange && relationCtx.onLockChange(true);
+          });
+        }
+      } else if (lockDropID) {
+        self.lockDropID = null;
+        relationCtx.onLockChange?.(false);
       }
-    } else if (lockDropID) {
-      self.lockDropID = null;
-      relationCtx.onLockChange?.(false);
-    }
 
-    const { dragOver: _, ...willChecks } = nextStatus;
+      const { dragOver: _, ...willChecks } = nextStatus;
 
-    // 是否有任意一个真实可用的位置被激活
-    const hasOver = _enableDropInfo.all ? dragOver : allPropertyHasTrue(willChecks);
+      // 是否有任意一个真实可用的位置被激活
+      const hasOver = _enableDropInfo.all ? dragOver : allPropertyHasTrue(willChecks);
 
-    // 松开时，还原状态、并在处于over状态时触发onSourceAccept
-    if (!down && self.lastOverStatus) {
+      // 松开时，还原状态、并在处于over状态时触发onSourceAccept
+      if (!down && self.lastOverStatus) {
+        if (hasOver) {
+          const acceptE = getEventObj(dragE, nextStatus) as DragFullEvent;
+          defer(() => {
+            props.onSourceAccept?.(acceptE);
+            ctx.onAccept(acceptE);
+          });
+        }
+
+        // 重置状态
+        self.lastOverStatus = false;
+        resetCtxCurrents();
+        setStatus(initStatus);
+        return;
+      }
+
       if (hasOver) {
-        const acceptE = getEventObj(dragE, nextStatus) as DragFullEvent;
-        defer(() => {
-          props.onSourceAccept?.(acceptE);
-          ctx.onAccept(acceptE);
-        });
+        // 保存当前放置目标状态
+        ctx.currentTarget = currentNode;
+        ctx.currentOffsetX = x - left;
+        ctx.currentOffsetY = y - top;
+        ctx.currentStatus = status;
+
+        // 上一拖动事件已经是over事件时，触发move，否则触发enter
+        if (self.lastOverStatus) {
+          props.onSourceMove?.(getEventObj(dragE, nextStatus) as DragFullEvent);
+        } else {
+          props.onSourceEnter?.(getEventObj(dragE, nextStatus) as DragFullEvent);
+        }
+      } else if (self.lastOverStatus) {
+        // 非over且上一次是over状态，则初始化当前的放置目标
+        resetCtxCurrents();
+
+        props.onSourceLeave?.(getEventObj(dragE, nextStatus));
       }
 
-      // 重置状态
-      self.lastOverStatus = false;
-      resetCtxCurrents();
-      setStatus(initStatus);
-      return;
-    }
+      // 保存本次放置状态
+      self.lastOverStatus = hasOver /* dragOver */;
 
-    if (hasOver) {
-      // 保存当前放置目标状态
-      ctx.currentTarget = currentNode;
-      ctx.currentOffsetX = x - left;
-      ctx.currentOffsetY = y - top;
-      ctx.currentStatus = status;
+      // 状态完全相等时不进行更新
+      if (allPropertyIsEqual(status, nextStatus)) return;
 
-      // 上一拖动事件已经是over事件时，触发move，否则触发enter
-      if (self.lastOverStatus) {
-        props.onSourceMove?.(getEventObj(dragE, nextStatus) as DragFullEvent);
-      } else {
-        props.onSourceEnter?.(getEventObj(dragE, nextStatus) as DragFullEvent);
-      }
-    } else if (self.lastOverStatus) {
-      // 非over且上一次是over状态，则初始化当前的放置目标
-      resetCtxCurrents();
-
-      props.onSourceLeave?.(getEventObj(dragE, nextStatus));
-    }
-    // 保存本次放置状态
-    self.lastOverStatus = hasOver /* dragOver */;
-
-    // 状态完全相等时不进行更新
-    if (
-      status.dragOver === nextStatus.dragOver &&
-      status.dragTop === nextStatus.dragTop &&
-      status.dragBottom === nextStatus.dragBottom &&
-      status.dragLeft === nextStatus.dragLeft &&
-      status.dragRight === nextStatus.dragRight &&
-      status.dragCenter === nextStatus.dragCenter
-    ) {
-      return;
-    }
-
-    setStatus(nextStatus);
-  });
+      setStatus(nextStatus);
+    },
+    // 减少执行次数
+    fn => _throttle(fn, 60, { trailing: true }),
+  );
 
   /** 拖动目标拖动事件处理 */
   const dragHandle: Handler<'drag'> = useFn(dragE => {
     const {
       movement: [moveX, moveY],
+      xy: [x, y],
       down,
       first,
       tap,
       memo,
       event,
+      cancel,
     } = dragE;
 
     let isDrop = false;
 
     if (tap) return;
+
+    if (isIgnoreEl(event, ignoreElFilter)) {
+      cancel?.();
+      return;
+    }
 
     event?.preventDefault();
 
@@ -208,12 +198,16 @@ export function useMethods(share: Share) {
       }
     }
 
-    const childAndSelf = [...relationCtxValue.childrens, id];
+    const domRect = state.nodeEl.getBoundingClientRect();
 
-    // 将拖动操作派发到其他同组DND组件
-    ctx.listeners.forEach(cItem => {
-      if (!childAndSelf.includes(cItem.id)) cItem.handler(dragE);
-    });
+    if (!isBetween(domRect, x, y) || !down) {
+      const childAndSelf = [...relationCtxValue.childrens, id];
+
+      // 将拖动操作派发到其他同组DND组件
+      ctx.listeners.forEach(cItem => {
+        if (!childAndSelf.includes(cItem.id)) cItem.handler(dragE);
+      });
+    }
 
     const moveE = getEventObj(dragE);
 
