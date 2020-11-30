@@ -48,7 +48,7 @@ export function useMethods(share: Share) {
 
   // 放置目标响应拖动目标的拖动事件
   const changeHandle: ChangeHandle = useFn(
-    dragE => {
+    (dragE, isCancel) => {
       const { lockDropID } = self;
 
       const {
@@ -81,7 +81,7 @@ export function useMethods(share: Share) {
       const { dragOver, left, top, ...otherS } = getOverStatus(state.nodeEl, x, y);
 
       const nextStatus: DragStatus = {
-        dragOver: dragOver && _enableDropInfo.all,
+        dragOver: dragOver && _enableDropInfo.all && !isCancel,
         dragTop: _enableDropInfo.top && otherS.dragTop,
         dragBottom: _enableDropInfo.bottom && otherS.dragBottom,
         dragLeft: _enableDropInfo.left && otherS.dragLeft,
@@ -96,9 +96,11 @@ export function useMethods(share: Share) {
 
         if (relationCtx.onLockChange && !lockDropID) {
           defer(() => {
+            relationCtx.onLockDrop?.(); // 清空所有父级的lockDropID
+
             self.lockDropID = id;
             // 无已设置的lockDropID且父级传入了isLock, 将其标记为锁定
-            relationCtx.onLockChange && relationCtx.onLockChange(true);
+            relationCtx.onLockChange?.(true);
           });
         }
       } else if (lockDropID) {
@@ -113,7 +115,7 @@ export function useMethods(share: Share) {
 
       // 松开时，还原状态、并在处于over状态时触发onSourceAccept
       if (!down && self.lastOverStatus) {
-        if (hasOver) {
+        if (!isCancel && hasOver) {
           const acceptE = getEventObj(dragE, nextStatus) as DragFullEvent;
           defer(() => {
             props.onSourceAccept?.(acceptE);
@@ -135,17 +137,21 @@ export function useMethods(share: Share) {
         ctx.currentOffsetY = y - top;
         ctx.currentStatus = status;
 
-        // 上一拖动事件已经是over事件时，触发move，否则触发enter
-        if (self.lastOverStatus) {
-          props.onSourceMove?.(getEventObj(dragE, nextStatus) as DragFullEvent);
-        } else {
-          props.onSourceEnter?.(getEventObj(dragE, nextStatus) as DragFullEvent);
+        if (!isCancel) {
+          // 上一拖动事件已经是over事件时，触发move，否则触发enter
+          if (self.lastOverStatus) {
+            props.onSourceMove?.(getEventObj(dragE, nextStatus) as DragFullEvent);
+          } else {
+            props.onSourceEnter?.(getEventObj(dragE, nextStatus) as DragFullEvent);
+          }
         }
       } else if (self.lastOverStatus) {
         // 非over且上一次是over状态，则初始化当前的放置目标
         resetCtxCurrents();
 
-        props.onSourceLeave?.(getEventObj(dragE, nextStatus));
+        if (!isCancel) {
+          props.onSourceLeave?.(getEventObj(dragE, nextStatus));
+        }
       }
 
       // 保存本次放置状态
@@ -200,13 +206,22 @@ export function useMethods(share: Share) {
 
     const domRect = state.nodeEl.getBoundingClientRect();
 
-    if (!isBetween(domRect, x, y) || !down) {
+    const isOverBetween = isBetween(domRect, x, y);
+
+    self.lastIsOverBetween = true;
+
+    // 仅在不处于拖动元素顶部或松开时通知拖动，如果从非拖动元素区域移动到拖动元素区域也需要更新
+    if (!isOverBetween || !down || self.lastIsOverBetween) {
       const childAndSelf = [...relationCtxValue.childrens, id];
 
       // 将拖动操作派发到其他同组DND组件
       ctx.listeners.forEach(cItem => {
-        if (!childAndSelf.includes(cItem.id)) cItem.handler(dragE);
+        if (!childAndSelf.includes(cItem.id)) cItem.handler(dragE, isOverBetween);
       });
+    }
+
+    if (isOverBetween) {
+      isDrop = false;
     }
 
     const moveE = getEventObj(dragE);

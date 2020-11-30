@@ -1,6 +1,9 @@
 /** 在此比例内的区域视为边缘 */
 export const edgeRatio = 0.24;
 
+/** 禁止拖动的元素tagName */
+export const ignoreReg = /^(INPUT|TEXTAREA|BUTTON|SELECT|AUDIO|VIDEO)$/;
+
 /** 默认props */
 export const defaultProps = {
   enableDrag: true,

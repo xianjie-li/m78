@@ -14,6 +14,7 @@
     font-size: 16px;
     font-weight: bold;
     padding: 8px;
+    cursor: move;
   }
 
   &List {
@@ -37,6 +38,7 @@
   font-size: 14px;
   user-select: none;
   border-radius: 2px;
+  cursor: grab;
 
   > div:nth-child(2) {
     font-size: 12px;

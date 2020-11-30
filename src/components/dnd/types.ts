@@ -209,6 +209,8 @@ export interface Share {
     lockDropID?: string | null;
     /** 组件已卸载，阻止某些延迟触发的状态更新 */
     ignore: boolean;
+    /** 最后一次drag事件时指针位置是否位于拖动元素内部 */
+    lastIsOverBetween?: boolean;
   };
   state: {
     /** 节点的挂载元素 */

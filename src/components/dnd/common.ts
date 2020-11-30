@@ -1,6 +1,6 @@
 import { AnyObject } from '@lxjx/utils';
 import { DNDProps } from 'm78/dnd/types';
-import { edgeRatio } from 'm78/dnd/consts';
+import { edgeRatio, ignoreReg } from 'm78/dnd/consts';
 
 /** 计算元光标和指定元素的覆盖状态 */
 export function getOverStatus(el: HTMLElement, x: number, y: number) {
@@ -53,8 +53,6 @@ export function allPropertyHasTrue(obj: AnyObject) {
 export function allPropertyIsEqual(obj: AnyObject, obj2: AnyObject) {
   return Object.entries(obj).every(([key, val]) => val === obj2[key]);
 }
-
-const ignoreReg = /^(INPUT|TEXTAREA|BUTTON|SELECT|AUDIO|VIDEO)$/;
 
 /**  根据事件元素类型决定是否禁止拖动 */
 export function isIgnoreEl(event?: any, ignoreElFilter?: DNDProps['ignoreElFilter']) {

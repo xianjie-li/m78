@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef } from 'react';
+import React, { useContext, useMemo, useRef } from 'react';
 import { createRandString } from '@lxjx/utils';
 import { useSelf, useSetState } from '@lxjx/hooks';
 import { defaultProps, initStatus } from 'm78/dnd/consts';
