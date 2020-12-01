@@ -3,7 +3,7 @@ import { DNDProps } from './types';
 import { edgeRatio, ignoreReg } from './consts';
 
 /** 计算元光标和指定元素的覆盖状态 */
-export function getOverStatus(el: HTMLElement, x: number, y: number) {
+export function getOverStatus(el: HTMLElement, x: number, y: number, fixedOffset?: number) {
   const bound = el.getBoundingClientRect();
   const { left, top, right, bottom } = bound;
 
@@ -12,8 +12,8 @@ export function getOverStatus(el: HTMLElement, x: number, y: number) {
   const height = bottom - top;
 
   // 触发边缘放置的偏移距离
-  const triggerXOffset = width * edgeRatio;
-  const triggerYOffset = height * edgeRatio;
+  const triggerXOffset = fixedOffset || width * edgeRatio;
+  const triggerYOffset = fixedOffset || height * edgeRatio;
 
   // 各方向上的拖动状态
   const dragOver = isBetween(bound, x, y);

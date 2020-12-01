@@ -2,14 +2,7 @@ import { useFn } from '@lxjx/hooks';
 import { FullGestureState, Handler } from 'react-use-gesture/dist/types';
 import { useEffect, useState } from 'react';
 import _throttle from 'lodash/throttle';
-import {
-  defer,
-  getFirstScrollParent,
-  isBoolean,
-  isFunction,
-  isNumber,
-  isObject,
-} from '@lxjx/utils';
+import { defer, getScrollParent, isBoolean, isFunction, isNumber, isObject } from '@lxjx/utils';
 import {
   allPropertyIsEqual,
   allPropertyHasTrue,
@@ -216,6 +209,16 @@ export function useMethods(share: Share) {
     const isOverBetween = isBetween(domRect, x, y);
 
     self.lastIsOverBetween = true;
+
+    console.log(x, y);
+
+    /**
+     * xy在元素范围外一定距离, 距离越远移动越快
+     * 元素在窗口外时，最小值取0 最大值取窗口尺寸
+     * */
+    ctx.scrollerList.forEach(ele => {
+      // console.log(JSON.stringify(getOverStatus(ele, x, y, 100)));
+    });
 
     // 仅在不处于拖动元素顶部或松开时通知拖动，如果从非拖动元素区域移动到拖动元素区域也需要更新
     if (!isOverBetween || !down || self.lastIsOverBetween) {
@@ -441,14 +444,16 @@ export function useMethods(share: Share) {
   /** 获取所有滚动父级 */
   function scrollParentsHandle() {
     if (!state.nodeEl) return;
-    const sp = getFirstScrollParent(state.nodeEl);
-    if (!sp) return;
+    const sps = getScrollParent(state.nodeEl, true);
+    if (!sps.length) return;
 
-    const indOf = ctx.scrollerList.indexOf(sp);
+    sps.forEach(sp => {
+      const indOf = ctx.scrollerList.indexOf(sp);
 
-    if (indOf === -1) {
-      ctx.scrollerList.push(sp);
-    }
+      if (indOf === -1) {
+        ctx.scrollerList.push(sp);
+      }
+    });
   }
 
   return {

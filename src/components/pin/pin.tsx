@@ -1,6 +1,6 @@
 import React, { RefObject, useEffect, useRef } from 'react';
 import { useFn, useScroll, useSetState, getRefDomOrDom } from '@lxjx/hooks';
-import { checkElementVisible, getFirstScrollParent, getStyle } from '@lxjx/utils';
+import { checkElementVisible, getScrollParent, getStyle } from '@lxjx/utils';
 import _debounce from 'lodash/debounce';
 
 import cls from 'classnames';
@@ -92,7 +92,7 @@ const Pin = ({
       return;
     }
 
-    const fs = getFirstScrollParent(pinEl.current);
+    const fs = getScrollParent(pinEl.current);
 
     /** 有滚动父节点且不为doc对象和body对象 */
     if (fs && fs !== document.documentElement && fs !== document.body) {

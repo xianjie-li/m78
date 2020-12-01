@@ -1,7 +1,7 @@
 import React, { RefObject, useEffect, useRef, useState } from 'react';
 import Button from 'm78/button';
 import { CaretUpOutlined } from 'm78/icon';
-import { getFirstScrollParent } from '@lxjx/utils';
+import { getScrollParent } from '@lxjx/utils';
 import { useFn, useScroll, getRefDomOrDom } from '@lxjx/hooks';
 import _debounce from 'lodash/debounce';
 import { Transition } from '@lxjx/react-transition-spring';
@@ -50,7 +50,7 @@ const BackTop = ({
       return;
     }
 
-    const sp = getFirstScrollParent(wrapRef.current);
+    const sp = getScrollParent(wrapRef.current);
 
     setEl(sp);
   }, [target]);

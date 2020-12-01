@@ -5,7 +5,7 @@ import Schema from 'async-validator';
 import {
   createRandString,
   isFunction,
-  getFirstScrollParent,
+  getScrollParent,
   checkElementVisible,
   triggerHighlight,
 } from '@lxjx/utils';
@@ -68,7 +68,7 @@ const BaseForm: React.FC<FormProps> = props => {
   }));
 
   useEffect(() => {
-    const el = getFirstScrollParent(flagEl.current);
+    const el = getScrollParent(flagEl.current);
 
     if (el) {
       setScrollParent(el);

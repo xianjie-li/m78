@@ -1,4 +1,4 @@
-import { getFirstScrollParent, isDom } from '@lxjx/utils';
+import { getScrollParent, isDom } from '@lxjx/utils';
 import { useFn, getRefDomOrDom } from '@lxjx/hooks';
 import { patchVisible } from './patchVisible';
 import { getPopperDirection } from './getPopperDirection';
@@ -62,7 +62,7 @@ export function useMethods(share: Share) {
     }
 
     if (state.elTarget) {
-      const fs = getFirstScrollParent(state.elTarget);
+      const fs = getScrollParent(state.elTarget);
       if (fs && fs !== state.wrapEl) {
         setState({
           wrapEl: fs,
