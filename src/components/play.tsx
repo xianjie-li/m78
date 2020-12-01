@@ -186,6 +186,8 @@ const Play = () => {
           </DND>
         ))}
       </DNDContext>
+
+      <Spacer height={2000} />
     </div>
   );
 };

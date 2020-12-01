@@ -1,9 +1,9 @@
 import React, { useContext, useMemo, useRef } from 'react';
 import { createRandString } from '@lxjx/utils';
 import { useSelf, useSetState } from '@lxjx/hooks';
-import { defaultProps, initStatus } from 'm78/dnd/consts';
-import { useLifeCycle } from 'm78/dnd/useLifeCycle';
-import { useRenders } from 'm78/dnd/useRenders';
+import { defaultProps, initStatus } from './consts';
+import { useLifeCycle } from './useLifeCycle';
+import { useRenders } from './useRenders';
 import DNDCtx, { relationContext } from './context';
 import { DNDProps, DNDRelationContext, Share } from './types';
 import { useMethods } from './useMethods';

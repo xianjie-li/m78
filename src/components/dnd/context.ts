@@ -1,9 +1,10 @@
 import { createContext } from 'react';
-import { DNDContext, DNDRelationContext } from 'm78/dnd/types';
 import { dumpFn } from '@lxjx/utils';
+import { DNDContext, DNDRelationContext } from './types';
 
 const defaultContext: DNDContext = {
   listeners: [],
+  scrollerList: [],
   onStart: dumpFn,
   onMove: dumpFn,
   onAccept: dumpFn,

@@ -6,6 +6,13 @@ import { FullGestureState } from 'react-use-gesture/dist/types';
  * TODO: 自动滚动
  * TODO: 过滤input等元素的拖动
  * TODO: 拖动完成后自身的禁用未刷新
+ *
+ * DNDC
+ * 所有dnd捕获所有滚动父级，并去重推入一个唯一列表中
+ * 拖动完成一段时间后，检测拖动元素父节点并合并
+ *
+ * 元素拖动时，判断此列表中所有元素并调整滚动位置
+ * 检测滚动元素边缘，光标位置越靠近末尾滚动越快
  * */
 
 /** 表示一个DND实例的拖动相关状态 */
@@ -93,6 +100,8 @@ export interface DNDContext extends Required<DNDContextProps> {
     handler: ChangeHandle;
     id: string;
   }[];
+  /** 所有被监听的滚动父级 */
+  scrollerList: any[];
   /** 当前拖动目标 */
   currentSource?: DNDNode;
   /** 当前放置目标 */

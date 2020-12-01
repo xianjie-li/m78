@@ -54,7 +54,7 @@ export function useLifeCycle(share: Share, methods: UseMethodsReturns) {
     };
   }, []);
 
-  // 同步relationCtxValue.childrens
+  /* 同步relationCtxValue.childrens */
   useEffect(() => {
     // 没有DND父级
     if (!relationCtx.childrens) return;
@@ -72,6 +72,9 @@ export function useLifeCycle(share: Share, methods: UseMethodsReturns) {
       _remove(relationCtx.childrens, _id => child.includes(_id));
     };
   }, []);
+
+  /* 检测滚动父级并同步到检测列表中 */
+  useEffect(methods.scrollParentsHandle, [state.nodeEl]);
 
   /* 绑定拖拽事件 */
   const bind = useDrag(methods.dragHandle, {

@@ -1,6 +1,6 @@
 import { AnyObject } from '@lxjx/utils';
-import { DNDProps } from 'm78/dnd/types';
-import { edgeRatio, ignoreReg } from 'm78/dnd/consts';
+import { DNDProps } from './types';
+import { edgeRatio, ignoreReg } from './consts';
 
 /** 计算元光标和指定元素的覆盖状态 */
 export function getOverStatus(el: HTMLElement, x: number, y: number) {

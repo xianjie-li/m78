@@ -2,14 +2,21 @@ import { useFn } from '@lxjx/hooks';
 import { FullGestureState, Handler } from 'react-use-gesture/dist/types';
 import { useEffect, useState } from 'react';
 import _throttle from 'lodash/throttle';
-import { defer, isBoolean, isFunction, isNumber, isObject } from '@lxjx/utils';
+import {
+  defer,
+  getFirstScrollParent,
+  isBoolean,
+  isFunction,
+  isNumber,
+  isObject,
+} from '@lxjx/utils';
 import {
   allPropertyIsEqual,
   allPropertyHasTrue,
   isIgnoreEl,
   getOverStatus,
   isBetween,
-} from 'm78/dnd/common';
+} from './common';
 import {
   ChangeHandle,
   DragFullEvent,
@@ -431,8 +438,22 @@ export function useMethods(share: Share) {
     };
   }
 
+  /** 获取所有滚动父级 */
+  function scrollParentsHandle() {
+    if (!state.nodeEl) return;
+    const sp = getFirstScrollParent(state.nodeEl);
+    if (!sp) return;
+
+    const indOf = ctx.scrollerList.indexOf(sp);
+
+    if (indOf === -1) {
+      ctx.scrollerList.push(sp);
+    }
+  }
+
   return {
     changeHandle,
+    scrollParentsHandle,
     dragHandle,
     enableDropInfo,
   };
