@@ -9,6 +9,8 @@ import {
   isIgnoreEl,
   getOverStatus,
   isBetween,
+  getAutoScrollStatus,
+  autoScrollByStatus,
 } from './common';
 import {
   ChangeHandle,
@@ -210,14 +212,13 @@ export function useMethods(share: Share) {
 
     self.lastIsOverBetween = true;
 
-    console.log(x, y);
-
     /**
      * xy在元素范围外一定距离, 距离越远移动越快
      * 元素在窗口外时，最小值取0 最大值取窗口尺寸
      * */
     ctx.scrollerList.forEach(ele => {
       // console.log(JSON.stringify(getOverStatus(ele, x, y, 100)));
+      autoScrollByStatus(ele, getAutoScrollStatus(ele, x, y), down, self);
     });
 
     // 仅在不处于拖动元素顶部或松开时通知拖动，如果从非拖动元素区域移动到拖动元素区域也需要更新

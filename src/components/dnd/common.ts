@@ -1,6 +1,6 @@
-import { AnyObject } from '@lxjx/utils';
+import { AnyObject, hasScroll } from '@lxjx/utils';
 import { DNDProps } from './types';
-import { edgeRatio, ignoreReg } from './consts';
+import { edgeRatio, ignoreReg, raf } from './consts';
 
 /** 计算元光标和指定元素的覆盖状态 */
 export function getOverStatus(el: HTMLElement, x: number, y: number, fixedOffset?: number) {
@@ -36,6 +36,115 @@ export function getOverStatus(el: HTMLElement, x: number, y: number, fixedOffset
     left,
     top,
   };
+}
+
+/**
+ * 计算光标在某个元素四个方向的超出值
+ * 不包含滚动条的方向返回值始终为0
+ * 元素不包含滚动条时无返回
+ * 同时只会有一个方向有值
+ * */
+export function getAutoScrollStatus(el: HTMLElement, x: number, y: number) {
+  if (el === document.documentElement) return;
+
+  const si = hasScroll(el);
+
+  if (!si.x && !si.y) return;
+
+  const { left, top, right, bottom } = el.getBoundingClientRect();
+
+  let t = 0;
+  let r = 0;
+  let b = 0;
+  let l = 0;
+
+  // 在y轴范围内
+  if (x > left && x < right) {
+    if (y < top) {
+      t = top - y;
+    }
+
+    if (y > bottom) {
+      b = y - bottom;
+    }
+  }
+
+  // 在x轴范围内
+  if (y > top && y < bottom) {
+    if (x < left) {
+      l = left - x;
+    }
+
+    if (x > right) {
+      r = x - right;
+    }
+  }
+
+  return {
+    top: si.y ? t : 0,
+    bottom: si.y ? b : 0,
+    left: si.x ? l : 0,
+    right: si.x ? r : 0,
+  };
+}
+
+/**
+ * 根据getAutoScrollStatus的返回值滚动元素
+ * 需要传入一个用来保持状态的ctx对象
+ * */
+export function autoScrollByStatus(
+  el: HTMLElement,
+  status: ReturnType<typeof getAutoScrollStatus>,
+  down: boolean,
+  ctx: any,
+) {
+  ctx.autoScrollDown = down;
+
+  if (!el || !status) return;
+
+  clearTimeout(ctx.autoScrollTimer);
+
+  console.log(status);
+
+  if (status.bottom) {
+    raf(() => {
+      el.scrollTop += 1 + status.bottom / 100;
+    });
+
+    ctx.autoScrollTimer = setTimeout(() => {
+      rafaa(() => {
+        el.scrollTop += 1 + status.bottom / 100;
+      }, ctx);
+    }, 50);
+
+    console.log(111, ctx.autoScrollTimer);
+  }
+
+  if (status.top) {
+    raf(() => {
+      el.scrollTop -= 1 + status.top;
+    });
+
+    console.log(33);
+
+    ctx.autoScrollTimer = setTimeout(() => {
+      rafaa(() => {
+        el.scrollTop -= 2;
+      }, ctx);
+    }, 50);
+
+    console.log(222, ctx.autoScrollTimer);
+  }
+}
+
+export function rafaa(fn: any, ctx: any) {
+  return requestAnimationFrame(() => {
+    fn();
+    console.log(123);
+    if (ctx.autoScrollDown) {
+      rafaa(fn, ctx);
+    }
+  });
 }
 
 /** 判断x, y 是否在指定的DOMRect区间中 */

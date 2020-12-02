@@ -35,15 +35,15 @@ const Play = () => {
   const [todo, setTodo] = useState(() => [
     {
       name: '待办',
-      list: [1, 2, 3, 4, 5, 6],
+      list: [1, 2, 3, 4, 5, 6, 11, 12, 13, 8, 9],
     },
     {
       name: '进行中',
-      list: [7, 8, 9],
+      list: [7],
     },
     {
       name: '已完成',
-      list: [10, 11, 12, 13],
+      list: [10],
     },
   ]);
 
