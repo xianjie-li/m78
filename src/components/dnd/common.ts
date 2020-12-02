@@ -1,9 +1,34 @@
-import { AnyObject, hasScroll } from '@lxjx/utils';
+import { AnyObject, checkElementVisible, hasScroll } from '@lxjx/utils';
 import { DNDProps } from './types';
 import { edgeRatio, ignoreReg, raf } from './consts';
 
+/** 自动滚动加速度，此值越小, 超出时自动滚动的速度越快 */
+const AutoScrollDiffSpeed = 20;
+
+/** 在距离边缘此偏移时即开始滚动 */
+const AutoScrollOffset = 16;
+
+/** 在多个滚动帮助函数间共享 */
+interface AutoScrollCtx {
+  /** 是否按下 */
+  autoScrollDown: boolean;
+  /** 自动滚动的开关 */
+  autoScrollToggle: boolean;
+  /** 要设置的key */
+  autoScrollPosKey: 'scrollLeft' | 'scrollTop';
+  /** 每次滚动距离 */
+  autoScrollVal: number;
+  /** 增加还是减少 1增加 2减少 */
+  autoScrollType: 1 | 2;
+}
+
 /** 计算元光标和指定元素的覆盖状态 */
-export function getOverStatus(el: HTMLElement, x: number, y: number, fixedOffset?: number) {
+export function getOverStatus(
+  el: HTMLElement,
+  x: number,
+  y: number,
+  firstScrollParent?: HTMLElement,
+) {
   const bound = el.getBoundingClientRect();
   const { left, top, right, bottom } = bound;
 
@@ -12,11 +37,23 @@ export function getOverStatus(el: HTMLElement, x: number, y: number, fixedOffset
   const height = bottom - top;
 
   // 触发边缘放置的偏移距离
-  const triggerXOffset = fixedOffset || width * edgeRatio;
-  const triggerYOffset = fixedOffset || height * edgeRatio;
+  const triggerXOffset = width * edgeRatio;
+  const triggerYOffset = height * edgeRatio;
 
-  // 各方向上的拖动状态
-  const dragOver = isBetween(bound, x, y);
+  // 元素是否可见，不可见时视为未覆盖
+  let visible = true;
+
+  // 检测元素可见性
+  if (firstScrollParent) {
+    const vs = checkElementVisible(el, {
+      fullVisible: true,
+      wrapEl: firstScrollParent,
+    });
+    visible = vs.visible;
+  }
+
+  // 各方向上的拖动状态E
+  const dragOver = visible && isBetween(bound, x, y);
   const dragTop = dragOver && y < top + triggerYOffset;
   const dragBottom = dragOver && !dragTop && y > bottom - triggerYOffset;
 
@@ -38,6 +75,11 @@ export function getOverStatus(el: HTMLElement, x: number, y: number, fixedOffset
   };
 }
 
+/** 判断x, y 是否在指定的DOMRect区间中 */
+export function isBetween({ left, top, right, bottom }: DOMRect, x: number, y: number) {
+  return x > left && x < right && y > top && y < bottom;
+}
+
 /**
  * 计算光标在某个元素四个方向的超出值
  * 不包含滚动条的方向返回值始终为0
@@ -45,13 +87,25 @@ export function getOverStatus(el: HTMLElement, x: number, y: number, fixedOffset
  * 同时只会有一个方向有值
  * */
 export function getAutoScrollStatus(el: HTMLElement, x: number, y: number) {
-  if (el === document.documentElement) return;
-
   const si = hasScroll(el);
 
   if (!si.x && !si.y) return;
 
-  const { left, top, right, bottom } = el.getBoundingClientRect();
+  let { left, top, right, bottom } = el.getBoundingClientRect();
+
+  /** 只在drag时触发，所以这里可以安全调用window而不用担心ssr的问题 */
+
+  // 取最小、最大触发位置
+  left = Math.max(left, 0);
+  top = Math.max(top, 0);
+  right = Math.min(right, window.innerWidth);
+  bottom = Math.min(bottom, window.innerHeight);
+
+  // 计算偏移
+  left += AutoScrollOffset;
+  top += AutoScrollOffset;
+  right -= AutoScrollOffset;
+  bottom -= AutoScrollOffset;
 
   let t = 0;
   let r = 0;
@@ -90,66 +144,82 @@ export function getAutoScrollStatus(el: HTMLElement, x: number, y: number) {
 
 /**
  * 根据getAutoScrollStatus的返回值滚动元素
- * 需要传入一个用来保持状态的ctx对象
  * */
 export function autoScrollByStatus(
-  el: HTMLElement,
+  el: HTMLElement & { ctx: AutoScrollCtx },
   status: ReturnType<typeof getAutoScrollStatus>,
   down: boolean,
-  ctx: any,
 ) {
-  ctx.autoScrollDown = down;
+  // 滚动元素本身是一个非常理想的存储局部滚动状态的对象
+  if (!el.ctx) {
+    el.ctx = {} as AutoScrollCtx;
+  }
+
+  el.ctx.autoScrollDown = down;
 
   if (!el || !status) return;
 
-  clearTimeout(ctx.autoScrollTimer);
-
-  console.log(status);
+  // 基础滚动距离
+  el.ctx.autoScrollVal = 1;
 
   if (status.bottom) {
-    raf(() => {
-      el.scrollTop += 1 + status.bottom / 100;
-    });
+    el.ctx.autoScrollPosKey = 'scrollTop';
+    el.ctx.autoScrollType = 1;
+    el.ctx.autoScrollVal += status.bottom / AutoScrollDiffSpeed;
+  }
 
-    ctx.autoScrollTimer = setTimeout(() => {
-      rafaa(() => {
-        el.scrollTop += 1 + status.bottom / 100;
-      }, ctx);
-    }, 50);
-
-    console.log(111, ctx.autoScrollTimer);
+  if (status.left) {
+    el.ctx.autoScrollPosKey = 'scrollLeft';
+    el.ctx.autoScrollType = 2;
+    el.ctx.autoScrollVal += status.left / AutoScrollDiffSpeed;
   }
 
   if (status.top) {
-    raf(() => {
-      el.scrollTop -= 1 + status.top;
-    });
+    el.ctx.autoScrollPosKey = 'scrollTop';
+    el.ctx.autoScrollType = 2;
+    el.ctx.autoScrollVal += status.top / AutoScrollDiffSpeed;
+  }
 
-    console.log(33);
+  if (status.right) {
+    el.ctx.autoScrollPosKey = 'scrollLeft';
+    el.ctx.autoScrollType = 1;
+    el.ctx.autoScrollVal += status.right / AutoScrollDiffSpeed;
+  }
 
-    ctx.autoScrollTimer = setTimeout(() => {
-      rafaa(() => {
-        el.scrollTop -= 2;
-      }, ctx);
-    }, 50);
-
-    console.log(222, ctx.autoScrollTimer);
+  // 根据状态开关滚动动画
+  if (!(status.bottom || status.top || status.left || status.right)) {
+    el.ctx.autoScrollToggle = false;
+  } else {
+    if (!el.ctx.autoScrollToggle) {
+      autoScroll(el);
+    }
+    el.ctx.autoScrollToggle = true;
   }
 }
 
-export function rafaa(fn: any, ctx: any) {
-  return requestAnimationFrame(() => {
-    fn();
-    console.log(123);
-    if (ctx.autoScrollDown) {
-      rafaa(fn, ctx);
-    }
-  });
-}
+/** 根据当前的AutoScrollCtx来自动滚动目标元素 */
+export function autoScroll(el: HTMLElement & { ctx: AutoScrollCtx }) {
+  raf(() => {
+    if (el.ctx.autoScrollType === 1) {
+      el[el.ctx.autoScrollPosKey] += el.ctx.autoScrollVal;
 
-/** 判断x, y 是否在指定的DOMRect区间中 */
-export function isBetween({ left, top, right, bottom }: DOMRect, x: number, y: number) {
-  return x > left && x < right && y > top && y < bottom;
+      // 处理浏览器兼容
+      if (el === document.documentElement) {
+        document.body[el.ctx.autoScrollPosKey] += el.ctx.autoScrollVal;
+      }
+    } else {
+      el[el.ctx.autoScrollPosKey] -= el.ctx.autoScrollVal;
+
+      // 处理浏览器兼容
+      if (el === document.documentElement) {
+        document.body[el.ctx.autoScrollPosKey] -= el.ctx.autoScrollVal;
+      }
+    }
+
+    if (!el.ctx.autoScrollDown || !el.ctx.autoScrollToggle) return;
+
+    autoScroll(el);
+  });
 }
 
 /** 对象是否包含属性值都为true的项 */

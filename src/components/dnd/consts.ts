@@ -17,6 +17,7 @@ export const initEnableDragsDeny = {
   bottom: false,
   top: false,
   center: false,
+  regular: true,
 };
 
 /** enableDrag为true时使用的方向配置 */
@@ -26,6 +27,7 @@ export const initEnableDragsPass = {
   bottom: true,
   top: true,
   center: true,
+  regular: false,
 };
 
 /** 初始状态 */
@@ -37,6 +39,7 @@ export const initStatus = {
   dragTop: false,
   dragCenter: false,
   dragging: false,
+  regular: true,
 };
 
 /** 提到utils */

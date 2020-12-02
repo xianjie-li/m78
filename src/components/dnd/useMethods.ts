@@ -80,7 +80,12 @@ export function useMethods(share: Share) {
       if (!state.nodeEl) return;
       if (!_enableDropInfo.enable) return;
 
-      const { dragOver, left, top, ...otherS } = getOverStatus(state.nodeEl, x, y);
+      const { dragOver, left, top, ...otherS } = getOverStatus(
+        state.nodeEl,
+        x,
+        y,
+        self.firstScrollParent,
+      );
 
       const nextStatus: DragStatus = {
         dragOver: dragOver && _enableDropInfo.all && !isCancel,
@@ -90,7 +95,20 @@ export function useMethods(share: Share) {
         dragRight: _enableDropInfo.right && otherS.dragRight,
         dragCenter: _enableDropInfo.center && otherS.dragCenter,
         dragging: status.dragging,
+        regular: true,
       };
+
+      if (
+        nextStatus.dragOver ||
+        nextStatus.dragTop ||
+        nextStatus.dragBottom ||
+        nextStatus.dragLeft ||
+        nextStatus.dragRight ||
+        nextStatus.dragCenter ||
+        nextStatus.dragging
+      ) {
+        nextStatus.regular = false;
+      }
 
       // 处理父子级关联锁定
       if (dragOver) {
@@ -110,7 +128,7 @@ export function useMethods(share: Share) {
         relationCtx.onLockChange?.(false);
       }
 
-      const { dragOver: _, ...willChecks } = nextStatus;
+      const { dragOver: _, regular: __, ...willChecks } = nextStatus;
 
       // 是否有任意一个真实可用的位置被激活
       const hasOver = _enableDropInfo.all ? dragOver : allPropertyHasTrue(willChecks);
@@ -217,8 +235,7 @@ export function useMethods(share: Share) {
      * 元素在窗口外时，最小值取0 最大值取窗口尺寸
      * */
     ctx.scrollerList.forEach(ele => {
-      // console.log(JSON.stringify(getOverStatus(ele, x, y, 100)));
-      autoScrollByStatus(ele, getAutoScrollStatus(ele, x, y), down, self);
+      autoScrollByStatus(ele, getAutoScrollStatus(ele, x, y), down);
     });
 
     // 仅在不处于拖动元素顶部或松开时通知拖动，如果从非拖动元素区域移动到拖动元素区域也需要更新
@@ -281,6 +298,7 @@ export function useMethods(share: Share) {
     defer(() => {
       setStatus({
         dragging: true,
+        regular: false,
       });
     });
   }
@@ -447,6 +465,9 @@ export function useMethods(share: Share) {
     if (!state.nodeEl) return;
     const sps = getScrollParent(state.nodeEl, true);
     if (!sps.length) return;
+
+    // 保存第一个滚动父级，用于计算DND可见性
+    self.firstScrollParent = sps[0];
 
     sps.forEach(sp => {
       const indOf = ctx.scrollerList.indexOf(sp);

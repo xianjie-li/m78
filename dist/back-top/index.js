@@ -3,7 +3,7 @@ import _slicedToArray from '@babel/runtime/helpers/slicedToArray';
 import React, { useRef, useState, useEffect } from 'react';
 import Button from 'm78/button';
 import { CaretUpOutlined } from 'm78/icon';
-import { getFirstScrollParent } from '@lxjx/utils';
+import { getScrollParent } from '@lxjx/utils';
 import { getRefDomOrDom, useFn, useScroll } from '@lxjx/hooks';
 import _debounce from 'lodash/debounce';
 import { Transition } from '@lxjx/react-transition-spring';
@@ -42,7 +42,7 @@ var BackTop = function BackTop(_ref) {
       return;
     }
 
-    var sp = getFirstScrollParent(wrapRef.current);
+    var sp = getScrollParent(wrapRef.current);
     setEl(sp);
   }, [target]); // 处理滚动
 

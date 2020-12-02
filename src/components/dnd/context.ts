@@ -1,8 +1,8 @@
 import { createContext } from 'react';
 import { dumpFn } from '@lxjx/utils';
-import { DNDContext, DNDRelationContext } from './types';
+import { DNDContextValue, DNDRelationContext } from './types';
 
-const defaultContext: DNDContext = {
+const defaultContext: DNDContextValue = {
   listeners: [],
   scrollerList: [],
   onStart: dumpFn,
@@ -10,7 +10,7 @@ const defaultContext: DNDContext = {
   onAccept: dumpFn,
 };
 
-const context = createContext<DNDContext>(defaultContext);
+const context = createContext<DNDContextValue>(defaultContext);
 
 context.displayName = 'DNDContext';
 

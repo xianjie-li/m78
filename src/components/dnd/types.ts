@@ -2,27 +2,14 @@ import React from 'react';
 import { SetState } from '@lxjx/hooks';
 import { FullGestureState } from 'react-use-gesture/dist/types';
 
-/*
- * TODO: 自动滚动
- * TODO: 过滤input等元素的拖动
- * TODO: 拖动完成后自身的禁用未刷新
- *
- * DNDC
- * 所有dnd捕获所有滚动父级，并去重推入一个唯一列表中
- * 拖动完成一段时间后，检测拖动元素父节点并合并
- *
- * 元素拖动时，判断此列表中所有元素并调整滚动位置
- * 检测滚动元素边缘，光标位置越靠近末尾滚动越快
- * */
+/* TODO: 可以简单的作为HTML5 drag的目标容器 */
 
-/** 表示一个DND实例的拖动相关状态 */
+/** 表示一个DND实例作为拖动目标、防止目标时的相关状态 */
 export interface DragStatus {
   /* ####### 作为拖动元素时 ####### */
   /** 是否正在拖动 */
   dragging: boolean;
   /* ####### 作为放置目标时 ####### */
-  /** 是否有拖动目标正位于其上方, 用于无其他指定方向的配置时 */
-  dragOver: boolean;
   /** 左侧有可用拖动目标 */
   dragLeft: boolean;
   /** 右侧有可用拖动目标 */
@@ -33,10 +20,14 @@ export interface DragStatus {
   dragTop: boolean;
   /** 中间部分有可用拖动目标, 一般用于合并项 */
   dragCenter: boolean;
+  /** 未指定其他特定的方向时，当拖动元素位于上方时此项为true */
+  dragOver: boolean;
+  /** 未处于拖动或放置状态 */
+  regular: boolean;
 }
 
-/** 传递给DND组件render children的对象 */
-interface DragBonus {
+/** DND组件的render children接收对象 */
+export interface DragBonus {
   /** 传递给拖动目标的ref */
   innerRef: React.MutableRefObject<any>;
   /** 传递给拖动把手的ref, 未在此项上获取到节点时，会以innerRef作为拖动节点 */
@@ -94,7 +85,7 @@ export interface DNDContextProps {
 }
 
 /** 内部使用的完整context对象 */
-export interface DNDContext extends Required<DNDContextProps> {
+export interface DNDContextValue extends Required<DNDContextProps> {
   /** 所有子DND实例的changeHandle挂载位置 */
   listeners: {
     handler: ChangeHandle;
@@ -157,7 +148,7 @@ export interface DNDProps<Data = any, TData = Data> {
   /**
    * 用于绑定拖动元素的render children, 接收:
    * - 拖放元素、拖动把手的ref(默认为拖放元素)
-   * - 拖动中、当前拖动位置、是否正被拖动元素覆盖
+   * - 拖动中、当前拖动位置、是否正被拖动元素覆盖等
    * - 某个方向上的启用信息等
    * */
   children: (bonus: DragBonus) => React.ReactElement;
@@ -220,6 +211,8 @@ export interface Share {
     ignore: boolean;
     /** 最后一次drag事件时指针位置是否位于拖动元素内部 */
     lastIsOverBetween?: boolean;
+    /** 目标的第一个滚动父级 */
+    firstScrollParent?: HTMLElement;
   };
   state: {
     /** 节点的挂载元素 */
@@ -229,7 +222,7 @@ export interface Share {
   };
   setState: SetState<Share['state']>;
   id: string;
-  ctx: DNDContext;
+  ctx: DNDContextValue;
   relationCtx: DNDRelationContext;
   relationCtxValue: DNDRelationContext;
   /** 表示当前节实例的DND节点对象 */

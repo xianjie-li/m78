@@ -15,3 +15,4 @@ export declare const stopPropagation: {
 };
 /** throw error */
 export declare function throwError(errorMsg: string, namespace?: string): never;
+export declare function sendWarning(msg: string, namespace?: string): void;

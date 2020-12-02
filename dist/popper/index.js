@@ -6,7 +6,7 @@ import React, { useEffect, useMemo, useRef, useImperativeHandle } from 'react';
 import Portal from 'm78/portal';
 import cls from 'classnames';
 import { useFn, getRefDomOrDom, useFormState, useMountExist, useSetState, useSelf } from '@lxjx/hooks';
-import { checkElementVisible, isDom, getFirstScrollParent, createRandString } from '@lxjx/utils';
+import { checkElementVisible, isDom, getScrollParent, createRandString } from '@lxjx/utils';
 import { useSpring, animated, to } from 'react-spring';
 import { useClickAway, useUpdateEffect, useMeasure } from 'react-use';
 import { useDelayDerivedToggleStatus } from 'm78/hooks';
@@ -660,7 +660,7 @@ function useMethods(share) {
     }
 
     if (state.elTarget) {
-      var fs = getFirstScrollParent(state.elTarget);
+      var fs = getScrollParent(state.elTarget);
 
       if (fs && fs !== state.wrapEl) {
         setState({

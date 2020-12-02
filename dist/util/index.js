@@ -21,5 +21,8 @@ var stopPropagation = {
 function throwError(errorMsg, namespace) {
   throw new Error("M78 -> ".concat(namespace ? "".concat(namespace, " -> ") : '', " ").concat(errorMsg));
 }
+function sendWarning(msg, namespace) {
+  console.log("M78 -> ".concat(namespace ? "".concat(namespace, " -> ") : '', " ").concat(msg));
+}
 
-export { LG, MD, SM, XL, Z_INDEX, Z_INDEX_DRAWER, Z_INDEX_MESSAGE, Z_INDEX_MODAL, stopPropagation, throwError };
+export { LG, MD, SM, XL, Z_INDEX, Z_INDEX_DRAWER, Z_INDEX_MESSAGE, Z_INDEX_MODAL, sendWarning, stopPropagation, throwError };

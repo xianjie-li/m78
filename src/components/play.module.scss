@@ -1,55 +1,32 @@
-@import './style/index';
+@import '~@lxjx/sass-base/main';
 
-.column {
-  display: inline-block;
-  width: 200px;
-  margin-right: 12px;
-  border-radius: $border-radius;
-  border: 6px solid #fff;
-  box-shadow: $shadow-1;
-  margin-bottom: 12px;
-  user-select: none;
-
-  &Title {
-    font-size: 16px;
-    font-weight: bold;
-    padding: 8px;
-    cursor: move;
-  }
-
-  &List {
-    padding: 4px 8px 120px;
-    height: 300px;
-    overflow: auto;
-    background-color: $b-bg;
-    border-radius: 4px;
-    box-shadow: -1px -1px 6px $b-border inset;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
-  }
-}
-
-.todo {
-  background-color: #fff;
-  box-shadow: $shadow-1;
-  padding: 8px 16px;
-  font-size: 14px;
-  user-select: none;
-  border-radius: 2px;
+.dndBox {
+  font-size: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 140px;
+  height: 140px;
+  border: 6px solid $b-second;
   cursor: grab;
 
-  > div:nth-child(2) {
-    font-size: 12px;
-    color: $b-second;
+  &:global(.__active) {
+    background-color: pink;
   }
 
-  &:hover {
-    box-shadow: $shadow-3;
+  &:global(.__left) {
+    border-left: 6px solid blue;
   }
 
-  & + & {
-    margin-top: 10px;
+  &:global(.__top) {
+    border-top: 6px solid blue;
+  }
+
+  &:global(.__right) {
+    border-right: 6px solid blue;
+  }
+
+  &:global(.__bottom) {
+    border-bottom: 6px solid blue;
   }
 }

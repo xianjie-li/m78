@@ -3,7 +3,7 @@ import _objectSpread from '@babel/runtime/helpers/objectSpread2';
 import _slicedToArray from '@babel/runtime/helpers/slicedToArray';
 import React, { useRef, useEffect } from 'react';
 import { useSetState, getRefDomOrDom, useScroll, useFn } from '@lxjx/hooks';
-import { getFirstScrollParent, checkElementVisible, getStyle } from '@lxjx/utils';
+import { getScrollParent, checkElementVisible, getStyle } from '@lxjx/utils';
 import _debounce from 'lodash/debounce';
 import cls from 'classnames';
 
@@ -57,7 +57,7 @@ var Pin = function Pin(_ref) {
       return;
     }
 
-    var fs = getFirstScrollParent(pinEl.current);
+    var fs = getScrollParent(pinEl.current);
     /** 有滚动父节点且不为doc对象和body对象 */
 
     if (fs && fs !== document.documentElement && fs !== document.body) {

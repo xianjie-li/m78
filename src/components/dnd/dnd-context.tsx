@@ -6,13 +6,20 @@ import DNDCtx, { defaultContext } from './context';
 const DNDContext: React.FC<DNDContextProps> = ({ children, ...props }) => {
   const listeners = useMemo(() => [], []);
   const scrollerList = useMemo(() => [], []);
+  const combineValue = useMemo(
+    () => ({
+      ...defaultContext,
+      listeners,
+      scrollerList,
+      ...props,
+    }),
+    [],
+  );
 
-  const combineValue = {
-    ...defaultContext,
-    listeners,
-    scrollerList,
-    ...props,
-  };
+  useMemo(() => {
+    // 保持combineValue引用不变
+    Object.assign(combineValue, props);
+  }, [props]);
 
   // 定时清理scrollerList中已被卸载或不可滚动的节点
   useEffect(() => {

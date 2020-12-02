@@ -9,7 +9,7 @@ export { FormProvider, useForm } from 'rc-field-form';
 import List, { Title, SubTitle, Footer } from 'm78/list';
 export { Footer, default as List, SubTitle, Title } from 'm78/list';
 import Schema from 'async-validator';
-import { isArray, isEmpty, createRandString, isFunction, getFirstScrollParent, triggerHighlight, checkElementVisible } from '@lxjx/utils';
+import { isArray, isEmpty, createRandString, isFunction, getScrollParent, triggerHighlight, checkElementVisible } from '@lxjx/utils';
 import { useScroll, useFn } from '@lxjx/hooks';
 import cls from 'classnames';
 import { createMessagesTemplate } from '@lxjx/validate-tools';
@@ -345,7 +345,7 @@ var BaseForm = function BaseForm(props) {
       contextValue = _useState4[0];
 
   useEffect(function () {
-    var el = getFirstScrollParent(flagEl.current);
+    var el = getScrollParent(flagEl.current);
 
     if (el) {
       setScrollParent(el);
