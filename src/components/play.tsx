@@ -1,120 +1,192 @@
 import React, { useState } from 'react';
-import DND, { DragBonus, DNDContext, DragPartialEvent } from 'm78/dnd';
+import DND, { DragBonus, DNDContext, DragPartialEvent, DNDProps } from 'm78/dnd';
 import { Row } from 'm78/layout';
 
 import cls from 'classnames';
 import { DragFullEvent } from 'm78/dnd/types';
+import _shuffle from 'lodash/shuffle';
 
+import { useFn } from '@lxjx/hooks';
+import { swap } from '@lxjx/utils';
+import { useTransition, animated } from 'react-spring';
 import sty from './play.module.scss';
 
+const ColumLen = 5;
+
 const Play = () => {
-  const [text, setText] = useState('尝试拖动盒子到相邻盒子的不同位置🤏');
+  const [list, setList] = useState(() => {
+    return Array.from({ length: 20 }).map((_, ind) => ind);
+  });
 
-  function renderDND({ innerRef, status }: DragBonus) {
-    return (
-      <div
-        ref={innerRef}
-        className={cls(sty.dndBox, {
-          __active: status.dragOver,
-          __left: status.dragLeft,
-          __top: status.dragTop,
-          __right: status.dragRight,
-          __bottom: status.dragBottom,
-        })}
-        style={{ margin: 12 }}
-      >
-        {status.dragging && <span>😫</span>}
-        {status.dragCenter && <span>😍</span>}
-        {status.dragLeft && <span>👈</span>}
-        {status.dragRight && <span>👉</span>}
-        {status.dragTop && <span>👆</span>}
-        {status.dragBottom && <span>👇</span>}
-        {status.regular && <span>🥰</span>}
-      </div>
-    );
-  }
+  console.log(list);
 
-  function acceptHandle(e: DragFullEvent<string>) {
-    console.log(e.source);
-    console.log(e.target);
+  const transition = useTransition(list, {
+    keys: item => item,
+    enter: item => {
+      const ind = list.indexOf(item);
+      return {
+        left: (ind % ColumLen) * 100,
+        top: Math.floor(ind / ColumLen) * 100,
+        opacity: 1,
+      };
+    },
+    update: item => {
+      const ind = list.indexOf(item);
+      return {
+        left: (ind % ColumLen) * 100,
+        top: Math.floor(ind / ColumLen) * 100,
+        opacity: 1,
+      };
+    },
+    // leave: item => {
+    //   const ind = list.indexOf(item);
+    //   return {
+    //     left: (ind % ColumLen) * 120,
+    //     top: Math.floor(ind / ColumLen) * 120,
+    //     opacity: 0,
+    //   };
+    // },
+  });
 
-    let position = '';
+  const acceptHandle = useFn((e: DragFullEvent<number>) => {
+    const tNode = e.target; // 放置目标
+    const sNode = e.source; // 拖动目标
 
-    if (e.status.dragLeft) position = '左';
-    if (e.status.dragRight) position = '右';
-    if (e.status.dragTop) position = '上';
-    if (e.status.dragBottom) position = '下';
-    if (e.status.dragCenter) position = '中间';
+    console.log(sNode, tNode);
 
-    setText(`从${e.source.data}拖动到${e.target.data}, 位置是: ${position}`);
-  }
+    if (!tNode || !sNode) return;
 
-  function dragStartHandle(e: DragPartialEvent<string>) {
-    setText(`开始拖动: ${e.source.data}`);
-  }
+    const sInd = list.indexOf(sNode.data);
+    const tInd = list.indexOf(tNode.data);
 
-  function dropHandle(e: DragPartialEvent<string>) {
-    if (!e.target) {
-      setText(`取消了拖动`);
+    // 拖动到中间
+    if (e.status.dragCenter) {
+      if (sInd === -1 || tInd === -1) return;
+
+      // 交换两个项的位置
+      swap(list, sInd, tInd);
     }
+
+    if (e.status.dragLeft) {
+      const removed = list.splice(sInd, 1);
+      list.splice(tInd, 0, ...removed);
+    }
+
+    if (e.status.dragRight) {
+      const removed = list.splice(sInd, 1);
+      list.splice(tInd + 1, 0, ...removed);
+    }
+
+    if (e.status.dragTop) {
+      const removed = list.splice(sInd, 1);
+      list.splice(tInd - ColumLen, 0, ...removed);
+    }
+
+    if (e.status.dragBottom) {
+      const removed = list.splice(sInd, 1);
+      list.splice(tInd + ColumLen, 0, ...removed);
+    }
+
+    refreshState();
+  });
+
+  /** 禁用边缘放置 */
+  const disableEdge: DNDProps['enableDrop'] = useFn(node => {
+    const ind = list.indexOf(node.data);
+
+    const disabledTop = ind < ColumLen;
+    const disabledLeft = ind % ColumLen === 0;
+    const disabledRight = (ind + 1) % ColumLen === 0;
+    const disabledBottom = ind > list.length - (ColumLen + 1);
+
+    return {
+      left: !disabledLeft,
+      right: !disabledRight,
+      bottom: !disabledBottom,
+      top: !disabledTop,
+      center: true,
+    };
+  });
+
+  function refreshState() {
+    setList(prev => [...prev]);
   }
 
-  function dragEnterHandle(e: DragFullEvent<string>) {
-    setText(`进入${e.target.data}`);
-  }
+  const fragment = transition((style, item, transition, index) => {
+    return (
+      <DND data={item} enableDrop={disableEdge}>
+        {({ innerRef, status, enables }) => (
+          <animated.div
+            className={cls(sty.gridItem, 'm78-dnd-box', {
+              // 禁用、拖动到中间的状态
+              __active: status.dragCenter,
+              __disabled: !enables.enable,
+            })}
+            ref={innerRef}
+            style={style}
+          >
+            {item}
 
-  function dragLeaveHandle() {
-    setText('离开');
-  }
+            {/* 拖动到侧边方向的提示 */}
+            {status.dragLeft && <span className="m78-dnd-box_left" />}
+            {status.dragRight && <span className="m78-dnd-box_right" />}
+            {status.dragTop && <span className="m78-dnd-box_top" />}
+            {status.dragBottom && <span className="m78-dnd-box_bottom" />}
+          </animated.div>
+        )}
+      </DND>
+    );
+  });
 
   return (
     <div>
-      <div className="fs-24 mb-16">{text}</div>
-      <DNDContext
-        onAccept={e => {
-          console.log('onAccept', e);
-        }}
-        onStart={e => {
-          console.log('onStart', e);
+      <button
+        onClick={() => {
+          const ls = _shuffle(list);
+          setList([...ls]);
         }}
       >
-        <Row mainAlign="between">
-          <DND
-            data="DND1"
-            enableDrop={{
-              left: true,
-              right: true,
-              bottom: true,
-              top: true,
-              center: true,
-            }}
-            onDrag={dragStartHandle}
-            onDrop={dropHandle}
-            onSourceEnter={dragEnterHandle}
-            onSourceLeave={dragLeaveHandle}
-            onSourceAccept={acceptHandle}
-          >
-            {renderDND}
-          </DND>
+        suffer
+      </button>
 
-          <DND
-            data="DND2"
-            enableDrop={{
-              left: true,
-              right: true,
-              bottom: true,
-              top: true,
-              center: true,
-            }}
-            onDrag={dragStartHandle}
-            onDrop={dropHandle}
-            onSourceEnter={dragEnterHandle}
-            onSourceLeave={dragLeaveHandle}
-            onSourceAccept={acceptHandle}
-          >
-            {renderDND}
-          </DND>
-        </Row>
+      <DNDContext onAccept={acceptHandle}>
+        <div
+          className={sty.grid}
+          style={{
+            width: ColumLen * 100,
+            height: Math.ceil(list.length / ColumLen) * 100,
+          }}
+        >
+          {fragment}
+          {/* {list.map((item, ind) => ( */}
+          {/*  <DND key={item} data={item} enableDrop={disableEdge}> */}
+          {/*    {({ innerRef, status, enables }) => ( */}
+          {/*      <div */}
+          {/*        className={cls(sty.gridItem, 'm78-dnd-box', { */}
+          {/*          // 禁用、拖动到中间的状态 */}
+          {/*          __active: status.dragCenter, */}
+          {/*          __disabled: !enables.enable, */}
+          {/*        })} */}
+          {/*        ref={innerRef} */}
+          {/*        style={{ */}
+          {/*          position: 'absolute', */}
+          {/*          transition: '0.3s', */}
+          {/*          left: (ind % ColumLen) * 100, */}
+          {/*          top: Math.floor(ind / ColumLen) * 100, */}
+          {/*        }} */}
+          {/*      > */}
+          {/*        {item} */}
+
+          {/*        /!* 拖动到侧边方向的提示 *!/ */}
+          {/*        {status.dragLeft && <span className="m78-dnd-box_left" />} */}
+          {/*        {status.dragRight && <span className="m78-dnd-box_right" />} */}
+          {/*        {status.dragTop && <span className="m78-dnd-box_top" />} */}
+          {/*        {status.dragBottom && <span className="m78-dnd-box_bottom" />} */}
+          {/*      </div> */}
+          {/*    )} */}
+          {/*  </DND> */}
+          {/* ))} */}
+        </div>
       </DNDContext>
     </div>
   );

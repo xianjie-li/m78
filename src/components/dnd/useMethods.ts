@@ -365,6 +365,7 @@ export function useMethods(share: Share) {
       }
 
       // 不可覆盖的基础样式
+      dragFeedback.style.transition = 'none'; // 放置添加过渡
       dragFeedback.style.left = `${x}px`;
       dragFeedback.style.top = `${y}px`;
       dragFeedback.style.width = `${state.nodeEl.offsetWidth}px`;
@@ -432,7 +433,9 @@ export function useMethods(share: Share) {
     let posInfos: any = enable;
 
     if (isFunction(enable)) {
-      posInfos = isClean ? enable() : enable(ctx.currentSource, ctx.currentTarget);
+      posInfos = isClean
+        ? enable(currentNode)
+        : enable(currentNode, ctx.currentSource, ctx.currentTarget);
     }
 
     if (isBoolean(posInfos)) {

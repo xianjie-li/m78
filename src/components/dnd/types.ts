@@ -157,7 +157,7 @@ export interface DNDProps<Data = any, TData = Data> {
   /** 是否可放置，可以是返回此状态的函数, 接收当前的拖动和放置目标 */
   enableDrop?:
     | MixAllowDrop
-    | ((dragNode?: DNDNode<Data>, dropNode?: DNDNode<TData>) => MixAllowDrop);
+    | ((node: DNDNode<Data>, dragNode?: DNDNode<Data>, dropNode?: DNDNode<TData>) => MixAllowDrop);
 
   /* ####### 作为放置目标的事件 ####### */
   /** 拖动目标进入时 */
