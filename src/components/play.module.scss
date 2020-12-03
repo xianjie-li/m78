@@ -1,20 +1,12 @@
 @import '~@lxjx/sass-base/main';
 
-.grid {
-  position: relative;
-  border: 1px solid #999;
-}
+.nestBox {
+  padding: 16px;
+  border: 1px solid $b-second;
+  border-radius: 2px;
+  margin-bottom: 16px;
 
-.gridItem {
-  position: absolute;
-  width: 100px;
-  height: 100px;
-  cursor: grab;
-  user-select: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #999;
-  font-size: 30px;
-  font-weight: bold;
+  &:global(.__active) {
+    background-color: rgba($color, 0.4);
+  }
 }

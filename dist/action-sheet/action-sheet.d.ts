@@ -1,7 +1,7 @@
 /// <reference types="react" />
 import { ActionSheetProps } from './type';
 declare function _ActionSheet<Val = any>(props: ActionSheetProps<Val>): JSX.Element;
-declare const actionSheetApi: ({ singleton, ...props }: Pick<ActionSheetProps<any>, "title" | "onChange" | "value" | "defaultValue" | "triggerNode" | "onClose" | "options" | "confirm" | "onShowChange"> & import("@lxjx/react-render-api/dist").ReactRenderApiExtraProps) => [import("@lxjx/react-render-api/dist").ReactRenderApiInstance<Pick<ActionSheetProps<any>, "title" | "onChange" | "value" | "defaultValue" | "triggerNode" | "onClose" | "options" | "confirm" | "onShowChange">>, string];
+declare const actionSheetApi: ({ singleton, ...props }: Pick<ActionSheetProps<any>, "title" | "onChange" | "defaultValue" | "value" | "triggerNode" | "onClose" | "options" | "confirm" | "onShowChange"> & import("@lxjx/react-render-api/dist").ReactRenderApiExtraProps) => [import("@lxjx/react-render-api/dist").ReactRenderApiInstance<Pick<ActionSheetProps<any>, "title" | "onChange" | "defaultValue" | "value" | "triggerNode" | "onClose" | "options" | "confirm" | "onShowChange">>, string];
 declare type ActionSheet = typeof _ActionSheet;
 interface ActionSheetWithApi extends ActionSheet {
     api: typeof actionSheetApi;

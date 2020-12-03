@@ -136,7 +136,7 @@ export interface DNDProps<Data = any, TData = Data> {
     /** 是否可拖动，可以是返回此状态的函数, 接收当前节点 */
     enableDrag?: boolean | ((node: DNDNode<Data>) => boolean);
     /** 是否可放置，可以是返回此状态的函数, 接收当前的拖动和放置目标 */
-    enableDrop?: MixAllowDrop | ((dragNode?: DNDNode<Data>, dropNode?: DNDNode<TData>) => MixAllowDrop);
+    enableDrop?: MixAllowDrop | ((node: DNDNode<Data>, dragNode?: DNDNode<Data>, dropNode?: DNDNode<TData>) => MixAllowDrop);
     /** 拖动目标进入时 */
     onSourceEnter?: (event: DragFullEvent<Data, TData>) => void;
     /** 拖动目标离开时 */
