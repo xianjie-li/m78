@@ -15,7 +15,7 @@ export interface CarouselProps extends ComponentBaseProps {
   children: ReactElement[];
   /** false | 设置滚动方向为纵向, 当为纵向时，必须设置height，否则高度默认为0 */
   vertical?: boolean;
-  /** vertical ? 0 : 'auto' | 当vertical为true时，必须设置高度 */
+  /** vertical ? 0 : 'auto' | 当vertical为true时，必须设置高度, 横向时此配置无效 */
   height?: number | string;
   /** 'auto' | 宽度，与轮播项一致 */
   width?: number | string;
@@ -468,5 +468,7 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
     );
   },
 );
+
+Carousel.displayName = 'Carousel';
 
 export default Carousel;

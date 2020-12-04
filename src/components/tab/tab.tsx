@@ -6,7 +6,7 @@ import { PositionEnum } from 'm78/types';
 import Carousel, { CarouselRef } from 'm78/carousel';
 import { CaretLeftOutlined, CaretRightOutlined } from 'm78/icon';
 import { If } from 'm78/fork';
-import { formatChild, getChildProps } from './common';
+import { formatChild, getChildProps, getIndexByVal } from './common';
 import { Share, TabProps } from './type';
 import { useMethods } from './methods';
 import { useLifeCycle } from './life-cycle';
@@ -33,7 +33,7 @@ const Tab: React.FC<TabProps> = props => {
   } = props as TabProps & typeof defaultProps;
 
   // 格式化TabItem列表
-  const child = formatChild(children);
+  const { child, hasContent, values } = formatChild(children);
 
   // 所有item的prop配置
   const childProps = getChildProps(child);
@@ -60,10 +60,9 @@ const Tab: React.FC<TabProps> = props => {
   const [spProps, set] = useSpring(() => ({ length: 0, offset: 0 }));
 
   // 控制tab显示
-  const [val, setVal] = useFormState(props, 0, {
-    valueKey: 'index',
-    defaultValueKey: 'defaultIndex',
-  });
+  const [val, setVal] = useFormState(props, values[0]);
+
+  const index = getIndexByVal(val, values);
 
   const share: Share = {
     isVertical,
@@ -77,6 +76,9 @@ const Tab: React.FC<TabProps> = props => {
     disabled,
     scroller: null as any,
     child,
+    hasContent,
+    values,
+    index,
   };
 
   // 内部方法
@@ -138,15 +140,15 @@ const Tab: React.FC<TabProps> = props => {
         </If>
 
         <div className="m78-tab_tabs" ref={share.scroller.ref as any}>
-          {childProps.map((item, index) => (
+          {childProps.map((item, _index) => (
             <div
               key={item.value}
               className={cls('m78-tab_tabs-item m78-effect __md', {
-                __active: val === index,
+                __active: index === _index,
                 __disabled: item.disabled,
               })}
-              onClick={() => onTabClick(item, index)}
-              ref={node => (self.tabRefs[index] = node!)}
+              onClick={() => onTabClick(item, _index)}
+              ref={node => (self.tabRefs[_index] = node!)}
             >
               <div>{item.label}</div>
             </div>
@@ -166,24 +168,27 @@ const Tab: React.FC<TabProps> = props => {
         </div>
       </div>
 
-      <Carousel
-        className="m78-tab_cont"
-        ref={carouselRef}
-        initPage={val}
-        noShadow
-        noScale
-        loop={loop}
-        control={false}
-        invisibleHidden={invisibleHidden}
-        invisibleUnmount={invisibleUnmount}
-        height={height}
-        vertical={isVertical}
-        onChange={(index, first) => {
-          !first && setVal(index);
-        }}
-      >
-        {child}
-      </Carousel>
+      {hasContent && (
+        <Carousel
+          className="m78-tab_cont"
+          ref={carouselRef}
+          initPage={index} /* TODO: 测试修改 */
+          noShadow
+          noScale
+          loop={loop}
+          control={false}
+          invisibleHidden={invisibleHidden}
+          invisibleUnmount={invisibleUnmount}
+          height={height}
+          vertical={isVertical}
+          /* TODO: 测试修改 */
+          onChange={(_index, first) => {
+            !first && setVal(values[_index]);
+          }}
+        >
+          {child}
+        </Carousel>
+      )}
     </div>
   );
 };

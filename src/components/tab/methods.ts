@@ -1,33 +1,50 @@
-import { isNumber } from '@lxjx/utils';
-import { useScroll } from '@lxjx/hooks';
+import { defer, isNumber } from '@lxjx/utils';
+import { UseScrollMeta } from '@lxjx/hooks';
 import { Share, TabItemProps } from './type';
 
-type ScrollMeta = ReturnType<ReturnType<typeof useScroll>['get']>;
-
 export function useMethods(share: Share) {
-  const { isVertical, self, set, val, setVal, carouselRef, disabled, state, setState } = share;
+  const {
+    isVertical,
+    self,
+    set,
+    val,
+    setVal,
+    carouselRef,
+    disabled,
+    state,
+    setState,
+    index,
+    values,
+  } = share;
 
   /** 根据索引设置活动线的状态 */
-  function refreshItemLine(index: number) {
-    const itemEl = self.tabRefs[index];
+  function refreshItemLine(_index: number) {
+    const itemEl = self.tabRefs[_index];
 
     if (!itemEl) return;
 
     const length = isVertical ? itemEl.offsetHeight : itemEl.offsetWidth;
     const offset = isVertical ? itemEl.offsetTop : itemEl.offsetLeft;
 
-    set({ length, offset, immediate: self.itemSpringSetCount === 0 });
+    // TODO: 在移动端immediate不生效, 需要延迟执行, 原因不明
+    defer(() => {
+      set({ length, offset, immediate: self.itemSpringSetCount === 0 });
 
-    self.itemSpringSetCount++;
+      self.itemSpringSetCount++;
+    });
   }
 
   /** 根据当前滚动状态设置滚动内容指示器的状态 */
-  function refreshScrollFlag(meta: ScrollMeta, tabsEl: NodeListOf<HTMLDivElement>, index: number) {
+  function refreshScrollFlag(
+    meta: UseScrollMeta,
+    tabsEl: NodeListOf<HTMLDivElement>,
+    _index: number,
+  ) {
     if (!hasScroll(meta)) return;
 
-    const currentEl = tabsEl[index];
-    const nextEl = tabsEl[index + 1];
-    const prevEl = tabsEl[index - 1];
+    const currentEl = tabsEl[_index];
+    const nextEl = tabsEl[_index + 1];
+    const prevEl = tabsEl[_index - 1];
 
     if (!currentEl) return;
     if (!nextEl && !prevEl) return;
@@ -68,22 +85,22 @@ export function useMethods(share: Share) {
   }
 
   /** 检测是否可滚动，接收 UseScrollMeta */
-  function hasScroll(meta: ScrollMeta) {
+  function hasScroll(meta: UseScrollMeta) {
     const _maxSize = isVertical ? meta.yMax : meta.xMax;
 
     return !!_maxSize;
   }
 
   /** tab项点击 */
-  function onTabClick(itemProps: TabItemProps, index: number) {
-    if (val === index) return;
+  function onTabClick(itemProps: TabItemProps, _index: number) {
+    if (index === _index) return;
     if (itemProps.disabled || disabled) return;
 
-    if (self.itemSpringSetCount !== 0) {
-      carouselRef.current.goTo(index);
+    if (share.hasContent && self.itemSpringSetCount !== 0) {
+      carouselRef.current.goTo(_index);
     }
 
-    setVal(index);
+    setVal(values[_index]);
   }
 
   // 向前或后滚动tab, flag为true时为前滚动
@@ -104,7 +121,7 @@ export function useMethods(share: Share) {
     scrollPage(true);
   }
 
-  function onScroll(meta: ScrollMeta) {
+  function onScroll(meta: UseScrollMeta) {
     if (hasScroll(meta)) {
       const nextStart = isVertical ? !meta.touchTop : !meta.touchLeft;
       const nextEnd = isVertical ? !meta.touchBottom : !meta.touchRight;

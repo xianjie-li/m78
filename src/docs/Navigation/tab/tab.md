@@ -43,22 +43,22 @@ group:
 **`Tab`**
 
 ```tsx | pure
-interface TabProps extends ComponentBaseProps {
-  /** 当前索引 */
-  index?: number;
-  /** 索引改变 */
-  onChange?: (index: number, value: string | number) => void;
-  /** 初始默认索引，优先级小于index */
-  defaultIndex?: number;
+interface TabProps extends ComponentBaseProps, FormLike<string | number> {
+  /** extend(FormLike) | 当前所在选项卡的value */
+  // value?: number;
+  /** extend(FormLike) | value改变 */
+  // onChange?: (value: string | number) => void;
+  /** extend(FormLike) | 初始选项卡的value，优先级小于index */
+  // defaultValue?: number;
   /** 一组TabItem */
   children?: TabItemElement[] | TabItemElement;
   /** tab的尺寸 */
-  size?: Size;
+  size?: SizeEnum;
   /** tab的位置 */
-  position?: Position;
+  position?: PositionEnum;
   /** tab项的每一项平分宽度，如果tab过多不建议开启, position为left和right时无效 */
   flexible?: boolean;
-  /** 高度，position为left和right时必传 */
+  /** 高度，position为left和right时必传, 横向切换时此配置无效 */
   height?: number | string;
   /** 无限滚动，页面内容过于复杂时不建议开启，因为需要复制页面帮助完成滚动动画 */
   loop?: boolean;
@@ -72,9 +72,9 @@ interface TabProps extends ComponentBaseProps {
   invisibleHidden?: boolean;
 
   /* ======== 样式定制 ======== */
-  /** extend ComponentBaseProps | 包裹元素的类名 */
+  /** extend(ComponentBaseProps) | 包裹元素的类名 */
   // className?: string;
-  /** extend ComponentBaseProps | 包裹元素样式 */
+  /** extend(ComponentBaseProps) | 包裹元素样式 */
   // style?: React.CSSProperties;
   /** 关闭分割线 */
   noSplitLine?: boolean;

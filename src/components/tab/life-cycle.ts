@@ -7,11 +7,11 @@ export function useLifeCycle(
   methods: ReturnType<typeof useMethods>,
   props: TabProps,
 ) {
-  const { val, scroller, child, setState } = share;
+  const { val, scroller, child, setState, index } = share;
 
   // 更新活动线
   useEffect(() => {
-    !props.noActiveLine && methods.refreshItemLine(val);
+    !props.noActiveLine && methods.refreshItemLine(index);
   }, [val, props.size, props.position, child.length, props.flexible]);
 
   // 修正滚动位置
@@ -23,7 +23,7 @@ export function useLifeCycle(
     const tabs = scroller.ref.current.querySelectorAll<HTMLDivElement>('.m78-tab_tabs-item');
 
     methods.onScroll(sm);
-    methods.refreshScrollFlag(sm, tabs, val);
+    methods.refreshScrollFlag(sm, tabs, index);
   }, [val]);
 
   useEffect(() => {
