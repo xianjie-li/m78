@@ -76,7 +76,7 @@ function Tips({ controller: queue }: TipsProps) {
             <If when={hasAction}>
               {() =>
                 item.actions?.map((it, ind) => (
-                  <Button key={ind} link size="small" color={it.color} onClick={it.handler}>
+                  <Button key={ind} text size="small" color={it.color} onClick={it.handler}>
                     {it.text}
                   </Button>
                 ))
@@ -85,7 +85,7 @@ function Tips({ controller: queue }: TipsProps) {
           </Switch>
           {/* 非暂停状态才显示操作按钮 */}
           <If when={hasPrev}>
-            <Button link size="small" color="red" onClick={queue.prev}>
+            <Button text size="small" color="red" onClick={queue.prev}>
               上一条
             </Button>
           </If>
@@ -93,7 +93,7 @@ function Tips({ controller: queue }: TipsProps) {
             {() => {
               const hasNext = queue.hasNext(item.id);
               return (
-                <Button link size="small" color={hasNext ? 'primary' : 'red'} onClick={queue.next}>
+                <Button text size="small" color={hasNext ? 'primary' : 'red'} onClick={queue.next}>
                   {hasNext ? '下一条' : '关闭'}
                 </Button>
               );

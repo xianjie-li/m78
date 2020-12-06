@@ -18,7 +18,7 @@ const Pane = () => {
         style={{ border: '1px solid #eee' }}
         header="单独使用的Pane"
         expandIconPosition={ExpandIconPosition.bottom}
-        expandIcon={open => <Button link>{open ? '折叠' : '展开'}</Button>}
+        expandIcon={open => <Button text>{open ? '折叠' : '展开'}</Button>}
       >
         {listSmall[1].text}
       </ExpansionPane>

@@ -138,7 +138,7 @@ const ExpansionPane = (props: ExpansionPaneProps) => {
           onClick={toggle}
         >
           {renderPropsIcon() || (
-            <Button link>{open ? <CaretUpOutlined /> : <CaretDownOutlined />}</Button>
+            <Button text>{open ? <CaretUpOutlined /> : <CaretDownOutlined />}</Button>
           )}
         </div>
       )}

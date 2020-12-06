@@ -441,5 +441,6 @@ var Carousel = /*#__PURE__*/React.forwardRef(function (_ref, ref) {
     className: "m78-carousel_ctrl-text"
   }, getPageNumber(page.current) + 1, " /", ' ', loopValid ? children.length - 2 : children.length)));
 });
+Carousel.displayName = 'Carousel';
 
 export default Carousel;

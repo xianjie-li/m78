@@ -96,7 +96,7 @@ create({
 
 以下所有 api 都包含在 create()创建的 auth 实例对象中
 
-以下大部分 api 签名都是伪代码，详细说明请直接在开发时点击对应函数/组件查看类型声明文件
+大部分 api 签名都是伪代码，详细说明请直接在开发时点击对应函数/组件查看类型声明文件
 
 ### **`<Auth />`**
 
@@ -108,7 +108,7 @@ interface AuthProps<D, V> {
    * 权限验证通过后显示的内容
    * * 当type为tooltip时，必须传入单个子元素，并且保证其能正常接收事件
    * */
-  children: React.ReactNode | any;
+  children: React.ReactElement | (() => React.ReactElement);
   /**
    * 待验证的权限key组成的数组
    * * 只要有一个权限未验证通过，后续验证就会被中断，所以key的传入顺序最好按优先级从左到右，如: ['login', 'isVip']

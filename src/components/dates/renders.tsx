@@ -317,7 +317,7 @@ export function staticRenderTabs(
   const renderButton = (dType: DateType, title: string, unit: string, handler: any) => (
     <Button
       size="small"
-      link
+      text
       title={title}
       color={state.type === dType ? 'primary' : undefined}
       onClick={handler}
@@ -369,7 +369,7 @@ const timePresetHelper = (t?: any) => {
 };
 
 export const renderPresetDates = ({ type, hasTime, setValue, props }: ShareMetas) => {
-  const baseProps = { size: 'small', link: true, color: 'primary' } as const;
+  const baseProps = { size: 'small', text: true, color: 'primary' } as const;
 
   // 设为当前
   const setCurrent = (format: string) => {

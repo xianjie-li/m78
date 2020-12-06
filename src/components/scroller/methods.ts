@@ -62,8 +62,6 @@ export function useMethods(share: Share) {
   function scrollHandle(meta: UseScrollMeta) {
     props.onScroll?.(meta);
 
-    console.log(meta);
-
     refreshProgressBar('x');
     refreshProgressBar('y');
 

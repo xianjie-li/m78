@@ -5,10 +5,11 @@ import Spin from 'm78/spin';
 import Button from 'm78/button';
 import Result from 'm78/result';
 import Popper from 'm78/popper';
-import { AuthProps, ExpandAuth } from './type';
+import { isFunction } from '@lxjx/utils';
+import { ExpandAuth } from './type';
 
 export function createAuth<D, V>(auth: Auth<D, V>, useAuth: ExpandAuth<D, V>['useAuth']) {
-  const AuthComponent: React.FC<AuthProps<D, V>> = props => {
+  const AuthComponent: ExpandAuth<D, V>['Auth'] = props => {
     const {
       children,
       keys,
@@ -21,6 +22,8 @@ export function createAuth<D, V>(auth: Auth<D, V>, useAuth: ExpandAuth<D, V>['us
       feedback,
     } = props;
 
+    const state = useAuth(keys, { extra, validators, disabled });
+
     const self = useSelf({
       /** 在实际进行验证前阻止渲染 */
       flag: true,
@@ -30,9 +33,9 @@ export function createAuth<D, V>(auth: Auth<D, V>, useAuth: ExpandAuth<D, V>['us
       self.flag = false;
     }, []);
 
-    const state = useAuth(keys, { extra, validators, disabled });
+    const renderChild = () => (isFunction(children) ? children() : children) as any;
 
-    if (disabled) return children;
+    if (disabled) return renderChild();
 
     if (self.flag) return null;
 
@@ -82,13 +85,13 @@ export function createAuth<D, V>(auth: Auth<D, V>, useAuth: ExpandAuth<D, V>['us
               <Result type="notAuth" title={firstRej.label} desc={firstRej.desc} actions={action} />
             }
           >
-            {React.cloneElement(children, { onClick: undefined })}
+            {React.cloneElement(renderChild(), { onClick: undefined })}
           </Popper>
         );
       }
     }
 
-    return children;
+    return renderChild();
   };
 
   AuthComponent.displayName = 'FrAuth';

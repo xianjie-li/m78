@@ -1,7 +1,7 @@
 import React from 'react';
 
 import 'm78/base';
-import Button, { ButtonProps } from 'm78/button';
+import Button, { ButtonPropsWithHTMLButton } from 'm78/button';
 import Modal from 'm78/modal';
 import { Transition } from '@lxjx/react-transition-spring';
 import { config } from 'react-spring';
@@ -42,7 +42,10 @@ export interface DialogProps extends Omit<ModalBaseProps, 'children' | 'onClose'
   /** 自定义底部内容，与其他底部相关配置的优先级为 footer > btns > confirm、close */
   footer?: React.ReactNode;
   /** 通过配置设置按钮组 */
-  btns?: (Pick<ButtonProps, 'color' | 'children' | 'onClick' | 'disabled' | 'icon' | 'link'> & {
+  btns?: (Pick<
+    ButtonPropsWithHTMLButton,
+    'color' | 'children' | 'onClick' | 'disabled' | 'icon'
+  > & {
     text: string;
   })[];
   /** 内容区域class */

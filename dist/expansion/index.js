@@ -224,7 +224,7 @@ var ExpansionPane = function ExpansionPane(props) {
     className: cls('m78-expansion_bottom-flag'),
     onClick: toggle
   }, renderPropsIcon() || /*#__PURE__*/React.createElement(Button, {
-    link: true
+    text: true
   }, open ? /*#__PURE__*/React.createElement(CaretUpOutlined, null) : /*#__PURE__*/React.createElement(CaretDownOutlined, null))), renderHeader(), /*#__PURE__*/React.createElement(animated.div, {
     className: "m78-expansion_content-wrap",
     style: spProps

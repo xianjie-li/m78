@@ -9,14 +9,19 @@ export function createUseAuth<D, V>(auth: Auth<D, V>) {
     const { disabled = false } = config || {};
 
     const [state, setState] = useSetState<ReturnType<UseAuth<D, V>>>({
-      pending: false,
+      pending: true,
       rejects: null,
     });
 
     const _pending = useDelayDerivedToggleStatus(state.pending, 100);
 
     const authHandler = useFn(() => {
-      if (disabled) return;
+      if (disabled) {
+        setState({
+          pending: false,
+        });
+        return;
+      }
 
       !state.pending && setState({ pending: true });
 

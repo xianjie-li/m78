@@ -2,16 +2,13 @@ import React from 'react';
 import { PositionEnum, SizeEnum, ComponentBaseProps } from 'm78/types';
 import { TabItem } from 'm78/tab';
 import { SpringStartFn } from 'react-spring';
-import { useScroll, SetState } from '@lxjx/hooks';
+import { useScroll, SetState, FormLike } from '@lxjx/hooks';
 import { CarouselRef } from 'm78/carousel';
 export declare type TabItemElement = React.ReactElement<TabItemProps, typeof TabItem>;
-export interface TabProps extends ComponentBaseProps {
-    /** 当前索引 */
-    index?: number;
-    /** 索引改变 */
-    onChange?: (index: number, value: string | number) => void;
-    /** 初始默认索引，优先级小于index */
-    defaultIndex?: number;
+export interface TabProps extends ComponentBaseProps, FormLike<string | number> {
+    /** extend(FormLike) | 当前所在选项卡的value */
+    /** extend(FormLike) | value改变 */
+    /** extend(FormLike) | 初始选项卡的value，优先级小于index */
     /** 一组TabItem */
     children?: TabItemElement[] | TabItemElement;
     /** tab的尺寸 */
@@ -20,7 +17,7 @@ export interface TabProps extends ComponentBaseProps {
     position?: PositionEnum;
     /** tab项的每一项平分宽度，如果tab过多不建议开启, position为left和right时无效 */
     flexible?: boolean;
-    /** 高度，position为left和right时必传 */
+    /** 高度，position为left和right时必传, 横向切换时此配置无效 */
     height?: number | string;
     /** 无限滚动，页面内容过于复杂时不建议开启，因为需要复制页面帮助完成滚动动画 */
     loop?: boolean;
@@ -31,8 +28,8 @@ export interface TabProps extends ComponentBaseProps {
     invisibleUnmount?: boolean;
     /** TabItem不可见时，将其display设置为node(需要保证每项只包含一个子元素且能够设置style，注意事项与invisibleUnmount一致) */
     invisibleHidden?: boolean;
-    /** extend ComponentBaseProps | 包裹元素的类名 */
-    /** extend ComponentBaseProps | 包裹元素样式 */
+    /** extend(ComponentBaseProps) | 包裹元素的类名 */
+    /** extend(ComponentBaseProps) | 包裹元素样式 */
     /** 关闭分割线 */
     noSplitLine?: boolean;
     /** 关闭活动线 */
@@ -70,7 +67,7 @@ export interface Share {
     /** 设置内部状态 */
     setState: SetState<Share['state']>;
     /** 当前tab索引 */
-    val: number;
+    val: number | string;
     /** 设置当前tab索引 */
     setVal: (arg: any) => void;
     /** 设置线条动画 */
@@ -86,4 +83,10 @@ export interface Share {
     scroller: ReturnType<typeof useScroll>;
     /** TabItem子项数组 */
     child: TabItemElement[];
+    /** 如果每一个TabItem都不包含可渲染的子项则为true */
+    hasContent: boolean;
+    /** 存放所有TabItem的子项 */
+    values: Array<string | number>;
+    /** 当前val索引 */
+    index: number;
 }

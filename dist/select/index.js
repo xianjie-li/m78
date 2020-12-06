@@ -505,25 +505,25 @@ function Select(props) {
     }, " (\u5DF2\u8FBE\u6700\u5927\u9009\u4E2D\u6570)"))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(If, {
       when: onAddTag && inpVal
     }, /*#__PURE__*/React.createElement(Button, {
-      link: true,
+      text: true,
       color: "blue",
       onClick: addTagFn,
       size: "small"
     }, "\u6DFB\u52A0\u6807\u7B7E")), /*#__PURE__*/React.createElement(If, {
       when: filterOptions.length && checked.length
     }, /*#__PURE__*/React.createElement(Button, {
-      link: true,
+      text: true,
       onClick: unCheckAll,
       size: "small"
     }, "\u6E05\u7A7A")), /*#__PURE__*/React.createElement(If, {
       when: maxLength === undefined && filterOptions.length
     }, /*#__PURE__*/React.createElement(Button, {
-      link: true,
+      text: true,
       onClick: checkAll,
       size: "small",
       color: allChecked ? 'primary' : undefined
     }, "\u5168\u9009"), /*#__PURE__*/React.createElement(Button, {
-      link: true,
+      text: true,
       onClick: toggleAll,
       size: "small"
     }, "\u53CD\u9009"))));

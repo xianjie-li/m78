@@ -132,7 +132,6 @@ function useMethods(share) {
     var _props$onScroll;
 
     (_props$onScroll = props.onScroll) === null || _props$onScroll === void 0 ? void 0 : _props$onScroll.call(props, meta);
-    console.log(meta);
     refreshProgressBar('x');
     refreshProgressBar('y');
     refreshScrollFlag();
@@ -703,7 +702,7 @@ var Scroller = /*#__PURE__*/React.forwardRef(function (props, ref) {
   function renderPullUpRetryBtn() {
     return /*#__PURE__*/React.createElement(Button, {
       size: "small",
-      link: true,
+      text: true,
       color: "primary",
       onClick: function onClick() {
         return methods.triggerPullUp(true);

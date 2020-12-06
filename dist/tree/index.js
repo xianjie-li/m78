@@ -502,16 +502,16 @@ var TreeItem = /*#__PURE__*/React.memo(function (_ref) {
 
             case 12:
               _context.prev = 12;
-              console.log('加载结束');
+              // console.log('加载结束');
               loadingCheck.unCheck(value);
               return _context.finish(12);
 
-            case 16:
+            case 15:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[3, 10, 12, 16]]);
+      }, _callee, null, [[3, 10, 12, 15]]);
     }));
     return _loadHandle.apply(this, arguments);
   }
@@ -1080,13 +1080,13 @@ var Toolbar = function Toolbar(_ref) {
     when: isM && conf.check
   }, /*#__PURE__*/React.createElement(Button, {
     size: "small",
-    link: true,
+    text: true,
     color: valCheck.allChecked ? 'primary' : undefined,
     onClick: checkAllHandle,
     disabled: isDisabled
   }, "\u5168\u9009"), /*#__PURE__*/React.createElement(Button, {
     size: "small",
-    link: true,
+    text: true,
     onClick: valCheck.unCheckAll,
     disabled: isDisabled
   }, "\u53D6\u6D88\u5168\u90E8")), /*#__PURE__*/React.createElement(If, {
@@ -1100,7 +1100,7 @@ var Toolbar = function Toolbar(_ref) {
       disabled: isDisabled
     }, /*#__PURE__*/React.createElement(Button, {
       size: "small",
-      link: true,
+      text: true,
       disabled: isDisabled
     }, "\u5C55\u5F00", /*#__PURE__*/React.createElement(DownOutlined, {
       className: "color-second",

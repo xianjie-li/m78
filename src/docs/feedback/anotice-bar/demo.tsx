@@ -36,7 +36,7 @@ const Demo = () => {
         status="warning"
         desc={
           <div>
-            <Button link color="blue">
+            <Button text color="blue">
               可以放任何东西
             </Button>
           </div>
@@ -46,7 +46,7 @@ const Demo = () => {
         message="自定义右侧内容"
         status="warning"
         right={
-          <Button link size="small" color="red">
+          <Button text size="small" color="red">
             不再显示
           </Button>
         }

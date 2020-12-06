@@ -16,9 +16,8 @@
   height: $size-default;
   font-size: $font-size;
   line-height: 1;
-  border-radius: 2px;
+  border-radius: $border-radius;
   cursor: pointer;
-  box-shadow: $shadow-1;
   background-color: #fff;
   color: $b-primary;
   text-align: center;
@@ -35,8 +34,7 @@
   .m78-icon,
   .anticon {
     position: relative;
-    font-size: 1em;
-    transform: scale(1.4);
+    font-size: 1.3em;
   }
 
   &__link {
@@ -45,6 +43,10 @@
   }
 
   @include ellipsis-x;
+
+  &.__shadow {
+    box-shadow: $shadow-1;
+  }
 
   &:hover,
   &:focus {
@@ -139,7 +141,6 @@
 
     .anticon {
       font-size: 20px;
-      transform: scale(1);
       margin-right: 0;
     }
 
@@ -156,8 +157,8 @@
     }
   }
 
-  // link按钮
-  &.__link {
+  // text按钮
+  &.__text {
     height: 24px;
     padding: 0 8px;
     box-shadow: none !important;
@@ -173,7 +174,7 @@
 
   // link按钮和icon按钮禁用样式
   &.__icon,
-  &.__link {
+  &.__text {
     &:disabled,
     &[disabled] {
       opacity: 0.5;
@@ -202,7 +203,7 @@
     }
   }
 
-  .m78-btn.__#{$name}.__link {
+  .m78-btn.__#{$name}.__text {
     color: $main-color;
 
     &:focus,

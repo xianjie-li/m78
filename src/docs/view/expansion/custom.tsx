@@ -53,7 +53,7 @@ const Custom = () => {
 
       <Expansion
         expandIcon={_open => (
-          <Button link color="primary">
+          <Button text color="primary">
             {_open ? '点击关闭' : '点击展开'}
           </Button>
         )}

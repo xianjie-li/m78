@@ -160,7 +160,7 @@ const Pagination = (props: PaginationProps) => {
           __active: isCurrent,
         })}
         color={isCurrent ? 'primary' : undefined}
-        link={plain}
+        text={plain}
         onClick={() => go(item)}
         disabled={disabled}
         title={`第${item}页`}
@@ -175,7 +175,7 @@ const Pagination = (props: PaginationProps) => {
       <Button
         className="m78-pagination_item __prev"
         disabled={page === 1 || disabled}
-        link={plain}
+        text={plain}
         title="上一页"
         onClick={() => go(page - 1)}
       >
@@ -189,7 +189,7 @@ const Pagination = (props: PaginationProps) => {
       <Button
         className="m78-pagination_item __next"
         disabled={page === totalPage || disabled}
-        link={plain}
+        text={plain}
         title="下一页"
         onClick={() => go(page + 1)}
       >
@@ -254,7 +254,7 @@ const Pagination = (props: PaginationProps) => {
         <If when={page >= 5}>
           <Button
             className="m78-pagination_item __ellipsis __ellipsisPrev"
-            link
+            text
             title="前翻5页"
             disabled={disabled}
             onClick={() => go(page - 5)}
@@ -269,7 +269,7 @@ const Pagination = (props: PaginationProps) => {
         <If when={page <= totalPage - 4}>
           <Button
             className="m78-pagination_item __ellipsis __ellipsisNext"
-            link
+            text
             title="后翻5页"
             onClick={() => go(page + 5)}
             disabled={disabled}

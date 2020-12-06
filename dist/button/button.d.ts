@@ -1,5 +1,6 @@
-import React from 'react';
+/// <reference types="react" />
 import 'm78/base';
-import { ButtonProps } from './type';
-declare const Button: React.FC<ButtonProps>;
+import { ButtonPropsWithHTMLButton, ButtonPropsWithHTMLLink } from './type';
+declare function Button(btnProps: ButtonPropsWithHTMLLink): JSX.Element;
+declare function Button(btnProps: ButtonPropsWithHTMLButton): JSX.Element;
 export default Button;

@@ -88,7 +88,7 @@ function Tips(_ref) {
       return (_item$actions = item.actions) === null || _item$actions === void 0 ? void 0 : _item$actions.map(function (it, ind) {
         return /*#__PURE__*/React.createElement(Button, {
           key: ind,
-          link: true,
+          text: true,
           size: "small",
           color: it.color,
           onClick: it.handler
@@ -97,7 +97,7 @@ function Tips(_ref) {
     })), /*#__PURE__*/React.createElement(If, {
       when: hasPrev
     }, /*#__PURE__*/React.createElement(Button, {
-      link: true,
+      text: true,
       size: "small",
       color: "red",
       onClick: queue.prev
@@ -106,7 +106,7 @@ function Tips(_ref) {
     }, function () {
       var hasNext = queue.hasNext(item.id);
       return /*#__PURE__*/React.createElement(Button, {
-        link: true,
+        text: true,
         size: "small",
         color: hasNext ? 'primary' : 'red',
         onClick: queue.next

@@ -79,14 +79,14 @@ const Toolbar = ({
         <If when={isM && conf.check}>
           <Button
             size="small"
-            link
+            text
             color={valCheck.allChecked ? 'primary' : undefined}
             onClick={checkAllHandle}
             disabled={isDisabled}
           >
             全选
           </Button>
-          <Button size="small" link onClick={valCheck.unCheckAll} disabled={isDisabled}>
+          <Button size="small" text onClick={valCheck.unCheckAll} disabled={isDisabled}>
             取消全部
           </Button>
         </If>
@@ -100,7 +100,7 @@ const Toolbar = ({
               onChange={expansionHandle}
               disabled={isDisabled}
             >
-              <Button size="small" link disabled={isDisabled}>
+              <Button size="small" text disabled={isDisabled}>
                 展开
                 <DownOutlined className="color-second" style={{ fontSize: 8 }} />
               </Button>

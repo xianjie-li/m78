@@ -341,20 +341,20 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
         </div>
         <div>
           <If when={onAddTag && inpVal}>
-            <Button link color="blue" onClick={addTagFn} size="small">
+            <Button text color="blue" onClick={addTagFn} size="small">
               添加标签
             </Button>
           </If>
           <If when={filterOptions.length && checked.length}>
-            <Button link onClick={unCheckAll} size="small">
+            <Button text onClick={unCheckAll} size="small">
               清空
             </Button>
           </If>
           <If when={maxLength === undefined && filterOptions.length}>
-            <Button link onClick={checkAll} size="small" color={allChecked ? 'primary' : undefined}>
+            <Button text onClick={checkAll} size="small" color={allChecked ? 'primary' : undefined}>
               全选
             </Button>
-            <Button link onClick={toggleAll} size="small">
+            <Button text onClick={toggleAll} size="small">
               反选
             </Button>
           </If>

@@ -189,7 +189,7 @@ const TreeItem = React.memo(
       } catch (e) {
         // nothing
       } finally {
-        console.log('加载结束');
+        // console.log('加载结束');
         loadingCheck.unCheck(value);
       }
     }

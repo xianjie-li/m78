@@ -37,7 +37,7 @@ function createUseAuth(auth) {
         disabled = _ref$disabled === void 0 ? false : _ref$disabled;
 
     var _useSetState = useSetState({
-      pending: false,
+      pending: true,
       rejects: null
     }),
         _useSetState2 = _slicedToArray(_useSetState, 2),
@@ -47,7 +47,13 @@ function createUseAuth(auth) {
     var _pending = useDelayDerivedToggleStatus(state.pending, 100);
 
     var authHandler = useFn(function () {
-      if (disabled) return;
+      if (disabled) {
+        setState({
+          pending: false
+        });
+        return;
+      }
+
       !state.pending && setState({
         pending: true
       });
@@ -82,6 +88,11 @@ function createAuth(auth, useAuth) {
         pendingNode = props.pendingNode,
         disabled = props.disabled,
         feedback = props.feedback;
+    var state = useAuth(keys, {
+      extra: extra,
+      validators: validators,
+      disabled: disabled
+    });
     var self = useSelf({
       /** 在实际进行验证前阻止渲染 */
       flag: true
@@ -89,12 +100,12 @@ function createAuth(auth, useAuth) {
     useEffect(function () {
       self.flag = false;
     }, []);
-    var state = useAuth(keys, {
-      extra: extra,
-      validators: validators,
-      disabled: disabled
-    });
-    if (disabled) return children;
+
+    var renderChild = function renderChild() {
+      return isFunction(children) ? children() : children;
+    };
+
+    if (disabled) return renderChild();
     if (self.flag) return null;
 
     if (state.pending) {
@@ -143,13 +154,13 @@ function createAuth(auth, useAuth) {
             desc: firstRej.desc,
             actions: action
           })
-        }, /*#__PURE__*/React.cloneElement(children, {
+        }, /*#__PURE__*/React.cloneElement(renderChild(), {
           onClick: undefined
         }));
       }
     }
 
-    return children;
+    return renderChild();
   };
 
   AuthComponent.displayName = 'FrAuth';
@@ -202,7 +213,9 @@ var create = function create(config) {
       var displayName = Component.displayName || Component.name || 'Component';
 
       var EnhanceComponent = function EnhanceComponent(props) {
-        return /*#__PURE__*/React.createElement(Auth, conf, /*#__PURE__*/React.createElement(Component, props));
+        return /*#__PURE__*/React.createElement(Auth, conf, function () {
+          return /*#__PURE__*/React.createElement(Component, props);
+        });
       };
 
       EnhanceComponent.displayName = "withAuth(".concat(displayName, ")");

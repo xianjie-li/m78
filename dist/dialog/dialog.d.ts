@@ -1,6 +1,6 @@
 import React from 'react';
 import 'm78/base';
-import { ButtonProps } from 'm78/button';
+import { ButtonPropsWithHTMLButton } from 'm78/button';
 import { ModalBaseProps } from '../modal/types';
 export interface DialogProps extends Omit<ModalBaseProps, 'children' | 'onClose'> {
     /** 内容区域的最大宽度, 默认为360 */
@@ -30,7 +30,7 @@ export interface DialogProps extends Omit<ModalBaseProps, 'children' | 'onClose'
     /** 自定义底部内容，与其他底部相关配置的优先级为 footer > btns > confirm、close */
     footer?: React.ReactNode;
     /** 通过配置设置按钮组 */
-    btns?: (Pick<ButtonProps, 'color' | 'children' | 'onClick' | 'disabled' | 'icon' | 'link'> & {
+    btns?: (Pick<ButtonPropsWithHTMLButton, 'color' | 'children' | 'onClick' | 'disabled' | 'icon'> & {
         text: string;
     })[];
     /** 内容区域class */

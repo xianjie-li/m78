@@ -37,7 +37,7 @@ var ForkImpl = function ForkImpl(_ref) {
   var reloadBtn = send ? /*#__PURE__*/React.createElement(Button, {
     onClick: send,
     color: "primary",
-    link: true,
+    text: true,
     size: "small",
     style: {
       top: -1

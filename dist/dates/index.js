@@ -945,7 +945,7 @@ function staticRenderTabs(_ref14, _ref15) {
   var renderButton = function renderButton(dType, title, unit, handler) {
     return /*#__PURE__*/React.createElement(Button, {
       size: "small",
-      link: true,
+      text: true,
       title: title,
       color: state.type === dType ? 'primary' : undefined,
       onClick: handler
@@ -993,7 +993,7 @@ var renderPresetDates = function renderPresetDates(_ref16) {
       props = _ref16.props;
   var baseProps = {
     size: 'small',
-    link: true,
+    text: true,
     color: 'primary'
   }; // 设为当前
 
@@ -1504,7 +1504,7 @@ function Dates(props) {
       className: "m78-dates_btns"
     }, !disabledPreset && renderPresetDates(share)), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement(Button, {
       size: "small",
-      link: true,
+      text: true,
       onClick: handlers.reset
     }, "\u6E05\u7A7A"), /*#__PURE__*/React.createElement(Button, {
       size: "small",

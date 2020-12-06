@@ -11,11 +11,12 @@ import { PositionEnum } from 'm78/types';
 import Carousel from 'm78/carousel';
 import { CaretLeftOutlined, CaretRightOutlined } from 'm78/icon';
 import { If } from 'm78/fork';
-import { isArray, isNumber } from '@lxjx/utils';
+import { isArray, isTruthyOrZero, defer, isNumber } from '@lxjx/utils';
 import { TabItem as TabItem$1 } from 'm78/tab';
 
 var TabItem = function TabItem(_ref) {
-  var children = _ref.children,
+  var _ref$children = _ref.children,
+      children = _ref$children === void 0 ? null : _ref$children,
       disabled = _ref.disabled,
       value = _ref.value,
       label = _ref.label,
@@ -24,13 +25,26 @@ var TabItem = function TabItem(_ref) {
   return /*#__PURE__*/React.isValidElement(children) ? /*#__PURE__*/React.cloneElement(children, _objectSpread({}, oProps)) : children;
 };
 
-/** 格式化子项，确保其格式为Tab[] */
+/** 格式化子项，确保其格式为Tab[], 如果每一个TabItem子项都不含内容时，hasContent为false */
 function formatChild(children) {
-  if (!children) return [];
+  var hasContent = false;
+  var values = [];
+  if (!children) return {
+    child: [],
+    hasContent: hasContent,
+    values: values
+  };
   var list = isArray(children) ? children : [children];
-  return list.filter(function (item) {
+  var resList = list.filter(function (item) {
+    if (isTruthyOrZero(item.props.children)) hasContent = true;
+    values.push(item.props.value);
     return item.type === TabItem$1;
   });
+  return {
+    child: resList,
+    hasContent: hasContent,
+    values: values
+  };
 }
 /** 从一组ReactElement<TabItemProps>中拿到props组成的数组 */
 
@@ -39,39 +53,49 @@ function getChildProps(children) {
     return item.props;
   });
 }
+/** 根据当前value和values获取索引, 无匹配时默认为0 */
+
+function getIndexByVal(val, vals) {
+  var ind = vals.indexOf(val);
+  return ind === -1 ? 0 : ind;
+}
 
 function useMethods(share) {
   var isVertical = share.isVertical,
       self = share.self,
       set = share.set,
-      val = share.val,
       setVal = share.setVal,
       carouselRef = share.carouselRef,
       disabled = share.disabled,
       state = share.state,
-      setState = share.setState;
+      setState = share.setState,
+      index = share.index,
+      values = share.values;
   /** 根据索引设置活动线的状态 */
 
-  function refreshItemLine(index) {
-    var itemEl = self.tabRefs[index];
+  function refreshItemLine(_index) {
+    var itemEl = self.tabRefs[_index];
     if (!itemEl) return;
     var length = isVertical ? itemEl.offsetHeight : itemEl.offsetWidth;
-    var offset = isVertical ? itemEl.offsetTop : itemEl.offsetLeft;
-    set({
-      length: length,
-      offset: offset,
-      immediate: self.itemSpringSetCount === 0
+    var offset = isVertical ? itemEl.offsetTop : itemEl.offsetLeft; // TODO: 在移动端immediate不生效, 需要延迟执行, 原因不明
+
+    defer(function () {
+      set({
+        length: length,
+        offset: offset,
+        immediate: self.itemSpringSetCount === 0
+      });
+      self.itemSpringSetCount++;
     });
-    self.itemSpringSetCount++;
   }
   /** 根据当前滚动状态设置滚动内容指示器的状态 */
 
 
-  function refreshScrollFlag(meta, tabsEl, index) {
+  function refreshScrollFlag(meta, tabsEl, _index) {
     if (!hasScroll(meta)) return;
-    var currentEl = tabsEl[index];
-    var nextEl = tabsEl[index + 1];
-    var prevEl = tabsEl[index - 1];
+    var currentEl = tabsEl[_index];
+    var nextEl = tabsEl[_index + 1];
+    var prevEl = tabsEl[_index - 1];
     if (!currentEl) return;
     if (!nextEl && !prevEl) return;
     var offset;
@@ -117,15 +141,15 @@ function useMethods(share) {
   /** tab项点击 */
 
 
-  function onTabClick(itemProps, index) {
-    if (val === index) return;
+  function onTabClick(itemProps, _index) {
+    if (index === _index) return;
     if (itemProps.disabled || disabled) return;
 
-    if (self.itemSpringSetCount !== 0) {
-      carouselRef.current.goTo(index);
+    if (share.hasContent && self.itemSpringSetCount !== 0) {
+      carouselRef.current.goTo(_index);
     }
 
-    setVal(index);
+    setVal(values[_index]);
   } // 向前或后滚动tab, flag为true时为前滚动
 
 
@@ -186,10 +210,11 @@ function useLifeCycle(share, methods, props) {
   var val = share.val,
       scroller = share.scroller,
       child = share.child,
-      setState = share.setState; // 更新活动线
+      setState = share.setState,
+      index = share.index; // 更新活动线
 
   useEffect(function () {
-    !props.noActiveLine && methods.refreshItemLine(val);
+    !props.noActiveLine && methods.refreshItemLine(index);
   }, [val, props.size, props.position, child.length, props.flexible]); // 修正滚动位置
 
   useEffect(function () {
@@ -197,7 +222,7 @@ function useLifeCycle(share, methods, props) {
     if (!scroller.ref.current) return;
     var tabs = scroller.ref.current.querySelectorAll('.m78-tab_tabs-item');
     methods.onScroll(sm);
-    methods.refreshScrollFlag(sm, tabs, val);
+    methods.refreshScrollFlag(sm, tabs, index);
   }, [val]);
   useEffect(function () {
     if ('ontouchstart' in window) {
@@ -230,7 +255,11 @@ var Tab = function Tab(props) {
       className = _ref.className,
       style = _ref.style; // 格式化TabItem列表
 
-  var child = formatChild(children); // 所有item的prop配置
+  var _formatChild = formatChild(children),
+      child = _formatChild.child,
+      hasContent = _formatChild.hasContent,
+      values = _formatChild.values; // 所有item的prop配置
+
 
   var childProps = getChildProps(child); // 内部状态
 
@@ -263,14 +292,12 @@ var Tab = function Tab(props) {
       set = _useSpring2[1]; // 控制tab显示
 
 
-  var _useFormState = useFormState(props, 0, {
-    valueKey: 'index',
-    defaultValueKey: 'defaultIndex'
-  }),
+  var _useFormState = useFormState(props, values[0]),
       _useFormState2 = _slicedToArray(_useFormState, 2),
       val = _useFormState2[0],
       setVal = _useFormState2[1];
 
+  var index = getIndexByVal(val, values);
   var share = {
     isVertical: isVertical,
     self: self,
@@ -282,7 +309,10 @@ var Tab = function Tab(props) {
     carouselRef: carouselRef,
     disabled: disabled,
     scroller: null,
-    child: child
+    child: child,
+    hasContent: hasContent,
+    values: values,
+    index: index
   }; // 内部方法
 
   var methods = useMethods(share);
@@ -328,18 +358,18 @@ var Tab = function Tab(props) {
   })), /*#__PURE__*/React.createElement("div", {
     className: "m78-tab_tabs",
     ref: share.scroller.ref
-  }, childProps.map(function (item, index) {
+  }, childProps.map(function (item, _index) {
     return /*#__PURE__*/React.createElement("div", {
       key: item.value,
       className: cls('m78-tab_tabs-item m78-effect __md', {
-        __active: val === index,
+        __active: index === _index,
         __disabled: item.disabled
       }),
       onClick: function onClick() {
-        return onTabClick(item, index);
+        return onTabClick(item, _index);
       },
       ref: function ref(node) {
-        return self.tabRefs[index] = node;
+        return self.tabRefs[_index] = node;
       }
     }, /*#__PURE__*/React.createElement("div", null, item.label));
   }), !noActiveLine && /*#__PURE__*/React.createElement(animated.div, {
@@ -349,10 +379,12 @@ var Tab = function Tab(props) {
     })), _defineProperty(_ref2, "transform", spProps.offset.to(function (ofs) {
       return "translate3d(".concat(isVertical ? 0 : ofs, "px, ").concat(isVertical ? ofs : 0, "px, 0px)");
     })), _ref2)
-  }))), /*#__PURE__*/React.createElement(Carousel, {
+  }))), hasContent && /*#__PURE__*/React.createElement(Carousel, {
     className: "m78-tab_cont",
     ref: carouselRef,
-    initPage: val,
+    initPage: index
+    /* TODO: 测试修改 */
+    ,
     noShadow: true,
     noScale: true,
     loop: loop,
@@ -360,9 +392,11 @@ var Tab = function Tab(props) {
     invisibleHidden: invisibleHidden,
     invisibleUnmount: invisibleUnmount,
     height: height,
-    vertical: isVertical,
-    onChange: function onChange(index, first) {
-      !first && setVal(index);
+    vertical: isVertical
+    /* TODO: 测试修改 */
+    ,
+    onChange: function onChange(_index, first) {
+      !first && setVal(values[_index]);
     }
   }, child));
 };

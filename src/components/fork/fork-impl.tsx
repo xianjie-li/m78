@@ -31,7 +31,7 @@ const ForkImpl: React.FC<ForkProps> = ({
 
   // 重试按钮
   const reloadBtn = send ? (
-    <Button onClick={send} color="primary" link size="small" style={{ top: -1 /* 视觉居中 */ }}>
+    <Button onClick={send} color="primary" text size="small" style={{ top: -1 /* 视觉居中 */ }}>
       重新加载
     </Button>
   ) : null;

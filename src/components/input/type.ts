@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormLike } from '@lxjx/hooks';
-import { ButtonProps } from 'm78/button';
+import { ButtonPropsWithHTMLButton } from 'm78/button';
 import { Status, FullSize } from 'm78/types';
 
 export type InputPropsExtends = Omit<
@@ -54,9 +54,9 @@ export interface InputProps extends FormLike<string>, InputPropsExtends {
   /** 后置图标 */
   suffix?: React.ReactNode;
   /** 前置按钮 */
-  prefixBtn?: React.ReactElement<ButtonProps>;
+  prefixBtn?: React.ReactElement<ButtonPropsWithHTMLButton>;
   /** 后置按钮 */
-  suffixBtn?: React.ReactElement<ButtonProps>;
+  suffixBtn?: React.ReactElement<ButtonPropsWithHTMLButton>;
 
   /* ############# 额外事件 ############# */
   /** 点击搜索按钮/回车/清空时，触发 */

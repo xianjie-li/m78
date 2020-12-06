@@ -7,7 +7,6 @@ export function useMethods(share: Share) {
     isVertical,
     self,
     set,
-    val,
     setVal,
     carouselRef,
     disabled,

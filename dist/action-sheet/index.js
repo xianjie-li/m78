@@ -108,7 +108,7 @@ function _ActionSheet(props) {
     onClick: function onClick() {
       return close();
     },
-    link: true,
+    text: true,
     color: "red"
   }, "\u53D6\u6D88")), /*#__PURE__*/React.createElement("div", null, title), /*#__PURE__*/React.createElement(If, {
     when: confirm

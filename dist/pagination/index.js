@@ -138,7 +138,7 @@ var Pagination = function Pagination(props) {
         __active: isCurrent
       }),
       color: isCurrent ? 'primary' : undefined,
-      link: plain,
+      text: plain,
       onClick: function onClick() {
         return go(item);
       },
@@ -151,7 +151,7 @@ var Pagination = function Pagination(props) {
     return /*#__PURE__*/React.createElement(Button, {
       className: "m78-pagination_item __prev",
       disabled: page === 1 || disabled,
-      link: plain,
+      text: plain,
       title: "\u4E0A\u4E00\u9875",
       onClick: function onClick() {
         return go(page - 1);
@@ -163,7 +163,7 @@ var Pagination = function Pagination(props) {
     return /*#__PURE__*/React.createElement(Button, {
       className: "m78-pagination_item __next",
       disabled: page === totalPage || disabled,
-      link: plain,
+      text: plain,
       title: "\u4E0B\u4E00\u9875",
       onClick: function onClick() {
         return go(page + 1);
@@ -219,7 +219,7 @@ var Pagination = function Pagination(props) {
     when: page >= 5
   }, /*#__PURE__*/React.createElement(Button, {
     className: "m78-pagination_item __ellipsis __ellipsisPrev",
-    link: true,
+    text: true,
     title: "\u524D\u7FFB5\u9875",
     disabled: disabled,
     onClick: function onClick() {
@@ -229,7 +229,7 @@ var Pagination = function Pagination(props) {
     when: page <= totalPage - 4
   }, /*#__PURE__*/React.createElement(Button, {
     className: "m78-pagination_item __ellipsis __ellipsisNext",
-    link: true,
+    text: true,
     title: "\u540E\u7FFB5\u9875",
     onClick: function onClick() {
       return go(page + 5);

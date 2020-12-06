@@ -141,7 +141,7 @@ function Dates(props: DatesProps | DatesRangeProps) {
         <div className="m78-dates_foot">
           <span className="m78-dates_btns">{!disabledPreset && renderPresetDates(share)}</span>
           <span>
-            <Button size="small" link onClick={handlers.reset}>
+            <Button size="small" text onClick={handlers.reset}>
               清空
             </Button>
             <Button size="small" color="primary" onClick={() => setState({ show: false })}>

@@ -29,9 +29,7 @@ const create: ExpandCreate = <
       const displayName = Component.displayName || Component.name || 'Component';
 
       const EnhanceComponent: React.FC<any> = props => (
-        <Auth {...conf}>
-          <Component {...props} />
-        </Auth>
+        <Auth {...conf}>{() => <Component {...props} />}</Auth>
       );
 
       EnhanceComponent.displayName = `withAuth(${displayName})`;

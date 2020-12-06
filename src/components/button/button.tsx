@@ -6,12 +6,12 @@ import { isArray } from '@lxjx/utils';
 
 import cls from 'classnames';
 
-import { ButtonProps } from './type';
+import { ButtonPropsWithHTMLButton, ButtonPropsWithHTMLLink } from './type';
 
 const sizeMap = {
-  large: 18,
-  small: 14,
-  mini: 12,
+  large: 12,
+  small: 8,
+  mini: 6,
 };
 
 const matchIcon = /.?(Outlined|Filled|TwoTone|Icon)$/;
@@ -58,52 +58,66 @@ function formatChildren(children: React.ReactNode) {
  * mini 20
  * */
 
-const Button: React.FC<ButtonProps> = ({
-  size,
-  color,
-  circle,
-  outline,
-  block,
-  link,
-  icon,
-  disabled,
-  loading,
-  md,
-  win,
-  children,
-  className,
-  href,
-  ...props
-}) => {
+function Button(btnProps: ButtonPropsWithHTMLLink): JSX.Element;
+function Button(btnProps: ButtonPropsWithHTMLButton): JSX.Element;
+function Button(btnProps: ButtonPropsWithHTMLLink | ButtonPropsWithHTMLButton) {
+  const {
+    size,
+    color,
+    circle,
+    outline,
+    block,
+    icon,
+    disabled,
+    loading,
+    md,
+    win,
+    children,
+    className,
+    text,
+    href,
+    shadow = true,
+    ...props
+  } = btnProps as ButtonPropsWithHTMLLink & ButtonPropsWithHTMLButton;
+
   const classNames = cls(className, 'm78-btn', 'm78-effect', {
     [`__${color}`]: color,
     [`__${size}`]: size,
     __circle: circle,
     __outline: outline,
     __block: block,
-    __link: link,
+    __text: text,
     __icon: icon,
     __md: md,
     __win: win,
-    __light: !!color && !link && !icon, // 当是link/icon按钮时，可以直接使用对于颜色的波纹
+    __light: !!color && !text && !icon, // 当是link/icon按钮时，可以直接使用对应颜色的波纹
+    __shadow: shadow,
     __disabled: disabled || loading,
   });
 
   const newChildren = useMemo(() => formatChildren(children), [children]);
 
-  return (
-    <button type="button" {...props} className={classNames} disabled={!!disabled || !!loading}>
-      {/* eslint-disable-next-line jsx-a11y/anchor-has-content,jsx-a11y/control-has-associated-label */}
-      {link && <a className="m78-btn__link" href={href} />}
+  const isLink = !!href;
+
+  return React.createElement(
+    href ? 'a' : 'button',
+    {
+      type: isLink ? undefined : 'button', // 禁用默认的submit类型
+      href,
+      ...props,
+      className: classNames,
+      disabled: !!disabled || !!loading,
+    },
+    <>
       <Spin
-        style={{ fontSize: size ? sizeMap[size] : 14, color: '#333' }}
+        style={{ fontSize: size ? sizeMap[size] : 10, color: '#333' }}
         show={!!loading}
         full
         text=""
       />
       <span>{newChildren}</span>
-    </button>
+    </>,
   );
-};
+}
 
 export default Button;

@@ -33,7 +33,7 @@ const Dropdown = () => {
         }}
         options={opt}
       >
-        <Button link color="primary">
+        <Button text color="primary">
           请选择内容
           <CaretDownOutlined className="fs-12" />
         </Button>
@@ -48,7 +48,7 @@ const Dropdown = () => {
         arrow
         direction={PopperDirectionEnum.bottom}
       >
-        <Button link color="primary">
+        <Button text color="primary">
           自定义位置+气泡
           <CaretDownOutlined className="fs-12" />
         </Button>

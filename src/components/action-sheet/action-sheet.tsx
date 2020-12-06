@@ -83,7 +83,7 @@ function _ActionSheet<Val = any>(props: ActionSheetProps<Val>) {
     >
       <div className="m78-action-sheet_item m78-effect __md __title __disabled">
         <If when={confirm}>
-          <Button className="m78-action-sheet_confirm" onClick={() => close()} link color="red">
+          <Button className="m78-action-sheet_confirm" onClick={() => close()} text color="red">
             取消
           </Button>
         </If>

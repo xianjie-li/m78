@@ -10,6 +10,7 @@
   ],
   "exclude": [
     "../src/components/*/style/**",
+    "../src/components/play.tsx",
     "../lib"
   ]
 }

@@ -4,17 +4,17 @@ import 'm78/button/style';
 
 const ButtonDemoColor = () => (
   <div>
-    <Button link>link</Button>
-    <Button color="red" link>
+    <Button text>link</Button>
+    <Button color="red" text>
       link
     </Button>
-    <Button color="green" link disabled>
+    <Button color="green" text disabled>
       link
     </Button>
-    <Button color="blue" link href="/">
+    <Button color="blue" text href="/">
       link↗
     </Button>
-    <Button color="yellow" link>
+    <Button color="yellow" text>
       link
     </Button>
   </div>

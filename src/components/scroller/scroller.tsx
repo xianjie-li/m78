@@ -134,7 +134,7 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
 
   function renderPullUpRetryBtn() {
     return (
-      <Button size="small" link color="primary" onClick={() => methods.triggerPullUp(true)}>
+      <Button size="small" text color="primary" onClick={() => methods.triggerPullUp(true)}>
         重试
       </Button>
     );

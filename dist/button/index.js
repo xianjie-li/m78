@@ -1,5 +1,4 @@
 import 'm78/button/style';
-import _extends from '@babel/runtime/helpers/extends';
 import _defineProperty from '@babel/runtime/helpers/defineProperty';
 import _objectWithoutProperties from '@babel/runtime/helpers/objectWithoutProperties';
 import _objectSpread from '@babel/runtime/helpers/objectSpread2';
@@ -9,10 +8,20 @@ import 'm78/base';
 import { isArray } from '@lxjx/utils';
 import cls from 'classnames';
 
+var ButtonColorEnum;
+
+(function (ButtonColorEnum) {
+  ButtonColorEnum["blue"] = "blue";
+  ButtonColorEnum["red"] = "red";
+  ButtonColorEnum["green"] = "green";
+  ButtonColorEnum["yellow"] = "yellow";
+  ButtonColorEnum["primary"] = "primary";
+})(ButtonColorEnum || (ButtonColorEnum = {}));
+
 var sizeMap = {
-  large: 18,
-  small: 14,
-  mini: 12
+  large: 12,
+  small: 8,
+  mini: 6
 };
 var matchIcon = /.?(Outlined|Filled|TwoTone|Icon)$/;
 /* 该函数用于遍历Button的children，当存在Icon和SvgIcon时(非函数匹配, 函数组件name能就会添加)，为其添加适当边距并返回 */
@@ -73,15 +82,15 @@ function formatChildren(children) {
  * */
 
 
-var Button = function Button(_ref) {
+function Button(btnProps) {
   var _cls;
 
-  var size = _ref.size,
+  var _ref = btnProps,
+      size = _ref.size,
       color = _ref.color,
       circle = _ref.circle,
       outline = _ref.outline,
       block = _ref.block,
-      link = _ref.link,
       icon = _ref.icon,
       disabled = _ref.disabled,
       loading = _ref.loading,
@@ -89,30 +98,34 @@ var Button = function Button(_ref) {
       win = _ref.win,
       children = _ref.children,
       className = _ref.className,
+      text = _ref.text,
       href = _ref.href,
-      props = _objectWithoutProperties(_ref, ["size", "color", "circle", "outline", "block", "link", "icon", "disabled", "loading", "md", "win", "children", "className", "href"]);
+      _ref$shadow = _ref.shadow,
+      shadow = _ref$shadow === void 0 ? true : _ref$shadow,
+      props = _objectWithoutProperties(_ref, ["size", "color", "circle", "outline", "block", "icon", "disabled", "loading", "md", "win", "children", "className", "text", "href", "shadow"]);
 
-  var classNames = cls(className, 'm78-btn', 'm78-effect', (_cls = {}, _defineProperty(_cls, "__".concat(color), color), _defineProperty(_cls, "__".concat(size), size), _defineProperty(_cls, "__circle", circle), _defineProperty(_cls, "__outline", outline), _defineProperty(_cls, "__block", block), _defineProperty(_cls, "__link", link), _defineProperty(_cls, "__icon", icon), _defineProperty(_cls, "__md", md), _defineProperty(_cls, "__win", win), _defineProperty(_cls, "__light", !!color && !link && !icon), _defineProperty(_cls, "__disabled", disabled || loading), _cls));
+  var classNames = cls(className, 'm78-btn', 'm78-effect', (_cls = {}, _defineProperty(_cls, "__".concat(color), color), _defineProperty(_cls, "__".concat(size), size), _defineProperty(_cls, "__circle", circle), _defineProperty(_cls, "__outline", outline), _defineProperty(_cls, "__block", block), _defineProperty(_cls, "__text", text), _defineProperty(_cls, "__icon", icon), _defineProperty(_cls, "__md", md), _defineProperty(_cls, "__win", win), _defineProperty(_cls, "__light", !!color && !text && !icon), _defineProperty(_cls, "__shadow", shadow), _defineProperty(_cls, "__disabled", disabled || loading), _cls));
   var newChildren = useMemo(function () {
     return formatChildren(children);
   }, [children]);
-  return /*#__PURE__*/React.createElement("button", _extends({
-    type: "button"
-  }, props, {
+  var isLink = !!href;
+  return /*#__PURE__*/React.createElement(href ? 'a' : 'button', _objectSpread(_objectSpread({
+    type: isLink ? undefined : 'button',
+    // 禁用默认的submit类型
+    href: href
+  }, props), {}, {
     className: classNames,
     disabled: !!disabled || !!loading
-  }), link && /*#__PURE__*/React.createElement("a", {
-    className: "m78-btn__link",
-    href: href
-  }), /*#__PURE__*/React.createElement(Spin, {
+  }), /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Spin, {
     style: {
-      fontSize: size ? sizeMap[size] : 14,
+      fontSize: size ? sizeMap[size] : 10,
       color: '#333'
     },
     show: !!loading,
     full: true,
     text: ""
-  }), /*#__PURE__*/React.createElement("span", null, newChildren));
-};
+  }), /*#__PURE__*/React.createElement("span", null, newChildren)));
+}
 
 export default Button;
+export { ButtonColorEnum };
