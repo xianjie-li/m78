@@ -2,6 +2,8 @@ import React from 'react';
 
 import Tab, { TabItem } from 'm78/tab';
 import sty from '@/docs/Navigation/tab/sty.module.scss';
+import Button from 'm78/button/button';
+import Input from 'm78/input';
 
 const Play = () => {
   return (
