@@ -1,13 +1,14 @@
 @import '../../style/index';
 
 .m78-page-header {
+  position: relative;
   background-color: #fff;
+  z-index: $z-index;
 
   /* 需要固定左右宽度 */
   &.__center {
     .m78-page-header_main {
       text-align: center;
-      line-height: 1.1;
     }
 
     .m78-page-header_title {
@@ -45,6 +46,13 @@
     }
   }
 
+  &.__fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+
   &_bar {
     position: relative;
     display: flex;
@@ -65,6 +73,8 @@
     margin: 0 $space-12;
     flex: 1;
     white-space: nowrap;
+    line-height: 1.1;
+
     @include ellipsis-x;
   }
 
