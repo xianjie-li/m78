@@ -11,6 +11,12 @@
   overflow: auto;
   min-height: 50px;
 
+  &.__prompt {
+    .m78-dialog_cont {
+      overflow: visible;
+    }
+  }
+
   &_close-icon {
     position: absolute !important;
     right: 12px;

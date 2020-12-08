@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import 'm78/base';
 import Button, { ButtonPropsWithHTMLButton } from 'm78/button';
@@ -11,6 +11,7 @@ import { useFormState } from '@lxjx/hooks';
 
 import cls from 'classnames';
 import createRenderApi from '@lxjx/react-render-api';
+import Input, { InputProps } from 'm78/input';
 import { ModalBaseProps } from '../modal/types';
 
 export interface DialogProps extends Omit<ModalBaseProps, 'children' | 'onClose'> {
@@ -20,8 +21,12 @@ export interface DialogProps extends Omit<ModalBaseProps, 'children' | 'onClose'
   title?: string;
   /** 内容区域 */
   children?: React.ReactNode;
-  /** 默认的关闭按钮/确认按钮/右上角关闭按钮点击, 或触发了clickAway时，如果是通过确认按钮点击的，isConfirm为true */
-  onClose?(isConfirm?: boolean): void;
+  /**
+   * 默认的关闭按钮/确认按钮/右上角关闭按钮点击, 或触发了clickAway时
+   * - 如果是通过确认按钮点击的，isConfirm为true
+   * - prompt模式下，promptValue为用户输入的值
+   * */
+  onClose?(isConfirm?: boolean, promptValue?: string): void;
   /** false | '取消' | 是否显示取消按钮，传入string时，为按钮文本 */
   close?: boolean | string;
   /** '确认' | 是否显示确认按钮，传入string时，为按钮文本 */
@@ -54,6 +59,13 @@ export interface DialogProps extends Omit<ModalBaseProps, 'children' | 'onClose'
   headerClassName?: string;
   /** 脚部区域class */
   footerClassName?: string;
+
+  /** 提示输入框模式, 通过onClose第二个参数接收值 */
+  prompt?: boolean;
+  /** 提示输入框的默认内容 */
+  promptDefaultValue?: string;
+  /** 透传给prompt输入框的props，与Input组件一致 */
+  promptInputProps?: InputProps;
 }
 
 export interface DialogApi
@@ -92,6 +104,9 @@ const DialogBase: React.FC<DialogProps> = props => {
     style,
     clickAwayClosable,
     confirmClose = true,
+    prompt,
+    promptInputProps,
+    promptDefaultValue = '',
     ...other
   } = props;
 
@@ -102,9 +117,21 @@ const DialogBase: React.FC<DialogProps> = props => {
     valueKey: 'show',
   });
 
+  /** prompt当前输入的值 */
+  const [pmtVal, setPmtVal] = useState('');
+
+  /** 在开启和关闭时还原prompt初始值 */
+  useEffect(() => {
+    if (show) {
+      setPmtVal(promptDefaultValue);
+    } else {
+      setPmtVal('');
+    }
+  }, [show]);
+
   function onClose(isConfirm = false) {
     setShow(false);
-    props.onClose?.(isConfirm);
+    props.onClose?.(isConfirm, prompt ? pmtVal : undefined);
   }
 
   function renderDefaultFooter() {
@@ -142,7 +169,21 @@ const DialogBase: React.FC<DialogProps> = props => {
         <div className={cls('m78-dialog_title', headerClassName)}>
           {header || <span>{title}</span>}
         </div>
-        <div className={cls('m78-dialog_cont', contentClassName)}>{children}</div>
+        <div className={cls('m78-dialog_cont', contentClassName)}>
+          {children}
+          {prompt && (
+            <div className="mt-8">
+              <Input
+                placeholder="请输入内容"
+                autoFocus
+                {...promptInputProps}
+                value={pmtVal}
+                onChange={setPmtVal}
+                onPressEnter={() => onClose(true)}
+              />
+            </div>
+          )}
+        </div>
         <div className={cls('m78-dialog_footer', footerClassName, { __full: flexBtn })}>
           {footer || renderBtns() || renderDefaultFooter()}
         </div>
@@ -156,7 +197,7 @@ const DialogBase: React.FC<DialogProps> = props => {
     <Modal
       {...other}
       onClose={props.onClose as () => void}
-      className={cls('m78-dialog m78-scroll-bar', className)}
+      className={cls('m78-dialog m78-scroll-bar', className, prompt && '__prompt')}
       style={{ ...style, maxWidth }}
       clickAwayClosable={loading ? false : clickAwayClosable}
       show={show}

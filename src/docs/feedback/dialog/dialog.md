@@ -36,8 +36,12 @@ interface DialogProps extends Omit<ModalBaseProps, 'children' | 'onClose'> {
   title?: string;
   /** 内容区域 */
   children?: React.ReactNode;
-  /** 默认的关闭按钮/确认按钮/右上角关闭按钮点击, 或触发了clickAway时，如果是通过确认按钮点击的，isConfirm为true */
-  onClose?(isConfirm?: boolean): void;
+  /**
+   * 默认的关闭按钮/确认按钮/右上角关闭按钮点击, 或触发了clickAway时
+   * - 如果是通过确认按钮点击的，isConfirm为true
+   * - prompt模式下，promptValue为用户输入的值
+   * */
+  onClose?(isConfirm?: boolean, promptValue?: string): void;
   /** false | '取消' | 是否显示取消按钮，传入string时，为按钮文本 */
   close?: boolean | string;
   /** '确认' | 是否显示确认按钮，传入string时，为按钮文本 */
@@ -58,7 +62,10 @@ interface DialogProps extends Omit<ModalBaseProps, 'children' | 'onClose'> {
   /** 自定义底部内容，与其他底部相关配置的优先级为 footer > btns > confirm、close */
   footer?: React.ReactNode;
   /** 通过配置设置按钮组 */
-  btns?: (Pick<ButtonProps, 'color' | 'children' | 'onClick' | 'disabled' | 'icon' | 'link'> & {
+  btns?: (Pick<
+    ButtonPropsWithHTMLButton,
+    'color' | 'children' | 'onClick' | 'disabled' | 'icon'
+  > & {
     text: string;
   })[];
   /** 内容区域class */
@@ -67,5 +74,12 @@ interface DialogProps extends Omit<ModalBaseProps, 'children' | 'onClose'> {
   headerClassName?: string;
   /** 脚部区域class */
   footerClassName?: string;
+
+  /** 提示输入框模式, 通过onClose第二个参数接收值 */
+  prompt?: boolean;
+  /** 提示输入框的默认内容 */
+  promptDefaultValue?: string;
+  /** 透传给prompt输入框的props，与Input组件一致 */
+  promptInputProps?: InputProps;
 }
 ```

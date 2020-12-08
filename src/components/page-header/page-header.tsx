@@ -3,7 +3,7 @@ import { ArrowLeftOutlined } from 'm78/icon';
 import Button from 'm78/button';
 import { Divider } from 'm78/layout';
 import cls from 'classnames';
-import { useFn } from '@lxjx/hooks';
+import { useFn, useMeasure } from '@lxjx/hooks';
 import { ComponentBaseProps } from 'm78/types';
 
 interface PageHeaderProps extends ComponentBaseProps {
@@ -26,6 +26,12 @@ interface PageHeaderProps extends ComponentBaseProps {
   backIcon?: React.ReactElement | null;
   /** 点击返回时触发，如果传入，会替换默认的返回行为 */
   onBack?: () => void;
+  /**
+   * 固定模式
+   * - 为防止固定后页面内容上移导致被遮挡，会在挂在位置生成一个同等高度得占位节点
+   * - 这种模式只适合防止再页面顶部，如果有特殊需求，可以通过className自行配置fixed样式
+   * */
+  fixed?: boolean;
 
   /** true | 开启阴影 */
   shadow?: boolean;
@@ -48,9 +54,14 @@ const PageHeader = ({
   color,
   white,
   onBack,
+  className,
+  style,
+  fixed,
 }: PageHeaderProps) => {
   // 用于在centerTitle开启时统一两侧宽度
   const [sideW, setSideW] = useState<number | undefined>();
+
+  const [calcRef, { height }] = useMeasure<HTMLDivElement>();
 
   const leadingEl = useRef<HTMLDivElement>(null!);
   const actionEl = useRef<HTMLDivElement>(null!);
@@ -73,42 +84,47 @@ const PageHeader = ({
   });
 
   return (
-    <div
-      className={cls('m78-page-header', {
-        __center: centerTitle,
-        __shadow: shadow,
-        __border: border,
-        __color: color,
-        __white: white,
-      })}
-      style={{ backgroundColor: typeof color === 'string' ? color : undefined }}
-    >
-      <div className="m78-page-header_bar">
-        <div ref={leadingEl} className="m78-page-header_leading" style={{ width: sideW }}>
-          {backIcon !== null && (
-            <Button icon className="m78-page-header_back">
-              {backIcon ? (
-                React.cloneElement(backIcon, { onClick: backHandle })
-              ) : (
-                <ArrowLeftOutlined title="返回" onClick={backHandle} />
-              )}
-            </Button>
-          )}
-          {leading}
-          {(title || desc) && !centerTitle && (
-            <Divider height={18} vertical color={white ? 'rgba(255,255,255,0.2)' : undefined} />
-          )}
+    <>
+      {fixed && <div style={{ height }} />}
+      <div
+        className={cls('m78-page-header', className, {
+          __center: centerTitle,
+          __shadow: shadow,
+          __border: border,
+          __color: color,
+          __white: white,
+          __fixed: fixed,
+        })}
+        style={{ ...style, backgroundColor: typeof color === 'string' ? color : undefined }}
+        ref={calcRef}
+      >
+        <div className="m78-page-header_bar">
+          <div ref={leadingEl} className="m78-page-header_leading" style={{ width: sideW }}>
+            {backIcon !== null && (
+              <Button icon className="m78-page-header_back">
+                {backIcon ? (
+                  React.cloneElement(backIcon, { onClick: backHandle })
+                ) : (
+                  <ArrowLeftOutlined title="返回" onClick={backHandle} />
+                )}
+              </Button>
+            )}
+            {leading}
+            {(title || desc) && backIcon !== null && !centerTitle && (
+              <Divider height={18} vertical color={white ? 'rgba(255,255,255,0.2)' : undefined} />
+            )}
+          </div>
+          <div className="m78-page-header_main">
+            {title && <span className="m78-page-header_title">{title}</span>}
+            <span className="m78-page-header_desc">{desc}</span>
+          </div>
+          <div ref={actionEl} className="m78-page-header_actions" style={{ width: sideW }}>
+            {actions}
+          </div>
         </div>
-        <div className="m78-page-header_main">
-          {title && <span className="m78-page-header_title">{title}</span>}
-          <span className="m78-page-header_desc">{desc}</span>
-        </div>
-        <div ref={actionEl} className="m78-page-header_actions" style={{ width: sideW }}>
-          {actions}
-        </div>
+        {bottom && <div className="m78-page-header_bottom">{bottom}</div>}
       </div>
-      {bottom && <div className="m78-page-header_bottom">{bottom}</div>}
-    </div>
+    </>
   );
 };
 

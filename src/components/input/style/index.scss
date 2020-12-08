@@ -198,7 +198,11 @@ $unitSpace: 8px;
     }
 
     &.__underline {
-      border-bottom-color: $color !important;
+      border-bottom-color: $b-border !important;
+
+      &:focus-within {
+        border-bottom-color: $color !important;
+      }
 
       &.__info {
         border-bottom-color: $color-info !important;
