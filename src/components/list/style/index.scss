@@ -104,8 +104,8 @@
 
     .m78-list_foot {
       margin: 0;
-      min-height: 26px;
-      padding: 4px 0;
+      min-height: 20px;
+      padding: 2px 0;
       line-height: 1.2;
     }
 
@@ -117,11 +117,13 @@
     &:not(.__inline) {
       max-width: $sm;
 
+      // 调整横向模式下提示文本和页脚的左边距，多出2px使视觉上更好看
+
       .m78-list_extra {
-        padding-left: calc(6em + 12px);
+        padding-left: calc(6em + 18px);
       }
       .m78-list_main-footer {
-        padding-left: calc(6em + 24px);
+        padding-left: calc(5em + 26px);
       }
     }
     .m78-ellipsis_shadow {
@@ -130,6 +132,10 @@
 
     .m78-list_right {
       display: none;
+    }
+
+    .m78-list_extra {
+      font-size: 13px;
     }
 
     & .m78-list_extra.__gray {
@@ -161,7 +167,7 @@
         padding-left: 0;
       }
       .m78-list_main-footer {
-        padding-left: 16px;
+        padding-left: 0;
       }
     }
   }
@@ -409,8 +415,8 @@
 
   &_sub-title {
     position: relative;
-    padding: 20px 16px;
-    margin: 0;
+    padding: 16px 0 12px;
+    margin: 0 16px 8px;
     font-size: 16px;
     font-weight: 600;
     color: $b-primary;
@@ -418,11 +424,13 @@
   }
 
   &_main-footer {
-    padding: 16px;
     line-height: 1.5;
     font-size: $fs-14;
     color: $b-second;
     border-top: 1px dashed $b-border;
+    margin: 16px;
+    padding-top: 16px;
+    padding-bottom: 16px;
   }
 
   &_require {

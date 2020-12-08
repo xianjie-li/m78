@@ -1,6 +1,6 @@
 import { PopperPropsCustom } from 'm78/popper';
 import React from 'react';
-import { isArray, getFirstTruthyOrZero } from '@lxjx/utils';
+import { isArray, getFirstTruthyOrZero, isTruthyOrZero } from '@lxjx/utils';
 import cls from 'classnames';
 import { CheckOutlined, CloseCircleOutlined } from 'm78/icon';
 import { ListChildComponentProps } from 'react-window';
@@ -44,16 +44,21 @@ export function filterOptionsHandler(
   });
 }
 
+/** 传入值是真值或0时，返回其组成的数组，否则返回一个空数组 */
+const truthyGArray = (arg: any) => (isTruthyOrZero(arg) ? [arg] : []);
+
 /** 处理传入的FormLike参数 */
 export function getUseCheckConf(props: SelectProps<any>) {
   const conf: any = {};
 
   if ('value' in props) {
-    conf.value = isArray(props.value) ? props.value : [props.value];
+    conf.value = isArray(props.value) ? props.value : truthyGArray(props.value);
   }
 
   if ('defaultValue' in props) {
-    conf.defaultValue = isArray(props.defaultValue) ? props.defaultValue : [props.defaultValue];
+    conf.defaultValue = isArray(props.defaultValue)
+      ? props.defaultValue
+      : truthyGArray(props.defaultValue);
   }
 
   return conf;

@@ -1,5 +1,11 @@
 @import '~@lxjx/sass-base/main';
 
+:global {
+  ::placeholder {
+    color: red;
+  }
+}
+
 .nestBox {
   padding: 16px;
   border: 1px solid $b-second;
