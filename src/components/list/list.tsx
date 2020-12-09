@@ -63,6 +63,7 @@ const Item: React.FC<ListItemProps> = ({
   descEllipsis = 3,
   className,
   style,
+  innerRef,
   ...props
 }) => {
   const { form: isForm, column } = useContext(Context);
@@ -79,6 +80,7 @@ const Item: React.FC<ListItemProps> = ({
         'm78-effect': hasEffect,
       })}
       style={{ ...itemStyle, ...style }}
+      ref={innerRef}
       {...props}
     >
       <div className={cls('m78-list_left', leftAlign && `__${leftAlign}`)}>{left}</div>

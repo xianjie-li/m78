@@ -40,6 +40,7 @@ const Item: React.FC<FormItemProps> = props => {
     valid: _valid = true,
     dependencies,
     required,
+    innerRef,
     ...otherProps
   } = props;
 
@@ -90,6 +91,7 @@ const Item: React.FC<FormItemProps> = props => {
         required={isRequired}
         style={_style}
         className={cls(className, '__layout')}
+        innerRef={innerRef}
       >
         {children}
       </List.Item>
@@ -144,7 +146,12 @@ const Item: React.FC<FormItemProps> = props => {
 
         if (noStyle) {
           return (
-            <div id={selector} className={cls('m78-form_item', className)} style={_style}>
+            <div
+              id={selector}
+              className={cls('m78-form_item', className)}
+              style={_style}
+              ref={innerRef}
+            >
               {child}
             </div>
           );
@@ -162,6 +169,7 @@ const Item: React.FC<FormItemProps> = props => {
             className={className}
             footLeft={errorString}
             status={status}
+            innerRef={innerRef}
           >
             {child}
           </List.Item>

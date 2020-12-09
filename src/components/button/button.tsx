@@ -77,6 +77,7 @@ function Button(btnProps: ButtonPropsWithHTMLLink | ButtonPropsWithHTMLButton) {
     text,
     href,
     shadow = true,
+    innerRef,
     ...props
   } = btnProps as ButtonPropsWithHTMLLink & ButtonPropsWithHTMLButton;
 
@@ -107,6 +108,7 @@ function Button(btnProps: ButtonPropsWithHTMLLink | ButtonPropsWithHTMLButton) {
       ...props,
       className: classNames,
       disabled: !!disabled || !!loading,
+      ref: innerRef,
     },
     <>
       <Spin

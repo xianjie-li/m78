@@ -1,29 +1,83 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
-import Tab, { TabItem } from 'm78/tab';
-import sty from '@/docs/Navigation/tab/sty.module.scss';
-import Select from 'm78/select';
+import Form, { Item } from 'm78/form';
+import Input from 'm78/input';
+import Button from 'm78/button';
+import { DragOutlined, DeleteOutlined } from 'm78/icon';
+import DND, { DNDContext } from 'm78/dnd';
+import classNames from 'classnames';
+import { isTruthyOrZero } from '@lxjx/utils';
 
 const Play = () => {
   return (
     <div>
-      <Select
-        placeholder="请输入内容"
-        options={[
-          {
-            value: '选项1',
-          },
-          {
-            value: '选项2',
-          },
-          {
-            value: '选项3',
-          },
-          {
-            value: '选项4',
-          },
-        ]}
-      />
+      <Form
+        onFinish={e => {
+          // eslint-disable-next-line no-alert
+          alert(JSON.stringify(e, null, 4));
+        }}
+      >
+        <Form.Item label="你的名字" name="name" required>
+          <Input placeholder="输入名字" />
+        </Form.Item>
+        <Item label="家庭关系" name="friends" required>
+          <Form.List name="friends">
+            {(fields, operations) => (
+              <DNDContext
+                onAccept={e => {
+                  const target = e.target?.data;
+                  const source = e.source?.data;
+
+                  if (isTruthyOrZero(target) && isTruthyOrZero(source)) {
+                    console.log(target, source);
+                    operations.move(source, target);
+                  }
+                }}
+              >
+                <div style={{ width: '100%' }}>
+                  {fields.map((filed, index) => (
+                    <DND
+                      data={index}
+                      key={filed.key}
+                      dragFeedback={<span className="fs-24">🚀</span>}
+                    >
+                      {({ innerRef, handleRef, status }) => (
+                        <Form.Item
+                          innerRef={innerRef}
+                          className={classNames('m78-dnd-box', {
+                            // 禁用、拖动到中间的状态
+                            __active: status.dragOver,
+                            __disabled: status.dragging,
+                          })}
+                        >
+                          <Form.Item name={[filed.name, 'name']} required>
+                            <Input placeholder="姓名" />
+                          </Form.Item>
+                          <Form.Item name={[filed.name, 'age']} required>
+                            <Input placeholder="年龄" />
+                          </Form.Item>
+                          <Button icon className="ml-16" onClick={() => operations.remove(index)}>
+                            <DeleteOutlined />
+                          </Button>
+                          <Button innerRef={handleRef} icon>
+                            <DragOutlined />
+                          </Button>
+                        </Form.Item>
+                      )}
+                    </DND>
+                  ))}
+                  <Button onClick={() => operations.add()}>添加</Button>
+                </div>
+              </DNDContext>
+            )}
+          </Form.List>
+        </Item>
+        <Form.Footer>
+          <Button type="submit" color="blue">
+            提交
+          </Button>
+        </Form.Footer>
+      </Form>
     </div>
   );
 };

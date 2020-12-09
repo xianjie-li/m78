@@ -2,6 +2,7 @@ import React from 'react';
 import Form, { Item } from 'm78/form';
 import Input from 'm78/input';
 import Button from 'm78/button';
+import { DeleteOutlined } from 'm78/icon';
 
 const List = () => (
   <Form
@@ -25,8 +26,8 @@ const List = () => (
                 <Form.Item name={[filed.name, 'age']} required>
                   <Input placeholder="年龄" />
                 </Form.Item>
-                <Button className="ml-16" onClick={() => operations.remove(filed.name)}>
-                  删除
+                <Button icon className="ml-16" onClick={() => operations.remove(index)}>
+                  <DeleteOutlined />
                 </Button>
               </Form.Item>
             ))}

@@ -37,6 +37,8 @@ export interface ButtonProps {
   shadow?: boolean;
   /** 传入href时，会渲染为a链接 */
   // href?: string;
+  /** 指向内部button的ref */
+  innerRef?: React.Ref<HTMLButtonElement>;
 }
 
 /** 剔除内部占用属性的原生按钮props */
