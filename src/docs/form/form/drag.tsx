@@ -35,11 +35,7 @@ const Drag = () => {
               >
                 <div style={{ width: '100%' }}>
                   {fields.map((filed, index) => (
-                    <DND
-                      data={index}
-                      key={filed.key}
-                      dragFeedback={<span className="fs-24">🚀</span>}
-                    >
+                    <DND data={index} key={filed.key}>
                       {({ innerRef, handleRef, status }) => (
                         <Form.Item
                           innerRef={innerRef}

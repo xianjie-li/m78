@@ -29,9 +29,9 @@ group:
 
 ## 动态表单 + 拖动排序
 
-通过`List`组件对一组列表值进行管理
+为上一个例子添加拖拽功能
 
-<code src="./list.tsx" />
+<code src="./drag.tsx" />
 
 ## 联动
 

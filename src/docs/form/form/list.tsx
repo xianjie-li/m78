@@ -18,7 +18,7 @@ const List = () => (
       <Form.List name="friends">
         {(fields, operations) => (
           <div style={{ width: '100%' }}>
-            {fields.map(filed => (
+            {fields.map((filed, index) => (
               <Form.Item key={filed.key}>
                 <Form.Item name={[filed.name, 'name']} required>
                   <Input placeholder="姓名" />
