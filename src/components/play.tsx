@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 
 import Form, { Item } from 'm78/form';
 import Input from 'm78/input';

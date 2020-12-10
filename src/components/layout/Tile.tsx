@@ -1,27 +1,33 @@
 import React from 'react';
-import { Size, SizeEnum } from 'm78/types';
+import { Row, FlexWrapProps } from 'm78/layout';
+import cls from 'classnames';
 
 /**
  * 传入onClick时, 会附加点击反馈效果
  * */
 interface TileProps extends Omit<React.PropsWithoutRef<JSX.IntrinsicElements['div']>, 'title'> {
   /** 主要内容 */
-  title: React.ReactNode;
+  title?: React.ReactNode;
   /** 次要内容 */
-  subTitle: React.ReactNode;
+  desc?: React.ReactNode;
   /** 前导内容 */
-  leading: React.ReactNode;
+  leading?: React.ReactNode;
   /** 尾随内容 */
-  trailing: React.ReactNode;
-  /** 布局的空白区域尺寸 */
-  spaceSize?: SizeEnum | Size;
+  trailing?: React.ReactNode;
+  /** 纵轴的对齐方式 */
+  crossAlign?: FlexWrapProps['crossAlign'];
 }
 
-const Tile = (props: TileProps) => {
+const Tile = ({ className, title, desc, leading, trailing, crossAlign, ...ppp }: TileProps) => {
   return (
-    <div>
-      <div>123</div>
-    </div>
+    <Row {...ppp} className={cls('m78-tile', className)} crossAlign={crossAlign}>
+      <div className="m78-tile_leading">{leading}</div>
+      <div className="m78-tile_main">
+        <div>{title}</div>
+        <div>{desc}</div>
+      </div>
+      <div className="m78-tile_trailing">{trailing}</div>
+    </Row>
   );
 };
 

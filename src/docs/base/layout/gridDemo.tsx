@@ -25,43 +25,57 @@ const GridDemo = () => {
         <Center>
           <span className="tc">
             <QqOutlined />
-            <div className="fs-14 color-second">QQ</div>
+            <div className="fs-14 color-second" style={{ color: '#ed1f24' }}>
+              QQ
+            </div>
           </span>
         </Center>
         <Center>
           <span className="tc">
             <WechatOutlined />
-            <div className="fs-14 color-second">Wechat</div>
+            <div className="fs-14 color-second" style={{ color: '#03d669' }}>
+              Wechat
+            </div>
           </span>
         </Center>
         <Center>
           <span className="tc">
             <TwitterOutlined />
-            <div className="fs-14 color-second">Twitter</div>
+            <div className="fs-14 color-second" style={{ color: '#1da1f2' }}>
+              Twitter
+            </div>
           </span>
         </Center>
         <Center>
           <span className="tc">
             <AlipayCircleOutlined />
-            <div className="fs-14 color-second">Alipay</div>
+            <div className="fs-14 color-second" style={{ color: '#1476fe' }}>
+              Alipay
+            </div>
           </span>
         </Center>
         <Center>
           <span className="tc">
             <TaobaoCircleOutlined />
-            <div className="fs-14 color-second">Taobao</div>
+            <div className="fs-14 color-second" style={{ color: '#ff4900' }}>
+              Taobao
+            </div>
           </span>
         </Center>
         <Center>
           <span className="tc">
             <ZhihuOutlined />
-            <div className="fs-14 color-second">Zhihu</div>
+            <div className="fs-14 color-second" style={{ color: '#1992f5' }}>
+              Zhihu
+            </div>
           </span>
         </Center>
         <Center>
           <span className="tc">
             <InstagramOutlined />
-            <div className="fs-14 color-second">Instagram</div>
+            <div className="fs-14 color-second" style={{ color: '#694bc8' }}>
+              Instagram
+            </div>
           </span>
         </Center>
       </Grid>

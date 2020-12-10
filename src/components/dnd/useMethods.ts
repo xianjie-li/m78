@@ -203,7 +203,7 @@ export function useMethods(share: Share) {
 
     if (tap) return;
 
-    if (isIgnoreEl(event, ignoreElFilter)) {
+    if (first && isIgnoreEl(event, ignoreElFilter)) {
       cancel?.();
       return;
     }

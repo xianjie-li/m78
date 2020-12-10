@@ -5,9 +5,13 @@ export interface FrConfig {
   emptyNode?: React.ReactElement;
   /** Picture组件加载图片错误时的默认占位图 */
   pictureErrorImg?: string;
+  /** ['#app', '#root'] | modal生效时，需要blur的元素选择器 */
+  modalBlurEls?: string[];
 }
 
-const context = React.createContext<FrConfig>({});
+const context = React.createContext<FrConfig>({
+  modalBlurEls: ['#app', '#root'],
+});
 
 function useConfig() {
   return useContext(context);

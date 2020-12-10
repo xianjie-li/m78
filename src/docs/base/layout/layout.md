@@ -10,7 +10,7 @@ group:
 
 声明式的布局能提供很大的方便，但是传统的 12 列或 24 列网格局限性又太大，不适用于定制化很高的前端页面。
 
-所以，参考 Flutter 提供了几个比较基础的 flex base 布局组件，以及部分功能性布局组件, 用于完成行、列、对齐、网格等常见的布局场景。
+所以，提供类似 Flutter 的 flex base 布局组件，以及部分功能性布局组件, 用于完成行、列、对齐、网格等常见的布局场景。
 
 ## Flexible
 
@@ -21,6 +21,12 @@ group:
 ## 工具类
 
 内置了很多常用的工具类, 请查收 [util-class.scss](https://github.com/Iixianjie/sass-stater/blob/master/base/util-class.scss)
+
+## Tile
+
+一个非常常用的布局组件，包含左侧、右侧、内容区、描述区四个位置，可用于很多常见的布局场景
+
+<code src="./tileDemo.tsx" />
 
 ## Grid
 
@@ -155,14 +161,10 @@ interface SpacerProps {
 **`Center`**
 
 ```tsx | pure
-interface DividerProps extends ComponentBaseProps {
-  /** false | 设置为垂直分割线 */
-  vertical?: boolean;
-  /** 100%(横向) / 0.5(纵向) | 分割线尺寸 */
-  width?: number;
-  /** 0.5(横向) / 1.2em(纵向) | 分割线尺寸 */
-  height?: number;
-  /** 颜色 */
-  color?: string;
+interface CenterProps extends ComponentBaseProps {
+  /** false | 为true时，将尺寸固定到与父元素一致(需要保证父元素position不是static), 为false时，需要通过className或style执行设置尺寸 */
+  attach?: boolean;
+  /** 需要居中的单个子元素 */
+  children?: React.ReactElement | string;
 }
 ```
