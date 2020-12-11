@@ -1566,12 +1566,12 @@
   dependencies:
     "@babel/runtime" "^7.5.5"
 
-"@lxjx/hooks@^1.15.0":
-  version "1.15.0"
-  resolved "https://registry.npm.taobao.org/@lxjx/hooks/download/@lxjx/hooks-1.15.0.tgz#29c747f11b084eac853a7177afc992b34a0a2732"
-  integrity sha1-KcdH8RsITqyFOnF3r8mSs0oKJzI=
+"@lxjx/hooks@^1.16.0":
+  version "1.16.0"
+  resolved "https://registry.npmjs.org/@lxjx/hooks/-/hooks-1.16.0.tgz#aad7f61075166f3bce200a52184f389ae74cd7a9"
+  integrity sha512-WPtkUX7yLk8ZWwFN8Tzg/RBurX1GshuwNwXMwrfoX9nAzDoPMAooNTLJQ0DHQ0jBWl04eF8M9IMZmMiUKpn9Lw==
   dependencies:
-    "@lxjx/utils" "^1.7.1"
+    "@lxjx/utils" "^1.11.0"
     "@types/lodash" "^4.14.149"
     "@types/react" "^16.9.23"
     "@types/react-dom" "^16.9.5"
@@ -1620,20 +1620,20 @@
     "@types/prop-types" "^15.7.3"
     prop-types "^15.7.2"
 
-"@lxjx/react-transition-spring@^1.2.1":
-  version "1.2.1"
-  resolved "https://registry.npm.taobao.org/@lxjx/react-transition-spring/download/@lxjx/react-transition-spring-1.2.1.tgz#e9eab3b1e45433732f0f76394be1684d6b4868bf"
-  integrity sha1-6eqzseRUM3MvD3Y5S+FoTWtIaL8=
+"@lxjx/react-transition-spring@^1.2.2":
+  version "1.2.2"
+  resolved "https://registry.npm.taobao.org/@lxjx/react-transition-spring/download/@lxjx/react-transition-spring-1.2.2.tgz#3821dc9a9df47cf3abb3d3b8154ca6d50d156d49"
+  integrity sha1-OCHcmp30fPOrs9O4FUym1Q0VbUk=
   dependencies:
     "@babel/runtime" "^7.7.2"
     "@lxjx/hooks" "^1.4.0"
     "@types/prop-types" "^15.7.3"
     react-spring "^9.0.0-rc.3"
 
-"@lxjx/sass-base@^1.4.0":
-  version "1.4.0"
-  resolved "https://registry.npmjs.org/@lxjx/sass-base/-/sass-base-1.4.0.tgz#3f48fc63e2bf9771d46c4fc98678351bd3012dd7"
-  integrity sha512-B0E5ZASoPjr0OTWir/Dcxx3N85Fp4vmjgbGtcPLT6W9mYvHbS1PVy5GhVj0tRa+PPovJ10yKJwDyNS5Sm9Mang==
+"@lxjx/sass-base@^1.5.1":
+  version "1.5.1"
+  resolved "https://registry.npmjs.org/@lxjx/sass-base/-/sass-base-1.5.1.tgz#45bd45743355f7633d78da370a5e78c3b3f7b517"
+  integrity sha512-OfH6QGDr3ZmfE48XgxfC9TIuIyqjU7KdMpqF9b6oT58pO59nhZZqkEz/2e16Yh9r57hBSTJ/DtySGdscJ8MraQ==
   dependencies:
     "@ant-design/colors" "^3.2.2"
 
@@ -1650,15 +1650,6 @@
   version "1.11.0"
   resolved "https://registry.npm.taobao.org/@lxjx/utils/download/@lxjx/utils-1.11.0.tgz#18a9bfdd5ebd95fbe0a5c30bf6ab9d5fea0c8d9c"
   integrity sha1-GKm/3V69lfvgpcML9qudX+oMjZw=
-  dependencies:
-    "@babel/runtime" "^7.7.6"
-    "@types/node" "^13.11.0"
-    uuid "^7.0.2"
-
-"@lxjx/utils@^1.7.1":
-  version "1.7.1"
-  resolved "https://registry.npm.taobao.org/@lxjx/utils/download/@lxjx/utils-1.7.1.tgz#44b721ff540e3c813f3c527b7e33940eaa66eba1"
-  integrity sha1-RLch/1QOPIE/PFJ7fjOUDqpm66E=
   dependencies:
     "@babel/runtime" "^7.7.6"
     "@types/node" "^13.11.0"

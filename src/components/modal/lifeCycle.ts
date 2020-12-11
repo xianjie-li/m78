@@ -13,7 +13,7 @@ export function useLifeCycle(share: Share, methods: ReturnType<typeof useMethods
   const [width, height] = modalSize;
 
   // 滚动锁定
-  useLockBodyScroll(share.lockScroll && share.show);
+  const lock = useLockBodyScroll(share.lockScroll && share.show);
 
   // 无遮罩时，通过ClickAway来触发关闭，需要延迟一定的时间，因为用户设置的Modal开关可能会与ClickAway区域重叠
   useClickAway(share.contRef, () => {
