@@ -55,4 +55,6 @@ export interface FormItemProps extends ComponentBaseProps, Omit<FieldProps, 'chi
     valid?: boolean | ((namePath: NamePath, form: FormInstance) => boolean);
     /** true | 是否可见，不影响组件状态 */
     visible?: boolean | ((namePath: NamePath, form: FormInstance) => boolean);
+    /** 指向内部包裹dom的ref */
+    innerRef?: React.Ref<HTMLDivElement>;
 }

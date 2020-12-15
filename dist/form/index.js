@@ -159,7 +159,8 @@ var Item = function Item(props) {
       _valid = _props$valid === void 0 ? true : _props$valid,
       dependencies = props.dependencies,
       required = props.required,
-      otherProps = _objectWithoutProperties(props, ["children", "name", "style", "className", "label", "extra", "desc", "disabled", "noStyle", "visible", "valid", "dependencies", "required"]);
+      innerRef = props.innerRef,
+      otherProps = _objectWithoutProperties(props, ["children", "name", "style", "className", "label", "extra", "desc", "disabled", "noStyle", "visible", "valid", "dependencies", "required", "innerRef"]);
 
   var _getFlatRules = getFlatRules(props, fullRules),
       _getFlatRules2 = _slicedToArray(_getFlatRules, 2),
@@ -208,7 +209,8 @@ var Item = function Item(props) {
       disabled: isDisabled,
       required: isRequired,
       style: _style,
-      className: cls(className, '__layout')
+      className: cls(className, '__layout'),
+      innerRef: innerRef
     }, children);
   }
   /** 根据render prop参数渲染children */
@@ -261,7 +263,8 @@ var Item = function Item(props) {
       return /*#__PURE__*/React.createElement("div", {
         id: selector,
         className: cls('m78-form_item', className),
-        style: _style
+        style: _style,
+        ref: innerRef
       }, child);
     }
 
@@ -275,7 +278,8 @@ var Item = function Item(props) {
       style: _style,
       className: className,
       footLeft: errorString,
-      status: status
+      status: status,
+      innerRef: innerRef
     }, child);
   });
 };

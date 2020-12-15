@@ -102,7 +102,8 @@ function Button(btnProps) {
       href = _ref.href,
       _ref$shadow = _ref.shadow,
       shadow = _ref$shadow === void 0 ? true : _ref$shadow,
-      props = _objectWithoutProperties(_ref, ["size", "color", "circle", "outline", "block", "icon", "disabled", "loading", "md", "win", "children", "className", "text", "href", "shadow"]);
+      innerRef = _ref.innerRef,
+      props = _objectWithoutProperties(_ref, ["size", "color", "circle", "outline", "block", "icon", "disabled", "loading", "md", "win", "children", "className", "text", "href", "shadow", "innerRef"]);
 
   var classNames = cls(className, 'm78-btn', 'm78-effect', (_cls = {}, _defineProperty(_cls, "__".concat(color), color), _defineProperty(_cls, "__".concat(size), size), _defineProperty(_cls, "__circle", circle), _defineProperty(_cls, "__outline", outline), _defineProperty(_cls, "__block", block), _defineProperty(_cls, "__text", text), _defineProperty(_cls, "__icon", icon), _defineProperty(_cls, "__md", md), _defineProperty(_cls, "__win", win), _defineProperty(_cls, "__light", !!color && !text && !icon), _defineProperty(_cls, "__shadow", shadow), _defineProperty(_cls, "__disabled", disabled || loading), _cls));
   var newChildren = useMemo(function () {
@@ -115,7 +116,8 @@ function Button(btnProps) {
     href: href
   }, props), {}, {
     className: classNames,
-    disabled: !!disabled || !!loading
+    disabled: !!disabled || !!loading,
+    ref: innerRef
   }), /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Spin, {
     style: {
       fontSize: size ? sizeMap[size] : 10,

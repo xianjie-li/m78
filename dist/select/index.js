@@ -9,7 +9,7 @@ import Empty from 'm78/empty';
 import Button from 'm78/button';
 import { CloseCircleOutlined, CheckOutlined, DownOutlined } from 'm78/icon';
 import { If } from 'm78/fork';
-import { getFirstTruthyOrZero, isArray, getCurrentParent } from '@lxjx/utils';
+import { getFirstTruthyOrZero, isArray, isTruthyOrZero, getCurrentParent } from '@lxjx/utils';
 import _debounce from 'lodash/debounce';
 import { VariableSizeList } from 'react-window';
 import cls from 'classnames';
@@ -46,17 +46,23 @@ function filterOptionsHandler(key, options, checked, hideSelected, isChecked, va
     return option.label.includes(key);
   });
 }
+/** 传入值是真值或0时，返回其组成的数组，否则返回一个空数组 */
+
+var truthyGArray = function truthyGArray(arg) {
+  return isTruthyOrZero(arg) ? [arg] : [];
+};
 /** 处理传入的FormLike参数 */
+
 
 function getUseCheckConf(props) {
   var conf = {};
 
   if ('value' in props) {
-    conf.value = isArray(props.value) ? props.value : [props.value];
+    conf.value = isArray(props.value) ? props.value : truthyGArray(props.value);
   }
 
   if ('defaultValue' in props) {
-    conf.defaultValue = isArray(props.defaultValue) ? props.defaultValue : [props.defaultValue];
+    conf.defaultValue = isArray(props.defaultValue) ? props.defaultValue : truthyGArray(props.defaultValue);
   }
 
   return conf;

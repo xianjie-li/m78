@@ -62,7 +62,7 @@
   top: 0;
 }
 
-.m78-divider2 {
+.m78-divider {
   background-color: rgba(0, 0, 0, 0.15);
   height: 0.5px;
   width: 100%;
@@ -91,4 +91,21 @@
 
 .m78-self-end {
   align-self: flex-end;
+}
+
+.m78-tile {
+  &_leading {
+    flex: 0 0 auto;
+    margin-right: 10px;
+  }
+
+  &_main {
+    flex: 1;
+    overflow: hidden;
+  }
+
+  &_trailing {
+    flex: 0 0 auto;
+    margin-left: 10px;
+  }
 }

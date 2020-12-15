@@ -64,7 +64,9 @@ function createUseAuth(auth) {
         });
       });
     });
-    useEffectEqual(authHandler, [keys, config === null || config === void 0 ? void 0 : config.extra]);
+    useEffectEqual(function () {
+      authHandler();
+    }, [keys, config === null || config === void 0 ? void 0 : config.extra]);
     useEffect(function () {
       return auth.subscribe(authHandler);
     }, []);

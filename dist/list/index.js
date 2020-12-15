@@ -105,7 +105,8 @@ var Item = function Item(_ref2) {
       descEllipsis = _ref2$descEllipsis === void 0 ? 3 : _ref2$descEllipsis,
       className = _ref2.className,
       style = _ref2.style,
-      props = _objectWithoutProperties(_ref2, ["left", "leftAlign", "title", "desc", "extra", "footLeft", "footRight", "arrow", "effect", "icon", "disabled", "status", "children", "required", "titleEllipsis", "descEllipsis", "className", "style"]);
+      innerRef = _ref2.innerRef,
+      props = _objectWithoutProperties(_ref2, ["left", "leftAlign", "title", "desc", "extra", "footLeft", "footRight", "arrow", "effect", "icon", "disabled", "status", "children", "required", "titleEllipsis", "descEllipsis", "className", "style", "innerRef"]);
 
   var _useContext = useContext(Context),
       isForm = _useContext.form,
@@ -123,7 +124,8 @@ var Item = function Item(_ref2) {
       __disabled: disabled,
       'm78-effect': hasEffect
     }),
-    style: _objectSpread(_objectSpread({}, itemStyle), style)
+    style: _objectSpread(_objectSpread({}, itemStyle), style),
+    ref: innerRef
   }, props), /*#__PURE__*/React.createElement("div", {
     className: cls('m78-list_left', leftAlign && "__".concat(leftAlign))
   }, left), /*#__PURE__*/React.createElement("div", {

@@ -3,7 +3,7 @@ import _objectSpread from '@babel/runtime/helpers/objectSpread2';
 import _extends from '@babel/runtime/helpers/extends';
 import _slicedToArray from '@babel/runtime/helpers/slicedToArray';
 import _objectWithoutProperties from '@babel/runtime/helpers/objectWithoutProperties';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import 'm78/base';
 import Button from 'm78/button';
 import Modal from 'm78/modal';
@@ -14,6 +14,7 @@ import Spin from 'm78/spin';
 import { useFormState } from '@lxjx/hooks';
 import cls from 'classnames';
 import createRenderApi from '@lxjx/react-render-api';
+import Input from 'm78/input';
 
 var DialogBase = function DialogBase(props) {
   var flexBtn = props.flexBtn,
@@ -43,7 +44,11 @@ var DialogBase = function DialogBase(props) {
       clickAwayClosable = props.clickAwayClosable,
       _props$confirmClose = props.confirmClose,
       confirmClose = _props$confirmClose === void 0 ? true : _props$confirmClose,
-      other = _objectWithoutProperties(props, ["flexBtn", "maxWidth", "footer", "header", "title", "close", "confirm", "closeIcon", "loading", "btns", "children", "status", "contentClassName", "footerClassName", "headerClassName", "className", "style", "clickAwayClosable", "confirmClose"]);
+      prompt = props.prompt,
+      promptInputProps = props.promptInputProps,
+      _props$promptDefaultV = props.promptDefaultValue,
+      promptDefaultValue = _props$promptDefaultV === void 0 ? '' : _props$promptDefaultV,
+      other = _objectWithoutProperties(props, ["flexBtn", "maxWidth", "footer", "header", "title", "close", "confirm", "closeIcon", "loading", "btns", "children", "status", "contentClassName", "footerClassName", "headerClassName", "className", "style", "clickAwayClosable", "confirmClose", "prompt", "promptInputProps", "promptDefaultValue"]);
   /** 代理defaultShow/show/onChange, 实现对应接口 */
 
 
@@ -55,13 +60,30 @@ var DialogBase = function DialogBase(props) {
       _useFormState2 = _slicedToArray(_useFormState, 2),
       show = _useFormState2[0],
       setShow = _useFormState2[1];
+  /** prompt当前输入的值 */
+
+
+  var _useState = useState(''),
+      _useState2 = _slicedToArray(_useState, 2),
+      pmtVal = _useState2[0],
+      setPmtVal = _useState2[1];
+  /** 在开启和关闭时还原prompt初始值 */
+
+
+  useEffect(function () {
+    if (show) {
+      setPmtVal(promptDefaultValue);
+    } else {
+      setPmtVal('');
+    }
+  }, [show]);
 
   function onClose() {
     var _props$onClose;
 
     var isConfirm = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
     setShow(false);
-    (_props$onClose = props.onClose) === null || _props$onClose === void 0 ? void 0 : _props$onClose.call(props, isConfirm);
+    (_props$onClose = props.onClose) === null || _props$onClose === void 0 ? void 0 : _props$onClose.call(props, isConfirm, prompt ? pmtVal : undefined);
   }
 
   function renderDefaultFooter() {
@@ -94,7 +116,18 @@ var DialogBase = function DialogBase(props) {
       className: cls('m78-dialog_title', headerClassName)
     }, header || /*#__PURE__*/React.createElement("span", null, title)), /*#__PURE__*/React.createElement("div", {
       className: cls('m78-dialog_cont', contentClassName)
-    }, children), /*#__PURE__*/React.createElement("div", {
+    }, children, prompt && /*#__PURE__*/React.createElement("div", {
+      className: "mt-8"
+    }, /*#__PURE__*/React.createElement(Input, _extends({
+      placeholder: "\u8BF7\u8F93\u5165\u5185\u5BB9",
+      autoFocus: true
+    }, promptInputProps, {
+      value: pmtVal,
+      onChange: setPmtVal,
+      onPressEnter: function onPressEnter() {
+        return onClose(true);
+      }
+    })))), /*#__PURE__*/React.createElement("div", {
       className: cls('m78-dialog_footer', footerClassName, {
         __full: flexBtn
       })
@@ -104,7 +137,7 @@ var DialogBase = function DialogBase(props) {
   var StatusIcon = statusIcons[status];
   return /*#__PURE__*/React.createElement(Modal, _extends({}, other, {
     onClose: props.onClose,
-    className: cls('m78-dialog m78-scroll-bar', className),
+    className: cls('m78-dialog m78-scroll-bar', className, prompt && '__prompt'),
     style: _objectSpread(_objectSpread({}, style), {}, {
       maxWidth: maxWidth
     }),

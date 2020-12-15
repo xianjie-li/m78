@@ -19,6 +19,12 @@ interface PageHeaderProps extends ComponentBaseProps {
     backIcon?: React.ReactElement | null;
     /** 点击返回时触发，如果传入，会替换默认的返回行为 */
     onBack?: () => void;
+    /**
+     * 固定模式
+     * - 为防止固定后页面内容上移导致被遮挡，会在挂在位置生成一个同等高度得占位节点
+     * - 这种模式只适合防止再页面顶部，如果有特殊需求，可以通过className自行配置fixed样式
+     * */
+    fixed?: boolean;
     /** true | 开启阴影 */
     shadow?: boolean;
     /** 开启边框, 优先级高于shadow */
@@ -26,5 +32,5 @@ interface PageHeaderProps extends ComponentBaseProps {
     /** 底部区域显示的内容 */
     bottom?: React.ReactNode;
 }
-declare const PageHeader: ({ leading, title, desc, centerTitle, backIcon, shadow, border, bottom, actions, color, white, onBack, }: PageHeaderProps) => JSX.Element;
+declare const PageHeader: ({ leading, title, desc, centerTitle, backIcon, shadow, border, bottom, actions, color, white, onBack, className, style, fixed, }: PageHeaderProps) => JSX.Element;
 export default PageHeader;

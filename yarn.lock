@@ -1566,12 +1566,12 @@
   dependencies:
     "@babel/runtime" "^7.5.5"
 
-"@lxjx/hooks@^1.16.0":
-  version "1.16.0"
-  resolved "https://registry.npmjs.org/@lxjx/hooks/-/hooks-1.16.0.tgz#aad7f61075166f3bce200a52184f389ae74cd7a9"
-  integrity sha512-WPtkUX7yLk8ZWwFN8Tzg/RBurX1GshuwNwXMwrfoX9nAzDoPMAooNTLJQ0DHQ0jBWl04eF8M9IMZmMiUKpn9Lw==
+"@lxjx/hooks@^1.15.0":
+  version "1.15.0"
+  resolved "https://registry.npm.taobao.org/@lxjx/hooks/download/@lxjx/hooks-1.15.0.tgz#29c747f11b084eac853a7177afc992b34a0a2732"
+  integrity sha1-KcdH8RsITqyFOnF3r8mSs0oKJzI=
   dependencies:
-    "@lxjx/utils" "^1.11.0"
+    "@lxjx/utils" "^1.7.1"
     "@types/lodash" "^4.14.149"
     "@types/react" "^16.9.23"
     "@types/react-dom" "^16.9.5"
@@ -1646,7 +1646,7 @@
     "@types/node" "^13.11.0"
     uuid "^7.0.2"
 
-"@lxjx/utils@^1.11.0":
+"@lxjx/utils@^1.11.0", "@lxjx/utils@^1.7.1":
   version "1.11.0"
   resolved "https://registry.npm.taobao.org/@lxjx/utils/download/@lxjx/utils-1.11.0.tgz#18a9bfdd5ebd95fbe0a5c30bf6ab9d5fea0c8d9c"
   integrity sha1-GKm/3V69lfvgpcML9qudX+oMjZw=

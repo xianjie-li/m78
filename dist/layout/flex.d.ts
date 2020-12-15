@@ -3,7 +3,7 @@ import { ComponentBasePropsWithAny } from 'm78/types';
 interface FlexWrapProps extends ComponentBasePropsWithAny {
     /** 'start' | 主轴对齐方式 */
     mainAlign?: 'center' | 'start' | 'end' | 'around' | 'between' | 'evenly';
-    /** 'stretch' | 交叉轴对齐方式 */
+    /** 'start' | 交叉轴对齐方式 */
     crossAlign?: 'stretch' | 'start' | 'end' | 'center';
     /** 内容 */
     children: React.ReactNode;
@@ -21,4 +21,4 @@ interface FlexProps extends ComponentBasePropsWithAny {
 declare const Column: ({ children, style, className, mainAlign, crossAlign, ...ppp }: FlexWrapProps) => JSX.Element;
 declare const Row: ({ children, style, className, mainAlign, crossAlign, ...ppp }: FlexWrapProps) => JSX.Element;
 declare const Flex: ({ flex, children, order, style, className, align, ...ppp }: FlexProps) => JSX.Element;
-export { Column, Row, Flex };
+export { Column, Row, Flex, FlexWrapProps };

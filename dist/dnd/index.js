@@ -653,7 +653,7 @@ function useMethods(share) {
     var isDrop = false;
     if (tap) return;
 
-    if (isIgnoreEl(event, ignoreElFilter)) {
+    if (first && isIgnoreEl(event, ignoreElFilter)) {
       cancel === null || cancel === void 0 ? void 0 : cancel();
       return;
     }

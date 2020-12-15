@@ -33,7 +33,9 @@ export function createUseAuth<D, V>(auth: Auth<D, V>) {
       });
     });
 
-    useEffectEqual(authHandler, [keys, config?.extra]);
+    useEffectEqual(() => {
+      authHandler();
+    }, [keys, config?.extra]);
 
     useEffect(() => auth.subscribe(authHandler), []);
 

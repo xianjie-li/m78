@@ -1,11 +1,12 @@
 import 'm78/page-header/style';
+import _objectSpread from '@babel/runtime/helpers/objectSpread2';
 import _slicedToArray from '@babel/runtime/helpers/slicedToArray';
 import React, { useState, useRef, useEffect } from 'react';
 import { ArrowLeftOutlined } from 'm78/icon';
 import Button from 'm78/button';
 import { Divider } from 'm78/layout';
 import cls from 'classnames';
-import { useFn } from '@lxjx/hooks';
+import { useMeasure, useFn } from '@lxjx/hooks';
 
 var PageHeader = function PageHeader(_ref) {
   var leading = _ref.leading,
@@ -20,13 +21,21 @@ var PageHeader = function PageHeader(_ref) {
       actions = _ref.actions,
       color = _ref.color,
       white = _ref.white,
-      onBack = _ref.onBack;
+      onBack = _ref.onBack,
+      className = _ref.className,
+      style = _ref.style,
+      fixed = _ref.fixed;
 
   // 用于在centerTitle开启时统一两侧宽度
   var _useState = useState(),
       _useState2 = _slicedToArray(_useState, 2),
       sideW = _useState2[0],
       setSideW = _useState2[1];
+
+  var _useMeasure = useMeasure(),
+      _useMeasure2 = _slicedToArray(_useMeasure, 2),
+      calcRef = _useMeasure2[0],
+      height = _useMeasure2[1].height;
 
   var leadingEl = useRef(null);
   var actionEl = useRef(null); // 计算两侧宽度
@@ -46,17 +55,23 @@ var PageHeader = function PageHeader(_ref) {
   var backHandle = useFn(function () {
     onBack ? onBack() : history.back();
   });
-  return /*#__PURE__*/React.createElement("div", {
-    className: cls('m78-page-header', {
+  return /*#__PURE__*/React.createElement(React.Fragment, null, fixed && /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: height
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    className: cls('m78-page-header', className, {
       __center: centerTitle,
       __shadow: shadow,
       __border: border,
       __color: color,
-      __white: white
+      __white: white,
+      __fixed: fixed
     }),
-    style: {
+    style: _objectSpread(_objectSpread({}, style), {}, {
       backgroundColor: typeof color === 'string' ? color : undefined
-    }
+    }),
+    ref: calcRef
   }, /*#__PURE__*/React.createElement("div", {
     className: "m78-page-header_bar"
   }, /*#__PURE__*/React.createElement("div", {
@@ -73,7 +88,7 @@ var PageHeader = function PageHeader(_ref) {
   }) : /*#__PURE__*/React.createElement(ArrowLeftOutlined, {
     title: "\u8FD4\u56DE",
     onClick: backHandle
-  })), leading, (title || desc) && !centerTitle && /*#__PURE__*/React.createElement(Divider, {
+  })), leading, (title || desc) && backIcon !== null && !centerTitle && /*#__PURE__*/React.createElement(Divider, {
     height: 18,
     vertical: true,
     color: white ? 'rgba(255,255,255,0.2)' : undefined
@@ -91,7 +106,7 @@ var PageHeader = function PageHeader(_ref) {
     }
   }, actions)), bottom && /*#__PURE__*/React.createElement("div", {
     className: "m78-page-header_bottom"
-  }, bottom));
+  }, bottom)));
 };
 
 export default PageHeader;

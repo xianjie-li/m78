@@ -48,6 +48,8 @@ export interface ListItemProps extends ComponentBasePropsWithAny {
     /** 2 | 3 标题和描述的最大行数 */
     titleEllipsis?: number;
     descEllipsis?: number;
+    /** 指向内部包裹dom的ref */
+    innerRef?: React.Ref<HTMLDivElement>;
 }
 export interface ListTitleType extends ComponentBasePropsWithAny {
     /** 标题内容 */

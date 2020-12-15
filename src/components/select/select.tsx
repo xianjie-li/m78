@@ -413,8 +413,6 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
       ? showMultipleString(originalChecked, multipleMaxShowLength, labelKey, valueKey)
       : placeholder;
 
-    console.log(checked);
-
     return (
       <Input
         innerRef={inpRef}

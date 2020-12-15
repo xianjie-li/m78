@@ -1,6 +1,6 @@
 {
   "name": "m78",
-  "version": "1.0.0-beta.27",
+  "version": "1.0.0-beta.28",
   "types": "./",
   "license": "MIT",
   "description": "components, hooks, utils, part of the react toolchain",
@@ -47,7 +47,7 @@
     "@lxjx/async-filed-cn-template": "^1.0.1",
     "@lxjx/auth": "^1.11.6",
     "@lxjx/click-effect": "^1.0.1",
-    "@lxjx/hooks": "^1.16.0",
+    "@lxjx/hooks": "^1.15.0",
     "@lxjx/react-render-api": "^0.5.0",
     "@lxjx/react-transition-spring": "^1.2.2",
     "@lxjx/sass-base": "^1.5.1",

@@ -31,6 +31,9 @@ export interface ButtonProps {
     win?: boolean;
     /** true | 常规状态是否显示阴影 */
     shadow?: boolean;
+    /** 传入href时，会渲染为a链接 */
+    /** 指向内部button的ref */
+    innerRef?: React.Ref<HTMLButtonElement>;
 }
 /** 剔除内部占用属性的原生按钮props */
 declare type HTMLBtnOmit = Omit<React.PropsWithoutRef<JSX.IntrinsicElements['button']>, 'color'>;
