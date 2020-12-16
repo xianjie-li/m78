@@ -1566,12 +1566,12 @@
   dependencies:
     "@babel/runtime" "^7.5.5"
 
-"@lxjx/hooks@^1.15.0":
-  version "1.15.0"
-  resolved "https://registry.npm.taobao.org/@lxjx/hooks/download/@lxjx/hooks-1.15.0.tgz#29c747f11b084eac853a7177afc992b34a0a2732"
-  integrity sha1-KcdH8RsITqyFOnF3r8mSs0oKJzI=
+"@lxjx/hooks@1.16.3", "@lxjx/hooks@^1.16.3":
+  version "1.16.3"
+  resolved "https://registry.npm.taobao.org/@lxjx/hooks/download/@lxjx/hooks-1.16.3.tgz?cache=0&sync_timestamp=1608130788734&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40lxjx%2Fhooks%2Fdownload%2F%40lxjx%2Fhooks-1.16.3.tgz#25168f881ef669460a32d49224531d67e2e9dad6"
+  integrity sha1-JRaPiB72aUYKMtSSJFMdZ+Lp2tY=
   dependencies:
-    "@lxjx/utils" "^1.7.1"
+    "@lxjx/utils" "^1.11.0"
     "@types/lodash" "^4.14.149"
     "@types/react" "^16.9.23"
     "@types/react-dom" "^16.9.5"
@@ -1583,24 +1583,6 @@
     react-use "^14.0.0"
     resize-observer-polyfill "^1.5.1"
     tslib "^1.11.1"
-
-"@lxjx/hooks@^1.4.0":
-  version "1.4.0"
-  resolved "https://registry.npm.taobao.org/@lxjx/hooks/download/@lxjx/hooks-1.4.0.tgz#2cbb99a61e7aa44610a64b06b458a6413d8bc75d"
-  integrity sha1-LLuZph56pEYQpksGtFimQT2Lx10=
-  dependencies:
-    "@lxjx/utils" "^1.3.4"
-    "@types/lodash" "^4.14.149"
-    "@types/react" "^16.9.23"
-    "@types/react-dom" "^16.9.5"
-    "@types/react-router-dom" "^5.1.3"
-    "@umijs/hooks" "^1.9.0"
-    lodash "^4.17.15"
-    lodash-es "^4.17.15"
-    query-string "^6.12.0"
-    react-router-dom "^5.1.2"
-    react-spring "^8.0.27"
-    react-use "^14.0.0"
 
 "@lxjx/preset-config@^0.1.0":
   version "0.1.0"
@@ -1620,14 +1602,13 @@
     "@types/prop-types" "^15.7.3"
     prop-types "^15.7.2"
 
-"@lxjx/react-transition-spring@^1.2.2":
-  version "1.2.2"
-  resolved "https://registry.npm.taobao.org/@lxjx/react-transition-spring/download/@lxjx/react-transition-spring-1.2.2.tgz#3821dc9a9df47cf3abb3d3b8154ca6d50d156d49"
-  integrity sha1-OCHcmp30fPOrs9O4FUym1Q0VbUk=
+"@lxjx/react-transition-spring@^1.2.5":
+  version "1.2.5"
+  resolved "https://registry.npm.taobao.org/@lxjx/react-transition-spring/download/@lxjx/react-transition-spring-1.2.5.tgz?cache=0&sync_timestamp=1608131403736&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40lxjx%2Freact-transition-spring%2Fdownload%2F%40lxjx%2Freact-transition-spring-1.2.5.tgz#26d0fb03391be2c7049183c4136f88923a8eb713"
+  integrity sha1-JtD7Azkb4scEkYPEE2+IkjqOtxM=
   dependencies:
     "@babel/runtime" "^7.7.2"
-    "@lxjx/hooks" "^1.4.0"
-    "@types/prop-types" "^15.7.3"
+    "@lxjx/hooks" "^1.16.3"
     react-spring "^9.0.0-rc.3"
 
 "@lxjx/sass-base@^1.5.1":
@@ -1637,7 +1618,7 @@
   dependencies:
     "@ant-design/colors" "^3.2.2"
 
-"@lxjx/utils@^1.1.7", "@lxjx/utils@^1.3.4", "@lxjx/utils@^1.4.5":
+"@lxjx/utils@^1.1.7", "@lxjx/utils@^1.4.5":
   version "1.4.5"
   resolved "https://registry.npm.taobao.org/@lxjx/utils/download/@lxjx/utils-1.4.5.tgz#9b7b13236891a5dfdab44be855274abe0773a9bc"
   integrity sha1-m3sTI2iRpd/atEvoVSdKvgdzqbw=
@@ -1646,7 +1627,7 @@
     "@types/node" "^13.11.0"
     uuid "^7.0.2"
 
-"@lxjx/utils@^1.11.0", "@lxjx/utils@^1.7.1":
+"@lxjx/utils@^1.11.0":
   version "1.11.0"
   resolved "https://registry.npm.taobao.org/@lxjx/utils/download/@lxjx/utils-1.11.0.tgz#18a9bfdd5ebd95fbe0a5c30bf6ab9d5fea0c8d9c"
   integrity sha1-GKm/3V69lfvgpcML9qudX+oMjZw=
@@ -2948,17 +2929,6 @@
     stylelint-declaration-block-no-ignored-properties "^2.1.0"
     stylelint-order "^3.0.0"
 
-"@umijs/hooks@^1.9.0":
-  version "1.9.3"
-  resolved "https://registry.npm.taobao.org/@umijs/hooks/download/@umijs/hooks-1.9.3.tgz#cc0de9e832714e03c1338aba17969aed2d29afd7"
-  integrity sha1-zA3p6DJxTgPBM4q6F5aa7S0pr9c=
-  dependencies:
-    "@umijs/use-request" "^1.4.3"
-    intersection-observer "^0.7.0"
-    lodash.isequal "^4.5.0"
-    resize-observer-polyfill "^1.5.1"
-    screenfull "^5.0.0"
-
 "@umijs/plugin-analytics@^0.2.2":
   version "0.2.2"
   resolved "https://registry.npm.taobao.org/@umijs/plugin-analytics/download/@umijs/plugin-analytics-0.2.2.tgz#575fd231d4327ea13413217aa1b5fc6bdd89465e"
@@ -3125,15 +3095,6 @@
     "@umijs/server" "3.2.13"
     "@umijs/utils" "3.2.13"
     webpack-chain "6.5.0"
-
-"@umijs/use-request@^1.4.3":
-  version "1.4.3"
-  resolved "https://registry.npm.taobao.org/@umijs/use-request/download/@umijs/use-request-1.4.3.tgz#bc5fadc4cb07d796eb35f09838d6a15cb12802f7"
-  integrity sha1-vF+txMsH15brNfCYONahXLEoAvc=
-  dependencies:
-    lodash.debounce "^4.0.8"
-    lodash.throttle "^4.1.1"
-    umi-request "^1.2.17"
 
 "@umijs/utils@3.2.13":
   version "3.2.13"
@@ -5737,13 +5698,6 @@ encodeurl@~1.0.2:
   resolved "https://registry.npm.taobao.org/encodeurl/download/encodeurl-1.0.2.tgz#ad3ff4c86ec2d029322f5a02c3a9a606c95b3f59"
   integrity sha1-rT/0yG7C0CkyL1oCw6mmBslbP1k=
 
-encoding@^0.1.11:
-  version "0.1.13"
-  resolved "https://registry.npm.taobao.org/encoding/download/encoding-0.1.13.tgz?cache=0&sync_timestamp=1594362883212&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fencoding%2Fdownload%2Fencoding-0.1.13.tgz#56574afdd791f54a8e9b2785c0582a2d26210fa9"
-  integrity sha1-VldK/deR9UqOmyeFwFgqLSYhD6k=
-  dependencies:
-    iconv-lite "^0.6.2"
-
 end-of-stream@^1.0.0, end-of-stream@^1.1.0:
   version "1.4.4"
   resolved "https://registry.npm.taobao.org/end-of-stream/download/end-of-stream-1.4.4.tgz#5ae64a5f45057baf3626ec14da0ca5e4b2431eb0"
@@ -7703,13 +7657,6 @@ iconv-lite@0.4.24, iconv-lite@^0.4.24:
   dependencies:
     safer-buffer ">= 2.1.2 < 3"
 
-iconv-lite@^0.6.2:
-  version "0.6.2"
-  resolved "https://registry.npm.taobao.org/iconv-lite/download/iconv-lite-0.6.2.tgz?cache=0&sync_timestamp=1594184278451&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ficonv-lite%2Fdownload%2Ficonv-lite-0.6.2.tgz#ce13d1875b0c3a674bd6a04b7f76b01b1b6ded01"
-  integrity sha1-zhPRh1sMOmdL1qBLf3awGxtt7QE=
-  dependencies:
-    safer-buffer ">= 2.1.2 < 3.0.0"
-
 icss-utils@^4.0.0, icss-utils@^4.1.1:
   version "4.1.1"
   resolved "https://registry.npm.taobao.org/icss-utils/download/icss-utils-4.1.1.tgz#21170b53789ee27447c2f47dd683081403f9a467"
@@ -7922,11 +7869,6 @@ internal-slot@^1.0.2:
     es-abstract "^1.17.0-next.1"
     has "^1.0.3"
     side-channel "^1.0.2"
-
-intersection-observer@^0.7.0:
-  version "0.7.0"
-  resolved "https://registry.npm.taobao.org/intersection-observer/download/intersection-observer-0.7.0.tgz#ee16bee978db53516ead2f0a8154b09b400bbdc9"
-  integrity sha1-7ha+6XjbU1FurS8KgVSwm0ALvck=
 
 invariant@^2.2.2, invariant@^2.2.4:
   version "2.2.4"
@@ -8258,7 +8200,7 @@ is-resolvable@^1.0.0:
   resolved "https://registry.npm.taobao.org/is-resolvable/download/is-resolvable-1.1.0.tgz#fb18f87ce1feb925169c9a407c19318a3206ed88"
   integrity sha1-+xj4fOH+uSUWnJpAfBkxijIG7Yg=
 
-is-stream@^1.0.1, is-stream@^1.1.0:
+is-stream@^1.1.0:
   version "1.1.0"
   resolved "https://registry.npm.taobao.org/is-stream/download/is-stream-1.1.0.tgz#12d4a3dd4e68e0b79ceb8dbc84173ae80d91ca44"
   integrity sha1-EtSj3U5o4Lec6428hBc66A2RykQ=
@@ -8355,14 +8297,6 @@ isobject@^3.0.0, isobject@^3.0.1:
   version "3.0.1"
   resolved "https://registry.npm.taobao.org/isobject/download/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
   integrity sha1-TkMekrEalzFjaqH5yNHMvP2reN8=
-
-isomorphic-fetch@^2.2.1:
-  version "2.2.1"
-  resolved "https://registry.npm.taobao.org/isomorphic-fetch/download/isomorphic-fetch-2.2.1.tgz#611ae1acf14f5e81f729507472819fe9733558a9"
-  integrity sha1-YRrhrPFPXoH3KVB0coGf6XM1WKk=
-  dependencies:
-    node-fetch "^1.0.1"
-    whatwg-fetch ">=0.10.0"
 
 isstream@~0.1.2:
   version "0.1.2"
@@ -9272,11 +9206,6 @@ locate-path@^5.0.0:
   dependencies:
     p-locate "^4.1.0"
 
-lodash-es@^4.17.15:
-  version "4.17.15"
-  resolved "https://registry.npm.taobao.org/lodash-es/download/lodash-es-4.17.15.tgz#21bd96839354412f23d7a10340e5eac6ee455d78"
-  integrity sha1-Ib2Wg5NUQS8j16EDQOXqxu5FXXg=
-
 lodash._reinterpolate@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npm.taobao.org/lodash._reinterpolate/download/lodash._reinterpolate-3.0.0.tgz#0ccf2d89166af03b3663c796538b75ac6e114d9d"
@@ -9287,11 +9216,6 @@ lodash.camelcase@^4.1.1:
   resolved "https://registry.npm.taobao.org/lodash.camelcase/download/lodash.camelcase-4.3.0.tgz#b28aa6288a2b9fc651035c7711f65ab6190331a6"
   integrity sha1-soqmKIorn8ZRA1x3EfZathkDMaY=
 
-lodash.debounce@^4.0.8:
-  version "4.0.8"
-  resolved "https://registry.npm.taobao.org/lodash.debounce/download/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
-  integrity sha1-gteb/zCmfEAF/9XiUVMArZyk168=
-
 lodash.defaultsdeep@^4.6.0:
   version "4.6.1"
   resolved "https://registry.npm.taobao.org/lodash.defaultsdeep/download/lodash.defaultsdeep-4.6.1.tgz#512e9bd721d272d94e3d3a63653fa17516741ca6"
@@ -9301,11 +9225,6 @@ lodash.get@^4.4.2:
   version "4.4.2"
   resolved "https://registry.npm.taobao.org/lodash.get/download/lodash.get-4.4.2.tgz#2d177f652fa31e939b4438d5341499dfa3825e99"
   integrity sha1-LRd/ZS+jHpObRDjVNBSZ36OCXpk=
-
-lodash.isequal@^4.5.0:
-  version "4.5.0"
-  resolved "https://registry.npm.taobao.org/lodash.isequal/download/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
-  integrity sha1-QVxEePK8wwEgwizhDtMib30+GOA=
 
 lodash.kebabcase@^4.0.1:
   version "4.1.1"
@@ -9341,11 +9260,6 @@ lodash.templatesettings@^4.0.0:
   integrity sha1-5IExDwSdPPbUfpEq0JMTsVTw+zM=
   dependencies:
     lodash._reinterpolate "^3.0.0"
-
-lodash.throttle@^4.1.1:
-  version "4.1.1"
-  resolved "https://registry.npm.taobao.org/lodash.throttle/download/lodash.throttle-4.1.1.tgz#c23e91b710242ac70c37f1e1cda9274cc39bf2f4"
-  integrity sha1-wj6RtxAkKscMN/HhzaknTMOb8vQ=
 
 lodash.toarray@^4.4.0:
   version "4.4.0"
@@ -10109,14 +10023,6 @@ node-emoji@^1.10.0:
   integrity sha1-iIar0l2ce7YYAqZYUj0fjSqJsto=
   dependencies:
     lodash.toarray "^4.4.0"
-
-node-fetch@^1.0.1:
-  version "1.7.3"
-  resolved "https://registry.npm.taobao.org/node-fetch/download/node-fetch-1.7.3.tgz?cache=0&sync_timestamp=1591866547755&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fnode-fetch%2Fdownload%2Fnode-fetch-1.7.3.tgz#980f6f72d85211a5347c6b2bc18c5b84c3eb47ef"
-  integrity sha1-mA9vcthSEaU0fGsrwYxbhMPrR+8=
-  dependencies:
-    encoding "^0.1.11"
-    is-stream "^1.0.1"
 
 node-gyp@^3.8.0:
   version "3.8.0"
@@ -11750,7 +11656,7 @@ prompts@^2.0.1:
     kleur "^3.0.3"
     sisteransi "^1.0.4"
 
-prop-types@^15.5.0, prop-types@^15.5.8, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@^15.5.0, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.npm.taobao.org/prop-types/download/prop-types-15.7.2.tgz?cache=0&sync_timestamp=1580303049679&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fprop-types%2Fdownload%2Fprop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha1-UsQedbjIfnK52TYOAga5ncv/psU=
@@ -11850,11 +11756,6 @@ qs@6.7.0:
   version "6.7.0"
   resolved "https://registry.npm.taobao.org/qs/download/qs-6.7.0.tgz#41dc1a015e3d581f1621776be31afb2876a9b1bc"
   integrity sha1-QdwaAV49WB8WIXdr4xr7KHapsbw=
-
-qs@^6.9.1:
-  version "6.9.4"
-  resolved "https://registry.npm.taobao.org/qs/download/qs-6.9.4.tgz#9090b290d1f91728d3c22e54843ca44aea5ab687"
-  integrity sha1-kJCykNH5FyjTwi5UhDykSupatoc=
 
 qs@~6.5.2:
   version "6.5.2"
@@ -12056,14 +11957,6 @@ react-router@5.2.0:
     react-is "^16.6.0"
     tiny-invariant "^1.0.2"
     tiny-warning "^1.0.0"
-
-react-spring@^8.0.27:
-  version "8.0.27"
-  resolved "https://registry.npm.taobao.org/react-spring/download/react-spring-8.0.27.tgz#97d4dee677f41e0b2adcb696f3839680a3aa356a"
-  integrity sha1-l9Te5nf0Hgsq3LaW84OWgKOqNWo=
-  dependencies:
-    "@babel/runtime" "^7.3.1"
-    prop-types "^15.5.8"
 
 react-spring@^9.0.0-rc.3:
   version "9.0.0-rc.3"
@@ -12829,7 +12722,7 @@ safe-regex@^2.0.1, safe-regex@^2.1.1:
   dependencies:
     regexp-tree "~0.1.1"
 
-"safer-buffer@>= 2.1.2 < 3", "safer-buffer@>= 2.1.2 < 3.0.0", safer-buffer@^2.0.2, safer-buffer@^2.1.0, safer-buffer@~2.1.0:
+"safer-buffer@>= 2.1.2 < 3", safer-buffer@^2.0.2, safer-buffer@^2.1.0, safer-buffer@~2.1.0:
   version "2.1.2"
   resolved "https://registry.npm.taobao.org/safer-buffer/download/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
   integrity sha1-RPoWGwGHuVSd2Eu5GAL5vYOFzWo=
@@ -14525,14 +14418,6 @@ typescript@^3.7.2, typescript@^3.8.3:
   resolved "https://registry.npm.taobao.org/typescript/download/typescript-3.9.7.tgz?cache=0&sync_timestamp=1596093375878&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ftypescript%2Fdownload%2Ftypescript-3.9.7.tgz#98d600a5ebdc38f40cb277522f12dc800e9e25fa"
   integrity sha1-mNYApevcOPQMsndSLxLcgA6eJfo=
 
-umi-request@^1.2.17:
-  version "1.3.5"
-  resolved "https://registry.npm.taobao.org/umi-request/download/umi-request-1.3.5.tgz#2af7e9fbaaeed0086c07d8c4876b3af65c084aea"
-  integrity sha1-Kvfp+6ru0AhsB9jEh2s69lwISuo=
-  dependencies:
-    isomorphic-fetch "^2.2.1"
-    qs "^6.9.1"
-
 umi-webpack-bundle-analyzer@3.5.0:
   version "3.5.0"
   resolved "https://registry.npm.taobao.org/umi-webpack-bundle-analyzer/download/umi-webpack-bundle-analyzer-3.5.0.tgz#35f9d0e75c01d8a636667386cd213a130bda63b6"
@@ -15195,11 +15080,6 @@ whatwg-encoding@^1.0.5:
   integrity sha1-WrrPd3wyFmpR0IXWtPPn0nET3bA=
   dependencies:
     iconv-lite "0.4.24"
-
-whatwg-fetch@>=0.10.0:
-  version "3.2.0"
-  resolved "https://registry.npm.taobao.org/whatwg-fetch/download/whatwg-fetch-3.2.0.tgz?cache=0&sync_timestamp=1594307643674&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fwhatwg-fetch%2Fdownload%2Fwhatwg-fetch-3.2.0.tgz#8e134f701f0a4ab5fda82626f113e2b647fd16dc"
-  integrity sha1-jhNPcB8KSrX9qCYm8RPitkf9Ftw=
 
 whatwg-mimetype@^2.3.0:
   version "2.3.0"

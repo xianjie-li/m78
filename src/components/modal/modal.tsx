@@ -58,7 +58,7 @@ const _ModalBase: React.FC<ModalBaseProps> = props => {
   });
 
   /** 延迟设置为false的show，用于防止组件从实例列表中被生硬的移除(会打乱zIndex/动画状态等 ) */
-  const delayShow = useDelayDerivedToggleStatus(show, 200, { trailing: true, leading: false });
+  const delayShow = useDelayDerivedToggleStatus(show, 1, { trailing: true, leading: false });
 
   /** 管理所有show为true的Modal组件 */
   const [cIndex, instances] = useSameState('fr_modal_metas', {
@@ -177,6 +177,7 @@ const _ModalBase: React.FC<ModalBaseProps> = props => {
           top: pos[1],
           zIndex: nowZIndex,
         }}
+        // reset
       >
         <div className="m78-modal_calc-node" ref={bind} />
         {children}

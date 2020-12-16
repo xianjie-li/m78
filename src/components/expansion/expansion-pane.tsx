@@ -86,9 +86,9 @@ const ExpansionPane = (props: ExpansionPaneProps) => {
   }
 
   /** 渲染展开标识图标 */
-  function renderPropsIcon() {
+  function renderPropsIcon(clsName: string) {
     if (isFunction(expandIcon)) {
-      return expandIcon(open);
+      return expandIcon(open, clsName);
     }
     return expandIcon;
   }
@@ -101,47 +101,49 @@ const ExpansionPane = (props: ExpansionPaneProps) => {
       return React.cloneElement(headerNode, { onClick: toggle });
     }
 
+    const iconClassName = cls('m78-expansion_header-leading', {
+      __right: iconPos === ExpandIconPosition.right,
+      __open: open,
+    });
+
     return (
       <div className="m78-expansion_header" onClick={toggle}>
         <If when={iconPos === ExpandIconPosition.left || iconPos === ExpandIconPosition.right}>
-          <div
-            className={cls('m78-expansion_header-leading', {
-              __right: iconPos === ExpandIconPosition.right,
-              __open: open,
-            })}
-          >
-            {renderPropsIcon() || <CaretRightOutlined />}
-          </div>
+          {renderPropsIcon(iconClassName) || (
+            <div className={iconClassName}>
+              <CaretRightOutlined />
+            </div>
+          )}
         </If>
         <div className="m78-expansion_header-body">{props.header}</div>
-        <div className="m78-expansion_header-action" {...stopPropagation}>
-          {props.actions}
-        </div>
+        {props.actions && (
+          <div className="m78-expansion_header-action" {...stopPropagation}>
+            {props.actions}
+          </div>
+        )}
       </div>
     );
   }
 
   return (
     <div
-      className={cls('m78-expansion_item', {
+      className={cls('m78-expansion_item', className, {
         __active: open,
         __disabled: disabled,
         __style: !noStyle,
-        className,
       })}
       style={style}
     >
-      {iconPos === ExpandIconPosition.bottom && (
-        <div
-          title={open ? '收起' : '展开'}
-          className={cls('m78-expansion_bottom-flag')}
-          onClick={toggle}
-        >
-          {renderPropsIcon() || (
+      {iconPos === ExpandIconPosition.bottom &&
+        (renderPropsIcon('m78-expansion_bottom-flag') || (
+          <div
+            title={open ? '收起' : '展开'}
+            className="m78-expansion_bottom-flag"
+            onClick={toggle}
+          >
             <Button text>{open ? <CaretUpOutlined /> : <CaretDownOutlined />}</Button>
-          )}
-        </div>
-      )}
+          </div>
+        ))}
 
       {renderHeader()}
 

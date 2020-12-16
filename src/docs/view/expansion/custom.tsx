@@ -53,11 +53,10 @@ const Custom = () => {
 
       <Expansion
         expandIcon={_open => (
-          <Button text color="primary">
+          <Button text color="primary" style={{ position: 'absolute', right: 2, top: 10 }}>
             {_open ? '点击关闭' : '点击展开'}
           </Button>
         )}
-        expandIconPosition={ExpandIconPosition.bottom}
       >
         {listSmall.map(item => (
           <ExpansionPane key={item.label} name={item.label} header={item.label}>

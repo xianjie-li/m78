@@ -24,8 +24,12 @@ export interface ExpansionBase extends MountExistBase {
   /* ########### 样式定制 ########### */
   /** 去除所有非必要样式 */
   noStyle?: boolean;
-  /** 自定义展开标识图标 */
-  expandIcon?: ((open: boolean) => React.ReactNode) | React.ReactNode;
+  /**
+   * 自定义展开标识图标
+   * - 如果将className添加到节点上，会在展开时为其设置旋转, 也可以通过open自行配置
+   * - 配置此项后expandIconPosition会失效，需要可以手动通过left top控制位置
+   * */
+  expandIcon?: React.ReactNode | ((open: boolean, className: string) => React.ReactNode);
   /** left | 展开图标的位置 */
   expandIconPosition?: ExpandIconPosition | 'left' | 'bottom' | 'right';
 }

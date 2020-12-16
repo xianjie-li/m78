@@ -21,12 +21,12 @@ interface TileProps extends Omit<React.PropsWithoutRef<JSX.IntrinsicElements['di
 const Tile = ({ className, title, desc, leading, trailing, crossAlign, ...ppp }: TileProps) => {
   return (
     <Row {...ppp} className={cls('m78-tile', className)} crossAlign={crossAlign}>
-      <div className="m78-tile_leading">{leading}</div>
+      {leading && <div className="m78-tile_leading">{leading}</div>}
       <div className="m78-tile_main">
-        <div>{title}</div>
-        <div>{desc}</div>
+        {title && <div>{title}</div>}
+        {desc && <div>{desc}</div>}
       </div>
-      <div className="m78-tile_trailing">{trailing}</div>
+      {trailing && <div className="m78-tile_trailing">{trailing}</div>}
     </Row>
   );
 };
