@@ -1,6 +1,6 @@
 {
   "name": "m78",
-  "version": "1.0.0-beta.28",
+  "version": "1.0.0-beta.30",
   "types": "./",
   "license": "MIT",
   "description": "components, hooks, utils, part of the react toolchain",
@@ -50,7 +50,7 @@
     "@lxjx/hooks": "1.16.3",
     "@lxjx/react-render-api": "^0.5.0",
     "@lxjx/react-transition-spring": "^1.2.5",
-    "@lxjx/sass-base": "^1.5.1",
+    "@lxjx/sass-base": "^1.5.3",
     "@lxjx/utils": "^1.11.0",
     "@lxjx/validate-tools": "^1.1.0",
     "@types/classnames": "^2.2.9",

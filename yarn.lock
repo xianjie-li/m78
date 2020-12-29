@@ -1611,10 +1611,10 @@
     "@lxjx/hooks" "^1.16.3"
     react-spring "^9.0.0-rc.3"
 
-"@lxjx/sass-base@^1.5.1":
-  version "1.5.1"
-  resolved "https://registry.npmjs.org/@lxjx/sass-base/-/sass-base-1.5.1.tgz#45bd45743355f7633d78da370a5e78c3b3f7b517"
-  integrity sha512-OfH6QGDr3ZmfE48XgxfC9TIuIyqjU7KdMpqF9b6oT58pO59nhZZqkEz/2e16Yh9r57hBSTJ/DtySGdscJ8MraQ==
+"@lxjx/sass-base@^1.5.3":
+  version "1.5.3"
+  resolved "https://registry.npm.taobao.org/@lxjx/sass-base/download/@lxjx/sass-base-1.5.3.tgz#0255e2418405374eea9f72d411260abbd559961f"
+  integrity sha1-AlXiQYQFN07qn3LUESYKu9VZlh8=
   dependencies:
     "@ant-design/colors" "^3.2.2"
 

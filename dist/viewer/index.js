@@ -6,8 +6,23 @@ import { useSpring, config, animated, to } from 'react-spring';
 import { useGesture } from 'react-use-gesture';
 import _clamp from 'lodash/clamp';
 import { useSelf, useSetState } from '@lxjx/hooks';
-import { getBoundMeta } from 'm78/viewer/utils';
 import cls from 'classnames';
+
+/** 根据bound元素和目标元素获取可用bound信息 */
+function getBoundMeta(boundEl, target) {
+  var boundRect = boundEl.getBoundingClientRect();
+  var targetRect = target.getBoundingClientRect();
+  var top = -(targetRect.top - boundRect.top);
+  var bottom = -(targetRect.bottom - boundRect.bottom);
+  var left = -(targetRect.left - boundRect.left);
+  var right = -(targetRect.right - boundRect.right);
+  return {
+    left: left,
+    right: right,
+    top: top,
+    bottom: bottom
+  };
+}
 
 var scaleBound = [0.5, 3];
 var initSpring = {

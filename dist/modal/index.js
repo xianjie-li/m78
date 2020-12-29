@@ -398,7 +398,8 @@ var _ModalBase = function _ModalBase(props) {
       _props$animationConfi = props.animationConfig,
       animationConfig = _props$animationConfi === void 0 ? config.stiff : _props$animationConfi,
       alpha = props.alpha,
-      innerRef = props.innerRef;
+      innerRef = props.innerRef,
+      maxWidth = props.maxWidth;
 
   var _contRef = useRef(null);
   /** 内容区域容器 */
@@ -418,7 +419,7 @@ var _ModalBase = function _ModalBase(props) {
   /** 延迟设置为false的show，用于防止组件从实例列表中被生硬的移除(会打乱zIndex/动画状态等 ) */
 
 
-  var delayShow = useDelayDerivedToggleStatus(show, 200, {
+  var delayShow = useDelayDerivedToggleStatus(show, 1, {
     trailing: true,
     leading: false
   });
@@ -544,11 +545,14 @@ var _ModalBase = function _ModalBase(props) {
       innerRef: contRef,
       className: cls('m78-modal', className),
       alpha: alpha,
-      style: _objectSpread(_objectSpread({}, style), {}, {
+      style: _objectSpread(_objectSpread({
+        maxWidth: maxWidth
+      }, style), {}, {
         left: pos[0],
         top: pos[1],
         zIndex: nowZIndex
-      })
+      }) // reset
+
     }, /*#__PURE__*/React.createElement("div", {
       className: "m78-modal_calc-node",
       ref: bind

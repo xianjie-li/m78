@@ -381,7 +381,11 @@ var BaseForm = function BaseForm(props) {
     if (!firstName) return;
     var el = document.getElementById("m78-FORM-ITEM-".concat(id, "-").concat(getNameString(firstName)));
     if (!el) return;
-    triggerHighlight(el);
+    /* TODO: 调整类型 */
+
+    triggerHighlight(el, {
+      useOutline: false
+    });
 
     var _checkElementVisible = checkElementVisible(el, {
       wrapEl: scrollParent,

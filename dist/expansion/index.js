@@ -176,9 +176,9 @@ var ExpansionPane = function ExpansionPane(props) {
   /** 渲染展开标识图标 */
 
 
-  function renderPropsIcon() {
+  function renderPropsIcon(clsName) {
     if (isFunction(expandIcon)) {
-      return expandIcon(open);
+      return expandIcon(open, clsName);
     }
 
     return expandIcon;
@@ -194,38 +194,38 @@ var ExpansionPane = function ExpansionPane(props) {
       });
     }
 
+    var iconClassName = cls('m78-expansion_header-leading', {
+      __right: iconPos === ExpandIconPosition.right,
+      __open: open
+    });
     return /*#__PURE__*/React.createElement("div", {
       className: "m78-expansion_header",
       onClick: toggle
     }, /*#__PURE__*/React.createElement(If, {
       when: iconPos === ExpandIconPosition.left || iconPos === ExpandIconPosition.right
-    }, /*#__PURE__*/React.createElement("div", {
-      className: cls('m78-expansion_header-leading', {
-        __right: iconPos === ExpandIconPosition.right,
-        __open: open
-      })
-    }, renderPropsIcon() || /*#__PURE__*/React.createElement(CaretRightOutlined, null))), /*#__PURE__*/React.createElement("div", {
+    }, renderPropsIcon(iconClassName) || /*#__PURE__*/React.createElement("div", {
+      className: iconClassName
+    }, /*#__PURE__*/React.createElement(CaretRightOutlined, null))), /*#__PURE__*/React.createElement("div", {
       className: "m78-expansion_header-body"
-    }, props.header), /*#__PURE__*/React.createElement("div", _extends({
+    }, props.header), props.actions && /*#__PURE__*/React.createElement("div", _extends({
       className: "m78-expansion_header-action"
     }, stopPropagation), props.actions));
   }
 
   return /*#__PURE__*/React.createElement("div", {
-    className: cls('m78-expansion_item', {
+    className: cls('m78-expansion_item', className, {
       __active: open,
       __disabled: disabled,
-      __style: !noStyle,
-      className: className
+      __style: !noStyle
     }),
     style: style
-  }, iconPos === ExpandIconPosition.bottom && /*#__PURE__*/React.createElement("div", {
+  }, iconPos === ExpandIconPosition.bottom && (renderPropsIcon('m78-expansion_bottom-flag') || /*#__PURE__*/React.createElement("div", {
     title: open ? '收起' : '展开',
-    className: cls('m78-expansion_bottom-flag'),
+    className: "m78-expansion_bottom-flag",
     onClick: toggle
-  }, renderPropsIcon() || /*#__PURE__*/React.createElement(Button, {
+  }, /*#__PURE__*/React.createElement(Button, {
     text: true
-  }, open ? /*#__PURE__*/React.createElement(CaretUpOutlined, null) : /*#__PURE__*/React.createElement(CaretDownOutlined, null))), renderHeader(), /*#__PURE__*/React.createElement(animated.div, {
+  }, open ? /*#__PURE__*/React.createElement(CaretUpOutlined, null) : /*#__PURE__*/React.createElement(CaretDownOutlined, null)))), renderHeader(), /*#__PURE__*/React.createElement(animated.div, {
     className: "m78-expansion_content-wrap",
     style: spProps
   }, /*#__PURE__*/React.createElement("div", {
@@ -237,4 +237,4 @@ var ExpansionPane = function ExpansionPane(props) {
 };
 
 export default Expansion;
-export { ExpansionPane };
+export { ExpandIconPosition, ExpansionPane };

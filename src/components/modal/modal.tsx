@@ -43,6 +43,7 @@ const _ModalBase: React.FC<ModalBaseProps> = props => {
     animationConfig = spConfig.stiff,
     alpha,
     innerRef,
+    maxWidth,
   } = props;
 
   const _contRef = useRef<HTMLDivElement>(null!);
@@ -172,6 +173,7 @@ const _ModalBase: React.FC<ModalBaseProps> = props => {
         className={cls('m78-modal', className)}
         alpha={alpha}
         style={{
+          maxWidth,
           ...style,
           left: pos[0],
           top: pos[1],

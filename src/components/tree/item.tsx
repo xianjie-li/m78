@@ -181,11 +181,13 @@ const TreeItem = React.memo(
 
         if (isTruthyArray(_children)) {
           data.origin.children = _children;
-
-          const newDs = [...dataSource];
-
-          onDataSourceChange?.(newDs);
+        } else {
+          data.origin.isLeaf = true;
         }
+
+        const newDs = [...dataSource];
+
+        onDataSourceChange?.(newDs);
       } catch (e) {
         // nothing
       } finally {

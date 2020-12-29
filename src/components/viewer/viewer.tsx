@@ -3,10 +3,10 @@ import { animated, useSpring, to, config } from 'react-spring';
 import { useGesture } from 'react-use-gesture';
 import _clamp from 'lodash/clamp';
 import { useSelf, useSetState } from '@lxjx/hooks';
-import { getBoundMeta } from 'm78/viewer/utils';
 import { AxisBounds } from 'react-use-gesture/dist/types';
 import { ComponentBaseProps } from 'm78/types/types';
 import cls from 'classnames';
+import { getBoundMeta } from './utils';
 
 export interface ViewerProps extends ComponentBaseProps {
   /** 任何react可渲染的东西 */

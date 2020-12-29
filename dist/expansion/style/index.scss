@@ -31,7 +31,7 @@
         border-bottom: 1px dashed transparent;
       }
 
-      &.__active .m78-expansion_header {
+      &.__active > .m78-expansion_header {
         border-bottom: 1px dashed $b-divider;
       }
 

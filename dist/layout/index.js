@@ -198,11 +198,11 @@ var Tile = function Tile(_ref) {
   return /*#__PURE__*/React.createElement(Row$1, _extends({}, ppp, {
     className: cls('m78-tile', className),
     crossAlign: crossAlign
-  }), /*#__PURE__*/React.createElement("div", {
+  }), leading && /*#__PURE__*/React.createElement("div", {
     className: "m78-tile_leading"
   }, leading), /*#__PURE__*/React.createElement("div", {
     className: "m78-tile_main"
-  }, /*#__PURE__*/React.createElement("div", null, title), /*#__PURE__*/React.createElement("div", null, desc)), /*#__PURE__*/React.createElement("div", {
+  }, title && /*#__PURE__*/React.createElement("div", null, title), desc && /*#__PURE__*/React.createElement("div", null, desc)), trailing && /*#__PURE__*/React.createElement("div", {
     className: "m78-tile_trailing"
   }, trailing));
 };

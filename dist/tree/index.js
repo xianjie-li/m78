@@ -489,29 +489,31 @@ var TreeItem = /*#__PURE__*/React.memo(function (_ref) {
 
               if (isTruthyArray(_children)) {
                 data.origin.children = _children;
-                newDs = _toConsumableArray(dataSource);
-                onDataSourceChange === null || onDataSourceChange === void 0 ? void 0 : onDataSourceChange(newDs);
+              } else {
+                data.origin.isLeaf = true;
               }
 
-              _context.next = 12;
+              newDs = _toConsumableArray(dataSource);
+              onDataSourceChange === null || onDataSourceChange === void 0 ? void 0 : onDataSourceChange(newDs);
+              _context.next = 14;
               break;
-
-            case 10:
-              _context.prev = 10;
-              _context.t0 = _context["catch"](3);
 
             case 12:
               _context.prev = 12;
+              _context.t0 = _context["catch"](3);
+
+            case 14:
+              _context.prev = 14;
               // console.log('加载结束');
               loadingCheck.unCheck(value);
-              return _context.finish(12);
+              return _context.finish(14);
 
-            case 15:
+            case 17:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[3, 10, 12, 15]]);
+      }, _callee, null, [[3, 12, 14, 17]]);
     }));
     return _loadHandle.apply(this, arguments);
   }
