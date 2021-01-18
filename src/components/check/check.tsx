@@ -97,7 +97,6 @@ const Check = <Val extends unknown = undefined>(_props: CheckProps<Val>) => {
     defaultValueKey: 'defaultChecked',
     triggerKey: 'onChange',
   });
-
   const [focus, setFocus] = useState(false);
 
   const renderCustom = customer || builtIn[type];

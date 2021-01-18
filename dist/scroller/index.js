@@ -292,6 +292,7 @@ function useMethods(share) {
       state.hasData && setState({
         hasData: false
       });
+      self.upLoadCount = 0;
 
       if (props.pullDownTips) {
         queue.push({
@@ -390,8 +391,12 @@ function useMethods(share) {
       }
 
       if (isEmpty) {
+        // 在加载第一次时，如果长度为0需要将hasData标记为true
+        var _has = length > 0 && self.upLoadCount === 0;
+
         setState({
-          pullUpStatus: PullUpStatus.NOT_DATA
+          pullUpStatus: PullUpStatus.NOT_DATA,
+          hasData: _has || state.hasData
         });
       } else {
         setState({
@@ -399,6 +404,8 @@ function useMethods(share) {
           hasData: true
         });
       }
+
+      self.upLoadCount += 1;
     })["catch"](function () {
       setState({
         pullUpStatus: PullUpStatus.ERROR

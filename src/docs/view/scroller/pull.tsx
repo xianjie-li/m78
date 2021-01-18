@@ -70,7 +70,6 @@ const Pull = () => {
         /* 下拉配置 */
         // 下拉刷新处理函数(重置查询状态, 重新触发加载)
         onPullDown={async triggerPullDown => {
-          /* ⛔ 这里使用的useSetState状态是可以同步获取的，如果你使用useState, 请通过useEffect等钩子在状态更新后再执行后续请求 */
           setState({
             page: 1,
             list: [],

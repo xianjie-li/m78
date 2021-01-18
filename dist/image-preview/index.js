@@ -34,7 +34,6 @@ var _ImagePreview = function _ImagePreview(_ref) {
       onRemove = _ref.onRemove,
       namespace = _ref.namespace;
   var carousel = useRef(null);
-  var wrapEl = useRef(null);
   /* 锁定滚动条 + 防止页面抖动 */
 
   var _useToggle = useToggle(!!show),
@@ -83,14 +82,14 @@ var _ImagePreview = function _ImagePreview(_ref) {
     var timeStamp = _ref2.timeStamp,
         first = _ref2.first,
         last = _ref2.last,
+        tap = _ref2.tap,
         memo = _ref2.memo,
         _ref2$movement = _slicedToArray(_ref2.movement, 1),
         x = _ref2$movement[0],
-        _ref2$direction = _slicedToArray(_ref2.direction, 2),
-        direct = _ref2$direction[0],
-        directY = _ref2$direction[1];
+        _ref2$direction = _slicedToArray(_ref2.direction, 1),
+        direct = _ref2$direction[0];
 
-    if (direct + directY === 0 && last) {
+    if (tap) {
       close();
     }
 
@@ -110,6 +109,8 @@ var _ImagePreview = function _ImagePreview(_ref) {
     if (first) {
       return timeStamp;
     }
+  }, {
+    filterTaps: true
   });
 
   function prev() {
@@ -190,8 +191,7 @@ var _ImagePreview = function _ImagePreview(_ref) {
     type: "fade",
     toggle: show && images.length > 0,
     mountOnEnter: true,
-    className: "m78-image-preview",
-    innerRef: wrapEl
+    className: "m78-image-preview"
   }, /*#__PURE__*/React.createElement("div", bindDrag(), /*#__PURE__*/React.createElement(Carousel, {
     ref: carousel,
     initPage: page,
@@ -207,8 +207,7 @@ var _ImagePreview = function _ImagePreview(_ref) {
     }, /*#__PURE__*/React.createElement(Viewer, {
       ref: function ref(viewer) {
         return self.viewers[key] = viewer;
-      },
-      bound: wrapEl
+      }
     }, /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement(If, {
       when: self.currentPage >= key - 1 && self.currentPage <= key + 1
     }, /*#__PURE__*/React.createElement(Picture, _extends({}, stopPropagation, {

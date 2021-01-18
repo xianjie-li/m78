@@ -97,7 +97,7 @@ export interface ScrollerProps extends ComponentBaseProps {
   onPullUp?: (args: {
     /** 由组件内部触发(点击重试、triggerPullUp(true)、初始化执行)等方式触发, 为true时应该调过增加页码等操作，仅做数据更新 */
     isRefresh?: boolean;
-  }) => Promise<{ length?: number; isEmpty: boolean }>;
+  }) => Promise<{ length: number; isEmpty: boolean }>;
   /** 120 | 触发上拉加载的距离 */
   pullUpThreshold?: number;
 

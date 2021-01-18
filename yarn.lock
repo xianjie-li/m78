@@ -1566,10 +1566,28 @@
   dependencies:
     "@babel/runtime" "^7.5.5"
 
-"@lxjx/hooks@1.16.3", "@lxjx/hooks@^1.16.3":
+"@lxjx/hooks@^1.16.3":
   version "1.16.3"
   resolved "https://registry.npm.taobao.org/@lxjx/hooks/download/@lxjx/hooks-1.16.3.tgz?cache=0&sync_timestamp=1608130788734&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40lxjx%2Fhooks%2Fdownload%2F%40lxjx%2Fhooks-1.16.3.tgz#25168f881ef669460a32d49224531d67e2e9dad6"
   integrity sha1-JRaPiB72aUYKMtSSJFMdZ+Lp2tY=
+  dependencies:
+    "@lxjx/utils" "^1.11.0"
+    "@types/lodash" "^4.14.149"
+    "@types/react" "^16.9.23"
+    "@types/react-dom" "^16.9.5"
+    "@types/react-router-dom" "^5.1.3"
+    lodash "^4.17.15"
+    query-string "^6.12.0"
+    react-router-dom "^5.1.2"
+    react-spring "^9.0.0-rc.3"
+    react-use "^14.0.0"
+    resize-observer-polyfill "^1.5.1"
+    tslib "^1.11.1"
+
+"@lxjx/hooks@^1.16.4":
+  version "1.16.4"
+  resolved "https://registry.npm.taobao.org/@lxjx/hooks/download/@lxjx/hooks-1.16.4.tgz#e1569b57dddff6568e7349bd8eb420682e25365e"
+  integrity sha1-4VabV93f9laOc0m9jrQgaC4lNl4=
   dependencies:
     "@lxjx/utils" "^1.11.0"
     "@types/lodash" "^4.14.149"

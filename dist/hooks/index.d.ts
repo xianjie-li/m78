@@ -6,8 +6,10 @@ export declare function useDelayDerivedToggleStatus(toggle: boolean, delay?: num
     disabled?: boolean;
     /** 当数组值改变时，更新state */
     deps?: any[];
-    /** 额外的延迟时间，用于对动画等消费的时间进行修正 */
-    extraDelay?: number;
+    /** 开启延迟，默认为delay的值 */
+    leadingDelay?: number;
+    /** 离场延迟，默认为delay的值 */
+    trailingDelay?: number;
     /** true | 启用入场延迟 */
     leading?: boolean;
     /** false | 启用离场延迟 */

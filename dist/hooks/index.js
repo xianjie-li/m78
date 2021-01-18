@@ -15,15 +15,17 @@ function useDelayDerivedToggleStatus(toggle) {
       disabled = _ref.disabled,
       _ref$deps = _ref.deps,
       deps = _ref$deps === void 0 ? [] : _ref$deps,
-      _ref$extraDelay = _ref.extraDelay,
-      extraDelay = _ref$extraDelay === void 0 ? 0 : _ref$extraDelay,
+      _ref$leadingDelay = _ref.leadingDelay,
+      leadingDelay = _ref$leadingDelay === void 0 ? delay : _ref$leadingDelay,
+      _ref$trailingDelay = _ref.trailingDelay,
+      trailingDelay = _ref$trailingDelay === void 0 ? delay : _ref$trailingDelay,
       trailing = _ref.trailing,
       _ref$leading = _ref.leading,
       leading = _ref$leading === void 0 ? true : _ref$leading;
 
   var isDisabled = !delay || disabled || !trailing && !leading; // 初始值在禁用或未开启前导延迟时为toggle本身，否则为false
 
-  var _useState = useState(isDisabled || !leading ? toggle : false),
+  var _useState = useState(toggle),
       _useState2 = _slicedToArray(_useState, 2),
       innerState = _useState2[0],
       setInnerState = _useState2[1];
@@ -32,18 +34,17 @@ function useDelayDerivedToggleStatus(toggle) {
     toggleTimer: null
   });
   useEffect(function () {
-    if (isDisabled) {
-      return;
-    }
+    if (isDisabled) return;
 
     if (toggle && !leading || !toggle && !trailing) {
       toggle !== innerState && setInnerState(toggle);
       return;
     }
 
+    var d = toggle ? leadingDelay : trailingDelay;
     self.toggleTimer = setTimeout(function () {
       setInnerState(toggle);
-    }, delay + extraDelay);
+    }, d);
     return function () {
       self.toggleTimer && clearTimeout(self.toggleTimer);
     };

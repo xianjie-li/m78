@@ -47,8 +47,6 @@ const _ImagePreview: React.FC<ImagePreviewProps> = ({
 }) => {
   const carousel = useRef<CarouselRef>(null!);
 
-  const wrapEl = useRef<HTMLDivElement>(null!);
-
   /* 锁定滚动条 + 防止页面抖动 */
   const [lock, toggleLock] = useToggle(!!show);
   useLockBodyScroll(lock);
@@ -100,8 +98,8 @@ const _ImagePreview: React.FC<ImagePreviewProps> = ({
   );
 
   const bindDrag = useDrag(
-    ({ timeStamp, first, last, memo, movement: [x], direction: [direct, directY] }) => {
-      if (direct + directY === 0 && last) {
+    ({ timeStamp, first, last, tap, memo, movement: [x], direction: [direct] }) => {
+      if (tap) {
         close();
       }
 
@@ -120,6 +118,9 @@ const _ImagePreview: React.FC<ImagePreviewProps> = ({
       if (first) {
         return timeStamp;
       }
+    },
+    {
+      filterTaps: true,
     },
   );
 
@@ -190,7 +191,6 @@ const _ImagePreview: React.FC<ImagePreviewProps> = ({
         toggle={show && images.length > 0}
         mountOnEnter
         className="m78-image-preview"
-        innerRef={wrapEl}
       >
         <div {...bindDrag()}>
           <Carousel
@@ -204,7 +204,7 @@ const _ImagePreview: React.FC<ImagePreviewProps> = ({
           >
             {images.map((item, key) => (
               <div key={key} className="m78-image-preview_img-wrap">
-                <Viewer ref={viewer => (self.viewers[key] = viewer!)} bound={wrapEl}>
+                <Viewer ref={viewer => (self.viewers[key] = viewer!)}>
                   <span>
                     <If when={self.currentPage >= key - 1 && self.currentPage <= key + 1}>
                       <Picture

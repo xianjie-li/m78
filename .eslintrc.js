@@ -16,5 +16,6 @@ module.exports = {
     'react/no-unescaped-entities': 'off',
     'prefer-destructuring': 'off',
     'class-methods-use-this': 'off',
+    'no-void': 'off',
   },
 };

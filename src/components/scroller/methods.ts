@@ -243,6 +243,8 @@ export function useMethods(share: Share) {
             hasData: false,
           });
 
+        self.upLoadCount = 0;
+
         if (props.pullDownTips) {
           queue.push({
             message: pullDownText[PullDownStatus.SUCCESS],
@@ -339,8 +341,12 @@ export function useMethods(share: Share) {
         }
 
         if (isEmpty) {
+          // 在加载第一次时，如果长度为0需要将hasData标记为true
+          const _has = length > 0 && self.upLoadCount === 0;
+
           setState({
             pullUpStatus: PullUpStatus.NOT_DATA,
+            hasData: _has || state.hasData,
           });
         } else {
           setState({
@@ -348,6 +354,8 @@ export function useMethods(share: Share) {
             hasData: true,
           });
         }
+
+        self.upLoadCount += 1;
       })
       .catch(() => {
         setState({
