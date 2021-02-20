@@ -379,28 +379,19 @@ function useMethods(share) {
     });
     props.onPullUp({
       isRefresh: isRefresh
-    }).then(function (isEmpty) {
-      // if (isNumber(length) && length > 0 && state.hasData) {
-      //   queue.push({
-      //     message: pullUpText[PullUpStatus.SUCCESS].replace('{num}', String(length)),
-      //   });
-      // }
-      if (isEmpty) {
-        // 在加载第一次时，如果长度为0需要将hasData标记为true
-        var _has = !isEmpty && self.upLoadCount === 0;
-
+    }).then(function (rate) {
+      if (rate < 1) {
         setState({
           pullUpStatus: PullUpStatus.NOT_DATA,
-          hasData: _has || state.hasData
+          hasData: self.upLoadCount === 0 ? rate !== 0 : true
         });
       } else {
         setState({
           pullUpStatus: PullUpStatus.TIP,
           hasData: true
         });
+        self.upLoadCount += 1;
       }
-
-      self.upLoadCount += 1;
     })["catch"](function () {
       setState({
         pullUpStatus: PullUpStatus.ERROR
@@ -815,8 +806,8 @@ var Scroller = /*#__PURE__*/React.forwardRef(function (props, ref) {
     target: scrollEl,
     style: {
       position: 'absolute',
-      right: 28,
-      bottom: 38
+      right: 16,
+      bottom: 24
     }
   }), props.extraNode);
 });

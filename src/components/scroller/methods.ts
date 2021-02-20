@@ -333,29 +333,19 @@ export function useMethods(share: Share) {
 
     props
       .onPullUp({ isRefresh })
-      .then(isEmpty => {
-        // if (isNumber(length) && length > 0 && state.hasData) {
-        //   queue.push({
-        //     message: pullUpText[PullUpStatus.SUCCESS].replace('{num}', String(length)),
-        //   });
-        // }
-
-        if (isEmpty) {
-          // 在加载第一次时，如果长度为0需要将hasData标记为true
-          const _has = !isEmpty && self.upLoadCount === 0;
-
+      .then(rate => {
+        if (rate < 1) {
           setState({
             pullUpStatus: PullUpStatus.NOT_DATA,
-            hasData: _has || state.hasData,
+            hasData: self.upLoadCount === 0 ? rate !== 0 : true,
           });
         } else {
           setState({
             pullUpStatus: PullUpStatus.TIP,
             hasData: true,
           });
+          self.upLoadCount += 1;
         }
-
-        self.upLoadCount += 1;
       })
       .catch(() => {
         setState({

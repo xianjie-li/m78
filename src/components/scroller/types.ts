@@ -86,7 +86,7 @@ export interface ScrollerProps extends ComponentBaseProps {
 
   /**
    * 启用上拉加载并在触发时通知
-   * - 如果Promise resolve, 应解析一个boolean值，表示该次请求之后是否还有数据可加载
+   * - 如果Promise resolve, 应解析 每页条数 / 当前条数, 用于帮助判断是否还可加载
    * - 如果Promise reject, 会发出一个加载失败通知
    * - onPullUp有3种方式触发，组件初始化时(isRefresh为true)、上拉到触发点时、调用triggerPullUp(组件内/外)
    *
@@ -97,7 +97,7 @@ export interface ScrollerProps extends ComponentBaseProps {
   onPullUp?: (args: {
     /** 由组件内部触发(点击重试、triggerPullUp(true)、初始化执行)等方式触发, 为true时应该调过增加页码等操作，仅做数据更新 */
     isRefresh?: boolean;
-  }) => Promise<boolean>;
+  }) => Promise<number>;
   /** 120 | 触发上拉加载的距离 */
   pullUpThreshold?: number;
 

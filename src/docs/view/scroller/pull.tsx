@@ -12,10 +12,10 @@ const maxPage = 5;
 function mockFetch(page: number) {
   return new Promise<string[]>((res, rej) => {
     setTimeout(() => {
-      Math.random() > 0.7
+      Math.random() > 0.9
         ? rej()
         : res(
-            Array.from({ length: page === maxPage ? 5 : 12 }).map(
+            Array.from({ length: page >= maxPage ? 5 : 12 }).map(
               () => `第${page}页 - ${createRandString()}`,
             ),
           );
@@ -35,23 +35,18 @@ const Pull = () => {
     // isRefresh为true时不更新页码或其他任何查询状态
     const page = isRefresh ? state.page : state.page + 1;
 
-    // 同步到state
-    page !== state.page &&
-      setState({
-        page,
-      });
-
     // 查询数据(实际业务中替换为接口)
     // 不需要进行try catch处理，抛出异常后组件会自动接管错误
     const list = await mockFetch(page);
 
     // 合并列表数据
     setState({
+      page,
       list: [...state.list, ...list],
     });
 
-    // 返回是否为空
-    return list.length < 12;
+    // 返回每页条数 / 当前条数
+    return list.length / 12;
   }
 
   const progress = state.page / maxPage;

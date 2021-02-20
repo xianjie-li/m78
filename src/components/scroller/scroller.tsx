@@ -284,7 +284,7 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
       <Tips controller={queue} />
 
       {props.backTop && (
-        <BackTop target={scrollEl} style={{ position: 'absolute', right: 28, bottom: 38 }} />
+        <BackTop target={scrollEl} style={{ position: 'absolute', right: 16, bottom: 24 }} />
       )}
 
       {props.extraNode}
