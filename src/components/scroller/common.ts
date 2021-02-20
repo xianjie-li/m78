@@ -41,7 +41,7 @@ export enum PullUpStatus {
   LOADING,
   NOT_DATA,
   ERROR,
-  SUCCESS,
+  // SUCCESS,
 }
 
 /** 下拉刷新各阶段的提示文本 */
@@ -59,5 +59,5 @@ export const pullUpText = {
   [PullUpStatus.LOADING]: '加载中',
   [PullUpStatus.NOT_DATA]: '没有更多了',
   [PullUpStatus.ERROR]: '加载失败,',
-  [PullUpStatus.SUCCESS]: '获取到{num}条新数据',
+  // [PullUpStatus.SUCCESS]: '获取到{num}条新数据',
 };

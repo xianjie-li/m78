@@ -19,8 +19,7 @@ export declare enum PullUpStatus {
     TIP = 0,
     LOADING = 1,
     NOT_DATA = 2,
-    ERROR = 3,
-    SUCCESS = 4
+    ERROR = 3
 }
 /** 下拉刷新各阶段的提示文本 */
 export declare const pullDownText: {
@@ -36,5 +35,4 @@ export declare const pullUpText: {
     1: string;
     2: string;
     3: string;
-    4: string;
 };

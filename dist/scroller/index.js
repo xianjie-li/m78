@@ -61,20 +61,19 @@ var PullDownStatus;
 })(PullDownStatus || (PullDownStatus = {}));
 
 var PullUpStatus;
-/** 下拉刷新各阶段的提示文本 */
 
 (function (PullUpStatus) {
   PullUpStatus[PullUpStatus["TIP"] = 0] = "TIP";
   PullUpStatus[PullUpStatus["LOADING"] = 1] = "LOADING";
   PullUpStatus[PullUpStatus["NOT_DATA"] = 2] = "NOT_DATA";
   PullUpStatus[PullUpStatus["ERROR"] = 3] = "ERROR";
-  PullUpStatus[PullUpStatus["SUCCESS"] = 4] = "SUCCESS";
 })(PullUpStatus || (PullUpStatus = {}));
 
+/** 下拉刷新各阶段的提示文本 */
 var pullDownText = (_pullDownText = {}, _defineProperty(_pullDownText, PullDownStatus.TIP, '下拉刷新'), _defineProperty(_pullDownText, PullDownStatus.RELEASE_TIP, '松开刷新'), _defineProperty(_pullDownText, PullDownStatus.LOADING, '正在刷新'), _defineProperty(_pullDownText, PullDownStatus.ERROR, '刷新失败'), _defineProperty(_pullDownText, PullDownStatus.SUCCESS, '数据已更新'), _pullDownText);
 /** 上拉加载各阶段的提示文本 */
 
-var pullUpText = (_pullUpText = {}, _defineProperty(_pullUpText, PullUpStatus.TIP, '上拉加载更多'), _defineProperty(_pullUpText, PullUpStatus.LOADING, '加载中'), _defineProperty(_pullUpText, PullUpStatus.NOT_DATA, '没有更多了'), _defineProperty(_pullUpText, PullUpStatus.ERROR, '加载失败,'), _defineProperty(_pullUpText, PullUpStatus.SUCCESS, '获取到{num}条新数据'), _pullUpText);
+var pullUpText = (_pullUpText = {}, _defineProperty(_pullUpText, PullUpStatus.TIP, '上拉加载更多'), _defineProperty(_pullUpText, PullUpStatus.LOADING, '加载中'), _defineProperty(_pullUpText, PullUpStatus.NOT_DATA, '没有更多了'), _defineProperty(_pullUpText, PullUpStatus.ERROR, '加载失败,'), _pullUpText);
 
 function useMethods(share) {
   var self = share.self,
@@ -380,19 +379,15 @@ function useMethods(share) {
     });
     props.onPullUp({
       isRefresh: isRefresh
-    }).then(function (_ref3) {
-      var length = _ref3.length,
-          isEmpty = _ref3.isEmpty;
-
-      if (isNumber(length) && length > 0 && state.hasData) {
-        queue.push({
-          message: pullUpText[PullUpStatus.SUCCESS].replace('{num}', String(length))
-        });
-      }
-
+    }).then(function (isEmpty) {
+      // if (isNumber(length) && length > 0 && state.hasData) {
+      //   queue.push({
+      //     message: pullUpText[PullUpStatus.SUCCESS].replace('{num}', String(length)),
+      //   });
+      // }
       if (isEmpty) {
         // 在加载第一次时，如果长度为0需要将hasData标记为true
-        var _has = length > 0 && self.upLoadCount === 0;
+        var _has = !isEmpty && self.upLoadCount === 0;
 
         setState({
           pullUpStatus: PullUpStatus.NOT_DATA,

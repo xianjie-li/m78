@@ -50,11 +50,8 @@ const Pull = () => {
       list: [...state.list, ...list],
     });
 
-    // 返回长度和是否为空
-    return {
-      length: list.length,
-      isEmpty: list.length < 12,
-    };
+    // 返回是否为空
+    return list.length < 12;
   }
 
   const progress = state.page / maxPage;
@@ -78,8 +75,6 @@ const Pull = () => {
           // 以isRefresh = true触发fetchList
           triggerPullDown(true);
         }}
-        // 在配合上拉加载使用时，不需要进行提示
-        pullDownTips={false}
         /* 其他 */
         backTop
         hideScrollbar

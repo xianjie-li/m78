@@ -1,6 +1,6 @@
 import _clamp from 'lodash/clamp';
 import { UseScrollMeta } from '@lxjx/hooks';
-import { isNumber, decimalPrecision, getScrollBarWidth } from '@lxjx/utils';
+import { decimalPrecision, getScrollBarWidth } from '@lxjx/utils';
 import { DirectionEnum } from 'm78/types';
 import { SetDragPosArg, Share } from './types';
 import { PullDownStatus, pullDownText, PullUpStatus, pullUpText, rubberFactor } from './common';
@@ -333,16 +333,16 @@ export function useMethods(share: Share) {
 
     props
       .onPullUp({ isRefresh })
-      .then(({ length, isEmpty }) => {
-        if (isNumber(length) && length > 0 && state.hasData) {
-          queue.push({
-            message: pullUpText[PullUpStatus.SUCCESS].replace('{num}', String(length)),
-          });
-        }
+      .then(isEmpty => {
+        // if (isNumber(length) && length > 0 && state.hasData) {
+        //   queue.push({
+        //     message: pullUpText[PullUpStatus.SUCCESS].replace('{num}', String(length)),
+        //   });
+        // }
 
         if (isEmpty) {
           // 在加载第一次时，如果长度为0需要将hasData标记为true
-          const _has = length > 0 && self.upLoadCount === 0;
+          const _has = !isEmpty && self.upLoadCount === 0;
 
           setState({
             pullUpStatus: PullUpStatus.NOT_DATA,

@@ -60,7 +60,7 @@ _适用于 pc 版_, 默认会在支持的浏览器上通过`-webkit-`私有前�
 ```tsx | pure
 interface ScrollerProps extends ComponentBaseProps {
   /** Direction.vertical | 滚动方向 */
-  direction?: Direction;
+  direction?: DirectionEnum;
   /** 内容, 是否可滚动的依据是滚动内容尺寸大于滚动容器尺寸 */
   children?: React.ReactNode;
   /** 滚动时触发 */
@@ -83,9 +83,9 @@ interface ScrollerProps extends ComponentBaseProps {
 
   /**
    * 启用上拉加载并在触发时通知
-   * - 如果Promise resolve, 解析包含length和isEmpty的对象，length表示该次请求到的数据总条数，isEmpty表示已无数据可加载
+   * - 如果Promise resolve, 应解析一个boolean值，表示该次请求之后是否还有数据可加载
    * - 如果Promise reject, 会发出一个加载失败通知
-   * - onPullUp有4 种方式触发，组件初始化时(isRefresh为true)、下拉刷新执行成功时、上拉到触发点时、调用triggerPullUp(组件内/外)
+   * - onPullUp有3种方式触发，组件初始化时(isRefresh为true)、上拉到触发点时、调用triggerPullUp(组件内/外)
    *
    * 上拉加载与下拉刷新有以下关联行为
    * - 开始刷新时，上拉状态会被还原
@@ -94,7 +94,7 @@ interface ScrollerProps extends ComponentBaseProps {
   onPullUp?: (args: {
     /** 由组件内部触发(点击重试、triggerPullUp(true)、初始化执行)等方式触发, 为true时应该调过增加页码等操作，仅做数据更新 */
     isRefresh?: boolean;
-  }) => Promise<{ length?: number; isEmpty: boolean }>;
+  }) => Promise<boolean>;
   /** 120 | 触发上拉加载的距离 */
   pullUpThreshold?: number;
 
