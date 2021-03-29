@@ -57,12 +57,12 @@ async function build(type = 'esm') {
         nodeResolve({
           extensions,
         }),
-        commonjs(),
         babel({
           exclude: 'node_modules',
           extensions,
           babelHelpers: 'runtime',
         }),
+        commonjs(),
         copy({
           targets: copyList,
           hook: 'writeBundle',
