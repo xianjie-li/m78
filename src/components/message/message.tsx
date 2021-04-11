@@ -129,7 +129,7 @@ const Message: React.FC<MessageProps> = ({
         <If when={hasCancel}>
           {() => (
             <Button onClick={onClose} className="m78-message_close" icon size="small">
-              <CloseOutlined />
+              <CloseOutlined className="m78-close-icon" />
             </Button>
           )}
         </If>

@@ -2,11 +2,10 @@
 
 .m78-close-icon {
   transform: scaleY(0.9) scaleX(1) !important;
-  color: $b-primary;
+  color: var(--m78-color-primary);
 }
 
 .m78-mask {
-  background-color: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(4px);
 }
 
@@ -21,17 +20,17 @@
 
     ::-webkit-scrollbar-thumb {
       border-radius: 6px;
-      background: $b-second;
+      background: var(--m78-color-second);
       min-height: 70px;
       min-width: 70px;
     }
 
     ::-webkit-scrollbar-thumb:hover {
-      background: $b-primary;
+      background: var(--m78-color-primary);
     }
 
     ::-webkit-scrollbar-thumb:active {
-      background: $b-primary;
+      background: var(--m78-color-primary);
     }
   }
 }
@@ -46,17 +45,17 @@
 
   &::-webkit-scrollbar-thumb {
     border-radius: 6px;
-    background: $b-second;
+    background: var(--m78-color-second);
     min-height: 70px;
     min-width: 70px;
   }
 
   &::-webkit-scrollbar-thumb:hover {
-    background: $b-primary;
+    background: var(--m78-color-primary);
   }
 
   &::-webkit-scrollbar-thumb:active {
-    background: $b-primary;
+    background: var(--m78-color-primary);
   }
 
   &.__hover {

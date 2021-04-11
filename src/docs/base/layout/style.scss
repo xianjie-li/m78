@@ -1,0 +1,32 @@
+
+.d-layout-box {
+  border-radius: var(--m78-border-radius);
+  background: var(--m78-color-border);
+  padding: 12px;
+  width: 60px;
+  height: 60px;
+  margin: 12px;
+}
+
+.d-layout-box2 {
+  border-radius: 4px;
+  background: var(--m78-color-border);
+  padding: 12px;
+}
+
+.d-layout-box3 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background: var(--m78-color-border);
+  padding: 12px;
+  margin: 12px;
+}
+
+.d-layout-box4 {
+  border-radius: 4px;
+  background: var(--m78-color-border);
+  padding: 12px;
+  margin: 12px;
+}

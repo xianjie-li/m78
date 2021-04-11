@@ -2,11 +2,11 @@
 
 .m78-dates {
   display: inline-block;
-  background: $component-background;
-  border-radius: $border-radius;
-  box-shadow: $shadow-1;
+  background-color: var(--m78-component-bg);
+  border-radius: var(--m78-border-radius);
+  box-shadow: var(--m78-shadow-1);
   width: 320px;
-  z-index: $z-index;
+  z-index: var(--m78-z-index);
 
   &_inp {
     border-style: solid !important;
@@ -29,7 +29,7 @@
   }
 
   &_head {
-    border-bottom: 1px solid $b-border;
+    border-bottom: 1px solid var(--m78-color-border);
 
     .m78-btn.__text {
       padding: 0 6px;
@@ -37,14 +37,14 @@
   }
 
   &_foot {
-    border-top: 1px solid $b-border;
+    border-top: 1px solid var(--m78-color-border);
   }
 
   &_body {
     min-height: 60px;
     user-select: none;
     overflow: hidden;
-    padding: $space-12 10px;
+    padding: var(--m78-space-3) 10px;
   }
 
   &_btns {
@@ -69,7 +69,7 @@
   }
 
   &_list {
-    margin-top: $space-4;
+    margin-top: var(--m78-space-4);
 
     .m78-carousel_item {
       box-shadow: none;
@@ -101,12 +101,12 @@
     }
 
     &.__gray {
-      color: $b-disable;
+      color: var(--m78-color-disable);
     }
 
     &.__focus {
       .m78-dates_date-item-inner {
-        border: 1px dashed $color;
+        border: 1px dashed var(--m78-color);
         background-color: transparent;
       }
     }
@@ -114,35 +114,35 @@
     &.__active {
       .m78-dates_date-item-inner {
         color: #fff;
-        background-color: $color;
+        background-color: var(--m78-color);
       }
     }
 
     &.__disabled {
       .m78-dates_date-item-inner {
-        background-color: $b-divider;
-        color: $b-disable;
+        background-color: var(--m78-color-divider);
+        color: var(--m78-color-disable);
         cursor: not-allowed;
       }
     }
 
     // 高亮范围， 暂时不用了
     &.__activeRange {
-      background-color: $color-1;
+      background-color: var(--m78-color-1);
 
       &:nth-of-type(1) {
         border-radius: 6px 0 0 6px;
       }
 
       .m78-dates_date-item-inner {
-        //color: $b-second;
+        //color: var(--m78-color-second);
         background-color: transparent;
       }
 
       &.__disabled {
-        background-color: $b-divider;
+        background-color: var(--m78-color-divider);
         .m78-dates_date-item-inner {
-          color: $b-disable;
+          color: var(--m78-color-disable);
         }
       }
 
@@ -156,12 +156,12 @@
     }
 
     &.__disabledRange {
-      color: $b-disable;
-      background-color: $b-divider;
+      color: var(--m78-color-disable);
+      background-color: var(--m78-color-divider);
       cursor: not-allowed;
 
       .m78-dates_date-item-inner {
-        color: $b-disable;
+        color: var(--m78-color-disable);
         cursor: not-allowed;
         background-color: transparent;
       }
@@ -197,7 +197,7 @@
     justify-content: center;
     width: 80%;
     height: 100%;
-    border-radius: $border-radius;
+    border-radius: var(--m78-border-radius);
     transition: none !important;
 
     @include effect-bg;
@@ -209,7 +209,7 @@
     top: 0;
     display: inline-block;
     font-size: 12px;
-    border: 1px solid $b-border;
+    border: 1px solid var(--m78-color-border);
     z-index: 1;
     background-color: #666;
     line-height: 1;
@@ -233,7 +233,7 @@
 
   &_arrow {
     display: inline-block;
-    color: $b-second;
+    color: var(--m78-color-second);
 
     &::after,
     &::before {
@@ -258,7 +258,7 @@
     }
 
     &:hover {
-      color: $color;
+      color: var(--m78-color);
       cursor: pointer;
     }
 
@@ -275,7 +275,7 @@
     @include effect-bg;
 
     &:hover {
-      color: $color;
+      color: var(--m78-color);
     }
   }
 
@@ -296,8 +296,8 @@
 
   &_picker-item {
     display: flex;
-    border-top: 1px solid $b-border;
-    border-bottom: 1px solid $b-border;
+    border-top: 1px solid var(--m78-color-border);
+    border-bottom: 1px solid var(--m78-color-border);
 
     & + .m78-dates_picker-item-diver {
       //margin-top: 12px;
@@ -319,7 +319,7 @@
   }
 
   &_picker-label {
-    padding: 0 $space-12;
+    padding: 0 var(--m78-space-3);
     text-align: center;
     font-weight: bold;
   }
@@ -332,7 +332,7 @@
     border-radius: 2px;
 
     & + & {
-      border-left: 1px solid $b-border;
+      border-left: 1px solid var(--m78-color-border);
     }
 
     &::-webkit-scrollbar-track {
@@ -363,7 +363,7 @@
 
     &.__active {
       font-weight: bold;
-      color: $color;
+      color: var(--m78-color);
       font-size: 18px;
 
       > span {
@@ -373,10 +373,10 @@
 
     &.__disabled {
       cursor: not-allowed;
-      color: $b-border;
+      color: var(--m78-color-border);
       background-color: transparent !important;
       > span {
-        color: $b-border !important;
+        color: var(--m78-color-border) !important;
       }
     }
 
@@ -392,7 +392,7 @@
     position: absolute;
     height: 2px;
     width: 100%;
-    border-top: 2px dashed $b-border;
+    border-top: 2px dashed var(--m78-color-border);
 
     &.__tl,
     &.__tr,
@@ -416,26 +416,26 @@
 
     &.__tl {
       left: 0;
-      border-right: 2px solid $b-second;
-      border-bottom: 2px solid $b-second;
+      border-right: 2px solid var(--m78-color-second);
+      border-bottom: 2px solid var(--m78-color-second);
     }
 
     &.__tr {
       right: 0;
-      border-left: 2px solid $b-second;
-      border-bottom: 2px solid $b-second;
+      border-left: 2px solid var(--m78-color-second);
+      border-bottom: 2px solid var(--m78-color-second);
     }
 
     &.__bl {
       left: 0;
-      border-top: 2px solid $b-second;
-      border-right: 2px solid $b-second;
+      border-top: 2px solid var(--m78-color-second);
+      border-right: 2px solid var(--m78-color-second);
     }
 
     &.__br {
       right: 0;
-      border-top: 2px solid $b-second;
-      border-left: 2px solid $b-second;
+      border-top: 2px solid var(--m78-color-second);
+      border-left: 2px solid var(--m78-color-second);
     }
   }
 }

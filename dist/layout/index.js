@@ -12,8 +12,8 @@ var defaultProps = {
   count: 3,
   children: [],
   aspectRatio: 1,
-  border: true,
-  borderColor: 'rgba(0, 0, 0, 0.15)'
+  border: true // borderColor: 'rgba(0, 0, 0, 0.15)',
+
 };
 
 var Grid = function Grid(props) {

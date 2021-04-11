@@ -377,7 +377,6 @@ var _ModalBase = function _ModalBase(props) {
       _props$mask = props.mask,
       mask = _props$mask === void 0 ? true : _props$mask,
       maskClassName = props.maskClassName,
-      maskTheme = props.maskTheme,
       _props$animationType = props.animationType,
       animationType = _props$animationType === void 0 ? 'fromMouse' : _props$animationType,
       _props$mountOnEnter = props.mountOnEnter,
@@ -570,7 +569,7 @@ var _ModalBase = function _ModalBase(props) {
     type: "fade",
     mountOnEnter: true,
     unmountOnExit: true,
-    className: cls(maskTheme === 'dark' ? 'm78-mask-b' : 'm78-mask', maskClassName),
+    className: cls('m78-mask', maskClassName),
     style: {
       zIndex: nowZIndex
     },

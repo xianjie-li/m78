@@ -28,8 +28,6 @@ export default {
   theme: {
     '@c-primary': '#13c2c2',
   },
-  exportStatic: {
-    // dynamicRoot: true,
-  },
+  exportStatic: {},
   dynamicImport: {},
 };

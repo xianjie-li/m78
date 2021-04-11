@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": "./",
+    "types": ["vite/client"],
     "paths": {
       "@/*": ["src/*"],
       "m78/*": [
@@ -13,7 +14,6 @@
       "dom.iterable",
       "esnext"
     ],
-
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
@@ -26,14 +26,17 @@
     "importHelpers": true
   },
   "include": [
-    "src/components/**/*",
-    "src/docs/**/*",
-    "src/mock/**/*",
-    ".babelrc.js",
-    "test/**/*",
+    "./src/components/**/*",
+    "./src/docs/**/*",
+    "./src/mock/**/*",
+    "./test/**/*",
+
+    "./.babelrc.js",
     "./app.d.ts",
     "./script",
-    ".eslintrc.js"
+    ".eslintrc.js",
+    "./play/**/*",
+    "./src/app.tsx"
   ],
   "exclude": [
     "../src/components/*/style/**",

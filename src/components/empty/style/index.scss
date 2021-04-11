@@ -3,7 +3,7 @@
 .m78-empty {
   padding: 16px;
   text-align: center;
-  line-height: $line-height-base;
+  line-height: var(--m78-line-height);
 
   &.__small {
     .m78-empty_icon,
@@ -14,7 +14,7 @@
 
     .m78-empty_desc,
     .m78-empty_actions {
-      font-size: $fs-12;
+      font-size: var(--m78-fs);
     }
   }
 
@@ -27,7 +27,7 @@
 
     .m78-empty_desc,
     .m78-empty_actions {
-      font-size: $fs-16;
+      font-size: var(--m78-fs-md);
     }
   }
 
@@ -38,13 +38,13 @@
   }
 
   &_desc {
-    color: $b-second;
-    font-size: $fs-14;
+    color: var(--m78-color-second);
+    font-size: var(--m78-fs);
     margin-top: 4px;
   }
 
   &_actions {
     margin-top: 4px;
-    font-size: $fs-14;
+    font-size: var(--m78-fs);
   }
 }

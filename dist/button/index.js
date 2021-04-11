@@ -5,6 +5,7 @@ import _objectSpread from '@babel/runtime/helpers/objectSpread2';
 import React, { useMemo } from 'react';
 import Spin from 'm78/spin';
 import 'm78/base';
+import m78Context from 'm78/context';
 import { isArray } from '@lxjx/utils';
 import cls from 'classnames';
 
@@ -100,12 +101,13 @@ function Button(btnProps) {
       className = _ref.className,
       text = _ref.text,
       href = _ref.href,
-      _ref$shadow = _ref.shadow,
-      shadow = _ref$shadow === void 0 ? true : _ref$shadow,
       innerRef = _ref.innerRef,
-      props = _objectWithoutProperties(_ref, ["size", "color", "circle", "outline", "block", "icon", "disabled", "loading", "md", "win", "children", "className", "text", "href", "shadow", "innerRef"]);
+      onFocus = _ref.onFocus,
+      onBlur = _ref.onBlur,
+      props = _objectWithoutProperties(_ref, ["size", "color", "circle", "outline", "block", "icon", "disabled", "loading", "md", "win", "children", "className", "text", "href", "innerRef", "onFocus", "onBlur"]);
 
-  var classNames = cls(className, 'm78-btn', 'm78-effect', (_cls = {}, _defineProperty(_cls, "__".concat(color), color), _defineProperty(_cls, "__".concat(size), size), _defineProperty(_cls, "__circle", circle), _defineProperty(_cls, "__outline", outline), _defineProperty(_cls, "__block", block), _defineProperty(_cls, "__text", text), _defineProperty(_cls, "__icon", icon), _defineProperty(_cls, "__md", md), _defineProperty(_cls, "__win", win), _defineProperty(_cls, "__light", !!color && !text && !icon), _defineProperty(_cls, "__shadow", shadow), _defineProperty(_cls, "__disabled", disabled || loading), _cls));
+  var theme = m78Context.theme;
+  var classNames = cls(className, 'm78-btn', 'm78-effect', (_cls = {}, _defineProperty(_cls, "__".concat(color), color), _defineProperty(_cls, "__".concat(size), size), _defineProperty(_cls, "__circle", circle), _defineProperty(_cls, "__outline", outline), _defineProperty(_cls, "__block", block), _defineProperty(_cls, "__text", text), _defineProperty(_cls, "__icon", icon), _defineProperty(_cls, "__md", md), _defineProperty(_cls, "__win", win), _defineProperty(_cls, "__light", !!color && !text && !icon || !color && theme === 'dark'), _defineProperty(_cls, "__disabled", disabled || loading), _cls));
   var newChildren = useMemo(function () {
     return formatChildren(children);
   }, [children]);

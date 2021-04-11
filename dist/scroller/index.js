@@ -84,7 +84,8 @@ function useMethods(share) {
       setPgSp = share.setPgSp,
       setPullDownSp = share.setPullDownSp,
       rootEl = share.rootEl,
-      queue = share.queue;
+      queue = share.queue,
+      sHelper = share.sHelper;
   var soap = props.soap,
       threshold = props.threshold,
       rubber = props.rubber,
@@ -206,7 +207,7 @@ function useMethods(share) {
 
   function getScrollWidth() {
     if (!hideScrollbar && !scrollFlag) return;
-    var w = getScrollBarWidth(rootEl.current);
+    var w = getScrollBarWidth(sHelper.ref.current);
     if (!w || w === state.scrollBarWidth) return;
     setState({
       scrollBarWidth: w
@@ -583,7 +584,8 @@ var defaultProps = {
   direction: DirectionEnum.vertical,
   pullUpThreshold: 120,
   pullDownTips: true
-};
+}; // limitBound、headerCustomer居中显示边框 无效
+
 var Scroller = /*#__PURE__*/React.forwardRef(function (props, ref) {
   var _ref = props,
       hideScrollbar = _ref.hideScrollbar,

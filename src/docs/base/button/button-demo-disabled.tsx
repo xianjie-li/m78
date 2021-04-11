@@ -17,6 +17,9 @@ const ButtonDemoColor = () => (
     <Button color="yellow" disabled>
       yellow
     </Button>
+    <Button color="primary" disabled>
+      primary
+    </Button>
   </div>
 );
 

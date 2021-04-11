@@ -12,7 +12,6 @@ const Spin: React.FC<SpinProps> = ({
   inline,
   text = '加载中',
   full,
-  dark,
   show = true,
   className,
   loadingDelay = 0,
@@ -32,7 +31,6 @@ const Spin: React.FC<SpinProps> = ({
         [`__${size}`]: !!size,
         __inline: inline,
         __full: full,
-        __dark: dark,
       })}
     >
       <WindmillIcon className="m78-spin_unit" />

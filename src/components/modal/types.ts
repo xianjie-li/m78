@@ -34,8 +34,8 @@ export interface ModalBaseProps extends ComponentBaseProps {
   maskClassName?: string;
   /** true | 点击内容区域以外是否关闭Modal */
   clickAwayClosable?: boolean;
-  /** 'light' | mask主题色 */
-  maskTheme?: 'dark' | 'light';
+  // /** 'light' | mask主题色 */
+  // maskTheme?: 'dark' | 'light';
   /** [0.5, 0.5] | 指定x/y轴位置, 值为 -1 ~ 1, 例：[0.5, 0.5] -> 居中， [1, 0] -> 右上， [1, 1] -> 右下 */
   alignment?: TupleNumber;
   /** 360 | 弹窗宽度 */

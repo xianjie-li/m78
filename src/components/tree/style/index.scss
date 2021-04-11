@@ -5,20 +5,20 @@ $ident-w: 20px;
 
 .m78-tree {
   position: relative;
-  line-height: $line-height-base;
-  font-size: $fs-14;
+  line-height: var(--m78-line-height);
+  font-size: var(--m78-fs);
   text-align: left;
 
   &.__style {
-    border: 1px solid $b-border;
-    border-radius: $border-radius;
+    border: 1px solid var(--m78-color-border);
+    border-radius: var(--m78-border-radius);
     padding: 12px;
 
     .m78-tree_toolbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px dashed $b-divider;
+      border-bottom: 1px dashed var(--m78-color-divider);
       padding-bottom: 12px;
       margin-bottom: 12px;
 
@@ -42,7 +42,7 @@ $ident-w: 20px;
 
   &.__large {
     .m78-tree_item {
-      font-size: $fs-16;
+      font-size: var(--m78-fs-md);
       padding: 0 12px 0 4px;
     }
   }
@@ -58,17 +58,17 @@ $ident-w: 20px;
     display: flex;
     justify-content: space-between;
     padding: 0 4px 0 0;
-    border-radius: $border-radius;
+    border-radius: var(--m78-border-radius);
     user-select: none;
     background-color: transparent;
 
     &.__dragging {
-      background-color: rgba($color, 0.1) !important;
-      border: 1px solid rgba($color, 0.6);
+      background-color: rgba(var(--m78-color), 0.1) !important;
+      border: 1px solid rgba(var(--m78-color), 0.6);
     }
 
     &.__disabled {
-      color: $b-disable;
+      color: var(--m78-color-disable);
       background-color: transparent !important;
       cursor: not-allowed !important;
     }
@@ -82,7 +82,7 @@ $ident-w: 20px;
   &_main {
     display: flex;
     flex: 1;
-    border-radius: $border-radius;
+    border-radius: var(--m78-border-radius);
   }
 
   &_cont {
@@ -111,12 +111,12 @@ $ident-w: 20px;
     }
 
     &.__empty {
-      color: $b-disable;
+      color: var(--m78-color-disable);
     }
   }
 
   &_open-icon {
-    transition: $animation-duration-base;
+    transition: var(--m78-animate-base);
   }
 
   // 直接渲染节点会比伪类空白时间更短?
@@ -126,8 +126,8 @@ $ident-w: 20px;
     height: 50%;
     top: 0;
     left: 50%;
-    border-left: 1px solid $b-border;
-    border-bottom: 1px solid $b-border;
+    border-left: 1px solid var(--m78-color-border);
+    border-bottom: 1px solid var(--m78-color-border);
     background-color: transparent !important;
   }
 
@@ -138,7 +138,7 @@ $ident-w: 20px;
     top: 0;
     bottom: 0;
     left: 50%;
-    background-color: $b-border;
+    background-color: var(--m78-color-border);
     border-color: transparent !important;
   }
 
@@ -189,14 +189,14 @@ $ident-w: 20px;
     height: 68%;
     margin-right: 10px;
     color: transparent;
-    border-radius: $border-radius;
+    border-radius: var(--m78-border-radius);
   }
 
   &_checked {
     position: absolute;
-    border: 2px solid $color;
-    background-color: rgba($color, 0.1);
-    border-radius: $border-radius;
+    border: 2px solid var(--m78-color);
+    background-color: rgba(var(--m78-color), 0.1);
+    border-radius: var(--m78-border-radius);
     z-index: -1;
     pointer-events: none;
 

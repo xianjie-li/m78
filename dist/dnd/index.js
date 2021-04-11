@@ -261,7 +261,7 @@ function getOverStatus(el, x, y, firstScrollParent) {
       wrapEl: firstScrollParent
     });
     visible = vs.visible;
-  } // 各方向上的拖动状态E
+  } // 各方向上的拖动状态
 
 
   var dragOver = visible && isBetween(bound, x, y);

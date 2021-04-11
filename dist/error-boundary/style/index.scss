@@ -3,13 +3,13 @@
 .m78-error-boundary {
   padding: 12px;
   font-size: 14px;
-  color: $b-primary;
+  color: var(--m78-color-primary);
   background-color: #fff;
 
   &_title {
     font-size: 16px;
     font-weight: bold;
-    color: $color-error;
+    color: var(--m78-color-error);
     margin-bottom: 4px;
   }
 

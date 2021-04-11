@@ -2,6 +2,8 @@ import React, { useMemo } from 'react';
 
 import Spin from 'm78/spin';
 import 'm78/base';
+import m78Context from 'm78/context';
+
 import { isArray } from '@lxjx/utils';
 
 import cls from 'classnames';
@@ -76,10 +78,13 @@ function Button(btnProps: ButtonPropsWithHTMLLink | ButtonPropsWithHTMLButton) {
     className,
     text,
     href,
-    shadow = true,
     innerRef,
+    onFocus,
+    onBlur,
     ...props
   } = btnProps as ButtonPropsWithHTMLLink & ButtonPropsWithHTMLButton;
+
+  const { theme } = m78Context;
 
   const classNames = cls(className, 'm78-btn', 'm78-effect', {
     [`__${color}`]: color,
@@ -91,8 +96,7 @@ function Button(btnProps: ButtonPropsWithHTMLLink | ButtonPropsWithHTMLButton) {
     __icon: icon,
     __md: md,
     __win: win,
-    __light: !!color && !text && !icon, // 当是link/icon按钮时，可以直接使用对应颜色的波纹
-    __shadow: shadow,
+    __light: (!!color && !text && !icon) || (!color && theme === 'dark'), // 当是link/icon按钮时，可以直接使用对应颜色的波纹
     __disabled: disabled || loading,
   });
 

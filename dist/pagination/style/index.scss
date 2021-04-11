@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   line-height: 3;
-  font-size: $font-size;
+  font-size: var(--m78-fs);
   text-align: center;
 
   &_item {
@@ -18,7 +18,7 @@
     &.m78-btn.__ellipsis {
       height: $size-default;
       font-size: 15px;
-      color: $b-second;
+      color: var(--m78-color-second);
 
       .anticon {
         margin: 0 !important;

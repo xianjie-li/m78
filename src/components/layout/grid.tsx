@@ -22,7 +22,7 @@ interface GridProps extends ComponentBaseProps {
   crossSpacing?: number;
   /** true | 是否启用边框 */
   border?: boolean;
-  /** 'rgba(0, 0, 0, 0.15)' | 边框颜色 */
+  /** 框颜色 */
   borderColor?: string;
   /** true | 当最后一行不能填满时，是否以空项占位 */
   complete?: boolean;
@@ -37,7 +37,7 @@ const defaultProps = {
   children: [] as React.ReactElement[],
   aspectRatio: 1,
   border: true,
-  borderColor: 'rgba(0, 0, 0, 0.15)',
+  // borderColor: 'rgba(0, 0, 0, 0.15)',
 };
 
 const Grid = (props: GridProps & typeof defaultProps) => {

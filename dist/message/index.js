@@ -203,7 +203,9 @@ var Message = function Message(_ref2) {
       className: "m78-message_close",
       icon: true,
       size: "small"
-    }, /*#__PURE__*/React.createElement(CloseOutlined, null));
+    }, /*#__PURE__*/React.createElement(CloseOutlined, {
+      className: "m78-close-icon"
+    }));
   }), /*#__PURE__*/React.createElement(Toggle, {
     when: type && !loading
   }, /*#__PURE__*/React.createElement("div", {

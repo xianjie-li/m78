@@ -52,7 +52,7 @@ export function getOverStatus(
     visible = vs.visible;
   }
 
-  // 各方向上的拖动状态E
+  // 各方向上的拖动状态
   const dragOver = visible && isBetween(bound, x, y);
   const dragTop = dragOver && y < top + triggerYOffset;
   const dragBottom = dragOver && !dragTop && y > bottom - triggerYOffset;

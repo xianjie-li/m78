@@ -1,9 +1,9 @@
-/** 与@lxjx/sass-base同步，用于js代码的常用屏幕尺寸 */
+/** 与style库同步，用于js代码的常用屏幕尺寸 */
 var SM = 576;
 var MD = 768;
 var LG = 992;
 var XL = 1200;
-/** 与@lxjx/sass-base同步，用于js代码的z-index预设值 */
+/** 与style库同步，用于js代码的z-index预设值 */
 
 var Z_INDEX = 1000;
 var Z_INDEX_DRAWER = 1400;

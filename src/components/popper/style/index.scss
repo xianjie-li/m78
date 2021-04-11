@@ -22,12 +22,12 @@
   top: 0;
   position: absolute;
   border-radius: 2px;
-  box-shadow: $shadow-2;
-  z-index: $z-index-message;
+  box-shadow: var(--m78-shadow-1-b-focus);
+  z-index: var(--m78-z-index-message);
   will-change: auto;
   max-width: 90vw;
   max-height: 90vh;
-  line-height: $line-height-base;
+  line-height: var(--m78-line-height);
   font-size: 14px;
   //overflow: auto;
 
@@ -39,7 +39,7 @@
     min-width: 80px;
     min-height: 30px;
     z-index: 100;
-    background-color: #fff;
+    background-color: var(--m78-component-bg);
   }
 
   &_tooltip {
@@ -56,9 +56,12 @@
 
   // popper不限制宽度，由用户控制
   &_popper {
+    box-shadow: var(--m78-shadow-1);
+    border: 1px solid var(--m78-color-border);
+
     &-title {
       padding: 4px 12px;
-      border-bottom: 1px solid $b-border;
+      border-bottom: 1px solid var(--m78-color-border);
       font-weight: 600;
     }
 
@@ -69,8 +72,10 @@
   }
 
   &_confirm {
+    box-shadow: var(--m78-shadow-1);
     padding: 12px;
     max-width: 300px;
+    border: 1px solid var(--m78-color-border);
 
     &-icon {
       float: left;
@@ -113,7 +118,7 @@
       float: left;
       margin-top: 4px;
       letter-spacing: 2px;
-      color: $w-primary;
+      color: rgba(255,255,255,0.95);
     }
 
     & + .m78-popper_arrow {
@@ -173,8 +178,8 @@
     position: absolute;
     width: 8px;
     height: 8px;
-    background-color: #fff;
-    z-index: -1;
+    background-color: var(--m78-component-bg);
+    //z-index: -1;
 
     &.__top,
     &.__topStart,
@@ -186,7 +191,7 @@
     &.__bottom,
     &.__bottomStart,
     &.__bottomEnd {
-      box-shadow: 1px 0 2px rgba(0, 0, 0, 0.14);
+      //box-shadow: 1px 0 2px rgba(0, 0, 0, 0.14);
       top: -4px;
     }
 

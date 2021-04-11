@@ -22,8 +22,6 @@ var _Skeleton = function _Skeleton(_ref) {
       lineNumber = _ref$lineNumber === void 0 ? 6 : _ref$lineNumber,
       _ref$shadow = _ref.shadow,
       shadow = _ref$shadow === void 0 ? true : _ref$shadow,
-      _ref$backgroundColor = _ref.backgroundColor,
-      backgroundColor = _ref$backgroundColor === void 0 ? '#fff' : _ref$backgroundColor,
       circle = _ref.circle,
       img = _ref.img;
 
@@ -69,16 +67,12 @@ var _Skeleton = function _Skeleton(_ref) {
       __shadow: shadow
     }),
     style: {
-      width: width,
-      backgroundColor: backgroundColor
+      width: width
     }
   }, img && /*#__PURE__*/React.createElement("div", {
     className: cls('m78-skeleton_img', {
       __circle: !!circle
-    }),
-    style: {
-      backgroundColor: backgroundColor
-    }
+    })
   }), lines);
 };
 /* height属性作用于banner的高度 */
@@ -88,16 +82,13 @@ var _Banner = function _Banner(_ref2) {
   var width = _ref2.width,
       height = _ref2.height,
       _ref2$shadow = _ref2.shadow,
-      shadow = _ref2$shadow === void 0 ? true : _ref2$shadow,
-      _ref2$backgroundColor = _ref2.backgroundColor,
-      backgroundColor = _ref2$backgroundColor === void 0 ? '#fff' : _ref2$backgroundColor;
+      shadow = _ref2$shadow === void 0 ? true : _ref2$shadow;
   return /*#__PURE__*/React.createElement("div", {
     className: cls('m78-skeleton m78-skeleton_banner', {
       __shadow: shadow
     }),
     style: {
-      width: width,
-      backgroundColor: backgroundColor
+      width: width
     }
   }, /*#__PURE__*/React.createElement("div", {
     className: "m78-skeleton_banner-main m78-skeleton_animate",

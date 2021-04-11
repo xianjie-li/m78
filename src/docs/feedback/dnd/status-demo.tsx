@@ -3,14 +3,7 @@ import DND, { DNDContext } from 'm78/dnd';
 import { Row } from 'm78/layout';
 import cls from 'classnames';
 
-const style: React.CSSProperties = {
-  width: 140,
-  height: 140,
-  boxShadow: '0 0 8px rgba(0,0,0,0.45)',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-};
+import sty from './sty1.module.scss';
 
 const StatusDemo = () => {
   return (
@@ -31,12 +24,11 @@ const StatusDemo = () => {
               <div
                 ref={innerRef}
                 // 内置的样式类名为.m78-dnd-box
-                className={cls('m78-dnd-box', {
+                className={cls('m78-dnd-box', sty.dndBox2, {
                   // 禁用、拖动到中间的状态
                   __active: status.dragCenter,
                   __disabled: !enables.enable,
                 })}
-                style={style}
               >
                 <div>1. 全方向放置</div>
 
@@ -60,12 +52,11 @@ const StatusDemo = () => {
               <div
                 ref={innerRef}
                 // 内置的样式类名为.m78-dnd-box
-                className={cls('m78-dnd-box', {
+                className={cls('m78-dnd-box', sty.dndBox2, {
                   // 禁用、拖动到中间的状态
                   __active: status.dragCenter,
                   __disabled: !enables.enable,
                 })}
-                style={style}
               >
                 <div>2. 上下可放置</div>
 
@@ -85,12 +76,11 @@ const StatusDemo = () => {
               <div
                 ref={innerRef}
                 // 内置的样式类名为.m78-dnd-box
-                className={cls('m78-dnd-box', {
+                className={cls('m78-dnd-box', sty.dndBox2, {
                   // 禁用、拖动到中间的状态
                   __active: status.dragOver,
                   __disabled: !enables.enable,
                 })}
-                style={style}
               >
                 <div>3. 不限制方向</div>
               </div>
@@ -107,12 +97,11 @@ const StatusDemo = () => {
               <div
                 ref={innerRef}
                 // 内置的样式类名为.m78-dnd-box
-                className={cls('m78-dnd-box', {
+                className={cls('m78-dnd-box', sty.dndBox2, {
                   // 禁用、拖动到中间的状态
                   __active: status.dragOver,
                   __disabled: !enables.enable,
                 })}
-                style={style}
               >
                 <div>4. 拖动`2`时禁用</div>
               </div>

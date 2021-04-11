@@ -16,7 +16,6 @@ function multiLine(line) {
 var Ellipsis = function Ellipsis(_ref) {
   var _ref$line = _ref.line,
       line = _ref$line === void 0 ? 1 : _ref$line,
-      dark = _ref.dark,
       _ref$forceCompat = _ref.forceCompat,
       forceCompat = _ref$forceCompat === void 0 ? false : _ref$forceCompat,
       _ref$disabled = _ref.disabled,
@@ -79,7 +78,6 @@ var Ellipsis = function Ellipsis(_ref) {
   return /*#__PURE__*/React.createElement("div", {
     ref: el,
     className: cls('m78-ellipsis', className, {
-      __dark: dark,
       ellipsis: !shouldAddShadow && line === 1
     }),
     style: _objectSpread(_objectSpread({

@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "baseUrl": "../",
+    "paths": {
+      "@/*": ["src/*"],
+      "m78/*": [
+        "src/components/*"
+      ]
+    },
+    "target": "es5",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "jsx": "react",
+    "strictPropertyInitialization": false,
+    "importHelpers": true
+  }
+}

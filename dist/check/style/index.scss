@@ -11,7 +11,7 @@ $s-small-wrap: $size-default;
   vertical-align: middle;
   align-items: center;
   font-size: 16px;
-  line-height: $line-height-base;
+  line-height: var(--m78-line-height);
   user-select: none;
   z-index: 1;
 
@@ -46,7 +46,7 @@ $s-small-wrap: $size-default;
 
   &.__disabled {
     cursor: not-allowed;
-    color: $b-disable;
+    color: var(--m78-color-disable);
   }
 
   &.__wave-wrap {
@@ -164,7 +164,7 @@ $s-small-wrap: $size-default;
             height: 3px;
             left: 3px;
             top: 9px;
-            background-color: #fff;
+            background-color: var(--m78-component-bg);
             transform: rotate(0);
           }
         }
@@ -179,7 +179,7 @@ $s-small-wrap: $size-default;
 
       .m78-check_base-main,
       .m78-check_base-inner {
-        border-radius: $border-radius;
+        border-radius: var(--m78-border-radius);
       }
 
       .m78-check_base-main {
@@ -201,7 +201,7 @@ $s-small-wrap: $size-default;
           content: '';
           width: 13px;
           height: 7px;
-          border-color: #fff;
+          border-color: var(--m78-component-bg);
           border-style: solid;
           border-width: 0 0 2px 2px;
           transform: rotate(-45deg);
@@ -210,7 +210,7 @@ $s-small-wrap: $size-default;
     }
 
     &:hover {
-      background-color: $b-divider;
+      background-color: var(--m78-color-divider);
     }
 
     &:active {
@@ -221,42 +221,45 @@ $s-small-wrap: $size-default;
       background-color: transparent !important;
 
       .m78-check_base-main {
-        border-color: $b-disable !important;
+        border-color: var(--m78-color-disable) !important;
       }
       .m78-check_base-inner {
-        background-color: $b-disable !important;
+        background-color: var(--m78-color-disable) !important;
       }
     }
 
     &.__focus {
-      background-color: $b-divider;
+      background-color: var(--m78-color-divider);
     }
 
     &.__focus.__checked {
-      background-color: rgba($color, 0.1);
+      background-color: var(--m78-color-opacity-sm);
+      //background-color: rgba(var(--m78-color), 0.1);
     }
 
     &.__checked,
     &.__partial {
       &:hover {
-        background-color: rgba($color, 0.1);
+        background-color: var(--m78-color-opacity-sm);
+        //background-color: rgba(--m78-color, 0.1);
       }
       .m78-check_base-inner {
         transform: scale3d(1, 1, 1);
       }
 
       .m78-check_base-main {
-        border-color: $color;
+        border-color: var(--m78-color);
       }
 
       .m78-effect-ripple {
-        background: rgba($color, 0.1);
+        background-color: var(--m78-color-opacity-sm);
+        //background: rgba(var(--m78-color), 0.1);
       }
     }
 
     .m78-effect-ripple {
       transition: 0.3s ease-in !important;
-      background: $b-divider;
+      background: var(--m78-color-divider);
     }
 
     &-main {
@@ -265,7 +268,7 @@ $s-small-wrap: $size-default;
       display: inline-block;
       width: 22px;
       height: 22px;
-      border: 2px solid $b-second;
+      border: 2px solid var(--m78-color-second);
       border-radius: 50%;
       z-index: 1;
     }
@@ -275,7 +278,7 @@ $s-small-wrap: $size-default;
       width: 12px;
       height: 12px;
       display: inline-block;
-      background-color: $color;
+      background-color: var(--m78-color);
       border-radius: 50%;
       left: 50%;
       top: 50%;
@@ -320,43 +323,46 @@ $s-small-wrap: $size-default;
     position: relative;
     height: 22px;
     width: 20px * 2 + 2; /* handle的宽度x2 + 2px的边距 */
-    background-color: $b-border;
+    background-color: var(--m78-color-border);
     border-radius: 50px;
-    box-shadow: 0 0 0 1px $b-second;
-    transition: background-color $animation-duration-slow;
+    box-shadow: 0 0 0 1px var(--m78-color-second);
+    transition: background-color var(--m78-animate-slow);
 
     &.__checked {
-      background-color: $color;
+      background-color: var(--m78-color);
 
       .m78-check_switch-inner {
         transform: translateX(20px);
       }
 
       .m78-effect-ripple {
-        background: rgba($color, 0.4);
+        background-color: var(--m78-color-opacity-md) !important;
+        //background: rgba(var(--m78-color), 0.4);
       }
     }
 
     &.__focus {
       .m78-check_switch-inner {
-        background-color: $b-divider;
+        background-color: var(--m78-color-divider);
       }
 
       &.__checked .m78-check_switch-inner {
-        background-color: rgba($color, 0.4);
+        background-color: var(--m78-color-opacity-md);
+        //background-color: rgba(var(--m78-color), 0.4);
       }
     }
 
     &.__disabled {
-      background-color: $b-divider;
-      box-shadow: 0 0 0 1px $b-disable;
+      background-color: var(--m78-color-divider);
+      box-shadow: 0 0 0 1px var(--m78-color-disable);
 
       .m78-check_switch-handle {
-        box-shadow: 0 0 0 1px $b-disable;
+        box-shadow: 0 0 0 1px var(--m78-color-disable);
       }
 
       &.__checked {
-        background-color: rgba($color, 0.4);
+        background-color: var(--m78-color-opacity-md);
+        //background-color: rgba(var(--m78-color), 0.4);
       }
     }
 
@@ -370,7 +376,7 @@ $s-small-wrap: $size-default;
       border-radius: 50%;
       /* 9 = inner 和 handle 的边距 减1px的间隙 */
       transform: translateX(0);
-      transition: transform $animation-duration-base;
+      transition: transform var(--m78-animate-base);
     }
 
     &-handle {
@@ -382,16 +388,22 @@ $s-small-wrap: $size-default;
       margin: auto;
       width: 20px;
       height: 20px;
-      background-color: #fff;
+      background-color: var(--m78-component-bg);
       border-radius: 50%;
-      box-shadow: 0 0 0 1px $b-second;
+      box-shadow: 0 0 0 1px var(--m78-color-second);
       font-size: 12px;
-      color: $b-second;
+      color: var(--m78-color-primary);
       @include ellipsis-x;
       > span {
         transform: scale(0.8);
         transform-origin: center center;
       }
     }
+  }
+}
+
+html[data-theme="dark"] {
+  .m78-check_switch .m78-effect-ripple {
+    background-color: var(--m78-color-second-w);
   }
 }

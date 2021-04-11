@@ -16,13 +16,12 @@ var Spin = function Spin(_ref) {
       _ref$text = _ref.text,
       text = _ref$text === void 0 ? '加载中' : _ref$text,
       full = _ref.full,
-      dark = _ref.dark,
       _ref$show = _ref.show,
       show = _ref$show === void 0 ? true : _ref$show,
       className = _ref.className,
       _ref$loadingDelay = _ref.loadingDelay,
       loadingDelay = _ref$loadingDelay === void 0 ? 0 : _ref$loadingDelay,
-      props = _objectWithoutProperties(_ref, ["size", "inline", "text", "full", "dark", "show", "className", "loadingDelay"]);
+      props = _objectWithoutProperties(_ref, ["size", "inline", "text", "full", "show", "className", "loadingDelay"]);
 
   var innerShow = useDelayDerivedToggleStatus(show, loadingDelay);
   return /*#__PURE__*/React.createElement(Transition, _extends({
@@ -32,7 +31,7 @@ var Spin = function Spin(_ref) {
     unmountOnExit: true
   }, props, {
     config: config.stiff,
-    className: cls(className, 'm78-spin', (_cls = {}, _defineProperty(_cls, "__".concat(size), !!size), _defineProperty(_cls, "__inline", inline), _defineProperty(_cls, "__full", full), _defineProperty(_cls, "__dark", dark), _cls))
+    className: cls(className, 'm78-spin', (_cls = {}, _defineProperty(_cls, "__".concat(size), !!size), _defineProperty(_cls, "__inline", inline), _defineProperty(_cls, "__full", full), _cls))
   }), /*#__PURE__*/React.createElement(WindmillIcon, {
     className: "m78-spin_unit"
   }), text && /*#__PURE__*/React.createElement("span", {

@@ -4,12 +4,12 @@
   display: flex;
   position: relative;
   margin: 12px 0;
-  z-index: $z-index;
-  background-color: $component-background;
+  z-index: var(--m78-z-index);
+  background-color: var(--m78-component-bg);
 
   &.__fixed {
     position: fixed;
-    z-index: $z-index-drawer;
+    z-index: var(--m78-z-index-drawer);
     overflow: auto;
 
     @include full;
@@ -45,14 +45,14 @@
   }
 
   &_title {
-    font-size: $fs-20;
+    font-size: var(--m78-fs-lg);
     margin-bottom: 8px;
-    color: $b-title;
+    color: var(--m78-color-title);
   }
 
   &_desc {
-    font-size: $fs-14;
-    color: $b-second;
+    font-size: var(--m78-fs);
+    color: var(--m78-color-second);
     line-height: 1.15;
   }
 
@@ -71,8 +71,8 @@
   &_extra {
     padding: 12px;
     margin: 24px 0 0;
-    border-radius: $border-radius;
-    background-color: $b-bg;
+    border-radius: var(--m78-border-radius);
+    background-color: var(--m78-component-bg);
     line-height: 1.3;
     text-align: left;
   }

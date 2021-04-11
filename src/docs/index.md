@@ -72,7 +72,7 @@ function App() {
 
 ```scss
 // custom.scss
-@import '~@lxjx/sass-base/var/index.scss';
+@import '~@m78/style/var/index.scss';
 
 // 主题色更改为红色
 $color: red;

@@ -20,12 +20,14 @@
       rgba(255, 255, 255, 0.96) 74%
     );
   }
+}
 
-  &.__dark .m78-ellipsis_shadow {
+:root[data-theme="dark"] {
+  .m78-ellipsis_shadow {
     background: linear-gradient(
       to right,
       rgba(0, 0, 0, 0),
-      rgba(0, 0, 0, 0.84) 60%,
+      rgba(0, 0, 0, 0.74) 60%,
       rgba(0, 0, 0, 0.96) 74%
     );
   }

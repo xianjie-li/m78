@@ -1,6 +1,6 @@
 {
   "name": "m78",
-  "version": "1.0.0-beta.35",
+  "version": "1.0.0-beta.51",
   "types": "./",
   "license": "MIT",
   "description": "components, hooks, utils, part of the react toolchain",
@@ -20,11 +20,13 @@
     "lint": "npm run lint:script && npm run lint:prettier",
     "fix": "eslint ./src --ext .js,.jsx,.ts,.tsx --fix && prettier --check ./src/**/* --write",
     "typecheck": "tsc --noEmit",
-    "dev": "dumi dev",
+    "dev:doc": "dumi dev",
     "build:doc": "dumi build",
     "test": "jest ./test",
     "ypublish": "yarn publish ./dist -f",
-    "postypublish": "node script/syncPkg"
+    "postypublish": "node script/syncPkg",
+    "dev": "vite --config config/vite.config.ts",
+    "gd": "tsc --emitDeclarationOnly -p ./config/lib.config.json --outDir ./dist/esm"
   },
   "repository": "https://github.com/Iixianjie/m78",
   "author": {
@@ -50,9 +52,9 @@
     "@lxjx/hooks": "^1.16.4",
     "@lxjx/react-render-api": "^0.5.0",
     "@lxjx/react-transition-spring": "^1.2.5",
-    "@lxjx/sass-base": "^1.5.3",
     "@lxjx/utils": "^1.11.0",
     "@lxjx/validate-tools": "^1.1.0",
+    "@m78/style": "^1.0.17",
     "@types/classnames": "^2.2.9",
     "@types/lodash": "^4.14.141",
     "@types/node": "^12.7.5",
@@ -91,6 +93,7 @@
     "@testing-library/react": "^10.4.5",
     "@types/jest": "^26.0.4",
     "@umijs/plugin-sass": "^1.1.1",
+    "@vitejs/plugin-react-refresh": "^1.3.2",
     "babel-jest": "^26.1.0",
     "chalk": "^4.1.0",
     "dumi": "^1.0.34",
@@ -105,7 +108,9 @@
     "rollup": "^2.33.1",
     "rollup-plugin-copy": "^3.3.0",
     "rollup-plugin-extensions": "^0.1.0",
-    "typescript": "^3.7.2"
+    "sass": "^1.32.8",
+    "typescript": "^3.7.2",
+    "vite": "^2.1.5"
   },
   "jest": {
     "moduleNameMapper": {

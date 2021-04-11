@@ -1,4 +1,4 @@
-@import '~@lxjx/sass-base/main';
+@import '~@m78/style/index';
 
 :global {
   ::placeholder {
@@ -8,11 +8,11 @@
 
 .nestBox {
   padding: 16px;
-  border: 1px solid $b-second;
+  border: 1px solid var(--m78-color-second);
   border-radius: 2px;
   margin-bottom: 16px;
 
   &:global(.__active) {
-    background-color: rgba($color, 0.4);
+    background-color: rgba(var(--m78-color), 0.4);
   }
 }

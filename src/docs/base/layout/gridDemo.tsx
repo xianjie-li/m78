@@ -9,12 +9,7 @@ import {
   WechatOutlined,
   ZhihuOutlined,
 } from 'm78/icon';
-
-const boxSty: React.CSSProperties = {
-  borderRadius: 4,
-  background: 'rgba(0, 0, 0, 0.1)',
-  padding: 12,
-};
+import './style.scss';
 
 const GridDemo = () => {
   return (
@@ -25,7 +20,7 @@ const GridDemo = () => {
         <Center>
           <span className="tc">
             <QqOutlined />
-            <div className="fs-14 color-second" style={{ color: '#ed1f24' }}>
+            <div className="fs color-second" style={{ color: '#ed1f24' }}>
               QQ
             </div>
           </span>
@@ -33,7 +28,7 @@ const GridDemo = () => {
         <Center>
           <span className="tc">
             <WechatOutlined />
-            <div className="fs-14 color-second" style={{ color: '#03d669' }}>
+            <div className="fs color-second" style={{ color: '#03d669' }}>
               Wechat
             </div>
           </span>
@@ -41,7 +36,7 @@ const GridDemo = () => {
         <Center>
           <span className="tc">
             <TwitterOutlined />
-            <div className="fs-14 color-second" style={{ color: '#1da1f2' }}>
+            <div className="fs color-second" style={{ color: '#1da1f2' }}>
               Twitter
             </div>
           </span>
@@ -49,7 +44,7 @@ const GridDemo = () => {
         <Center>
           <span className="tc">
             <AlipayCircleOutlined />
-            <div className="fs-14 color-second" style={{ color: '#1476fe' }}>
+            <div className="fs color-second" style={{ color: '#1476fe' }}>
               Alipay
             </div>
           </span>
@@ -57,7 +52,7 @@ const GridDemo = () => {
         <Center>
           <span className="tc">
             <TaobaoCircleOutlined />
-            <div className="fs-14 color-second" style={{ color: '#ff4900' }}>
+            <div className="fs color-second" style={{ color: '#ff4900' }}>
               Taobao
             </div>
           </span>
@@ -65,7 +60,7 @@ const GridDemo = () => {
         <Center>
           <span className="tc">
             <ZhihuOutlined />
-            <div className="fs-14 color-second" style={{ color: '#1992f5' }}>
+            <div className="fs color-second" style={{ color: '#1992f5' }}>
               Zhihu
             </div>
           </span>
@@ -73,7 +68,7 @@ const GridDemo = () => {
         <Center>
           <span className="tc">
             <InstagramOutlined />
-            <div className="fs-14 color-second" style={{ color: '#694bc8' }}>
+            <div className="fs color-second" style={{ color: '#694bc8' }}>
               Instagram
             </div>
           </span>
@@ -112,7 +107,13 @@ const GridDemo = () => {
 
       <h3>示例4</h3>
 
-      <Grid count={4} style={{ width: 300 }} contStyle={boxSty} border={false} spacing={12}>
+      <Grid
+        count={4}
+        style={{ width: 300 }}
+        contClassName="d-layout-box2"
+        border={false}
+        spacing={12}
+      >
         <div />
         <div />
         <div />

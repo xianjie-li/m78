@@ -4,8 +4,9 @@
   font-size: 14px;
   padding: 20px 24px;
   background-color: #fff;
-  box-shadow: $shadow-1;
-  border-radius: $border-radius-large;
+  background-color: var(--m78-component-bg);
+  box-shadow: var(--m78-shadow-1);
+  border-radius: var(--m78-border-radius-lg);
   width: 90%;
   max-height: 90%;
   overflow: auto;
@@ -22,8 +23,8 @@
     right: 12px;
     top: 12px;
     cursor: pointer;
-    text-shadow: $stress-shadow-w;
-    font-size: $fs-12 !important;
+    text-shadow: var(--m78-stress-shadow-w);
+    font-size: var(--m78-fs-sm) !important;
 
     &:hover {
       font-weight: bold;
@@ -52,7 +53,8 @@
   }
 
   &_title {
-    color: $b-title;
+    color: var(--m78-color-title);
+    color: var(--m78-color-title);
     font-size: 18px;
   }
 

@@ -4,19 +4,19 @@
   display: flex;
   align-items: center;
   font-size: 14px;
-  line-height: $line-height-base;
-
+  line-height: var(--m78-line-height);
   position: absolute;
   top: 0;
   left: 50%;
   width: 100%;
   padding: 8px 12px;
-  background-color: $component-background;
-  box-shadow: $shadow-1;
+  background-color: var(--m78-component-bg);
+  box-shadow: var(--m78-shadow-1-b);
+  border: 1px solid var(--m78-color-border);
   max-height: 150px;
   overflow-y: auto;
   overflow-x: hidden;
-  z-index: $z-index;
+  z-index: var(--m78-z-index);
 
   &_content {
     flex: 1;
@@ -37,7 +37,7 @@
   &.__card {
     width: 90%;
     top: 16px;
-    border-radius: $border-radius;
+    border-radius: var(--m78-border-radius);
   }
 
   &.__fitWidth {
@@ -49,7 +49,7 @@
   &.__global {
     position: fixed;
     top: 48px;
-    z-index: $z-index-message;
+    z-index: var(--m78-z-index-message);
     max-width: 90vw;
     text-align: center;
 

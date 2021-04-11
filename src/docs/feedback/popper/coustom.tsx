@@ -1,5 +1,6 @@
 import React from 'react';
 import Popper, { PopperPropsCustom } from 'm78/popper';
+import Button from 'm78/button';
 
 import sty from './custom.module.scss';
 
@@ -20,7 +21,7 @@ const Custom = () => {
   return (
     <div>
       <Popper customer={MyPopper} content="这是气泡内容">
-        <button type="button">定制气泡</button>
+        <Button>定制气泡</Button>
       </Popper>
     </div>
   );

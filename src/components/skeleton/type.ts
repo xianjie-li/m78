@@ -16,8 +16,6 @@ export interface SkeletonProps extends SkeletonFactoryProps {
   height?: number;
   /** 宽度 */
   width?: number;
-  /** #fff | 包裹元素背景色 */
-  backgroundColor?: string;
   /** true | 包裹元素是否有阴影 */
   shadow?: boolean;
   /** false | 圆角图片,只在传img时生效 */

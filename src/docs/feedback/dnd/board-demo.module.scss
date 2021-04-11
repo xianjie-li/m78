@@ -1,12 +1,12 @@
-@import 'node_modules/@lxjx/sass-base/main';
+@import '~@m78/style';
 
 .column {
   display: inline-block;
   width: 200px;
   margin-right: 12px;
-  border-radius: $border-radius;
-  border: 6px solid #fff;
-  box-shadow: $shadow-1;
+  border-radius: var(--m78-border-radius);
+  border: 6px solid var(--m78-pure);
+  box-shadow: var(--m78-shadow-1);
   margin-bottom: 12px;
   user-select: none;
 
@@ -21,9 +21,9 @@
     padding: 4px 8px 120px;
     height: 300px;
     overflow: auto;
-    background-color: $b-bg;
+    background-color: var(--m78-component-bg);
     border-radius: 4px;
-    box-shadow: -1px -1px 6px $b-border inset;
+    box-shadow: -1px -1px 6px var(--m78-color-border) inset;
 
     &::-webkit-scrollbar {
       display: none;
@@ -32,8 +32,7 @@
 }
 
 .todo {
-  background-color: #fff;
-  box-shadow: $shadow-1;
+  box-shadow: var(--m78-shadow-1);
   padding: 8px 16px;
   font-size: 16px;
   user-select: none;
@@ -42,11 +41,11 @@
 
   > div:nth-child(2) {
     font-size: 12px;
-    color: $b-second;
+    color: var(--m78-color-second);
   }
 
   &:hover {
-    box-shadow: $shadow-3;
+    box-shadow: var(--m78-shadow-3);
   }
 
   & + & {

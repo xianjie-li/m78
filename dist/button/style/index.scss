@@ -6,21 +6,21 @@
   /* 退级 */
   display: inline-block;
   display: inline-flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  text-align: center;
   font-weight: 400;
   vertical-align: middle;
   user-select: none;
-  border: none;
+  border: 1px solid var(--m78-color-border);
   padding: 0 18px;
   height: $size-default;
-  font-size: $font-size;
+  font-size: var(--m78-fs);
   line-height: 1;
-  border-radius: $border-radius;
+  border-radius: var(--m78-border-radius);
   cursor: pointer;
-  background-color: #fff;
-  color: $b-primary;
-  text-align: center;
+  background-color: var(--m78-component-bg);
+  color: var(--m78-color-primary);
   /* fix: 修复safari下overflow失效的问题 */
   transform: translate3d(0, 0, 0);
   z-index: 1;
@@ -44,10 +44,6 @@
 
   @include ellipsis-x;
 
-  &.__shadow {
-    box-shadow: $shadow-1;
-  }
-
   &:hover,
   &:focus {
     text-decoration: none;
@@ -57,7 +53,8 @@
   // 非disabled的情况下hover及focus的样式
   &:not(:disabled):hover,
   &:not(:disabled):focus {
-    box-shadow: $shadow-2;
+    box-shadow: var(--m78-shadow-1-focus);
+    border-color: transparent;
   }
 
   // 禁用
@@ -65,13 +62,14 @@
   &[disabled] {
     cursor: not-allowed;
     background: scale_color(#fff, $lightness: -5%);
-    color: $b-disable;
-    box-shadow: $shadow-1 !important;
+    background: var(--m78-color-divider);
+    color: var(--m78-color-disable);
   }
 
   & + & {
     margin-left: 8px;
   }
+
   // 大小
   &.__large {
     height: $size-large;
@@ -132,11 +130,12 @@
   &.__icon {
     box-shadow: none !important;
     background: transparent !important;
+    border: none;
 
     // 使用特有的交互样式
     &:focus,
     &:not(.__disabled):hover {
-      background-color: $b-divider !important;
+      background-color: var(--m78-color-divider) !important;
     }
 
     .anticon {
@@ -164,11 +163,12 @@
     box-shadow: none !important;
     background: transparent !important;
     font-size: inherit;
+    border: none;
 
     // 使用特有的交互样式
     &:focus,
     &:not(.__disabled):hover {
-      background-color: $b-divider !important;
+      background-color: var(--m78-color-divider) !important;
     }
   }
 
@@ -182,6 +182,70 @@
   }
 }
 
+// 基础样式
+.m78-btn.__primary {
+  color: #fff;
+  background-color: var(--m78-color);
+  border: none;
+}
+
+.m78-btn.__primary.__icon {
+  color: var(--m78-color);
+
+  &:focus,
+  &:not(.__disabled):hover {
+    background-color: var(--m78-color-opacity-sm) !important;
+  }
+}
+
+.m78-btn.__primary.__text {
+  color: var(--m78-color);
+
+  &:focus,
+  &:not(.__disabled):hover {
+    background-color: var(--m78-color-opacity-sm) !important;
+  }
+}
+
+// 边框按钮
+.m78-btn.__primary.__outline {
+  color: var(--m78-color);
+  background-color: transparent;
+  background-image: none;
+  border: 1px solid var(--m78-color);
+  //box-shadow: $shadow-1;
+  padding: 7px 15px;
+
+  // 单独配置背景色和颜色
+  &:not(:disabled):hover,
+  &:not(:disabled):focus {
+    color: #fff;
+    background-color: var(--m78-color);
+    border: 1px solid transparent;
+  }
+
+  /* 修复边框按钮的大小，使其与普通按钮一致 */
+  &.__large {
+    padding: 9px 23px;
+  }
+
+  &.__small {
+    padding: 5px 7px;
+  }
+
+  &.__mini {
+    padding: 3px 8px;
+    font-size: 12px;
+  }
+}
+
+// 彩色按钮禁用
+.m78-btn.__primary:disabled,
+.m78-btn.__primary[disabled] {
+  cursor: not-allowed;
+  background-color: var(--m78-color-3);
+}
+
 /**
   * 生成按钮
   * $name: 主题名
@@ -192,6 +256,7 @@
   .m78-btn.__#{$name} {
     color: #fff;
     background-color: $main-color;
+    border: none;
   }
 
   .m78-btn.__#{$name}.__icon {
@@ -218,7 +283,7 @@
     background-color: transparent;
     background-image: none;
     border: 1px solid $main-color;
-    box-shadow: $shadow-1;
+    //box-shadow: $shadow-1;
     padding: 7px 15px;
 
     // 单独配置背景色和颜色
@@ -249,12 +314,10 @@
   .m78-btn.__#{$name}[disabled] {
     cursor: not-allowed;
     background-color: scale_color($main-color, $lightness: 60%);
-    box-shadow: $shadow-1;
   }
 }
 
-@include btn('primary', $color);
-@include btn('blue', $color-info);
-@include btn('green', $color-success);
-@include btn('red', $color-error);
-@include btn('yellow', $color-warn);
+@include btn('blue', $blue-5);
+@include btn('green', $green-5);
+@include btn('red', $red-5);
+@include btn('yellow', $orange-5);

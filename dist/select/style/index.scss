@@ -43,7 +43,7 @@
     &.__empty,
     &.__focus {
       .m78-input::placeholder {
-        color: $b-second !important;
+        color: var(--m78-color-second) !important;
       }
     }
   }
@@ -67,7 +67,7 @@
       &::after {
         content: '';
         position: absolute;
-        background-color: $w-primary;
+        background-color: rgba(255,255,255,0.95);
         cursor: not-allowed;
         @include full;
       }
@@ -79,36 +79,36 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 $space-12;
+    padding: 0 var(--m78-space-3);
     cursor: pointer;
     user-select: none;
     @include ellipsis-x;
-    background-color: $component-background;
+    background-color: var(--m78-component-bg);
     overflow-y: auto;
 
     &:hover {
-      background-color: rgba($color-1, 0.5);
+      background-color: rgba(var(--m78-color-1), 0.5);
     }
 
     &:active {
-      background-color: rgba($color-2, 0.5);
+      background-color: rgba(var(--m78-color-2), 0.5);
     }
 
     &.__title,
     &.__divider,
     &.__disabled {
-      background-color: $component-background !important;
+      background-color: var(--m78-component-bg) !important;
       cursor: auto;
     }
 
     &.__active {
-      background-color: $color-1;
-      font-weight: $fw-600;
+      background-color: var(--m78-color-1);
+      font-weight: var(--m78-fw-bold);
     }
 
     &.__title {
-      font-size: $fs-12;
-      color: $b-second;
+      font-size: var(--m78-fs);
+      color: var(--m78-color-second);
     }
 
     &.__divider {
@@ -116,13 +116,13 @@
     }
 
     &.__disabled {
-      color: $b-disable;
+      color: var(--m78-color-disable);
       cursor: not-allowed;
     }
   }
 
   &_check-icon {
-    color: $color;
+    color: var(--m78-color);
     margin-left: 4px;
   }
 
@@ -141,15 +141,15 @@
     display: flex;
     align-items: center;
     position: relative;
-    line-height: $line-height-base;
-    border: 1px dashed $b-border;
+    line-height: var(--m78-line-height);
+    border: 1px dashed var(--m78-color-border);
     margin: 4px 8px 4px 0;
     height: 28px;
-    padding: 4px $space-12;
+    padding: 4px var(--m78-space-3);
     padding-right: 28px;
     font-size: 12px;
-    background: $b-bg;
-    border-radius: $border-radius;
+    background: var(--m78-component-bg);
+    border-radius: var(--m78-border-radius);
 
     &.__small {
       height: $size-small;
@@ -158,7 +158,7 @@
     &.__large,
     &.__big {
       height: $size-large;
-      font-size: $fs-18;
+      font-size: var(--m78-fs-md);
     }
 
     &.__disabled {
@@ -177,14 +177,14 @@
       justify-content: space-between;
       align-items: center;
       height: 40px;
-      padding: 0 $space-12;
+      padding: 0 var(--m78-space-3);
     }
   }
 
   &_down-icon {
     position: relative;
     top: 0.1em;
-    color: $b-second;
+    color: var(--m78-color-second);
     transition: 0.3s transform;
 
     &.__reverse {
@@ -204,11 +204,11 @@
     line-height: 1;
     position: absolute;
     right: 6px;
-    background-color: $w-primary;
+    background-color: rgba(255,255,255,0.95);
     cursor: pointer;
     font-size: 18px;
     margin-left: 6px;
-    color: $b-second;
+    color: var(--m78-color-second);
     border-radius: 50%;
 
     @include effect-font;

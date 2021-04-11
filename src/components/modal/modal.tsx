@@ -28,7 +28,6 @@ const _ModalBase: React.FC<ModalBaseProps> = props => {
     alignment = DEFAULT_ALIGN,
     mask = true,
     maskClassName,
-    maskTheme,
     animationType = 'fromMouse',
     mountOnEnter = true,
     unmountOnExit = false,
@@ -199,7 +198,7 @@ const _ModalBase: React.FC<ModalBaseProps> = props => {
             type="fade"
             mountOnEnter
             unmountOnExit
-            className={cls(maskTheme === 'dark' ? 'm78-mask-b' : 'm78-mask', maskClassName)}
+            className={cls('m78-mask', maskClassName)}
             style={{ zIndex: nowZIndex }}
             reset
           />

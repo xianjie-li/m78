@@ -1,8 +1,8 @@
 @import '../../style/index';
 
 .m78-expansion {
-  line-height: $line-height-base;
-  font-size: $font-size;
+  line-height: var(--m78-line-height);
+  font-size: var(--m78-fs);
   text-align: left;
 
   & & {
@@ -10,9 +10,9 @@
   }
 
   &.__style {
-    border-radius: $border-radius;
-    border: 1px solid $b-border;
-    background-color: $component-background;
+    border-radius: var(--m78-border-radius);
+    border: 1px solid var(--m78-color-border);
+    background-color: var(--m78-component-bg);
   }
 
   &_item {
@@ -20,7 +20,7 @@
 
     &.__disabled {
       .m78-expansion_header {
-        color: $b-disable;
+        color: var(--m78-color-disable);
         background-color: transparent !important;
         cursor: not-allowed;
       }
@@ -32,7 +32,7 @@
       }
 
       &.__active > .m78-expansion_header {
-        border-bottom: 1px dashed $b-divider;
+        border-bottom: 1px dashed var(--m78-color-divider);
       }
 
       .m78-expansion_header {
@@ -43,7 +43,7 @@
       }
 
       & + & {
-        border-top: 1px solid $b-border;
+        border-top: 1px solid var(--m78-color-border);
       }
 
       .m78-expansion_content {
@@ -57,7 +57,7 @@
   }
 
   &_header-leading {
-    transition: $animation-duration-base;
+    transition: var(--m78-animate-base);
     margin-right: 10px;
 
     &.__open {
@@ -89,8 +89,8 @@
     bottom: 0;
     left: 50%;
     transform: translate(-50%, 50%);
-    z-index: $z-index-base;
-    transition: $animation-duration-base;
+    z-index: var(--m78-z-index-base);
+    transition: var(--m78-animate-base);
 
     .anticon-caret-down {
       top: 1px;

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Popper from 'm78/popper';
+import Button from 'm78/button';
 
 const Show = () => {
   const [show, setShow] = useState(false);
@@ -7,15 +8,15 @@ const Show = () => {
   return (
     <div>
       <Popper content="这是提示文本">
-        <button type="button">组件内部控制</button>
+        <Button>组件内部控制</Button>
       </Popper>
 
       <Popper content="这是提示文本" defaultShow>
-        <button type="button">设置默认值</button>
+        <Button>设置默认值</Button>
       </Popper>
 
       <Popper content="这是提示文本" show={show} onChange={_show => setShow(_show)}>
-        <button type="button">组件内部控制</button>
+        <Button>组件内部控制</Button>
       </Popper>
     </div>
   );

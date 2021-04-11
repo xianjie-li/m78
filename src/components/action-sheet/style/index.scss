@@ -5,35 +5,35 @@
   width: 100%;
   border-radius: 32px 32px 0 0;
   text-align: center;
-  background-color: $component-background;
+  background-color: var(--m78-component-bg);
   overflow: hidden;
   max-width: $sm;
   max-height: 78% !important;
-  box-shadow: $shadow-1;
+  box-shadow: var(--m78-shadow-1);
 
   &_item {
     padding: 18px;
-    font-size: $fs-16;
-    background-color: #fff;
+    font-size: var(--m78-fs-md);
+    background-color: var(--m78-component-bg);
     user-select: none;
 
     &.__active {
       font-weight: bold;
-      color: $color !important;
+      color: var(--m78-color) !important;
     }
 
     &.__highlight {
-      color: $color-warn;
+      color: var(--m78-color-warn);
     }
 
     &.__disabled {
-      color: $b-disable;
+      color: var(--m78-color-disable);
     }
 
     &.__title,
     &.__cancel {
       padding: 20px;
-      color: $b-title;
+      color: var(--m78-color-title);
     }
 
     &.__title {
@@ -63,7 +63,6 @@
   }
 
   &_item-cont {
-    background-color: #fff;
     max-height: 60vh;
     overflow-y: auto;
     .m78-hb-t:nth-child(n + 2)::before {
@@ -73,7 +72,8 @@
   }
 
   &_desc {
-    color: $b-second;
+    color: var(--m78-color-second);
+    color: var(--m78-color-second);
     font-size: 14px;
     margin-top: 4px;
     font-weight: 400;

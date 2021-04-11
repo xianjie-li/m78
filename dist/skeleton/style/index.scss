@@ -12,12 +12,13 @@
 .m78-skeleton {
   position: relative;
   margin-bottom: 12px;
-  border-radius: $border-radius;
+  border-radius: var(--m78-border-radius);
   padding: 10px;
   overflow: hidden;
+  background-color: var(--m78-component-bg);
 
   &.__shadow {
-    box-shadow: $shallow-shadow;
+    box-shadow: var(--m78-shadow-1-b);
   }
 
   &_line-box {
@@ -35,7 +36,7 @@
 
   &_line {
     height: 12px;
-    border-radius: $border-radius;
+    border-radius: var(--m78-border-radius);
     flex: 0 1 auto;
     margin-right: 8px;
 
@@ -45,7 +46,7 @@
   }
 
   &_animate {
-    background: linear-gradient(to right, #f3f3f3 30%, #ecebeb 46%, #f3f3f3 70%);
+    background: linear-gradient(to right, var(--m78-color-border) 30%, var(--m78-color-bg) 46%, var(--m78-color-border) 70%);
     background-size: 400% 100%;
     animation: m78-skeleton-animation 2s ease infinite;
   }
@@ -55,7 +56,7 @@
     width: 110px;
     height: 72px;
     z-index: 1;
-    background-color: #fff;
+    background-color: var(--m78-component-bg);
 
     &::before {
       content: '';
@@ -63,8 +64,8 @@
       height: 100%;
       left: 0;
       right: 12px;
-      border-radius: $border-radius;
-      background: linear-gradient(to right, #f3f3f3 30%, #ecebeb 46%, #f3f3f3 70%);
+      border-radius: var(--m78-border-radius);
+      background: linear-gradient(to right, var(--m78-color-border) 30%, var(--m78-color-bg) 46%, var(--m78-color-border) 70%);
       background-size: 400% 100%;
       animation: m78-skeleton-animation 2s ease infinite;
     }
@@ -87,12 +88,19 @@
     .m78-skeleton {
       margin-bottom: 0;
       background-color: transparent;
+      border: none !important;
     }
   }
 
   &_banner-main {
     width: 100%;
     height: 140px;
-    background-color: #fff;
+    background-color: var(--m78-component-bg);
+  }
+}
+
+html[data-theme=dark] {
+  .m78-skeleton {
+    border: 1px solid var(--m78-color-border);
   }
 }

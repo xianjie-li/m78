@@ -29,7 +29,7 @@ export const defaultProps = {
   pullUpThreshold: 120,
   pullDownTips: true,
 };
-
+// limitBound、headerCustomer居中显示边框 无效
 const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
   const {
     hideScrollbar,

@@ -1,7 +1,7 @@
 @import '../../style/index';
 
 .m78-pin {
-  z-index: $z-index-base;
+  z-index: var(--m78-z-index-base);
 
   &_shadow {
     visibility: hidden;

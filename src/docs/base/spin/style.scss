@@ -4,8 +4,8 @@
   position: relative;
   width: 260px;
   height: 260px;
-  border: 1px solid $b-border;
-  border-radius: $border-radius;
+  border: 1px solid var(--m78-color-border);
+  border-radius: var(--m78-border-radius);
   padding: 8px;
 
   & + & {

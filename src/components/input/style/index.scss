@@ -32,7 +32,7 @@ $unitSpace: 8px;
   color: #000000;
   background-color: transparent;
   @include ellipsis-x;
-  line-height: $line-height-base;
+  line-height: var(--m78-line-height);
 
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
@@ -45,7 +45,7 @@ $unitSpace: 8px;
   //}
 
   &:disabled {
-    color: $b-disable;
+    color: var(--m78-color-disable);
     cursor: not-allowed;
   }
 
@@ -57,24 +57,24 @@ $unitSpace: 8px;
     align-items: center;
     height: $size-default;
     width: 100%;
-    border: 1px solid $b-border;
-    border-radius: $border-radius;
+    border: 1px solid var(--m78-color-border);
+    border-radius: var(--m78-border-radius);
     padding: 0 10px;
     font-size: 16px;
     line-height: 1;
     overflow: hidden;
     max-width: $sm;
-    transition: $animation-duration-base box-shadow, $animation-duration-base border-color;
+    transition: var(--m78-animate-base) box-shadow, var(--m78-animate-base) border-color;
     transition-delay: 0s;
 
     /* 各种状态的处理 */
     &:not(.__disabled):hover {
-      border-color: $color;
+      border-color: var(--m78-color);
     }
 
     &:not(.__disabled):not(.__readonly):active {
-      border-color: $color;
-      box-shadow: 0 0 0 3px rgba($color, 0.5);
+      border-color: var(--m78-color);
+      box-shadow: 0 0 0 3px rgba(var(--m78-color), 0.5);
       transition-delay: 0.1s;
     }
 
@@ -83,8 +83,8 @@ $unitSpace: 8px;
     }
 
     &.__focus {
-      border-color: $color;
-      box-shadow: 0 0 0 3.8px rgba($color, 0.2);
+      border-color: var(--m78-color);
+      box-shadow: 0 0 0 3.8px rgba(var(--m78-color), 0.2);
     }
 
     &.__disabled {
@@ -94,7 +94,6 @@ $unitSpace: 8px;
 
     &.__matter {
       input {
-        font-family: $font-variant-base;
         font-weight: bold;
       }
 
@@ -120,7 +119,7 @@ $unitSpace: 8px;
         position: absolute;
         right: 8px;
         bottom: 8px;
-        text-shadow: $stress-shadow-w;
+        text-shadow: var(--m78-stress-shadow-w);
         user-select: none;
         pointer-events: none;
       }
@@ -129,7 +128,7 @@ $unitSpace: 8px;
         position: absolute;
         right: 4px;
         top: 4px;
-        text-shadow: $stress-shadow-w;
+        text-shadow: var(--m78-stress-shadow-w);
       }
 
       .m78-input_loading:not(.__full) {
@@ -175,19 +174,19 @@ $unitSpace: 8px;
 
     /* 状态色 */
     &.__info {
-      @include statusColor($color-info);
+      @include statusColor($blue-5);
     }
 
     &.__success {
-      @include statusColor($color-success);
+      @include statusColor($green-5);
     }
 
     &.__warning {
-      @include statusColor($color-warn);
+      @include statusColor($orange-5);
     }
 
     &.__error {
-      @include statusColor($color-error);
+      @include statusColor($red-5);
     }
 
     &.__not-border,
@@ -198,26 +197,26 @@ $unitSpace: 8px;
     }
 
     &.__underline {
-      border-bottom-color: $b-border !important;
+      border-bottom-color: var(--m78-color-border) !important;
 
       &:focus-within {
-        border-bottom-color: $color !important;
+        border-bottom-color: var(--m78-color-border) !important;
       }
 
       &.__info {
-        border-bottom-color: $color-info !important;
+        border-bottom-color: var(--m78-color-info) !important;
       }
 
       &.__success {
-        border-bottom-color: $color-success !important;
+        border-bottom-color: var(--m78-color-success) !important;
       }
 
       &.__warning {
-        border-bottom-color: $color-warn !important;
+        border-bottom-color: var(--m78-color-warn) !important;
       }
 
       &.__error {
-        border-bottom-color: $color-error !important;
+        border-bottom-color: var(--m78-color-error) !important;
       }
     }
   }
@@ -232,14 +231,14 @@ $unitSpace: 8px;
     font-size: 18px;
     cursor: pointer;
     margin-left: $unitSpace;
-    color: $b-second;
+    color: var(--m78-color-second);
 
     &:hover {
-      color: $b-primary;
+      color: var(--m78-color-primary);
     }
 
     &:active {
-      color: $b-title;
+      color: var(--m78-color-title);
     }
   }
 
@@ -254,7 +253,7 @@ $unitSpace: 8px;
     line-height: 1;
     font-size: 12px;
     margin-left: $unitSpace;
-    color: $b-second;
+    color: var(--m78-color-second);
   }
 
   &_prefix,

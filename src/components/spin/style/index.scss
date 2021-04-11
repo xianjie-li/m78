@@ -27,16 +27,9 @@
 
     justify-content: center;
     position: absolute;
-    background-color: $w-primary;
+    background-color: var(--m78-mask);
     margin: 0;
-    z-index: $z-index;
-  }
-
-  &.__dark {
-    background-color: $b-primary;
-    .m78-spin_text {
-      color: $w-title;
-    }
+    z-index: var(--m78-z-index);
   }
 
   &.__small {
@@ -49,8 +42,9 @@
 }
 
 .m78-spin_text {
-  font-size: $fs-14;
-  color: $b-second;
+  font-size: var(--m78-fs);
+  color: var(--m78-color-second);
+  color: var(--m78-color-second);
   margin-left: 0;
   margin-top: 8px;
   user-select: none;

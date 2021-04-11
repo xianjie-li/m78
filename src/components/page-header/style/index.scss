@@ -2,8 +2,9 @@
 
 .m78-page-header {
   position: relative;
-  background-color: #fff;
-  z-index: $z-index;
+  background-color: var(--m78-component-bg);
+  z-index: var(--m78-z-index);
+  border: 1px solid var(--m78-color-border);
 
   /* 需要固定左右宽度 */
   &.__center {
@@ -18,31 +19,30 @@
   }
 
   &.__shadow {
-    box-shadow: $shadow-1;
+    box-shadow: var(--m78-shadow-1-b);
   }
 
   &.__border {
-    border: 1px solid $b-border;
     box-shadow: none;
   }
 
   &.__color {
-    background-color: $color;
+    background-color: var(--m78-color);
   }
 
   &.__white {
-    color: $w-title;
+    color: rgba(255, 255, 255, 0.95);
 
     .anticon {
-      color: $w-title;
+      color: rgba(255, 255, 255, 0.95);
     }
 
     .m78-page-header_desc {
-      color: $w-primary;
+      color: rgba(255, 255, 255, 0.85);
     }
 
     .m78-page-header_bottom {
-      border-top: 1px solid $w-second;
+      border-top: 1px solid rgba(255, 255, 255, 0.65);
     }
   }
 
@@ -58,7 +58,7 @@
     display: flex;
     align-items: center;
     height: 50px;
-    padding: 0 $space-8;
+    padding: 0 var(--m78-space-2);
     line-height: 1;
 
     .anticon {
@@ -70,7 +70,7 @@
   &_main {
     font-size: 17px;
     font-weight: bold;
-    margin: 0 $space-12;
+    margin: 0 var(--m78-space-3);
     flex: 1;
     white-space: nowrap;
     line-height: 1.1;
@@ -85,7 +85,7 @@
   &_desc {
     font-size: 14px;
     font-weight: 400;
-    color: $b-second;
+    color: var(--m78-color-second);
   }
 
   &_leading {
@@ -99,7 +99,7 @@
   }
 
   &_bottom {
-    padding: $space-12;
-    border-top: 1px solid $b-border;
+    padding: var(--m78-space-3);
+    border-top: 1px solid var(--m78-color-border);
   }
 }

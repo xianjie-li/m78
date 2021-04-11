@@ -5,6 +5,7 @@ import { swap } from '@lxjx/utils';
 import { animated, useTransition } from 'react-spring';
 import cls from 'classnames';
 import _shuffle from 'lodash/shuffle';
+import Button from 'm78/button';
 import sty from './grid-anim.module.scss';
 
 const ColumLen = 5;
@@ -121,7 +122,7 @@ const GridAnimDemo = () => {
 
   return (
     <div>
-      <button
+      <Button
         type="button"
         onClick={() => {
           const ls = _shuffle(list);
@@ -129,7 +130,7 @@ const GridAnimDemo = () => {
         }}
       >
         suffer
-      </button>
+      </Button>
 
       <DNDContext onAccept={acceptHandle}>
         <div

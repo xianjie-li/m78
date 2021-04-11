@@ -3,7 +3,7 @@
   height: 150px;
   box-shadow: rgb(97, 251, 246) 0 0 0 8px;
   border: 4px dashed rgb(251, 97, 97);
-  background-color: #fff;
+  background-color: var(--m78-component-bg);
   padding: 12px;
 
   & + :global(.m78-popper_arrow) {

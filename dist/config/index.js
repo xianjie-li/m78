@@ -1,8 +1,6 @@
 import React, { useContext } from 'react';
 
-var context = /*#__PURE__*/React.createContext({
-  modalBlurEls: ['#app', '#root']
-});
+var context = /*#__PURE__*/React.createContext({});
 
 function useConfig() {
   return useContext(context);

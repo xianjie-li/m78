@@ -3,7 +3,7 @@
 .m78-image-preview {
   position: fixed;
   background: rgba(255, 255, 255, 0.75);
-  z-index: $z-index-drawer;
+  z-index: var(--m78-z-index-drawer);
 
   @include full;
 
@@ -15,7 +15,7 @@
   .m78-viewer_cont {
     border-radius: 2px;
     border: 6px solid #fff;
-    box-shadow: $shadow-1;
+    box-shadow: var(--m78-shadow-1);
   }
 
   .m78-carousel_item {
@@ -27,10 +27,10 @@
   }
 
   .m78-carousel_ctrl-item {
-    background-color: $b-disable;
+    background-color: var(--m78-color-disable);
 
     &.__active {
-      background-color: $b-title;
+      background-color: var(--m78-color-title);
     }
   }
 
@@ -47,7 +47,7 @@
     max-width: 100%;
     min-width: 100px;
     min-height: 100px;
-    background-color: $b-bg;
+    background-color: var(--m78-component-bg);
   }
 
   &_ctrl-bar {
@@ -57,14 +57,14 @@
     left: 50%;
     transform: translateX(-50%);
     background-color: #fff;
-    border: 1px solid $b-border;
+    border: 1px solid var(--m78-color-border);
     padding: 6px;
     white-space: nowrap;
     user-select: none;
     border-radius: 20px;
     font-size: 14px;
     text-align: center;
-    box-shadow: $shadow-1;
+    box-shadow: var(--m78-shadow-1);
 
     > span {
       position: relative;
@@ -75,7 +75,7 @@
       font-size: 22px;
 
       &.__disabled {
-        color: $b-disable;
+        color: var(--m78-color-disable);
         .anticon {
           transform: scale(1) !important;
         }
@@ -86,7 +86,7 @@
       }
 
       &:last-child {
-        color: $color-error;
+        color: var(--m78-color-error);
       }
 
       .anticon {
@@ -107,7 +107,7 @@
         margin-top: -10px;
         width: 1px;
         display: inline-block;
-        background-color: $b-border;
+        background-color: var(--m78-color-border);
       }
     }
   }

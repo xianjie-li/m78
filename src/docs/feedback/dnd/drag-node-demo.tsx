@@ -30,7 +30,7 @@ const DragNodeDemo = () => {
               );
             }}
           </DND>
-          <DND data="DND2" dragFeedback={<span className="fs-38">😛</span>}>
+          <DND data="DND2" dragFeedback={<span className="fs-lg">😛</span>}>
             {({ innerRef }) => {
               return (
                 <div

@@ -9,7 +9,7 @@
   }
 
   &_placeholder {
-    background-color: $color;
+    background-color: var(--m78-color);
     height: 12px;
   }
 }
@@ -23,8 +23,8 @@
   &_top,
   &_bottom {
     position: absolute;
-    background-color: $color;
-    border-radius: $border-radius;
+    background-color: var(--m78-color);
+    border-radius: var(--m78-border-radius);
   }
 
   &_left {
@@ -56,7 +56,7 @@
   }
 
   &.__active {
-    background-color: rgba($color, 0.2);
+    background-color: rgba(var(--m78-color), 0.2);
   }
 
   &.__disabled {

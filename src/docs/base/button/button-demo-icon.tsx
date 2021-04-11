@@ -33,6 +33,9 @@ const ButtonDemoColor = () => (
     <Button color="red" icon>
       李
     </Button>
+    <Button color="primary" icon>
+      周
+    </Button>
     <Button color="red" icon size="large">
       <SettingOutlined />
     </Button>
