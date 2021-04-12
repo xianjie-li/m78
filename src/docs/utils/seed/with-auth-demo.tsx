@@ -1,10 +1,10 @@
 import React from 'react';
-import create, { AuthTypeEnum } from 'm78/auth';
+import create from 'm78/seed';
 import Message from 'm78/message';
 import Button from 'm78/button';
 import { Divider } from 'm78/layout';
 
-const { Auth, setDeps } = create({
+const { setDeps, withAuth } = create({
   /* 被所有验证器依赖数据 */
   dependency: {
     /** 登录用户 */
@@ -68,7 +68,22 @@ const { Auth, setDeps } = create({
   },
 });
 
-const FeedbackTypeDemo = () => {
+function MyComponent() {
+  return (
+    <div className="tc">
+      <div className="fs-38">😀</div>
+      <div className="fs-24 color-success bold">权限验证通过</div>
+      <div className="fs-14 color-second mt-8">这里是需要权限验证的内容</div>
+    </div>
+  );
+}
+
+const AuthMyComponent = withAuth({
+  /** 支持Auth组件除children外的所有props */
+  keys: ['login', 'admin'],
+})(MyComponent);
+
+const WithAuthDemo = () => {
   return (
     <div>
       <Button size="small" onClick={() => setDeps({ user: 'lxj' })}>
@@ -87,43 +102,11 @@ const FeedbackTypeDemo = () => {
         移除管理权限
       </Button>
 
-      <div className="p-12">
-        <h3>占位形反馈</h3>
-        <div className="fs-14 color-second">通过占位节点替换无权限内容</div>
-        <Auth keys={['login', 'admin']}>
-          <div className="tc">
-            <div className="fs-38">😀</div>
-            <div className="fs-24 color-success bold">权限验证通过</div>
-            <div className="fs-14 color-second mt-8">这里是需要权限验证的内容</div>
-          </div>
-        </Auth>
-      </div>
+      <div className="fs-14 color-second mtb-12">直接作为常规组件使用</div>
 
-      <Divider margin={16} />
-
-      <div className="p-12">
-        <h3>气泡提示型反馈</h3>
-        <div className="fs-14 color-second">通过气泡提示框进行权限提示</div>
-        <Auth keys={['login', 'admin']} type={AuthTypeEnum.popper}>
-          <Button className="mtb-24">执行一个需要权限的操作</Button>
-        </Auth>
-      </div>
-
-      <Divider margin={16} />
-
-      <div className="p-12">
-        <h3>隐藏无权限节点</h3>
-        <div className="fs-14 color-second">阻止渲染无权限内容</div>
-        <Auth keys={['login', 'admin']} type={AuthTypeEnum.hidden}>
-          <div className="tc">
-            <div className="fs-38">😀</div>
-            <div className="fs-24 color-success bold">权限验证通过</div>
-            <div className="fs-14 color-second mt-8">这里是需要权限验证的内容</div>
-          </div>
-        </Auth>
-      </div>
+      <AuthMyComponent />
     </div>
   );
 };
 
-export default FeedbackTypeDemo;
+export default WithAuthDemo;

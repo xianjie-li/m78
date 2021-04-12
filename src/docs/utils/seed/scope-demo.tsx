@@ -1,5 +1,5 @@
 import React from 'react';
-import create from 'm78/auth';
+import create from 'm78/seed';
 import Button from 'm78/button';
 import Message from 'm78/message';
 

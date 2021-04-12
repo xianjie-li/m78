@@ -1,8 +1,8 @@
 import React from 'react';
-import create from 'm78/auth';
+import create from 'm78/seed';
 import Button from 'm78/button';
 
-const { setDeps, useDeps, Deps, getDeps } = create({
+const { setDeps, useState, State, getDeps } = create({
   /* 被所有验证器依赖数据 */
   dependency: {
     number: 0,
@@ -17,8 +17,8 @@ const GetDepsDemo = () => {
    * 省略selector参数会直接返回整个deps
    * hook只会在选取的值变更后更新组件、所以只获取需要的依赖值能大大减少render次数从而提升性能
    * */
-  const dNumber = useDeps(deps => deps.number);
-  const dTime = useDeps(deps => deps.time);
+  const dNumber = useState(deps => deps.number);
+  const dTime = useState(deps => deps.time);
 
   return (
     <div>

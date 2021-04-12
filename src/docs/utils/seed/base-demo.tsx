@@ -1,10 +1,10 @@
 import React from 'react';
-import create from 'm78/auth';
-import Message from 'm78/message';
 import Button from 'm78/button';
 import { Divider } from 'm78/layout';
+import create from 'm78/seed';
+import Message from 'm78/message';
 
-const { useAuth, setDeps } = create({
+const { Auth, setDeps } = create({
   /* 被所有验证器依赖数据 */
   dependency: {
     /** 登录用户 */
@@ -68,9 +68,7 @@ const { useAuth, setDeps } = create({
   },
 });
 
-const UseAuthDemo = () => {
-  const authMeta = useAuth(['login', 'admin']);
-
+const BaseDemo = () => {
   return (
     <div>
       <Button size="small" onClick={() => setDeps({ user: 'lxj' })}>
@@ -89,11 +87,15 @@ const UseAuthDemo = () => {
         移除管理权限
       </Button>
 
-      <pre className="p-12 mtb-12" style={{ backgroundColor: '#efefef' }}>
-        {JSON.stringify(authMeta, null, 2)}
-      </pre>
+      <Auth keys={['login', 'admin']}>
+        <div className="tc">
+          <div className="fs-38">😀</div>
+          <div className="fs-24 color-success bold">权限验证通过</div>
+          <div className="fs-14 color-second mt-8">这里是需要权限验证的内容</div>
+        </div>
+      </Auth>
     </div>
   );
 };
 
-export default UseAuthDemo;
+export default BaseDemo;

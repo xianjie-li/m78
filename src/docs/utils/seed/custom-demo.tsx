@@ -1,5 +1,5 @@
 import React from 'react';
-import create from 'm78/auth';
+import create from 'm78/seed';
 import Message from 'm78/message';
 import Button from 'm78/button';
 import { Divider } from 'm78/layout';

@@ -1,18 +1,16 @@
 import React from 'react';
+import create from 'm78/seed';
+import Message from 'm78/message';
 import Button from 'm78/button';
 import { Divider } from 'm78/layout';
-import create from 'm78/auth';
-import Message from 'm78/message';
 
-const { Auth, setDeps } = create({
+const { useAuth, setDeps } = create({
   /* 被所有验证器依赖数据 */
   dependency: {
     /** 登录用户 */
     user: '',
     /** 是否是管理员 */
     admin: 2,
-    /** 是否是vip */
-    vip: 2,
   },
   /* 声明验证器 */
   validators: {
@@ -67,30 +65,12 @@ const { Auth, setDeps } = create({
         };
       }
     },
-    // 是否是vip
-    vip(deps) {
-      if (deps.vip !== 1) {
-        return {
-          label: 'vip可用',
-          desc: '请注册成为vip!',
-          actions: [
-            {
-              label: '注册vip',
-              color: 'blue',
-              onClick() {
-                Message.tips({
-                  content: '注册vip',
-                });
-              },
-            },
-          ],
-        };
-      }
-    },
   },
 });
 
-const OrDemo = () => {
+const UseAuthDemo = () => {
+  const authMeta = useAuth(['login', 'admin']);
+
   return (
     <div>
       <Button size="small" onClick={() => setDeps({ user: 'lxj' })}>
@@ -109,26 +89,11 @@ const OrDemo = () => {
         移除管理权限
       </Button>
 
-      <Divider vertical />
-
-      <Button size="small" onClick={() => setDeps({ vip: 1 })}>
-        设为vip
-      </Button>
-      <Button size="small" onClick={() => setDeps({ vip: 2 })}>
-        移除vip权限
-      </Button>
-
-      <div>
-        <Auth keys={['login', ['admin', 'vip']]}>
-          <div className="tc">
-            <div className="fs-38">😀</div>
-            <div className="fs-24 color-success bold">权限验证通过</div>
-            <div className="fs-14 color-second mt-8">这里是需要权限验证的内容</div>
-          </div>
-        </Auth>
-      </div>
+      <pre className="p-12 mtb-12" style={{ backgroundColor: '#efefef' }}>
+        {JSON.stringify(authMeta, null, 2)}
+      </pre>
     </div>
   );
 };
 
-export default OrDemo;
+export default UseAuthDemo;

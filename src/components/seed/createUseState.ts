@@ -1,14 +1,14 @@
-import { Auth } from '@lxjx/auth';
+import { Seed } from '@m78/seed';
 import { useEffect, useState } from 'react';
 import { useFn } from '@lxjx/hooks';
-import { UseDeps } from './type';
+import { UseState } from './type';
 
-export function createUseDeps<D, V>(auth: Auth<D, V>) {
+export function createUseDeps<D, V>(seed: Seed<D, V>) {
   const defSelector = (d: any) => d;
 
-  const useDeps: UseDeps<D> = (selector = defSelector, equalFn) => {
+  const useDeps: UseState<D> = (selector = defSelector, equalFn) => {
     const select = useFn(() => {
-      return selector(auth.getDeps());
+      return selector(seed.getState());
     });
 
     const [deps, setDeps] = useState(select);
@@ -21,7 +21,7 @@ export function createUseDeps<D, V>(auth: Auth<D, V>) {
       }
     });
 
-    useEffect(() => auth.subscribe(handle), []);
+    useEffect(() => seed.subscribe(handle), []);
 
     return deps;
   };

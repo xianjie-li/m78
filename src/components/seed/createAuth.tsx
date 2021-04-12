@@ -6,10 +6,10 @@ import Button from 'm78/button';
 import Result from 'm78/result';
 import Popper from 'm78/popper';
 import { isFunction } from '@lxjx/utils';
-import { ExpandAuth } from './type';
+import { ExpandSeed } from './type';
 
-export function createAuth<D, V>(auth: Auth<D, V>, useAuth: ExpandAuth<D, V>['useAuth']) {
-  const AuthComponent: ExpandAuth<D, V>['Auth'] = props => {
+export function createAuth<D, V>(auth: Auth<D, V>, useAuth: ExpandSeed<D, V>['useAuth']) {
+  const AuthComponent: ExpandSeed<D, V>['Auth'] = props => {
     const {
       children,
       keys,

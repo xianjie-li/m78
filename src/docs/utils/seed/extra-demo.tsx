@@ -1,29 +1,29 @@
 import React from 'react';
-import create from 'm78/auth';
-import { delay } from '@lxjx/utils';
+import create from 'm78/seed';
 import Message from 'm78/message';
 import Button from 'm78/button';
+import { Divider } from 'm78/layout';
 
-const { setDeps, Auth, getDeps } = create({
+const { Auth, setDeps } = create({
   /* 被所有验证器依赖数据 */
   dependency: {
-    number: 0,
+    name: 'lxj',
   },
   /* 声明验证器 */
   validators: {
-    async checkSomething({ number }) {
-      await delay(1500);
-
-      if (number < 4) {
+    // 指定用户可用
+    onlySpecify(deps, extra) {
+      if (deps.name !== extra) {
         return {
-          label: '验证失败！',
-          desc: '这是一个异步验证结果',
+          label: '该资源只能上传者本人访问',
+          desc: '请联系资源上传者',
           actions: [
             {
-              label: '好的',
+              label: `联系${extra}`,
+              color: 'blue',
               onClick() {
                 Message.tips({
-                  content: '好的',
+                  content: '联系上传者',
                 });
               },
             },
@@ -34,15 +34,20 @@ const { setDeps, Auth, getDeps } = create({
   },
 });
 
-const AsyncDemo = () => {
+const ExtraDemo = () => {
   return (
     <div>
-      <Button size="small" onClick={() => setDeps({ number: getDeps().number + 1 })}>
-        add number
+      <Button size="small" onClick={() => setDeps({ name: 'lxj' })}>
+        登录用户`lxj`
+      </Button>
+      <Button size="small" onClick={() => setDeps({ name: 'jxl' })}>
+        登录用户`jxl`
       </Button>
 
+      <Divider />
+
       <div>
-        <Auth keys={['checkSomething']}>
+        <Auth keys={['onlySpecify']} extra="jxl">
           <div className="tc">
             <div className="fs-38">😀</div>
             <div className="fs-24 color-success bold">权限验证通过</div>
@@ -54,4 +59,4 @@ const AsyncDemo = () => {
   );
 };
 
-export default AsyncDemo;
+export default ExtraDemo;
