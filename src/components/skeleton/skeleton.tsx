@@ -49,11 +49,7 @@ const _Skeleton: React.FC<SkeletonProps> = ({
 
   return (
     <div className={cls('m78-skeleton', { __shadow: shadow })} style={{ width }}>
-      {img && (
-        <div
-          className={cls('m78-skeleton_img', { __circle: !!circle })}
-        />
-      )}
+      {img && <div className={cls('m78-skeleton_img', { __circle: !!circle })} />}
       {lines}
     </div>
   );
@@ -65,10 +61,7 @@ const _Banner: React.FC<Omit<SkeletonProps, 'circle' | 'img' | 'lineNumber'>> = 
   height,
   shadow = true,
 }) => (
-  <div
-    className={cls('m78-skeleton m78-skeleton_banner', { __shadow: shadow })}
-    style={{ width }}
-  >
+  <div className={cls('m78-skeleton m78-skeleton_banner', { __shadow: shadow })} style={{ width }}>
     <div className="m78-skeleton_banner-main m78-skeleton_animate" style={{ height }} />
     {/* eslint-disable-next-line */}
     <_Skeleton show lineNumber={2} />

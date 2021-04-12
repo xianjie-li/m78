@@ -4,9 +4,9 @@ import Message from 'm78/message';
 import Button from 'm78/button';
 import { Divider } from 'm78/layout';
 
-const { Auth, setDeps } = create({
+const { Auth, setState } = create({
   /* 被所有验证器依赖数据 */
-  dependency: {
+  state: {
     /** 登录用户 */
     user: '',
     /** 是否是管理员 */
@@ -71,30 +71,30 @@ const { Auth, setDeps } = create({
 const CustomDemo = () => {
   return (
     <div>
-      <Button size="small" onClick={() => setDeps({ user: 'lxj' })}>
+      <Button size="small" onClick={() => setState({ user: 'lxj' })}>
         登录
       </Button>
-      <Button size="small" onClick={() => setDeps({ user: '' })}>
+      <Button size="small" onClick={() => setState({ user: '' })}>
         退出
       </Button>
 
       <Divider vertical />
 
-      <Button size="small" onClick={() => setDeps({ admin: 1 })}>
+      <Button size="small" onClick={() => setState({ admin: 1 })}>
         设为管理员
       </Button>
-      <Button size="small" onClick={() => setDeps({ admin: 2 })}>
+      <Button size="small" onClick={() => setState({ admin: 2 })}>
         移除管理权限
       </Button>
 
       <div className="p-12">
         <h3>自定义icon</h3>
-        <div className="fs-14 color-second">通过定制icon来进行简单的自定义</div>
+        <div className="fs color-second">通过定制icon来进行简单的自定义</div>
         <Auth keys={['login', 'admin']} icon={<span>:(</span>}>
           <div className="tc">
-            <div className="fs-38">😀</div>
-            <div className="fs-24 color-success bold">权限验证通过</div>
-            <div className="fs-14 color-second mt-8">这里是需要权限验证的内容</div>
+            <div className="fs-lg">😀</div>
+            <div className="fs-md color-success bold">权限验证通过</div>
+            <div className="fs color-second mt-8">这里是需要权限验证的内容</div>
           </div>
         </Auth>
       </div>
@@ -103,7 +103,7 @@ const CustomDemo = () => {
 
       <div className="p-12">
         <h3>完整的自定义</h3>
-        <div className="fs-14 color-second mb-24">自行定制反馈内容</div>
+        <div className="fs color-second mb-24">自行定制反馈内容</div>
         <Auth
           keys={['login', 'admin']}
           feedback={rejectMeta => (
@@ -120,9 +120,9 @@ const CustomDemo = () => {
           )}
         >
           <div className="tc">
-            <div className="fs-38">😀</div>
-            <div className="fs-24 color-success bold">权限验证通过</div>
-            <div className="fs-14 color-second mt-8">这里是需要权限验证的内容</div>
+            <div className="fs-lg">😀</div>
+            <div className="fs-md color-success bold">权限验证通过</div>
+            <div className="fs color-second mt-8">这里是需要权限验证的内容</div>
           </div>
         </Auth>
       </div>

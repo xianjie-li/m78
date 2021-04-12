@@ -37,7 +37,7 @@
 
   &.__text-value {
     .m78-input::placeholder {
-      color: #000000 !important;
+      color: var(--m78-color-title) !important;
     }
 
     &.__empty,
@@ -67,7 +67,7 @@
       &::after {
         content: '';
         position: absolute;
-        background-color: rgba(255,255,255,0.95);
+        background-color: var(--m78-color-disable);
         cursor: not-allowed;
         @include full;
       }
@@ -87,11 +87,11 @@
     overflow-y: auto;
 
     &:hover {
-      background-color: rgba(var(--m78-color-1), 0.5);
+      background-color: var(--m78-color-opacity-sm);
     }
 
     &:active {
-      background-color: rgba(var(--m78-color-2), 0.5);
+      background-color: var(--m78-color-opacity-md);
     }
 
     &.__title,
@@ -102,7 +102,7 @@
     }
 
     &.__active {
-      background-color: var(--m78-color-1);
+      background-color: var(--m78-color-opacity-md);
       font-weight: var(--m78-fw-bold);
     }
 
@@ -204,7 +204,7 @@
     line-height: 1;
     position: absolute;
     right: 6px;
-    background-color: rgba(255,255,255,0.95);
+    background-color: var(--m78-gray-2);
     cursor: pointer;
     font-size: 18px;
     margin-left: 6px;

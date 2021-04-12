@@ -1,14 +1,12 @@
-import React, { useEffect } from 'react';
-import { useSelf } from '@lxjx/hooks';
-import { Auth } from '@lxjx/auth';
-import Spin from 'm78/spin';
+import React from 'react';
+import { Seed } from '@m78/seed';
 import Button from 'm78/button';
 import Result from 'm78/result';
 import Popper from 'm78/popper';
 import { isFunction } from '@lxjx/utils';
-import { ExpandSeed } from './type';
+import { AuthTypeEnum, ExpandSeed } from './type';
 
-export function createAuth<D, V>(auth: Auth<D, V>, useAuth: ExpandSeed<D, V>['useAuth']) {
+export function createAuth<D, V>(seed: Seed<D, V>, useAuth: ExpandSeed<D, V>['useAuth']) {
   const AuthComponent: ExpandSeed<D, V>['Auth'] = props => {
     const {
       children,
@@ -17,36 +15,20 @@ export function createAuth<D, V>(auth: Auth<D, V>, useAuth: ExpandSeed<D, V>['us
       validators,
       type = 'feedback',
       icon,
-      pendingNode,
       disabled,
       feedback,
     } = props;
 
-    const state = useAuth(keys, { extra, validators, disabled });
-
-    const self = useSelf({
-      /** 在实际进行验证前阻止渲染 */
-      flag: true,
-    });
-
-    useEffect(() => {
-      self.flag = false;
-    }, []);
+    const rejects = useAuth(keys, { extra, validators, disabled });
 
     const renderChild = () => (isFunction(children) ? children() : children) as any;
 
     if (disabled) return renderChild();
 
-    if (self.flag) return null;
+    if (rejects && rejects.length) {
+      const firstRej = rejects[0];
 
-    if (state.pending) {
-      return pendingNode || <Spin text="验证中" />;
-    }
-
-    if (state.rejects) {
-      const firstRej = state.rejects[0];
-
-      if (!firstRej || type === 'hidden') return null;
+      if (type === AuthTypeEnum.hidden) return null;
 
       if (feedback) {
         return feedback(firstRej, props);
@@ -56,13 +38,17 @@ export function createAuth<D, V>(auth: Auth<D, V>, useAuth: ExpandSeed<D, V>['us
         firstRej.actions &&
         firstRej.actions.map(({ label, ...btnProps }) => {
           return (
-            <Button key={label} size={type === 'popper' ? 'small' : undefined} {...btnProps}>
+            <Button
+              key={label}
+              size={type === AuthTypeEnum.popper ? 'small' : undefined}
+              {...btnProps}
+            >
               {label}
             </Button>
           );
         });
 
-      if (type === 'feedback') {
+      if (type === AuthTypeEnum.feedback) {
         return (
           <Result
             type="notAuth"
@@ -74,7 +60,7 @@ export function createAuth<D, V>(auth: Auth<D, V>, useAuth: ExpandSeed<D, V>['us
         );
       }
 
-      if (type === 'popper') {
+      if (type === AuthTypeEnum.popper) {
         return (
           <Popper
             className="m78-auth_popper"
@@ -94,7 +80,7 @@ export function createAuth<D, V>(auth: Auth<D, V>, useAuth: ExpandSeed<D, V>['us
     return renderChild();
   };
 
-  AuthComponent.displayName = 'FrAuth';
+  AuthComponent.displayName = 'Auth';
 
   return AuthComponent;
 }

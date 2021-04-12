@@ -3,7 +3,7 @@ import { Seed } from '@m78/seed';
 import { isFunction } from '@lxjx/utils';
 import { State, UseState } from './type';
 
-function createDeps<D, V>(seed: Seed<D, V>, useState: UseState<D>) {
+function createState<D, V>(seed: Seed<D, V>, useState: UseState<D>) {
   const _Deps: State<D> = ({ children }) => {
     const state = useState();
 
@@ -16,4 +16,4 @@ function createDeps<D, V>(seed: Seed<D, V>, useState: UseState<D>) {
   return _Deps;
 }
 
-export default createDeps;
+export default createState;

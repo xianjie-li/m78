@@ -6,7 +6,7 @@ import { SetDragPosArg, Share } from './types';
 import { PullDownStatus, pullDownText, PullUpStatus, pullUpText, rubberFactor } from './common';
 
 export function useMethods(share: Share) {
-  const { self, state, setState, props, setSp, setPgSp, setPullDownSp, rootEl, queue, sHelper } = share;
+  const { self, state, setState, props, setSp, setPgSp, setPullDownSp, queue } = share;
   const { soap, threshold, rubber, progressBar, scrollFlag, hideScrollbar } = props;
 
   /** 根据drag信息设置元素的拖动状态 */
@@ -151,7 +151,7 @@ export function useMethods(share: Share) {
   function getScrollWidth() {
     if (!hideScrollbar && !scrollFlag) return;
 
-    const w = getScrollBarWidth(sHelper.ref.current as HTMLElement);
+    const w = getScrollBarWidth(share.sHelper.ref.current as HTMLElement);
 
     if (!w || w === state.scrollBarWidth) return;
 

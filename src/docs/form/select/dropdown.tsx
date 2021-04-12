@@ -35,7 +35,7 @@ const Dropdown = () => {
       >
         <Button text color="primary">
           请选择内容
-          <CaretDownOutlined className="fs-12" />
+          <CaretDownOutlined className="fs-lg" />
         </Button>
       </Select>
 
@@ -50,7 +50,7 @@ const Dropdown = () => {
       >
         <Button text color="primary">
           自定义位置+气泡
-          <CaretDownOutlined className="fs-12" />
+          <CaretDownOutlined className="fs-lg" />
         </Button>
       </Select>
     </div>

@@ -1762,14 +1762,6 @@
   dependencies:
     tslib "^2.0.0"
 
-"@lxjx/auth@^1.11.6":
-  version "1.11.6"
-  resolved "https://registry.npm.taobao.org/@lxjx/auth/download/@lxjx/auth-1.11.6.tgz?cache=0&sync_timestamp=1605768870723&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40lxjx%2Fauth%2Fdownload%2F%40lxjx%2Fauth-1.11.6.tgz#ea544773104722aa190cb0bf327f03ca2b688677"
-  integrity sha1-6lRHcxBHIqoZDLC/Mn8Dyitohnc=
-  dependencies:
-    "@lxjx/utils" "^1.4.5"
-    tslib "^2.0.0"
-
 "@lxjx/click-effect@^1.0.1":
   version "1.0.1"
   resolved "https://registry.npm.taobao.org/@lxjx/click-effect/download/@lxjx/click-effect-1.0.1.tgz#4e3e685b207d68f7ccff5d4020eb2faa43456013"
@@ -1858,6 +1850,15 @@
     "@types/node" "^13.11.0"
     uuid "^7.0.2"
 
+"@lxjx/utils@^1.11.1":
+  version "1.11.1"
+  resolved "https://registry.npm.taobao.org/@lxjx/utils/download/@lxjx/utils-1.11.1.tgz#347cc5218fc902a7277987a72d1e82cf41270dbb"
+  integrity sha1-NHzFIY/JAqcneYenLR6Cz0EnDbs=
+  dependencies:
+    "@babel/runtime" "^7.7.6"
+    "@types/node" "^13.11.0"
+    uuid "^7.0.2"
+
 "@lxjx/validate-tools@^1.1.0":
   version "1.1.0"
   resolved "https://registry.npm.taobao.org/@lxjx/validate-tools/download/@lxjx/validate-tools-1.1.0.tgz#4061a7d6cb6b963892fcedbf724e686e5eedb811"
@@ -1869,10 +1870,18 @@
     lodash "^4.17.15"
     tslib "^2.0.0"
 
-"@m78/style@^1.0.17":
-  version "1.0.17"
-  resolved "https://registry.npm.taobao.org/@m78/style/download/@m78/style-1.0.17.tgz#63d642f64f594dd9c58c16b7b0ae7acd29f60df9"
-  integrity sha1-Y9ZC9k9ZTdnFjBa3sK56zSn2Dfk=
+"@m78/seed@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.npm.taobao.org/@m78/seed/download/@m78/seed-1.1.1.tgz#b4932f7b1a88469b4689061b7e7a54ad54a32a00"
+  integrity sha1-tJMvexqIRptGiQYbfnpUrVSjKgA=
+  dependencies:
+    "@lxjx/utils" "^1.11.1"
+    tslib "^2.1.0"
+
+"@m78/style@^1.0.19":
+  version "1.0.19"
+  resolved "https://registry.npm.taobao.org/@m78/style/download/@m78/style-1.0.19.tgz?cache=0&sync_timestamp=1618259164179&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40m78%2Fstyle%2Fdownload%2F%40m78%2Fstyle-1.0.19.tgz#eb13375f23113c6993faf7562547a2ed8806f07d"
+  integrity sha1-6xM3XyMRPGmT+vdWJUei7YgG8H0=
   dependencies:
     "@ant-design/colors" "^3.2.2"
 
@@ -14657,6 +14666,11 @@ tslib@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npm.taobao.org/tslib/download/tslib-2.0.0.tgz#18d13fc2dce04051e20f074cc8387fd8089ce4f3"
   integrity sha1-GNE/wtzgQFHiDwdMyDh/2Aic5PM=
+
+tslib@^2.1.0:
+  version "2.2.0"
+  resolved "https://registry.npm.taobao.org/tslib/download/tslib-2.2.0.tgz#fb2c475977e35e241311ede2693cee1ec6698f5c"
+  integrity sha1-+yxHWXfjXiQTEe3iaTzuHsZpj1w=
 
 tsutils@^3.17.1, tsutils@^3.7.0:
   version "3.17.1"

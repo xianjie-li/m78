@@ -29,10 +29,10 @@ $unitSpace: 8px;
   width: 100%;
   outline: none;
   border: none;
-  color: #000000;
+  color: var(--m78-color-title);
   background-color: transparent;
-  @include ellipsis-x;
   line-height: var(--m78-line-height);
+  @include ellipsis-x;
 
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
@@ -74,7 +74,7 @@ $unitSpace: 8px;
 
     &:not(.__disabled):not(.__readonly):active {
       border-color: var(--m78-color);
-      box-shadow: 0 0 0 3px rgba(var(--m78-color), 0.5);
+      box-shadow: 0 0 0 3px var(--m78-color-opacity-md);
       transition-delay: 0.1s;
     }
 
@@ -84,11 +84,11 @@ $unitSpace: 8px;
 
     &.__focus {
       border-color: var(--m78-color);
-      box-shadow: 0 0 0 3.8px rgba(var(--m78-color), 0.2);
+      box-shadow: 0 0 0 3.8px var(--m78-color-opacity-sm);
     }
 
     &.__disabled {
-      background-color: $grey-4;
+      background-color: var(--m78-gray-4);
       cursor: not-allowed;
     }
 
@@ -174,19 +174,19 @@ $unitSpace: 8px;
 
     /* 状态色 */
     &.__info {
-      @include statusColor($blue-5);
+      @include statusColor($color-info);
     }
 
     &.__success {
-      @include statusColor($green-5);
+      @include statusColor($color-success);
     }
 
     &.__warning {
-      @include statusColor($orange-5);
+      @include statusColor($color-warn);
     }
 
     &.__error {
-      @include statusColor($red-5);
+      @include statusColor($color-error);
     }
 
     &.__not-border,
@@ -261,7 +261,7 @@ $unitSpace: 8px;
     user-select: none;
     white-space: nowrap;
     font-size: 14px;
-    color: $grey-8;
+    color: #666666;
   }
 
   &_prefix {

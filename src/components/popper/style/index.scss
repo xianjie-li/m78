@@ -22,7 +22,6 @@
   top: 0;
   position: absolute;
   border-radius: 2px;
-  box-shadow: var(--m78-shadow-1-b-focus);
   z-index: var(--m78-z-index-message);
   will-change: auto;
   max-width: 90vw;
@@ -48,6 +47,7 @@
     color: #fff;
     text-align: center;
     max-width: 220px;
+    box-shadow: var(--m78-shadow-1-b-focus);
 
     & + .m78-popper_arrow {
       background-color: $grey-9;
@@ -118,7 +118,7 @@
       float: left;
       margin-top: 4px;
       letter-spacing: 2px;
-      color: rgba(255,255,255,0.95);
+      color: rgba(255, 255, 255, 0.95);
     }
 
     & + .m78-popper_arrow {

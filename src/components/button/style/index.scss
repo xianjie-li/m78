@@ -317,7 +317,7 @@
   }
 }
 
-@include btn('blue', $blue-5);
-@include btn('green', $green-5);
-@include btn('red', $red-5);
-@include btn('yellow', $orange-5);
+@include btn('blue', $color-info);
+@include btn('green', $color-success);
+@include btn('red', $color-error);
+@include btn('yellow', $color-warn);

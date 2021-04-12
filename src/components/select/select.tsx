@@ -333,7 +333,7 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
   function renderToolbar() {
     const bar = (
       <div className="m78-select_toolbar-inner m78-hb-t">
-        <div className="color-second fs-12">
+        <div className="color-second fs-sm">
           已选中{checked.length}项
           <If when={maxLength && checked.length >= maxLength}>
             <span className="color-error"> (已达最大选中数)</span>

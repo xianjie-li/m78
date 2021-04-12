@@ -46,7 +46,12 @@
   }
 
   &_animate {
-    background: linear-gradient(to right, var(--m78-color-border) 30%, var(--m78-color-bg) 46%, var(--m78-color-border) 70%);
+    background: linear-gradient(
+      to right,
+      var(--m78-color-border) 30%,
+      var(--m78-color-bg) 46%,
+      var(--m78-color-border) 70%
+    );
     background-size: 400% 100%;
     animation: m78-skeleton-animation 2s ease infinite;
   }
@@ -65,7 +70,12 @@
       left: 0;
       right: 12px;
       border-radius: var(--m78-border-radius);
-      background: linear-gradient(to right, var(--m78-color-border) 30%, var(--m78-color-bg) 46%, var(--m78-color-border) 70%);
+      background: linear-gradient(
+        to right,
+        var(--m78-color-border) 30%,
+        var(--m78-color-bg) 46%,
+        var(--m78-color-border) 70%
+      );
       background-size: 400% 100%;
       animation: m78-skeleton-animation 2s ease infinite;
     }
@@ -99,7 +109,7 @@
   }
 }
 
-html[data-theme=dark] {
+html[data-theme='dark'] {
   .m78-skeleton {
     border: 1px solid var(--m78-color-border);
   }

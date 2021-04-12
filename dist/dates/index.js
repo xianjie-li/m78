@@ -432,7 +432,7 @@ var Time = function Time(props) {
           patchValue(key, item);
         }
       }, item, " ", /*#__PURE__*/React.createElement("span", {
-        className: "color-second fs-12"
+        className: "color-second fs-sm"
       }, unit));
     }), /*#__PURE__*/React.createElement("div", {
       className: "m78-dates_picker-time __plain"

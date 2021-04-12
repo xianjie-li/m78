@@ -1,6 +1,7 @@
 import CheckBox from 'm78/check-box';
 import React, { useState, useRef } from 'react';
 import { UseCheckReturns } from '@lxjx/hooks';
+import Button from 'm78/button';
 
 const options = [
   {
@@ -28,12 +29,12 @@ const Demo = () => {
 
   return (
     <div>
-      <button type="button" onClick={() => setVal([1, 4])}>
+      <Button type="button" onClick={() => setVal([1, 4])}>
         set [1, 4]
-      </button>
-      <button type="button" onClick={() => ck.current.toggleAll()}>
+      </Button>
+      <Button type="button" onClick={() => ck.current.toggleAll()}>
         反选
-      </button>
+      </Button>
       <CheckBox
         ref={ck}
         name="like"

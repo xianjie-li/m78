@@ -26,13 +26,13 @@ const CustomDemo = () => {
       children: [
         {
           label: '一张动图.gif',
-          icon: <FileGifOutlined className="fs-18" />,
-          actions: <a className="fs-12">放大</a>,
+          icon: <FileGifOutlined className="fs-lg" />,
+          actions: <a className="fs-sm">放大</a>,
         },
         {
           label: '一张神奇的图片.gif',
-          icon: <FileJpgOutlined className="fs-18" />,
-          actions: <a className="fs-12">了解更多</a>,
+          icon: <FileJpgOutlined className="fs-lg" />,
+          actions: <a className="fs-sm">了解更多</a>,
         },
         {
           label: (
@@ -40,7 +40,7 @@ const CustomDemo = () => {
               <span className="color-error">JavaScript</span>高级程序设计.pdf
             </span>
           ),
-          icon: <FilePdfOutlined className="fs-18" />,
+          icon: <FilePdfOutlined className="fs-lg" />,
         },
       ],
     },

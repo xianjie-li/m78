@@ -1,48 +1,34 @@
-import { Auth } from '@lxjx/auth';
-import { useEffectEqual, useFn, useSetState } from '@lxjx/hooks';
-import { useEffect } from 'react';
-import { useDelayDerivedToggleStatus } from 'm78/hooks';
+import { Seed } from '@m78/seed';
+import { useEffectEqual, useFn } from '@lxjx/hooks';
+import { useEffect, useState } from 'react';
 import { UseAuth } from './type';
 
-export function createUseAuth<D, V>(auth: Auth<D, V>) {
-  const useAuth: UseAuth<D, V> = (keys, config) => {
+export function createUseAuth<S, V>(seed: Seed<S, V>) {
+  const useAuth: UseAuth<S, V> = (keys, config) => {
     const { disabled = false } = config || {};
-
-    const [state, setState] = useSetState<ReturnType<UseAuth<D, V>>>({
-      pending: true,
-      rejects: null,
-    });
-
-    const _pending = useDelayDerivedToggleStatus(state.pending, 100);
 
     const authHandler = useFn(() => {
       if (disabled) {
-        setState({
-          pending: false,
-        });
-        return;
+        return null;
       }
 
-      !state.pending && setState({ pending: true });
-
-      auth.auth(keys, config!).then(rejects => {
-        setState({
-          rejects,
-          pending: false,
-        });
-      });
+      return seed.auth(keys, config!);
     });
 
-    useEffectEqual(() => {
-      authHandler();
-    }, [keys, config?.extra]);
+    const [rejects, setRejects] = useState<ReturnType<UseAuth<S, V>>>(authHandler);
 
-    useEffect(() => auth.subscribe(authHandler), []);
+    const update = useFn(() => {
+      const rej = authHandler();
+      if (rej !== rejects) {
+        setRejects(rej);
+      }
+    });
 
-    return {
-      ...state,
-      pending: _pending,
-    };
+    useEffectEqual(() => update(), [keys, config?.extra]);
+
+    useEffect(() => seed.subscribe(() => update()), []);
+
+    return rejects;
   };
 
   return useAuth;

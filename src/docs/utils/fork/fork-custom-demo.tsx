@@ -25,8 +25,8 @@ const ForkCustomDemo = () => {
           <div>
             <h3 className="color-error">
               {title}
-              <span className="mlr-12 color-second fs-14">{message}</span>
-              <Button className="fs-14" onClick={meta.send} size="small" color="primary" text>
+              <span className="mlr-12 color-second fs">{message}</span>
+              <Button className="fs" onClick={meta.send} size="small" color="primary" text>
                 重试
               </Button>
             </h3>

@@ -83,9 +83,7 @@ function useMethods(share) {
       setSp = share.setSp,
       setPgSp = share.setPgSp,
       setPullDownSp = share.setPullDownSp,
-      rootEl = share.rootEl,
-      queue = share.queue,
-      sHelper = share.sHelper;
+      queue = share.queue;
   var soap = props.soap,
       threshold = props.threshold,
       rubber = props.rubber,
@@ -207,7 +205,7 @@ function useMethods(share) {
 
   function getScrollWidth() {
     if (!hideScrollbar && !scrollFlag) return;
-    var w = getScrollBarWidth(sHelper.ref.current);
+    var w = getScrollBarWidth(share.sHelper.ref.current);
     if (!w || w === state.scrollBarWidth) return;
     setState({
       scrollBarWidth: w

@@ -147,7 +147,7 @@ const Time: React.FC<TimeProps> = props => {
                 patchValue(key, item);
               }}
             >
-              {item} <span className="color-second fs-12">{unit}</span>
+              {item} <span className="color-second fs-sm">{unit}</span>
             </div>
           );
         })}

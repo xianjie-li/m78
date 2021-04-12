@@ -1,7 +1,7 @@
-import 'm78/auth/style';
+import 'm78/seed/style';
 import cacheMiddleware from '@m78/seed/cacheMiddleware';
 import devtoolMiddleware from '@m78/seed/devtoolMiddleware';
-import create from './auth';
+import create from './seedImpl';
 
 export { Validator, Action, ValidMeta, Middleware } from '@m78/seed';
 export { cacheMiddleware, devtoolMiddleware };

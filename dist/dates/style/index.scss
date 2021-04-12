@@ -126,9 +126,8 @@
       }
     }
 
-    // 高亮范围， 暂时不用了
     &.__activeRange {
-      background-color: var(--m78-color-1);
+      background-color: var(--m78-color-opacity-sm);
 
       &:nth-of-type(1) {
         border-radius: 6px 0 0 6px;

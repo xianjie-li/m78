@@ -185,7 +185,7 @@ $ident-w: 20px;
   }
 
   &_skeleton-bar {
-    background-color: #f3f3f3;
+    background-color: var(--m78-color-divider);
     height: 68%;
     margin-right: 10px;
     color: transparent;

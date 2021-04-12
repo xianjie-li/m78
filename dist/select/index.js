@@ -503,7 +503,7 @@ function Select(props) {
     var bar = /*#__PURE__*/React.createElement("div", {
       className: "m78-select_toolbar-inner m78-hb-t"
     }, /*#__PURE__*/React.createElement("div", {
-      className: "color-second fs-12"
+      className: "color-second fs-sm"
     }, "\u5DF2\u9009\u4E2D", checked.length, "\u9879", /*#__PURE__*/React.createElement(If, {
       when: maxLength && checked.length >= maxLength
     }, /*#__PURE__*/React.createElement("span", {

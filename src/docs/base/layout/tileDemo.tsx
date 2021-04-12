@@ -96,7 +96,7 @@ const TileDemo = () => {
           borderRadius: 2,
           padding: '10px 12px',
         }}
-        title={<div className="color-title fs-18">Xianjie Li</div>}
+        title={<div className="color-title fs-lg">Xianjie Li</div>}
         desc={
           <div className="color-second">
             <Tile
@@ -116,7 +116,7 @@ const TileDemo = () => {
             />
           </div>
         }
-        leading={<GithubOutlined className="fs-30" />}
+        leading={<GithubOutlined className="fs-lg" />}
         trailing={
           <Button icon size="small">
             <ArrowRightOutlined />

@@ -1,30 +1,30 @@
 import React from 'react';
-import createApi, { CreateAuthConfig, Validators } from '@lxjx/auth';
+import createApi, { CreateSeedConfig, Validators } from '@m78/seed';
 import { AnyObject } from '@lxjx/utils';
 
-import createDeps from './createDeps';
+import createState from './createState';
 import { createUseAuth } from './createUseAuth';
 import { AuthProps, ExpandCreate } from './type';
 import { createAuth } from './createAuth';
-import { createUseDeps } from './createUseDeps';
+import { createUseState } from './createUseState';
 
 const create: ExpandCreate = <
-  D extends AnyObject = AnyObject,
-  V extends Validators<D> = Validators<D>
+  S extends AnyObject = AnyObject,
+  V extends Validators<S> = Validators<S>
 >(
-  config: CreateAuthConfig<D, V>,
+  config: CreateSeedConfig<S, V>,
 ) => {
-  const auth = createApi<D, V>(config);
+  const auth = createApi<S, V>(config);
 
-  const useAuth = createUseAuth<D, V>(auth);
+  const useAuth = createUseAuth<S, V>(auth);
 
-  const Auth = createAuth<D, V>(auth, useAuth);
+  const Auth = createAuth<S, V>(auth, useAuth);
 
-  const useDeps = createUseDeps<D, V>(auth);
+  const useState = createUseState<S, V>(auth);
 
-  const Deps = createDeps<D, V>(auth, useDeps);
+  const State = createState<S, V>(auth, useState);
 
-  const withAuth = (conf: Omit<AuthProps<D, V>, 'children'>) => {
+  const withAuth = (conf: Omit<AuthProps<S, V>, 'children'>) => {
     return (Component: React.ComponentType<any>) => {
       const displayName = Component.displayName || Component.name || 'Component';
 
@@ -43,8 +43,8 @@ const create: ExpandCreate = <
     Auth,
     withAuth,
     useAuth,
-    useDeps,
-    Deps,
+    useState,
+    State,
   };
 };
 

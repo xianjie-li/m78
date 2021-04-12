@@ -4,9 +4,9 @@ import Message from 'm78/message';
 import Button from 'm78/button';
 import { Divider } from 'm78/layout';
 
-const { useAuth, setDeps } = create({
+const { useAuth, setState } = create({
   /* 被所有验证器依赖数据 */
-  dependency: {
+  state: {
     /** 登录用户 */
     user: '',
     /** 是否是管理员 */
@@ -69,29 +69,27 @@ const { useAuth, setDeps } = create({
 });
 
 const UseAuthDemo = () => {
-  const authMeta = useAuth(['login', 'admin']);
+  const rejects = useAuth(['login', 'admin']);
 
   return (
     <div>
-      <Button size="small" onClick={() => setDeps({ user: 'lxj' })}>
+      <Button size="small" onClick={() => setState({ user: 'lxj' })}>
         登录
       </Button>
-      <Button size="small" onClick={() => setDeps({ user: '' })}>
+      <Button size="small" onClick={() => setState({ user: '' })}>
         退出
       </Button>
 
       <Divider vertical />
 
-      <Button size="small" onClick={() => setDeps({ admin: 1 })}>
+      <Button size="small" onClick={() => setState({ admin: 1 })}>
         设为管理员
       </Button>
-      <Button size="small" onClick={() => setDeps({ admin: 2 })}>
+      <Button size="small" onClick={() => setState({ admin: 2 })}>
         移除管理权限
       </Button>
 
-      <pre className="p-12 mtb-12" style={{ backgroundColor: '#efefef' }}>
-        {JSON.stringify(authMeta, null, 2)}
-      </pre>
+      <pre className="p-12 mtb-12">{JSON.stringify(rejects, null, 2)}</pre>
     </div>
   );
 };

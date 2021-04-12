@@ -66,7 +66,7 @@ const BaseDemo = () => {
 
   return (
     <div>
-      <div className="fs-24 mb-16">{text}</div>
+      <div className="fs-lg mb-16">{text}</div>
 
       <DNDContext
         onAccept={e => {

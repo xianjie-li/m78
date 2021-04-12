@@ -1,6 +1,6 @@
 import React from 'react';
 import { ButtonPropsWithHTMLButton } from 'm78/button';
-import { AuthKeys, Auth, CreateSeedConfig, Validators, ValidMeta, AuthConfig } from '@m78/seed';
+import { AuthKeys, Seed, CreateSeedConfig, Validators, ValidMeta, AuthConfig } from '@m78/seed';
 
 import { AnyObject } from '@lxjx/utils';
 
@@ -9,7 +9,7 @@ declare module '@m78/seed' {
 }
 
 /** 扩展seed api */
-export interface ExpandSeed<D, V> extends Auth<D, V> {
+export interface ExpandSeed<D, V> extends Seed<D, V> {
   /** 权限检测组件 */
   Auth: React.FC<AuthProps<D, V>>;
   /** 创建带权限检测的高阶组件 */
@@ -81,7 +81,7 @@ export interface AuthProps<D, V> {
    * * 只要有一个权限未验证通过，后续验证就会被中断，所以key的传入顺序最好按优先级从左到右，如: ['login', 'isVip']
    * * 可以通过二维数组来组合两个条件['key1', ['key2', 'key3']], 组合的条件表示逻辑 `or` */
   keys: AuthKeys<V>;
-  /** 'feedback' | 反馈方式，占位节点、隐藏、气泡提示框, 当type为popper时，会自动拦截子元素的onClick事件 */
+  /** 'feedback' | 反馈方式，占位节点、隐藏、气泡提示框, 当type为popper时，会自动拦截子元素的onClick事件, 同时，也需要确保子节点符合<Popper />组件的子节点规则 */
   type?: 'feedback' | 'hidden' | 'popper' | AuthTypeEnum;
   /** 传递给验证器的额外参数 */
   extra?: any;

@@ -5,21 +5,21 @@ const Demo = () => {
   const [num, setNum] = useState(999999);
 
   return (
-    <div className="fs-38">
+    <div style={{ fontSize: 38 }}>
       <div>
-        <ViewNum>1000</ViewNum> <span className="color-second fs-16">(数字)</span>
+        <ViewNum>1000</ViewNum> <span className="color-second fs-md">(数字)</span>
       </div>
       <div>
         <ViewNum pattern="3" precision={1}>
           100000000
         </ViewNum>{' '}
-        <span className="color-second fs-16">(金额)</span>
+        <span className="color-second fs-md">(金额)</span>
       </div>
       <div>
         <ViewNum pattern="3" transition precision={2}>
           {num}
         </ViewNum>{' '}
-        <span className="color-second fs-16">
+        <span className="color-second fs-md">
           (动画)
           <button
             className="ml-12"
@@ -34,23 +34,23 @@ const Demo = () => {
         <ViewNum pattern="3" precision={2}>
           100000000.0000
         </ViewNum>{' '}
-        <span className="color-second fs-16">(小数)</span>
+        <span className="color-second fs-md">(小数)</span>
       </div>
       <div>
         <ViewNum pattern="3, 4" lastRepeat delimiter=" ">
           17500000000
         </ViewNum>
-        <span className="color-second fs-16">(手机号)</span>
+        <span className="color-second fs-md">(手机号)</span>
       </div>
       <div>
         <ViewNum pattern="3, 4" lastRepeat delimiter=" ">
           6220224051500000000
         </ViewNum>
-        <span className="color-second fs-16">(打钱)</span>
+        <span className="color-second fs-md">(打钱)</span>
       </div>
       <div>
         <ViewNum padLeftZero={8}>520</ViewNum>
-        <span className="color-second fs-16">(左填充)</span>
+        <span className="color-second fs-md">(左填充)</span>
       </div>
       <div>
         <ViewNum
@@ -67,7 +67,7 @@ const Demo = () => {
         >
           1000000
         </ViewNum>
-        <span className="color-second fs-16">(自定义样式)</span>
+        <span className="color-second fs-md">(自定义样式)</span>
       </div>
       <div>
         <ViewNum
@@ -86,7 +86,7 @@ const Demo = () => {
         >
           {num}
         </ViewNum>
-        <span className="color-second fs-16">(自定义样式2)</span>
+        <span className="color-second fs-md">(自定义样式2)</span>
       </div>
     </div>
   );

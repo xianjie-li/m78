@@ -16,7 +16,7 @@ const Demo = () => (
         label={
           <div>
             <div>Vanilla JS</div>
-            <div className="fs-12 color-second">Vanilla JS的描述</div>
+            <div className="fs-sm color-second">Vanilla JS的描述</div>
           </div>
         }
         value={1}
@@ -27,7 +27,7 @@ const Demo = () => (
         label={
           <div>
             <div>Dart</div>
-            <div className="fs-12 color-second">Dart的描述</div>
+            <div className="fs-sm color-second">Dart的描述</div>
           </div>
         }
         value={2}
@@ -41,7 +41,7 @@ const Demo = () => (
         label={
           <div>
             <div>Node</div>
-            <div className="fs-12 color-second">Node的描述</div>
+            <div className="fs-sm color-second">Node的描述</div>
           </div>
         }
         value={3}
@@ -55,7 +55,7 @@ const Demo = () => (
         label={
           <div>
             <div>Kotlin</div>
-            <div className="fs-12 color-second">Kotlin的描述</div>
+            <div className="fs-sm color-second">Kotlin的描述</div>
           </div>
         }
         value={4}
@@ -87,7 +87,7 @@ const Demo = () => (
       <TabItem
         label={
           <div className="tc">
-            <HomeOutlined className="fs-20" />
+            <HomeOutlined className="fs-lg" />
             <div>首页</div>
           </div>
         }
@@ -100,7 +100,7 @@ const Demo = () => (
       <TabItem
         label={
           <div className="tc">
-            <RedEnvelopeOutlined className="fs-20" />
+            <RedEnvelopeOutlined className="fs-lg" />
             <div>提现</div>
           </div>
         }
@@ -111,7 +111,7 @@ const Demo = () => (
       <TabItem
         label={
           <div className="tc">
-            <AlertOutlined className="fs-20" />
+            <AlertOutlined className="fs-lg" />
             <div>通知</div>
           </div>
         }
@@ -122,7 +122,7 @@ const Demo = () => (
       <TabItem
         label={
           <div className="tc">
-            <UserOutlined className="fs-20" />
+            <UserOutlined className="fs-lg" />
             <div>我的</div>
           </div>
         }

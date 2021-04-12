@@ -87,7 +87,6 @@ export function useMethods(share: Share) {
         self.firstScrollParent,
       );
 
-
       const nextStatus: DragStatus = {
         dragOver: dragOver && _enableDropInfo.all && !isCancel,
         dragTop: _enableDropInfo.top && otherS.dragTop,

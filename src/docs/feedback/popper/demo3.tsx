@@ -7,9 +7,7 @@ const Demo3 = () => {
 
   return (
     <div>
-      <Button innerRef={btn}>
-        多气泡
-      </Button>
+      <Button innerRef={btn}>多气泡</Button>
 
       <Popper target={btn} content="轻提示" />
       <Popper target={btn} content="确认执行操作?" type="confirm" direction="bottom" />
