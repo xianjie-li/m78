@@ -1,8 +1,9 @@
-import { Bound, PopperTriggerType } from './types';
+import { Bound, PopperTriggerEnum, PopperTriggerType } from './types';
 
 /** 检测是否为合法的Bound */
 export function isPopperBound(arg: any): arg is Bound {
-  return arg && 'left' in arg && 'top' in arg && 'width' in arg && 'height' in arg;
+  return arg && 'left' in arg && 'top' in arg && 'right' in arg && 'bottom' in arg;
+  // return arg && 'left' in arg && 'top' in arg && 'width' in arg && 'height' in arg;
 }
 
 /** 根据PopperTriggerType获取启用的事件类型 */
@@ -15,9 +16,10 @@ export function getTriggerType(type: PopperTriggerType | PopperTriggerType[]) {
   }
 
   return {
-    hover: types.includes('hover'),
-    click: types.includes('click'),
-    focus: types.includes('focus'),
+    hover: types.includes(PopperTriggerEnum.hover),
+    click: types.includes(PopperTriggerEnum.click),
+    focus: types.includes(PopperTriggerEnum.focus),
+    subClick: type.includes(PopperTriggerEnum.subClick),
   };
 }
 

@@ -40,6 +40,7 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
     rubber,
   } = props as Share['props'];
 
+  /** 内部消息提示 */
   const queue = Tips.useTipsController({
     defaultItemOption: {
       duration: 1200,
@@ -51,6 +52,7 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
 
   const [state, setState] = useSetState<Share['state']>({
     scrollBarWidth: 0,
+    scrollBarHeight: 0,
     hasTouch: false,
 
     topFlag: false,
@@ -104,9 +106,10 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
     queue,
   };
 
-  // 方法拆分
+  // 方法
   const methods = useMethods(share);
 
+  // 滚动处理
   share.sHelper = useScroll<HTMLDivElement>({
     throttleTime: 40,
     onScroll: methods.scrollHandle,
@@ -117,6 +120,7 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
   // 事件绑定/声明周期
   useHooks(methods, share);
 
+  // 暴露实例
   useImperativeHandle(ref, () => ({
     triggerPullDown: methods.triggerPullDown,
     triggerPullUp: methods.triggerPullUp,
@@ -125,10 +129,17 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
     ...share.sHelper,
   }));
 
-  const hideOffset =
+  // 隐藏scrollbar所需偏移
+  const hideOffsetX =
     hideScrollbar && state.scrollBarWidth && !state.hasTouch ? -state.scrollBarWidth : undefined;
+  const hideOffsetY =
+    hideScrollbar && state.scrollBarHeight && !state.hasTouch ? -state.scrollBarHeight : undefined;
 
+  // 是否为纵向滚动
   const isVertical = direction === DirectionEnum.vertical;
+
+  // 滚动值的设置行为，隐藏滚动条时应始终显示滚动条
+  const scrollerValue = hideScrollbar ? 'scroll' : 'auto';
 
   const isPullUpIng = methods.isPullUpIng();
 
@@ -195,9 +206,11 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
           })}
           ref={scrollEl as any}
           style={{
-            right: isVertical ? hideOffset : undefined,
-            bottom: !isVertical ? hideOffset : undefined,
-            [isVertical ? 'overflowY' : 'overflowX']: props.disableScroll ? undefined : 'auto',
+            right: isVertical ? hideOffsetX : undefined,
+            bottom: !isVertical ? hideOffsetY : undefined,
+            [isVertical ? 'overflowY' : 'overflowX']: props.disableScroll
+              ? undefined
+              : scrollerValue,
           }}
         >
           {props.children}

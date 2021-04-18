@@ -1859,6 +1859,15 @@
     "@types/node" "^13.11.0"
     uuid "^7.0.2"
 
+"@lxjx/utils@^1.12.1":
+  version "1.12.1"
+  resolved "https://registry.npm.taobao.org/@lxjx/utils/download/@lxjx/utils-1.12.1.tgz#5ddf414f10e999ee128fd6119f75615289398fcf"
+  integrity sha1-Xd9BTxDpme4Sj9YRn3VhUok5j88=
+  dependencies:
+    "@babel/runtime" "^7.7.6"
+    "@types/node" "^13.11.0"
+    uuid "^7.0.2"
+
 "@lxjx/validate-tools@^1.1.0":
   version "1.1.0"
   resolved "https://registry.npm.taobao.org/@lxjx/validate-tools/download/@lxjx/validate-tools-1.1.0.tgz#4061a7d6cb6b963892fcedbf724e686e5eedb811"
@@ -1870,18 +1879,18 @@
     lodash "^4.17.15"
     tslib "^2.0.0"
 
-"@m78/seed@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.npm.taobao.org/@m78/seed/download/@m78/seed-1.1.1.tgz#b4932f7b1a88469b4689061b7e7a54ad54a32a00"
-  integrity sha1-tJMvexqIRptGiQYbfnpUrVSjKgA=
+"@m78/seed@^1.1.3":
+  version "1.1.3"
+  resolved "https://registry.npm.taobao.org/@m78/seed/download/@m78/seed-1.1.3.tgz?cache=0&sync_timestamp=1618732993964&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40m78%2Fseed%2Fdownload%2F%40m78%2Fseed-1.1.3.tgz#0ee78a3ab9e2d2b7d9d2007153b726ecb6f89aa2"
+  integrity sha1-DueKOrni0rfZ0gBxU7cm7Lb4mqI=
   dependencies:
     "@lxjx/utils" "^1.11.1"
     tslib "^2.1.0"
 
-"@m78/style@^1.0.19":
-  version "1.0.19"
-  resolved "https://registry.npm.taobao.org/@m78/style/download/@m78/style-1.0.19.tgz?cache=0&sync_timestamp=1618259164179&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40m78%2Fstyle%2Fdownload%2F%40m78%2Fstyle-1.0.19.tgz#eb13375f23113c6993faf7562547a2ed8806f07d"
-  integrity sha1-6xM3XyMRPGmT+vdWJUei7YgG8H0=
+"@m78/style@^1.0.20":
+  version "1.0.20"
+  resolved "https://registry.npm.taobao.org/@m78/style/download/@m78/style-1.0.20.tgz#769ce6d77597a386d3514890563652eda71bf17e"
+  integrity sha1-dpzm13WXo4bTUUiQVjZS7acb8X4=
   dependencies:
     "@ant-design/colors" "^3.2.2"
 

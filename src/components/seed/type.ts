@@ -1,6 +1,13 @@
 import React from 'react';
 import { ButtonPropsWithHTMLButton } from 'm78/button';
-import { AuthKeys, Seed, CreateSeedConfig, Validators, ValidMeta, AuthConfig } from '@m78/seed';
+import {
+  AuthKeys,
+  Seed,
+  CreateSeedConfig,
+  Validators,
+  ValidMeta,
+  AuthConfig,
+} from '@m78/seed/types';
 
 import { AnyObject } from '@lxjx/utils';
 

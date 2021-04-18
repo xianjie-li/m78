@@ -115,6 +115,8 @@ const TreeItem = React.memo(
     const toggleHandle = useFn(() => {
       if (isDisabled) return;
 
+      props.onNodeClick?.(data);
+
       // 单选时共享此事件
       isSCheck && valueCheckHandle();
 
@@ -341,9 +343,10 @@ const TreeItem = React.memo(
             {renderLabel()}
           </span>
         </div>
-        {actions && (
+        {(props.actions || actions) && (
           <div className="m78-tree_action" {...stopPropagation}>
             {isFunction(actions) ? actions(data) : actions}
+            {isFunction(props.actions) ? props.actions(data) : props.actions}
           </div>
         )}
       </div>

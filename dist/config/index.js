@@ -1,16 +1,16 @@
-import React, { useContext } from 'react';
+import create from 'm78/seed';
 
-var context = /*#__PURE__*/React.createContext({});
+var m78Config = create({
+  state: {
+    darkMode: false
+  }
+});
+m78Config.subscribe(function (_ref) {
+  var darkMode = _ref.darkMode;
 
-function useConfig() {
-  return useContext(context);
-}
+  if (typeof window !== 'undefined' && window.document) {
+    document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light');
+  }
+});
 
-var index = {
-  context: context,
-  Provider: context.Provider,
-  Consumer: context.Consumer,
-  useConfig: useConfig
-};
-
-export default index;
+export default m78Config;

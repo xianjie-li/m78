@@ -5,9 +5,10 @@ import _objectSpread from '@babel/runtime/helpers/objectSpread2';
 import React, { useMemo } from 'react';
 import Spin from 'm78/spin';
 import 'm78/base';
-import m78Context from 'm78/context';
+import m78seed from 'm78/config';
 import { isArray } from '@lxjx/utils';
 import cls from 'classnames';
+import { FullSizeEnum } from 'm78/types';
 
 var ButtonColorEnum;
 
@@ -19,11 +20,6 @@ var ButtonColorEnum;
   ButtonColorEnum["primary"] = "primary";
 })(ButtonColorEnum || (ButtonColorEnum = {}));
 
-var sizeMap = {
-  large: 12,
-  small: 8,
-  mini: 6
-};
 var matchIcon = /.?(Outlined|Filled|TwoTone|Icon)$/;
 /* 该函数用于遍历Button的children，当存在Icon和SvgIcon时(非函数匹配, 函数组件name能就会添加)，为其添加适当边距并返回 */
 
@@ -106,8 +102,10 @@ function Button(btnProps) {
       onBlur = _ref.onBlur,
       props = _objectWithoutProperties(_ref, ["size", "color", "circle", "outline", "block", "icon", "disabled", "loading", "md", "win", "children", "className", "text", "href", "innerRef", "onFocus", "onBlur"]);
 
-  var theme = m78Context.theme;
-  var classNames = cls(className, 'm78-btn', 'm78-effect', (_cls = {}, _defineProperty(_cls, "__".concat(color), color), _defineProperty(_cls, "__".concat(size), size), _defineProperty(_cls, "__circle", circle), _defineProperty(_cls, "__outline", outline), _defineProperty(_cls, "__block", block), _defineProperty(_cls, "__text", text), _defineProperty(_cls, "__icon", icon), _defineProperty(_cls, "__md", md), _defineProperty(_cls, "__win", win), _defineProperty(_cls, "__light", !!color && !text && !icon || !color && theme === 'dark'), _defineProperty(_cls, "__disabled", disabled || loading), _cls));
+  var darkMode = m78seed.useState(function (state) {
+    return state.darkMode;
+  });
+  var classNames = cls(className, 'm78-btn', 'm78-effect', (_cls = {}, _defineProperty(_cls, "__".concat(color), color), _defineProperty(_cls, "__".concat(size), size), _defineProperty(_cls, "__circle", circle), _defineProperty(_cls, "__outline", outline), _defineProperty(_cls, "__block", block), _defineProperty(_cls, "__text", text), _defineProperty(_cls, "__icon", icon), _defineProperty(_cls, "__md", md), _defineProperty(_cls, "__win", win), _defineProperty(_cls, "__light", !!color && !text && !icon || !color && darkMode), _defineProperty(_cls, "__disabled", disabled || loading), _cls));
   var newChildren = useMemo(function () {
     return formatChildren(children);
   }, [children]);
@@ -122,10 +120,10 @@ function Button(btnProps) {
     ref: innerRef
   }), /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Spin, {
     style: {
-      fontSize: size ? sizeMap[size] : 10,
       color: '#333'
     },
     show: !!loading,
+    size: FullSizeEnum.small,
     full: true,
     text: ""
   }), /*#__PURE__*/React.createElement("span", null, newChildren)));

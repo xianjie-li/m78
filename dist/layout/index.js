@@ -182,10 +182,6 @@ var Spacer = function Spacer(_ref) {
   });
 };
 
-/**
- * 传入onClick时, 会附加点击反馈效果
- * */
-
 var Tile = function Tile(_ref) {
   var className = _ref.className,
       title = _ref.title,
@@ -202,7 +198,11 @@ var Tile = function Tile(_ref) {
     className: "m78-tile_leading"
   }, leading), /*#__PURE__*/React.createElement("div", {
     className: "m78-tile_main"
-  }, title && /*#__PURE__*/React.createElement("div", null, title), desc && /*#__PURE__*/React.createElement("div", null, desc)), trailing && /*#__PURE__*/React.createElement("div", {
+  }, title && /*#__PURE__*/React.createElement("div", {
+    className: "m78-tile_title"
+  }, title), desc && /*#__PURE__*/React.createElement("div", {
+    className: "m78-tile_desc"
+  }, desc)), trailing && /*#__PURE__*/React.createElement("div", {
     className: "m78-tile_trailing"
   }, trailing));
 };

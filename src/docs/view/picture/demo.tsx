@@ -2,8 +2,6 @@ import React from 'react';
 import Picture from 'm78/picture';
 import 'm78/picture/style';
 
-import Config from 'm78/config';
-
 import img1 from '@/mock/img/11.jpg';
 import img2 from '@/mock/img/22.jpg';
 import img3 from '@/mock/img/33.jpg';
@@ -42,20 +40,6 @@ const Demo = () => (
     <div className="mt-32">
       <h4>使用自定义文本</h4>
       <Picture style={imgStyle} src="" errorNode="出错啦!😭" />
-    </div>
-
-    <div className="mt-32">
-      <h4>全局配置加载错误时展示的图片</h4>
-      <Config.Provider
-        value={{
-          pictureErrorImg: img1,
-        }}
-      >
-        <div>
-          <Picture style={imgStyle} src={img2} />
-          <Picture style={imgStyle} src="" />
-        </div>
-      </Config.Provider>
     </div>
   </div>
 );

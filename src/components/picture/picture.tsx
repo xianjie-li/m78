@@ -1,12 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 
 import Spin from 'm78/spin';
-import config from 'm78/config';
 
 import { useSetState } from '@lxjx/hooks';
 
 import cls from 'classnames';
 import { ComponentBaseProps } from 'm78/types';
+import config from 'm78/config';
 
 /* 组件必须有实际的尺寸 */
 
@@ -50,7 +50,7 @@ const Picture: React.FC<PictureProps> = ({
     text: '' as React.ReactNode,
   });
 
-  const { pictureErrorImg } = config.useConfig();
+  const pictureErrorImg = config.useState(st => st.pictureErrorImg);
 
   const _errorImg = errorImg || pictureErrorImg;
 

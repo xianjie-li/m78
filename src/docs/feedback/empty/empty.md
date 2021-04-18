@@ -14,12 +14,6 @@ group:
 
 <code src="./demo.tsx" />
 
-## 全局配置
-
-全局配置空状态图片
-
-<code src="./demo-config.tsx" />
-
 ## props
 
 ```tsx | pure

@@ -13,9 +13,9 @@ const ForkCustomDemo = () => {
   return (
     <div>
       <div className="mb-12">
-        <button type="button" disabled={meta.loading} onClick={meta.send}>
+        <Button disabled={meta.loading} onClick={meta.send}>
           {meta.loading ? '加载中' : '发起请求'}
-        </button>
+        </Button>
       </div>
       <Fork
         hasData={meta.data?.length}

@@ -9,6 +9,7 @@ const barStyle: React.CSSProperties = {
   fontSize: 24,
   backgroundColor: '#fff',
   width: 320,
+  color: 'rgba(0,0,0,0.8)',
 };
 
 const Demo2 = () => {

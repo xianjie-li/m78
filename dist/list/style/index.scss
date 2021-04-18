@@ -29,6 +29,10 @@
     max-width: 100% !important;
   }
 
+  &.__disabled {
+    opacity: 0.4;
+  }
+
   &.__disabled::before {
     content: '';
     display: flex;
@@ -38,7 +42,6 @@
     position: absolute;
     z-index: 100;
     @include full;
-    background-color: var(--m78-color-disable);
     cursor: not-allowed;
   }
 
@@ -69,7 +72,7 @@
     }
 
     .m78-list_item {
-      padding: 26px 16px 0;
+      padding: 0;
 
       // 属性配置
       &.__layout {
@@ -103,9 +106,7 @@
     }
 
     .m78-list_foot {
-      margin: 0;
       min-height: 20px;
-      padding: 2px 0;
       line-height: 1.2;
     }
 
@@ -146,6 +147,16 @@
       .m78-list_cont-left {
         margin-bottom: 8px;
       }
+    }
+
+    .m78-list_main-footer {
+      margin: 0;
+      margin-top: 16px;
+    }
+
+    .m78-list_sub-title {
+      margin: 0;
+      margin-bottom: 12px;
     }
   }
 
@@ -235,12 +246,12 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    padding: 8px 12px;
+    padding: 12px;
 
     &.__disabled {
       user-select: none;
       cursor: not-allowed;
-      pointer-events: none;
+      opacity: 0.4;
 
       &::after {
         position: absolute;
@@ -250,8 +261,7 @@
         top: 1px;
         bottom: 0;
         z-index: 98;
-        opacity: 0.6;
-        background-color: #fff;
+        //background-color: var(--m78-mask);
       }
     }
 
@@ -368,7 +378,7 @@
     display: flex;
     justify-content: space-between;
     font-size: var(--m78-fs);
-    margin-top: 10px;
+    margin-top: 4px;
   }
 
   &_extra-icon {

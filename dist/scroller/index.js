@@ -205,11 +205,18 @@ function useMethods(share) {
 
   function getScrollWidth() {
     if (!hideScrollbar && !scrollFlag) return;
-    var w = getScrollBarWidth(share.sHelper.ref.current);
-    if (!w || w === state.scrollBarWidth) return;
-    setState({
-      scrollBarWidth: w
-    });
+
+    var _getScrollBarWidth = getScrollBarWidth('m78-scrollbar'),
+        _getScrollBarWidth2 = _slicedToArray(_getScrollBarWidth, 2),
+        w = _getScrollBarWidth2[0],
+        h = _getScrollBarWidth2[1];
+
+    if (w !== state.scrollBarWidth || h !== state.scrollBarHeight) {
+      setState({
+        scrollBarWidth: w,
+        scrollBarHeight: h
+      });
+    }
   }
   /**
    * 处理下拉刷新逻辑，down表示是否按下
@@ -505,6 +512,7 @@ function useHooks(methods, share) {
           dey = _ref$delta[1],
           down = _ref.down;
 
+      if (!props.onPullDown && !props.onPullUp) return;
       var sMeta = sHelper.get();
       var yPrevent = props.direction === DirectionEnum.vertical && (dy > 0 && sMeta.touchTop || dy < 0 && sMeta.touchBottom);
       var xPrevent = props.direction === DirectionEnum.horizontal && (dx > 0 && sMeta.touchLeft || dx < 0 && sMeta.touchRight);
@@ -557,6 +565,20 @@ function useHooks(methods, share) {
           methods.setDragPos(dragPosArg);
         }
       }
+    },
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    onWheel: function onWheel(_ref2) {
+      var _ref2$direction = _slicedToArray(_ref2.direction, 2),
+          _ = _ref2$direction[0],
+          dr = _ref2$direction[1];
+
+      if (props.direction === DirectionEnum.vertical) return;
+      if (dr !== 1 && dr !== -1) return; // 这段代码刚好能解决笔记本触控板高频触发的问题，测试用的触控板dr始终为0, 保持观望
+
+      sHelper.set({
+        x: dr > 0 ? 80 : -80,
+        raise: true
+      });
     }
   }, {
     domTarget: rootEl,
@@ -592,6 +614,8 @@ var Scroller = /*#__PURE__*/React.forwardRef(function (props, ref) {
       direction = _ref.direction,
       threshold = _ref.threshold,
       rubber = _ref.rubber;
+  /** 内部消息提示 */
+
   var queue = Tips.useTipsController({
     defaultItemOption: {
       duration: 1200
@@ -603,6 +627,7 @@ var Scroller = /*#__PURE__*/React.forwardRef(function (props, ref) {
 
   var _useSetState = useSetState({
     scrollBarWidth: 0,
+    scrollBarHeight: 0,
     hasTouch: false,
     topFlag: false,
     rightFlag: false,
@@ -670,16 +695,18 @@ var Scroller = /*#__PURE__*/React.forwardRef(function (props, ref) {
     state: state,
     setPullDownSp: setPullDownSp,
     queue: queue
-  }; // 方法拆分
+  }; // 方法
 
-  var methods = useMethods(share);
+  var methods = useMethods(share); // 滚动处理
+
   share.sHelper = useScroll({
     throttleTime: 40,
     onScroll: methods.scrollHandle
   });
   var scrollEl = share.sHelper.ref; // 事件绑定/声明周期
 
-  useHooks(methods, share);
+  useHooks(methods, share); // 暴露实例
+
   useImperativeHandle(ref, function () {
     return _objectSpread({
       triggerPullDown: methods.triggerPullDown,
@@ -687,9 +714,14 @@ var Scroller = /*#__PURE__*/React.forwardRef(function (props, ref) {
       slideNext: methods.slideNext,
       slidePrev: methods.slidePrev
     }, share.sHelper);
-  });
-  var hideOffset = hideScrollbar && state.scrollBarWidth && !state.hasTouch ? -state.scrollBarWidth : undefined;
-  var isVertical = direction === DirectionEnum.vertical;
+  }); // 隐藏scrollbar所需偏移
+
+  var hideOffsetX = hideScrollbar && state.scrollBarWidth && !state.hasTouch ? -state.scrollBarWidth : undefined;
+  var hideOffsetY = hideScrollbar && state.scrollBarHeight && !state.hasTouch ? -state.scrollBarHeight : undefined; // 是否为纵向滚动
+
+  var isVertical = direction === DirectionEnum.vertical; // 滚动值的设置行为，隐藏滚动条时应始终显示滚动条
+
+  var scrollerValue = hideScrollbar ? 'scroll' : 'auto';
   var isPullUpIng = methods.isPullUpIng();
 
   function renderPullUpRetryBtn() {
@@ -739,9 +771,9 @@ var Scroller = /*#__PURE__*/React.forwardRef(function (props, ref) {
     }),
     ref: scrollEl,
     style: _defineProperty({
-      right: isVertical ? hideOffset : undefined,
-      bottom: !isVertical ? hideOffset : undefined
-    }, isVertical ? 'overflowY' : 'overflowX', props.disableScroll ? undefined : 'auto')
+      right: isVertical ? hideOffsetX : undefined,
+      bottom: !isVertical ? hideOffsetY : undefined
+    }, isVertical ? 'overflowY' : 'overflowX', props.disableScroll ? undefined : scrollerValue)
   }, props.children, props.onPullUp && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(If, {
     when: !state.hasData
   }, /*#__PURE__*/React.createElement(Spacer, {

@@ -5,12 +5,14 @@ import { ComponentBaseProps } from 'm78/types';
 import { defaultProps } from './popper';
 import { getTriggerType } from './utils';
 
-type PopperTriggerKeys = 'hover' | 'click' | 'focus';
+type PopperTriggerKeys = 'hover' | 'click' | 'focus' | 'subClick';
 
 export enum PopperTriggerEnum {
   hover = 'hover',
   click = 'click',
   focus = 'focus',
+  /** 次要按钮点击 */
+  subClick = 'subClick',
 }
 
 export type PopperTriggerType = PopperTriggerKeys | PopperTriggerEnum;
@@ -165,6 +167,8 @@ export interface PopperProps extends ComponentBaseProps {
   title?: React.ReactNode;
   /** 获取实例对象 */
   instanceRef?: Ref<PopperRef>;
+  /** false | TODO: 将位置检测模式调整为滚动等行为结束后以提升性能 */
+  // lazyMode?: boolean;
 
   /* ############ 显示 / mount状态 控制 ############ */
   /** 通过show/onChange手动控制显示、隐藏 */

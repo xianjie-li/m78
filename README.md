@@ -15,10 +15,11 @@
 
 ## ✨Features
 
-- 完全使用`hooks`编写。
+
 - 设计风格上采用`antd`与`material`混搭, 基础样式兼容`antd`, 可作为其的补充组件库使用。
 - 大部分组件都进行了大小屏处理，移动端/PC 端均可用
 - 使用 `TypeScript` 开发，包含完整的类型声明。
+- 完全使用`hooks`编写。
 - 标准化接口，size/value/defaultValue/onChange/color 等很多配置与社区大部分组件保持一致，学习成本更低。
 - 贴近前台业务，相比其他为中后台设计的组件库可能会更适用于前台。
 
@@ -55,13 +56,14 @@ function App() {
 
 💡 默认是没有主入口的，所有组件都在独立的模块中维护, 这样可以做到天然的按需加载，`tree shake` 也更友好。
 
-打包组件目录支持使用[babel-plugin-import](https://github.com/ant-design/babel-plugin-import), 不过不推荐, 一是对这样对 idea 和 ts 来说很怪异，支持不好；二是，组件通常会包含多个命名导出，如 `import Form, { TreeItem, Title, Footer, FormProps } from 'M78/form'`， 直接导入会更复合直觉。
-
 <br>
 
-### `样式`
+### `启用sass加载器`
 
 样式采用后编译(开发时编译), 你需要为你的`webpack`或其他打包器添加`scss`文件支持才能正常使用。
+
+
+### 定制主题(可选)
 
 如果要自定义主题色和其他样式变量，可以通过`webpack`配置`sass-loader`的`prependData`选项，并导入自定义的变量文件, 步骤如下:
 
@@ -69,10 +71,10 @@ function App() {
 
 ```scss
 // custom.scss
-@import '~@lxjx/sass-base/var/index.scss';
+@import '~@m78/style/sass-vars.scss';   // 不同工具的导入方式可能不一致，比如vite导入时不带前面的 `~`
 
 // 主题色更改为红色
-$color: red;
+$color-6: red;
 
 // 自定义信息色
 $color-info: blue;
@@ -81,7 +83,7 @@ $color-error: red;
 $color-warn: yellow;
 ```
 
-更多变量请查看[var.scss](https://github.com/Iixianjie/sass-stater/blob/master/var/var.scss)
+更多变量请查看[m78/style](https://github.com/m78-core/style/blob/main/config.scss)
 
 2. 修改`webpack` -> `sass-loader`配置(也可以跳过此步，在每个 sass 文件顶部自行引入)
 

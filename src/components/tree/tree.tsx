@@ -45,14 +45,6 @@ export const defaultProps = {
 };
 
 /**
- * 维护一个便利更新tree data的方法
- *  onDataSourceChange(ds) {}
- *
- *  move({ indexes: [1, 5, 7], t1 }, { indexes: [1, 2, 7], t2 });
- *  insert([1, 5, 7], t1, t2, t3, ...);
- *  push([1, 5, 7], t1, t2, ...);
- *  unshift([1, 5, 7, t1, t2, ...])
- *
  * 拖拽
  * 拖动开始时，关闭开启状态
  * 停止在一个可展开节点上时，延迟一定时间后展开该节点

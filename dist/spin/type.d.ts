@@ -1,8 +1,12 @@
 import React from 'react';
-import { ComponentBaseProps } from 'm78/types';
+import { ComponentBaseProps, FullSize, FullSizeEnum } from 'm78/types';
+export declare enum SpinAnimeEnum {
+    default = 0,
+    spin = 1
+}
 export interface SpinProps extends ComponentBaseProps {
     /** 大小 */
-    size?: 'small' | 'large';
+    size?: FullSizeEnum | FullSize;
     /** 内联模式 */
     inline?: boolean;
     /** '加载中' | 提示文本 */
@@ -17,4 +21,6 @@ export interface SpinProps extends ComponentBaseProps {
     className?: string;
     /** 300 | 延迟显示/隐藏loading的毫秒数 */
     loadingDelay?: number;
+    /** 动画类型 */
+    animeType?: SpinAnimeEnum;
 }

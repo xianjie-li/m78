@@ -20,6 +20,7 @@ var PopperTriggerEnum;
   PopperTriggerEnum["hover"] = "hover";
   PopperTriggerEnum["click"] = "click";
   PopperTriggerEnum["focus"] = "focus";
+  PopperTriggerEnum["subClick"] = "subClick";
 })(PopperTriggerEnum || (PopperTriggerEnum = {}));
 
 /** 所有可能出现的方向 */
@@ -57,6 +58,16 @@ function useEventBind(share, methods) {
     setShow(function (prev) {
       return !prev;
     });
+  });
+  /** 副键点击 */
+
+  var subClickHandle = useFn(function (e) {
+    if (disabled) return;
+    e.preventDefault();
+    setShow(function (prev) {
+      return !prev;
+    });
+    return false;
   });
   /** 鼠标移入 */
 
@@ -105,7 +116,7 @@ function useEventBind(share, methods) {
 
   useEffect(function () {
     if (!state.elTarget && !state.boundTarget) return;
-    eventBind();
+    return eventBind();
   }, [state.elTarget, state.boundTarget]); // 绑定滚动事件
 
   useEffect(function () {
@@ -135,6 +146,7 @@ function useEventBind(share, methods) {
     var clickEnable = triggerType.click;
     var focusEnable = triggerType.focus;
     var hoverEnable = triggerType.hover;
+    var subClick = triggerType.subClick;
 
     if (clickEnable) {
       el.addEventListener('click', clickHandle);
@@ -148,6 +160,10 @@ function useEventBind(share, methods) {
     if (focusEnable) {
       el.addEventListener('focus', focusHandle);
       el.addEventListener('blur', blurHandle);
+    }
+
+    if (subClick) {
+      el.addEventListener('contextmenu', subClickHandle);
     }
 
     return function () {
@@ -164,6 +180,10 @@ function useEventBind(share, methods) {
         el.removeEventListener('focus', focusHandle);
         el.removeEventListener('blur', blurHandle);
       }
+
+      if (subClick) {
+        el.removeEventListener('contextmenu', subClickHandle);
+      }
     };
   }
 
@@ -174,8 +194,9 @@ function useEventBind(share, methods) {
 }
 
 /** 检测是否为合法的Bound */
+
 function isPopperBound(arg) {
-  return arg && 'left' in arg && 'top' in arg && 'width' in arg && 'height' in arg;
+  return arg && 'left' in arg && 'top' in arg && 'right' in arg && 'bottom' in arg; // return arg && 'left' in arg && 'top' in arg && 'width' in arg && 'height' in arg;
 }
 /** 根据PopperTriggerType获取启用的事件类型 */
 
@@ -189,9 +210,10 @@ function getTriggerType(type) {
   }
 
   return {
-    hover: types.includes('hover'),
-    click: types.includes('click'),
-    focus: types.includes('focus')
+    hover: types.includes(PopperTriggerEnum.hover),
+    click: types.includes(PopperTriggerEnum.click),
+    focus: types.includes(PopperTriggerEnum.focus),
+    subClick: type.includes(PopperTriggerEnum.subClick)
   };
 }
 
@@ -270,6 +292,10 @@ function useEffects(share, methods) {
 
   useClickAway(popperEl, function (_ref) {
     var _target = _ref.target;
+
+    if (triggerType.subClick && show) {
+      setShow(false);
+    }
 
     if (triggerType.click && show) {
       var elTarget = state.elTarget; // 只在点击的不是目标元素时生效

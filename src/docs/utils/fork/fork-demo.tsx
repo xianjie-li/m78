@@ -2,6 +2,7 @@ import React from 'react';
 import Fork from 'm78/fork';
 import { useFetch } from '@lxjx/hooks';
 
+import Button from 'm78/button';
 import { mockData, listItemStyle } from './utils';
 
 const ForkDemo = () => {
@@ -12,9 +13,9 @@ const ForkDemo = () => {
   return (
     <div>
       <div className="mb-12">
-        <button type="button" disabled={meta.loading} onClick={meta.send}>
+        <Button type="button" disabled={meta.loading} onClick={meta.send}>
           {meta.loading ? '加载中' : '发起请求'}
-        </button>
+        </Button>
       </div>
       <Fork hasData={meta.data?.length} {...meta}>
         {() => (

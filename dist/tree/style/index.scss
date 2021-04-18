@@ -104,6 +104,10 @@ $ident-w: 20px;
     justify-content: center;
     cursor: pointer;
 
+    .m78-dot {
+      margin: 0;
+    }
+
     &.__open {
       .m78-tree_open-icon {
         transform: rotate(90deg);

@@ -63,6 +63,8 @@ export function useHooks(methods: ReturnType<typeof useMethods>, share: Share) {
   const bind = useGesture(
     {
       onDrag({ event, direction: [dx, dy], delta: [dex, dey], down }) {
+        if (!props.onPullDown && !props.onPullUp) return;
+
         const sMeta = sHelper.get();
 
         const yPrevent =
@@ -119,6 +121,15 @@ export function useHooks(methods: ReturnType<typeof useMethods>, share: Share) {
             methods.setDragPos(dragPosArg);
           }
         }
+      },
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      onWheel({ direction: [_, dr] }) {
+        if (props.direction === DirectionEnum.vertical) return;
+        if (dr !== 1 && dr !== -1) return; // 这段代码刚好能解决笔记本触控板高频触发的问题，测试用的触控板dr始终为0, 保持观望
+        sHelper.set({
+          x: dr > 0 ? 80 : -80,
+          raise: true,
+        });
       },
     },
     {

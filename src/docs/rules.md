@@ -8,8 +8,8 @@ group:
 
 ## 样式约定
 
-- 所有表单控件都尽可能的支持`large` `small` 两种额外的尺寸, 可以通过`components/types`中的`Size`类型声明
-  - 大部分组件高度推荐为`40 | 32 | 24`, 特定组件可根据实际情况 +8 或 -8
+- 所有表单控件都尽可能的支持`large` `small` 两种额外的尺寸, 可以通过`types`中的`Size`类型声明
+  - 大部分组件高度推荐为`40 | 32 | 24`, 特定组件可根据实际情况 +8 或 -8, 关联的可用值有`types`中的`Size/FullSize`类型声明, `base` 下的 scss 变量,`util` 下的 `SIZE_MAP` 映射
   - 部分组件会额外拥有`big`尺寸
 - 组件`z-index`统一使用内部提供的四种, 可以在`componet/util`中或 sass 中通过对应变量获取
 - 保持组件样式隔离，组件应包含独立的[背景色、字号、行高、文字颜色、文字方向], 防止受使用环境影响而导致样式错乱
@@ -17,7 +17,6 @@ group:
 
 ## 组件约定
 
-- 某些包含选项的组件, 选项格式为`{ label: ReactNode, value: any }`, 对应`components/types`中的`DataSourceItem`
 - 表单均需要支持 `value/defaultValue/onChange(val)` 接口，即使是`Radio`等组件。不使用`check/defaultCheck`等更语义化的名称，一是增加使用成本，二是能更方便的与验证库或其他第三方库集成。
 - 所有表单控件 onChange 首参应输出直接可用的 value 类型，而不是未处理的特殊类型。类似`antd`时间控件的`onChange(moment)`，对使用者不友好。
 - 表单控件应该根据类型支持以下态或其他衍生状态
@@ -33,11 +32,12 @@ group:
   - tabindex
   - 键盘操作
 - 复杂的条件渲染(参与验证的条件超过两个)，考虑使用 `If`, `Toggle`, `Fork` 等组件。
-- 对于需要将内部 dom 元素通过 ref 转发的，使用名为`innerRef`的 prop, 必要时再使用`forwordRef`转发获取组件实例, 组件实例`ref`也可以通过`instanceRef`传递。
+- 对于需要将内部 dom 元素通过 ref 转发的，使用名为`innerRef`的 prop, 必要时再使用`forwordRef`转发获取组件实例, 组件实例`ref`通过`instanceRef`传递。
 - 默认最优配置，尽量减少配置项，API 数，例如，常用 api 占 25%，那么可以将整体 api 压缩到 50%(25%的高频使用 api，25%的扩展型 api，剩余通过组件内部通过默认值管理), 后续根据使用情况逐个放出有使用场景的 api，这样可以大大减少学习成本，并且降低出现破坏性变更的可能性。
-- 在需要 `SSR` 的组件中不要在 render 中使用`document`、`window`等浏览器对象，dom 操作都放到`effect`中
+- 除非完全不需要 `SSR` 的组件，否则一律不要直接在 render 中使用`document`、`window`等浏览器对象，dom 操作都放到`effect`中
 - 组件的字符类参数应同时支持传入 string key 和 enum, 例如: `<Button type="large" />` | `<Button type={Size.large} />`, 以 Button 为例, 两种类型的命名应为`ButtonSizeKeys`/`ButtonSizeEnum`
-- 某些依赖于数据源的组件除如不需要特殊含义，均命名为`dataSource`, 如`tree`组件
+- 某些依赖于数据源的组件如不需要特殊含义，均命名为`dataSource`, 如`tree`组件, 选项格式为`{ label: ReactNode, value: any }`, 对应`components/types`中的`DataSourceItem`
+- 定制组件某个部位的 prop 名使用`xxxCustomer`扩展某处节点的 prop 名使用`xxExtraNode`
 
 ## 文档
 
@@ -50,4 +50,3 @@ group:
   某些类型声明会被用户间接引用到，如果 dependencies 不包含对应包，会导致类型反馈异常，区分哪些声明文件可能会被用到很麻烦，而且声明文件通常很小，所以直接全安装到 dependencies
 
 - 组件的类型声明放在同目录`types.ts`下, 防止文件臃肿。
-- 样式位置为同目录下`style/index.js`/`style/index.ts`/`style/index.scss`, 用于与[babel-plugin-import](https://github.com/ant-design/babel-plugin-import)搭配使用, 即使组件不包含样式文件, 也需要在同目录下创建`style/index.js`/`style/index.ts`

@@ -1,5 +1,8 @@
 @import '../../style/index';
 
+$colors: rgba($color-info, 0.75) rgba($color-warn, 0.75) rgba($color-error, 0.75)
+  rgb($color-success, 0.75);
+
 .m78-spin {
   display: inline-flex;
   align-items: center;
@@ -32,12 +35,16 @@
     z-index: var(--m78-z-index);
   }
 
-  &.__small {
-    font-size: 18px;
+  &.__small .m78-spin_unit {
+    font-size: $size-small;
   }
 
-  &.__large {
-    font-size: 26px;
+  &.__large .m78-spin_unit {
+    font-size: $size-large;
+  }
+
+  &.__big .m78-spin_unit {
+    font-size: $size-big;
   }
 }
 
@@ -55,7 +62,47 @@
 }
 
 .m78-spin_unit {
-  animation: m78-spin 1.2s linear infinite reverse;
+  position: relative;
+  font-size: 32px;
+  width: 1em;
+  height: 1em;
+  transform: rotate(165deg);
+
+  &:before,
+  &:after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: block;
+    width: 0.2em;
+    height: 0.2em;
+    border-radius: 0.1em;
+    transform: translate(-50%, -50%);
+  }
+
+  &.__anime0 {
+    &::before {
+      animation: m78-spin_before 2s infinite;
+    }
+
+    &::after {
+      animation: m78-spin_after 2s infinite;
+    }
+  }
+
+  &.__anime1 {
+    animation: m78-spin 1s linear infinite reverse;
+
+    &::before {
+      width: 1em;
+      box-shadow: 0 (-0.4em) nth($colors, 1), 0 0.4em nth($colors, 2);
+    }
+    &::after {
+      height: 1em;
+      box-shadow: 0.4em 0 nth($colors, 3), (-0.4em) 0 nth($colors, 4);
+    }
+  }
 }
 
 .m78-spin_ellipsis {
@@ -79,5 +126,41 @@
   }
   100% {
     content: '...';
+  }
+}
+
+@keyframes m78-spin_before {
+  0% {
+    width: 0.2em;
+    box-shadow: 0.4em (-0.2em) nth($colors, 1), (-0.4em) 0.2em nth($colors, 2);
+  }
+  35% {
+    width: 1em;
+    box-shadow: 0 (-0.2em) nth($colors, 1), 0 0.2em nth($colors, 2);
+  }
+  70% {
+    width: 0.2em;
+    box-shadow: (-0.4em) (-0.2em) nth($colors, 1), 0.4em 0.2em nth($colors, 2);
+  }
+  100% {
+    box-shadow: 0.4em (-0.2em) nth($colors, 1), (-0.4em) 0.2em nth($colors, 2);
+  }
+}
+
+@keyframes m78-spin_after {
+  0% {
+    height: 0.2em;
+    box-shadow: 0.2em 0.4em nth($colors, 3), (-0.2em) (-0.4em) nth($colors, 4);
+  }
+  35% {
+    height: 1em;
+    box-shadow: 0.2em 0 nth($colors, 3), (-0.2em) 0 nth($colors, 4);
+  }
+  70% {
+    height: 0.2em;
+    box-shadow: 0.2em (-0.4em) nth($colors, 3), (-0.2em) 0.4em nth($colors, 4);
+  }
+  100% {
+    box-shadow: 0.2em 0.4em nth($colors, 3), (-0.2em) (-0.4em) nth($colors, 4);
   }
 }

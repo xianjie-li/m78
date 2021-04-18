@@ -21,6 +21,8 @@ export interface Share {
     state: {
         /** 当前环境下的滚动条宽度 */
         scrollBarWidth: number;
+        /** 当前环境下的滚动条宽度 */
+        scrollBarHeight: number;
         /** 是否支持touch事件 */
         hasTouch: boolean;
         /** 各位置的滚动标识 */

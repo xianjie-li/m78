@@ -403,7 +403,10 @@ var TreeItem = /*#__PURE__*/React.memo(function (_ref) {
   /** 处理展开关闭逻辑 */
 
   var toggleHandle = useFn(function () {
-    if (isDisabled) return; // 单选时共享此事件
+    var _props$onNodeClick;
+
+    if (isDisabled) return;
+    (_props$onNodeClick = props.onNodeClick) === null || _props$onNodeClick === void 0 ? void 0 : _props$onNodeClick.call(props, data); // 单选时共享此事件
 
     isSCheck && valueCheckHandle();
     if (!isTwig && !isLoadTwig) return;
@@ -645,9 +648,9 @@ var TreeItem = /*#__PURE__*/React.memo(function (_ref) {
     checked: isChecked,
     disabled: isDisabled,
     onChange: valueCheckHandle
-  })), renderLabel())), actions && /*#__PURE__*/React.createElement("div", _extends({
+  })), renderLabel())), (props.actions || actions) && /*#__PURE__*/React.createElement("div", _extends({
     className: "m78-tree_action"
-  }, stopPropagation), isFunction(actions) ? actions(data) : actions));
+  }, stopPropagation), isFunction(actions) ? actions(data) : actions, isFunction(props.actions) ? props.actions(data) : props.actions));
 }, areEqual);
 
 var DragItem = function DragItem(props) {
@@ -1133,14 +1136,6 @@ var defaultProps = {
   checkStrictly: true
 };
 /**
- * 维护一个便利更新tree data的方法
- *  onDataSourceChange(ds) {}
- *
- *  move({ indexes: [1, 5, 7], t1 }, { indexes: [1, 2, 7], t2 });
- *  insert([1, 5, 7], t1, t2, t3, ...);
- *  push([1, 5, 7], t1, t2, ...);
- *  unshift([1, 5, 7, t1, t2, ...])
- *
  * 拖拽
  * 拖动开始时，关闭开启状态
  * 停止在一个可展开节点上时，延迟一定时间后展开该节点

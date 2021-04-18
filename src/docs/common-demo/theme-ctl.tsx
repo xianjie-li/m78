@@ -1,27 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Button from 'm78/button';
+import config from 'm78/config';
 
 const ThemeCtl = () => {
-  const [theme, setTheme] = useState('light');
-
-  console.log(theme);
-
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme === 'dark' ? 'dark' : 'light');
-  }, [theme]);
-
   return (
     <Button
       icon
       style={{
         position: 'fixed',
-        right: 12,
-        bottom: 12,
+        right: 24,
+        bottom: 16,
         zIndex: 2000,
         fontSize: 24,
       }}
       onClick={() => {
-        setTheme(theme === 'dark' ? 'light' : 'dark');
+        config.setState({
+          darkMode: !config.getState().darkMode,
+        });
       }}
     >
       💡

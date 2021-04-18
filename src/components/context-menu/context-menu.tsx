@@ -1,33 +1,86 @@
-import React from 'react';
-import Button from 'm78/button';
-import Popper from 'm78/popper';
+import React, { useState } from 'react';
+import Popper, { Bound, PopperDirectionEnum, PopperPropsCustom } from 'm78/popper';
+import { Tile } from 'm78/layout';
+import classNames from 'classnames';
+import { isFunction } from '@lxjx/utils';
+import { ContextMenuItemProps, ContextMenuProps } from './types';
 
-const XxContextMenu = () => {
+/** 定制popper */
+const MenuCustomer = (props: PopperPropsCustom) => {
+  const contRender = props.content as ContextMenuProps['content'];
+
   return (
-    <Popper
-      show
-      type="popper"
-      content={
-        <div>
-          <div>呵呵哒</div>
-          <div>呵呵哒</div>
-          <div>呵呵哒</div>
-        </div>
-      }
-      onChange={e => console.log(e)}
+    <div
+      onContextMenu={e => e.preventDefault()}
+      className={classNames(
+        'm78-context-menu',
+        (props as any).classNamePassToCustomer,
+        (props as any).stylePassToCustomer,
+      )}
+      onClick={() => props.setShow(false)}
     >
-      <Button
-        onContextMenu={e => {
-          e.preventDefault();
-          console.log(e);
-
-          return false;
-        }}
-      >
-        click
-      </Button>
-    </Popper>
+      {isFunction(contRender) ? contRender(props) : contRender}
+    </div>
   );
 };
 
-export default XxContextMenu;
+const ContextMenu = ({ content, customer, className, style, children }: ContextMenuProps) => {
+  const [target, setTarget] = useState<Bound | undefined>();
+  const [show, setShow] = useState(false);
+
+  function onContextMenu(e: React.MouseEvent) {
+    e.preventDefault();
+
+    setTarget({
+      left: e.clientX,
+      top: e.clientY,
+      right: e.clientX,
+      bottom: e.clientY,
+    });
+
+    !show && setShow(true);
+
+    return false;
+  }
+
+  return (
+    <>
+      <Popper
+        show={show}
+        type="popper"
+        target={target}
+        trigger="subClick"
+        direction={PopperDirectionEnum.rightStart}
+        offset={0}
+        content={content}
+        customer={customer || MenuCustomer}
+        onChange={setShow}
+        // @ts-ignore 组件内部临时增加的属性
+        classNamePassToCustomer={className}
+        // @ts-ignore
+        stylePassToCustomer={style}
+      />
+      {React.cloneElement(children, {
+        onContextMenu,
+      })}
+    </>
+  );
+};
+
+const ContextMenuItem = (props: ContextMenuItemProps) => {
+  return (
+    <Tile
+      {...props}
+      className={classNames(
+        'm78-context-menu_item',
+        props.className,
+        props.disabled && '__disabled',
+      )}
+    />
+  );
+};
+
+ContextMenu.Item = ContextMenuItem;
+
+export default ContextMenu;
+export { ContextMenuItem };

@@ -1,5 +1,6 @@
 import React from 'react';
 import ErrorBoundary from 'm78/error-boundary';
+import Button from 'm78/button';
 
 function SomeError() {
   let a: any;
@@ -29,12 +30,12 @@ const CustomDemo = () => {
               {error?.stack}
             </pre>
             <div>
-              <button type="button" onClick={reload}>
+              <Button type="button" onClick={reload}>
                 刷新页面
-              </button>
-              <button type="button" onClick={reset}>
+              </Button>
+              <Button type="button" onClick={reset}>
                 重载组件
-              </button>
+              </Button>
             </div>
           </div>
         )}

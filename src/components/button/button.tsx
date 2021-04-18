@@ -2,19 +2,14 @@ import React, { useMemo } from 'react';
 
 import Spin from 'm78/spin';
 import 'm78/base';
-import m78Context from 'm78/context';
+import m78seed from 'm78/config';
 
 import { isArray } from '@lxjx/utils';
 
 import cls from 'classnames';
 
+import { FullSizeEnum } from 'm78/types';
 import { ButtonPropsWithHTMLButton, ButtonPropsWithHTMLLink } from './type';
-
-const sizeMap = {
-  large: 12,
-  small: 8,
-  mini: 6,
-};
 
 const matchIcon = /.?(Outlined|Filled|TwoTone|Icon)$/;
 
@@ -84,7 +79,7 @@ function Button(btnProps: ButtonPropsWithHTMLLink | ButtonPropsWithHTMLButton) {
     ...props
   } = btnProps as ButtonPropsWithHTMLLink & ButtonPropsWithHTMLButton;
 
-  const { theme } = m78Context;
+  const darkMode = m78seed.useState(state => state.darkMode);
 
   const classNames = cls(className, 'm78-btn', 'm78-effect', {
     [`__${color}`]: color,
@@ -96,7 +91,7 @@ function Button(btnProps: ButtonPropsWithHTMLLink | ButtonPropsWithHTMLButton) {
     __icon: icon,
     __md: md,
     __win: win,
-    __light: (!!color && !text && !icon) || (!color && theme === 'dark'), // 当是link/icon按钮时，可以直接使用对应颜色的波纹
+    __light: (!!color && !text && !icon) || (!color && darkMode), // 当是link/icon按钮时，可以直接使用对应颜色的波纹
     __disabled: disabled || loading,
   });
 
@@ -115,12 +110,7 @@ function Button(btnProps: ButtonPropsWithHTMLLink | ButtonPropsWithHTMLButton) {
       ref: innerRef,
     },
     <>
-      <Spin
-        style={{ fontSize: size ? sizeMap[size] : 10, color: '#333' }}
-        show={!!loading}
-        full
-        text=""
-      />
+      <Spin style={{ color: '#333' }} show={!!loading} size={FullSizeEnum.small} full text="" />
       <span>{newChildren}</span>
     </>,
   );

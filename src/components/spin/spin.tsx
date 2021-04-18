@@ -1,11 +1,10 @@
 import React from 'react';
 
-import { WindmillIcon } from 'm78/icon';
 import { useDelayDerivedToggleStatus } from 'm78/hooks';
 import { Transition, config } from '@lxjx/react-transition-spring';
 
 import cls from 'classnames';
-import { SpinProps } from './type';
+import { SpinAnimeEnum, SpinProps } from './type';
 
 const Spin: React.FC<SpinProps> = ({
   size,
@@ -15,6 +14,7 @@ const Spin: React.FC<SpinProps> = ({
   show = true,
   className,
   loadingDelay = 0,
+  animeType = SpinAnimeEnum.default,
   ...props
 }) => {
   const innerShow = useDelayDerivedToggleStatus(show, loadingDelay);
@@ -33,7 +33,7 @@ const Spin: React.FC<SpinProps> = ({
         __full: full,
       })}
     >
-      <WindmillIcon className="m78-spin_unit" />
+      <span className={cls('m78-spin_unit', `__anime${animeType}`)} />
       {text && (
         <span className="m78-spin_text">
           {text}

@@ -2,8 +2,9 @@
 
 .m78-image-preview {
   position: fixed;
-  background: rgba(255, 255, 255, 0.75);
+  background: var(--m78-mask);
   z-index: var(--m78-z-index-drawer);
+  //backdrop-filter: blur(4px);
 
   @include full;
 
@@ -56,7 +57,7 @@
     bottom: 50px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: #fff;
+    background-color: var(--m78-component-bg);
     border: 1px solid var(--m78-color-border);
     padding: 6px;
     white-space: nowrap;

@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import ViewNum from 'm78/view-num';
+import Button from 'm78/button';
 
 const Demo = () => {
   const [num, setNum] = useState(999999);
 
   return (
-    <div style={{ fontSize: 38 }}>
+    <div style={{ fontSize: 30 }}>
       <div>
         <ViewNum>1000</ViewNum> <span className="color-second fs-md">(数字)</span>
       </div>
@@ -21,13 +22,12 @@ const Demo = () => {
         </ViewNum>{' '}
         <span className="color-second fs-md">
           (动画)
-          <button
+          <Button
             className="ml-12"
-            type="button"
             onClick={() => setNum(p => p + Math.floor(Math.random() * 100000))}
           >
             +
-          </button>
+          </Button>
         </span>
       </div>
       <div>
@@ -79,7 +79,7 @@ const Demo = () => {
               .split('')
               .map((item, index) => {
                 const color = colors[index % colors.length];
-                return `<span style="color: ${color};padding: 8px;width: 50px;display:inline-block;text-align:center;border-radius: 4px;border:2px solid ${color};margin-right: 12px">${item}</span>`;
+                return `<span style="color: ${color};padding: 4px;width: 46px;display:inline-block;text-align:center;border-radius: 4px;border:2px solid ${color};margin-right: 12px">${item}</span>`;
               })
               .join('');
           }}

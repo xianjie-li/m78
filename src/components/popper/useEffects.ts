@@ -21,6 +21,10 @@ export function useEffects(share: Share, methods: ReturnType<typeof useMethods>)
 
   /** 点击气泡外位置关闭 */
   useClickAway(popperEl, ({ target: _target }) => {
+    if (triggerType.subClick && show) {
+      setShow(false);
+    }
+
     if (triggerType.click && show) {
       const { elTarget } = state;
       // 只在点击的不是目标元素时生效

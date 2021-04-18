@@ -53,6 +53,10 @@ export interface TreeProps extends ComponentBaseProps {
   defaultOpenZIndex?: number;
   /** 将包含children但值为`[]`的数组视为子节点, 使其可在单选模式下不开启checkTwig的情况下选中 */
   emptyTwigAsNode?: boolean;
+  /** 公共的操作区内容, 渲染在每个节点的右侧  */
+  actions?: React.ReactNode | ((current: TreeNode) => React.ReactNode);
+  /** 点击节点 */
+  onNodeClick?: (current: TreeNode) => void;
 
   /* ############## 定制选项 ############## */
   /** 自定义所有节点的默认前导图标，权重小于option中单独设置的 */
@@ -80,9 +84,6 @@ export interface TreeProps extends ComponentBaseProps {
 
   /** 开启拖拽 */
   draggable?: boolean;
-
-  /** TODO: 公用的action, 渲染在每个节点的右侧 */
-  // commonActions?: node => React.ReactNode;
 }
 
 /** 工具条配置 */

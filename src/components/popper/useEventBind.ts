@@ -15,6 +15,14 @@ export function useEventBind(share: Share, methods: ReturnType<typeof useMethods
     setShow(prev => !prev);
   });
 
+  /** 副键点击 */
+  const subClickHandle = useFn((e: MouseEvent) => {
+    if (disabled) return;
+    e.preventDefault();
+    setShow(prev => !prev);
+    return false;
+  });
+
   /** 鼠标移入 */
   const mouseEnterHandle = useFn(() => {
     if (disabled) return;
@@ -63,7 +71,7 @@ export function useEventBind(share: Share, methods: ReturnType<typeof useMethods
   useEffect(() => {
     if (!state.elTarget && !state.boundTarget) return;
 
-    eventBind();
+    return eventBind();
   }, [state.elTarget, state.boundTarget]);
 
   // 绑定滚动事件
@@ -99,6 +107,7 @@ export function useEventBind(share: Share, methods: ReturnType<typeof useMethods
     const clickEnable = triggerType.click;
     const focusEnable = triggerType.focus;
     const hoverEnable = triggerType.hover;
+    const subClick = triggerType.subClick;
 
     if (clickEnable) {
       el.addEventListener('click', clickHandle);
@@ -114,6 +123,10 @@ export function useEventBind(share: Share, methods: ReturnType<typeof useMethods
       el.addEventListener('blur', blurHandle);
     }
 
+    if (subClick) {
+      el.addEventListener('contextmenu', subClickHandle);
+    }
+
     return () => {
       if (clickEnable) {
         el.removeEventListener('click', clickHandle);
@@ -127,6 +140,10 @@ export function useEventBind(share: Share, methods: ReturnType<typeof useMethods
       if (focusEnable) {
         el.removeEventListener('focus', focusHandle);
         el.removeEventListener('blur', blurHandle);
+      }
+
+      if (subClick) {
+        el.removeEventListener('contextmenu', subClickHandle);
       }
     };
   }

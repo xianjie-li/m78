@@ -6,6 +6,7 @@ export declare function getTriggerType(type: PopperTriggerType | PopperTriggerTy
     hover: boolean;
     click: boolean;
     focus: boolean;
+    subClick: boolean;
 };
 export interface MountExistBase {
     /** true | 如果为true，在第一次启用时才真正挂载内容 */

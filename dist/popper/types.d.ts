@@ -4,11 +4,13 @@ import { SpringStartFn, SpringValue } from 'react-spring';
 import { ComponentBaseProps } from 'm78/types';
 import { defaultProps } from './popper';
 import { getTriggerType } from './utils';
-declare type PopperTriggerKeys = 'hover' | 'click' | 'focus';
+declare type PopperTriggerKeys = 'hover' | 'click' | 'focus' | 'subClick';
 export declare enum PopperTriggerEnum {
     hover = "hover",
     click = "click",
-    focus = "focus"
+    focus = "focus",
+    /** 次要按钮点击 */
+    subClick = "subClick"
 }
 export declare type PopperTriggerType = PopperTriggerKeys | PopperTriggerEnum;
 export interface PopperRef {
@@ -147,6 +149,7 @@ export interface PopperProps extends ComponentBaseProps {
     title?: React.ReactNode;
     /** 获取实例对象 */
     instanceRef?: Ref<PopperRef>;
+    /** false | TODO: 将位置检测模式调整为滚动等行为结束后以提升性能 */
     /** 通过show/onChange手动控制显示、隐藏 */
     show?: boolean;
     /** 通过show/onChange手动控制显示、隐藏 */

@@ -21,7 +21,7 @@ export enum StatusEnum {
   error = 'error',
 }
 
-export type Size = 'large' | 'small' /* 40 | 32 | 24 */;
+export type Size = 'large' | 'small';
 
 /* 40 | 32 | 24 */
 export enum SizeEnum {

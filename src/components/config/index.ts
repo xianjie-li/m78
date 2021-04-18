@@ -10,16 +10,16 @@ interface M78SeedState {
   pictureErrorImg?: string;
 }
 
-const m78Seed = create<M78SeedState>({
+const m78Config = create<M78SeedState>({
   state: {
     darkMode: false,
   },
 });
 
-m78Seed.subscribe(({ darkMode }) => {
+m78Config.subscribe(({ darkMode }) => {
   if (typeof window !== 'undefined' && window.document) {
     document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light');
   }
 });
 
-export default m78Seed;
+export default m78Config;

@@ -151,13 +151,14 @@ export function useMethods(share: Share) {
   function getScrollWidth() {
     if (!hideScrollbar && !scrollFlag) return;
 
-    const w = getScrollBarWidth(share.sHelper.ref.current as HTMLElement);
+    const [w, h] = getScrollBarWidth('m78-scrollbar');
 
-    if (!w || w === state.scrollBarWidth) return;
-
-    setState({
-      scrollBarWidth: w,
-    });
+    if (w !== state.scrollBarWidth || h !== state.scrollBarHeight) {
+      setState({
+        scrollBarWidth: w,
+        scrollBarHeight: h,
+      });
+    }
   }
 
   /**

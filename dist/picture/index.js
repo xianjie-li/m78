@@ -4,9 +4,11 @@ import _slicedToArray from '@babel/runtime/helpers/slicedToArray';
 import _objectWithoutProperties from '@babel/runtime/helpers/objectWithoutProperties';
 import React, { useRef, useEffect } from 'react';
 import Spin from 'm78/spin';
-import config from 'm78/config';
 import { useSetState } from '@lxjx/hooks';
 import cls from 'classnames';
+import config from 'm78/config';
+
+/* 组件必须有实际的尺寸 */
 
 var Picture = function Picture(_ref) {
   var _ref$src = _ref.src,
@@ -33,8 +35,9 @@ var Picture = function Picture(_ref) {
       state = _useSetState2[0],
       setState = _useSetState2[1];
 
-  var _config$useConfig = config.useConfig(),
-      pictureErrorImg = _config$useConfig.pictureErrorImg;
+  var pictureErrorImg = config.useState(function (st) {
+    return st.pictureErrorImg;
+  });
 
   var _errorImg = errorImg || pictureErrorImg;
 

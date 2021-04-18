@@ -49,6 +49,10 @@ export interface TreeProps extends ComponentBaseProps {
     defaultOpenZIndex?: number;
     /** 将包含children但值为`[]`的数组视为子节点, 使其可在单选模式下不开启checkTwig的情况下选中 */
     emptyTwigAsNode?: boolean;
+    /** 公共的操作区内容, 渲染在每个节点的右侧  */
+    actions?: React.ReactNode | ((current: TreeNode) => React.ReactNode);
+    /** 点击节点 */
+    onNodeClick?: (current: TreeNode) => void;
     /** 自定义所有节点的默认前导图标，权重小于option中单独设置的 */
     icon?: React.ReactNode;
     /** 自定义展开标识图标, 如果将className添加到节点上，会在展开时将其旋转90deg, 也可以通过open自行配置 */

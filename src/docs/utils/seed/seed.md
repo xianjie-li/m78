@@ -45,13 +45,13 @@ group:
 
 <code src="./with-auth-demo.tsx" />
 
-## useAuth
+### useAuth
 
 hooks 式的验证，接受验证参数，返回验证结果
 
 <code src="./use-auth-demo.tsx" />
 
-## 或
+### 或
 
 类似编程语言中的 `||`，如果需要在两个权限中任意一个通过就通过验证，可以将权限 key 设置为二维数组`['key', ['key2', 'key3']]`·
 
@@ -59,17 +59,17 @@ hooks 式的验证，接受验证参数，返回验证结果
 
 <code src="./or-demo.tsx" />
 
-## 额外参数
+### 额外参数
 
 某些验证器会需要接受当前的某些运行时参数作为验证参照（比如验证是否为本人，会需要传入当前用户的信息给验证器），可以通过 extra 传递
 
 <code src="./extra-demo.tsx" />
 
-## 定制反馈节点
+### 定制反馈节点
 
 <code src="./custom-demo.tsx" />
 
-## 局部验证器
+### 局部验证器
 
 只作用于当前挂载组件的验证器
 
