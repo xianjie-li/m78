@@ -1,6 +1,6 @@
 {
   "name": "m78",
-  "version": "1.0.0-beta.56",
+  "version": "1.0.0-beta.57",
   "types": "./",
   "license": "MIT",
   "description": "components, hooks, utils, part of the react toolchain",
@@ -54,7 +54,7 @@
     "@lxjx/utils": "^1.12.1",
     "@lxjx/validate-tools": "^1.1.0",
     "@m78/seed": "^1.1.3",
-    "@m78/style": "^1.0.20",
+    "@m78/style": "^1.0.21",
     "@types/classnames": "^2.2.9",
     "@types/lodash": "^4.14.141",
     "@types/node": "^12.7.5",
