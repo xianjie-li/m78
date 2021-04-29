@@ -3,8 +3,6 @@ import DND, { DNDContext } from 'm78/dnd';
 import { Row } from 'm78/layout';
 import cls from 'classnames';
 
-import sty from './sty1.module.scss';
-
 const StatusDemo = () => {
   return (
     <div>
@@ -21,26 +19,23 @@ const StatusDemo = () => {
             }}
           >
             {({ innerRef, status, enables }) => (
-              <div
-                ref={innerRef}
-                // 内置的样式类名为.m78-dnd-box
-                className={cls('m78-dnd-box', sty.dndBox2, {
-                  // 禁用、拖动到中间的状态
-                  __active: status.dragCenter,
-                  __disabled: !enables.enable,
-                })}
-              >
-                <div>1. 全方向放置</div>
-
-                {/* 拖动到侧边方向的提示 */}
-                {status.dragLeft && <span className="m78-dnd-box_left" />}
-                {status.dragRight && <span className="m78-dnd-box_right" />}
-                {status.dragTop && <span className="m78-dnd-box_top" />}
-                {status.dragBottom && <span className="m78-dnd-box_bottom" />}
+              <div ref={innerRef} className="m78-dnd-box-anime">
+                <div
+                  className={cls('m78-dnd-box-anime_main testBox', {
+                    // 禁用、拖动到中间的状态
+                    __active: status.dragCenter,
+                    __disabled: !enables.enable,
+                    __left: status.dragLeft,
+                    __top: status.dragTop,
+                    __right: status.dragRight,
+                    __bottom: status.dragBottom,
+                  })}
+                >
+                  <div>1. 全方向放置 + 内置偏移动画</div>
+                </div>
               </div>
             )}
           </DND>
-
           <DND
             data="DND2"
             enableDrop={{
@@ -52,14 +47,13 @@ const StatusDemo = () => {
               <div
                 ref={innerRef}
                 // 内置的样式类名为.m78-dnd-box
-                className={cls('m78-dnd-box', sty.dndBox2, {
+                className={cls('m78-dnd-box testBox', {
                   // 禁用、拖动到中间的状态
                   __active: status.dragCenter,
                   __disabled: !enables.enable,
                 })}
               >
-                <div>2. 上下可放置</div>
-
+                <div>2. 上下可放置 + 内置线条提示动画</div>
                 {/* 拖动到侧边方向的提示 */}
                 {status.dragLeft && <span className="m78-dnd-box_left" />}
                 {status.dragRight && <span className="m78-dnd-box_right" />}
@@ -69,14 +63,13 @@ const StatusDemo = () => {
             )}
           </DND>
         </Row>
-
         <Row mainAlign="evenly" className="mt-24">
           <DND data="DND3" enableDrop>
             {({ innerRef, status, enables }) => (
               <div
                 ref={innerRef}
                 // 内置的样式类名为.m78-dnd-box
-                className={cls('m78-dnd-box', sty.dndBox2, {
+                className={cls('m78-dnd-box testBox', {
                   // 禁用、拖动到中间的状态
                   __active: status.dragOver,
                   __disabled: !enables.enable,
@@ -86,7 +79,6 @@ const StatusDemo = () => {
               </div>
             )}
           </DND>
-
           <DND
             data="DND4"
             enableDrop={(node, source) => {
@@ -97,13 +89,42 @@ const StatusDemo = () => {
               <div
                 ref={innerRef}
                 // 内置的样式类名为.m78-dnd-box
-                className={cls('m78-dnd-box', sty.dndBox2, {
+                className={cls('m78-dnd-box testBox', {
                   // 禁用、拖动到中间的状态
                   __active: status.dragOver,
                   __disabled: !enables.enable,
                 })}
               >
                 <div>4. 拖动`2`时禁用</div>
+              </div>
+            )}
+          </DND>
+          <DND
+            data="DND2"
+            enableDrop={{
+              bottom: true,
+              top: true,
+              left: true,
+              right: true,
+              center: true,
+            }}
+          >
+            {({ innerRef, status, enables }) => (
+              <div
+                ref={innerRef}
+                // 内置的样式类名为.m78-dnd-box
+                className={cls('m78-dnd-box testBox', {
+                  // 禁用、拖动到中间的状态
+                  __active: status.dragCenter,
+                  __disabled: !enables.enable,
+                })}
+              >
+                <div>5. 开启所有方向</div>
+                {/* 拖动到侧边方向的提示 */}
+                {status.dragLeft && <span className="m78-dnd-box_left" />}
+                {status.dragRight && <span className="m78-dnd-box_right" />}
+                {status.dragTop && <span className="m78-dnd-box_top" />}
+                {status.dragBottom && <span className="m78-dnd-box_bottom" />}
               </div>
             )}
           </DND>

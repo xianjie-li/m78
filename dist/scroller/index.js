@@ -16,7 +16,7 @@ import Empty from 'm78/empty';
 import Tips from 'm78/tips';
 import BackTop from 'm78/back-top';
 import _clamp from 'lodash/clamp';
-import { decimalPrecision, getScrollBarWidth, isNumber } from '@lxjx/utils';
+import { decimalPrecision, getScrollBarWidth, isNumber, defer } from '@lxjx/utils';
 import { useGesture } from 'react-use-gesture';
 import preventTopPullDown from 'prevent-top-pull-down';
 
@@ -168,10 +168,19 @@ function useMethods(share) {
     var yHas = hasScroll('y'); // 有滚动内容才计算
 
     if (xHas || yHas) {
-      var topFlag = yHas && !meta.touchTop;
-      var bottomFlag = yHas && !meta.touchBottom;
-      var leftFlag = xHas && !meta.touchLeft;
-      var rightFlag = xHas && !meta.touchRight;
+      var topFlag = false;
+      var bottomFlag = false;
+      var leftFlag = false;
+      var rightFlag = false;
+
+      if (props.direction === DirectionEnum.vertical) {
+        topFlag = yHas && !meta.touchTop;
+        bottomFlag = yHas && !meta.touchBottom;
+      } else {
+        leftFlag = xHas && !meta.touchLeft;
+        rightFlag = xHas && !meta.touchRight;
+      }
+
       var isAllEqual = topFlag === state.topFlag && leftFlag === state.leftFlag && bottomFlag === state.bottomFlag && rightFlag === state.rightFlag;
 
       if (!isAllEqual) {
@@ -478,7 +487,12 @@ function useHooks(methods, share) {
     setPgSp(aniTo);
   }, [props.xProgress, props.yProgress]); // 初始化滚动标识
 
-  useEffect(methods.refreshScrollFlag, []); // touch事件监测
+  useEffect(function () {
+    var t = defer(methods.refreshScrollFlag);
+    return function () {
+      return clearTimeout(t);
+    };
+  }, [props.children]); // touch事件监测
 
   useEffect(function () {
     if (typeof window !== 'undefined' && 'ontouchstart' in window) {
@@ -570,14 +584,17 @@ function useHooks(methods, share) {
     onWheel: function onWheel(_ref2) {
       var _ref2$direction = _slicedToArray(_ref2.direction, 2),
           _ = _ref2$direction[0],
-          dr = _ref2$direction[1];
+          dr = _ref2$direction[1],
+          distance = _ref2.distance;
 
       if (props.direction === DirectionEnum.vertical) return;
       if (dr !== 1 && dr !== -1) return; // 这段代码刚好能解决笔记本触控板高频触发的问题，测试用的触控板dr始终为0, 保持观望
 
+      var d = distance / 7;
       sHelper.set({
-        x: dr > 0 ? 80 : -80,
-        raise: true
+        x: dr > 0 ? d : -d,
+        raise: true // immediate: true,
+
       });
     }
   }, {

@@ -3,7 +3,7 @@ import { useGesture } from 'react-use-gesture';
 import preventTopPullDown from 'prevent-top-pull-down';
 import _clamp from 'lodash/clamp';
 import { DirectionEnum } from 'm78/types';
-import { isNumber } from '@lxjx/utils';
+import { defer, isNumber } from '@lxjx/utils';
 import { SetDragPosArg, Share } from './types';
 import { useMethods } from './methods';
 
@@ -34,7 +34,10 @@ export function useHooks(methods: ReturnType<typeof useMethods>, share: Share) {
   }, [props.xProgress, props.yProgress]);
 
   // 初始化滚动标识
-  useEffect(methods.refreshScrollFlag, []);
+  useEffect(() => {
+    const t = defer(methods.refreshScrollFlag);
+    return () => clearTimeout(t);
+  }, [props.children]);
 
   // touch事件监测
   useEffect(() => {
@@ -123,12 +126,16 @@ export function useHooks(methods: ReturnType<typeof useMethods>, share: Share) {
         }
       },
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      onWheel({ direction: [_, dr] }) {
+      onWheel({ direction: [_, dr], distance }) {
         if (props.direction === DirectionEnum.vertical) return;
         if (dr !== 1 && dr !== -1) return; // 这段代码刚好能解决笔记本触控板高频触发的问题，测试用的触控板dr始终为0, 保持观望
+
+        const d = distance / 7;
+
         sHelper.set({
-          x: dr > 0 ? 80 : -80,
+          x: dr > 0 ? d : -d,
           raise: true,
+          // immediate: true,
         });
       },
     },

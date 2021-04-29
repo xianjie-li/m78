@@ -56,10 +56,47 @@
   }
 
   &.__active {
-    background-color: rgba(var(--m78-color), 0.2);
+    background-color: var(--m78-color-opacity-sm);
   }
 
   &.__disabled {
-    opacity: 0.6;
+    opacity: 0.3;
+  }
+}
+
+
+.m78-dnd-box-anime {
+  position: relative;
+
+  &_main {
+    transition: 0.2s;
+
+    &.__left, &.__right, &.__top, &.__bottom {
+      //transform: scale(0.7);
+    }
+
+    &.__left {
+      transform: scale(0.8) translateX(30%);
+    }
+
+    &.__right {
+      transform: scale(0.8) translateX(-30%);
+    }
+
+    &.__top {
+      transform: scale(0.8) translateY(30%);
+    }
+
+    &.__bottom {
+      transform: scale(0.8) translateY(-30%);
+    }
+
+    &.__active {
+      transform: scale(0.7);
+    }
+
+    &.__disabled {
+      opacity: 0.3;
+    }
   }
 }

@@ -108,10 +108,18 @@ export function useMethods(share: Share) {
 
     // 有滚动内容才计算
     if (xHas || yHas) {
-      const topFlag = yHas && !meta.touchTop;
-      const bottomFlag = yHas && !meta.touchBottom;
-      const leftFlag = xHas && !meta.touchLeft;
-      const rightFlag = xHas && !meta.touchRight;
+      let topFlag = false;
+      let bottomFlag = false;
+      let leftFlag = false;
+      let rightFlag = false;
+
+      if (props.direction === DirectionEnum.vertical) {
+        topFlag = yHas && !meta.touchTop;
+        bottomFlag = yHas && !meta.touchBottom;
+      } else {
+        leftFlag = xHas && !meta.touchLeft;
+        rightFlag = xHas && !meta.touchRight;
+      }
 
       const isAllEqual =
         topFlag === state.topFlag &&
