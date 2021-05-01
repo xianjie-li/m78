@@ -5,4 +5,4 @@ export * from './type';
 export * from './form';
 export { useForm } from 'rc-field-form';
 export * from 'rc-field-form/es/interface';
-export default Form;
+export { Form };

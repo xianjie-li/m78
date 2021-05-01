@@ -1,5 +1,5 @@
 import React from 'react';
-import Spin from 'm78/spin';
+import { Spin } from 'm78/spin';
 import 'm78/spin/style';
 import { FullSizeEnum } from 'm78/types';
 

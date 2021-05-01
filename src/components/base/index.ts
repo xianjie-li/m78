@@ -7,4 +7,4 @@ new ClickEffect({
   effect: 'm78-effect',
 });
 
-export default 1;
+export default 'hello world';

@@ -1,11 +1,11 @@
 import React from 'react';
-import Spin from 'm78/spin';
+import { Spin } from 'm78/spin';
 import { isFunction } from '@lxjx/utils';
-import Button from 'm78/button';
+import { Button } from 'm78/button';
 
-import NoticeBar from 'm78/notice-bar';
-import Empty from 'm78/empty';
-import classNames from 'classnames';
+import { NoticeBar } from 'm78/notice-bar';
+import { Empty } from 'm78/empty';
+import classNames from 'clsx';
 import { IfProps, ToggleProps, SwitchProps, ForkProps } from './type';
 
 const ForkImpl: React.FC<ForkProps> = ({

@@ -1,5 +1,5 @@
 import React from 'react';
-import Scroller from 'm78/scroller';
+import { Scroller } from 'm78/scroller';
 import { DirectionEnum } from 'm78/types';
 import { Divider } from 'm78/layout';
 import { mockData } from './util';

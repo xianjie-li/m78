@@ -1,5 +1,5 @@
 import React from 'react';
-import DND, { DNDContext } from 'm78/dnd';
+import { DND, DNDContext } from 'm78/dnd';
 
 const HandleDemo = () => {
   return (

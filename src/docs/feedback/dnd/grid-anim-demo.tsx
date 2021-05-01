@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useFn } from '@lxjx/hooks';
-import DND, { DNDContext, DNDProps, DragFullEvent } from 'm78/dnd';
+import { DND, DNDContext, DNDProps, DragFullEvent } from 'm78/dnd';
 import { swap } from '@lxjx/utils';
 import { animated, useTransition } from 'react-spring';
-import cls from 'classnames';
+import cls from 'clsx';
 import _shuffle from 'lodash/shuffle';
-import Button from 'm78/button';
+import { Button } from 'm78/button';
 import sty from './grid-anim.module.scss';
 
 const ColumLen = 5;

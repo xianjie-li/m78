@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import RForm, { useForm, FormProvider, List as FormList } from 'rc-field-form';
-import List, { Title, SubTitle, Footer } from 'm78/list';
+import { List, Title, SubTitle, Footer } from 'm78/list';
 import Schema from 'async-validator';
 import {
   createRandString,
@@ -11,7 +11,7 @@ import {
 } from '@lxjx/utils';
 import { useFn, useScroll } from '@lxjx/hooks';
 import { ValidateErrorEntity } from 'rc-field-form/es/interface';
-import cls from 'classnames';
+import cls from 'clsx';
 import { createMessagesTemplate } from '@lxjx/validate-tools';
 
 import { FormProps } from './type';

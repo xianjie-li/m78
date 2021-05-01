@@ -4,9 +4,9 @@ import { useUpdateEffect, useToggle } from 'react-use';
 import { useLockBodyScroll } from '@lxjx/hooks';
 import { Transition } from '@lxjx/react-transition-spring';
 
-import Portal from 'm78/portal';
+import { Portal } from 'm78/portal';
 
-import cls from 'classnames';
+import cls from 'clsx';
 
 import { ReactRenderApiProps } from '@lxjx/react-render-api';
 import { ComponentBaseProps } from 'm78/types';

@@ -1,10 +1,10 @@
 import React from 'react';
-import create, { AuthTypeEnum } from 'm78/seed';
-import Message from 'm78/message';
-import Button from 'm78/button';
+import { createSeed, AuthTypeEnum } from 'm78/seed';
+import { message } from 'm78/message';
+import { Button } from 'm78/button';
 import { Divider } from 'm78/layout';
 
-const seed = create({
+const seed = createSeed({
   /* 被所有验证器依赖数据 */
   state: {
     /** 登录用户 */
@@ -27,7 +27,7 @@ const seed = create({
               label: '去登陆',
               color: 'red',
               onClick() {
-                Message.tips({
+                message.tips({
                   content: '去登陆',
                 });
               },
@@ -35,7 +35,7 @@ const seed = create({
             {
               label: '算了',
               onClick() {
-                Message.tips({
+                message.tips({
                   content: '算了',
                 });
               },
@@ -56,7 +56,7 @@ const seed = create({
               label: '联系管理员',
               color: 'blue',
               onClick() {
-                Message.tips({
+                message.tips({
                   content: '联系管理员',
                 });
               },

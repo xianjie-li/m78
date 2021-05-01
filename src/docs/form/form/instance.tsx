@@ -1,7 +1,7 @@
 import React from 'react';
-import Form, { useForm } from 'm78/form';
-import Input from 'm78/input';
-import Button from 'm78/button';
+import { Form, useForm } from 'm78/form';
+import { Input } from 'm78/input';
+import { Button } from 'm78/button';
 
 interface Values {
   phone: string;

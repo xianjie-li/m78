@@ -6,4 +6,4 @@ import create from './seedImpl';
 export * from '@m78/seed';
 export { cacheMiddleware, devtoolMiddleware };
 export { AuthTypeEnum } from './type';
-export default create;
+export { create as createSeed };

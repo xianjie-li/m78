@@ -94,4 +94,4 @@ function ViewNum(props) {
   });
 }
 
-export default ViewNum;
+export { ViewNum };

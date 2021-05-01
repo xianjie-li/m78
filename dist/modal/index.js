@@ -3,13 +3,13 @@ import _objectWithoutProperties from '@babel/runtime/helpers/objectWithoutProper
 import _objectSpread from '@babel/runtime/helpers/objectSpread2';
 import _slicedToArray from '@babel/runtime/helpers/slicedToArray';
 import React, { useEffect, useRef, useState } from 'react';
-import Portal from 'm78/portal';
+import { Portal } from 'm78/portal';
 import { Z_INDEX_MODAL } from 'm78/util';
 import { useClickAway, useUpdateEffect, useMeasure } from 'react-use';
 import { config, Transition } from '@lxjx/react-transition-spring';
 import { useLockBodyScroll, useFormState, useSameState, useSelf, useRefize } from '@lxjx/hooks';
 import { useSpring, animated, to } from 'react-spring';
-import cls from 'classnames';
+import cls from 'clsx';
 import { useMountInterface, useDelayDerivedToggleStatus } from 'm78/hooks';
 import createRenderApi from '@lxjx/react-render-api';
 import _debounce from 'lodash/debounce';
@@ -595,4 +595,4 @@ var Modal = Object.assign(_ModalBase, {
   api: baseApi
 });
 
-export default Modal;
+export { Modal };

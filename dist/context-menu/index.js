@@ -2,9 +2,9 @@ import 'm78/context-menu/style';
 import _extends from '@babel/runtime/helpers/extends';
 import _slicedToArray from '@babel/runtime/helpers/slicedToArray';
 import React, { useState } from 'react';
-import Popper, { PopperDirectionEnum } from 'm78/popper';
+import { Popper, PopperDirectionEnum } from 'm78/popper';
 import { Tile } from 'm78/layout';
-import classNames from 'classnames';
+import classNames from 'clsx';
 import { isFunction } from '@lxjx/utils';
 
 /** 定制popper */
@@ -77,5 +77,4 @@ var ContextMenuItem = function ContextMenuItem(props) {
 
 ContextMenu.Item = ContextMenuItem;
 
-export default ContextMenu;
-export { ContextMenuItem };
+export { ContextMenu, ContextMenuItem };

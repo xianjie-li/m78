@@ -1,5 +1,5 @@
 import React from 'react';
-import Tree from 'm78/tree';
+import { Tree } from 'm78/tree';
 import { SizeEnum } from 'm78/types';
 import { Spacer } from 'm78/layout';
 

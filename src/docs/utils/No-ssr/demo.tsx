@@ -1,5 +1,5 @@
 import React from 'react';
-import NoSSR from 'm78/no-ssr';
+import { NoSSR } from 'm78/no-ssr';
 
 const box: React.CSSProperties = {
   width: 200,

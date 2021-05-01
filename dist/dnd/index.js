@@ -10,7 +10,7 @@ import { throwError } from 'm78/util';
 import { useDrag } from 'react-use-gesture';
 import _remove from 'lodash/remove';
 import { useDelayDerivedToggleStatus } from 'm78/hooks';
-import Portal from 'm78/portal';
+import { Portal } from 'm78/portal';
 import _throttle from 'lodash/throttle';
 
 var defaultContext = {
@@ -1055,5 +1055,4 @@ function DND(props) {
 
 DND.defaultProps = defaultProps;
 
-export default DND;
-export { DNDContext };
+export { DND, DNDContext };

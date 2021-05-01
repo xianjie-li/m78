@@ -1,10 +1,10 @@
 import React from 'react';
-import Button from 'm78/button';
+import { Button } from 'm78/button';
 import { Divider } from 'm78/layout';
-import create from 'm78/seed';
-import Message from 'm78/message';
+import { createSeed } from 'm78/seed';
+import { message } from 'm78/message';
 
-const { Auth, setState } = create({
+const { Auth, setState } = createSeed({
   /* 被所有验证器依赖数据 */
   state: {
     /** 登录用户 */
@@ -29,7 +29,7 @@ const { Auth, setState } = create({
               label: '去登陆',
               color: 'red',
               onClick() {
-                Message.tips({
+                message.tips({
                   content: '去登陆',
                 });
               },
@@ -37,7 +37,7 @@ const { Auth, setState } = create({
             {
               label: '算了',
               onClick() {
-                Message.tips({
+                message.tips({
                   content: '算了',
                 });
               },
@@ -58,7 +58,7 @@ const { Auth, setState } = create({
               label: '联系管理员',
               color: 'blue',
               onClick() {
-                Message.tips({
+                message.tips({
                   content: '联系管理员',
                 });
               },
@@ -78,7 +78,7 @@ const { Auth, setState } = create({
               label: '注册vip',
               color: 'blue',
               onClick() {
-                Message.tips({
+                message.tips({
                   content: '注册vip',
                 });
               },

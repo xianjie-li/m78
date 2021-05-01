@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Tree, { OptionsItem } from 'm78/tree';
-import Button from 'm78/button';
+import { Tree, OptionsItem } from 'm78/tree';
+import { Button } from 'm78/button';
 import { Spacer } from 'm78/layout';
 import mockTreeData from './mockTreeData';
 

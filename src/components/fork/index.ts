@@ -17,4 +17,4 @@ Fork.Switch = Switch;
 
 export * from './type';
 export * from './fork-impl';
-export default Fork;
+export { Fork };

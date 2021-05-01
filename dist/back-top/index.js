@@ -1,14 +1,14 @@
 import 'm78/back-top/style';
 import _slicedToArray from '@babel/runtime/helpers/slicedToArray';
 import React, { useRef, useState, useEffect } from 'react';
-import Button from 'm78/button';
+import { Button } from 'm78/button';
 import { CaretUpOutlined } from 'm78/icon';
 import { getScrollParent } from '@lxjx/utils';
 import { getRefDomOrDom, useFn, useScroll } from '@lxjx/hooks';
 import _debounce from 'lodash/debounce';
 import { Transition } from '@lxjx/react-transition-spring';
-import cls from 'classnames';
-import Portal from 'm78/portal';
+import cls from 'clsx';
+import { Portal } from 'm78/portal';
 
 var BackTop = function BackTop(_ref) {
   var target = _ref.target,
@@ -79,7 +79,9 @@ var BackTop = function BackTop(_ref) {
         return sh.set({
           y: 0
         });
-      },
+      }
+      /* FIXME: 修复类型错误 */
+      ,
       style: style
     }, children || /*#__PURE__*/React.createElement(Button, null, /*#__PURE__*/React.createElement(CaretUpOutlined, null)));
   }
@@ -89,4 +91,4 @@ var BackTop = function BackTop(_ref) {
   }, renderMain());
 };
 
-export default BackTop;
+export { BackTop };

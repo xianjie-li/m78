@@ -3,11 +3,11 @@ import _objectSpread from '@babel/runtime/helpers/objectSpread2';
 import _objectWithoutProperties from '@babel/runtime/helpers/objectWithoutProperties';
 import React, { useContext, useMemo } from 'react';
 import { useCheck, useFormState, useSelf, useMeasure, useMountExist } from '@lxjx/hooks';
-import cls from 'classnames';
+import cls from 'clsx';
 import _extends from '@babel/runtime/helpers/extends';
 import _slicedToArray from '@babel/runtime/helpers/slicedToArray';
 import { isFunction } from '@lxjx/utils';
-import Button from 'm78/button';
+import { Button } from 'm78/button';
 import { CaretUpOutlined, CaretDownOutlined, CaretRightOutlined } from 'm78/icon';
 import { If } from 'm78/fork';
 import { stopPropagation } from 'm78/util';
@@ -236,5 +236,4 @@ var ExpansionPane = function ExpansionPane(props) {
   }), mound && props.children)));
 };
 
-export default Expansion;
-export { ExpandIconPosition, ExpansionPane };
+export { ExpandIconPosition, Expansion, ExpansionPane };

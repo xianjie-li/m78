@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 
 import 'm78/base';
-import Button, { ButtonPropsWithHTMLButton } from 'm78/button';
-import Modal from 'm78/modal';
+import { ButtonPropsWithHTMLButton, Button } from 'm78/button';
+import { Modal } from 'm78/modal';
 import { Transition } from '@lxjx/react-transition-spring';
 import { config } from 'react-spring';
 import { CloseOutlined, statusIcons } from 'm78/icon';
-import Spin from 'm78/spin';
+import { Spin } from 'm78/spin';
 import { useFormState } from '@lxjx/hooks';
 
-import cls from 'classnames';
+import cls from 'clsx';
 import createRenderApi from '@lxjx/react-render-api';
-import Input, { InputProps } from 'm78/input';
+import { Input, InputProps } from 'm78/input';
 import { ModalBaseProps } from '../modal/types';
 
 export interface DialogProps extends Omit<ModalBaseProps, 'children' | 'onClose'> {

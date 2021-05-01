@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
-import Scroller, { ScrollerRef } from 'm78/scroller';
+import { Scroller, ScrollerRef } from 'm78/scroller';
 import { Divider } from 'm78/layout';
-import Button from 'm78/button';
+import { Button } from 'm78/button';
 import { mockData } from './util';
 
 import sty from './style.module.scss';

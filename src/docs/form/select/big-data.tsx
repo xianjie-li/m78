@@ -1,4 +1,4 @@
-import Select from 'm78/select';
+import { Select } from 'm78/select';
 import React, { useState } from 'react';
 
 import { fakeOptions } from './utils';

@@ -3,9 +3,9 @@ import _objectSpread from '@babel/runtime/helpers/objectSpread2';
 import _slicedToArray from '@babel/runtime/helpers/slicedToArray';
 import React, { useState, useRef, useEffect } from 'react';
 import { ArrowLeftOutlined } from 'm78/icon';
-import Button from 'm78/button';
+import { Button } from 'm78/button';
 import { Divider } from 'm78/layout';
-import cls from 'classnames';
+import cls from 'clsx';
 import { useMeasure, useFn } from '@lxjx/hooks';
 
 var PageHeader = function PageHeader(_ref) {
@@ -109,4 +109,4 @@ var PageHeader = function PageHeader(_ref) {
   }, bottom)));
 };
 
-export default PageHeader;
+export { PageHeader };

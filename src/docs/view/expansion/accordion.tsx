@@ -1,5 +1,5 @@
 import React from 'react';
-import Expansion, { ExpansionPane } from 'm78/expansion';
+import { Expansion, ExpansionPane } from 'm78/expansion';
 import data1 from '@/mock/data1';
 
 const listSmall = data1.slice(0, 4);

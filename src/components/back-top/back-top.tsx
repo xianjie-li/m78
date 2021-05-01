@@ -1,12 +1,12 @@
 import React, { RefObject, useEffect, useRef, useState } from 'react';
-import Button from 'm78/button';
+import { Button } from 'm78/button';
 import { CaretUpOutlined } from 'm78/icon';
 import { getScrollParent } from '@lxjx/utils';
 import { useFn, useScroll, getRefDomOrDom } from '@lxjx/hooks';
 import _debounce from 'lodash/debounce';
 import { Transition } from '@lxjx/react-transition-spring';
-import cls from 'classnames';
-import Portal from 'm78/portal';
+import cls from 'clsx';
+import { Portal } from 'm78/portal';
 import { ComponentBaseProps } from 'm78/types';
 
 interface BackTopProps extends ComponentBaseProps {
@@ -88,6 +88,7 @@ const BackTop = ({
         title="返回顶部"
         type="slideRight"
         onClick={() => sh.set({ y: 0 })}
+        /* FIXME: 修复类型错误 */
         style={style}
       >
         {children || (

@@ -1,7 +1,7 @@
 import React from 'react';
 
-import NoticeBar from 'm78/notice-bar';
-import Button from 'm78/button';
+import { NoticeBar } from 'm78/notice-bar';
+import { Button } from 'm78/button';
 
 const Demo = () => {
   const [show, setShow] = React.useState(true);

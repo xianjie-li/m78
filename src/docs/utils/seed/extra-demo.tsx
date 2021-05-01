@@ -1,10 +1,10 @@
 import React from 'react';
-import create from 'm78/seed';
-import Message from 'm78/message';
-import Button from 'm78/button';
+import { createSeed } from 'm78/seed';
+import { message } from 'm78/message';
+import { Button } from 'm78/button';
 import { Divider } from 'm78/layout';
 
-const { Auth, setState } = create({
+const { Auth, setState } = createSeed({
   /* 被所有验证器依赖数据 */
   state: {
     name: 'lxj',
@@ -22,7 +22,7 @@ const { Auth, setState } = create({
               label: `联系${extra}`,
               color: 'blue',
               onClick() {
-                Message.tips({
+                message.tips({
                   content: '联系上传者',
                 });
               },

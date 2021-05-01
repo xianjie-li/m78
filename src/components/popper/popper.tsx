@@ -1,6 +1,6 @@
 import React, { useImperativeHandle, useMemo, useRef } from 'react';
-import Portal from 'm78/portal';
-import cls from 'classnames';
+import { Portal } from 'm78/portal';
+import cls from 'clsx';
 import { useFormState, useSelf, useSetState, useMountExist } from '@lxjx/hooks';
 import { createRandString } from '@lxjx/utils';
 import { useSpring, animated, to } from 'react-spring';
@@ -150,6 +150,7 @@ const Popper = (_props: PopperProps) => {
               /* 使用toFixed防止chrome字体模糊 */
               return `translate3d(${x}px, ${y}px, 0) scale3d(${sc}, ${sc}, ${sc})`;
             }),
+            // @ts-ignore
             opacity: spProps.opacity.to(o => o),
             // 隐藏
             visibility: spProps.opacity.to(o => (o < 0.3 ? 'hidden' : undefined!)),

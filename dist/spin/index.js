@@ -5,7 +5,7 @@ import _objectWithoutProperties from '@babel/runtime/helpers/objectWithoutProper
 import React from 'react';
 import { useDelayDerivedToggleStatus } from 'm78/hooks';
 import { Transition, config } from '@lxjx/react-transition-spring';
-import cls from 'classnames';
+import cls from 'clsx';
 
 var SpinAnimeEnum;
 
@@ -49,5 +49,4 @@ var Spin = function Spin(_ref) {
   })));
 };
 
-export default Spin;
-export { SpinAnimeEnum };
+export { Spin, SpinAnimeEnum };

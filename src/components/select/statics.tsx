@@ -1,7 +1,7 @@
 import { PopperPropsCustom } from 'm78/popper';
 import React from 'react';
 import { isArray, getFirstTruthyOrZero, isTruthyOrZero } from '@lxjx/utils';
-import cls from 'classnames';
+import cls from 'clsx';
 import { CheckOutlined, CloseCircleOutlined } from 'm78/icon';
 import { ListChildComponentProps } from 'react-window';
 import { RenderItemData, SelectCustomTag, SelectOptionItem, SelectProps } from './type';

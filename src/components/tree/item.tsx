@@ -1,11 +1,11 @@
 import React from 'react';
-import cls from 'classnames';
+import cls from 'clsx';
 import { If, Switch } from 'm78/fork';
 import { CaretRightOutlined, LoadingOutlined } from 'm78/icon';
 import { useFn } from '@lxjx/hooks';
 import { isArray, isFunction } from '@lxjx/utils';
 import { stopPropagation } from 'm78/util';
-import Check from 'm78/check';
+import { Check } from 'm78/check';
 import { SizeEnum } from 'm78/types';
 import { areEqual } from 'react-window';
 import {

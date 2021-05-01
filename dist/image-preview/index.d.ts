@@ -1,3 +1,4 @@
 import 'm78/image-preview/style';
+import ImagePreview from './image-preview';
 export * from './image-preview';
-export { default } from './image-preview';
+export { ImagePreview };

@@ -1,7 +1,7 @@
-import CheckBox from 'm78/check-box';
+import { CheckBox } from 'm78/check-box';
 import React, { useState, useRef } from 'react';
 import { UseCheckReturns } from '@lxjx/hooks';
-import Button from 'm78/button';
+import { Button } from 'm78/button';
 
 const options = [
   {

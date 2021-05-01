@@ -1,5 +1,5 @@
 import React from 'react';
-import Carousel from 'm78/carousel';
+import { Carousel } from 'm78/carousel';
 
 import img1 from '@/mock/img/3.png';
 import img2 from '@/mock/img/6.png';

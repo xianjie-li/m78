@@ -1,6 +1,6 @@
 import React from 'react';
 import { Divider, Spacer } from 'm78/layout';
-import Button from 'm78/button';
+import { Button } from 'm78/button';
 
 const SpacerDemo = () => {
   return (

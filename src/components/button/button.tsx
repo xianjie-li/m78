@@ -1,12 +1,12 @@
 import React, { useMemo } from 'react';
 
-import Spin from 'm78/spin';
+import { Spin } from 'm78/spin';
 import 'm78/base';
-import m78seed from 'm78/config';
+import { m78Config as config } from 'm78/config';
 
 import { isArray } from '@lxjx/utils';
 
-import cls from 'classnames';
+import cls from 'clsx';
 
 import { FullSizeEnum } from 'm78/types';
 import { ButtonPropsWithHTMLButton, ButtonPropsWithHTMLLink } from './type';
@@ -79,7 +79,7 @@ function Button(btnProps: ButtonPropsWithHTMLLink | ButtonPropsWithHTMLButton) {
     ...props
   } = btnProps as ButtonPropsWithHTMLLink & ButtonPropsWithHTMLButton;
 
-  const darkMode = m78seed.useState(state => state.darkMode);
+  const darkMode = config.useState(state => state.darkMode);
 
   const classNames = cls(className, 'm78-btn', 'm78-effect', {
     [`__${color}`]: color,

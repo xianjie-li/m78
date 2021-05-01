@@ -6,4 +6,4 @@ import { PullDownStatus, PullUpStatus } from './common';
 export * from './types';
 
 export { PullDownStatus, PullUpStatus };
-export default Scroller;
+export { Scroller };

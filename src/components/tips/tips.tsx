@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo } from 'react';
 import { useQueue, UseQueueConfig, UseQueueItem } from '@lxjx/hooks';
 import { animated, useTransition } from 'react-spring';
-import Button from 'm78/button';
+import { Button } from 'm78/button';
 import { getPortalsNode } from '@lxjx/utils';
 import { If, Switch } from 'm78/fork';
-import cls from 'classnames';
+import cls from 'clsx';
 import { useGesture } from 'react-use-gesture';
 import ReactDOM from 'react-dom';
 import { TipsItem, TipsProps } from './type';

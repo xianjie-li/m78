@@ -1,7 +1,7 @@
 import React from 'react';
 import { useMeasure } from 'react-use';
 import { If } from 'm78/fork';
-import cls from 'classnames';
+import cls from 'clsx';
 import { ComponentBaseProps } from 'm78/types';
 
 export interface ArticleBoxProps extends ComponentBaseProps {

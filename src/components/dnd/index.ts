@@ -1,6 +1,6 @@
 import 'm78/dnd/style';
 import DNDContext from './dnd-context';
+import DND from './dnd';
 
-export { DNDContext };
+export { DNDContext, DND };
 export * from './types';
-export { default } from './dnd';

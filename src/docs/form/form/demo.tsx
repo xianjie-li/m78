@@ -1,7 +1,7 @@
-import Form, { Item } from 'm78/form';
+import { Form, Item } from 'm78/form';
 import React, { useState } from 'react';
-import Input from 'm78/input';
-import Button from 'm78/button';
+import { Input } from 'm78/input';
+import { Button } from 'm78/button';
 import { CloseCircleOutlined } from 'm78/icon';
 
 const Demo = () => {

@@ -7,10 +7,10 @@ import _createSuper from '@babel/runtime/helpers/createSuper';
 import _defineProperty from '@babel/runtime/helpers/defineProperty';
 import React from 'react';
 import { isFunction } from '@lxjx/utils';
-import cls from 'classnames';
-import Spin from 'm78/spin';
-import Result from 'm78/result';
-import Button from 'm78/button';
+import cls from 'clsx';
+import { Spin } from 'm78/spin';
+import { Result } from 'm78/result';
+import { Button } from 'm78/button';
 
 var ErrorBoundaryType;
 
@@ -164,4 +164,4 @@ var ErrorBoundary = /*#__PURE__*/function (_React$Component) {
   return ErrorBoundary;
 }(React.Component);
 
-export default ErrorBoundary;
+export { ErrorBoundary };

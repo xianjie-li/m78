@@ -4,8 +4,8 @@ import React from 'react';
 import { useToggle, useUpdateEffect } from 'react-use';
 import { useLockBodyScroll } from '@lxjx/hooks';
 import { Transition } from '@lxjx/react-transition-spring';
-import Portal from 'm78/portal';
-import cls from 'classnames';
+import { Portal } from 'm78/portal';
+import cls from 'clsx';
 
 /**
  *  与RenderApi配合使用, 为弹层类组件提供mask并且支持代理RenderApi的部分操作
@@ -81,4 +81,4 @@ var Mask = function Mask(_ref) {
   }, render()) : render();
 };
 
-export default Mask;
+export { Mask };

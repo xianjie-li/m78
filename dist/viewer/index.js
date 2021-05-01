@@ -6,7 +6,7 @@ import { useSpring, config, animated, to } from 'react-spring';
 import { useGesture } from 'react-use-gesture';
 import _clamp from 'lodash/clamp';
 import { useSelf, useSetState } from '@lxjx/hooks';
-import cls from 'classnames';
+import cls from 'clsx';
 
 /** 根据bound元素和目标元素获取可用bound信息 */
 function getBoundMeta(boundEl, target) {
@@ -243,4 +243,4 @@ var Viewer = /*#__PURE__*/React.forwardRef(function (_ref, ref) {
   }, children));
 });
 
-export default Viewer;
+export { Viewer };

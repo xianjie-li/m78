@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Result from 'm78/result';
-import Button from 'm78/button';
+import { Result } from 'm78/result';
+import { Button } from 'm78/button';
 
 const Demo = () => (
   <div>

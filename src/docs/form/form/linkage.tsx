@@ -1,8 +1,8 @@
 import React from 'react';
-import Form from 'm78/form';
-import Input from 'm78/input';
-import Button from 'm78/button';
-import Check from 'm78/check';
+import { Form } from 'm78/form';
+import { Input } from 'm78/input';
+import { Button } from 'm78/button';
+import { Check } from 'm78/check';
 
 const Linkage = () => (
   <Form

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Spacer, Tile } from 'm78/layout';
-import Ellipsis from 'm78/ellipsis';
+import { Ellipsis } from 'm78/ellipsis';
 import { ArrowRightOutlined, GithubOutlined } from 'm78/icon';
-import Button from 'm78/button';
+import { Button } from 'm78/button';
 
 const labelSty: React.CSSProperties = {
   minWidth: '3em',

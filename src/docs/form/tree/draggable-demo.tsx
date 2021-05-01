@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Tree from 'm78/tree';
+import { Tree } from 'm78/tree';
 import mockTreeData from './mockTreeData';
 
 const DraggableDemo = () => {

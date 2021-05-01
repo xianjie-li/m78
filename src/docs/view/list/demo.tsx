@@ -1,6 +1,6 @@
 import React from 'react';
 
-import List from 'm78/list';
+import { List } from 'm78/list';
 import 'm78/list/style';
 
 const Demo = () => (

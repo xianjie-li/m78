@@ -39,6 +39,8 @@
     min-height: 30px;
     z-index: 100;
     background-color: var(--m78-component-bg);
+    box-shadow: var(--m78-shadow-1);
+    //border: 1px solid var(--m78-color-border);
   }
 
   &_tooltip {
@@ -56,8 +58,8 @@
 
   // popper不限制宽度，由用户控制
   &_popper {
-    box-shadow: var(--m78-shadow-1);
-    border: 1px solid var(--m78-color-border);
+    //box-shadow: var(--m78-shadow-1);
+    //border: 1px solid var(--m78-color-border);
 
     &-title {
       padding: 4px 12px;
@@ -72,10 +74,10 @@
   }
 
   &_confirm {
-    box-shadow: var(--m78-shadow-1);
+    //box-shadow: var(--m78-shadow-1);
+    //border: 1px solid var(--m78-color-border);
     padding: 12px;
     max-width: 300px;
-    border: 1px solid var(--m78-color-border);
 
     &-icon {
       float: left;

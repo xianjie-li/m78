@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Modal from 'm78/modal';
-import Button from 'm78/button';
+import { Modal } from 'm78/modal';
+import { Button } from 'm78/button';
 import sty from './style.module.scss';
 
 const Alignment = () => {

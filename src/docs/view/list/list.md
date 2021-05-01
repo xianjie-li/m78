@@ -8,6 +8,10 @@ group:
 
 # List - 列表
 
+<h2 class="color-red">deprecated!!!</h2>
+
+此组件为早期开发的遗留组件，不建议继续使用，请移步 [ListView](/docs/view/list-view)
+
 用于展示列表图片、段落，同时也用作表单的布局和展示
 
 ## 列表

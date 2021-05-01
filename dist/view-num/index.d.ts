@@ -1,2 +1,3 @@
 import 'm78/view-num/style';
-export { default } from './view-num';
+import ViewNum from './view-num';
+export { ViewNum };

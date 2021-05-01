@@ -3,22 +3,12 @@ import _defineProperty from '@babel/runtime/helpers/defineProperty';
 import _objectWithoutProperties from '@babel/runtime/helpers/objectWithoutProperties';
 import _objectSpread from '@babel/runtime/helpers/objectSpread2';
 import React, { useMemo } from 'react';
-import Spin from 'm78/spin';
+import { Spin } from 'm78/spin';
 import 'm78/base';
-import m78seed from 'm78/config';
+import { m78Config } from 'm78/config';
 import { isArray } from '@lxjx/utils';
-import cls from 'classnames';
+import cls from 'clsx';
 import { FullSizeEnum } from 'm78/types';
-
-var ButtonColorEnum;
-
-(function (ButtonColorEnum) {
-  ButtonColorEnum["blue"] = "blue";
-  ButtonColorEnum["red"] = "red";
-  ButtonColorEnum["green"] = "green";
-  ButtonColorEnum["yellow"] = "yellow";
-  ButtonColorEnum["primary"] = "primary";
-})(ButtonColorEnum || (ButtonColorEnum = {}));
 
 var matchIcon = /.?(Outlined|Filled|TwoTone|Icon)$/;
 /* 该函数用于遍历Button的children，当存在Icon和SvgIcon时(非函数匹配, 函数组件name能就会添加)，为其添加适当边距并返回 */
@@ -102,7 +92,7 @@ function Button(btnProps) {
       onBlur = _ref.onBlur,
       props = _objectWithoutProperties(_ref, ["size", "color", "circle", "outline", "block", "icon", "disabled", "loading", "md", "win", "children", "className", "text", "href", "innerRef", "onFocus", "onBlur"]);
 
-  var darkMode = m78seed.useState(function (state) {
+  var darkMode = m78Config.useState(function (state) {
     return state.darkMode;
   });
   var classNames = cls(className, 'm78-btn', 'm78-effect', (_cls = {}, _defineProperty(_cls, "__".concat(color), color), _defineProperty(_cls, "__".concat(size), size), _defineProperty(_cls, "__circle", circle), _defineProperty(_cls, "__outline", outline), _defineProperty(_cls, "__block", block), _defineProperty(_cls, "__text", text), _defineProperty(_cls, "__icon", icon), _defineProperty(_cls, "__md", md), _defineProperty(_cls, "__win", win), _defineProperty(_cls, "__light", !!color && !text && !icon || !color && darkMode), _defineProperty(_cls, "__disabled", disabled || loading), _cls));
@@ -129,5 +119,14 @@ function Button(btnProps) {
   }), /*#__PURE__*/React.createElement("span", null, newChildren)));
 }
 
-export default Button;
-export { ButtonColorEnum };
+var ButtonColorEnum;
+
+(function (ButtonColorEnum) {
+  ButtonColorEnum["blue"] = "blue";
+  ButtonColorEnum["red"] = "red";
+  ButtonColorEnum["green"] = "green";
+  ButtonColorEnum["yellow"] = "yellow";
+  ButtonColorEnum["primary"] = "primary";
+})(ButtonColorEnum || (ButtonColorEnum = {}));
+
+export { Button, ButtonColorEnum };

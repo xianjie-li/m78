@@ -3,7 +3,7 @@ import { SkeletonProps, SkeletonFactoryProps } from './type';
 /** 工厂HOC，为其包裹的骨架组件提供一些基础的props和基本的流程控制 */
 declare function SkeletonFactory<T extends SkeletonFactoryProps = SkeletonFactoryProps>(Component: React.ComponentType<T>): React.FC<T & SkeletonFactoryProps>;
 declare const BasedSkeleton: React.FC<SkeletonProps & SkeletonFactoryProps>;
-declare const BannerSkeleton: React.FC<Pick<SkeletonProps, "number" | "show" | "children" | "width" | "height" | "shadow"> & SkeletonFactoryProps>;
+declare const BannerSkeleton: React.FC<Pick<SkeletonProps, "number" | "show" | "height" | "width" | "children" | "shadow"> & SkeletonFactoryProps>;
 declare type Skeleton = typeof BasedSkeleton;
 interface SkeletonWithExtra extends Skeleton {
     BannerSkeleton: typeof BannerSkeleton;

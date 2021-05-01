@@ -1,12 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 
-import Spin from 'm78/spin';
+import { Spin } from 'm78/spin';
 
 import { useSetState } from '@lxjx/hooks';
 
-import cls from 'classnames';
+import cls from 'clsx';
 import { ComponentBaseProps } from 'm78/types';
-import config from 'm78/config';
+import { m78Config as config } from 'm78/config';
 
 /* 组件必须有实际的尺寸 */
 

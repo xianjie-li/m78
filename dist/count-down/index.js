@@ -3,7 +3,7 @@ import _objectSpread from '@babel/runtime/helpers/objectSpread2';
 import React, { useRef, useEffect } from 'react';
 import { getDateCountDown, dumpFn } from '@lxjx/utils';
 import { useSelf } from '@lxjx/hooks';
-import cls from 'classnames';
+import cls from 'clsx';
 
 /**
  * 将getDateCountDown返回的时间转换为可读的倒计时字符串
@@ -85,4 +85,4 @@ var CountDown = function CountDown(_ref) {
   });
 };
 
-export default CountDown;
+export { CountDown };

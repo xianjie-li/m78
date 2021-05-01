@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 
-import cls from 'classnames';
+import cls from 'clsx';
 
 import { SkeletonProps, SkeletonFactoryProps } from './type';
 

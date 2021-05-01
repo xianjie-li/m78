@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Check from 'm78/check';
-import Button from 'm78/button';
+import { Check } from 'm78/check';
+import { Button } from 'm78/button';
 import { useCheck } from '@lxjx/hooks';
 
 const options = [

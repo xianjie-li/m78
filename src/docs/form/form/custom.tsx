@@ -1,7 +1,7 @@
 import React from 'react';
-import Form, { FormRenderChild } from 'm78/form';
-import Input from 'm78/input';
-import Button from 'm78/button';
+import { Form, FormRenderChild } from 'm78/form';
+import { Input } from 'm78/input';
+import { Button } from 'm78/button';
 
 const customRender: FormRenderChild = (control, meta) => {
   return (

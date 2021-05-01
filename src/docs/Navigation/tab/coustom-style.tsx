@@ -1,7 +1,7 @@
 import React from 'react';
 import 'm78/article-box/style';
 
-import Tab, { TabItem } from 'm78/tab';
+import { Tab, TabItem } from 'm78/tab';
 
 import { PositionEnum, SizeEnum } from 'm78/types';
 import { Divider } from 'm78/layout';

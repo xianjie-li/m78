@@ -4,11 +4,11 @@ import _objectWithoutProperties from '@babel/runtime/helpers/objectWithoutProper
 import React, { useEffect, useRef } from 'react';
 import _defineProperty from '@babel/runtime/helpers/defineProperty';
 import _slicedToArray from '@babel/runtime/helpers/slicedToArray';
-import cls from 'classnames';
+import cls from 'clsx';
 import { useSetState, useSelf, useFormState, useScroll } from '@lxjx/hooks';
 import { useSpring, animated } from 'react-spring';
 import { PositionEnum } from 'm78/types';
-import Carousel from 'm78/carousel';
+import { Carousel } from 'm78/carousel';
 import { CaretLeftOutlined, CaretRightOutlined } from 'm78/icon';
 import { If } from 'm78/fork';
 import { isArray, isTruthyOrZero, defer, isNumber } from '@lxjx/utils';
@@ -403,5 +403,4 @@ var Tab = function Tab(props) {
 
 Tab.defaultProps = defaultProps;
 
-export default Tab;
-export { TabItem };
+export { Tab, TabItem };

@@ -1,3 +1,3 @@
 import 'm78/base/style';
-declare const _default: 1;
+declare const _default: "hello world";
 export default _default;

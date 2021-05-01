@@ -1,8 +1,8 @@
 import React from 'react';
 import { Seed } from '@m78/seed';
-import Button from 'm78/button';
-import Result from 'm78/result';
-import Popper from 'm78/popper';
+import { Button } from 'm78/button';
+import { Result } from 'm78/result';
+import { Popper } from 'm78/popper';
 import { isFunction } from '@lxjx/utils';
 import { AuthTypeEnum, ExpandSeed } from './type';
 

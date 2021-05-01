@@ -6,13 +6,13 @@ import { useLockBodyScroll, useSelf } from '@lxjx/hooks';
 import { useDrag } from 'react-use-gesture';
 import { useToggle, useUpdateEffect, useSetState } from 'react-use';
 import _clamp from 'lodash/clamp';
-import cls from 'classnames';
-import Carousel from 'm78/carousel';
-import Viewer from 'm78/viewer';
-import Picture from 'm78/picture';
+import cls from 'clsx';
+import { Carousel } from 'm78/carousel';
+import { Viewer } from 'm78/viewer';
+import { Picture } from 'm78/picture';
 import { LeftOutlined, UndoOutlined, RedoOutlined, ZoomInOutlined, ZoomOutOutlined, SyncOutlined, RightOutlined, CloseCircleOutlined } from 'm78/icon';
 import { If } from 'm78/fork';
-import Portal from 'm78/portal';
+import { Portal } from 'm78/portal';
 import { stopPropagation } from 'm78/util';
 import createRenderApi from '@lxjx/react-render-api';
 import { Transition } from '@lxjx/react-transition-spring';
@@ -292,4 +292,4 @@ var ImagePreview = Object.assign(_ImagePreview, {
   api: api
 });
 
-export default ImagePreview;
+export { ImagePreview };

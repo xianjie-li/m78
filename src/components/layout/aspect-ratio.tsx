@@ -1,5 +1,5 @@
 import React from 'react';
-import cls from 'classnames';
+import cls from 'clsx';
 import { ComponentBaseProps } from 'm78/types';
 
 interface AspectRatioProps extends ComponentBaseProps {

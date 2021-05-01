@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from 'm78/button';
+import { Button } from 'm78/button';
 import {
   TagOutlined,
   SettingOutlined,
@@ -10,7 +10,7 @@ import {
   CaretLeftOutlined,
   CaretRightOutlined,
 } from 'm78/icon';
-import Message from 'm78/message';
+import { message } from 'm78/message';
 
 const ButtonDemoColor = () => (
   <div>
@@ -78,7 +78,7 @@ const ButtonDemoColor = () => (
       <div className="mt-16">
         <Button
           color="primary"
-          onClick={() => Message.tips({ type: 'success', content: '恭喜您成功脱发一根!' })}
+          onClick={() => message.tips({ type: 'success', content: '恭喜您成功脱发一根!' })}
         >
           <CaretLeftOutlined />
           点我

@@ -3,7 +3,7 @@ import _objectSpread from '@babel/runtime/helpers/objectSpread2';
 import _slicedToArray from '@babel/runtime/helpers/slicedToArray';
 import React, { useState, useEffect } from 'react';
 import { getStyle } from '@lxjx/utils';
-import cls from 'classnames';
+import cls from 'clsx';
 
 function multiLine(line) {
   return {
@@ -92,4 +92,4 @@ var Ellipsis = function Ellipsis(_ref) {
   }));
 };
 
-export default Ellipsis;
+export { Ellipsis };

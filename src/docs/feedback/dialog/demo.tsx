@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
-import Dialog from 'm78/dialog';
-import Button from 'm78/button';
-import message from 'm78/message';
+import { Dialog } from 'm78/dialog';
+import { Button } from 'm78/button';
+import { message } from 'm78/message';
 
 const Demo = () => {
   const [loading, setLoading] = useState(false);

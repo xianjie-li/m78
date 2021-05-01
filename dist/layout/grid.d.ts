@@ -28,7 +28,7 @@ interface GridProps extends ComponentBaseProps {
 }
 declare const defaultProps: {
     count: number;
-    children: React.ReactElement<any, string | ((props: any) => React.ReactElement<any, string | any | (new (props: any) => React.Component<any, any, any>)> | null) | (new (props: any) => React.Component<any, any, any>)>[];
+    children: React.ReactElement<any, string | ((props: any) => React.ReactElement<any, any> | null) | (new (props: any) => React.Component<any, any, any>)>[];
     aspectRatio: number;
     border: boolean;
 };
@@ -36,7 +36,7 @@ declare const Grid: {
     (props: GridProps & typeof defaultProps): JSX.Element;
     defaultProps: {
         count: number;
-        children: React.ReactElement<any, string | ((props: any) => React.ReactElement<any, string | any | (new (props: any) => React.Component<any, any, any>)> | null) | (new (props: any) => React.Component<any, any, any>)>[];
+        children: React.ReactElement<any, string | ((props: any) => React.ReactElement<any, any> | null) | (new (props: any) => React.Component<any, any, any>)>[];
         aspectRatio: number;
         border: boolean;
     };

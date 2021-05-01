@@ -1,8 +1,8 @@
 import React from 'react';
 
-import Check, { CheckCustom } from 'm78/check';
+import { Check, CheckCustom } from 'm78/check';
 import './style.scss';
-import cls from 'classnames';
+import cls from 'clsx';
 
 const myCheck: CheckCustom = ({ checked, disabled, focus }, props) => (
   <span

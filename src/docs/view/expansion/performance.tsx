@@ -1,5 +1,5 @@
 import React from 'react';
-import Expansion, { ExpansionPane } from 'm78/expansion';
+import { Expansion, ExpansionPane } from 'm78/expansion';
 import { Spacer } from 'm78/layout';
 import data1 from '@/mock/data1';
 

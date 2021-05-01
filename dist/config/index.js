@@ -1,6 +1,6 @@
-import create from 'm78/seed';
+import { createSeed } from 'm78/seed';
 
-var m78Config = create({
+var m78Config = createSeed({
   state: {
     darkMode: false
   }
@@ -13,4 +13,4 @@ m78Config.subscribe(function (_ref) {
   }
 });
 
-export default m78Config;
+export { m78Config };

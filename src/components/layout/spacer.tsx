@@ -1,5 +1,5 @@
 import React from 'react';
-import cls from 'classnames';
+import cls from 'clsx';
 import { isArray } from '@lxjx/utils';
 
 interface SpacerProps {

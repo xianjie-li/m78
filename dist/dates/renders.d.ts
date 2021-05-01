@@ -1,4 +1,3 @@
-/// <reference types="react" />
 import { ShareMetas } from './type';
 import { useDateUIController, useHandlers } from './hooks';
 /**  渲染选择结果 */

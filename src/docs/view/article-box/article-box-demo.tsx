@@ -1,5 +1,5 @@
 import React from 'react';
-import ArticleBox from 'm78/article-box';
+import { ArticleBox } from 'm78/article-box';
 
 import img from '@/mock/img/111.jpg';
 

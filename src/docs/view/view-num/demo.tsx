@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import ViewNum from 'm78/view-num';
-import Button from 'm78/button';
+import { ViewNum } from 'm78/view-num';
+import { Button } from 'm78/button';
 
 const Demo = () => {
   const [num, setNum] = useState(999999);

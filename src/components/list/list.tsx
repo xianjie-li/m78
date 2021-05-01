@@ -4,9 +4,9 @@ import 'm78/base';
 import { Switch, If } from 'm78/fork';
 import { /* statusIcons, */ RightOutlined /* LoadingOutlined */ } from 'm78/icon';
 
-import Ellipsis from 'm78/ellipsis';
+import { Ellipsis } from 'm78/ellipsis';
 
-import cls from 'classnames';
+import cls from 'clsx';
 import { Title, SubTitle } from './titles';
 import Footer from './footer';
 

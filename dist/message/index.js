@@ -8,15 +8,15 @@ import _regeneratorRuntime from '@babel/runtime/regenerator';
 import _asyncToGenerator from '@babel/runtime/helpers/asyncToGenerator';
 import _slicedToArray from '@babel/runtime/helpers/slicedToArray';
 import { useSpring, config, animated } from 'react-spring';
-import Portal from 'm78/portal';
+import { Portal } from 'm78/portal';
 import { statusIcons, CloseOutlined } from 'm78/icon';
-import Spin from 'm78/spin';
+import { Spin } from 'm78/spin';
 import { If, Toggle } from 'm78/fork';
 import { useMeasure } from 'react-use';
 import { Transition } from '@lxjx/react-transition-spring';
-import cls from 'classnames';
+import cls from 'clsx';
 import { useSelf } from '@lxjx/hooks';
-import Button from 'm78/button';
+import { Button } from 'm78/button';
 
 function MessageWrap(_ref) {
   var children = _ref.children;
@@ -294,5 +294,4 @@ var message = Object.assign(messageApi, {
   notify: notify
 });
 
-export default message;
-export { loading, notify, tips };
+export { loading, message, notify, tips };

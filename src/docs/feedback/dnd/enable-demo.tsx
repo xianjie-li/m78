@@ -1,7 +1,7 @@
 import React from 'react';
-import DND, { DNDContext } from 'm78/dnd';
+import { DND, DNDContext } from 'm78/dnd';
 import { Row } from 'm78/layout';
-import cls from 'classnames';
+import cls from 'clsx';
 import sty from './sty1.module.scss';
 
 const EnableDemo = () => {

@@ -2,7 +2,7 @@
 import { isTruthyArray } from '@lxjx/utils';
 import { TreeNode, OptionsItem, ToolbarConf, TreeProps, TreePropsMultipleChoice, TreePropsSingleChoice, TreeValueType } from './types';
 export declare const defaultValueGetter: (item: OptionsItem) => {} | null | undefined;
-export declare const defaultLabelGetter: (item: OptionsItem) => string | number | boolean | {} | import("react").ReactElement<any, string | ((props: any) => import("react").ReactElement<any, string | any | (new (props: any) => import("react").Component<any, any, any>)> | null) | (new (props: any) => import("react").Component<any, any, any>)> | import("react").ReactNodeArray | import("react").ReactPortal;
+export declare const defaultLabelGetter: (item: OptionsItem) => string | number | boolean | {} | import("react").ReactElement<any, string | ((props: any) => import("react").ReactElement<any, any> | null) | (new (props: any) => import("react").Component<any, any, any>)> | import("react").ReactNodeArray | import("react").ReactPortal;
 /** 预设尺寸 */
 export declare const sizeMap: {
     default: {

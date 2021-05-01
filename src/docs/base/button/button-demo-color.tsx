@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from 'm78/button';
+import { Button } from 'm78/button';
 import 'm78/button/style';
 
 const ButtonDemoColor = () => (

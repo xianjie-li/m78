@@ -4,10 +4,10 @@ import _objectSpread from '@babel/runtime/helpers/objectSpread2';
 import React, { useMemo, useEffect } from 'react';
 import { useQueue } from '@lxjx/hooks';
 import { useTransition, animated } from 'react-spring';
-import Button from 'm78/button';
+import { Button } from 'm78/button';
 import { getPortalsNode } from '@lxjx/utils';
 import { Switch, If } from 'm78/fork';
-import cls from 'classnames';
+import cls from 'clsx';
 import { useGesture } from 'react-use-gesture';
 import ReactDOM from 'react-dom';
 
@@ -167,4 +167,4 @@ Tips.tip = function (message) {
   });
 };
 
-export default Tips;
+export { Tips };

@@ -1,10 +1,10 @@
 import React from 'react';
-import Viewer, { ViewerRef } from 'm78/viewer';
+import { Viewer, ViewerRef } from 'm78/viewer';
 import 'm78/viewer/style';
 
 import 'm78/drawer/style';
 
-import Button from 'm78/button';
+import { Button } from 'm78/button';
 import 'm78/button/style';
 
 import { getRandRange } from '@lxjx/utils';

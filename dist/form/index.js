@@ -6,12 +6,12 @@ import _objectWithoutProperties from '@babel/runtime/helpers/objectWithoutProper
 import React, { createContext, useMemo, useContext, useEffect, useRef, useState } from 'react';
 import RForm, { Field, FormProvider, List as List$1, useForm } from 'rc-field-form';
 export { FormProvider, useForm } from 'rc-field-form';
-import List, { Title, SubTitle, Footer } from 'm78/list';
-export { Footer, default as List, SubTitle, Title } from 'm78/list';
+import { List, Title, SubTitle, Footer } from 'm78/list';
+export { Footer, List, SubTitle, Title } from 'm78/list';
 import Schema from 'async-validator';
 import { isArray, isEmpty, createRandString, isFunction, getScrollParent, triggerHighlight, checkElementVisible } from '@lxjx/utils';
 import { useScroll, useFn } from '@lxjx/hooks';
-import cls from 'classnames';
+import cls from 'clsx';
 import { createMessagesTemplate } from '@lxjx/validate-tools';
 import _toConsumableArray from '@babel/runtime/helpers/toConsumableArray';
 import _get from 'lodash/get';
@@ -446,5 +446,4 @@ var Form = Object.assign(BaseForm, {
   Footer: Footer
 });
 
-export default Form;
-export { Item };
+export { Form, Item };

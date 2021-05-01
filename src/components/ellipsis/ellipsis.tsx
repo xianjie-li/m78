@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { getStyle } from '@lxjx/utils';
-import cls from 'classnames';
+import cls from 'clsx';
 
 export interface MaskProps extends React.PropsWithoutRef<JSX.IntrinsicElements['div']> {
   /** 1 | 最大行数 */

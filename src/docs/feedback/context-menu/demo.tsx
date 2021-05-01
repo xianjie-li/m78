@@ -1,7 +1,7 @@
 import React from 'react';
 import { Divider } from 'm78/layout';
-import Button from 'm78/button';
-import ContextMenu, { ContextMenuItem } from 'm78/context-menu';
+import { Button } from 'm78/button';
+import { ContextMenu, ContextMenuItem } from 'm78/context-menu';
 import { SizeEnum } from 'm78/types';
 
 const TipsDemo = () => {

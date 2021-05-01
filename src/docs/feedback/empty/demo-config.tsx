@@ -1,13 +1,13 @@
 import React from 'react';
 
-import Empty from 'm78/empty';
+import { Empty } from 'm78/empty';
 
 import img from '@/mock/img/1.png';
-import m78Seed from 'm78/config';
+import { m78Config as config } from 'm78/config';
 
 const newEmptyNode = <img src={img} alt="" />;
 
-m78Seed.setState({
+config.setState({
   emptyNode: newEmptyNode,
 });
 

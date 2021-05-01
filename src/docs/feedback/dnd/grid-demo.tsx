@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useFn } from '@lxjx/hooks';
-import DND, { DNDContext, DNDProps, DragFullEvent } from 'm78/dnd';
+import { DND, DNDContext, DNDProps, DragFullEvent } from 'm78/dnd';
 import { swap } from '@lxjx/utils';
-import cls from 'classnames';
+import cls from 'clsx';
 
 import sty from './grid.module.scss';
 

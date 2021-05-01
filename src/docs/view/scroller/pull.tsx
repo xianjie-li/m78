@@ -1,5 +1,5 @@
 import React from 'react';
-import Scroller from 'm78/scroller';
+import { Scroller } from 'm78/scroller';
 import { createRandString } from '@lxjx/utils';
 import { useSetState } from '@lxjx/hooks';
 

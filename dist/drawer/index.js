@@ -5,12 +5,12 @@ import _defineProperty from '@babel/runtime/helpers/defineProperty';
 import _slicedToArray from '@babel/runtime/helpers/slicedToArray';
 import _objectWithoutProperties from '@babel/runtime/helpers/objectWithoutProperties';
 import React, { useMemo } from 'react';
-import Modal from 'm78/modal';
-import Button from 'm78/button';
+import { Modal } from 'm78/modal';
+import { Button } from 'm78/button';
 import { CloseOutlined } from 'm78/icon';
 import { If } from 'm78/fork';
 import _capitalize from 'lodash/capitalize';
-import cls from 'classnames';
+import cls from 'clsx';
 import { useFormState, useSameState } from '@lxjx/hooks';
 import { Z_INDEX_DRAWER } from 'm78/util';
 
@@ -122,4 +122,4 @@ var Drawer = function Drawer(props) {
   return render();
 };
 
-export default Drawer;
+export { Drawer };

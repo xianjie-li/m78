@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useEffectEqual, useFormState, useScroll } from '@lxjx/hooks';
 import { useFirstMountState } from 'react-use';
-import cls from 'classnames';
+import cls from 'clsx';
 import { createRandString } from '@lxjx/utils';
 import { checkDisabled, getTimes } from './utils';
 import { TimeProps, TimeValue } from './type';

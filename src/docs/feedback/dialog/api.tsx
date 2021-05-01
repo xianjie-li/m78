@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Dialog from 'm78/dialog';
-import Button from 'm78/button';
+import { Dialog } from 'm78/dialog';
+import { Button } from 'm78/button';
 
 const Api = () => {
   return (

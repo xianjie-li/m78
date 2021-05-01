@@ -2,17 +2,17 @@ import 'm78/select/style';
 import _objectSpread from '@babel/runtime/helpers/objectSpread2';
 import _slicedToArray from '@babel/runtime/helpers/slicedToArray';
 import React, { useRef, useMemo, useState, useEffect } from 'react';
-import Input from 'm78/input';
-import Popper, { PopperDirectionEnum, PopperTriggerEnum } from 'm78/popper';
-import Spin from 'm78/spin';
-import Empty from 'm78/empty';
-import Button from 'm78/button';
+import { Input } from 'm78/input';
+import { PopperDirectionEnum, PopperTriggerEnum, Popper } from 'm78/popper';
+import { Spin } from 'm78/spin';
+import { Empty } from 'm78/empty';
+import { Button } from 'm78/button';
 import { CloseCircleOutlined, CheckOutlined, DownOutlined } from 'm78/icon';
 import { If } from 'm78/fork';
 import { getFirstTruthyOrZero, isArray, isTruthyOrZero, getCurrentParent } from '@lxjx/utils';
 import _debounce from 'lodash/debounce';
 import { VariableSizeList } from 'react-window';
-import cls from 'classnames';
+import cls from 'clsx';
 import { useSelf, useSetState, useFormState, useCheck, useFn } from '@lxjx/hooks';
 
 /** 自定义popper样式 */
@@ -641,5 +641,4 @@ function Select(props) {
 
 Select.displayName = 'FrSelect';
 
-export default Select;
-export { CustomPopper, mergeOptions };
+export { CustomPopper, Select, mergeOptions };

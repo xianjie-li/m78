@@ -10,9 +10,9 @@ import _slicedToArray from '@babel/runtime/helpers/slicedToArray';
 import { useFn, useEffectEqual } from '@lxjx/hooks';
 import _extends from '@babel/runtime/helpers/extends';
 import _objectWithoutProperties from '@babel/runtime/helpers/objectWithoutProperties';
-import Button from 'm78/button';
-import Result from 'm78/result';
-import Popper from 'm78/popper';
+import { Button } from 'm78/button';
+import { Result } from 'm78/result';
+import { Popper } from 'm78/popper';
 
 function createState(seed, useState) {
   var _Deps = function _Deps(_ref) {
@@ -221,5 +221,4 @@ var create = function create(config) {
   });
 };
 
-export default create;
-export { AuthTypeEnum };
+export { AuthTypeEnum, create as createSeed };

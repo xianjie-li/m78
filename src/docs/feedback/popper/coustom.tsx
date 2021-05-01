@@ -1,6 +1,6 @@
 import React from 'react';
-import Popper, { PopperPropsCustom } from 'm78/popper';
-import Button from 'm78/button';
+import { Popper, PopperPropsCustom } from 'm78/popper';
+import { Button } from 'm78/button';
 
 import sty from './custom.module.scss';
 

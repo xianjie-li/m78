@@ -1,10 +1,10 @@
 import React from 'react';
 import { isFunction } from '@lxjx/utils';
 import { ComponentBaseProps } from 'm78/types';
-import cls from 'classnames';
-import Spin from 'm78/spin';
-import Result from 'm78/result';
-import Button from 'm78/button';
+import cls from 'clsx';
+import { Spin } from 'm78/spin';
+import { Result } from 'm78/result';
+import { Button } from 'm78/button';
 
 interface ErrorBoundaryState {
   /** 错误对象 */

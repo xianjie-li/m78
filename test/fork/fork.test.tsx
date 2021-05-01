@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, queryByText, queryAllByText, findByText } from '@testing-library/react';
-import Fork, { If, Toggle, Switch } from 'm78/fork';
+import { Fork, If, Toggle, Switch } from 'm78/fork';
 
 test('Fork', () => {
   const notData = render(

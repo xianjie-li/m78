@@ -1,3 +1,4 @@
 import 'm78/drawer/style';
+import Drawer from './drawer';
 
-export { default } from './drawer';
+export { Drawer };

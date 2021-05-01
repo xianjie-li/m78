@@ -6,8 +6,8 @@ import React, { useContext } from 'react';
 import 'm78/base';
 import { Switch, If } from 'm78/fork';
 import { RightOutlined } from 'm78/icon';
-import Ellipsis from 'm78/ellipsis';
-import cls from 'classnames';
+import { Ellipsis } from 'm78/ellipsis';
+import cls from 'clsx';
 
 var Title = function Title(_ref) {
   var title = _ref.title,
@@ -184,5 +184,4 @@ var List = Object.assign(_List, {
   Footer: Footer
 });
 
-export default List;
-export { Footer, Item, SubTitle, Title };
+export { Footer, Item, List, SubTitle, Title };

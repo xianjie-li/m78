@@ -3,7 +3,7 @@ import React from 'react';
 import { useDelayDerivedToggleStatus } from 'm78/hooks';
 import { Transition, config } from '@lxjx/react-transition-spring';
 
-import cls from 'classnames';
+import cls from 'clsx';
 import { SpinAnimeEnum, SpinProps } from './type';
 
 const Spin: React.FC<SpinProps> = ({

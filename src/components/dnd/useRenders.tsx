@@ -1,6 +1,6 @@
 import { useDelayDerivedToggleStatus } from 'm78/hooks';
 import React from 'react';
-import Portal from 'm78/portal';
+import { Portal } from 'm78/portal';
 import { Share } from './types';
 
 export function useRenders(share: Share) {

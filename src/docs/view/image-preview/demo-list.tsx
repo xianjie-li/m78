@@ -1,5 +1,5 @@
 import React from 'react';
-import ImagePreview from 'm78/image-preview';
+import { ImagePreview } from 'm78/image-preview';
 import 'm78/viewer/style';
 
 import img1 from '@/mock/img/1.png';

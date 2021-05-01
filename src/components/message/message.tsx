@@ -2,17 +2,17 @@ import React, { useState, useEffect } from 'react';
 
 import { animated, config, useSpring } from 'react-spring';
 
-import Portal from 'm78/portal';
+import { Portal } from 'm78/portal';
 import { CloseOutlined, statusIcons } from 'm78/icon';
-import Spin from 'm78/spin';
+import { Spin } from 'm78/spin';
 import { If, Toggle } from 'm78/fork';
 import { useMeasure } from 'react-use';
 import { Transition } from '@lxjx/react-transition-spring';
 
-import cls from 'classnames';
+import cls from 'clsx';
 
 import { useSelf } from '@lxjx/hooks';
-import Button from 'm78/button';
+import { Button } from 'm78/button';
 import { MessageProps } from './type';
 
 function MessageWrap({ children }: any) {

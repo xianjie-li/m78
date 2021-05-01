@@ -5,16 +5,16 @@ import _slicedToArray from '@babel/runtime/helpers/slicedToArray';
 import _objectWithoutProperties from '@babel/runtime/helpers/objectWithoutProperties';
 import React, { useState, useEffect } from 'react';
 import 'm78/base';
-import Button from 'm78/button';
-import Modal from 'm78/modal';
+import { Button } from 'm78/button';
+import { Modal } from 'm78/modal';
 import { Transition } from '@lxjx/react-transition-spring';
 import { config } from 'react-spring';
 import { statusIcons, CloseOutlined } from 'm78/icon';
-import Spin from 'm78/spin';
+import { Spin } from 'm78/spin';
 import { useFormState } from '@lxjx/hooks';
-import cls from 'classnames';
+import cls from 'clsx';
 import createRenderApi from '@lxjx/react-render-api';
-import Input from 'm78/input';
+import { Input } from 'm78/input';
 
 var DialogBase = function DialogBase(props) {
   var flexBtn = props.flexBtn,
@@ -188,4 +188,4 @@ var Dialog = Object.assign(DialogBase, {
   api: baseApi
 });
 
-export default Dialog;
+export { Dialog };

@@ -1,6 +1,6 @@
 import React from 'react';
-import ErrorBoundary from 'm78/error-boundary';
-import Button from 'm78/button';
+import { ErrorBoundary } from 'm78/error-boundary';
+import { Button } from 'm78/button';
 
 function SomeError() {
   let a: any;

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Input from 'm78/input';
+import { Input } from 'm78/input';
 
 const Demo3 = () => (
   <div>

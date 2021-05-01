@@ -1,7 +1,7 @@
 import React from 'react';
-import Tips from 'm78/tips';
+import { Tips } from 'm78/tips';
 import { Divider } from 'm78/layout';
-import Button from 'm78/button';
+import { Button } from 'm78/button';
 
 const TipsDemo = () => {
   const queue = Tips.useTipsController();

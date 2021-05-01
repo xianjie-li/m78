@@ -1,5 +1,5 @@
 import React from 'react';
-import Picture from 'm78/picture';
+import { Picture } from 'm78/picture';
 import 'm78/picture/style';
 
 import img1 from '@/mock/img/11.jpg';

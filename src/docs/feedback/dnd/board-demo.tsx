@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 
 import { isString, swap } from '@lxjx/utils';
 import { useFn } from '@lxjx/hooks';
-import DND, { DragFullEvent, DNDContext } from 'm78/dnd';
-import cls from 'classnames';
+import { DND, DragFullEvent, DNDContext } from 'm78/dnd';
+import cls from 'clsx';
 
 import sty from './board-demo.module.scss';
 

@@ -1,4 +1,4 @@
-import RadioBox from 'm78/radio-box';
+import { RadioBox } from 'm78/radio-box';
 import React, { useState } from 'react';
 
 const options = [

@@ -4,7 +4,7 @@ import { If } from 'm78/fork';
 
 import { useFormState } from '@lxjx/hooks';
 
-import cls from 'classnames';
+import cls from 'clsx';
 
 import { CheckProps } from './type';
 

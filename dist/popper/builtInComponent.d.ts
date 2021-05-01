@@ -1,4 +1,3 @@
-/// <reference types="react" />
 import { PopperPropsCustom } from './types';
 declare function Tooltip(props: PopperPropsCustom): JSX.Element;
 declare function Popper(props: PopperPropsCustom): JSX.Element;

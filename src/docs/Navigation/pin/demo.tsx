@@ -1,6 +1,6 @@
 import React from 'react';
 import { Spacer } from 'm78/layout';
-import Pin from 'm78/pin';
+import { Pin } from 'm78/pin';
 
 const Demo = () => (
   <div>

@@ -3,10 +3,10 @@ import _extends from '@babel/runtime/helpers/extends';
 import _slicedToArray from '@babel/runtime/helpers/slicedToArray';
 import _objectWithoutProperties from '@babel/runtime/helpers/objectWithoutProperties';
 import React, { useRef, useEffect } from 'react';
-import Spin from 'm78/spin';
+import { Spin } from 'm78/spin';
 import { useSetState } from '@lxjx/hooks';
-import cls from 'classnames';
-import config from 'm78/config';
+import cls from 'clsx';
+import { m78Config } from 'm78/config';
 
 /* 组件必须有实际的尺寸 */
 
@@ -35,7 +35,7 @@ var Picture = function Picture(_ref) {
       state = _useSetState2[0],
       setState = _useSetState2[1];
 
-  var pictureErrorImg = config.useState(function (st) {
+  var pictureErrorImg = m78Config.useState(function (st) {
     return st.pictureErrorImg;
   });
 
@@ -127,4 +127,4 @@ var Picture = function Picture(_ref) {
   }));
 };
 
-export default Picture;
+export { Picture };

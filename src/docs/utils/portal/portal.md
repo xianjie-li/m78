@@ -14,7 +14,7 @@ group:
 
 ```tsx
 import React from 'react';
-import Portal from 'm78/portal';
+import { Portal } from 'm78/portal';
 import 'm78/portal/style';
 
 export default () => (
@@ -36,7 +36,7 @@ export default () => (
 
 ```tsx
 import React from 'react';
-import Portal from 'm78/portal';
+import { Portal } from 'm78/portal';
 import 'm78/portal/style';
 
 export default () => (

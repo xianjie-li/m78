@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import BackTop from 'm78/back-top';
+import { BackTop } from 'm78/back-top';
 
 const Demo2 = () => {
   const scrollEl = useRef<HTMLDivElement>(null!);

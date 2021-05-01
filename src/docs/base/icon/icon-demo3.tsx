@@ -11,7 +11,7 @@ import {
   WaitingIcon,
 } from 'm78/icon';
 
-import message from 'm78/message';
+import { message } from 'm78/message';
 
 import { useCopyToClipboard } from 'react-use';
 

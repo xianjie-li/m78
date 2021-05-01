@@ -2,11 +2,11 @@ import 'm78/pagination/style';
 import _toConsumableArray from '@babel/runtime/helpers/toConsumableArray';
 import _slicedToArray from '@babel/runtime/helpers/slicedToArray';
 import React, { useMemo, useState } from 'react';
-import Button from 'm78/button';
+import { Button } from 'm78/button';
 import { LeftOutlined, RightOutlined, EllipsisOutlined, DoubleLeftOutlined, DoubleRightOutlined } from 'm78/icon';
 import { Divider } from 'm78/layout';
-import Input from 'm78/input';
-import cls from 'classnames';
+import { Input } from 'm78/input';
+import cls from 'clsx';
 import { useFormState } from '@lxjx/hooks';
 import { If } from 'm78/fork';
 import _clamp from 'lodash/clamp';
@@ -246,4 +246,4 @@ var Pagination = function Pagination(props) {
   }, total), " \u6761\u6570\u636E")));
 };
 
-export default Pagination;
+export { Pagination };

@@ -5,11 +5,11 @@ import _slicedToArray from '@babel/runtime/helpers/slicedToArray';
 import _objectWithoutProperties from '@babel/runtime/helpers/objectWithoutProperties';
 import React, { useMemo, useState, useEffect, useRef, useImperativeHandle } from 'react';
 import { CloseCircleOutlined, EyeOutlined, EyeInvisibleOutlined, SearchOutlined } from 'm78/icon';
-import Spin from 'm78/spin';
-import Button from 'm78/button';
+import { Spin } from 'm78/spin';
+import { Button } from 'm78/button';
 import { If } from 'm78/fork';
 import { dumpFn, validateFormatString, isNumber, formatString } from '@lxjx/utils';
-import cls from 'classnames';
+import cls from 'clsx';
 import { useSelf, useFormState, useDerivedStateFromProps } from '@lxjx/hooks';
 import { TransitionBase } from '@lxjx/react-transition-spring';
 import { useUpdateEffect } from 'react-use';
@@ -572,5 +572,4 @@ var Input = /*#__PURE__*/React.forwardRef(function (_props, ref) {
 });
 Input.displayName = 'FrInput';
 
-export default Input;
-export { formatMoney };
+export { Input, formatMoney };

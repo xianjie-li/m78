@@ -1,7 +1,7 @@
 import React from 'react';
-import Form from 'm78/form';
-import Input from 'm78/input';
-import Button from 'm78/button';
+import { Form } from 'm78/form';
+import { Input } from 'm78/input';
+import { Button } from 'm78/button';
 import { Divider } from 'm78/layout';
 
 const Inline = () => {

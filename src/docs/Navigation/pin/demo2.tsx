@@ -1,5 +1,5 @@
 import React from 'react';
-import Pin from 'm78/pin';
+import { Pin } from 'm78/pin';
 import { Spacer } from 'm78/layout';
 
 const barStyle: React.CSSProperties = {

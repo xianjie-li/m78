@@ -3,7 +3,7 @@ import { useFn, useScroll, useSetState, getRefDomOrDom } from '@lxjx/hooks';
 import { checkElementVisible, getScrollParent, getStyle } from '@lxjx/utils';
 import _debounce from 'lodash/debounce';
 
-import cls from 'classnames';
+import cls from 'clsx';
 import { ComponentBaseProps } from 'm78/types';
 
 interface PinProps extends ComponentBaseProps {

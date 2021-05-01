@@ -4,6 +4,6 @@ import ClickEffect from '@lxjx/click-effect';
 new ClickEffect({
   effect: 'm78-effect'
 });
-var index = 1;
+var index = 'hello world';
 
 export default index;

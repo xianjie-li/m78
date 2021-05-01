@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useFormState } from '@lxjx/hooks';
 
-import Check from 'm78/check';
+import { Check } from 'm78/check';
 
 import { RadioBoxProps } from './type';
 

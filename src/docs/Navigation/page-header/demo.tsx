@@ -1,7 +1,7 @@
 import React from 'react';
-import PageHeader from 'm78/page-header';
+import { PageHeader } from 'm78/page-header';
 import { Spacer } from 'm78/layout';
-import Button from 'm78/button';
+import { Button } from 'm78/button';
 import { HeartOutlined, LeftOutlined, SettingOutlined } from 'm78/icon';
 
 const Demo = () => (

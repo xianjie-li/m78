@@ -1,2 +1,3 @@
 import 'm78/modal/style';
-export { default } from './modal';
+import Modal from './modal';
+export { Modal };

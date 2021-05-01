@@ -1,9 +1,9 @@
 import React from 'react';
-import create from 'm78/seed';
-import Button from 'm78/button';
-import Message from 'm78/message';
+import { createSeed } from 'm78/seed';
+import { Button } from 'm78/button';
+import { message } from 'm78/message';
 
-const { Auth, setState } = create({
+const { Auth, setState } = createSeed({
   /* 被所有验证器依赖数据 */
   state: {
     /** 登录用户 */
@@ -40,7 +40,7 @@ const ScopeDemo = () => {
                     label: '去登陆',
                     color: 'red',
                     onClick() {
-                      Message.tips({
+                      message.tips({
                         content: '去登陆',
                       });
                     },
@@ -48,7 +48,7 @@ const ScopeDemo = () => {
                   {
                     label: '算了',
                     onClick() {
-                      Message.tips({
+                      message.tips({
                         content: '算了',
                       });
                     },

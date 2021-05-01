@@ -7,4 +7,4 @@ var Portal = function Portal(_ref) {
   return /*#__PURE__*/ReactDom.createPortal(children, getPortalsNode(namespace));
 };
 
-export default Portal;
+export { Portal };

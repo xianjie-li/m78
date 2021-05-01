@@ -3,8 +3,8 @@ import _extends from '@babel/runtime/helpers/extends';
 import _objectSpread from '@babel/runtime/helpers/objectSpread2';
 import _slicedToArray from '@babel/runtime/helpers/slicedToArray';
 import React, { useEffect, useMemo, useRef, useImperativeHandle } from 'react';
-import Portal from 'm78/portal';
-import cls from 'classnames';
+import { Portal } from 'm78/portal';
+import cls from 'clsx';
 import { useFn, getRefDomOrDom, useFormState, useMountExist, useSetState, useSelf } from '@lxjx/hooks';
 import { checkElementVisible, isDom, getScrollParent, createRandString } from '@lxjx/utils';
 import { useSpring, animated, to } from 'react-spring';
@@ -12,35 +12,7 @@ import { useClickAway, useUpdateEffect, useMeasure } from 'react-use';
 import { useDelayDerivedToggleStatus } from 'm78/hooks';
 import _throttle from 'lodash/throttle';
 import { WarningIcon } from 'm78/icon';
-import Button from 'm78/button';
-
-var PopperTriggerEnum;
-
-(function (PopperTriggerEnum) {
-  PopperTriggerEnum["hover"] = "hover";
-  PopperTriggerEnum["click"] = "click";
-  PopperTriggerEnum["focus"] = "focus";
-  PopperTriggerEnum["subClick"] = "subClick";
-})(PopperTriggerEnum || (PopperTriggerEnum = {}));
-
-/** 所有可能出现的方向 */
-var PopperDirectionEnum;
-/** 所有可能出现的方向 */
-
-(function (PopperDirectionEnum) {
-  PopperDirectionEnum["topStart"] = "topStart";
-  PopperDirectionEnum["top"] = "top";
-  PopperDirectionEnum["topEnd"] = "topEnd";
-  PopperDirectionEnum["leftStart"] = "leftStart";
-  PopperDirectionEnum["left"] = "left";
-  PopperDirectionEnum["leftEnd"] = "leftEnd";
-  PopperDirectionEnum["bottomStart"] = "bottomStart";
-  PopperDirectionEnum["bottom"] = "bottom";
-  PopperDirectionEnum["bottomEnd"] = "bottomEnd";
-  PopperDirectionEnum["rightStart"] = "rightStart";
-  PopperDirectionEnum["right"] = "right";
-  PopperDirectionEnum["rightEnd"] = "rightEnd";
-})(PopperDirectionEnum || (PopperDirectionEnum = {}));
+import { Button } from 'm78/button';
 
 /** 绑定事件，由于要支持不同的target类型，所以一律使用原生api进行绑定 */
 function useEventBind(share, methods) {
@@ -192,6 +164,34 @@ function useEventBind(share, methods) {
     mouseLeaveHandle: mouseLeaveHandle
   };
 }
+
+var PopperTriggerEnum;
+
+(function (PopperTriggerEnum) {
+  PopperTriggerEnum["hover"] = "hover";
+  PopperTriggerEnum["click"] = "click";
+  PopperTriggerEnum["focus"] = "focus";
+  PopperTriggerEnum["subClick"] = "subClick";
+})(PopperTriggerEnum || (PopperTriggerEnum = {}));
+
+/** 所有可能出现的方向 */
+var PopperDirectionEnum;
+/** 所有可能出现的方向 */
+
+(function (PopperDirectionEnum) {
+  PopperDirectionEnum["topStart"] = "topStart";
+  PopperDirectionEnum["top"] = "top";
+  PopperDirectionEnum["topEnd"] = "topEnd";
+  PopperDirectionEnum["leftStart"] = "leftStart";
+  PopperDirectionEnum["left"] = "left";
+  PopperDirectionEnum["leftEnd"] = "leftEnd";
+  PopperDirectionEnum["bottomStart"] = "bottomStart";
+  PopperDirectionEnum["bottom"] = "bottom";
+  PopperDirectionEnum["bottomEnd"] = "bottomEnd";
+  PopperDirectionEnum["rightStart"] = "rightStart";
+  PopperDirectionEnum["right"] = "right";
+  PopperDirectionEnum["rightEnd"] = "rightEnd";
+})(PopperDirectionEnum || (PopperDirectionEnum = {}));
 
 /** 检测是否为合法的Bound */
 
@@ -958,6 +958,7 @@ var Popper$1 = function Popper(_props) {
           /* 使用toFixed防止chrome字体模糊 */
           return "translate3d(".concat(x, "px, ").concat(y, "px, 0) scale3d(").concat(sc, ", ").concat(sc, ", ").concat(sc, ")");
         }),
+        // @ts-ignore
         opacity: spProps.opacity.to(function (o) {
           return o;
         }),
@@ -985,5 +986,4 @@ var Popper$1 = function Popper(_props) {
 
 Popper$1.defaultProps = defaultProps;
 
-export default Popper$1;
-export { PopperDirectionEnum, PopperTriggerEnum };
+export { Popper$1 as Popper, PopperDirectionEnum, PopperTriggerEnum };

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Row } from 'm78/layout';
-import cls from 'classnames';
+import cls from 'clsx';
 import { TileProps } from './types';
 
 const Tile = ({ className, title, desc, leading, trailing, crossAlign, ...ppp }: TileProps) => {

@@ -7,7 +7,7 @@ import {
   FolderOpenOutlined,
   FolderOutlined,
 } from 'm78/icon';
-import Tree, { OptionsItem } from 'm78/tree';
+import { Tree, OptionsItem } from 'm78/tree';
 import { SizeEnum } from 'm78/types';
 
 const badgeSty: React.CSSProperties = {

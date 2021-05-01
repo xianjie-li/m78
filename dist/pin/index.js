@@ -5,7 +5,7 @@ import React, { useRef, useEffect } from 'react';
 import { useSetState, getRefDomOrDom, useScroll, useFn } from '@lxjx/hooks';
 import { getScrollParent, checkElementVisible, getStyle } from '@lxjx/utils';
 import _debounce from 'lodash/debounce';
-import cls from 'classnames';
+import cls from 'clsx';
 
 /** 需要为shadowEl代理的样式key */
 var proxyKeys = ['height', 'width', 'position', 'top', 'bottom', 'marginTop', 'marginBottom', 'display'];
@@ -195,4 +195,4 @@ var Pin = function Pin(_ref) {
   }, children));
 };
 
-export default Pin;
+export { Pin };

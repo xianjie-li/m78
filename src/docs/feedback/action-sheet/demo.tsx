@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import ActionSheet from 'm78/action-sheet';
+import { ActionSheet } from 'm78/action-sheet';
 import 'm78/action-sheet/style';
 
-import Button from 'm78/button';
+import { Button } from 'm78/button';
 import 'm78/button/style';
 
 const options = [

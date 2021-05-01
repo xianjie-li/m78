@@ -1,7 +1,7 @@
 import React from 'react';
 import { SpringStartFn } from 'react-spring';
 import { useScroll, UseScrollMeta, SetState } from '@lxjx/hooks';
-import Tips from 'm78/tips';
+import { Tips } from 'm78/tips';
 import { ComponentBaseProps } from 'm78/types/types';
 import { DirectionEnum } from 'm78/types';
 import { PullDownStatus, PullUpStatus } from './common';

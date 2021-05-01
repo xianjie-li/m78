@@ -1,6 +1,6 @@
 import React from 'react';
 
-import cls from 'classnames';
+import cls from 'clsx';
 
 import { ListTitleType, ListSubTitleType } from './type';
 

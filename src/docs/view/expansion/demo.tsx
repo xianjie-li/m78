@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Expansion, { ExpansionPane } from 'm78/expansion';
+import { Expansion, ExpansionPane } from 'm78/expansion';
 import { Spacer } from 'm78/layout';
 import { SettingOutlined } from 'm78/icon';
 import data1 from '@/mock/data1';

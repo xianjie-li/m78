@@ -2,7 +2,7 @@ import 'm78/check/style';
 import _objectSpread from '@babel/runtime/helpers/objectSpread2';
 import React, { useMemo, useImperativeHandle } from 'react';
 import { useCheck } from '@lxjx/hooks';
-import Check from 'm78/check';
+import { Check } from 'm78/check';
 
 var CheckBox = /*#__PURE__*/React.forwardRef(function (props, ref) {
   var options = props.options,
@@ -53,4 +53,4 @@ var CheckBox = /*#__PURE__*/React.forwardRef(function (props, ref) {
   }));
 });
 
-export default CheckBox;
+export { CheckBox };

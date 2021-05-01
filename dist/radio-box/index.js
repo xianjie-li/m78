@@ -2,7 +2,7 @@ import 'm78/check/style';
 import _slicedToArray from '@babel/runtime/helpers/slicedToArray';
 import React from 'react';
 import { useFormState } from '@lxjx/hooks';
-import Check from 'm78/check';
+import { Check } from 'm78/check';
 
 var RadioBox = function RadioBox(props) {
   var options = props.options,
@@ -41,4 +41,4 @@ var RadioBox = function RadioBox(props) {
   }));
 };
 
-export default RadioBox;
+export { RadioBox };

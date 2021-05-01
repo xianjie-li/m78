@@ -1,6 +1,6 @@
 import React from 'react';
 import { WarningIcon } from 'm78/icon';
-import Button from 'm78/button';
+import { Button } from 'm78/button';
 import { useFn } from '@lxjx/hooks';
 import { PopperPropsCustom } from './types';
 

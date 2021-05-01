@@ -1,4 +1,4 @@
-import Button from 'm78/button';
+import { Button } from 'm78/button';
 import React from 'react';
 import moment, { Moment } from 'moment';
 import Time from './Time';

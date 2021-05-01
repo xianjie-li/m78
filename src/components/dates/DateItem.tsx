@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import cls from 'classnames';
+import cls from 'clsx';
 import { useFn } from '@lxjx/hooks';
 import { useHover } from 'react-use-gesture';
 import { dumpFn } from '@lxjx/utils';

@@ -1,8 +1,8 @@
 import React from 'react';
-import Fork from 'm78/fork';
+import { Fork } from 'm78/fork';
 import { useFetch } from '@lxjx/hooks';
 
-import Button from 'm78/button';
+import { Button } from 'm78/button';
 import { mockData, listItemStyle } from './utils';
 
 const ForkDemo = () => {

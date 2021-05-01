@@ -3,7 +3,7 @@ import _slicedToArray from '@babel/runtime/helpers/slicedToArray';
 import React from 'react';
 import { useMeasure } from 'react-use';
 import { If } from 'm78/fork';
-import cls from 'classnames';
+import cls from 'clsx';
 
 /* 行数等于 高度 / 240 (行高) + 基础行 4 */
 
@@ -61,4 +61,4 @@ var ArticleBox = function ArticleBox(_ref) {
   }));
 };
 
-export default ArticleBox;
+export { ArticleBox };

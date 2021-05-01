@@ -1,6 +1,6 @@
 import React from 'react';
-import Drawer from 'm78/drawer';
-import Button from 'm78/button';
+import { Drawer } from 'm78/drawer';
+import { Button } from 'm78/button';
 
 const Demo = () => {
   return (

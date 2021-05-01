@@ -1,9 +1,9 @@
 import React, { useMemo, useRef } from 'react';
 import { useCheck, useSelf, useSetState } from '@lxjx/hooks';
-import cls from 'classnames';
+import cls from 'clsx';
 import { VariableSizeList as List } from 'react-window';
-import Spin from 'm78/spin';
-import Empty from 'm78/empty';
+import { Spin } from 'm78/spin';
+import { Empty } from 'm78/empty';
 import { useDelayDerivedToggleStatus } from 'm78/hooks';
 import {
   DraggableRubric,

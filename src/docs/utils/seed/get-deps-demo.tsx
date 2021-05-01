@@ -1,8 +1,8 @@
 import React from 'react';
-import create from 'm78/seed';
-import Button from 'm78/button';
+import { createSeed } from 'm78/seed';
+import { Button } from 'm78/button';
 
-const { setState, useState, State, getState } = create({
+const { setState, useState, State, getState } = createSeed({
   /* 被所有验证器依赖数据 */
   state: {
     number: 0,

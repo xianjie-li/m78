@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Tree, { OptionsItem } from 'm78/tree';
+import { Tree, OptionsItem } from 'm78/tree';
 import { delay, getRandRange } from '@lxjx/utils';
 
 const generateChildren = (pLabel = '') => {

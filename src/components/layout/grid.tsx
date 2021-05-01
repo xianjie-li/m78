@@ -1,6 +1,6 @@
 import React from 'react';
 
-import cls from 'classnames';
+import cls from 'clsx';
 import { isArray } from '@lxjx/utils';
 import { AspectRatio } from 'm78/layout';
 import { ComponentBaseProps } from 'm78/types';

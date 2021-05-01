@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormProvider, List as FormList } from 'rc-field-form';
-import List, { Title, SubTitle, Footer } from 'm78/list';
+import { List, Title, SubTitle, Footer } from 'm78/list';
 import { FormProps } from './type';
 import Item from './item';
 declare const BaseForm: React.FC<FormProps>;

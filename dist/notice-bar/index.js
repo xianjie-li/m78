@@ -8,8 +8,8 @@ import { useSpring, config, animated } from 'react-spring';
 import { useFormState } from '@lxjx/hooks';
 import { lineStatusIcons, CloseOutlined } from 'm78/icon';
 import { If } from 'm78/fork';
-import Button from 'm78/button';
-import cls from 'classnames';
+import { Button } from 'm78/button';
+import cls from 'clsx';
 
 var NoticeBar = function NoticeBar(_ref) {
   var _ref$closable = _ref.closable,
@@ -93,4 +93,4 @@ var NoticeBar = function NoticeBar(_ref) {
   }))))));
 };
 
-export default NoticeBar;
+export { NoticeBar };

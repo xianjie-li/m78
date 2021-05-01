@@ -1,10 +1,10 @@
 import 'm78/result/style';
 import React from 'react';
 import { statusIcons } from 'm78/icon';
-import Fork from 'm78/fork';
-import Portal from 'm78/portal';
+import { Fork } from 'm78/fork';
+import { Portal } from 'm78/portal';
 import { Transition, config } from '@lxjx/react-transition-spring';
-import cls from 'classnames';
+import cls from 'clsx';
 
 /* 用于标记哪些Icon.Svg需要添加特殊的status样式 */
 var statusResultList = ['notFound', 'serverError', 'notAuth'];
@@ -70,4 +70,4 @@ var Result = function Result(_ref) {
   return fixed ? /*#__PURE__*/React.createElement(Portal, null, render()) : render();
 };
 
-export default Result;
+export { Result };

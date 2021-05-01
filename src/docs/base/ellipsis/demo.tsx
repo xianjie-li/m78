@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
-import Ellipsis from 'm78/ellipsis';
+import { Ellipsis } from 'm78/ellipsis';
 
-import Button from 'm78/button';
+import { Button } from 'm78/button';
 
 const style: React.CSSProperties = { border: '1px solid #ccc', fontSize: 20, padding: 12 };
 

@@ -37,5 +37,4 @@ function NoSSR(_ref) {
   return /*#__PURE__*/React.createElement(React.Fragment, null, noSSR ? children : feedback);
 }
 
-export default NoSSR;
-export { useNoSSR };
+export { NoSSR, useNoSSR };

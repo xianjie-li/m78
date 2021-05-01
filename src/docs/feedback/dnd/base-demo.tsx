@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import DND, { DNDContext, DragBonus, DragFullEvent, DragPartialEvent } from 'm78/dnd';
-import cls from 'classnames';
+import { DND, DNDContext, DragBonus, DragFullEvent, DragPartialEvent } from 'm78/dnd';
+import cls from 'clsx';
 import { Row } from 'm78/layout';
 import sty from './sty1.module.scss';
 

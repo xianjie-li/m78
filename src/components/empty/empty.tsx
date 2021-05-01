@@ -2,9 +2,9 @@ import React from 'react';
 
 import { EmptyIcon } from 'm78/icon';
 
-import cls from 'classnames';
+import cls from 'clsx';
 
-import config from 'm78/config';
+import { m78Config as config } from 'm78/config';
 import { EmptyProps } from './type';
 
 /* 为指定的ReactElement注入m78-empty_icon类 */

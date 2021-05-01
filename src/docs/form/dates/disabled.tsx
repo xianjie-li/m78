@@ -1,5 +1,5 @@
 import React from 'react';
-import Dates, { DateType, TimeLimiter, DateLimiter } from 'm78/dates';
+import { Dates, DateType, TimeLimiter, DateLimiter } from 'm78/dates';
 import moment, { Moment } from 'moment';
 
 const disabledDate: DateLimiter = (mmt: Moment, type: any) => {

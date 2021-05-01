@@ -18,4 +18,4 @@ const message: MessageApi = Object.assign(_messageApi, {
 
 export * from './factory';
 export * from './type';
-export default message;
+export { message };

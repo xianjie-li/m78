@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Check from 'm78/check';
+import { Check } from 'm78/check';
 
 const Demo = () => (
   <div>

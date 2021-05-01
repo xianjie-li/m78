@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { useCheck, UseCheckConf } from '@lxjx/hooks';
-import classNames from 'classnames';
+import classNames from 'clsx';
 import { ExpansionProps } from './types';
 import { Provider } from './ctx';
 

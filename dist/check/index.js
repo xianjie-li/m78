@@ -4,7 +4,7 @@ import _slicedToArray from '@babel/runtime/helpers/slicedToArray';
 import React, { useState } from 'react';
 import { If } from 'm78/fork';
 import { useFormState } from '@lxjx/hooks';
-import cls from 'classnames';
+import cls from 'clsx';
 
 /* 接收<ShareMeta>并生成适合的类名返回 */
 function getCheckCls(_ref) {
@@ -170,4 +170,4 @@ Check.Group = function (_ref4) {
   }, children);
 };
 
-export default Check;
+export { Check };

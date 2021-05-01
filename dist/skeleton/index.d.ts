@@ -1,3 +1,4 @@
 import 'm78/skeleton/style';
+import Skeleton from './skeleton';
 export * from './skeleton';
-export { default } from './skeleton';
+export { Skeleton };

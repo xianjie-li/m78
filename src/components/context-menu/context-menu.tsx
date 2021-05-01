@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Popper, { Bound, PopperDirectionEnum, PopperPropsCustom } from 'm78/popper';
+import { Popper, Bound, PopperDirectionEnum, PopperPropsCustom } from 'm78/popper';
 import { Tile } from 'm78/layout';
-import classNames from 'classnames';
+import classNames from 'clsx';
 import { isFunction } from '@lxjx/utils';
 import { ContextMenuItemProps, ContextMenuProps } from './types';
 

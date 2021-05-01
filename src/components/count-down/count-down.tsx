@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { getDateCountDown, dumpFn } from '@lxjx/utils';
 import { useSelf } from '@lxjx/hooks';
-import cls from 'classnames';
+import cls from 'clsx';
 import { ComponentBaseProps } from 'm78/types';
 
 interface ExtCls {

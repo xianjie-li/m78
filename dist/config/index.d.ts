@@ -8,4 +8,4 @@ interface M78SeedState {
     pictureErrorImg?: string;
 }
 declare const m78Config: import("../seed/type").ExpandSeed<M78SeedState, import("@m78/seed/types").Validators<M78SeedState>>;
-export default m78Config;
+export { m78Config };

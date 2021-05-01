@@ -1,7 +1,7 @@
 import 'm78/layout/style';
 import _toConsumableArray from '@babel/runtime/helpers/toConsumableArray';
 import React from 'react';
-import cls from 'classnames';
+import cls from 'clsx';
 import { isArray } from '@lxjx/utils';
 import { AspectRatio as AspectRatio$1, Row as Row$1 } from 'm78/layout';
 import _objectSpread from '@babel/runtime/helpers/objectSpread2';

@@ -1,11 +1,11 @@
 import 'm78/fork/style';
 import React from 'react';
-import Spin from 'm78/spin';
+import { Spin } from 'm78/spin';
 import { isFunction } from '@lxjx/utils';
-import Button from 'm78/button';
-import NoticeBar from 'm78/notice-bar';
-import Empty from 'm78/empty';
-import classNames from 'classnames';
+import { Button } from 'm78/button';
+import { NoticeBar } from 'm78/notice-bar';
+import { Empty } from 'm78/empty';
+import classNames from 'clsx';
 
 var ForkImpl = function ForkImpl(_ref) {
   var children = _ref.children,
@@ -157,5 +157,4 @@ Fork.If = If;
 Fork.Toggle = Toggle;
 Fork.Switch = Switch;
 
-export default Fork;
-export { If, Switch, Toggle };
+export { Fork, If, Switch, Toggle };

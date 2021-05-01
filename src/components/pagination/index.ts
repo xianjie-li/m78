@@ -1,3 +1,4 @@
 import 'm78/pagination/style';
+import Pagination from './pagination';
 
-export { default } from './pagination';
+export { Pagination };

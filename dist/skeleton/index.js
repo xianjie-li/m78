@@ -2,7 +2,7 @@ import 'm78/skeleton/style';
 import _extends from '@babel/runtime/helpers/extends';
 import _objectWithoutProperties from '@babel/runtime/helpers/objectWithoutProperties';
 import React, { useMemo } from 'react';
-import cls from 'classnames';
+import cls from 'clsx';
 
 /* 获取一个以baseP为基础值的百分比宽度 */
 function getRandWidth(baseP) {
@@ -136,5 +136,4 @@ var Skeleton = Object.assign(BasedSkeleton, {
   SkeletonFactory: SkeletonFactory
 });
 
-export default Skeleton;
-export { BannerSkeleton, SkeletonFactory };
+export { BannerSkeleton, Skeleton, SkeletonFactory };

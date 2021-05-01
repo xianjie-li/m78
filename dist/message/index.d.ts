@@ -9,4 +9,4 @@ interface MessageApi extends Message {
 declare const message: MessageApi;
 export * from './factory';
 export * from './type';
-export default message;
+export { message };

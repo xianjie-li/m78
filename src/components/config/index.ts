@@ -1,4 +1,4 @@
-import create from 'm78/seed';
+import { createSeed } from 'm78/seed';
 import React from 'react';
 
 interface M78SeedState {
@@ -10,7 +10,7 @@ interface M78SeedState {
   pictureErrorImg?: string;
 }
 
-const m78Config = create<M78SeedState>({
+const m78Config = createSeed<M78SeedState>({
   state: {
     darkMode: false,
   },
@@ -22,4 +22,4 @@ m78Config.subscribe(({ darkMode }) => {
   }
 });
 
-export default m78Config;
+export { m78Config };

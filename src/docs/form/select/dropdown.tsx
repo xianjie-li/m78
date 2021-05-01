@@ -1,6 +1,6 @@
 import React from 'react';
-import Select, { SelectOptionItem } from 'm78/select';
-import Button from 'm78/button';
+import { Select, SelectOptionItem } from 'm78/select';
+import { Button } from 'm78/button';
 import { CaretDownOutlined } from 'm78/icon';
 import { PopperDirectionEnum } from 'm78/popper';
 

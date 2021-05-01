@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Scroller from 'm78/scroller';
+import { Scroller } from 'm78/scroller';
 import { UndoOutlined } from 'm78/icon';
 import { delay } from '@lxjx/utils';
 import { Divider } from 'm78/layout';

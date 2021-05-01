@@ -1,11 +1,11 @@
 import React from 'react';
 
 import { statusIcons } from 'm78/icon';
-import Fork from 'm78/fork';
-import Portal from 'm78/portal';
+import { Fork } from 'm78/fork';
+import { Portal } from 'm78/portal';
 import { Transition, config } from '@lxjx/react-transition-spring';
 
-import cls from 'classnames';
+import cls from 'clsx';
 
 import { ResultProps } from './type';
 

@@ -8,7 +8,9 @@ group:
 
 # Mask 遮罩
 
-# deprecated 已弃用
+<h2 class="color-red">deprecated!!!</h2>
+
+不建议继续使用，请移步 [Modal](/docs/feedback/modal)
 
 请使用 Modal 组件
 

@@ -4,7 +4,7 @@ import { animated, useSpring } from 'react-spring';
 import { useGesture } from 'react-use-gesture';
 import _clamp from 'lodash/clamp';
 
-import cls from 'classnames';
+import cls from 'clsx';
 
 import { dumpFn } from '@lxjx/utils';
 import { useSelf } from '@lxjx/hooks';

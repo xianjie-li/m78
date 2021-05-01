@@ -1,5 +1,5 @@
 import React from 'react';
-import Dates, { DateType } from 'm78/dates';
+import { Dates, DateType } from 'm78/dates';
 
 const RangeDemo = () => {
   return (

@@ -1,6 +1,6 @@
 import React from 'react';
-import Button from 'm78/button';
-import config from 'm78/config';
+import { Button } from 'm78/button';
+import { m78Config as config } from 'm78/config';
 
 const ThemeCtl = () => {
   return (

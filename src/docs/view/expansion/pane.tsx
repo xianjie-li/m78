@@ -2,7 +2,7 @@ import React from 'react';
 import { ExpansionPane } from 'm78/expansion';
 import { Spacer } from 'm78/layout';
 import { ExpandIconPosition } from 'm78/expansion/types';
-import Button from 'm78/button';
+import { Button } from 'm78/button';
 import data1 from '@/mock/data1';
 
 const listSmall = data1.slice(0, 4);

@@ -9,4 +9,4 @@ interface Fork extends ForkType {
 declare const Fork: Fork;
 export * from './type';
 export * from './fork-impl';
-export default Fork;
+export { Fork };

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import message from 'm78/message';
-import Button from 'm78/button';
+import { message } from 'm78/message';
+import { Button } from 'm78/button';
 
 const type = ['success', 'error', 'warning', undefined];
 

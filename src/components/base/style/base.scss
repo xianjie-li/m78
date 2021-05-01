@@ -45,13 +45,13 @@
 
   &::-webkit-scrollbar-thumb {
     border-radius: 6px;
-    background: var(--m78-color-second);
+    background: var(--m78-color-disable);
     min-height: 70px;
     min-width: 70px;
   }
 
   &::-webkit-scrollbar-thumb:hover {
-    background: var(--m78-color-primary);
+    background: var(--m78-color-second);
   }
 
   &::-webkit-scrollbar-thumb:active {
