@@ -1,56 +1,122 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-import List from 'm78/list';
-import 'm78/list/style';
+import { Select, SelectOptionItem } from 'm78/select';
+import { ListViewItemStyleEnum } from 'm78/list-view/types';
+import { SizeEnum } from 'm78/types';
+import { Button } from 'm78/button';
+import { Spacer } from 'm78/layout';
+import { ListView, ListViewItem, ListViewTitle } from 'm78/list-view';
+import { Check } from 'm78/check';
 
-const Demo = () => (
-  <div>
-    <List fullWidth>
-      <List.Title
-        title="列表标题"
-        desc="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias animi, atque aut deleniti dolor eum expedita fugit itaque laborum libero magnam natus nobis, nostrum pariatur quidem tempora ullam? Exercitationem, quod!"
-      />
-      <List.SubTitle title="常规列表" />
-      <List.Item title="普通内容" />
-      <List.Item title="操作项" required arrow />
-      <List.Item title="余额" extra="80000.00" required arrow />
-      <List.Item title="禁用" extra="80000.00" disabled />
-      <List.Item title="操作项" extra={<input type="checkbox" />} effect />
-      <List.Item left="😍" title="自定义左右内容" icon="😆" />
+const itemStyleDs: SelectOptionItem[] = [
+  {
+    label: '分割线',
+    value: ListViewItemStyleEnum.splitLine,
+  },
+  {
+    label: '边框',
+    value: ListViewItemStyleEnum.border,
+  },
+  {
+    label: '无',
+    value: 'none',
+  },
+];
 
-      <List.SubTitle title="复杂列表" />
-      <List.Item title="多行列表" desc="行描述行描述" extra="额外说明" />
-      <List.Item
-        title="多行列表"
-        desc="行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述"
-        extra="额外说明"
-      />
-      <List.Item
-        left={<div style={{ backgroundColor: '#ccc', width: 60, height: 60 }} />}
-        leftAlign="top"
-        title="多行列表多行列表多行列表多行列表多行列表多行列表多行列表多行列表多行列表多行列表多行列表多行列表多行列表多行列表多行列表多行列表多行列表多行列表多行列表多行列表多行列表多行列表多行列表多行列表多行列表多行列表"
-        desc="行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述行描述"
-        extra="额外说明"
-      />
-      <List.Item
-        left={<div style={{ backgroundColor: '#ccc', width: 76, height: 76 }} />}
-        leftAlign="top"
-        title="标题标题标题标题标题标标题标题标题"
-        desc="描述描述描述述描述描述描述描述描述"
-        extra="次要文本"
-        footLeft="页脚文本页脚文本页脚文本"
-        footRight="2020-01-01"
-        arrow
+const sizeDs: SelectOptionItem[] = [
+  {
+    label: '大',
+    value: SizeEnum.large,
+  },
+  {
+    label: '常规',
+    value: '',
+  },
+  {
+    label: '小',
+    value: SizeEnum.small,
+  },
+];
+
+const Demo = () => {
+  const [column, setColumn] = useState(0);
+  const [border, setBorder] = useState(true);
+  const [itemStyle, setItemStyle] = useState(ListViewItemStyleEnum.splitLine);
+  const [size, setSize] = useState<undefined | string>();
+  const [effect, setEffect] = useState(true);
+
+  return (
+    <div>
+      <div className="mb-24">
+        <Button onClick={() => setBorder(prev => !prev)}>边框 ({border ? '开' : '关'})</Button>
+        <Button onClick={() => setColumn(prev => (prev ? 0 : 3))}>
+          多列 ({column === 3 ? '开' : '关'})
+        </Button>
+        <Button onClick={() => setEffect(prev => !prev)}>交互效果 ({effect ? '开' : '关'})</Button>
+
+        <Spacer />
+
+        <Select
+          size="small"
+          value={itemStyle}
+          onChange={setItemStyle}
+          options={itemStyleDs}
+          placeholder="项风格"
+          style={{ width: 100 }}
+        />
+
+        <Spacer width={8} />
+
+        <Select
+          size="small"
+          value={size}
+          onChange={setSize}
+          options={sizeDs}
+          placeholder="尺寸"
+          style={{ width: 100 }}
+        />
+      </div>
+
+      <ListView
+        effect={effect}
+        border={border}
+        column={column}
+        itemStyle={itemStyle}
+        size={size as SizeEnum}
       >
-        表单区域
-      </List.Item>
+        <ListViewTitle>收藏的水果</ListViewTitle>
 
-      <List.Footer>
-        底部描述
-        <p>这是对该列表的一段描述</p>
-      </List.Footer>
-    </List>
-  </div>
-);
+        <ListViewItem leading="🍊" title="橘子" arrow />
+        <ListViewItem leading="🍉" title="西瓜" arrow />
+
+        <ListViewTitle subTile>最爱吃</ListViewTitle>
+
+        <ListViewItem leading="🥝" title="猕猴桃" arrow desc="水果之王" />
+        <ListViewItem leading="🍇" title="葡萄" trailing={<Check type="switch" />} />
+        <ListViewItem leading="🍓" title="草莓" arrow trailing="其实不是水果" />
+        <ListViewItem
+          leading="🍒"
+          title={
+            <span>
+              樱<span className="color-red">桃</span>
+            </span>
+          }
+          arrow
+        />
+
+        <ListViewTitle subTile>偶尔吃</ListViewTitle>
+
+        <ListViewItem
+          leading="🍋"
+          title="柠檬"
+          arrow
+          desc="一年一度的“我吃柠檬”挑战又要开始啦~，请记住我们的活动代号“#WCNM#”"
+        />
+        <ListViewItem leading="🍍" title="菠萝" arrow trailing="也叫凤梨" />
+        <ListViewItem leading="🍎" title="苹果" arrow />
+      </ListView>
+    </div>
+  );
+};
 
 export default Demo;

@@ -8,6 +8,7 @@ import { Check } from 'm78/check';
 import { ListViewItemStyleEnum } from 'm78/list-view/types';
 import { SizeEnum } from 'm78/types';
 import { Button } from 'm78/button';
+import { Input } from 'm78/input';
 
 const itemStyleDs: SelectOptionItem[] = [
   {
@@ -87,7 +88,7 @@ const App = () => {
       </div>
 
       <ListView
-        effect={effect}
+        effect={false}
         border={border}
         column={column}
         itemStyle={itemStyle}
@@ -95,10 +96,17 @@ const App = () => {
       >
         <ListViewTitle>收藏的水果</ListViewTitle>
 
-        <ListViewItem leading="🍊" title="橘子" arrow />
+        <ListViewItem
+          leading="🍊"
+          arrow
+          titleEllipsis={0}
+          title={
+            <div>
+              <Input placeholder="请输入用户名" />
+            </div>
+          }
+        />
         <ListViewItem leading="🍉" title="西瓜" arrow />
-
-        <ListViewTitle subTile>最爱吃</ListViewTitle>
 
         <ListViewItem leading="🥝" title="猕猴桃" arrow desc="水果之王" />
         <ListViewItem leading="🍇" title="葡萄" trailing={<Check type="switch" />} />

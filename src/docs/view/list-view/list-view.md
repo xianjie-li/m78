@@ -1,14 +1,13 @@
 ---
-title: List - 列表
+title: ListView - 列表
 group:
   title: 展示组件
   path: /view
-  order: 4000
 ---
 
 # List - 列表
 
-用于展示列表图片、段落，同时也用作表单的布局和展示
+经典的展示组件
 
 ## 列表
 
@@ -16,95 +15,60 @@ group:
 
 ## API
 
-**`List`**
+**`ListView`**
 
 ```tsx | pure
-interface ListType extends ComponentBasePropsWithAny {
-  /** false | 开启表单模式 */
-  form?: boolean;
-  /** false | 是否去掉列表项边框 */
-  notBorder?: boolean;
-  /** 'vertical' | 横向表单/纵向表单 */
-  layout?: 'horizontal' | 'vertical';
-  /** 1 | 当大于1时，表单为多列模式 */
+interface ListViewProps {
+  /** 内容, 通常是一组ListViewItem */
+  children: React.ReactNode;
+  /** 多列模式 */
   column?: number;
-  /** false | 不限制最大宽度 */
-  fullWidth?: boolean;
-  /** false | 禁用表单 */
-  disabled?: boolean;
+  /** 调整布局紧凑程度、字号等 */
+  size?: SizeEnum | Size;
+  /** false | 列表容器显示边框 */
+  border?: boolean;
+  /**
+   * 'splitLine' | 项的基础样式类型
+   * - splitLine模式在开启了多列的情况下无效
+   * */
+  itemStyle?: 'splitLine' | 'border' | 'none' | ListViewItemStyleEnum;
+  /** true | 列表项交互效果 */
+  effect?: boolean;
 }
 ```
 
-**`Item`**
+**`ListViewItem`**
 
 ```tsx | pure
-interface ListItemProps extends ComponentBasePropsWithAny {
-  /** 左侧插槽内容 */
-  left?: React.ReactNode;
-  /** 左侧插槽内容的垂直对其方式，默认居中 */
-  leftAlign?: 'top' | 'bottom';
-  /** 标题内容，超过两行会自动截行 */
+interface ListViewItemProps {
+  /** 主要内容 */
   title: React.ReactNode;
-  /** 描述内容，超过两行自动截行 */
+  /** 次要内容 */
   desc?: React.ReactNode;
-  /** 右侧的额外描述内容 */
-  extra?: React.ReactNode;
-  /** 底部内容 */
-  footLeft?: React.ReactNode;
-  /** 底部内容右侧 */
-  footRight?: React.ReactNode;
-  /** 是否显示右箭头 */
+  /** 前导内容 */
+  leading?: React.ReactNode;
+  /** 尾随内容 */
+  trailing?: React.ReactNode;
+  /** 纵轴的对齐方式 */
+  crossAlign?: FlexWrapProps['crossAlign'];
+  /** 显示右侧箭头 */
   arrow?: boolean;
-  /** 强制开启点击效果，默认只有带arrow和onClick的项会开启 */
-  effect?: boolean;
-  /** 自定义要在arrow区域显示的内容 */
-  icon?: React.ReactNode;
-  /** 禁用该列表项 */
+  /** 禁用（视觉禁用） */
   disabled?: boolean;
-  /** 列表状态，会改变footLeft内的文本颜色并在icon插槽内显示反馈图标 */
-  status?: 'success' | 'error' | 'warning';
-  /** 表单类型的List适用，放置表单控件或说明文本 */
-  children?: React.ReactNode;
-  /** 标记该项为必填项（标题后会带红色*号） */
-  require?: boolean;
-  /** 1 | 2 标题和描述的最大行数 */
+  /** 1 | 标题最大行数 */
   titleEllipsis?: number;
+  /** 2 | 描述区域最大行数 */
   descEllipsis?: number;
 }
 ```
 
-**`Title`**
+**`ListViewTitle`**
 
 ```tsx | pure
-interface ListTitleType extends ComponentBasePropsWithAny {
+interface ListViewTitle {
+  /** 是否是子标题 */
+  subTile?: boolean;
   /** 标题内容 */
-  title: React.ReactNode;
-  /** 描述内容 */
-  desc?: React.ReactNode;
-}
-```
-
-**`SubTitle`**
-
-```tsx | pure
-interface ListSubTitleType extends ComponentBasePropsWithAny {
-  /** 标题内容 */
-  title: React.ReactNode;
-}
-```
-
-**`相关接口/Footer`**
-
-```tsx | pure
-interface ComponentBaseProps {
-  /** 包裹元素的类名 */
-  className?: string;
-  /** 包裹元素样式 */
-  style?: React.CSSProperties;
-}
-
-interface ComponentBasePropsWithAny extends ComponentBaseProps {
-  /** 透传到包裹元素上的属性 */
-  [key: string]: any;
+  children?: React.ReactNode;
 }
 ```

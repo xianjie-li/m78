@@ -35,7 +35,7 @@ export interface ListViewItemProps extends TileProps {
     /** 2 | 描述区域最大行数 */
     descEllipsis?: number;
 }
-export interface ListViewTitle {
+export interface ListViewTitleProps {
     /** 是否是子标题 */
     subTile?: boolean;
     /** 标题内容 */

@@ -1,4 +1,4 @@
-import { ListViewItemProps, ListViewProps, ListViewTitle } from 'm78/list-view/types';
+import { ListViewItemProps, ListViewProps, ListViewTitleProps } from './types';
 declare function InternalListView(props: ListViewProps): JSX.Element;
 declare namespace InternalListView {
     var displayName: string;
@@ -7,7 +7,7 @@ declare function InternalListViewItem({ title, desc, leading, trailing, arrow, c
 declare namespace InternalListViewItem {
     var displayName: string;
 }
-declare function InternalListViewTitle({ subTile, children }: ListViewTitle): JSX.Element;
+declare function InternalListViewTitle({ subTile, children }: ListViewTitleProps): JSX.Element;
 declare namespace InternalListViewTitle {
     var displayName: string;
 }

@@ -5,8 +5,15 @@ import React, { createContext, useContext } from 'react';
 import { Tile } from 'm78/layout';
 import { Ellipsis } from 'm78/ellipsis';
 import { RightOutlined } from '@ant-design/icons';
-import { ListViewItemStyleEnum } from 'm78/list-view/types';
 import classNames from 'clsx';
+
+var ListViewItemStyleEnum;
+
+(function (ListViewItemStyleEnum) {
+  ListViewItemStyleEnum["splitLine"] = "splitLine";
+  ListViewItemStyleEnum["border"] = "border";
+  ListViewItemStyleEnum["none"] = "none";
+})(ListViewItemStyleEnum || (ListViewItemStyleEnum = {}));
 
 var context = /*#__PURE__*/createContext({});
 
@@ -85,4 +92,4 @@ InternalListView.displayName = 'ListView';
 InternalListViewItem.displayName = 'ListViewItem';
 InternalListViewTitle.displayName = 'ListViewTitle';
 
-export { InternalListView as ListView, InternalListViewItem as ListViewItem, InternalListViewTitle as ListViewTitle };
+export { InternalListView as ListView, InternalListViewItem as ListViewItem, ListViewItemStyleEnum, InternalListViewTitle as ListViewTitle };
