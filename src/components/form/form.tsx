@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import RForm, { useForm, FormProvider, List as FormList } from 'rc-field-form';
-import { List, Title, SubTitle, Footer } from 'm78/list';
 import Schema from 'async-validator';
 import {
   createRandString,
@@ -14,10 +13,12 @@ import { ValidateErrorEntity } from 'rc-field-form/es/interface';
 import cls from 'clsx';
 import { createMessagesTemplate } from '@lxjx/validate-tools';
 
+import { ListViewTitle as FormTitle } from 'm78/list-view';
 import { FormProps } from './type';
 import { getNameString } from './utils';
 import FormContext from './context';
-import Item from './item';
+import FormItem from './item';
+import { FormLayout, FormActions } from './layout';
 
 const msgTpl = createMessagesTemplate({ hasName: false /* nameKey: 'label' */ });
 
@@ -29,10 +30,8 @@ const BaseForm: React.FC<FormProps> = props => {
     children,
     style,
     className,
-    notBorder,
     layout,
     column,
-    fullWidth,
     disabled = false,
     form: _form,
     onValuesChange,
@@ -41,15 +40,19 @@ const BaseForm: React.FC<FormProps> = props => {
     noStyle,
     instanceRef,
     border,
+    size,
+    itemStyle,
     ...otherProps
   } = props;
   /** 该表单的唯一id */
-  const id = useMemo(() => createRandString(2), []);
+  const id = useMemo(() => createRandString(), []);
 
+  // 标记表单元素所在节点
   const flagEl = useRef<HTMLSpanElement>(null!);
 
   const [form] = useForm(_form);
 
+  // 首个可滚动父级
   const [scrollParent, setScrollParent] = useState<HTMLElement | undefined>();
 
   const { scrollToElement } = useScroll({
@@ -67,6 +70,7 @@ const BaseForm: React.FC<FormProps> = props => {
     rules,
   }));
 
+  /* TODO: 节点变更时重新进行获取 */
   useEffect(() => {
     const el = getScrollParent(flagEl.current);
 
@@ -83,6 +87,7 @@ const BaseForm: React.FC<FormProps> = props => {
     }
   });
 
+  // 提交验证错误时高亮第一个未通过元素
   const finishFailedHandle = useFn((arg: ValidateErrorEntity) => {
     const { errorFields, outOfDate } = arg;
     props.onFinishFailed?.(arg);
@@ -128,23 +133,17 @@ const BaseForm: React.FC<FormProps> = props => {
     }
 
     return (
-      <List
-        form
+      <FormLayout
         style={style}
-        className={cls(
-          className,
-          'm78-form',
-          contextValue.hideRequiredMark && '__hide-required-mark',
-          !border && '__not-border',
-        )}
-        notBorder={notBorder}
+        className={cls(className, contextValue.hideRequiredMark && '__hide-required-mark')}
+        border={border}
         layout={layout}
         column={column}
-        fullWidth={fullWidth}
-        disabled={disabled}
+        size={size}
+        itemStyle={itemStyle}
       >
         {node}
-      </List>
+      </FormLayout>
     );
   }
 
@@ -176,21 +175,19 @@ type Form = typeof BaseForm;
 
 interface FormWithExtra extends Form {
   FormProvider: typeof FormProvider;
-  Item: typeof Item;
+  Item: typeof FormItem;
   List: typeof FormList;
-  Title: typeof Title;
-  SubTitle: typeof SubTitle;
-  Footer: typeof Footer;
+  Title: typeof FormTitle;
+  Actions: typeof FormActions;
 }
 
 const Form: FormWithExtra = Object.assign(BaseForm, {
   FormProvider,
-  Item,
+  Item: FormItem,
   List: FormList,
-  Title,
-  SubTitle,
-  Footer,
+  Title: FormTitle,
+  Actions: FormActions,
 });
 
-export { FormProvider, Item, List, Title, SubTitle, Footer };
+export { FormProvider, FormItem, FormTitle, FormActions };
 export default Form;

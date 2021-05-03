@@ -1,5 +1,5 @@
 import React from 'react';
-import { Size } from 'm78/types';
+import { SizeKeys } from 'm78/types';
 export declare enum ButtonColorEnum {
     blue = "blue",
     red = "red",
@@ -11,7 +11,7 @@ export interface ButtonProps {
     /** 按钮颜色 */
     color?: 'blue' | 'red' | 'green' | 'yellow' | 'primary' | ButtonColorEnum;
     /** 大小 */
-    size?: Size | 'mini';
+    size?: SizeKeys | 'mini';
     /** 圆形按钮 */
     circle?: boolean;
     /** 边框按钮 */

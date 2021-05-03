@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 // import { Button } from 'm78/button';
 import { m78Config } from 'm78/config';
-import { Divider, Spacer } from 'm78/layout';
+import { Divider, Row, Spacer } from 'm78/layout';
 import { Select, SelectOptionItem } from 'm78/select';
 import { ListView, ListViewItem, ListViewTitle } from 'm78/list-view';
 import { Check } from 'm78/check';
@@ -9,6 +9,10 @@ import { ListViewItemStyleEnum } from 'm78/list-view/types';
 import { SizeEnum } from 'm78/types';
 import { Button } from 'm78/button';
 import { Input } from 'm78/input';
+import { Form } from 'm78/form';
+
+import './style.scss';
+import { FormItemLayout, FormLayout } from 'm78/form/layout';
 
 const itemStyleDs: SelectOptionItem[] = [
   {
@@ -57,6 +61,8 @@ const App = () => {
 
       <Divider />
 
+      <Form />
+
       <div className="mb-24">
         <Button onClick={() => setBorder(prev => !prev)}>边框 ({border ? '开' : '关'})</Button>
         <Button onClick={() => setColumn(prev => (prev ? 0 : 3))}>
@@ -87,25 +93,122 @@ const App = () => {
         />
       </div>
 
+      <FormLayout border={border} column={column} itemStyle={itemStyle} size={size as SizeEnum}>
+        <FormItemLayout label="姓名">
+          <Input placeholder="请输入" />
+        </FormItemLayout>
+        <FormItemLayout label="年龄">
+          <Input placeholder="请输入" />
+        </FormItemLayout>
+        <FormItemLayout label="爱好">
+          <Input placeholder="请输入" />
+        </FormItemLayout>
+        <FormItemLayout label="性别">
+          <Input placeholder="请输入" />
+        </FormItemLayout>
+      </FormLayout>
+
       <ListView
         effect={false}
         border={border}
         column={column}
         itemStyle={itemStyle}
         size={size as SizeEnum}
+        className="m78-form __horizontal"
       >
         <ListViewTitle>收藏的水果</ListViewTitle>
 
         <ListViewItem
-          leading="🍊"
-          arrow
+          className="m78-form_item"
           titleEllipsis={0}
           title={
-            <div>
-              <Input placeholder="请输入用户名" />
+            <div className="m78-form_item-main">
+              <div className="m78-form_item-label">用户名哈哈</div>
+              <div className="m78-form_item-cont">
+                <Input placeholder="请输入用户名" />
+                <div className="m78-form_item-text-wrap">
+                  <div className="m78-form_item-text">描述文本描述文本描述文本</div>
+                  <div className="m78-form_item-tips-text">错误文本错误文本错误文本</div>
+                </div>
+              </div>
             </div>
           }
         />
+
+        <ListViewItem
+          className="m78-form_item"
+          titleEllipsis={0}
+          title={
+            <div className="m78-form_item-main">
+              {/*<div className="m78-form_item-label">用户名</div>*/}
+              <div className="m78-form_item-cont">
+                <div className="m78-form_item-unit-wrap">
+                  <ListViewItem
+                    className="m78-form_item"
+                    titleEllipsis={0}
+                    title={
+                      <div className="m78-form_item-main">
+                        <div className="m78-form_item-label">用户名</div>
+                        <div className="m78-form_item-cont">
+                          <div className="m78-form_item-unit-wrap">
+                            <Input placeholder="请输入用户名" />
+                          </div>
+                          <div className="m78-form_item-text-wrap">
+                            <div className="m78-form_item-text">描述文本描述文本描述文本</div>
+                            <div className="m78-form_item-tips-text">错误文本错误文本错误文本</div>
+                          </div>
+                        </div>
+                      </div>
+                    }
+                  />
+
+                  <ListViewItem
+                    className="m78-form_item"
+                    titleEllipsis={0}
+                    title={
+                      <div className="m78-form_item-main">
+                        <div className="m78-form_item-label">
+                          用户名
+                          <i className="m78-form_require-mark" title="必填项">
+                            *
+                          </i>
+                        </div>
+                        <div className="m78-form_item-cont">
+                          <div className="m78-form_item-unit-wrap">
+                            <Input placeholder="请输入用户名" />
+                          </div>
+                          <div className="m78-form_item-text-wrap">
+                            <div className="m78-form_item-text">描述文本描述文本描述文本</div>
+                            <div className="m78-form_item-tips-text">错误文本错误文本错误文本</div>
+                          </div>
+                        </div>
+                      </div>
+                    }
+                  />
+                </div>
+                {/*<div className="m78-form_item-text-wrap">*/}
+                {/*  <div className="m78-form_item-text">描述文本描述文本描述文本</div>*/}
+                {/*  <div className="m78-form_item-tips-text">错误文本错误文本错误文本</div>*/}
+                {/*</div>*/}
+              </div>
+            </div>
+          }
+        />
+
+        <ListViewItem
+          className="m78-form_item"
+          titleEllipsis={0}
+          title={
+            <div className="m78-form_item-main">
+              <div className="m78-form_item-label">用户名</div>
+              <div className="m78-form_item-cont">
+                <Input placeholder="请输入用户名" />
+                <div className="m78-form_item-text">错误文本</div>
+              </div>
+            </div>
+          }
+        />
+
         <ListViewItem leading="🍉" title="西瓜" arrow />
 
         <ListViewItem leading="🥝" title="猕猴桃" arrow desc="水果之王" />

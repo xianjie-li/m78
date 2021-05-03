@@ -1,12 +1,12 @@
 import React from 'react';
-import { ComponentBaseProps, FullSize, FullSizeEnum } from 'm78/types';
+import { ComponentBaseProps, FullSizeKeys, FullSizeEnum } from 'm78/types';
 export declare enum SpinAnimeEnum {
     default = 0,
     spin = 1
 }
 export interface SpinProps extends ComponentBaseProps {
     /** 大小 */
-    size?: FullSizeEnum | FullSize;
+    size?: FullSizeEnum | FullSizeKeys;
     /** 内联模式 */
     inline?: boolean;
     /** '加载中' | 提示文本 */

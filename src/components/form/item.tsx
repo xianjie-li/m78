@@ -2,10 +2,10 @@ import React, { useContext, useEffect, useMemo } from 'react';
 import { AnyObject, createRandString, isArray, isFunction } from '@lxjx/utils';
 import { useUpdate } from 'react-use';
 import _has from 'lodash/has';
-import { List } from 'm78/list';
 import { FormInstance } from 'rc-field-form/es/interface';
 import { Field } from 'rc-field-form';
 import cls from 'clsx';
+import { FormItemLayout } from './layout';
 import FormContext from './context';
 import { getFirstError, getFlatRules, getNameString, getStatus } from './utils';
 import { FormItemCustomMeta, FormItemProps } from './type';
@@ -32,7 +32,7 @@ const Item: React.FC<FormItemProps> = props => {
     style,
     className,
     label,
-    extra,
+    errorNode,
     desc,
     disabled,
     noStyle,
@@ -41,6 +41,7 @@ const Item: React.FC<FormItemProps> = props => {
     dependencies,
     required,
     innerRef,
+    arrow,
     ...otherProps
   } = props;
 
@@ -83,18 +84,19 @@ const Item: React.FC<FormItemProps> = props => {
   // 无name时仅作为布局组件使用
   if (!name) {
     return (
-      <List.Item
+      <FormItemLayout
         desc={desc}
-        extra={extra}
-        title={label}
+        errorNode={errorNode}
+        label={label}
         disabled={isDisabled}
         required={isRequired}
         style={_style}
         className={cls(className, '__layout')}
         innerRef={innerRef}
+        arrow={arrow}
       >
         {children}
-      </List.Item>
+      </FormItemLayout>
     );
   }
 
@@ -146,33 +148,27 @@ const Item: React.FC<FormItemProps> = props => {
 
         if (noStyle) {
           return (
-            <div
-              id={selector}
-              className={cls('m78-form_item', className)}
-              style={_style}
-              ref={innerRef}
-            >
+            <div id={selector} className={className} style={_style} ref={innerRef}>
               {child}
             </div>
           );
         }
 
         return (
-          <List.Item
+          <FormItemLayout
             id={selector}
             desc={desc}
-            extra={extra}
-            title={label}
+            label={label}
             disabled={isDisabled}
             required={isRequired}
             style={_style}
             className={className}
-            footLeft={errorString}
-            status={status}
+            errorNode={errorString}
             innerRef={innerRef}
+            arrow={arrow}
           >
             {child}
-          </List.Item>
+          </FormItemLayout>
         );
       }}
     </Field>

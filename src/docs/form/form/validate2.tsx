@@ -71,11 +71,11 @@ const Validate = () => (
     <Form.Item label="其他" name="other">
       <Input placeholder="随便输入点什么" />
     </Form.Item>
-    <Form.Footer>
+    <Form.Actions>
       <Button type="submit" color="blue">
         提交
       </Button>
-    </Form.Footer>
+    </Form.Actions>
   </Form>
 );
 

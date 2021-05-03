@@ -4,19 +4,20 @@ import _objectSpread from '@babel/runtime/helpers/objectSpread2';
 import _slicedToArray from '@babel/runtime/helpers/slicedToArray';
 import _objectWithoutProperties from '@babel/runtime/helpers/objectWithoutProperties';
 import React, { createContext, useMemo, useContext, useEffect, useRef, useState } from 'react';
-import RForm, { Field, FormProvider, List as List$1, useForm } from 'rc-field-form';
+import RForm, { Field, FormProvider, List, useForm } from 'rc-field-form';
 export { FormProvider, useForm } from 'rc-field-form';
-import { List, Title, SubTitle, Footer } from 'm78/list';
-export { Footer, List, SubTitle, Title } from 'm78/list';
 import Schema from 'async-validator';
 import { isArray, isEmpty, createRandString, isFunction, getScrollParent, triggerHighlight, checkElementVisible } from '@lxjx/utils';
 import { useScroll, useFn } from '@lxjx/hooks';
 import cls from 'clsx';
 import { createMessagesTemplate } from '@lxjx/validate-tools';
+import { ListViewItem, ListViewItemStyleEnum, ListView, ListViewTitle } from 'm78/list-view';
+export { ListViewTitle as FormTitle } from 'm78/list-view';
 import _toConsumableArray from '@babel/runtime/helpers/toConsumableArray';
 import _get from 'lodash/get';
 import { useUpdate } from 'react-use';
 import _has from 'lodash/has';
+import { DirectionEnum } from 'm78/types';
 export * from 'rc-field-form/es/interface';
 
 /** 从错误字符数组中取第一位 */
@@ -125,6 +126,63 @@ var context = /*#__PURE__*/createContext({
 });
 context.displayName = 'm78-form-context';
 
+function FormLayout(_ref) {
+  var className = _ref.className,
+      children = _ref.children,
+      _ref$layout = _ref.layout,
+      layout = _ref$layout === void 0 ? DirectionEnum.vertical : _ref$layout,
+      _ref$itemStyle = _ref.itemStyle,
+      itemStyle = _ref$itemStyle === void 0 ? ListViewItemStyleEnum.none : _ref$itemStyle,
+      style = _ref.style,
+      ppp = _objectWithoutProperties(_ref, ["className", "children", "layout", "itemStyle", "style"]);
+
+  return /*#__PURE__*/React.createElement(ListView, _extends({}, ppp, {
+    effect: false,
+    itemStyle: itemStyle,
+    className: cls('m78-form', layout && "__".concat(layout), className)
+  }), children);
+}
+function FormItemLayout(_ref2) {
+  var label = _ref2.label,
+      children = _ref2.children,
+      desc = _ref2.desc,
+      errorNode = _ref2.errorNode,
+      required = _ref2.required,
+      innerRef = _ref2.innerRef,
+      className = _ref2.className,
+      ppp = _objectWithoutProperties(_ref2, ["label", "children", "desc", "errorNode", "required", "innerRef", "className"]);
+
+  return /*#__PURE__*/React.createElement(ListViewItem, _extends({}, ppp, {
+    innerRef: innerRef,
+    className: cls('m78-form_item', className),
+    titleEllipsis: 0,
+    title: /*#__PURE__*/React.createElement("div", {
+      className: "m78-form_item-main"
+    }, label && /*#__PURE__*/React.createElement("div", {
+      className: "m78-form_item-label"
+    }, label, required && /*#__PURE__*/React.createElement("i", {
+      className: "m78-form_require-mark",
+      title: "\u5FC5\u586B\u9879"
+    }, "*")), /*#__PURE__*/React.createElement("div", {
+      className: "m78-form_item-cont"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "m78-form_item-unit-wrap"
+    }, children), (desc || errorNode) && /*#__PURE__*/React.createElement("div", {
+      className: "m78-form_item-text-wrap"
+    }, desc && /*#__PURE__*/React.createElement("div", {
+      className: "m78-form_item-text"
+    }, desc), errorNode && /*#__PURE__*/React.createElement("div", {
+      className: "m78-form_item-tips-text"
+    }, errorNode))))
+  }));
+}
+var FormActions = function FormActions(_ref3) {
+  var children = _ref3.children;
+  return /*#__PURE__*/React.createElement("div", {
+    className: "m78-form_actions"
+  }, children);
+};
+
 var Item = function Item(props) {
   /** 该字段的唯一id */
   var id = useMemo(function () {
@@ -149,7 +207,7 @@ var Item = function Item(props) {
       style = props.style,
       className = props.className,
       label = props.label,
-      extra = props.extra,
+      errorNode = props.errorNode,
       desc = props.desc,
       disabled = props.disabled,
       noStyle = props.noStyle,
@@ -160,7 +218,8 @@ var Item = function Item(props) {
       dependencies = props.dependencies,
       required = props.required,
       innerRef = props.innerRef,
-      otherProps = _objectWithoutProperties(props, ["children", "name", "style", "className", "label", "extra", "desc", "disabled", "noStyle", "visible", "valid", "dependencies", "required", "innerRef"]);
+      arrow = props.arrow,
+      otherProps = _objectWithoutProperties(props, ["children", "name", "style", "className", "label", "errorNode", "desc", "disabled", "noStyle", "visible", "valid", "dependencies", "required", "innerRef", "arrow"]);
 
   var _getFlatRules = getFlatRules(props, fullRules),
       _getFlatRules2 = _slicedToArray(_getFlatRules, 2),
@@ -202,15 +261,16 @@ var Item = function Item(props) {
   var isDisabled = disabled || contextDisabled; // 无name时仅作为布局组件使用
 
   if (!name) {
-    return /*#__PURE__*/React.createElement(List.Item, {
+    return /*#__PURE__*/React.createElement(FormItemLayout, {
       desc: desc,
-      extra: extra,
-      title: label,
+      errorNode: errorNode,
+      label: label,
       disabled: isDisabled,
       required: isRequired,
       style: _style,
       className: cls(className, '__layout'),
-      innerRef: innerRef
+      innerRef: innerRef,
+      arrow: arrow
     }, children);
   }
   /** 根据render prop参数渲染children */
@@ -262,24 +322,23 @@ var Item = function Item(props) {
     if (noStyle) {
       return /*#__PURE__*/React.createElement("div", {
         id: selector,
-        className: cls('m78-form_item', className),
+        className: className,
         style: _style,
         ref: innerRef
       }, child);
     }
 
-    return /*#__PURE__*/React.createElement(List.Item, {
+    return /*#__PURE__*/React.createElement(FormItemLayout, {
       id: selector,
       desc: desc,
-      extra: extra,
-      title: label,
+      label: label,
       disabled: isDisabled,
       required: isRequired,
       style: _style,
       className: className,
-      footLeft: errorString,
-      status: status,
-      innerRef: innerRef
+      errorNode: errorString,
+      innerRef: innerRef,
+      arrow: arrow
     }, child);
   });
 };
@@ -296,10 +355,8 @@ var BaseForm = function BaseForm(props) {
   var children = props.children,
       style = props.style,
       className = props.className,
-      notBorder = props.notBorder,
       layout = props.layout,
       column = props.column,
-      fullWidth = props.fullWidth,
       _props$disabled = props.disabled,
       disabled = _props$disabled === void 0 ? false : _props$disabled,
       _form = props.form,
@@ -310,18 +367,22 @@ var BaseForm = function BaseForm(props) {
       noStyle = props.noStyle,
       instanceRef = props.instanceRef,
       border = props.border,
-      otherProps = _objectWithoutProperties(props, ["children", "style", "className", "notBorder", "layout", "column", "fullWidth", "disabled", "form", "onValuesChange", "hideRequiredMark", "rules", "noStyle", "instanceRef", "border"]);
+      size = props.size,
+      itemStyle = props.itemStyle,
+      otherProps = _objectWithoutProperties(props, ["children", "style", "className", "layout", "column", "disabled", "form", "onValuesChange", "hideRequiredMark", "rules", "noStyle", "instanceRef", "border", "size", "itemStyle"]);
   /** 该表单的唯一id */
 
 
   var id = useMemo(function () {
-    return createRandString(2);
-  }, []);
+    return createRandString();
+  }, []); // 标记表单元素所在节点
+
   var flagEl = useRef(null);
 
   var _useForm = useForm(_form),
       _useForm2 = _slicedToArray(_useForm, 1),
-      form = _useForm2[0];
+      form = _useForm2[0]; // 首个可滚动父级
+
 
   var _useState = useState(),
       _useState2 = _slicedToArray(_useState, 2),
@@ -347,6 +408,8 @@ var BaseForm = function BaseForm(props) {
   }),
       _useState4 = _slicedToArray(_useState3, 1),
       contextValue = _useState4[0];
+  /* TODO: 节点变更时重新进行获取 */
+
 
   useEffect(function () {
     var el = getScrollParent(flagEl.current);
@@ -369,7 +432,8 @@ var BaseForm = function BaseForm(props) {
 
       isFunction(trigger) && trigger.apply(void 0, arg);
     }
-  });
+  }); // 提交验证错误时高亮第一个未通过元素
+
   var finishFailedHandle = useFn(function (arg) {
     var _props$onFinishFailed, _errorFields$;
 
@@ -407,15 +471,14 @@ var BaseForm = function BaseForm(props) {
       }, node);
     }
 
-    return /*#__PURE__*/React.createElement(List, {
-      form: true,
+    return /*#__PURE__*/React.createElement(FormLayout, {
       style: style,
-      className: cls(className, 'm78-form', contextValue.hideRequiredMark && '__hide-required-mark', !border && '__not-border'),
-      notBorder: notBorder,
+      className: cls(className, contextValue.hideRequiredMark && '__hide-required-mark'),
+      border: border,
       layout: layout,
       column: column,
-      fullWidth: fullWidth,
-      disabled: disabled
+      size: size,
+      itemStyle: itemStyle
     }, node);
   }
 
@@ -440,10 +503,9 @@ var BaseForm = function BaseForm(props) {
 var Form = Object.assign(BaseForm, {
   FormProvider: FormProvider,
   Item: Item,
-  List: List$1,
-  Title: Title,
-  SubTitle: SubTitle,
-  Footer: Footer
+  List: List,
+  Title: ListViewTitle,
+  Actions: FormActions
 });
 
-export { Form, Item };
+export { Form, FormActions, Item as FormItem };

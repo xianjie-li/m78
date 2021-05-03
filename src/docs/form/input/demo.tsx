@@ -4,7 +4,7 @@ import { Input } from 'm78/input';
 import { Button } from 'm78/button';
 
 const Demo = () => (
-  <div>
+  <div style={{ maxWidth: 576 }}>
     <div className="mt-16">
       <Input placeholder="自动获取焦点" autoFocus />
     </div>

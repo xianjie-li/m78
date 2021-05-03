@@ -33,14 +33,14 @@ const Inline = () => {
             <Input placeholder="备注" />
           </Form.Item>
         </Form.Item>
-        <Form.Footer>
+        <Form.Actions>
           <Button type="submit" color="blue">
             提交
           </Button>
-        </Form.Footer>
+        </Form.Actions>
       </Form>
 
-      <h3 style={{ marginTop: 100 }}>独立のlabel</h3>
+      <h3 style={{ marginTop: 100 }}>独立的label</h3>
 
       <Form
         onFinish={e => {
@@ -66,11 +66,11 @@ const Inline = () => {
             <Input placeholder="输入备注" />
           </Form.Item>
         </Form.Item>
-        <Form.Footer>
+        <Form.Actions>
           <Button type="submit" color="blue">
             提交
           </Button>
-        </Form.Footer>
+        </Form.Actions>
       </Form>
 
       <h3 style={{ marginTop: 100 }}>横向布局</h3>
@@ -104,11 +104,11 @@ const Inline = () => {
             <Input placeholder="填写备注" />
           </Form.Item>
         </Form.Item>
-        <Form.Footer>
+        <Form.Actions>
           <Button type="submit" color="blue">
             提交
           </Button>
-        </Form.Footer>
+        </Form.Actions>
       </Form>
     </div>
   );

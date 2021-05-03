@@ -21,6 +21,8 @@ function InternalListView(props: ListViewProps) {
     effect = true,
     column,
     itemStyle = ListViewItemStyleEnum,
+    className,
+    style,
   } = props;
 
   const hasColumn = column && column > 1;
@@ -30,12 +32,14 @@ function InternalListView(props: ListViewProps) {
   return (
     <Provider value={props}>
       <div
-        className={classNames('m78-list-view', size && `__${size}`, {
+        className={classNames('m78-list-view', className, size && `__${size}`, {
           __border: border,
           __effect: effect,
           '__item-border': isBorderItem,
           '__split-line': isSplitItem && !hasColumn,
+          __column: hasColumn,
         })}
+        style={style}
       >
         {children}
       </div>
@@ -53,6 +57,9 @@ function InternalListViewItem({
   titleEllipsis = 1,
   descEllipsis = 2,
   disabled,
+  className,
+  style,
+  innerRef,
   ...ppp
 }: ListViewItemProps) {
   const { column } = useContext(context);
@@ -61,8 +68,9 @@ function InternalListViewItem({
 
   return (
     <Tile
-      style={{ width: hasColumn ? `calc(${100 / column!}% - 8px)` : undefined }}
-      className={classNames('m78-list-view_item', disabled && '__disabled')}
+      innerRef={innerRef}
+      style={{ width: hasColumn ? `calc(${100 / column!}% - 8px)` : undefined, ...style }}
+      className={classNames('m78-list-view_item', className, disabled && '__disabled')}
       title={titleEllipsis ? <Ellipsis line={titleEllipsis}>{title}</Ellipsis> : title}
       desc={desc && <Ellipsis line={descEllipsis}>{desc}</Ellipsis>}
       leading={leading}
@@ -80,9 +88,12 @@ function InternalListViewItem({
   );
 }
 
-function InternalListViewTitle({ subTile, children }: ListViewTitleProps) {
+function InternalListViewTitle({ subTile, children, desc }: ListViewTitleProps) {
   return (
-    <div className={classNames('m78-list-view_title', subTile && '__sub-title')}>{children}</div>
+    <div className={classNames('m78-list-view_title', subTile && '__sub-title')}>
+      <div>{children}</div>
+      {desc && <div className="m78-list-view_title-desc">{desc}</div>}
+    </div>
   );
 }
 

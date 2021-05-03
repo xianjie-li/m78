@@ -17,8 +17,10 @@ interface FlexProps extends ComponentBasePropsWithAny {
     align?: FlexWrapProps['crossAlign'];
     /** 内容 */
     children?: React.ReactNode;
+    /** 指向内部包裹dom的ref */
+    innerRef?: React.Ref<HTMLDivElement>;
 }
-declare const Column: ({ children, style, className, mainAlign, crossAlign, ...ppp }: FlexWrapProps) => JSX.Element;
-declare const Row: ({ children, style, className, mainAlign, crossAlign, ...ppp }: FlexWrapProps) => JSX.Element;
+declare const Column: ({ children, style, className, mainAlign, crossAlign, innerRef, ...ppp }: FlexWrapProps) => JSX.Element;
+declare const Row: ({ children, style, className, mainAlign, crossAlign, innerRef, ...ppp }: FlexWrapProps) => JSX.Element;
 declare const Flex: ({ flex, children, order, style, className, align, ...ppp }: FlexProps) => JSX.Element;
 export { Column, Row, Flex, FlexWrapProps };

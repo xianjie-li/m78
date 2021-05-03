@@ -1,46 +1,137 @@
 @import '../../style/index';
 
 .m78-form {
+  font-size: 16px;
+  padding-bottom: 16px !important;
+
+  > form {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .m78-list-view_title {
+    padding: var(--m78-space-3);
+    padding-bottom: 0;
+  }
+
   &.__hide-required-mark {
-    .m78-list_require {
+    .m78-form_require-mark {
       display: none;
     }
   }
 
-  // 为noStyle定制简单样式
-  &_item {
-    //position: relative;
-    //display: inline-block;
-    //vertical-align: top;
-    //
-    //& + & {
-    //  margin-left: 12px;
-    //}
-    //
-    //&-extra {
-    //  font-size: var(--m78-fs);
-    //  color: $color-error;
-    //}
-    //
-    //&-mark {
-    //  line-height: 1;
-    //  position: absolute !important;
-    //  right: -4px;
-    //  top: -12px !important;
-    //}
+  &.__split-line, &.__item-border {
+    .m78-list-view_item {
+      padding: var(--m78-space-3);
+    }
   }
 
-  //&:hover {
-  //  .m78-form_setting {
-  //    visibility: visible;
-  //    opacity: 1;
-  //  }
-  //}
-  //
-  //&_setting {
-  //  position: absolute !important;
-  //  right: -18px;
-  //  top: 4px;
-  //  cursor: pointer;
-  //}
+  &.__horizontal {
+    max-width: 600px;
+
+    .m78-form_item-main {
+      display: flex;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .m78-form_item-label {
+      margin-right: 20px;
+      padding-top: 3px;
+      width: 5em;
+      text-align: right;
+    }
+
+    .m78-form_actions {
+      margin-left: 20px;
+      padding-left: calc(5em + 12px);
+    }
+  }
+
+  &.__vertical {
+    max-width: 480px;
+
+    .m78-form_item-label {
+      margin-bottom: 4px;
+    }
+  }
+
+  &.__column {
+    max-width: 100%;
+
+    &.__horizontal .m78-form_item-label {
+      width: 4em;
+      margin-right: 16px;
+    }
+  }
+
+  // 增加命中层级
+  .m78-form_item {
+    padding: var(--m78-space-3);
+    padding-bottom: 0;
+    align-items: flex-start;
+  }
+
+  &_item {
+    .m78-tile_title {
+      font-size: 16px;
+    }
+
+    &-text-wrap {
+      margin-top: 4px;
+    }
+
+    &-text {
+      width: 100%;
+      font-size: var(--m78-fs);
+      color: var(--m78-color-second);
+    }
+
+    &-tips-text {
+      color: var(--m78-color-error);
+      font-size: var(--m78-fs);
+    }
+
+    &-label {
+      margin-bottom: 4px;
+    }
+
+    &-unit-wrap {
+      display: flex;
+
+      .m78-form_item {
+        padding: 0 !important;
+        border: none !important;
+      }
+
+      > .m78-form_item + .m78-form_item {
+        margin-left: 12px;
+      }
+
+      .m78-form_item::before {
+        display: none;
+      }
+    }
+
+    &-main {
+
+    }
+
+    &-cont {
+      flex: 1;
+    }
+  }
+
+  &_require-mark {
+    position: absolute;
+    color: var(--m78-color-error);
+    font-weight: 700;
+  }
+
+  &_actions {
+    padding: var(--m78-space-3);
+    padding-top: 16px;
+    width: 100%;
+  }
 }

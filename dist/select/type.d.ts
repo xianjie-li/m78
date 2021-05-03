@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormLikeWithExtra } from '@lxjx/hooks';
 import { PopperDirectionEnum, PopperDirectionKeys, PopperTriggerType } from 'm78/popper';
-import { ComponentBaseProps, FullSize, Status } from 'm78/types';
+import { ComponentBaseProps, FullSizeKeys, StatusKeys } from 'm78/types';
 export interface SelectOptionItem {
     /** 类目名, 如果不传入，将使用value作为label */
     label?: string;
@@ -102,9 +102,9 @@ export interface SelectProps<ValType, Options = any> extends ComponentBaseProps,
     /** 禁用指定选项 */
     disabledOption?: any[];
     /** 尺寸 */
-    size?: FullSize;
+    size?: FullSizeKeys;
     /** 状态，不同状态会以不同的功能色展示 */
-    status?: Status;
+    status?: StatusKeys;
 }
 /** 约定内部选项Item的入参 */
 export interface RenderItemData {

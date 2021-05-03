@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Item } from 'm78/form';
+import { Form, FormItem } from 'm78/form';
 import { Input } from 'm78/input';
 import { Button } from 'm78/button';
 import { DeleteOutlined } from 'm78/icon';
@@ -14,19 +14,24 @@ const List = () => (
     <Form.Item label="你的名字" name="name" required>
       <Input placeholder="输入名字" />
     </Form.Item>
-    <Item label="家庭关系" name="friends" required>
+    <FormItem label="家庭关系" name="friends" required>
       <Form.List name="friends">
         {(fields, operations) => (
           <div style={{ width: '100%' }}>
             {fields.map((filed, index) => (
-              <Form.Item key={filed.key}>
+              <Form.Item key={filed.key} className="mt-12">
                 <Form.Item name={[filed.name, 'name']} required>
                   <Input placeholder="姓名" />
                 </Form.Item>
                 <Form.Item name={[filed.name, 'age']} required>
                   <Input placeholder="年龄" />
                 </Form.Item>
-                <Button icon className="ml-16" onClick={() => operations.remove(index)}>
+                <Button
+                  icon
+                  className="ml-16"
+                  onClick={() => operations.remove(index)}
+                  style={{ flex: '0 0 auto' }}
+                >
                   <DeleteOutlined />
                 </Button>
               </Form.Item>
@@ -37,12 +42,12 @@ const List = () => (
           </div>
         )}
       </Form.List>
-    </Item>
-    <Form.Footer>
+    </FormItem>
+    <Form.Actions>
       <Button type="submit" color="blue">
         提交
       </Button>
-    </Form.Footer>
+    </Form.Actions>
   </Form>
 );
 

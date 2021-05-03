@@ -1,4 +1,4 @@
-import { Form, Item } from 'm78/form';
+import { Form, FormItem } from 'm78/form';
 import React, { useState } from 'react';
 import { Input } from 'm78/input';
 import { Button } from 'm78/button';
@@ -22,7 +22,7 @@ const Demo = () => {
       }}
     >
       {/* <Form.Title title="基础表单" /> */}
-      <Item
+      <FormItem
         dependencies={['age']}
         valid={(namePath, form) => form.getFieldValue('age') !== '3'}
         name="name"
@@ -42,40 +42,40 @@ const Demo = () => {
         }}
       >
         <Input />
-      </Item>
-      <Item name="age" label="年龄">
+      </FormItem>
+      <FormItem name="age" label="年龄">
         <Input />
-      </Item>
-      <Item label="地址">
-        <Item
+      </FormItem>
+      <FormItem label="地址">
+        <FormItem
           noStyle
           style={{ width: 178, marginRight: 12 }}
           name={['address', 'shen']}
           rules={[{ required: true }]}
         >
           <Input />
-        </Item>
-        <Item noStyle style={{ width: 178 }} name={['address', 'name']}>
+        </FormItem>
+        <FormItem noStyle style={{ width: 178 }} name={['address', 'name']}>
           <Input />
-        </Item>
-      </Item>
-      <Item label="朋友">
+        </FormItem>
+      </FormItem>
+      <FormItem label="朋友">
         <Form.List name="friends">
           {(fields, operations) => (
             <div>
               {fields.map(filed => (
                 <div key={filed.key} className="mt-12">
-                  <Item
+                  <FormItem
                     noStyle
                     style={{ width: 178, marginRight: 12 }}
                     name={[filed.name, 'name']}
                     required
                   >
                     <Input />
-                  </Item>
-                  <Item noStyle style={{ width: 178 }} name={[filed.name, 'age']} required>
+                  </FormItem>
+                  <FormItem noStyle style={{ width: 178 }} name={[filed.name, 'age']} required>
                     <Input />
-                  </Item>
+                  </FormItem>
                   <Button icon onClick={() => operations.remove(filed.name)}>
                     <CloseCircleOutlined />
                   </Button>
@@ -87,13 +87,14 @@ const Demo = () => {
             </div>
           )}
         </Form.List>
-      </Item>
-      <Form.Footer>
+      </FormItem>
+
+      <Form.Actions>
         <Button type="submit" color="blue">
           submit
         </Button>
         <Button onClick={() => setShow(prev => !prev)}>click</Button>
-      </Form.Footer>
+      </Form.Actions>
     </Form>
   );
 };

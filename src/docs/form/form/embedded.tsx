@@ -29,11 +29,11 @@ const Embedded = () => (
         <Input placeholder="备注" />
       </Form.Item>
     </Form.Item>
-    <Form.Footer>
+    <Form.Actions>
       <Button type="submit" color="blue">
         提交
       </Button>
-    </Form.Footer>
+    </Form.Actions>
   </Form>
 );
 

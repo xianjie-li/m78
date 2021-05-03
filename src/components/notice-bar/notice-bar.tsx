@@ -7,7 +7,7 @@ import { lineStatusIcons, CloseOutlined } from 'm78/icon';
 import { If } from 'm78/fork';
 import { Button } from 'm78/button';
 import cls from 'clsx';
-import { ComponentBaseProps, Status } from 'm78/types';
+import { ComponentBaseProps, StatusKeys } from 'm78/types';
 
 export interface NoticeBarProps extends ComponentBaseProps {
   /** 关闭回调 */
@@ -21,7 +21,7 @@ export interface NoticeBarProps extends ComponentBaseProps {
   /** 详细说明文本 */
   desc?: React.ReactNode;
   /** 状态 */
-  status?: Status;
+  status?: StatusKeys;
   /** 定位到元素最顶部 */
   fixedTop?: boolean;
   /** 替换右侧关闭图标的内容 */

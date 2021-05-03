@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import { PopperPropsCustom } from 'm78/popper';
 import { ListChildComponentProps } from 'react-window';
 import { RenderItemData, SelectCustomTag, SelectOptionItem, SelectProps } from './type';

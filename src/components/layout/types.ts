@@ -13,4 +13,6 @@ export interface TileProps
   trailing?: React.ReactNode;
   /** 纵轴的对齐方式 */
   crossAlign?: FlexWrapProps['crossAlign'];
+  /** 指向内部包裹dom的ref */
+  innerRef?: React.Ref<HTMLDivElement>;
 }

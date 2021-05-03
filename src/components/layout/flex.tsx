@@ -20,6 +20,8 @@ interface FlexProps extends ComponentBasePropsWithAny {
   align?: FlexWrapProps['crossAlign'];
   /** 内容 */
   children?: React.ReactNode;
+  /** 指向内部包裹dom的ref */
+  innerRef?: React.Ref<HTMLDivElement>;
 }
 
 function getClasses(
@@ -39,12 +41,21 @@ function getClasses(
   return styObj;
 }
 
-const Column = ({ children, style, className, mainAlign, crossAlign, ...ppp }: FlexWrapProps) => {
+const Column = ({
+  children,
+  style,
+  className,
+  mainAlign,
+  crossAlign,
+  innerRef,
+  ...ppp
+}: FlexWrapProps) => {
   return (
     <div
       {...ppp}
       className={cls('m78-column', className, getClasses(mainAlign, crossAlign))}
       style={style}
+      ref={innerRef}
     >
       {children}
     </div>
@@ -57,11 +68,13 @@ const Row = ({
   className,
   mainAlign,
   crossAlign = 'start',
+  innerRef,
   ...ppp
 }: FlexWrapProps) => {
   return (
     <div
       {...ppp}
+      ref={innerRef}
       className={cls('m78-row', className, getClasses(mainAlign, crossAlign))}
       style={style}
     >

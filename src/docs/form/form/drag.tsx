@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Item } from 'm78/form';
+import { Form, FormItem } from 'm78/form';
 import { Input } from 'm78/input';
 import { DND, DNDContext } from 'm78/dnd';
 import { isTruthyOrZero } from '@lxjx/utils';
@@ -19,7 +19,7 @@ const Drag = () => {
         <Form.Item label="你的名字" name="name" required>
           <Input placeholder="输入名字" />
         </Form.Item>
-        <Item label="家庭关系" name="friends" required>
+        <FormItem label="家庭关系" name="friends" required>
           <Form.List name="friends">
             {(fields, operations) => (
               <DNDContext
@@ -39,7 +39,7 @@ const Drag = () => {
                       {({ innerRef, handleRef, status }) => (
                         <Form.Item
                           innerRef={innerRef}
-                          className={classNames('m78-dnd-box', {
+                          className={classNames('m78-dnd-box mt-12', {
                             // 禁用、拖动到中间的状态
                             __active: status.dragOver,
                             __disabled: status.dragging,
@@ -51,27 +51,34 @@ const Drag = () => {
                           <Form.Item name={[filed.name, 'age']} required>
                             <Input placeholder="年龄" />
                           </Form.Item>
-                          <Button icon className="ml-16" onClick={() => operations.remove(index)}>
+                          <Button
+                            icon
+                            className="ml-16"
+                            onClick={() => operations.remove(index)}
+                            style={{ flex: '0 0 auto' }}
+                          >
                             <DeleteOutlined />
                           </Button>
-                          <Button innerRef={handleRef} icon>
+                          <Button innerRef={handleRef} icon style={{ flex: '0 0 auto' }}>
                             <DragOutlined />
                           </Button>
                         </Form.Item>
                       )}
                     </DND>
                   ))}
-                  <Button onClick={() => operations.add()}>添加</Button>
+                  <Button className="mt-12" onClick={() => operations.add()}>
+                    添加
+                  </Button>
                 </div>
               </DNDContext>
             )}
           </Form.List>
-        </Item>
-        <Form.Footer>
+        </FormItem>
+        <Form.Actions>
           <Button type="submit" color="blue">
             提交
           </Button>
-        </Form.Footer>
+        </Form.Actions>
       </Form>
     </div>
   );

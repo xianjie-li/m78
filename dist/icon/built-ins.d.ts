@@ -1,3 +1,4 @@
+/// <reference types="react" />
 export declare const Empty: (props: any) => JSX.Element;
 export declare const Success: (props: any) => JSX.Element;
 export declare const Warning: (props: any) => JSX.Element;

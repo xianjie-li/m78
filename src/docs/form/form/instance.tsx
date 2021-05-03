@@ -29,7 +29,7 @@ const Instance = () => {
         <Form.Item label="密码" name="psw" required>
           <Input />
         </Form.Item>
-        <Form.Footer>
+        <Form.Actions>
           <Button
             onClick={() => {
               form.submit();
@@ -68,7 +68,7 @@ const Instance = () => {
           >
             重置
           </Button>
-        </Form.Footer>
+        </Form.Actions>
       </Form>
     </div>
   );

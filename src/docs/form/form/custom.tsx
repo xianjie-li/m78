@@ -35,11 +35,11 @@ const Custom = () => {
       <Form.Item noStyle label="密码" name="psw" required>
         {customRender}
       </Form.Item>
-      <Form.Footer>
+      <Form.Actions>
         <Button type="submit" color="blue">
           提交
         </Button>
-      </Form.Footer>
+      </Form.Actions>
     </Form>
   );
 };

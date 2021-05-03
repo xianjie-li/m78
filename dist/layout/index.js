@@ -189,9 +189,11 @@ var Tile = function Tile(_ref) {
       leading = _ref.leading,
       trailing = _ref.trailing,
       crossAlign = _ref.crossAlign,
-      ppp = _objectWithoutProperties(_ref, ["className", "title", "desc", "leading", "trailing", "crossAlign"]);
+      innerRef = _ref.innerRef,
+      ppp = _objectWithoutProperties(_ref, ["className", "title", "desc", "leading", "trailing", "crossAlign", "innerRef"]);
 
   return /*#__PURE__*/React.createElement(Row$1, _extends({}, ppp, {
+    innerRef: innerRef,
     className: cls('m78-tile', className),
     crossAlign: crossAlign
   }), leading && /*#__PURE__*/React.createElement("div", {
@@ -227,11 +229,13 @@ var Column = function Column(_ref) {
       className = _ref.className,
       mainAlign = _ref.mainAlign,
       crossAlign = _ref.crossAlign,
-      ppp = _objectWithoutProperties(_ref, ["children", "style", "className", "mainAlign", "crossAlign"]);
+      innerRef = _ref.innerRef,
+      ppp = _objectWithoutProperties(_ref, ["children", "style", "className", "mainAlign", "crossAlign", "innerRef"]);
 
   return /*#__PURE__*/React.createElement("div", _extends({}, ppp, {
     className: cls('m78-column', className, getClasses(mainAlign, crossAlign)),
-    style: style
+    style: style,
+    ref: innerRef
   }), children);
 };
 
@@ -242,9 +246,11 @@ var Row = function Row(_ref2) {
       mainAlign = _ref2.mainAlign,
       _ref2$crossAlign = _ref2.crossAlign,
       crossAlign = _ref2$crossAlign === void 0 ? 'start' : _ref2$crossAlign,
-      ppp = _objectWithoutProperties(_ref2, ["children", "style", "className", "mainAlign", "crossAlign"]);
+      innerRef = _ref2.innerRef,
+      ppp = _objectWithoutProperties(_ref2, ["children", "style", "className", "mainAlign", "crossAlign", "innerRef"]);
 
   return /*#__PURE__*/React.createElement("div", _extends({}, ppp, {
+    ref: innerRef,
     className: cls('m78-row', className, getClasses(mainAlign, crossAlign)),
     style: style
   }), children);

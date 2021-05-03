@@ -3,7 +3,7 @@ import React from 'react';
 import { Input } from 'm78/input';
 
 const Demo2 = () => (
-  <div>
+  <div style={{ maxWidth: 576 }}>
     <div className="mt-16">
       <Input placeholder="只能输入整数、浮点数" type="number" />
     </div>

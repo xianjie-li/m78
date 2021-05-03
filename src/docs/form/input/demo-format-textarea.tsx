@@ -3,7 +3,7 @@ import React from 'react';
 import { Input } from 'm78/input';
 
 const Demo3 = () => (
-  <div>
+  <div style={{ maxWidth: 576 }}>
     <div className="mt-16">
       <Input placeholder="多行输入+最大长度+自动计算高度" textArea maxLength={400} status="error" />
     </div>

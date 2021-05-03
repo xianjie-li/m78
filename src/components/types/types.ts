@@ -12,7 +12,7 @@ export interface ComponentBaseProps {
   style?: React.CSSProperties;
 }
 
-export type Status = 'info' | 'success' | 'warning' | 'error';
+export type StatusKeys = 'info' | 'success' | 'warning' | 'error';
 
 export enum StatusEnum {
   info = 'info',
@@ -21,7 +21,7 @@ export enum StatusEnum {
   error = 'error',
 }
 
-export type Size = 'large' | 'small';
+export type SizeKeys = 'large' | 'small';
 
 /* 40 | 32 | 24 */
 export enum SizeEnum {
@@ -29,7 +29,7 @@ export enum SizeEnum {
   small = 'small',
 }
 
-export type FullSize = 'big' | Size;
+export type FullSizeKeys = 'big' | SizeKeys;
 
 export enum FullSizeEnum {
   large = 'large',
@@ -37,12 +37,16 @@ export enum FullSizeEnum {
   big = 'big',
 }
 
+export type PositionKeys = 'left' | 'top' | 'right' | 'bottom';
+
 export enum PositionEnum {
   left = 'left',
   top = 'top',
   right = 'right',
   bottom = 'bottom',
 }
+
+export type DirectionKeys = 'horizontal' | 'vertical';
 
 export enum DirectionEnum {
   horizontal = 'horizontal',

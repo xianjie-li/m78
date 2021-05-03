@@ -1,5 +1,5 @@
 import { FormLikeWithExtra, SetState, UseCheckReturns } from '@lxjx/hooks';
-import { ComponentBaseProps, DataSourceItem, Size } from 'm78/types';
+import { ComponentBaseProps, DataSourceItem, SizeKeys } from 'm78/types';
 import React from 'react';
 import { ListChildComponentProps } from 'react-window';
 import { DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
@@ -58,7 +58,7 @@ export interface TreeProps extends ComponentBaseProps {
     /** 自定义展开标识图标, 如果将className添加到节点上，会在展开时将其旋转90deg, 也可以通过open自行配置 */
     expansionIcon?: React.ReactNode | ((open: boolean, className: string) => React.ReactNode);
     /** 尺寸 */
-    size?: Size;
+    size?: SizeKeys;
     /** 节点项的基础高度，传入时覆盖size选项的默认项高度 */
     itemHeight?: number;
     /** 缩进格和前导图标容器的宽度，传入时覆盖size选项的默认宽度 */

@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import { ComponentBaseProps } from 'm78/types';
 interface DividerProps extends ComponentBaseProps {
     /** false | 设置为垂直分割线 */

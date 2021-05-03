@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import { ContextMenuItemProps, ContextMenuProps } from './types';
 declare const ContextMenu: {
     ({ content, customer, className, style, children }: ContextMenuProps): JSX.Element;

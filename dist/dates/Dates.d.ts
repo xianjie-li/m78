@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import { DatesProps, DatesRangeProps } from './type';
 declare function Dates(props: DatesProps): JSX.Element;
 declare namespace Dates {

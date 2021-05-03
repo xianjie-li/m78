@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import 'm78/base';
 import { ButtonPropsWithHTMLButton, ButtonPropsWithHTMLLink } from './type';
 declare function Button(btnProps: ButtonPropsWithHTMLLink): JSX.Element;

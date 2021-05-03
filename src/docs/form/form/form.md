@@ -7,7 +7,7 @@ group:
 
 # Form 表单
 
-与 antd 一样通过底层库 [rc-field-form](https://github.com/react-component/field-form) 进行封装, 为了减少学习和使用成本，表单层面的 api 会大体上 **使用&表现** 一致，对验证体验/表单联动/表单行为等进行了优化，更简单易用。
+与 antd 使用同一底层库 [rc-field-form](https://github.com/react-component/field-form) 进行封装, api使用大体上一致，但额外对验证体验/表单联动/布局方式等进行了优化，更简单易用。
 
 ## 基本使用
 
@@ -103,30 +103,33 @@ group:
 interface FormProps<Values = any> {
   /** false | 隐藏所有必选标记 */
   hideRequiredMark?: boolean;
-  /** 直接传入rules配置来进行表单验证 */
+  /** 同表单级别的配置来进行验证 */
   rules?: {
     [key: string]: Rule | Rule[];
   };
-  /** 关闭默认的样式，开启后只会保护一个无样式的包裹容器，并且column、layout等布局配置失效，不会影响FormItem的样式 */
+  /** 关闭默认的样式，开启后只会包含一个无样式的包裹容器，并且column、layout等布局配置失效，不会影响FormItem的样式 */
   noStyle?: boolean;
-  /** 是否启用带边框的布局` */
-  border?: boolean;
-  /** 获取表单控制实例 */
+  /** 向表单控件传递disabled */
+  disabled?: boolean;
+  /** 获取表单实例 */
   instanceRef?: React.Ref<FormInstance<Values>>;
-  /** false | 是否去掉列表项边框 */
-  notBorder?: boolean;
   /** 'vertical' | 横向表单/纵向表单 */
   layout?: 'horizontal' | 'vertical';
-  /** 1 | 当大于1时，表单为多列模式 */
+  /** 多列模式 */
   column?: number;
-  /** false | 不限制最大宽度 */
-  fullWidth?: boolean;
-  /** false | 禁用(样式层面) */
-  disabled?: boolean;
+  /** 调整布局紧凑程度、字号等 */
+  size?: SizeEnum | Size;
+  /** false | 列表容器显示边框 */
+  border?: boolean;
+  /**
+   * 'splitLine' | 项的基础样式类型
+   * - splitLine模式在开启了多列的情况下无效
+   * */
+  itemStyle?: 'splitLine' | 'border' | 'none' | ListViewItemStyleEnum;
 
   /** 表单初始值 */
   initialValues?: Store;
-  /** 通过useForm获取表单实例 */
+  /** 通过useForm设置表单实例 */
   form?: FormInstance<Values>;
   /** 子元素，支持render props(不推荐) */
   children?: RenderProps | React.ReactNode;
@@ -160,24 +163,28 @@ interface FormProps<Values = any> {
 
 ### **`Item`**
 
-有关验证字段的配置，这里只做例举，具体请参考 [async-validator](https://github.com/yiminghe/async-validator/)
+有关验证字段的配置，这里只做例举，详情请参考 [async-validator](https://github.com/yiminghe/async-validator/)
 
 ```ts
 interface FormItemProps {
   /**
    * 一个作为表单控件的直接子元素, 需要支持value/onChange接口或通过自己配置相关key
    * - 可以通过FormRenderChild和可选的noStyle手动实现更精细的状态和样式控制
-   * - 如果传入的不是合法的ReactElement或FormRenderChild, 会不做任何处理直接渲染
+   * - 如果传入一组FormItem，会使其作为布局组件使用
    * */
   children: React.ReactElement | FormRenderChild | React.ReactNode;
-  /** 表单项标题 */
+  /** 标题 */
   label?: string;
-  /** 位于输入控件下方的描述文本 */
-  extra?: React.ReactNode;
-  /** 位于输入控件上方的描述文本 */
+  /** 表单项的描述 */
   desc?: React.ReactNode;
-  /** 禁用表单，如果表单控件不识别disabled属性，此项仅在样式上表现为"禁用" */
+  /** 禁用（视觉禁用） */
   disabled?: boolean;
+  /** 标记该项为必填项（标题后会带红色*号） */
+  required?: boolean;
+  /** 指向内部包裹dom的ref */
+  innerRef?: React.Ref<HTMLDivElement>;
+  /** 显示右侧箭头 */
+  arrow?: boolean;
   /**
    * 禁用样式/默认的验证样式，直接渲染表单控件, 只包含一个无样式的包装容器，可通过className和style控制容器样式
    * - 一般启用此项后都会通过children: FormRenderChild 自定义布局、验证样式
@@ -193,36 +200,71 @@ interface FormItemProps {
   /** 包裹元素样式 */
   style?: React.CSSProperties;
 
-  /**
-   * Set up `dependencies` field.
-   * When dependencies field update and current field is touched,
-   * will trigger validate rules and render.
-   */
+  /** 表单名路径 */
+  name?: NamePath;
+  /** 如果依赖项变化会触发重新render */
   dependencies?: NamePath[];
+  /** 指定如何从事件中获取值 */
   getValueFromEvent?: (...args: EventArgs) => StoreValue;
-  name?: InternalNamePath;
+  /** 用于在值更新前对其进行处理 */
   normalize?: (value: StoreValue, prevValue: StoreValue, allValues: Store) => StoreValue;
+  /** 验证规则 */
   rules?: Rule[];
+  /** 判断字段是否应该更新 */
   shouldUpdate?: ShouldUpdate;
+  /** 指定用于更新值的事件触发器 */
   trigger?: string;
+  /** 配置规则触发的时机对应的事件 */
+  validateTrigger?: string | string[] | false;
+  /** 在某个值验证失败时中断后续验证器执行 */
   validateFirst?: boolean | 'parallel';
+  /** 配置值映射到的属性, 如使用checkbox时应设置 valuePropName="checked" */
   valuePropName?: string;
+  /** valuePropName的函数形式 */
   getValueProps?: (value: StoreValue) => object;
+  /** 为ruleMesage配置额外的模板变量 */
   messageVariables?: Record<string, string>;
+  /** 初始值，优先级小于form中设置的initialValue */
   initialValue?: any;
   onReset?: () => void;
   preserve?: boolean;
 
-  enum?: StoreValue[];
-  len?: number;
-  max?: number;
-  message?: string | ReactElement;
-  min?: number;
-  pattern?: RegExp;
-  required?: boolean;
-  transform?: (value: StoreValue) => StoreValue;
+  /** 
+   验证类型, 包含一下可选值
+   string：必须为字符串类型。 这是默认类型。
+   number：必须为数字类型。
+   boolean：必须为布尔值类型。
+   method：必须为函数类型。
+   regexp：必须是RegExp的实例，或者是在创建新RegExp时不会生成异常的字符串。
+   integer：必须为数字类型和整数。
+   float：必须是数字类型和浮点数。
+   array：必须是由Array.isArray确定的数组。
+   object：必须为object类型，而不是Array.isArray。
+   enum：值必须存在于枚举中。
+   date：值必须由Date对象确定有效
+   url：必须为url类型。
+   hex：必须为十六进制类型。
+   email：必须为电子邮件类型。
+   any：可以是任何类型。
+   * 
+   * */
   type?: RuleType;
+  /** 值只能为列表中指定的 */
+  enum?: StoreValue[];
+  /** 验证字段的确切长度。 对于字符串和数组类型，将对length属性进行比较，对于数字类型，此属性表示该数字的精确匹配 */
+  len?: number;
+  /** 使用min和max属性定义范围。 对于字符串和数组类型，将对length进行比较，对于数字类型，数字不得小于min或大于max */
+  max?: number;
+  min?: number;
+  /** 定义验证消息 */
+  message?: string | ReactElement;
+  /** 指定需要通过验证的正则表达式 */
+  pattern?: RegExp;
+  /** 在验证之前转换值 */
+  transform?: (value: StoreValue) => StoreValue;
+  /** 自定义指定字段的验证函数 */
   validator?: Validator;
+  /** 默认将只包含空格的必填字段视为错误， 此项用于控制此行为 */
   whitespace?: boolean;
 }
 ```
@@ -255,7 +297,3 @@ interface ListProps {
   children?: (fields: ListField[], operations: ListOperations) => JSX.Element | React.ReactNode;
 }
 ```
-
-### **布局组件**
-
-`Title`, `SubTitle`, `Footer`与[list](/docs/view/list)中相关组件一样，请查看

@@ -1,18 +1,18 @@
 import React from 'react';
 import { FormProvider, List as FormList } from 'rc-field-form';
-import { List, Title, SubTitle, Footer } from 'm78/list';
+import { ListViewTitle as FormTitle } from 'm78/list-view';
 import { FormProps } from './type';
-import Item from './item';
+import FormItem from './item';
+import { FormActions } from './layout';
 declare const BaseForm: React.FC<FormProps>;
 declare type Form = typeof BaseForm;
 interface FormWithExtra extends Form {
     FormProvider: typeof FormProvider;
-    Item: typeof Item;
+    Item: typeof FormItem;
     List: typeof FormList;
-    Title: typeof Title;
-    SubTitle: typeof SubTitle;
-    Footer: typeof Footer;
+    Title: typeof FormTitle;
+    Actions: typeof FormActions;
 }
 declare const Form: FormWithExtra;
-export { FormProvider, Item, List, Title, SubTitle, Footer };
+export { FormProvider, FormItem, FormTitle, FormActions };
 export default Form;

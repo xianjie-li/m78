@@ -3,9 +3,23 @@ import { Row } from 'm78/layout';
 import cls from 'clsx';
 import { TileProps } from './types';
 
-const Tile = ({ className, title, desc, leading, trailing, crossAlign, ...ppp }: TileProps) => {
+const Tile = ({
+  className,
+  title,
+  desc,
+  leading,
+  trailing,
+  crossAlign,
+  innerRef,
+  ...ppp
+}: TileProps) => {
   return (
-    <Row {...ppp} className={cls('m78-tile', className)} crossAlign={crossAlign}>
+    <Row
+      {...ppp}
+      innerRef={innerRef}
+      className={cls('m78-tile', className)}
+      crossAlign={crossAlign}
+    >
       {leading && <div className="m78-tile_leading">{leading}</div>}
       <div className="m78-tile_main">
         {title && <div className="m78-tile_title">{title}</div>}

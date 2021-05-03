@@ -1,18 +1,18 @@
 import React from 'react';
 import { TileProps } from 'm78/layout';
-import { SizeEnum, Size } from 'm78/types';
+import { SizeEnum, SizeKeys, ComponentBaseProps } from 'm78/types';
 export declare enum ListViewItemStyleEnum {
     splitLine = "splitLine",
     border = "border",
     none = "none"
 }
-export interface ListViewProps {
+export interface ListViewProps extends ComponentBaseProps {
     /** 内容, 通常是一组ListViewItem */
     children: React.ReactNode;
     /** 多列模式 */
     column?: number;
     /** 调整布局紧凑程度、字号等 */
-    size?: SizeEnum | Size;
+    size?: SizeEnum | SizeKeys;
     /** false | 列表容器显示边框 */
     border?: boolean;
     /**
@@ -40,4 +40,6 @@ export interface ListViewTitleProps {
     subTile?: boolean;
     /** 标题内容 */
     children?: React.ReactNode;
+    /** 描述信息 */
+    desc?: React.ReactNode;
 }

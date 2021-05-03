@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentBaseProps, Status } from 'm78/types';
+import { ComponentBaseProps, StatusKeys } from 'm78/types';
 export interface NoticeBarProps extends ComponentBaseProps {
     /** 关闭回调 */
     onClose?(): void;
@@ -12,7 +12,7 @@ export interface NoticeBarProps extends ComponentBaseProps {
     /** 详细说明文本 */
     desc?: React.ReactNode;
     /** 状态 */
-    status?: Status;
+    status?: StatusKeys;
     /** 定位到元素最顶部 */
     fixedTop?: boolean;
     /** 替换右侧关闭图标的内容 */

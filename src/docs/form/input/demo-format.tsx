@@ -10,7 +10,7 @@ const Demo = () => {
   const [customVal, setCustomVal] = useState('80');
 
   return (
-    <div>
+    <div style={{ maxWidth: 576 }}>
       <div className="mt-16">
         <h2>内置的格式化类型</h2>
         <p>

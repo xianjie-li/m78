@@ -1,5 +1,6 @@
 import 'm78/list-view/style';
 import _extends from '@babel/runtime/helpers/extends';
+import _objectSpread from '@babel/runtime/helpers/objectSpread2';
 import _objectWithoutProperties from '@babel/runtime/helpers/objectWithoutProperties';
 import React, { createContext, useContext } from 'react';
 import { Tile } from 'm78/layout';
@@ -23,22 +24,27 @@ function InternalListView(props) {
   var children = props.children,
       border = props.border,
       size = props.size,
-      effect = props.effect,
+      _props$effect = props.effect,
+      effect = _props$effect === void 0 ? true : _props$effect,
       column = props.column,
       _props$itemStyle = props.itemStyle,
-      itemStyle = _props$itemStyle === void 0 ? ListViewItemStyleEnum : _props$itemStyle;
+      itemStyle = _props$itemStyle === void 0 ? ListViewItemStyleEnum : _props$itemStyle,
+      className = props.className,
+      style = props.style;
   var hasColumn = column && column > 1;
   var isBorderItem = itemStyle === ListViewItemStyleEnum.border;
   var isSplitItem = itemStyle === ListViewItemStyleEnum.splitLine;
   return /*#__PURE__*/React.createElement(Provider, {
     value: props
   }, /*#__PURE__*/React.createElement("div", {
-    className: classNames('m78-list-view', size && "__".concat(size), {
+    className: classNames('m78-list-view', className, size && "__".concat(size), {
       __border: border,
       __effect: effect,
       '__item-border': isBorderItem,
-      '__split-line': isSplitItem && !hasColumn
-    })
+      '__split-line': isSplitItem && !hasColumn,
+      __column: hasColumn
+    }),
+    style: style
   }, children));
 }
 
@@ -55,23 +61,27 @@ function InternalListViewItem(_ref) {
       _ref$descEllipsis = _ref.descEllipsis,
       descEllipsis = _ref$descEllipsis === void 0 ? 2 : _ref$descEllipsis,
       disabled = _ref.disabled,
-      ppp = _objectWithoutProperties(_ref, ["title", "desc", "leading", "trailing", "arrow", "crossAlign", "titleEllipsis", "descEllipsis", "disabled"]);
+      className = _ref.className,
+      style = _ref.style,
+      innerRef = _ref.innerRef,
+      ppp = _objectWithoutProperties(_ref, ["title", "desc", "leading", "trailing", "arrow", "crossAlign", "titleEllipsis", "descEllipsis", "disabled", "className", "style", "innerRef"]);
 
   var _useContext = useContext(context),
       column = _useContext.column;
 
   var hasColumn = column && column > 1;
   return /*#__PURE__*/React.createElement(Tile, _extends({
-    style: {
+    innerRef: innerRef,
+    style: _objectSpread({
       width: hasColumn ? "calc(".concat(100 / column, "% - 8px)") : undefined
-    },
-    className: classNames('m78-list-view_item', disabled && '__disabled'),
-    title: /*#__PURE__*/React.createElement(Ellipsis, {
+    }, style),
+    className: classNames('m78-list-view_item', className, disabled && '__disabled'),
+    title: titleEllipsis ? /*#__PURE__*/React.createElement(Ellipsis, {
       line: titleEllipsis
-    }, title),
-    desc: desc && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Ellipsis, {
+    }, title) : title,
+    desc: desc && /*#__PURE__*/React.createElement(Ellipsis, {
       line: descEllipsis
-    }, desc)),
+    }, desc),
     leading: leading,
     trailing: (trailing || arrow) && /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("span", null, trailing), arrow && /*#__PURE__*/React.createElement(RightOutlined, {
       className: "m78-list-view_item_arrow"
@@ -82,10 +92,13 @@ function InternalListViewItem(_ref) {
 
 function InternalListViewTitle(_ref2) {
   var subTile = _ref2.subTile,
-      children = _ref2.children;
+      children = _ref2.children,
+      desc = _ref2.desc;
   return /*#__PURE__*/React.createElement("div", {
     className: classNames('m78-list-view_title', subTile && '__sub-title')
-  }, children);
+  }, /*#__PURE__*/React.createElement("div", null, children), desc && /*#__PURE__*/React.createElement("div", {
+    className: "m78-list-view_title-desc"
+  }, desc));
 }
 
 InternalListView.displayName = 'ListView';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormLike } from '@lxjx/hooks';
 import { ButtonPropsWithHTMLButton } from 'm78/button';
-import { Status, FullSize } from 'm78/types';
+import { StatusKeys, FullSizeKeys } from 'm78/types';
 
 export type InputPropsExtends = Omit<
   React.PropsWithoutRef<JSX.IntrinsicElements['input']>,
@@ -38,9 +38,9 @@ export interface InputProps extends FormLike<string>, InputPropsExtends {
 
   /* ############# 定制 ############# */
   /** 输入框状态，不同状态会以不同的功能色展示 */
-  status?: Status;
+  status?: StatusKeys;
   /** 组件尺寸 */
-  size?: FullSize;
+  size?: FullSizeKeys;
   /** 设置加载状态 */
   loading?: boolean;
   /** 设置阻塞型加载 */

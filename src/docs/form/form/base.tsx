@@ -15,11 +15,11 @@ const Base = () => (
     <Form.Item label="收货地址" name="address" required min={10}>
       <Input placeholder="输入收货地址" textArea />
     </Form.Item>
-    <Form.Footer>
+    <Form.Actions>
       <Button type="submit" color="blue">
         提交
       </Button>
-    </Form.Footer>
+    </Form.Actions>
   </Form>
 );
 

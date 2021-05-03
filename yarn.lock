@@ -1886,10 +1886,10 @@
     "@lxjx/utils" "^1.11.1"
     tslib "^2.1.0"
 
-"@m78/style@^1.0.22":
-  version "1.0.22"
-  resolved "https://registry.nlark.com/@m78/style/download/@m78/style-1.0.22.tgz#0e99a3c82c1fad9050b7ef2fafcbc1d21df64254"
-  integrity sha1-DpmjyCwfrZBQt+8vr8vB0h32QlQ=
+"@m78/style@^1.0.23":
+  version "1.0.23"
+  resolved "https://registry.nlark.com/@m78/style/download/@m78/style-1.0.23.tgz#635e706e6985e3dd7b54cd4c809ee0afeede550d"
+  integrity sha1-Y15wbmmF4917VM1MgJ7gr+7eVQ0=
   dependencies:
     "@ant-design/colors" "^3.2.2"
 

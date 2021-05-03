@@ -9,30 +9,32 @@ export interface ComponentBaseProps {
     /** 包裹元素样式 */
     style?: React.CSSProperties;
 }
-export declare type Status = 'info' | 'success' | 'warning' | 'error';
+export declare type StatusKeys = 'info' | 'success' | 'warning' | 'error';
 export declare enum StatusEnum {
     info = "info",
     success = "success",
     warning = "warning",
     error = "error"
 }
-export declare type Size = 'large' | 'small';
+export declare type SizeKeys = 'large' | 'small';
 export declare enum SizeEnum {
     large = "large",
     small = "small"
 }
-export declare type FullSize = 'big' | Size;
+export declare type FullSizeKeys = 'big' | SizeKeys;
 export declare enum FullSizeEnum {
     large = "large",
     small = "small",
     big = "big"
 }
+export declare type PositionKeys = 'left' | 'top' | 'right' | 'bottom';
 export declare enum PositionEnum {
     left = "left",
     top = "top",
     right = "right",
     bottom = "bottom"
 }
+export declare type DirectionKeys = 'horizontal' | 'vertical';
 export declare enum DirectionEnum {
     horizontal = "horizontal",
     vertical = "vertical"
