@@ -1,6 +1,6 @@
 import React from 'react';
 import { TileProps } from 'm78/layout';
-import { SizeEnum, SizeKeys, ComponentBaseProps } from 'm78/types';
+import { SizeEnum, SizeKeys, ComponentBaseProps, ComponentBasePropsWithAny } from 'm78/types';
 
 export enum ListViewItemStyleEnum {
   splitLine = 'splitLine',
@@ -39,7 +39,7 @@ export interface ListViewItemProps extends TileProps {
   descEllipsis?: number;
 }
 
-export interface ListViewTitleProps {
+export interface ListViewTitleProps extends ComponentBasePropsWithAny {
   /** 是否是子标题 */
   subTile?: boolean;
   /** 标题内容 */

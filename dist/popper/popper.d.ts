@@ -1,4 +1,3 @@
-/// <reference types="react" />
 import { PopperProps } from './types';
 export declare const defaultProps: {
     offset: number;

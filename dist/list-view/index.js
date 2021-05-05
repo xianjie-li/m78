@@ -93,10 +93,15 @@ function InternalListViewItem(_ref) {
 function InternalListViewTitle(_ref2) {
   var subTile = _ref2.subTile,
       children = _ref2.children,
-      desc = _ref2.desc;
-  return /*#__PURE__*/React.createElement("div", {
-    className: classNames('m78-list-view_title', subTile && '__sub-title')
-  }, /*#__PURE__*/React.createElement("div", null, children), desc && /*#__PURE__*/React.createElement("div", {
+      desc = _ref2.desc,
+      className = _ref2.className,
+      style = _ref2.style,
+      ppp = _objectWithoutProperties(_ref2, ["subTile", "children", "desc", "className", "style"]);
+
+  return /*#__PURE__*/React.createElement("div", _extends({}, ppp, {
+    className: classNames('m78-list-view_title', className, subTile && '__sub-title'),
+    style: style
+  }), /*#__PURE__*/React.createElement("div", null, children), desc && /*#__PURE__*/React.createElement("div", {
     className: "m78-list-view_title-desc"
   }, desc));
 }

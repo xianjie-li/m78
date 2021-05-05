@@ -4,10 +4,19 @@
   font-size: 16px;
   padding-bottom: 16px !important;
 
+  // 回复div的默认块行为
+  > div {
+    width: 100%;
+  }
+
   > form {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
+
+    > div {
+      width: 100%;
+    }
   }
 
   .m78-list-view_title {

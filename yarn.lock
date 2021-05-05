@@ -2635,7 +2635,14 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-dom@^16.9.5", "@types/react-dom@^16.9.8", "@types/react-dom@^17.0.3":
+"@types/react-dom@^16.9.5", "@types/react-dom@^16.9.8":
+  version "16.9.12"
+  resolved "https://registry.npm.taobao.org/@types/react-dom/download/@types/react-dom-16.9.12.tgz#55cd6b17e73922edb9545e5355a0016c1734e6f4"
+  integrity sha1-Vc1rF+c5Iu25VF5TVaABbBc05vQ=
+  dependencies:
+    "@types/react" "^16"
+
+"@types/react-dom@^17.0.3":
   version "17.0.3"
   resolved "https://registry.npm.taobao.org/@types/react-dom/download/@types/react-dom-17.0.3.tgz#7fdf37b8af9d6d40127137865bb3fff8871d7ee1"
   integrity sha1-f983uK+dbUAScTeGW7P/+IcdfuE=
@@ -2675,10 +2682,19 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@^16.9.23", "@types/react@^16.9.43", "@types/react@^17.0.4":
+"@types/react@*", "@types/react@^17.0.4":
   version "17.0.4"
   resolved "https://registry.nlark.com/@types/react/download/@types/react-17.0.4.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40types%2Freact%2Fdownload%2F%40types%2Freact-17.0.4.tgz#a67c6f7a460d2660e950d9ccc1c2f18525c28220"
   integrity sha1-pnxvekYNJmDpUNnMwcLxhSXCgiA=
+  dependencies:
+    "@types/prop-types" "*"
+    "@types/scheduler" "*"
+    csstype "^3.0.2"
+
+"@types/react@^16", "@types/react@^16.9.23", "@types/react@^16.9.43":
+  version "16.14.6"
+  resolved "https://registry.nlark.com/@types/react/download/@types/react-16.14.6.tgz?cache=0&sync_timestamp=1620163536027&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40types%2Freact%2Fdownload%2F%40types%2Freact-16.14.6.tgz#d933a2a6bc1bfe320a5eea480e8f45ba8126d6ee"
+  integrity sha1-2TOiprwb/jIKXupIDo9FuoEm1u4=
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"

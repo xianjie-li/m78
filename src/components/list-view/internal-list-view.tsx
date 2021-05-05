@@ -88,9 +88,20 @@ function InternalListViewItem({
   );
 }
 
-function InternalListViewTitle({ subTile, children, desc }: ListViewTitleProps) {
+function InternalListViewTitle({
+  subTile,
+  children,
+  desc,
+  className,
+  style,
+  ...ppp
+}: ListViewTitleProps) {
   return (
-    <div className={classNames('m78-list-view_title', subTile && '__sub-title')}>
+    <div
+      {...ppp}
+      className={classNames('m78-list-view_title', className, subTile && '__sub-title')}
+      style={style}
+    >
       <div>{children}</div>
       {desc && <div className="m78-list-view_title-desc">{desc}</div>}
     </div>

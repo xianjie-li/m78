@@ -1,4 +1,3 @@
-/// <reference types="react" />
 import { ListViewItemProps, ListViewProps, ListViewTitleProps } from './types';
 declare function InternalListView(props: ListViewProps): JSX.Element;
 declare namespace InternalListView {
@@ -8,7 +7,7 @@ declare function InternalListViewItem({ title, desc, leading, trailing, arrow, c
 declare namespace InternalListViewItem {
     var displayName: string;
 }
-declare function InternalListViewTitle({ subTile, children, desc }: ListViewTitleProps): JSX.Element;
+declare function InternalListViewTitle({ subTile, children, desc, className, style, ...ppp }: ListViewTitleProps): JSX.Element;
 declare namespace InternalListViewTitle {
     var displayName: string;
 }
