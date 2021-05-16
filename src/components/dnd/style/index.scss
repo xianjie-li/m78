@@ -64,14 +64,16 @@
   }
 }
 
-
 .m78-dnd-box-anime {
   position: relative;
 
   &_main {
     transition: 0.2s;
 
-    &.__left, &.__right, &.__top, &.__bottom {
+    &.__left,
+    &.__right,
+    &.__top,
+    &.__bottom {
       //transform: scale(0.7);
     }
 

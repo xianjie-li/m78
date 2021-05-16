@@ -7,7 +7,7 @@ group:
 
 # Form 表单
 
-与 antd 使用同一底层库 [rc-field-form](https://github.com/react-component/field-form) 进行封装, api使用大体上一致，但额外对验证体验/表单联动/布局方式等进行了优化，更简单易用。
+与 antd 使用同一底层库 [rc-field-form](https://github.com/react-component/field-form) 进行封装, api 使用大体上一致，但额外对验证体验/表单联动/布局方式等进行了优化，更简单易用。
 
 ## 基本使用
 

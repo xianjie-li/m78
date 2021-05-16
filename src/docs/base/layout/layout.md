@@ -88,12 +88,10 @@ nterface FlexProps extends ComponentBasePropsWithAny {
 }
 ```
 
-
 **`Tile`**
 
 ```tsx | pure
-interface TileProps
-        extends Omit<React.PropsWithoutRef<JSX.IntrinsicElements['div']>, 'title'> {
+interface TileProps extends Omit<React.PropsWithoutRef<JSX.IntrinsicElements['div']>, 'title'> {
   /** 主要内容 */
   title?: React.ReactNode;
   /** 次要内容 */
@@ -106,7 +104,6 @@ interface TileProps
   crossAlign?: FlexWrapProps['crossAlign'];
 }
 ```
-
 
 **`Grid`**
 
