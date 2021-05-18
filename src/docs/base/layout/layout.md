@@ -112,7 +112,7 @@ interface TileProps
 
 ```tsx | pure
 interface GridProps extends ComponentBaseProps {
-  /** 子元素, 必须是一组可以挂在className和style的元素 */
+  /** 子元素, 必须是一组可以挂载className和style的元素 */
   children: React.ReactElement | React.ReactElement[];
   /** 总列数 */
   count?: number;

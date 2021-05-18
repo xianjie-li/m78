@@ -48,12 +48,6 @@ export interface BoundWithVisible extends Bound {
   hidden: boolean;
 }
 
-/** 描述尺寸的必要信息 */
-export interface Size {
-  width: number;
-  height: number;
-}
-
 /** 描述了所有方向气泡位置信息的对象 */
 export type PopperDirectionInfo = {
   [key in PopperDirectionKeys]: Bound;

@@ -1,7 +1,8 @@
 import React from 'react';
 import { getRefDomOrDom } from '@lxjx/hooks';
 import { isPopperBound } from './utils';
-import { Size, Bound, PopperDirectionKeys, PopperDirectionInfo } from './types';
+import { Bound, PopperDirectionKeys, PopperDirectionInfo } from './types';
+import { Size } from 'm78/types';
 
 /**
  * 根据popper尺寸，目标的位置信息计算气泡位置
