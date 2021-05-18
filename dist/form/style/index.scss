@@ -2,7 +2,8 @@
 
 .m78-form {
   font-size: 16px;
-  padding-bottom: 16px !important;
+  //padding-bottom: 16px !important;
+  margin: auto;
 
   // 回复div的默认块行为
   > div {
@@ -30,7 +31,8 @@
     }
   }
 
-  &.__split-line, &.__item-border {
+  &.__split-line,
+  &.__item-border {
     .m78-list-view_item {
       padding: var(--m78-space-3);
     }
@@ -87,6 +89,10 @@
       font-size: 16px;
     }
 
+    .m78-tile_main {
+      overflow: visible;
+    }
+
     &-text-wrap {
       margin-top: 4px;
     }
@@ -124,7 +130,6 @@
     }
 
     &-main {
-
     }
 
     &-cont {

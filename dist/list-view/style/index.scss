@@ -5,7 +5,8 @@
   flex-wrap: wrap;
 
   &.__small {
-    .m78-list-view_item, .m78-list-view_title {
+    .m78-list-view_item,
+    .m78-list-view_title {
       padding: var(--m78-space-1) var(--m78-space-3);
     }
 
@@ -24,7 +25,8 @@
   }
 
   &.__large {
-    .m78-list-view_item, .m78-list-view_title {
+    .m78-list-view_item,
+    .m78-list-view_title {
       padding: var(--m78-space-4) var(--m78-space-6);
     }
 
