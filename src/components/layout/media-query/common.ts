@@ -84,6 +84,7 @@ const mediaQueryGetterDefaultChecker = (item: any) => item !== undefined;
  * @param mq - 包含MediaQueryTypeKeys配置的对象
  * @param fullback - 没有任何匹配的回退值
  * @param checker - 自定义T是否生效，默认检测其是否为undefined
+ * @param reverse - 以相反的方向匹配
  * @return t - 满足当前媒体条件的值
  * */
 export function mediaQueryGetter<T>(
@@ -91,6 +92,7 @@ export function mediaQueryGetter<T>(
   mq: MediaQueryObject<T>,
   fullback: T,
   checker?: (item?: T) => boolean,
+  reverse = false,
 ) {
   let val: T | undefined;
 
@@ -98,36 +100,43 @@ export function mediaQueryGetter<T>(
 
   /** 从列表中获取首个包含正确值的value */
   const getFirst = (cLs: (T | undefined)[]) => cLs.find(_checker);
+  const getLast = (cLs: (T | undefined)[]) => [...cLs].reverse().find(_checker);
+
+  const currentGetter = reverse ? getLast : getFirst;
 
   /** 取值顺序 */
   const ls = [mq.xxl, mq.xl, mq.lg, mq.md, mq.sm, mq.xs];
 
   if (meta.isXXL()) {
-    val = getFirst(ls);
+    val = currentGetter(reverse ? ls.slice(0, 1) : ls);
   }
 
   if (meta.isXL()) {
-    val = getFirst(ls.slice(1));
+    val = currentGetter(reverse ? ls.slice(0, 2) : ls.slice(1));
   }
 
   if (meta.isLG()) {
-    val = getFirst(ls.slice(2));
+    val = currentGetter(reverse ? ls.slice(0, 3) : ls.slice(2));
   }
 
   if (meta.isMD()) {
-    val = getFirst(ls.slice(3));
+    val = currentGetter(reverse ? ls.slice(0, 4) : ls.slice(3));
   }
 
   if (meta.isSM()) {
-    val = getFirst(ls.slice(4));
+    val = currentGetter(reverse ? ls.slice(0, 5) : ls.slice(4));
   }
 
   if (meta.isXS()) {
-    val = getFirst(ls.slice(5));
+    val = currentGetter(reverse ? ls.slice(0, 6) : ls.slice(5));
   }
 
   if (!_checker(val)) {
     val = fullback;
+  }
+
+  if (reverse) {
+    console.log(reverse, ls, val);
   }
 
   return val as T;

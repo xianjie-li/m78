@@ -17,17 +17,22 @@ const getStyleValue = (n?: number) => {
 };
 
 function Grids(props: GridsRowProps) {
-  const { children, wrap = true, mainAlign, crossAlign } = props;
+  const { children, wrap = true, mainAlign, crossAlign, gutter, className, style, ...ppp } = props;
 
   return (
     <context.Provider value={props}>
       <div
         className={cls(
           'm78-grids',
+          className,
           wrap && 'm78-flex-wrap',
           mainAlign && `m78-main-${mainAlign}`,
           crossAlign && `m78-cross-${crossAlign}`,
         )}
+        style={{
+          ...style,
+          padding: isNumber(gutter) ? gutter / 2 : undefined,
+        }}
       >
         {children}
       </div>
@@ -68,19 +73,21 @@ function GridsItem(props: GridsColProps) {
 
   const { col, offset, move, order, flex, hidden, align } = current;
 
+  const _gutter = isNumber(gutter) ? gutter / 2 : undefined;
+
   return (
     <div
       {...ppp}
       className={cls('m78-grids_col', className, align && `m78-self-${align}`)}
       style={{
+        ...style,
         width: getStyleValue(col),
-        margin: gutter,
-        marginLeft: getStyleValue(offset) || gutter,
+        padding: _gutter,
+        marginLeft: getStyleValue(offset),
         left: getStyleValue(move),
         order,
         flex,
         display: hidden ? 'none' : undefined,
-        ...style,
       }}
     >
       {children}

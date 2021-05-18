@@ -61,6 +61,7 @@ export function getCurrentMqProps(
       mqObject,
       hidden as any,
       item => !isNumber(item) && item?.hidden,
+      true,
     ),
     align: mediaQueryGetter(
       mqMeta!,

@@ -1,5 +1,5 @@
 import React, { ReactElement, ReactNode } from 'react';
-import { ComponentBasePropsWithAny, DirectionEnum, DirectionKeys, Size } from 'm78/types';
+import { ComponentBasePropsWithAny, Size } from 'm78/types';
 
 /*
  * ########################################
@@ -148,7 +148,7 @@ export interface GridsColMediaQueryProps {
   order?: number;
   /** 手动指定该列的flex值 */
   flex?: string | number;
-  /** 是否隐藏 */
+  /** 是否隐藏, 此属性不会被继承，只在指定的断点中生效 */
   hidden?: boolean;
   /** 该项在交叉轴的对齐方式 */
   align?: FlexWrapProps['crossAlign'];
