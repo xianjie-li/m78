@@ -1,5 +1,5 @@
 import React, { ReactElement, ReactNode } from 'react';
-import { ComponentBasePropsWithAny, Size } from 'm78/types';
+import { ComponentBaseProps, ComponentBasePropsWithAny, Size } from 'm78/types';
 
 /*
  * ########################################
@@ -136,8 +136,9 @@ export interface MediaQueryListenerProps {
 
 /**
  * GridCol的媒体查询配置
+ * 所有属性都支持在断点中以对象形式设置，如xs={{ col: 5, move: 2 }}
  * */
-export interface GridsColMediaQueryProps {
+export interface GridsColMediaQueryProps extends ComponentBaseProps {
   /** 占用栅格列数 */
   col?: number;
   /** 左侧间隔列 */
@@ -148,18 +149,18 @@ export interface GridsColMediaQueryProps {
   order?: number;
   /** 手动指定该列的flex值 */
   flex?: string | number;
-  /** 是否隐藏, 此属性不会被继承，只在指定的断点中生效 */
-  hidden?: boolean;
   /** 该项在交叉轴的对齐方式 */
   align?: FlexWrapProps['crossAlign'];
+  /** 是否隐藏, 此属性与其他属性的继承顺序是相反的 */
+  hidden?: boolean;
 }
 
 /** 表示列数或一个GridColMediaQueryProps配置 */
 export type GridsColNumberOrMediaQueryProps = number | GridsColMediaQueryProps;
 
 export interface GridsRowProps extends FlexWrapProps {
-  /** 间隔，支持响应式设置 */
-  gutter?: [number, number] | number;
+  /** 间隔 */
+  gutter?: number;
   /** true | 是否允许换行 */
   wrap?: boolean;
 }

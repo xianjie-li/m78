@@ -27,6 +27,7 @@ html[data-theme='dark'] .__dumi-default-search-input {
 
 .__dumi-default-previewer {
   border: 1px solid var(--m78-color-disable) !important;
+  background: transparent !important;
 }
 
 .__dumi-default-previewer-actions {
@@ -35,6 +36,10 @@ html[data-theme='dark'] .__dumi-default-search-input {
 
 .__dumi-default-previewer-source {
   border-top: 1px solid var(--m78-color-disable) !important;
+}
+
+.__dumi-default-dark {
+  display: none;
 }
 
 h1,

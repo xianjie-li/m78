@@ -8,9 +8,127 @@ group:
 
 # Layout 布局
 
-声明式的布局能提供很大的方便，但是传统的 12 列或 24 列网格局限性又太大，不适用于定制化很高的前端页面。
+Layout模块能够极大的简化您的布局方式，它包含以下主要内容:
 
-所以，提供类似 Flutter 的 flex base 布局组件，以及部分功能性布局组件, 用于完成行、列、对齐、网格等常见的布局场景。
+* 一个功能强大的12列栅格系统
+* 声明式的媒体查询组件和工具
+* 大量常用的布局原子类，像是`bg-blue` `bold `  `fs-sm`等等
+* 一些很常用的声明式布局组件, 如`Tile` `Spacer` `Divider`等
+
+> 声明式的布局能提供很大的方便, 在`Flutter`和`tailwindcss`等技术中被大量使用, 对于简单、局部的小型布局, 使用它可以非常方便且迅速的实现，并且大部分情况下不需要编写css代码,
+> 如果你正在编写过于复杂的大块布局或精度很高的用户端页面，则推荐使用css辅以声明式布局的方式
+
+
+## Grids
+
+一个类似bootstrap的12格栅格系统
+
+* 核心计算通过js实现，所以比传统的静态css栅格拥有更强的能力, 比如小数位的栅格, 断点支持设置对象并且包含丰富的配置等
+* 采用12格的栅格系统(相比24格心算更简单✌), 但是得益于小数位栅格的支持，同样可以实现非常灵活的布局，如： 二等分 6 / 三等分 4 / 四等分 3 / 五等分 2.4 / 六等分 2
+* 布局采用flex，可以灵活的控制栅格定位行为
+
+### 基础栅格
+
+使用`Grids`和`GridsItem`来进行栅格布局, 传入`col`来控制栅格数
+
+<code src="./grids/base.tsx" />
+
+### offset
+
+通过`offset`来为格设置左（负数）右偏移
+
+<code src="./grids/offset.tsx" />
+
+### 排序
+
+通过`move`来在不影响格布局流的情况下移动子项进行排序, 也可以通过order来进行排序
+
+<code src="./grids/order.tsx" />
+
+### 布局行为
+
+通过`mainAlign`和`crossAlign`来分别控制子项在主轴和交叉轴上的布局方式
+
+<code src="./grids/layouts.tsx" />
+
+
+### flex
+
+`GridsItem`支持传入flex设置弹性系数
+
+<code src="./grids/flex.tsx" />
+
+### 响应式栅格
+
+预设6种响应尺寸 `xs` `sm` `md` `lg` `xl` `xxl`
+
+实际使用时不可能为每一个断点都设置值，所有断点遵循一套继承机制，以减少编码量: 
+
+* 断点会影响其后所有未设置值的断点，比如，设置了`xs`时, `xs`之后的所有断点都会继承`xs`的配置, 如果`xs`后任意一个断点也设置了值，则后续断点会改为继承该断点
+* hidden的继承顺序与其他属性是相反的，也就是从大到小
+* 基于`MediaQuery`系列组件实现断点，所以断点是支持容器级的
+
+<code src="./grids/mediaQuery.tsx" />
+
+### API
+
+**`Grids`**
+
+```tsx
+interface GridsRowProps {
+  /** 间隔 */
+  gutter?: number;
+  /** true | 是否允许换行 */
+  wrap?: boolean;
+  /** 'start' | 主轴对齐方式 */
+  mainAlign?: 'center' | 'start' | 'end' | 'around' | 'between' | 'evenly';
+  /** 'start' | 交叉轴对齐方式 */
+  crossAlign?: 'stretch' | 'start' | 'end' | 'center';
+  /** 内容 */
+  children: React.ReactNode;
+}
+```
+
+**`GridsItem`**
+
+```tsx
+interface GridsColProps extends GridsColMediaQueryProps {
+  /** 内容 */
+  children?: ReactNode;
+  /** 处于特定媒体类型下的配置 */
+  xs?: GridsColNumberOrMediaQueryProps;
+  sm?: GridsColNumberOrMediaQueryProps;
+  md?: GridsColNumberOrMediaQueryProps;
+  lg?: GridsColNumberOrMediaQueryProps;
+  xl?: GridsColNumberOrMediaQueryProps;
+  xxl?: GridsColNumberOrMediaQueryProps;
+}
+
+type GridsColNumberOrMediaQueryProps = number | GridsColMediaQueryProps;
+
+// 以下所有props都支持在断点中以对象形式设置，如xs={{ col: 5, move: 2 }}
+interface GridsColMediaQueryProps {
+  /** 包裹元素的类名 */
+  className?: string;
+  /** 包裹元素样式 */
+  style?: React.CSSProperties;
+  /** 占用栅格列数 */
+  col?: number;
+  /** 左侧间隔列 */
+  offset?: number;
+  /** 向左或向右移动指定列，不会影响原有文档流 */
+  move?: number;
+  /** 控制顺序 */
+  order?: number;
+  /** 手动指定该列的flex值 */
+  flex?: string | number;
+  /** 该项在交叉轴的对齐方式 */
+  align?: FlexWrapProps['crossAlign'];
+  /** 是否隐藏, 此属性与其他属性的继承顺序是相反的 */
+  hidden?: boolean;
+}
+```
+
 
 ## Flexible
 

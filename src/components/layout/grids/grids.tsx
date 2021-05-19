@@ -10,10 +10,7 @@ const ONE_COLUMN = 100 / MAX_COLUMN;
 const context = React.createContext<Omit<GridsRowProps, 'children'>>({});
 
 const getStyleValue = (n?: number) => {
-  if (isNumber(n)) {
-    return `${n * ONE_COLUMN}%`;
-  }
-  return undefined;
+  if (isNumber(n)) return `${n * ONE_COLUMN}%`;
 };
 
 function Grids(props: GridsRowProps) {
@@ -43,8 +40,6 @@ function Grids(props: GridsRowProps) {
 function GridsItem(props: GridsColProps) {
   const {
     children,
-    className,
-    style,
     // exclude
     col: a,
     offset: b,
@@ -53,6 +48,8 @@ function GridsItem(props: GridsColProps) {
     flex: e,
     hidden: f,
     align: g,
+    className: h,
+    style: i,
     xs,
     sm,
     md,
@@ -71,7 +68,7 @@ function GridsItem(props: GridsColProps) {
 
   const current = getCurrentMqProps(mqMeta, props);
 
-  const { col, offset, move, order, flex, hidden, align } = current;
+  const { col, offset, move, order, flex, hidden, align, className, style } = current;
 
   const _gutter = isNumber(gutter) ? gutter / 2 : undefined;
 
@@ -94,12 +91,6 @@ function GridsItem(props: GridsColProps) {
     </div>
   );
 }
-
-// TODO: MediaQuery支持接收 xs={xx} sm={xx} 配置，并根据生效情况在meta中返回
-/* 当前区间没有指定栅格大小时，会取此位置前第一个生效的栅格大小 */
-/* 一个类似此函数的帮助函数，从{xs, sm, md}这样的对象中以指定规则取值
- * 因为支持小数点，所以可以只需要12列栅格即可完成非常精细的布局
- * */
 
 Grids.Item = GridsItem;
 

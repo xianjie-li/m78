@@ -19,7 +19,23 @@ import { isNumber, isObject, isTruthyOrZero } from '@lxjx/utils';
  * */
 export function getCurrentMqProps(
   mqMeta: MediaQueryMeta,
-  { col, offset, move, order, flex, hidden, align, xs, sm, md, lg, xl, xxl }: GridsColProps,
+  {
+    col,
+    offset,
+    move,
+    order,
+    flex,
+    hidden,
+    align,
+    xs,
+    sm,
+    md,
+    lg,
+    xl,
+    xxl,
+    className,
+    style,
+  }: GridsColProps,
 ) {
   const mqObject: MediaQueryObject<GridsColNumberOrMediaQueryProps> = {
     xs,
@@ -68,6 +84,18 @@ export function getCurrentMqProps(
       mqObject,
       align as any,
       item => !isNumber(item) && item?.align,
+    ),
+    className: mediaQueryGetter(
+      mqMeta!,
+      mqObject,
+      className as any,
+      item => !isNumber(item) && item?.className,
+    ),
+    style: mediaQueryGetter(
+      mqMeta!,
+      mqObject,
+      style as any,
+      item => !isNumber(item) && item?.style,
     ),
   };
 
