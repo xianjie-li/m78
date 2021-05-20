@@ -88,7 +88,7 @@ export interface MediaQueryConf {
 }
 
 /** MediaQuery 完整元信息 */
-export interface MediaQueryMeta {
+export interface MediaQueryMeta<Val = any> {
   /** 当前容器宽度 */
   width: number;
   /** 当前容器高度 */
@@ -120,11 +120,26 @@ export interface MediaQueryObject<T = any> {
   xxl?: T;
 }
 
-export interface MediaQueryProps extends MediaQueryConf {
-  children: (meta: MediaQueryMeta) => ReactElement<any, any> | null;
+export interface MediaQueryProps<Val = any> extends MediaQueryConf {
+  /**
+   * 处于特定媒体类型下的断点配置, 符合条件的会传递给children
+   * 实际使用时不可能为每一个断点都设置值，所有断点遵循一套继承机制，以减少编码量:
+   * - 断点会影响其后所有未设置值的断点，比如，设置了xs时, xs之后的所有断点都会继承xs的配置, 如果xs后任意一个断点也设置了值，则后续断点会改为继承该断点
+   * */
+  xs?: Val;
+  sm?: Val;
+  md?: Val;
+  lg?: Val;
+  xl?: Val;
+  xxl?: Val;
+  /** 默认的断点值继承机制为从左到右，传入此项将其继承顺序颠倒 */
+  reverse?: boolean;
+  /** 断点内容render, 其接收的value是当前命中的断点配置 */
+  children: (meta: MediaQueryMeta, value: Val) => ReactElement<any, any> | null;
 }
 
 export interface MediaQueryListenerProps {
+  /** 断点内容render */
   onChange: (meta: MediaQueryMeta) => void;
 }
 

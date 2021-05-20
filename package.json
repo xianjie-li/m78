@@ -72,7 +72,9 @@
     "react-use": "^13.8.0",
     "react-use-gesture": "7.0.16",
     "react-window": "^1.8.5",
-    "tslib": "^2.2.0"
+    "tslib": "^2.2.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
@@ -104,8 +106,6 @@
     "jest": "^26.1.0",
     "node-sass": "^4.13.1",
     "ora": "^4.0.4",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
     "rollup": "^2.33.1",
     "rollup-plugin-copy": "^3.3.0",
     "rollup-plugin-extensions": "^0.1.0",

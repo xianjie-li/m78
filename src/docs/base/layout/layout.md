@@ -12,8 +12,9 @@ Layout模块能够极大的简化您的布局方式，它包含以下主要内�
 
 * 一个功能强大的12列栅格系统
 * 声明式的媒体查询组件和工具
-* 大量常用的布局原子类，像是`bg-blue` `bold `  `fs-sm`等等
 * 一些很常用的声明式布局组件, 如`Tile` `Spacer` `Divider`等
+* 大量常用的布局原子类，像是`bg-blue` `bold `  `fs-sm`等等
+
 
 > 声明式的布局能提供很大的方便, 在`Flutter`和`tailwindcss`等技术中被大量使用, 对于简单、局部的小型布局, 使用它可以非常方便且迅速的实现，并且大部分情况下不需要编写css代码,
 > 如果你正在编写过于复杂的大块布局或精度很高的用户端页面，则推荐使用css辅以声明式布局的方式
@@ -74,7 +75,7 @@ Layout模块能够极大的简化您的布局方式，它包含以下主要内�
 
 **`Grids`**
 
-```tsx
+```tsx | pure
 interface GridsRowProps {
   /** 间隔 */
   gutter?: number;
@@ -91,7 +92,7 @@ interface GridsRowProps {
 
 **`GridsItem`**
 
-```tsx
+```tsx | pure
 interface GridsColProps extends GridsColMediaQueryProps {
   /** 内容 */
   children?: ReactNode;
@@ -129,6 +130,162 @@ interface GridsColMediaQueryProps {
 }
 ```
 
+<br>
+<br>
+
+
+## MediaQuery
+
+一套声明式的媒体查询工具，帮助你轻松的实现响应式布局
+
+* 响应式的监听点可以是窗口，也可以是指定容器
+* 包含6种断点尺寸, 由小到大依次是 `xs` `sm` `md` `lg` `xl` `xxl`
+* 媒体查询的核心类型是`MediaQueryMeta`,所有api都围绕此类型展开
+
+### MediaQuery组件
+
+最常用的断点组件，它通过render children来根据断点渲染差异化的子项
+
+<code src="./mediaQuery/base.tsx" />
+
+你也可以使用`MediaQuery`的内部实现hook`useMediaQuery`, 用法几乎一致，但是hook的用法会在尺寸类型变更时更新整个消费组件
+
+```ts
+const meta = useMediaQuery()
+
+meta.type;
+meta.isSM();
+```
+
+### MediaQuery断点
+
+可以方便的为`MediaQuery`设置一组断点配置并在render children中接收符合当前尺寸的值
+
+> 为了减少断点声明，断点配置包含一组继承规则，详情见下方`MediaQuery`api说明
+
+```tsx | pure
+<MediaQuery xs="small" md="medium" xxl="large">
+  {(meta, value) => (
+    <div>
+      {meta.type} {value}
+    </div>
+  )}
+</MediaQuery>
+
+// 如过配置为联合类型，可以通过泛型组件设置类型, 如果为单一类型的话会自动推导
+<MediaQuery<string | number> xs="small" md={5} xxl="large">
+  {(meta, value /* 这里的类型为 string | number */) => (
+    <div>
+      {meta.type} {value}
+    </div>
+  )}
+</MediaQuery>
+```
+
+### 监听器
+
+一个获取`MediaQueryMeta`变更的事件订阅器，不会产生更新
+
+```tsx | pure
+<MediaQueryListener onChange={meta => console.log(meta)} />
+```
+
+另一种更简单的订阅方式是使用`useMediaQueryListener`
+
+```ts
+const meta = useMediaQueryListener(meta => {
+  meta.type;
+  meta.isSM();
+})
+```
+
+### 重要API & 类型
+
+**`断点`**
+
+```ts
+/**
+ * MediaQuery的所有类型
+ * 判断是否在某一类型的方式为 当前宽度大于等于该类型的值且小于下一类型的值
+ * */
+enum MediaQueryTypeValues {
+  XS = 0,
+  SM = 576,
+  MD = 768,
+  LG = 992,
+  XL = 1200,
+  XXL = 1600,
+}
+
+export enum MediaQueryTypeKeys {
+  XS = 'xs',
+  SM = 'sm',
+  MD = 'md',
+  LG = 'lg',
+  XL = 'xl',
+  XXL = 'xxl',
+}
+```
+
+**`MediaQuery`**
+
+```ts
+interface MediaQueryProps {
+  /** 延迟响应变更的时间(ms) */
+  debounce?: number;
+  /**
+   * 'type' | 监听类型
+   * - 为type时，只在MediaQueryTypeKey变更时更新, 需要注意的时，此时的width和height值为更新时的快照值, 不应该依赖其进行一些计算操作
+   * - 为size时，会在每一次尺寸变更时更新, size模式建议开启debounce, 防止频繁render
+   * */
+  listenType?: 'type' | 'size';
+  /**
+   * 处于特定媒体类型下的断点配置, 符合条件的会传递给children
+   * 实际使用时不可能为每一个断点都设置值，所有断点遵循一套继承机制，以减少编码量:
+   * - 断点会影响其后所有未设置值的断点，比如，设置了xs时, xs之后的所有断点都会继承xs的配置, 如果xs后任意一个断点也设置了值，则后续断点会改为继承该断点
+   * */
+  xs?: Val;
+  sm?: Val;
+  md?: Val;
+  lg?: Val;
+  xl?: Val;
+  xxl?: Val;
+  /** 默认的断点值继承机制为从左到右，传入此项将其继承顺序颠倒 */
+  reverse?: boolean;
+  /** 断点内容render, 其接收的value是当前命中的断点配置 */
+  children: (meta: MediaQueryMeta) => ReactElement<any, any> | null;
+}
+```
+
+**`MediaQueryMeta`**
+
+```ts
+interface MediaQueryMeta {
+  /** 当前容器宽度 */
+  width: number;
+  /** 当前容器高度 */
+  height: number;
+  /** 当前类型 */
+  type: MediaQueryTypeKeys;
+  /** 检测是否为指定类型 */
+  isXS: () => boolean;
+  isSM: () => boolean;
+  isMD: () => boolean;
+  isLG: () => boolean;
+  isXL: () => boolean;
+  isXXL: () => boolean;
+  /** 当前尺寸是 xs或sm */
+  isSmall: () => boolean;
+  /** 当前尺寸是 md或lg */
+  isMedium: () => boolean;
+  /** 当前尺寸大于 lg */
+  isLarge: () => boolean;
+}
+```
+
+<br>
+<br>
+
 
 ## Flexible
 
@@ -136,7 +293,7 @@ interface GridsColMediaQueryProps {
 
 <code src="./flexDemo.tsx" />
 
-## 工具类
+## 原子类
 
 内置了很多常用的工具类, 请查收 [util-class.scss](https://github.com/Iixianjie/sass-stater/blob/master/base/util-class.scss)
 

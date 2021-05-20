@@ -1,23 +1,8 @@
-import React, { useEffect, useRef } from 'react';
-import { m78Config } from 'm78/config';
-import {
-  Divider,
-  MediaQuery,
-  Grids,
-  GridsItem,
-  MediaQueryContext,
-  MediaQueryMeta,
-  MediaQueryListener,
-} from 'm78/layout';
-import { Button } from 'm78/button';
-
-import './style.scss';
-
+import React from 'react';
+import { MediaQuery, MediaQueryContext, MediaQueryMeta } from 'm78/layout';
 import sty from './style.module.scss';
 
-const App = () => {
-  const dark = m78Config.useState(state => state.darkMode);
-
+const Base = () => {
   function getSize(meta: MediaQueryMeta) {
     if (meta.isSmall()) return '小';
     if (meta.isMedium()) return '中';
@@ -42,21 +27,7 @@ const App = () => {
   }
 
   return (
-    <div className="p-32">
-      <Button onClick={() => m78Config.setState({ darkMode: !m78Config.getState().darkMode })}>
-        {dark ? 'dark' : 'light'}
-      </Button>
-
-      <Divider />
-
-      <MediaQuery xs="small" md="medium" xxl="large">
-        {(meta, value) => (
-          <div>
-            {meta.type} {value}
-          </div>
-        )}
-      </MediaQuery>
-
+    <div>
       <div className={sty.box1}>
         <div className={sty.title}>响应窗口尺寸</div>
         <MediaQuery>{render}</MediaQuery>
@@ -72,8 +43,4 @@ const App = () => {
   );
 };
 
-/*
- * 分割线
- * */
-
-export default App;
+export default Base;

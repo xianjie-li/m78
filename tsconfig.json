@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": "./",
-    "types": ["vite/client"],
+//    "types": ["vite/client", "jest"],
     "paths": {
       "@/*": ["src/*"],
       "m78/*": [
@@ -26,6 +26,7 @@
     "importHelpers": true
   },
   "include": [
+    "node_modules/@types/jest",
     "./src/components/**/*",
     "./src/docs/**/*",
     "./src/mock/**/*",
