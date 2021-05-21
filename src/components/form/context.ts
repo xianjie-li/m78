@@ -14,7 +14,7 @@ interface FormInsideContext {
   /** 表示该表单的唯一id */
   id: string;
   /** 直接传入rules配置来进行表单验证 */
-  rules?: FormProps[''];
+  rules?: FormProps['rules'];
 }
 
 const context = createContext<FormInsideContext>({

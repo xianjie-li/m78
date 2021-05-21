@@ -19,6 +19,7 @@ function Grids(props: GridsRowProps) {
   return (
     <context.Provider value={props}>
       <div
+        {...ppp}
         className={cls(
           'm78-grids',
           className,

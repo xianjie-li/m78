@@ -1,6 +1,6 @@
+import { mediaQueryGetter } from 'm78/layout';
 import { MediaQueryListenerProps, MediaQueryProps } from '../types';
 import { useMediaQuery, useMediaQueryListener } from './hooks';
-import { mediaQueryGetter } from 'm78/layout';
 
 /**
  * 窗口尺寸改变时通过回调通知
@@ -26,7 +26,7 @@ function MediaQuery<Val>({
 }: MediaQueryProps<Val>) {
   const meta = useMediaQuery(conf);
 
-  let val = meta
+  const val = meta
     ? mediaQueryGetter<Val>(
         meta,
         {

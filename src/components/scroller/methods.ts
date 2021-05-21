@@ -281,14 +281,14 @@ export function useMethods(share: Share) {
   /** 设置到下拉位置到threshold处 */
   function pullDownToThreshold() {
     setSp({
-      y: self.memoY = threshold,
+      y: (self.memoY = threshold),
     });
   }
 
   /** 停止下拉并还原动画和状态文本 */
   function stopPullDown() {
     setSp({
-      y: self.memoY = 0,
+      y: (self.memoY = 0),
     });
 
     setState({

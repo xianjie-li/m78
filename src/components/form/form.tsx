@@ -42,6 +42,7 @@ const BaseForm: React.FC<FormProps> = props => {
     border,
     size,
     itemStyle,
+    fullWidth,
     ...otherProps
   } = props;
   /** 该表单的唯一id */
@@ -117,16 +118,12 @@ const BaseForm: React.FC<FormProps> = props => {
   });
 
   function renderWrap(node: React.ReactNode) {
+    const _fullWidth = fullWidth && '__full-width';
+    const _requiredMark = contextValue.hideRequiredMark && '__hide-required-mark';
+
     if (noStyle) {
       return (
-        <div
-          style={style}
-          className={cls(
-            className,
-            'm78-form',
-            contextValue.hideRequiredMark && '__hide-required-mark',
-          )}
-        >
+        <div style={style} className={cls(className, 'm78-form', _fullWidth, _requiredMark)}>
           {node}
         </div>
       );
@@ -135,7 +132,7 @@ const BaseForm: React.FC<FormProps> = props => {
     return (
       <FormLayout
         style={style}
-        className={cls(className, contextValue.hideRequiredMark && '__hide-required-mark')}
+        className={cls(className, _fullWidth, _requiredMark)}
         border={border}
         layout={layout}
         column={column}

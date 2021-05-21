@@ -186,17 +186,17 @@ const Viewer = React.forwardRef<ViewerRef, ViewerProps>(
 
     function setRotate(rotate: number) {
       if (disabled) return;
-      set({ rotateZ: self.rotateZ += rotate, config: config.slow });
+      set({ rotateZ: (self.rotateZ += rotate), config: config.slow });
     }
 
     function reset() {
       if (disabled) return;
 
       set({
-        scale: self.scale = initSpring.scale,
-        rotateZ: self.rotateZ = initSpring.rotateZ,
-        x: self.x = initSpring.x,
-        y: self.y = initSpring.y,
+        scale: (self.scale = initSpring.scale),
+        rotateZ: (self.rotateZ = initSpring.rotateZ),
+        x: (self.x = initSpring.x),
+        y: (self.y = initSpring.y),
       });
     }
 

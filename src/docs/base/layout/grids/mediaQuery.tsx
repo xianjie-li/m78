@@ -1,6 +1,6 @@
 import React from 'react';
-import sty from './style.module.scss';
 import { Grids, GridsItem } from 'm78/layout';
+import sty from './style.module.scss';
 
 const MediaQuery = () => {
   return (

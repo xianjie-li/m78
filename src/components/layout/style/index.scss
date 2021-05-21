@@ -11,7 +11,6 @@
   }
 }
 
-
 // #######################
 // Flex
 // #######################
@@ -44,15 +43,15 @@
   justify-content: flex-end;
 }
 
-.m78-main-around  {
+.m78-main-around {
   justify-content: space-around;
 }
 
-.m78-main-between  {
+.m78-main-between {
   justify-content: space-between;
 }
 
-.m78-main-evenly  {
+.m78-main-evenly {
   justify-content: space-evenly;
 }
 
@@ -90,27 +89,27 @@
 
 // 值类
 .m78-order-minus1 {
-  order: -1
+  order: -1;
 }
 
 .m78-order-1 {
-  order: 1
+  order: 1;
 }
 
 .m78-order-2 {
-  order: 2
+  order: 2;
 }
 
 .m78-order-3 {
-  order: 3
+  order: 3;
 }
 
 .m78-order-4 {
-  order: 4
+  order: 4;
 }
 
 .m78-order-5 {
-  order: 5
+  order: 5;
 }
 
 .m78-flex-auto {
@@ -118,23 +117,23 @@
 }
 
 .m78-flex-1 {
-  flex: 1
+  flex: 1;
 }
 
 .m78-flex-2 {
-  flex: 2
+  flex: 2;
 }
 
 .m78-flex-3 {
-  flex: 3
+  flex: 3;
 }
 
 .m78-flex-4 {
-  flex: 4
+  flex: 4;
 }
 
 .m78-flex-5 {
-  flex: 5
+  flex: 5;
 }
 
 // #######################
@@ -183,7 +182,6 @@
     @include full;
   }
 }
-
 
 // #######################
 // Divider

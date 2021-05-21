@@ -41,6 +41,8 @@ export interface FormProps<Values = any>
   disabled?: boolean;
   /** 获取表单控制实例 */
   instanceRef?: React.Ref<FormInstance<Values>>;
+  /** 全宽显示表单 */
+  fullWidth?: boolean;
 }
 
 /* 不带name的Item会作为布局组件使用 */

@@ -8,25 +8,22 @@ group:
 
 # Layout 布局
 
-Layout模块能够极大的简化您的布局方式，它包含以下主要内容:
+Layout 模块能够极大的简化您的布局方式，它包含以下主要内容:
 
-* 一个功能强大的12列栅格系统
-* 声明式的媒体查询组件和工具
-* 一些很常用的声明式布局组件, 如`Tile` `Spacer` `Divider`等
-* 大量常用的布局原子类，像是`bg-blue` `bold `  `fs-sm`等等
+- 一个功能强大的 12 列栅格系统
+- 声明式的媒体查询组件和工具
+- 一些很常用的声明式布局组件, 如`Tile` `Spacer` `Divider`等
+- 大量常用的布局原子类，像是`bg-blue` `bold ` `fs-sm`等等
 
-
-> 声明式的布局能提供很大的方便, 在`Flutter`和`tailwindcss`等技术中被大量使用, 对于简单、局部的小型布局, 使用它可以非常方便且迅速的实现，并且大部分情况下不需要编写css代码,
-> 如果你正在编写过于复杂的大块布局或精度很高的用户端页面，则推荐使用css辅以声明式布局的方式
-
+> 声明式的布局能提供很大的方便, 在`Flutter`和`tailwindcss`等技术中被大量使用, 对于简单、局部的小型布局, 使用它可以非常方便且迅速的实现，并且大部分情况下不需要编写 css 代码, 如果你正在编写过于复杂的大块布局或精度很高的用户端页面，则推荐使用 css 辅以声明式布局的方式
 
 ## Grids
 
-一个类似bootstrap的12格栅格系统
+一个类似 bootstrap 的 12 格栅格系统
 
-* 核心计算通过js实现，所以比传统的静态css栅格拥有更强的能力, 比如小数位的栅格, 断点支持设置对象并且包含丰富的配置等
-* 采用12格的栅格系统(相比24格心算更简单✌), 但是得益于小数位栅格的支持，同样可以实现非常灵活的布局，如： 二等分 6 / 三等分 4 / 四等分 3 / 五等分 2.4 / 六等分 2
-* 布局采用flex，可以灵活的控制栅格定位行为
+- 核心计算通过 js 实现，所以比传统的静态 css 栅格拥有更强的能力, 比如小数位的栅格, 断点支持设置对象并且包含丰富的配置等
+- 采用 12 格的栅格系统(相比 24 格心算更简单 ✌), 但是得益于小数位栅格的支持，同样可以实现非常灵活的布局，如： 二等分 6 / 三等分 4 / 四等分 3 / 五等分 2.4 / 六等分 2
+- 布局采用 flex，可以灵活的控制栅格定位行为
 
 ### 基础栅格
 
@@ -42,7 +39,7 @@ Layout模块能够极大的简化您的布局方式，它包含以下主要内�
 
 ### 排序
 
-通过`move`来在不影响格布局流的情况下移动子项进行排序, 也可以通过order来进行排序
+通过`move`来在不影响格布局流的情况下移动子项进行排序, 也可以通过 order 来进行排序
 
 <code src="./grids/order.tsx" />
 
@@ -52,22 +49,21 @@ Layout模块能够极大的简化您的布局方式，它包含以下主要内�
 
 <code src="./grids/layouts.tsx" />
 
-
 ### flex
 
-`GridsItem`支持传入flex设置弹性系数
+`GridsItem`支持传入 flex 设置弹性系数
 
 <code src="./grids/flex.tsx" />
 
 ### 响应式栅格
 
-预设6种响应尺寸 `xs` `sm` `md` `lg` `xl` `xxl`
+预设 6 种响应尺寸 `xs` `sm` `md` `lg` `xl` `xxl`
 
-实际使用时不可能为每一个断点都设置值，所有断点遵循一套继承机制，以减少编码量: 
+实际使用时不可能为每一个断点都设置值，所有断点遵循一套继承机制，以减少编码量:
 
-* 断点会影响其后所有未设置值的断点，比如，设置了`xs`时, `xs`之后的所有断点都会继承`xs`的配置, 如果`xs`后任意一个断点也设置了值，则后续断点会改为继承该断点
-* hidden的继承顺序与其他属性是相反的，也就是从大到小
-* 基于`MediaQuery`系列组件实现断点，所以断点是支持容器级的
+- 断点会影响其后所有未设置值的断点，比如，设置了`xs`时, `xs`之后的所有断点都会继承`xs`的配置, 如果`xs`后任意一个断点也设置了值，则后续断点会改为继承该断点
+- hidden 的继承顺序与其他属性是相反的，也就是从大到小
+- 基于`MediaQuery`系列组件实现断点，所以断点是支持容器级的
 
 <code src="./grids/mediaQuery.tsx" />
 
@@ -133,35 +129,34 @@ interface GridsColMediaQueryProps {
 <br>
 <br>
 
-
 ## MediaQuery
 
 一套声明式的媒体查询工具，帮助你轻松的实现响应式布局
 
-* 响应式的监听点可以是窗口，也可以是指定容器
-* 包含6种断点尺寸, 由小到大依次是 `xs` `sm` `md` `lg` `xl` `xxl`
-* 媒体查询的核心类型是`MediaQueryMeta`,所有api都围绕此类型展开
+- 响应式的监听点可以是窗口，也可以是指定容器
+- 包含 6 种断点尺寸, 由小到大依次是 `xs` `sm` `md` `lg` `xl` `xxl`
+- 媒体查询的核心类型是`MediaQueryMeta`,所有 api 都围绕此类型展开
 
-### MediaQuery组件
+### MediaQuery 组件
 
-最常用的断点组件，它通过render children来根据断点渲染差异化的子项
+最常用的断点组件，它通过 render children 来根据断点渲染差异化的子项
 
 <code src="./mediaQuery/base.tsx" />
 
-你也可以使用`MediaQuery`的内部实现hook`useMediaQuery`, 用法几乎一致，但是hook的用法会在尺寸类型变更时更新整个消费组件
+你也可以使用`MediaQuery`的内部实现 hook`useMediaQuery`, 用法几乎一致，但是 hook 的用法会在尺寸类型变更时更新整个消费组件
 
 ```ts
-const meta = useMediaQuery()
+const meta = useMediaQuery();
 
 meta.type;
 meta.isSM();
 ```
 
-### MediaQuery断点
+### MediaQuery 断点
 
-可以方便的为`MediaQuery`设置一组断点配置并在render children中接收符合当前尺寸的值
+可以方便的为`MediaQuery`设置一组断点配置并在 render children 中接收符合当前尺寸的值
 
-> 为了减少断点声明，断点配置包含一组继承规则，详情见下方`MediaQuery`api说明
+> 为了减少断点声明，断点配置包含一组继承规则，详情见下方`MediaQuery`api 说明
 
 ```tsx | pure
 <MediaQuery xs="small" md="medium" xxl="large">
@@ -196,10 +191,10 @@ meta.isSM();
 const meta = useMediaQueryListener(meta => {
   meta.type;
   meta.isSM();
-})
+});
 ```
 
-### 重要API & 类型
+### 重要 API & 类型
 
 **`断点`**
 
@@ -285,7 +280,6 @@ interface MediaQueryMeta {
 
 <br>
 <br>
-
 
 ## Flexible
 

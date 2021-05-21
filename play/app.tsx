@@ -1,45 +1,15 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { m78Config } from 'm78/config';
-import {
-  Divider,
-  MediaQuery,
-  Grids,
-  GridsItem,
-  MediaQueryContext,
-  MediaQueryMeta,
-  MediaQueryListener,
-} from 'm78/layout';
+import { Divider, Grids, GridsItem } from 'm78/layout';
 import { Button } from 'm78/button';
 
 import './style.scss';
 
-import sty from './style.module.scss';
+import { Form, FormItem } from 'm78/form';
+import { Input } from 'm78/input';
 
 const App = () => {
   const dark = m78Config.useState(state => state.darkMode);
-
-  function getSize(meta: MediaQueryMeta) {
-    if (meta.isSmall()) return '小';
-    if (meta.isMedium()) return '中';
-    if (meta.isLarge()) return '大';
-  }
-
-  function render(meta: MediaQueryMeta) {
-    return (
-      <div>
-        <div>{meta.type}</div>
-        <div>{getSize(meta)}</div>
-        <div className={sty.desc}>
-          <span>xs: {meta.isXS().toString()}</span>
-          <span>sm: {meta.isSM().toString()}</span>
-          <span>md: {meta.isMD().toString()}</span>
-          <span>lg: {meta.isLG().toString()}</span>
-          <span>xl: {meta.isXL().toString()}</span>
-          <span>xxl: {meta.isXXL().toString()}</span>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="p-32">
@@ -49,25 +19,30 @@ const App = () => {
 
       <Divider />
 
-      <MediaQuery xs="small" md="medium" xxl="large">
-        {(meta, value) => (
-          <div>
-            {meta.type} {value}
-          </div>
-        )}
-      </MediaQuery>
-
-      <div className={sty.box1}>
-        <div className={sty.title}>响应窗口尺寸</div>
-        <MediaQuery>{render}</MediaQuery>
-      </div>
-
-      <div className={sty.box1}>
-        <div className={sty.title}>响应容器尺寸</div>
-        <MediaQueryContext>
-          <MediaQuery>{render}</MediaQuery>
-        </MediaQueryContext>
-      </div>
+      <Form fullWidth>
+        <Grids>
+          <GridsItem xs={12} md={6} xl={4} xxl={3}>
+            <FormItem label="表单1">
+              <Input placeholder="请输入" />
+            </FormItem>
+          </GridsItem>
+          <GridsItem xs={12} md={6} xl={4} xxl={3}>
+            <FormItem label="表单2">
+              <Input placeholder="请输入" />
+            </FormItem>
+          </GridsItem>
+          <GridsItem xs={12} md={6} xl={4} xxl={3}>
+            <FormItem label="表单3">
+              <Input placeholder="请输入" />
+            </FormItem>
+          </GridsItem>
+          <GridsItem xs={12} md={6} xl={4} xxl={3}>
+            <FormItem label="表单4">
+              <Input placeholder="请输入" />
+            </FormItem>
+          </GridsItem>
+        </Grids>
+      </Form>
     </div>
   );
 };
