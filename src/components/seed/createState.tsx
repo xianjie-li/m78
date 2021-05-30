@@ -1,10 +1,10 @@
 import React from 'react';
 import { Seed } from '@m78/seed';
 import { isFunction } from '@lxjx/utils';
-import { State, UseState } from './type';
+import { State, UseState } from './types';
 
-function createState<D, V>(seed: Seed<D, V>, useState: UseState<D>) {
-  const _Deps: State<D> = ({ children }) => {
+export function _createState(seed: Seed, useState: UseState<any>) {
+  const _Deps: State<any> = ({ children }) => {
     const state = useState();
 
     if (isFunction(children)) {
@@ -15,5 +15,3 @@ function createState<D, V>(seed: Seed<D, V>, useState: UseState<D>) {
 
   return _Deps;
 }
-
-export default createState;

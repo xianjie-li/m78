@@ -1,1 +1,0 @@
-(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([[71],{QWW6:function(e,a,t){"use strict";t.r(a);var n=t("q1tI"),s=t.n(n),c=t("1p7j"),i=(t("GTID"),()=>s.a.createElement("div",{className:"demo"},s.a.createElement(c["a"],{size:"large",text:"\u81ea\u5b9a\u4e49\u6587\u672c"})));a["default"]=i}}]);

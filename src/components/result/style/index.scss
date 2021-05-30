@@ -21,7 +21,7 @@
     width: 100%;
     text-align: center;
     line-height: 1.5;
-    max-width: $md;
+    max-width: $sm;
   }
 
   &_icon {
@@ -72,7 +72,7 @@
     padding: 12px;
     margin: 24px 0 0;
     border-radius: var(--m78-border-radius);
-    background-color: var(--m78-component-bg);
+    background-color: var(--m78-color-bg);
     line-height: 1.3;
     text-align: left;
   }

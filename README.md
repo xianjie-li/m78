@@ -1,6 +1,6 @@
 
 <p align="center">
-    <img src="https://gitee.com/llixianjie/m78/raw/master/public/logo.png" width="160" align="center" />
+    <img src="https://gitee.com/llixianjie/m78/raw/master/public/logo-small.png" width="160" align="center" />
 </p>
 
 <h1 align="center">M78</h1>

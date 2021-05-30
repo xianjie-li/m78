@@ -1,90 +1,103 @@
 ---
 title: Seed - 种子
 group:
-  title: 工具
+  title: 工具包
   path: /utils
   order: 5000
 ---
 
 # Seed 种子
 
-提供权限、状态管理等核心且基础的功能
+一个非常简单易用的状态管理工具, 拒绝`redux`⛔，从我做起 😎.
 
-## 状态管理
+- 简单，三分钟即可学会使用.
+- 完善的类型声明.
+- 可扩展，支持中间件，内置了对`redux-devtool`的中间件支持.
 
-**应用状态**
+> 本库是 [@m78/seed](https://github.com/m78-core/seed) 的`react`实现。
 
-类似`redux`, 状态由一个状态对象表示，但是 seed 的使用更加轻松和简单.
+## 使用
 
-💡 你也可以通过`create()`来创建多个 seed 实例，这可以实现某些状态管理库中的`model`概念
+```tsx | pure
+import { createSeed } from 'm78/seed';
 
-**获取状态**
+// #########################
+//        基础 Api
+// #########################
 
-- 有三种方式获取状态, 分别是 `seed实例` 下的 `getState()`、`useState()`、`<State />` 三个 api
-- `useDeps`和`Deps`的优势是会响应 deps 的变更而进行更新，而`getState()`用于简单的获取状态
+// 🔥 createSeed()用来创建一个seed实例, 你可以创建多个不同的seed实例
+const seed = createSeed({
+  // 每个seed管理一个状态对象
+  state: {
+    name: 'count app',
+    count: 1,
+    createTime: Date.now(),
+  },
+});
 
-<code src="./get-deps-demo.tsx" />
+// 🔥 更新某个状态的值
+auth.setState({ count: 2 })
 
-## 权限控制
+// 🔥 将状态覆盖设置为指定值, 此处设置后，name字段将变为undefined
+auth.coverSetState({ count: 2, createTime: Date.now() })
 
-### 基本说明
+// 🔥 获取state
+auth.getState();
 
-创建 seed 实例并通过通过 Auth 组件来对指定节点附加权限
+// 🔥 订阅state变更
+const unsubscribe = subscribe((changes) => {...});
 
-<code src="./base-demo.tsx" />
+// 🔥 取消订阅
+unsubscribe();
 
-### 反馈方式
+// #########################
+//        React Api
+// #########################
 
-无权限时有三种可选的反馈方式：占位节点、气泡框提示、隐藏
+// 🔥 useState(), 获取状态的最佳方式
+function UseStateExample() {
+  /**
+   * 从state中选择部分state并返回，如果省略参数，会返回整个state对象
+   * 遵循一些使用规则，能使useState只在必要的时机更新，详情请见api useState部分
+   * */
+  const count = auth.useState(({ count }) => count);
 
-<code src="./feedback-type-demo.tsx" />
+  return (
+    <div>{count}</div>
+  )
+}
 
-### 权限组件
+// 🔥 <State />, 偶尔会用用的状态获取方式
+function StateExample() {
+  /**
+   * 通过State组件获取状态，状态改变时，只有组件的render children区域更新，
+   * 适合某个区域要显示部分deps的场景
+   * */
+  const count = auth.useState(({ count }) => count);
 
-为现有组件附加权限控制，生成的权限组件会直接附带权限验证，可用于路由组件等的权限验证
+  return (
+    <State>
+      {({ count, name }) => (
+        <div>
+          <div>count: {count}</div>
+          <div>name: {name}</div>
+        </div>
+      )}
+    </State>
+  )
+}
+```
 
-<code src="./with-auth-demo.tsx" />
-
-### useAuth
-
-hooks 式的验证，接受验证参数，返回验证结果
-
-<code src="./use-auth-demo.tsx" />
-
-### 或
-
-类似编程语言中的 `||`，如果需要在两个权限中任意一个通过就通过验证，可以将权限 key 设置为二维数组`['key', ['key2', 'key3']]`·
-
-💡 与常规验证器不同，串联的 `或验证器` 不会在前面的验证器执行失败后阻止后面的同级验证器执行
-
-<code src="./or-demo.tsx" />
-
-### 额外参数
-
-某些验证器会需要接受当前的某些运行时参数作为验证参照（比如验证是否为本人，会需要传入当前用户的信息给验证器），可以通过 extra 传递
-
-<code src="./extra-demo.tsx" />
-
-### 定制反馈节点
-
-<code src="./custom-demo.tsx" />
-
-### 局部验证器
-
-只作用于当前挂载组件的验证器
-
-<code src="./scope-demo.tsx" />
-
-## 底层 api
-
-最基本的底层逻辑在外部包中维护，[@m78/seed](https://github.com/m78-core/seed)，你可以在其文档查看`setState()`, `getState()`, `subscribe()`, `auth()`， 中间件系统等底层 api 的用法
+<br>
+如果你想了解更多，请查看下方 `API` 部分
+<br>
 
 ## 中间件
 
 中间件用于增强 api，动态更改初始配置，内置了两个中间件:
 
-- cacheMiddleware
-- devtool
+- **cacheMiddleware**: 启用 state 缓存功能，销毁时将状态存储到 session 或 storage 中并在下次进入时还原
+- **devtool**: 开启对 redux-devtool 的支持，可以通过该浏览器插件来查看当前状态
 
 ```ts
 import create, { cacheMiddleware, devtoolMiddleware } from 'm78/seed';
@@ -99,164 +112,150 @@ create({
 });
 ```
 
-如果要自己编写中间件, 请查看[@m78/seed](https://github.com/m78-core/seed#middleware)
+## 编写中间件
+
+> 🤔 这是进阶内容，如果你只是组件和库的使用者请忽略此节内容
+
+中间件用于为原有 api 添加各种补丁功能，也可用于在配置实际生效前对其进行修改。
+
+中间件有两个执行周期：
+
+- 初始化阶段，用于修改传入的默认配置
+- 补丁阶段，用于为内置 api 添加各种增强性补丁
+
+一个 log 中间件的例子:
+
+```ts
+import { Middleware } from 'm78/seed';
+
+const cacheMiddleware: Middleware = bonus => {
+  /* ##### 初始化阶段 ##### */
+
+  if (bonus.init) {
+    const conf = bonus.config;
+    console.log('init');
+
+    // 初始化时必须返回配置，即使没有对其进行修改， 返回值会作为新的初始配置使用
+    return { ...conf, state: { ...conf.state, additionalDep: 'hello😄' } };
+  }
+
+  /* ##### 补丁阶段 ##### */
+
+  console.log('api created');
+
+  // 在执行setState时打印设置的新state
+  bonus.monkey('setState', next => patch => {
+    console.log('setState', patch);
+    next(patch);
+  });
+
+  // 获取state时输出获取行为
+  bonus.monkey('getState', next => () => {
+    console.log('getState');
+    return next();
+  });
+};
+```
+
+中间件的完整 api 签名:
+
+```ts
+interface Middleware {
+  (bonus: MiddlewareBonusPatch | MiddlewareBonusInit): CreateSeedConfig | void;
+}
+
+/** 中间件初始化阶段的入参 */
+export interface MiddlewareBonusInit {
+  /** 是否为初始化阶段 */
+  init: true;
+  /** 当前创建配置(可能已被其他中间件修改过) */
+  config: CreateSeedConfig;
+  /** 在不同中间件中共享的对象，可以通过中间件特有的命名空间在其中存储数据 */
+  ctx: AnyObject;
+}
+
+// 补丁阶段参数
+interface MiddlewareBonusPatch {
+  /** 是否为初始化阶段 */
+  init: false;
+  /** 当前的auth api(可能已被其他中间件修改过) */
+  apis: Seed;
+  /** 为api添加增强补丁 */
+  monkey: MonkeyHelper;
+  /** 在不同中间件中共享的对象，可以通过中间件特有的命名空间在其中存储数据 */
+  ctx: AnyObject;
+}
+```
 
 ## API
 
-以下所有 api 都包含在 create()创建的 seed 实例对象中
+### **`Seed实例`**
 
-大部分 api 签名都是伪代码，详细说明请直接在开发时点击对应函数/组件查看类型声明文件
-
-### **`<Auth />`**
-
-为包裹的内部节点添加权限验证
+`seed`实例，由`createSeed()`创建
 
 ```ts | pure
-interface AuthProps<D, V> {
-  /**
-   * 权限验证通过后显示的内容
-   * * 当type为tooltip时，必须传入单个子元素，并且保证其能正常接收事件
-   * */
-  children: React.ReactElement | (() => React.ReactElement);
-  /**
-   * 待验证的权限key组成的数组
-   * * 只要有一个权限未验证通过，后续验证就会被中断，所以key的传入顺序最好按优先级从左到右，如: ['login', 'isVip']
-   * * 可以通过二维数组来组合两个条件['key1', ['key2', 'key3']], 组合的条件表示逻辑 `or` */
-  keys: AuthKeys<V>;
-  /** 'feedback' | 反馈方式，占位节点、隐藏、气泡提示框, 当type为popper时，会自动拦截子元素的onClick事件, 同时，也需要确保子节点符合<Popper />组件的子节点规则 */
-  type?: 'feedback' | 'hidden' | 'popper' | AuthTypeEnum;
-  /** 传递给验证器的额外参数 */
-  extra?: any;
-  /**
-   * 定制无权限时的反馈样式
-   * @param rejectMeta - 未通过的权限的具体信息
-   * @param props - 组件接收的原始props
-   * @return - 返回用于显示的反馈节点
-   * */
-  feedback?: (rejectMeta: ValidMeta, props: AuthProps<D, V>) => React.ReactNode;
-  /** 是否禁用，禁用时直接显示子节点 */
-  disabled?: boolean;
-  /** 局部验证器 */
-  validators?: Validators<D>;
-  /** 自定义显示的403 icon */
-  icon?: React.ReactNode;
+interface RCSeed<S> {
+  /** 更改当前state, 只会更改对象中包含的key */
+  setState: SetState<
+    S & {
+      [key: string]: any;
+    }
+  >;
+  /** 以新state覆盖当前state */
+  coverSetState: CoverSetState<
+    S & {
+      [key: string]: any;
+    }
+  >;
+  /** 订阅state变更, 返回函数用于取消改订阅, 接收变更的state(setState传入的原始值) */
+  subscribe: Subscribe<S>;
+  /** 获取当前的state */
+  getState(): S;
+  /** 获取当前state的hook */
+  useState: UseState<S>;
+  /** 通过render children获取state */
+  State: State<S>;
 }
-```
 
-### **`withAuth()`**
-
-创建一个权限组件
-
-`conf`参数支持`<Auth />`除`children`外的所有`props`
-
-```ts
-(conf: Omit<AuthProps<D, V>, 'children'>) => (Component: React.ComponentType<P>) => React.FC<P>
-```
-
-### **`useState()`**
-
-获取`state`
-
-```ts
-interface UseState<D> {
-  <ScopeDep = any>(
+// useState
+interface UseState<S> {
+  <ScopeS = any>(
     /**
-     * 从deps中选择部分deps并返回，如果省略，会返回整个deps对象
-     * - 如果未通过selector选取deps，hook会在每一次deps变更时更新，选取局部deps时只在选取部分变更时更新
+     * 从state中选择部分state并返回，如果省略参数，会返回整个state对象
+     * - 如果未通过selector选取state，hook会在每一次state变更时更新，选取局部state时只在选取部分变更时更新
      * - 尽量只通过selector返回必要值，以减少hook所在组件的更新次数
-     * - 如果选取的依赖值是对象等引用类型值，直接`deps => deps.xxx`返回即可，如果类似`deps => ({ ...deps.xxx })`这样更新引用地址，会造成不必要的更新
+     * - 如果选取的依赖值是对象等引用类型值，直接`({ xxx }) => xxx`返回即可，如果类似`state => ({ ...state.xxx })`这样更新引用地址，会造成不必要的更新
      * */
-    selector?: (deps: D) => ScopeDep,
+    selector?: (state: S) => ScopeS,
     /**
-     * 每次deps变更时会简单通过`===`比前后的值，如果相等则不会更新hook，你可以通过此函数来增强对比行为，如使用_.isEqual进行深对比
+     * 每次state变更时会简单通过`===`比前后的值，如果相等则不会更新hook，你可以通过此函数来增强对比行为，如使用_.isEqual进行深对比
      * - 如果在selector中正确保留了引用，很少会直接用到此参数
      * - 即使传入了自定义对比函数，依然会先执行 `===` 对比
      * */
-    equalFn?: (next: ScopeDep, prev?: ScopeDep) => boolean,
-  ): ScopeDep;
+    equalFn?: (next: ScopeS, prev?: ScopeS) => boolean,
+  ): ScopeS;
+}
+
+// <State />
+interface State<S> {
+  (props: { children: (state: S) => React.ReactNode }): React.ReactElement | null;
 }
 ```
 
-### **`<State />`**
+### **`createSeed()`**
 
-通过`render children`来跟踪`state`并渲染返回的节点
-
-```ts
-interface State<D> {
-  (props: { children: (deps: D) => React.ReactNode }): React.ReactElement | null;
-}
-```
-
-### **`useAuth()`**
-
-以 hook 的形式使用`seed.auth()`, 会自动跟踪依赖值和 key 变更
+创建一个`createSeed()`实例
 
 ```ts
-interface AuthConfig<D> {
-  /** 传递给验证器的额外参数 */
-  extra?: any;
-  /** 局部验证器 */
-  validators?: Validators<D>;
+interface RCSeedCreator {
+  <S extends AnyObject = AnyObject>(conf: CreateSeedConfig<S>): RCSeed<S>;
 }
 
-interface UseAuth<D, V> {
-  (
-    keys: AuthKeys<V>,
-    config?: {
-      /** 是否启用 */
-      disabled?: boolean;
-    } & AuthConfig<D>,
-  ): /** 所有未通过验证器返回的ValidMeta，如果为null则表示验证通过 */
-  ValidMeta[] | null;
-}
-```
-
-### **`setState()`**
-
-设置`state`值
-
-```ts
-SetState<S & {
-  [key: string]: any;
-}>
-```
-
-### **`getState()`**
-
-获取当前的 `state`
-
-### **`subscribe()`**
-
-订阅 dependency 变更, 返回的函数用于取消改订阅
-
-```ts
-type Listener<S extends object = AnyObject> = (changes: Partial<S>) => void;
-
-type Subscribe = (listener: Listener) => () => void;
-```
-
-### **`auth()`**
-
-```ts
-{
-  /**
-   * @param authKeys - 所属权限, 如果数组项为数组则表示逻辑 `or`
-   * @return [pass, rejects] - 验证结束的回调
-   * 回调接收:
-   *   * pass 是否通过了所有指定的验证
-   *   * rejects 未通过的验证器返回的ValidMeta列表
-   * */
-  auth(authKeys: AuthKeys<V>): ValidMeta[] | null;
-  /**
-   * @param authKeys - 所属权限, 如果数组项为数组则表示逻辑 `or`
-   * @param config - 配置
-   * @param config.extra - 传递给验证器的额外参数
-   * @param config.validators - 局部验证器
-   * @return [pass, rejects] - 验证结束的回调
-   * 回调接收:
-   *   * pass 是否通过了所有指定的验证
-   *   * rejects 未通过的验证器返回的ValidMeta列表
-   * */
-  auth(authKeys: AuthKeys<V>, config: AuthConfig<S>): ValidMeta[] | null;
+// 创建配置
+interface CreateSeedConfig<S = any> {
+  /** 状态 */
+  state?: S;
+  /** 中间件 */
+  middleware?: (Middleware | null | undefined)[];
 }
 ```

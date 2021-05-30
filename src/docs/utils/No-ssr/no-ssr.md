@@ -1,7 +1,7 @@
 ---
 title: NoSSR - 非服务端渲染
 group:
-  title: 反馈
+  title: 工具包
   path: /utils
   order: 5000
 ---

@@ -92,7 +92,7 @@ h6,
 /* 其他覆盖样式 */
 
 .__dumi-default-navbar {
-  z-index: var(--m78-z-index) !important;
+  z-index: 2000 !important;
   border-bottom: 1px solid var(--m78-color-border);
 }
 
@@ -165,4 +165,12 @@ h6,
 
 .__dumi-default-menu-inner::-webkit-scrollbar-thumb:active {
   background: #717171;
+}
+
+ul[role='slug-list'] li[data-depth='3'] {
+  padding-left: 22px !important;
+}
+
+.__dumi-default-navbar nav > span > a {
+  color: var(--m78-color-primary) !important;
 }

@@ -1,12 +1,12 @@
 import { Seed } from '@m78/seed';
 import { useEffect, useState } from 'react';
 import { useFn } from '@lxjx/hooks';
-import { UseState } from './type';
+import { UseState } from './types';
 
-export function createUseState<D, V>(seed: Seed<D, V>) {
+export function _createUseState(seed: Seed) {
   const defSelector = (d: any) => d;
 
-  const _useState: UseState<D> = (selector = defSelector, equalFn) => {
+  const _useState: UseState<any> = (selector = defSelector, equalFn) => {
     const select = useFn(() => {
       return selector(seed.getState());
     });

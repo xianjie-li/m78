@@ -34,7 +34,7 @@ const Popper = (_props: PopperProps) => {
   });
 
   /** 防止快速的连续开关和关闭后马上又开启的情况 */
-  const show = useDelayDerivedToggleStatus(_show, 40, {
+  const show = useDelayDerivedToggleStatus(_show, 20, {
     trailing: true,
     leading: false,
   });
@@ -153,9 +153,9 @@ const Popper = (_props: PopperProps) => {
             // @ts-ignore
             opacity: spProps.opacity.to(o => o),
             // 隐藏
-            visibility: spProps.opacity.to(o => (o < 0.3 ? 'hidden' : undefined!)),
+            visibility: spProps.opacity.to(o => (o <= 0.5 ? 'hidden' : undefined!)),
             // 关闭时防止触发事件
-            pointerEvents: spProps.opacity.to(o => (o! < 0.7 ? 'none' : undefined!)),
+            pointerEvents: spProps.opacity.to(o => (o! < 0.8 ? 'none' : undefined!)),
           }}
         >
           <div ref={measureRef}>

@@ -1,1 +1,0 @@
-(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([[122],{"5i6s":function(e,t,a){"use strict";a.r(t);var n=a("q1tI"),i=a.n(n),w=a("wXi6"),c=()=>i.a.createElement("div",{style:{width:"640px"}},i.a.createElement(w["b"],{mode:"calendar"}));t["default"]=c}}]);

@@ -1,7 +1,7 @@
 ---
 title: ErrorBoundary - 错误边界
 group:
-  title: 反馈
+  title: 工具包
   path: /utils
   order: 5000
 ---

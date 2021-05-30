@@ -135,7 +135,7 @@ export function useMethods(share: Share) {
     const hideConf = {
       xy: [direct.left, direct.top],
       opacity: 0,
-      scale: 0,
+      scale: 0.5,
       immediate: self.allHide || !animation,
     };
 
@@ -143,19 +143,15 @@ export function useMethods(share: Share) {
       if (self.lastShow) {
         set({ ...showConf, immediate: self.allHide || !animation });
       } else {
-        // stop();
-
-        // setTimeout(() => {
         set({
           immediate: self.allHide || !animation,
           from: {
             xy: [direct.left, direct.top],
             opacity: 0,
-            scale: 0.7,
+            scale: 0.8,
           },
           to: showConf,
         });
-        // });
       }
     } else {
       set(hideConf);

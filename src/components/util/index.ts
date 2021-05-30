@@ -30,9 +30,9 @@ export const stopPropagation = {
 
 /** throw error */
 export function throwError(errorMsg: string, namespace?: string): never {
-  throw new Error(`M78 -> ${namespace ? `${namespace} -> ` : ''} ${errorMsg}`);
+  throw new Error(`M78💥 -> ${namespace ? `${namespace} -> ` : ''} ${errorMsg}`);
 }
 
 export function sendWarning(msg: string, namespace?: string) {
-  console.log(`M78 -> ${namespace ? `${namespace} -> ` : ''} ${msg}`);
+  console.log(`M78💢 -> ${namespace ? `${namespace} -> ` : ''} ${msg}`);
 }

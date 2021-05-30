@@ -144,13 +144,16 @@ const _ModalBase: React.FC<ModalBaseProps> = props => {
               ...style,
               left: pos[0],
               top: pos[1],
+              // @ts-ignore TODO: 修复react-spring类型问题
               zIndex: nowZIndex,
               transform: to(
                 [sp.x, sp.y, sp.scale],
                 (x, y, scale) =>
                   `translate3d(${x}px,${y}px,0px) scale3d(${scale},${scale},${scale})`,
               ),
+              // @ts-ignore
               opacity: sp.opacity,
+              // @ts-ignore
               display: sp.opacity.to(o => (o <= 0.2 ? 'none' : '')),
             }}
           >

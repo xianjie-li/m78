@@ -11,7 +11,7 @@ export enum PopperTriggerEnum {
   hover = 'hover',
   click = 'click',
   focus = 'focus',
-  /** 次要按钮点击 */
+  /** 次要按钮点击(通常是鼠标右键) */
   subClick = 'subClick',
 }
 

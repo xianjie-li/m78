@@ -5,7 +5,7 @@ group:
   path: /view
 ---
 
-# List - 列表
+# ListView - 列表
 
 经典的展示组件
 

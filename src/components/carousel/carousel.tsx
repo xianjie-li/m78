@@ -393,6 +393,7 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
           className="m78-carousel_item"
           style={{
             height: vertical ? _height : undefined,
+            // @ts-ignore TODO: 修复react-spring类型问题
             zIndex: page.current === i ? 1 : 0,
             transform: noScale
               ? undefined

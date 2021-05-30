@@ -5,4 +5,3 @@
 import '../../base/style';
 import './index.scss';
 ```
-3. 没有style的组件统一需要创建 style/index.ts style/index.js 文件，防止在使用webpack按需加载插件的时候报错

@@ -1,9 +1,8 @@
-import 'm78/seed/style';
 import cacheMiddleware from '@m78/seed/cacheMiddleware';
 import devtoolMiddleware from '@m78/seed/devtoolMiddleware';
-import create from './seedImpl';
+import { _CreateSeed as createSeed } from './createSeed';
 
 export * from '@m78/seed';
+export * from './types';
 export { cacheMiddleware, devtoolMiddleware };
-export { AuthTypeEnum } from './type';
-export { create as createSeed };
+export { createSeed };

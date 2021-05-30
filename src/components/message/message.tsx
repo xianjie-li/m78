@@ -118,7 +118,11 @@ const Message: React.FC<MessageProps> = ({
   const StatusIcon = statusIcons[type || 'success'];
 
   return (
-    <animated.div style={springProp} className="m78-message_item">
+    <animated.div
+      // @ts-ignore TODO: 修复react-spring类型问题
+      style={springProp}
+      className="m78-message_item"
+    >
       <Portal>
         <Transition className="m78-mask" toggle={maskShow} type="fade" mountOnEnter unmountOnExit />
       </Portal>

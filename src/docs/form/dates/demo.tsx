@@ -3,7 +3,7 @@ import { Dates, DateType } from 'm78/dates';
 
 const Demo = () => {
   return (
-    <div>
+    <div style={{ maxWidth: 480 }}>
       <div>
         <Dates type={DateType.DATE} />
       </div>

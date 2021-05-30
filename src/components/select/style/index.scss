@@ -58,6 +58,7 @@
     position: relative;
     //min-width: 280px;
     max-width: 90vw;
+    z-index: var(--m78-z-index-base);
 
     .m78-empty {
       padding: 8px 12px;

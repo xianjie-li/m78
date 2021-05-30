@@ -49,7 +49,7 @@ export function getPopperDirection(
   /** 气泡大于目标元素的高 */
   const overH = size.height - targetH;
 
-  /* ############# 可以在多个反向复用的基准线 ############# */
+  /* ############# 可以在多个方向复用的基准线 ############# */
 
   /** 顶部基准线, 用于top系位置 */
   const topY = tg.top - size.height + winSt - offset;

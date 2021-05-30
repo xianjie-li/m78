@@ -64,7 +64,7 @@ export function useEventBind(share: Share, methods: ReturnType<typeof useMethods
     () => {
       show && methods.refresh();
     },
-    fn => _throttle(fn, 60, { trailing: true, leading: false }),
+    fn => _throttle(fn, 40, { trailing: true, leading: false }),
   );
 
   // target变更， 绑定基础事件

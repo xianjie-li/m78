@@ -1,7 +1,7 @@
 ---
 title: Portal - 传送门
 group:
-  title: 工具
+  title: 工具包
   path: /utils
   order: 5000
 ---
