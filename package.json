@@ -14,6 +14,8 @@
   "scripts": {
     "prebuild": "npm run lint && npm run typecheck",
     "build": "node script/build",
+    "prebuild:ci": "npm run typecheck",
+    "build:ci": "npm run build",
     "onlyBuild": "node script/build",
     "lint:script": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "lint:prettier": "prettier --check ./src/**/*",
