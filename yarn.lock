@@ -1881,10 +1881,10 @@
     lodash "^4.17.15"
     tslib "^2.0.0"
 
-"@m78/auth@^1.1.3":
-  version "1.1.3"
-  resolved "https://registry.nlark.com/@m78/auth/download/@m78/auth-1.1.3.tgz?cache=0&sync_timestamp=1622289053702&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40m78%2Fauth%2Fdownload%2F%40m78%2Fauth-1.1.3.tgz#7981ab87aab022d90cb4969bd12058ac5bf68037"
-  integrity sha1-eYGrh6qwItkMtJab0SBYrFv2gDc=
+"@m78/auth@^1.1.4":
+  version "1.1.4"
+  resolved "https://registry.nlark.com/@m78/auth/download/@m78/auth-1.1.4.tgz#e1fcaa8ced1a6b20b0e8096e031a9f368d1dca3d"
+  integrity sha1-4fyqjO0aayCw6AluAxqfNo0dyj0=
   dependencies:
     "@lxjx/utils" "^1.13.0"
     "@m78/seed" "^2.0.2"

@@ -1,6 +1,6 @@
 {
   "name": "m78",
-  "version": "1.0.0-beta.67",
+  "version": "1.0.0-beta.68",
   "types": "./",
   "license": "MIT",
   "description": "components, hooks, utils, part of the react toolchain",
@@ -61,7 +61,7 @@
     "@lxjx/react-transition-spring": "^1.2.5",
     "@lxjx/utils": "^1.13.0",
     "@lxjx/validate-tools": "^1.1.0",
-    "@m78/auth": "^1.1.3",
+    "@m78/auth": "^1.1.4",
     "@m78/seed": "^2.0.2",
     "@m78/style": "^1.0.28",
     "@types/lodash": "^4.14.141",
