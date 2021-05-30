@@ -11,7 +11,7 @@ export default {
   locales: [['zh-CN', '中文']],
   outputPath: 'docs',
   // base: '/m78/',
-  // publicPath: '/m78/',
+  publicPath: '/m78/',
   resolve: {},
   mode: 'site',
   navs: [
