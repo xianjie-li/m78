@@ -6,7 +6,7 @@ import { onChangeHandle } from './common';
 import MediaQueryCalc from './media-query-calc';
 
 /**
- * 提供MediaQuery上下文，只有其内部的MediaQuery系列组件会生效
+ * 提供MediaQuery上下文，其内部的MediaQuery会在此上下文中单独管理
  * */
 const MediaQueryContext: React.FC = ({ children }) => {
   const value = useRef<_MediaQueryTypeContext>({

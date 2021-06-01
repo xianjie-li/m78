@@ -303,7 +303,7 @@ const TreeItem = React.memo(
 
             <Switch>
               <If when={isLoading}>
-                <span className="m78-tree_icon color-primary" style={iconStyle}>
+                <span className="m78-tree_icon color" style={iconStyle}>
                   <LoadingOutlined />
                 </span>
               </If>

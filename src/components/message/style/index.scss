@@ -15,7 +15,7 @@
     transform: translate(-50%, -50%);
     text-align: center;
     width: 86vw;
-    max-width: 320px; // 兼容PC
+    max-width: 360px; // 兼容PC
     //pointer-events: none;
   }
 
@@ -52,7 +52,7 @@
         font-size: 80px;
       }
 
-      width: 300px;
+      width: 320px;
       padding: 24px;
       user-select: auto;
       pointer-events: auto;
@@ -62,10 +62,10 @@
   &_process {
     position: absolute;
     left: 0;
-    bottom: 0;
+    bottom: -1px;
     width: 0;
-    height: 2px;
-    background-color: var(--m78-color-disable);
+    height: 3px;
+    background-color: var(--m78-color-border-b);
     //transform: scaleY(0.8);
     //border-bottom: 1px var(--m78-color-second) solid;
   }

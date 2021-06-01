@@ -48,9 +48,9 @@
   &_animate {
     background: linear-gradient(
       to right,
-      var(--m78-color-border) 30%,
+      var(--m78-color-divider) 30%,
       var(--m78-color-bg) 46%,
-      var(--m78-color-border) 70%
+      var(--m78-color-divider) 70%
     );
     background-size: 400% 100%;
     animation: m78-skeleton-animation 2s ease infinite;
@@ -72,9 +72,9 @@
       border-radius: var(--m78-border-radius);
       background: linear-gradient(
         to right,
-        var(--m78-color-border) 30%,
+        var(--m78-color-divider) 30%,
         var(--m78-color-bg) 46%,
-        var(--m78-color-border) 70%
+        var(--m78-color-divider) 70%
       );
       background-size: 400% 100%;
       animation: m78-skeleton-animation 2s ease infinite;

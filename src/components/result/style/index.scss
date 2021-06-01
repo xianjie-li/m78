@@ -4,8 +4,7 @@
   display: flex;
   position: relative;
   margin: 12px 0;
-  z-index: var(--m78-z-index);
-  background-color: var(--m78-component-bg);
+  z-index: var(--m78-z-index-base);
 
   &.__fixed {
     position: fixed;

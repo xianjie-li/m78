@@ -294,7 +294,7 @@ const Pagination = (props: PaginationProps) => {
         <>
           <Divider vertical />
           <div className="m78-pagination_count">
-            共 <span className="color-primary">{total}</span> 条数据
+            共 <span className="color">{total}</span> 条数据
           </div>
         </>
       )}

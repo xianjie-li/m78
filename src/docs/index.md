@@ -4,7 +4,7 @@ order: 1
 ---
 
 <p align="center">
-    <img src="https://gitee.com/llixianjie/m78/raw/master/public/logo.png" width="160" align="center" />
+    <img src="https://gitee.com/llixianjie/m78/raw/master/public/logo-small.png" width="160" align="center" />
 </p>
 
 <h1 align="center">M78</h1>
@@ -13,18 +13,19 @@ order: 1
 
 ## 🎉Introduction
 
-一个 react 基础库，包含常用组件、hooks、以及其他工具。[查看文档](http://llixianjie.gitee.io/m78/docs)
+一个 react 基础库，包含常用组件、hooks、开发工具。[查看文档](http://llixianjie.gitee.io/m78/docs)
 
 <br>
 
 ## ✨Features
 
-- 设计风格上采用`antd`与`material`混搭, 基础样式兼容`antd`, 可作为其的补充组件库使用。
-- 大部分组件都进行了大小屏处理，移动端/PC 端均可用
-- 使用 `TypeScript` 开发，包含完整的类型声明。
-- 完全使用`hooks`编写。
-- 标准化接口，size/value/defaultValue/onChange/color 等很多配置与社区大部分组件保持一致，学习成本更低。
-- 贴近前台业务，相比其他为中后台设计的组件库可能会更适用于前台。
+- 统一的视觉风格
+- 移动端/PC 双端兼容
+- 使用 `TypeScript` 开发，包含完整的类型声明
+- 完全使用`hooks`编写
+- 标准化接口，size/value/defaultValue/onChange/color 等很多配置与社区组件保持一致，学习成本更低
+- 除 UI 外，还包含大量应用层面的工具实现，如：`权限`、`状态管理`等
+- 优秀的组件定制能力
 
 <br>
 
@@ -45,7 +46,7 @@ npm install m78
 `M78` 使用 `es modules` 模块，你可以通过`m78/*` 来导入主包下的各个模块
 
 ```js
-import { ButtonProps, Button } from 'm78/button';
+import Button, { ButtonProps } from 'm78/button';
 
 function App() {
   return (

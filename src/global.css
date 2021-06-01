@@ -5,12 +5,26 @@ body {
 /* 兼容黑暗模式 */
 
 html[data-theme='dark'] .__dumi-default-code-block {
-  filter: invert(1);
+  background-color: #21252b;
+}
+
+html[data-theme='dark'] code[class*='language-'],
+html[data-theme='dark'] pre[class*='language-'] {
+  text-shadow: none !important;
+  color: var(--m78-color-title-w) !important;
+}
+
+html[data-theme='dark'] .token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  background-color: transparent !important;
 }
 
 html[data-theme='dark'] .markdown *:not(pre) code {
-  filter: invert(1);
   border-radius: var(--m78-border-radius);
+  background-color: var(--m78-component-bg) !important;
 }
 
 html[data-theme='dark'] .__dumi-default-icon {
@@ -18,11 +32,43 @@ html[data-theme='dark'] .__dumi-default-icon {
 }
 
 html[data-theme='dark'] .__dumi-default-search-input {
-  filter: invert(1);
+  color: var(--m78-color-primary) !important;
+  background-color: var(--m78-component-bg) !important;
+}
+
+.__dumi-default-search > ul {
+  background-color: var(--m78-component-bg) !important;
+  border: 1px solid var(--m78-color-border) !important;
+}
+
+.__dumi-default-search > ul li a {
+  color: var(--m78-color-primary) !important;
+}
+
+.__dumi-default-search > ul li a:hover {
+  background-color: var(--m78-gray-3) !important;
+}
+
+.__dumi-default-previewer-source .__dumi-default-code-block {
+  border: none !important;
+}
+
+.markdown *:not(pre) code {
+  border: 1px solid var(--m78-color-border);
+  border-radius: var(--m78-border-radius);
+  margin: 0 4px;
 }
 
 .__dumi-default-search-input {
   transition: none !important;
+}
+
+.__dumi-default-layout-toc li a::before {
+  background-color: var(--m78-color-divider) !important;
+}
+
+.__dumi-default-layout-toc li a.active::before {
+  background-color: var(--m78-color) !important;
 }
 
 .__dumi-default-previewer {
@@ -92,12 +138,20 @@ h6,
 /* 其他覆盖样式 */
 
 .__dumi-default-navbar {
-  z-index: 2000 !important;
+  z-index: 200 !important;
   border-bottom: 1px solid var(--m78-color-border);
 }
 
 .__dumi-default-layout-toc {
   box-shadow: none !important;
+}
+
+.__dumi-default-previewer {
+  border-radius: var(--m78-border-radius) !important;
+}
+
+.__dumi-default-dark {
+  display: none !important;
 }
 
 .__dumi-default-layout-toc li a {

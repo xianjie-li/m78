@@ -67,15 +67,15 @@ const ContextMenu = ({ content, customer, className, style, children }: ContextM
   );
 };
 
-const ContextMenuItem = (props: ContextMenuItemProps) => {
+const ContextMenuItem = ({ disabled, onClick, ...props }: ContextMenuItemProps) => {
   return (
     <Tile
       {...props}
-      className={classNames(
-        'm78-context-menu_item',
-        props.className,
-        props.disabled && '__disabled',
-      )}
+      className={classNames('m78-context-menu_item', props.className, disabled && '__disabled')}
+      onClick={e => {
+        if (disabled) e.stopPropagation();
+        onClick?.(e);
+      }}
     />
   );
 };

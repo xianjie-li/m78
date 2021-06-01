@@ -3,14 +3,14 @@
 .m78-dialog {
   font-size: 14px;
   padding: 20px 24px;
-  background-color: #fff;
   background-color: var(--m78-component-bg);
-  box-shadow: var(--m78-shadow-1);
+  box-shadow: var(--m78-shadow-1-b);
   border-radius: var(--m78-border-radius-lg);
   width: 90%;
   max-height: 90%;
   overflow: auto;
   min-height: 50px;
+  border: 1px solid var(--m78-color-border);
 
   &.__prompt {
     .m78-dialog_cont {

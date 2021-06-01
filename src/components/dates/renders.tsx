@@ -44,7 +44,7 @@ export function staticRenderCheckedValue(
         {mmt && hasTime && (
           <span
             onClick={toTime}
-            className="color-primary m78-dates_time m78-dates_effect-text"
+            className="color m78-dates_time m78-dates_effect-text"
             title="点击选择"
           >
             {mmt.format(DATE_FORMAT_TIME)}
