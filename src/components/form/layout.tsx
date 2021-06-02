@@ -54,10 +54,14 @@ export function FormItemLayout({
           )}
           <div className="m78-form_item-cont">
             <div className="m78-form_item-unit-wrap">{children}</div>
-            {(desc || errorNode) && (
+            {desc && (
               <div className="m78-form_item-text-wrap">
-                {desc && <div className="m78-form_item-text">{desc}</div>}
-                {errorNode && <div className="m78-form_item-tips-text">{errorNode}</div>}
+                <div className="m78-form_item-text">{desc}</div>
+              </div>
+            )}
+            {errorNode && (
+              <div className="m78-form_item-tips-text ellipsis-2" title={errorNode as string}>
+                {errorNode}
               </div>
             )}
           </div>

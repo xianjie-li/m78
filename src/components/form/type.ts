@@ -46,12 +46,12 @@ export interface FormProps<Values = any>
 }
 
 /* 不带name的Item会作为布局组件使用 */
-export interface FormItemProps
-  extends Omit<FormItemLayoutProps, 'children' | 'errorNode'>,
-    /* 支持rc-form-field所有参数 */
-    Omit<FieldProps, 'children'>,
+export interface FormItemProps /* 支持rc-form-field所有参数 */
+  extends Omit<FieldProps, 'children'>,
     /* 支持平铺式的传入验证项 */
-    Omit<RuleObject, 'validateTrigger'> {
+    Omit<RuleObject, 'validateTrigger'>,
+    Omit<FormItemLayoutProps, 'children' | 'errorNode'>,
+    ComponentBasePropsWithAny {
   /**
    * 一个作为表单控件的直接子元素, 需要支持value/onChange接口或通过自己配置相关key
    * - 可以通过FormRenderChild和可选的noStyle手动实现更精细的状态和样式控制
@@ -74,7 +74,7 @@ export interface FormLayoutProps extends Omit<ListViewProps, 'effect'> {
   layout?: DirectionKeys | DirectionEnum;
 }
 
-export interface FormItemLayoutProps extends ComponentBasePropsWithAny {
+export interface FormItemLayoutProps extends ComponentBaseProps {
   /** 内容 */
   children: React.ReactNode;
   /** 标题 */
@@ -91,4 +91,6 @@ export interface FormItemLayoutProps extends ComponentBasePropsWithAny {
   innerRef?: React.Ref<HTMLDivElement>;
   /** 显示右侧箭头 */
   arrow?: boolean;
+  /** 元素id */
+  id?: string;
 }

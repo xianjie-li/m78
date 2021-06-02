@@ -104,7 +104,7 @@ const BaseForm: React.FC<FormProps> = props => {
     if (!el) return;
 
     /* TODO: 调整类型 */
-    triggerHighlight(el, { useOutline: false } as any);
+    triggerHighlight(el);
 
     const { visible } = checkElementVisible(el, {
       wrapEl: scrollParent,

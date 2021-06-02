@@ -25,8 +25,8 @@ const Linkage = () => (
       <Input placeholder="输入密码" type="password" />
     </Form.Item>
 
-    <Form.Item noStyle name="other" valuePropName="checked" className="w-100p mt-12">
-      <Check className="ml-8" label="填点其他的" />
+    <Form.Item noStyle name="other" valuePropName="checked">
+      <Check label="填点其他的" />
     </Form.Item>
 
     <Form.Item

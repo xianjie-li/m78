@@ -34,6 +34,7 @@
   &.__item-border {
     .m78-list-view_item {
       padding: var(--m78-space-3);
+      padding-bottom: 24px;
     }
   }
 
@@ -52,14 +53,13 @@
 
     .m78-form_item-label {
       margin-right: 20px;
-      padding-top: 3px;
+      padding-top: 7px;
       width: 5em;
       text-align: right;
     }
 
     .m78-form_actions {
-      margin-left: 20px;
-      padding-left: calc(5em + 16px);
+      padding-left: 102px;
     }
   }
 
@@ -82,9 +82,9 @@
 
   // 增加命中层级
   .m78-form_item {
-    padding: var(--m78-space-3);
-    padding-bottom: 0;
+    padding: 10px var(--m78-space-3);
     align-items: flex-start;
+    outline-offset: 6px;
   }
 
   &_item {
@@ -102,17 +102,25 @@
 
     &-text {
       width: 100%;
-      font-size: var(--m78-fs);
+      font-size: 12px;
       color: var(--m78-color-second);
     }
 
     &-tips-text {
+      position: absolute;
       color: var(--m78-color-error);
-      font-size: var(--m78-fs);
+      font-size: 12px;
+      line-height: 1;
+      padding-top: 2px;
+      padding-right: var(--m78-space-3);
+      height: 15px;
+      overflow: hidden;
+      -webkit-line-clamp: 1;
     }
 
     &-label {
-      margin-bottom: 4px;
+      font-size: var(--m78-fs);
+      line-height: 1.2;
     }
 
     &-unit-wrap {
@@ -132,9 +140,6 @@
       }
     }
 
-    &-main {
-    }
-
     &-cont {
       flex: 1;
       align-self: center;
@@ -145,6 +150,9 @@
     position: absolute;
     color: var(--m78-color-error);
     font-weight: 700;
+    font-style: normal;
+    padding-top: 2px;
+    padding-left: 1px;
   }
 
   &_actions {
