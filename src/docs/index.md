@@ -46,7 +46,7 @@ npm install m78
 `M78` 使用 `es modules` 模块，你可以通过`m78/*` 来导入主包下的各个模块
 
 ```js
-import Button, { ButtonProps } from 'm78/button';
+import { Button, ButtonProps } from 'm78/button';
 
 function App() {
   return (
