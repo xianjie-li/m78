@@ -10,7 +10,7 @@ export const _CreateSeed: RCSeedCreator = conf => {
   }
 
   return create({
-    middleware,
     ...conf,
+    middleware,
   }) as RCSeed<any>;
 };
