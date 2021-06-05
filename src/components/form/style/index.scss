@@ -47,13 +47,13 @@
 
     .m78-form_item-main {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       flex-wrap: wrap;
     }
 
     .m78-form_item-label {
       margin-right: 20px;
-      //padding-top: 7px;
+      padding-top: 8px;
       width: 5em;
       text-align: right;
     }
@@ -124,6 +124,7 @@
 
     &-unit-wrap {
       display: flex;
+      min-height: $size-default;
 
       .m78-form_item {
         padding: 0 !important;
