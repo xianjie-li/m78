@@ -40,6 +40,7 @@
 
   &.__full-width {
     max-width: 100% !important;
+    width: 100% !important;
   }
 
   &.__horizontal {
@@ -73,6 +74,7 @@
 
   &.__column {
     max-width: 100%;
+    width: 100%;
 
     &.__horizontal .m78-form_item-label {
       width: 4em;
