@@ -19,6 +19,7 @@ export function useEventBind(share: Share, methods: ReturnType<typeof useMethods
   const subClickHandle = useFn((e: MouseEvent) => {
     if (disabled) return;
     e.preventDefault();
+    e.stopPropagation();
     setShow(prev => !prev);
     return false;
   });

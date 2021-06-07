@@ -30,6 +30,7 @@ const ContextMenu = ({ content, customer, className, style, children }: ContextM
 
   function onContextMenu(e: React.MouseEvent) {
     e.preventDefault();
+    e.stopPropagation();
 
     setTarget({
       left: e.clientX,
