@@ -80,7 +80,8 @@ const Popper = (_props: PopperProps) => {
     opacity: 0,
     scale: 0,
     config: {
-      tension: 280,
+      // popper通常需要快速呈现内容，动画速度尽量调高，防止操作的顿感
+      tension: 400,
       friction: 24,
     },
   }));

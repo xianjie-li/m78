@@ -148,7 +148,7 @@ export function useMethods(share: Share) {
           from: {
             xy: [direct.left, direct.top],
             opacity: 0,
-            scale: 0.8,
+            scale: 0.9,
           },
           to: showConf,
         });

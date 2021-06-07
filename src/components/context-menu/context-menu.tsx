@@ -77,6 +77,11 @@ const ContextMenuItem = ({ disabled, onClick, ...props }: ContextMenuItemProps) 
         if (disabled) e.stopPropagation();
         onClick?.(e);
       }}
+      onContextMenu={e => {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+      }}
     />
   );
 };
