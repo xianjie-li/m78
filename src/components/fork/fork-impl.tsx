@@ -1,6 +1,6 @@
 import React from 'react';
 import { Spin } from 'm78/spin';
-import { isFunction } from '@lxjx/utils';
+import { isArray, isFunction } from '@lxjx/utils';
 import { Button } from 'm78/button';
 
 import { NoticeBar } from 'm78/notice-bar';
@@ -100,13 +100,46 @@ const If: React.FC<IfProps> = ({ when, children }) => {
 };
 
 /**
- * 显示或隐藏内容(!必须确保子只有一个子元素并且包含包裹元素（即不能为纯文本），用于挂载display: 'none')
+ * 显示或隐藏内容
+ *
+ * 组件内部通过display: 'none'隐藏元素，其支持以下类型的子元素:
+ * - 单个ReactElement，并且props支持接收style控制样式，这是最佳的使用方式，不会改变dom树
+ * - 字符串，会生成一个div包裹在其外层来控制显示隐藏
+ * - 一组元素, 遍历为所有的ReactElement添加隐藏的style，非ReactElement节点会原样返回
  *  */
-const Toggle: React.FC<ToggleProps> = ({ when, children }) => {
+const Toggle = ({ when, children }: ToggleProps): React.ReactElement => {
   function hideChild() {
-    return React.cloneElement(children, { style: { display: 'none' } });
+    const hideProps = { display: 'none' };
+
+    // 克隆并返回一个reactElement的隐藏版本(需要其支持style参数)
+    const hideReactElement = (rEl: React.ReactElement, key?: any) =>
+      React.cloneElement(rEl, {
+        key,
+        style: { ...rEl.props.style, ...hideProps },
+      });
+
+    if (typeof children === 'string') {
+      return <div style={hideProps}>{children}</div>;
+    }
+
+    if (isArray(children)) {
+      return children.map((item, ind) => {
+        // 正常的reactElement
+        if (React.isValidElement(item)) return hideReactElement(item, ind);
+        // 其他的原样返回
+        return item;
+      });
+    }
+
+    if (React.isValidElement(children)) {
+      return hideReactElement(children);
+    }
+
+    // 不满足条件时通过阻止渲染作为回退
+    return null;
   }
-  return when ? children : hideChild();
+
+  return when ? children : (hideChild() as any);
 };
 
 type Filter = {

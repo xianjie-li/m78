@@ -57,7 +57,7 @@ export interface ToggleProps {
   /** 任何falsy\truthy值 */
   when?: any;
   /** 待切换的子元素 */
-  children: React.ReactElement;
+  children: React.ReactNode;
 }
 
 export interface SwitchProps {
