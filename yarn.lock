@@ -1870,6 +1870,15 @@
     "@babel/runtime" "^7.7.6"
     "@types/node" "^13.11.0"
 
+"@lxjx/utils@^1.14.0":
+  version "1.14.0"
+  resolved "https://registry.nlark.com/@lxjx/utils/download/@lxjx/utils-1.14.0.tgz#2f9c68017e19591f47a6b18a2659c830e68bf100"
+  integrity sha1-L5xoAX4ZWR9HprGKJlnIMOaL8QA=
+  dependencies:
+    "@babel/runtime" "^7.7.6"
+    "@types/node" "^13.11.0"
+    "@types/react" "^17.0.9"
+
 "@lxjx/validate-tools@^1.1.0":
   version "1.1.0"
   resolved "https://registry.npm.taobao.org/@lxjx/validate-tools/download/@lxjx/validate-tools-1.1.0.tgz#4061a7d6cb6b963892fcedbf724e686e5eedb811"
@@ -2755,7 +2764,7 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@17.0.4", "@types/react@^16.9.23", "@types/react@^16.9.43", "@types/react@^17.0.4":
+"@types/react@*", "@types/react@17.0.4", "@types/react@^16.9.23", "@types/react@^16.9.43", "@types/react@^17.0.4", "@types/react@^17.0.9":
   version "17.0.4"
   resolved "https://registry.nlark.com/@types/react/download/@types/react-17.0.4.tgz?cache=0&sync_timestamp=1621989398685&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40types%2Freact%2Fdownload%2F%40types%2Freact-17.0.4.tgz#a67c6f7a460d2660e950d9ccc1c2f18525c28220"
   integrity sha1-pnxvekYNJmDpUNnMwcLxhSXCgiA=

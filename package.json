@@ -59,7 +59,7 @@
     "@lxjx/hooks": "^1.16.4",
     "@lxjx/react-render-api": "^0.5.0",
     "@lxjx/react-transition-spring": "^1.2.5",
-    "@lxjx/utils": "^1.13.0",
+    "@lxjx/utils": "^1.14.0",
     "@lxjx/validate-tools": "^1.1.0",
     "@m78/auth": "^1.1.4",
     "@m78/seed": "^2.0.2",
