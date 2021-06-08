@@ -11,19 +11,24 @@ export function _createUseState(seed: Seed) {
       return selector(seed.getState());
     });
 
-    const [deps, setDeps] = useState(select);
+    const [deps, setDeps] = useState(() => ({
+      state: select(),
+    }));
 
     const handle = useFn(() => {
       const selected = select();
-      if (selected !== deps) {
-        if (equalFn && equalFn(selected, deps)) return;
-        setDeps(selected);
+      if (selected !== deps.state) {
+        if (equalFn && equalFn(selected, deps.state)) return;
+        // !!selected有可能是函数，千万别直接存useState, 需要通过对象转存
+        setDeps({
+          state: selected,
+        });
       }
     });
 
     useEffect(() => seed.subscribe(handle), []);
 
-    return deps;
+    return deps.state;
   };
 
   return _useState;
