@@ -38,13 +38,15 @@
 /* 滚动条尺寸大于10时启用 */
 .m78-scrollbar {
   &::-webkit-scrollbar {
+    position: relative;
     width: 6px;
     height: 6px;
-    background: transparent;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
   }
 
   &::-webkit-scrollbar-thumb {
-    border-radius: 6px;
+    border-radius: 4px;
     background: var(--m78-color-disable);
     min-height: 70px;
     min-width: 70px;
@@ -59,12 +61,12 @@
   }
 
   &.__hover {
-    &::-webkit-scrollbar-thumb {
+    &::-webkit-scrollbar {
       display: none;
     }
 
     &:hover {
-      &::-webkit-scrollbar-thumb {
+      &::-webkit-scrollbar {
         display: block;
       }
     }

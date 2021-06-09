@@ -173,6 +173,10 @@
     -webkit-filter: blur(0); // chrome模糊
     overflow: hidden;
 
+    .m78-btn + .m78-btn {
+      margin-left: 0;
+    }
+
     &-inner {
       display: flex;
       justify-content: space-between;
@@ -195,6 +199,7 @@
 
   &_prefix {
     margin-right: 4px;
+    font-weight: 400;
   }
 
   &_suffix {
