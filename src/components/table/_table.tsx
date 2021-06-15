@@ -1,75 +1,86 @@
 import React from 'react';
 import { Button } from 'm78/button';
+import { isTruthyOrZero } from '@lxjx/utils';
+import { TableProps } from './types';
+import { getPrimaryKey, getField } from './common';
 
-const _Table = () => {
-  return (
-    <div className="m78-table __border __stripe m78-scrollbar" style={{ height: 400 }}>
-      <table>
-        <colgroup>
-          <col />
-          <col />
-          <col />
-          <col />
-          <col />
-          <col />
-          <col />
-          <col />
-        </colgroup>
-        <thead>
-          <tr>
-            <td className="m78-table_fixed">
-              <div>#</div>
-              <span className="m78-table_fixed-border_left" />
-              <span className="m78-table_fixed-border_right" />
-            </td>
-            <td>
-              <div>标题2</div>
-            </td>
-            <td>
-              <div>标题3</div>
-            </td>
-            <td>
-              <div>标题4</div>
-            </td>
-            <td>
-              <div>标题5</div>
-            </td>
-            <td>
-              <div>
-                标题6标题6题6标题6标6标题6标题6标题6标题6标题6标题6标题6标题6标题6标题6标题6标题6标题6标6标题6标题6标题6标题6标题6标题6标题6标题6标题6标题6标题6标题6标题6标6标题6标题6标题6标题6标题6标题6标题6标题6标题6标题6标题6标题6标题6标6标题6标题6标题6标题6标题6标题6标题6标题6
-              </div>
-            </td>
-            <td>
-              <div>标题7</div>
-            </td>
-            <td>
-              <div>标题8</div>
-            </td>
-          </tr>
-        </thead>
-        <tbody>
-          {Array.from({ length: 20 }).map((item, key) => (
+const _Table = (props: TableProps) => {
+  const { dataSource = [], columns = [], primaryKey = '' } = props;
+
+  function renderColgroup() {
+    return (
+      <colgroup>
+        {columns.map((item, ind) => {
+          const { width, maxWidth } = item;
+
+          // 单元格的width相当于maxWidth, maxWidth设置无效,所以在设置maxWidth时，为其设置width可以限制列的最大宽度
+          return <col key={ind} style={{ width: isTruthyOrZero(maxWidth) ? maxWidth : width }} />;
+        })}
+      </colgroup>
+    );
+  }
+
+  function renderThead() {
+    return (
+      <thead>
+        <tr>
+          {columns.map((item, ind) => {
+            const { width, maxWidth } = item;
+
+            return (
+              <td key={ind}>
+                <div
+                  className="m78-table_cell"
+                  style={{ maxWidth, width: !isTruthyOrZero(maxWidth) ? width : undefined }}
+                >
+                  {item.label}
+                </div>
+              </td>
+            );
+          })}
+        </tr>
+      </thead>
+    );
+  }
+
+  function renderTbody() {
+    return (
+      <tbody>
+        {dataSource.map(item => {
+          const key = item[primaryKey] || getPrimaryKey(item);
+
+          return (
             <tr key={key}>
-              <td className="m78-table_fixed">
-                {key + 1}
-                <span className="m78-table_fixed-border_left" />
-                <span className="m78-table_fixed-border_right" />
-              </td>
-              <td>内容2</td>
-              <td>
-                <Button size="small">编辑</Button>
-              </td>
-              <td>内容4</td>
-              <td>内容5</td>
-              <td>内容6</td>
-              <td>内容7</td>
-              <td>内容8</td>
+              {columns.map((column, ind) => {
+                const val = getField(item, column.field);
+                const { width, maxWidth } = column;
+
+                return (
+                  <td key={ind}>
+                    <div
+                      className="m78-table_cell"
+                      style={{ maxWidth, width: !isTruthyOrZero(maxWidth) ? width : undefined }}
+                    >
+                      {isTruthyOrZero(val) ? val : <div className="tc">-</div>}
+                    </div>
+                  </td>
+                );
+              })}
             </tr>
-          ))}
-        </tbody>
+          );
+        })}
+      </tbody>
+    );
+  }
+
+  return (
+    <div className="m78-table __border __stripe m78-scrollbar">
+      <table>
+        {renderColgroup()}
+        {renderThead()}
+        {renderTbody()}
       </table>
     </div>
   );
 };
-
 export default _Table;

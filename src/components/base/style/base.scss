@@ -52,6 +52,10 @@
     min-width: 70px;
   }
 
+  &::-webkit-scrollbar-corner {
+    background-color: transparent;
+  }
+
   &::-webkit-scrollbar-thumb:hover {
     background: var(--m78-color-second);
   }

@@ -1,7 +1,6 @@
 @import '../../style/index';
 
 .m78-table {
-  white-space: nowrap;
   background: var(--m78-component-bg);
   line-height: var(--m78-line-height);
   font-size: var(--m78-fs);
@@ -9,21 +8,30 @@
   text-align: left;
   overflow: auto;
   width: 100%;
-  border: 1px solid var(--m78-gray-5);
-  border-radius: 6px;
 
   table {
+    //table-layout: fixed;
+    min-width: 100%;
     border-spacing: 0;
-    border-collapse: collapse;
+    // collapse和sticky已经firefox支持很怪异，后续css统一使用使用手动合并边框的方式
+    border-collapse: separate;
   }
 
   thead {
     font-weight: bold;
     color: var(--m78-color-title);
-    position: sticky;
-    top: 0;
-    background-color: var(--m78-component-bg);
-    z-index: 11;
+    white-space: nowrap;
+
+    td {
+      top: 0;
+      position: sticky;
+      z-index: 11;
+      background-color: var(--m78-component-bg);
+    }
+
+    .m78-table_fixed {
+      z-index: 12;
+    }
   }
 
   // 背景色、边框均使用td来设置可以减少css差异减少维护成本
@@ -31,6 +39,14 @@
     tr {
       &:hover td, &:hover .m78-table_fixed {
         background: var(--m78-gray-4) !important;
+      }
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+
+      &::after {
+        display: none;
       }
     }
   }
@@ -41,13 +57,20 @@
 
   td {
     position: relative;
-    padding: 6px 12px;
-    height: 40px;
 
     &:first-child {
       font-weight: bold;
     }
   }
+
+  &_cell {
+    padding: 6px 12px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    word-break: break-word;
+  }
+
 
   // ##########################
   // fixed列和表头
@@ -58,46 +81,43 @@
     z-index: 10;
     left: 0;
     background: var(--m78-component-bg);
-  }
 
-  // 修复sticky格的显示问题
-
-  &_fixed-border_left, &_fixed-border_right {
-    position: absolute;
-    top: 0;
-    height: 100%;
-  }
-
-  &_fixed-border_left {
-    border-left: 1px solid var(--m78-gray-5);
-    left: -1px;
-  }
-
-  &_fixed-border_right {
-    border-right: 1px solid var(--m78-gray-5);
-    right: -1px;
+    &::after {
+      position: absolute;
+      content: '';
+      width: 100%;
+      left: 0;
+      bottom: -12px;
+      border-bottom: 1px solid var(--m78-gray-5);
+    }
   }
 
   &.__regular thead, &.__border thead {
     td {
       border-bottom: 1px solid var(--m78-gray-7);
 
-      &::before, &::after {
+      // 模拟下边框修复不显示的问题
+      &::after {
         position: absolute;
         content: '';
         height: 0;
-        width: 100%;
-        left: 0;
-      }
-
-      &::before {
-        top: -1px;
-        border-top: 1px solid var(--m78-gray-7);
+        // 防止出现间隔
+        width: 104%;
+        left: -1px;
       }
 
       &::after {
         bottom: -1px;
         border-bottom: 1px solid var(--m78-gray-7);
+      }
+
+      // 防止溢出导致滚动
+      &:first-child::after {
+        left: 0;
+      }
+
+      &:last-child::after {
+        left: -4%;
       }
     }
   }
@@ -111,36 +131,23 @@
       border-bottom: 1px solid var(--m78-gray-5);
     }
 
-    tr:last-child td{
+    tr:last-child td {
       border-bottom: none;
     }
   }
 
   &.__border {
-    thead {
-      td::before {
-        border-color: var(--m78-gray-5);
-      }
-    }
+    border: 1px solid var(--m78-gray-5);
+    //border-right: none;
+    //border-bottom: none;
 
     td {
-      border: 1px solid var(--m78-gray-5);
-    }
-
-    tr:first-child td {
-      border-top: none;
-    }
-
-    td:first-child {
-      border-left: none;
+      border-right: 1px solid var(--m78-gray-5);
+      border-bottom: 1px solid var(--m78-gray-5);
     }
 
     td:last-child {
       border-right: none;
-    }
-
-    tr:last-child td {
-      border-bottom: none;
     }
   }
 
@@ -152,7 +159,8 @@
     }
   }
 
-  &::-webkit-scrollbar, &::-webkit-scrollbar-thumb {
-    border-radius: 0;
+  &::-webkit-scrollbar {
+    //border-radius: 0;
+    //background-color: transparent;
   }
 }
