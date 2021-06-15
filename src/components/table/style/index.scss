@@ -1,6 +1,7 @@
 @import '../../style/index';
 
 .m78-table {
+  position: relative;
   background: var(--m78-component-bg);
   line-height: var(--m78-line-height);
   font-size: var(--m78-fs);
@@ -8,15 +9,27 @@
   text-align: left;
   overflow: auto;
   width: 100%;
+  border-radius: 6px 6px 0 0;
 
+  // 隐藏左侧阴影的标记类
+  &.__touchLeft .m78-table_fixed-shadow.__right {
+    opacity: 0;
+  }
+
+  // 隐藏右侧阴影的标记类
+  &.__touchRight .m78-table_fixed-shadow.__left {
+    opacity: 0;
+  }
+
+  // 基础表格属性
   table {
-    //table-layout: fixed;
     min-width: 100%;
     border-spacing: 0;
-    // collapse和sticky已经firefox支持很怪异，后续css统一使用使用手动合并边框的方式
+    // collapse在部分浏览器支持很怪异，所以统一使用使用手动合并边框的方式
     border-collapse: separate;
   }
 
+  // 表头基础样式
   thead {
     font-weight: bold;
     color: var(--m78-color-title);
@@ -27,6 +40,10 @@
       position: sticky;
       z-index: 11;
       background-color: var(--m78-component-bg);
+    }
+
+    .m78-table_cell {
+      padding: 8px 12px;
     }
 
     .m78-table_fixed {
@@ -63,6 +80,7 @@
     }
   }
 
+  // td内部的格子
   &_cell {
     padding: 6px 12px;
     overflow: hidden;
@@ -76,19 +94,34 @@
   // fixed列和表头
   // ##########################
 
+  // 固定cell
   &_fixed {
     position: sticky !important;
     z-index: 10;
     left: 0;
     background: var(--m78-component-bg);
 
-    &::after {
-      position: absolute;
-      content: '';
-      width: 100%;
-      left: 0;
-      bottom: -12px;
-      border-bottom: 1px solid var(--m78-gray-5);
+    &.__left-last {
+      box-shadow: 0 0 4px var(--m78-color-second);
+    }
+  }
+
+  // 固定格的提示阴影
+  tbody &_fixed-shadow {
+    position: absolute;
+    left: -10px;
+    top: 0;
+    width: 10px;
+    height: 100%;
+    background: linear-gradient(to left, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
+    pointer-events: none;
+    transition: opacity var(--m78-animate-fast);
+    opacity: 1;
+
+    &.__right {
+      left: auto;
+      right: -10px;
+      background: linear-gradient(to right, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
     }
   }
 
@@ -126,6 +159,7 @@
   // 边框、分割样式类型
   // ##########################
 
+  // 常规样式
   &.__regular {
     td {
       border-bottom: 1px solid var(--m78-gray-5);
@@ -134,8 +168,13 @@
     tr:last-child td {
       border-bottom: none;
     }
+
+    &::-webkit-scrollbar {
+      background-color: transparent;
+    }
   }
 
+  // 边框样式
   &.__border {
     border: 1px solid var(--m78-gray-5);
     //border-right: none;
@@ -149,8 +188,26 @@
     td:last-child {
       border-right: none;
     }
+
+    td:not(.m78-table_fixed) + .m78-table_fixed {
+      &::before {
+        position: absolute;
+        content: '';
+        height: 100%;
+        left: -1px;
+        top: 0;
+        border-left: 1px solid var(--m78-gray-5);
+      }
+    }
+
+    &::-webkit-scrollbar {
+      border: 1px solid var(--m78-gray-5);
+      border-radius: 0;
+      background-color: transparent;
+    }
   }
 
+  // 条纹背景
   &.__stripe {
     tbody {
       tr:nth-child(2n - 1) td {
@@ -159,8 +216,4 @@
     }
   }
 
-  &::-webkit-scrollbar {
-    //border-radius: 0;
-    //background-color: transparent;
-  }
 }

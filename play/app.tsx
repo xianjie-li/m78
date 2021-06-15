@@ -9,7 +9,8 @@ const columns: TableColumns = [
   {
     label: '#',
     field: 'id',
-    width: 200,
+    maxWidth: 50,
+    fixed: 'left',
   },
   {
     label: '姓名',
@@ -19,6 +20,7 @@ const columns: TableColumns = [
   {
     label: '出生日期',
     field: 'birthday',
+    fixed: 'left',
   },
   {
     label: '职业',
@@ -27,11 +29,62 @@ const columns: TableColumns = [
   {
     label: '亲属名',
     field: ['relation', '0', 'name'],
+    fixed: 'right',
   },
   {
     label: '描述',
     field: 'desc',
-    maxWidth: 300,
+    width: 100,
+    fixed: 'right',
+  },
+  {
+    label: '技能',
+    field: 'skill',
+    fixed: 'right',
+  },
+  {
+    label: '技能',
+    field: 'skill',
+  },
+  {
+    label: '技能',
+    field: 'skill',
+  },
+  {
+    label: '技能',
+    field: 'skill',
+  },
+  {
+    label: '技能',
+    field: 'skill',
+  },
+  {
+    label: '技能',
+    field: 'skill',
+  },
+  {
+    label: '技能',
+    field: 'skill',
+  },
+  {
+    label: '技能',
+    field: 'skill',
+  },
+  {
+    label: '技能',
+    field: 'skill',
+  },
+  {
+    label: '技能',
+    field: 'skill',
+  },
+  {
+    label: '技能',
+    field: 'skill',
+  },
+  {
+    label: '技能',
+    field: 'skill',
   },
   {
     label: '技能',
@@ -59,8 +112,30 @@ const ds = Array.from({ length: 20 }).map((i, ind) => {
   };
 });
 
+const ds2 = Array.from({ length: 20 }).map((i, ind) => {
+  return {
+    id: ind + 10001,
+    name: `李显杰${ind}${1 + 10001}`,
+    birthday: '1994-07-14',
+    user: {
+      name: '前端工程师',
+    },
+    // relation: [
+    //   {
+    //     name: '梁龙弟',
+    //   },
+    // ],
+    desc:
+      '这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一',
+    // desc: '这是一',
+    skill: '编程、绘画、旅游',
+  };
+});
+
 const App = () => {
   const dark = m78Config.useState(state => state.darkMode);
+
+  const [d, setD] = useState(ds);
 
   return (
     <div className="p-32">
@@ -70,9 +145,11 @@ const App = () => {
 
       <Divider />
 
+      <Button onClick={() => (d === ds ? setD(ds2) : setD(ds))}>change</Button>
+
       <Spacer height={50} />
 
-      <Table columns={columns} dataSource={ds} primaryKey="name" />
+      <Table columns={columns} dataSource={d} primaryKey="name" />
 
       <Spacer height={1000} />
     </div>
