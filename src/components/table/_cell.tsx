@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { AnyObject, isTruthyOrZero } from '@lxjx/utils';
 import { getField } from 'm78/table/common';
 import { useSetState } from '@lxjx/hooks';
-import { _TableColumnInside, TableColumn, TableColumnFixedEnum } from './types';
+import { _Share, _TableColumnInside, TableColumn, TableColumnFixedEnum } from './types';
 
 interface TableCellProps {
   /** 当前列 */
@@ -16,10 +16,14 @@ interface TableCellProps {
   isHead?: boolean;
   /** 表格节点 */
   tableElRef: React.MutableRefObject<HTMLTableElement>;
+  share: _Share;
 }
 
-const _Cell = ({ column, isHead, record, index, tableElRef }: TableCellProps) => {
+const _Cell = ({ column, isHead, record, share, index }: TableCellProps) => {
   const { width, maxWidth, fixed, label, fixedLeftLast, fixedRightFirst } = column;
+  const { state } = share;
+
+  const fixedMeta = state.fixedMetas[index];
 
   const elRef = useRef<HTMLTableDataCellElement>(null!);
 
@@ -30,22 +34,22 @@ const _Cell = ({ column, isHead, record, index, tableElRef }: TableCellProps) =>
     child = isTruthyOrZero(val) ? val : <div className="tc">-</div>;
   }
 
-  useEffect(() => {
-    if (column.fixed === TableColumnFixedEnum.left) {
-      elRef.current.style.left = 'auto';
-      const left = elRef.current.offsetLeft;
-      elRef.current.style.left = `${left}px`;
-    }
-
-    if (column.fixed === TableColumnFixedEnum.right) {
-      elRef.current.style.right = 'auto';
-      const wrapBound = tableElRef.current.getBoundingClientRect();
-      const elBound = elRef.current.getBoundingClientRect();
-
-      const right = wrapBound.right - elBound.right;
-      elRef.current.style.right = `${right}px`;
-    }
-  });
+  // useEffect(() => {
+  //   if (column.fixed === TableColumnFixedEnum.left) {
+  //     elRef.current.style.left = 'auto';
+  //     const left = elRef.current.offsetLeft;
+  //     elRef.current.style.left = `${left}px`;
+  //   }
+  //
+  //   if (column.fixed === TableColumnFixedEnum.right) {
+  //     elRef.current.style.right = 'auto';
+  //     const wrapBound = tableElRef.current.getBoundingClientRect();
+  //     const elBound = elRef.current.getBoundingClientRect();
+  //
+  //     const right = wrapBound.right - elBound.right;
+  //     elRef.current.style.right = `${right}px`;
+  //   }
+  // });
 
   return (
     <td
@@ -53,6 +57,10 @@ const _Cell = ({ column, isHead, record, index, tableElRef }: TableCellProps) =>
       className={clsx({
         'm78-table_fixed': fixed,
       })}
+      style={{
+        left: column.fixed === TableColumnFixedEnum.left ? fixedMeta?.left : undefined,
+        right: column.fixed === TableColumnFixedEnum.right ? fixedMeta?.right : undefined,
+      }}
     >
       <div
         className="m78-table_cell"

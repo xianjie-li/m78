@@ -1,5 +1,18 @@
 import { AnyObject } from '@lxjx/utils';
 
+export interface _InnerState {
+  touchLeft: boolean;
+  touchRight: boolean;
+  fixedMetas: {
+    left: number;
+    right: number;
+  }[];
+}
+
+export interface _Share {
+  state: _InnerState;
+}
+
 export type TableColumnFixedKeys = 'left' | 'right';
 
 export enum TableColumnFixedEnum {

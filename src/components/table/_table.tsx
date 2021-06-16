@@ -2,9 +2,16 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from 'm78/button';
 import { isTruthyOrZero } from '@lxjx/utils';
 import clsx from 'clsx';
-import { useScroll, UseScrollMeta } from '@lxjx/hooks';
+import { useScroll, UseScrollMeta, useSetState } from '@lxjx/hooks';
 import Cell from './_cell';
-import { _TableColumnInside, TableColumnFixedEnum, TableColumns, TableProps } from './types';
+import {
+  _InnerState,
+  _Share,
+  _TableColumnInside,
+  TableColumnFixedEnum,
+  TableColumns,
+  TableProps,
+} from './types';
 import { getPrimaryKey, getField } from './common';
 
 const _Table = (props: TableProps) => {
@@ -13,10 +20,13 @@ const _Table = (props: TableProps) => {
   const wrapElRef = useRef<HTMLDivElement>(null!);
   const tableElRef = useRef<HTMLTableElement>(null!);
   const theadElRef = useRef<HTMLTableSectionElement>(null!);
+  /** tbody first line */
+  const firstTBodyRowRef = useRef<HTMLTableRowElement>(null!);
 
-  const [state, setState] = useState({
+  const [state, setState] = useSetState<_InnerState>({
     touchLeft: true,
     touchRight: true,
+    fixedMetas: [],
   });
 
   const fmtColumns = useMemo(() => {
@@ -25,26 +35,24 @@ const _Table = (props: TableProps) => {
     const colsSuf: _TableColumnInside[] = [];
 
     columns.forEach(col => {
-      const clone = { ...col };
-
       if (col.fixed === TableColumnFixedEnum.left) {
-        colsPre.push(clone);
+        colsPre.push(col);
         return;
       }
 
       if (col.fixed === TableColumnFixedEnum.right) {
-        colsSuf.push(clone);
+        colsSuf.push(col);
         return;
       }
-      cols.push(clone);
+      cols.push(col);
     });
 
     if (colsPre.length) {
-      colsPre[colsPre.length - 1].fixedLeftLast = true;
+      colsPre[colsPre.length - 1] = { ...colsPre[colsPre.length - 1], fixedLeftLast: true };
     }
 
     if (colsSuf.length) {
-      colsSuf[0].fixedRightFirst = true;
+      colsSuf[0] = { ...colsSuf[0], fixedRightFirst: true };
     }
 
     return [...colsPre, ...cols, ...colsSuf];
@@ -55,8 +63,38 @@ const _Table = (props: TableProps) => {
     onScroll: syncTouchStatus,
   });
 
+  const share: _Share = {
+    state,
+  };
+
   useEffect(() => {
     syncTouchStatus(scroller.get());
+  }, []);
+
+  useEffect(() => {
+    const el = firstTBodyRowRef.current;
+    if (!el) return;
+
+    const tds = el.querySelectorAll(':scope>td');
+
+    if (!tds.length) return;
+
+    const ls: any = [];
+
+    const wrapBound = tableElRef.current.getBoundingClientRect();
+
+    tds.forEach(item => {
+      const elBound = item.getBoundingClientRect();
+
+      ls.push({
+        left: elBound.left - wrapBound.left,
+        right: wrapBound.right - elBound.right,
+      });
+    });
+
+    setState({
+      fixedMetas: ls,
+    });
   }, []);
 
   /** 同步滚动状态到touchLeft，touchRight */
@@ -88,7 +126,14 @@ const _Table = (props: TableProps) => {
         <tr>
           {fmtColumns.map((column, index) => {
             return (
-              <Cell key={index} column={column} index={index} isHead tableElRef={tableElRef} />
+              <Cell
+                key={index}
+                share={share}
+                column={column}
+                index={index}
+                isHead
+                tableElRef={tableElRef}
+              />
             );
           })}
         </tr>
@@ -99,14 +144,15 @@ const _Table = (props: TableProps) => {
   function renderTbody() {
     return (
       <tbody>
-        {dataSource.map(item => {
+        {dataSource.map((item, ind) => {
           const key = item[primaryKey] || getPrimaryKey(item);
 
           return (
-            <tr key={key}>
+            <tr key={key} ref={ind === 0 ? firstTBodyRowRef : undefined}>
               {fmtColumns.map((column, index) => {
                 return (
                   <Cell
+                    share={share}
                     key={index}
                     record={item}
                     column={column}
@@ -125,11 +171,11 @@ const _Table = (props: TableProps) => {
   return (
     <div
       ref={wrapElRef}
-      className={clsx('m78-table __regular __stripe m78-scrollbar', {
+      className={clsx('m78-table __border __stripe m78-scrollbar', {
         __touchLeft: state.touchLeft,
         __touchRight: state.touchRight,
       })}
-      style={{ height: 400 }}
+      // style={{ height: 400 }}
     >
       <table ref={tableElRef}>
         {renderColgroup()}

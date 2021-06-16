@@ -4,12 +4,13 @@ import { Divider, Spacer, Tile } from 'm78/layout';
 import { Button } from 'm78/button';
 import { Toggle } from 'm78/fork';
 import { Table, TableColumns } from 'm78/table';
+import 'm78/table/style';
 
 const columns: TableColumns = [
   {
     label: '#',
     field: 'id',
-    maxWidth: 50,
+    maxWidth: 100,
     fixed: 'left',
   },
   {
@@ -112,7 +113,7 @@ const ds = Array.from({ length: 20 }).map((i, ind) => {
   };
 });
 
-const ds2 = Array.from({ length: 20 }).map((i, ind) => {
+const ds2 = Array.from({ length: 500 }).map((i, ind) => {
   return {
     id: ind + 10001,
     name: `李显杰${ind}${1 + 10001}`,
@@ -135,7 +136,7 @@ const ds2 = Array.from({ length: 20 }).map((i, ind) => {
 const App = () => {
   const dark = m78Config.useState(state => state.darkMode);
 
-  const [d, setD] = useState(ds);
+  const [d, setD] = useState(ds2);
 
   return (
     <div className="p-32">
