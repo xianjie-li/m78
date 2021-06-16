@@ -1,4 +1,12 @@
 import { AnyObject } from '@lxjx/utils';
+import React from 'react';
+
+export interface _InnerSelf {
+  /** 存放列位置, 用于fixed列定位 */
+  fixedSizeMap: {
+    [ind: string]: number;
+  };
+}
 
 export interface _InnerState {
   touchLeft: boolean;
@@ -11,6 +19,19 @@ export interface _InnerState {
 
 export interface _Share {
   state: _InnerState;
+  self: _InnerSelf;
+  props: TableProps;
+}
+
+export interface TableCellMeta {
+  /** 当前列 */
+  column: TableColumn;
+  /** 当前记录, 当为表头行时，值为 `{}` */
+  record: AnyObject;
+  /** 当前列索引 */
+  colIndex: number;
+  /** 当前行索引 */
+  rowIndex: number;
 }
 
 export type TableColumnFixedKeys = 'left' | 'right';
@@ -30,6 +51,8 @@ export interface TableColumn {
    *    - ['things', '1', 'name'] => things['1'].name
    * */
   field?: string | string[];
+  /** 自定义渲染内容, 会覆盖field配置 */
+  render?: (meta: TableCellMeta) => React.ReactNode;
   /** 列的固定宽度, 不传时列宽取决于其内容的宽度 */
   width?: string | number;
   /**
@@ -40,6 +63,16 @@ export interface TableColumn {
   maxWidth?: string | number;
   /** 固定列到左侧或右侧, 如果声明了fixed的列在常规列中间，它会根据固定方向移动到表格两侧渲染 */
   fixed?: TableColumnFixedKeys | TableColumnFixedEnum;
+  /**
+   * 为该列所有单元格设置的props, 支持td标签的所有props
+   * - 可通过该配置为整列同时设置样式、对齐、事件等
+   * - 部分被内部占用的props会被覆盖
+   * */
+  props?:
+    | React.PropsWithoutRef<JSX.IntrinsicElements['td']>
+    | ((meta: TableCellMeta) => React.PropsWithoutRef<JSX.IntrinsicElements['td']>);
+  /** 在列头渲染的额外内容 */
+  extra?: React.ReactNode | ((meta: TableCellMeta) => React.ReactNode);
 }
 
 /** 内部使用的扩展TableColumn */
@@ -61,4 +94,22 @@ export interface TableProps {
    * - 在启用了选择等功能时，primaryKey对应的值会作为选中项的value
    * */
   primaryKey?: string;
+  width?: string | number;
+  height?: string | number;
+  /**
+   * 根据传入坐标对行进行合并
+   * - 对于被合并的行，必须为其返回0来腾出位置, 否则会导致表格排列异常
+   * - fixed列和普通列不能进行合并
+   * */
+  rowSpan?: (meta: TableCellMeta) => number | undefined;
+  /**
+   * 根据传入坐标对列进行合并
+   * - 对于被合并的列，必须为其返回0来腾出位置, 否则会导致表格排列异常
+   * - fixed列和普通列不能进行合并
+   * */
+  colSpan?: (meta: TableCellMeta) => number | undefined;
+  /**
+   * 单元格未获取到有效值时(checkValid()返回false), 用于显示的回退内容, 默认是 “-”
+   * */
+  fallback?: React.ReactNode | ((meta: TableCellMeta) => React.ReactNode);
 }

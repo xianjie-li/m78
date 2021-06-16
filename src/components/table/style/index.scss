@@ -7,10 +7,9 @@
   font-size: var(--m78-fs);
   color: var(--m78-color-primary);
   text-align: left;
-  //overflow: auto;
-  //height: 400px;
+  overflow: auto;
+  height: 100%;
   width: 100%;
-  border-radius: 6px 6px 0 0;
 
   // 隐藏左侧阴影的标记类
   &.__touchLeft .m78-table_fixed-shadow.__right {
@@ -61,10 +60,10 @@
     }
 
     tr:last-child td {
-      border-bottom: none;
+      //border-bottom: none;
 
       &::after {
-        display: none;
+        //display: none;
       }
     }
   }
@@ -78,6 +77,18 @@
 
     &:first-child {
       font-weight: bold;
+    }
+  }
+
+  &_cell-wrap {
+    padding: 6px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .m78-table_cell {
+      flex: 1;
+      padding: 0 !important;
     }
   }
 
@@ -169,25 +180,22 @@
     tr:last-child td {
       border-bottom: none;
     }
-
-    &::-webkit-scrollbar {
-      background-color: transparent;
-    }
   }
 
   // 边框样式
   &.__border {
-    border: 1px solid var(--m78-gray-5);
-    //border-right: none;
-    //border-bottom: none;
+
+    thead td {
+      border-top: 1px solid var(--m78-gray-5);
+    }
 
     td {
       border-right: 1px solid var(--m78-gray-5);
       border-bottom: 1px solid var(--m78-gray-5);
     }
 
-    td:last-child {
-      border-right: none;
+    td:first-child {
+      border-left: 1px solid var(--m78-gray-5);
     }
 
     td:not(.m78-table_fixed) + .m78-table_fixed {
@@ -200,12 +208,18 @@
         border-left: 1px solid var(--m78-gray-5);
       }
     }
+  }
 
-    &::-webkit-scrollbar {
-      border: 1px solid var(--m78-gray-5);
-      border-radius: 0;
-      background-color: transparent;
-    }
+  &::-webkit-scrollbar-thumb {
+    //border-radius: 0;
+    border-left: 2px solid var(--m78-component-bg);
+    border-top: 2px solid var(--m78-component-bg);
+  }
+
+  &::-webkit-scrollbar {
+    background-color: transparent;
+    width: 8px;
+    height: 8px;
   }
 
   // 条纹背景

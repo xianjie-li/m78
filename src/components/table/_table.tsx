@@ -2,9 +2,10 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from 'm78/button';
 import { isTruthyOrZero } from '@lxjx/utils';
 import clsx from 'clsx';
-import { useScroll, UseScrollMeta, useSetState } from '@lxjx/hooks';
+import { useScroll, UseScrollMeta, useSelf, useSetState } from '@lxjx/hooks';
 import Cell from './_cell';
 import {
+  _InnerSelf,
   _InnerState,
   _Share,
   _TableColumnInside,
@@ -15,7 +16,7 @@ import {
 import { getPrimaryKey, getField } from './common';
 
 const _Table = (props: TableProps) => {
-  const { dataSource = [], columns = [], primaryKey = '' } = props;
+  const { dataSource = [], columns = [], primaryKey = '', width, height, rowSpan } = props;
 
   const wrapElRef = useRef<HTMLDivElement>(null!);
   const tableElRef = useRef<HTMLTableElement>(null!);
@@ -27,6 +28,10 @@ const _Table = (props: TableProps) => {
     touchLeft: true,
     touchRight: true,
     fixedMetas: [],
+  });
+
+  const self = useSelf<_InnerSelf>({
+    fixedSizeMap: {},
   });
 
   const fmtColumns = useMemo(() => {
@@ -65,37 +70,15 @@ const _Table = (props: TableProps) => {
 
   const share: _Share = {
     state,
+    self,
+    props,
   };
 
   useEffect(() => {
     syncTouchStatus(scroller.get());
   }, []);
 
-  useEffect(() => {
-    const el = firstTBodyRowRef.current;
-    if (!el) return;
-
-    const tds = el.querySelectorAll(':scope>td');
-
-    if (!tds.length) return;
-
-    const ls: any = [];
-
-    const wrapBound = tableElRef.current.getBoundingClientRect();
-
-    tds.forEach(item => {
-      const elBound = item.getBoundingClientRect();
-
-      ls.push({
-        left: elBound.left - wrapBound.left,
-        right: wrapBound.right - elBound.right,
-      });
-    });
-
-    setState({
-      fixedMetas: ls,
-    });
-  }, []);
+  self.fixedSizeMap = {};
 
   /** 同步滚动状态到touchLeft，touchRight */
   function syncTouchStatus(meta: UseScrollMeta) {
@@ -111,33 +94,35 @@ const _Table = (props: TableProps) => {
     return (
       <colgroup>
         {fmtColumns.map((item, ind) => {
-          const { width, maxWidth } = item;
+          const { maxWidth } = item;
 
           // 单元格的width相当于maxWidth, maxWidth设置无效,所以在设置maxWidth时，为其设置width可以限制列的最大宽度
-          return <col key={ind} style={{ width: isTruthyOrZero(maxWidth) ? maxWidth : width }} />;
+          return (
+            <col key={ind} style={{ width: isTruthyOrZero(maxWidth) ? maxWidth : item.width }} />
+          );
         })}
       </colgroup>
     );
   }
 
-  function renderThead() {
+  function renderThead(columnLs: _TableColumnInside[]) {
     return (
-      <thead ref={theadElRef}>
-        <tr>
-          {fmtColumns.map((column, index) => {
-            return (
-              <Cell
-                key={index}
-                share={share}
-                column={column}
-                index={index}
-                isHead
-                tableElRef={tableElRef}
-              />
-            );
-          })}
-        </tr>
-      </thead>
+      <tr>
+        {columnLs.map((column, index) => {
+          return (
+            <Cell
+              key={index}
+              share={share}
+              column={column}
+              record={{}}
+              rowIndex={0}
+              colIndex={index}
+              isHead
+              tableElRef={tableElRef}
+            />
+          );
+        })}
+      </tr>
     );
   }
 
@@ -156,7 +141,8 @@ const _Table = (props: TableProps) => {
                     key={index}
                     record={item}
                     column={column}
-                    index={index}
+                    rowIndex={ind}
+                    colIndex={index}
                     tableElRef={tableElRef}
                   />
                 );
@@ -175,11 +161,11 @@ const _Table = (props: TableProps) => {
         __touchLeft: state.touchLeft,
         __touchRight: state.touchRight,
       })}
-      // style={{ height: 400 }}
+      style={{ width, maxHeight: height }}
     >
       <table ref={tableElRef}>
         {renderColgroup()}
-        {renderThead()}
+        <thead ref={theadElRef}>{renderThead(fmtColumns)}</thead>
         {renderTbody()}
       </table>
     </div>

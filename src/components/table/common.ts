@@ -1,6 +1,18 @@
-import { AnyObject, isArray, isString } from '@lxjx/utils';
+import { AnyObject, isArray, isString, isTruthyOrZero } from '@lxjx/utils';
+import { throwError } from 'm78/util';
 
-export const getPrimaryKey = (obj: AnyObject) => obj.id || obj.key;
+export const getPrimaryKey = (obj: AnyObject) => {
+  const key = obj.id || obj.key;
+
+  if (!isTruthyOrZero(key)) {
+    throwError(
+      'Get default PrimaryKey(id/key) failed, please manual set <Table primaryKey="<FieldName>" />',
+      'Table',
+    );
+  }
+
+  return key;
+};
 
 export const getField = (obj: AnyObject, field?: string | string[]) => {
   if (isString(field)) {

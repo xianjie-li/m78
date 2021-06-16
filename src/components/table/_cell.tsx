@@ -1,17 +1,19 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import clsx from 'clsx';
-import { AnyObject, isTruthyOrZero } from '@lxjx/utils';
+import { AnyObject, isFunction, isNumber, isTruthyOrZero } from '@lxjx/utils';
 import { getField } from 'm78/table/common';
 import { useSetState } from '@lxjx/hooks';
-import { _Share, _TableColumnInside, TableColumn, TableColumnFixedEnum } from './types';
+import { _Share, _TableColumnInside, TableCellMeta, TableColumnFixedEnum } from './types';
 
 interface TableCellProps {
   /** 当前列 */
   column: _TableColumnInside;
   /** 当前记录, 为表头时可不传 */
-  record?: AnyObject;
-  /** 索引 */
-  index: number;
+  record: AnyObject;
+  /** 列索引 */
+  colIndex: number;
+  /** 行索引 */
+  rowIndex: number;
   /** 是否是表头单元格 */
   isHead?: boolean;
   /** 表格节点 */
@@ -19,55 +21,142 @@ interface TableCellProps {
   share: _Share;
 }
 
-const _Cell = ({ column, isHead, record, share, index }: TableCellProps) => {
-  const { width, maxWidth, fixed, label, fixedLeftLast, fixedRightFirst } = column;
-  const { state } = share;
+const _Cell = ({
+  column,
+  isHead,
+  record,
+  share,
+  colIndex,
+  rowIndex,
+  tableElRef,
+}: TableCellProps) => {
+  const { state, self, props } = share;
+  const { fallback } = props;
+  const {
+    width,
+    maxWidth,
+    fixed,
+    label,
+    render,
+    fixedLeftLast,
+    fixedRightFirst,
+    props: _cellProps,
+    extra,
+  } = column;
 
-  const fixedMeta = state.fixedMetas[index];
+  const fixedMeta = state.fixedMetas[colIndex];
 
   const elRef = useRef<HTMLTableDataCellElement>(null!);
 
-  let child: any = label;
+  const meta: TableCellMeta = { column, record, colIndex, rowIndex };
 
-  if (!isHead) {
-    const val = getField(record!, column.field);
-    child = isTruthyOrZero(val) ? val : <div className="tc">-</div>;
+  const [rowSpan, colSpan] = useMemo(() => {
+    if (isHead) return [];
+    const rowSpanGetter = props.rowSpan;
+    const colSpanGetter = props.colSpan;
+    return [rowSpanGetter?.(meta), colSpanGetter?.(meta)];
+  }, [record, column, colIndex, rowIndex]);
+
+  const cellProps = useMemo(() => {
+    if (isFunction(_cellProps)) return _cellProps(meta);
+    return _cellProps;
+  }, [_cellProps]);
+
+  /* TODO: 大小改变时重置 */
+  useEffect(() => {
+    const isFixedLeft = column.fixed === TableColumnFixedEnum.left;
+    const isFixedRight = column.fixed === TableColumnFixedEnum.right;
+
+    if (!isFixedLeft && !isFixedRight) return;
+
+    const currentSize = self.fixedSizeMap[colIndex];
+
+    if (!isNumber(currentSize)) {
+      if (isFixedLeft) {
+        elRef.current.style.left = 'auto';
+      }
+      if (isFixedRight) {
+        elRef.current.style.right = 'auto';
+      }
+
+      const wrapBound = tableElRef.current.getBoundingClientRect();
+      const elBound = elRef.current.getBoundingClientRect();
+
+      if (isFixedLeft) {
+        self.fixedSizeMap[colIndex] = elBound.left - wrapBound.left;
+      }
+
+      if (isFixedRight) {
+        self.fixedSizeMap[colIndex] = wrapBound.right - elBound.right;
+      }
+    }
+
+    if (isFixedLeft) {
+      elRef.current.style.left = `${self.fixedSizeMap[colIndex]}px`;
+    }
+
+    if (isFixedRight) {
+      elRef.current.style.right = `${self.fixedSizeMap[colIndex]}px`;
+    }
+  });
+
+  /** 单元格显示内容 */
+  function renderChild() {
+    if (isHead) return label;
+    if (render) return render(meta);
+
+    const val = getField(record, column.field);
+
+    if (isTruthyOrZero(val)) return val;
+
+    if (fallback !== undefined) {
+      if (isFunction(fallback)) return fallback(meta);
+      return fallback;
+    }
+
+    return <div className="tc">-</div>;
   }
 
-  // useEffect(() => {
-  //   if (column.fixed === TableColumnFixedEnum.left) {
-  //     elRef.current.style.left = 'auto';
-  //     const left = elRef.current.offsetLeft;
-  //     elRef.current.style.left = `${left}px`;
-  //   }
-  //
-  //   if (column.fixed === TableColumnFixedEnum.right) {
-  //     elRef.current.style.right = 'auto';
-  //     const wrapBound = tableElRef.current.getBoundingClientRect();
-  //     const elBound = elRef.current.getBoundingClientRect();
-  //
-  //     const right = wrapBound.right - elBound.right;
-  //     elRef.current.style.right = `${right}px`;
-  //   }
-  // });
-
-  return (
-    <td
-      ref={elRef}
-      className={clsx({
-        'm78-table_fixed': fixed,
-      })}
-      style={{
-        left: column.fixed === TableColumnFixedEnum.left ? fixedMeta?.left : undefined,
-        right: column.fixed === TableColumnFixedEnum.right ? fixedMeta?.right : undefined,
-      }}
-    >
+  /** 内容 */
+  function renderCellBox() {
+    return (
       <div
         className="m78-table_cell"
         style={{ maxWidth, width: !isTruthyOrZero(maxWidth) ? width : undefined }}
       >
-        {child}
+        {renderChild()}
       </div>
+    );
+  }
+
+  function renderFork() {
+    if (!extra || !isHead) return renderCellBox();
+
+    return (
+      <div className="m78-table_cell-wrap">
+        {renderCellBox()}
+        <div className="ml-4">{isFunction(extra) ? extra(meta) : extra}</div>
+      </div>
+    );
+  }
+
+  return (
+    <td
+      {...cellProps}
+      ref={elRef}
+      className={clsx(cellProps?.className, {
+        'm78-table_fixed': fixed,
+      })}
+      style={{
+        ...cellProps?.style,
+        left: column.fixed === TableColumnFixedEnum.left ? fixedMeta?.left : undefined,
+        right: column.fixed === TableColumnFixedEnum.right ? fixedMeta?.right : undefined,
+        display: rowSpan === 0 || colSpan === 0 ? 'none' : undefined,
+      }}
+      rowSpan={rowSpan}
+      colSpan={colSpan}
+    >
+      {renderFork()}
       {fixedRightFirst && <div className="m78-table_fixed-shadow __left" />}
       {fixedLeftLast && <div className="m78-table_fixed-shadow __right" />}
     </td>
