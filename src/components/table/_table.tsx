@@ -3,6 +3,8 @@ import { Button } from 'm78/button';
 import { isTruthyOrZero } from '@lxjx/utils';
 import clsx from 'clsx';
 import { useScroll, UseScrollMeta, useSelf, useSetState } from '@lxjx/hooks';
+import { Spin } from 'm78/spin';
+import { Empty } from 'm78/empty';
 import Cell from './_cell';
 import {
   _InnerSelf,
@@ -11,12 +13,34 @@ import {
   _TableColumnInside,
   TableColumnFixedEnum,
   TableColumns,
+  TableDivideStyleEnum,
   TableProps,
 } from './types';
 import { getPrimaryKey, getField } from './common';
 
+const defaultProps = {
+  dataSource: [],
+  columns: [],
+  primaryKey: '',
+  divideStyle: TableDivideStyleEnum.regular,
+  stripe: true,
+  loading: false,
+  cellMaxWidth: '300px',
+};
+
 const _Table = (props: TableProps) => {
-  const { dataSource = [], columns = [], primaryKey = '', width, height, rowSpan } = props;
+  const {
+    dataSource,
+    columns,
+    primaryKey,
+    width,
+    height,
+    divideStyle,
+    stripe,
+    size,
+    loading,
+    cellMaxWidth,
+  } = props as TableProps & typeof defaultProps;
 
   const wrapElRef = useRef<HTMLDivElement>(null!);
   const tableElRef = useRef<HTMLTableElement>(null!);
@@ -96,10 +120,14 @@ const _Table = (props: TableProps) => {
         {fmtColumns.map((item, ind) => {
           const { maxWidth } = item;
 
-          // 单元格的width相当于maxWidth, maxWidth设置无效,所以在设置maxWidth时，为其设置width可以限制列的最大宽度
-          return (
-            <col key={ind} style={{ width: isTruthyOrZero(maxWidth) ? maxWidth : item.width }} />
-          );
+          // 默认尺寸取cellMaxWidth
+          let w: number | string | undefined = cellMaxWidth;
+
+          if (isTruthyOrZero(maxWidth)) w = maxWidth;
+          if (isTruthyOrZero(item.width)) w = item.width;
+
+          // 单元格的width相当于maxWidth, 直接设置maxWidth设置无效
+          return <col key={ind} style={{ width: w }} />;
         })}
       </colgroup>
     );
@@ -127,6 +155,18 @@ const _Table = (props: TableProps) => {
   }
 
   function renderTbody() {
+    if (!dataSource?.length) {
+      return (
+        <tbody>
+          <tr>
+            <td colSpan={fmtColumns.length}>
+              <Empty desc="暂无数据" />
+            </td>
+          </tr>
+        </tbody>
+      );
+    }
+
     return (
       <tbody>
         {dataSource.map((item, ind) => {
@@ -156,19 +196,35 @@ const _Table = (props: TableProps) => {
 
   return (
     <div
-      ref={wrapElRef}
-      className={clsx('m78-table __border __stripe m78-scrollbar', {
+      className={clsx('m78-table', size && `__${size}`, {
+        __stripe: stripe,
+        [`__${divideStyle}`]: true,
         __touchLeft: state.touchLeft,
         __touchRight: state.touchRight,
       })}
-      style={{ width, maxHeight: height }}
     >
-      <table ref={tableElRef}>
-        {renderColgroup()}
-        <thead ref={theadElRef}>{renderThead(fmtColumns)}</thead>
-        {renderTbody()}
-      </table>
+      <Spin full show={loading} />
+
+      <div ref={wrapElRef} className="m78-table_wrap" style={{ width, maxHeight: height }}>
+        <table ref={tableElRef}>
+          {renderColgroup()}
+          <thead ref={theadElRef}>{renderThead(fmtColumns)}</thead>
+          {renderTbody()}
+          <tfoot style={{ position: 'sticky', bottom: 0, zIndex: 9999 }}>
+            <tr>
+              <td>1</td>
+              <td>2</td>
+              <td>3</td>
+              <td>4</td>
+              <td>5</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
     </div>
   );
 };
+
+_Table.defaultProps = defaultProps;
+
 export default _Table;

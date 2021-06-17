@@ -7,9 +7,16 @@
   font-size: var(--m78-fs);
   color: var(--m78-color-primary);
   text-align: left;
-  overflow: auto;
   height: 100%;
   width: 100%;
+
+  &_wrap {
+    position: relative;
+    overflow: auto;
+    height: 100%;
+    width: 100%;
+    border: 1px solid var(--m78-gray-5);
+  }
 
   // 隐藏左侧阴影的标记类
   &.__touchLeft .m78-table_fixed-shadow.__right {
@@ -89,6 +96,7 @@
     .m78-table_cell {
       flex: 1;
       padding: 0 !important;
+      min-width: 0;
     }
   }
 
@@ -99,6 +107,22 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     word-break: break-word;
+    min-width: 100%;  // 防止总列宽不足容器宽度，但是设置了maxWidth相关的属性时，内容被裁剪
+  }
+
+  // ##########################
+  // 尺寸
+  // ##########################
+  &.__small {
+    .m78-table_cell, .m78-table_cell-wrap {
+      padding: 2px 8px;
+    }
+  }
+
+  &.__large {
+    .m78-table_cell, .m78-table_cell-wrap {
+      padding: 10px 16px;
+    }
   }
 
 
@@ -127,7 +151,6 @@
     height: 100%;
     background: linear-gradient(to left, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
     pointer-events: none;
-    transition: opacity var(--m78-animate-fast);
     opacity: 1;
 
     &.__right {
@@ -184,9 +207,8 @@
 
   // 边框样式
   &.__border {
-
     thead td {
-      border-top: 1px solid var(--m78-gray-5);
+      border-top: none;
     }
 
     td {
@@ -195,7 +217,17 @@
     }
 
     td:first-child {
-      border-left: 1px solid var(--m78-gray-5);
+      border-left: none;
+    }
+
+    td:last-child {
+      border-right: none;
+    }
+
+    tbody {
+      tr:last-child td {
+        border-bottom: none;
+      }
     }
 
     td:not(.m78-table_fixed) + .m78-table_fixed {
@@ -210,18 +242,6 @@
     }
   }
 
-  &::-webkit-scrollbar-thumb {
-    //border-radius: 0;
-    border-left: 2px solid var(--m78-component-bg);
-    border-top: 2px solid var(--m78-component-bg);
-  }
-
-  &::-webkit-scrollbar {
-    background-color: transparent;
-    width: 8px;
-    height: 8px;
-  }
-
   // 条纹背景
   &.__stripe {
     tbody {
@@ -231,4 +251,7 @@
     }
   }
 
+  tfoot tr {
+    //border-top: 1px solid var(--m78-gray-5);
+  }
 }

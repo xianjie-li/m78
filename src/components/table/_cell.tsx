@@ -91,14 +91,16 @@ const _Cell = ({
       }
     }
 
-    if (isFixedLeft) {
+    const v = `${self.fixedSizeMap[colIndex]}px`;
+
+    if (isFixedLeft && elRef.current.style.left !== v) {
       elRef.current.style.left = `${self.fixedSizeMap[colIndex]}px`;
     }
 
-    if (isFixedRight) {
+    if (isFixedRight && elRef.current.style.right !== v) {
       elRef.current.style.right = `${self.fixedSizeMap[colIndex]}px`;
     }
-  });
+  }, [column, record, colIndex, rowIndex]);
 
   /** 单元格显示内容 */
   function renderChild() {
@@ -119,10 +121,15 @@ const _Cell = ({
 
   /** 内容 */
   function renderCellBox() {
+    let mw = props.cellMaxWidth;
+
+    // width和maxWidth任意项有值则覆盖cellMaxWidth
+    if (width) mw = maxWidth;
+
     return (
       <div
         className="m78-table_cell"
-        style={{ maxWidth, width: !isTruthyOrZero(maxWidth) ? width : undefined }}
+        style={{ maxWidth: mw, width: !isTruthyOrZero(maxWidth) ? width : undefined }}
       >
         {renderChild()}
       </div>

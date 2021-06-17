@@ -1,5 +1,6 @@
 import { AnyObject } from '@lxjx/utils';
 import React from 'react';
+import { SizeEnum, SizeKeys } from 'm78/types';
 
 export interface _InnerSelf {
   /** 存放列位置, 用于fixed列定位 */
@@ -39,6 +40,13 @@ export type TableColumnFixedKeys = 'left' | 'right';
 export enum TableColumnFixedEnum {
   left = 'left',
   right = 'right',
+}
+
+export type TableDivideStyleKeys = 'border' | 'regular';
+
+export enum TableDivideStyleEnum {
+  border = 'border',
+  regular = 'regular',
 }
 
 export interface TableColumn {
@@ -97,6 +105,18 @@ export interface TableProps {
   width?: string | number;
   height?: string | number;
   /**
+   * 'regular' | 表格的数据分割类型:
+   * - border: 边框型
+   * - regular: 常规型，行直接带分割线
+   * */
+  divideStyle?: TableDivideStyleKeys | TableDivideStyleEnum;
+  /** true | 显示条纹背景 */
+  stripe?: boolean;
+  /** 表格尺寸 */
+  size?: SizeKeys | SizeEnum;
+  /** 设置加载中状态 */
+  loading?: boolean;
+  /**
    * 根据传入坐标对行进行合并
    * - 对于被合并的行，必须为其返回0来腾出位置, 否则会导致表格排列异常
    * - fixed列和普通列不能进行合并
@@ -108,6 +128,8 @@ export interface TableProps {
    * - fixed列和普通列不能进行合并
    * */
   colSpan?: (meta: TableCellMeta) => number | undefined;
+  /** 300px 单元格最大宽度, 用于防止某一列内容过长占用大量位置导致很差的显示效果 */
+  cellMaxWidth?: string | number;
   /**
    * 单元格未获取到有效值时(checkValid()返回false), 用于显示的回退内容, 默认是 “-”
    * */
