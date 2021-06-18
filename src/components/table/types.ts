@@ -24,15 +24,24 @@ export interface _Share {
   props: TableProps;
 }
 
-export interface TableCellMeta {
-  /** 当前列 */
+/**
+ * 一个元信息，可以代表表格中的某行、某列、或某一个特定的单元格
+ * */
+export interface TableMeta {
+  /** 当前列, 用于表示行数据时，值为`{}` */
   column: TableColumn;
-  /** 当前记录, 当为表头行时，值为 `{}` */
+  /** 当前记录, 用于表示非表格体的行时，值为`{}` */
   record: AnyObject;
   /** 当前列索引 */
   colIndex: number;
   /** 当前行索引 */
   rowIndex: number;
+  /** 是否是表格体 */
+  isBody: boolean;
+  /** 是否是表头 */
+  isHead: boolean;
+  /** 是否是表尾(summary) */
+  isFoot: boolean;
 }
 
 export type TableColumnFixedKeys = 'left' | 'right';
@@ -60,7 +69,7 @@ export interface TableColumn {
    * */
   field?: string | string[];
   /** 自定义渲染内容, 会覆盖field配置 */
-  render?: (meta: TableCellMeta) => React.ReactNode;
+  render?: (cellMeta: TableMeta) => React.ReactNode;
   /** 列的固定宽度, 不传时列宽取决于其内容的宽度 */
   width?: string | number;
   /**
@@ -78,9 +87,9 @@ export interface TableColumn {
    * */
   props?:
     | React.PropsWithoutRef<JSX.IntrinsicElements['td']>
-    | ((meta: TableCellMeta) => React.PropsWithoutRef<JSX.IntrinsicElements['td']>);
+    | ((cellMeta: TableMeta) => React.PropsWithoutRef<JSX.IntrinsicElements['td']>);
   /** 在列头渲染的额外内容 */
-  extra?: React.ReactNode | ((meta: TableCellMeta) => React.ReactNode);
+  extra?: React.ReactNode | ((cellMeta: TableMeta) => React.ReactNode);
 }
 
 /** 内部使用的扩展TableColumn */
@@ -97,9 +106,9 @@ export interface TableProps {
   dataSource: AnyObject[];
   columns: TableColumns;
   /**
-   * key/id | 表示dataSource中一条记录的唯一值
-   * - 如果是key | id 以外的键(如uid)，需要特别指定
+   * key/id | 表格中的每一条记录都应该有一个能表示该条记录的字段, primaryKey用于配置获取这个字段的key
    * - 在启用了选择等功能时，primaryKey对应的值会作为选中项的value
+   * - 由于id和key是非常常见的记录主键，所以会默认进行获取， 如果是key/id 以外的键(如uid)，需要特别指定
    * */
   primaryKey?: string;
   width?: string | number;
@@ -120,18 +129,29 @@ export interface TableProps {
    * 根据传入坐标对行进行合并
    * - 对于被合并的行，必须为其返回0来腾出位置, 否则会导致表格排列异常
    * - fixed列和普通列不能进行合并
+   * - 不作用于表头、总结栏
    * */
-  rowSpan?: (meta: TableCellMeta) => number | undefined;
+  rowSpan?: (cellMeta: TableMeta) => number | undefined;
   /**
    * 根据传入坐标对列进行合并
    * - 对于被合并的列，必须为其返回0来腾出位置, 否则会导致表格排列异常
    * - fixed列和普通列不能进行合并
+   * - 不作用于表头
    * */
-  colSpan?: (meta: TableCellMeta) => number | undefined;
+  colSpan?: (cellMeta: TableMeta) => number | undefined;
   /** 300px 单元格最大宽度, 用于防止某一列内容过长占用大量位置导致很差的显示效果 */
   cellMaxWidth?: string | number;
   /**
-   * 单元格未获取到有效值时(checkValid()返回false), 用于显示的回退内容, 默认是 “-”
+   * 单元格未获取到有效值时(checkValid()返回false), 用于显示的回退内容, 默认显示 “-”
+   * - 作用于表头
    * */
-  fallback?: React.ReactNode | ((meta: TableCellMeta) => React.ReactNode);
+  fallback?: React.ReactNode | ((cellMeta: TableMeta) => React.ReactNode);
+  /** 开启总结栏并根据此函数返回生成每列的值 */
+  summary?: (colMeta: TableMeta) => React.ReactNode | void;
+  /**
+   * 开启行展开并根据返回生成行的展开内容
+   * - 此功能与虚拟滚动不兼容，因为虚拟滚动需要项具有明确的高度
+   * */
+  expand?: (rowMeta: TableMeta) => React.ReactNode | void;
+  expandIcon?: React.ReactNode;
 }

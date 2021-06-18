@@ -16,6 +16,7 @@
     height: 100%;
     width: 100%;
     border: 1px solid var(--m78-gray-5);
+    border-radius: var(--m78-border-radius);
   }
 
   // 隐藏左侧阴影的标记类
@@ -60,17 +61,9 @@
 
   // 背景色、边框均使用td来设置可以减少css差异减少维护成本
   tbody {
-    tr {
+    tr.m78-table_body-row {
       &:hover td, &:hover .m78-table_fixed {
         background: var(--m78-gray-4) !important;
-      }
-    }
-
-    tr:last-child td {
-      //border-bottom: none;
-
-      &::after {
-        //display: none;
       }
     }
   }
@@ -152,6 +145,7 @@
     background: linear-gradient(to left, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
     pointer-events: none;
     opacity: 1;
+    transition: 0.1s opacity;
 
     &.__right {
       left: auto;
@@ -187,6 +181,19 @@
       &:last-child::after {
         left: -4%;
       }
+    }
+  }
+
+  &.__regular tfoot, &.__border tfoot {
+    z-index: 100;
+    font-weight: bold;
+
+    td {
+      position: sticky;
+      bottom: 0;
+      border-top: 1px solid var(--m78-gray-7);
+      background-color: var(--m78-component-bg);
+      border-bottom: none;
     }
   }
 
@@ -237,7 +244,9 @@
         height: 100%;
         left: -1px;
         top: 0;
-        border-left: 1px solid var(--m78-gray-5);
+        background-color: var(--m78-gray-5);
+        width: 1px;
+        transform: scaleX(0.5);
       }
     }
   }
@@ -245,13 +254,33 @@
   // 条纹背景
   &.__stripe {
     tbody {
-      tr:nth-child(2n - 1) td {
+      tr.m78-table_body-row.__odd td {
         background-color: var(--m78-gray-3);
       }
     }
   }
 
-  tfoot tr {
-    //border-top: 1px solid var(--m78-gray-5);
+  // ##########################
+  // 其他
+  // ##########################
+
+  &_expand-node {
+    min-height: 40px;
+  }
+
+  &_expand-icon {
+    padding: 0 4px !important;
+    width: $size-small;
+    height: $size-small;
+    margin-right: 4px;
+
+    > span {
+      display: inline-block;
+      transition: transform var(--m78-animate-fast);
+    }
+
+    &.__open > span {
+      transform: rotate(90deg);
+    }
   }
 }

@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import clsx from 'clsx';
-import { AnyObject, isFunction, isNumber, isTruthyOrZero } from '@lxjx/utils';
+import { AnyObject, decimalPrecision, isFunction, isNumber, isTruthyOrZero } from '@lxjx/utils';
 import { getField } from 'm78/table/common';
 import { useSetState } from '@lxjx/hooks';
-import { _Share, _TableColumnInside, TableCellMeta, TableColumnFixedEnum } from './types';
+import { CaretRightOutlined } from 'm78/icon';
+import { _Share, _TableColumnInside, TableMeta, TableColumnFixedEnum } from './types';
 
 interface TableCellProps {
   /** 当前列 */
@@ -16,22 +17,32 @@ interface TableCellProps {
   rowIndex: number;
   /** 是否是表头单元格 */
   isHead?: boolean;
+  /** 是否是表尾单元格 */
+  isFoot?: boolean;
   /** 表格节点 */
   tableElRef: React.MutableRefObject<HTMLTableElement>;
+  /** 共享数据 */
   share: _Share;
+  /** 自行指定单元格内容 */
+  content?: React.ReactNode;
+  /** 单元格前置节点 */
+  prefix?: React.ReactNode;
 }
 
 const _Cell = ({
   column,
-  isHead,
+  isHead = false,
+  isFoot = false,
   record,
   share,
   colIndex,
   rowIndex,
   tableElRef,
+  content,
+  prefix,
 }: TableCellProps) => {
   const { state, self, props } = share;
-  const { fallback } = props;
+  const { fallback, summary } = props;
   const {
     width,
     maxWidth,
@@ -48,13 +59,16 @@ const _Cell = ({
 
   const elRef = useRef<HTMLTableDataCellElement>(null!);
 
-  const meta: TableCellMeta = { column, record, colIndex, rowIndex };
+  const isBody = !isFoot && !isHead;
+
+  const meta: TableMeta = { column, record, colIndex, rowIndex, isFoot, isHead, isBody };
 
   const [rowSpan, colSpan] = useMemo(() => {
     if (isHead) return [];
     const rowSpanGetter = props.rowSpan;
     const colSpanGetter = props.colSpan;
-    return [rowSpanGetter?.(meta), colSpanGetter?.(meta)];
+    // 页脚不需要行合并
+    return [isFoot ? undefined : rowSpanGetter?.(meta), colSpanGetter?.(meta)];
   }, [record, column, colIndex, rowIndex]);
 
   const cellProps = useMemo(() => {
@@ -81,13 +95,12 @@ const _Cell = ({
 
       const wrapBound = tableElRef.current.getBoundingClientRect();
       const elBound = elRef.current.getBoundingClientRect();
-
       if (isFixedLeft) {
-        self.fixedSizeMap[colIndex] = elBound.left - wrapBound.left;
+        self.fixedSizeMap[colIndex] = decimalPrecision(elBound.left - wrapBound.left, 2);
       }
 
       if (isFixedRight) {
-        self.fixedSizeMap[colIndex] = wrapBound.right - elBound.right;
+        self.fixedSizeMap[colIndex] = decimalPrecision(wrapBound.right - elBound.right, 2);
       }
     }
 
@@ -100,23 +113,36 @@ const _Cell = ({
     if (isFixedRight && elRef.current.style.right !== v) {
       elRef.current.style.right = `${self.fixedSizeMap[colIndex]}px`;
     }
-  }, [column, record, colIndex, rowIndex]);
+  }, [record, column, colIndex, rowIndex]);
 
   /** 单元格显示内容 */
   function renderChild() {
+    if (isTruthyOrZero(content)) return content;
+
     if (isHead) return label;
+
+    if (isFoot) {
+      if (!isFunction(summary)) return getFallback();
+      const s = summary(meta);
+      return isTruthyOrZero(s) ? s : getFallback();
+    }
+
     if (render) return render(meta);
 
     const val = getField(record, column.field);
 
     if (isTruthyOrZero(val)) return val;
 
+    return getFallback();
+  }
+
+  function getFallback() {
     if (fallback !== undefined) {
       if (isFunction(fallback)) return fallback(meta);
       return fallback;
     }
 
-    return <div className="tc">-</div>;
+    return <div className="plr-12">-</div>;
   }
 
   /** 内容 */
@@ -137,14 +163,19 @@ const _Cell = ({
   }
 
   function renderFork() {
-    if (!extra || !isHead) return renderCellBox();
+    if ((isHead && extra) || prefix) {
+      const ex = isFunction(extra) ? extra(meta) : extra;
 
-    return (
-      <div className="m78-table_cell-wrap">
-        {renderCellBox()}
-        <div className="ml-4">{isFunction(extra) ? extra(meta) : extra}</div>
-      </div>
-    );
+      return (
+        <div className="m78-table_cell-wrap">
+          {prefix}
+          {renderCellBox()}
+          {ex && <div className="ml-4">{isFunction(extra) ? extra(meta) : extra}</div>}
+        </div>
+      );
+    }
+
+    return renderCellBox();
   }
 
   return (
@@ -172,4 +203,4 @@ const _Cell = ({
 
 _Cell.displayName = 'TableCell';
 
-export default _Cell;
+export default React.memo(_Cell);
