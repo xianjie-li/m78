@@ -232,20 +232,10 @@ export interface _TableCellProps {
 }
 
 /** 内部使用的扩展TableColumn */
-export interface _TableColumnInside extends TableColumn {
-  /** 是否为左侧固定列的最后一个 */
-  fixedLeftLast?: boolean;
-  /** 是否为右侧固定列的第一个 */
-  fixedRightFirst?: boolean;
-}
+export interface _TableColumnInside extends TableColumn {}
 
 /** 内部实例对象 */
-export interface _InnerSelf {
-  /** 存放列位置, 用于fixed列定位 */
-  fixedSizeMap: {
-    [ind: string]: number;
-  };
-}
+export interface _InnerSelf {}
 
 /** 内部状态 */
 export interface _InnerState {

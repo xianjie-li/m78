@@ -44,7 +44,7 @@ export const defaultProps = {
 function Tree(props: TreePropsSingleChoice): JSX.Element;
 function Tree(props: TreePropsMultipleChoice): JSX.Element;
 function Tree(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
-  const { size, height, customer } = props as Share['props'];
+  const { size, height } = props as Share['props'];
 
   // 虚拟列表实例
   const virtualList = useRef<List>(null!);
@@ -171,15 +171,6 @@ function Tree(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
   const isSearchAndNoList = state.keyword && !isTruthyArray(showList);
 
   const isEmpty = isSearchAndNoList || !isTruthyArray(props.dataSource);
-
-  if (customer?.tree) {
-    return customer.tree({
-      loading,
-      isEmpty,
-      renderToolbar,
-      renderList,
-    });
-  }
 
   return (
     <div className={cls('m78-tree m78-scroll-bar __hoverEffect __style', size && `__${size}`)}>

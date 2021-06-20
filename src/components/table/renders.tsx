@@ -8,7 +8,7 @@ import { CaretDownOutlined, CaretRightOutlined, CaretUpOutlined } from 'm78/icon
 import { If, Toggle } from 'm78/fork';
 import { Spin } from 'm78/spin';
 import { stopPropagation } from 'm78/util';
-import { _Context, _TableCellProps, TableColumnFixedEnum, TableMeta, TableSortEnum } from './types';
+import { _Context, _TableCellProps, _TableColumnInside, TableMeta, TableSortEnum } from './types';
 import { getField, getInitTableMeta, getPrimaryKey, handleSortClick } from './functions';
 
 /** 主内容render */
@@ -40,7 +40,7 @@ export function render(ctx: _Context) {
       props: _,
       ...ppp
     },
-    states: { state, wrapElRef, tableElRef },
+    states: { state, wrapElRef, tableElRef, virtualList, fmtColumns },
   } = ctx;
 
   return (
@@ -57,16 +57,38 @@ export function render(ctx: _Context) {
       <Spin full show={loading} loadingDelay={0} />
 
       <div
-        ref={wrapElRef}
+        ref={node => {
+          wrapElRef.current = node!;
+          virtualList.containerProps.ref(node);
+        }}
+        onScroll={virtualList.containerProps.onScroll}
         className="m78-table_wrap"
-        style={{ width, maxHeight: height, opacity: state.mounted ? undefined : 0 }}
+        style={{ width, maxHeight: height }}
       >
-        <table ref={tableElRef}>
-          {renderColgroup(ctx)}
-          {renderThead(ctx)}
-          {renderTbody(ctx)}
-          {renderTfoot(ctx)}
-        </table>
+        <div className="m78-table_main __left" {...virtualList.wrapperProps}>
+          <table className="m78-table_fixed-table __left">
+            {renderColgroup(ctx, fmtColumns.fixedLeft)}
+            {renderThead(ctx, fmtColumns.fixedLeft)}
+            {renderTbody(ctx, fmtColumns.fixedLeft)}
+            {renderTfoot(ctx, fmtColumns.fixedLeft)}
+          </table>
+        </div>
+        <div className="m78-table_main" {...virtualList.wrapperProps}>
+          <table ref={tableElRef}>
+            {renderColgroup(ctx, fmtColumns.column)}
+            {renderThead(ctx, fmtColumns.column)}
+            {renderTbody(ctx, fmtColumns.column, true)}
+            {renderTfoot(ctx, fmtColumns.column)}
+          </table>
+        </div>
+        <div className="m78-table_main __right" {...virtualList.wrapperProps}>
+          <table className="m78-table_fixed-table __right">
+            {renderColgroup(ctx, fmtColumns.fixedRight)}
+            {renderThead(ctx, fmtColumns.fixedRight)}
+            {renderTbody(ctx, fmtColumns.fixedRight)}
+            {renderTfoot(ctx, fmtColumns.fixedRight)}
+          </table>
+        </div>
       </div>
     </div>
   );
@@ -93,7 +115,7 @@ export function renderExpandNode(ctx: _Context, record: AnyObject, ind: number) 
 
   return (
     <tr>
-      <td colSpan={fmtColumns.length}>
+      <td colSpan={fmtColumns.column.length}>
         <div className="m78-table_expand-node">{node as any}</div>
       </td>
     </tr>
@@ -101,9 +123,9 @@ export function renderExpandNode(ctx: _Context, record: AnyObject, ind: number) 
 }
 
 /** 渲染表格体 */
-export function renderTbody(ctx: _Context) {
+export function renderTbody(ctx: _Context, columns: _TableColumnInside[], isMainTable = false) {
   const {
-    states: { fmtColumns, firstTBodyRowRef, tableElRef, expandChecker, state },
+    states: { firstTBodyRowRef, tableElRef, expandChecker, virtualList },
     props: { dataSource, primaryKey },
   } = ctx;
 
@@ -111,7 +133,7 @@ export function renderTbody(ctx: _Context) {
     return (
       <tbody>
         <tr>
-          <td colSpan={fmtColumns.length}>
+          <td colSpan={columns.length}>
             <Empty desc="暂无数据" />
           </td>
         </tr>
@@ -121,12 +143,12 @@ export function renderTbody(ctx: _Context) {
 
   return (
     <tbody>
-      {dataSource.map((item, ind) => {
-        const key = item[primaryKey] || getPrimaryKey(item);
+      {virtualList.list.map(({ data, index }) => {
+        const key = data[primaryKey] || getPrimaryKey(data);
 
-        const expandNode = renderExpandNode(ctx, item, ind);
+        const expandNode = isMainTable && renderExpandNode(ctx, data, index);
 
-        const isOdd = ind % 2 === 0;
+        const isOdd = index % 2 === 0;
 
         const isExpanded = expandChecker.isChecked(key);
 
@@ -136,23 +158,29 @@ export function renderTbody(ctx: _Context) {
               className={clsx('m78-table_body-row', {
                 __odd: isOdd,
               })}
-              ref={ind === 0 ? firstTBodyRowRef : undefined}
+              ref={index === 0 ? firstTBodyRowRef : undefined}
             >
-              {fmtColumns.map((column, index) => {
+              {columns.map((column, ind) => {
                 return (
                   <Cell
-                    key={index}
+                    key={ind}
                     tableElRef={tableElRef}
                     prefix={
                       expandNode &&
-                      index === 0 && (
+                      ind === 0 && (
                         <Button
                           className={clsx('m78-table_expand-icon', {
                             __open: isExpanded,
                           })}
                           size="small"
                           text
-                          onClick={() => expandChecker.toggle(key)}
+                          onClick={() => {
+                            if (expandChecker.isChecked(key)) {
+                              expandChecker.setChecked([]);
+                            } else {
+                              expandChecker.setChecked([key]);
+                            }
+                          }}
                         >
                           <span>
                             <CaretRightOutlined />
@@ -162,9 +190,9 @@ export function renderTbody(ctx: _Context) {
                     }
                     {...getInitTableMeta({
                       column,
-                      record: item,
-                      colIndex: index,
-                      rowIndex: ind,
+                      record: data,
+                      colIndex: ind,
+                      rowIndex: index,
                     })}
                     ctx={ctx}
                   />
@@ -180,15 +208,14 @@ export function renderTbody(ctx: _Context) {
 }
 
 /** table col render */
-export function renderColgroup(ctx: _Context) {
+export function renderColgroup(ctx: _Context, columns: _TableColumnInside[]) {
   const {
     props: { cellMaxWidth },
-    states: { fmtColumns },
   } = ctx;
 
   return (
     <colgroup>
-      {fmtColumns.map((item, ind) => {
+      {columns.map((item, ind) => {
         const { maxWidth } = item;
 
         // 默认尺寸取cellMaxWidth
@@ -205,15 +232,15 @@ export function renderColgroup(ctx: _Context) {
 }
 
 /** table head render */
-export function renderThead(ctx: _Context) {
+export function renderThead(ctx: _Context, columns: _TableColumnInside[]) {
   const {
-    states: { fmtColumns, tableElRef, theadElRef },
+    states: { tableElRef, theadElRef },
   } = ctx;
 
   return (
     <thead ref={theadElRef}>
       <tr>
-        {fmtColumns.map((column, index) => {
+        {columns.map((column, index) => {
           return (
             <Cell
               key={index}
@@ -233,9 +260,9 @@ export function renderThead(ctx: _Context) {
 }
 
 /** table foot render */
-export function renderTfoot(ctx: _Context) {
+export function renderTfoot(ctx: _Context, columns: _TableColumnInside[]) {
   const {
-    states: { fmtColumns, tableElRef },
+    states: { tableElRef },
     props,
   } = ctx;
 
@@ -244,7 +271,7 @@ export function renderTfoot(ctx: _Context) {
   return (
     <tfoot>
       <tr>
-        {fmtColumns.map((column, index) => {
+        {columns.map((column, index) => {
           return (
             <Cell
               key={index}
@@ -308,24 +335,14 @@ export function renderCellMain(ctx: _Context, meta: TableMeta, content: React.Re
   return renderCellFallback(ctx, meta);
 }
 
-/** 渲染单元格的容器div */
-export function renderCellContent(ctx: _Context, meta: TableMeta, content: React.ReactNode) {
-  const { props } = ctx;
-
-  const { width, maxWidth } = meta.column;
-
-  let mw: string | number | undefined = props.cellMaxWidth;
-
-  // width和maxWidth任意项有值则覆盖cellMaxWidth
-  if (width) mw = maxWidth;
-
-  const child = renderCellMain(ctx, meta, content);
+/** 渲染单元格主要内容 */
+export function renderCellCont(child: any) {
+  const isStringChild = isString(child) || isNumber(child);
 
   return (
     <div
-      title={isString(child) || isNumber(child) ? (child as string) : undefined}
-      className="m78-table_cell"
-      style={{ maxWidth: mw, width: !isTruthyOrZero(maxWidth) ? width : undefined }}
+      title={isStringChild ? (child as string) : undefined}
+      className={clsx('m78-table_cell-content', isStringChild && 'ellipsis')}
     >
       {child}
     </div>
@@ -336,49 +353,66 @@ export function renderCellContent(ctx: _Context, meta: TableMeta, content: React
 export function renderCellFork(ctx: _Context, meta: TableMeta, cellProps: _TableCellProps) {
   const {
     states: { sortState },
+    props,
   } = ctx;
   const { isHead, column } = meta;
-  const { field, key, extra, sort } = column;
+  const { field, key, extra, sort, width, maxWidth } = column;
   const { prefix, content } = cellProps;
 
-  if ((isHead && (extra || sort)) || prefix) {
-    const ex = isFunction(extra) ? extra(meta) : extra;
-    const [sortValue] = sortState;
-    const [sortKey, sortType] = sortValue || [];
+  // 宽度
+  let mw: string | number | undefined = props.cellMaxWidth;
 
-    let currentKey = key;
+  // width和maxWidth任意项有值则覆盖cellMaxWidth
+  if (width) mw = maxWidth;
 
-    if (!currentKey && isString(field)) {
-      currentKey = field;
-    }
+  // 渲染内容
+  const child = renderCellMain(ctx, meta, content);
 
-    return (
-      <div className="m78-table_cell-wrap" onClick={() => handleSortClick(ctx, column, currentKey)}>
-        {prefix}
-        {renderCellContent(ctx, meta, content)}
-        <If when={sort && currentKey}>
-          <span
-            className={clsx(
-              'm78-table_sort-btn',
-              sortType && sortKey === currentKey && `__${sortType}`,
-            )}
-          >
-            <If when={isBoolean(sort) || sort === TableSortEnum.asc}>
-              <CaretUpOutlined />
-            </If>
-            <If when={isBoolean(sort) || sort === TableSortEnum.desc}>
-              <CaretDownOutlined />
-            </If>
-          </span>
-        </If>
-        {ex && (
-          <div className="ml-8" {...stopPropagation}>
-            {isFunction(extra) ? extra(meta) : extra}
-          </div>
-        )}
-      </div>
-    );
+  // 额外节点
+  const ex = isFunction(extra) ? extra(meta) : extra;
+
+  // 排序
+  const [sortValue] = sortState;
+  const [sortKey, sortType] = sortValue || [];
+
+  // 当前排序的key
+  let currentKey = key;
+
+  if (!currentKey && isString(field)) {
+    currentKey = field;
   }
 
-  return renderCellContent(ctx, meta, content);
+  // 是否开启了sort
+  const hasSort = isHead && sort && currentKey;
+
+  return (
+    <div
+      className="m78-table_cell"
+      onClick={hasSort ? () => handleSortClick(ctx, column, currentKey) : undefined}
+      style={{ maxWidth: mw, width: !isTruthyOrZero(maxWidth) ? width : undefined }}
+    >
+      {prefix}
+      {renderCellCont(child)}
+      <If when={hasSort}>
+        <span
+          className={clsx(
+            'm78-table_sort-btn',
+            sortType && sortKey === currentKey && `__${sortType}`,
+          )}
+        >
+          <If when={isBoolean(sort) || sort === TableSortEnum.asc}>
+            <CaretUpOutlined />
+          </If>
+          <If when={isBoolean(sort) || sort === TableSortEnum.desc}>
+            <CaretDownOutlined />
+          </If>
+        </span>
+      </If>
+      <If when={isHead && ex}>
+        <div className="ml-12" {...stopPropagation}>
+          {isFunction(extra) ? extra(meta) : extra}
+        </div>
+      </If>
+    </div>
+  );
 }

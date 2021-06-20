@@ -80,30 +80,6 @@ export interface TreeProps extends ComponentBaseProps {
   indicatorLine?: boolean;
   /** 彩虹色连接指示线 */
   rainbowIndicatorLine?: boolean;
-  customer?: {
-    tree(meta: {
-      loading: boolean;
-      isEmpty: boolean;
-      renderToolbar: () => JSX.Element | null;
-      renderList: () => JSX.Element | JSX.Element[];
-    }): React.ReactNode;
-    placeholder(meta: {
-      style: React.CSSProperties;
-      data: TreeNode;
-      itemProps: ItemProps;
-    }): React.ReactNode;
-    item(meta: {
-      isChecked: boolean;
-      isDisabled: boolean;
-      toggleHandle: () => void;
-      isEmptyTwig: boolean;
-      style: React.CSSProperties | undefined;
-      renderIdent: () => JSX.Element;
-      isVirtual: boolean;
-      renderMultiCheck: () => JSX.Element;
-      renderLabel: () => JSX.Element;
-    }): React.ReactElement;
-  };
 }
 
 /** 工具条配置 */
@@ -273,5 +249,3 @@ export interface VirtualItemProps extends ListChildComponentProps {
     data: TreeNode[];
   } & Omit<ItemProps, 'data' | 'index'>;
 }
-
-export type DragItemProps = Omit<ItemProps, 'provided' | 'snapshot'>;

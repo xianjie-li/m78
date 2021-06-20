@@ -305,22 +305,6 @@ const TreeItem = React.memo(({ data, share, methods, className, style, size }: I
     );
   }
 
-  const customer = props.customer?.item;
-
-  if (customer) {
-    return customer({
-      isChecked,
-      isDisabled,
-      toggleHandle,
-      isEmptyTwig,
-      style,
-      renderIdent,
-      isVirtual,
-      renderMultiCheck,
-      renderLabel,
-    });
-  }
-
   return (
     <div
       className={cls('m78-tree_item', className, {

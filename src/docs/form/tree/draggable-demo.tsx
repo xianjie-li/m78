@@ -7,7 +7,7 @@ const DraggableDemo = () => {
 
   return (
     <div>
-      <Tree draggable dataSource={ds} rainbowIndicatorLine height={400} defaultOpenAll />
+      <Tree dataSource={ds} rainbowIndicatorLine height={400} defaultOpenAll />
     </div>
   );
 };

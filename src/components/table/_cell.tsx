@@ -1,13 +1,13 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
 import clsx from 'clsx';
-import { getCellProps, getCellSpan, handleFixedColumn } from 'm78/table/functions';
+import { getCellProps, getCellSpan } from 'm78/table/functions';
 import { renderCellFork } from 'm78/table/renders';
 import { _TableCellProps, TableMeta } from './types';
 
 const _Cell = (props: _TableCellProps) => {
   const { column, isHead = false, isFoot = false, record, ctx, colIndex, rowIndex } = props;
 
-  const { fixed, fixedLeftLast, fixedRightFirst, sort } = column;
+  const { fixed, sort } = column;
 
   // 单元格容器节点
   const elRef = useRef<HTMLTableDataCellElement>(null!);
@@ -29,10 +29,6 @@ const _Cell = (props: _TableCellProps) => {
   // 要为单元格设置的额外props
   const cellProps = useMemo(() => getCellProps(ctx, meta), [column.props, ctx.props.props]);
 
-  /* TODO: 大小改变时重置 */
-  // 固定列尺寸和位置处理
-  useEffect(() => handleFixedColumn(ctx, meta, elRef), [record, column, colIndex, rowIndex]);
-
   return (
     <td
       {...cellProps}
@@ -49,8 +45,6 @@ const _Cell = (props: _TableCellProps) => {
       colSpan={colSpan}
     >
       {renderCellFork(ctx, meta, props)}
-      {fixedRightFirst && <div className="m78-table_fixed-shadow __left" />}
-      {fixedLeftLast && <div className="m78-table_fixed-shadow __right" />}
     </td>
   );
 };

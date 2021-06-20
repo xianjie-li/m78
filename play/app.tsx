@@ -6,13 +6,11 @@ import { Table, TableColumns } from 'm78/table';
 import 'm78/table/style';
 import { ListView, ListViewItem } from 'm78/list-view';
 import { datetime } from '@lxjx/utils';
-import { formatDate } from 'm78/dates/utils';
 
 const columns: TableColumns = [
   {
     label: '#',
     field: 'id',
-    width: 100,
     fixed: 'left',
   },
   {
@@ -28,6 +26,7 @@ const columns: TableColumns = [
   {
     label: '数值',
     field: 'num',
+    maxWidth: 100,
     sort: true,
   },
   {
@@ -47,7 +46,7 @@ const columns: TableColumns = [
     label: '描述',
     field: 'desc',
     // width: 100,
-    fixed: 'right',
+    // fixed: 'right',
   },
   {
     label: '技能1',
@@ -135,18 +134,18 @@ const ds = Array.from({ length: 20 }).map((i, ind) => {
   };
 });
 
-const ds2 = Array.from({ length: 200 }).map((i, ind) => {
+const ds2 = Array.from({ length: 99999 }).map((i, ind) => {
   const date = new Date('1994-07-14');
 
   date.setDate(date.getDate() - ind);
 
   return {
-    id: ind + 10001,
+    id: `${String(ind)}1000000`,
     name: `李显杰${ind}${1 + 10001}`,
     num: ind,
     birthday: datetime(date, 'YYYY-MM-DD'),
     user: {
-      name: '前端工程师',
+      name: '前'.repeat(ind % 200),
     },
     // relation: [
     //   {
@@ -183,22 +182,22 @@ const App = () => {
 
       {toggle && (
         <Table
-          height={400}
+          height={700}
           divideStyle="border"
           columns={columns}
           dataSource={d}
-          // summary={({ column }) => {
-          //   if (column.label === '#') return '总计';
-          //   if (column.label === '数值') {
-          // {/*    const count = d.reduce((prev, item) => {*/}
-          //       if (isNaN(prev)) return prev;
-          //       return prev + item.num;
-          //     }, 0);
-          //
-          //     return isNaN(count) ? 'N/A' : count;
-          //   }
-          //   return <span className="color-second fw">N/A</span>;
-          // }}
+          summary={({ column }) => {
+            if (column.label === '#') return '总计';
+            if (column.label === '数值') {
+              const count = d.reduce((prev, item) => {
+                if (isNaN(prev)) return prev;
+                return prev + item.num;
+              }, 0);
+
+              return isNaN(count) ? 'N/A' : count;
+            }
+            return <span className="color-second fw">N/A</span>;
+          }}
           expand={({ rowIndex }) => {
             if (rowIndex > 5) return;
 

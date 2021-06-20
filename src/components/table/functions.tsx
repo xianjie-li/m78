@@ -90,32 +90,28 @@ export function syncTouchStatus(
  * - 处理fixed列
  * */
 export function columnsBeforeFormat({ columns }: TableProps) {
-  const colsPre: _TableColumnInside[] = [];
-  const cols: _TableColumnInside[] = [];
-  const colsSuf: _TableColumnInside[] = [];
+  const fixedLeft: _TableColumnInside[] = [];
+  const column: _TableColumnInside[] = [];
+  const fixedRight: _TableColumnInside[] = [];
 
   columns.forEach(col => {
     if (col.fixed === TableColumnFixedEnum.left) {
-      colsPre.push(col);
+      fixedLeft.push(col);
       return;
     }
 
     if (col.fixed === TableColumnFixedEnum.right) {
-      colsSuf.push(col);
+      fixedRight.push(col);
       return;
     }
-    cols.push(col);
+    column.push(col);
   });
 
-  if (colsPre.length) {
-    colsPre[colsPre.length - 1] = { ...colsPre[colsPre.length - 1], fixedLeftLast: true };
-  }
-
-  if (colsSuf.length) {
-    colsSuf[0] = { ...colsSuf[0], fixedRightFirst: true };
-  }
-
-  return [...colsPre, ...cols, ...colsSuf];
+  return {
+    fixedLeft,
+    column,
+    fixedRight,
+  };
 }
 
 /**
@@ -123,56 +119,6 @@ export function columnsBeforeFormat({ columns }: TableProps) {
  * 单元格
  * ################################
  * */
-
-/** 计算固定列位置并进行dom处理 */
-export function handleFixedColumn(
-  ctx: _Context,
-  { column, colIndex }: TableMeta,
-  elRef: React.MutableRefObject<HTMLTableDataCellElement>,
-) {
-  const {
-    states: { self, tableElRef, setState, state },
-  } = ctx;
-
-  const isFixedLeft = column.fixed === TableColumnFixedEnum.left;
-  const isFixedRight = column.fixed === TableColumnFixedEnum.right;
-
-  if (!isFixedLeft && !isFixedRight) return;
-
-  const currentSize = self.fixedSizeMap[colIndex];
-
-  if (!isNumber(currentSize)) {
-    if (isFixedLeft) {
-      elRef.current.style.left = 'auto';
-    }
-    if (isFixedRight) {
-      elRef.current.style.right = 'auto';
-    }
-
-    const wrapBound = tableElRef.current.getBoundingClientRect();
-    const elBound = elRef.current.getBoundingClientRect();
-
-    if (isFixedLeft) {
-      self.fixedSizeMap[colIndex] = decimalPrecision(elBound.left - wrapBound.left, 2);
-      !state.mounted && setState({ mounted: true });
-    }
-
-    if (isFixedRight) {
-      self.fixedSizeMap[colIndex] = decimalPrecision(wrapBound.right - elBound.right, 2);
-      !state.mounted && setState({ mounted: true });
-    }
-  }
-
-  const v = `${self.fixedSizeMap[colIndex]}px`;
-
-  if (isFixedLeft && elRef.current.style.left !== v) {
-    elRef.current.style.left = `${self.fixedSizeMap[colIndex]}px`;
-  }
-
-  if (isFixedRight && elRef.current.style.right !== v) {
-    elRef.current.style.right = `${self.fixedSizeMap[colIndex]}px`;
-  }
-}
 
 /** 获取要为单元格设置的props */
 export function getCellProps(ctx: _Context, meta: TableMeta) {

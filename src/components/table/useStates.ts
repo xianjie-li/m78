@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { useCheck, useFormState, useScroll, useSelf, useSetState } from '@lxjx/hooks';
 import { _InnerSelf, _InnerState, TableProps, TableSortValue } from 'm78/table/types';
+import useVirtualList from 'ahooks/es/useVirtualList';
 import { columnsBeforeFormat, syncTouchStatus } from './functions';
 
 export function useStates(props: TableProps) {
@@ -21,18 +22,22 @@ export function useStates(props: TableProps) {
   });
 
   /** 实例对象 */
-  const self = useSelf<_InnerSelf>({
-    fixedSizeMap: {},
-  });
+  const self = useSelf<_InnerSelf>({});
+
+  /** 控制表格expand的checker */
+  const expandChecker = useCheck<string>({});
 
   /** 容器滚动控制 */
   const scroller = useScroll({
     el: wrapElRef,
-    onScroll: meta => syncTouchStatus(state, setState, meta),
+    throttleTime: 0,
+    onScroll: meta => {
+      syncTouchStatus(state, setState, meta);
+      // if (expandChecker.checked.length) {
+      //   expandChecker.setChecked([]);
+      // }
+    },
   });
-
-  /** 控制表格expand的checker */
-  const expandChecker = useCheck<string>({});
 
   /** 经过内部化处理的columns，应优先使用此变量代替传入的column */
   const fmtColumns = useMemo(() => columnsBeforeFormat(props), [props.columns]);
@@ -43,8 +48,10 @@ export function useStates(props: TableProps) {
     triggerKey: 'onSortChange',
   });
 
-  // 每次render前还原fixedSizeMap
-  self.fixedSizeMap = {};
+  const virtualList = useVirtualList(props.dataSource || [], {
+    overscan: 6,
+    itemHeight: 41,
+  });
 
   return {
     wrapElRef,
@@ -58,5 +65,6 @@ export function useStates(props: TableProps) {
     scroller,
     fmtColumns,
     sortState,
+    virtualList,
   };
 }

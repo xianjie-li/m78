@@ -14,17 +14,73 @@
     position: relative;
     overflow: auto;
     width: 100%;
+    white-space: nowrap;
     border: 1px solid var(--m78-gray-5);
     border-radius: var(--m78-border-radius);
   }
 
+  &_main {
+    display: inline-block;
+    vertical-align: top;
+    width: auto !important;
+
+    &.__left, &.__right {
+      background-color: var(--m78-component-bg);
+      position: sticky;
+      z-index: 13;
+    }
+
+    &.__left {
+      left: 0;
+      flex: 1 0 auto;
+    }
+
+    &.__right {
+      right: 0;
+      flex: 1 0 auto;
+    }
+  }
+
+  &_fixed-table {
+    position: relative;
+    min-width: auto !important;
+    width: 0;   // 配合自动布局的table能实现自适应宽度
+
+    &.__left, &.__right {
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        width: 10px;
+        height: 100%;
+        pointer-events: none;
+        opacity: 1;
+        transition: 0.2s opacity;
+      }
+    }
+
+    &.__left {
+      &::after {
+        right: -10px;
+        background: linear-gradient(to right, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
+      }
+    }
+
+    &.__right {
+      &::after {
+        left: -10px;
+        background: linear-gradient(to left, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
+      }
+    }
+  }
+
   // 隐藏左侧阴影的标记类
-  &.__touchLeft .m78-table_fixed-shadow.__right {
+  &.__touchLeft .m78-table_fixed-table.__left::after {
     opacity: 0;
   }
 
   // 隐藏右侧阴影的标记类
-  &.__touchRight .m78-table_fixed-shadow.__left {
+  &.__touchRight .m78-table_fixed-table.__right::after {
     opacity: 0;
   }
 
@@ -45,16 +101,12 @@
     td {
       top: 0;
       position: sticky;
-      z-index: 11;
+      z-index: 12;
       background-color: var(--m78-component-bg);
     }
 
     .m78-table_cell {
       padding: 8px 12px;
-    }
-
-    .m78-table_fixed {
-      z-index: 12;
     }
   }
 
@@ -97,11 +149,15 @@
     }
   }
 
-  &_cell-wrap {
-    padding: 6px 12px;
+  &_cell {
+    height: 38px;
+    padding: 0 12px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    word-break: break-word;
+    white-space: nowrap;
+    min-width: 100%;  // 防止总列宽不足容器宽度，但是设置了maxWidth相关的属性时，内容被裁剪
 
     .m78-table_cell {
       flex: 1;
@@ -111,27 +167,24 @@
   }
 
   // td内部的格子
-  &_cell {
-    padding: 6px 12px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    word-break: break-word;
-    min-width: 100%;  // 防止总列宽不足容器宽度，但是设置了maxWidth相关的属性时，内容被裁剪
+  &_cell-content {
+
   }
 
   // ##########################
   // 尺寸
   // ##########################
   &.__small {
-    .m78-table_cell, .m78-table_cell-wrap {
-      padding: 2px 8px;
+    .m78-table_cell {
+      padding: 0 8px;
+      height: 32px;
     }
   }
 
   &.__large {
-    .m78-table_cell, .m78-table_cell-wrap {
-      padding: 10px 16px;
+    .m78-table_cell {
+      padding: 0 16px;
+      height: 48px;
     }
   }
 
@@ -139,37 +192,6 @@
   // ##########################
   // fixed列和表头
   // ##########################
-
-  // 固定cell
-  &_fixed {
-    position: sticky !important;
-    z-index: 10;
-    left: 0;
-    background: var(--m78-component-bg);
-
-    &.__left-last {
-      box-shadow: 0 0 4px var(--m78-color-second);
-    }
-  }
-
-  // 固定格的提示阴影
-  tbody &_fixed-shadow {
-    position: absolute;
-    left: -10px;
-    top: 0;
-    width: 10px;
-    height: 100%;
-    background: linear-gradient(to left, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
-    pointer-events: none;
-    opacity: 1;
-    transition: 0.1s opacity;
-
-    &.__right {
-      left: auto;
-      right: -10px;
-      background: linear-gradient(to right, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
-    }
-  }
 
   &.__regular thead, &.__border thead, &.__regular tfoot, &.__border tfoot {
     td {
@@ -241,17 +263,12 @@
       }
     }
 
-    td:not(.m78-table_fixed) + .m78-table_fixed {
-      &::before {
-        position: absolute;
-        content: '';
-        height: 100%;
-        left: -1px;
-        top: 0;
-        background-color: var(--m78-gray-5);
-        width: 1px;
-        transform: scaleX(0.5);
-      }
+    .m78-table_fixed-table.__left {
+      border-right: 1px solid var(--m78-gray-5);
+    }
+
+    .m78-table_fixed-table.__right {
+      border-left: 1px solid var(--m78-gray-5);
     }
   }
 
@@ -295,7 +312,7 @@
     align-items: center;
     justify-content: center;
     font-size: 8px;
-    margin-left: 8px;
+    margin-left: 12px;
     color: var(--m78-color-second);
 
     &.__asc > span:first-child {
