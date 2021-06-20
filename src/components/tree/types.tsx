@@ -2,7 +2,6 @@ import { FormLikeWithExtra, SetState, UseCheckReturns } from '@lxjx/hooks';
 import { ComponentBaseProps, DataSourceItem, SizeKeys } from 'm78/types';
 import React from 'react';
 import { ListChildComponentProps } from 'react-window';
-import { DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 import { flatTreeData } from './common';
 import { useMethods } from './methods';
 import { defaultProps } from './tree';
@@ -81,9 +80,30 @@ export interface TreeProps extends ComponentBaseProps {
   indicatorLine?: boolean;
   /** 彩虹色连接指示线 */
   rainbowIndicatorLine?: boolean;
-
-  /** 开启拖拽 */
-  draggable?: boolean;
+  customer?: {
+    tree(meta: {
+      loading: boolean;
+      isEmpty: boolean;
+      renderToolbar: () => JSX.Element | null;
+      renderList: () => JSX.Element | JSX.Element[];
+    }): React.ReactNode;
+    placeholder(meta: {
+      style: React.CSSProperties;
+      data: TreeNode;
+      itemProps: ItemProps;
+    }): React.ReactNode;
+    item(meta: {
+      isChecked: boolean;
+      isDisabled: boolean;
+      toggleHandle: () => void;
+      isEmptyTwig: boolean;
+      style: React.CSSProperties | undefined;
+      renderIdent: () => JSX.Element;
+      isVirtual: boolean;
+      renderMultiCheck: () => JSX.Element;
+      renderLabel: () => JSX.Element;
+    }): React.ReactElement;
+  };
 }
 
 /** 工具条配置 */
@@ -148,6 +168,7 @@ export interface OptionsItem extends Partial<DataSourceItem<TreeValueType>> {
    * - 传入onLoad时生效
    * */
   isLeaf?: boolean;
+
   /** 在需要自行指定value或label的key时使用 */
   [key: string]: any;
 }
@@ -243,9 +264,6 @@ export interface ItemProps extends ComponentBaseProps {
   };
   /** 该项索引 */
   index: number;
-  /** dnd */
-  provided?: DraggableProvided;
-  snapshot?: DraggableStateSnapshot;
 }
 
 export interface VirtualItemProps extends ListChildComponentProps {
@@ -253,7 +271,7 @@ export interface VirtualItemProps extends ListChildComponentProps {
   data: {
     /**  当前列表 */
     data: TreeNode[];
-  } & Omit<ItemProps, 'data' | 'index' | 'provided'>;
+  } & Omit<ItemProps, 'data' | 'index'>;
 }
 
 export type DragItemProps = Omit<ItemProps, 'provided' | 'snapshot'>;

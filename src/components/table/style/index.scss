@@ -7,13 +7,12 @@
   font-size: var(--m78-fs);
   color: var(--m78-color-primary);
   text-align: left;
-  height: 100%;
   width: 100%;
+
 
   &_wrap {
     position: relative;
     overflow: auto;
-    height: 100%;
     width: 100%;
     border: 1px solid var(--m78-gray-5);
     border-radius: var(--m78-border-radius);
@@ -37,8 +36,8 @@
     border-collapse: separate;
   }
 
-  // 表头基础样式
-  thead {
+  // 表头表底基础样式
+  thead, tfoot {
     font-weight: bold;
     color: var(--m78-color-title);
     white-space: nowrap;
@@ -56,6 +55,24 @@
 
     .m78-table_fixed {
       z-index: 12;
+    }
+  }
+
+  thead {
+    td.__effect {
+      cursor: pointer;
+      user-select: none;
+
+      &:hover {
+        background-color: var(--m78-gray-3);
+      }
+    }
+  }
+
+  tfoot {
+    td {
+      top: auto;
+      bottom: 0;
     }
   }
 
@@ -154,23 +171,17 @@
     }
   }
 
-  &.__regular thead, &.__border thead {
+  &.__regular thead, &.__border thead, &.__regular tfoot, &.__border tfoot {
     td {
-      border-bottom: 1px solid var(--m78-gray-7);
-
       // 模拟下边框修复不显示的问题
       &::after {
         position: absolute;
         content: '';
-        height: 0;
-        // 防止出现间隔
-        width: 104%;
+        width: 104%;  // 防止出现间隔
         left: -1px;
-      }
-
-      &::after {
         bottom: -1px;
-        border-bottom: 1px solid var(--m78-gray-7);
+        height: 1px;
+        background-color: var(--m78-gray-7);
       }
 
       // 防止溢出导致滚动
@@ -185,15 +196,9 @@
   }
 
   &.__regular tfoot, &.__border tfoot {
-    z-index: 100;
-    font-weight: bold;
-
-    td {
-      position: sticky;
-      bottom: 0;
-      border-top: 1px solid var(--m78-gray-7);
-      background-color: var(--m78-component-bg);
-      border-bottom: none;
+    td::after {
+      bottom: unset;
+      top: 1px;
     }
   }
 
@@ -214,13 +219,8 @@
 
   // 边框样式
   &.__border {
-    thead td {
-      border-top: none;
-    }
-
     td {
       border-right: 1px solid var(--m78-gray-5);
-      border-bottom: 1px solid var(--m78-gray-5);
     }
 
     td:first-child {
@@ -232,6 +232,10 @@
     }
 
     tbody {
+      td {
+        border-bottom: 1px solid var(--m78-gray-5);
+      }
+
       tr:last-child td {
         border-bottom: none;
       }
@@ -281,6 +285,29 @@
 
     &.__open > span {
       transform: rotate(90deg);
+    }
+  }
+
+  &_sort-btn {
+    display: flex;
+    height: $size-small;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    margin-left: 8px;
+    color: var(--m78-color-second);
+
+    &.__asc > span:first-child {
+      color: var(--m78-color);
+    }
+
+    &.__desc > span:last-child {
+      color: var(--m78-color);
+    }
+
+    > span {
+      margin: 0 !important;
     }
   }
 }

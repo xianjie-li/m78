@@ -1,31 +1,38 @@
 import React, { useState } from 'react';
 import { m78Config } from 'm78/config';
-import { Divider, Spacer, Tile } from 'm78/layout';
+import { Divider, Spacer } from 'm78/layout';
 import { Button } from 'm78/button';
 import { Table, TableColumns } from 'm78/table';
 import 'm78/table/style';
 import { ListView, ListViewItem } from 'm78/list-view';
+import { datetime } from '@lxjx/utils';
+import { formatDate } from 'm78/dates/utils';
 
 const columns: TableColumns = [
   {
     label: '#',
     field: 'id',
-    width: 150,
+    width: 100,
+    fixed: 'left',
+  },
+  {
+    label: '虚拟列',
+    render: ({ rowIndex }) => <span>row {rowIndex}</span>,
     fixed: 'left',
   },
   {
     label: '姓名',
     field: 'name',
-    maxWidth: 300,
+    maxWidth: 200,
   },
   {
     label: '数值',
     field: 'num',
+    sort: true,
   },
   {
     label: '出生日期',
     field: 'birthday',
-    fixed: 'left',
   },
   {
     label: '职业',
@@ -42,69 +49,69 @@ const columns: TableColumns = [
     // width: 100,
     fixed: 'right',
   },
-  // {
-  //   label: '技能1',
-  //   field: 'skill',
-  //   fixed: 'right',
-  //   render: () => {
-  //     return (
-  //       <>
-  //         <Button size="small">操作</Button>
-  //         <Button size="small">操作</Button>
-  //       </>
-  //     );
-  //   },
-  // },
-  // {
-  //   label: '技能2',
-  //   field: 'skill',
-  //   extra: <span>⚙</span>,
-  // },
-  // {
-  //   label: '技能3',
-  //   field: 'skill',
-  // },
-  // {
-  //   label: '技能4',
-  //   field: 'skill',
-  // },
-  // {
-  //   label: '技能5',
-  //   field: 'skill',
-  //   width: 50,
-  // },
-  // {
-  //   label: '技能6',
-  //   field: 'skill',
-  // },
-  // {
-  //   label: '技能7',
-  //   field: 'skill',
-  // },
-  // {
-  //   label: '技能8',
-  //   field: 'skill',
-  // },
-  // {
-  //   label: '技能9',
-  //   field: 'skill',
-  // },
-  // {
-  //   label: '技能10',
-  //   field: 'skill',
-  // },
-  // {
-  //   label: '技能11',
-  //   field: 'skill',
-  // },
-  // {
-  //   label: '技能12',
-  //   field: 'skill',
-  // },
-  // {
-  //   label: '技能13',
-  //   field: 'skill',
-  // },
+  {
+    label: '技能1',
+    field: 'skill',
+    fixed: 'right',
+    render: () => {
+      return (
+        <>
+          <Button size="small">操作</Button>
+          <Button size="small">操作</Button>
+        </>
+      );
+    },
+  },
+  {
+    label: '技能2',
+    field: 'skill',
+    extra: <span>⚙</span>,
+  },
+  {
+    label: '技能3',
+    field: 'skill',
+  },
+  {
+    label: '技能4',
+    field: 'skill',
+  },
+  {
+    label: '技能5',
+    field: 'skill',
+    width: 50,
+  },
+  {
+    label: '技能6',
+    field: 'skill',
+  },
+  {
+    label: '技能7',
+    field: 'skill',
+  },
+  {
+    label: '技能8',
+    field: 'skill',
+  },
+  {
+    label: '技能9',
+    field: 'skill',
+  },
+  {
+    label: '技能10',
+    field: 'skill',
+  },
+  {
+    label: '技能11',
+    field: 'skill',
+  },
+  {
+    label: '技能12',
+    field: 'skill',
+  },
+  {
+    label: '技能13',
+    field: 'skill',
+  },
 ];
 
 const ds = Array.from({ length: 20 }).map((i, ind) => {
@@ -128,12 +135,16 @@ const ds = Array.from({ length: 20 }).map((i, ind) => {
   };
 });
 
-const ds2 = Array.from({ length: 100 }).map((i, ind) => {
+const ds2 = Array.from({ length: 200 }).map((i, ind) => {
+  const date = new Date('1994-07-14');
+
+  date.setDate(date.getDate() - ind);
+
   return {
     id: ind + 10001,
     name: `李显杰${ind}${1 + 10001}`,
     num: ind,
-    birthday: '1994-07-14',
+    birthday: datetime(date, 'YYYY-MM-DD'),
     user: {
       name: '前端工程师',
     },
@@ -154,6 +165,8 @@ const App = () => {
 
   const [d, setD] = useState(ds2);
 
+  const [toggle, setToggle] = useState(true);
+
   return (
     <div className="p-32">
       <Button onClick={() => m78Config.setState({ darkMode: !m78Config.getState().darkMode })}>
@@ -166,42 +179,107 @@ const App = () => {
 
       <Spacer height={50} />
 
-      <Table
-        // height={500}
-        divideStyle="border"
-        columns={columns}
-        dataSource={d}
-        summary={({ column }) => {
-          if (column.label === '#') return '总计';
-          if (column.label === '数值') {
-            const count = d.reduce((prev, item) => {
-              if (isNaN(prev)) return prev;
-              return prev + item.num;
-            }, 0);
+      <Button onClick={() => setToggle(prev => !prev)}>toggle</Button>
 
-            return isNaN(count) ? 'N/A' : count;
-          }
-          return 'N/A';
-        }}
-        expand={({ record, rowIndex }) => {
-          if (rowIndex > 5) return;
+      {toggle && (
+        <Table
+          height={400}
+          divideStyle="border"
+          columns={columns}
+          dataSource={d}
+          // summary={({ column }) => {
+          //   if (column.label === '#') return '总计';
+          //   if (column.label === '数值') {
+          // {/*    const count = d.reduce((prev, item) => {*/}
+          //       if (isNaN(prev)) return prev;
+          //       return prev + item.num;
+          //     }, 0);
+          //
+          //     return isNaN(count) ? 'N/A' : count;
+          //   }
+          //   return <span className="color-second fw">N/A</span>;
+          // }}
+          expand={({ rowIndex }) => {
+            if (rowIndex > 5) return;
 
-          return (
-            <div className="p-12">
-              <ListView size="small" style={{ fontWeight: 400 }}>
-                <ListViewItem title="姓名" desc="xxx" />
-                <ListViewItem title="年龄" desc="18" />
-                <ListViewItem title="数值" desc="516" />
-                <ListViewItem
-                  title="职业"
-                  desc="
+            return (
+              <div className="p-12">
+                <ListView size="small" style={{ fontWeight: 400 }}>
+                  <ListViewItem title="姓名" desc="xxx" />
+                  <ListViewItem title="年龄" desc="18" />
+                  <ListViewItem title="数值" desc="516" />
+                  <ListViewItem
+                    title="职业"
+                    desc="
 前端工程师"
-                />
-              </ListView>
-            </div>
-          );
-        }}
-      />
+                  />
+                </ListView>
+              </div>
+            );
+          }}
+          onSortChange={([key, type]) => {
+            if (key === 'num') {
+              setD(prev => {
+                prev.sort((a, b) => {
+                  return type === 'asc' ? a.num - b.num : b.num - a.num;
+                });
+
+                return prev;
+              });
+            }
+
+            // if (key === 'birthday') {
+            //   setD(prev => {
+            //     prev.sort((a, b) => {
+            //       return type === 'asc'
+            //         ? new Date(a.birthday) - new Date(b.birthday)
+            //         : new Date(b.birthday) - new Date(a.birthday);
+            //     });
+            //
+            //     return prev;
+            //   });
+            // }
+          }}
+        />
+      )}
+
+      <Spacer />
+
+      {/*      <Table*/}
+      {/*        height={400}*/}
+      {/*        columns={columns}*/}
+      {/*        dataSource={d}*/}
+      {/*        summary={({ column }) => {*/}
+      {/*          if (column.label === '#') return '总计';*/}
+      {/*          if (column.label === '数值') {*/}
+      {/*            const count = d.reduce((prev, item) => {*/}
+      {/*              if (isNaN(prev)) return prev;*/}
+      {/*              return prev + item.num;*/}
+      {/*            }, 0);*/}
+
+      {/*            return isNaN(count) ? 'N/A' : count;*/}
+      {/*          }*/}
+      {/*          return 'N/A';*/}
+      {/*        }}*/}
+      {/*        expand={({ rowIndex }) => {*/}
+      {/*          if (rowIndex > 5) return;*/}
+
+      {/*          return (*/}
+      {/*            <div className="p-12">*/}
+      {/*              <ListView size="small" style={{ fontWeight: 400 }}>*/}
+      {/*                <ListViewItem title="姓名" desc="xxx" />*/}
+      {/*                <ListViewItem title="年龄" desc="18" />*/}
+      {/*                <ListViewItem title="数值" desc="516" />*/}
+      {/*                <ListViewItem*/}
+      {/*                  title="职业"*/}
+      {/*                  desc="*/}
+      {/*前端工程师"*/}
+      {/*                />*/}
+      {/*              </ListView>*/}
+      {/*            </div>*/}
+      {/*          );*/}
+      {/*        }}*/}
+      {/*      />*/}
 
       <Spacer height={1000} />
     </div>

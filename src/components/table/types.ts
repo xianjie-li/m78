@@ -1,36 +1,69 @@
-import { AnyObject } from '@lxjx/utils';
+import { AnyObject, ComponentBasePropsWithAny } from '@lxjx/utils';
 import React from 'react';
 import { SizeEnum, SizeKeys } from 'm78/types';
+import { useStates } from 'm78/table/useStates';
+import { defaultProps } from './common';
 
-export interface _InnerSelf {
-  /** 存放列位置, 用于fixed列定位 */
-  fixedSizeMap: {
-    [ind: string]: number;
-  };
-}
+/*
+ * ############################
+ * 枚举
+ * ############################
+ * */
 
-export interface _InnerState {
-  touchLeft: boolean;
-  touchRight: boolean;
-  fixedMetas: {
-    left: number;
-    right: number;
-  }[];
-}
+/** 列固定方向 */
+export type TableColumnFixedKeys = 'left' | 'right';
 
-export interface _Share {
-  state: _InnerState;
-  self: _InnerSelf;
-  props: TableProps;
+/** 列固定方向 */
+export enum TableColumnFixedEnum {
+  left = 'left',
+  right = 'right',
 }
 
 /**
- * 一个元信息，可以代表表格中的某行、某列、或某一个特定的单元格
+ * 表格单元格分割风格:
+ *
+ * border - 边框,
+ * regular - 单元格
+ * */
+export type TableDivideStyleKeys = 'border' | 'regular';
+
+/**
+ * 表格单元格分割风格:
+ *
+ * border - 边框,
+ * regular - 单元格
+ * */
+export enum TableDivideStyleEnum {
+  border = 'border',
+  regular = 'regular',
+}
+
+/** 表格排序方式  */
+export type TableSortKeys = 'asc' | 'desc';
+
+/** 表格排序方式  */
+export enum TableSortEnum {
+  asc = 'asc',
+  desc = 'desc',
+}
+
+/*
+ * ############################
+ * 主要类型
+ * ############################
+ * */
+
+export type TableSortValue = [string, TableSortEnum | TableSortKeys];
+
+/**
+ * 一个元信息，可以用来表示表格中的某行、某列、或某一个特定的单元格
  * */
 export interface TableMeta {
-  /** 当前列, 用于表示行数据时，值为`{}` */
+  /** 传递给table的ctx对象 */
+  ctx: any;
+  /** 当前列, 用于表示行数据时会设置一个无效值 */
   column: TableColumn;
-  /** 当前记录, 用于表示非表格体的行时，值为`{}` */
+  /** 当前记录, 用于表示非表格体的行时会设置一个无效值 */
   record: AnyObject;
   /** 当前列索引 */
   colIndex: number;
@@ -44,20 +77,9 @@ export interface TableMeta {
   isFoot: boolean;
 }
 
-export type TableColumnFixedKeys = 'left' | 'right';
-
-export enum TableColumnFixedEnum {
-  left = 'left',
-  right = 'right',
-}
-
-export type TableDivideStyleKeys = 'border' | 'regular';
-
-export enum TableDivideStyleEnum {
-  border = 'border',
-  regular = 'regular',
-}
-
+/**
+ * 表格列配置
+ * */
 export interface TableColumn {
   /** 列名 */
   label: string;
@@ -81,29 +103,36 @@ export interface TableColumn {
   /** 固定列到左侧或右侧, 如果声明了fixed的列在常规列中间，它会根据固定方向移动到表格两侧渲染 */
   fixed?: TableColumnFixedKeys | TableColumnFixedEnum;
   /**
-   * 为该列所有单元格设置的props, 支持td标签的所有props
+   * 为该列所有单元格设置的props, 支持td标签的所有prop
    * - 可通过该配置为整列同时设置样式、对齐、事件等
-   * - 部分被内部占用的props会被覆盖
+   * - 部分被内部占用的props无效
    * */
   props?:
     | React.PropsWithoutRef<JSX.IntrinsicElements['td']>
     | ((cellMeta: TableMeta) => React.PropsWithoutRef<JSX.IntrinsicElements['td']>);
   /** 在列头渲染的额外内容 */
   extra?: React.ReactNode | ((cellMeta: TableMeta) => React.ReactNode);
-}
-
-/** 内部使用的扩展TableColumn */
-export interface _TableColumnInside extends TableColumn {
-  /** 是否为左侧固定列的最后一个 */
-  fixedLeftLast?: boolean;
-  /** 是否为右侧固定列的第一个 */
-  fixedRightFirst?: boolean;
+  /** 如果开启了过滤和排序, 需要通过此项来 , 不传时此值与filed相同 */
+  key?: string;
+  /**
+   * 开启过滤并通过onSort进行回调:
+   * - 如果为boolean值true，则表示同时开启asc和desc两种类型的排序
+   * - 如果为string类型，则表示只开启该类型的排序
+   * */
+  sort?: boolean | TableSortKeys | TableSortEnum;
+  /** 其他任意的键值 */
+  [key: string]: any;
 }
 
 export type TableColumns = TableColumn[];
 
-export interface TableProps {
+/**
+ * 表格类型
+ * */
+export interface TableProps extends ComponentBasePropsWithAny {
+  /** 数据源 */
   dataSource: AnyObject[];
+  /** 表格列配置 */
   columns: TableColumns;
   /**
    * key/id | 表格中的每一条记录都应该有一个能表示该条记录的字段, primaryKey用于配置获取这个字段的key
@@ -111,7 +140,9 @@ export interface TableProps {
    * - 由于id和key是非常常见的记录主键，所以会默认进行获取， 如果是key/id 以外的键(如uid)，需要特别指定
    * */
   primaryKey?: string;
+  /** 表格宽度，默认为容器宽度 */
   width?: string | number;
+  /** 表格高度 */
   height?: string | number;
   /**
    * 'regular' | 表格的数据分割类型:
@@ -141,11 +172,10 @@ export interface TableProps {
   colSpan?: (cellMeta: TableMeta) => number | undefined;
   /** 300px 单元格最大宽度, 用于防止某一列内容过长占用大量位置导致很差的显示效果 */
   cellMaxWidth?: string | number;
-  /**
-   * 单元格未获取到有效值时(checkValid()返回false), 用于显示的回退内容, 默认显示 “-”
-   * - 作用于表头
-   * */
+  /** 单元格未获取到有效值时(checkValid()返回false), 用于显示的回退内容, 默认显示 “-” */
   fallback?: React.ReactNode | ((cellMeta: TableMeta) => React.ReactNode);
+  /** 通过column.filed获取到字段值后，会通过此函数检测字段值是否有效，无效时会显示回退值, 默认只有truthy和0会通过检测 */
+  checkFieldValid?: (val: any) => boolean;
   /** 开启总结栏并根据此函数返回生成每列的值 */
   summary?: (colMeta: TableMeta) => React.ReactNode | void;
   /**
@@ -154,4 +184,81 @@ export interface TableProps {
    * */
   expand?: (rowMeta: TableMeta) => React.ReactNode | void;
   expandIcon?: React.ReactNode;
+  /**
+   * 所有单元格设置的props, 支持td标签的所有prop
+   * - 可通过该配置为所有单元格同时设置样式、对齐、事件等
+   * - 部分被内部占用的props无效
+   * */
+  props?:
+    | React.PropsWithoutRef<JSX.IntrinsicElements['td']>
+    | ((cellMeta: TableMeta) => React.PropsWithoutRef<JSX.IntrinsicElements['td']>);
+  /** 默认的排序值 */
+  defaultSort?: TableSortValue;
+  /** 受控的排序值 */
+  sort?: TableSortValue;
+  /**
+   * 触发排序的回调, 无sort传入时表示取消排序
+   * */
+  onSortChange?: (sort: TableSortValue | []) => void;
+}
+
+/*
+ * ############################
+ * 内部类型
+ * ############################
+ * */
+
+export interface _TableCellProps {
+  /** 当前列 */
+  column: _TableColumnInside;
+  /** 当前记录, 为表头时可不传 */
+  record: AnyObject;
+  /** 列索引 */
+  colIndex: number;
+  /** 行索引 */
+  rowIndex: number;
+  /** 是否是表头单元格 */
+  isHead?: boolean;
+  /** 是否是表尾单元格 */
+  isFoot?: boolean;
+  /** 表格节点 */
+  tableElRef: React.MutableRefObject<HTMLTableElement>;
+  /** 共享数据 */
+  ctx: _Context;
+  /** 自行指定单元格内容 */
+  content?: React.ReactNode;
+  /** 单元格前置节点 */
+  prefix?: React.ReactNode;
+}
+
+/** 内部使用的扩展TableColumn */
+export interface _TableColumnInside extends TableColumn {
+  /** 是否为左侧固定列的最后一个 */
+  fixedLeftLast?: boolean;
+  /** 是否为右侧固定列的第一个 */
+  fixedRightFirst?: boolean;
+}
+
+/** 内部实例对象 */
+export interface _InnerSelf {
+  /** 存放列位置, 用于fixed列定位 */
+  fixedSizeMap: {
+    [ind: string]: number;
+  };
+}
+
+/** 内部状态 */
+export interface _InnerState {
+  /** x轴滚动到最左侧 */
+  touchLeft: boolean;
+  /** x轴滚动到最右侧 */
+  touchRight: boolean;
+  /** 标记表格是否渲染完毕，反正向用户呈现抖动的渲染帧 */
+  mounted: boolean;
+}
+
+export interface _Context {
+  /** 状态 */
+  states: ReturnType<typeof useStates>;
+  props: TableProps & typeof defaultProps;
 }

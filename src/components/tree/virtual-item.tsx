@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { DragItem } from './drag-item';
 import TreeItem from './item';
 import { VirtualItemProps } from './types';
 
 export const VirtualItem = ({ index, style, data }: VirtualItemProps) => {
   const { data: list, ...itemProps } = data;
-  const { draggable } = itemProps.share.props;
 
   const item = list[index];
 
   // 使用低消耗的渲染占位，一定延迟后再切换真实节点，防止快速滚动、拖动造成不必要的计算消耗
   const [render, setRender] = useState(!itemProps.share.self.scrolling);
+
+  const placeholderCustomer = itemProps.share.props.customer?.placeholder;
 
   useEffect(() => {
     if (render) return;
@@ -22,6 +22,14 @@ export const VirtualItem = ({ index, style, data }: VirtualItemProps) => {
   }, []);
 
   if (!render) {
+    if (placeholderCustomer) {
+      return placeholderCustomer({
+        style,
+        data: item,
+        itemProps: itemProps as any,
+      });
+    }
+
     return (
       <div style={style} className="m78-tree_skeleton">
         {item.parents &&
@@ -37,9 +45,5 @@ export const VirtualItem = ({ index, style, data }: VirtualItemProps) => {
     );
   }
 
-  if (!draggable) {
-    return <TreeItem data={item} key={item.value} {...itemProps} style={style} index={index} />;
-  }
-
-  return <DragItem data={item} key={item.value} {...itemProps} style={style} index={index} />;
+  return <TreeItem data={item} key={item.value} {...itemProps} style={style} index={index} />;
 };
