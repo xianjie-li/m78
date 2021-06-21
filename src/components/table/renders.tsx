@@ -191,7 +191,8 @@ export function renderTbody(ctx: _Context, columns: _TableColumnInside[], isMain
                       })}
                       size="small"
                       text
-                      onClick={() => {
+                      onClick={e => {
+                        e.stopPropagation();
                         if (expandChecker.isChecked(key)) {
                           expandChecker.setChecked([]);
                         } else {
