@@ -10,7 +10,6 @@ import {
 } from '@lxjx/utils';
 import { throwError } from 'm78/util';
 import { SetState, UseScrollMeta } from '@lxjx/hooks';
-import React from 'react';
 import {
   _Context,
   _InnerState,
@@ -21,6 +20,7 @@ import {
   TableProps,
   TableSortEnum,
 } from './types';
+import React from 'react';
 
 /**
  * ################################
@@ -173,5 +173,22 @@ export function handleSortClick(ctx: _Context, column: TableColumn, key?: string
   // 排序类型为指定类型，在无和该类型间切换
   if (isString(column.sort)) {
     setSort(sortType && key === sortKey ? [] : [key, column.sort]);
+  }
+}
+
+/** 处理行交互事件并派发通知 */
+export function handleRowHover(
+  ctx: _Context,
+  rowInd: number,
+  e: React.MouseEvent<HTMLTableRowElement, MouseEvent>,
+) {
+  const ev = ctx.states.updateBgEvent;
+
+  if (e.type === 'mouseenter') {
+    ev.emit(rowInd, true);
+  }
+
+  if (e.type === 'mouseleave') {
+    ev.emit(rowInd, false);
   }
 }

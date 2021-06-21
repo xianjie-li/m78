@@ -200,6 +200,10 @@ export interface TableProps extends ComponentBasePropsWithAny {
    * 触发排序的回调, 无sort传入时表示取消排序
    * */
   onSortChange?: (sort: TableSortValue | []) => void;
+  /** 如果传入，则控制要显示的列, 数组项为 columns.key 或 字符类型的columns.field */
+  showColumns?: string[];
+  /** 为树形时 */
+  treeDataSource?: any;
 }
 
 /*

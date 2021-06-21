@@ -70,47 +70,47 @@ const columns: TableColumns = [
     label: '技能3',
     field: 'skill',
   },
-  {
-    label: '技能4',
-    field: 'skill',
-  },
-  {
-    label: '技能5',
-    field: 'skill',
-    width: 50,
-  },
-  {
-    label: '技能6',
-    field: 'skill',
-  },
-  {
-    label: '技能7',
-    field: 'skill',
-  },
-  {
-    label: '技能8',
-    field: 'skill',
-  },
-  {
-    label: '技能9',
-    field: 'skill',
-  },
-  {
-    label: '技能10',
-    field: 'skill',
-  },
-  {
-    label: '技能11',
-    field: 'skill',
-  },
-  {
-    label: '技能12',
-    field: 'skill',
-  },
-  {
-    label: '技能13',
-    field: 'skill',
-  },
+  // {
+  //   label: '技能4',
+  //   field: 'skill',
+  // },
+  // {
+  //   label: '技能5',
+  //   field: 'skill',
+  //   width: 50,
+  // },
+  // {
+  //   label: '技能6',
+  //   field: 'skill',
+  // },
+  // {
+  //   label: '技能7',
+  //   field: 'skill',
+  // },
+  // {
+  //   label: '技能8',
+  //   field: 'skill',
+  // },
+  // {
+  //   label: '技能9',
+  //   field: 'skill',
+  // },
+  // {
+  //   label: '技能10',
+  //   field: 'skill',
+  // },
+  // {
+  //   label: '技能11',
+  //   field: 'skill',
+  // },
+  // {
+  //   label: '技能12',
+  //   field: 'skill',
+  // },
+  // {
+  //   label: '技能13',
+  //   field: 'skill',
+  // },
 ];
 
 const ds = Array.from({ length: 20 }).map((i, ind) => {
@@ -182,7 +182,7 @@ const App = () => {
 
       {toggle && (
         <Table
-          height={700}
+          height={500}
           divideStyle="border"
           columns={columns}
           dataSource={d}

@@ -1,6 +1,12 @@
 import { useMemo, useRef } from 'react';
-import { useCheck, useFormState, useScroll, useSelf, useSetState } from '@lxjx/hooks';
-import { _InnerSelf, _InnerState, TableProps, TableSortValue } from 'm78/table/types';
+import { createEvent, useCheck, useFormState, useScroll, useSelf, useSetState } from '@lxjx/hooks';
+import {
+  _InnerSelf,
+  _InnerState,
+  TableColumnFixedEnum,
+  TableProps,
+  TableSortValue,
+} from 'm78/table/types';
 import useVirtualList from 'ahooks/es/useVirtualList';
 import { columnsBeforeFormat, syncTouchStatus } from './functions';
 
@@ -13,6 +19,8 @@ export function useStates(props: TableProps) {
   const theadElRef = useRef<HTMLTableSectionElement>(null!);
   /** 表格体首行tr节点的ref */
   const firstTBodyRowRef = useRef<HTMLTableRowElement>(null!);
+
+  const isVirtual = !!props.height;
 
   /** 状态 */
   const [state, setState] = useSetState<_InnerState>({
@@ -42,13 +50,27 @@ export function useStates(props: TableProps) {
   /** 经过内部化处理的columns，应优先使用此变量代替传入的column */
   const fmtColumns = useMemo(() => columnsBeforeFormat(props), [props.columns]);
 
+  /** 排序 */
   const sortState = useFormState<TableSortValue | []>(props, [], {
     defaultValueKey: 'defaultSort',
     valueKey: 'sort',
     triggerKey: 'onSortChange',
   });
 
-  const virtualList = useVirtualList(props.dataSource || [], {
+  // TableRender内部使用的通知事件
+  const updateEvent = useMemo(
+    () => createEvent<(type: TableColumnFixedEnum, width: number) => void>(),
+    [],
+  );
+
+  // CellEffectBg状态改变事件
+  const updateBgEvent = useMemo(
+    () => createEvent<(rowIndex: number, isHover: boolean) => void>(),
+    [],
+  );
+
+  // 虚拟列表
+  const virtualList = useVirtualList(isVirtual ? props.dataSource : [], {
     overscan: 6,
     itemHeight: 41,
   });
@@ -66,5 +88,8 @@ export function useStates(props: TableProps) {
     fmtColumns,
     sortState,
     virtualList,
+    updateEvent,
+    updateBgEvent,
+    isVirtual,
   };
 }

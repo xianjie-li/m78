@@ -2,6 +2,7 @@ import React, { useMemo, useRef } from 'react';
 import clsx from 'clsx';
 import { getCellProps, getCellSpan } from 'm78/table/functions';
 import { renderCellFork } from 'm78/table/renders';
+import CellEffectBg from 'm78/table/_cell-effect-bg';
 import { _TableCellProps, TableMeta } from './types';
 
 const _Cell = (props: _TableCellProps) => {
@@ -45,6 +46,7 @@ const _Cell = (props: _TableCellProps) => {
       colSpan={colSpan}
     >
       {renderCellFork(ctx, meta, props)}
+      {isBody && <CellEffectBg ctx={ctx} rowInd={rowIndex} />}
     </td>
   );
 };
@@ -58,6 +60,7 @@ export default React.memo(_Cell, (prev, next) => {
     prev.colIndex === next.colIndex &&
     prev.rowIndex === next.rowIndex &&
     prev.isHead === next.isHead &&
-    prev.isFoot === next.isFoot
+    prev.isFoot === next.isFoot &&
+    prev.prefix === next.prefix
   );
 });
