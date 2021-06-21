@@ -112,6 +112,10 @@
         background-color: var(--m78-gray-3);
       }
     }
+
+    .m78-table_cell {
+      justify-content: space-between;
+    }
   }
 
   tfoot {
@@ -139,7 +143,6 @@
     padding: 0 12px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     word-break: break-word;
     white-space: nowrap;
     min-width: 100%;  // 防止总列宽不足容器宽度，但是设置了maxWidth相关的属性时，内容被裁剪

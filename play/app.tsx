@@ -134,7 +134,7 @@ const ds = Array.from({ length: 20 }).map((i, ind) => {
   };
 });
 
-const ds2 = Array.from({ length: 99999 }).map((i, ind) => {
+const ds2 = Array.from({ length: 100 }).map((i, ind) => {
   const date = new Date('1994-07-14');
 
   date.setDate(date.getDate() - ind);
@@ -182,7 +182,8 @@ const App = () => {
 
       {toggle && (
         <Table
-          height={500}
+          showColumns={['id', 'name', 'num', 'relation[0].name']}
+          // height={500}
           divideStyle="border"
           columns={columns}
           dataSource={d}

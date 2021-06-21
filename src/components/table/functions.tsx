@@ -21,6 +21,7 @@ import {
   TableSortEnum,
 } from './types';
 import React from 'react';
+import { stringifyArrayField } from 'm78/table/common';
 
 /**
  * ################################
@@ -39,6 +40,21 @@ export function getPrimaryKey(obj: AnyObject) {
     );
   }
 
+  return key;
+}
+
+/** 根据列配置获取其key，取值顺序为 column.key > column.field(如果是字符类型) > undefined */
+export function getColumnKey(column: TableColumn) {
+  let key = column.key;
+
+  if (!key && isString(column.field)) {
+    key = column.field;
+  }
+
+  if (!key && isArray(column.field)) {
+    const k = stringifyArrayField(column.field);
+    if (k) key = k;
+  }
   return key;
 }
 
@@ -89,12 +105,20 @@ export function syncTouchStatus(
  * - 转换为_TableColumnInside
  * - 处理fixed列
  * */
-export function columnsBeforeFormat({ columns }: TableProps) {
+export function columnsBeforeFormat({ columns, showColumns }: TableProps) {
   const fixedLeft: _TableColumnInside[] = [];
   const column: _TableColumnInside[] = [];
   const fixedRight: _TableColumnInside[] = [];
 
   columns.forEach(col => {
+    // 过滤不显示的列
+    if (showColumns?.length) {
+      const key = getColumnKey(col);
+      if (key && !showColumns.includes(key)) {
+        return;
+      }
+    }
+
     if (col.fixed === TableColumnFixedEnum.left) {
       fixedLeft.push(col);
       return;
@@ -190,5 +214,18 @@ export function handleRowHover(
 
   if (e.type === 'mouseleave') {
     ev.emit(rowInd, false);
+  }
+}
+
+/**
+ * 表格点击事件
+ * - 如果点击时包含展开的expand，则将其关闭
+ * */
+export function handleTableClick(ctx: _Context) {
+  const {
+    states: { expandChecker },
+  } = ctx;
+  if (expandChecker.checked.length) {
+    expandChecker.setChecked([]);
   }
 }

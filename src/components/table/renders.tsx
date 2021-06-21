@@ -22,6 +22,8 @@ import {
   getPrimaryKey,
   handleSortClick,
   handleRowHover,
+  getColumnKey,
+  handleTableClick,
 } from './functions';
 import TableRender from './_table-render';
 
@@ -52,6 +54,7 @@ export function render(ctx: _Context) {
       sort,
       onSortChange,
       props: _,
+      showColumns,
       ...ppp
     },
     states: { state, wrapElRef, tableElRef, virtualList, fmtColumns, isVirtual },
@@ -78,6 +81,7 @@ export function render(ctx: _Context) {
         onScroll={isVirtual ? virtualList.containerProps.onScroll : undefined}
         className="m78-table_wrap"
         style={{ width, maxHeight: height }}
+        onClick={() => handleTableClick(ctx)}
       >
         {fmtColumns.fixedLeft.length > 0 && (
           <TableRender
@@ -127,7 +131,7 @@ export function renderExpandNode(ctx: _Context, record: AnyObject, ind: number) 
   if (!isTruthyOrZero(node)) return null;
 
   return (
-    <tr>
+    <tr {...stopPropagation}>
       <td colSpan={fmtColumns.column.length}>
         <div className="m78-table_expand-node">{node as any}</div>
       </td>
@@ -373,7 +377,7 @@ export function renderCellFork(ctx: _Context, meta: TableMeta, cellProps: _Table
     props,
   } = ctx;
   const { isHead, column } = meta;
-  const { field, key, extra, sort, width, maxWidth } = column;
+  const { extra, sort, width, maxWidth } = column;
   const { prefix, content } = cellProps;
 
   // 宽度
@@ -393,19 +397,15 @@ export function renderCellFork(ctx: _Context, meta: TableMeta, cellProps: _Table
   const [sortKey, sortType] = sortValue || [];
 
   // 当前排序的key
-  let currentKey = key;
-
-  if (!currentKey && isString(field)) {
-    currentKey = field;
-  }
+  const columnKey = getColumnKey(column);
 
   // 是否开启了sort
-  const hasSort = isHead && sort && currentKey;
+  const hasSort = isHead && sort && columnKey;
 
   return (
     <div
       className="m78-table_cell"
-      onClick={hasSort ? () => handleSortClick(ctx, column, currentKey) : undefined}
+      onClick={hasSort ? () => handleSortClick(ctx, column, columnKey) : undefined}
       style={{ maxWidth: mw, width: !isTruthyOrZero(maxWidth) ? width : undefined }}
     >
       {prefix}
@@ -414,7 +414,7 @@ export function renderCellFork(ctx: _Context, meta: TableMeta, cellProps: _Table
         <span
           className={clsx(
             'm78-table_sort-btn',
-            sortType && sortKey === currentKey && `__${sortType}`,
+            sortType && sortKey === columnKey && `__${sortType}`,
           )}
         >
           <If when={isBoolean(sort) || sort === TableSortEnum.asc}>

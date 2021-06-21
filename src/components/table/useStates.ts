@@ -50,6 +50,8 @@ export function useStates(props: TableProps) {
   /** 经过内部化处理的columns，应优先使用此变量代替传入的column */
   const fmtColumns = useMemo(() => columnsBeforeFormat(props), [props.columns]);
 
+  // const fmtDataSource = useMemo(() => {}, [props.dataSource]);
+
   /** 排序 */
   const sortState = useFormState<TableSortValue | []>(props, [], {
     defaultValueKey: 'defaultSort',

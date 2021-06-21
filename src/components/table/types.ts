@@ -86,8 +86,9 @@ export interface TableColumn {
   /**
    * 该列对应的数据字段
    * - 传入字符数组时可以嵌套获取值, 如:
-   *    - ['user', 'name'] => user.name
-   *    - ['things', '1', 'name'] => things['1'].name
+   * @example
+   * - ['user', 'name'] => user.name
+   * - ['things', '1', 'name'] => things[1].name
    * */
   field?: string | string[];
   /** 自定义渲染内容, 会覆盖field配置 */
@@ -112,7 +113,11 @@ export interface TableColumn {
     | ((cellMeta: TableMeta) => React.PropsWithoutRef<JSX.IntrinsicElements['td']>);
   /** 在列头渲染的额外内容 */
   extra?: React.ReactNode | ((cellMeta: TableMeta) => React.ReactNode);
-  /** 如果开启了过滤和排序, 需要通过此项来 , 不传时此值与filed相同 */
+  /**
+   * 如果开启了过滤和排序, 需要通过此项来对列进行标识
+   * - 如果未明确传入此值，且field为string类型的话，会将filed作为key使用
+   * - 如果未明确传入此值，且field为array类型的话，会将起转换为字段字符串并作为key使用，如user.name、news[0].title
+   * */
   key?: string;
   /**
    * 开启过滤并通过onSort进行回调:
