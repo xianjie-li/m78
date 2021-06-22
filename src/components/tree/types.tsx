@@ -1,10 +1,9 @@
-import { FormLikeWithExtra, SetState, UseCheckReturns } from '@lxjx/hooks';
+import { FormLikeWithExtra } from '@lxjx/hooks';
 import { ComponentBaseProps, DataSourceItem, SizeKeys } from 'm78/types';
 import React from 'react';
 import { ListChildComponentProps } from 'react-window';
-import { useTreeStates } from 'm78/tree/use-tree-states';
-import { flatTreeData } from './common';
-import { defaultProps } from './_tree';
+import { useTreeStates } from './use-tree-states';
+import { defaultProps } from './common';
 
 /**
  * ########################################
@@ -19,11 +18,12 @@ export type TreeValueType = string | number;
 
 /** 树组件的基础类型 */
 export interface TreeBaseProps<Item, Node> {
+  /* ############## 常用 ############## */
   /** 数据源 (每次更改时会解析树数据并缓存关联信息以提升后续操作速度，所以最好将dataSource通过useState或useMemo等进行管理，不要直接内联式传入) */
   dataSource?: Item[];
   /**
    * 组件内部更改了数据源时，通过此方法通知
-   * - 仅在启用了动态加载子节点、拖拽功能时触发，它们的共同点是都会更改传入的dataSource
+   * - 在启用了动态加载子节点、拖拽等功能时触发，它们的共同点是都会更改传入的dataSource
    * - 此选项存在的意义是让动态加载、拖拽排序等功能使用更简单，目前常见组件库中的tree均是只做节点变更通知，需要由用户手动根据节点层级
    * 将新数据/节点顺序设置到DataSource后再更新数据源，但是多层级的树形数据操作是非常麻烦且费时的，所以组件将这些更新操作放到内部进行，用户仅需监听
    * onDataSourceChange并将新的DataSource合并即可
@@ -31,12 +31,6 @@ export interface TreeBaseProps<Item, Node> {
    * 所以在开启了动态加载子节点、拖拽功能时，必须传入此项来同步dataSource
    * */
   onDataSourceChange?: (ds: Item[]) => void;
-  /** 指定打开的节点 (受控) */
-  opens?: TreeValueType[];
-  /** 指定默认打开的节点 (非受控) */
-  defaultOpens?: TreeValueType[];
-  /** 打开节点变更时触发 */
-  onOpensChange?: (nextOpens: TreeValueType[], nodes: Node[]) => void;
 
   /* ############## 其他常用配置 ############## */
   /**
@@ -54,14 +48,22 @@ export interface TreeBaseProps<Item, Node> {
   emptyTwigAsNode?: boolean;
   /** 点击节点 */
   onNodeClick?: (current: Node) => void;
+  /** 禁用(工具条、展开、选中) */
+  disabled?: boolean;
+  /** 指定打开的节点 (受控) */
+  opens?: TreeValueType[];
+  /** 指定默认打开的节点 (非受控) */
+  defaultOpens?: TreeValueType[];
+  /** 打开节点变更时触发 */
+  onOpensChange?: (nextOpens: TreeValueType[], nodes: Node[]) => void;
 
   /* ############## 定制选项 ############## */
   /** 自定义展开标识图标, 如果将className添加到节点上，会在展开时将其旋转90deg, 也可以通过open自行配置 */
   expansionIcon?: React.ReactNode | ((open: boolean, className: string) => React.ReactNode);
-  /** 如何从选项中拿到value，默认是 item => item.value */
-  valueGetter?: (optItem: TreeDataSourceItem) => TreeValueType;
+  /** 如何从选项中拿到value，默认是 item => item.value || item.label, 如果无value且label不为字符类型，应该手动传入value来禁用默认的回退行为 */
+  valueGetter?: (optItem: Item) => TreeValueType;
   /** 如何从选项中拿到label，默认是 item => item.label */
-  labelGetter?: (optItem: TreeDataSourceItem) => React.ReactNode;
+  labelGetter?: (optItem: Item) => React.ReactNode;
 }
 
 /** 单选props */
@@ -69,7 +71,7 @@ export interface TreeBaseSingleChoiceProps<Node = TreeNode>
   extends FormLikeWithExtra<TreeValueType, Node> {
   /** 是否可单选 (使用高亮样式) */
   checkable?: boolean;
-  /** false | 是否可选中目录级 */
+  /** false | 是否可选中目录级（单选时可用） */
   checkTwig?: boolean;
   /** extend(FormLikeWithExtra) | 控制选中值 */
   // value/defaultValue/onChange
@@ -89,6 +91,7 @@ export interface TreeBaseMultipleChoiceProps<Node = TreeNode>
   // value/defaultValue/onChange
 }
 
+/** 用来共享传递的临时类型 */
 export interface TreeBasePropsMix<Item = DataSourceItem, Node = TreeNode>
   extends TreeBaseProps<Item, Node>,
     Omit<TreeBaseSingleChoiceProps, 'value' | 'defaultValue' | 'onChange'>,
@@ -167,16 +170,12 @@ export interface TreeProps extends ComponentBaseProps, TreeBaseProps<TreeDataSou
    * - 内容不再支持超出自动折行，一律使用size或itemHeight指定的高度
    * */
   height?: number | string;
-  /* ############## 其他常用配置 ############## */
-  /** 禁用(工具条、展开、选中) */
-  disabled?: boolean;
-  /** 公共的操作区内容, 渲染在每个节点的右侧  */
-  actions?: React.ReactNode | ((current: TreeNode) => React.ReactNode);
 
   /* ############## 定制选项 ############## */
+  /** 公共的操作区内容, 渲染在每个节点的右侧  */
+  actions?: React.ReactNode | ((current: TreeNode) => React.ReactNode);
   /** 自定义所有节点的默认前导图标，权重小于option中单独设置的 */
   icon?: React.ReactNode;
-
   /** 尺寸 */
   size?: SizeKeys;
   /** 节点项的基础高度，传入时覆盖size选项的默认项高度 */

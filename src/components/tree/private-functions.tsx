@@ -5,10 +5,10 @@
  * */
 
 import { isNumber } from '@lxjx/utils';
-import { sizeMap } from 'm78/tree/common';
-import { Share } from 'm78/tree/types';
-import functions from 'm78/tree/functions';
 import _debounce from 'lodash/debounce';
+import { sizeMap } from './common';
+import { Share } from './types';
+import functions from './functions';
 
 /** 根据参数获取应有尺寸 */
 export function getSize(share: Share) {

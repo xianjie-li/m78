@@ -64,8 +64,8 @@ $ident-w: 20px;
     background-color: transparent;
 
     &.__dragging {
-      background-color: rgba(var(--m78-color), 0.1) !important;
-      border: 1px solid rgba(var(--m78-color), 0.6);
+      background-color: var(--m78-color-opacity-sm) !important;
+      border: 1px solid var(--m78-color-opacity-md);
     }
 
     &.__disabled {
@@ -131,13 +131,29 @@ $ident-w: 20px;
     height: 50%;
     top: 0;
     left: 50%;
-    border-left: 1px solid var(--m78-color-border);
-    border-bottom: 1px solid var(--m78-color-border);
-    background-color: transparent !important;
+
+    &::after, &::before {
+      content: '';
+      position: absolute;
+      background-color: var(--m78-color-border);
+    }
+
+    &::after {
+      width: 1px;
+      height: 100%;
+      left: 0;
+      top: 0;
+    }
+
+    &::before {
+      height: 1px;
+      width: 100%;
+      left: 0;
+      top: 100%;
+    }
   }
 
   &_line {
-    content: '';
     position: absolute;
     width: 1px;
     top: 0;
@@ -153,29 +169,34 @@ $ident-w: 20px;
     height: 100%;
     //width: $ident-w;
 
-    &.__c0 .m78-tree_line-node {
-      border-color: rgba($red-6, 0.25);
-      background-color: rgba($red-6, 0.25);
+    &.__c0 {
+      .m78-tree_line, .m78-tree_turn-line::after, .m78-tree_turn-line::before {
+        background-color: rgba($red-6, 0.3);
+      }
     }
 
-    &.__c1 .m78-tree_line-node {
-      border-color: rgba($orange-6, 0.25);
-      background-color: rgba($orange-6, 0.25);
+    &.__c1 {
+      .m78-tree_line, .m78-tree_turn-line::after, .m78-tree_turn-line::before {
+        background-color: rgba($orange-6, 0.3);
+      }
     }
 
-    &.__c2 .m78-tree_line-node {
-      border-color: rgba($green-6, 0.25);
-      background-color: rgba($green-6, 0.25);
+    &.__c2 {
+      .m78-tree_line, .m78-tree_turn-line::after, .m78-tree_turn-line::before {
+        background-color: rgba($green-6, 0.3);
+      }
     }
 
-    &.__c3 .m78-tree_line-node {
-      border-color: rgba($cyan-6, 0.25);
-      background-color: rgba($cyan-6, 0.25);
+    &.__c3 {
+      .m78-tree_line, .m78-tree_turn-line::after, .m78-tree_turn-line::before {
+        background-color: rgba($cyan-6, 0.3);
+      }
     }
 
-    &.__c4 .m78-tree_line-node {
-      border-color: rgba($purple-6, 0.25);
-      background-color: rgba($purple-6, 0.25);
+    &.__c4 {
+      .m78-tree_line, .m78-tree_turn-line::after, .m78-tree_turn-line::before {
+        background-color: rgba($purple-6, 0.3);
+      }
     }
   }
 
@@ -200,9 +221,9 @@ $ident-w: 20px;
   &_checked {
     position: absolute;
     border: 2px solid var(--m78-color);
-    background-color: rgba(var(--m78-color), 0.1);
+    background-color: var(--m78-color-opacity-sm);
     border-radius: var(--m78-border-radius);
-    z-index: -1;
+    z-index: 0;
     pointer-events: none;
 
     @include full;

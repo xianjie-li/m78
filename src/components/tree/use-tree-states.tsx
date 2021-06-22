@@ -1,6 +1,6 @@
 import { useCheck, useSelf, useSetState } from '@lxjx/hooks';
-import { TreeBaseNode, TreeBasePropsMix, TreeValueType } from 'm78/tree/types';
-import { flatTreeData, useValCheckArgDispose } from 'm78/tree/common';
+import { TreeBaseNode, TreeBasePropsMix, TreeValueType } from './types';
+import { flatTreeData, useValCheckArgDispose } from './common';
 
 /**
  * 抽象的的树状态
@@ -42,7 +42,7 @@ export function useTreeStates(props: TreeBasePropsMix) {
   const openChecker = useCheck<TreeValueType, TreeBaseNode>({
     ...props,
     options: list,
-    collector: props.valueGetter,
+    collector: props.valueGetter as any,
     triggerKey: 'onOpensChange',
     valueKey: 'opens',
     defaultValueKey: 'defaultOpens',
@@ -58,7 +58,7 @@ export function useTreeStates(props: TreeBasePropsMix) {
   const valChecker = useCheck<TreeValueType, TreeBaseNode>({
     ...checkProps,
     options: list,
-    collector: props.valueGetter,
+    collector: props.valueGetter as any,
     disables: state.nodes?.disabledValues,
   });
 

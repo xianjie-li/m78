@@ -37,9 +37,19 @@ const CustomDemo = () => {
         {
           label: (
             <span>
+              <span className="color-info">Effective</span>Java.pdf
+            </span>
+          ),
+          value: 'Effective Java',
+          icon: <FilePdfOutlined className="fs-lg" />,
+        },
+        {
+          label: (
+            <span>
               <span className="color-error">JavaScript</span>高级程序设计.pdf
             </span>
           ),
+          value: 'JavaScript',
           icon: <FilePdfOutlined className="fs-lg" />,
         },
       ],
@@ -52,7 +62,7 @@ const CustomDemo = () => {
           icon: '😀',
         },
         {
-          label: '笑嘻嘻',
+          label: '笑',
           icon: '😁',
         },
         {
@@ -60,7 +70,7 @@ const CustomDemo = () => {
           icon: '😃',
         },
         {
-          label: '春心荡漾',
+          label: '爱情',
           icon: '🥰',
         },
       ],

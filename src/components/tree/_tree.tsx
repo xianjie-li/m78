@@ -4,31 +4,24 @@ import { VariableSizeList as List } from 'react-window';
 import { Spin } from 'm78/spin';
 import { Empty } from 'm78/empty';
 import { useDelayDerivedToggleStatus } from 'm78/hooks';
-import { useTreeStates } from 'm78/tree/use-tree-states';
-import { getShowList, getSize } from 'm78/tree/private-functions';
-import functions from 'm78/tree/functions';
+import { useTreeStates } from './use-tree-states';
+import { getShowList, getSize } from './private-functions';
+import functions from './functions';
 import { VirtualItem } from './virtual-item';
 import {
   Share,
+  TreeBasePropsMix,
   TreePropsMultipleChoice,
   TreePropsSingleChoice,
   VirtualItemProps,
-  TreeBasePropsMix,
 } from './types';
 import TreeItem from './item';
-import { defaultLabelGetter, defaultValueGetter, getToolbarConf, isTruthyArray } from './common';
+import { defaultProps, getToolbarConf, isTruthyArray } from './common';
 import { useLifeCycle } from './life-cycle';
 import Toolbar from './toolbar';
 
-export const defaultProps = {
-  valueGetter: defaultValueGetter,
-  labelGetter: defaultLabelGetter,
-  indicatorLine: true,
-  checkStrictly: true,
-};
-
 /*
- * 由于其他组件(Table)会用到此组件内的树选择、树结构处理等功能，所有需要对相关的逻辑进行抽象用以复用，
+ * 由于其他组件(Table)会用到此组件内的树选择、树结构处理等功能，需要对相关的逻辑进行抽象用以复用，
  * 所以此组件内部的代码分为两种，一种是抽象的复用代码，一种是内部代码，修改抽象代码时应注意对其他相关组件的影响，
  *
  * 抽象只针对状态和行为部分，UI均自行实现

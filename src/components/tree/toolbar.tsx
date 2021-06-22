@@ -7,8 +7,8 @@ import { useFn } from '@lxjx/hooks';
 import { If } from 'm78/fork';
 import { filterIncludeDisableChildNode, isMultipleCheck, isTruthyArray } from './common';
 import { Share } from './types';
-import functions from 'm78/tree/functions';
-import { keywordChangeHandle } from 'm78/tree/private-functions';
+import functions from './functions';
+import { keywordChangeHandle } from './private-functions';
 
 const OPEN_ALL = 'OPEN_ALL';
 const FOLD_ALL = 'FOLD_ALL';

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { isNumber } from '@lxjx/utils';
 import { useUpdateEffect } from 'react-use';
-import functions from 'm78/tree/functions';
+import functions from './functions';
 import { flatTreeData } from './common';
 import { Share } from './types';
 

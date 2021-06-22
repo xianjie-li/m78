@@ -2,20 +2,19 @@ import {
   heightLightMatchString,
   isArray,
   isBoolean,
-  isTruthyOrZero,
   isTruthyArray,
+  isTruthyOrZero,
 } from '@lxjx/utils';
 import { useMemo } from 'react';
 import {
-  TreeNode,
-  TreeDataSourceItem,
   ToolbarConf,
+  TreeBaseMultipleChoiceProps,
+  TreeBaseSingleChoiceProps,
+  TreeDataSourceItem,
+  TreeNode,
   TreeProps,
   TreePropsMultipleChoice,
-  TreePropsSingleChoice,
   TreeValueType,
-  TreeBaseSingleChoiceProps,
-  TreeBaseMultipleChoiceProps,
 } from './types';
 
 export const defaultValueGetter = (item: TreeDataSourceItem) => item.value! || item.label;
@@ -201,7 +200,7 @@ export function flatTreeData(
 }
 
 export function isMultipleCheck(
-  props: TreePropsSingleChoice | TreePropsMultipleChoice,
+  props: TreeBaseSingleChoiceProps | TreeBaseMultipleChoiceProps,
 ): props is TreePropsMultipleChoice {
   if ('multipleCheckable' in props) {
     return !!props.multipleCheckable;
@@ -210,8 +209,8 @@ export function isMultipleCheck(
 }
 
 export function isCheck(
-  props: TreePropsSingleChoice | TreePropsMultipleChoice,
-): props is TreePropsSingleChoice {
+  props: TreeBaseSingleChoiceProps | TreeBaseMultipleChoiceProps,
+): props is TreeBaseSingleChoiceProps {
   if ('checkable' in props) {
     return !!props.checkable;
   }
@@ -283,5 +282,12 @@ export function getToolbarConf(toolbar?: TreeProps['toolbar']) {
     ...toolbar,
   };
 }
+
+export const defaultProps = {
+  valueGetter: defaultValueGetter,
+  labelGetter: defaultLabelGetter,
+  indicatorLine: true,
+  checkStrictly: true,
+};
 
 export { isTruthyArray };

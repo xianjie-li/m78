@@ -1,7 +1,7 @@
-import { Share, TreeBaseNode, TreeNode, TreeValueType } from 'm78/tree/types';
-import { isTruthyArray } from 'm78/tree/common';
 import { isArray, isBoolean, isNumber } from '@lxjx/utils';
 import _clamp from 'lodash/clamp';
+import { Share, TreeBaseNode, TreeNode, TreeValueType } from './types';
+import { isTruthyArray } from './common';
 
 /*
  * ########################################
