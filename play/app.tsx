@@ -70,7 +70,6 @@ const columns: TableColumns = [
     label: '技能3',
     field: 'skill',
   },
-  // },
   {
     label: '技能4',
     field: 'skill',
