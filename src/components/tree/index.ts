@@ -1,5 +1,5 @@
 import 'm78/tree/style';
-import Tree from './tree';
+import Tree from './_tree';
 
 export * from './types';
 

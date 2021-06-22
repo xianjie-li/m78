@@ -7,7 +7,7 @@ import {
   FolderOpenOutlined,
   FolderOutlined,
 } from 'm78/icon';
-import { Tree, OptionsItem } from 'm78/tree';
+import { Tree, TreeDataSourceItem } from 'm78/tree';
 import { SizeEnum } from 'm78/types';
 
 const badgeSty: React.CSSProperties = {
@@ -20,7 +20,7 @@ const badgeSty: React.CSSProperties = {
 };
 
 const CustomDemo = () => {
-  const [ds] = useState<OptionsItem[]>([
+  const [ds] = useState<TreeDataSourceItem[]>([
     {
       label: 'folder1',
       children: [

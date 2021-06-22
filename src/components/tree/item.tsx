@@ -16,11 +16,13 @@ import {
   isTruthyArray,
 } from './common';
 import { ItemProps } from './types';
+import functions from 'm78/tree/functions';
 
 const openRotateClassName = 'm78-tree_open-icon';
 
-const TreeItem = React.memo(({ data, share, methods, className, style, size }: ItemProps) => {
-  const { openCheck, valCheck, props, isVirtual, state, loadingCheck } = share;
+const TreeItem = React.memo(({ data, share, className, style, size }: ItemProps) => {
+  const { treeState, props, isVirtual } = share;
+  const { openChecker, valChecker, state, loadingChecker } = treeState;
   const { itemHeight, identWidth } = size;
   const {
     indicatorLine,
@@ -39,18 +41,18 @@ const TreeItem = React.memo(({ data, share, methods, className, style, size }: I
   const hasChildren = !!data.children?.length;
 
   /** 是否展开 */
-  const isOpen = openCheck.isChecked(value);
+  const isOpen = openChecker.isChecked(value);
 
   /** 是否选中 */
-  const isChecked = valCheck.isChecked(value);
+  const isChecked = valChecker.isChecked(value);
 
   /** 单选多选类型检测 */
   const isSCheck = isCheck(props);
   const isMCheck = isMultipleCheck(props) && !isSCheck; /* 权重低于单选 */
 
-  const isLoading = loadingCheck.isChecked(value);
+  const isLoading = loadingChecker.isChecked(value);
 
-  const isDisabled = props.disabled || valCheck.isDisabled(value) || isLoading;
+  const isDisabled = props.disabled || valChecker.isDisabled(value) || isLoading;
 
   /** 是否为树枝节点 */
   const isTwig = checkIsTwig();
@@ -75,7 +77,7 @@ const TreeItem = React.memo(({ data, share, methods, className, style, size }: I
 
     if (isSCheck) {
       if (!isTwig || props.checkTwig) {
-        valCheck.setChecked([value]);
+        valChecker.setChecked([value]);
       }
     }
 
@@ -84,17 +86,17 @@ const TreeItem = React.memo(({ data, share, methods, className, style, size }: I
       if (hasChildren && checkStrictly) {
         if (isChecked || checkIsPartial()) {
           // 取消当前节点和所有子节点选中
-          valCheck.unCheckList(methods.getSelfAndDescendants(data));
+          valChecker.unCheckList(functions.getSelfAndDescendants(data));
         } else {
           // 选中当前节点和所有子节点中不包含禁用子节点的节点
-          const ls = methods.getSelfAndDescendantsItem(data);
+          const ls = functions.getSelfAndDescendantsItem(data);
 
-          valCheck.checkList(filterIncludeDisableChildNode(ls));
+          valChecker.checkList(filterIncludeDisableChildNode(ls));
         }
 
         // 更新所有父节点的选中状态
         setTimeout(() => {
-          methods.syncParentsChecked(data);
+          functions.syncParentsChecked(treeState, data);
         });
 
         return;
@@ -102,8 +104,8 @@ const TreeItem = React.memo(({ data, share, methods, className, style, size }: I
 
       // 选中同时需要更新所有父节点状态
       checkStrictly
-        ? methods.syncParentsChecked(data, !isChecked) // 兄弟节点全选、反选时同步所有父级
-        : valCheck.toggle(value);
+        ? functions.syncParentsChecked(treeState, data, !isChecked) // 兄弟节点全选、反选时同步所有父级
+        : valChecker.toggle(value);
     }
   });
 
@@ -124,13 +126,13 @@ const TreeItem = React.memo(({ data, share, methods, className, style, size }: I
 
     if (isOpen) {
       // 已选中，移除当前级和所有子级
-      openCheck.unCheckList(methods.getSelfAndDescendants(data));
+      openChecker.unCheckList(functions.getSelfAndDescendants(data));
     } else if (props.accordion) {
       // 手风琴开启，选中当前级和所有父级
-      openCheck.setChecked(methods.getSelfAndParents(data));
+      openChecker.setChecked(functions.getSelfAndParents(data));
     } else {
       // 正常单项选中
-      openCheck.check(value);
+      openChecker.check(value);
     }
   });
 
@@ -144,7 +146,7 @@ const TreeItem = React.memo(({ data, share, methods, className, style, size }: I
 
     if (!isTruthyArray(des)) return false;
 
-    return des!.some(valCheck.isChecked);
+    return des!.some(valChecker.isChecked);
   }
 
   /** 检测是否为树枝节点 */
@@ -172,7 +174,7 @@ const TreeItem = React.memo(({ data, share, methods, className, style, size }: I
   async function loadHandle() {
     if (!onLoad) return;
 
-    loadingCheck.check(value);
+    loadingChecker.check(value);
 
     try {
       const _children = await onLoad(data);
@@ -190,7 +192,7 @@ const TreeItem = React.memo(({ data, share, methods, className, style, size }: I
       // nothing
     } finally {
       // console.log('加载结束');
-      loadingCheck.unCheck(value);
+      loadingChecker.unCheck(value);
     }
   }
 

@@ -7,19 +7,15 @@ import { useFn } from '@lxjx/hooks';
 import { If } from 'm78/fork';
 import { filterIncludeDisableChildNode, isMultipleCheck, isTruthyArray } from './common';
 import { Share } from './types';
-import { useMethods } from './methods';
+import functions from 'm78/tree/functions';
+import { keywordChangeHandle } from 'm78/tree/private-functions';
 
 const OPEN_ALL = 'OPEN_ALL';
 const FOLD_ALL = 'FOLD_ALL';
 
-const Toolbar = ({
-  valCheck,
-  list,
-  nodes,
-  methods,
-  props,
-  toolbar,
-}: Share & { methods: ReturnType<typeof useMethods> }) => {
+const Toolbar = ({ treeState, props, toolbar }: Share) => {
+  const { valChecker, list, state } = treeState;
+  const nodes = state.nodes;
   const conf = toolbar!;
 
   const isM = isMultipleCheck(props);
@@ -54,23 +50,23 @@ const Toolbar = ({
   /** 展开控制 */
   const expansionHandle = useFn(val => {
     if (val === OPEN_ALL) {
-      methods.openAll();
+      functions.openAll(treeState);
       return;
     }
 
     if (val === FOLD_ALL) {
-      methods.openToZ(0);
+      functions.openToZ(treeState, 0);
       return;
     }
 
-    methods.openToZ(Number(val));
+    functions.openToZ(treeState, Number(val));
   });
 
   /** 全选处理 */
   const checkAllHandle = useFn(() => {
     if (!isTruthyArray(list)) return;
 
-    valCheck.setChecked(filterIncludeDisableChildNode(list));
+    valChecker.setChecked(filterIncludeDisableChildNode(list));
   });
 
   return (
@@ -80,13 +76,13 @@ const Toolbar = ({
           <Button
             size="small"
             text
-            color={valCheck.allChecked ? 'primary' : undefined}
+            color={valChecker.allChecked ? 'primary' : undefined}
             onClick={checkAllHandle}
             disabled={isDisabled}
           >
             全选
           </Button>
-          <Button size="small" text onClick={valCheck.unCheckAll} disabled={isDisabled}>
+          <Button size="small" text onClick={valChecker.unCheckAll} disabled={isDisabled}>
             取消全部
           </Button>
         </If>
@@ -110,7 +106,7 @@ const Toolbar = ({
 
         <If when={isM && conf.checkCount}>
           <span className="color-second ml-8">
-            共{valCheck.checked.length}/{list.length}项
+            共{valChecker.checked.length}/{list.length}项
           </span>
         </If>
 
@@ -123,7 +119,7 @@ const Toolbar = ({
             placeholder="关键词搜索"
             disabled={isDisabled}
             size="small"
-            onChange={methods.keywordChangeHandle}
+            onChange={val => keywordChangeHandle(treeState, val)}
           />
         </div>
       </If>

@@ -1,6 +1,6 @@
-import { OptionsItem } from 'm78/tree';
+import { TreeDataSourceItem } from 'm78/tree';
 
-const dataSource1: OptionsItem[] = [
+const dataSource1: TreeDataSourceItem[] = [
   {
     label: 'JS',
     children: [

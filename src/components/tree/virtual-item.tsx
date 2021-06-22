@@ -8,7 +8,7 @@ export const VirtualItem = ({ index, style, data }: VirtualItemProps) => {
   const item = list[index];
 
   // 使用低消耗的渲染占位，一定延迟后再切换真实节点，防止快速滚动、拖动造成不必要的计算消耗
-  const [render, setRender] = useState(!itemProps.share.self.scrolling);
+  const [render, setRender] = useState(!itemProps.share.treeState.self.scrolling);
 
   useEffect(() => {
     if (render) return;

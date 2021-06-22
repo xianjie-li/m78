@@ -8,17 +8,19 @@ import {
 import { useMemo } from 'react';
 import {
   TreeNode,
-  OptionsItem,
+  TreeDataSourceItem,
   ToolbarConf,
   TreeProps,
   TreePropsMultipleChoice,
   TreePropsSingleChoice,
   TreeValueType,
+  TreeBaseSingleChoiceProps,
+  TreeBaseMultipleChoiceProps,
 } from './types';
 
-export const defaultValueGetter = (item: OptionsItem) => item.value! || item.label;
+export const defaultValueGetter = (item: TreeDataSourceItem) => item.value! || item.label;
 
-export const defaultLabelGetter = (item: OptionsItem) => item.label!;
+export const defaultLabelGetter = (item: TreeDataSourceItem) => item.label!;
 
 /** 预设尺寸 */
 export const sizeMap = {
@@ -59,7 +61,7 @@ const connectVal2Array = (val: any, array?: any[]) => {
  * @returns returns.disables - 所有禁用项
  * */
 export function flatTreeData(
-  optionList: OptionsItem[],
+  optionList: TreeDataSourceItem[],
   conf: {
     valueGetter: NonNullable<TreeProps['valueGetter']>;
     labelGetter: NonNullable<TreeProps['labelGetter']>;
@@ -89,7 +91,12 @@ export function flatTreeData(
   }
 
   // 平铺data树, 获取总层级，所有可展开项id
-  function flat(target = [] as TreeNode[], optList: OptionsItem[], zIndex = 0, parent?: TreeNode) {
+  function flat(
+    target = [] as TreeNode[],
+    optList: TreeDataSourceItem[],
+    zIndex = 0,
+    parent?: TreeNode,
+  ) {
     if (isArray(optList)) {
       const siblings: TreeNode[] = [];
       const siblingsValues: TreeValueType[] = [];
@@ -212,7 +219,9 @@ export function isCheck(
 }
 
 /** 单选时包装props以匹配useCheck */
-export function useValCheckArgDispose(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
+export function useValCheckArgDispose(
+  props: TreeBaseSingleChoiceProps | TreeBaseMultipleChoiceProps,
+) {
   return useMemo(() => {
     const _p = { ...props };
 
@@ -229,10 +238,10 @@ export function useValCheckArgDispose(props: TreePropsSingleChoice | TreePropsMu
         props.onChange?.(value[0], extra[0]);
       };
 
-      return _p as TreePropsMultipleChoice;
+      return _p as TreeBaseMultipleChoiceProps;
     }
 
-    return props;
+    return props as TreeBaseMultipleChoiceProps;
   }, [props]);
 }
 
@@ -273,22 +282,6 @@ export function getToolbarConf(toolbar?: TreeProps['toolbar']) {
     ...def,
     ...toolbar,
   };
-}
-
-/** 根据value和索引拼接字符串，用于onBeforeCapture等回调中更方便获取 */
-export function getValueIndexJointString(value: TreeValueType, index: number) {
-  return `${typeof value}##${value}##${index}`;
-}
-
-/** 将splitValueIndexJointString处理过的字符裁剪为原始值 */
-export function splitValueIndexJointString(str: string) {
-  const sp = str.split('##');
-
-  if (sp.length !== 3) return null;
-
-  const [type, value, index] = sp;
-
-  return [type === 'number' ? Number(value) : value, Number(index)] as [TreeValueType, number];
 }
 
 export { isTruthyArray };

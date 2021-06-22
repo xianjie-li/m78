@@ -1,8 +1,9 @@
 import { AnyObject, ComponentBasePropsWithAny } from '@lxjx/utils';
 import React from 'react';
-import { SizeEnum, SizeKeys } from 'm78/types';
+import { SizeEnum, SizeKeys, DataSourceItem } from 'm78/types';
 import { useStates } from 'm78/table/useStates';
 import { defaultProps } from './common';
+import { TreeDataSourceItem, TreeValueType } from 'm78/tree';
 
 /*
  * ############################
@@ -136,7 +137,9 @@ export type TableColumns = TableColumn[];
  * */
 export interface TableProps extends ComponentBasePropsWithAny {
   /** 数据源 */
-  dataSource: AnyObject[];
+  dataSource?: TableDataSourceItem[];
+  onDataSourceChange?: (ds: TableDataSourceItem[]) => void;
+
   /** 表格列配置 */
   columns: TableColumns;
   /**
@@ -207,9 +210,27 @@ export interface TableProps extends ComponentBasePropsWithAny {
   onSortChange?: (sort: TableSortValue | []) => void;
   /** 如果传入，则控制要显示的列, 数组项为 columns.key 或 字符类型的columns.field */
   showColumns?: string[];
-  /** 为树形时 */
-  treeDataSource?: any;
 }
+
+/** 表格数据源的可选结构，使用选择模式和tree模式时使用 */
+export interface TableDataSourceItem extends Partial<DataSourceItem<TreeValueType>> {
+  /** 是否禁用 */
+  disabled?: boolean;
+  /** 子项列表 */
+  children?: TableDataSourceItem[];
+  /**
+   * 是否为叶子节点
+   * - 设置onLoad开启异步加载数据后，所有项都会显示展开图标，如果项被指定为叶子节点，则视为无下级且不显示展开图标
+   * - 传入onLoad时生效
+   * */
+  isLeaf?: boolean;
+  /** 在需要自行指定value或label的key时使用 */
+  [key: string]: any;
+}
+
+export interface TableTreeProps {}
+
+export interface TableSelectionProps {}
 
 /*
  * ############################

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Tree, OptionsItem } from 'm78/tree';
+import { Tree, TreeDataSourceItem } from 'm78/tree';
 import { Button } from 'm78/button';
 import { Spacer } from 'm78/layout';
 import mockTreeData from './mockTreeData';
@@ -13,7 +13,7 @@ function BigDataTreeDemo({
   z: number;
   multipleCheckable?: boolean;
 }) {
-  const [ds] = useState<OptionsItem[]>(() => mockTreeData(length, z));
+  const [ds] = useState<TreeDataSourceItem[]>(() => mockTreeData(length, z));
 
   return (
     <div>

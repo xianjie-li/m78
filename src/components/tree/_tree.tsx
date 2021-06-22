@@ -1,28 +1,22 @@
-import React, { useMemo, useRef } from 'react';
-import { useCheck, useSelf, useSetState } from '@lxjx/hooks';
+import React, { useMemo } from 'react';
 import cls from 'clsx';
 import { VariableSizeList as List } from 'react-window';
 import { Spin } from 'm78/spin';
 import { Empty } from 'm78/empty';
 import { useDelayDerivedToggleStatus } from 'm78/hooks';
+import { useTreeStates } from 'm78/tree/use-tree-states';
+import { getShowList, getSize } from 'm78/tree/private-functions';
+import functions from 'm78/tree/functions';
 import { VirtualItem } from './virtual-item';
 import {
-  TreeNode,
   Share,
   TreePropsMultipleChoice,
   TreePropsSingleChoice,
   VirtualItemProps,
-  TreeValueType,
+  TreeBasePropsMix,
 } from './types';
 import TreeItem from './item';
-import {
-  defaultLabelGetter,
-  defaultValueGetter,
-  getToolbarConf,
-  isTruthyArray,
-  useValCheckArgDispose,
-} from './common';
-import { useMethods } from './methods';
+import { defaultLabelGetter, defaultValueGetter, getToolbarConf, isTruthyArray } from './common';
 import { useLifeCycle } from './life-cycle';
 import Toolbar from './toolbar';
 
@@ -32,6 +26,17 @@ export const defaultProps = {
   indicatorLine: true,
   checkStrictly: true,
 };
+
+/*
+ * 由于其他组件(Table)会用到此组件内的树选择、树结构处理等功能，所有需要对相关的逻辑进行抽象用以复用，
+ * 所以此组件内部的代码分为两种，一种是抽象的复用代码，一种是内部代码，修改抽象代码时应注意对其他相关组件的影响，
+ *
+ * 抽象只针对状态和行为部分，UI均自行实现
+ *
+ * 抽象的部分:
+ * - `use-tree-states.tsx`  tree的主要状态
+ * - `functions.tsx`        共享的操作函数
+ *  */
 
 /**
  * TODO: 拖拽
@@ -46,91 +51,40 @@ function Tree(props: TreePropsMultipleChoice): JSX.Element;
 function Tree(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
   const { size, height } = props as Share['props'];
 
-  // 虚拟列表实例
-  const virtualList = useRef<List>(null!);
-
-  const [state, setState] = useSetState<Share['state']>({
-    nodes: undefined,
-    loading: true,
-    keyword: '',
-  });
-
-  const self = useSelf<Share['self']>({
-    scrolling: false,
-  });
-
-  /** 平铺列表 */
-  const list = state.nodes ? state.nodes.list : [];
+  /** 共享tree状态 */
+  const treeState = useTreeStates(props as TreeBasePropsMix);
 
   /** 延迟设置的加载状态, 防止数据量较少时loading一闪而过 */
-  const loading = useDelayDerivedToggleStatus(state.loading, 150);
+  const loading = useDelayDerivedToggleStatus(treeState.state.loading, 150);
 
   /** 是否开启虚拟滚动 */
-  const isVirtual = !!(height && height > 0);
+  const isVirtual = !!height;
 
-  /** 展开状态 */
-  const openCheck = useCheck<TreeValueType, TreeNode>({
-    ...props,
-    options: list,
-    collector: props.valueGetter,
-    triggerKey: 'onOpensChange',
-    valueKey: 'opens',
-    defaultValueKey: 'defaultOpens',
-    value: [],
-    defaultValue: [],
-    onChange: () => {},
-  });
-
-  /** 如果是单选类型，将props调整为兼容useCheck的格式并代理onChange */
-  const checkProps = useValCheckArgDispose(props);
-
-  /** 选中状态 */
-  const valCheck = useCheck<TreeValueType, TreeNode>({
-    ...checkProps,
-    options: list,
-    collector: props.valueGetter,
-    disables: state.nodes?.disabledValues,
-  });
-
-  /** 节点加载状态 */
-  const loadingCheck = useCheck<TreeValueType>({});
-
-  /** 共享状态 */
+  /** 上下文状态 */
   const share: Share = {
-    openCheck,
-    valCheck,
-    loadingCheck,
+    treeState,
     props: props as Share['props'],
-    nodes: state.nodes,
-    state,
-    setState,
-    self,
     isVirtual,
-    list,
     toolbar: getToolbarConf(props.toolbar),
   };
 
-  /** 内部方法 */
-  const methods = useMethods(share);
-
-  /** 生命周期 */
-  useLifeCycle(share, methods);
+  /** 共享生命周期 */
+  useLifeCycle(share);
 
   /** 实际显示的列表 */
-  const showList = useMemo(() => methods.getShowList(list, state.keyword), [
-    list,
-    openCheck.checked,
-    state.keyword,
+  const showList = useMemo(() => getShowList(treeState), [
+    treeState.list,
+    treeState.openChecker.checked,
+    treeState.state.keyword,
   ]);
 
   /** item的尺寸信息(高度、缩进) */
-  const sizeInfo = methods.getSize();
+  const sizeInfo = getSize(share);
 
   const itemData: VirtualItemProps['data'] = {
     size: sizeInfo,
     data: showList,
     share,
-    methods,
   };
 
   function renderNormalList() {
@@ -142,7 +96,7 @@ function Tree(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
   function renderVirtualList() {
     return (
       <List
-        ref={virtualList}
+        // ref={virtualList}
         height={height || 0}
         itemCount={showList.length}
         itemSize={index => showList[index].height || sizeInfo.itemHeight}
@@ -152,7 +106,7 @@ function Tree(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
         overscanCount={3}
         itemData={itemData}
         itemKey={index => showList[index].value}
-        onScroll={methods.scrollHandle}
+        onScroll={() => functions.scrollHandle(treeState)}
       >
         {VirtualItem}
       </List>
@@ -165,10 +119,10 @@ function Tree(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
 
   function renderToolbar() {
     if (!share.toolbar) return null;
-    return <Toolbar {...share} methods={methods} />;
+    return <Toolbar {...share} />;
   }
 
-  const isSearchAndNoList = state.keyword && !isTruthyArray(showList);
+  const isSearchAndNoList = treeState.state.keyword && !isTruthyArray(showList);
 
   const isEmpty = isSearchAndNoList || !isTruthyArray(props.dataSource);
 
@@ -186,5 +140,6 @@ function Tree(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
 }
 
 Tree.defaultProps = defaultProps;
+Tree.displayName = 'Tree';
 
 export default Tree;

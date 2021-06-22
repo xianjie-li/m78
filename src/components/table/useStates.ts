@@ -72,7 +72,7 @@ export function useStates(props: TableProps) {
   );
 
   // 虚拟列表
-  const virtualList = useVirtualList(isVirtual ? props.dataSource : [], {
+  const virtualList = useVirtualList(isVirtual ? props.dataSource! : [], {
     overscan: 6,
     itemHeight: 41,
   });

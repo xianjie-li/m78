@@ -22,7 +22,6 @@ interface Props {
 const _TableRender = ({ type, innerRef, ctx, containerProps, column, isMain }: Props) => {
   const updateEvent = ctx.states.updateEvent;
   const isVirtual = ctx.states.isVirtual;
-  const fake = ctx.states.fakeTheadElRef;
 
   // 容器ref
   const wrapRef = useRef<HTMLDivElement>(null!);

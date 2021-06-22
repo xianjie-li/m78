@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Tree, OptionsItem } from 'm78/tree';
+import { Tree, TreeDataSourceItem } from 'm78/tree';
 import { Spacer } from 'm78/layout';
 import mockTreeData from './mockTreeData';
 
 const OpenDemo = () => {
-  const [ds] = useState<OptionsItem[]>(() => mockTreeData(2, 2));
+  const [ds] = useState<TreeDataSourceItem[]>(() => mockTreeData(2, 2));
 
   const [opens, setOpens] = useState(['1', '1-1', '1-2']);
 

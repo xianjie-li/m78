@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Tree, OptionsItem } from 'm78/tree';
+import { Tree, TreeDataSourceItem } from 'm78/tree';
 import { delay, getRandRange } from '@lxjx/utils';
 
 const generateChildren = (pLabel = '') => {
@@ -12,7 +12,7 @@ const generateChildren = (pLabel = '') => {
 };
 
 const DynamicDemo = () => {
-  const [ds, setDs] = useState<OptionsItem[]>([
+  const [ds, setDs] = useState<TreeDataSourceItem[]>([
     {
       label: '节点1',
     },
