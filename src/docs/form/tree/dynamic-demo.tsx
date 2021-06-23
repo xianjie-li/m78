@@ -36,10 +36,10 @@ const DynamicDemo = () => {
         // 与其他组件库中的tree组件不同的是，该组件会代理dataSource的变更，在内部处理并更新dataSource，用户只需要接收并同步即可
         onDataSourceChange={setDs as any}
         onLoad={async node => {
-          // 模拟延迟
+          // 模拟请求延迟
           await delay(400);
 
-          return generateChildren(node.label as string);
+          return generateChildren(node.origin.label as string);
         }}
         height={400}
         rainbowIndicatorLine

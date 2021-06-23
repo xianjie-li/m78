@@ -6,7 +6,16 @@ import CellEffectBg from 'm78/table/_cell-effect-bg';
 import { _TableCellProps, TableMeta } from './types';
 
 const _Cell = (props: _TableCellProps) => {
-  const { column, isHead = false, isFoot = false, record, ctx, colIndex, rowIndex } = props;
+  const {
+    column,
+    isHead = false,
+    isFoot = false,
+    record,
+    treeNode,
+    ctx,
+    colIndex,
+    rowIndex,
+  } = props;
 
   const { fixed, sort } = column;
 
@@ -17,7 +26,17 @@ const _Cell = (props: _TableCellProps) => {
   const isBody = !isFoot && !isHead;
 
   // 表示当前列的meta
-  const meta: TableMeta = { ctx: {}, column, record, colIndex, rowIndex, isFoot, isHead, isBody };
+  const meta: TableMeta = {
+    ctx: {},
+    column,
+    record,
+    treeNode,
+    colIndex,
+    rowIndex,
+    isFoot,
+    isHead,
+    isBody,
+  };
 
   // 单元格的合并数
   const [rowSpan, colSpan] = useMemo(() => getCellSpan(ctx, meta), [

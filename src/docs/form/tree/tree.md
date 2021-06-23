@@ -253,30 +253,10 @@ interface TreeNode {
   disabledChildren: TreeNode[];
   /** 该项子级的所有禁用项的value */
   disabledChildrenValues: TreeValueType[];
-  /** 未更改的原对象 */
+  /** 未更改的原DataSource对象 */
   origin: TreeDataSourceItem;
-  /** 子节点列表, 区别于children，children是未经过处理的原始值 */
+  /** 子节点列表 */
   child?: TreeNode[];
-
-  /* ############## 继承TreeDataSourceItem ############## */
-  /** 选项名 */
-  label: React.ReactNode;
-  /** 是否禁用 */
-  disabled?: boolean;
-  /** 子项列表 */
-  children?: TreeDataSourceItem[];
-  /**
-   * 是否为叶子节点
-   * - 设置onLoad开启异步加载数据后，所有项都会显示展开图标，如果项被指定为叶子节点，则视为无下级且不显示展开图标
-   * - 传入onLoad时生效
-   * */
-  isLeaf?: boolean;
-  /** 前导图标 */
-  icon?: React.ReactNode;
-  /** 在开启虚拟滚动时，可通过此项单独制定项高度 */
-  height?: number;
-  /** 操作区内容 */
-  actions?: React.ReactNode | ((current: TreeNode) => React.ReactNode);
 }
 ```
 

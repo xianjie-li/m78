@@ -3,7 +3,7 @@ import { ComponentBaseProps, DataSourceItem, SizeKeys } from 'm78/types';
 import React from 'react';
 import { ListChildComponentProps } from 'react-window';
 import { useTreeStates } from './use-tree-states';
-import { defaultProps } from './common';
+import { defaultProps, flatTreeData } from './common';
 
 /**
  * ########################################
@@ -118,7 +118,7 @@ export interface TreeBaseDataSourceItem extends Partial<DataSourceItem<TreeValue
 }
 
 /** 表示树中的一个节点 */
-export interface TreeBaseNode<Node = TreeNode> {
+export interface TreeBaseNode<Node = TreeNode, DS = TreeDataSourceItem> {
   /** 该节点对应的值 */
   value: TreeValueType;
   /** 当前层级 */
@@ -149,9 +149,9 @@ export interface TreeBaseNode<Node = TreeNode> {
   disabledChildren: Node[];
   /** 该项子级的所有禁用项的value */
   disabledChildrenValues: TreeValueType[];
-  /** 未更改的原对象 */
-  origin: TreeDataSourceItem;
-  /** 子节点列表, 区别于children，children是未经过处理的原始值 */
+  /** 未更改的原DataSource对象 */
+  origin: DS;
+  /** 子节点列表 */
   child?: Node[];
 }
 
@@ -221,7 +221,7 @@ export interface TreeDataSourceItem extends TreeBaseDataSourceItem {
 }
 
 /** 表示树中的一个节点 */
-export interface TreeNode extends TreeBaseNode, Omit<TreeDataSourceItem, 'value'> {}
+export interface TreeNode extends TreeBaseNode {}
 
 /** 共享配置 */
 export interface Share {
@@ -257,4 +257,13 @@ export interface VirtualItemProps extends ListChildComponentProps {
     /**  当前列表 */
     data: TreeNode[];
   } & Omit<ItemProps, 'data' | 'index'>;
+}
+
+export interface _InsideState {
+  /** 初始化状态 */
+  loading: boolean;
+  /** 扁平化的tree */
+  nodes: ReturnType<typeof flatTreeData> | undefined;
+  /** 当前搜索关键词 */
+  keyword: string;
 }

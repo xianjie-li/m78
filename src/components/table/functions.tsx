@@ -1,15 +1,8 @@
-import {
-  AnyObject,
-  decimalPrecision,
-  isArray,
-  isBoolean,
-  isFunction,
-  isNumber,
-  isString,
-  isTruthyOrZero,
-} from '@lxjx/utils';
+import { AnyObject, isArray, isBoolean, isFunction, isString, isTruthyOrZero } from '@lxjx/utils';
 import { throwError } from 'm78/util';
 import { SetState, UseScrollMeta } from '@lxjx/hooks';
+import React from 'react';
+import { stringifyArrayField } from 'm78/table/common';
 import {
   _Context,
   _InnerState,
@@ -20,8 +13,6 @@ import {
   TableProps,
   TableSortEnum,
 } from './types';
-import React from 'react';
-import { stringifyArrayField } from 'm78/table/common';
 
 /**
  * ################################
@@ -30,12 +21,17 @@ import { stringifyArrayField } from 'm78/table/common';
  * */
 
 /** 获取对象中的默认主键 id => key */
-export function getPrimaryKey(obj: AnyObject) {
+export function defaultValueGetter(obj: AnyObject) {
   const key = obj.id || obj.key;
 
   if (!isTruthyOrZero(key)) {
+    console.log(obj);
+
     throwError(
-      'Get default PrimaryKey(id/key) failed, please manual set <Table primaryKey="<FieldName>" />',
+      `
+        Get default PrimaryKey(id/key) failed, please manual set <Table primaryKey="<FieldName>" />.
+
+      `,
       'Table',
     );
   }
@@ -74,8 +70,9 @@ export function getField(obj: AnyObject, field?: string | string[]) {
 /** 获取一个只包含初始值的tableMeta, 可以传入指定对象覆盖默认值 */
 export function getInitTableMeta(overObj?: Partial<TableMeta>): TableMeta {
   return {
-    column: { label: '' }, // 表示一个不存在的列
-    record: {},
+    column: {} as any, // 表示一个不存在的列
+    record: {} as any,
+    treeNode: {} as any,
     colIndex: 0,
     rowIndex: 0,
     isBody: false,
@@ -110,7 +107,7 @@ export function columnsBeforeFormat({ columns, showColumns }: TableProps) {
   const column: _TableColumnInside[] = [];
   const fixedRight: _TableColumnInside[] = [];
 
-  columns.forEach(col => {
+  columns.forEach((col, index) => {
     // 过滤不显示的列
     if (showColumns?.length) {
       const key = getColumnKey(col);
@@ -120,15 +117,15 @@ export function columnsBeforeFormat({ columns, showColumns }: TableProps) {
     }
 
     if (col.fixed === TableColumnFixedEnum.left) {
-      fixedLeft.push(col);
+      fixedLeft.push({ ...col, index });
       return;
     }
 
     if (col.fixed === TableColumnFixedEnum.right) {
-      fixedRight.push(col);
+      fixedRight.push({ ...col, index });
       return;
     }
-    column.push(col);
+    column.push({ ...col, index });
   });
 
   return {

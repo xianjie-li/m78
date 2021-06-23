@@ -1,11 +1,11 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import cls from 'clsx';
 import { VariableSizeList as List } from 'react-window';
 import { Spin } from 'm78/spin';
 import { Empty } from 'm78/empty';
 import { useDelayDerivedToggleStatus } from 'm78/hooks';
 import { useTreeStates } from './use-tree-states';
-import { getShowList, getSize } from './private-functions';
+import { getSize } from './private-functions';
 import functions from './functions';
 import { VirtualItem } from './virtual-item';
 import {
@@ -17,7 +17,7 @@ import {
 } from './types';
 import TreeItem from './item';
 import { defaultProps, getToolbarConf, isTruthyArray } from './common';
-import { useLifeCycle } from './life-cycle';
+import { useTreeLifeCycle } from './life-cycle';
 import Toolbar from './toolbar';
 
 /*
@@ -53,6 +53,8 @@ function Tree(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
   /** 是否开启虚拟滚动 */
   const isVirtual = !!height;
 
+  const showList = treeState.showList;
+
   /** 上下文状态 */
   const share: Share = {
     treeState,
@@ -62,14 +64,7 @@ function Tree(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
   };
 
   /** 共享生命周期 */
-  useLifeCycle(share);
-
-  /** 实际显示的列表 */
-  const showList = useMemo(() => getShowList(treeState), [
-    treeState.list,
-    treeState.openChecker.checked,
-    treeState.state.keyword,
-  ]);
+  useTreeLifeCycle(props, treeState, !!share.toolbar?.search);
 
   /** item的尺寸信息(高度、缩进) */
   const sizeInfo = getSize(share);
@@ -92,7 +87,7 @@ function Tree(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
         // ref={virtualList}
         height={height || 0}
         itemCount={showList.length}
-        itemSize={index => showList[index].height || sizeInfo.itemHeight}
+        itemSize={index => showList[index].origin.height || sizeInfo.itemHeight}
         estimatedItemSize={sizeInfo.itemHeight}
         width="auto"
         className="m78-tree_nodes"

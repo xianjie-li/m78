@@ -1,21 +1,23 @@
 import { useCheck, useSelf, useSetState } from '@lxjx/hooks';
-import { TreeBaseNode, TreeBasePropsMix, TreeValueType } from './types';
+import {
+  _InsideState,
+  TreeBaseNode,
+  TreeBasePropsMix,
+  TreeDataSourceItem,
+  TreeNode,
+  TreeValueType,
+} from './types';
 import { flatTreeData, useValCheckArgDispose } from './common';
+import { useMemo } from 'react';
+import { getShowList } from 'm78/tree/private-functions';
 
 /**
  * 抽象的的树状态
  * - 可被其他包含相同功能的组件消费，修改时需要主要是否会影响其他组件使用
  * */
-export function useTreeStates(props: TreeBasePropsMix) {
+export function useTreeStates<Node = TreeNode, DS = TreeDataSourceItem>(props: TreeBasePropsMix) {
   /** 状态 */
-  const [state, setState] = useSetState<{
-    /** 初始化状态 */
-    loading: boolean;
-    /** 扁平化的tree */
-    nodes: ReturnType<typeof flatTreeData> | undefined;
-    /** 当前搜索关键词 */
-    keyword: string;
-  }>({
+  const [state, setState] = useSetState<_InsideState>({
     nodes: undefined,
     loading: true,
     keyword: '',
@@ -39,10 +41,10 @@ export function useTreeStates(props: TreeBasePropsMix) {
   const list = state.nodes ? state.nodes.list : [];
 
   /** 展开状态控制 */
-  const openChecker = useCheck<TreeValueType, TreeBaseNode>({
+  const openChecker = useCheck<TreeValueType, TreeBaseNode<Node, DS>>({
     ...props,
-    options: list,
-    collector: props.valueGetter as any,
+    options: list as any,
+    collector: item => props.valueGetter!(item.origin as any),
     triggerKey: 'onOpensChange',
     valueKey: 'opens',
     defaultValueKey: 'defaultOpens',
@@ -55,15 +57,22 @@ export function useTreeStates(props: TreeBasePropsMix) {
   const checkProps = useValCheckArgDispose(props);
 
   /** 选中状态 */
-  const valChecker = useCheck<TreeValueType, TreeBaseNode>({
-    ...checkProps,
-    options: list,
-    collector: props.valueGetter as any,
+  const valChecker = useCheck<TreeValueType, TreeBaseNode<Node, DS>>({
+    ...(checkProps as any),
+    options: list as any,
+    collector: item => props.valueGetter!(item.origin as any),
     disables: state.nodes?.disabledValues,
   });
 
   /** 节点加载状态 */
   const loadingChecker = useCheck<TreeValueType>({});
+
+  /** 实际显示的列表 */
+  const showList = useMemo(() => getShowList(list, state, openChecker), [
+    list,
+    openChecker.checked,
+    state.keyword,
+  ]);
 
   return {
     state,
@@ -73,5 +82,6 @@ export function useTreeStates(props: TreeBasePropsMix) {
     openChecker,
     valChecker,
     loadingChecker,
+    showList,
   };
 }

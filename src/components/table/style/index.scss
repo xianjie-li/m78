@@ -278,6 +278,21 @@
     min-height: 40px;
   }
 
+  &_prefix-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: $size-small;
+    height: $size-small;
+    font-size: 18px;
+    border-radius: 4px;
+    margin-right: 4px;
+
+    &.__effect:hover {
+      background-color: var(--m78-color-bg);
+    }
+  }
+
   &_expand-icon {
     padding: 0 4px !important;
     width: $size-small;

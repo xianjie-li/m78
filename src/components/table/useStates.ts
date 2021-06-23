@@ -8,17 +8,16 @@ import {
   TableSortValue,
 } from 'm78/table/types';
 import useVirtualList from 'ahooks/es/useVirtualList';
+import { Share } from 'm78/tree';
 import { columnsBeforeFormat, syncTouchStatus } from './functions';
 
-export function useStates(props: TableProps) {
+export function useStates(props: TableProps, treeState: Share['treeState']) {
   /** 滚动容器节点ref */
   const wrapElRef = useRef<HTMLDivElement>(null!);
   /** 表格节点ref */
   const tableElRef = useRef<HTMLTableElement>(null!);
   /** 表头节点ref */
   const theadElRef = useRef<HTMLTableSectionElement>(null!);
-  /** 表格体首行tr节点的ref */
-  const firstTBodyRowRef = useRef<HTMLTableRowElement>(null!);
 
   const isVirtual = !!props.height;
 
@@ -33,7 +32,7 @@ export function useStates(props: TableProps) {
   const self = useSelf<_InnerSelf>({});
 
   /** 控制表格expand的checker */
-  const expandChecker = useCheck<string>({});
+  const expandChecker = useCheck<string | number>({});
 
   /** 容器滚动控制 */
   const scroller = useScroll({
@@ -72,7 +71,7 @@ export function useStates(props: TableProps) {
   );
 
   // 虚拟列表
-  const virtualList = useVirtualList(isVirtual ? props.dataSource! : [], {
+  const virtualList = useVirtualList(isVirtual ? treeState.showList : [], {
     overscan: 6,
     itemHeight: 41,
   });
@@ -81,7 +80,6 @@ export function useStates(props: TableProps) {
     wrapElRef,
     tableElRef,
     theadElRef,
-    firstTBodyRowRef,
     state,
     setState,
     self,

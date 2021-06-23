@@ -15,13 +15,15 @@ const TreeItem = React.memo(({ data, share, className, style, size }: ItemProps)
   const { itemHeight, identWidth } = size;
   const { indicatorLine } = props;
 
+  const originDs = data.origin;
+
   const itemState = useTreeItem({
     data,
     props: props as TreeBasePropsMix,
     treeState,
   });
 
-  const actions = data.actions;
+  const actions = originDs.actions;
 
   const iconStyle = { height: itemHeight, width: identWidth };
 
@@ -89,7 +91,7 @@ const TreeItem = React.memo(({ data, share, className, style, size }: ItemProps)
           </If>
           <If>
             <span className="m78-tree_icon" style={iconStyle}>
-              {data.icon || props.icon || (
+              {originDs.icon || props.icon || (
                 <span className="m78-dot" style={{ width: 3, height: 3 }} />
               )}
             </span>
@@ -102,11 +104,13 @@ const TreeItem = React.memo(({ data, share, className, style, size }: ItemProps)
   function renderLabel() {
     if (state.keyword) {
       return (
-        <span dangerouslySetInnerHTML={{ __html: highlightKeyword(data.label, state.keyword) }} />
+        <span
+          dangerouslySetInnerHTML={{ __html: highlightKeyword(originDs.label, state.keyword) }}
+        />
       );
     }
 
-    return <span>{data.label}</span>;
+    return <span>{originDs.label}</span>;
   }
 
   return (
@@ -117,7 +121,10 @@ const TreeItem = React.memo(({ data, share, className, style, size }: ItemProps)
         // __dragging: snapshot?.isDragging,
         // __combine: snapshot?.combineTargetFor,
       })}
-      onClick={itemState.toggleHandle}
+      onClick={() => {
+        itemState.toggleHandle();
+        itemState.isSCheck && itemState.valueCheckHandle();
+      }}
       title={itemState.isEmptyTwig ? '空节点' : ''}
       style={{
         height: itemHeight,

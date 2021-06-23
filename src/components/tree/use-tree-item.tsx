@@ -28,10 +28,12 @@ export function useTreeItem({ data, treeState, props }: Props) {
   const { openChecker, valChecker, loadingChecker } = treeState;
   const { onLoad, checkStrictly, dataSource = [], onDataSourceChange, expansionIcon } = props;
 
+  const originDs = data.origin;
+
   const value = data.value;
 
   /** 是否包含children */
-  const hasChildren = !!data.children?.length;
+  const hasChildren = !!originDs.children?.length;
 
   /** 是否展开 */
   const isOpen = openChecker.isChecked(value);
@@ -99,12 +101,12 @@ export function useTreeItem({ data, treeState, props }: Props) {
 
   /** 处理展开关闭逻辑 */
   const toggleHandle = useFn(() => {
-    if (isDisabled) return;
+    // if (isDisabled) return;
 
     props.onNodeClick?.(data);
 
-    // 单选时共享此事件
-    isSCheck && valueCheckHandle();
+    // // 单选时共享此事件
+    // isSCheck && valueCheckHandle();
 
     if (!isTwig && !isLoadTwig) return;
 
@@ -139,10 +141,10 @@ export function useTreeItem({ data, treeState, props }: Props) {
 
   /** 检测是否为树枝节点 */
   function checkIsTwig() {
-    if (!isArray(data.children)) return false;
+    if (!isArray(originDs.children)) return false;
 
     if (props.emptyTwigAsNode) {
-      if (data.children.length === 0) return false;
+      if (originDs.children.length === 0) return false;
     }
 
     return true;
@@ -155,7 +157,7 @@ export function useTreeItem({ data, treeState, props }: Props) {
     // 已有子级的树枝节点排除
     if (isTwig && hasChildren) return false;
     // 标记为树叶节点的排除
-    return !data.isLeaf;
+    return !originDs.isLeaf;
   }
 
   /** 触发加载子级时的处理程序 */
@@ -197,18 +199,17 @@ export function useTreeItem({ data, treeState, props }: Props) {
   }
 
   function renderMultiCheck() {
+    if (!isMCheck) return null;
     return (
       <span {...stopPropagation}>
-        {isMCheck && (
-          <Check
-            size={SizeEnum.small}
-            type="checkbox"
-            partial={checkIsPartial()}
-            checked={isChecked}
-            disabled={isDisabled}
-            onChange={valueCheckHandle}
-          />
-        )}
+        <Check
+          size={SizeEnum.small}
+          type="checkbox"
+          partial={checkIsPartial()}
+          checked={isChecked}
+          disabled={isDisabled}
+          onChange={valueCheckHandle}
+        />
       </span>
     );
   }

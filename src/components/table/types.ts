@@ -1,9 +1,16 @@
-import { AnyObject, ComponentBasePropsWithAny } from '@lxjx/utils';
+import { ComponentBaseProps } from '@lxjx/utils';
 import React from 'react';
-import { SizeEnum, SizeKeys, DataSourceItem } from 'm78/types';
+import { SizeEnum, SizeKeys } from 'm78/types';
 import { useStates } from 'm78/table/useStates';
+import {
+  TreeBaseDataSourceItem,
+  TreeBaseMultipleChoiceProps,
+  TreeBaseNode,
+  TreeBaseProps,
+  TreeBaseSingleChoiceProps,
+} from 'm78/tree';
+import { useTreeStates } from 'm78/tree/use-tree-states';
 import { defaultProps } from './common';
-import { TreeDataSourceItem, TreeValueType } from 'm78/tree';
 
 /*
  * ############################
@@ -63,9 +70,11 @@ export interface TableMeta {
   /** 传递给table的ctx对象 */
   ctx: any;
   /** 当前列, 用于表示行数据时会设置一个无效值 */
-  column: TableColumn;
+  column: _TableColumnInside;
   /** 当前记录, 用于表示非表格体的行时会设置一个无效值 */
-  record: AnyObject;
+  record: TableDataSourceItem;
+  /** 树节点信息, 用于表示非表格体的行时会设置一个无效值 */
+  treeNode: TableTreeNode;
   /** 当前列索引 */
   colIndex: number;
   /** 当前行索引 */
@@ -126,6 +135,7 @@ export interface TableColumn {
    * - 如果为string类型，则表示只开启该类型的排序
    * */
   sort?: boolean | TableSortKeys | TableSortEnum;
+
   /** 其他任意的键值 */
   [key: string]: any;
 }
@@ -135,11 +145,9 @@ export type TableColumns = TableColumn[];
 /**
  * 表格类型
  * */
-export interface TableProps extends ComponentBasePropsWithAny {
-  /** 数据源 */
-  dataSource?: TableDataSourceItem[];
-  onDataSourceChange?: (ds: TableDataSourceItem[]) => void;
-
+export interface TableProps
+  extends ComponentBaseProps,
+    Omit<TreeBaseProps<TableDataSourceItem, TableTreeNode>, 'labelGetter'> {
   /** 表格列配置 */
   columns: TableColumns;
   /**
@@ -147,7 +155,7 @@ export interface TableProps extends ComponentBasePropsWithAny {
    * - 在启用了选择等功能时，primaryKey对应的值会作为选中项的value
    * - 由于id和key是非常常见的记录主键，所以会默认进行获取， 如果是key/id 以外的键(如uid)，需要特别指定
    * */
-  primaryKey?: string;
+  // valueGetter?: string;
   /** 表格宽度，默认为容器宽度 */
   width?: string | number;
   /** 表格高度 */
@@ -189,6 +197,7 @@ export interface TableProps extends ComponentBasePropsWithAny {
   /**
    * 开启行展开并根据返回生成行的展开内容
    * - 此功能与虚拟滚动不兼容，因为虚拟滚动需要项具有明确的高度
+   * TODO: expand重做
    * */
   expand?: (rowMeta: TableMeta) => React.ReactNode | void;
   expandIcon?: React.ReactNode;
@@ -212,25 +221,21 @@ export interface TableProps extends ComponentBasePropsWithAny {
   showColumns?: string[];
 }
 
-/** 表格数据源的可选结构，使用选择模式和tree模式时使用 */
-export interface TableDataSourceItem extends Partial<DataSourceItem<TreeValueType>> {
-  /** 是否禁用 */
-  disabled?: boolean;
-  /** 子项列表 */
-  children?: TableDataSourceItem[];
-  /**
-   * 是否为叶子节点
-   * - 设置onLoad开启异步加载数据后，所有项都会显示展开图标，如果项被指定为叶子节点，则视为无下级且不显示展开图标
-   * - 传入onLoad时生效
-   * */
-  isLeaf?: boolean;
-  /** 在需要自行指定value或label的key时使用 */
-  [key: string]: any;
-}
+/** 单选props */
+export interface TablePropsSingleChoice
+  extends TableProps,
+    TreeBaseSingleChoiceProps<TableTreeNode> {}
 
-export interface TableTreeProps {}
+/** 多选props */
+export interface TablePropsMultipleChoice
+  extends TableProps,
+    TreeBaseMultipleChoiceProps<TableTreeNode> {}
 
-export interface TableSelectionProps {}
+/** 表格数据源的可选结构，一般在使用选择模式和tree模式时使用 */
+export interface TableDataSourceItem extends TreeBaseDataSourceItem {}
+
+/** 树中的一个节点 */
+export interface TableTreeNode extends TreeBaseNode<TableTreeNode, TableDataSourceItem> {}
 
 /*
  * ############################
@@ -242,7 +247,9 @@ export interface _TableCellProps {
   /** 当前列 */
   column: _TableColumnInside;
   /** 当前记录, 为表头时可不传 */
-  record: AnyObject;
+  record: TableDataSourceItem;
+  /** 树节点信息 */
+  treeNode: TableTreeNode;
   /** 列索引 */
   colIndex: number;
   /** 行索引 */
@@ -262,7 +269,10 @@ export interface _TableCellProps {
 }
 
 /** 内部使用的扩展TableColumn */
-export interface _TableColumnInside extends TableColumn {}
+export interface _TableColumnInside extends TableColumn {
+  /** 因为要根据是否固定拆分为多个列表，所以列索引一律使用这个 */
+  index: number;
+}
 
 /** 内部实例对象 */
 export interface _InnerSelf {}
@@ -280,5 +290,8 @@ export interface _InnerState {
 export interface _Context {
   /** 状态 */
   states: ReturnType<typeof useStates>;
-  props: TableProps & typeof defaultProps;
+  /** Table组件接收的props */
+  props: TablePropsSingleChoice & TablePropsMultipleChoice & typeof defaultProps;
+  /** 通用tree状态 */
+  treeState: ReturnType<typeof useTreeStates>;
 }

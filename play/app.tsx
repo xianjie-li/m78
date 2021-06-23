@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { m78Config } from 'm78/config';
 import { Divider, Spacer } from 'm78/layout';
 import { Button } from 'm78/button';
-import { Table, TableColumns } from 'm78/table';
+import { Table, TableColumns, TableDataSourceItem } from 'm78/table';
 import 'm78/table/style';
 import { ListView, ListViewItem } from 'm78/list-view';
 import { datetime } from '@lxjx/utils';
@@ -133,31 +133,75 @@ const ds = Array.from({ length: 20 }).map((i, ind) => {
     skill: '编程、绘画',
   };
 });
+//
+// const ds2 = Array.from({ length: 30 }).map((i, ind) => {
+//   const date = new Date('1994-07-14');
+//
+//   date.setDate(date.getDate() - ind);
+//
+//   return {
+//     id: `${String(ind)}1000000`,
+//     name: `李显杰${ind}${1 + 10001}`,
+//     num: ind,
+//     birthday: datetime(date, 'YYYY-MM-DD'),
+//     user: {
+//       name: '前'.repeat(ind % 200),
+//     },
+//     // relation: [
+//     //   {
+//     //     name: '梁龙弟',
+//     //   },
+//     // ],
+//     desc:
+//       '这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一',
+//     // desc: '这是一',
+//     skill: '编程、绘画、旅游',
+//   };
+// });
 
-const ds2 = Array.from({ length: 100 }).map((i, ind) => {
-  const date = new Date('1994-07-14');
+let count = 0;
 
-  date.setDate(date.getDate() - ind);
+/** 指定长度、深度、label来生成模拟的treedata */
+function mockTreeData(length: number, z: number, label = '选项') {
+  const ls: TableDataSourceItem[] = [];
 
-  return {
-    id: `${String(ind)}1000000`,
-    name: `李显杰${ind}${1 + 10001}`,
-    num: ind,
-    birthday: datetime(date, 'YYYY-MM-DD'),
-    user: {
-      name: '前'.repeat(ind % 200),
-    },
-    // relation: [
-    //   {
-    //     name: '梁龙弟',
-    //   },
-    // ],
-    desc:
-      '这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一这是一',
-    // desc: '这是一',
-    skill: '编程、绘画、旅游',
-  };
-});
+  function gn(list: TableDataSourceItem = [], vp: string, cZInd = 0) {
+    Array.from({ length }).forEach((_, index) => {
+      const v = vp ? `${vp}-${index + 1}` : String(index + 1);
+      const children: TableDataSourceItem[] = [];
+
+      const current: TableDataSourceItem = {
+        label: `${label} ${v}`,
+        id: v,
+        num: ++count,
+        name: `李显杰${cZInd}${1 + 10001}`,
+        user: {
+          name: v,
+        },
+        birthday: '1994-07-14',
+        children: Math.random() > 0.5 ? [] : undefined,
+        desc: '描述描述描述描述描述描述描述描述描述描述描述',
+        skill: '编程、绘画、旅游',
+        disabled: Math.random() > 0.7,
+      };
+
+      list.push(current);
+
+      if (cZInd !== z) {
+        current.children = children;
+        gn(children, v, cZInd + 1);
+      }
+    });
+  }
+
+  gn(ls, '');
+
+  return ls;
+}
+
+const ds2 = mockTreeData(5, 3);
+
+console.log(ds2);
 
 const App = () => {
   const dark = m78Config.useState(state => state.darkMode);
@@ -183,41 +227,45 @@ const App = () => {
 
       {toggle && (
         <Table
+          multipleCheckable
           // showColumns={['id', 'name', 'num', 'relation[0].name']}
-          // height={500}
+          height={500}
           divideStyle="border"
           columns={columns}
           dataSource={d}
-          summary={({ column }) => {
-            if (column.label === '#') return '总计';
-            if (column.label === '数值') {
-              const count = d.reduce((prev, item) => {
-                if (isNaN(prev)) return prev;
-                return prev + item.num;
-              }, 0);
-
-              return isNaN(count) ? 'N/A' : count;
-            }
-            return <span className="color-second fw">N/A</span>;
+          onChange={e => {
+            console.log(e);
           }}
-          expand={({ rowIndex }) => {
-            if (rowIndex > 5) return;
-
-            return (
-              <div className="p-12">
-                <ListView size="small" style={{ fontWeight: 400 }}>
-                  <ListViewItem title="姓名" desc="xxx" />
-                  <ListViewItem title="年龄" desc="18" />
-                  <ListViewItem title="数值" desc="516" />
-                  <ListViewItem
-                    title="职业"
-                    desc="
-前端工程师"
-                  />
-                </ListView>
-              </div>
-            );
-          }}
+          // summary={({ column }) => {
+          //   if (column.label === '#') return '总计';
+          //   if (column.label === '数值') {
+          //     const count = d.reduce((prev, item) => {
+          //       if (isNaN(prev)) return prev;
+          //       return prev + item.num;
+          //     }, 0);
+          //
+          //     return isNaN(count) ? 'N/A' : count;
+          //   }
+          //   return <span className="color-second fw">N/A</span>;
+          // }}
+          //           expand={({ rowIndex }) => {
+          //             if (rowIndex > 5) return;
+          //
+          //             return (
+          //               <div className="p-12">
+          //                 <ListView size="small" style={{ fontWeight: 400 }}>
+          //                   <ListViewItem title="姓名" desc="xxx" />
+          //                   <ListViewItem title="年龄" desc="18" />
+          //                   <ListViewItem title="数值" desc="516" />
+          //                   <ListViewItem
+          //                     title="职业"
+          //                     desc="
+          // 前端工程师"
+          //                   />
+          //                 </ListView>
+          //               </div>
+          //             );
+          //           }}
           onSortChange={([key, type]) => {
             if (key === 'num') {
               setD(prev => {
@@ -225,7 +273,7 @@ const App = () => {
                   return type === 'asc' ? a.num - b.num : b.num - a.num;
                 });
 
-                return prev;
+                return [...prev];
               });
             }
 

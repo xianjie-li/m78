@@ -2,6 +2,7 @@ import { isArray, isBoolean, isNumber } from '@lxjx/utils';
 import _clamp from 'lodash/clamp';
 import { Share, TreeBaseNode, TreeNode, TreeValueType } from './types';
 import { isTruthyArray } from './common';
+import { UseCheckReturns } from '@lxjx/hooks';
 
 /*
  * ########################################
@@ -10,7 +11,7 @@ import { isTruthyArray } from './common';
  * */
 
 /** 检测某项是否展开 */
-function isShow(treeState: Share['treeState'], item: TreeBaseNode) {
+function isShow(openChecker: UseCheckReturns<TreeValueType, any>, item: TreeBaseNode) {
   if (item.zIndex === 0) return true;
 
   const parents = item.parents;
@@ -20,7 +21,7 @@ function isShow(treeState: Share['treeState'], item: TreeBaseNode) {
 
   if (!p) return false;
 
-  return treeState.openChecker.isChecked(p.value);
+  return openChecker.isChecked(p.value);
 }
 
 /** 获取传入节点和它的子孙节点的value数组 */
@@ -112,7 +113,7 @@ function syncParentsChecked(treeState: Share['treeState'], item: TreeBaseNode, c
       if (it.value !== i.value) {
         noSelfSiblings.push(it.value);
       }
-      if (it.disabled) {
+      if (it.origin.disabled) {
         hasDisabled = true;
       }
     });

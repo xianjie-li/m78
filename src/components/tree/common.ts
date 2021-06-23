@@ -82,7 +82,7 @@ export function flatTreeData(
     item.parents!.forEach(p => {
       p.descendants && p.descendants.push(item);
       p.descendantsValues && p.descendantsValues.push(item.value);
-      if (!isTruthyArray(item.children)) {
+      if (!isTruthyArray(item.origin.children)) {
         p.descendantsWithoutTwigValues && p.descendantsWithoutTwigValues.push(item.value);
         p.descendantsWithoutTwig && p.descendantsWithoutTwig.push(item);
       }
@@ -105,7 +105,7 @@ export function flatTreeData(
         const label = labelGetter(item);
 
         const current: TreeNode = {
-          ...item,
+          // ...item,
           origin: item,
           zIndex,
           values: connectVal2Array(val, parent?.values)! /* value取值方式更换 */,
@@ -114,7 +114,6 @@ export function flatTreeData(
           siblings: null!,
           siblingsValues: null!,
           value: val,
-          label,
           descendants: item.children ? [] : undefined,
           descendantsValues: item.children ? [] : undefined,
           descendantsWithoutTwig: item.children ? [] : undefined,
@@ -132,7 +131,7 @@ export function flatTreeData(
 
         // 添加父级节点value
         if (isArray(current.parents)) {
-          current.parentsValues = current.parents.map(valueGetter);
+          current.parentsValues = current.parents.map(it => valueGetter(it.origin));
         }
 
         // 为父节点添加child
@@ -147,13 +146,13 @@ export function flatTreeData(
         target.push(current);
 
         // 加到可展开列表
-        if (isTruthyArray(current.children)) {
+        if (isTruthyArray(current.origin.children)) {
           expandableList.push(current);
           expandableValues.push(current.value);
         }
 
         // 禁用列表
-        if (current.disabled) {
+        if (current.origin.disabled) {
           disabledValues.push(current.value);
           disables.push(current);
 

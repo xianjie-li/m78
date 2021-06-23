@@ -1,13 +1,13 @@
-import { AnyObject, isBoolean, isFunction, isNumber, isString, isTruthyOrZero } from '@lxjx/utils';
+import { isBoolean, isFunction, isNumber, isString, isTruthyOrZero } from '@lxjx/utils';
 import React from 'react';
 import Cell from 'm78/table/_cell';
 import { Empty } from 'm78/empty';
 import clsx from 'clsx';
-import { Button } from 'm78/button';
-import { CaretDownOutlined, CaretRightOutlined, CaretUpOutlined } from 'm78/icon';
-import { If, Toggle } from 'm78/fork';
+import { CaretDownOutlined, CaretUpOutlined } from 'm78/icon';
+import { If } from 'm78/fork';
 import { Spin } from 'm78/spin';
 import { stopPropagation } from 'm78/util';
+import BodyRowItem from 'm78/table/_body-row-item';
 import {
   _Context,
   _TableCellProps,
@@ -15,54 +15,28 @@ import {
   TableColumnFixedEnum,
   TableMeta,
   TableSortEnum,
+  TableTreeNode,
 } from './types';
 import {
   getField,
   getInitTableMeta,
-  getPrimaryKey,
   handleSortClick,
-  handleRowHover,
   getColumnKey,
   handleTableClick,
+  defaultValueGetter,
 } from './functions';
 import TableRender from './_table-render';
 
 /** 主内容render */
 export function render(ctx: _Context) {
   const {
-    props: {
-      size,
-      stripe,
-      loading,
-      divideStyle,
-      width,
-      height,
-      className,
-      style,
-      dataSource,
-      columns,
-      primaryKey,
-      rowSpan,
-      colSpan,
-      cellMaxWidth,
-      fallback,
-      summary,
-      expand,
-      expandIcon,
-      checkFieldValid,
-      defaultSort,
-      sort,
-      onSortChange,
-      props: _,
-      showColumns,
-      ...ppp
-    },
+    props: { size, stripe, loading, divideStyle, width, height, className, style },
     states: { state, wrapElRef, tableElRef, virtualList, fmtColumns, isVirtual },
+    treeState,
   } = ctx;
 
   return (
     <div
-      {...ppp}
       className={clsx('m78-table', className, size && `__${size}`, {
         __stripe: stripe,
         [`__${divideStyle}`]: true,
@@ -71,8 +45,7 @@ export function render(ctx: _Context) {
       })}
       style={style}
     >
-      <Spin full show={loading} loadingDelay={0} />
-
+      {(loading || treeState.state.loading) && <Spin full loadingDelay={0} />}
       <div
         ref={node => {
           wrapElRef.current = node!;
@@ -112,7 +85,7 @@ export function render(ctx: _Context) {
 }
 
 /** 根据记录和索引获取展开节点 */
-export function renderExpandNode(ctx: _Context, record: AnyObject, ind: number) {
+export function renderExpandNode(ctx: _Context, record: TableTreeNode, ind: number) {
   const {
     props: { expand },
     states: { fmtColumns },
@@ -142,11 +115,11 @@ export function renderExpandNode(ctx: _Context, record: AnyObject, ind: number) 
 /** 渲染表格体 */
 export function renderTbody(ctx: _Context, columns: _TableColumnInside[], isMainTable = false) {
   const {
-    states: { firstTBodyRowRef, tableElRef, expandChecker, virtualList, isVirtual },
-    props: { dataSource, primaryKey },
+    states: { virtualList, isVirtual },
+    treeState: { showList },
   } = ctx;
 
-  if (!dataSource?.length) {
+  if (!showList?.length) {
     return (
       <tbody>
         <tr>
@@ -158,75 +131,34 @@ export function renderTbody(ctx: _Context, columns: _TableColumnInside[], isMain
     );
   }
 
-  const renderItem = (data: AnyObject, index: number) => {
-    const key = data[primaryKey] || getPrimaryKey(data);
-
-    const expandNode = isMainTable && renderExpandNode(ctx, data, index);
-
-    const isOdd = index % 2 === 0;
-
-    const isExpanded = expandChecker.isChecked(key);
-
-    return (
-      <React.Fragment key={key}>
-        <tr
-          className={clsx('m78-table_body-row', {
-            __odd: isOdd,
-          })}
-          ref={index === 0 ? firstTBodyRowRef : undefined}
-          onMouseEnter={e => handleRowHover(ctx, index, e)}
-          onMouseLeave={e => handleRowHover(ctx, index, e)}
-        >
-          {columns.map((column, ind) => {
-            return (
-              <Cell
-                key={ind}
-                tableElRef={tableElRef}
-                prefix={
-                  expandNode &&
-                  ind === 0 && (
-                    <Button
-                      className={clsx('m78-table_expand-icon', {
-                        __open: isExpanded,
-                      })}
-                      size="small"
-                      text
-                      onClick={e => {
-                        e.stopPropagation();
-                        if (expandChecker.isChecked(key)) {
-                          expandChecker.setChecked([]);
-                        } else {
-                          expandChecker.setChecked([key]);
-                        }
-                      }}
-                    >
-                      <span>
-                        <CaretRightOutlined />
-                      </span>
-                    </Button>
-                  )
-                }
-                {...getInitTableMeta({
-                  column,
-                  record: data,
-                  colIndex: ind,
-                  rowIndex: index,
-                })}
-                ctx={ctx}
-              />
-            );
-          })}
-        </tr>
-        {expandNode && <Toggle when={isExpanded}>{expandNode}</Toggle>}
-      </React.Fragment>
-    );
+  const baseRowProps = {
+    ctx,
+    isMainTable,
+    columns,
+    props: ctx.props,
   };
 
   if (isVirtual) {
-    return <tbody>{virtualList.list.map(({ data, index }) => renderItem(data, index))}</tbody>;
+    return (
+      <tbody>
+        {virtualList.list.map(({ data, index }) => {
+          const key = ctx.props.valueGetter(data.origin);
+          return (
+            <BodyRowItem key={key} valueKey={key} data={data} index={index} {...baseRowProps} />
+          );
+        })}
+      </tbody>
+    );
   }
 
-  return <tbody>{dataSource.map(renderItem)}</tbody>;
+  return (
+    <tbody>
+      {showList.map((data, index) => {
+        const key = ctx.props.valueGetter(data.origin);
+        return <BodyRowItem key={key} valueKey={key} data={data} index={index} {...baseRowProps} />;
+      })}
+    </tbody>
+  );
 }
 
 /** table col render */
@@ -262,13 +194,13 @@ export function renderThead(ctx: _Context, columns: _TableColumnInside[]) {
   return (
     <thead ref={theadElRef}>
       <tr>
-        {columns.map((column, index) => {
+        {columns.map(column => {
           return (
             <Cell
-              key={index}
+              key={column.index}
               {...getInitTableMeta({
                 column,
-                colIndex: index,
+                colIndex: column.index,
                 isHead: true,
               })}
               ctx={ctx}

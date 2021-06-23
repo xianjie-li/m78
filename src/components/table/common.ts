@@ -1,5 +1,7 @@
 import { TableDivideStyleEnum } from 'm78/table/types';
 import { isNumber, isString, isTruthyOrZero } from '@lxjx/utils';
+import { Tree } from 'm78/tree';
+import { defaultValueGetter } from 'm78/table/functions';
 
 export const defaultProps = {
   dataSource: [],
@@ -10,6 +12,8 @@ export const defaultProps = {
   loading: false,
   cellMaxWidth: '300px',
   checkFieldValid: isTruthyOrZero,
+  ...Tree.defaultProps,
+  valueGetter: defaultValueGetter,
 };
 
 /**
