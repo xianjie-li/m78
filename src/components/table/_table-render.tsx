@@ -60,10 +60,27 @@ const _TableRender = ({ type, innerRef, ctx, containerProps, column, isMain }: P
     return () => ro.disconnect();
   }, []);
 
-  const restProps = isVirtual ? containerProps : {};
+  function getProps() {
+    const restProps = isVirtual ? containerProps : {};
+
+    const style = restProps?.style;
+
+    if (style) {
+      const height = style.height;
+      return {
+        ...restProps,
+        style: {
+          ...style,
+          height: height ? height + 42 /* 加上表头的高度 */ : undefined,
+        },
+      };
+    }
+
+    return restProps;
+  }
 
   return (
-    <div ref={wrapRef} className={clsx('m78-table_main', type && `__${type}`)} {...restProps}>
+    <div ref={wrapRef} className={clsx('m78-table_main', type && `__${type}`)} {...getProps()}>
       <table
         ref={innerRef}
         className={isMain ? undefined : clsx('m78-table_fixed-table', type && `__${type}`)}

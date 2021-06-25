@@ -14,6 +14,7 @@ export const defaultProps = {
   checkFieldValid: isTruthyOrZero,
   ...Tree.defaultProps,
   valueGetter: defaultValueGetter,
+  customScrollbar: true,
 };
 
 /**

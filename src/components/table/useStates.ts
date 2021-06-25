@@ -9,7 +9,8 @@ import {
 } from 'm78/table/types';
 import useVirtualList from 'ahooks/es/useVirtualList';
 import { Share } from 'm78/tree';
-import { columnsBeforeFormat, syncTouchStatus } from './functions';
+import { columnsBeforeFormat, syncTouchStatus, getSizeNumber } from './functions';
+import { SizeEnum } from 'm78/types';
 
 export function useStates(props: TableProps, treeState: Share['treeState']) {
   /** 滚动容器节点ref */
@@ -72,8 +73,8 @@ export function useStates(props: TableProps, treeState: Share['treeState']) {
 
   // 虚拟列表
   const virtualList = useVirtualList(isVirtual ? treeState.showList : [], {
-    overscan: 6,
-    itemHeight: 41,
+    overscan: 2,
+    itemHeight: getSizeNumber(props.size as SizeEnum),
   });
 
   return {

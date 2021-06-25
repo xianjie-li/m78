@@ -219,6 +219,8 @@ export interface TableProps
   onSortChange?: (sort: TableSortValue | []) => void;
   /** 如果传入，则控制要显示的列, 数组项为 columns.key 或 字符类型的columns.field */
   showColumns?: string[];
+  /** true | 是否开启webkit下的自定义滚动条，部分新版浏览器使用默认滚动条时自带了滚动优化，可以关闭此定制来提升性能 */
+  customScrollbar?: boolean;
 }
 
 /** 单选props */

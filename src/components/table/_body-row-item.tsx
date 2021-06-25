@@ -4,16 +4,14 @@ import clsx from 'clsx';
 import Cell from 'm78/table/_cell';
 import { Button } from 'm78/button';
 import { CaretRightOutlined, LoadingOutlined } from 'm78/icon';
-import { If, Toggle } from 'm78/fork';
+import { If } from 'm78/fork';
 import { renderExpandNode } from 'm78/table/renders';
 import { _Context, _TableColumnInside, TableTreeNode } from 'm78/table/types';
 import { useTreeItem } from 'm78/tree/use-tree-item';
-import { Share, TreeBasePropsMix, TreeValueType } from 'm78/tree';
+import { TreeValueType } from 'm78/tree';
 import { areEqual } from 'react-window';
-import { stopPropagation } from 'm78/util';
 import { Check } from 'm78/check';
 import { SizeEnum } from 'm78/types';
-import item from 'm78/tree/item';
 
 interface Props {
   data: TableTreeNode;
@@ -34,10 +32,6 @@ const _BodyRowItem = ({ data, index, ctx, isMainTable, columns, valueKey, props 
     states: { expandChecker, tableElRef },
     treeState,
   } = ctx;
-
-  const { valChecker } = treeState;
-
-  const ds = data.origin;
 
   const itemState = useTreeItem({
     data,

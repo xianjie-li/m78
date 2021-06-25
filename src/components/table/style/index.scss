@@ -139,7 +139,7 @@
 
   &_cell {
     position: relative;
-    height: 38px;
+    //height: 38px;
     padding: 0 12px;
     display: flex;
     align-items: center;
@@ -155,25 +155,34 @@
     }
   }
 
-  // td内部的格子
-  &_cell-content {
-
-  }
-
   // ##########################
   // 尺寸
   // ##########################
+  td {
+    height: 42px;
+  }
+
+  .m78-table_cell {
+    max-height: 39px;
+  }
+
   &.__small {
+    td {
+      height: 32px;
+    }
     .m78-table_cell {
       padding: 0 8px;
-      height: 32px;
+      max-height: 29px;
     }
   }
 
   &.__large {
+    td {
+      height: 48px;
+    }
     .m78-table_cell {
       padding: 0 16px;
-      height: 48px;
+      max-height: 45px;
     }
   }
 

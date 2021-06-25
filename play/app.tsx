@@ -230,7 +230,7 @@ const App = () => {
           multipleCheckable
           // showColumns={['id', 'name', 'num', 'relation[0].name']}
           height={500}
-          divideStyle="border"
+          // divideStyle="border"
           columns={columns}
           dataSource={d}
           onChange={e => {

@@ -1,5 +1,5 @@
 import { AnyObject, isArray, isBoolean, isFunction, isString, isTruthyOrZero } from '@lxjx/utils';
-import { throwError } from 'm78/util';
+import { SIZE_MAP, throwError } from 'm78/util';
 import { SetState, UseScrollMeta } from '@lxjx/hooks';
 import React from 'react';
 import { stringifyArrayField } from 'm78/table/common';
@@ -13,6 +13,7 @@ import {
   TableProps,
   TableSortEnum,
 } from './types';
+import { SizeEnum } from 'm78/types';
 
 /**
  * ################################
@@ -65,6 +66,16 @@ export function getField(obj: AnyObject, field?: string | string[]) {
       return p?.[i];
     }, obj);
   }
+}
+
+/** 获取尺寸 */
+export function getSizeNumber(size?: SizeEnum) {
+  const sizeMap = {
+    small: 32,
+    large: 48,
+    def: 42,
+  };
+  return sizeMap[size!] || sizeMap.def;
 }
 
 /** 获取一个只包含初始值的tableMeta, 可以传入指定对象覆盖默认值 */

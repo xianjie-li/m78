@@ -30,7 +30,7 @@ import TableRender from './_table-render';
 /** 主内容render */
 export function render(ctx: _Context) {
   const {
-    props: { size, stripe, loading, divideStyle, width, height, className, style },
+    props: { size, stripe, loading, divideStyle, width, height, className, style, customScrollbar },
     states: { state, wrapElRef, tableElRef, virtualList, fmtColumns, isVirtual },
     treeState,
   } = ctx;
@@ -52,7 +52,7 @@ export function render(ctx: _Context) {
           virtualList.containerProps.ref(node);
         }}
         onScroll={isVirtual ? virtualList.containerProps.onScroll : undefined}
-        className="m78-table_wrap"
+        className={clsx('m78-table_wrap', customScrollbar && 'm78-scrollbar')}
         style={{ width, maxHeight: height }}
         onClick={() => handleTableClick(ctx)}
       >
