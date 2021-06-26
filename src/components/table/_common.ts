@@ -1,7 +1,7 @@
-import { TableDivideStyleEnum } from 'm78/table/types';
 import { isNumber, isString, isTruthyOrZero } from '@lxjx/utils';
 import { Tree } from 'm78/tree';
-import { defaultValueGetter } from 'm78/table/functions';
+import { TableDivideStyleEnum } from './_types';
+import { defaultValueGetter } from './_functions';
 
 export const defaultProps = {
   dataSource: [],

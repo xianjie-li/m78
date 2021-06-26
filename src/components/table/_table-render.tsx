@@ -1,11 +1,10 @@
 import React, { useEffect, useRef } from 'react';
-import ReactDom from 'react-dom';
-import { renderColgroup, renderTbody, renderTfoot, renderThead } from 'm78/table/renders';
-import { _Context, _TableColumnInside, TableColumnFixedEnum } from 'm78/table/types';
 import ResizeObserver from 'resize-observer-polyfill';
 import { AnyObject } from '@lxjx/utils';
 import clsx from 'clsx';
-import { createEvent, useSelf } from '@lxjx/hooks';
+import { useSelf } from '@lxjx/hooks';
+import { _Context, _TableColumnInside, TableColumnFixedEnum } from './_types';
+import { renderColgroup, renderTbody, renderTfoot, renderThead } from './_renders';
 
 interface Props {
   type?: TableColumnFixedEnum;

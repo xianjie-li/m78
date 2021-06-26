@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { _Context } from 'm78/table/types';
 import clsx from 'clsx';
+import { _Context } from './_types';
 
 interface Props {
   ctx: _Context;

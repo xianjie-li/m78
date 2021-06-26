@@ -131,10 +131,6 @@
 
   td {
     position: relative;
-
-    &:first-child {
-      font-weight: bold;
-    }
   }
 
   &_cell {
@@ -274,7 +270,7 @@
   &.__stripe {
     tbody {
       tr.m78-table_body-row.__odd td {
-        background-color: var(--m78-gray-3);
+        background-color: var(--m78-gray-2);
       }
     }
   }
@@ -299,22 +295,6 @@
 
     &.__effect:hover {
       background-color: var(--m78-color-bg);
-    }
-  }
-
-  &_expand-icon {
-    padding: 0 4px !important;
-    width: $size-small;
-    height: $size-small;
-    margin-right: 4px;
-
-    > span {
-      display: inline-block;
-      transition: transform var(--m78-animate-fast);
-    }
-
-    &.__open > span {
-      transform: rotate(90deg);
     }
   }
 
@@ -353,7 +333,7 @@
     pointer-events: none;
 
     &.__show {
-      opacity: 1;
+      opacity: 0.4;
     }
   }
 }

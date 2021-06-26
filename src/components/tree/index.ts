@@ -1,6 +1,8 @@
 import 'm78/tree/style';
 import Tree from './_tree';
+import useTreeItem from './_use-tree-item';
+import useTreeStates from './_use-tree-states';
 
 export * from './types';
 
-export { Tree };
+export { Tree, useTreeItem, useTreeStates };

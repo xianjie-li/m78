@@ -26,12 +26,12 @@ const CustomDemo = () => {
       children: [
         {
           label: '一张动图.gif',
-          icon: <FileGifOutlined className="fs-lg" />,
+          icon: <FileGifOutlined className="fs-md" />,
           actions: <a className="fs-sm">放大</a>,
         },
         {
           label: '一张神奇的图片.gif',
-          icon: <FileJpgOutlined className="fs-lg" />,
+          icon: <FileJpgOutlined className="fs-md" />,
           actions: <a className="fs-sm">了解更多</a>,
         },
         {
@@ -41,7 +41,7 @@ const CustomDemo = () => {
             </span>
           ),
           value: 'Effective Java',
-          icon: <FilePdfOutlined className="fs-lg" />,
+          icon: <FilePdfOutlined className="fs-md" />,
         },
         {
           label: (
@@ -50,7 +50,7 @@ const CustomDemo = () => {
             </span>
           ),
           value: 'JavaScript',
-          icon: <FilePdfOutlined className="fs-lg" />,
+          icon: <FilePdfOutlined className="fs-md" />,
         },
       ],
     },

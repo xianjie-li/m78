@@ -1,8 +1,9 @@
 import { AnyObject, isArray, isBoolean, isFunction, isString, isTruthyOrZero } from '@lxjx/utils';
-import { SIZE_MAP, throwError } from 'm78/util';
+import { throwError } from 'm78/util';
 import { SetState, UseScrollMeta } from '@lxjx/hooks';
 import React from 'react';
-import { stringifyArrayField } from 'm78/table/common';
+import { SizeEnum } from 'm78/types';
+import { stringifyArrayField } from './_common';
 import {
   _Context,
   _InnerState,
@@ -12,8 +13,7 @@ import {
   TableMeta,
   TableProps,
   TableSortEnum,
-} from './types';
-import { SizeEnum } from 'm78/types';
+} from './_types';
 
 /**
  * ################################
@@ -29,10 +29,7 @@ export function defaultValueGetter(obj: AnyObject) {
     console.log(obj);
 
     throwError(
-      `
-        Get default PrimaryKey(id/key) failed, please manual set <Table primaryKey="<FieldName>" />.
-
-      `,
+      'Get default PrimaryKey(id/key) failed, please manual set <Table valueGetter={item => item.<FieldName>} />.',
       'Table',
     );
   }
@@ -79,7 +76,7 @@ export function getSizeNumber(size?: SizeEnum) {
 }
 
 /** 获取一个只包含初始值的tableMeta, 可以传入指定对象覆盖默认值 */
-export function getInitTableMeta(overObj?: Partial<TableMeta>): TableMeta {
+export function getInitTableMeta(ctx: _Context, overObj?: Partial<TableMeta>): TableMeta {
   return {
     column: {} as any, // 表示一个不存在的列
     record: {} as any,
@@ -89,7 +86,7 @@ export function getInitTableMeta(overObj?: Partial<TableMeta>): TableMeta {
     isBody: false,
     isFoot: false,
     isHead: false,
-    ctx: {},
+    ctx: ctx.props.ctx,
     ...overObj,
   };
 }
@@ -222,18 +219,5 @@ export function handleRowHover(
 
   if (e.type === 'mouseleave') {
     ev.emit(rowInd, false);
-  }
-}
-
-/**
- * 表格点击事件
- * - 如果点击时包含展开的expand，则将其关闭
- * */
-export function handleTableClick(ctx: _Context) {
-  const {
-    states: { expandChecker },
-  } = ctx;
-  if (expandChecker.checked.length) {
-    expandChecker.setChecked([]);
   }
 }

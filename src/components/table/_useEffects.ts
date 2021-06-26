@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { syncTouchStatus } from 'm78/table/functions';
-import { _Context } from 'm78/table/types';
+import { syncTouchStatus } from './_functions';
+import { _Context } from './_types';
 
 export function useEffects(ctx: _Context) {
   const { states } = ctx;

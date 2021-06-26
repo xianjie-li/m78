@@ -1,4 +1,6 @@
 import { useCheck, useSelf, useSetState } from '@lxjx/hooks';
+import { useMemo } from 'react';
+import { getShowList } from 'm78/tree/private-functions';
 import {
   _InsideState,
   TreeBaseNode,
@@ -7,15 +9,15 @@ import {
   TreeNode,
   TreeValueType,
 } from './types';
-import { flatTreeData, useValCheckArgDispose } from './common';
-import { useMemo } from 'react';
-import { getShowList } from 'm78/tree/private-functions';
+import { isCheck, isMultipleCheck, useValCheckArgDispose } from './common';
 
 /**
  * 抽象的的树状态
  * - 可被其他包含相同功能的组件消费，修改时需要主要是否会影响其他组件使用
  * */
-export function useTreeStates<Node = TreeNode, DS = TreeDataSourceItem>(props: TreeBasePropsMix) {
+export default function _useTreeStates<Node = TreeNode, DS = TreeDataSourceItem>(
+  props: TreeBasePropsMix,
+) {
   /** 状态 */
   const [state, setState] = useSetState<_InsideState>({
     nodes: undefined,
@@ -74,6 +76,10 @@ export function useTreeStates<Node = TreeNode, DS = TreeDataSourceItem>(props: T
     state.keyword,
   ]);
 
+  /** 单选多选类型检测 */
+  const isSCheck = isCheck(props);
+  const isMCheck = isMultipleCheck(props) && !isSCheck; /* 权重低于单选 */
+
   return {
     state,
     setState,
@@ -83,5 +89,7 @@ export function useTreeStates<Node = TreeNode, DS = TreeDataSourceItem>(props: T
     valChecker,
     loadingChecker,
     showList,
+    isSCheck,
+    isMCheck,
   };
 }

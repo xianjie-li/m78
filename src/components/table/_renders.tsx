@@ -1,13 +1,15 @@
 import { isBoolean, isFunction, isNumber, isString, isTruthyOrZero } from '@lxjx/utils';
 import React from 'react';
-import Cell from 'm78/table/_cell';
 import { Empty } from 'm78/empty';
 import clsx from 'clsx';
 import { CaretDownOutlined, CaretUpOutlined } from 'm78/icon';
 import { If } from 'm78/fork';
 import { Spin } from 'm78/spin';
 import { stopPropagation } from 'm78/util';
-import BodyRowItem from 'm78/table/_body-row-item';
+import { Check } from 'm78/check';
+import { SizeEnum } from 'm78/types';
+import Cell from './_cell';
+import BodyRowItem from './_body-row-item';
 import {
   _Context,
   _TableCellProps,
@@ -15,16 +17,8 @@ import {
   TableColumnFixedEnum,
   TableMeta,
   TableSortEnum,
-  TableTreeNode,
-} from './types';
-import {
-  getField,
-  getInitTableMeta,
-  handleSortClick,
-  getColumnKey,
-  handleTableClick,
-  defaultValueGetter,
-} from './functions';
+} from './_types';
+import { getField, getInitTableMeta, handleSortClick, getColumnKey } from './_functions';
 import TableRender from './_table-render';
 
 /** 主内容render */
@@ -45,7 +39,7 @@ export function render(ctx: _Context) {
       })}
       style={style}
     >
-      {(loading || treeState.state.loading) && <Spin full loadingDelay={0} />}
+      {(loading || treeState.state.loading) && <Spin full />}
       <div
         ref={node => {
           wrapElRef.current = node!;
@@ -54,7 +48,6 @@ export function render(ctx: _Context) {
         onScroll={isVirtual ? virtualList.containerProps.onScroll : undefined}
         className={clsx('m78-table_wrap', customScrollbar && 'm78-scrollbar')}
         style={{ width, maxHeight: height }}
-        onClick={() => handleTableClick(ctx)}
       >
         {fmtColumns.fixedLeft.length > 0 && (
           <TableRender
@@ -81,34 +74,6 @@ export function render(ctx: _Context) {
         )}
       </div>
     </div>
-  );
-}
-
-/** 根据记录和索引获取展开节点 */
-export function renderExpandNode(ctx: _Context, record: TableTreeNode, ind: number) {
-  const {
-    props: { expand },
-    states: { fmtColumns },
-  } = ctx;
-
-  if (!expand) return null;
-
-  const meta = getInitTableMeta({
-    rowIndex: ind,
-    record,
-    isBody: true,
-  });
-
-  const node = expand(meta);
-
-  if (!isTruthyOrZero(node)) return null;
-
-  return (
-    <tr {...stopPropagation}>
-      <td colSpan={fmtColumns.column.length}>
-        <div className="m78-table_expand-node">{node as any}</div>
-      </td>
-    </tr>
   );
 }
 
@@ -188,23 +153,44 @@ export function renderColgroup(ctx: _Context, columns: _TableColumnInside[], isM
 /** table head render */
 export function renderThead(ctx: _Context, columns: _TableColumnInside[]) {
   const {
-    states: { tableElRef, theadElRef },
+    treeState,
+    states: { tableElRef },
   } = ctx;
 
+  const valChecker = treeState.valChecker;
+
+  function renderPrefix(ind: number) {
+    if (ind !== 0) return null;
+
+    if (treeState.isMCheck) {
+      return (
+        <Check
+          size={SizeEnum.small}
+          type="checkbox"
+          partial={valChecker.partialChecked}
+          onChange={checked => {
+            checked ? valChecker.checkAll() : valChecker.unCheckAll();
+          }}
+        />
+      );
+    }
+  }
+
   return (
-    <thead ref={theadElRef}>
+    <thead>
       <tr>
         {columns.map(column => {
           return (
             <Cell
               key={column.index}
-              {...getInitTableMeta({
+              {...getInitTableMeta(ctx, {
                 column,
                 colIndex: column.index,
                 isHead: true,
               })}
               ctx={ctx}
               tableElRef={tableElRef}
+              prefixInline={renderPrefix(column.index)}
             />
           );
         })}
@@ -230,7 +216,7 @@ export function renderTfoot(ctx: _Context, columns: _TableColumnInside[]) {
             <Cell
               key={index}
               tableElRef={tableElRef}
-              {...getInitTableMeta({
+              {...getInitTableMeta(ctx, {
                 column,
                 colIndex: index,
                 isFoot: true,
@@ -290,7 +276,7 @@ export function renderCellMain(ctx: _Context, meta: TableMeta, content: React.Re
 }
 
 /** 渲染单元格主要内容 */
-export function renderCellCont(child: any) {
+export function renderCellCont(child: any, cellProps: _TableCellProps) {
   const isStringChild = isString(child) || isNumber(child);
 
   return (
@@ -298,6 +284,7 @@ export function renderCellCont(child: any) {
       title={isStringChild ? (child as string) : undefined}
       className={clsx('m78-table_cell-content', isStringChild && 'ellipsis')}
     >
+      {cellProps.prefixInline}
       {child}
     </div>
   );
@@ -342,7 +329,7 @@ export function renderCellFork(ctx: _Context, meta: TableMeta, cellProps: _Table
       style={{ maxWidth: mw, width: !isTruthyOrZero(maxWidth) ? width : undefined }}
     >
       {prefix}
-      {renderCellCont(child)}
+      {renderCellCont(child, cellProps)}
       <If when={hasSort}>
         <span
           className={clsx(
@@ -360,7 +347,7 @@ export function renderCellFork(ctx: _Context, meta: TableMeta, cellProps: _Table
       </If>
       <If when={isHead && ex}>
         <div className="ml-12" {...stopPropagation}>
-          {isFunction(extra) ? extra(meta) : extra}
+          {ex}
         </div>
       </If>
     </div>

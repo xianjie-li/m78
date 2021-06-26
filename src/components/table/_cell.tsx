@@ -1,9 +1,9 @@
 import React, { useMemo, useRef } from 'react';
 import clsx from 'clsx';
-import { getCellProps, getCellSpan } from 'm78/table/functions';
-import { renderCellFork } from 'm78/table/renders';
-import CellEffectBg from 'm78/table/_cell-effect-bg';
-import { _TableCellProps, TableMeta } from './types';
+import { getCellProps, getCellSpan } from './_functions';
+import { renderCellFork } from './_renders';
+import CellEffectBg from './_cell-effect-bg';
+import { _TableCellProps, TableMeta } from './_types';
 
 const _Cell = (props: _TableCellProps) => {
   const {
@@ -27,7 +27,7 @@ const _Cell = (props: _TableCellProps) => {
 
   // 表示当前列的meta
   const meta: TableMeta = {
-    ctx: {},
+    ctx: ctx.props.ctx,
     column,
     record,
     treeNode,
@@ -76,6 +76,7 @@ export default React.memo(_Cell, (prev, next) => {
   return (
     prev.column === next.column &&
     prev.record === next.record &&
+    prev.treeNode === next.treeNode &&
     prev.colIndex === next.colIndex &&
     prev.rowIndex === next.rowIndex &&
     prev.isHead === next.isHead &&

@@ -5,7 +5,7 @@ import { LoadingOutlined } from 'm78/icon';
 import { isFunction } from '@lxjx/utils';
 import { stopPropagation } from 'm78/util';
 import { areEqual } from 'react-window';
-import { useTreeItem } from './use-tree-item';
+import useTreeItem from './_use-tree-item';
 import { highlightKeyword } from './common';
 import { ItemProps, TreeBasePropsMix } from './types';
 

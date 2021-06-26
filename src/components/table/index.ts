@@ -1,6 +1,6 @@
-import 'm78/table/style';
+import './style';
 
-import Table from './table';
+import Table from './_table';
 
-export * from './types';
+export * from './_types';
 export { Table };

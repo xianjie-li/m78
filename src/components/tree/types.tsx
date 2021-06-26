@@ -2,7 +2,7 @@ import { FormLikeWithExtra } from '@lxjx/hooks';
 import { ComponentBaseProps, DataSourceItem, SizeKeys } from 'm78/types';
 import React from 'react';
 import { ListChildComponentProps } from 'react-window';
-import { useTreeStates } from './use-tree-states';
+import useTreeStates from './_use-tree-states';
 import { defaultProps, flatTreeData } from './common';
 
 /**
@@ -59,7 +59,9 @@ export interface TreeBaseProps<Item, Node> {
 
   /* ############## 定制选项 ############## */
   /** 自定义展开标识图标, 如果将className添加到节点上，会在展开时将其旋转90deg, 也可以通过open自行配置 */
-  expansionIcon?: React.ReactNode | ((open: boolean, className: string) => React.ReactNode);
+  expansionIcon?:
+    | React.ReactNode
+    | ((open: boolean, node: Node, className: string) => React.ReactNode);
   /** 如何从选项中拿到value，默认是 item => item.value || item.label, 如果无value且label不为字符类型，应该手动传入value来禁用默认的回退行为 */
   valueGetter?: (optItem: Item) => TreeValueType;
   /** 如何从选项中拿到label，默认是 item => item.label */

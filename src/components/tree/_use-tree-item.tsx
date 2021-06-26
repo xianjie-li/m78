@@ -9,7 +9,7 @@ import React from 'react';
 import { stopPropagation } from 'm78/util';
 import { Check } from 'm78/check';
 import { SizeEnum } from 'm78/types';
-import { filterIncludeDisableChildNode, isCheck, isMultipleCheck, isTruthyArray } from './common';
+import { filterIncludeDisableChildNode, isTruthyArray } from './common';
 import functions from './functions';
 import { Share, TreeBasePropsMix, TreeNode } from './types';
 
@@ -24,8 +24,8 @@ interface Props<Node = TreeNode> {
 
 const openRotateClassName = 'm78-tree_open-icon';
 
-export function useTreeItem({ data, treeState, props }: Props) {
-  const { openChecker, valChecker, loadingChecker } = treeState;
+export default function _useTreeItem({ data, treeState, props }: Props) {
+  const { openChecker, valChecker, loadingChecker, isSCheck, isMCheck } = treeState;
   const { onLoad, checkStrictly, dataSource = [], onDataSourceChange, expansionIcon } = props;
 
   const originDs = data.origin;
@@ -40,10 +40,6 @@ export function useTreeItem({ data, treeState, props }: Props) {
 
   /** 是否选中 */
   const isChecked = valChecker.isChecked(value);
-
-  /** 单选多选类型检测 */
-  const isSCheck = isCheck(props);
-  const isMCheck = isMultipleCheck(props) && !isSCheck; /* 权重低于单选 */
 
   const isLoading = loadingChecker.isChecked(value);
 
@@ -189,7 +185,7 @@ export function useTreeItem({ data, treeState, props }: Props) {
   function renderExpansionIcon() {
     if (expansionIcon) {
       if (isFunction(expansionIcon)) {
-        return expansionIcon(isOpen, openRotateClassName);
+        return expansionIcon(isOpen, data, openRotateClassName);
       }
 
       return expansionIcon;

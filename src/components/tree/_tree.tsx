@@ -4,7 +4,7 @@ import { VariableSizeList as List } from 'react-window';
 import { Spin } from 'm78/spin';
 import { Empty } from 'm78/empty';
 import { useDelayDerivedToggleStatus } from 'm78/hooks';
-import { useTreeStates } from './use-tree-states';
+import useTreeStates from './_use-tree-states';
 import { getSize } from './private-functions';
 import functions from './functions';
 import { VirtualItem } from './virtual-item';
