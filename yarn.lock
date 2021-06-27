@@ -1878,14 +1878,13 @@
     "@babel/runtime" "^7.7.6"
     "@types/node" "^13.11.0"
 
-"@lxjx/utils@^1.14.0":
-  version "1.14.0"
-  resolved "https://registry.nlark.com/@lxjx/utils/download/@lxjx/utils-1.14.0.tgz#2f9c68017e19591f47a6b18a2659c830e68bf100"
-  integrity sha1-L5xoAX4ZWR9HprGKJlnIMOaL8QA=
+"@lxjx/utils@^1.15.0":
+  version "1.15.0"
+  resolved "https://registry.nlark.com/@lxjx/utils/download/@lxjx/utils-1.15.0.tgz?cache=0&sync_timestamp=1624719798803&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40lxjx%2Futils%2Fdownload%2F%40lxjx%2Futils-1.15.0.tgz#3f3c6e4184a994a64e1b85f3f1f78b8a56f78c20"
+  integrity sha1-PzxuQYSplKZOG4Xz8feLilb3jCA=
   dependencies:
-    "@babel/runtime" "^7.7.6"
-    "@types/node" "^13.11.0"
-    "@types/react" "^17.0.9"
+    lodash "^4.17.21"
+    tslib "^2.1.0"
 
 "@lxjx/validate-tools@^1.1.0":
   version "1.1.0"
@@ -2772,7 +2771,7 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@17.0.4", "@types/react@^16.9.23", "@types/react@^16.9.43", "@types/react@^17.0.4", "@types/react@^17.0.9":
+"@types/react@*", "@types/react@17.0.4", "@types/react@^16.9.23", "@types/react@^16.9.43", "@types/react@^17.0.4":
   version "17.0.4"
   resolved "https://registry.nlark.com/@types/react/download/@types/react-17.0.4.tgz?cache=0&sync_timestamp=1621989398685&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40types%2Freact%2Fdownload%2F%40types%2Freact-17.0.4.tgz#a67c6f7a460d2660e950d9ccc1c2f18525c28220"
   integrity sha1-pnxvekYNJmDpUNnMwcLxhSXCgiA=
@@ -14932,6 +14931,11 @@ tslib@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npm.taobao.org/tslib/download/tslib-2.0.0.tgz#18d13fc2dce04051e20f074cc8387fd8089ce4f3"
   integrity sha1-GNE/wtzgQFHiDwdMyDh/2Aic5PM=
+
+tslib@^2.1.0:
+  version "2.3.0"
+  resolved "https://registry.nlark.com/tslib/download/tslib-2.3.0.tgz#803b8cdab3e12ba581a4ca41c8839bbb0dacb09e"
+  integrity sha1-gDuM2rPhK6WBpMpByIObuw2ssJ4=
 
 tslib@^2.2.0:
   version "2.2.0"

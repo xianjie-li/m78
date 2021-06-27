@@ -18,11 +18,15 @@ export default {
     null,
     {
       title: 'hooks',
-      path: 'https://iixianjie.github.io/hooks/',
+      path: 'http://llixianjie.gitee.io/hooks',
     },
     {
       title: 'github',
       path: 'https://github.com/Iixianjie/m78',
+    },
+    {
+      title: 'm78-core',
+      path: 'https://github.com/m78-core',
     },
   ],
   theme: {
