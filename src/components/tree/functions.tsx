@@ -1,8 +1,8 @@
 import { isArray, isBoolean, isNumber } from '@lxjx/utils';
 import _clamp from 'lodash/clamp';
-import { Share, TreeBaseNode, TreeNode, TreeValueType } from './types';
-import { isTruthyArray } from './common';
 import { UseCheckReturns } from '@lxjx/hooks';
+import { Share, TreeBaseNode, TreeValueType } from './_types';
+import { isTruthyArray } from './common';
 
 /*
  * ########################################
@@ -140,17 +140,6 @@ function syncParentsChecked(treeState: Share['treeState'], item: TreeBaseNode, c
   });
 }
 
-function scrollHandle(treeState: Share['treeState']) {
-  const self = treeState.self;
-  self.scrollingCheckTimer && clearTimeout(self.scrollingCheckTimer);
-
-  self.scrolling = true;
-
-  self.scrollingCheckTimer = setTimeout(() => {
-    self.scrolling = false;
-  }, 300 /* 不需要严格精准 */);
-}
-
 // 减少命名污染
 export default {
   isShow,
@@ -160,5 +149,4 @@ export default {
   openAll,
   openToZ,
   syncParentsChecked,
-  scrollHandle,
 };

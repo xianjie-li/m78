@@ -11,7 +11,7 @@ import { Check } from 'm78/check';
 import { SizeEnum } from 'm78/types';
 import { filterIncludeDisableChildNode, isTruthyArray } from './common';
 import functions from './functions';
-import { Share, TreeBasePropsMix, TreeNode } from './types';
+import { Share, TreeBasePropsMix, TreeNode } from './_types';
 
 interface Props<Node = TreeNode> {
   /** 当前节点 */
@@ -33,7 +33,7 @@ export default function _useTreeItem({ data, treeState, props }: Props) {
   const value = data.value;
 
   /** 是否包含children */
-  const hasChildren = !!originDs.children?.length;
+  const hasChildren = !!data.children?.length;
 
   /** 是否展开 */
   const isOpen = openChecker.isChecked(value);
@@ -137,10 +137,10 @@ export default function _useTreeItem({ data, treeState, props }: Props) {
 
   /** 检测是否为树枝节点 */
   function checkIsTwig() {
-    if (!isArray(originDs.children)) return false;
+    if (!isArray(data.children)) return false;
 
     if (props.emptyTwigAsNode) {
-      if (originDs.children.length === 0) return false;
+      if (data.children.length === 0) return false;
     }
 
     return true;

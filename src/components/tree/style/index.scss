@@ -11,9 +11,7 @@ $ident-w: 20px;
   width: 100%;
 
   &.__style {
-    border: 1px solid var(--m78-color-border);
     border-radius: var(--m78-border-radius);
-    padding: 12px;
 
     .m78-tree_toolbar {
       display: flex;

@@ -56,7 +56,7 @@
     "@babel/runtime": "^7.7.2",
     "@lxjx/async-filed-cn-template": "^1.0.1",
     "@lxjx/click-effect": "^1.0.1",
-    "@lxjx/hooks": "^1.16.4",
+    "@lxjx/hooks": "^1.21.0",
     "@lxjx/react-render-api": "^0.5.0",
     "@lxjx/react-transition-spring": "^1.2.5",
     "@lxjx/utils": "^1.15.0",

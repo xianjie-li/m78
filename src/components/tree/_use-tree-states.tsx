@@ -1,4 +1,4 @@
-import { useCheck, useSelf, useSetState } from '@lxjx/hooks';
+import { useCheck, useSelf, useSetState, useVirtualList, UseVirtualListOption } from '@lxjx/hooks';
 import { useMemo } from 'react';
 import { getShowList } from 'm78/tree/private-functions';
 import {
@@ -8,15 +8,18 @@ import {
   TreeDataSourceItem,
   TreeNode,
   TreeValueType,
-} from './types';
+} from './_types';
 import { isCheck, isMultipleCheck, useValCheckArgDispose } from './common';
 
 /**
  * 抽象的的树状态
  * - 可被其他包含相同功能的组件消费，修改时需要主要是否会影响其他组件使用
+ * - 传入isVirtual开启虚拟滚动，此时需要通过virtualOption进行虚拟滚动配置
  * */
 export default function _useTreeStates<Node = TreeNode, DS = TreeDataSourceItem>(
   props: TreeBasePropsMix,
+  isVirtual?: boolean,
+  virtualOption?: Omit<UseVirtualListOption<Node>, 'list'>,
 ) {
   /** 状态 */
   const [state, setState] = useSetState<_InsideState>({
@@ -31,13 +34,7 @@ export default function _useTreeStates<Node = TreeNode, DS = TreeDataSourceItem>
     defaultOpenTriggered?: boolean;
     // 标记defaultOpenZIndex是否已触发过
     defaultOpenZIndexTriggered?: boolean;
-    // 是否正在滚动中
-    scrolling: boolean;
-    // 恢复scrolling状态的计时器
-    scrollingCheckTimer?: any;
-  }>({
-    scrolling: false,
-  });
+  }>({});
 
   /** 平铺列表 */
   const list = state.nodes ? state.nodes.list : [];
@@ -71,10 +68,18 @@ export default function _useTreeStates<Node = TreeNode, DS = TreeDataSourceItem>
 
   /** 实际显示的列表 */
   const showList = useMemo(() => getShowList(list, state, openChecker), [
-    list,
     openChecker.checked,
     state.keyword,
+    list,
   ]);
+
+  const virtualList = useVirtualList<Node>({
+    overscan: 2,
+    ...(virtualOption as any),
+    disabled: !isVirtual,
+    list: showList as any,
+    log: !!props.onLoad,
+  });
 
   /** 单选多选类型检测 */
   const isSCheck = isCheck(props);
@@ -85,6 +90,7 @@ export default function _useTreeStates<Node = TreeNode, DS = TreeDataSourceItem>
     setState,
     self,
     list,
+    virtualList,
     openChecker,
     valChecker,
     loadingChecker,

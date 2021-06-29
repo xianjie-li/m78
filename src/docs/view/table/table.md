@@ -296,6 +296,8 @@ interface TableProps {
   defaultOpens?: TreeValueType[];
   /** 打开节点变更时触发 */
   onOpensChange?: (nextOpens: TreeValueType[], nodes: TableTreeNode[]) => void;
+  /** 如何从选项中拿到children，默认是 item => item.children */
+  childrenGetter?: (optItem: Item) => Item[];
 }
 ```
 
