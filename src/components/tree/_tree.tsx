@@ -15,7 +15,7 @@ import {
   TreePropsSingleChoice,
   VirtualItemProps,
 } from './types';
-import TreeItem from './item';
+import TreeItem from './_item';
 import { defaultProps, getToolbarConf, isTruthyArray } from './common';
 import { useTreeLifeCycle } from './life-cycle';
 import Toolbar from './toolbar';

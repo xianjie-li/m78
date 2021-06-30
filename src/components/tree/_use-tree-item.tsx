@@ -151,7 +151,7 @@ export default function _useTreeItem({ data, treeState, props }: Props) {
     // 是否开启
     if (!isFunction(onLoad)) return false;
     // 已有子级的树枝节点排除
-    if (isTwig && hasChildren) return false;
+    if (isTwig && isArray(originDs.children)) return false;
     // 标记为树叶节点的排除
     return !originDs.isLeaf;
   }
@@ -165,7 +165,7 @@ export default function _useTreeItem({ data, treeState, props }: Props) {
     try {
       const _children = await onLoad(data);
 
-      if (isTruthyArray(_children)) {
+      if (isArray(_children)) {
         data.origin.children = _children;
       } else {
         data.origin.isLeaf = true;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import TreeItem from './item';
+import TreeItem from './_item';
 import { VirtualItemProps } from './types';
 
 export const VirtualItem = ({ index, style, data }: VirtualItemProps) => {

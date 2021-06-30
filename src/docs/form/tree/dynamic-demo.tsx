@@ -3,11 +3,12 @@ import { Tree, TreeDataSourceItem } from 'm78/tree';
 import { delay, getRandRange } from '@lxjx/utils';
 
 const generateChildren = (pLabel = '') => {
+  if (Math.random() > 0.7) return []; // 应包含子项但为空
   const length = getRandRange(1, 5);
 
   return Array.from({ length }).map((_, ind) => ({
     label: `${pLabel}-${ind + 1}`,
-    isLeaf: Math.random() > 0.7,
+    isLeaf: Math.random() > 0.7, // 明确声明为叶子节点，该节点不可再展开
   }));
 };
 
