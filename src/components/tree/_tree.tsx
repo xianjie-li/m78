@@ -3,6 +3,7 @@ import cls from 'clsx';
 import { Spin } from 'm78/spin';
 import { Empty } from 'm78/empty';
 import { useDelayDerivedToggleStatus } from 'm78/hooks';
+import { DNDContext } from 'm78/dnd';
 import useTreeStates from './_use-tree-states';
 import { getSize } from './private-functions';
 import { VirtualItem } from './virtual-item';
@@ -45,15 +46,12 @@ function Tree(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
   /** 是否开启虚拟滚动 */
   const isVirtual = !!height;
 
-  console.log(isVirtual);
-
   /** item的尺寸信息(高度、缩进) */
   const sizeInfo = getSize(props);
 
   /** 共享tree状态 */
   const treeState = useTreeStates(props as TreeBasePropsMix, isVirtual, {
     size: item => item.origin.height || sizeInfo.itemHeight,
-    key: item => item.value as string,
   });
 
   /** 延迟设置的加载状态, 防止数据量较少时loading一闪而过 */
@@ -116,7 +114,13 @@ function Tree(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
   }
 
   function renderList() {
-    return isVirtual ? renderVirtualList() : renderNormalList();
+    const list = isVirtual ? renderVirtualList() : renderNormalList();
+
+    if (123) {
+      return <DNDContext>{list}</DNDContext>;
+    }
+
+    return list;
   }
 
   function renderToolbar() {

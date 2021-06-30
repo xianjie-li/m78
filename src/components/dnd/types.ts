@@ -127,7 +127,7 @@ export interface AllowPosition {
 }
 
 /**
- * 可用防止位置位置信息
+ * 可用放置位置位置信息
  * */
 export interface EnableInfos extends AllowPosition {
   /** 至少有一个方向启用 */

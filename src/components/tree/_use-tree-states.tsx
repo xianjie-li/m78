@@ -34,6 +34,8 @@ export default function _useTreeStates<Node = TreeNode, DS = TreeDataSourceItem>
     defaultOpenTriggered?: boolean;
     // 标记defaultOpenZIndex是否已触发过
     defaultOpenZIndexTriggered?: boolean;
+    // 当前正在拖拽的节点
+    currentDragNode?: TreeNode;
   }>({});
 
   /** 平铺列表 */
@@ -75,10 +77,15 @@ export default function _useTreeStates<Node = TreeNode, DS = TreeDataSourceItem>
 
   const virtualList = useVirtualList<Node>({
     overscan: 2,
+    key: (item: TreeBaseNode) => item.value,
     ...(virtualOption as any),
     disabled: !isVirtual,
     list: showList as any,
-    log: !!props.onLoad,
+    keepAlive: (item: TreeBaseNode) => {
+      if (self.currentDragNode) {
+        return item.value === self.currentDragNode.value;
+      }
+    },
   });
 
   /** 单选多选类型检测 */

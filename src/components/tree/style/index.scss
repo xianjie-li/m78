@@ -60,22 +60,6 @@ $ident-w: 20px;
     border-radius: var(--m78-border-radius);
     user-select: none;
     background-color: transparent;
-
-    &.__dragging {
-      background-color: var(--m78-color-opacity-sm) !important;
-      border: 1px solid var(--m78-color-opacity-md);
-    }
-
-    &.__disabled {
-      color: var(--m78-color-disable);
-      background-color: transparent !important;
-      cursor: not-allowed !important;
-    }
-
-    &.__combine {
-      background-color: rgba($green-6, 0.2);
-      transition: background-color 0s 0.3s !important;
-    }
   }
 
   &_main {
@@ -230,5 +214,23 @@ $ident-w: 20px;
   &_empty {
     margin: 32px auto;
     text-align: center;
+  }
+
+  &_disabled {
+    color: var(--m78-color-disable);
+    background-color: transparent !important;
+    cursor: not-allowed !important;
+  }
+
+  &_drag-combine {
+    background-color: var(--m78-color-opacity-sm);
+  }
+
+  &_drag-top-node {
+    top: -1.5px !important;
+  }
+
+  &_drag-bottom-node {
+    bottom: -1.5px !important;
   }
 }

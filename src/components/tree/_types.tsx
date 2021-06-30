@@ -1,7 +1,6 @@
 import { FormLikeWithExtra } from '@lxjx/hooks';
 import { ComponentBaseProps, DataSourceItem, SizeKeys } from 'm78/types';
 import React from 'react';
-import { ListChildComponentProps } from 'react-window';
 import useTreeStates from './_use-tree-states';
 import { defaultProps, flatTreeData } from './common';
 
