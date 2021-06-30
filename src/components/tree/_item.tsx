@@ -7,7 +7,7 @@ import { stopPropagation } from 'm78/util';
 import { areEqual } from 'react-window';
 import useTreeItem from './_use-tree-item';
 import { highlightKeyword } from './common';
-import { ItemProps, TreeBasePropsMix } from './types';
+import { ItemProps, TreeBasePropsMix } from './_types';
 
 const TreeItem = React.memo(({ data, share, className, style, size }: ItemProps) => {
   const { treeState, props, isVirtual } = share;

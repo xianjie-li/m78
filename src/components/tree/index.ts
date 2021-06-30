@@ -3,6 +3,6 @@ import Tree from './_tree';
 import useTreeItem from './_use-tree-item';
 import useTreeStates from './_use-tree-states';
 
-export * from './types';
+export * from './_types';
 
 export { Tree, useTreeItem, useTreeStates };

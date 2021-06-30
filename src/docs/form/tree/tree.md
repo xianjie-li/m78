@@ -169,6 +169,8 @@ interface TreeProps {
   valueGetter?: (optItem: TreeDataSourceItem) => TreeValueType;
   /** 如何从选项中拿到label，默认是 item => item.label */
   labelGetter?: (optItem: TreeDataSourceItem) => React.ReactNode;
+  /** 如何从选项中拿到children，默认是 item => item.children */
+  childrenGetter?: (optItem: Item) => Item[];
   /** 公共的操作区内容, 渲染在每个节点的右侧  */
   actions?: React.ReactNode | ((current: TreeNode) => React.ReactNode);
   /** 自定义所有节点的默认前导图标，权重小于option中单独设置的 */

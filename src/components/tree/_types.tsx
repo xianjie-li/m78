@@ -68,6 +68,8 @@ export interface TreeBaseProps<Item, Node> {
   valueGetter?: (optItem: Item) => TreeValueType;
   /** 如何从选项中拿到label，默认是 item => item.label */
   labelGetter?: (optItem: Item) => React.ReactNode;
+  /** 如何从选项中拿到children，默认是 item => item.children */
+  childrenGetter?: (optItem: Item) => Item[];
 }
 
 /** 单选props */
@@ -157,6 +159,8 @@ export interface TreeBaseNode<Node = TreeNode, DS = TreeDataSourceItem> {
   origin: DS;
   /** 子节点列表 */
   child?: Node[];
+  /** 子项列表，此值代理至origin中获取到的children(取决于childrenGetter), 操作children时应首选此值 */
+  children?: DS[];
 }
 
 /**
@@ -255,12 +259,9 @@ export interface ItemProps extends ComponentBaseProps {
   index: number;
 }
 
-export interface VirtualItemProps extends ListChildComponentProps {
-  /** 当前列表和其他要传给ItemProps的props */
-  data: {
-    /**  当前列表 */
-    data: TreeNode[];
-  } & Omit<ItemProps, 'data' | 'index'>;
+export interface VirtualItemProps extends ItemProps {
+  /** 是否处于滚动状态中 */
+  scrolling: boolean;
 }
 
 export interface _InsideState {

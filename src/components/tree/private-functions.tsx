@@ -8,15 +8,11 @@ import { isNumber } from '@lxjx/utils';
 import _debounce from 'lodash/debounce';
 import { UseCheckReturns } from '@lxjx/hooks';
 import { sizeMap } from './common';
-import { _InsideState, Share, TreeBaseNode, TreeValueType } from './types';
+import { _InsideState, Share, TreeBaseNode, TreeProps, TreeValueType } from './_types';
 import functions from './functions';
 
 /** 根据参数获取应有尺寸 */
-export function getSize(share: Share) {
-  const {
-    props: { itemHeight, identWidth, size },
-  } = share;
-
+export function getSize({ itemHeight, identWidth, size }: TreeProps) {
   const _size = {
     itemHeight: itemHeight!,
     identWidth: identWidth!,

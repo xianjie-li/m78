@@ -1,39 +1,33 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import TreeItem from './_item';
-import { VirtualItemProps } from './types';
+import { VirtualItemProps } from './_types';
 
-export const VirtualItem = ({ index, style, data }: VirtualItemProps) => {
-  const { data: list, ...itemProps } = data;
+/** 虚拟滚动到实际Item的中间站 */
+export const VirtualItem = (props: VirtualItemProps) => {
+  const { index, data, size } = props;
+  const { scrolling, ...itemProps } = props;
 
-  const item = list[index];
-
-  // 使用低消耗的渲染占位，一定延迟后再切换真实节点，防止快速滚动、拖动造成不必要的计算消耗
-  const [render, setRender] = useState(!itemProps.share.treeState.self.scrolling);
+  const firstLoad = useRef(false);
 
   useEffect(() => {
-    if (render) return;
-
-    const t = setTimeout(() => {
-      setRender(true);
-    }, 100);
-    return () => clearTimeout(t);
+    if (!firstLoad.current) firstLoad.current = true;
   }, []);
 
-  if (!render) {
+  if (!firstLoad.current && scrolling) {
     return (
-      <div style={style} className="m78-tree_skeleton">
-        {item.parents &&
-          item.parents.map(i => (
+      <div className="m78-tree_skeleton" style={{ height: size.itemHeight }}>
+        {data.parents &&
+          data.parents.map(i => (
             <span key={i.value} style={{ width: itemProps.size.identWidth }} />
           ))}
         <span
           className="m78-tree_skeleton-bar"
           style={{ width: itemProps.size.itemHeight * 0.68 }}
         />
-        <span className="m78-tree_skeleton-bar">{item.origin.label}</span>
+        <span className="m78-tree_skeleton-bar">{data.origin.label}</span>
       </div>
     );
   }
 
-  return <TreeItem data={item} key={item.value} {...itemProps} style={style} index={index} />;
+  return <TreeItem {...itemProps} index={index} />;
 };

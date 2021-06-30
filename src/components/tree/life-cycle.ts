@@ -3,7 +3,7 @@ import { isNumber } from '@lxjx/utils';
 import { useUpdateEffect } from 'react-use';
 import functions from './functions';
 import { flatTreeData } from './common';
-import { Share, TreeBaseProps } from './types';
+import { Share, TreeBaseProps } from './_types';
 
 /**
  * 抽象的的树状态树声明周期，传入hasSearch来控制是否启用搜索
@@ -15,7 +15,14 @@ export function useTreeLifeCycle(
   hasSearch: boolean,
 ) {
   const { state, setState, self } = treeState;
-  const { defaultOpenAll, defaultOpenZIndex, dataSource, valueGetter, labelGetter } = props;
+  const {
+    defaultOpenAll,
+    defaultOpenZIndex,
+    dataSource,
+    valueGetter,
+    labelGetter,
+    childrenGetter,
+  } = props;
 
   // 同步平铺dataSource
   useEffect(() => {
@@ -36,6 +43,7 @@ export function useTreeLifeCycle(
     const flatTree = flatTreeData(dataSource, {
       valueGetter: valueGetter!,
       labelGetter: labelGetter!,
+      childrenGetter: childrenGetter!,
       skipSearchKeySplicing: !hasSearch,
       // !share.toolbar?.search,
     });

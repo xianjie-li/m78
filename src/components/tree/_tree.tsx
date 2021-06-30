@@ -1,20 +1,18 @@
 import React from 'react';
 import cls from 'clsx';
-import { VariableSizeList as List } from 'react-window';
 import { Spin } from 'm78/spin';
 import { Empty } from 'm78/empty';
 import { useDelayDerivedToggleStatus } from 'm78/hooks';
 import useTreeStates from './_use-tree-states';
 import { getSize } from './private-functions';
-import functions from './functions';
 import { VirtualItem } from './virtual-item';
 import {
+  ItemProps,
   Share,
   TreeBasePropsMix,
   TreePropsMultipleChoice,
   TreePropsSingleChoice,
-  VirtualItemProps,
-} from './types';
+} from './_types';
 import TreeItem from './_item';
 import { defaultProps, getToolbarConf, isTruthyArray } from './common';
 import { useTreeLifeCycle } from './life-cycle';
@@ -44,14 +42,22 @@ function Tree(props: TreePropsMultipleChoice): JSX.Element;
 function Tree(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
   const { size, height } = props as Share['props'];
 
+  /** 是否开启虚拟滚动 */
+  const isVirtual = !!height;
+
+  console.log(isVirtual);
+
+  /** item的尺寸信息(高度、缩进) */
+  const sizeInfo = getSize(props);
+
   /** 共享tree状态 */
-  const treeState = useTreeStates(props as TreeBasePropsMix);
+  const treeState = useTreeStates(props as TreeBasePropsMix, isVirtual, {
+    size: item => item.origin.height || sizeInfo.itemHeight,
+    key: item => item.value as string,
+  });
 
   /** 延迟设置的加载状态, 防止数据量较少时loading一闪而过 */
   const loading = useDelayDerivedToggleStatus(treeState.state.loading, 150);
-
-  /** 是否开启虚拟滚动 */
-  const isVirtual = !!height;
 
   const showList = treeState.showList;
 
@@ -66,38 +72,46 @@ function Tree(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
   /** 共享生命周期 */
   useTreeLifeCycle(props, treeState, !!share.toolbar?.search);
 
-  /** item的尺寸信息(高度、缩进) */
-  const sizeInfo = getSize(share);
-
-  const itemData: VirtualItemProps['data'] = {
+  const itemData: Pick<ItemProps, 'size' | 'share'> = {
     size: sizeInfo,
-    data: showList,
     share,
   };
 
   function renderNormalList() {
-    return showList.map((item, index) => (
-      <TreeItem key={item.value} {...itemData} data={item} index={index} />
-    ));
+    return (
+      <div className="m78-tree_nodes">
+        {showList.map((item, index) => (
+          <TreeItem key={item.value} {...itemData} data={item} index={index} />
+        ))}
+      </div>
+    );
   }
 
   function renderVirtualList() {
+    const virtualList = treeState.virtualList;
+
     return (
-      <List
-        // ref={virtualList}
-        height={height || 0}
-        itemCount={showList.length}
-        itemSize={index => showList[index].origin.height || sizeInfo.itemHeight}
-        estimatedItemSize={sizeInfo.itemHeight}
-        width="auto"
-        className="m78-tree_nodes"
-        overscanCount={3}
-        itemData={itemData}
-        itemKey={index => showList[index].value}
-        onScroll={() => functions.scrollHandle(treeState)}
+      <div
+        ref={virtualList.containerRef}
+        className="m78-tree_nodes m78-scrollbar"
+        style={{ height: height || 0 }}
       >
-        {VirtualItem}
-      </List>
+        <div ref={virtualList.wrapRef}>
+          <virtualList.Render>
+            {state =>
+              state.list.map(item => (
+                <VirtualItem
+                  key={item.key}
+                  {...itemData}
+                  data={item.data}
+                  index={item.index}
+                  scrolling={state.scrolling}
+                />
+              ))
+            }
+          </virtualList.Render>
+        </div>
+      </div>
     );
   }
 
@@ -115,7 +129,7 @@ function Tree(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
   const isEmpty = isSearchAndNoList || !isTruthyArray(props.dataSource);
 
   return (
-    <div className={cls('m78-tree m78-scroll-bar __hoverEffect __style', size && `__${size}`)}>
+    <div className={cls('m78-tree __hoverEffect __style', size && `__${size}`)}>
       {loading && <Spin full text="索引数据中..." />}
 
       {renderToolbar()}

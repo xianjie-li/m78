@@ -15,11 +15,13 @@ import {
   TreeProps,
   TreePropsMultipleChoice,
   TreeValueType,
-} from './types';
+} from './_types';
 
 export const defaultValueGetter = (item: TreeDataSourceItem) => item.value! || item.label;
 
 export const defaultLabelGetter = (item: TreeDataSourceItem) => item.label!;
+
+export const defaultChildrenGetter = (item: TreeDataSourceItem) => item.children!;
 
 /** 预设尺寸 */
 export const sizeMap = {
@@ -64,6 +66,7 @@ export function flatTreeData(
   conf: {
     valueGetter: NonNullable<TreeProps['valueGetter']>;
     labelGetter: NonNullable<TreeProps['labelGetter']>;
+    childrenGetter: NonNullable<TreeProps['childrenGetter']>;
     skipSearchKeySplicing?: boolean;
   },
 ) {
@@ -74,7 +77,7 @@ export function flatTreeData(
   const disabledValues: TreeValueType[] = [];
   const zList: TreeNode[][] = [];
   const zListValues: TreeValueType[][] = [];
-  const { valueGetter, labelGetter, skipSearchKeySplicing } = conf;
+  const { valueGetter, labelGetter, childrenGetter, skipSearchKeySplicing } = conf;
 
   // 将指定的TreeNode添加到它所有父级的descendants列表中
   function fillParentsDescendants(item: TreeNode) {
@@ -82,7 +85,7 @@ export function flatTreeData(
     item.parents!.forEach(p => {
       p.descendants && p.descendants.push(item);
       p.descendantsValues && p.descendantsValues.push(item.value);
-      if (!isTruthyArray(item.origin.children)) {
+      if (!isTruthyArray(item.children)) {
         p.descendantsWithoutTwigValues && p.descendantsWithoutTwigValues.push(item.value);
         p.descendantsWithoutTwig && p.descendantsWithoutTwig.push(item);
       }
@@ -103,10 +106,12 @@ export function flatTreeData(
       optList.forEach((item, index) => {
         const val = valueGetter(item);
         const label = labelGetter(item);
+        const children = childrenGetter(item);
 
         const current: TreeNode = {
           // ...item,
           origin: item,
+          children,
           zIndex,
           values: connectVal2Array(val, parent?.values)! /* value取值方式更换 */,
           indexes: connectVal2Array(index, parent?.indexes)!,
@@ -114,10 +119,10 @@ export function flatTreeData(
           siblings: null!,
           siblingsValues: null!,
           value: val,
-          descendants: item.children ? [] : undefined,
-          descendantsValues: item.children ? [] : undefined,
-          descendantsWithoutTwig: item.children ? [] : undefined,
-          descendantsWithoutTwigValues: item.children ? [] : undefined,
+          descendants: children ? [] : undefined,
+          descendantsValues: children ? [] : undefined,
+          descendantsWithoutTwig: children ? [] : undefined,
+          descendantsWithoutTwigValues: children ? [] : undefined,
           fullSearchKey: typeof label === 'string' ? label : '',
           disabledChildren: [],
           disabledChildrenValues: [],
@@ -146,7 +151,7 @@ export function flatTreeData(
         target.push(current);
 
         // 加到可展开列表
-        if (isTruthyArray(current.origin.children)) {
+        if (isTruthyArray(children)) {
           expandableList.push(current);
           expandableValues.push(current.value);
         }
@@ -178,8 +183,8 @@ export function flatTreeData(
           current.parents!.forEach(p => (p.fullSearchKey += current.fullSearchKey));
         }
 
-        if (isArray(item.children)) {
-          flat(target, item.children, zIndex + 1, current);
+        if (isArray(children)) {
+          flat(target, children, zIndex + 1, current);
         }
       });
     }
@@ -285,6 +290,7 @@ export function getToolbarConf(toolbar?: TreeProps['toolbar']) {
 export const defaultProps = {
   valueGetter: defaultValueGetter,
   labelGetter: defaultLabelGetter,
+  childrenGetter: defaultChildrenGetter,
   indicatorLine: true,
   checkStrictly: true,
 };

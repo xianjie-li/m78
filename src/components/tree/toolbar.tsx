@@ -6,7 +6,7 @@ import { Input } from 'm78/input';
 import { useFn } from '@lxjx/hooks';
 import { If } from 'm78/fork';
 import { filterIncludeDisableChildNode, isMultipleCheck, isTruthyArray } from './common';
-import { Share } from './types';
+import { Share } from './_types';
 import functions from './functions';
 import { keywordChangeHandle } from './private-functions';
 
