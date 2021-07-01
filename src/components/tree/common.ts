@@ -8,6 +8,7 @@ import {
 import { useMemo } from 'react';
 import {
   ToolbarConf,
+  TreeBaseDataSourceItem,
   TreeBaseMultipleChoiceProps,
   TreeBaseSingleChoiceProps,
   TreeDataSourceItem,
@@ -16,12 +17,6 @@ import {
   TreePropsMultipleChoice,
   TreeValueType,
 } from './_types';
-
-export const defaultValueGetter = (item: TreeDataSourceItem) => item.value! || item.label;
-
-export const defaultLabelGetter = (item: TreeDataSourceItem) => item.label!;
-
-export const defaultChildrenGetter = (item: TreeDataSourceItem) => item.children!;
 
 /** 预设尺寸 */
 export const sizeMap = {
@@ -49,8 +44,8 @@ const connectVal2Array = (val: any, array?: any[]) => {
  * 将OptionsItem[]的每一项转换为treeNode并平铺到数组返回, 同时返回一些实用信息
  * @param optionList - OptionsItem选项组，为空或不存在时返回空数组
  * @param conf
- * @param conf.valueGetter - 获取value的方法
- * @param conf.labelGetter - 获取label的方法
+ * @param conf.valueKey - 获取value的key
+ * @param conf.labelKey - 获取label的方法
  * @param conf.skipSearchKeySplicing - 关闭关键词拼接，不需要时关闭以提升性能
  * @returns returns
  * @returns returns.list - 平铺的列表
@@ -64,9 +59,9 @@ const connectVal2Array = (val: any, array?: any[]) => {
 export function flatTreeData(
   optionList: TreeDataSourceItem[],
   conf: {
-    valueGetter: NonNullable<TreeProps['valueGetter']>;
-    labelGetter: NonNullable<TreeProps['labelGetter']>;
-    childrenGetter: NonNullable<TreeProps['childrenGetter']>;
+    valueKey: NonNullable<TreeProps['valueKey']>;
+    labelKey: NonNullable<TreeProps['labelKey']>;
+    childrenKey: NonNullable<TreeProps['childrenKey']>;
     skipSearchKeySplicing?: boolean;
   },
 ) {
@@ -77,7 +72,7 @@ export function flatTreeData(
   const disabledValues: TreeValueType[] = [];
   const zList: TreeNode[][] = [];
   const zListValues: TreeValueType[][] = [];
-  const { valueGetter, labelGetter, childrenGetter, skipSearchKeySplicing } = conf;
+  const { valueKey, labelKey, childrenKey, skipSearchKeySplicing } = conf;
 
   // 将指定的TreeNode添加到它所有父级的descendants列表中
   function fillParentsDescendants(item: TreeNode) {
@@ -104,9 +99,9 @@ export function flatTreeData(
       const siblingsValues: TreeValueType[] = [];
 
       optList.forEach((item, index) => {
-        const val = valueGetter(item);
-        const label = labelGetter(item);
-        const children = childrenGetter(item);
+        const val = getValue(item, { valueKey, labelKey });
+        const label = item[labelKey];
+        const children = item[childrenKey];
 
         const current: TreeNode = {
           // ...item,
@@ -136,7 +131,7 @@ export function flatTreeData(
 
         // 添加父级节点value
         if (isArray(current.parents)) {
-          current.parentsValues = current.parents.map(it => valueGetter(it.origin));
+          current.parentsValues = current.parents.map(it => it.origin[valueKey]);
         }
 
         // 为父节点添加child
@@ -287,10 +282,20 @@ export function getToolbarConf(toolbar?: TreeProps['toolbar']) {
   };
 }
 
+/** 根据props获取value */
+export function getValue(
+  item: TreeBaseDataSourceItem,
+  props: { labelKey: string; valueKey: string },
+) {
+  const v = item[props.valueKey];
+  return isTruthyOrZero(v) ? v : item[props.labelKey];
+}
+
 export const defaultProps = {
-  valueGetter: defaultValueGetter,
-  labelGetter: defaultLabelGetter,
-  childrenGetter: defaultChildrenGetter,
+  dataSource: [],
+  valueKey: 'value',
+  labelKey: 'label',
+  childrenKey: 'children',
   indicatorLine: true,
   checkStrictly: true,
 };

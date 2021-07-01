@@ -147,7 +147,7 @@ export type TableColumns = TableColumn[];
  * */
 export interface TableProps
   extends ComponentBaseProps,
-    Omit<TreeBaseProps<TableDataSourceItem, TableTreeNode>, 'labelGetter'> {
+    Omit<TreeBaseProps<TableDataSourceItem, TableTreeNode>, 'labelKey'> {
   /** 表格列配置 */
   columns: TableColumns;
   /**

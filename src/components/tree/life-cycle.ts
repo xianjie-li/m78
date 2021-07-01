@@ -15,14 +15,7 @@ export function useTreeLifeCycle(
   hasSearch: boolean,
 ) {
   const { state, setState, self } = treeState;
-  const {
-    defaultOpenAll,
-    defaultOpenZIndex,
-    dataSource,
-    valueGetter,
-    labelGetter,
-    childrenGetter,
-  } = props;
+  const { defaultOpenAll, defaultOpenZIndex, dataSource, valueKey, labelKey, childrenKey } = props;
 
   // 同步平铺dataSource
   useEffect(() => {
@@ -41,9 +34,9 @@ export function useTreeLifeCycle(
 
     // setTimeout(() => {
     const flatTree = flatTreeData(dataSource, {
-      valueGetter: valueGetter!,
-      labelGetter: labelGetter!,
-      childrenGetter: childrenGetter!,
+      valueKey: valueKey!,
+      labelKey: labelKey!,
+      childrenKey: childrenKey!,
       skipSearchKeySplicing: !hasSearch,
       // !share.toolbar?.search,
     });

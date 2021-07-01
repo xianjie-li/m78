@@ -1,6 +1,14 @@
-import { useCheck, useSelf, useSetState, useVirtualList, UseVirtualListOption } from '@lxjx/hooks';
+import {
+  useCheck,
+  useFn,
+  useSelf,
+  useSetState,
+  useVirtualList,
+  UseVirtualListOption,
+} from '@lxjx/hooks';
 import { useMemo } from 'react';
 import { getShowList } from 'm78/tree/private-functions';
+import { DragFullEvent } from 'm78/dnd';
 import {
   _InsideState,
   TreeBaseNode,
@@ -9,7 +17,7 @@ import {
   TreeNode,
   TreeValueType,
 } from './_types';
-import { isCheck, isMultipleCheck, useValCheckArgDispose } from './common';
+import { getValue, isCheck, isMultipleCheck, useValCheckArgDispose } from './common';
 
 /**
  * 抽象的的树状态
@@ -45,7 +53,7 @@ export default function _useTreeStates<Node = TreeNode, DS = TreeDataSourceItem>
   const openChecker = useCheck<TreeValueType, TreeBaseNode<Node, DS>>({
     ...props,
     options: list as any,
-    collector: item => props.valueGetter!(item.origin as any),
+    collector: item => getValue(item.origin, props as any),
     triggerKey: 'onOpensChange',
     valueKey: 'opens',
     defaultValueKey: 'defaultOpens',
@@ -61,7 +69,7 @@ export default function _useTreeStates<Node = TreeNode, DS = TreeDataSourceItem>
   const valChecker = useCheck<TreeValueType, TreeBaseNode<Node, DS>>({
     ...(checkProps as any),
     options: list as any,
-    collector: item => props.valueGetter!(item.origin as any),
+    collector: item => getValue(item.origin, props as any),
     disables: state.nodes?.disabledValues,
   });
 
@@ -88,6 +96,63 @@ export default function _useTreeStates<Node = TreeNode, DS = TreeDataSourceItem>
     },
   });
 
+  const handleDrag = useFn(({ target, source, status }: DragFullEvent<TreeBaseNode>) => {
+    const sNode = source.data;
+    const tNode = target.data;
+
+    // source所在列表
+    let sourceList = props.dataSource || [];
+    // target所在列表
+    let targetList = props.dataSource || [];
+
+    if (sNode.parents?.length) {
+      const parent = sNode.parents[sNode.parents.length - 1];
+      sourceList = parent.children as any;
+    }
+
+    if (tNode.parents?.length) {
+      const parent = tNode.parents[tNode.parents.length - 1];
+      targetList = parent.children as any;
+    }
+
+    // 移除source
+    const sourceInd = sourceList.findIndex(item => item.value === sNode.value);
+    if (sourceInd !== -1) {
+      sourceList.splice(sourceInd, 1);
+    }
+
+    if (status.dragTop || status.dragBottom) {
+      const targetInd = targetList.findIndex(item => item.value === tNode.value);
+      console.log(targetInd);
+      if (targetInd !== -1) {
+        if (status.dragTop) {
+          if (targetInd === 0) {
+            targetList.unshift(sNode.origin as any);
+          } else {
+            targetList.splice(targetInd, 0, sNode.origin as any);
+          }
+        }
+
+        if (status.dragBottom) {
+          targetList.splice(targetInd + 1, 0, sNode.origin as any);
+        }
+      }
+    }
+
+    // TODO: 改为dragOver
+    if (status.dragCenter) {
+      if (!tNode.origin[props.childrenKey!]) {
+        tNode.origin[props.childrenKey!] = [];
+      }
+
+      tNode.origin[props.childrenKey!].push(sNode.origin as any);
+    }
+
+    console.log(sNode, tNode);
+    props.onDataSourceChange?.([...props.dataSource!]);
+    // sNode.parents.findIndex(item => item.value === sNode.value);
+  });
+
   /** 单选多选类型检测 */
   const isSCheck = isCheck(props);
   const isMCheck = isMultipleCheck(props) && !isSCheck; /* 权重低于单选 */
@@ -104,5 +169,6 @@ export default function _useTreeStates<Node = TreeNode, DS = TreeDataSourceItem>
     showList,
     isSCheck,
     isMCheck,
+    handleDrag,
   };
 }

@@ -63,12 +63,12 @@ export interface TreeBaseProps<Item, Node> {
   expansionIcon?:
     | React.ReactNode
     | ((open: boolean, node: Node, className: string) => React.ReactNode);
-  /** 如何从选项中拿到value，默认是 item => item.value || item.label, 如果无value且label不为字符类型，应该手动传入value来禁用默认的回退行为 */
-  valueGetter?: (optItem: Item) => TreeValueType;
-  /** 如何从选项中拿到label，默认是 item => item.label */
-  labelGetter?: (optItem: Item) => React.ReactNode;
-  /** 如何从选项中拿到children，默认是 item => item.children */
-  childrenGetter?: (optItem: Item) => Item[];
+  /** 'value' | 自定义用于存取value的key, 当没有获取到value时，会以label作为value，如果无value且label不为字符类型，应该手动传入value来禁用默认的回退行为 */
+  valueKey?: string;
+  /** 'label' | 自定义用于存取label的key */
+  labelKey?: string;
+  /** 'children' | 自定义用于获取children的key */
+  childrenKey?: string;
 }
 
 /** 单选props */

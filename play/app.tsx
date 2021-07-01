@@ -10,7 +10,7 @@ import { Tree } from 'm78/tree';
 const App = () => {
   const dark = m78Config.useState(state => state.darkMode);
 
-  const [ds] = useState(() => mockTreeData(4, 4));
+  const [ds, setDs] = useState(() => mockTreeData(4, 4));
 
   return (
     <div className="p-32">
@@ -19,7 +19,13 @@ const App = () => {
       </Button>
       <Divider />
 
-      <Tree dataSource={ds} rainbowIndicatorLine height={400} defaultOpenAll />
+      <Tree
+        dataSource={ds}
+        onDataSourceChange={setDs}
+        rainbowIndicatorLine
+        height={400}
+        defaultOpenAll
+      />
     </div>
   );
 };

@@ -117,7 +117,7 @@ function Tree(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
     const list = isVirtual ? renderVirtualList() : renderNormalList();
 
     if (123) {
-      return <DNDContext>{list}</DNDContext>;
+      return <DNDContext onAccept={treeState.handleDrag}>{list}</DNDContext>;
     }
 
     return list;

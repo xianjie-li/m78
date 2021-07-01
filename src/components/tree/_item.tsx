@@ -2,13 +2,13 @@ import React from 'react';
 import cls from 'clsx';
 import { If, Switch } from 'm78/fork';
 import { LoadingOutlined } from 'm78/icon';
-import { defer, isFunction } from '@lxjx/utils';
+import { isFunction } from '@lxjx/utils';
 import { stopPropagation } from 'm78/util';
 import { areEqual } from 'react-window';
-import { DND, DNDNode, DragPartialEvent } from 'm78/dnd';
+import { DND } from 'm78/dnd';
 import useTreeItem from './_use-tree-item';
 import { highlightKeyword } from './common';
-import { ItemProps, TreeBasePropsMix, TreeNode } from './_types';
+import { ItemProps, TreeBasePropsMix } from './_types';
 
 const TreeItem = React.memo(({ data, share, className, style, size }: ItemProps) => {
   const { treeState, props, isVirtual } = share;
@@ -114,35 +114,8 @@ const TreeItem = React.memo(({ data, share, className, style, size }: ItemProps)
     return <span>{originDs.label}</span>;
   }
 
-  function handleDrag(e: DragPartialEvent<TreeNode>) {
-    const node = e.source.data;
-
-    if (node) {
-      treeState.self.currentDragNode = node;
-
-      if (treeState.openChecker.isChecked(node.value)) {
-        itemState.toggleHandle();
-      }
-    }
-  }
-
-  function handleDrop() {
-    treeState.self.currentDragNode = undefined;
-  }
-
-  const dndProps = {
-    data,
-    enableDrop: {
-      top: true,
-      center: true,
-      bottom: true,
-    },
-    onDrag: handleDrag,
-    onDrop: handleDrop,
-  };
-
   return (
-    <DND {...dndProps}>
+    <DND {...itemState.dndProps}>
       {({ innerRef, status }) => (
         <div
           ref={innerRef}
@@ -162,8 +135,22 @@ const TreeItem = React.memo(({ data, share, className, style, size }: ItemProps)
             ...style,
           }}
         >
-          {status.dragTop && <div className="m78-dnd-box_top m78-tree_drag-top-node" />}
-          {status.dragBottom && <div className="m78-dnd-box_bottom m78-tree_drag-bottom-node" />}
+          {status.dragTop && (
+            <div
+              className="m78-dnd-box_top m78-tree_drag-top-node"
+              style={{
+                left: data.parents?.length ? data.parents.length * iconStyle.width : undefined,
+              }}
+            />
+          )}
+          {status.dragBottom && (
+            <div
+              className="m78-dnd-box_bottom m78-tree_drag-bottom-node"
+              style={{
+                left: data.parents?.length ? data.parents.length * iconStyle.width : undefined,
+              }}
+            />
+          )}
           {itemState.isSCheck && itemState.isChecked && <div className="m78-tree_checked" />}
           <div className="m78-tree_main">
             {renderIdent()}

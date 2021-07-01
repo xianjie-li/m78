@@ -9,6 +9,7 @@ import React from 'react';
 import { stopPropagation } from 'm78/util';
 import { Check } from 'm78/check';
 import { SizeEnum } from 'm78/types';
+import { DragPartialEvent } from 'm78/dnd';
 import { filterIncludeDisableChildNode, isTruthyArray } from './common';
 import functions from './functions';
 import { Share, TreeBasePropsMix, TreeNode } from './_types';
@@ -24,9 +25,15 @@ interface Props<Node = TreeNode> {
 
 const openRotateClassName = 'm78-tree_open-icon';
 
+const enableDrop = {
+  top: true,
+  center: true,
+  bottom: true,
+};
+
 export default function _useTreeItem({ data, treeState, props }: Props) {
-  const { openChecker, valChecker, loadingChecker, isSCheck, isMCheck } = treeState;
-  const { onLoad, checkStrictly, dataSource = [], onDataSourceChange, expansionIcon } = props;
+  const { openChecker, valChecker, loadingChecker, isSCheck, isMCheck, self } = treeState;
+  const { onLoad, checkStrictly, dataSource, onDataSourceChange, expansionIcon } = props;
 
   const originDs = data.origin;
 
@@ -122,6 +129,24 @@ export default function _useTreeItem({ data, treeState, props }: Props) {
     }
   });
 
+  /** DND拖动首帧的处理函数 */
+  const handleDrag = useFn((e: DragPartialEvent<TreeNode>) => {
+    const node = e.source.data;
+
+    if (node) {
+      self.currentDragNode = node;
+
+      if (openChecker.isChecked(node.value)) {
+        toggleHandle();
+      }
+    }
+  });
+
+  /** DND拖动结束的处理函数 */
+  function handleDrop() {
+    treeState.self.currentDragNode = undefined;
+  }
+
   /** 检测是否半选 */
   function checkIsPartial() {
     // 当前项已选中
@@ -166,12 +191,12 @@ export default function _useTreeItem({ data, treeState, props }: Props) {
       const _children = await onLoad(data);
 
       if (isArray(_children)) {
-        data.origin.children = _children;
+        data.origin[props.childrenKey!] = _children;
       } else {
         data.origin.isLeaf = true;
       }
 
-      const newDs = [...dataSource];
+      const newDs = [...dataSource!];
 
       onDataSourceChange?.(newDs);
     } catch (e) {
@@ -210,6 +235,14 @@ export default function _useTreeItem({ data, treeState, props }: Props) {
     );
   }
 
+  /** 透传给DND的props */
+  const dndProps = {
+    data,
+    enableDrop,
+    onDrag: handleDrag,
+    onDrop: handleDrop,
+  };
+
   return {
     value,
     hasChildren,
@@ -231,5 +264,6 @@ export default function _useTreeItem({ data, treeState, props }: Props) {
     loadHandle,
     renderExpansionIcon,
     renderMultiCheck,
+    dndProps,
   };
 }
