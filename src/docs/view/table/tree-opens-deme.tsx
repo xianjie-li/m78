@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Tree, TreeDataSourceItem, TreeValueType } from 'm78/tree';
+import { TreeValueType } from 'm78/tree';
 import { Spacer } from 'm78/layout';
 import { Table, TableColumns, TableDataSourceItem } from 'm78/table';
 import { mockTreeData } from './mock-tree-data';

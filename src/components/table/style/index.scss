@@ -22,7 +22,8 @@
     vertical-align: top;
     width: auto !important;
 
-    &.__left, &.__right {
+    &.__left,
+    &.__right {
       position: sticky;
       background-color: var(--m78-component-bg);
       z-index: 13;
@@ -41,7 +42,8 @@
     min-width: auto !important;
     //width: 0;   // 配合自动布局的table能实现自适应宽度
 
-    &.__left, &.__right {
+    &.__left,
+    &.__right {
       &::after {
         content: '';
         position: absolute;
@@ -90,7 +92,8 @@
   }
 
   // 表头表底基础样式
-  thead, tfoot {
+  thead,
+  tfoot {
     font-weight: bold;
     color: var(--m78-color-title);
     white-space: nowrap;
@@ -141,7 +144,7 @@
     align-items: center;
     word-break: break-word;
     white-space: nowrap;
-    min-width: 100%;  // 防止总列宽不足容器宽度，但是设置了maxWidth相关的属性时，内容被裁剪
+    min-width: 100%; // 防止总列宽不足容器宽度，但是设置了maxWidth相关的属性时，内容被裁剪
     z-index: 1;
 
     .m78-table_cell {
@@ -182,18 +185,20 @@
     }
   }
 
-
   // ##########################
   // fixed列和表头
   // ##########################
 
-  &.__regular thead, &.__border thead, &.__regular tfoot, &.__border tfoot {
+  &.__regular thead,
+  &.__border thead,
+  &.__regular tfoot,
+  &.__border tfoot {
     td {
       // 模拟下边框修复不显示的问题
       &::after {
         position: absolute;
         content: '';
-        width: 104%;  // 防止出现间隔
+        width: 104%; // 防止出现间隔
         left: -1px;
         bottom: -1px;
         height: 1px;
@@ -211,7 +216,8 @@
     }
   }
 
-  &.__regular tfoot, &.__border tfoot {
+  &.__regular tfoot,
+  &.__border tfoot {
     td::after {
       bottom: unset;
       top: 1px;

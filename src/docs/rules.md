@@ -35,7 +35,7 @@ group:
   - 每个关键样式部位都包含用于定制的类名
   - 可以将不同的样式特征声明到不同的类名下方便通过 props 关闭，如`__shadow`, `__hover`分别用于控制组件的阴影和交互样式
   - 用于定制组件某个部位的 prop 命名为 `customXXX`, 如果是一个定制函数`(xx) => node`, 命名为 `XXXCustomer`
-  - 大部分组件都可以支持Customer接口来定制组件整体样式，还可以支持特定部位的Customer如TitleCustomer
+  - 大部分组件都可以支持 Customer 接口来定制组件整体样式，还可以支持特定部位的 Customer 如 TitleCustomer
   - 扩展某处节点的 prop 名使用`xxExtraNode`, 如果是替换型的 props, 直接使用 `xxxNode`
 
 ## 组件约定

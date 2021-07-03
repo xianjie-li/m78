@@ -4,7 +4,6 @@ import { TableDivideStyleEnum } from './_types';
 import { defaultValueGetter } from './_functions';
 
 export const defaultProps = {
-  dataSource: [],
   columns: [],
   primaryKey: '',
   divideStyle: TableDivideStyleEnum.regular,
@@ -13,6 +12,7 @@ export const defaultProps = {
   cellMaxWidth: '300px',
   checkFieldValid: isTruthyOrZero,
   ...Tree.defaultProps,
+  valueKey: 'id',
   valueGetter: defaultValueGetter,
   customScrollbar: true,
 };

@@ -8,6 +8,10 @@ group:
 
 # Table 表格
 
+<h2 class="color-red">deprecated!!!</h2>
+
+**HTML table 的渲染性能非常低，并且很多布局特性在不同浏览器上表现并不一致，标记结构非常受限，所以此组件即将重构为使用传统布局模拟的表格（会包含扩展的 API 和少量的现有 API 更改）。**
+
 通过二维数据表展示信息
 
 ## 常规
@@ -20,21 +24,20 @@ group:
 
 ### 字段值渲染
 
-* `field`支持对嵌套对象、数组项取值
-* `render`可以用来进行一些复杂列的渲染
-* 列不一定要对应一个数据源字段、可以通过`render`来生成虚拟列
+- `field`支持对嵌套对象、数组项取值
+- `render`可以用来进行一些复杂列的渲染
+- 列不一定要对应一个数据源字段、可以通过`render`来生成虚拟列
 
 <code src="./render-demo.tsx" />
 
-
 ### 大数据量渲染
 
-html表格的渲染效率是非常低的，这导致如果表格数据量很多会非常卡顿，如果你要渲染的数据很多，可以通过开箱即用的虚拟滚动来对其进行优化。
+html 表格的渲染效率是非常低的，这导致如果表格数据量很多会非常卡顿，如果你要渲染的数据很多，可以通过开箱即用的虚拟滚动来对其进行优化。
 
-* 由于表格项是惰性加载的，如果列的内容宽度波动较大，建议为其设置一个固定的宽度, 否则表格会在子项宽度变更时会持续动态调整列宽
-* 部分浏览器在使用默认滚动条时会包含滚动性能优化，关闭滚动条定制可以提升一定的性能
+- 由于表格项是惰性加载的，如果列的内容宽度波动较大，建议为其设置一个固定的宽度, 否则表格会在子项宽度变更时会持续动态调整列宽
+- 部分浏览器在使用默认滚动条时会包含滚动性能优化，关闭滚动条定制可以提升一定的性能
 
-渲染99999条记录
+渲染 99999 条记录
 
 <code src="./big-data-demo.tsx" />
 
@@ -46,12 +49,11 @@ html表格的渲染效率是非常低的，这导致如果表格数据量很多�
 
 <code src="./style-demo.tsx" />
 
-### 单元格props
+### 单元格 props
 
-单元格props能够为每个单元格传入独立的props, 可以用来配置样式、对齐、事件等, 此外, 你还通过在`column.props`配置针对列的prop
+单元格 props 能够为每个单元格传入独立的 props, 可以用来配置样式、对齐、事件等, 此外, 你还通过在`column.props`配置针对列的 prop
 
 <code src="./cell-props-demo.tsx" />
-
 
 ### 固定列
 
@@ -59,21 +61,21 @@ html表格的渲染效率是非常低的，这导致如果表格数据量很多�
 
 <code src="./fixed-demo.tsx" />
 
-
 ### 合并单元格
 
 对单元格进行行或列合并, 有以下注意事项:
-- 对于被合并的行或列，必须为其返回0来腾出位置, 否则会导致表格排列异常
-- fixed列和普通列不能进行合并
+
+- 对于被合并的行或列，必须为其返回 0 来腾出位置, 否则会导致表格排列异常
+- fixed 列和普通列不能进行合并
 - 合并不作用于表头
 
 <code src="./span-demo.tsx" />
 
 ### valueGetter
 
-排序、选项、树形表格等功能需要获取能表示记录的唯一值， valueGetter用于获取这个字段，由于id和key是非常常见的记录主键，所以会作为默认值进行获取
+排序、选项、树形表格等功能需要获取能表示记录的唯一值， valueGetter 用于获取这个字段，由于 id 和 key 是非常常见的记录主键，所以会作为默认值进行获取
 
-将记录组件指定为uid
+将记录组件指定为 uid
 
 ```tsx | pure
 <Table valueGetter={item => item.uid} />
@@ -83,13 +85,13 @@ html表格的渲染效率是非常低的，这导致如果表格数据量很多�
 
 为列配置`sort`来开启排序，然后通过`onSortChange`来排序数据源并显示
 
-> 此示例是针对静态数据的，实际使用时一般会通过onSortChange来监听排序状态变更并根据排序参数重新请求后端接口
+> 此示例是针对静态数据的，实际使用时一般会通过 onSortChange 来监听排序状态变更并根据排序参数重新请求后端接口
 
 <code src="./sort-demo.tsx" />
 
 ### 过滤
 
-通过列的extra配置在表头挂载额外的节点，以此来实现过滤逻辑
+通过列的 extra 配置在表头挂载额外的节点，以此来实现过滤逻辑
 
 <code src="./filter-demo.tsx" />
 
@@ -99,7 +101,6 @@ html表格的渲染效率是非常低的，这导致如果表格数据量很多�
 
 <code src="./summary-demo.tsx" />
 
-
 ## 选择
 
 ### 多选
@@ -108,19 +109,17 @@ html表格的渲染效率是非常低的，这导致如果表格数据量很多�
 
 <code src="./mcheck-demo.tsx" />
 
-
 ### 单选
 
 单选的受控使用示例，可通过`value`/`defaultValue`/`onChange`自行控制受控和非受控件的使用方式
 
 <code src="./scheck-demo.tsx" />
 
-
 ## 树形表格
 
 ### 基础示例
 
-使用树形表格时, dataSource遵循一些特定的配置, 比如`children`配置其子项、`isLeaf`配置其是否为叶子节点.
+使用树形表格时, dataSource 遵循一些特定的配置, 比如`children`配置其子项、`isLeaf`配置其是否为叶子节点.
 
 > 树形表格和[tree](/docs/form/tree)共用一套底层的树形处理逻辑，仅对部分用法进行了增减
 
@@ -128,13 +127,13 @@ html表格的渲染效率是非常低的，这导致如果表格数据量很多�
 
 ### 多选
 
-多选，支持受控、非受控使用, 可传入checkStrictly来关闭父子级的选中关联
+多选，支持受控、非受控使用, 可传入 checkStrictly 来关闭父子级的选中关联
 
 <code src="./tree-mcheck-demo.tsx" />
 
 ### 单选
 
-单选，支持受控、非受控使用，可通过checkTwig开启树枝节点选中， emptyTwigAsNode将空的树节点视为子节点并使其可选中
+单选，支持受控、非受控使用，可通过 checkTwig 开启树枝节点选中， emptyTwigAsNode 将空的树节点视为子节点并使其可选中
 
 <code src="./tree-scheck-demo.tsx" />
 
@@ -146,7 +145,7 @@ html表格的渲染效率是非常低的，这导致如果表格数据量很多�
 
 ### 动态加载
 
-传入onLoad开启异步加载子项数据，它返回 Promise，该 Promise resolve 树节点的子项
+传入 onLoad 开启异步加载子项数据，它返回 Promise，该 Promise resolve 树节点的子项
 
 <code src="./tree-dynamic-load-demo.tsx" />
 
@@ -155,7 +154,6 @@ html表格的渲染效率是非常低的，这导致如果表格数据量很多�
 同一级下只会同时展开一个
 
 <code src="./tree-accordion-demo.tsx" />
-
 
 ## Api
 
@@ -248,9 +246,8 @@ interface TableProps {
    * - 部分被内部占用的props无效
    * */
   props?:
-          | React.PropsWithoutRef<JSX.IntrinsicElements['td']>
-          | ((cellMeta: TableMeta) => React.PropsWithoutRef<JSX.IntrinsicElements['td']> | void);
-
+    | React.PropsWithoutRef<JSX.IntrinsicElements['td']>
+    | ((cellMeta: TableMeta) => React.PropsWithoutRef<JSX.IntrinsicElements['td']> | void);
 
   /* ############## 单选/多选 ############## */
   /** 是否可单选 (使用高亮样式) */
@@ -270,8 +267,7 @@ interface TableProps {
   defaultValue?: TreeValueType;
   /** 选项的变更回调 (多选时，TreeValueType和TreeNode类型为数组) */
   onChange?: (value: TreeValueType, extra: TableTreeNode) => void;
-  
-  
+
   /* ############## 树常用配置 ############## */
   /**
    * 开启异步加载数据，启用后，除了配置了OptionsItem.isLeaf的节点和已有含值子级的节点外，一律可展开，并在展开时触发此回调
@@ -335,8 +331,8 @@ interface TableDataSourceItem {
    * - 部分被内部占用的props无效
    * */
   props?:
-          | React.PropsWithoutRef<JSX.IntrinsicElements['td']>
-          | ((cellMeta: TableMeta) => React.PropsWithoutRef<JSX.IntrinsicElements['td']> | void);
+    | React.PropsWithoutRef<JSX.IntrinsicElements['td']>
+    | ((cellMeta: TableMeta) => React.PropsWithoutRef<JSX.IntrinsicElements['td']> | void);
   /** 在列头渲染的额外内容 */
   extra?: React.ReactNode | ((cellMeta: TableMeta) => React.ReactNode);
   /**

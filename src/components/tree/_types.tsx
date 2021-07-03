@@ -1,6 +1,7 @@
 import { FormLikeWithExtra } from '@lxjx/hooks';
 import { ComponentBaseProps, DataSourceItem, SizeKeys } from 'm78/types';
 import React from 'react';
+import { DragFullEvent } from 'm78/dnd';
 import useTreeStates from './_use-tree-states';
 import { defaultProps, flatTreeData } from './common';
 
@@ -69,6 +70,14 @@ export interface TreeBaseProps<Item, Node> {
   labelKey?: string;
   /** 'children' | 自定义用于获取children的key */
   childrenKey?: string;
+
+  /* ############## 拖动 ############## */
+  /** 开启拖动排序 */
+  draggable?: boolean;
+  /** 拖动并触发重新排序时调用, 内置的排序逻辑仅作用于本地数据，用户应在此方法中完成排序数据的持久化 */
+  onDragAccept?: (event: DragFullEvent, nextDataSource: Item[]) => void;
+  /** 关闭默认的拖动数据源处理逻辑, 交由用户自行更新dataSource */
+  skipDragDatasourceProcess?: boolean;
 }
 
 /** 单选props */

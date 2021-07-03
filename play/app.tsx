@@ -10,7 +10,7 @@ import { Tree } from 'm78/tree';
 const App = () => {
   const dark = m78Config.useState(state => state.darkMode);
 
-  const [ds, setDs] = useState(() => mockTreeData(4, 4));
+  const [ds, setDs] = useState(() => mockTreeData(4, 3));
 
   return (
     <div className="p-32">
@@ -20,8 +20,12 @@ const App = () => {
       <Divider />
 
       <Tree
+        draggable
         dataSource={ds}
         onDataSourceChange={setDs}
+        onDragAccept={(e, ds1) => {
+          console.log(e, ds1);
+        }}
         rainbowIndicatorLine
         height={400}
         defaultOpenAll

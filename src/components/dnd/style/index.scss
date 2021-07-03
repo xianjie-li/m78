@@ -25,6 +25,7 @@
     position: absolute;
     background-color: var(--m78-color);
     border-radius: var(--m78-border-radius);
+    pointer-events: none;
   }
 
   &_left {

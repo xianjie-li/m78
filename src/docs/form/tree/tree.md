@@ -80,7 +80,16 @@ group:
 
 ## 拖拽模式
 
-🚧 此功能尚处于开发阶段，会在后续版本放出 🚧
+拖动树节点进行排序
+
+通常，对一个树节点进行拖动排序，需要执行以下操作:
+
+- 拖动到放置目标前或后, 表示行为 `移动为目标的兄弟节点`, 需要将拖动目标从当前位置移除, 并插入放置目标的前面或后面
+- 拖动到放置目标上方, 表示行为 `移动到指定目录下`, 需要将拖动目标从当前位置移除, 并将其添加到目标元素的`children`列表最后
+
+为了方便，tree 组件会自动对 dataSource 进行如上操作，但这并不会影响你存放在服务器、storage、sqlLite 等地方的原数据, 你需要监听`onDragAccept`来自行持久化更改数据源, 如果你的存储数据源和当前数据源结构完全一致，甚至可以直接将 onDragAccept 的 nextDataSource 参数持久化保存
+
+如果预设的本地数据源更改行为不符合你的排序行为预期，可以通过`skipDragDatasourceProcess=false`关闭对本地 dataSource 自动进行排序处理的行为，完全由用户控制 dataSource 的表更
 
 <code src="./draggable-demo.tsx" />
 
@@ -112,7 +121,6 @@ interface TreeProps {
    * - 内容不再支持超出自动折行，一律使用size或itemHeight指定的高度
    * */
   height?: number | string;
-  
 
   /* ############## 单选/多选 ############## */
   /** 是否可单选 (使用高亮样式) */
@@ -133,7 +141,6 @@ interface TreeProps {
   /** 选项的变更回调 (多选时，TreeValueType和TreeNode类型为数组) */
   onChange?: (value: TreeValueType, extra: TreeNode) => void;
 
-  
   /* ############## 其他常用配置 ############## */
   /**
    * 开启异步加载数据，启用后，除了配置了OptionsItem.isLeaf的节点和已有含值子级的节点外，一律可展开，并在展开时触发此回调
@@ -160,8 +167,7 @@ interface TreeProps {
   defaultOpens?: TreeValueType[];
   /** 打开节点变更时触发 */
   onOpensChange?: (nextOpens: TreeValueType[], nodes: TreeNode[]) => void;
-  
-  
+
   /* ############## 定制选项 ############## */
   /** 自定义展开标识图标, 如果将className添加到节点上，会在展开时将其旋转90deg, 也可以通过open自行配置 */
   expansionIcon?: React.ReactNode | ((open: boolean, className: string) => React.ReactNode);
@@ -189,6 +195,14 @@ interface TreeProps {
   indicatorLine?: boolean;
   /** 彩虹色连接指示线 */
   rainbowIndicatorLine?: boolean;
+
+  /* ############## 拖动 ############## */
+  /** 开启拖动排序 */
+  draggable?: boolean;
+  /** 拖动并触发重新排序时调用, 内置的排序逻辑仅作用于本地数据，用户应在此方法中完成排序数据的持久化 */
+  onDragAccept?: (event: DragFullEvent, nextDataSource: Item[]) => void;
+  /** 关闭默认的拖动数据源处理逻辑, 交由用户自行更新dataSource */
+  skipDragDatasourceProcess?: boolean;
 }
 ```
 

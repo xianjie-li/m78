@@ -3,7 +3,7 @@ import { DNDProps } from './types';
 import { edgeRatio, ignoreReg, raf } from './consts';
 
 /** 自动滚动加速度，此值越小, 超出时自动滚动的速度越快 */
-const AutoScrollDiffSpeed = 20;
+const AutoScrollDiffSpeed = 10;
 
 /** 在距离边缘此偏移时即开始滚动 */
 const AutoScrollOffset = 16;
@@ -222,10 +222,16 @@ export function autoScroll(el: HTMLElement & { ctx: AutoScrollCtx }) {
   });
 }
 
-/** 对象是否包含属性值都为true的项 */
+/** 检测boolean为key的对象是否包含属性值为true的项 */
 export function allPropertyHasTrue(obj: AnyObject) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   return Object.entries(obj).some(([_, _enable]) => _enable);
+}
+
+/** 检测boolean为key对象是否所有项都为true */
+export function allPropertyAllTrue(obj: AnyObject) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  return Object.entries(obj).every(([_, _enable]) => _enable);
 }
 
 /** 左侧对象的所有值是否都与右侧对象相等 */

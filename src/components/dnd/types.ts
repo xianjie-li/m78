@@ -132,7 +132,7 @@ export interface AllowPosition {
 export interface EnableInfos extends AllowPosition {
   /** 至少有一个方向启用 */
   enable: boolean;
-  /** 任意方向都可放置，设置后其他方向配置值都会为false */
+  /** 任意方向都可放置 */
   all: boolean;
 }
 

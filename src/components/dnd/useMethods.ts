@@ -11,6 +11,7 @@ import {
   isBetween,
   getAutoScrollStatus,
   autoScrollByStatus,
+  allPropertyAllTrue,
 } from './common';
 import {
   ChangeHandle,
@@ -21,7 +22,7 @@ import {
   EnableInfos,
 } from './types';
 
-import { initEnableDragsDeny, initStatus } from './consts';
+import { initEnableDragsPass, initStatus, initEnableDragsDeny } from './consts';
 
 export function useMethods(share: Share) {
   const {
@@ -88,7 +89,7 @@ export function useMethods(share: Share) {
       );
 
       const nextStatus: DragStatus = {
-        dragOver: dragOver && _enableDropInfo.all && !isCancel,
+        dragOver: dragOver /* && _enableDropInfo.all */ && !isCancel,
         dragTop: _enableDropInfo.top && otherS.dragTop,
         dragBottom: _enableDropInfo.bottom && otherS.dragBottom,
         dragLeft: _enableDropInfo.left && otherS.dragLeft,
@@ -99,7 +100,8 @@ export function useMethods(share: Share) {
       };
 
       if (
-        nextStatus.dragOver ||
+        (_enableDropInfo.all &&
+          nextStatus.dragOver) /* 开启全部时，dragOver为true即视为非常规状态 */ ||
         nextStatus.dragTop ||
         nextStatus.dragBottom ||
         nextStatus.dragLeft ||
@@ -439,28 +441,22 @@ export function useMethods(share: Share) {
     }
 
     if (isBoolean(posInfos)) {
-      return { ...initEnableDragsDeny, enable: posInfos, all: posInfos };
-    }
-
-    // 设置了all时，其他方向都不进行标记
-    if (posInfos.all) {
-      posInfos = {
-        ...posInfos,
-        ...initEnableDragsDeny,
-        all: true,
-      };
-    } else {
-      posInfos = {
-        ...initEnableDragsDeny,
-        ...posInfos,
-        all: false,
+      return {
+        ...(enable ? initEnableDragsPass : initEnableDragsDeny),
+        enable: posInfos,
+        all: posInfos,
       };
     }
 
-    return {
+    posInfos = {
+      ...initEnableDragsDeny,
       ...posInfos,
-      enable: allPropertyHasTrue(posInfos),
     };
+
+    posInfos.enable = allPropertyHasTrue(posInfos);
+    posInfos.all = allPropertyAllTrue(posInfos);
+
+    return posInfos;
   }
 
   /** 获取所有滚动父级 */

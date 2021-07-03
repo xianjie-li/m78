@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Table, TableColumns } from 'm78/table';
-import { dataSource } from './dataSource';
 import { TreeValueType } from 'm78/tree';
+import { dataSource } from './dataSource';
 
 const columns: TableColumns = [
   {

@@ -114,7 +114,8 @@ $ident-w: 20px;
     top: 0;
     left: 50%;
 
-    &::after, &::before {
+    &::after,
+    &::before {
       content: '';
       position: absolute;
       background-color: var(--m78-color-border);
@@ -152,31 +153,41 @@ $ident-w: 20px;
     //width: $ident-w;
 
     &.__c0 {
-      .m78-tree_line, .m78-tree_turn-line::after, .m78-tree_turn-line::before {
+      .m78-tree_line,
+      .m78-tree_turn-line::after,
+      .m78-tree_turn-line::before {
         background-color: rgba($red-6, 0.3);
       }
     }
 
     &.__c1 {
-      .m78-tree_line, .m78-tree_turn-line::after, .m78-tree_turn-line::before {
+      .m78-tree_line,
+      .m78-tree_turn-line::after,
+      .m78-tree_turn-line::before {
         background-color: rgba($orange-6, 0.3);
       }
     }
 
     &.__c2 {
-      .m78-tree_line, .m78-tree_turn-line::after, .m78-tree_turn-line::before {
+      .m78-tree_line,
+      .m78-tree_turn-line::after,
+      .m78-tree_turn-line::before {
         background-color: rgba($green-6, 0.3);
       }
     }
 
     &.__c3 {
-      .m78-tree_line, .m78-tree_turn-line::after, .m78-tree_turn-line::before {
+      .m78-tree_line,
+      .m78-tree_turn-line::after,
+      .m78-tree_turn-line::before {
         background-color: rgba($cyan-6, 0.3);
       }
     }
 
     &.__c4 {
-      .m78-tree_line, .m78-tree_turn-line::after, .m78-tree_turn-line::before {
+      .m78-tree_line,
+      .m78-tree_turn-line::after,
+      .m78-tree_turn-line::before {
         background-color: rgba($purple-6, 0.3);
       }
     }
@@ -232,5 +243,20 @@ $ident-w: 20px;
 
   &_drag-bottom-node {
     bottom: -1.5px !important;
+  }
+
+  &_drag-top-node,
+  &_drag-bottom-node {
+    margin-left: 8px;
+    &::before {
+      content: '';
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      left: -7px;
+      top: -3px;
+      border-radius: 50%;
+      border: 2px solid var(--m78-color);
+    }
   }
 }

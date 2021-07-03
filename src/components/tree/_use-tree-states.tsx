@@ -7,8 +7,8 @@ import {
   UseVirtualListOption,
 } from '@lxjx/hooks';
 import { useMemo } from 'react';
-import { getShowList } from 'm78/tree/private-functions';
 import { DragFullEvent } from 'm78/dnd';
+import { getShowList } from './private-functions';
 import {
   _InsideState,
   TreeBaseNode,
@@ -96,61 +96,74 @@ export default function _useTreeStates<Node = TreeNode, DS = TreeDataSourceItem>
     },
   });
 
-  const handleDrag = useFn(({ target, source, status }: DragFullEvent<TreeBaseNode>) => {
-    const sNode = source.data;
-    const tNode = target.data;
+  /** 处理拖动逻辑排序 */
+  const handleDrag = useFn((de: DragFullEvent<TreeBaseNode>) => {
+    const { target, source, status } = de;
 
-    // source所在列表
-    let sourceList = props.dataSource || [];
-    // target所在列表
-    let targetList = props.dataSource || [];
+    // 内置拖动排序逻辑
+    if (!props.skipDragDatasourceProcess) {
+      const sNode = source?.data;
+      const tNode = target?.data;
 
-    if (sNode.parents?.length) {
-      const parent = sNode.parents[sNode.parents.length - 1];
-      sourceList = parent.children as any;
-    }
+      if (!sNode || !tNode) return;
 
-    if (tNode.parents?.length) {
-      const parent = tNode.parents[tNode.parents.length - 1];
-      targetList = parent.children as any;
-    }
+      // source所在列表
+      let sourceList = props.dataSource || [];
+      // target所在列表
+      let targetList = props.dataSource || [];
 
-    // 移除source
-    const sourceInd = sourceList.findIndex(item => item.value === sNode.value);
-    if (sourceInd !== -1) {
-      sourceList.splice(sourceInd, 1);
-    }
+      if (sNode.parents?.length) {
+        const parent = sNode.parents[sNode.parents.length - 1];
+        sourceList = parent.children as any;
+      }
 
-    if (status.dragTop || status.dragBottom) {
-      const targetInd = targetList.findIndex(item => item.value === tNode.value);
-      console.log(targetInd);
-      if (targetInd !== -1) {
-        if (status.dragTop) {
-          if (targetInd === 0) {
-            targetList.unshift(sNode.origin as any);
-          } else {
-            targetList.splice(targetInd, 0, sNode.origin as any);
+      if (tNode.parents?.length) {
+        const parent = tNode.parents[tNode.parents.length - 1];
+        targetList = parent.children as any;
+      }
+
+      // 移除source
+      const sourceInd = sourceList.findIndex(item => item.value === sNode.value);
+      if (sourceInd !== -1) {
+        sourceList.splice(sourceInd, 1);
+      }
+
+      // 移动节点前后
+      if (status.dragTop || status.dragBottom) {
+        const targetInd = targetList.findIndex(item => item.value === tNode.value);
+
+        if (targetInd !== -1) {
+          if (status.dragTop) {
+            if (targetInd === 0) {
+              targetList.unshift(sNode.origin as any);
+            } else {
+              targetList.splice(targetInd, 0, sNode.origin as any);
+            }
+          }
+
+          if (status.dragBottom) {
+            targetList.splice(targetInd + 1, 0, sNode.origin as any);
           }
         }
+      } else if (status.dragOver) {
+        // 移动为子级
 
-        if (status.dragBottom) {
-          targetList.splice(targetInd + 1, 0, sNode.origin as any);
+        if (!tNode.origin[props.childrenKey!]) {
+          tNode.origin[props.childrenKey!] = [];
         }
-      }
-    }
 
-    // TODO: 改为dragOver
-    if (status.dragCenter) {
-      if (!tNode.origin[props.childrenKey!]) {
-        tNode.origin[props.childrenKey!] = [];
+        tNode.origin[props.childrenKey!].push(sNode.origin as any);
       }
 
-      tNode.origin[props.childrenKey!].push(sNode.origin as any);
+      console.log(status);
     }
 
-    console.log(sNode, tNode);
-    props.onDataSourceChange?.([...props.dataSource!]);
-    // sNode.parents.findIndex(item => item.value === sNode.value);
+    const nextDataSource = [...props.dataSource!];
+
+    // 更新dataSource
+    props.onDataSourceChange?.(nextDataSource);
+    // 通知
+    props.onDragAccept?.(de, nextDataSource);
   });
 
   /** 单选多选类型检测 */
