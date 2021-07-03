@@ -58,7 +58,7 @@ async function build(type = 'esm') {
           extensions,
         }),
         babel({
-          exclude: 'node_modules',
+          exclude: '**/node_modules/**',
           extensions,
           babelHelpers: 'runtime',
         }),
