@@ -147,15 +147,11 @@ export type TableColumns = TableColumn[];
  * */
 export interface TableProps
   extends ComponentBaseProps,
-    Omit<TreeBaseProps<TableDataSourceItem, TableTreeNode>, 'labelKey'> {
+    Omit<TreeBaseProps<TableDataSourceItem, TableTreeNode>, 'labelKey' | 'valueKey'> {
   /** 表格列配置 */
   columns: TableColumns;
-  /**
-   * key/id | 表格中的每一条记录都应该有一个能表示该条记录的字段, valueGetter用于获取这个字段的key
-   * - 在启用了选择等功能时，valueGetter获取到的值会作为选中项的value
-   * - 由于id和key是非常常见的记录主键，所以会作为默认值进行获取， 如果是key/id 以外的键(如uid)，需要特别指定
-   * */
-  // valueGetter?: string;
+  /** 表格中的每一条记录都应该有一个能表示该条记录的字段, valueKey用于获取这个字段的key, 在启用了选择等功能时，valueKey指向的值会作为选中项的value */
+  valueKey: string | number;
 
   /**
    * 表格高度, 表格数据量过大时使用，传入此项时:
@@ -267,12 +263,14 @@ export interface _TableCellProps {
   tableElRef: React.MutableRefObject<HTMLTableElement>;
   /** 共享数据 */
   ctx: _Context;
-  /** 自行指定单元格内容 */
+  /** 替换设置单元格内容 */
   content?: React.ReactNode;
   /** 单元格前置节点 */
   prefix?: React.ReactNode;
   /** 单元格前置内联节点(不左右排列显示) */
   prefixInline?: React.ReactNode;
+  /** 和单元格一并渲染的额外节点 */
+  extra?: React.ReactNode;
 }
 
 /** 内部使用的扩展TableColumn */
@@ -301,4 +299,6 @@ export interface _Context {
   props: TablePropsSingleChoice & TablePropsMultipleChoice & typeof defaultProps;
   /** 通用tree状态 */
   treeState: ReturnType<typeof useTreeStates>;
+  /** 是否开启了虚拟滚动 */
+  isVirtual: boolean;
 }

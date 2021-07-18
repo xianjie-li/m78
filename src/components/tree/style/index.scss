@@ -89,6 +89,11 @@ $ident-w: 20px;
 
     .m78-dot {
       margin: 0;
+
+      &.__small {
+        width: 2px;
+        height: 2px;
+      }
     }
 
     &.__open {
@@ -247,7 +252,9 @@ $ident-w: 20px;
 
   &_drag-top-node,
   &_drag-bottom-node {
+    z-index: 9999;
     margin-left: 8px;
+
     &::before {
       content: '';
       position: absolute;

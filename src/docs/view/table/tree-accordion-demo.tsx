@@ -27,18 +27,6 @@ const columns: TableColumns = [
     label: '级别',
     field: 'level',
   },
-  {
-    label: '攻',
-    field: 'atk',
-  },
-  {
-    label: '防',
-    field: 'def',
-  },
-  {
-    label: '罕见度',
-    field: 'rare',
-  },
 ];
 
 const TreeAccordionDemo = () => {
@@ -46,7 +34,7 @@ const TreeAccordionDemo = () => {
 
   return (
     <div>
-      <Table height={400} columns={columns} dataSource={ds} accordion />
+      <Table valueKey="id" height={400} columns={columns} dataSource={ds} accordion />
     </div>
   );
 };

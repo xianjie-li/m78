@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Table, TableColumns } from 'm78/table';
-import { TreeValueType } from 'm78/tree';
 import { dataSource } from './dataSource';
+import { mockTreeData } from './mock-tree-data';
 
 const columns: TableColumns = [
   {
@@ -13,12 +13,8 @@ const columns: TableColumns = [
     field: 'name',
   },
   {
-    label: '种族',
-    field: 'race',
-  },
-  {
-    label: '属性',
-    field: 'property',
+    label: '日文名',
+    field: 'jName',
   },
   {
     label: '级别',
@@ -34,22 +30,21 @@ const columns: TableColumns = [
   },
 ];
 
-const ScheckDemo = () => {
-  const [checked, setChecked] = useState<TreeValueType>('91188343');
+const FilterDemo = () => {
+  const [ds, setDs] = useState(() => mockTreeData(8, 3));
 
   return (
     <div>
-      <span>选中项: {checked}</span>
       <Table
+        draggable
+        height={400}
         valueKey="id"
-        checkable
-        value={checked}
-        onChange={setChecked}
         columns={columns}
-        dataSource={dataSource}
+        dataSource={ds}
+        onDataSourceChange={setDs}
       />
     </div>
   );
 };
 
-export default ScheckDemo;
+export default FilterDemo;

@@ -28,22 +28,6 @@ const columns: TableColumns = [
     label: '级别',
     field: 'level',
   },
-  {
-    label: '攻',
-    field: 'atk',
-  },
-  {
-    label: '防',
-    field: 'def',
-  },
-  {
-    label: '罕见度',
-    field: 'rare',
-  },
-  {
-    label: '详情',
-    field: 'desc',
-  },
 ];
 
 const TreeScheckDemo = () => {
@@ -54,6 +38,7 @@ const TreeScheckDemo = () => {
     <div>
       <span>选中项: {checked}</span>
       <Table
+        valueKey="id"
         height={400}
         checkable
         value={checked}

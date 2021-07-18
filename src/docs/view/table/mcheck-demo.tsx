@@ -13,10 +13,6 @@ const columns: TableColumns = [
     field: 'name',
   },
   {
-    label: '日文名',
-    field: 'jName',
-  },
-  {
     label: '种族',
     field: 'race',
   },
@@ -36,18 +32,6 @@ const columns: TableColumns = [
     label: '防',
     field: 'def',
   },
-  {
-    label: '卡包',
-    field: 'pkg',
-  },
-  {
-    label: '罕见度',
-    field: 'rare',
-  },
-  {
-    label: '详情',
-    field: 'desc',
-  },
 ];
 
 const McheckDemo = () => {
@@ -55,8 +39,9 @@ const McheckDemo = () => {
 
   return (
     <div>
-      <span>选中项: {checked.join(', ')}</span>
+      <div className="ellipsis">选中项: {checked.join(', ')}</div>
       <Table
+        valueKey="id"
         multipleCheckable
         value={checked}
         onChange={setChecked}

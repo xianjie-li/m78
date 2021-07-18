@@ -8,6 +8,7 @@ import { Spin } from 'm78/spin';
 import { stopPropagation } from 'm78/util';
 import { Check } from 'm78/check';
 import { SizeEnum } from 'm78/types';
+import { DNDContext } from 'm78/dnd';
 import Cell from './_cell';
 import BodyRowItem from './_body-row-item';
 import {
@@ -24,64 +25,97 @@ import TableRender from './_table-render';
 /** 主内容render */
 export function render(ctx: _Context) {
   const {
-    props: { size, stripe, loading, divideStyle, width, height, className, style, customScrollbar },
-    states: { state, wrapElRef, tableElRef, virtualList, fmtColumns, isVirtual },
+    props: {
+      size,
+      stripe,
+      loading,
+      divideStyle,
+      width,
+      height,
+      className,
+      style,
+      customScrollbar,
+      draggable,
+    },
+    states: { state, wrapElRef, tableElRef, fmtColumns },
     treeState,
+    isVirtual,
   } = ctx;
 
-  return (
-    <div
-      className={clsx('m78-table', className, size && `__${size}`, {
-        __stripe: stripe,
-        [`__${divideStyle}`]: true,
-        __touchLeft: state.touchLeft,
-        __touchRight: state.touchRight,
-      })}
-      style={style}
-    >
-      {(loading || treeState.state.loading) && <Spin full />}
+  const virtualList = treeState.virtualList;
+
+  // 滚动包裹容器的样式
+  const wrapStyle: React.CSSProperties = {
+    width,
+  };
+
+  // 虚拟滚动时，如果高度不为有效number则设置为固定height，用于优化虚拟滚动
+  let heightKey = 'maxHeight';
+  if (isVirtual && (!height || !isNumber(height))) {
+    heightKey = 'height';
+  }
+  wrapStyle[heightKey as 'height'] = height;
+
+  /**
+   * m78-table - 包裹节点
+   * m78-table_wrap - 滚动节点
+   * m78-table_cont - 容器节点
+   * */
+
+  const childRender = () => {
+    return (
       <div
-        ref={node => {
-          wrapElRef.current = node!;
-          virtualList.containerProps.ref(node);
-        }}
-        onScroll={isVirtual ? virtualList.containerProps.onScroll : undefined}
-        className={clsx('m78-table_wrap', customScrollbar && 'm78-scrollbar')}
-        style={{ width, maxHeight: height }}
+        className={clsx('m78-table', className, size && `__${size}`, {
+          __stripe: stripe,
+          [`__${divideStyle}`]: true,
+          __touchLeft: state.touchLeft,
+          __touchRight: state.touchRight,
+        })}
+        style={style}
       >
-        {fmtColumns.fixedLeft.length > 0 && (
-          <TableRender
-            type={TableColumnFixedEnum.left}
-            containerProps={virtualList.wrapperProps}
-            column={fmtColumns.fixedLeft}
-            ctx={ctx}
-          />
-        )}
-        <TableRender
-          isMain
-          containerProps={virtualList.wrapperProps}
-          column={fmtColumns.column}
-          ctx={ctx}
-          innerRef={tableElRef}
-        />
-        {fmtColumns.fixedRight.length > 0 && (
-          <TableRender
-            type={TableColumnFixedEnum.right}
-            containerProps={virtualList.wrapperProps}
-            column={fmtColumns.fixedRight}
-            ctx={ctx}
-          />
-        )}
+        {(loading || treeState.state.loading) && <Spin full />}
+        <div
+          ref={node => {
+            wrapElRef.current = node!;
+            (virtualList.containerRef as any).current = node!;
+          }}
+          className={clsx('m78-table_wrap', customScrollbar && 'm78-scrollbar')}
+          style={wrapStyle}
+        >
+          <div className="m78-table_cont" ref={virtualList.wrapRef}>
+            {fmtColumns.fixedLeft.length > 0 && (
+              <TableRender
+                type={TableColumnFixedEnum.left}
+                column={fmtColumns.fixedLeft}
+                ctx={ctx}
+              />
+            )}
+            <TableRender isMain column={fmtColumns.column} ctx={ctx} innerRef={tableElRef} />
+            {fmtColumns.fixedRight.length > 0 && (
+              <TableRender
+                type={TableColumnFixedEnum.right}
+                column={fmtColumns.fixedRight}
+                ctx={ctx}
+              />
+            )}
+          </div>
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
+
+  if (draggable) {
+    return <DNDContext onAccept={treeState.handleDrag}>{childRender()}</DNDContext>;
+  }
+
+  return childRender();
 }
 
 /** 渲染表格体 */
 export function renderTbody(ctx: _Context, columns: _TableColumnInside[], isMainTable = false) {
   const {
-    states: { virtualList, isVirtual },
-    treeState: { showList },
+    treeState: { showList, virtualList },
+    isVirtual,
   } = ctx;
 
   if (!showList?.length) {
@@ -89,7 +123,7 @@ export function renderTbody(ctx: _Context, columns: _TableColumnInside[], isMain
       <tbody>
         <tr>
           <td colSpan={columns.length}>
-            <Empty desc="暂无数据" />
+            <Empty desc="暂无数据" style={{ padding: '60px 12px' }} />
           </td>
         </tr>
       </tbody>
@@ -106,12 +140,19 @@ export function renderTbody(ctx: _Context, columns: _TableColumnInside[], isMain
   if (isVirtual) {
     return (
       <tbody>
-        {virtualList.list.map(({ data, index }) => {
-          const key = ctx.props.valueGetter(data.origin);
-          return (
-            <BodyRowItem key={key} valueKey={key} data={data} index={index} {...baseRowProps} />
-          );
-        })}
+        <virtualList.Render>
+          {({ list }) =>
+            list.map(item => (
+              <BodyRowItem
+                key={item.key}
+                valueKey={item.key}
+                data={item.data as any}
+                index={item.index}
+                {...baseRowProps}
+              />
+            ))
+          }
+        </virtualList.Render>
       </tbody>
     );
   }
@@ -119,8 +160,15 @@ export function renderTbody(ctx: _Context, columns: _TableColumnInside[], isMain
   return (
     <tbody>
       {showList.map((data, index) => {
-        const key = ctx.props.valueGetter(data.origin);
-        return <BodyRowItem key={key} valueKey={key} data={data} index={index} {...baseRowProps} />;
+        return (
+          <BodyRowItem
+            key={data.value}
+            valueKey={data.value}
+            data={data}
+            index={index}
+            {...baseRowProps}
+          />
+        );
       })}
     </tbody>
   );
@@ -168,6 +216,7 @@ export function renderThead(ctx: _Context, columns: _TableColumnInside[]) {
           size={SizeEnum.small}
           type="checkbox"
           partial={valChecker.partialChecked}
+          checked={valChecker.allChecked}
           onChange={checked => {
             checked ? valChecker.checkAll() : valChecker.unCheckAll();
           }}

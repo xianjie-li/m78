@@ -25,12 +25,6 @@ interface Props<Node = TreeNode> {
 
 const openRotateClassName = 'm78-tree_open-icon';
 
-const enableDrop = {
-  top: true,
-  center: true,
-  bottom: true,
-};
-
 export default function _useTreeItem({ data, treeState, props }: Props) {
   const { openChecker, valChecker, loadingChecker, isSCheck, isMCheck, self } = treeState;
   const { onLoad, checkStrictly, dataSource, onDataSourceChange, expansionIcon } = props;
@@ -238,7 +232,7 @@ export default function _useTreeItem({ data, treeState, props }: Props) {
   /** 透传给DND的props */
   const dndProps = {
     data,
-    enableDrop,
+    enableDrop: true,
     onDrag: handleDrag,
     onDrop: handleDrop,
   };

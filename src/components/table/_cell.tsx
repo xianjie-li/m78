@@ -1,5 +1,6 @@
 import React, { useMemo, useRef } from 'react';
 import clsx from 'clsx';
+import { areEqual } from 'react-window';
 import { getCellProps, getCellSpan } from './_functions';
 import { renderCellFork } from './_renders';
 import CellEffectBg from './_cell-effect-bg';
@@ -15,6 +16,7 @@ const _Cell = (props: _TableCellProps) => {
     ctx,
     colIndex,
     rowIndex,
+    extra,
   } = props;
 
   const { fixed, sort } = column;
@@ -65,6 +67,7 @@ const _Cell = (props: _TableCellProps) => {
       colSpan={colSpan}
     >
       {renderCellFork(ctx, meta, props)}
+      {extra}
       {isBody && <CellEffectBg ctx={ctx} rowInd={rowIndex} />}
     </td>
   );
@@ -72,15 +75,4 @@ const _Cell = (props: _TableCellProps) => {
 
 _Cell.displayName = 'TableCell';
 
-export default React.memo(_Cell, (prev, next) => {
-  return (
-    prev.column === next.column &&
-    prev.record === next.record &&
-    prev.treeNode === next.treeNode &&
-    prev.colIndex === next.colIndex &&
-    prev.rowIndex === next.rowIndex &&
-    prev.isHead === next.isHead &&
-    prev.isFoot === next.isFoot &&
-    prev.prefix === next.prefix
-  );
-});
+export default React.memo(_Cell, areEqual);

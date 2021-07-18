@@ -7,6 +7,7 @@
   color: var(--m78-color-primary);
   text-align: left;
   width: 100%;
+  background: var(--m78-component-bg);
 
   &_wrap {
     position: relative;
@@ -17,13 +18,18 @@
     border-radius: var(--m78-border-radius);
   }
 
+  &_cont {
+    display: inline-flex; /* 使宽度超过100% */
+    min-width: 100%;
+  }
+
   &_main {
-    display: inline-block;
-    vertical-align: top;
+    flex: 1 1 auto;
     width: auto !important;
 
     &.__left,
     &.__right {
+      flex: 1;
       position: sticky;
       background-color: var(--m78-component-bg);
       z-index: 13;
@@ -84,7 +90,6 @@
   // 基础表格属性
   table {
     position: relative;
-    background: var(--m78-component-bg);
     min-width: 100%;
     border-spacing: 0;
     // collapse在部分浏览器支持很怪异，所以统一使用使用手动合并边框的方式
@@ -341,5 +346,43 @@
     &.__show {
       opacity: 0.4;
     }
+  }
+
+  &_drag-handle {
+    cursor: all-scroll;
+    user-select: none;
+  }
+
+  &_drag-top-node, &_drag-bottom-node, &_drag-center-node {
+    position: absolute;
+    border: 8px solid transparent;
+    border-left-color: var(--m78-color);
+    border-radius: 2px;
+    z-index: 9999;
+  }
+
+  &_drag-top-node, &_drag-bottom-node {
+    &::after {
+      content: '';
+      position: absolute;
+      width: 100px;
+      height: 2px;
+      background-color: var(--m78-color);
+      left: -6px;
+      top: -1px;
+    }
+  }
+
+  &_drag-center-node {
+    top: 50%;
+    margin-top: -8px;
+  }
+
+  &_drag-top-node {
+    top: -8px;
+  }
+
+  &_drag-bottom-node {
+    bottom: -8px;
   }
 }

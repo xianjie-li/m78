@@ -1,4 +1,4 @@
-import { AnyObject, isArray, isBoolean, isFunction, isString, isTruthyOrZero } from '@lxjx/utils';
+import { AnyObject, isArray, isBoolean, isFunction, isString } from '@lxjx/utils';
 import { throwError } from 'm78/util';
 import { SetState, UseScrollMeta } from '@lxjx/hooks';
 import React from 'react';
@@ -20,22 +20,6 @@ import {
  * 表格
  * ################################
  * */
-
-/** 获取对象中的默认主键 id => key */
-export function defaultValueGetter(obj: AnyObject) {
-  const key = obj.id || obj.key;
-
-  if (!isTruthyOrZero(key)) {
-    console.log(obj);
-
-    throwError(
-      'Get default PrimaryKey(id/key) failed, please manual set <Table valueGetter={item => item.<FieldName>} />.',
-      'Table',
-    );
-  }
-
-  return key;
-}
 
 /** 根据列配置获取其key，取值顺序为 column.key > column.field(如果是字符类型) > undefined */
 export function getColumnKey(column: TableColumn) {

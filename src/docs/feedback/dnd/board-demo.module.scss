@@ -5,7 +5,7 @@
   width: 200px;
   margin-right: 12px;
   border-radius: var(--m78-border-radius);
-  border: 6px solid var(--m78-pure);
+  border: 6px solid var(--m78-component-bg);
   box-shadow: var(--m78-shadow-1);
   margin-bottom: 12px;
   user-select: none;
@@ -32,7 +32,7 @@
 }
 
 .todo {
-  box-shadow: var(--m78-shadow-1);
+  box-shadow: var(--m78-shadow-1-b);
   padding: 8px 16px;
   font-size: 16px;
   user-select: none;

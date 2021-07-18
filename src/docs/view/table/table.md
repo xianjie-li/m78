@@ -8,11 +8,7 @@ group:
 
 # Table 表格
 
-<h2 class="color-red">deprecated!!!</h2>
-
-**HTML table 的渲染性能非常低，并且很多布局特性在不同浏览器上表现并不一致，标记结构非常受限，所以此组件即将重构为使用传统布局模拟的表格（会包含扩展的 API 和少量的现有 API 更改）。**
-
-通过二维数据表展示信息
+经典二维数据展示形式
 
 ## 常规
 
@@ -24,7 +20,7 @@ group:
 
 ### 字段值渲染
 
-- `field`支持对嵌套对象、数组项取值
+- `field`用来指定要渲染的表格字段，支持对嵌套对象、数组项取值
 - `render`可以用来进行一些复杂列的渲染
 - 列不一定要对应一个数据源字段、可以通过`render`来生成虚拟列
 
@@ -34,7 +30,7 @@ group:
 
 html 表格的渲染效率是非常低的，这导致如果表格数据量很多会非常卡顿，如果你要渲染的数据很多，可以通过开箱即用的虚拟滚动来对其进行优化。
 
-- 由于表格项是惰性加载的，如果列的内容宽度波动较大，建议为其设置一个固定的宽度, 否则表格会在子项宽度变更时会持续动态调整列宽
+- m78表格布局模式都是非fixed的，列宽根据内容动态设置，由于表格项是惰性加载的，如果列的内容宽度波动较大，建议为其设置一个固定的宽度, 否则表格会在子项宽度变更时会持续动态调整列宽
 - 部分浏览器在使用默认滚动条时会包含滚动性能优化，关闭滚动条定制可以提升一定的性能
 
 渲染 99999 条记录
@@ -71,15 +67,6 @@ html 表格的渲染效率是非常低的，这导致如果表格数据量很多
 
 <code src="./span-demo.tsx" />
 
-### valueGetter
-
-排序、选项、树形表格等功能需要获取能表示记录的唯一值， valueGetter 用于获取这个字段，由于 id 和 key 是非常常见的记录主键，所以会作为默认值进行获取
-
-将记录组件指定为 uid
-
-```tsx | pure
-<Table valueGetter={item => item.uid} />
-```
 
 ### 排序
 
@@ -155,6 +142,15 @@ html 表格的渲染效率是非常低的，这导致如果表格数据量很多
 
 <code src="./tree-accordion-demo.tsx" />
 
+
+## 拖拽排序
+
+拖动排序， 与[tree](/docs/form/tree#拖拽模式)的拖拽用法一样
+
+> 这是一个操作本地数据的示例，详细的用法说明请参考[tree](/docs/form/tree#拖拽模式)组件
+
+<code src="./dnd-demo.tsx" />
+
 ## Api
 
 ### **`Table`**
@@ -163,6 +159,8 @@ html 表格的渲染效率是非常低的，这导致如果表格数据量很多
 interface TableProps {
   /** 表格列配置 */
   columns: TableColumns;
+  /** 表格中的每一条记录都应该有一个能表示该条记录的字段, valueKey用于获取这个字段的key, 在启用了选择等功能时，valueKey指向的值会作为选中项的value */
+  valueKey: string | number;
   /** 数据源 (每次更改时会解析树数据并缓存关联信息以提升后续操作速度，所以最好将dataSource通过useState或useMemo等进行管理，不要直接内联式传入) */
   dataSource?: TableDataSourceItem[];
   /**
@@ -175,12 +173,6 @@ interface TableProps {
    * 所以在开启了动态加载子节点、拖拽功能时，必须传入此项来同步dataSource
    * */
   onDataSourceChange?: (ds: TableDataSourceItem[]) => void;
-  /**
-   * key/id | 表格中的每一条记录都应该有一个能表示该条记录的字段, valueGetter用于获取这个字段的key
-   * - 在启用了选择等功能时，valueGetter获取到的值会作为选中项的value
-   * - 由于id和key是非常常见的记录主键，所以会作为默认值进行获取， 如果是key/id 以外的键(如uid)，需要特别指定
-   * */
-  valueGetter?: string;
   /**
    * 表格高度, 表格数据量过大时使用，传入此项时:
    * - 开启虚拟滚动
@@ -296,6 +288,14 @@ interface TableProps {
   onOpensChange?: (nextOpens: TreeValueType[], nodes: TableTreeNode[]) => void;
   /** 如何从选项中拿到children，默认是 item => item.children */
   childrenGetter?: (optItem: Item) => Item[];
+
+  /* ############## 拖动 ############## */
+  /** 开启拖动排序 */
+  draggable?: boolean;
+  /** 拖动并触发重新排序时调用, 内置的排序逻辑仅作用于本地数据，用户应在此方法中完成排序数据的持久化 */
+  onDragAccept?: (event: DragFullEvent, nextDataSource: Item[]) => void;
+  /** 关闭默认的拖动数据源处理逻辑, 交由用户自行更新dataSource */
+  skipDragDatasourceProcess?: boolean;
 }
 ```
 

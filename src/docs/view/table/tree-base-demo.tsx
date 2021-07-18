@@ -16,14 +16,6 @@ const columns: TableColumns = [
     field: 'jName',
   },
   {
-    label: '种族',
-    field: 'race',
-  },
-  {
-    label: '属性',
-    field: 'property',
-  },
-  {
     label: '级别',
     field: 'level',
   },
@@ -35,14 +27,6 @@ const columns: TableColumns = [
     label: '防',
     field: 'def',
   },
-  {
-    label: '罕见度',
-    field: 'rare',
-  },
-  {
-    label: '详情',
-    field: 'desc',
-  },
 ];
 
 const TreeBaseDemo = () => {
@@ -50,7 +34,7 @@ const TreeBaseDemo = () => {
 
   return (
     <div>
-      <Table height={400} columns={columns} dataSource={ds} />
+      <Table valueKey="id" height={400} columns={columns} dataSource={ds} />
     </div>
   );
 };

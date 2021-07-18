@@ -12,11 +12,7 @@ const columns: TableColumns = [
   {
     label: '#',
     render: ({ rowIndex }) => <span>{rowIndex + 1}</span>,
-  },
-  {
-    label: '卡号',
-    field: 'id',
-    width: 200,
+    width: 70,
   },
   {
     label: '名称',
@@ -48,24 +44,18 @@ const columns: TableColumns = [
     label: '防',
     field: 'def',
   },
-  {
-    label: '卡包',
-    field: 'pkg',
-  },
-  {
-    label: '罕见度',
-    field: 'rare',
-  },
-  {
-    label: '详情',
-    field: 'desc',
-  },
 ];
 
 const BigDataDemo = () => {
   return (
     <div>
-      <Table height={400} columns={columns} dataSource={mockDs} customScrollbar={false} />
+      <Table
+        valueKey="id"
+        height={400}
+        columns={columns}
+        dataSource={mockDs}
+        customScrollbar={false}
+      />
     </div>
   );
 };

@@ -12,18 +12,6 @@ const columns: TableColumns = [
     field: 'name',
   },
   {
-    label: '日文名',
-    field: 'jName',
-  },
-  {
-    label: '种族',
-    field: 'race',
-  },
-  {
-    label: '属性',
-    field: 'property',
-  },
-  {
     label: '级别',
     field: 'level',
     sort: true,
@@ -42,14 +30,6 @@ const columns: TableColumns = [
     label: '卡包',
     field: 'pkg',
   },
-  {
-    label: '罕见度',
-    field: 'rare',
-  },
-  {
-    label: '详情',
-    field: 'desc',
-  },
 ];
 
 const SortDemo = () => {
@@ -58,6 +38,7 @@ const SortDemo = () => {
   return (
     <div>
       <Table
+        valueKey="id"
         columns={columns}
         dataSource={ds}
         onSortChange={([key, type]) => {

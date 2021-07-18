@@ -5,6 +5,7 @@ import { useTreeItem, TreeValueType } from 'm78/tree';
 import { areEqual } from 'react-window';
 import { Check } from 'm78/check';
 import { SizeEnum } from 'm78/types';
+import { DND, DragBonus } from 'm78/dnd';
 import { _Context, _TableColumnInside, TableTreeNode } from './_types';
 import { getInitTableMeta, handleRowHover } from './_functions';
 import Cell from './_cell';
@@ -41,7 +42,11 @@ const _BodyRowItem = ({ data, index, ctx, columns, props }: Props) => {
     if (!data.parents?.length) return null;
 
     return data.parents.map((parent, ind) => {
-      return <span key={ind} className="m78-table_prefix-item" />;
+      return (
+        <span key={ind} className="m78-table_prefix-item m78-tree_icon">
+          <span className="m78-dot __small" />
+        </span>
+      );
     });
   }
 
@@ -76,7 +81,7 @@ const _BodyRowItem = ({ data, index, ctx, columns, props }: Props) => {
     if (z && z > 1) {
       return (
         <span className="m78-table_prefix-item m78-tree_icon">
-          <span className="m78-dot" /> {}
+          <span className="m78-dot" />
         </span>
       );
     }
@@ -111,33 +116,69 @@ const _BodyRowItem = ({ data, index, ctx, columns, props }: Props) => {
     );
   }
 
-  return (
-    <tr
-      className={clsx('m78-table_body-row', {
-        __odd: isOdd,
-      })}
-      onMouseEnter={e => handleRowHover(ctx, index, e)}
-      onMouseLeave={e => handleRowHover(ctx, index, e)}
-    >
-      {columns.map(column => {
-        return (
-          <Cell
-            key={column.index}
-            tableElRef={tableElRef}
-            prefix={renderPrefix(column.index)}
-            {...getInitTableMeta(ctx, {
-              column,
-              record: data.origin,
-              colIndex: column.index,
-              rowIndex: index,
-            })}
-            treeNode={data}
-            ctx={ctx}
-          />
-        );
-      })}
-    </tr>
-  );
+  function renderChild(dragBonus?: DragBonus) {
+    const dragStatus = dragBonus?.status;
+
+    const dT = dragStatus?.dragTop;
+    const dB = dragStatus?.dragBottom;
+
+    // 拖动提示节点的左偏位置
+    const dragFeedbackNodeIDent = data.parents?.length
+      ? (data.parents.length + 1) * 28 /* prefix-item总宽度 */ - 8 /* 图标旋转视产生的偏移距离 */
+      : undefined;
+    const dragFeedbackNodeStyle = { left: dragFeedbackNodeIDent };
+
+    return (
+      <tr
+        ref={dragBonus?.innerRef}
+        className={clsx('m78-table_body-row', {
+          __odd: isOdd,
+          'm78-tree_disabled': itemState.isDisabled || dragStatus?.dragging,
+        })}
+        onMouseEnter={e => handleRowHover(ctx, index, e)}
+        onMouseLeave={e => handleRowHover(ctx, index, e)}
+      >
+        {columns.map(column => {
+          return (
+            <Cell
+              key={column.index}
+              tableElRef={tableElRef}
+              prefix={renderPrefix(column.index)}
+              {...getInitTableMeta(ctx, {
+                column,
+                record: data.origin,
+                colIndex: column.index,
+                rowIndex: index,
+              })}
+              treeNode={data}
+              ctx={ctx}
+              extra={
+                column.index === 0 && (
+                  <>
+                    {dT && (
+                      <span className="m78-table_drag-top-node" style={dragFeedbackNodeStyle} />
+                    )}
+                    {dragStatus?.dragOver && !dT && !dB && (
+                      <span className="m78-table_drag-center-node" style={dragFeedbackNodeStyle} />
+                    )}
+                    {dB && (
+                      <span className="m78-table_drag-bottom-node" style={dragFeedbackNodeStyle} />
+                    )}
+                  </>
+                )
+              }
+            />
+          );
+        })}
+      </tr>
+    );
+  }
+
+  if (props.draggable) {
+    return <DND {...itemState.dndProps}>{renderChild}</DND>;
+  }
+
+  return renderChild();
 };
 
 export default React.memo(_BodyRowItem, areEqual);

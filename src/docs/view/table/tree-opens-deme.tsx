@@ -29,22 +29,6 @@ const columns: TableColumns = [
     label: '级别',
     field: 'level',
   },
-  {
-    label: '攻',
-    field: 'atk',
-  },
-  {
-    label: '防',
-    field: 'def',
-  },
-  {
-    label: '罕见度',
-    field: 'rare',
-  },
-  {
-    label: '详情',
-    field: 'desc',
-  },
 ];
 
 const OpenDemo = () => {
@@ -55,12 +39,19 @@ const OpenDemo = () => {
   return (
     <div>
       <h3>默认展开</h3>
-      <Table height={400} columns={columns} dataSource={ds} defaultOpens={['1', '1-1', '1-2']} />
+      <Table
+        valueKey="id"
+        height={400}
+        columns={columns}
+        dataSource={ds}
+        defaultOpens={['1', '1-1', '1-2']}
+      />
 
       <Spacer height={50} />
 
       <h3>受控展开</h3>
       <Table
+        valueKey="id"
         height={400}
         columns={columns}
         dataSource={ds}
@@ -71,12 +62,12 @@ const OpenDemo = () => {
       <Spacer height={50} />
 
       <h3>默认展开全部</h3>
-      <Table height={400} columns={columns} dataSource={ds} defaultOpenAll />
+      <Table valueKey="id" height={400} columns={columns} dataSource={ds} defaultOpenAll />
 
       <Spacer height={50} />
 
       <h3>指定默认展开层级</h3>
-      <Table height={400} columns={columns} dataSource={ds} defaultOpenZIndex={1} />
+      <Table valueKey="id" height={400} columns={columns} dataSource={ds} defaultOpenZIndex={1} />
     </div>
   );
 };

@@ -1,7 +1,6 @@
 import { isNumber, isString, isTruthyOrZero } from '@lxjx/utils';
 import { Tree } from 'm78/tree';
 import { TableDivideStyleEnum } from './_types';
-import { defaultValueGetter } from './_functions';
 
 export const defaultProps = {
   columns: [],
@@ -13,9 +12,10 @@ export const defaultProps = {
   checkFieldValid: isTruthyOrZero,
   ...Tree.defaultProps,
   valueKey: 'id',
-  valueGetter: defaultValueGetter,
   customScrollbar: true,
 };
+
+export const tableHeaderHeight = 42;
 
 /**
  * 将 ['user', 'name'], ['list', '0', 'title'] 格式的字段数组转换为字符串，

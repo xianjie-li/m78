@@ -4,6 +4,7 @@ import { Spin } from 'm78/spin';
 import { Empty } from 'm78/empty';
 import { useDelayDerivedToggleStatus } from 'm78/hooks';
 import { DNDContext } from 'm78/dnd';
+import { isNumber } from '@lxjx/utils';
 import useTreeStates from './_use-tree-states';
 import { getSize } from './private-functions';
 import { VirtualItem } from './virtual-item';
@@ -30,14 +31,7 @@ import Toolbar from './toolbar';
  * - `functions.tsx`        共享的操作函数
  *  */
 
-/**
- * TODO: 拖拽
- * 拖动开始时，关闭开启状态
- * 停止在一个可展开节点上时，延迟一定时间后展开该节点
- * 放置时根据拖动位置调整左侧缩进
- * 拖放到元素上时，将其合并到元素末尾
- * */
-
+/** Tree */
 function Tree(props: TreePropsSingleChoice): JSX.Element;
 function Tree(props: TreePropsMultipleChoice): JSX.Element;
 function Tree(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
@@ -52,6 +46,7 @@ function Tree(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
   /** 共享tree状态 */
   const treeState = useTreeStates(props as TreeBasePropsMix, isVirtual, {
     size: item => item.origin.height || sizeInfo.itemHeight,
+    height: isNumber(height) ? height : undefined,
   });
 
   /** 延迟设置的加载状态, 防止数据量较少时loading一闪而过 */
@@ -88,11 +83,17 @@ function Tree(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
   function renderVirtualList() {
     const virtualList = treeState.virtualList;
 
+    // 虚拟滚动时，如果高度不为有效number则设置为固定height，用于优化虚拟滚动
+    let heightKey = 'maxHeight';
+    if (isVirtual && (!height || !isNumber(height))) {
+      heightKey = 'height';
+    }
+
     return (
       <div
         ref={virtualList.containerRef}
         className="m78-tree_nodes m78-scrollbar"
-        style={{ height: height || 0 }}
+        style={{ [heightKey]: height || 0 }}
       >
         <div ref={virtualList.wrapRef}>
           <virtualList.Render>

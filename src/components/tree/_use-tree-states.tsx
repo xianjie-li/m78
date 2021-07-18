@@ -83,8 +83,9 @@ export default function _useTreeStates<Node = TreeNode, DS = TreeDataSourceItem>
     list,
   ]);
 
+  /** 虚拟列表 */
   const virtualList = useVirtualList<Node>({
-    overscan: 2,
+    overscan: 3,
     key: (item: TreeBaseNode) => item.value,
     ...(virtualOption as any),
     disabled: !isVirtual,
@@ -123,14 +124,16 @@ export default function _useTreeStates<Node = TreeNode, DS = TreeDataSourceItem>
       }
 
       // 移除source
-      const sourceInd = sourceList.findIndex(item => item.value === sNode.value);
+      const sourceInd = sourceList.findIndex(item => getValue(item, props as any) === sNode.value);
       if (sourceInd !== -1) {
         sourceList.splice(sourceInd, 1);
       }
 
       // 移动节点前后
       if (status.dragTop || status.dragBottom) {
-        const targetInd = targetList.findIndex(item => item.value === tNode.value);
+        const targetInd = targetList.findIndex(
+          item => getValue(item, props as any) === tNode.value,
+        );
 
         if (targetInd !== -1) {
           if (status.dragTop) {
@@ -154,8 +157,6 @@ export default function _useTreeStates<Node = TreeNode, DS = TreeDataSourceItem>
 
         tNode.origin[props.childrenKey!].push(sNode.origin as any);
       }
-
-      console.log(status);
     }
 
     const nextDataSource = [...props.dataSource!];

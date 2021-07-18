@@ -151,7 +151,7 @@ const columns: TableColumns = [
 const FixedDemo = () => {
   return (
     <div>
-      <Table columns={columns} dataSource={dataSource} />
+      <Table valueKey="id" columns={columns} dataSource={dataSource} />
     </div>
   );
 };

@@ -1807,10 +1807,10 @@
     resize-observer-polyfill "^1.5.1"
     tslib "^1.11.1"
 
-"@lxjx/hooks@^1.21.0":
-  version "1.21.0"
-  resolved "https://registry.nlark.com/@lxjx/hooks/download/@lxjx/hooks-1.21.0.tgz?cache=0&sync_timestamp=1624982842777&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40lxjx%2Fhooks%2Fdownload%2F%40lxjx%2Fhooks-1.21.0.tgz#1b381e5756d93ca186ccc2dc0622434a1d2b35a9"
-  integrity sha1-GzgeV1bZPKGGzMLcBiJDSh0rNak=
+"@lxjx/hooks@^1.22.3":
+  version "1.22.3"
+  resolved "https://registry.nlark.com/@lxjx/hooks/download/@lxjx/hooks-1.22.3.tgz?cache=0&sync_timestamp=1626639039965&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40lxjx%2Fhooks%2Fdownload%2F%40lxjx%2Fhooks-1.22.3.tgz#08df18ab256587b5c5249392ee6a42767ec83ef5"
+  integrity sha1-CN8YqyVlh7XFJJOS7mpCdn7IPvU=
   dependencies:
     "@lxjx/utils" "^1.11.0"
     lodash "^4.17.15"

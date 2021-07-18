@@ -40,18 +40,6 @@ const columns: TableColumns = [
     label: '防',
     field: 'def',
   },
-  {
-    label: '卡包',
-    field: 'pkg',
-  },
-  {
-    label: '罕见度',
-    field: 'rare',
-  },
-  {
-    label: '详情',
-    field: 'desc',
-  },
 ];
 
 const StyleDemo = () => {

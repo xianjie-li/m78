@@ -20,7 +20,7 @@ export interface DragStatus {
   dragTop: boolean;
   /** 中间部分有可用拖动目标, 一般用于合并项 */
   dragCenter: boolean;
-  /** 未指定其他特定的方向时，当拖动元素位于上方时此项为true */
+  /** 当拖动元素位于上方时 */
   dragOver: boolean;
   /** 未处于拖动或放置状态 */
   regular: boolean;

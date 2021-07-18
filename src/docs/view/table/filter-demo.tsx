@@ -16,10 +16,6 @@ const columns: TableColumns = [
     field: 'name',
   },
   {
-    label: '日文名',
-    field: 'jName',
-  },
-  {
     label: '种族',
     field: 'race',
     extra: ({ ctx }) => {
@@ -92,18 +88,6 @@ const columns: TableColumns = [
     label: '防',
     field: 'def',
   },
-  {
-    label: '卡包',
-    field: 'pkg',
-  },
-  {
-    label: '罕见度',
-    field: 'rare',
-  },
-  {
-    label: '详情',
-    field: 'desc',
-  },
 ];
 
 const FilterDemo = () => {
@@ -122,6 +106,7 @@ const FilterDemo = () => {
   return (
     <div>
       <Table
+        valueKey="id"
         // 可以在静态column配置中接收此对象，当然，你也可以将columns声明在组件作用域内
         ctx={{
           filterByKey,

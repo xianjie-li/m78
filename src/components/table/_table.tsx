@@ -1,6 +1,8 @@
 import { TreeBasePropsMix, useTreeStates } from 'm78/tree';
 import { useTreeLifeCycle } from 'm78/tree/life-cycle';
-import { defaultProps } from './_common';
+import { SizeEnum } from 'm78/types';
+import { isNumber } from '@lxjx/utils';
+import { defaultProps, tableHeaderHeight } from './_common';
 import { _useStates } from './_useStates';
 import { useEffects } from './_useEffects';
 import {
@@ -10,21 +12,32 @@ import {
   TableTreeNode,
 } from './_types';
 import { render } from './_renders';
+import { getSizeNumber } from './_functions';
 
 function Table(props: TablePropsSingleChoice): JSX.Element;
 function Table(props: TablePropsMultipleChoice): JSX.Element;
 function Table(props: TablePropsSingleChoice | TablePropsMultipleChoice) {
-  const treeState = useTreeStates<TableTreeNode>(props as TreeBasePropsMix);
+  const { height } = props;
 
-  const states = _useStates(props, treeState);
+  /** 是否开启虚拟滚动 */
+  const isVirtual = !!height;
+
+  const treeState = useTreeStates<TableTreeNode>(props as TreeBasePropsMix, isVirtual, {
+    size: getSizeNumber(props.size as SizeEnum),
+    height: isNumber(height) ? height : undefined,
+    space: tableHeaderHeight,
+  });
+
+  const states = _useStates(props);
 
   const ctx: _Context = {
     states,
+    isVirtual,
     props: props as _Context['props'],
     treeState,
   };
 
-  useTreeLifeCycle(props, ctx.treeState, false);
+  useTreeLifeCycle(props as TreeBasePropsMix, ctx.treeState, false);
 
   useEffects(ctx);
 

@@ -24,18 +24,6 @@ const columns: TableColumns = [
     field: 'property',
   },
   {
-    label: '级别',
-    field: 'level',
-  },
-  {
-    label: '攻',
-    field: 'atk',
-  },
-  {
-    label: '防',
-    field: 'def',
-  },
-  {
     label: '卡包',
     field: 'pkg',
   },
@@ -43,16 +31,13 @@ const columns: TableColumns = [
     label: '罕见度',
     field: 'rare',
   },
-  {
-    label: '详情',
-    field: 'desc',
-  },
 ];
 
 const SpanDemo = () => {
   return (
     <div>
       <Table
+        valueKey="id"
         divideStyle="border"
         columns={columns}
         dataSource={dataSource}

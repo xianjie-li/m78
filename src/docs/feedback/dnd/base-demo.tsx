@@ -79,13 +79,7 @@ const BaseDemo = () => {
         <Row mainAlign="evenly">
           <DND
             data="DND1"
-            enableDrop={{
-              left: true,
-              right: true,
-              bottom: true,
-              top: true,
-              center: true,
-            }}
+            enableDrop
             onDrag={dragStartHandle}
             onDrop={dropHandle}
             onSourceEnter={dragEnterHandle}
@@ -97,13 +91,7 @@ const BaseDemo = () => {
 
           <DND
             data="DND2"
-            enableDrop={{
-              left: true,
-              right: true,
-              bottom: true,
-              top: true,
-              center: true,
-            }}
+            enableDrop
             onDrag={dragStartHandle}
             onDrop={dropHandle}
             onSourceEnter={dragEnterHandle}

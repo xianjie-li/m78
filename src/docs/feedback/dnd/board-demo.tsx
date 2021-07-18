@@ -148,7 +148,7 @@ const BoardDemo = () => {
                         // 如果拖动目标是栏目、禁止防止
                         if (isColumn(dragNode?.data)) return false;
 
-                        // 否则运行防止上中下三个位置
+                        // 否则允许上中下三个位置
                         return {
                           top: true,
                           bottom: true,

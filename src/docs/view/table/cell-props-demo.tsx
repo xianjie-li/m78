@@ -12,22 +12,6 @@ const columns: TableColumns = [
     field: 'name',
   },
   {
-    label: '日文名',
-    field: 'jName',
-  },
-  {
-    label: '种族',
-    field: 'race',
-  },
-  {
-    label: '属性',
-    field: 'property',
-  },
-  {
-    label: '级别',
-    field: 'level',
-  },
-  {
     label: '攻',
     field: 'atk',
   },
@@ -43,16 +27,13 @@ const columns: TableColumns = [
     label: '罕见度',
     field: 'rare',
   },
-  {
-    label: '详情',
-    field: 'desc',
-  },
 ];
 
 const CellPropsDemo = () => {
   return (
     <div>
       <Table
+        valueKey="id"
         columns={columns}
         dataSource={dataSource}
         props={({ column, record, rowIndex, isBody, isHead }) => {

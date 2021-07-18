@@ -27,18 +27,6 @@ const columns: TableColumns = [
     label: '级别',
     field: 'level',
   },
-  {
-    label: '攻',
-    field: 'atk',
-  },
-  {
-    label: '防',
-    field: 'def',
-  },
-  {
-    label: '罕见度',
-    field: 'rare',
-  },
 ];
 
 // 生成模拟条数据
@@ -68,6 +56,7 @@ const TreeDynamicLoadDemo = () => {
   return (
     <div>
       <Table
+        valueKey="id"
         height={400}
         columns={columns}
         dataSource={ds}
