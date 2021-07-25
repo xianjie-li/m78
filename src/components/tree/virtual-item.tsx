@@ -24,7 +24,7 @@ export const VirtualItem = (props: VirtualItemProps) => {
           className="m78-tree_skeleton-bar"
           style={{ width: itemProps.size.itemHeight * 0.68 }}
         />
-        <span className="m78-tree_skeleton-bar">{data.origin.label}</span>
+        <span className="m78-tree_skeleton-bar">{data.label}</span>
       </div>
     );
   }

@@ -104,9 +104,9 @@ export function flatTreeData(
         const children = item[childrenKey];
 
         const current: TreeNode = {
-          // ...item,
           origin: item,
           children,
+          label,
           zIndex,
           values: connectVal2Array(val, parent?.values)! /* value取值方式更换 */,
           indexes: connectVal2Array(index, parent?.indexes)!,

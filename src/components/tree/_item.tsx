@@ -128,12 +128,12 @@ const TreeItem = React.memo(({ data, share, className, style, size }: ItemProps)
       return (
         <div
           className="ellipsis"
-          dangerouslySetInnerHTML={{ __html: highlightKeyword(originDs.label, state.keyword) }}
+          dangerouslySetInnerHTML={{ __html: highlightKeyword(data.label, state.keyword) }}
         />
       );
     }
 
-    return <div className="ellipsis">{originDs.label}</div>;
+    return <div className="ellipsis">{data.label}</div>;
   }
 
   function renderChild(dragBonus?: DragBonus) {

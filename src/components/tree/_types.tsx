@@ -137,8 +137,12 @@ export interface TreeBaseDataSourceItem extends Partial<DataSourceItem<TreeValue
 
 /** 表示树中的一个节点 */
 export interface TreeBaseNode<Node = TreeNode, DS = TreeDataSourceItem> {
-  /** 该节点对应的值 */
+  /** 该节点对应的值, 需要对value取值时优先使用此值 */
   value: TreeValueType;
+  /** 该节点对应的label, 需要对label取值时优先使用此值 */
+  label: string;
+  /** 子项列表，此值代理至origin中获取到的children, 操作children时应首选此值 */
+  children?: DS[];
   /** 当前层级 */
   zIndex: number;
   /** 所有父级节点 */
@@ -171,8 +175,6 @@ export interface TreeBaseNode<Node = TreeNode, DS = TreeDataSourceItem> {
   origin: DS;
   /** 子节点列表 */
   child?: Node[];
-  /** 子项列表，此值代理至origin中获取到的children(取决于childrenGetter), 操作children时应首选此值 */
-  children?: DS[];
 }
 
 /**
