@@ -3,99 +3,100 @@ import { TreeDataSourceItem } from 'm78/tree';
 const dataSource1: TreeDataSourceItem[] = [
   {
     label: 'JS',
-    children: [
-      {
-        label: '基本对象',
-        children: [
-          {
-            label: 'Global',
-          },
-          {
-            label: 'Object',
-          },
-          {
-            label: 'Function',
-          },
-          {
-            label: 'Boolean',
-          },
-          {
-            label: 'Symbol',
-          },
-          {
-            label: 'Error',
-          },
-        ],
-      },
-      {
-        label: 'Number&Date',
-        children: [
-          {
-            label: 'Date',
-          },
-          {
-            label: 'Number',
-          },
-          {
-            label: 'Math',
-          },
-          {
-            label: 'Bigint',
-          },
-        ],
-      },
-      {
-        label: 'Text',
-        children: [
-          {
-            label: 'RegExp',
-          },
-          {
-            label: 'String',
-          },
-        ],
-      },
-      {
-        label: 'Collection',
-        children: [
-          {
-            label: 'Array',
-          },
-          {
-            label: 'Map',
-          },
-          {
-            label: 'Set',
-          },
-          {
-            label: 'TypedArray/ArrayBuffer',
-          },
-          {
-            label: 'JSON',
-          },
-          {
-            label: 'DataView',
-          },
-        ],
-      },
-      {
-        label: '控制抽象化',
-        children: [
-          {
-            label: 'Proxy',
-          },
-          {
-            label: 'Reflect',
-          },
-          {
-            label: 'Generator',
-          },
-          {
-            label: 'Async',
-          },
-        ],
-      },
-    ],
+    // children: [
+    //   {
+    //     label:
+    //       '基本对象基本对象基本对象基本对象基本对象基本对象基本对象基本对象基本对象基本对象基本对象',
+    //     children: [
+    //       {
+    //         label: 'Global',
+    //       },
+    //       {
+    //         label: 'Object',
+    //       },
+    //       {
+    //         label: 'Function',
+    //       },
+    //       {
+    //         label: 'Boolean',
+    //       },
+    //       {
+    //         label: 'Symbol',
+    //       },
+    //       {
+    //         label: 'Error',
+    //       },
+    //     ],
+    //   },
+    //   {
+    //     label: 'Number&Date',
+    //     children: [
+    //       {
+    //         label: 'Date',
+    //       },
+    //       {
+    //         label: 'Number',
+    //       },
+    //       {
+    //         label: 'Math',
+    //       },
+    //       {
+    //         label: 'Bigint',
+    //       },
+    //     ],
+    //   },
+    //   {
+    //     label: 'Text',
+    //     children: [
+    //       {
+    //         label: 'RegExp',
+    //       },
+    //       {
+    //         label: 'String',
+    //       },
+    //     ],
+    //   },
+    //   {
+    //     label: 'Collection',
+    //     children: [
+    //       {
+    //         label: 'Array',
+    //       },
+    //       {
+    //         label: 'Map',
+    //       },
+    //       {
+    //         label: 'Set',
+    //       },
+    //       {
+    //         label: 'TypedArray/ArrayBuffer',
+    //       },
+    //       {
+    //         label: 'JSON',
+    //       },
+    //       {
+    //         label: 'DataView',
+    //       },
+    //     ],
+    //   },
+    //   {
+    //     label: '控制抽象化',
+    //     children: [
+    //       {
+    //         label: 'Proxy',
+    //       },
+    //       {
+    //         label: 'Reflect',
+    //       },
+    //       {
+    //         label: 'Generator',
+    //       },
+    //       {
+    //         label: 'Async',
+    //       },
+    //     ],
+    //   },
+    // ],
   },
   {
     label: 'TypeScript',

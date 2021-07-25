@@ -56,7 +56,7 @@ $ident-w: 20px;
     position: relative;
     display: flex;
     justify-content: space-between;
-    padding: 0 4px 0 0;
+    padding: 0 4px;
     border-radius: var(--m78-border-radius);
     user-select: none;
     background-color: transparent;
@@ -66,13 +66,16 @@ $ident-w: 20px;
     display: flex;
     flex: 1;
     border-radius: var(--m78-border-radius);
+    min-width: 0; /* 修复子级ellipsis */
   }
 
   &_cont {
-    //flex: 1;
+    flex: 1;
     display: flex;
     align-items: center;
     overflow: hidden;
+    min-width: 0;
+    margin-left: 4px;
   }
 
   &_ident {
@@ -91,8 +94,8 @@ $ident-w: 20px;
       margin: 0;
 
       &.__small {
-        width: 2px;
-        height: 2px;
+        width: 3px;
+        height: 3px;
       }
     }
 
@@ -201,7 +204,7 @@ $ident-w: 20px;
   &_action {
     display: flex;
     align-items: center;
-    margin-left: 12px;
+    margin-left: 4px;
   }
 
   &_skeleton {

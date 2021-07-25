@@ -8,7 +8,14 @@ import { isNumber } from '@lxjx/utils';
 import _debounce from 'lodash/debounce';
 import { UseCheckReturns } from '@lxjx/hooks';
 import { sizeMap } from './common';
-import { _InsideState, Share, TreeBaseNode, TreeProps, TreeValueType } from './_types';
+import {
+  _InsideState,
+  Share,
+  TreeBaseNode,
+  TreeBasePropsMix,
+  TreeProps,
+  TreeValueType,
+} from './_types';
 import functions from './functions';
 
 /** 根据参数获取应有尺寸 */
@@ -43,16 +50,22 @@ export function getShowList(
   list: TreeBaseNode[],
   state: _InsideState,
   openChecker: UseCheckReturns<TreeValueType, any>,
+  filter: TreeBasePropsMix['filter'],
 ) {
-  // list: TreeNode[], keyword?: string
+  let _list = list;
+
+  // 过滤关键字
   if (state.keyword) {
-    const filterList = list.filter(item => {
+    _list = list.filter(item => {
       return item.fullSearchKey.indexOf(state.keyword) !== -1;
     });
-    return filterList.filter(item => functions.isShow(openChecker, item));
   }
 
-  return list.filter(item => functions.isShow(openChecker, item));
+  // 过滤未选中和 props.filter
+  return _list.filter(item => {
+    const filterPass = filter ? filter(item) : true;
+    return functions.isShow(openChecker, item) && filterPass;
+  });
 }
 
 export const keywordChangeHandle = _debounce((treeState: Share['treeState'], keyword: string) => {

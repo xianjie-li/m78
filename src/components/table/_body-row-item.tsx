@@ -81,7 +81,7 @@ const _BodyRowItem = ({ data, index, ctx, columns, props }: Props) => {
     if (z && z > 1) {
       return (
         <span className="m78-table_prefix-item m78-tree_icon">
-          <span className="m78-dot" />
+          <span className="m78-dot __small" />
         </span>
       );
     }

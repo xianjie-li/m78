@@ -58,6 +58,10 @@ export interface TreeBaseProps<Item, Node> {
   defaultOpens?: TreeValueType[];
   /** 打开节点变更时触发 */
   onOpensChange?: (nextOpens: TreeValueType[], nodes: Node[]) => void;
+  /** 过滤掉所有返回false的节点，使其不在列表显示 */
+  filter?: (current: Node) => boolean;
+  /** 过滤关键字, 用于实现本地搜索 */
+  keyword?: string;
 
   /* ############## 定制选项 ############## */
   /** 自定义展开标识图标, 如果将className添加到节点上，会在展开时将其旋转90deg, 也可以通过open自行配置 */
@@ -183,15 +187,18 @@ export interface TreeProps extends ComponentBaseProps, TreeBaseProps<TreeDataSou
    * 容器高度, 节点数据量过大时使用，传入此项时:
    * - 开启虚拟滚动
    * - 超出此高度会出现滚动条
-   * - 内容不再支持超出自动折行，一律使用size或itemHeight指定的高度
    * */
   height?: number | string;
 
   /* ############## 定制选项 ############## */
   /** 公共的操作区内容, 渲染在每个节点的右侧  */
   actions?: React.ReactNode | ((current: TreeNode) => React.ReactNode);
-  /** 自定义所有节点的默认前导图标，权重小于option中单独设置的 */
+  /** 自定义所有叶子节点的默认前导图标，权重小于option中单独设置的 */
   icon?: React.ReactNode;
+  /** 自定义所有树枝节点的默认前导图标，权重小于option中单独设置的 */
+  twigIcon?: React.ReactNode;
+  /** 自定义节点渲染方式, 接收到的icon为从不同配置中获取的最终icon */
+  customIconRender?: (icon: string | React.ReactNode, node: TreeNode) => React.ReactNode;
   /** 尺寸 */
   size?: SizeKeys;
   /** 节点项的基础高度，传入时覆盖size选项的默认项高度 */

@@ -6,6 +6,7 @@
     z-index: 100000 !important;
     user-select: none;
     touch-action: none;
+    pointer-events: none;
   }
 
   &_placeholder {

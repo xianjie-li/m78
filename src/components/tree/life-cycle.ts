@@ -17,6 +17,10 @@ export function useTreeLifeCycle(
   const { state, setState, self } = treeState;
   const { defaultOpenAll, defaultOpenZIndex, dataSource, valueKey, labelKey, childrenKey } = props;
 
+  // 搜索是否开启
+  const shouldSearch =
+    'keyword' in props || hasSearch; /* hasSearch为true目前表现为tree组件开启了toolbar search */
+
   // 同步平铺dataSource
   useEffect(() => {
     if (!dataSource) {
@@ -32,20 +36,17 @@ export function useTreeLifeCycle(
       });
     }
 
-    // setTimeout(() => {
     const flatTree = flatTreeData(dataSource, {
       valueKey: valueKey!,
       labelKey: labelKey!,
       childrenKey: childrenKey!,
-      skipSearchKeySplicing: !hasSearch,
-      // !share.toolbar?.search,
+      skipSearchKeySplicing: !shouldSearch,
     });
 
     setState({
       nodes: flatTree,
       loading: false,
     });
-    // });
   }, [dataSource]);
 
   // 启用默认展开全部行为
@@ -57,9 +58,15 @@ export function useTreeLifeCycle(
     }
   }, [defaultOpenAll, state.nodes]);
 
+  // 同步props.keyword到state.keyword
+  useEffect(() => {
+    if (!shouldSearch) return;
+    treeState.setState({ keyword: props.keyword });
+  }, [props.keyword]);
+
   // 搜索时自动展开全部
   useUpdateEffect(() => {
-    if (!hasSearch) return;
+    if (!shouldSearch) return;
     setTimeout(() => functions.openAll(treeState));
   }, [state.keyword]);
 

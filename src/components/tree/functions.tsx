@@ -50,6 +50,8 @@ function getSelfAndDescendantsItem(item: TreeBaseNode) {
 function getSelfAndParents(item: TreeBaseNode) {
   const all = [item.value];
 
+  console.log(item, item.parentsValues);
+
   if (isArray(item.parentsValues)) {
     all.unshift(...item.parentsValues);
   }

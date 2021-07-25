@@ -77,7 +77,7 @@ export default function _useTreeStates<Node = TreeNode, DS = TreeDataSourceItem>
   const loadingChecker = useCheck<TreeValueType>({});
 
   /** 实际显示的列表 */
-  const showList = useMemo(() => getShowList(list, state, openChecker), [
+  const showList = useMemo(() => getShowList(list, state, openChecker, props.filter), [
     openChecker.checked,
     state.keyword,
     list,

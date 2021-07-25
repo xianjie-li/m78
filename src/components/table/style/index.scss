@@ -353,7 +353,9 @@
     user-select: none;
   }
 
-  &_drag-top-node, &_drag-bottom-node, &_drag-center-node {
+  &_drag-top-node,
+  &_drag-bottom-node,
+  &_drag-center-node {
     position: absolute;
     border: 8px solid transparent;
     border-left-color: var(--m78-color);
@@ -361,7 +363,8 @@
     z-index: 9999;
   }
 
-  &_drag-top-node, &_drag-bottom-node {
+  &_drag-top-node,
+  &_drag-bottom-node {
     &::after {
       content: '';
       position: absolute;

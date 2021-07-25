@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Table, TableColumns } from 'm78/table';
-import { dataSource } from './dataSource';
 import { mockTreeData } from './mock-tree-data';
 
 const columns: TableColumns = [

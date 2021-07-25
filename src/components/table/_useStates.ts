@@ -1,12 +1,6 @@
 import { useMemo, useRef } from 'react';
 import { createEvent, useFormState, useScroll, useSelf, useSetState } from '@lxjx/hooks';
-import {
-  _InnerSelf,
-  _InnerState,
-  TableColumnFixedEnum,
-  TableProps,
-  TableSortValue,
-} from './_types';
+import { _InnerSelf, _InnerState, TableProps, TableSortValue } from './_types';
 import { columnsBeforeFormat, syncTouchStatus } from './_functions';
 
 export function _useStates(props: TableProps) {

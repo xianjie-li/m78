@@ -30,7 +30,7 @@ group:
 
 html 表格的渲染效率是非常低的，这导致如果表格数据量很多会非常卡顿，如果你要渲染的数据很多，可以通过开箱即用的虚拟滚动来对其进行优化。
 
-- m78表格布局模式都是非fixed的，列宽根据内容动态设置，由于表格项是惰性加载的，如果列的内容宽度波动较大，建议为其设置一个固定的宽度, 否则表格会在子项宽度变更时会持续动态调整列宽
+- m78 表格布局模式都是非 fixed 的，列宽根据内容动态设置，由于表格项是惰性加载的，如果列的内容宽度波动较大，建议为其设置一个固定的宽度, 否则表格会在子项宽度变更时会持续动态调整列宽
 - 部分浏览器在使用默认滚动条时会包含滚动性能优化，关闭滚动条定制可以提升一定的性能
 
 渲染 99999 条记录
@@ -66,7 +66,6 @@ html 表格的渲染效率是非常低的，这导致如果表格数据量很多
 - 合并不作用于表头
 
 <code src="./span-demo.tsx" />
-
 
 ### 排序
 
@@ -141,7 +140,6 @@ html 表格的渲染效率是非常低的，这导致如果表格数据量很多
 同一级下只会同时展开一个
 
 <code src="./tree-accordion-demo.tsx" />
-
 
 ## 拖拽排序
 
@@ -240,6 +238,12 @@ interface TableProps {
   props?:
     | React.PropsWithoutRef<JSX.IntrinsicElements['td']>
     | ((cellMeta: TableMeta) => React.PropsWithoutRef<JSX.IntrinsicElements['td']> | void);
+  /** 自定义展开标识图标, 如果将className添加到节点上，会在展开时将其旋转90deg, 也可以通过open自行配置 */
+  expansionIcon?:
+    | React.ReactNode
+    | ((open: boolean, node: Node, className: string) => React.ReactNode);
+  /** 'children' | 自定义用于获取children的key */
+  childrenKey?: string;
 
   /* ############## 单选/多选 ############## */
   /** 是否可单选 (使用高亮样式) */
@@ -267,7 +271,7 @@ interface TableProps {
    * - 返回非以上值时，设置改节点为叶子节点，不可再展开
    * - 如果promise异常，则忽略操作
    *  */
-  onLoad?: (node: TableTreeNode) => Promise<TableDataSourceItem[]>;
+  onLoad?: (node: Node) => Promise<Item[]>;
   /** 手风琴模式，同级只会有一个节点被展开 */
   accordion?: boolean;
   /** 默认展开所有节点  */
@@ -277,7 +281,7 @@ interface TableProps {
   /** 将包含children但值为`[]`的数组视为子节点, 使其可在单选模式下不开启checkTwig的情况下选中 */
   emptyTwigAsNode?: boolean;
   /** 点击节点 */
-  onNodeClick?: (current: TableTreeNode) => void;
+  onNodeClick?: (current: Node) => void;
   /** 禁用(工具条、展开、选中) */
   disabled?: boolean;
   /** 指定打开的节点 (受控) */
@@ -285,9 +289,11 @@ interface TableProps {
   /** 指定默认打开的节点 (非受控) */
   defaultOpens?: TreeValueType[];
   /** 打开节点变更时触发 */
-  onOpensChange?: (nextOpens: TreeValueType[], nodes: TableTreeNode[]) => void;
-  /** 如何从选项中拿到children，默认是 item => item.children */
-  childrenGetter?: (optItem: Item) => Item[];
+  onOpensChange?: (nextOpens: TreeValueType[], nodes: Node[]) => void;
+  /** 过滤掉所有返回false的节点，使其不在列表显示 */
+  filter?: (current: Node) => boolean;
+  /** 过滤关键字, 用于实现本地搜索 */
+  keyword?: string;
 
   /* ############## 拖动 ############## */
   /** 开启拖动排序 */

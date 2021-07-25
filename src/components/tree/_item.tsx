@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import cls from 'clsx';
 import { If, Switch } from 'm78/fork';
 import { LoadingOutlined } from 'm78/icon';
@@ -10,11 +10,14 @@ import useTreeItem from './_use-tree-item';
 import { highlightKeyword } from './common';
 import { ItemProps, TreeBasePropsMix } from './_types';
 
+/** 默认的props.customIconRender */
+const defIconRender = (arg: any) => arg;
+
 const TreeItem = React.memo(({ data, share, className, style, size }: ItemProps) => {
   const { treeState, props, isVirtual } = share;
   const { state } = treeState;
   const { itemHeight, identWidth } = size;
-  const { indicatorLine } = props;
+  const { indicatorLine, customIconRender = defIconRender } = props;
 
   const originDs = data.origin;
 
@@ -23,6 +26,13 @@ const TreeItem = React.memo(({ data, share, className, style, size }: ItemProps)
     props: props as TreeBasePropsMix,
     treeState,
   });
+
+  /** 父级是否存在icon, 第0级元素固定返回true */
+  const parentHasIcon = useMemo(() => {
+    if (props.twigIcon || data.zIndex === 0) return true;
+    if (!data.parents?.length) return false;
+    return !!data.parents[data.parents.length - 1].origin.icon;
+  }, []);
 
   const actions = originDs.actions;
 
@@ -89,13 +99,24 @@ const TreeItem = React.memo(({ data, share, className, style, size }: ItemProps)
             >
               {itemState.renderExpansionIcon()}
             </span>
+            {(originDs.icon || props.twigIcon) && (
+              <span className="m78-tree_icon" style={iconStyle}>
+                {customIconRender(originDs.icon || props.twigIcon, data)}
+              </span>
+            )}
           </If>
+          {/* 如果是节点、并且包含节点图标，在父级没有图标的情况下使用节点图标替换占位点，以优化显示 */}
           <If>
-            <span className="m78-tree_icon" style={iconStyle}>
-              {originDs.icon || props.icon || (
+            <If when={(!originDs.icon && !props.icon) || parentHasIcon}>
+              <span className="m78-tree_icon" style={iconStyle}>
                 <span className="m78-dot" style={{ width: 3, height: 3 }} />
-              )}
-            </span>
+              </span>
+            </If>
+            <If when={originDs.icon || props.icon}>
+              <span className="m78-tree_icon" style={iconStyle}>
+                {customIconRender(originDs.icon || props.icon, data)}
+              </span>
+            </If>
           </If>
         </Switch>
       </div>
@@ -105,13 +126,14 @@ const TreeItem = React.memo(({ data, share, className, style, size }: ItemProps)
   function renderLabel() {
     if (state.keyword) {
       return (
-        <span
+        <div
+          className="ellipsis"
           dangerouslySetInnerHTML={{ __html: highlightKeyword(originDs.label, state.keyword) }}
         />
       );
     }
 
-    return <span>{originDs.label}</span>;
+    return <div className="ellipsis">{originDs.label}</div>;
   }
 
   function renderChild(dragBonus?: DragBonus) {
@@ -157,10 +179,10 @@ const TreeItem = React.memo(({ data, share, className, style, size }: ItemProps)
         {itemState.isSCheck && itemState.isChecked && <div className="m78-tree_checked" />}
         <div className="m78-tree_main">
           {renderIdent()}
-          <span className={cls('m78-tree_cont', isVirtual && 'ellipsis')}>
+          <div className={cls('m78-tree_cont', isVirtual && 'ellipsis')}>
             {itemState.renderMultiCheck()}
             {renderLabel()}
-          </span>
+          </div>
         </div>
         {(props.actions || actions) && (
           <div className="m78-tree_action" {...stopPropagation}>

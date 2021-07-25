@@ -4,41 +4,16 @@ import { Divider } from 'm78/layout';
 import { Button } from 'm78/button';
 
 import './style.scss';
-import { mockTreeData } from '@/docs/view/table/mock-tree-data';
-import { Table, TableColumns } from 'm78/table';
-
-// 配置要显示的列
-const columns: TableColumns = [
-  {
-    label: '卡号',
-    field: 'id',
-  },
-  {
-    label: '名称',
-    field: 'name',
-  },
-  {
-    label: '日文名',
-    field: 'jName',
-  },
-  {
-    label: '级别',
-    field: 'level',
-  },
-  {
-    label: '攻',
-    field: 'atk',
-  },
-  {
-    label: '防',
-    field: 'def',
-  },
-];
+import dataSource1 from '@/docs/form/tree/ds1';
+import { Tree, TreeDataSourceItem } from 'm78/tree';
+import { Input } from 'm78/input';
 
 const App = () => {
   const dark = m78Config.useState(state => state.darkMode);
 
-  const [ds, setDs] = useState(() => mockTreeData(8, 3));
+  const [ds] = useState<TreeDataSourceItem[]>(dataSource1);
+
+  const [key, setKey] = useState('');
 
   return (
     <div className="p-32">
@@ -47,17 +22,15 @@ const App = () => {
       </Button>
       <Divider />
 
-      <div className="t2">
-        <Table
-          draggable
-          height={400}
-          valueKey="id"
-          columns={columns}
+      <div className="t2 border p-12" style={{ width: 300 }}>
+        <Input onChange={setKey} value={key} />
+        <Tree
           dataSource={ds}
-          onDataSourceChange={dd => {
-            console.log(222, dd);
-            setDs(dd);
-          }}
+          actions={<Button text>text</Button>}
+          icon="📘"
+          twigIcon="📂"
+          customIconRender={icon => <span>{icon}</span>}
+          keyword={key}
         />
       </div>
     </div>

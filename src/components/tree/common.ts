@@ -21,16 +21,16 @@ import {
 /** 预设尺寸 */
 export const sizeMap = {
   default: {
+    h: 32,
+    identW: 24,
+  },
+  small: {
     h: 26,
     identW: 20,
   },
-  small: {
-    h: 20,
-    identW: 16,
-  },
   large: {
     h: 36,
-    identW: 24,
+    identW: 28,
   },
 };
 
@@ -131,7 +131,7 @@ export function flatTreeData(
 
         // 添加父级节点value
         if (isArray(current.parents)) {
-          current.parentsValues = current.parents.map(it => it.origin[valueKey]);
+          current.parentsValues = current.parents.map(it => it.value);
         }
 
         // 为父节点添加child
