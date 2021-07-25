@@ -59,7 +59,7 @@ export function useTreeLifeCycle(
   }, [defaultOpenAll, state.nodes]);
 
   // 同步props.keyword到state.keyword
-  useEffect(() => {
+  useUpdateEffect(() => {
     if (!shouldSearch) return;
     treeState.setState({ keyword: props.keyword });
   }, [props.keyword]);

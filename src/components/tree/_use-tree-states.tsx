@@ -33,7 +33,7 @@ export default function _useTreeStates<Node = TreeNode, DS = TreeDataSourceItem>
   const [state, setState] = useSetState<_InsideState>({
     nodes: undefined,
     loading: true,
-    keyword: '',
+    keyword: 'keyword' in props ? props.keyword! : '',
   });
 
   /** 实例 */
