@@ -1,38 +1,53 @@
 import React, { useState } from 'react';
 import { m78Config } from 'm78/config';
-import { Divider } from 'm78/layout';
-import { Button } from 'm78/button';
 
 import './style.scss';
-import dataSource1 from '@/docs/form/tree/ds1';
-import { Tree, TreeDataSourceItem } from 'm78/tree';
-import { Input } from 'm78/input';
+import { TransitionBase } from 'm78/transition';
+import { config } from 'react-spring';
 
 const App = () => {
   const dark = m78Config.useState(state => state.darkMode);
 
-  const [ds] = useState<TreeDataSourceItem[]>(dataSource1);
-
-  const [key, setKey] = useState('');
+  const [show, setShow] = useState(true);
 
   return (
     <div className="p-32">
-      <Button onClick={() => m78Config.setState({ darkMode: !m78Config.getState().darkMode })}>
+      <button
+        type="button"
+        onClick={() => m78Config.setState({ darkMode: !m78Config.getState().darkMode })}
+      >
         {dark ? 'dark' : 'light'}
-      </Button>
-      <Divider />
+      </button>
 
-      <div className="t2 border p-12" style={{ width: 300 }}>
-        <Input onChange={setKey} value={key} />
-        <Tree
-          dataSource={ds}
-          actions={<Button text>text</Button>}
-          icon="📘"
-          twigIcon="📂"
-          customIconRender={icon => <span>{icon}</span>}
-          keyword={key}
-        />
-      </div>
+      <hr />
+
+      <button type="button" onClick={() => setShow(p => !p)}>
+        {show.toString()}
+      </button>
+
+      <TransitionBase
+        // appear={false}
+        from={{ opacity: 0, x: 0 }}
+        to={{ opacity: 1, x: 100 }}
+        show={show}
+        springProps={{
+          config: config.wobbly,
+        }}
+      >
+        14241241
+      </TransitionBase>
+
+      <TransitionBase
+        // appear={false}
+        from={{ n: 0 }}
+        to={{ n: 99999 }}
+        show={show}
+        changeVisible={false}
+      >
+        {style => style.n.to(n => n.toFixed(0))}
+      </TransitionBase>
+
+      <span>123</span>
     </div>
   );
 };

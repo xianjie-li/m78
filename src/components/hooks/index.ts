@@ -64,27 +64,38 @@ export function useDelayDerivedToggleStatus(
 
 /**
  * 用于便捷的实现mountOnEnter/unmountOnExit接口
- * monkeySet会在何时的情况下才进行更新，可以在直接调用而不用编写验证代码
+ * - 卸载的准确时机hook是不能感知的，因为可能中间存在动画或其他过渡行为，所以需要用户在正确时机调用unmount()通知
  * */
-export function useMountInterface(init: boolean, { mountOnEnter = true, unmountOnExit = false }) {
+export function useMountInterface(
+  toggle: boolean,
+  { mountOnEnter = true, unmountOnExit = false } = {},
+) {
   const [mount, setMount] = useState(() => {
     // mountOnEnter为false时，强制渲染, 否则取init
     if (!mountOnEnter) return true;
-    return init;
+    return toggle;
   });
 
-  function monkeySet(isMount: boolean) {
+  useEffect(() => {
+    toggle && monkeySet(toggle);
+  }, [toggle]);
+
+  function monkeySet(m: boolean) {
     // 需要挂载但未挂载时对其进行挂载
-    if (isMount && !mount) {
+    if (m && !mount) {
       setMount(true);
       return;
     }
 
     // 需要离场卸载且收到卸载通知且当前已挂载
-    if (unmountOnExit && !isMount && mount) {
+    if (unmountOnExit && !m && mount) {
       setMount(false);
     }
   }
 
-  return [mount, monkeySet] as const;
+  function unmount() {
+    monkeySet(false);
+  }
+
+  return [mount, unmount] as const;
 }
