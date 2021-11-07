@@ -75,7 +75,7 @@ $colors: rgba($color-info, 0.95) rgba($color-warn, 0.5) rgba($color-error, 0.95)
     background-color: nth($colors, 1);
     transform: rotate(45deg);
     border-radius: 160px 14px;
-    animation: m78-spin_unit1 1.6s infinite linear;
+    animation: m78-spin_unit1 2s infinite linear reverse;
     z-index: 1;
     box-shadow: 2px 2px 12px inset rgba(255,255,255,0.5);
   }
@@ -84,14 +84,14 @@ $colors: rgba($color-info, 0.95) rgba($color-warn, 0.5) rgba($color-error, 0.95)
     background-color: nth($colors, 2);
     transform: rotate(90deg);
     border-radius: 14px 160px;
-    animation: m78-spin_unit2 1.6s infinite linear;
+    animation: m78-spin_unit2 2s infinite linear reverse;
   }
 
   &:nth-child(3) {
     background-color: nth($colors, 3);
     transform: rotate(135deg);
     border-radius: 160px 14px;
-    animation: m78-spin_unit3 1.6s infinite linear;
+    animation: m78-spin_unit3 2s infinite linear reverse;
     z-index: 1;
     box-shadow: 2px 2px 12px inset rgba(255,255,255,0.5);
   }
@@ -100,7 +100,7 @@ $colors: rgba($color-info, 0.95) rgba($color-warn, 0.5) rgba($color-error, 0.95)
     background-color: nth($colors, 4);
     border-radius: 14px 160px;
     transform: rotate(180deg);
-    animation: m78-spin_unit4 1.6s infinite linear;
+    animation: m78-spin_unit4 2s infinite linear reverse;
   }
 }
 
