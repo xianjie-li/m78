@@ -1,0 +1,39 @@
+.box1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border: 1px solid var(--m78-color-border);
+  font-size: 32px;
+  text-align: center;
+  padding: 40px 0;
+
+  & + & {
+    margin-top: 24px;
+  }
+}
+
+.title {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  padding: 2px 4px;
+  background-color: var(--m78-color);
+  color: #fff;
+  font-size: 12px;
+  border-radius: 4px;
+}
+
+.desc {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  color: var(--m78-color-second);
+  font-size: 12px;
+
+  :global {
+    span + span {
+      margin-left: 12px;
+    }
+  }
+}

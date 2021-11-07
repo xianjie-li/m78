@@ -1,0 +1,43 @@
+@import '~@m78/style/var';
+
+.dndBox {
+  font-size: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 140px;
+  height: 140px;
+  border: 6px solid var(--m78-color-border);
+  cursor: grab;
+
+  > span {
+    pointer-events: none;
+  }
+
+  &:global(.__left) {
+    border-left: 6px solid blue;
+  }
+
+  &:global(.__top) {
+    border-top: 6px solid blue;
+  }
+
+  &:global(.__right) {
+    border-right: 6px solid blue;
+  }
+
+  &:global(.__bottom) {
+    border-bottom: 6px solid blue;
+  }
+}
+
+.dndBox2 {
+  padding: 12px;
+  width: 140px;
+  height: 140px;
+  box-shadow: var(--m78-shadow-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}

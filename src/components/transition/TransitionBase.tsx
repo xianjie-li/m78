@@ -7,14 +7,20 @@ import { TransitionBaseProps } from './types';
 export const _TransitionBase = (props: TransitionBaseProps) => {
   const {
     show = true,
-    to,
-    from,
     appear = true,
     tag = 'div',
     springProps,
+    innerRef,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    mountOnEnter,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    unmountOnExit,
+    to,
+    from,
     interpolater,
     changeVisible = true,
     children,
+    ...passProps
   } = props;
   const self = useSelf({
     isFirst: true,
@@ -63,8 +69,10 @@ export const _TransitionBase = (props: TransitionBaseProps) => {
 
   return (
     <Animated
-      ref={props.innerRef}
+      {...passProps}
+      ref={innerRef}
       style={{
+        ...props.style,
         ...sp,
         display: changeVisible
           ? sp.__progress.to((p: number) => (p === 0 ? 'none' : undefined))
@@ -72,7 +80,7 @@ export const _TransitionBase = (props: TransitionBaseProps) => {
         // 动画大部分未出场时阻止事件，防止隐藏出现等场景错误点击
         pointerEvents: sp.__progress.to((p: number) => (p <= 0.6 ? 'none' : undefined)),
       }}
-      className="aaBox"
+      className={props.className}
     >
       {typeof children === 'function' ? children(sp) : children}
     </Animated>

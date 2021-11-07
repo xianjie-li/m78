@@ -1,0 +1,60 @@
+@import '../../style/index';
+
+.m78-tips {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  line-height: var(--m78-line-height);
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 100%;
+  padding: 8px 12px;
+  background-color: var(--m78-component-bg);
+  box-shadow: var(--m78-shadow-1-b);
+  border: 1px solid var(--m78-color-border);
+  max-height: 150px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: var(--m78-z-index);
+
+  &_content {
+    flex: 1;
+  }
+
+  &_action {
+    margin-left: 12px;
+
+    .m78-btn + .m78-btn {
+      margin-left: 0;
+    }
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  &.__card {
+    width: 90%;
+    top: 16px;
+    border-radius: var(--m78-border-radius);
+  }
+
+  &.__fitWidth {
+    width: auto;
+    top: 16px;
+    white-space: nowrap;
+  }
+
+  &.__global {
+    position: fixed;
+    top: 48px;
+    z-index: var(--m78-z-index-message);
+    max-width: 90vw;
+    text-align: center;
+
+    &.__hasAction {
+      text-align: left;
+    }
+  }
+}

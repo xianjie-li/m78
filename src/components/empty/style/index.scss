@@ -1,0 +1,50 @@
+@import '../../style/index';
+
+.m78-empty {
+  padding: 16px;
+  text-align: center;
+  line-height: var(--m78-line-height);
+
+  &.__small {
+    .m78-empty_icon,
+    .m78-empty_icon > svg {
+      height: 48px;
+      width: auto;
+    }
+
+    .m78-empty_desc,
+    .m78-empty_actions {
+      font-size: var(--m78-fs);
+    }
+  }
+
+  &.__large {
+    .m78-empty_icon,
+    .m78-empty_icon > svg {
+      height: 80px;
+      width: auto;
+    }
+
+    .m78-empty_desc,
+    .m78-empty_actions {
+      font-size: var(--m78-fs-md);
+    }
+  }
+
+  &_icon,
+  &_icon > svg {
+    height: 64px;
+    width: auto;
+  }
+
+  &_desc {
+    color: var(--m78-color-second);
+    font-size: var(--m78-fs);
+    margin-top: 4px;
+  }
+
+  &_actions {
+    margin-top: 4px;
+    font-size: var(--m78-fs);
+  }
+}

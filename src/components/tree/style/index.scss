@@ -1,0 +1,272 @@
+@import '../../style/index';
+
+$base-h: 26px;
+$ident-w: 20px;
+
+.m78-tree {
+  position: relative;
+  line-height: var(--m78-line-height);
+  font-size: var(--m78-fs);
+  text-align: left;
+  width: 100%;
+
+  &.__style {
+    border-radius: var(--m78-border-radius);
+
+    .m78-tree_toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px dashed var(--m78-color-divider);
+      padding-bottom: 12px;
+      margin-bottom: 12px;
+
+      .m78-btn {
+        margin-left: 0;
+      }
+    }
+
+    .m78-tree_toolbar-left {
+      flex: 1;
+    }
+
+    .m78-tree_toolbar-right {
+      flex: 0.6;
+      margin-left: 12px;
+    }
+  }
+
+  &_nodes {
+  }
+
+  &.__large {
+    .m78-tree_item {
+      font-size: var(--m78-fs-md);
+      padding: 0 12px 0 4px;
+    }
+  }
+
+  &.__hoverEffect {
+    .m78-tree_item {
+      @include effect-bg;
+    }
+  }
+
+  &_item {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 4px;
+    border-radius: var(--m78-border-radius);
+    user-select: none;
+    background-color: transparent;
+  }
+
+  &_main {
+    display: flex;
+    flex: 1;
+    border-radius: var(--m78-border-radius);
+    min-width: 0; /* 修复子级ellipsis */
+  }
+
+  &_cont {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    min-width: 0;
+    margin-left: 4px;
+  }
+
+  &_ident {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+  }
+
+  &_icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    .m78-dot {
+      margin: 0;
+
+      &.__small {
+        width: 3px;
+        height: 3px;
+      }
+    }
+
+    &.__open {
+      .m78-tree_open-icon {
+        transform: rotate(90deg);
+      }
+    }
+
+    &.__empty {
+      color: var(--m78-color-disable);
+    }
+  }
+
+  &_open-icon {
+    transition: var(--m78-animate-base);
+  }
+
+  // 直接渲染节点会比伪类空白时间更短?
+  &_turn-line {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    top: 0;
+    left: 50%;
+
+    &::after,
+    &::before {
+      content: '';
+      position: absolute;
+      background-color: var(--m78-color-border);
+    }
+
+    &::after {
+      width: 1px;
+      height: 100%;
+      left: 0;
+      top: 0;
+    }
+
+    &::before {
+      height: 1px;
+      width: 100%;
+      left: 0;
+      top: 100%;
+    }
+  }
+
+  &_line {
+    position: absolute;
+    width: 1px;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    background-color: var(--m78-color-border);
+    border-color: transparent !important;
+  }
+
+  &_ident-unit {
+    position: relative;
+    display: inline-block;
+    height: 100%;
+    //width: $ident-w;
+
+    &.__c0 {
+      .m78-tree_line,
+      .m78-tree_turn-line::after,
+      .m78-tree_turn-line::before {
+        background-color: rgba($red-6, 0.3);
+      }
+    }
+
+    &.__c1 {
+      .m78-tree_line,
+      .m78-tree_turn-line::after,
+      .m78-tree_turn-line::before {
+        background-color: rgba($orange-6, 0.3);
+      }
+    }
+
+    &.__c2 {
+      .m78-tree_line,
+      .m78-tree_turn-line::after,
+      .m78-tree_turn-line::before {
+        background-color: rgba($green-6, 0.3);
+      }
+    }
+
+    &.__c3 {
+      .m78-tree_line,
+      .m78-tree_turn-line::after,
+      .m78-tree_turn-line::before {
+        background-color: rgba($cyan-6, 0.3);
+      }
+    }
+
+    &.__c4 {
+      .m78-tree_line,
+      .m78-tree_turn-line::after,
+      .m78-tree_turn-line::before {
+        background-color: rgba($purple-6, 0.3);
+      }
+    }
+  }
+
+  &_action {
+    display: flex;
+    align-items: center;
+    margin-left: 4px;
+  }
+
+  &_skeleton {
+    display: flex;
+  }
+
+  &_skeleton-bar {
+    background-color: var(--m78-color-divider);
+    height: 68%;
+    margin-right: 10px;
+    color: transparent;
+    border-radius: var(--m78-border-radius);
+  }
+
+  &_checked {
+    position: absolute;
+    border: 2px solid var(--m78-color);
+    background-color: var(--m78-color-opacity-sm);
+    border-radius: var(--m78-border-radius);
+    z-index: 0;
+    pointer-events: none;
+
+    @include full;
+  }
+
+  &_empty {
+    margin: 32px auto;
+    text-align: center;
+  }
+
+  &_disabled {
+    color: var(--m78-color-disable);
+    background-color: transparent !important;
+    cursor: not-allowed !important;
+  }
+
+  &_drag-combine {
+    background-color: var(--m78-color-opacity-sm);
+  }
+
+  &_drag-top-node {
+    top: -1.5px !important;
+  }
+
+  &_drag-bottom-node {
+    bottom: -1.5px !important;
+  }
+
+  &_drag-top-node,
+  &_drag-bottom-node {
+    z-index: 9999;
+    margin-left: 8px;
+
+    &::before {
+      content: '';
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      left: -7px;
+      top: -3px;
+      border-radius: 50%;
+      border: 2px solid var(--m78-color);
+    }
+  }
+}

@@ -1,0 +1,28 @@
+.Item {
+  height: 38px;
+  background-color: var(--m78-component-bg);
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  padding: 0 12px;
+
+  & + & {
+    border-top: 1px solid var(--m78-color-border);
+    margin-top: 1px;
+  }
+}
+
+.HItem {
+  display: inline-block;
+  height: 60px;
+  line-height: 60px;
+  background-color: var(--m78-component-bg);
+  font-size: 20px;
+  text-align: center;
+  padding: 0 12px;
+
+  * + * {
+    border-left: 1px solid var(--m78-color-border);
+  }
+}

@@ -1,0 +1,222 @@
+@import '../../style/index';
+
+.m78-select {
+  .m78-input_prefix {
+    //z-index: 1000;
+  }
+
+  &.__has-multiple-tag {
+    height: auto;
+    flex-wrap: wrap;
+    min-height: 32px;
+    padding: 6px 10px;
+    .m78-input_prefix {
+      flex: 1 0 auto;
+      width: 100%;
+    }
+    .m78-input {
+      margin-top: 4px;
+    }
+
+    &.__not-search {
+      padding: 0 10px;
+    }
+
+    &.__not-search .m78-input {
+      display: none;
+    }
+
+    &.__not-search .m78-input_suffix {
+      display: none;
+    }
+  }
+
+  &.__not-search {
+    border-style: solid !important;
+  }
+
+  &.__text-value {
+    .m78-input::placeholder {
+      color: var(--m78-color-title) !important;
+    }
+
+    &.__empty,
+    &.__focus {
+      .m78-input::placeholder {
+        color: var(--m78-color-second) !important;
+      }
+    }
+  }
+
+  &_popper:not(.__hasArrow) {
+    .m78-popper_arrow {
+      display: none;
+    }
+  }
+
+  &_list {
+    position: relative;
+    //min-width: 280px;
+    max-width: 90vw;
+    z-index: var(--m78-z-index-base);
+
+    .m78-empty {
+      padding: 8px 12px;
+    }
+
+    &.__disabled {
+      &::after {
+        content: '';
+        position: absolute;
+        background-color: var(--m78-color-disable);
+        cursor: not-allowed;
+        @include full;
+      }
+    }
+  }
+
+  &_item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--m78-space-3);
+    cursor: pointer;
+    user-select: none;
+    @include ellipsis-x;
+    background-color: var(--m78-component-bg);
+    overflow-y: auto;
+
+    &:hover {
+      background-color: var(--m78-color-opacity-sm);
+    }
+
+    &:active {
+      background-color: var(--m78-color-opacity-md);
+    }
+
+    &.__title,
+    &.__divider,
+    &.__disabled {
+      background-color: var(--m78-component-bg) !important;
+      cursor: auto;
+    }
+
+    &.__active {
+      background-color: var(--m78-color-opacity-md);
+      font-weight: var(--m78-fw-bold);
+    }
+
+    &.__title {
+      font-size: var(--m78-fs);
+      color: var(--m78-color-second);
+    }
+
+    &.__divider {
+      height: 1px;
+    }
+
+    &.__disabled {
+      color: var(--m78-color-disable);
+      cursor: not-allowed;
+    }
+  }
+
+  &_check-icon {
+    color: var(--m78-color);
+    margin-left: 4px;
+  }
+
+  &_tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  &_tag {
+    max-width: 40%;
+    display: flex;
+    align-items: center;
+    position: relative;
+    line-height: var(--m78-line-height);
+    border: 1px dashed var(--m78-color-border);
+    margin: 4px 8px 4px 0;
+    height: 28px;
+    padding: 4px var(--m78-space-3);
+    padding-right: 28px;
+    font-size: 12px;
+    background: var(--m78-component-bg);
+    border-radius: var(--m78-border-radius);
+
+    &.__small {
+      height: $size-small;
+    }
+
+    &.__large,
+    &.__big {
+      height: $size-large;
+      font-size: var(--m78-fs-md);
+    }
+
+    &.__disabled {
+      .m78-select_close-btn {
+        pointer-events: none;
+      }
+    }
+  }
+
+  &_toolbar {
+    -webkit-filter: blur(0); // chrome模糊
+    overflow: hidden;
+
+    .m78-btn + .m78-btn {
+      margin-left: 0;
+    }
+
+    &-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 40px;
+      padding: 0 var(--m78-space-3);
+    }
+  }
+
+  &_down-icon {
+    position: relative;
+    top: 0.1em;
+    color: var(--m78-color-second);
+    transition: 0.3s transform;
+
+    &.__reverse {
+      transform: rotate(180deg);
+    }
+  }
+
+  &_prefix {
+    margin-right: 4px;
+    font-weight: 400;
+  }
+
+  &_suffix {
+    margin-left: 4px;
+  }
+
+  &_close-btn {
+    line-height: 1;
+    position: absolute;
+    right: 6px;
+    background-color: var(--m78-gray-2);
+    cursor: pointer;
+    font-size: 18px;
+    margin-left: 6px;
+    color: var(--m78-color-second);
+    border-radius: 50%;
+
+    @include effect-font;
+  }
+}

@@ -59,3 +59,16 @@ export interface TransitionProps extends Base {
   /** true | 为所有类型的动画附加fade动画，使其视觉效果更平滑 */
   alpha?: boolean;
 }
+
+interface TransitionConfigItem {
+  from: any;
+  to: any;
+  config?: any;
+  // 关闭
+  skipFade?: boolean;
+  interpolater?: TransitionBaseProps['interpolater'];
+}
+
+export type _TransitionConfigsType = {
+  [key in BuiltInTransitionTypes]: TransitionConfigItem;
+};
