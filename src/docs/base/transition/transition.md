@@ -1,7 +1,51 @@
-/** 基础动画配置 */
-import { AnyObject, ComponentBasePropsWithAny } from '@lxjx/utils';
-import React from 'react';
-import { Primitives } from '@react-spring/web/dist/declarations/src/primitives';
+---
+title: Transition - 过渡动画
+group:
+  title: 基础组件
+  path: /base
+  order: 1000
+---
+
+# Transition
+
+简化简单动画的使用，内置很多常用动画且支持一定程度的定制。
+
+> 对于富交互并且包含多个动画结果的动画应使用react-spring等动画库
+
+## 内置动画
+
+<code src="./builtIn.tsx" />
+
+## 定制动画
+
+使用`TransitionBase`来简单的实现各种自定义动画, 可以通过`interpolater`prop或render children来进行更为强大的插值动画
+children来进行更为强大的插值动画
+
+<code src="./custom.tsx" />
+
+## 动画配置
+
+动画配置, 可用于配置动画表现、行为、添加动画回调钩子等,
+更多细节请参考[react-spring](https://www.react-spring.io/)
+
+<code src="./config.tsx" />
+
+
+## props
+
+**`<Button>`**
+
+```tsx | pure
+export enum TransitionTypeEnum {
+  fade = 'fade',
+  zoom = 'zoom',
+  punch = 'punch',
+  slideLeft = 'slideLeft',
+  slideRight = 'slideRight',
+  slideTop = 'slideTop',
+  slideBottom = 'slideBottom',
+  bounce = 'bounce',
+}
 
 interface Base extends ComponentBasePropsWithAny {
   /** true | 控制显示隐藏 */
@@ -28,21 +72,6 @@ interface Base extends ComponentBasePropsWithAny {
   unmountOnExit?: boolean;
 }
 
-export enum TransitionTypeEnum {
-  fade = 'fade',
-  zoom = 'zoom',
-  punch = 'punch',
-  slideLeft = 'slideLeft',
-  slideRight = 'slideRight',
-  slideTop = 'slideTop',
-  slideBottom = 'slideBottom',
-  bounce = 'bounce',
-}
-
-export type TransitionTypeKeys = keyof typeof TransitionTypeEnum;
-
-export type TransitionType = TransitionTypeEnum | TransitionTypeKeys;
-
 /* 基础动画组件的类型 */
 export interface TransitionBaseProps extends Base {
   /** 动画的入场状态 */
@@ -64,16 +93,4 @@ export interface TransitionProps extends Base {
   /** true | 为所有类型的动画附加fade动画，使其视觉效果更平滑 */
   alpha?: boolean;
 }
-
-interface TransitionConfigItem {
-  from: any;
-  to: any;
-  config?: any;
-  // 关闭
-  skipFade?: boolean;
-  interpolater?: TransitionBaseProps['interpolater'];
-}
-
-export type _TransitionConfigsType = {
-  [key in TransitionTypeKeys]: TransitionConfigItem;
-};
+```

@@ -1,4 +1,4 @@
-import { BuiltInTransitionTypes, TransitionProps } from 'm78/transition';
+import { TransitionProps, TransitionType } from 'm78/transition';
 import { ComponentBaseProps } from 'm78/types/types';
 import React from 'react';
 
@@ -41,7 +41,7 @@ export interface ModalBaseProps extends ComponentBaseProps {
   /** 360 | 弹窗宽度 */
   maxWidth?: number | string;
   /** 动画类型, 默认从光标位置出现 */
-  animationType?: BuiltInTransitionTypes | 'fromMouse';
+  animationType?: TransitionType | 'fromMouse';
   /** true | 开启后内容会在Modal开启时才进行渲染，关闭后内容随Modal一起渲染, 并根据show状态决定是否显示 */
   mountOnEnter?: boolean;
   /** false | Modal关闭后是否卸载其内容 */

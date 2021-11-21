@@ -1,0 +1,16 @@
+.wrap {
+  display: inline-flex;
+  width: 140px;
+  height: 140px;
+}
+
+.box {
+  position: absolute;
+  display: flex;
+  align-items: center;justify-content: center;
+  border: 2px solid var(--m78-color);
+  font-size: 16px;
+  width: 120px;
+  height: 120px;
+  border-radius: var(--m78-border-radius);
+}

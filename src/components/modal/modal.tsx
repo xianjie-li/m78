@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Portal } from 'm78/portal';
 import { Z_INDEX_MODAL } from 'm78/util';
 import { useMeasure } from 'react-use';
-import { config as spConfig, Transition, BuiltInTransitionTypes } from 'm78/transition';
+import { config as spConfig, Transition, TransitionType } from 'm78/transition';
 import { useFormState, useSameState, useRefize, useSelf } from '@lxjx/hooks';
 import { animated, to } from 'react-spring';
 
@@ -167,7 +167,7 @@ const _ModalBase: React.FC<ModalBaseProps> = props => {
     return (
       <Transition
         show={show}
-        type={animationType as BuiltInTransitionTypes}
+        type={animationType as TransitionType}
         springProps={{
           config: animationConfig,
         }}

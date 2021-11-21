@@ -49,7 +49,7 @@ const _ImagePreview: React.FC<ImagePreviewProps> = ({
 
   /* 锁定滚动条 + 防止页面抖动 */
   const [lock, toggleLock] = useToggle(!!show);
-  useLockBodyScroll(lock);
+  useLockBodyScroll(!!show);
   useUpdateEffect(() => {
     if (show) toggleLock(true);
     if (!show) {
@@ -205,17 +205,15 @@ const _ImagePreview: React.FC<ImagePreviewProps> = ({
             {images.map((item, key) => (
               <div key={key} className="m78-image-preview_img-wrap">
                 <Viewer ref={viewer => (self.viewers[key] = viewer!)}>
-                  <span>
-                    <If when={self.currentPage >= key - 1 && self.currentPage <= key + 1}>
-                      <Picture
-                        {...stopPropagation}
-                        src={item.img}
-                        alt="图片加载失败"
-                        className="m78-image-preview_img"
-                        imgProps={{ onDragStart: disabledDrag }}
-                      />
-                    </If>
-                  </span>
+                  <If when={self.currentPage >= key - 1 && self.currentPage <= key + 1}>
+                    <Picture
+                      {...stopPropagation}
+                      src={item.img}
+                      alt="图片加载失败"
+                      className="m78-image-preview_img"
+                      imgProps={{ onDragStart: disabledDrag }}
+                    />
+                  </If>
                 </Viewer>
               </div>
             ))}
