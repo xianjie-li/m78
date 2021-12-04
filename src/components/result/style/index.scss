@@ -20,7 +20,7 @@
     width: 100%;
     text-align: center;
     line-height: 1.5;
-    max-width: $sm;
+    max-width: var(--m78-sm);
   }
 
   &_icon {

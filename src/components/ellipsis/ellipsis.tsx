@@ -72,7 +72,7 @@ const Ellipsis: React.FC<MaskProps> = ({
   return (
     <div
       ref={el}
-      className={cls('m78-ellipsis', className, {
+      className={cls('m78 m78-ellipsis', className, {
         ellipsis: !shouldAddShadow && line === 1,
       })}
       style={{

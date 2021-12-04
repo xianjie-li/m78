@@ -141,7 +141,7 @@ const Popper = (_props: PopperProps) => {
     return (
       <Portal namespace="popper">
         <animated.div
-          className={cls('m78-popper', state.direction && `__${state.direction}`, props.className)}
+          className={cls('m78 m78-popper', state.direction && `__${state.direction}`, props.className)}
           /** 为气泡挂载鼠标事件，用于鼠标在target和气泡间移动时不会关闭 */
           onMouseEnter={triggerType.hover ? handlers.mouseEnterHandle : undefined}
           onMouseLeave={triggerType.hover ? handlers.mouseLeaveHandle : undefined}

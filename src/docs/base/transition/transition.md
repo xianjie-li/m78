@@ -47,6 +47,7 @@ export enum TransitionTypeEnum {
   bounce = 'bounce',
 }
 
+/** TransitionBase和Transition都支持的props */
 interface Base extends ComponentBasePropsWithAny {
   /** true | 控制显示隐藏 */
   show?: boolean;

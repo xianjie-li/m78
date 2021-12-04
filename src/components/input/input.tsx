@@ -327,7 +327,7 @@ const Input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
 
   return (
     <span
-      className={cls('m78-input_wrap', className, status && `__${status}`, size && `__${size}`, {
+      className={cls('m78 m78-input_wrap', className, status && `__${status}`, size && `__${size}`, {
         '__not-border': !textArea && notBorder,
         __underline: !textArea && underline,
         __focus: focus,

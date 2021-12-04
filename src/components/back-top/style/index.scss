@@ -9,8 +9,8 @@
   z-index: var(--m78-z-index);
 
   .m78-btn {
-    width: $size-default;
-    height: $size-default;
+    width: var(--m78--unit-size);
+    height: var(--m78--unit-size);
     border-radius: 50%;
     padding: 0;
     box-shadow: var(--m78-shadow-2-b) !important;

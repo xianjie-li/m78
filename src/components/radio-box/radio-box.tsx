@@ -12,7 +12,7 @@ const RadioBox = <Val extends unknown>(props: RadioBoxProps<Val>) => {
   const [value, setValue] = useFormState<Val>(props, undefined!);
 
   return (
-    <div className="m78-radio-box m78-check_group">
+    <div className="m78 m78-radio-box m78-check_group">
       {options.map((item, index) => (
         <Check
           key={index}

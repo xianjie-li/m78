@@ -457,7 +457,7 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
     <Popper
       offset={arrow ? 12 : 4}
       style={listStyle}
-      className={cls('m78-select_popper', listClassName, {
+      className={cls('m78 m78-select_popper', listClassName, {
         __hasArrow: arrow,
         __dropdown: isDropDown,
       })}
@@ -475,6 +475,6 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
   );
 }
 
-Select.displayName = 'FrSelect';
+Select.displayName = 'M78Select';
 
 export default Select;

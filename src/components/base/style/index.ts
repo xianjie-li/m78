@@ -1,5 +1,5 @@
 /* 基础样式 */
 import '@m78/style/index.scss';
 
-/* 组件库内部基础样式 */ ``;
+/* 组件库内部基础样式 */
 import './base.scss';

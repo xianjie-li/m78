@@ -13,7 +13,7 @@
   word-break: break-all;
   background-color: var(--m78-body-bg);
   margin: auto;
-  max-width: $md;
+  max-width: var(--m78-md);
   border: 1px solid var(--m78-color-border);
   text-align: left;
 
@@ -117,7 +117,7 @@
     }
 
     &:not(.__inline) {
-      max-width: $sm;
+      max-width: var(--m78-sm);
 
       // 调整横向模式下提示文本和页脚的左边距，多出2px使视觉上更好看
 

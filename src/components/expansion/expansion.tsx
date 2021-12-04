@@ -51,7 +51,7 @@ const Expansion = (props: ExpansionProps) => {
   return (
     <Provider value={ctxProps}>
       <div
-        className={classNames('m78-expansion', !props.noStyle && '__style', className)}
+        className={classNames('m78 m78-expansion', !props.noStyle && '__style', className)}
         style={style}
       >
         {children}

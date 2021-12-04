@@ -105,7 +105,7 @@ const CountDown: React.FC<CountDownProps> = ({
     })}`;
   }
 
-  return <span className={cls('m78-count-down', className)} style={style} ref={ref} />;
+  return <span className={cls('m78 m78-count-down', className)} style={style} ref={ref} />;
 };
 
 export default CountDown;

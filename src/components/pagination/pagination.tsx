@@ -233,7 +233,7 @@ const Pagination = (props: PaginationProps) => {
 
   if (simple) {
     return (
-      <div className="m78-pagination __simple">
+      <div className="m78 m78-pagination __simple">
         {renderPrev()}
         {renderJumper()} / <span className="m78-pagination_simple-total">{totalPage}</span>
         {renderNext()}
@@ -243,7 +243,7 @@ const Pagination = (props: PaginationProps) => {
 
   return (
     <div
-      className={cls('m78-pagination', {
+      className={cls('m78 m78-pagination', {
         __plain: plain,
         __small: size === 'small',
       })}

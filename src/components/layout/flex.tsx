@@ -31,7 +31,7 @@ const Column = ({
   return (
     <div
       {...ppp}
-      className={cls('m78-column', className, getClasses(mainAlign, crossAlign))}
+      className={cls('m78 m78-column', className, getClasses(mainAlign, crossAlign))}
       style={style}
       ref={innerRef}
     >
@@ -53,7 +53,7 @@ const Row = ({
     <div
       {...ppp}
       ref={innerRef}
-      className={cls('m78-row', className, getClasses(mainAlign, crossAlign))}
+      className={cls('m78 m78-row', className, getClasses(mainAlign, crossAlign))}
       style={style}
     >
       {children}
@@ -65,7 +65,7 @@ const Flex = ({ flex = 1, children, order, style, className, align, ...ppp }: Fl
   return (
     <div
       {...ppp}
-      className={cls(className, align && `m78-self-${align}`)}
+      className={cls('m78 m78-flex', className, align && `m78-self-${align}`)}
       style={{ flex, order, ...style }}
     >
       {children}

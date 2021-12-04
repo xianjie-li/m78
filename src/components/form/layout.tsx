@@ -17,7 +17,7 @@ export function FormLayout({
       {...ppp}
       effect={false}
       itemStyle={itemStyle}
-      className={clsx('m78-form', layout && `__${layout}`, className)}
+      className={clsx('m78 m78-form', layout && `__${layout}`, className)}
     >
       {children}
     </ListView>

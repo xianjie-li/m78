@@ -87,7 +87,7 @@ const PageHeader = ({
     <>
       {fixed && <div style={{ height }} />}
       <div
-        className={cls('m78-page-header', className, {
+        className={cls('m78 m78-page-header', className, {
           __center: centerTitle,
           __shadow: shadow,
           __border: border,

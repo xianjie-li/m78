@@ -36,7 +36,7 @@ const Result: React.FC<ResultProps> = ({
         }}
         mountOnEnter
         unmountOnExit
-        className={cls('m78-result', className, { __fixed: fixed })}
+        className={cls('m78 m78-result', className, { __fixed: fixed })}
         style={style}
       >
         <div className="m78-result_cont">

@@ -126,7 +126,7 @@
 
     &-unit-wrap {
       display: flex;
-      min-height: $size-default;
+      min-height: var(--m78--unit-size);
 
       .m78-form_item {
         padding: 0 !important;

@@ -223,7 +223,7 @@ const Viewer = React.forwardRef<ViewerRef, ViewerProps>(
     }
 
     return (
-      <div ref={innerWrap} className={cls('m78-viewer', className)} style={style}>
+      <div ref={innerWrap} className={cls('m78 m78-viewer', className)} style={style}>
         <animated.div
           ref={eventEl}
           className="m78-viewer_cont"

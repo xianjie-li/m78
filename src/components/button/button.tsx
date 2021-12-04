@@ -81,7 +81,7 @@ function Button(btnProps: ButtonPropsWithHTMLLink | ButtonPropsWithHTMLButton) {
 
   const darkMode = config.useState(state => state.darkMode);
 
-  const classNames = cls(className, 'm78-btn', 'm78-effect', {
+  const classNames = cls(className, 'm78 m78-btn', 'm78-effect', {
     [`__${color}`]: color,
     [`__${size}`]: size,
     __circle: circle,

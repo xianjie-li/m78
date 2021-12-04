@@ -12,7 +12,7 @@ interface CenterProps extends ComponentBaseProps {
 const Center = ({ children, attach, className, style }: CenterProps) => {
   return (
     <div
-      className={cls('m78-center', className, style)}
+      className={cls('m78 m78-center', className, style)}
       style={{ position: attach ? 'absolute' : undefined, ...style }}
     >
       {children}

@@ -17,7 +17,7 @@ const Tile = ({
     <Row
       {...ppp}
       innerRef={innerRef}
-      className={cls('m78-tile', className)}
+      className={cls('m78 m78-tile', className)}
       crossAlign={crossAlign}
     >
       {leading && <div className="m78-tile_leading">{leading}</div>}

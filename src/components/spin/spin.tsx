@@ -25,7 +25,7 @@ const Spin: React.FC<SpinProps> = ({
       type="fade"
       mountOnEnter
       unmountOnExit
-      className={cls(className, 'm78-spin', {
+      className={cls(className, 'm78 m78-spin', {
         [`__${size}`]: !!size,
         __inline: inline,
         __full: full,

@@ -78,7 +78,7 @@ const ForkImpl: React.FC<ForkProps> = ({
 
   function renderFeedback() {
     return (
-      <div className={classNames('m78-fork', className)} style={style}>
+      <div className={classNames('m78 m78-fork', className)} style={style}>
         {feedbackNode}
       </div>
     );

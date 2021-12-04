@@ -60,7 +60,7 @@ function Tips({ controller: queue }: TipsProps) {
     return (
       <animated.div
         className={cls(
-          'm78-tips',
+          'm78 m78-tips',
           `__${item.type}`,
           item.fitWidth && '__fitWidth',
           item.global && '__global',

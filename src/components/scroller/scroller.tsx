@@ -154,7 +154,7 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
   return (
     <div
       className={cls(
-        'm78-scroller',
+        'm78 m78-scroller',
 
         props.className,
       )}

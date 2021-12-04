@@ -30,7 +30,7 @@ const CheckBox = React.forwardRef<UseCheckReturns<any, any>, CheckBoxProps<any>>
     useImperativeHandle(ref, () => ck);
 
     return (
-      <div className="m78-radio-box m78-check_group">
+      <div className="m78 m78-radio-box m78-check_group">
         {options.map((item, index) => (
           <Check<Val>
             key={index}

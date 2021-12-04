@@ -298,8 +298,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: $size-small;
-    height: $size-small;
+    width: var(--m78--unit-size-small);
+    height: var(--m78--unit-size-small);
     font-size: 18px;
     border-radius: 4px;
     margin-right: 4px;
@@ -311,7 +311,7 @@
 
   &_sort-btn {
     display: flex;
-    height: $size-small;
+    height: var(--m78--unit-size-small);
     flex-direction: column;
     align-items: center;
     justify-content: center;

@@ -3,8 +3,6 @@
 .m78-btn {
   appearance: none;
   position: relative;
-  /* 退级 */
-  display: inline-block;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -14,7 +12,7 @@
   user-select: none;
   border: 1px solid var(--m78-color-border);
   padding: 0 18px;
-  height: $size-default;
+  height: var(--m78--unit-size);
   font-size: var(--m78-fs);
   line-height: 1;
   border-radius: var(--m78-border-radius);
@@ -72,13 +70,13 @@
 
   // 大小
   &.__large {
-    height: $size-large;
+    height: var(--m78--unit-size-large);
     padding: 0 26px;
     font-size: 18px;
   }
 
   &.__small {
-    height: $size-small;
+    height: var(--m78--unit-size-small);
     padding: 0 8px;
     font-size: 14px;
   }
@@ -93,7 +91,7 @@
   &.__block {
     display: block;
     width: 100%;
-    max-width: $sm;
+    max-width: var(--m78-sm);
     margin: 0 auto;
 
     & + & {
@@ -317,7 +315,7 @@
   }
 }
 
-@include btn('blue', $color-info);
-@include btn('green', $color-success);
-@include btn('red', $color-error);
-@include btn('yellow', $color-warn);
+@include btn('blue', #40a9ff);
+@include btn('green', #73d13d);
+@include btn('red', #ff4d4f);
+@include btn('yellow', #ffa940);

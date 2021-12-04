@@ -1,7 +1,0 @@
-## 样式
-1. 在组件入口通过`import 'm78/<componentName>/style';`引入组件样式
-2. 对应组件的目录下引入css, 如果其他组件依赖了`../../base/style`, 其实是可以不引入的
-```ts
-import '../../base/style';
-import './index.scss';
-```

@@ -122,7 +122,7 @@ const Message: React.FC<MessageProps> = ({
     <animated.div
       // @ts-ignore TODO: 修复react-spring类型问题
       style={springProp}
-      className="m78-message_item"
+      className="m78 m78-message_item"
     >
       <Portal>
         <Transition className="m78-mask" show={maskShow} type="fade" mountOnEnter unmountOnExit />

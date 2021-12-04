@@ -164,7 +164,8 @@ $ident-w: 20px;
       .m78-tree_line,
       .m78-tree_turn-line::after,
       .m78-tree_turn-line::before {
-        background-color: rgba($red-6, 0.3);
+        background-color: var(--m78-red-6);
+        opacity: 0.3;
       }
     }
 
@@ -172,7 +173,8 @@ $ident-w: 20px;
       .m78-tree_line,
       .m78-tree_turn-line::after,
       .m78-tree_turn-line::before {
-        background-color: rgba($orange-6, 0.3);
+        background-color: var(--m78-orange-6);
+        opacity: 0.3;
       }
     }
 
@@ -180,7 +182,8 @@ $ident-w: 20px;
       .m78-tree_line,
       .m78-tree_turn-line::after,
       .m78-tree_turn-line::before {
-        background-color: rgba($green-6, 0.3);
+        background-color: var(--m78-green-6);
+        opacity: 0.3;
       }
     }
 
@@ -188,7 +191,8 @@ $ident-w: 20px;
       .m78-tree_line,
       .m78-tree_turn-line::after,
       .m78-tree_turn-line::before {
-        background-color: rgba($cyan-6, 0.3);
+        background-color: var(--m78-cyan-6);
+        opacity: 0.3;
       }
     }
 
@@ -196,7 +200,8 @@ $ident-w: 20px;
       .m78-tree_line,
       .m78-tree_turn-line::after,
       .m78-tree_turn-line::before {
-        background-color: rgba($purple-6, 0.3);
+        background-color: var(--m78-purple-6);
+        opacity: 0.3;
       }
     }
   }

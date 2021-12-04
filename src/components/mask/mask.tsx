@@ -71,7 +71,7 @@ const Mask: React.FC<MaskProps> = ({
 
   function render() {
     return (
-      <div className={cls('m78-mask_wrap', className)} style={style}>
+      <div className={cls('m78 m78-mask_wrap', className)} style={style}>
         {mask && (
           <div className="m78-mask_inner" style={{ opacity: visible ? 1 : 0 }}>
             <Transition

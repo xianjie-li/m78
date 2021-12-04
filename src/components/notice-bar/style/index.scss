@@ -3,7 +3,7 @@
 .m78-notice-bar {
   overflow: hidden;
   font-size: var(--m78-fs);
-  max-width: $sm;
+  max-width: var(--m78-sm);
   pointer-events: none;
 
   &_wrap {

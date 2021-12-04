@@ -22,7 +22,7 @@ const ArticleBox: React.FC<ArticleBoxProps> = ({ watermark, html, content, style
   const col = Math.ceil(width / 300);
 
   return (
-    <div ref={ref} className={cls('m78-article-box', className)} style={style}>
+    <div ref={ref} className={cls('m78 m78-article-box', className)} style={style}>
       <If when={html}>
         {() => <div className="m78-article-box_html" dangerouslySetInnerHTML={{ __html: html! }} />}
       </If>

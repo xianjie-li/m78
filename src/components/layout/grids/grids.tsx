@@ -21,7 +21,7 @@ function Grids(props: GridsRowProps) {
       <div
         {...ppp}
         className={cls(
-          'm78-grids',
+          'm78 m78-grids',
           className,
           wrap && 'm78-flex-wrap',
           mainAlign && `m78-main-${mainAlign}`,
@@ -76,7 +76,7 @@ function GridsItem(props: GridsColProps) {
   return (
     <div
       {...ppp}
-      className={cls('m78-grids_col', className, align && `m78-self-${align}`)}
+      className={cls('m78 m78-grids_col', className, align && `m78-self-${align}`)}
       style={{
         ...style,
         width: getStyleValue(col),

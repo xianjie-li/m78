@@ -29,7 +29,7 @@ const _List: React.FC<ListType> = ({
   ...props
 }) => (
   <div
-    className={cls('m78-list', className, {
+    className={cls('m78 m78-list', className, {
       __form: form,
       '__not-border': notBorder,
       __vertical: layout === 'vertical',

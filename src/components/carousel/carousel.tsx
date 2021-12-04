@@ -421,7 +421,7 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
 
     return (
       <div
-        className={cls('m78-carousel', className, { __vertical: vertical, __noShadow: noShadow })}
+        className={cls('m78 m78-carousel', className, { __vertical: vertical, __noShadow: noShadow })}
         ref={wrapRef}
         style={{ height: vertical ? _height : 'auto', width: _width || 'auto', ...style }}
       >

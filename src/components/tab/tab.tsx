@@ -103,7 +103,7 @@ const Tab: React.FC<TabProps> = props => {
   return (
     <div
       className={cls(
-        'm78-tab',
+        'm78 m78-tab',
         size && `__${size}`,
         position && `__${position}`,
         flexible && '__flexible',

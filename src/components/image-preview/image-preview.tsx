@@ -48,7 +48,7 @@ const _ImagePreview: React.FC<ImagePreviewProps> = ({
   const carousel = useRef<CarouselRef>(null!);
 
   /* 锁定滚动条 + 防止页面抖动 */
-  const [lock, toggleLock] = useToggle(!!show);
+  const [, toggleLock] = useToggle(!!show);
   useLockBodyScroll(!!show);
   useUpdateEffect(() => {
     if (show) toggleLock(true);
@@ -190,7 +190,7 @@ const _ImagePreview: React.FC<ImagePreviewProps> = ({
         type="fade"
         show={show && images.length > 0}
         mountOnEnter
-        className="m78-image-preview"
+        className="m78 m78-image-preview"
       >
         <div {...bindDrag()}>
           <Carousel

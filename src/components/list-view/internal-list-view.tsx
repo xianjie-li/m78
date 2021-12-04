@@ -32,7 +32,7 @@ function InternalListView(props: ListViewProps) {
   return (
     <Provider value={props}>
       <div
-        className={classNames('m78-list-view', className, size && `__${size}`, {
+        className={classNames('m78 m78-list-view', className, size && `__${size}`, {
           __border: border,
           __effect: effect,
           '__item-border': isBorderItem,
@@ -70,7 +70,7 @@ function InternalListViewItem({
     <Tile
       innerRef={innerRef}
       style={{ width: hasColumn ? `calc(${100 / column!}% - 8px)` : undefined, ...style }}
-      className={classNames('m78-list-view_item', className, disabled && '__disabled')}
+      className={classNames('m78 m78-list-view_item', className, disabled && '__disabled')}
       title={titleEllipsis ? <Ellipsis line={titleEllipsis}>{title}</Ellipsis> : title}
       desc={desc && <Ellipsis line={descEllipsis}>{desc}</Ellipsis>}
       leading={leading}
@@ -99,7 +99,7 @@ function InternalListViewTitle({
   return (
     <div
       {...ppp}
-      className={classNames('m78-list-view_title', className, subTile && '__sub-title')}
+      className={classNames('m78 m78-list-view_title', className, subTile && '__sub-title')}
       style={style}
     >
       <div>{children}</div>

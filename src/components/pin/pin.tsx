@@ -218,7 +218,7 @@ const Pin = ({
           ...state.shadowStyle,
           display: isPin ? undefined : 'none',
         }}
-        className="m78-pin_shadow"
+        className="m78 m78-pin_shadow"
       />
       <div
         className={cls('m78-pin', className, isPin && '__isPin')}

@@ -135,7 +135,7 @@ const Check = <Val extends unknown = undefined>(_props: CheckProps<Val>) => {
   return (
     /* eslint-disable-next-line jsx-a11y/label-has-associated-control,jsx-a11y/label-has-for */
     <label
-      className={cls('m78-check', statusCls, className, size && `__${size}`, {
+      className={cls('m78 m78-check', statusCls, className, size && `__${size}`, {
         '__wave-wrap': waveWrap,
       })}
       style={style}

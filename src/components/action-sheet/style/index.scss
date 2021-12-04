@@ -7,7 +7,7 @@
   text-align: center;
   background-color: var(--m78-component-bg);
   overflow: hidden;
-  max-width: $sm;
+  max-width: var(--m78-sm);
   max-height: 78% !important;
   box-shadow: var(--m78-shadow-1);
 
@@ -72,7 +72,6 @@
   }
 
   &_desc {
-    color: var(--m78-color-second);
     color: var(--m78-color-second);
     font-size: 14px;
     margin-top: 4px;

@@ -139,7 +139,7 @@ const _ModalBase: React.FC<ModalBaseProps> = props => {
         mount && (
           <animated.div
             ref={contRef}
-            className={cls('m78-modal', className)}
+            className={cls('m78 m78-modal', className)}
             style={{
               ...style,
               left: pos[0],
@@ -174,7 +174,7 @@ const _ModalBase: React.FC<ModalBaseProps> = props => {
         mountOnEnter={mountOnEnter}
         unmountOnExit={unmountOnExit}
         innerRef={contRef}
-        className={cls('m78-modal', className)}
+        className={cls('m78 m78-modal', className)}
         alpha={alpha}
         style={{
           maxWidth,

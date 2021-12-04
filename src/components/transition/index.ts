@@ -1,4 +1,3 @@
-import 'm78/transition/style';
 import { config } from 'react-spring';
 import { _TransitionBase as TransitionBase } from './TransitionBase';
 import { _Transition as Transition } from './Transition';

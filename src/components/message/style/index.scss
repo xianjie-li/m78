@@ -25,6 +25,7 @@
     font-size: var(--m78-fs);
     overflow: hidden;
     width: auto;
+    line-height: 1;
   }
 
   &_item-cont {
@@ -74,6 +75,7 @@
     font-size: 56px;
     vertical-align: middle;
     margin-bottom: 8px;
+    line-height: 1;
   }
 
   &_loading {

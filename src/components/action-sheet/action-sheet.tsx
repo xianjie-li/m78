@@ -73,7 +73,7 @@ function _ActionSheet<Val = any>(props: ActionSheetProps<Val>) {
 
   return (
     <Drawer
-      className="m78-action-sheet"
+      className="m78 m78-action-sheet"
       // @ts-ignore
       namespace="ACTION_SHEET"
       {...other}

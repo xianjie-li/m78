@@ -20,7 +20,7 @@ const Divider = ({ vertical, width, height, color, margin = 12 }: DividerProps) 
 
   return (
     <div
-      className={cls('m78-divider', vertical && '__vertical')}
+      className={cls('m78 m78-divider', vertical && '__vertical')}
       style={{ width, height, backgroundColor: color, margin: marginStr }}
     />
   );

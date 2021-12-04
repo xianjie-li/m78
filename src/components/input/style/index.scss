@@ -55,7 +55,7 @@ $unitSpace: 8px;
     position: relative;
     display: inline-flex;
     align-items: center;
-    height: $size-default;
+    height: var(--m78--unit-size);
     width: 100%;
     border: 1px solid var(--m78-color-border);
     border-radius: var(--m78-border-radius);
@@ -109,7 +109,6 @@ $unitSpace: 8px;
 
       textarea {
         padding: 10px;
-        min-height: 3em; /* 退级 */
         min-height: calc(20px + 2em * 1.4);
         white-space: normal !important;
         word-break: break-all;
@@ -139,7 +138,7 @@ $unitSpace: 8px;
 
     /* 尺寸 */
     &.__small {
-      height: $size-small;
+      height: var(--m78--unit-size-small);
       font-size: 14px;
       padding: 0 6px;
       .m78-input_suffix,
@@ -149,7 +148,7 @@ $unitSpace: 8px;
     }
 
     &.__large {
-      height: $size-large;
+      height: var(--m78--unit-size-large);
       font-size: 20px;
 
       .m78-input_suffix,
@@ -159,7 +158,7 @@ $unitSpace: 8px;
     }
 
     &.__big {
-      height: $size-big;
+      height: var(--m78--unit-size-big);
       font-size: 28px;
 
       .m78-input {
@@ -174,19 +173,19 @@ $unitSpace: 8px;
 
     /* 状态色 */
     &.__info {
-      @include statusColor($color-info);
+      @include statusColor(#40a9ff);
     }
 
     &.__success {
-      @include statusColor($color-success);
+      @include statusColor(#73d13d);
     }
 
     &.__warning {
-      @include statusColor($color-warn);
+      @include statusColor(#ffa940);
     }
 
     &.__error {
-      @include statusColor($color-error);
+      @include statusColor(#ff4d4f);
     }
 
     &.__not-border,

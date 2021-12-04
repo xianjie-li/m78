@@ -128,7 +128,7 @@ function Dates(props: DatesProps | DatesRangeProps) {
   function renderMain(fullWidth = false) {
     return (
       <div
-        className={cls('m78-dates', className, {
+        className={cls('m78 m78-dates', className, {
           __time: type === DateType.TIME || state.type === DateType.TIME,
         })}
         style={{ width: fullWidth ? '100%' : undefined, ...style }}

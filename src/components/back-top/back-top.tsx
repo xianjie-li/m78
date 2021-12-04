@@ -84,7 +84,7 @@ const BackTop = ({
       <Transition
         show={show}
         innerRef={wrapRef}
-        className={cls('m78-back-top', className)}
+        className={cls('m78 m78-back-top', className)}
         title="返回顶部"
         type="slideRight"
         onClick={() => sh.set({ y: 0 })}

@@ -10,13 +10,13 @@
   &_item {
     &.m78-btn,
     &.m78-btn.__text {
-      min-width: $size-default;
-      height: $size-default;
+      min-width: var(--m78--unit-size);
+      height: var(--m78--unit-size);
       padding: 0 8px;
     }
 
     &.m78-btn.__ellipsis {
-      height: $size-default;
+      height: var(--m78--unit-size);
       font-size: 15px;
       color: var(--m78-color-second);
 
@@ -85,13 +85,13 @@
   &.__small {
     .m78-pagination_item {
       &.m78-btn {
-        min-width: $size-small;
-        height: $size-small;
+        min-width: var(--m78--unit-size-small);
+        height: var(--m78--unit-size-small);
         padding: 0 4px;
       }
 
       &.m78-btn.__ellipsis {
-        height: $size-small;
+        height: var(--m78--unit-size-small);
         font-size: 14px;
       }
     }
@@ -107,8 +107,8 @@
 
   &.__simple {
     .m78-pagination_jumper .m78-input_wrap {
-      width: $size-default;
-      height: $size-small;
+      width: var(--m78--unit-size);
+      height: var(--m78--unit-size-small);
       padding: 0;
       font-size: 17px;
     }

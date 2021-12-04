@@ -65,7 +65,7 @@ export function render(ctx: _Context) {
   const childRender = () => {
     return (
       <div
-        className={clsx('m78-table', className, size && `__${size}`, {
+        className={clsx('m78 m78-table', className, size && `__${size}`, {
           __stripe: stripe,
           [`__${divideStyle}`]: true,
           __touchLeft: state.touchLeft,

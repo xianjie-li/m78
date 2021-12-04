@@ -134,7 +134,7 @@ function Tree(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
   const isEmpty = isSearchAndNoList || !isTruthyArray(props.dataSource);
 
   return (
-    <div className={cls('m78-tree __hoverEffect __style', size && `__${size}`)}>
+    <div className={cls('m78 m78-tree __hoverEffect __style', size && `__${size}`)}>
       {loading && <Spin full text="索引数据中..." />}
 
       {renderToolbar()}

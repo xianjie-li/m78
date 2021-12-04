@@ -61,7 +61,7 @@ const NoticeBar: React.FC<NoticeBarProps> = ({
     <animated.div
       // @ts-ignore
       style={{ ...spStyle, ...style }}
-      className={cls('m78-notice-bar', status && `__${status}`, { __fixed: fixedTop }, className)}
+      className={cls('m78 m78-notice-bar', status && `__${status}`, { __fixed: fixedTop }, className)}
     >
       <div ref={ref} className="m78-notice-bar_wrap">
         <If when={status}>

@@ -74,7 +74,7 @@ const Grid = (props: GridProps & typeof defaultProps) => {
   }
 
   return (
-    <div className={cls('m78-grid', className)} style={style}>
+    <div className={cls('m78 m78-grid', className)} style={style}>
       {child.map((item, index) => {
         const realIndex = index + 1;
         // 每行最后一个
