@@ -1,4 +1,4 @@
-import { ComponentBasePropsWithAny } from 'm78/types';
+import { ComponentBasePropsWithAny } from '@lxjx/utils';
 
 export interface IconProps extends ComponentBasePropsWithAny {
   /** 颜色 */

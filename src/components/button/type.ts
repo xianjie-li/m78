@@ -1,5 +1,5 @@
 import React from 'react';
-import { SizeKeys } from 'm78/types';
+import { SizeKeys } from 'm78/common';
 
 export enum ButtonColorEnum {
   blue = 'blue',

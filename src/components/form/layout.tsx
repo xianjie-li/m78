@@ -1,7 +1,7 @@
 import { ListView, ListViewItem, ListViewItemStyleEnum } from 'm78/list-view';
 import React from 'react';
 import clsx from 'clsx';
-import { DirectionEnum } from 'm78/types';
+import { DirectionEnum } from 'm78/common';
 import { FormItemLayoutProps, FormLayoutProps } from './type';
 
 export function FormLayout({

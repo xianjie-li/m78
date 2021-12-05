@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { Select, SelectOptionItem } from 'm78/select';
 import { ListViewItemStyleEnum } from 'm78/list-view/types';
-import { SizeEnum } from 'm78/types';
+import { SizeEnum } from 'm78/common';
 import { Button } from 'm78/button';
 import { Spacer } from 'm78/layout';
 import { ListView, ListViewItem, ListViewTitle } from 'm78/list-view';

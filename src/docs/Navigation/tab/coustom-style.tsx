@@ -3,7 +3,7 @@ import 'm78/article-box/style';
 
 import { Tab, TabItem } from 'm78/tab';
 
-import { PositionEnum, SizeEnum } from 'm78/types';
+import { PositionEnum, SizeEnum } from 'm78/common';
 import { Divider } from 'm78/layout';
 import { AlertOutlined, HomeOutlined, RedEnvelopeOutlined, UserOutlined } from 'm78/icon';
 import sty from './sty.module.scss';

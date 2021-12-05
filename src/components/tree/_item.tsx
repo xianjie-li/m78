@@ -3,7 +3,7 @@ import cls from 'clsx';
 import { If, Switch } from 'm78/fork';
 import { LoadingOutlined } from 'm78/icon';
 import { isFunction } from '@lxjx/utils';
-import { stopPropagation } from 'm78/util';
+import { stopPropagation } from 'm78/common';
 import { areEqual } from 'react-window';
 import { DND, DragBonus } from 'm78/dnd';
 import useTreeItem from './_use-tree-item';

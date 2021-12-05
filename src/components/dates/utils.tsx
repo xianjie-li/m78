@@ -1,7 +1,7 @@
 import moment, { Moment } from 'moment';
 import { isArray } from '@lxjx/utils';
 import _debounce from 'lodash/debounce';
-import { SM } from 'm78/util';
+import { SM } from 'm78/common';
 import { DateLimiter, DatesProps, DateType, TimeLimiter, ShareMetas } from './type';
 
 export const DATE_FORMAT_YEAR = 'YYYY';

@@ -2,8 +2,7 @@ import { Moment } from 'moment';
 import { FormLike, SetState } from '@lxjx/hooks';
 import React from 'react';
 
-import { AnyFunction } from '@lxjx/utils';
-import { ComponentBaseProps } from 'm78/types';
+import { AnyFunction, ComponentBaseProps } from '@lxjx/utils';
 import { InputProps } from '../input';
 
 export enum DateType {

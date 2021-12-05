@@ -1,9 +1,8 @@
 import React from 'react';
 
 import cls from 'clsx';
-import { isArray } from '@lxjx/utils';
+import { isArray, ComponentBaseProps } from '@lxjx/utils';
 import { AspectRatio } from 'm78/layout';
-import { ComponentBaseProps } from 'm78/types';
 
 interface GridProps extends ComponentBaseProps {
   /** 子元素, 必须是一组可以挂在className和style的元素 */

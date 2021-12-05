@@ -7,7 +7,8 @@ import { lineStatusIcons, CloseOutlined } from 'm78/icon';
 import { If } from 'm78/fork';
 import { Button } from 'm78/button';
 import cls from 'clsx';
-import { ComponentBaseProps, StatusKeys } from 'm78/types';
+import { StatusKeys } from 'm78/common';
+import { ComponentBaseProps } from '@lxjx/utils';
 
 export interface NoticeBarProps extends ComponentBaseProps {
   /** 关闭回调 */
@@ -61,7 +62,12 @@ const NoticeBar: React.FC<NoticeBarProps> = ({
     <animated.div
       // @ts-ignore
       style={{ ...spStyle, ...style }}
-      className={cls('m78 m78-notice-bar', status && `__${status}`, { __fixed: fixedTop }, className)}
+      className={cls(
+        'm78 m78-notice-bar',
+        status && `__${status}`,
+        { __fixed: fixedTop },
+        className,
+      )}
     >
       <div ref={ref} className="m78-notice-bar_wrap">
         <If when={status}>

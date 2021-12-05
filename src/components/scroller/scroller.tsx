@@ -5,7 +5,7 @@ import { animated, config, to, useSpring } from 'react-spring';
 import cls from 'clsx';
 import { ErrorIcon, WindmillIcon } from 'm78/icon';
 import { Button } from 'm78/button';
-import { DirectionEnum } from 'm78/types';
+import { DirectionEnum } from 'm78/common';
 import { Spin } from 'm78/spin';
 import { If } from 'm78/fork';
 import { Spacer } from 'm78/layout';

@@ -327,15 +327,21 @@ const Input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
 
   return (
     <span
-      className={cls('m78 m78-input_wrap', className, status && `__${status}`, size && `__${size}`, {
-        '__not-border': !textArea && notBorder,
-        __underline: !textArea && underline,
-        __focus: focus,
-        __disabled: isDisabled,
-        __readonly: readonly,
-        __matter: format === 'money',
-        __textarea: textArea,
-      })}
+      className={cls(
+        'm78 m78-input_wrap',
+        className,
+        status && `__${status}`,
+        size && `__${size}`,
+        {
+          '__not-border': !textArea && notBorder,
+          __underline: !textArea && underline,
+          __focus: focus,
+          __disabled: isDisabled,
+          __readonly: readonly,
+          __matter: format === 'money',
+          __textarea: textArea,
+        },
+      )}
       style={style}
     >
       <If when={prefixBtn && !textArea}>

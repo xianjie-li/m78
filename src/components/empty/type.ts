@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentBaseProps } from 'm78/types';
+import { ComponentBaseProps } from '@lxjx/utils';
 
 export interface EmptyProps extends ComponentBaseProps {
   /** 描述 */

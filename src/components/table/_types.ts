@@ -1,6 +1,6 @@
 import { ComponentBaseProps } from '@lxjx/utils';
 import React from 'react';
-import { SizeEnum, SizeKeys } from 'm78/types';
+import { SizeEnum, SizeKeys } from 'm78/common';
 import {
   TreeBaseDataSourceItem,
   TreeBaseMultipleChoiceProps,

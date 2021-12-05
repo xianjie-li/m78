@@ -39,7 +39,9 @@ const Spacer = ({ width, height, children }: SpacerProps) => {
     return child as any;
   }
 
-  return <div className={cls('m78 m78-spacer', !!w && '__inline')} style={{ width: w, height: h }} />;
+  return (
+    <div className={cls('m78 m78-spacer', !!w && '__inline')} style={{ width: w, height: h }} />
+  );
 };
 
 export default Spacer;

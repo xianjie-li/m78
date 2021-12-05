@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button } from 'm78/button';
 import { m78Config as config } from 'm78/config';
 
 const ThemeCtl = () => {
+  useEffect(() => {
+    document.documentElement.className += 'm78';
+  }, []);
+
   return (
     <Button
       icon

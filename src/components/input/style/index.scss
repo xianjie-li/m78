@@ -1,4 +1,4 @@
-@import '../../style/index';
+@import '../../common/style/sass';
 
 $unitSpace: 8px;
 
@@ -88,7 +88,7 @@ $unitSpace: 8px;
     }
 
     &.__disabled {
-      background-color: var(--m78-gray-4);
+      background-color: var(--m78-color-divider);
       cursor: not-allowed;
     }
 

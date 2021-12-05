@@ -1,5 +1,6 @@
-import { ComponentBaseProps, SizeEnum } from 'm78/types';
+import { SizeEnum } from 'm78/common';
 import React from 'react';
+import { ComponentBaseProps } from '@lxjx/utils';
 import { CheckCustom } from './check';
 
 export interface CheckProps<Val> extends ComponentBaseProps {

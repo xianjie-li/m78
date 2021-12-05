@@ -1,5 +1,5 @@
 import { TransitionProps, TransitionType } from 'm78/transition';
-import { ComponentBaseProps } from 'm78/types/types';
+import { ComponentBaseProps } from '@lxjx/utils';
 import React from 'react';
 
 export type TupleNumber = [number, number];

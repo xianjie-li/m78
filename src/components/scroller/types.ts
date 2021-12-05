@@ -2,11 +2,10 @@ import React from 'react';
 import { useScroll, UseScrollMeta, SetState } from '@lxjx/hooks';
 
 import { Tips } from 'm78/tips';
-import { ComponentBaseProps } from 'm78/types/types';
-import { DirectionEnum } from 'm78/types';
+import { DirectionEnum } from 'm78/common';
+import { AnyFunction, ComponentBaseProps } from '@lxjx/utils';
 import { PullDownStatus, PullUpStatus } from './common';
 import { defaultProps } from './scroller';
-import { AnyFunction } from '@lxjx/utils';
 
 /** setDragPos依赖的必须参数 */
 export interface SetDragPosArg {

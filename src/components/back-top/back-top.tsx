@@ -1,13 +1,12 @@
 import React, { RefObject, useEffect, useRef, useState } from 'react';
 import { Button } from 'm78/button';
 import { CaretUpOutlined } from 'm78/icon';
-import { getScrollParent } from '@lxjx/utils';
+import { ComponentBaseProps, getScrollParent } from '@lxjx/utils';
 import { useFn, useScroll, getRefDomOrDom } from '@lxjx/hooks';
 import _debounce from 'lodash/debounce';
 import { Transition } from 'm78/transition';
 import cls from 'clsx';
 import { Portal } from 'm78/portal';
-import { ComponentBaseProps } from 'm78/types';
 
 interface BackTopProps extends ComponentBaseProps {
   /**

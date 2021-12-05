@@ -9,7 +9,7 @@ import _capitalize from 'lodash/capitalize';
 import cls from 'clsx';
 
 import { useFormState, useSameState } from '@lxjx/hooks';
-import { Z_INDEX_DRAWER } from 'm78/util';
+import { Z_INDEX_DRAWER } from 'm78/common';
 import { DrawerProps } from './type';
 
 const alignmentMap: { [key in NonNullable<DrawerProps['direction']>]: [number, number] } = {

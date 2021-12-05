@@ -3,7 +3,7 @@ import { formatString } from '@lxjx/utils';
 import { formatMoney } from 'm78/input';
 import { TransitionBase } from 'm78/transition';
 import { useMemo, useRef } from 'react';
-import clsx from "clsx";
+import clsx from 'clsx';
 import { NumProps } from './type';
 
 function parseN(num: string | number) {
@@ -91,7 +91,13 @@ function ViewNum(props: NumProps) {
     );
   }
 
-  return <span className={clsx('m78 m78-view-num', className)} style={style} dangerouslySetInnerHTML={{ __html: target }} />;
+  return (
+    <span
+      className={clsx('m78 m78-view-num', className)}
+      style={style}
+      dangerouslySetInnerHTML={{ __html: target }}
+    />
+  );
 }
 
 export default ViewNum;

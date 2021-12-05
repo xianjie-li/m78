@@ -13,7 +13,7 @@ import cls from 'clsx';
 
 import { useSelf } from '@lxjx/hooks';
 import { Button } from 'm78/button';
-import { SizeEnum } from 'm78/types';
+import { SizeEnum } from 'm78/common';
 import { MessageProps } from './type';
 
 function MessageWrap({ children }: any) {

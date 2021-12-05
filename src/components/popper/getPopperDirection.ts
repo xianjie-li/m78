@@ -1,6 +1,6 @@
 import React from 'react';
 import { getRefDomOrDom } from '@lxjx/hooks';
-import { Size } from 'm78/types';
+import { Size } from '@lxjx/utils';
 import { isPopperBound } from './utils';
 import { Bound, PopperDirectionKeys, PopperDirectionInfo } from './types';
 

@@ -20,7 +20,7 @@ import {
 } from 'm78/icon';
 import { If } from 'm78/fork';
 import { Portal } from 'm78/portal';
-import { stopPropagation } from 'm78/util';
+import { stopPropagation } from 'm78/common';
 
 import createRenderApi, { ReactRenderApiProps } from '@lxjx/react-render-api';
 import { Transition } from 'm78/transition';

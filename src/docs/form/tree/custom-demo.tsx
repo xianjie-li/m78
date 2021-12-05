@@ -8,7 +8,7 @@ import {
   FolderOutlined,
 } from 'm78/icon';
 import { Tree, TreeDataSourceItem } from 'm78/tree';
-import { SizeEnum } from 'm78/types';
+import { SizeEnum } from 'm78/common';
 
 const badgeSty: React.CSSProperties = {
   padding: '1px 4px',

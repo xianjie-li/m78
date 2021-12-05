@@ -6,9 +6,8 @@ import _clamp from 'lodash/clamp';
 
 import cls from 'clsx';
 
-import { dumpFn } from '@lxjx/utils';
+import { dumpFn, ComponentBaseProps } from '@lxjx/utils';
 import { useSelf } from '@lxjx/hooks';
-import { ComponentBaseProps } from 'm78/types';
 
 export interface CarouselProps extends ComponentBaseProps {
   /** 子元素，必须为多个直接子元素或子元素数组 */
@@ -421,7 +420,10 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
 
     return (
       <div
-        className={cls('m78 m78-carousel', className, { __vertical: vertical, __noShadow: noShadow })}
+        className={cls('m78 m78-carousel', className, {
+          __vertical: vertical,
+          __noShadow: noShadow,
+        })}
         ref={wrapRef}
         style={{ height: vertical ? _height : 'auto', width: _width || 'auto', ...style }}
       >

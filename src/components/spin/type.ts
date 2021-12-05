@@ -1,5 +1,6 @@
 import React from 'react';
-import { ComponentBaseProps, FullSizeKeys, FullSizeEnum } from 'm78/types';
+import { FullSizeKeys, FullSizeEnum } from 'm78/common';
+import { ComponentBaseProps } from '@lxjx/utils';
 
 export interface SpinProps extends ComponentBaseProps {
   /** 大小 */

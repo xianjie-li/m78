@@ -1,5 +1,5 @@
 import React, { ReactElement, ReactNode } from 'react';
-import { ComponentBaseProps, ComponentBasePropsWithAny, Size } from 'm78/types';
+import { ComponentBasePropsWithAny, ComponentBaseProps, Size } from '@lxjx/utils';
 
 /*
  * ########################################

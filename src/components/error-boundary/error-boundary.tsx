@@ -1,6 +1,5 @@
 import React from 'react';
-import { isFunction } from '@lxjx/utils';
-import { ComponentBaseProps } from 'm78/types';
+import { isFunction, ComponentBaseProps } from '@lxjx/utils';
 import cls from 'clsx';
 import { Spin } from 'm78/spin';
 import { Result } from 'm78/result';

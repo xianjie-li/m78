@@ -9,7 +9,7 @@ import { Portal } from 'm78/portal';
 import cls from 'clsx';
 
 import { ReactRenderApiProps } from '@lxjx/react-render-api';
-import { ComponentBaseProps } from 'm78/types';
+import { ComponentBaseProps } from '@lxjx/utils';
 
 export interface MaskProps extends ComponentBaseProps, ReactRenderApiProps {
   /** 是否显示mask */

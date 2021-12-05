@@ -4,7 +4,7 @@ import { Button } from 'm78/button';
 import { Divider } from 'm78/layout';
 import cls from 'clsx';
 import { useFn, useMeasure } from '@lxjx/hooks';
-import { ComponentBaseProps } from 'm78/types';
+import { ComponentBaseProps } from '@lxjx/utils';
 
 interface PageHeaderProps extends ComponentBaseProps {
   /** 标题 */

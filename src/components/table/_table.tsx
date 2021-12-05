@@ -1,6 +1,6 @@
 import { TreeBasePropsMix, useTreeStates } from 'm78/tree';
 import { useTreeLifeCycle } from 'm78/tree/life-cycle';
-import { SizeEnum } from 'm78/types';
+import { SizeEnum } from 'm78/common';
 import { isNumber } from '@lxjx/utils';
 import { defaultProps, tableHeaderHeight } from './_common';
 import { _useStates } from './_useStates';

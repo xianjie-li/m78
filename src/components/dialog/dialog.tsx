@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import 'm78/base';
+import 'm78/init';
 import { ButtonPropsWithHTMLButton, Button } from 'm78/button';
 import { Modal } from 'm78/modal';
 import { Transition } from 'm78/transition';

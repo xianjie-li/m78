@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tree } from 'm78/tree';
-import { SizeEnum } from 'm78/types';
+import { SizeEnum } from 'm78/common';
 import { Spacer } from 'm78/layout';
 
 import dataSource1 from './ds1';

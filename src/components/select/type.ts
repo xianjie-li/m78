@@ -1,7 +1,8 @@
 import React from 'react';
 import { FormLikeWithExtra } from '@lxjx/hooks';
 import { PopperDirectionEnum, PopperDirectionKeys, PopperTriggerType } from 'm78/popper';
-import { ComponentBaseProps, FullSizeKeys, StatusKeys } from 'm78/types';
+import { FullSizeKeys, StatusKeys } from 'm78/common';
+import { ComponentBaseProps } from '@lxjx/utils';
 
 export interface SelectOptionItem {
   /** 类目名, 如果不传入，将使用value作为label */

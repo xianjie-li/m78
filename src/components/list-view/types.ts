@@ -1,6 +1,7 @@
 import React from 'react';
 import { TileProps } from 'm78/layout';
-import { SizeEnum, SizeKeys, ComponentBaseProps, ComponentBasePropsWithAny } from 'm78/types';
+import { SizeEnum, SizeKeys } from 'm78/common';
+import { ComponentBasePropsWithAny, ComponentBaseProps } from '@lxjx/utils';
 
 export enum ListViewItemStyleEnum {
   splitLine = 'splitLine',

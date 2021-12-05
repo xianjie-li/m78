@@ -2,7 +2,7 @@ import React from 'react';
 import { Row } from 'm78/layout';
 import { RadioBox } from 'm78/radio-box';
 import { Table, TableColumns, TableDivideStyleEnum } from 'm78/table';
-import { SizeEnum } from 'm78/types';
+import { SizeEnum } from 'm78/common';
 import { Check } from 'm78/check';
 import { useSetState } from '@lxjx/hooks';
 import { dataSource } from './dataSource';

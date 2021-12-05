@@ -1,4 +1,4 @@
-@import '../../style/index';
+@import './sass';
 
 :root {
   // 单位尺寸
@@ -6,7 +6,6 @@
   --m78--unit-size-large: 40px;
   --m78--unit-size-small: 24px;
   --m78--unit-size-big: 60px;
-
 }
 
 .m78-close-icon {

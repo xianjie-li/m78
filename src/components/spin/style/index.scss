@@ -1,7 +1,6 @@
-@import '../../style/index';
+@import '../../common/style/sass';
 
-$colors: rgba(#40a9ff, 0.95) rgba(#ffa940, 0.5) rgba(#ff4d4f, 0.95)
-  rgb(#73d13d, 0.5);
+$colors: rgba(#40a9ff, 0.95) rgba(#ffa940, 0.5) rgba(#ff4d4f, 0.95) rgb(#73d13d, 0.5);
 
 .m78-spin {
   display: inline-flex;
@@ -128,7 +127,7 @@ $colors: rgba(#40a9ff, 0.95) rgba(#ffa940, 0.5) rgba(#ff4d4f, 0.95)
 
 @keyframes m78-spin_unit1 {
   0% {
-    transform: rotate(45deg)
+    transform: rotate(45deg);
   }
 
   100% {
@@ -147,7 +146,6 @@ $colors: rgba(#40a9ff, 0.95) rgba(#ffa940, 0.5) rgba(#ff4d4f, 0.95)
 }
 
 @keyframes m78-spin_unit3 {
-
   0% {
     transform: rotate(135deg);
   }

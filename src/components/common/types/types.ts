@@ -1,22 +1,5 @@
 import React from 'react';
 
-/** 通用基础props */
-export interface ComponentBasePropsWithAny extends ComponentBaseProps {
-  /** 透传到包裹元素上的属性 */
-  [key: string]: any;
-}
-
-/** 通用基础props */
-export interface ComponentBaseProps {
-  /** 包裹元素的类名 */
-  className?: string;
-  /** 包裹元素样式 */
-  style?: React.CSSProperties;
-}
-
-/** 通用状态类型 */
-export type StatusKeys = 'info' | 'success' | 'warning' | 'error';
-
 /** 通用状态类型 */
 export enum StatusEnum {
   info = 'info',
@@ -25,14 +8,19 @@ export enum StatusEnum {
   error = 'error',
 }
 
-/** 通用尺寸类型 */
-export type SizeKeys = 'large' | 'small';
+export type StatusKeys = keyof typeof StatusEnum;
+
+export type Status = StatusEnum | StatusKeys;
 
 /** 通用尺寸类型 40 | 32 | 24 */
 export enum SizeEnum {
   large = 'large',
   small = 'small',
 }
+
+export type SizeKeys = keyof typeof SizeEnum;
+
+export type Size = SizeEnum | SizeKeys;
 
 /** 通用完整尺寸类型 */
 export type FullSizeKeys = 'big' | SizeKeys;
@@ -44,8 +32,7 @@ export enum FullSizeEnum {
   big = 'big',
 }
 
-/** 通用方向类型 */
-export type PositionKeys = 'left' | 'top' | 'right' | 'bottom';
+export type FullSize = FullSizeEnum | FullSizeKeys;
 
 /** 通用方向类型 */
 export enum PositionEnum {
@@ -55,8 +42,9 @@ export enum PositionEnum {
   bottom = 'bottom',
 }
 
-/** 通用轴类型 */
-export type DirectionKeys = 'horizontal' | 'vertical';
+export type PositionKeys = keyof typeof PositionEnum;
+
+export type Position = PositionEnum | PositionKeys;
 
 /** 通用轴类型 */
 export enum DirectionEnum {
@@ -64,11 +52,9 @@ export enum DirectionEnum {
   vertical = 'vertical',
 }
 
-/** 通用尺寸类型 */
-export interface Size {
-  width: number;
-  height: number;
-}
+export type DirectionKeys = 'horizontal' | 'vertical';
+
+export type Direction = DirectionEnum | DirectionKeys;
 
 /** 通用数据源类型 */
 export interface DataSourceItem<ValType = any> {

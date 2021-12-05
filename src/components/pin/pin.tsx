@@ -1,10 +1,9 @@
 import React, { RefObject, useEffect, useRef } from 'react';
 import { useFn, useScroll, useSetState, getRefDomOrDom } from '@lxjx/hooks';
-import { checkElementVisible, getScrollParent, getStyle } from '@lxjx/utils';
+import { checkElementVisible, getScrollParent, getStyle, ComponentBaseProps } from '@lxjx/utils';
 import _debounce from 'lodash/debounce';
 
 import cls from 'clsx';
-import { ComponentBaseProps } from 'm78/types';
 
 interface PinProps extends ComponentBaseProps {
   /** 指定目标元素，默认为第一个可滚动父元素 */

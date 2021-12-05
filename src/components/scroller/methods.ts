@@ -1,7 +1,7 @@
 import _clamp from 'lodash/clamp';
 import { UseScrollMeta } from '@lxjx/hooks';
 import { decimalPrecision, getScrollBarWidth } from '@lxjx/utils';
-import { DirectionEnum } from 'm78/types';
+import { DirectionEnum } from 'm78/common';
 import { SetDragPosArg, Share } from './types';
 import { PullDownStatus, pullDownText, PullUpStatus, pullUpText, rubberFactor } from './common';
 

@@ -1,6 +1,5 @@
 import React from 'react';
-import { AnyFunction } from '@lxjx/utils';
-import { ComponentBaseProps } from 'm78/types';
+import { AnyFunction, ComponentBaseProps } from '@lxjx/utils';
 
 export interface ForkProps extends ComponentBaseProps {
   /** 是否有数据用于显示, 当为truthy值且无其他非常规状态时时，显示子元素 */

@@ -1,14 +1,14 @@
 import React, { useMemo } from 'react';
 
 import { Spin } from 'm78/spin';
-import 'm78/base';
+import 'm78/init';
 import { m78Config as config } from 'm78/config';
 
 import { isArray } from '@lxjx/utils';
 
 import cls from 'clsx';
 
-import { FullSizeEnum } from 'm78/types';
+import { FullSizeEnum } from 'm78/common';
 import { ButtonPropsWithHTMLButton, ButtonPropsWithHTMLLink } from './type';
 
 const matchIcon = /.?(Outlined|Filled|TwoTone|Icon)$/;

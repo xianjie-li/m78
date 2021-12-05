@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentBaseProps } from 'm78/types';
+import { ComponentBaseProps } from '@lxjx/utils';
 import { PopperPropsCustom } from 'm78/popper';
 import { TileProps } from 'm78/layout';
 

@@ -1,8 +1,7 @@
 import React, { useEffect, useRef } from 'react';
-import { getDateCountDown, dumpFn } from '@lxjx/utils';
+import { getDateCountDown, dumpFn, ComponentBaseProps } from '@lxjx/utils';
 import { useSelf } from '@lxjx/hooks';
 import cls from 'clsx';
-import { ComponentBaseProps } from 'm78/types';
 
 interface ExtCls {
   /** 字符"xx天xx时xx分"中的xx所在包裹元素的额外类名 */

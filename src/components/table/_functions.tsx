@@ -1,8 +1,7 @@
 import { AnyObject, isArray, isBoolean, isFunction, isString } from '@lxjx/utils';
-import { throwError } from 'm78/util';
+import { throwError, SizeEnum } from 'm78/common';
 import { SetState, UseScrollMeta } from '@lxjx/hooks';
 import React from 'react';
-import { SizeEnum } from 'm78/types';
 import { stringifyArrayField } from './_common';
 import {
   _Context,

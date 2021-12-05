@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useSelf } from '@lxjx/hooks';
+import { useFn, useSelf } from '@lxjx/hooks';
 
 /**
  * 将转入的开关状态在指定延迟后转为本地状态并在变更后同步
@@ -64,7 +64,7 @@ export function useDelayDerivedToggleStatus(
 
 /**
  * 用于便捷的实现mountOnEnter/unmountOnExit接口
- * - 卸载的准确时机hook是不能感知的，因为可能中间存在动画或其他过渡行为，所以需要用户在正确时机调用unmount()通知
+ * - 卸载的准确时机hook内是不能感知的，因为可能中间会存在动画或其他延迟行为，所以需要用户在正确时机调用unmount()通知卸载
  * */
 export function useMountInterface(
   toggle: boolean,
@@ -76,9 +76,12 @@ export function useMountInterface(
     return toggle;
   });
 
+  // 自动同步true状态, false状态因为可能存在动画等, 由用户手动触发
   useEffect(() => {
     toggle && monkeySet(toggle);
   }, [toggle]);
+
+  const unmount = useFn(() => monkeySet(false));
 
   function monkeySet(m: boolean) {
     // 需要挂载但未挂载时对其进行挂载
@@ -91,10 +94,6 @@ export function useMountInterface(
     if (unmountOnExit && !m && mount) {
       setMount(false);
     }
-  }
-
-  function unmount() {
-    monkeySet(false);
   }
 
   return [mount, unmount] as const;

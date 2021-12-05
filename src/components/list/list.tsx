@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 
-import 'm78/base';
+import 'm78/init';
 import { Switch, If } from 'm78/fork';
 import { /* statusIcons, */ RightOutlined /* LoadingOutlined */ } from 'm78/icon';
 

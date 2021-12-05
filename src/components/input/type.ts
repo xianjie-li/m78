@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormLike } from '@lxjx/hooks';
 import { ButtonPropsWithHTMLButton } from 'm78/button';
-import { StatusKeys, FullSizeKeys } from 'm78/types';
+import { StatusKeys, FullSizeKeys } from 'm78/common';
 
 export type InputPropsExtends = Omit<
   React.PropsWithoutRef<JSX.IntrinsicElements['input']>,

@@ -1,7 +1,8 @@
 import { FormLikeWithExtra } from '@lxjx/hooks';
-import { ComponentBaseProps, DataSourceItem, SizeKeys } from 'm78/types';
+import { DataSourceItem, SizeKeys } from 'm78/common';
 import React from 'react';
 import { DragFullEvent } from 'm78/dnd';
+import { ComponentBaseProps } from '@lxjx/utils';
 import useTreeStates from './_use-tree-states';
 import { defaultProps, flatTreeData } from './common';
 

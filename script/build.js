@@ -40,12 +40,8 @@ async function build(type = 'esm') {
 
   const copyList = [
     {
-      src: 'src/components/style/**/*',
-      dest: parsePath(`../${DIST}/${type}/style`),
-    },
-    {
-      src: 'src/components/assets/**/*',
-      dest: parsePath(`../${DIST}/${type}/assets`),
+      src: 'src/components/common/assets/**/*',
+      dest: parsePath(`../${DIST}/${type}/common/assets`),
     },
   ];
 

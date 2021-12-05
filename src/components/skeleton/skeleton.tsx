@@ -61,7 +61,10 @@ const _Banner: React.FC<Omit<SkeletonProps, 'circle' | 'img' | 'lineNumber'>> = 
   height,
   shadow = true,
 }) => (
-  <div className={cls('m78 m78-skeleton m78-skeleton_banner', { __shadow: shadow })} style={{ width }}>
+  <div
+    className={cls('m78 m78-skeleton m78-skeleton_banner', { __shadow: shadow })}
+    style={{ width }}
+  >
     <div className="m78-skeleton_banner-main m78-skeleton_animate" style={{ height }} />
     {/* eslint-disable-next-line */}
     <_Skeleton show lineNumber={2} />

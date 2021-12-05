@@ -5,7 +5,7 @@ import { Spin } from 'm78/spin';
 import { useSetState } from '@lxjx/hooks';
 
 import cls from 'clsx';
-import { ComponentBaseProps } from 'm78/types';
+import { ComponentBaseProps } from '@lxjx/utils';
 import { m78Config as config } from 'm78/config';
 
 /* 组件必须有实际的尺寸 */

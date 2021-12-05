@@ -1884,10 +1884,10 @@
     "@lxjx/utils" "^1.13.0"
     tslib "^2.2.0"
 
-"@m78/style@^2.0.2":
-  version "2.0.2"
-  resolved "https://registry.npmmirror.com/@m78/style/download/@m78/style-2.0.2.tgz#b81b43540c454056ab01b742c784c9c4e3a4c347"
-  integrity sha512-dIDXcLj1tTOH6X+50U5Ok97vX3j/PTqrhKDyXENaDrIcMp2ZO6J42tY9FYVxp8EX7kIyh1QAHT77SSNzvP5lnA==
+"@m78/style@^2.0.4":
+  version "2.0.4"
+  resolved "https://registry.npmmirror.com/@m78/style/download/@m78/style-2.0.4.tgz#fe9f8d3cbba36770c6edbaf121f128188a5f9bb5"
+  integrity sha512-/2uduevV9LxPSOwvuGtXYp9TAJEjrR2yTP6DT/MRJV7qyXq1tCjtvoak4Ij4ZlYwFXS5X+uTgVIgmZ4O98uo+g==
   dependencies:
     "@ant-design/colors" "^3.2.2"
 

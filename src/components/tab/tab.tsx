@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import cls from 'clsx';
 import { useFormState, useScroll, useSelf, useSetState } from '@lxjx/hooks';
 import { animated, useSpring } from 'react-spring';
-import { PositionEnum } from 'm78/types';
+import { PositionEnum } from 'm78/common';
 import { Carousel, CarouselRef } from 'm78/carousel';
 import { CaretLeftOutlined, CaretRightOutlined } from 'm78/icon';
 import { If } from 'm78/fork';

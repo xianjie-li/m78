@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useGesture } from 'react-use-gesture';
 import preventTopPullDown from 'prevent-top-pull-down';
 import _clamp from 'lodash/clamp';
-import { DirectionEnum } from 'm78/types';
+import { DirectionEnum } from 'm78/common';
 import { defer, isNumber } from '@lxjx/utils';
 import { SetDragPosArg, Share } from './types';
 import { useMethods } from './methods';

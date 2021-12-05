@@ -3,7 +3,7 @@ import { Button } from 'm78/button';
 import { Input } from 'm78/input';
 import { Modal } from 'm78/modal';
 import { Popper } from 'm78/popper';
-import { Z_INDEX_MESSAGE } from 'm78/util';
+import { Z_INDEX_MESSAGE } from 'm78/common';
 import { useFormState, useSelf, useSetState } from '@lxjx/hooks';
 import moment, { Moment } from 'moment';
 import cls from 'clsx';

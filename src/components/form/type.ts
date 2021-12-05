@@ -2,13 +2,8 @@ import { FormProps as RFormProps } from 'rc-field-form/es/Form';
 import { FieldProps } from 'rc-field-form/es/Field';
 import { NamePath, FormInstance, RuleObject, Meta, Rule } from 'rc-field-form/es/interface';
 import React from 'react';
-import { AnyObject } from '@lxjx/utils';
-import {
-  ComponentBaseProps,
-  ComponentBasePropsWithAny,
-  DirectionEnum,
-  DirectionKeys,
-} from 'm78/types';
+import { AnyObject, ComponentBasePropsWithAny, ComponentBaseProps } from '@lxjx/utils';
+import { DirectionEnum, DirectionKeys } from 'm78/common';
 import { ListViewProps } from 'm78/list-view';
 
 export interface FormItemCustomMeta extends Meta {

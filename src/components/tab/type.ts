@@ -1,9 +1,9 @@
 import React from 'react';
-import { PositionEnum, SizeEnum, ComponentBaseProps } from 'm78/types';
+import { PositionEnum, SizeEnum } from 'm78/common';
 import { TabItem } from 'm78/tab';
 import { useScroll, SetState, FormLike } from '@lxjx/hooks';
 import { CarouselRef } from 'm78/carousel';
-import { AnyFunction } from '@lxjx/utils';
+import { AnyFunction, ComponentBaseProps } from '@lxjx/utils';
 
 export type TabItemElement = React.ReactElement<TabItemProps, typeof TabItem>;
 

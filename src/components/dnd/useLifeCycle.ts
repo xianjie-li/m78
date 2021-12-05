@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { throwError } from 'm78/util';
+import { throwError } from 'm78/common';
 import { useDrag } from 'react-use-gesture';
 import { isFunction } from '@lxjx/utils';
 import _remove from 'lodash/remove';

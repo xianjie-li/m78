@@ -1,6 +1,6 @@
 import React from 'react';
+import { ComponentBaseProps } from '@lxjx/utils';
 import { MountExistBase } from 'm78/popper/utils';
-import { ComponentBaseProps } from 'm78/types/types';
 
 export enum ExpandIconPosition {
   left = 'left',

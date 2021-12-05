@@ -1,6 +1,6 @@
 import React from 'react';
 import cls from 'clsx';
-import { ComponentBaseProps } from 'm78/types';
+import { ComponentBaseProps } from '@lxjx/utils';
 
 interface DividerProps extends ComponentBaseProps {
   /** false | 设置为垂直分割线 */

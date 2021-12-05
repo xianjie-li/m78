@@ -1,6 +1,6 @@
 import React from 'react';
 import cls from 'clsx';
-import { ComponentBaseProps } from 'm78/types';
+import { ComponentBaseProps } from '@lxjx/utils';
 
 interface CenterProps extends ComponentBaseProps {
   /** false | 为true时，将尺寸固定到与父元素一致(需要保证父元素position不是static), 为false时，需要通过className或style执行设置尺寸 */

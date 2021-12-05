@@ -3,8 +3,7 @@ import { m78Config } from 'm78/config';
 
 import './style.scss';
 import { Transition, TransitionBase, TransitionTypeEnum, config } from 'm78/transition';
-import { Spin } from 'm78/spin';
-import { FullSizeEnum } from 'm78/types';
+// import { Spin } from 'm78/spin';
 import { Button } from 'm78/button';
 import sty from './style.module.scss';
 
@@ -12,7 +11,7 @@ const App = () => {
   const dark = m78Config.useState(state => state.darkMode);
 
   const [show, setShow] = useState(true);
-  const [type, setType] = React.useState('slideRight');
+  // const [type, setType] = React.useState('slideRight');
 
   return (
     <div className="p-32">

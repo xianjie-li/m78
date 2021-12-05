@@ -4,7 +4,7 @@ import { useGesture } from 'react-use-gesture';
 import _clamp from 'lodash/clamp';
 import { useSelf, useSetState } from '@lxjx/hooks';
 import { AxisBounds } from 'react-use-gesture/dist/types';
-import { ComponentBaseProps } from 'm78/types/types';
+import { ComponentBaseProps } from '@lxjx/utils';
 import cls from 'clsx';
 import { getBoundMeta } from './utils';
 

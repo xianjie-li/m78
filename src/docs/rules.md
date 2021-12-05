@@ -21,7 +21,7 @@ group:
   某些类型声明会被用户间接引用到，如果 dependencies 不包含对应包，会导致类型反馈异常，区分哪些声明文件可能会被用到很麻烦，而且声明文件通常很小，所以直接全安装到 dependencies
 
 - 中大型组件的类型声明放在同目录`types.ts`下, 防止文件臃肿。
-- 对于不想对外导出或被用户 ide 错误感知的类型或成员, 以`_`开头, 仅运行在程序内部使用。
+- 对于不想对外导出或被用户 ide 错误感知的类型或成员项, 以`_`开头, 仅运行在程序内部使用。
 
 ## 样式约定
 
@@ -34,9 +34,9 @@ group:
   - 支持添加`noStyle`选项来关闭所有非必要样式
   - 每个关键样式部位都包含用于定制的类名
   - 可以将不同的样式特征声明到不同的类名下方便通过 props 关闭，如`__shadow`, `__hover`分别用于控制组件的阴影和交互样式
-  - 用于定制组件某个部位的 prop 命名为 `customXXX`, 如果是一个定制函数`(xx) => node`, 命名为 `XXXCustomer`
+  - 定制性的 props, 以定制的部位命名, 如 header, 通常会支持直接传`node`和`(xx) => node`的方式, 否则声明一个明确的`XXXCustomer`类型方便用户实现, 如果是扩展某部位的 prop 名额外添加`xxExtra`,
   - 大部分组件都可以支持 Customer 接口来定制组件整体样式，还可以支持特定部位的 Customer 如 TitleCustomer
-  - 扩展某处节点的 prop 名使用`xxExtraNode`, 如果是替换型的 props, 直接使用 `xxxNode`
+  - 扩
 
 ## 组件约定
 
@@ -58,7 +58,7 @@ group:
 - 对于需要将内部 dom 元素通过 ref 转发的，使用名为`innerRef`的 prop, 组件实例使用`instanceRef`/`useImperativeHandle`, 必要时再使用`forwordRef`转发获取组件实例, 因为这种方式对组件类型签名破坏太大。
 - 默认最优配置，尽量减少配置项，API 数，例如，常用 api 占 25%，那么可以将整体 api 压缩到 50%(25%的高频使用 api，25%的扩展型 api，剩余通过组件内部通过默认值管理), 后续再根据使用情况逐个放出有使用场景的 api，这样可以大大减少学习成本，并且降低出现破坏性变更的可能性。
 - 除非完全不需要 `SSR` 的组件，否则一律不要直接在 render 中使用`document`、`window`等浏览器对象，对这些对象的操作都放到`effect`中。
-- 组件的字符类参数应同时支持传入 string key 和 enum, 例如: `<Button type="large" />` | `<Button type={Size.large} />`, 以 Button 为例, 两种类型的命名应为`ButtonSizeKeys`/`ButtonSizeEnum`
+- 组件的字符类参数应同时支持传入 string key 和 enum, 例如: `<Button type="large" />` | `<Button type={Size.large} />`, 以 Button 为例, 两种类型的命名应为`ButtonSizeKeys`/`ButtonSizeEnum`, 并声明一个用于直接使用的联合类型 `ButtonSizeKeys | ButtonSizeEnum`
 - 某些依赖于数据源的组件如没有特殊含义，均命名为`dataSource`, 如`tree`组件, 选项格式为`{ label: ReactNode, value: any }`, 对应`components/types`中的`DataSourceItem`
 
 ## 文档
