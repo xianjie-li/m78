@@ -61,7 +61,6 @@ function App() {
 
 样式采用后编译(开发时编译), 你需要为你的`webpack`或其他打包器添加`scss`文件支持才能正常使用。
 
-
 ### 定制主题(可选)
 
 如果要自定义主题色和其他样式变量，可以通过`webpack`配置`sass-loader`的`prependData`选项，并导入自定义的变量文件, 步骤如下:
@@ -70,7 +69,7 @@ function App() {
 
 ```scss
 // custom.scss
-@import '~@m78/style/sass-vars.scss';   // 不同工具的导入方式可能不一致，比如vite导入时不带前面的 `~`
+@import '~@m78/style/sass-vars.scss'; // 不同工具的导入方式可能不一致，比如vite导入时不带前面的 `~`
 
 // 主题色更改为红色
 $color-6: red;
@@ -98,3 +97,9 @@ $color-warn: yellow;
 ## 🎄 其他
 
 还没想到.jpg
+
+## 🎁 support
+
+Thanks for the open source license provided by JetBrains
+
+<img alt="JetBrains" width="120" src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png?_gl=1*1p2eqoh*_ga*MTcxMDQ3MTQxLjE2Mzc2ODcwNDc.*_ga_V0XZL7QHEB*MTYzOTA5OTgwMi41LjAuMTYzOTA5OTgwMi4w&_ga=2.52930088.1860787367.1639099803-171047141.1637687047" />

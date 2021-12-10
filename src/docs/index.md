@@ -101,3 +101,9 @@ $color-warn: yellow;
 ## 🎄 其他
 
 还没想到.jpg
+
+## 🎁 support
+
+Thanks for the open source license provided by JetBrains
+
+<img alt="JetBrains" width="120" src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png?_gl=1*1p2eqoh*_ga*MTcxMDQ3MTQxLjE2Mzc2ODcwNDc.*_ga_V0XZL7QHEB*MTYzOTA5OTgwMi41LjAuMTYzOTA5OTgwMi4w&_ga=2.52930088.1860787367.1639099803-171047141.1637687047" />
