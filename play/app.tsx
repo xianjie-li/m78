@@ -15,10 +15,7 @@ const App = () => {
 
   return (
     <div className="p-32">
-      <button
-        type="button"
-        onClick={() => m78Config.setState({ darkMode: !m78Config.getState().darkMode })}
-      >
+      <button type="button" onClick={() => m78Config.set({ darkMode: !m78Config.get().darkMode })}>
         {dark ? 'dark' : 'light'}
       </button>
 

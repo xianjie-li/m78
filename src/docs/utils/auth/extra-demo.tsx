@@ -42,10 +42,10 @@ const Auth = createAuth({
 const ExtraDemo = () => {
   return (
     <div>
-      <Button size="small" onClick={() => seed.setState({ name: 'lxj' })}>
+      <Button size="small" onClick={() => seed.set({ name: 'lxj' })}>
         登录用户`lxj`
       </Button>
-      <Button size="small" onClick={() => seed.setState({ name: 'jxl' })}>
+      <Button size="small" onClick={() => seed.set({ name: 'jxl' })}>
         登录用户`jxl`
       </Button>
 

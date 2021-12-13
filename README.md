@@ -98,6 +98,8 @@ $color-warn: yellow;
 
 还没想到.jpg
 
+<br>
+
 ## 🎁 support
 
 Thanks for the open source license provided by JetBrains

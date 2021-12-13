@@ -8,7 +8,7 @@ export function _createUseState(seed: Seed) {
 
   const _useState: UseState<any> = (selector = defSelector, equalFn) => {
     const select = useFn(() => {
-      return selector(seed.getState());
+      return selector(seed.get());
     });
 
     const [deps, setDeps] = useState(() => ({

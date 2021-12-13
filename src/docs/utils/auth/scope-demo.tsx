@@ -23,10 +23,10 @@ const Auth = createAuth({
 const ScopeDemo = () => {
   return (
     <div>
-      <Button size="small" onClick={() => seed.setState({ user: 'lxj' })}>
+      <Button size="small" onClick={() => seed.set({ user: 'lxj' })}>
         登录
       </Button>
-      <Button size="small" onClick={() => seed.setState({ user: '' })}>
+      <Button size="small" onClick={() => seed.set({ user: '' })}>
         退出
       </Button>
 

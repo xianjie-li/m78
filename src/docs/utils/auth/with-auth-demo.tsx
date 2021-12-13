@@ -91,19 +91,19 @@ const AuthMyComponent = auth.withAuth({
 const WithAuthDemo = () => {
   return (
     <div>
-      <Button size="small" onClick={() => seed.setState({ user: 'lxj' })}>
+      <Button size="small" onClick={() => seed.set({ user: 'lxj' })}>
         登录
       </Button>
-      <Button size="small" onClick={() => seed.setState({ user: '' })}>
+      <Button size="small" onClick={() => seed.set({ user: '' })}>
         退出
       </Button>
 
       <Divider vertical />
 
-      <Button size="small" onClick={() => seed.setState({ admin: 1 })}>
+      <Button size="small" onClick={() => seed.set({ admin: 1 })}>
         设为管理员
       </Button>
-      <Button size="small" onClick={() => seed.setState({ admin: 2 })}>
+      <Button size="small" onClick={() => seed.set({ admin: 2 })}>
         移除管理权限
       </Button>
 

@@ -18,8 +18,8 @@ const ThemeCtl = () => {
         fontSize: 24,
       }}
       onClick={() => {
-        config.setState({
-          darkMode: !config.getState().darkMode,
+        config.set({
+          darkMode: !config.get().darkMode,
         });
       }}
     >

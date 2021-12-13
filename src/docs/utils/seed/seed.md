@@ -36,13 +36,13 @@ const seed = createSeed({
 });
 
 // 🔥 更新某个状态的值
-auth.setState({ count: 2 })
+seed.set({ count: 2 })
 
 // 🔥 将状态覆盖设置为指定值, 此处设置后，name字段将变为undefined
-auth.coverSetState({ count: 2, createTime: Date.now() })
+seed.coverSet({ count: 2, createTime: Date.now() })
 
 // 🔥 获取state
-auth.getState();
+seed.get();
 
 // 🔥 订阅state变更
 const unsubscribe = subscribe((changes) => {...});
@@ -60,7 +60,7 @@ function UseStateExample() {
    * 从state中选择部分state并返回，如果省略参数，会返回整个state对象
    * 遵循一些使用规则，能使useState只在必要的时机更新，详情请见api useState部分
    * */
-  const count = auth.useState(({ count }) => count);
+  const count = seed.useState(({ count }) => count);
 
   return (
     <div>{count}</div>
@@ -73,7 +73,7 @@ function StateExample() {
    * 通过State组件获取状态，状态改变时，只有组件的render children区域更新，
    * 适合某个区域要显示部分deps的场景
    * */
-  const count = auth.useState(({ count }) => count);
+  const count = seed.useState(({ count }) => count);
 
   return (
     <State>
@@ -143,15 +143,15 @@ const cacheMiddleware: Middleware = bonus => {
 
   console.log('api created');
 
-  // 在执行setState时打印设置的新state
-  bonus.monkey('setState', next => patch => {
-    console.log('setState', patch);
+  // 在执行set state时打印设置的新state
+  bonus.monkey('set', next => patch => {
+    console.log('set', patch);
     next(patch);
   });
 
   // 获取state时输出获取行为
-  bonus.monkey('getState', next => () => {
-    console.log('getState');
+  bonus.monkey('get', next => () => {
+    console.log('get');
     return next();
   });
 };
@@ -196,13 +196,13 @@ interface MiddlewareBonusPatch {
 ```ts | pure
 interface RCSeed<S> {
   /** 更改当前state, 只会更改对象中包含的key */
-  setState: SetState<
+  set: SetState<
     S & {
       [key: string]: any;
     }
   >;
   /** 以新state覆盖当前state */
-  coverSetState: CoverSetState<
+  coverSet: CoverSetState<
     S & {
       [key: string]: any;
     }
@@ -210,7 +210,7 @@ interface RCSeed<S> {
   /** 订阅state变更, 返回函数用于取消改订阅, 接收变更的state(setState传入的原始值) */
   subscribe: Subscribe<S>;
   /** 获取当前的state */
-  getState(): S;
+  get(): S;
   /** 获取当前state的hook */
   useState: UseState<S>;
   /** 通过render children获取state */

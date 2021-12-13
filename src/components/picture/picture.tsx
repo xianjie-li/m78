@@ -50,9 +50,9 @@ const Picture: React.FC<PictureProps> = ({
     text: '' as React.ReactNode,
   });
 
-  const pictureErrorImg = config.useState(st => st.pictureErrorImg);
+  const pictureConfig = config.useState(st => st.picture);
 
-  const _errorImg = errorImg || pictureErrorImg;
+  const _errorImg = errorImg || pictureConfig.errorImg;
 
   useEffect(() => {
     setState({

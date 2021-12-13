@@ -61,7 +61,7 @@ export default () => <span />;
 
 <code src="./button-demo-effect.tsx" />
 
-## props
+## API
 
 **`<Button>`**
 

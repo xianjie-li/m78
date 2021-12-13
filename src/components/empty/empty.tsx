@@ -14,11 +14,11 @@ function injectIconClassName(el?: React.ReactElement) {
 }
 
 const Empty: React.FC<EmptyProps> = ({ desc, children, size, emptyNode, ...props }) => {
-  const globalEmptyNode = config.useState(state => state.emptyNode);
+  const emptyConfig = config.useState(state => state.empty);
 
   return (
     <div className={cls('m78 m78-empty', size && `__${size}`, props.className)} {...props}>
-      {injectIconClassName(emptyNode) || injectIconClassName(globalEmptyNode) || (
+      {injectIconClassName(emptyNode) || injectIconClassName(emptyConfig.emptyNode) || (
         // <Icon.SvgIcon type="empty" />
         <EmptyIcon className="m78-empty_icon" />
       )}
