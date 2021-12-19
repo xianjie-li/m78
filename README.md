@@ -1,4 +1,3 @@
-
 <p align="center">
     <img src="https://gitee.com/llixianjie/m78/raw/master/public/logo-small.png" width="160" align="center" />
 </p>
@@ -19,7 +18,6 @@
 - 移动端/PC 双端兼容
 - 使用 `TypeScript` 开发，包含完整的类型声明
 - 完全使用`hooks`编写
-- 标准化接口，size/value/defaultValue/onChange/color 等很多配置与社区组件保持一致，学习成本更低
 - 除 UI 外，还包含大量应用层面的工具实现，如：`权限`、`状态管理`等
 - 优秀的组件定制能力
 
@@ -39,7 +37,7 @@ npm install m78
 
 ### `导入组件`
 
-`M78` 使用 `es modules` 模块，你可以通过`m78/*` 来导入主包下的各个模块
+`M78` 使用 `es modules` 模块系统，你可以通过`m78/*` 来导入主包下的各个模块
 
 ```js
 import { Button, ButtonProps } from 'm78/button';
@@ -53,44 +51,34 @@ function App() {
 }
 ```
 
-💡 默认是没有主入口的，所有组件都在独立的模块中维护, 这样可以做到天然的按需加载，`tree shake` 也更友好。
+💡 不包含主入口，所有组件都在独立的模块中维护并独立导入使用, 以达到天然的按需加载，`tree shake` 也更友好。
 
 <br>
 
 ### `启用sass加载器`
 
-样式采用后编译(开发时编译), 你需要为你的`webpack`或其他打包器添加`scss`文件支持才能正常使用。
+样式采用后编译(开发时编译), 你需要为你的`webpack`或其他打包器添加`.scss`文件支持才能正常使用。
+
 
 ### 定制主题(可选)
 
-如果要自定义主题色和其他样式变量，可以通过`webpack`配置`sass-loader`的`prependData`选项，并导入自定义的变量文件, 步骤如下:
+组件库采用`CSS variables`来管理css配置, 由于此特性是浏览器天然支持的, 使用权重更高的变量覆盖组件库变量即可实现样式定制
 
-1. 自定义 sass 变量
+可以在[此处](https://github.com/m78-core/style/blob/main/var.scss)查看所有可用变量
 
-```scss
-// custom.scss
-@import '~@m78/style/sass-vars.scss'; // 不同工具的导入方式可能不一致，比如vite导入时不带前面的 `~`
-
-// 主题色更改为红色
-$color-6: red;
-
-// 自定义信息色
-$color-info: blue;
-$color-success: green;
-$color-error: red;
-$color-warn: yellow;
-```
-
-更多变量请查看[m78/style](https://github.com/m78-core/style/blob/main/config.scss)
-
-2. 修改`webpack` -> `sass-loader`配置(也可以跳过此步，在每个 sass 文件顶部自行引入)
-
-```
-// 你的webpack配置文件.js (每个脚手架配置方式可能会有所不同，请自行查阅)
-{
-  prependData: '@import "@/[文件路径]/custom.scss;',
+```css
+/* html:root用于提升权重, 组件库变量位于:root选择器下, 你可以使用其他任意提高权重的方式 */
+html:root {
+  --m78-color-6: red;
+  --m78-color-sub: pink;
+  --m78-color-info: blue;
+  --m78-color-success: green;
+  --m78-color-error: red;
+  --m78-color-warn: orange;
+  --m78-fs: 16px;
 }
 ```
+
 
 <br>
 

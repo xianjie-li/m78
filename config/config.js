@@ -12,7 +12,10 @@ export default {
   outputPath: 'docs',
   base: '/m78/',
   publicPath: '/m78/',
-  resolve: {},
+  resolve: {
+    includes: ['src', './README.md'],
+    excludes: ['src/components'],
+  },
   mode: 'site',
   navs: [
     null,

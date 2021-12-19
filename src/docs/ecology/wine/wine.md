@@ -1,9 +1,9 @@
 ---
 title: Wine - 任务窗口
 group:
-  title: 工具包
-  path: /utils
-  order: 5000
+  title: 生态
+  path: /ecology
+  order: 6000
 ---
 
 # Wine 任务窗口
@@ -36,7 +36,7 @@ yarn install @m78/wine
 
 * `Wine`是[renderApi](/m78/docs/utils/render-api)创建出来的实例, 使用此包前一定要先对其进行了解
 * `state`是`WineState`类型, 用于配置窗口的一些具体行为
-* `renderInstance`是由`renderApi`创建出来的示例, 上面包含了一些对应实例的管理方法, 其中, `renderInstance.current`是`Wine`对外暴露的特有实例, 对应`WineInstanceExtend`类型
+* `renderInstance`是由`renderApi`创建出来的示例, 上面包含了一些对应实例的管理方法, 其中, `renderInstance.current`是`Wine`对外暴露的特有实例, 对应`WineInstance`类型
 
 ```ts
 import Wine from '@m78/wine';
@@ -45,16 +45,22 @@ const renderInstance = Wine.render(state);
 ```
 
 ```ts
-/** 窗口状态 */
-export interface WineState {
+/**
+ * wine接收的state
+ * */
+export interface WineState extends RenderApiComponentProps<WineState, WineInstance> {
   /** 内容 */
   content: React.ReactNode;
 
   /* ##### 顶栏配置 ##### */
-  /** 顶栏主要区域显示的内容 */
-  headerNode?: React.ReactNode;
+  header?: React.ReactNode;
   /** 完全自定义顶栏，需要确保将props展开到header根节点上, .eg (<div {...props} className="myHeader" />) */
-  headerCustomer?: (props: any, instance: WineInstance, isFull: boolean) => React.ReactNode;
+  headerCustomer?: (
+    props: any,
+    state: WineState,
+    instance: WineInstance,
+    isFull: boolean,
+  ) => React.ReactNode;
 
   /* ##### 位置、尺寸 ##### */
   /** [0.5, 0.5] | 弹窗在屏幕上的位置, 取值为0 ~ 1 */
@@ -81,15 +87,12 @@ export interface WineState {
   zIndex?: number;
 
   /* ##### 事件 #####  */
-  /** 置顶/活动事件、 */
+  /** 置顶/活动事件 */
   onActive?: () => void;
 }
-```
 
-对外暴露的实例方法, 通过`render()`返回的实例上的`instance`使用
-```ts
-/** 扩展的实例属性和方法 */
-export interface WineInstanceExtend {
+/** 对外扩展的实例属性和方法 */
+export interface WineInstance {
   /** 对应的html节点 */
   el: RefObject<HTMLElement>;
   /** 置顶 */
@@ -103,10 +106,7 @@ export interface WineInstanceExtend {
   /** 一些内部使用的实例变量，某些复杂场景可能会用到 */
   meta: _WineSelf;
 }
-```
 
-其他
-```ts
 /** 描述可拖动范围 */
 export enum WineBoundEnum {
   /** 窗口范围内 */
@@ -115,5 +115,17 @@ export enum WineBoundEnum {
   safeArea = 'safeArea',
   /** 不限制 */
   noLimit = 'noLimit',
+}
+
+/** 描述可拖动方向 */
+export enum WineDragPositionEnum {
+  L,
+  T,
+  R,
+  B,
+  LT,
+  RT,
+  RB,
+  LB,
 }
 ```

@@ -1,9 +1,9 @@
 ---
 title: Seed - 种子
 group:
-  title: 工具包
-  path: /utils
-  order: 5000
+  title: 生态
+  path: /ecology
+  order: 6000
 ---
 
 # Seed 种子

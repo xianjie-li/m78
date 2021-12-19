@@ -1,9 +1,9 @@
 ---
 title: Auth - 权限
 group:
-  title: 工具包
-  path: /utils
-  order: 5000
+  title: 生态
+  path: /ecology
+  order: 6000
 ---
 
 # Auth 权限
