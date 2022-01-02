@@ -1,4 +1,4 @@
-import { useClickAway, useUpdateEffect } from 'react-use';
+import { useUpdateEffect, useClickAway } from '@lxjx/hooks';
 import { useEffect } from 'react';
 import { Share } from './types';
 import { useMethods } from './useMethods';
@@ -20,21 +20,24 @@ export function useEffects(share: Share, methods: ReturnType<typeof useMethods>)
   const { refresh } = methods;
 
   /** 点击气泡外位置关闭 */
-  useClickAway(popperEl, ({ target: _target }) => {
-    if (triggerType.subClick && show) {
-      setShow(false);
-    }
+  useClickAway({
+    target: [popperEl],
+    onTrigger: ({ target: _target }) => {
+      if (triggerType.subClick && show) {
+        setShow(false);
+      }
 
-    if (triggerType.click && show) {
-      const { elTarget } = state;
-      // 只在点击的不是目标元素时生效
-      if (_target && elTarget && elTarget.contains) {
-        const isTarget = elTarget.contains(_target as HTMLElement);
-        if (!isTarget) {
-          setShow(false);
+      if (triggerType.click && show) {
+        const { elTarget } = state;
+        // 只在点击的不是目标元素时生效
+        if (_target && elTarget && elTarget.contains) {
+          const isTarget = elTarget.contains(_target as HTMLElement);
+          if (!isTarget) {
+            setShow(false);
+          }
         }
       }
-    }
+    },
   });
 
   // 初始化显示
@@ -55,6 +58,8 @@ export function useEffects(share: Share, methods: ReturnType<typeof useMethods>)
     if (!mount) return;
     refresh();
   }, [show]);
+
+  useUpdateEffect(() => {}, []);
 
   useUpdateEffect(() => {
     show && refresh();

@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
-import { useMountInterface } from 'm78/hooks';
 import { useSpring, animated } from 'react-spring';
-import { useSelf } from '@lxjx/hooks';
+import { useSelf, useMountState } from '@lxjx/hooks';
 import { TransitionBaseProps } from './types';
 
 export const _TransitionBase = (props: TransitionBaseProps) => {
@@ -26,7 +25,7 @@ export const _TransitionBase = (props: TransitionBaseProps) => {
     isFirst: true,
   });
 
-  const [mount, unmount] = useMountInterface(show, props);
+  const [mount, unmount] = useMountState(show, props);
 
   const Animated = useMemo(() => animated[tag as 'div'], []);
 
@@ -74,11 +73,11 @@ export const _TransitionBase = (props: TransitionBaseProps) => {
       style={{
         ...props.style,
         ...sp,
-        display: changeVisible
-          ? sp.__progress.to((p: number) => (p === 0 ? 'none' : undefined))
+        visibility: changeVisible
+          ? sp.__progress.to((p: number) => (p <= 0 ? 'hidden' : 'visible'))
           : undefined,
         // 动画大部分未出场时阻止事件，防止隐藏出现等场景错误点击
-        pointerEvents: sp.__progress.to((p: number) => (p <= 0.6 ? 'none' : undefined)),
+        pointerEvents: sp.__progress.to((p: number) => (p <= 0.7 ? 'none' : undefined)),
       }}
       className={props.className}
     >

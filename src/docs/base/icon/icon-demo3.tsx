@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   EmptyIcon,
   SuccessIcon,
@@ -13,19 +13,24 @@ import {
 
 import { message } from 'm78/message';
 
-import { useCopyToClipboard } from 'react-use';
-
 const IconDemo2 = () => {
-  const [copyState, copyToClipboard] = useCopyToClipboard();
+  function copyToClipboard(text: string) {
+    if (!('clipboard' in navigator)) {
+      message.tips({
+        type: 'error',
+        content: `sorry! 你的浏览器不支持navigator.clipboard API`,
+      });
+      return;
+    }
 
-  useEffect(() => {
-    if (copyState.value) {
+    navigator.clipboard.writeText(text).then(() => {
       message.tips({
         type: 'success',
-        content: `复制成功: ${copyState.value}`,
+        content: `复制成功: <${text} />`,
       });
-    }
-  }, [copyState.value]);
+    });
+  }
+
   return (
     <div className="doc-wrap">
       <span className="d-icon-view-item __svg" onClick={() => copyToClipboard('SuccessIcon')}>

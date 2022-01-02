@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useMemo } from 'react';
 import { AnyObject, createRandString, isArray, isFunction } from '@lxjx/utils';
-import { useUpdate } from 'react-use';
+import { useUpdate } from '@lxjx/hooks';
 import _has from 'lodash/has';
 import { FormInstance } from 'rc-field-form/es/interface';
 import { Field } from 'rc-field-form';

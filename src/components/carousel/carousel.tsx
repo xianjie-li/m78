@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useRef, useState, useImperativeHandle } from 'react';
-import { useMeasure, useUpdate, useInterval } from 'react-use';
+import { useMeasure, useUpdate, useSelf, useFn } from '@lxjx/hooks';
 import { animated, useSpring } from 'react-spring';
 import { useGesture } from 'react-use-gesture';
 import _clamp from 'lodash/clamp';
@@ -7,7 +7,6 @@ import _clamp from 'lodash/clamp';
 import cls from 'clsx';
 
 import { dumpFn, ComponentBaseProps } from '@lxjx/utils';
-import { useSelf } from '@lxjx/hooks';
 
 export interface CarouselProps extends ComponentBaseProps {
   /** 子元素，必须为多个直接子元素或子元素数组 */
@@ -97,7 +96,7 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
     const [children, loopValid] = loopChildrenHandle(_children, loop);
 
     // 获取包裹元素的尺寸等信息
-    const [wrapRef, { width, height }] = useMeasure();
+    const [{ width, height }, wrapRef] = useMeasure<HTMLDivElement>();
 
     // 用于阻止轮播组件内图片的drag操作
     const innerWrap = useRef<HTMLDivElement>(null!);
@@ -154,6 +153,29 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
       // eslint-disable-next-line
     }, []);
 
+    const next = useFn(() => {
+      if (loopValid && page.current === children.length - 1) {
+        goTo(1, true, () => {
+          goTo(calcPage(page.current + 1));
+        });
+        return;
+      }
+
+      goTo(calcPage(page.current + 1));
+    });
+
+    /** 跳转至上一页 */
+    const prev = useFn(() => {
+      if (loopValid && page.current === 0) {
+        goTo(children.length - 2, true, () => {
+          goTo(calcPage(page.current - 1));
+        });
+        return;
+      }
+
+      goTo(calcPage(page.current - 1));
+    });
+
     useImperativeHandle(ref, () => ({
       prev,
       next,
@@ -162,12 +184,13 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
       },
     }));
 
-    useInterval(
-      function autoPlayHandle() {
-        next();
-      },
-      delay > 0 ? delay : null,
-    );
+    useEffect(() => {
+      if (!delay) return;
+
+      const t = setInterval(next, delay);
+
+      return () => clearInterval(t);
+    }, [delay]);
 
     const bind = useGesture(
       {
@@ -267,30 +290,6 @@ const Carousel = React.forwardRef<CarouselRef, CarouselProps>(
     );
 
     useEffect(bind as any, [bind]);
-
-    /** 跳转至上一页 */
-    function prev() {
-      if (loopValid && page.current === 0) {
-        goTo(children.length - 2, true, () => {
-          goTo(calcPage(page.current - 1));
-        });
-        return;
-      }
-
-      goTo(calcPage(page.current - 1));
-    }
-
-    /** 跳转至下一页 */
-    function next() {
-      if (loopValid && page.current === children.length - 1) {
-        goTo(1, true, () => {
-          goTo(calcPage(page.current + 1));
-        });
-        return;
-      }
-
-      goTo(calcPage(page.current + 1));
-    }
 
     /**
      * @description - 跳转到指定页

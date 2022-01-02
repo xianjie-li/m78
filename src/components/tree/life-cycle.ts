@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { isNumber } from '@lxjx/utils';
-import { useUpdateEffect } from 'react-use';
+import { useUpdateEffect } from '@lxjx/hooks';
 import functions from './functions';
 import { flatTreeData } from './common';
 import { Share, TreeBaseProps } from './_types';

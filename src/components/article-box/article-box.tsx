@@ -1,5 +1,5 @@
 import React from 'react';
-import { useMeasure } from 'react-use';
+import { useMeasure } from '@lxjx/hooks';
 import { If } from 'm78/fork';
 import cls from 'clsx';
 import { ComponentBaseProps } from '@lxjx/utils';
@@ -17,7 +17,7 @@ export interface ArticleBoxProps extends ComponentBaseProps {
 /* 列数等于 宽度 / 300 */
 
 const ArticleBox: React.FC<ArticleBoxProps> = ({ watermark, html, content, style, className }) => {
-  const [ref, { width, height }] = useMeasure();
+  const [{ width, height }, ref] = useMeasure<HTMLDivElement>();
   const row = Math.ceil(height / 240) + 4;
   const col = Math.ceil(width / 300);
 

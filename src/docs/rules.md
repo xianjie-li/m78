@@ -22,6 +22,7 @@ group:
 
 - 中大型组件的类型声明放在同目录`types.ts`下, 防止文件臃肿。
 - 对于不想对外导出或被用户 ide 错误感知的类型或成员项, 以`_`开头, 仅运行在程序内部使用。
+- 对外导出的类型以组件名作为前缀命名空间, 如`ButtonProps`, `ButtonTypeKeys`
 
 ## 样式约定
 
@@ -36,7 +37,6 @@ group:
   - 可以将不同的样式特征声明到不同的类名下方便通过 props 关闭，如`__shadow`, `__hover`分别用于控制组件的阴影和交互样式
   - 定制性的 props, 以定制的部位命名, 如 header, 通常会支持直接传`node`和`(xx) => node`的方式, 否则声明一个明确的`XXXCustomer`类型方便用户实现, 如果是扩展某部位的 prop 名额外添加`xxExtra`,
   - 大部分组件都可以支持 Customer 接口来定制组件整体样式，还可以支持特定部位的 Customer 如 TitleCustomer
-  - 扩
 
 ## 组件约定
 

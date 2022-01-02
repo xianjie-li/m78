@@ -17,7 +17,7 @@ const MyModal = ({
   title,
   content,
   // render api注入的props
-  show,
+  show = false,
   onChange,
 }: MyModalState) => {
   const [aShow, setAShow] = useState(false);
@@ -32,7 +32,7 @@ const MyModal = ({
       <div className={sty.Title}>
         <span>{title}</span>
         {/* 通过api在组件内更改组件的状态 */}
-        <span className={sty.CloseBtn} onClick={() => onChange(false)}>
+        <span className={sty.CloseBtn} onClick={() => onChange?.(false)}>
           close
         </span>
       </div>

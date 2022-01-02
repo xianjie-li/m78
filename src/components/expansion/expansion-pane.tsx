@@ -1,5 +1,7 @@
 import React, { useMemo } from 'react';
-import { useFormState, useMountExist, useMeasure, useSelf } from '@lxjx/hooks';
+import { useFormState, useMeasure, useSelf } from '@lxjx/hooks';
+/** TODO: 移除依赖 */
+import { useMountExist } from 'm78/popper';
 import { isFunction } from '@lxjx/utils';
 import cls from 'clsx';
 import { Button } from 'm78/button';
@@ -60,7 +62,7 @@ const ExpansionPane = (props: ExpansionPaneProps) => {
   });
 
   // 测量高度
-  const [contRef, { height }] = useMeasure<HTMLDivElement>();
+  const [{ height }, contRef] = useMeasure<HTMLDivElement>();
 
   // 实现mountOnEnter/unmountOnExit
   const [mound] = useMountExist({

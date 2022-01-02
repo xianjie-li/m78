@@ -9,10 +9,11 @@ group:
 # Config - 全局配置
 
 全局性的控制组件的一些表现和行为
-  
-config本身是一个[seed](/docs/utils/seed), 可以使用seed的所有api
+
+config 本身是一个[seed](/docs/utils/seed), 可以使用 seed 的所有 api
 
 目前支持的配置如下:
+
 ```ts
 interface M78SeedState {
   /** 黑暗模式 */
@@ -30,9 +31,9 @@ interface M78SeedState {
 ```
 
 通过`seed api`来获取和更新状态
+
 ```ts
 const darkMode = seed.get().darkMode;
 
-seed.set({ darkMode: !darkMode })
+seed.set({ darkMode: !darkMode });
 ```
-

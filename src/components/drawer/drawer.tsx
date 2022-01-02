@@ -8,7 +8,7 @@ import { If } from 'm78/fork';
 import _capitalize from 'lodash/capitalize';
 import cls from 'clsx';
 
-import { useFormState, useSameState } from '@lxjx/hooks';
+import { useFormState, useSame } from '@lxjx/hooks';
 import { Z_INDEX_DRAWER } from 'm78/common';
 import { DrawerProps } from './type';
 
@@ -39,7 +39,7 @@ const Drawer: React.FC<DrawerProps> = props => {
     valueKey: 'show',
   });
 
-  const [___, instances, instanceId] = useSameState('fr_drawer_metas', {
+  const [___, instances, instanceId] = useSame('fr_drawer_metas', {
     enable: show,
     meta: {
       direction,

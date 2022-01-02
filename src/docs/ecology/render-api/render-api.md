@@ -8,19 +8,21 @@ group:
 
 # RenderApi 渲染 api
 
-`RenderApi` 提供了在主React实例外渲染组件的方式，与 `React Portal api` 和 `React.render` 相比，此库提供了一系列管理已渲染组件的方法 和一些主观约定，简而言之, 它：
+`RenderApi` 提供了在主 React 实例外渲染组件的方式，与 `React Portal api` 和 `React.render` 相比，此库提供了一系列管理已渲染组件的方法 和一些主观约定，简而言之, 它：
 
-* 统一弹层实现方式和接口, 减少开发和使用成本
-* 通过简洁的api管理你的外部组件实例, 并且你可以进行更新实例状态、控制显示、卸载等操作
-* 不同于其他弹层组件, 渲染的组件可以存在于当前react上下文中, 所以 `React Context api` 等是可用的
-* 单例，你可以创建多个api接口而不用担心它们彼此干扰
+- 统一弹层实现方式和接口, 减少开发和使用成本
+- 通过简洁的 api 管理你的外部组件实例, 并且你可以进行更新实例状态、控制显示、卸载等操作
+- 不同于其他弹层组件, 渲染的组件可以存在于当前 react 上下文中, 所以 `React Context api` 等是可用的
+- 单例，你可以创建多个 api 接口而不用担心它们彼此干扰
 
 🤔 使用场景？
 
-最常见的用例是用来渲染Modal等需要挂载到节点树外的组件，并且将其api化，可以通过api来直接创建实例并进行管理
+最常见的用例是用来渲染 Modal 等需要挂载到节点树外的组件，并且将其 api 化，可以通过 api 来直接创建实例并进行管理
 
 ## install
-RenderApi在单独的包中维护, 需要独立安装
+
+RenderApi 在单独的包中维护, 需要独立安装
+
 ```shell
 yarn add @m78/render-api
 # 或者使用 npm
@@ -28,11 +30,13 @@ npm install @m78/render-api
 ```
 
 ## usage
+
 大致步骤如下:
-* 约定组件的状态
-* 创建要全局渲染的组件, `render-api`会在其 props 中传入当前状态和实例对象，组件 props 可通过 `RenderApiComponentBaseProps` 描述
-* 通过`create()`和创建的组件来生成 api
-* 使用生成的 api 渲染和管理组件
+
+- 约定组件的状态
+- 创建要全局渲染的组件, `render-api`会在其 props 中传入当前状态和实例对象，组件 props 可通过 `RenderApiComponentBaseProps` 描述
+- 通过`create()`和创建的组件来生成 api
+- 使用生成的 api 渲染和管理组件
 
 <code src="./demo.tsx" />
 
@@ -40,9 +44,9 @@ npm install @m78/render-api
 
 以下伪代码描述了各类型的对应关系:
 
-* `create`创建一个api实例, 它接收`RenderApiOption`作为配置并返回`RenderApiInstance`实例
-* `RenderApiInstance.render`返回一个`RenderApiComponentInstance`实例, 用来控制实例的表现和行为
-* 其中, 泛型`S`表示实现组件接收的状态, 也对应`render(S)`中的参数, `I`是实现组件想要主动对外扩展的api
+- `create`创建一个 api 实例, 它接收`RenderApiOption`作为配置并返回`RenderApiInstance`实例
+- `RenderApiInstance.render`返回一个`RenderApiComponentInstance`实例, 用来控制实例的表现和行为
+- 其中, 泛型`S`表示实现组件接收的状态, 也对应`render(S)`中的参数, `I`是实现组件想要主动对外扩展的 api
 
 ```ts
 import create from '@m78/render-api';
@@ -75,9 +79,9 @@ export interface RenderApiOption<S> {
   changeKey?: string;
 }
 
-/** 
+/**
  * ###########################################
- * 以下两个类型是实现组件的接收props的基础类型, 
+ * 以下两个类型是实现组件的接收props的基础类型,
  * 可以根据是否自定义show/onChange选择继承其中哪一个
  * ###########################################
  * */
@@ -144,7 +148,7 @@ export interface RenderApiInstance<S, I> {
    * whiteList: ['defaultState', 'wrap', 'maxInstance']
    * */
   setOption: (
-          opt: Omit<RenderApiOption<S>, 'component' | 'namespace' | 'showKey' | 'changeKey'>,
+    opt: Omit<RenderApiOption<S>, 'component' | 'namespace' | 'showKey' | 'changeKey'>,
   ) => void;
   /**
    * 获取正在使用的配置副本

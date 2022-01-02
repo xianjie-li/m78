@@ -81,19 +81,24 @@ function Button(btnProps: ButtonPropsWithHTMLLink | ButtonPropsWithHTMLButton) {
 
   const darkMode = config.useState(state => state.darkMode);
 
-  const classNames = cls(className, 'm78 m78-btn', 'm78-effect', {
-    [`__${color}`]: color,
-    [`__${size}`]: size,
-    __circle: circle,
-    __outline: outline,
-    __block: block,
-    __text: text,
-    __icon: icon,
-    __md: md,
-    __win: win,
-    __light: (!!color && !text && !icon) || (!color && darkMode), // 当是link/icon按钮时，可以直接使用对应颜色的波纹
-    __disabled: disabled || loading,
-  });
+  const classNames = cls(
+    'm78 m78-btn',
+    'm78-effect',
+    {
+      [`__${color}`]: color,
+      [`__${size}`]: size,
+      __circle: circle,
+      __outline: outline,
+      __block: block,
+      __text: text,
+      __icon: icon,
+      __md: md,
+      __win: win,
+      __light: (!!color && !text && !icon) || (!color && darkMode), // 当是link/icon按钮时，可以直接使用对应颜色的波纹
+      __disabled: disabled || loading,
+    },
+    className,
+  );
 
   const newChildren = useMemo(() => formatChildren(children), [children]);
 

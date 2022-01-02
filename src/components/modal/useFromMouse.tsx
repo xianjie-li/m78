@@ -1,5 +1,5 @@
 import { useSpring } from 'react-spring';
-import { useDelayDerivedToggleStatus, useMountInterface } from 'm78/hooks';
+import { useDelayToggle, useMountState } from '@lxjx/hooks';
 import { useEffect } from 'react';
 import { getLastXKey, getLastYKey } from './commons';
 import { useMethods } from './methods';
@@ -16,10 +16,10 @@ export function useFromMouse(
   const [sp, set] = useSpring(() => ({ x: 0, y: 0, scale: 0, opacity: 1 }));
 
   /** 为animationType = fromMouse 单独实现mountOnEnter、unmountOnExit */
-  const [mount, unmount] = useMountInterface(show, { mountOnEnter, unmountOnExit });
+  const [mount, unmount] = useMountState(show, { mountOnEnter, unmountOnExit });
 
   /** 用于确保fromMouse的useEffect()能访问到以挂载的contRef.current，类似nextTick */
-  const show2 = useDelayDerivedToggleStatus(show, 1, {
+  const show2 = useDelayToggle(show, 1, {
     trailing: false,
     leading: true,
     disabled: !isFromMouse,

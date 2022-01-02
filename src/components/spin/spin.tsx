@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useDelayDerivedToggleStatus } from 'm78/hooks';
+import { useDelayToggle } from '@lxjx/hooks';
 import { Transition } from 'm78/transition';
 
 import cls from 'clsx';
@@ -16,7 +16,7 @@ const Spin: React.FC<SpinProps> = ({
   loadingDelay = 0,
   ...props
 }) => {
-  const innerShow = useDelayDerivedToggleStatus(show, loadingDelay);
+  const innerShow = useDelayToggle(show, loadingDelay);
 
   return (
     <Transition

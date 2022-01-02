@@ -1,13 +1,11 @@
 import React, { useRef, useState } from 'react';
 import { Portal } from 'm78/portal';
 import { Z_INDEX_MODAL } from 'm78/common';
-import { useMeasure } from 'react-use';
 import { config as spConfig, Transition, TransitionType } from 'm78/transition';
-import { useFormState, useSameState, useRefize, useSelf } from '@lxjx/hooks';
+import { useFormState, useSame, useRefize, useSelf, useDelayToggle, useMeasure } from '@lxjx/hooks';
 import { animated, to } from 'react-spring';
 
 import cls from 'clsx';
-import { useDelayDerivedToggleStatus } from 'm78/hooks';
 import createRenderApi from '@lxjx/react-render-api';
 import { useLifeCycle } from './lifeCycle';
 import { useFromMouse } from './useFromMouse';
@@ -58,10 +56,10 @@ const _ModalBase: React.FC<ModalBaseProps> = props => {
   });
 
   /** 延迟设置为false的show，用于防止组件从实例列表中被生硬的移除(会打乱zIndex/动画状态等 ) */
-  const delayShow = useDelayDerivedToggleStatus(show, 1, { trailing: true, leading: false });
+  const delayShow = useDelayToggle(show, 1, { trailing: true, leading: false });
 
   /** 管理所有show为true的Modal组件 */
-  const [cIndex, instances] = useSameState('fr_modal_metas', {
+  const [cIndex, instances] = useSame('fr_modal_metas', {
     enable: delayShow,
     meta: {
       mask,
@@ -74,7 +72,7 @@ const _ModalBase: React.FC<ModalBaseProps> = props => {
   const nowZIndex = cIndex === -1 ? baseZIndex : cIndex + baseZIndex;
 
   /** 监听容器大小变更 */
-  const [bind, { width, height }] = useMeasure();
+  const [{ width, height }, bind] = useMeasure<HTMLDivElement>();
 
   /** 内容区域的xy坐标 */
   const [pos, setPos] = useState([0, 0]);

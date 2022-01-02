@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import { useLockBodyScroll, useSelf } from '@lxjx/hooks';
+import { useLockBodyScroll, useSelf, useSetState, useToggle, useUpdateEffect } from '@lxjx/hooks';
 import { useDrag } from 'react-use-gesture';
-import { useSetState, useToggle, useUpdateEffect } from 'react-use';
 import _clamp from 'lodash/clamp';
 import cls from 'clsx';
 

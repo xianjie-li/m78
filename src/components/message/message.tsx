@@ -6,12 +6,11 @@ import { Portal } from 'm78/portal';
 import { CloseOutlined, statusIcons } from 'm78/icon';
 import { Spin } from 'm78/spin';
 import { If, Toggle } from 'm78/fork';
-import { useMeasure } from 'react-use';
 import { Transition } from 'm78/transition';
 
 import cls from 'clsx';
 
-import { useSelf } from '@lxjx/hooks';
+import { useSelf, useMeasure } from '@lxjx/hooks';
 import { Button } from 'm78/button';
 import { SizeEnum } from 'm78/common';
 import { MessageProps } from './type';
@@ -52,7 +51,7 @@ const Message: React.FC<MessageProps> = ({
 
   const [maskShow, setMaskShow] = useState(mask);
 
-  const [bind, { height }] = useMeasure();
+  const [{ height }, bind] = useMeasure<HTMLDivElement>();
 
   /* 元素显示&隐藏 */
   useEffect(() => {

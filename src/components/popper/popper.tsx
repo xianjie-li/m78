@@ -1,17 +1,16 @@
 import React, { useImperativeHandle, useMemo, useRef } from 'react';
 import { Portal } from 'm78/portal';
 import cls from 'clsx';
-import { useFormState, useSelf, useSetState, useMountExist } from '@lxjx/hooks';
+import { useFormState, useSelf, useSetState, useDelayToggle, useMeasure } from '@lxjx/hooks';
 import { createRandString } from '@lxjx/utils';
 import { useSpring, animated, to } from 'react-spring';
-import { useMeasure } from 'react-use';
-import { useDelayDerivedToggleStatus } from 'm78/hooks';
 import { useEventBind } from './useEventBind';
 import { getTriggerType } from './utils';
 import { PopperProps, Share } from './types';
 import { buildInComponent } from './builtInComponent';
 import { useEffects } from './useEffects';
 import { useMethods } from './useMethods';
+import { useMountExist } from './common';
 
 export const defaultProps = {
   offset: 12,
@@ -34,7 +33,7 @@ const Popper = (_props: PopperProps) => {
   });
 
   /** 防止快速的连续开关和关闭后马上又开启的情况 */
-  const show = useDelayDerivedToggleStatus(_show, 20, {
+  const show = useDelayToggle(_show, 20, {
     trailing: true,
     leading: false,
   });
@@ -72,7 +71,7 @@ const Popper = (_props: PopperProps) => {
   const targetSelector = `m78-popper_${id}`;
 
   /** 监听内容尺寸变更 */
-  const [measureRef, { width: mWidth, height: mHeight }] = useMeasure();
+  const [{ width: mWidth, height: mHeight }, measureRef] = useMeasure<HTMLDivElement>();
 
   /** 动画控制 */
   const [spProps, set] = useSpring(() => ({

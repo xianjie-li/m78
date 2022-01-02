@@ -9,34 +9,36 @@ group:
 # Wine 任务窗口
 
 ## feature
+
 通过多窗口来高效的组织任务, 支持:
-* 多窗口        multi-window
-* 调整大小      resize
-* 拖动         drag
-* 自动排列      auto align
-* 定制样式      custom style
-* 限制拖动      bounded
-* 等...        etc.   
+
+- 多窗口 multi-window
+- 调整大小 resize
+- 拖动 drag
+- 自动排列 auto align
+- 定制样式 custom style
+- 限制拖动 bounded
+- 等... etc.
 
 ## install
+
 使用前, 需要安装独立的依赖
+
 ```shell
 yarn install @m78/wine
 ```
-
 
 ## 使用
 
 <code src="./demo.tsx" />
 
-
 ## API
 
-通过下方伪代码来解释主要api的构成:
+通过下方伪代码来解释主要 api 的构成:
 
-* `Wine`是[renderApi](/m78/docs/utils/render-api)创建出来的实例, 使用此包前一定要先对其进行了解
-* `state`是`WineState`类型, 用于配置窗口的一些具体行为
-* `renderInstance`是由`renderApi`创建出来的示例, 上面包含了一些对应实例的管理方法, 其中, `renderInstance.current`是`Wine`对外暴露的特有实例, 对应`WineInstance`类型
+- `Wine`是[renderApi](/m78/docs/utils/render-api)创建出来的实例, 使用此包前一定要先对其进行了解
+- `state`是`WineState`类型, 用于配置窗口的一些具体行为
+- `renderInstance`是由`renderApi`创建出来的示例, 上面包含了一些对应实例的管理方法, 其中, `renderInstance.current`是`Wine`对外暴露的特有实例, 对应`WineInstance`类型
 
 ```ts
 import Wine from '@m78/wine';

@@ -1,7 +1,6 @@
 import React from 'react';
-import { useMeasure, useUpdateEffect } from 'react-use';
 import { useSpring, animated, config } from 'react-spring';
-import { useFormState } from '@lxjx/hooks';
+import { useFormState, useMeasure, useUpdateEffect } from '@lxjx/hooks';
 
 import { lineStatusIcons, CloseOutlined } from 'm78/icon';
 import { If } from 'm78/fork';
@@ -40,7 +39,7 @@ const NoticeBar: React.FC<NoticeBarProps> = ({
   style,
   ...props
 }) => {
-  const [ref, { height }] = useMeasure();
+  const [{ height }, ref] = useMeasure<HTMLDivElement>();
   const [show, setShow] = useFormState(props, true, {
     valueKey: 'show',
     triggerKey: 'onClose',

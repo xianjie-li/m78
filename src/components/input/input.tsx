@@ -8,9 +8,8 @@ import { isNumber, formatString, validateFormatString, dumpFn } from '@lxjx/util
 
 import cls from 'clsx';
 
-import { useFormState, useDerivedStateFromProps, useSelf } from '@lxjx/hooks';
+import { useFormState, useDerivedStateFromProps, useSelf, useUpdateEffect } from '@lxjx/hooks';
 import { TransitionBase } from 'm78/transition';
-import { useUpdateEffect } from 'react-use';
 import { InputProps, InputRef } from './type';
 import {
   buildInPattern,

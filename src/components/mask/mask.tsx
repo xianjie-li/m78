@@ -1,7 +1,6 @@
 import React from 'react';
 
-import { useUpdateEffect, useToggle } from 'react-use';
-import { useLockBodyScroll } from '@lxjx/hooks';
+import { useLockBodyScroll, useUpdateEffect, useToggle } from '@lxjx/hooks';
 import { Transition } from 'm78/transition';
 
 import { Portal } from 'm78/portal';

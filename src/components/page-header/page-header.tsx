@@ -61,7 +61,7 @@ const PageHeader = ({
   // 用于在centerTitle开启时统一两侧宽度
   const [sideW, setSideW] = useState<number | undefined>();
 
-  const [calcRef, { height }] = useMeasure<HTMLDivElement>();
+  const [{ height }, calcRef] = useMeasure<HTMLDivElement>();
 
   const leadingEl = useRef<HTMLDivElement>(null!);
   const actionEl = useRef<HTMLDivElement>(null!);
