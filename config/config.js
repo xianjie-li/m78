@@ -10,8 +10,8 @@ export default {
   logo: 'https://gitee.com/llixianjie/m78/raw/master/public/logo-small.png',
   locales: [['zh-CN', '中文']],
   outputPath: 'docs',
-  base: '/m78/',
-  publicPath: '/m78/',
+  base: '/',
+  publicPath: '/',
   resolve: {
     includes: ['src', './README.md'],
     excludes: ['src/components'],
