@@ -5,28 +5,21 @@
  * - 代码中的简单命名约定 t: 目标节点(即定位目标), c: 内容节点(即overlay容器)
  * */
 
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { useFormState, useMeasure, useSelf, useSetState } from '@lxjx/hooks';
-import { Portal } from 'm78/portal';
-import { Transition, TransitionBase } from 'm78/transition';
-import { animated, useSpring } from 'react-spring';
-import clsx from 'clsx';
+import { useSpring } from 'react-spring';
 import { useTrigger } from 'm78/hooks';
 import { _useMethods as useMethods } from './useMethods';
 import { _useLifeCycle as useLifeCycle } from './useLifeCycle';
-import { _MountTrigger as MountTrigger } from './mountTrigger';
-import { _Arrow as Arrow } from './arrow';
+import { _useRender as useRender } from './useRender';
 import { _Context, _MergeDefaultProps, OverlayProps } from './types';
 import {
   defaultProps,
-  getArrowBasePosition,
   onTrigger,
   transitionConfig,
   useOverlaysClickAway,
   useOverlaysMask,
 } from './common';
-
-const AnimatedArrow = animated(Arrow);
 
 /**
  * overlay抽象了所有弹层类组件(modal, drawer, popper等需要的基础能力), 使实现这些组件变得非常的简单
@@ -111,107 +104,15 @@ export function _Overlay(p: OverlayProps) {
     arrowSpApi,
     trigger,
     overlaysClickAway,
+    overlaysMask,
     measure,
   };
 
   const methods = useMethods(ctx);
 
-  const hooks = useLifeCycle(ctx, methods);
+  const lifeCycle = useLifeCycle(ctx, methods);
 
-  function renderArrow() {
-    if (!methods.isArrowEnable()) return false;
-
-    const [w, h] = props.arrowSize;
-    const { rotate, ...pos } = getArrowBasePosition(state.lastDirection!, props.arrowSize);
-
-    return (
-      <AnimatedArrow
-        {...props.arrowProps}
-        width={w}
-        height={h}
-        style={{
-          ...props.arrowProps?.style,
-          ...pos,
-          transform: arrowSp.offset.to(o => {
-            return `rotate(${rotate}deg) translate3d(${o}px, 0, 0)`;
-          }),
-        }}
-      />
-    );
-  }
-
-  function renderContent() {
-    const transition = props.transition;
-
-    const TransitionComponent = transition ? TransitionBase : Transition;
-
-    return React.createElement(
-      TransitionComponent as any,
-      {
-        show,
-        type: props.transitionType!,
-        className: clsx(
-          'm78-overlay',
-          state.lastDirection && `__${state.lastDirection}`,
-          props.className,
-        ),
-        mountOnEnter: props.mountOnEnter,
-        unmountOnExit: props.unmountOnExit,
-        from: transition?.from,
-        to: transition?.to,
-        springProps: {
-          config: transitionConfig,
-          ...props.springProps,
-        },
-        style: props.style,
-        innerRef: props.innerRef,
-        onTouchStart: methods.activeContent,
-        onClick: methods.activeContent,
-        onMouseEnter: methods.activeContent,
-        onMouseLeave: methods.unActiveContent,
-      },
-      <>
-        {props.content}
-        <MountTrigger onMount={hooks.onContentMount} onUnmount={hooks.onContentUnmount} />
-        {renderArrow()}
-      </>,
-    );
-  }
-
-  function renderMask() {
-    return (
-      <Transition
-        {...props.maskProps}
-        show={show && overlaysMask.isFirst}
-        type="fade"
-        className={clsx('m78 m78-mask', props.maskProps?.className)}
-        mountOnEnter
-        unmountOnExit
-      />
-    );
-  }
-
-  return (
-    <>
-      <Portal namespace={props.namespace}>
-        {renderMask()}
-        <animated.div
-          ref={containerRef}
-          className="m78 m78-overlay_wrap"
-          style={{
-            ...sp,
-            visibility: show ? 'visible' : 'hidden',
-            zIndex: props.zIndex,
-            opacity: sp.isHidden.to(hide => (hide ? 0 : 1)),
-            pointerEvents: sp.isHidden.to(hide => (hide ? 'none' : undefined!)),
-          }}
-        >
-          {renderContent()}
-        </animated.div>
-      </Portal>
-      {trigger.node}
-    </>
-  );
+  return useRender(ctx, methods, lifeCycle);
 }
 
 _Overlay.defaultProps = defaultProps;

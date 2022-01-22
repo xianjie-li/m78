@@ -6,7 +6,7 @@ import { useTrigger, UseTriggerConfig } from 'm78/hooks';
 import { TransitionBaseProps, TransitionType } from 'm78/transition';
 import { SpringValues } from '@react-spring/core/dist/declarations/src/types';
 import { SpringRef } from 'react-spring';
-import { defaultProps, useOverlaysClickAway } from './common';
+import { defaultProps, useOverlaysClickAway, useOverlaysMask } from './common';
 
 /** 可用的目标类型 */
 export type OverlayTarget = BoundSize | React.RefObject<HTMLElement> | HTMLElement;
@@ -209,6 +209,7 @@ export interface _Context {
   arrowSpApi: SpringRef<{ offset: number }>;
   trigger: ReturnType<typeof useTrigger>;
   overlaysClickAway: ReturnType<typeof useOverlaysClickAway>;
+  overlaysMask: ReturnType<typeof useOverlaysMask>;
   measure: DOMRectReadOnly;
 }
 

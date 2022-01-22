@@ -21,7 +21,7 @@ export interface State<S> {
 }
 
 export interface UseState<S> {
-  <ScopeS = any>(
+  <ScopeS = S>(
     /**
      * 从state中选择部分state并返回，如果省略参数，会返回整个state对象
      * - 如果未通过selector选取state，hook会在每一次state变更时更新，选取局部state时只在选取部分变更时更新

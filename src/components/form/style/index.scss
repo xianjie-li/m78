@@ -1,165 +1,132 @@
 @import '../../common/style/sass';
 
 .m78-form {
-  font-size: 16px;
-  margin: auto;
-
-  // 恢复下级div的默认块行为
-  > div {
-    width: 100%;
-  }
-
-  > form {
+  &_field {
+    position: relative;
     display: flex;
     flex-wrap: wrap;
     width: 100%;
+    outline-offset: 8px;
+    outline-color: var(--m78-color-opacity-lg) !important;
 
-    > div {
-      width: 100%;
+    &.__vertical {
+      .m78-form_label {
+        width: 100%;
+        line-height: 1;
+        padding: 2px 0 4px;
+      }
+
+      .m78-form_cont {
+        width: 100%;
+      }
+
+      .m78-form_tips {
+        padding-top: 4px;
+        min-height: 20px;
+      }
+    }
+
+    &.__horizontal {
+      .m78-form_label {
+        justify-content: flex-end;
+        padding-top: 10px;
+        margin-right: 8px;
+        line-height: 1.1;
+        font-size: 13px;
+        width: 80px;
+      }
+
+      .m78-form_tips {
+        padding-top: 4px;
+        min-height: 22px;
+      }
     }
   }
 
-  .m78-list-view_title {
-    padding: var(--m78-space-3);
-    padding-bottom: 0;
-  }
-
-  &.__hide-required-mark {
-    .m78-form_require-mark {
+  &_label, &_extra, &_leading, &_trailing {
+    &:empty {
       display: none;
     }
   }
 
-  &.__split-line,
-  &.__item-border {
-    .m78-list-view_item {
-      padding: var(--m78-space-3);
-      padding-bottom: 24px;
-    }
+  &_label {
+    position: relative;
+    display: flex;
   }
 
-  &.__full-width {
-    max-width: 100% !important;
-    width: 100% !important;
+  &_cont {
+    flex: 1;
+    line-height: 1.1;
+    word-break: break-all;
   }
 
-  &.__horizontal {
-    max-width: 600px;
-
-    .m78-form_item-main {
-      display: flex;
-      align-items: flex-start;
-      flex-wrap: wrap;
-    }
-
-    .m78-form_item-label {
-      margin-right: 20px;
-      padding-top: 8px;
-      width: 5em;
-      text-align: right;
-    }
-
-    .m78-form_actions {
-      padding-left: 102px;
-    }
+  &_extra {
+    color: var(--m78-color-second);
+    padding-top: 6px;
   }
 
-  &.__vertical {
-    max-width: 480px;
-
-    .m78-form_item-label {
-      margin-bottom: 4px;
-    }
-  }
-
-  &.__column {
-    max-width: 100%;
-    width: 100%;
-
-    &.__horizontal .m78-form_item-label {
-      width: 4em;
-      margin-right: 16px;
-    }
-  }
-
-  // 增加命中层级
-  .m78-form_item {
-    padding: 10px var(--m78-space-3);
-    outline-offset: 6px;
-  }
-
-  &_item {
-    .m78-tile_title {
-      font-size: 16px;
-    }
-
-    .m78-tile_main {
-      overflow: visible;
-    }
-
-    &-text-wrap {
-      margin-top: 4px;
-    }
-
-    &-text {
-      width: 100%;
-      font-size: 12px;
-      color: var(--m78-color-second);
-    }
-
-    &-tips-text {
-      position: absolute;
-      color: var(--m78-color-error);
-      font-size: 12px;
-      line-height: 1;
-      padding-top: 2px;
-      padding-right: var(--m78-space-3);
-      height: 15px;
-      overflow: hidden;
-      -webkit-line-clamp: 1;
-    }
-
-    &-label {
-      font-size: var(--m78-fs);
-      line-height: 1.2;
-    }
-
-    &-unit-wrap {
-      display: flex;
-      min-height: var(--m78--unit-size);
-
-      .m78-form_item {
-        padding: 0 !important;
-        border: none !important;
-      }
-
-      > .m78-form_item + .m78-form_item {
-        margin-left: 12px;
-      }
-
-      .m78-form_item::before {
-        display: none;
-      }
-    }
-
-    &-cont {
-      flex: 1;
-      align-self: center;
-    }
-  }
-
-  &_require-mark {
-    position: absolute;
+  &_required {
+    position: relative;
+    display: inline-block;
     color: var(--m78-color-error);
-    font-weight: 700;
-    font-style: normal;
-    padding-top: 2px;
-    padding-left: 1px;
+    font-weight: bold;
+    line-height: 1;
+    margin-left: var(--m78-space-1);
+    cursor: pointer;
+    user-select: none;
+    vertical-align: middle;
   }
 
-  &_actions {
-    padding: var(--m78-space-3);
-    padding-top: 16px;
-    width: 100%;
+  &_info {
+    margin-left: var(--m78-space-1);
+    font-size: 1.3em;
+    vertical-align: middle;
+
+    @include effect-opacity;
+  }
+
+  &_main {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  &_widget {
+    flex: 1;
+  }
+
+  &_leading {
+    margin-right: var(--m78-space-2);
+  }
+
+  &_trailing {
+    margin-left: var(--m78-space-2);
+
+    .m78-form_required {
+      font-size: 1em;
+      position: absolute;
+      right: -0.2em;
+      top: -0.3em;
+    }
+  }
+
+  &_bubble {
+    border-radius: var(--m78-border-radius) !important;
+  }
+
+  &_bubble-error {
+    padding: 2px 8px;
+  }
+
+  &_bubble-extra {
+    padding: 8px 12px;
+  }
+
+  &_tip-trigger {
+    position: absolute;
+    bottom: 3px;
+    left: 0;
+    height: 0;
+    width: 0;
   }
 }

@@ -1,6 +1,7 @@
 const path = require('path');
 
 export default {
+  favicon: 'https://gitee.com/llixianjie/m78/raw/master/public/logo-small.png',
   alias: {
     '@': path.resolve(__dirname, '../src'),
     m78: path.resolve(__dirname, '../src/components'),

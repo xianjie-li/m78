@@ -85,3 +85,5 @@ export const _TransitionBase = (props: TransitionBaseProps) => {
     </Animated>
   );
 };
+
+_TransitionBase.displayName = 'TransitionBase';

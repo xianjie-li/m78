@@ -112,3 +112,5 @@ export function _useLifeCycle(ctx: _Context, methods: _Methods) {
     onContentUnmount,
   };
 }
+
+export type _LifeCycle = ReturnType<typeof _useLifeCycle>;

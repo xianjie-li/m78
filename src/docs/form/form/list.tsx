@@ -1,54 +1,78 @@
 import React from 'react';
-import { Form, FormItem } from 'm78/form';
+import { useForm, array, required, string } from 'm78/form';
 import { Input } from 'm78/input';
+import { Row, Spacer } from 'm78/layout';
+import { DirectionEnum } from 'm78/common';
 import { Button } from 'm78/button';
-import { DeleteOutlined } from 'm78/icon';
+import { ArrowDownOutlined, ArrowUpOutlined, DeleteOutlined } from 'm78/icon';
 
-const List = () => (
-  <Form
-    onFinish={e => {
-      // eslint-disable-next-line no-alert
-      alert(JSON.stringify(e, null, 4));
-    }}
-  >
-    <Form.Item label="你的名字" name="name" required>
-      <Input placeholder="输入名字" />
-    </Form.Item>
-    <FormItem label="家庭关系" name="friends" required>
-      <Form.List name="friends">
-        {(fields, operations) => (
-          <div style={{ width: '100%' }}>
-            {fields.map((filed, index) => (
-              <Form.Item key={filed.key} className="mt-12">
-                <Form.Item name={[filed.name, 'name']} required>
-                  <Input placeholder="姓名" />
-                </Form.Item>
-                <Form.Item name={[filed.name, 'age']} required>
-                  <Input placeholder="年龄" />
-                </Form.Item>
-                <Button
-                  icon
-                  className="ml-16"
-                  onClick={() => operations.remove(index)}
-                  style={{ flex: '0 0 auto' }}
-                >
-                  <DeleteOutlined />
-                </Button>
-              </Form.Item>
-            ))}
-            <Button className="mt-12" onClick={() => operations.add()}>
-              添加
-            </Button>
+const List = () => {
+  const Form = useForm({
+    maxWidth: 540,
+  });
+
+  Form.submitEvent.useEvent(values => {
+    alert(JSON.stringify(values, undefined, 4));
+  });
+
+  return (
+    <div>
+      <Form.Field name="name" label="发货人" validator={[required(), string({ min: 2 })]}>
+        <Input placeholder="输入发货人" />
+      </Form.Field>
+
+      <Form.List name="user" label="收货人" validator={[required(), array({ max: 3 })]}>
+        {lProps => (
+          <div className="pt-12">
+            {lProps.list.map((item, index) => {
+              const max = lProps.list.length - 1;
+              const min = 0;
+              const prev = index - 1 < min ? max - 1 : index - 1;
+              const next = index + 1 > max ? min : index + 1;
+
+              return (
+                <Row key={item.key}>
+                  <Spacer width={16}>
+                    <Form.Field
+                      bind={item.bind}
+                      name="address"
+                      layout={DirectionEnum.horizontal}
+                      validator={[required()]}
+                    >
+                      <Input placeholder="输入地址" />
+                    </Form.Field>
+                    <Form.Field
+                      bind={item.bind}
+                      name="phone"
+                      layout={DirectionEnum.horizontal}
+                      validator={[required()]}
+                    >
+                      <Input placeholder="输入联系方式" />
+                    </Form.Field>
+                    <Button className="ml-12" onClick={() => lProps.move(index, prev)}>
+                      <ArrowUpOutlined />
+                    </Button>
+                    <Button onClick={() => lProps.move(index, next)}>
+                      <ArrowDownOutlined />
+                    </Button>
+                    <Button onClick={() => lProps.remove(index)}>
+                      <DeleteOutlined className="color-red" />
+                    </Button>
+                  </Spacer>
+                </Row>
+              );
+            })}
+            <Button onClick={lProps.add}>添加收货人</Button>
           </div>
         )}
       </Form.List>
-    </FormItem>
-    <Form.Actions>
-      <Button type="submit" color="blue">
+
+      <Button color="primary" onClick={Form.submit}>
         提交
       </Button>
-    </Form.Actions>
-  </Form>
-);
+      <Button onClick={Form.reset}>重置</Button>
+    </div>
+  );
+};
 
 export default List;

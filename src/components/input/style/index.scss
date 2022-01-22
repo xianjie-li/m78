@@ -32,6 +32,7 @@ $unitSpace: 8px;
   color: var(--m78-color-title);
   background-color: transparent;
   line-height: var(--m78-line-height);
+  font-size: inherit;
   @include ellipsis-x;
 
   &::-webkit-outer-spin-button,

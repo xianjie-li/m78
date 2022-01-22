@@ -52,7 +52,7 @@ export enum DirectionEnum {
   vertical = 'vertical',
 }
 
-export type DirectionKeys = 'horizontal' | 'vertical';
+export type DirectionKeys = keyof typeof DirectionEnum;
 
 export type Direction = DirectionEnum | DirectionKeys;
 

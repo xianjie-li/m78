@@ -75,3 +75,5 @@ export const _Transition = ({ type, alpha = true, ...props }: TransitionProps) =
     />
   );
 };
+
+_Transition.displayName = 'Transition';

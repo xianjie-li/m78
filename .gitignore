@@ -18,6 +18,7 @@ yarn-error.log*
 .idea
 .vscode
 .umi
+.umi-production
 *.suo
 *.ntvs*
 *.njsproj
