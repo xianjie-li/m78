@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { isBoolean, isFunction } from '@lxjx/utils';
-import { FieldProps, FieldRenderProps, LayoutCustomer, ListProps, RForm } from './types';
 import { DirectionEnum, FullSizeEnum } from 'm78/common';
 import clsx from 'clsx';
 import { InfoCircleOutlined } from 'm78/icon';
@@ -8,6 +7,7 @@ import { Overlay, OverlayDirectionEnum } from 'm78/overlay';
 import { UseTriggerTypeEnum } from 'm78/hooks';
 import { Spin } from 'm78/spin';
 import { VFieldLike } from '@m78/vform';
+import { FieldProps, FieldRenderProps, LayoutCustomer, ListProps, RForm } from './types';
 
 export const defaultFieldProps: Partial<FieldProps> = {
   changeKey: 'onChange',

@@ -1,25 +1,23 @@
 ---
 title: VForm - 虚拟表单
 group:
-    title: 生态
-    path: /ecology
-    order: 6000
+  title: 生态
+  path: /ecology
+  order: 6000
 ---
 
-`vform`是一些表单库常见功能的抽象实现, 完全脱离UI, 使用`vform`可以让你简单的在任何前端框架或原生js中实现自己的表单库.
-
+`vform`是一些表单库常见功能的抽象实现, 完全脱离 UI, 使用`vform`可以让你简单的在任何前端框架或原生 js 中实现自己的表单库.
 
 ## 简单示例
 
-下面例子演示了如何通过`vform`来创建虚拟表单, 并绑定到视图, 这只是最简单的桥接实现, 开发中推荐使用[m78/form](/docs/form/form)以获得良好的开发体验和性能,
-当然, 如果你要创建自己的`form`库, 使用`vform`会更合适.
+下面例子演示了如何通过`vform`来创建虚拟表单, 并绑定到视图, 这只是最简单的桥接实现, 开发中推荐使用[m78/form](/docs/form/form)以获得良好的开发体验和性能, 当然, 如果你要创建自己的`form`库, 使用`vform`会更合适.
 
 <code src="./demo.tsx" />
-
 
 ## API
 
 ### VFormConfig
+
 ```ts
 /**
  * 注意: 在vform verifyFirst默认为false
@@ -27,8 +25,8 @@ group:
 interface VFormConfig {
   /** 表单默认值 */
   defaultValue?: AnyObject;
-  
-  /** 
+
+  /**
    * #### 继承至verify Config
    * */
   /** true | 当其中一项验证失败后，停止后续字段的验证 */
@@ -211,7 +209,7 @@ interface VListConfig extends VFieldConfig {
    * - 通过list.add()新增记录时, 如果没有传入任何field, 会新增一条空记录并触发onFillField
    *
    * 可以通过list上的add和withName方法来添加字段:
-   * 
+   *
    * onFillField: (vl, key, index) => {
    *     vl.add({
    *       fields: [
@@ -221,9 +219,9 @@ interface VListConfig extends VFieldConfig {
    *       key,
    *     });
    * },
-   * 
+   *
    * */
-    onFillField?: (vList: VList, key: string, index: number) => void;
+  onFillField?: (vList: VList, key: string, index: number) => void;
 }
 ```
 

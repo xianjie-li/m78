@@ -1,13 +1,13 @@
 ---
-title: Form - 表单 
+title: Form - 表单
 group:
-    title: 数据录入 
-    path: /form
+  title: 数据录入
+  path: /form
 ---
 
 # Form 表单
 
-一个灵活、高性能的react表单解决方案, 可用于解决各种复杂的表单场景
+一个灵活、高性能的 react 表单解决方案, 可用于解决各种复杂的表单场景
 
 ## 基本使用
 
@@ -31,18 +31,17 @@ group:
 
 ## 验证
 
-验证主要是通过`validator`进行, `validator`接收一个或一组验证器来进行验证, 更多内置验证器请参考下方api部分
+验证主要是通过`validator`进行, `validator`接收一个或一组验证器来进行验证, 更多内置验证器请参考下方 api 部分
 
 <code src="./verify.tsx" />
 
-> 如果需要根据表单状态动态调整验证规则, 请参考下方的[动态validator](/docs/form/form#%E5%8A%A8%E6%80%81validator);
+> 如果需要根据表单状态动态调整验证规则, 请参考下方的[动态 validator](/docs/form/form#%E5%8A%A8%E6%80%81validator);
 
 ### 验证器
 
-验证器是一个普通js函数, 如果返回string, 表示包含错误并将其作为错误反馈文本, 如果验证器内部发生了错误，该错误会被捕获，并使用`Error.message`来作为错误反馈文本.
+验证器是一个普通 js 函数, 如果返回 string, 表示包含错误并将其作为错误反馈文本, 如果验证器内部发生了错误，该错误会被捕获，并使用`Error.message`来作为错误反馈文本.
 
-> 空校验应交给required验证器完成, 自定义验证器时, 如果遇到空值的情况应视为成功
-
+> 空校验应交给 required 验证器完成, 自定义验证器时, 如果遇到空值的情况应视为成功
 
 <code src="./validator.tsx" />
 
@@ -58,11 +57,11 @@ group:
 
 ## 表单联动
 
-组件提供了能覆盖绝大多数联动场景的4个prop:
+组件提供了能覆盖绝大多数联动场景的 4 个 prop:
 
-- `valid`: 一个boolean值或返回boolean的函数, 用于动态控制表单是否有效, 无效表单不会渲染并且不会参与提交与验证
-- `hidden`: 一个boolean值或返回boolean的函数, 用于动态控制表单是否显示, 被隐藏的表单仍然会参与提交与验证
-- `disabled`:  一个boolean值或返回boolean的函数, 用于动态控制表单是否禁用(需要表单控件支持disabled), 无效表单不会渲染并且不会参与提交与验证
+- `valid`: 一个 boolean 值或返回 boolean 的函数, 用于动态控制表单是否有效, 无效表单不会渲染并且不会参与提交与验证
+- `hidden`: 一个 boolean 值或返回 boolean 的函数, 用于动态控制表单是否显示, 被隐藏的表单仍然会参与提交与验证
+- `disabled`: 一个 boolean 值或返回 boolean 的函数, 用于动态控制表单是否禁用(需要表单控件支持 disabled), 无效表单不会渲染并且不会参与提交与验证
 - `validator`: 为`validator`传入一个动态返回验证器的函数, 用来动态控制表单验证规则
 
 传统`react`表单都是非常低效的, 每一次`change`会导致整个表单区域重绘, `Form`将更新控制在了字段级别, 从而达到更好的性能.
@@ -81,7 +80,7 @@ group:
 
 <code src="./hidden.tsx" />
 
-### 动态validator
+### 动态 validator
 
 <code src="./dynamic-validator.tsx" />
 
@@ -95,7 +94,7 @@ group:
 
 `Form`与其他表单库的一个显著区别是: 对结构的限制非常小, 你可以灵活的使用现有的布局组件来排布你的表单控件, 比如`m78/layout`中的布局组件.
 
-同时, 你也可以完全覆盖默认的样式, 从0开始编写表单布局.
+同时, 你也可以完全覆盖默认的样式, 从 0 开始编写表单布局.
 
 ### 横向/纵向
 
@@ -129,10 +128,10 @@ group:
 
 此库通过[`@m78/vform`](/docs/ecology/vform)和[`@m78/verify`](https://github.com/m78-core/verify)作为底层实现:
 
-- `vform`是一个脱离UI的虚拟表单库, 专注于值的收集与验证等表单底层操作.
+- `vform`是一个脱离 UI 的虚拟表单库, 专注于值的收集与验证等表单底层操作.
 - `verify`是一个验证库
 
-如果本库中的用例无法满足你的需求, 可以尝试搭配`vform`和`verify`的api来解锁更多能力.
+如果本库中的用例无法满足你的需求, 可以尝试搭配`vform`和`verify`的 api 来解锁更多能力.
 
 ## API
 
@@ -150,7 +149,7 @@ const form = useForm({...});
 
 ### FormConfig
 
-创建form的配置对象. 继承了`vform`的和`verify`创建配置
+创建 form 的配置对象. 继承了`vform`的和`verify`创建配置
 
 ```ts
 interface RFormConfig {
@@ -190,7 +189,7 @@ interface RFormConfig {
 
 ### Form
 
-form实例, 继承至`vform`, 扩展了几个便于在`react`中使用的`api`
+form 实例, 继承至`vform`, 扩展了几个便于在`react`中使用的`api`
 
 ```ts
 interface Form {
@@ -270,7 +269,7 @@ interface Form {
 
 ### FieldProps
 
-`Field`组件的props, 继承至`vfield`和`verify schema`对象
+`Field`组件的 props, 继承至`vfield`和`verify schema`对象
 
 ```ts
 interface FieldProps {
@@ -417,10 +416,7 @@ interface ListItem {
 `Field`和`List`的自定义渲染器
 
 ```ts
-type LayoutCustomer = (
-  props: FieldRenderProps,
-  child: React.ReactElement,
-) => React.ReactNode;
+type LayoutCustomer = (props: FieldRenderProps, child: React.ReactElement) => React.ReactNode;
 
 interface FieldRenderProps {
   /** 用来控制表单控件的绑定props, 用于展开并透传到表单控件上 */
@@ -440,7 +436,7 @@ interface FieldRenderProps {
 
 ### VField
 
-一个虚拟字段对象, 在一些api中作为参数接收
+一个虚拟字段对象, 在一些 api 中作为参数接收
 
 ```ts
 interface VField {
@@ -495,7 +491,7 @@ interface VField {
 
 ### VList
 
-一个虚拟列表字段对象, 在一些api中作为参数接收
+一个虚拟列表字段对象, 在一些 api 中作为参数接收
 
 ```ts
 interface VList extends VField {
