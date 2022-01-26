@@ -21,7 +21,6 @@
   color: var(--m78-color-primary);
   /* fix: 修复safari下overflow失效的问题 */
   transform: translate3d(0, 0, 0);
-  z-index: 1;
 
   > span {
     display: flex;
@@ -51,8 +50,14 @@
   // 非disabled的情况下hover及focus的样式
   &:not(:disabled):hover,
   &:not(:disabled):focus {
-    box-shadow: var(--m78-shadow-1-focus);
+    transition: var(--m78-animate-base) box-shadow;
     border-color: transparent;
+    box-shadow: 0 0 0 3.8px var(--m78-color-opacity-md);
+  }
+
+  &:not(:disabled):active {
+    box-shadow: 0 0 0 1px var(--m78-color-opacity-md);
+    transition-delay: 0.1s;
   }
 
   // 禁用
@@ -255,6 +260,17 @@
     color: #fff;
     background-color: $main-color;
     border: none;
+
+    &:not(:disabled):hover,
+    &:not(:disabled):focus {
+      transition: var(--m78-animate-base) box-shadow;
+      border-color: transparent;
+      box-shadow: 0 0 0 3.8px rgba($main-color, 0.3);
+    }
+
+    &:not(:disabled):active {
+      box-shadow: 0 0 0 1px rgba($main-color, 0.3);
+    }
   }
 
   .m78-btn.__#{$name}.__icon {
@@ -313,6 +329,7 @@
     cursor: not-allowed;
     background-color: scale_color($main-color, $lightness: 60%);
   }
+
 }
 
 @include btn('blue', #40a9ff);

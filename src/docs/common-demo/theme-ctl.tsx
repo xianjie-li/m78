@@ -10,6 +10,7 @@ const ThemeCtl = () => {
   return (
     <Button
       icon
+      className="themeCtl"
       style={{
         position: 'fixed',
         right: 24,
@@ -23,7 +24,7 @@ const ThemeCtl = () => {
         });
       }}
     >
-      💡
+      <config.State>{({ darkMode }) => (darkMode ? '🌙' : '☀')}</config.State>
     </Button>
   );
 };

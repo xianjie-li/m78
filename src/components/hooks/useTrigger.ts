@@ -146,7 +146,14 @@ export function useTrigger<E = HTMLElement>(config: UseTriggerConfig) {
     if (el !== node.nextSibling) {
       setEl(node.nextSibling);
     }
-    node.parentNode.removeChild(node); // 移除定位节点, 防止干扰用户的dom树
+
+    if (node && node.parentNode) {
+      const parentNode = node.parentNode;
+      const n = parentNode.removeChild(node);
+      // 直接删除节点会导致react-refresh等刷新节点时报错, 所以将插入的节点放到容器最后, 减少对dom树的破坏
+      // 主要是为了使兄弟级的css选择器(~ +等)能保持正常运行
+      parentNode.appendChild(n);
+    }
   });
 
   // 保持事件回调引用
@@ -306,6 +313,7 @@ export function useTrigger<E = HTMLElement>(config: UseTriggerConfig) {
       null,
       React.createElement('span', {
         ref: refCallback,
+        style: { display: 'none' },
       }),
       element,
     );

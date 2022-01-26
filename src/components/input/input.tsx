@@ -13,7 +13,7 @@ import { TransitionBase } from 'm78/transition';
 import { InputProps, InputRef } from './type';
 import {
   buildInPattern,
-  formatMoney,
+  formatNumeric,
   parserNumber,
   parserInteger,
   parserGeneral,
@@ -49,6 +49,7 @@ const Input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
     formatDelimiter = ' ',
     formatRepeat = false,
     formatLastRepeat = false,
+    formatReverse = false,
     formatter: _formatter,
     parser: _parser,
     maxLength,
@@ -65,6 +66,7 @@ const Input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
     charCount = false,
     innerRef,
     onClear,
+    inputDirection = 'left',
     ...props
   } = _props;
 
@@ -84,7 +86,12 @@ const Input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
 
     return [
       formatPattern,
-      { delimiter: formatDelimiter, repeat: formatRepeat, lastRepeat: formatLastRepeat },
+      {
+        delimiter: formatDelimiter,
+        repeat: formatRepeat,
+        lastRepeat: formatLastRepeat,
+        reverse: formatReverse,
+      },
     ] as const;
     // eslint-disable-next-line
   }, []);
@@ -104,7 +111,7 @@ const Input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
   const [value, setValue] = useFormState(_props, '');
 
   // textarea的高度 用于设置了autoSize时动态调整高度
-  const [textAreaHeight, setTextAreaHeight] = useState('');
+  const [textAreaHeight, setTextAreaHeight] = useState(0);
 
   /* 各种态，active和hover通过css处理, 部分状态需要由内部接管方便在用户之外进行一些状态操作 */
   const [focus, setFocus] = useState(false);
@@ -118,7 +125,7 @@ const Input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
 
   // 对一些配置进行type的类型优化
   useEffect(() => {
-    if (memoFormat === 'money') {
+    if (memoFormat === 'numeric') {
       setType('number');
     }
     // eslint-disable-next-line
@@ -226,7 +233,7 @@ const Input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
       });
     }
 
-    calcTextHeight();
+    calcTextHeight(val);
   }
 
   /* 清空输入框 */
@@ -246,11 +253,19 @@ const Input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
     onSearch(input.current.value);
   }
 
-  function calcTextHeight() {
+  function calcTextHeight(val?: string) {
     if (!textArea || !autoSize || !cloneText.current) return;
-    const el = input.current;
-    cloneText.current.value = isNumber(maxLength) ? parserLength(el.value, maxLength) : el.value;
-    setTextAreaHeight(`${cloneText.current.scrollHeight}px`);
+    const _val = val === undefined ? input.current.value : val;
+    cloneText.current.value = isNumber(maxLength) ? parserLength(_val, maxLength) : _val;
+
+    const h = cloneText.current.scrollHeight;
+
+    const diff = textAreaHeight - h;
+
+    // 防止输入时出现异常抖动
+    if (Math.abs(diff) < 5) return;
+
+    setTextAreaHeight(h);
   }
 
   /* 提交value前的预处理函数 */
@@ -297,13 +312,26 @@ const Input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
   /** 将字符值根据配置格式化后返回 */
   function formatVal(val: string) {
     /* 启用了formatArg时，对其格式化，否则返回原value */
+
+    const isNumeric = formatArg && memoFormat === 'numeric';
+    // 备份后置string, 用于防止数值中小数位后参与格式化
+    let backupStr = '';
+
+    if (isNumeric) {
+      const sArr = val.split('.');
+      if (sArr.length > 1) {
+        val = sArr[0];
+        backupStr = `.${sArr[1]}`;
+      }
+    }
+
     // eslint-disable-next-line
     let formatValue =
       formatArg && val /* TODO: 验证是否还会破坏热更新 */ ? formatString(val, ...formatArg) : val;
 
-    // 对money类型特殊处理
-    if (formatArg && memoFormat === 'money') {
-      formatValue = formatMoney(formatValue);
+    // 对数值类型特殊处理
+    if (isNumeric) {
+      formatValue = formatNumeric(formatValue) + backupStr;
     }
 
     /* value传入input前进行格式化(在传入了解析parser时才不会影响最终的value结果) */
@@ -337,7 +365,7 @@ const Input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
           __focus: focus,
           __disabled: isDisabled,
           __readonly: readonly,
-          __matter: format === 'money',
+          __matter: format === 'numeric',
           __textarea: textArea,
         },
       )}
@@ -374,7 +402,9 @@ const Input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
               overflow: autoSize ? 'hidden' : 'auto',
               resize: autoSize ? 'none' : undefined,
             }
-          : {},
+          : {
+              textAlign: inputDirection,
+            },
       })}
       {(loading || blockLoading) && (
         <Spin className="m78-input_loading" size="small" text="" full={blockLoading} />
@@ -423,6 +453,6 @@ const Input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
   );
 });
 
-Input.displayName = 'FrInput';
+Input.displayName = 'Input';
 
 export default Input;

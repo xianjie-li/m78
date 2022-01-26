@@ -62,7 +62,7 @@ const List = () => {
                 </Row>
               );
             })}
-            <Button onClick={lProps.add}>添加收货人</Button>
+            <Button onClick={() => lProps.add()}>添加收货人</Button>
           </div>
         )}
       </Form.List>

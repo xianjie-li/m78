@@ -3,5 +3,5 @@ import Input from './input';
 
 export * from './type';
 
-export { formatMoney } from './utils';
+export { formatNumeric } from './utils';
 export { Input };

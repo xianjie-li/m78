@@ -47,7 +47,7 @@ export function _useLifeCycle(ctx: _Context, methods: _Methods) {
     target: [containerRef, trigger.el!],
     onTrigger: () => {
       if (!show || !props.clickAwayClosable) return;
-      if (!overlaysClickAway.isLast) return;
+      if (props.clickAwayQueue && !overlaysClickAway.isLast) return;
       setTimeout(() => {
         setShow(false);
       });
@@ -59,6 +59,11 @@ export function _useLifeCycle(ctx: _Context, methods: _Methods) {
 
   /** show变更时, 先立即调整位置 */
   useUpdateEffect(() => {
+    // 每次出现时将焦点移入组件
+    if (show && containerRef.current) {
+      containerRef.current.focus();
+    }
+
     methods.update(true);
     clearTimeout(self.shouldCloseTimer);
   }, [show]);

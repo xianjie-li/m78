@@ -151,7 +151,7 @@ export interface ListRenderProps
   /** 用于渲染的item列表 */
   list: ListItem[];
   /** 新增一条记录, val会作为记录的初始值 */
-  add: (val: any) => void;
+  add: (val?: any) => void;
 }
 
 export interface ListProps extends Omit<FieldProps, 'children'> {

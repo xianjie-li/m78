@@ -133,6 +133,18 @@ group:
 
 如果本库中的用例无法满足你的需求, 可以尝试搭配`vform`和`verify`的 api 来解锁更多能力.
 
+## 常见问题
+
+- 为什么实例中`const Form = useForm()`中`Form`作为实例却使用大写?
+
+在jsx中写起来会更工整
+
+- 通过接口获取到表单默认值后, 如何设置到表单?
+
+分为两种情况, 一是需要使用`form.reset()`时, 可以使用`createForm()`来在接口请求完成后再创建form实例, jsx中判断form示例存在后再渲染表单;
+另一种情况是不需要`reset()`功能, 接口拿到数据后通过`form.setValues(values)`设置当前表单值即可
+
+
 ## API
 
 ### createForm/useForm

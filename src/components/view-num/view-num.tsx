@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { formatString } from '@lxjx/utils';
-import { formatMoney } from 'm78/input';
+import { formatNumeric } from 'm78/input';
 import { TransitionBase } from 'm78/transition';
 import { useMemo, useRef } from 'react';
 import clsx from 'clsx';
@@ -50,7 +50,7 @@ function ViewNum(props: NumProps) {
         delimiter,
       });
 
-      showNum = formatMoney(showNum, delimiter);
+      showNum = formatNumeric(showNum, delimiter);
     }
 
     if (propsFormat) {

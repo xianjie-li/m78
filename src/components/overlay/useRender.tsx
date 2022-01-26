@@ -96,6 +96,7 @@ export function _useRender(ctx: _Context, methods: _Methods, lifeCycle: _LifeCyc
           <animated.div
             ref={containerRef}
             className="m78 m78-overlay_wrap"
+            tabIndex={-1}
             style={{
               ...sp,
               visibility: show ? 'visible' : 'hidden',

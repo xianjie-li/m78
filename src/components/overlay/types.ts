@@ -8,6 +8,23 @@ import { SpringValues } from '@react-spring/core/dist/declarations/src/types';
 import { SpringRef } from 'react-spring';
 import { defaultProps, useOverlaysClickAway, useOverlaysMask } from './common';
 
+/** 在使用api调用时所有应该剔除的props */
+export const omitApiProps = [
+  'defaultShow',
+  'show',
+  'onChange',
+  'children',
+  'childrenAsTarget',
+  'triggerType',
+  'onUpdate',
+  'onDispose',
+  'innerRef',
+  'instanceRef',
+] as const;
+
+/** 创建api时需要排除的所有props类型 */
+export type OverlayApiOmitKeys = typeof omitApiProps[number];
+
 /** 可用的目标类型 */
 export type OverlayTarget = BoundSize | React.RefObject<HTMLElement> | HTMLElement;
 
@@ -98,6 +115,8 @@ export interface OverlayProps
   maskProps?: any;
   /** true | 点击内容或触发区域外时是否关闭 */
   clickAwayClosable?: boolean;
+  /** true | 存在多个开启了clickAwayClosable的overlay时, 如果启用此项, 每次触发会逐个关闭而不是一次性全部关闭 */
+  clickAwayQueue?: boolean;
   /** true | 出现时是否锁定滚动条 */
   lockScroll?: boolean;
   /** 获取内部wrap dom的ref */
@@ -138,10 +157,13 @@ export interface OverlayProps
 export interface OverlayInstance {
   /** 更新xy */
   updateXY(xy: TupleNumber, immediate?: boolean): void;
+
   /** 更新alignment */
   updateAlignment(alignment: TupleNumber, immediate?: boolean): void;
+
   /** 更新气泡目标 */
   updateTarget(target: OverlayTarget, immediate?: boolean): void;
+
   /** 以最后的更新类型刷新overlay定位 */
   update(immediate?: boolean): void;
 }
@@ -149,19 +171,7 @@ export interface OverlayInstance {
 /**
  * 通过api调用时的配置, 移除了一些非必要参数
  * */
-export type OverlayRenderOption = Omit<
-  OverlayProps,
-  | 'defaultShow'
-  | 'show'
-  | 'onChange'
-  | 'children'
-  | 'childrenAsTarget'
-  | 'triggerType'
-  | 'onUpdate'
-  | 'onDispose'
-  | 'innerRef'
-  | 'instanceRef'
->;
+export type OverlayRenderOption = Omit<OverlayProps, OverlayApiOmitKeys>;
 
 /** 更新类型 */
 export enum OverlayUpdateType {

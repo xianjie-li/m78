@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { isBoolean, isFunction } from '@lxjx/utils';
+import { isBoolean, isFunction, isTruthyOrZero } from '@lxjx/utils';
 import { DirectionEnum, FullSizeEnum } from 'm78/common';
 import clsx from 'clsx';
 import { InfoCircleOutlined } from 'm78/icon';
@@ -53,13 +53,13 @@ export const defaultFieldRenderChildren: LayoutCustomer = (
   child: React.ReactElement,
 ) => {
   const paddingTop = props.layout === DirectionEnum.horizontal ? props.labelFixPad : undefined;
-  const hasLabel = props.label !== undefined;
+  const hasLabel = isTruthyOrZero(props.label);
   const bubbleTips = props.bubbleTips;
 
   function renderRequired() {
     if (!required) return;
     return (
-      <span className="m78-form_required" title="必填">
+      <span className={clsx('m78-form_required', !hasLabel && '__fixed')} title="必填">
         *
       </span>
     );
@@ -84,7 +84,7 @@ export const defaultFieldRenderChildren: LayoutCustomer = (
         springProps={{
           immediate: true,
         }}
-        clickAwayClosable={false}
+        // clickAwayClosable={false}
       >
         <span className="m78-form_tip-trigger" />
       </Overlay>
@@ -128,8 +128,8 @@ export const defaultFieldRenderChildren: LayoutCustomer = (
           <div className="m78-form_trailing">
             {renderBubbleExtra()}
             {props.trailing}
-            {!hasLabel && renderRequired()}
           </div>
+          {!hasLabel && renderRequired()}
           {renderBubbleError()}
         </div>
         <div className="m78-form_extra fs-12">{!bubbleTips && props.extra}</div>

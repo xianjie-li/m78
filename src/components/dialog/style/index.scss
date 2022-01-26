@@ -1,23 +1,15 @@
 @import '../../common/style/sass';
 
-.m78-dialog {
-  font-size: 14px;
+// 增加样式权重
+.m78 .m78-dialog {
   padding: 20px 24px;
-  background-color: var(--m78-component-bg);
-  box-shadow: var(--m78-shadow-1-b);
   border-radius: var(--m78-border-radius-lg);
-  width: 90%;
-  max-height: 90%;
-  overflow: auto;
-  min-height: 50px;
   border: 1px solid var(--m78-color-border);
+  width: 100vw;
+  overflow: hidden;
+}
 
-  &.__prompt {
-    .m78-dialog_cont {
-      overflow: visible;
-    }
-  }
-
+.m78-dialog {
   &_close-icon {
     position: absolute !important;
     right: 12px;
@@ -59,10 +51,11 @@
 
   &_cont {
     position: relative;
-    padding: 0 0 16px;
-    margin: 8px 0;
+    padding: 0 12px 16px;
+    margin: 8px -12px;  // 为Input等组件腾出空间, 防止交互效果被遮挡
     font-size: 14px;
     max-height: 70vh;
+    min-height: 58px;
     overflow: auto;
   }
 

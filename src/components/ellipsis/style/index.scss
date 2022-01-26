@@ -22,13 +22,12 @@
   }
 }
 
-:root[data-theme='dark'] {
+:root[data-mode='dark'] {
   .m78-ellipsis_shadow {
     background: linear-gradient(
       to right,
       rgba(0, 0, 0, 0),
-      rgba(0, 0, 0, 0.74) 60%,
-      rgba(0, 0, 0, 0.96) 74%
+      var(--m78-body-bg) 74%
     );
   }
 }

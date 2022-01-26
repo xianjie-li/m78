@@ -35,6 +35,8 @@ export interface InputProps extends FormLike<string>, InputPropsExtends {
   charCount?: boolean;
   /** 指向内部input元素的ref */
   innerRef?: React.MutableRefObject<HTMLInputElement>;
+  /** 'left' | 输入方向 */
+  inputDirection?: 'left' | 'right';
 
   /* ############# 定制 ############# */
   /** 输入框状态，不同状态会以不同的功能色展示 */
@@ -68,7 +70,7 @@ export interface InputProps extends FormLike<string>, InputPropsExtends {
 
   /* ############# 格式化 ############# */
   /** 预设的格式化类型 */
-  format?: 'phone' | 'idCard' | 'money' | 'bankCard';
+  format?: 'phone' | 'idCard' | 'numeric' | 'bankCard';
   /** 格式化规则的模式字符，如format=phone的模式为为 `3,4,4`, 数字两端可包含空格 */
   formatPattern?: string;
   /** ' ' | 自定义格式化分隔符 */
@@ -77,6 +79,8 @@ export interface InputProps extends FormLike<string>, InputPropsExtends {
   formatRepeat?: boolean;
   /** 当字符长度超过pattern可匹配到的长度时，重复以当前pattern的最后一位对剩余字符进行格式化 */
   formatLastRepeat?: boolean;
+  /** 使用相反的顺序执行format */
+  formatReverse?: boolean;
   /** 将value格式化为特定格式，用于优化Input的显示, 运行于value到达input之前 */
   formatter?: (value: string) => string;
   /**

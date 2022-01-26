@@ -9,13 +9,12 @@ const Demo = () => {
 
   return (
     <div>
-      <Dialog triggerNode={<Button>基本</Button>} title="这是标题">
-        <div>这是弹窗内容</div>
+      <Dialog title="这是标题" content={<div>这是弹窗内容</div>}>
+        <Button>基本</Button>
       </Dialog>
 
       <Dialog
         close
-        triggerNode={<Button>确认按钮+取消按钮</Button>}
         title="这是标题"
         onClose={isConfirm => {
           message.tips({
@@ -23,79 +22,75 @@ const Demo = () => {
             content: isConfirm ? '你点击了确认' : '你关闭了弹窗',
           });
         }}
+        content={<div>确认 + 取消</div>}
       >
-        <div>确认 + 取消</div>
+        <Button>确认按钮+取消按钮</Button>
       </Dialog>
 
       <div className="mt-24">
-        <Dialog
-          loading={loading}
-          triggerNode={
-            <Button
-              onClick={() => {
-                setLoading(true);
+        <Dialog loading={loading} content={<div>这是弹窗内容</div>}>
+          <Button
+            onClick={() => {
+              setLoading(true);
 
-                setTimeout(() => {
-                  setLoading(false);
-                }, 1500);
-              }}
-            >
-              加载状态
-            </Button>
-          }
-        >
-          <div>这是弹窗内容</div>
+              setTimeout(() => {
+                setLoading(false);
+              }, 1500);
+            }}
+          >
+            加载状态
+          </Button>
         </Dialog>
 
-        <Dialog status="success" triggerNode={<Button>弹窗状态(成功)</Button>}>
-          <div>这是弹窗内容</div>
+        <Dialog status="success" content={<div>这是弹窗内容</div>}>
+          <Button>弹窗状态(成功)</Button>
         </Dialog>
 
-        <Dialog status="error" triggerNode={<Button>弹窗状态(失败)</Button>}>
-          <div>这是弹窗内容</div>
+        <Dialog status="error" content={<div>这是弹窗内容</div>}>
+          <Button>弹窗状态(失败)</Button>
         </Dialog>
 
-        <Dialog status="warning" triggerNode={<Button>弹窗状态(警告)</Button>}>
-          <div>这是弹窗内容</div>
+        <Dialog status="warning" content={<div>这是弹窗内容</div>}>
+          <Button>弹窗状态(警告)</Button>
         </Dialog>
       </div>
 
       <div className="mt-24">
         <Dialog
-          triggerNode={<Button>自定义</Button>}
           header={
             <div>
               自定义 <span style={{ color: 'red', fontSize: 20 }}>顶部</span>
             </div>
           }
+          content={<div>这是弹窗内容</div>}
           footer={
             <div>
               自定义 <span style={{ color: 'blue', fontSize: 20 }}>底部</span>
             </div>
           }
         >
-          <div>这是弹窗内容</div>
+          <Button>自定义</Button>
         </Dialog>
 
         <Dialog
-          triggerNode={<Button>按钮配置</Button>}
-          btns={[
+          content={<div>配置项请参考Button props</div>}
+          btnList={[
             {
-              text: '按钮1',
+              children: '按钮1',
               color: 'red',
               onClick() {
                 console.log('点击按钮1');
               },
             },
             {
-              text: '按钮2',
+              children: '按钮2',
               color: 'green',
               onClick() {
                 console.log('点击按钮2');
               },
             },
             {
-              text: '按钮3',
+              children: '按钮3',
               color: 'blue',
               onClick() {
                 console.log('点击按钮3');
@@ -103,41 +98,41 @@ const Demo = () => {
             },
           ]}
         >
-          <div>配置项请参考Button props</div>
+          <Button>按钮配置</Button>
         </Dialog>
       </div>
 
-      <div className="mt-24">
-        <Dialog
-          prompt
-          close
-          triggerNode={<Button>提示输入框</Button>}
-          title="用于快速提醒输入的dialog"
-          onClose={(isConfirm, val) => {
-            if (isConfirm) {
-              console.log(val);
-            }
-          }}
-        />
+      {/*<div className="mt-24">*/}
+      {/*  <Dialog*/}
+      {/*    prompt*/}
+      {/*    close*/}
+      {/*    triggerNode={<Button>提示输入框</Button>}*/}
+      {/*    title="用于快速提醒输入的dialog"*/}
+      {/*    onClose={(isConfirm, val) => {*/}
+      {/*      if (isConfirm) {*/}
+      {/*        console.log(val);*/}
+      {/*      }*/}
+      {/*    }}*/}
+      {/*  />*/}
 
-        <Dialog
-          prompt
-          promptDefaultValue="123"
-          close
-          triggerNode={<Button>提示输入框 + 相关配置</Button>}
-          title="用于快速提醒输入的dialog"
-          onClose={(isConfirm, val) => {
-            if (isConfirm) {
-              console.log(val);
-            }
-          }}
-          promptInputProps={{
-            type: 'password',
-          }}
-        >
-          <div className="color-second">输入您的密码</div>
-        </Dialog>
-      </div>
+      {/*  <Dialog*/}
+      {/*    prompt*/}
+      {/*    promptDefaultValue="123"*/}
+      {/*    close*/}
+      {/*    triggerNode={<Button>提示输入框 + 相关配置</Button>}*/}
+      {/*    title="用于快速提醒输入的dialog"*/}
+      {/*    onClose={(isConfirm, val) => {*/}
+      {/*      if (isConfirm) {*/}
+      {/*        console.log(val);*/}
+      {/*      }*/}
+      {/*    }}*/}
+      {/*    promptInputProps={{*/}
+      {/*      type: 'password',*/}
+      {/*    }}*/}
+      {/*  >*/}
+      {/*    <div className="color-second">输入您的密码</div>*/}
+      {/*  </Dialog>*/}
+      {/*</div>*/}
     </div>
   );
 };

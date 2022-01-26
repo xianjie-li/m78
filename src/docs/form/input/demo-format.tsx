@@ -44,7 +44,7 @@ const Demo = () => {
         />
       </div>
       <div className="mt-16">
-        <Input prefix="￥" value={money} onChange={value => setMoney(value)} format="money" />
+        <Input prefix="￥" value={money} onChange={value => setMoney(value)} format="numeric" />
       </div>
       <div style={{ marginTop: 60 }}>
         <h2>自定义匹配模式</h2>

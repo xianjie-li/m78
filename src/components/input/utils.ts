@@ -7,6 +7,7 @@ type BuildInPatterns = {
     delimiter?: string;
     lastRepeat?: boolean;
     repeat?: boolean;
+    reverse?: boolean;
   };
 };
 
@@ -21,10 +22,11 @@ export const buildInPattern: BuildInPatterns = {
     pattern: '3,3,4',
     lastRepeat: true,
   },
-  money: {
-    delimiter: "'",
-    pattern: '5,3',
-    lastRepeat: true,
+  numeric: {
+    delimiter: ',',
+    pattern: '3',
+    repeat: true,
+    reverse: true,
   },
   bankCard: {
     delimiter: ' ',
@@ -33,15 +35,15 @@ export const buildInPattern: BuildInPatterns = {
   },
 };
 
-/* money format需要单独处理小数点 */
-export function formatMoney(moneyStr = '', delimiter = "'") {
+/* 数值format需要单独处理小数点 */
+export function formatNumeric(moneyStr = '', delimiter = buildInPattern.numeric.delimiter) {
   const dotIndex = moneyStr.indexOf('.');
 
   if (dotIndex === -1) return moneyStr;
 
   const first = moneyStr.slice(0, dotIndex - 1);
   // 移除小数点前一位以及以后所有的delimiter
-  const last = moneyStr.slice(dotIndex - 1).replace(new RegExp(delimiter, 'g'), '');
+  const last = moneyStr.slice(dotIndex - 1).replace(new RegExp(delimiter!, 'g'), '');
 
   return first + last;
 }

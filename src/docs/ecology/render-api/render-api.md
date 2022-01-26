@@ -66,7 +66,7 @@ export interface RenderApiOption<S> {
   /** 交由api渲染的组件，该组件接受RenderApiComponentProps */
   component: ComponentType<RenderApiComponentBaseProps<any>>;
   /** 默认state状态，会和render(state)时传入的state合并 */
-  defaultState?: Partial<_OmitBuiltState<S>>;
+  defaultState?: Partial<RenderApiOmitBuiltState<S>>;
   /** 包装组件，如果你的实现组件依赖于特定的布局，可以通过传递此项来包裹它们 */
   wrap?: ComponentType;
   /** 最大实例数，当渲染的组件数超过此数值时，会将最先进入的实例移除 */
@@ -77,6 +77,8 @@ export interface RenderApiOption<S> {
   showKey?: string;
   /** 'onChange' | 自定义show变更进行通知的方法 */
   changeKey?: string;
+  /** 用于在调用render时过滤掉一些不想接收的state, 会以返回的state传递给render(state) */
+  omitState?: (state: Partial<RenderApiOmitBuiltState<S>>) => Partial<RenderApiOmitBuiltState<S>>;
 }
 
 /**
@@ -91,9 +93,9 @@ export interface RenderApiOption<S> {
  * */
 export interface RenderApiComponentProps<S, I = null> extends RenderApiComponentBaseProps<S, I> {
   /** 是否显示 */
-  show: boolean;
+  show?: boolean;
   /** show状态变更时通知父组件 */
-  onChange: (cur: boolean) => boolean;
+  onChange?: (cur: boolean) => void;
 }
 
 /**
@@ -174,7 +176,7 @@ export interface RenderApiComponentInstance<S, I> {
   /** 渲染组件的state */
   state: S;
   /** 更新渲染组件的state */
-  setState: (nState: Partial<_OmitBuiltState<S>>) => void;
+  setState: (nState: Partial<RenderApiOmitBuiltState<S>>) => void;
   /**
    * 存放组件内部对外暴露的属性和方法，由于组件渲染过程是异步的，所以此属性会延迟设置，如果实现组件未扩展任何东西则始终为null
    * - 如果需要在render()执行后马上获取此实例, 请使用safe()并在其内部进行操作

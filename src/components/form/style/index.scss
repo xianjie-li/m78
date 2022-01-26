@@ -78,6 +78,13 @@
     cursor: pointer;
     user-select: none;
     vertical-align: middle;
+
+    &.__fixed {
+      font-size: 1em;
+      position: absolute;
+      right: -0.2em;
+      top: -0.3em;
+    }
   }
 
   &_info {
@@ -104,13 +111,6 @@
 
   &_trailing {
     margin-left: var(--m78-space-2);
-
-    .m78-form_required {
-      font-size: 1em;
-      position: absolute;
-      right: -0.2em;
-      top: -0.3em;
-    }
   }
 
   &_bubble {

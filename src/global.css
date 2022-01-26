@@ -1,20 +1,23 @@
-body {
-  background-color: #fff !important;
+.__dumi-default-layout {
+  font-family: var(--m78-font-family);
+  line-height: var(--m78-line-height);
+  color: var(--m78-color-primary);
+  font-size: var(--m78-fs);
 }
 
 /* 兼容黑暗模式 */
 
-html[data-theme='dark'] .__dumi-default-code-block {
+html[data-mode='dark'] .__dumi-default-code-block {
   background-color: #21252b;
 }
 
-html[data-theme='dark'] code[class*='language-'],
-html[data-theme='dark'] pre[class*='language-'] {
+html[data-mode='dark'] code[class*='language-'],
+html[data-mode='dark'] pre[class*='language-'] {
   text-shadow: none !important;
   color: var(--m78-color-title-w) !important;
 }
 
-html[data-theme='dark'] .token.operator,
+html[data-mode='dark'] .token.operator,
 .token.entity,
 .token.url,
 .language-css .token.string,
@@ -22,16 +25,16 @@ html[data-theme='dark'] .token.operator,
   background-color: transparent !important;
 }
 
-html[data-theme='dark'] .markdown *:not(pre) code {
+html[data-mode='dark'] .markdown *:not(pre) code {
   border-radius: var(--m78-border-radius);
   background-color: var(--m78-component-bg) !important;
 }
 
-html[data-theme='dark'] .__dumi-default-icon {
+html[data-mode='dark'] .__dumi-default-icon {
   filter: invert(1);
 }
 
-html[data-theme='dark'] .__dumi-default-search-input {
+html[data-mode='dark'] .__dumi-default-search-input {
   color: var(--m78-color-primary) !important;
   background-color: var(--m78-component-bg) !important;
 }
@@ -57,6 +60,7 @@ html[data-theme='dark'] .__dumi-default-search-input {
   border: 1px solid var(--m78-color-border);
   border-radius: var(--m78-border-radius);
   margin: 0 4px;
+  background: var(--m78-component-bg) !important;
 }
 
 .__dumi-default-search-input {
@@ -227,4 +231,13 @@ ul[role='slug-list'] li[data-depth='3'] {
 
 .__dumi-default-navbar nav > span > a {
   color: var(--m78-color-primary) !important;
+}
+
+.themeCtl {
+  font-family: var(--m78-font-family);
+  border: 1px solid var(--m78-color-border) !important;
+}
+
+.markdown blockquote p {
+  color: var(--m78-color-second) !important;
 }

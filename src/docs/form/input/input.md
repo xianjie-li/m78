@@ -89,7 +89,7 @@ interface InputProps extends FormLike<string>, InputPropsExtends {
 
   /* ############# 格式化 ############# */
   /** 预设的格式化类型 */
-  format?: 'phone' | 'idCard' | 'money' | 'bankCard';
+  format?: 'phone' | 'idCard' | 'numeric' | 'bankCard';
   /** 格式化规则的模式字符，如format=phone的模式为为 `3,4,4`, 数字两端可包含空格 */
   formatPattern?: string;
   /** ' ' | 自定义格式化分隔符 */

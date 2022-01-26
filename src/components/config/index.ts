@@ -32,7 +32,7 @@ const m78Config = createSeed<M78SeedState>({
 
 m78Config.subscribe(({ darkMode }) => {
   if (typeof window !== 'undefined' && window.document) {
-    document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-mode', darkMode ? 'dark' : 'light');
   }
 });
 

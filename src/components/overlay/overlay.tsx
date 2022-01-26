@@ -77,7 +77,7 @@ export function _Overlay(p: OverlayProps) {
 
   /** 所有启用了clickAwayClosable的overlay */
   const overlaysClickAway = useOverlaysClickAway({
-    enable: show && props.clickAwayClosable,
+    enable: show && props.clickAwayQueue && props.clickAwayClosable,
   });
 
   /** 触发器 */

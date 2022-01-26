@@ -121,8 +121,18 @@ interface OverlayProps
    * - 除了defaultShow外, 还有继承至RenderApiComponentProps的show/onChange
    * - 以及继承至UseMountStateConfig的mountOnEnter/unmountOnExit用来控制overlay显示/未显示时的内容是否挂载
    * */
+  /** 是否显示 */
+  show?: boolean;
+  /** show状态变更时通知父组件 */
+  onChange?: (cur: boolean) => void;
   /** 是否非受控显示 */
   defaultShow?: boolean;
+  /** true | 如果为true，在第一次启用时才真正挂载内容 */
+  mountOnEnter?: boolean;
+  /** false | 在关闭时卸载内容 */
+  unmountOnExit?: boolean;
+  /** 当需要对外暴露更多的api时使用, 将额外的api挂载到此ref */
+  instanceRef?: React.Ref<I>;
 
   /**
    * ########## 位置 ##########
@@ -164,6 +174,8 @@ interface OverlayProps
   maskProps?: any;
   /** true | 点击内容或触发区域外时是否关闭 */
   clickAwayClosable?: boolean;
+  /** true | 存在多个开启了clickAwayClosable的overlay时, 如果启用此项, 每次触发会逐个关闭而不是一次性全部关闭 */
+  clickAwayQueue?: boolean;
   /** true | 出现时是否锁定滚动条 */
   lockScroll?: boolean;
   /** 获取内部wrap dom的ref */

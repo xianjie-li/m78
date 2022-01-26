@@ -1,31 +1,14 @@
 import React from 'react';
-import { m78Config } from 'm78/config';
-
-import './style.scss';
-import { Button } from 'm78/button';
-import { OverlayDirectionEnum } from 'm78/overlay';
-
-import { Dialog } from 'm78/dialog';
-import { delay } from '@lxjx/utils';
-import { TransitionTypeEnum } from 'm78/transition';
-import { useForm, required } from 'm78/form';
+import { required, useForm } from 'm78/form';
 import { Input } from 'm78/input';
+import { Button } from 'm78/button';
+import { Dialog } from 'm78/dialog';
 
-const App = () => {
-  const dark = m78Config.useState(state => state.darkMode);
-
+const Form = () => {
   const Form = useForm();
 
   return (
-    <div className="m78 p-16">
-      <button
-        style={{ position: 'fixed', right: 12, top: 12 }}
-        type="button"
-        onClick={() => m78Config.set({ darkMode: !m78Config.get().darkMode })}
-      >
-        {dark ? 'dark' : 'light'}
-      </button>
-
+    <div>
       <Dialog
         title="录入登录信息"
         content={
@@ -54,8 +37,4 @@ const App = () => {
   );
 };
 
-/*
- * 分割线
- * */
-
-export default App;
+export default Form;

@@ -2,14 +2,15 @@ import { AnyFunction, AnyObject, BoundSize, isNumber, omit, TupleNumber } from '
 import { TransitionTypeEnum } from 'm78/transition';
 import { Z_INDEX_MODAL } from 'm78/common';
 import clamp from 'lodash/clamp';
-import { useSame } from '@lxjx/hooks';
 import { UseTriggerEvent, UseTriggerTypeEnum } from 'm78/hooks';
+import { useSame } from '@lxjx/hooks';
 import {
   _ArrowBasePosition,
   _ClampBound,
   _Context,
   _DirectionMeta,
   _DirectionMetaMap,
+  omitApiProps,
   OverlayDirection,
   OverlayDirectionEnum,
   OverlayDirectionKeys,
@@ -24,6 +25,7 @@ export const defaultProps = {
   transitionType: TransitionTypeEnum.zoom,
   zIndex: Z_INDEX_MODAL,
   clickAwayClosable: true,
+  clickAwayQueue: true,
   lockScroll: true,
   arrowSize: [26, 8],
   offset: 0,
@@ -62,10 +64,7 @@ export function calcAlignment(alignment: TupleNumber, size: TupleNumber) {
 
 /** 当要为其他上层组件创建api时, 通过此函数来剔除不必要的props */
 export function getApiProps(props: OverlayProps): OverlayRenderOption {
-  return omit(
-    props,
-    'defaultShow,show,onChange,children,childrenAsTarget,triggerType,onUpdate,onDispose,innerRef,instanceRef',
-  ) as OverlayRenderOption;
+  return omit(props, omitApiProps as any) as OverlayRenderOption;
 }
 
 type SameConfig = Parameters<typeof useSame>[1];
