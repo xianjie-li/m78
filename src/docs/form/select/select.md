@@ -132,12 +132,12 @@ interface SelectProps<ValType, Options = any>
   listWidth?: number | string;
   /** 320 | 列表最大高度, 超出时出现滚动条 */
   listMaxHeight?: number | string;
-  /** 32 | 虚拟滚动需要确定的高度(px)，如果列表项通过其他配置修改过，通过此项设置修改后的高度 */
+  /** 38 | 虚拟滚动需要确定的高度(px)，如果列表项通过其他配置修改过，通过此项设置修改后的高度 */
   listItemHeight?: number;
   /** bottomStart | 列表展开方向 */
-  direction?: PopperDirectionKeys | PopperDirectionEnum;
+  direction?: OverlayDirection;
   /** 'click' | 气泡的触发方式 */
-  trigger?: PopperTriggerType | PopperTriggerType[];
+  triggerType?: UseTriggerType;
   /** 是否显示气泡箭头 */
   arrow?: boolean;
   /** true | 是否显示选中的勾选图标, 传入children时不显示 */

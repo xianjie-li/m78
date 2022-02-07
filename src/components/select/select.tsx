@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import { Input } from 'm78/input';
-import { Popper, PopperDirectionEnum, PopperRef, PopperTriggerEnum } from 'm78/popper';
 import { Spin } from 'm78/spin';
 import { Empty } from 'm78/empty';
 import { Button } from 'm78/button';
@@ -15,16 +14,18 @@ import { VariableSizeList as FixedList } from 'react-window';
 import cls from 'clsx';
 
 import { useCheck, useFn, useFormState, useSelf, useSetState } from '@lxjx/hooks';
-import { SelectProps, RenderItemData, SelectCustomTagMeta } from './type';
+import { OverlayDirectionEnum, OverlayInstance } from 'm78/overlay';
+import { UseTriggerTypeEnum } from 'm78/hooks';
+import { Bubble, BubbleTypeEnum } from 'm78/bubble';
+import { RenderItemData, SelectCustomTagMeta, SelectProps } from './type';
 import {
-  CustomPopper,
+  buildInTagRender,
   filterOptionsHandler,
   getLabel,
   getUseCheckConf,
   getValue,
   RenderItem,
   showMultipleString,
-  buildInTagRender,
 } from './statics';
 
 function Select<ValType = string, Options = any>(props: SelectProps<ValType, Options>) {
@@ -33,7 +34,7 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
     style,
     listMaxHeight = 200,
     listWidth,
-    listItemHeight = 36,
+    listItemHeight = 38,
     multiple,
     showTag = true,
     hideSelected = false,
@@ -63,8 +64,8 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
     debounceTime = 300,
     onSearch,
     onAddTag,
-    direction = PopperDirectionEnum.bottomStart,
-    trigger = PopperTriggerEnum.click,
+    direction = OverlayDirectionEnum.bottomStart,
+    triggerType = UseTriggerTypeEnum.click,
     arrow,
     checkIcon = true,
     children,
@@ -78,7 +79,7 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
     inputWidth: 0,
   });
 
-  const popperRef = useRef<PopperRef>(null!);
+  const bubbleRef = useRef<OverlayInstance>(null!);
 
   const conf = useMemo(() => getUseCheckConf(props), [props.value]);
 
@@ -95,7 +96,7 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
     onChange(val, opt) {
       props.onChange?.(multiple ? val : val[0], multiple ? opt : opt[0]);
       setTimeout(() => {
-        popperRef.current?.refresh();
+        bubbleRef.current.update(true);
       });
     },
     notExistValueTrigger,
@@ -453,25 +454,30 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
     );
   }
 
+  function renderContent() {
+    return <div className="m78-popper_content">{renderList()}</div>;
+  }
+
   return (
-    <Popper
+    <Bubble
+      type={BubbleTypeEnum.popper}
       offset={arrow ? 12 : 4}
       style={listStyle}
       className={cls('m78 m78-select_popper', listClassName, {
         __hasArrow: arrow,
         __dropdown: isDropDown,
       })}
+      arrow={arrow}
       content={renderList()}
       direction={direction}
-      trigger={trigger}
-      customer={CustomPopper}
-      instanceRef={popperRef}
+      triggerType={triggerType}
+      instanceRef={bubbleRef}
       show={show}
       onChange={onPopperClose}
       unmountOnExit={false}
     >
       {isDropDown ? renderChildren() : renderInput()}
-    </Popper>
+    </Bubble>
   );
 }
 

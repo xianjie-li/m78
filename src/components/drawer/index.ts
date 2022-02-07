@@ -1,4 +1,4 @@
 import 'm78/drawer/style';
-import Drawer from './drawer';
+import { _Drawer as Drawer } from './drawer';
 
 export { Drawer };

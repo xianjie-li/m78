@@ -45,7 +45,7 @@ Dialog 组件的配置非常多样化，通过合理的配置可以实现绝大�
 
 ## 嵌入表单
 
-<code src="./form.tsx" />
+<code src="./form-demo.tsx" />
 
 
 ## API

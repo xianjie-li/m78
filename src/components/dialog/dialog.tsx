@@ -14,16 +14,27 @@ import { omitApiProps, Overlay, OverlayApiOmitKeys, OverlayInstance } from 'm78/
 import createRenderApi from '@m78/render-api';
 import { DialogProps } from './types';
 
+const defaultProps: Partial<DialogProps> = {
+  width: 360,
+  title: '提示',
+  close: false,
+  confirm: '确认',
+  closeIcon: true,
+  loading: false,
+  btnList: [],
+  namespace: 'DIALOG',
+  mask: true,
+};
+
 const DialogBase = (props: DialogProps) => {
   const {
-    width = 360,
-    title = '提示',
-    close = false,
-    confirm = '确认',
-    closeIcon = true,
-    loading = false,
-    btnList = [],
-    mask = true,
+    width,
+    title,
+    close,
+    confirm,
+    closeIcon,
+    loading,
+    btnList,
     flexBtn,
     footer,
     header,
@@ -96,8 +107,8 @@ const DialogBase = (props: DialogProps) => {
   }
 
   function renderBtns() {
-    if (btnList.length === 0) return null;
-    return btnList.map((btnProps, key) => <Button key={key} {...btnProps} />);
+    if (btnList!.length === 0) return null;
+    return btnList!.map((btnProps, key) => <Button key={key} {...btnProps} />);
   }
 
   function renderDefault() {
@@ -124,15 +135,13 @@ const DialogBase = (props: DialogProps) => {
   return (
     <Overlay
       {...other}
-      className="m78 m78-init m78-dialog m78-scroll-bar"
-      namespace="DIALOG"
-      style={{ width }}
+      className={cls('m78 m78-init m78-dialog m78-scroll-bar', className)}
+      style={{ width, ...style }}
       clickAwayClosable={loading ? false : clickAwayClosable}
       show={show}
       onChange={nShow => {
         nShow ? setShow(nShow) : closeHandle();
       }}
-      mask={mask}
       content={
         <>
           {status && (
@@ -168,6 +177,8 @@ const DialogBase = (props: DialogProps) => {
   );
 };
 
+DialogBase.defaultProps = defaultProps;
+
 const api = createRenderApi<Omit<DialogProps, OverlayApiOmitKeys>, OverlayInstance>({
   component: DialogBase,
   defaultState: {
@@ -177,6 +188,6 @@ const api = createRenderApi<Omit<DialogProps, OverlayApiOmitKeys>, OverlayInstan
   omitState: state => omit(state, omitApiProps as any),
 });
 
-const Dialog = Object.assign(DialogBase, api);
+const _Dialog = Object.assign(DialogBase, api);
 
-export default Dialog;
+export { _Dialog };

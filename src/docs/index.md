@@ -64,15 +64,15 @@ function App() {
 
 样式采用后编译(开发时编译), 你需要为你的`webpack`或其他打包器添加`.scss`文件支持才能正常使用。
 
+
 ### 定制主题(可选)
 
-组件库采用`CSS variables`来管理 css 配置, 由于此特性是浏览器天然支持的, 使用权重更高的变量覆盖组件库变量即可实现样式定制
+组件库采用`CSS variables`来管理css配置, 由于此特性是浏览器天然支持的, 使用权重更高的变量覆盖组件库变量即可实现样式定制
 
 可以在[此处](https://github.com/m78-core/style/blob/main/var.scss)查看所有可用变量
 
 ```css
-/* html:root用于提升权重, 组件库变量位于:root选择器下, 你可以使用其他任意提高权重的方式 */
-html:root {
+*.m78 {
   --m78-color-6: red;
   --m78-color-sub: pink;
   --m78-color-info: blue;
@@ -82,6 +82,7 @@ html:root {
   --m78-fs: 16px;
 }
 ```
+
 
 <br>
 

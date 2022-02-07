@@ -8,37 +8,54 @@ group:
 
 # Drawer 抽屉
 
-与 Dialog 类似，在不跳转页面的情况下向用户展示一组内容, 区别是它从窗体边缘动画进入
+一个用于在指定方向显示无阻断内容的便捷容器, 它是`overlay`的易用性封装.
 
-💡 通过 [Modal](/feedback/modal) 作为底层实现, 基本的用法如显示/隐藏的不同控制方式、mask、位置、动画、渲染特性等请查阅其文档
-
-## 基础示例
+## 示例
 
 <code src="./demo.tsx" />
 
 ## API
 
-该组件 props 继承至 ModalBaseProps 的子集, 完整配置等请参考 [Modal](/feedback/modal)
+继承了[overlay](/docs/feedback/overlay)除了以下`props`的所有用法
 
-```tsx | pure
-type OmitModalSpecific = Omit<
-  ModalBaseProps,
-  | 'baseZIndex'
-  | 'namespace'
-  | 'alignment'
-  | 'animationType'
-  | 'onRemove'
-  | 'onRemoveDelay'
-  | 'config'
-  | 'innerRef'
->;
+```ts
+export const omitDrawerOverlayProps = [
+  'xy',
+  'alignment',
+  'target',
+  'childrenAsTarget',
+  'offset',
+  'direction',
+  'arrow',
+  'arrowSize',
+  'arrowProps',
+  'transitionType',
+] as const;
+```
 
-export interface DrawerProps extends OmitModalSpecific {
-  /** 是否显示关闭按钮 */
-  closeIcon?: boolean;
-  /** 方向 */
-  direction?: 'bottom' | 'left' | 'right' | 'top';
-  /** 全屏 */
-  fullScreen?: boolean;
+组件扩展的用法
+
+```ts
+interface DrawerProps {
+  /** 'bottom' | 出现位置 */
+  position?: Position;
+  /** 头部内容, 头部区域会固定在最顶部 */
+  header?: React.ReactNode;
 }
+```
+
+通过api使用时, 以下[overlay](/docs/feedback/overlay) props也不可用, api用法通过[renderApi](/docs/ecology/render-api)实现, 详细用法请查阅其文档
+```ts
+export const omitApiProps = [
+  'defaultShow',
+  'show',
+  'onChange',
+  'children',
+  'childrenAsTarget',
+  'triggerType',
+  'onUpdate',
+  'onDispose',
+  'innerRef',
+  'instanceRef',
+] as const;
 ```

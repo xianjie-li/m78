@@ -1,6 +1,6 @@
 import React from 'react';
 import { ComponentBaseProps } from '@lxjx/utils';
-import { MountExistBase } from 'm78/popper/utils';
+import { UseMountStateConfig } from '@lxjx/hooks';
 
 export enum ExpandIconPosition {
   left = 'left',
@@ -9,7 +9,7 @@ export enum ExpandIconPosition {
 }
 
 /** Expansion和ExpansionPane通用的props */
-export interface ExpansionBase extends MountExistBase {
+export interface ExpansionBase extends UseMountStateConfig {
   /** 禁用 */
   disabled?: boolean;
 

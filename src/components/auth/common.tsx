@@ -1,11 +1,11 @@
 import { Result } from 'm78/result';
-import { Popper } from 'm78/popper';
 import React, { useEffect, useState } from 'react';
 import { isFunction } from '@lxjx/utils';
 import { Seed } from '@m78/seed';
 import { Button } from 'm78/button';
 import { Auth, ValidMeta } from '@m78/auth';
 import { useEffectEqual, useFn } from '@lxjx/hooks';
+import { Bubble, BubbleTypeEnum } from 'm78/bubble';
 import { AuthProProps, AuthProps, AuthTypeEnum, RCAuth, UseAuth } from './types';
 
 /** 定制AuthPro反馈内容 */
@@ -50,10 +50,9 @@ export const authProFeedback: NonNullable<AuthProProps['feedback']> = (
   if (type === AuthTypeEnum.popper) {
     const renderChild = () => (isFunction(children) ? children() : children) as any;
     return (
-      <Popper
+      <Bubble
         className="m78-auth_popper"
-        type="popper"
-        trigger="click"
+        type={BubbleTypeEnum.popper}
         icon={icon}
         content={
           <Result type="notAuth" title={title}>
@@ -62,7 +61,7 @@ export const authProFeedback: NonNullable<AuthProProps['feedback']> = (
         }
       >
         {React.cloneElement(renderChild(), { onClick: undefined })}
-      </Popper>
+      </Bubble>
     );
   }
 };
@@ -124,17 +123,16 @@ export function createAuthComponent<S, V>(seed: Seed<S>, useAuth: RCAuth<S, V>['
 
       if (type === AuthTypeEnum.popper) {
         return (
-          <Popper
+          <Bubble
             className="m78-auth_popper"
-            type="popper"
-            trigger="click"
+            type={BubbleTypeEnum.popper}
             icon={icon}
             content={
               <Result type="notAuth" title={firstRej.label} desc={firstRej.desc} actions={action} />
             }
           >
             {React.cloneElement(renderChild(), { onClick: undefined })}
-          </Popper>
+          </Bubble>
         );
       }
     }

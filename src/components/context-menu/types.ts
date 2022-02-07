@@ -1,18 +1,23 @@
-import React from 'react';
-import { ComponentBaseProps } from '@lxjx/utils';
-import { PopperPropsCustom } from 'm78/popper';
-import { TileProps } from 'm78/layout';
+import { OverlayProps } from 'm78/overlay';
 
-export interface ContextMenuProps extends ComponentBaseProps {
-  /** 一个接收onContextMenu事件的子节点 */
-  children: JSX.Element;
-  /** 内容 */
-  content: React.ReactNode | ((props: PopperPropsCustom) => React.ReactNode);
-  /** 完全定制样式 */
-  customer?(props: PopperPropsCustom): JSX.Element;
-}
+/** 应从Overlay中移除的props */
+export const omitContextMenuOverlayProps = [
+  'triggerType',
+  'xy',
+  'alignment',
+  'target',
+  'childrenAsTarget',
+] as const;
 
-export interface ContextMenuItemProps extends TileProps {
-  /** 添加禁用样式 */
-  disabled?: boolean;
-}
+/** 应从Overlay中移除的props */
+export type ContextMenuOmitOverlayKeys = typeof omitContextMenuOverlayProps[number];
+
+export type ContextMenuOmitOverlayProps = Omit<OverlayProps, ContextMenuOmitOverlayKeys>;
+
+/**
+ * 移除了部分prop的OverlayProps, 并且以下默认值有变更:
+ * - mountOnEnter/unmountOnExit 默认为true
+ * - direction 默认为OverlayDirectionEnum.rightStart
+ * - springProps 默认去除了动画, 可以通过 immediate: false 开启
+ * */
+export interface ContextMenuProps extends ContextMenuOmitOverlayProps {}

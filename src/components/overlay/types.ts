@@ -127,6 +127,8 @@ export interface OverlayProps
    * - 通过children + active模式控制开关时, 过大的offset会影响触发体验
    * */
   offset?: number;
+  /** 禁用 */
+  disabled?: boolean;
 
   // ######## 动画 ########
   /** 'zoom' | 指定内置动画类型 */
@@ -202,6 +204,8 @@ export interface _Context {
     lastTarget: OverlayProps['target'];
     /** 内容区域是否处于活动状态 */
     activeContent: boolean;
+    /** 内容节点是否已挂载 */
+    contentExist: boolean;
     /** 由于active或focus时间触发关闭, 但是activeContent为true阻止关闭时, 设置此项为true来在合适的时机重新关闭 */
     shouldCloseFlag?: boolean;
     /** 触发shouldCloseFlag自动关闭的计时器, 在show状态更新时清理 */

@@ -113,7 +113,7 @@ const Direction = () => {
             position: 'absolute',
             left: 0,
             top: 32,
-            width: 140,
+            width: 120,
             textAlign: 'left',
             lineHeight: 3.2,
           }}

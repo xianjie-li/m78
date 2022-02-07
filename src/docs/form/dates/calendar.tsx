@@ -3,7 +3,7 @@ import { Dates } from 'm78/dates';
 
 const CalendarDemo = () => {
   return (
-    <div style={{ maxWidth: '640px' }}>
+    <div style={{ maxWidth: 500 }}>
       <Dates mode="calendar" />
     </div>
   );

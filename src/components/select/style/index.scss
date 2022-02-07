@@ -1,8 +1,9 @@
 @import '../../common/style/sass';
 
 .m78-select {
-  .m78-input_prefix {
-    //z-index: 1000;
+
+  &_popper {
+    padding: var(--m78-space-2) !important;
   }
 
   &.__has-multiple-tag {
@@ -48,12 +49,6 @@
     }
   }
 
-  &_popper:not(.__hasArrow) {
-    .m78-popper_arrow {
-      display: none;
-    }
-  }
-
   &_list {
     position: relative;
     //min-width: 280px;
@@ -86,6 +81,8 @@
     @include ellipsis-x;
     background-color: var(--m78-component-bg);
     overflow-y: auto;
+    border-radius: var(--m78-border-radius);
+    margin-bottom: 2px;
 
     &:hover {
       background-color: var(--m78-color-opacity-sm);

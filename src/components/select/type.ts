@@ -1,8 +1,9 @@
 import React from 'react';
 import { FormLikeWithExtra } from '@lxjx/hooks';
-import { PopperDirectionEnum, PopperDirectionKeys, PopperTriggerType } from 'm78/popper';
 import { FullSizeKeys, StatusKeys } from 'm78/common';
 import { ComponentBaseProps } from '@lxjx/utils';
+import { OverlayDirection } from 'm78/overlay';
+import { UseTriggerType } from 'm78/hooks';
 
 export interface SelectOptionItem {
   /** 类目名, 如果不传入，将使用value作为label */
@@ -34,8 +35,10 @@ export interface SelectProps<ValType, Options = any>
   show?: boolean;
   /** 是否默认显示 */
   defaultShow?: boolean;
+
   /** show触发改变, 类似表单控件onChange用法 */
   onShowChange?(show: boolean): void;
+
   /** 通常不会传入，传入时，select会作为下拉菜单使用，并且部分针对输入框的选项会失效 */
   children?: React.ReactNode;
 
@@ -48,6 +51,7 @@ export interface SelectProps<ValType, Options = any>
   hideSelected?: boolean;
   /** 8 | 最大显示的 多选元素/标签 数量 */
   multipleMaxShowLength?: number;
+
   /**
    * 用于在value中包含options中不存在的值时进行获取
    * eg. 通过value传入了[1, 5, 7], 但是options中不存在value为1, 5的选项，就会通过此方法传入[1, 5]来帮助进行查询并合并选项
@@ -55,6 +59,7 @@ export interface SelectProps<ValType, Options = any>
    * 每个不存在的值只会被回传一次
    * */
   notExistValueTrigger?(val: ValType): void;
+
   /** 定制tag样式 */
   customTag?: SelectCustomTag;
   /** 最大选中条数 */
@@ -81,8 +86,10 @@ export interface SelectProps<ValType, Options = any>
   search?: boolean;
   /** 300 | 搜索防抖延迟 */
   debounceTime?: number;
+
   /** 关键词变更时触发，用于从服务端查询数据并同步到options中 */
   onSearch?(key: string): void;
+
   /**
    * 当用户触发新增标签时触发(包含keyword时按下Enter/点击添加按钮)
    * check用于组件为非受控使用时在合并新tag到options后传入选项值对其进行选中，
@@ -103,12 +110,12 @@ export interface SelectProps<ValType, Options = any>
   listWidth?: number | string;
   /** 320 | 列表最大高度, 超出时出现滚动条 */
   listMaxHeight?: number | string;
-  /** 32 | 虚拟滚动需要确定的高度(px)，如果列表项通过其他配置修改过，通过此项设置修改后的高度 */
+  /** 38 | 虚拟滚动需要确定的高度(px)，如果列表项通过其他配置修改过，通过此项设置修改后的高度 */
   listItemHeight?: number;
   /** bottomStart | 列表展开方向 */
-  direction?: PopperDirectionKeys | PopperDirectionEnum;
+  direction?: OverlayDirection;
   /** 'click' | 气泡的触发方式 */
-  trigger?: PopperTriggerType | PopperTriggerType[];
+  triggerType?: UseTriggerType;
   /** 是否显示气泡箭头 */
   arrow?: boolean;
   /** true | 是否显示选中的勾选图标, 传入children时不显示 */
@@ -128,9 +135,13 @@ export interface SelectProps<ValType, Options = any>
 /** 约定内部选项Item的入参 */
 export interface RenderItemData {
   listItemHeight: number | string;
+
   isChecked(val: any): boolean;
+
   isDisabled(val: any): boolean;
+
   onCheckItem(val?: any): void;
+
   options: SelectOptionItem[];
   labelKey: string;
   valueKey: string;
@@ -142,8 +153,10 @@ export interface SelectCustomTagMeta {
   option: SelectOptionItem;
   /** 标签label */
   label: string;
+
   /** 删除该值 */
   del(): void;
+
   /** 该标签在数组中的索引 */
   index: number;
   /** 透传给标签的className，包含size/disabled等用于定制的定制状态类 */

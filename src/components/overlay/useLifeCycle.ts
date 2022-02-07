@@ -1,5 +1,7 @@
 import { useClickAway, useLockBodyScroll, useUpdateEffect } from '@lxjx/hooks';
 import { useEffect, useImperativeHandle, useMemo } from 'react';
+import { UseTriggerTypeEnum } from 'm78/hooks';
+import { ensureArray } from '@lxjx/utils';
 import { _Methods } from './useMethods';
 import { isBound } from './common';
 import { _Context } from './types';
@@ -58,13 +60,17 @@ export function _useLifeCycle(ctx: _Context, methods: _Methods) {
   useUpdateEffect(methods.updateChildrenEl, [trigger.el]);
 
   /** show变更时, 先立即调整位置 */
-  useUpdateEffect(() => {
+  useEffect(() => {
     // 每次出现时将焦点移入组件
     if (show && containerRef.current) {
-      containerRef.current.focus();
+      // 非focus模式时为容器设置focus
+      if (!ensureArray(props.triggerType).includes(UseTriggerTypeEnum.focus)) {
+        containerRef.current.focus();
+      }
     }
 
-    methods.update(true);
+    // 内容已挂载时才出发, 防止第一次渲染时和
+    if (self.contentExist) methods.update(true);
     clearTimeout(self.shouldCloseTimer);
   }, [show]);
 
@@ -104,12 +110,14 @@ export function _useLifeCycle(ctx: _Context, methods: _Methods) {
 
   /** content对应的dom挂载, 如果启用了unmountOnExit, 此hook会在每次content挂载后执行 */
   const onContentMount = () => {
+    self.contentExist = true;
     methods.update(true);
   };
 
   /** content对应的dom卸载, 如果启用了unmountOnExit, 此hook会在每次content卸载后执行 */
   const onContentUnmount = () => {
     props.onDispose?.();
+    self.contentExist = false;
   };
 
   return {

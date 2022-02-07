@@ -1,5 +1,5 @@
 import 'm78/context-menu/style';
-import ContextMenu, { ContextMenuItem } from './context-menu';
+import { _ContextMenu as ContextMenu } from './context-menu';
 
 export * from './types';
-export { ContextMenuItem, ContextMenu };
+export { ContextMenu };

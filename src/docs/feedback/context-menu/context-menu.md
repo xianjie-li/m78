@@ -8,7 +8,7 @@ group:
 
 # ContextMenu 上下文菜单
 
-用于对特定组件展示一组上下文操作, 该组件适用于 PC 设备
+对组件展示一组上下文操作
 
 ## 示例
 
@@ -16,20 +16,19 @@ group:
 
 ## API
 
-💡 组件依赖[`Popper`](/docs/feedback/popper)组件，部分`api`会包含该组件的类型，请自行查阅
+继承了[overlay](/docs/feedback/overlay)除了以下`props`的用法
 
-```tsx | pure
-interface ContextMenuProps extends ComponentBaseProps {
-  /** 一个接收onContextMenu事件的子节点 */
-  children: JSX.Element;
-  /** 内容 */
-  content: React.ReactNode | ((props: PopperPropsCustom) => React.ReactNode);
-  /** 完全定制样式 */
-  customer?(props: PopperPropsCustom): JSX.Element;
-}
-
-export interface ContextMenuItemProps extends TileProps {
-  /** 添加禁用样式 */
-  disabled?: boolean;
-}
+```ts
+const omitContextMenuOverlayProps = [
+  'triggerType',
+  'xy',
+  'alignment',
+  'target',
+  'childrenAsTarget',
+] as const;
 ```
+
+以下默认值有变更:
+- mountOnEnter/unmountOnExit 默认为true
+- direction 默认为OverlayDirectionEnum.rightStart
+- springProps 默认去除了动画, 可以通过 immediate: false 开启

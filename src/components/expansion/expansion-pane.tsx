@@ -1,8 +1,6 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useFormState, useMeasure, useSelf } from '@lxjx/hooks';
-/** TODO: 移除依赖 */
-import { useMountExist } from 'm78/popper';
-import { isFunction } from '@lxjx/utils';
+import { isFunction, isNumber } from '@lxjx/utils';
 import cls from 'clsx';
 import { Button } from 'm78/button';
 import { CaretRightOutlined, CaretUpOutlined, CaretDownOutlined } from 'm78/icon';
@@ -11,6 +9,39 @@ import { stopPropagation } from 'm78/common';
 import { useSpring, animated, config } from 'react-spring';
 import { ExpansionPaneProps, ExpandIconPosition } from './types';
 import { useCtx } from './ctx';
+
+/** 临时使用 */
+function useMountExist({ toggle, mountOnEnter = true, unmountOnExit, exitDelay }: any) {
+  const [mount, set] = useState(() => {
+    // mountOnEnter为false时，强制渲染, 否则取init
+    if (!mountOnEnter) return true;
+    return toggle;
+  });
+
+  const timer = useRef<any>();
+
+  useEffect(() => {
+    timer.current && clearTimeout(timer.current);
+
+    if (toggle && mountOnEnter) {
+      !mount && set(true);
+    }
+
+    if (!toggle && unmountOnExit) {
+      if (mount) {
+        if (isNumber(exitDelay)) {
+          timer.current = setTimeout(() => {
+            set(false);
+          }, exitDelay);
+        } else {
+          set(false);
+        }
+      }
+    }
+  }, [toggle]);
+
+  return [mount] as const;
+}
 
 const ExpansionPane = (props: ExpansionPaneProps) => {
   const { checker, accordion, ...ctxBaseProps } = useCtx();

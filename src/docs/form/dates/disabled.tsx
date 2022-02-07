@@ -42,7 +42,7 @@ const disabledTimeWithDate: TimeLimiter = (meta, { checkedDate: mmt }) => {
 
 const DisabledDemo = () => {
   return (
-    <div style={{ maxWidth: 480 }}>
+    <div style={{ maxWidth: 320 }}>
       <div className="mt-24">
         <ul>
           <li>禁用本月5号以前的所有日期/月/年</li>

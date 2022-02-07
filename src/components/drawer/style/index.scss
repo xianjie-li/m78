@@ -2,42 +2,34 @@
 
 .m78-drawer {
   background-color: var(--m78-component-bg);
-  padding: 12px;
-  overflow: auto;
-  box-shadow: var(--m78-shadow-1);
-  transition: 0.6s margin-left, 0.6s margin-right, 0.6s margin-top, 0.6s margin-bottom;
+  box-shadow: var(--m78-shadow-1-b);
+  border-radius: var(--m78-border-radius-lg);
+  display: flex;
+  flex-direction: column;
 
-  &_close {
-    position: absolute;
-    right: 6px;
-    top: 6px;
-    font-size: 24px;
-    z-index: 1;
-    background-color: var(--m78-component-bg);
-    border-radius: 50%;
-    line-height: 1;
+  &_content {
+    flex: 1;
+    overflow: auto;
+    padding: var(--m78-space-5);
   }
 
-  &.__left,
-  &.__right {
-    max-width: 86%;
-    min-width: 44px;
-    top: 0;
-    bottom: 0;
+  &_header {
+    display: flex;
+    align-items: center;
+    padding: var(--m78-space-3) var(--m78-space-5);
+    font-size: var(--m78-fs-lg);
+
+    & + .m78-drawer_content {
+      padding-top: 0;
+    }
   }
 
-  &.__top,
-  &.__bottom {
-    max-height: 86%;
-    min-height: 44px;
-    right: 0;
-    left: 0;
+  &.__left, &.__right {
+    max-height: 96vw;
   }
 
-  &.__full-screen {
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    top: 0 !important;
+  &.__top, &.__bottom {
+    max-width: 96vw;
+    min-width: 10vw;
   }
 }

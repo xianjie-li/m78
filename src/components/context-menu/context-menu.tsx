@@ -1,92 +1,59 @@
-import React, { useState } from 'react';
-import { Popper, Bound, PopperDirectionEnum, PopperPropsCustom } from 'm78/popper';
-import { Tile } from 'm78/layout';
-import classNames from 'clsx';
-import { isFunction } from '@lxjx/utils';
-import { ContextMenuItemProps, ContextMenuProps } from './types';
+import React, { useMemo, useState } from 'react';
+import { defer, omit, TupleNumber } from '@lxjx/utils';
+import { useTrigger, UseTriggerTypeEnum } from 'm78/hooks';
+import { Overlay, OverlayDirectionEnum } from 'm78/overlay';
+import clsx from 'clsx';
+import { useFormState } from '@lxjx/hooks';
+import { TransitionTypeEnum } from 'm78/transition';
+import { ContextMenuProps, omitContextMenuOverlayProps } from './types';
 
-/** 定制popper */
-const MenuCustomer = (props: PopperPropsCustom) => {
-  const contRender = props.content as ContextMenuProps['content'];
+const _ContextMenu = (props: ContextMenuProps) => {
+  const { content, children } = props;
 
-  return (
-    <div
-      onContextMenu={e => e.preventDefault()}
-      className={classNames(
-        'm78-context-menu',
-        (props as any).classNamePassToCustomer,
-        (props as any).stylePassToCustomer,
-      )}
-      onClick={() => props.setShow(false)}
-    >
-      {isFunction(contRender) ? contRender(props) : contRender}
-    </div>
-  );
-};
+  const overlayProps = useMemo(() => {
+    return omit(props, [...(omitContextMenuOverlayProps as any), 'children']);
+  }, [props]);
 
-const ContextMenu = ({ content, customer, className, style, children }: ContextMenuProps) => {
-  const [target, setTarget] = useState<Bound | undefined>();
-  const [show, setShow] = useState(false);
+  const [xy, setXY] = useState<TupleNumber>([0, 0]);
+  const [show, setShow] = useFormState(props, false, {
+    valueKey: 'show',
+    defaultValueKey: 'defaultShow',
+  });
 
-  function onContextMenu(e: React.MouseEvent) {
-    e.preventDefault();
-    e.stopPropagation();
+  const { node } = useTrigger({
+    element: children,
+    type: [UseTriggerTypeEnum.contextMenu],
+    onTrigger(e) {
+      setXY([e.x, e.y]);
 
-    setTarget({
-      left: e.clientX,
-      top: e.clientY,
-      right: e.clientX,
-      bottom: e.clientY,
-    });
-
-    !show && setShow(true);
-
-    return false;
-  }
+      defer(() => setShow(true));
+    },
+  });
 
   return (
     <>
-      <Popper
+      {node}
+      <Overlay
+        mountOnEnter
+        unmountOnExit
+        direction={OverlayDirectionEnum.rightStart}
+        {...overlayProps}
+        xy={xy}
         show={show}
-        type="popper"
-        target={target}
-        trigger="subClick"
-        direction={PopperDirectionEnum.rightStart}
-        offset={0}
-        content={content}
-        customer={customer || MenuCustomer}
         onChange={setShow}
-        // @ts-ignore 组件内部临时增加的属性
-        classNamePassToCustomer={className}
-        // @ts-ignore
-        stylePassToCustomer={style}
+        transitionType={TransitionTypeEnum.fade}
+        content={
+          <div
+            className={clsx('m78-context-menu')}
+            onClick={() => setShow(false)}
+            onContextMenu={e => e.preventDefault()}
+          >
+            {content}
+          </div>
+        }
       />
-      {React.cloneElement(children, {
-        onContextMenu,
-      })}
     </>
   );
 };
 
-const ContextMenuItem = ({ disabled, onClick, ...props }: ContextMenuItemProps) => {
-  return (
-    <Tile
-      {...props}
-      className={classNames('m78-context-menu_item', props.className, disabled && '__disabled')}
-      onClick={e => {
-        if (disabled) e.stopPropagation();
-        onClick?.(e);
-      }}
-      onContextMenu={e => {
-        e.preventDefault();
-        e.stopPropagation();
-        return false;
-      }}
-    />
-  );
-};
-
-ContextMenu.Item = ContextMenuItem;
-
-export default ContextMenu;
-export { ContextMenuItem };
+export { _ContextMenu };

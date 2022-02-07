@@ -186,6 +186,8 @@ interface OverlayProps
    * - 通过children + active模式控制开关时, 过大的offset会影响触发体验
    * */
   offset?: number;
+  /** 禁用 */
+  disabled?: boolean;
 
   // ######## 动画 ########
   /** 'zoom' | 指定内置动画类型 */

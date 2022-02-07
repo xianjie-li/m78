@@ -4,7 +4,7 @@ import { Input } from 'm78/input';
 import { Button } from 'm78/button';
 import { Dialog } from 'm78/dialog';
 
-const Form = () => {
+const FormDemo = () => {
   const Form = useForm();
 
   return (
@@ -37,4 +37,4 @@ const Form = () => {
   );
 };
 
-export default Form;
+export default FormDemo;

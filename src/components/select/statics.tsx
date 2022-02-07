@@ -1,16 +1,9 @@
-import { PopperPropsCustom } from 'm78/popper';
 import React from 'react';
 import { isArray, getFirstTruthyOrZero, isTruthyOrZero } from '@lxjx/utils';
 import cls from 'clsx';
 import { CheckOutlined, CloseCircleOutlined } from 'm78/icon';
 import { ListChildComponentProps } from 'react-window';
 import { RenderItemData, SelectCustomTag, SelectOptionItem, SelectProps } from './type';
-
-/** 自定义popper样式 */
-export function CustomPopper(props: PopperPropsCustom) {
-  const { content } = props;
-  return <div className="m78-popper_content">{content}</div>;
-}
 
 /** 根据SelectOptionItem取value */
 export function getValue(item: SelectOptionItem, key: string) {
@@ -86,6 +79,8 @@ export function RenderItem({ index, style, data }: Item) {
 
   const disabled = data.isDisabled(value);
 
+  const height = style.height!;
+
   return (
     <div
       className={cls('m78-select_item', {
@@ -95,7 +90,10 @@ export function RenderItem({ index, style, data }: Item) {
         __active: _isChecked,
         __disabled: disabled,
       })}
-      style={style}
+      style={{
+        ...style,
+        height: Number(height) - 2 /* 下边距 */,
+      }}
       onClick={() => (item.type || disabled ? undefined : data.onCheckItem(value))}
     >
       {!isDivider && (

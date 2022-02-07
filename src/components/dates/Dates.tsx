@@ -1,14 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Button } from 'm78/button';
 import { Input } from 'm78/input';
-import { Modal } from 'm78/modal';
-import { Popper } from 'm78/popper';
-import { Z_INDEX_MESSAGE } from 'm78/common';
 import { useFormState, useSelf, useSetState } from '@lxjx/hooks';
 import moment, { Moment } from 'moment';
 import cls from 'clsx';
 
-import { defaultFormat, parseValue, placeholderMaps, pickerTypeWrap } from './utils';
+import { defaultFormat, parseValue, pickerTypeWrap, placeholderMaps } from './utils';
 import {
   renderPresetDates,
   staticRenderCheckedValue,
@@ -20,6 +17,8 @@ import {
 } from './renders';
 import { DatesProps, DatesRangeProps, DateType, ShareMetas } from './type';
 import { useDateUIController, useHandlers } from './hooks';
+import { Bubble, BubbleTypeEnum } from 'm78/bubble';
+import { Overlay, OverlayDirectionEnum } from 'm78/overlay';
 
 function Dates(props: DatesProps): JSX.Element;
 function Dates(props: DatesRangeProps): JSX.Element;
@@ -178,16 +177,14 @@ function Dates(props: DatesProps | DatesRangeProps) {
 
   function renderTooltip() {
     return (
-      <Popper
+      <Bubble
         className="m78-dates_popper"
         offset={4}
         content={renderMain()}
-        direction="bottomStart"
-        trigger="click"
+        direction={OverlayDirectionEnum.bottomStart}
         show={state.show}
-        type="popper"
+        type={BubbleTypeEnum.popper}
         disabled={disabled}
-        unmountOnExit={false}
         onChange={_show => {
           setState({
             show: _show,
@@ -195,7 +192,7 @@ function Dates(props: DatesProps | DatesRangeProps) {
         }}
       >
         {renderInput()}
-      </Popper>
+      </Bubble>
     );
   }
 
@@ -204,14 +201,15 @@ function Dates(props: DatesProps | DatesRangeProps) {
     return (
       <>
         {renderInput()}
-        <Modal
-          baseZIndex={Z_INDEX_MESSAGE}
+        <Overlay
+          content={renderMain(true)}
           show={state.show}
-          style={{ width: '94%', padding: 12 }}
-          onClose={handlers.onHide}
-        >
-          {renderMain(true)}
-        </Modal>
+          className="m78-dates_overlay"
+          mask
+          onChange={_show => {
+            if (!_show) handlers.onHide();
+          }}
+        />
       </>
     );
   }

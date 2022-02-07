@@ -47,6 +47,7 @@ export function _Overlay(p: OverlayProps) {
     lastAlignment: props.alignment,
     lastTarget: props.target,
     activeContent: false,
+    contentExist: false,
   });
 
   /** 内容定位动画 */
@@ -55,7 +56,7 @@ export function _Overlay(p: OverlayProps) {
       to: {
         x: 0,
         y: 0,
-        isHidden: false,
+        isHidden: true,
       },
       config: transitionConfig,
     };
@@ -91,7 +92,7 @@ export function _Overlay(p: OverlayProps) {
   const [measure] = useMeasure(containerRef, 200);
 
   const ctx: _Context = {
-    show,
+    show: show && !props.disabled,
     setShow,
     state,
     setState,

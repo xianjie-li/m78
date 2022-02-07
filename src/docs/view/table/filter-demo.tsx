@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Table, TableColumns } from 'm78/table';
 import { Select } from 'm78/select';
-import { Popper } from 'm78/popper';
 import { Row } from 'm78/layout';
 import { Input } from 'm78/input';
+import { Bubble, BubbleTypeEnum } from 'm78/bubble';
 import { dataSource } from './dataSource';
 
 const columns: TableColumns = [
@@ -61,8 +61,8 @@ const columns: TableColumns = [
     field: 'level',
     extra: ({ ctx }) => {
       return (
-        <Popper
-          type="popper"
+        <Bubble
+          type={BubbleTypeEnum.popper}
           content={
             <Row crossAlign="center">
               <span className="mr-8">星级: </span>
@@ -76,7 +76,7 @@ const columns: TableColumns = [
           }
         >
           <span className="cus-p">⚙</span>
-        </Popper>
+        </Bubble>
       );
     },
   },

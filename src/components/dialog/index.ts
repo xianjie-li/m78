@@ -1,5 +1,5 @@
 import 'm78/dialog/style';
-import Dialog from './dialog';
+import { _Dialog } from './dialog';
 
 export * from './types';
-export { Dialog };
+export { _Dialog as Dialog };

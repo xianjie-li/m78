@@ -2,10 +2,7 @@
 
 .m78-dates {
   display: inline-block;
-  background-color: var(--m78-component-bg);
-  border-radius: var(--m78-border-radius);
-  box-shadow: var(--m78-shadow-1);
-  width: 320px;
+  width: 340px;
   z-index: var(--m78-z-index);
 
   &_inp {
@@ -13,10 +10,11 @@
   }
 
   &_popper {
-    .m78-popper_popper-content {
-      padding: 0;
-      box-shadow: none;
-    }
+    padding: 0 !important;
+  }
+
+  &_overlay {
+    width: 88vw;
   }
 
   &_head,

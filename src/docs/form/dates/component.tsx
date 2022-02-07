@@ -3,7 +3,7 @@ import { Dates } from 'm78/dates';
 
 const ComponentDemo = () => {
   return (
-    <div style={{ maxWidth: 480 }}>
+    <div style={{ maxWidth: 320 }}>
       <Dates mode="component" />
     </div>
   );

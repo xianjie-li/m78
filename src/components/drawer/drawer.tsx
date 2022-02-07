@@ -1,127 +1,77 @@
 import React, { useMemo } from 'react';
+import clsx from 'clsx';
+import {
+  omitApiProps,
+  Overlay,
+  OverlayApiOmitKeys,
+  OverlayInstance,
+  transitionConfig,
+} from 'm78/overlay';
+import { omit, TupleNumber } from '@lxjx/utils';
+import { TransitionType } from 'm78/transition';
+import { PositionEnum, Z_INDEX_DRAWER } from 'm78/common';
+import { upperFirst } from 'lodash';
+import createRenderApi from '@m78/render-api';
+import { DrawerProps, omitDrawerOverlayProps, DrawerOmitOverlayProps } from './type';
 
-import { Modal } from 'm78/modal';
-import { Button } from 'm78/button';
-import { CloseOutlined } from 'm78/icon';
-import { If } from 'm78/fork';
-
-import _capitalize from 'lodash/capitalize';
-import cls from 'clsx';
-
-import { useFormState, useSame } from '@lxjx/hooks';
-import { Z_INDEX_DRAWER } from 'm78/common';
-import { DrawerProps } from './type';
-
-const alignmentMap: { [key in NonNullable<DrawerProps['direction']>]: [number, number] } = {
-  top: [0, 0],
-  right: [1, 0],
-  bottom: [0, 1],
-  left: [0, 0],
+const positionMap = {
+  [PositionEnum.top]: [0.5, 0.02] as TupleNumber,
+  [PositionEnum.right]: [0.96, 0.5] as TupleNumber,
+  [PositionEnum.bottom]: [0.5, 0.96] as TupleNumber,
+  [PositionEnum.left]: [0.02, 0.5] as TupleNumber,
 };
 
-const spConfig = { clamp: true };
+const defaultProps: Partial<DrawerProps> = {
+  position: PositionEnum.bottom,
+  namespace: 'DRAWER',
+  mask: true,
+  zIndex: Z_INDEX_DRAWER,
+};
 
-const Drawer: React.FC<DrawerProps> = props => {
-  const {
-    closeIcon = false,
-    direction = 'bottom',
-    fullScreen = false,
-    className,
-    style,
-    children,
-    ...otherProps
-  } = props;
+const DrawerBase = (props: DrawerProps) => {
+  const { className, position, header, ...other } = props;
 
-  /** 代理defaultShow/show/onChange, 实现对应接口 */
-  const [show, setShow] = useFormState<boolean>(props, false, {
-    defaultValueKey: 'defaultShow',
-    triggerKey: 'onChange',
-    valueKey: 'show',
-  });
+  const overlayProps = useMemo(() => {
+    return omit<DrawerOmitOverlayProps>(other, omitDrawerOverlayProps as any);
+  }, [props]);
 
-  const [___, instances, instanceId] = useSame('fr_drawer_metas', {
-    enable: show,
-    meta: {
-      direction,
-    },
-  });
-
-  // 所有方向相同，未启用fullScreen的组件
-  const sames = instances.filter(item => item.meta.direction === direction && !fullScreen);
-
-  // 该实例后的实例总数
-  const afterInstanceLength = useMemo(() => {
-    if (!show || !sames.length) return 0;
-
-    const ind = sames.findIndex(item => item.id === instanceId);
-
-    const after = sames.slice(ind + 1);
-
-    return after.length > 0 ? after.length : 0;
-  }, [sames, ___]);
-
-  const capDirection = _capitalize(direction);
-
-  let marginType = 'left';
-
-  if (direction === 'bottom' || direction === 'top') {
-    marginType = 'top';
-  }
-
-  // 当存在多个drawer时，前一个相对于后一个偏移60px, 不适用于全屏模式
-  const offsetStyle =
-    !fullScreen && show && afterInstanceLength > 0
-      ? {
-          [`margin${_capitalize(marginType)}`]:
-            direction === 'right' || direction === 'bottom'
-              ? -afterInstanceLength * 50
-              : afterInstanceLength * 50,
-        }
-      : {};
-
-  function onClose() {
-    setShow(false);
-    props.onClose?.();
-  }
-
-  function render() {
+  function renderContent() {
     return (
-      <Modal
-        {...otherProps}
-        namespace="drawer"
-        className={cls(
-          'm78-drawer',
-          {
-            '__full-screen': fullScreen,
-          },
-          direction && !fullScreen && `__${direction}`,
-          className,
-        )}
-        style={{
-          ...style,
-          ...offsetStyle,
-        }}
-        baseZIndex={Z_INDEX_DRAWER}
-        show={show}
-        onChange={nShow => setShow(nShow)}
-        animationType={(`slide${capDirection}` as any) || 'bottom'}
-        alignment={alignmentMap[direction]}
-        animationConfig={spConfig}
-        alpha={false}
-      >
-        <If when={closeIcon || fullScreen}>
-          <div className="m78-drawer_close">
-            <Button icon onClick={onClose} size="small">
-              <CloseOutlined className="m78-close-icon" />
-            </Button>
-          </div>
-        </If>
-        {children}
-      </Modal>
+      <>
+        {header && <div className="m78-drawer_header">{header}</div>}
+        <div className="m78-drawer_content">{props.content}</div>
+      </>
     );
   }
 
-  return render();
+  return (
+    <Overlay
+      {...overlayProps}
+      className={clsx('m78 m78-drawer', `__${position}`, className)}
+      alignment={positionMap[position!]}
+      transitionType={`slide${upperFirst(position)}` as TransitionType}
+      content={renderContent()}
+      springProps={{
+        config: {
+          ...transitionConfig,
+          ...props.springProps,
+        },
+      }}
+    />
+  );
 };
 
-export default Drawer;
+DrawerBase.defaultProps = defaultProps;
+
+const api = createRenderApi<Omit<DrawerProps, OverlayApiOmitKeys>, OverlayInstance>({
+  component: DrawerBase,
+  defaultState: {
+    mountOnEnter: true,
+    unmountOnExit: true,
+  },
+  omitState: state => omit(state, omitApiProps as any),
+});
+
+const _Drawer = Object.assign(DrawerBase, api);
+
+export { _Drawer };
