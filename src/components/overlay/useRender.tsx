@@ -1,14 +1,14 @@
-import { getArrowBasePosition, transitionConfig } from 'm78/overlay/common';
 import { Transition, TransitionBase } from 'm78/transition';
 import React from 'react';
 import clsx from 'clsx';
-import { _MountTrigger as MountTrigger } from 'm78/overlay/mountTrigger';
 import { Portal } from 'm78/portal';
 import { animated } from 'react-spring';
 import { _Context } from 'm78/overlay/types';
 import { _Methods } from 'm78/overlay/useMethods';
-import { _Arrow as Arrow } from 'm78/overlay/arrow';
 import { _LifeCycle } from 'm78/overlay/useLifeCycle';
+import { _Arrow as Arrow } from './arrow';
+import { getArrowBasePosition, transitionConfig } from './common';
+import { _MountTrigger as MountTrigger } from './mountTrigger';
 
 const AnimatedArrow = animated(Arrow);
 

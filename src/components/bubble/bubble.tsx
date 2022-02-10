@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Overlay, OverlayDirectionEnum, OverlayProps } from 'm78/overlay';
-import { BubbleProps, BubbleTypeEnum, omitBubbleOverlayProps } from 'm78/bubble/types';
+import { BubbleProps, BubbleTypeEnum, omitBubbleOverlayProps } from './types';
 import { SizeEnum, Z_INDEX_MESSAGE } from 'm78/common';
 import clsx from 'clsx';
 import { Button } from 'm78/button';
