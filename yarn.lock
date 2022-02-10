@@ -1940,10 +1940,10 @@
     "@lxjx/utils" "^1.13.0"
     tslib "^2.2.0"
 
-"@m78/style@^2.1.1":
-  version "2.1.1"
-  resolved "https://registry.npmmirror.com/@m78/style/download/@m78/style-2.1.1.tgz#5df8c6748b09cfccbb3603c8cfff5ae6fc5439b4"
-  integrity sha512-l1QgTrjwcq02MWu7vYt6aUfO+/C8l/vrO04oSrxAp0v3u+h43jFTWbR/r63YTGymM1AdIIOdSqUZmG3zUNmajQ==
+"@m78/style@^2.1.3":
+  version "2.1.3"
+  resolved "https://registry.npmmirror.com/@m78/style/-/style-2.1.3.tgz#8956b587a12c4f34f7fb47ef2b6b98dce08189d9"
+  integrity sha512-ttIZltIIbsrr6IPknGvbJep3Yd9Q2ZUlS5S4ZqJdbHEoHrXD5ZHW2mFttpBxEL1UfvXmuOl+AeS57Uq6xipLmw==
   dependencies:
     "@ant-design/colors" "^3.2.2"
 

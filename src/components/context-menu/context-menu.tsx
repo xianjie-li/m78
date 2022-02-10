@@ -24,6 +24,8 @@ const _ContextMenu = (props: ContextMenuProps) => {
     element: children,
     type: [UseTriggerTypeEnum.contextMenu],
     onTrigger(e) {
+      e.nativeEvent.stopPropagation();
+
       setXY([e.x, e.y]);
 
       defer(() => setShow(true));
