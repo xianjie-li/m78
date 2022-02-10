@@ -24,11 +24,13 @@
     }
   }
 
-  &.__left, &.__right {
+  &.__left,
+  &.__right {
     max-height: 96vw;
   }
 
-  &.__top, &.__bottom {
+  &.__top,
+  &.__bottom {
     max-width: 96vw;
     min-width: 10vw;
   }

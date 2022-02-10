@@ -1812,6 +1812,18 @@
     resize-observer-polyfill "^1.5.1"
     tslib "^2.3.1"
 
+"@lxjx/hooks@^1.30.0":
+  version "1.30.0"
+  resolved "https://registry.npmmirror.com/@lxjx/hooks/-/hooks-1.30.0.tgz#7368b27ed2fb2d60d69c3233e61a79864ab0acd2"
+  integrity sha512-WQ3fUn64OjAw5omwch7PDa35eKhf17nK75TSo8XzLXl0aTM8w5I6oLi6H4iI2UWTLTM/zvqqWl1ohHKeHmy5qg==
+  dependencies:
+    "@lxjx/utils" "^1.7.7"
+    lodash "^4.17.15"
+    query-string "^7.0.1"
+    react-spring "^9.3.3"
+    resize-observer-polyfill "^1.5.1"
+    tslib "^2.3.1"
+
 "@lxjx/preset-config@^0.1.0":
   version "0.1.0"
   resolved "https://registry.npm.taobao.org/@lxjx/preset-config/download/@lxjx/preset-config-0.1.0.tgz#f61a8edb37bb7d40628fda3fc8a545e1f129976f"

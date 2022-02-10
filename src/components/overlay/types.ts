@@ -129,6 +129,8 @@ export interface OverlayProps
   offset?: number;
   /** 禁用 */
   disabled?: boolean;
+  /** true | 弹层出现时, 会自动获取焦点, 便于后续的tab控制, 如果不需要此行为可通过传入false关闭 */
+  autoFocus?: boolean;
 
   // ######## 动画 ########
   /** 'zoom' | 指定内置动画类型 */

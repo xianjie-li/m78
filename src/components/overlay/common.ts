@@ -30,6 +30,7 @@ export const defaultProps = {
   arrowSize: [26, 8],
   offset: 0,
   triggerType: UseTriggerTypeEnum.click,
+  autoFocus: true,
 };
 
 export const transitionConfig = {

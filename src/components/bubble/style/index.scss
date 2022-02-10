@@ -16,7 +16,8 @@
     font-size: var(--m78-fs-md);
   }
 
-  &.__popper, &.__confirm {
+  &.__popper,
+  &.__confirm {
     padding: var(--m78-space-3);
   }
 
@@ -28,7 +29,6 @@
   }
 
   &_cont {
-
   }
 
   &_confirm-btn {

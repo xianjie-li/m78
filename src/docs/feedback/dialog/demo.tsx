@@ -102,37 +102,37 @@ const Demo = () => {
         </Dialog>
       </div>
 
-      {/*<div className="mt-24">*/}
-      {/*  <Dialog*/}
-      {/*    prompt*/}
-      {/*    close*/}
-      {/*    triggerNode={<Button>提示输入框</Button>}*/}
-      {/*    title="用于快速提醒输入的dialog"*/}
-      {/*    onClose={(isConfirm, val) => {*/}
-      {/*      if (isConfirm) {*/}
-      {/*        console.log(val);*/}
-      {/*      }*/}
-      {/*    }}*/}
-      {/*  />*/}
+      {/* <div className="mt-24"> */}
+      {/*  <Dialog */}
+      {/*    prompt */}
+      {/*    close */}
+      {/*    triggerNode={<Button>提示输入框</Button>} */}
+      {/*    title="用于快速提醒输入的dialog" */}
+      {/*    onClose={(isConfirm, val) => { */}
+      {/*      if (isConfirm) { */}
+      {/*        console.log(val); */}
+      {/*      } */}
+      {/*    }} */}
+      {/*  /> */}
 
-      {/*  <Dialog*/}
-      {/*    prompt*/}
-      {/*    promptDefaultValue="123"*/}
-      {/*    close*/}
-      {/*    triggerNode={<Button>提示输入框 + 相关配置</Button>}*/}
-      {/*    title="用于快速提醒输入的dialog"*/}
-      {/*    onClose={(isConfirm, val) => {*/}
-      {/*      if (isConfirm) {*/}
-      {/*        console.log(val);*/}
-      {/*      }*/}
-      {/*    }}*/}
-      {/*    promptInputProps={{*/}
-      {/*      type: 'password',*/}
-      {/*    }}*/}
-      {/*  >*/}
-      {/*    <div className="color-second">输入您的密码</div>*/}
-      {/*  </Dialog>*/}
-      {/*</div>*/}
+      {/*  <Dialog */}
+      {/*    prompt */}
+      {/*    promptDefaultValue="123" */}
+      {/*    close */}
+      {/*    triggerNode={<Button>提示输入框 + 相关配置</Button>} */}
+      {/*    title="用于快速提醒输入的dialog" */}
+      {/*    onClose={(isConfirm, val) => { */}
+      {/*      if (isConfirm) { */}
+      {/*        console.log(val); */}
+      {/*      } */}
+      {/*    }} */}
+      {/*    promptInputProps={{ */}
+      {/*      type: 'password', */}
+      {/*    }} */}
+      {/*  > */}
+      {/*    <div className="color-second">输入您的密码</div> */}
+      {/*  </Dialog> */}
+      {/* </div> */}
     </div>
   );
 };

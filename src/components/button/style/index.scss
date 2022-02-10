@@ -329,7 +329,6 @@
     cursor: not-allowed;
     background-color: scale_color($main-color, $lightness: 60%);
   }
-
 }
 
 @include btn('blue', #40a9ff);

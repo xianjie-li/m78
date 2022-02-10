@@ -62,7 +62,7 @@ export function _useLifeCycle(ctx: _Context, methods: _Methods) {
   /** show变更时, 先立即调整位置 */
   useEffect(() => {
     // 每次出现时将焦点移入组件
-    if (show && containerRef.current) {
+    if (props.autoFocus && show && containerRef.current) {
       // 非focus模式时为容器设置focus
       if (!ensureArray(props.triggerType).includes(UseTriggerTypeEnum.focus)) {
         containerRef.current.focus();

@@ -44,7 +44,8 @@ interface DrawerProps {
 }
 ```
 
-通过api使用时, 以下[overlay](/docs/feedback/overlay) props也不可用, api用法通过[renderApi](/docs/ecology/render-api)实现, 详细用法请查阅其文档
+通过 api 使用时, 以下[overlay](/docs/feedback/overlay) props 也不可用, api 用法通过[renderApi](/docs/ecology/render-api)实现, 详细用法请查阅其文档
+
 ```ts
 export const omitApiProps = [
   'defaultShow',

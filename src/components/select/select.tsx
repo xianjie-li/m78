@@ -454,10 +454,6 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
     );
   }
 
-  function renderContent() {
-    return <div className="m78-popper_content">{renderList()}</div>;
-  }
-
   return (
     <Bubble
       type={BubbleTypeEnum.popper}

@@ -1,25 +1,6 @@
 import React from 'react';
 import { OverlayProps } from 'm78/overlay';
 
-/**
- * api用法或类型为tooltip/confirm时, mountOnEnter/unmountOnExit均为true
- * 其他情况使用overlay的默认配置: mountOnEnter: true,  unmountOnExit: false
- *
- * # overlay
- * 核心功能均通过[m78/overlay](/docs/feedback/overlay#bubble)实现, 此组件仅是对气泡易用性的封装, 更多特性请查阅其文档
- *
- * ## 类型
- * 内置了三种显示样式:
- * - tooltip 简单的文本提示
- * - popper 展示一段复杂内容
- * - confirm 进行快捷询问
- *
- * ## 通过api实现单例
- * 组件通过[@m78/renderApi](/docs/ecology/render-api)实现了api用法, 可以借此来实现单例气泡, 如果需要同时渲染大量气泡(比如虚拟列表中), 建议使用
- *
- *
- * */
-
 export enum BubbleTypeEnum {
   tooltip = 'tooltip',
   popper = 'popper',

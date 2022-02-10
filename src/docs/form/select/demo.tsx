@@ -7,7 +7,7 @@ const Demo = () => {
   const [opt] = useState(options);
 
   return (
-    <div style={{ maxWidth: 280 }}>
+    <div style={{ maxWidth: 360 }}>
       <h3>尺寸</h3>
       <Select size="small" options={opt} placeholder="请选择" />
       <Select options={opt} placeholder="请选择" className="mt-12" />

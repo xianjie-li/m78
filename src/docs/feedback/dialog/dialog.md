@@ -20,11 +20,12 @@ Dialog 组件的配置非常多样化，通过合理的配置可以实现绝大�
 
 ## onClose
 
-在通过关闭按钮/确认/或点击dialog以外区域进行关闭时, 会触发`onClose(isConfirm)`, 如果是通过确认按钮触发, 则`isConfirm`为`true`
+在通过关闭按钮/确认/或点击 dialog 以外区域进行关闭时, 会触发`onClose(isConfirm)`, 如果是通过确认按钮触发, 则`isConfirm`为`true`
 
 同时, 为`onClose`返回不同的类型可以达到不同的效果:
+
 - 返回`false`, 阻止默认的关闭行为
-- 返回一个`Promise`对象, `dialog`进入加载状态, 如果`promise` resolve的值为`false`或抛出异常则阻止关闭
+- 返回一个`Promise`对象, `dialog`进入加载状态, 如果`promise` resolve 的值为`false`或抛出异常则阻止关闭
 
 <code src="./on-close.tsx" />
 
@@ -34,12 +35,11 @@ Dialog 组件的配置非常多样化，通过合理的配置可以实现绝大�
 
 <code src="./overlay.tsx" />
 
-
 ## 通过 api 使用
 
-通过[renderApi](/docs/ecology/render-api) 实现了api用法, 你可以在组件结构以外的任意位置通过api来渲染dialog
+通过[renderApi](/docs/ecology/render-api) 实现了 api 用法, 你可以在组件结构以外的任意位置通过 api 来渲染 dialog
 
-> 查阅renderApi文档来学会如何使用api来管理和更新渲染的实例以及更多用法.
+> 查阅 renderApi 文档来学会如何使用 api 来管理和更新渲染的实例以及更多用法.
 
 <code src="./api.tsx" />
 
@@ -47,10 +47,9 @@ Dialog 组件的配置非常多样化，通过合理的配置可以实现绝大�
 
 <code src="./form-demo.tsx" />
 
-
 ## API
 
-除了以下扩展api外, 支持[Overlay](/feedback/overlay)所有用法, 以及通过[renderApi](/docs/ecology/render-api)来进行api渲染.
+除了以下扩展 api 外, 支持[Overlay](/feedback/overlay)所有用法, 以及通过[renderApi](/docs/ecology/render-api)来进行 api 渲染.
 
 ```ts
 interface DialogProps extends OverlayProps {
@@ -93,7 +92,7 @@ interface DialogProps extends OverlayProps {
   footerProps?: JSX.IntrinsicElements['div'];
 }
 
-在api用法中, 以下props无效
+在api用法中, 以下props无效;
 /** 在使用api调用时所有应该剔除的props */
 export const omitApiProps = [
   'defaultShow',

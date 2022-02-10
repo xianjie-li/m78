@@ -20,6 +20,7 @@ const defaultProps: Partial<BubbleProps> = {
   lockScroll: false,
   direction: OverlayDirectionEnum.top,
   arrow: true,
+  autoFocus: false,
 };
 
 const _Bubble = (props: BubbleProps) => {

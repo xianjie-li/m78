@@ -4,7 +4,7 @@ import {
   useSelf,
   useSetState,
   useVirtualList,
-  UseVirtualListOption,
+  VirtualListOption,
 } from '@lxjx/hooks';
 import { useMemo } from 'react';
 import { DragFullEvent } from 'm78/dnd';
@@ -27,7 +27,7 @@ import { getValue, isCheck, isMultipleCheck, useValCheckArgDispose } from './com
 export default function _useTreeStates<Node = TreeNode, DS = TreeDataSourceItem>(
   props: TreeBasePropsMix,
   isVirtual?: boolean,
-  virtualOption?: Omit<UseVirtualListOption<Node>, 'list'>,
+  virtualOption?: Omit<VirtualListOption<Node>, 'list'>,
 ) {
   /** 状态 */
   const [state, setState] = useSetState<_InsideState>({

@@ -24,10 +24,6 @@
 
 :root[data-mode='dark'] {
   .m78-ellipsis_shadow {
-    background: linear-gradient(
-      to right,
-      rgba(0, 0, 0, 0),
-      var(--m78-body-bg) 74%
-    );
+    background: linear-gradient(to right, rgba(0, 0, 0, 0), var(--m78-body-bg) 74%);
   }
 }
