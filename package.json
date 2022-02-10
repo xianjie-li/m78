@@ -114,7 +114,7 @@
     "glob": "^7.1.4",
     "jest": "^26.1.0",
     "mockjs": "^1.1.0",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "ora": "^4.0.4",
     "rollup": "^2.33.1",
     "rollup-plugin-copy": "^3.3.0",
