@@ -151,20 +151,17 @@ export function useTrigger<E = HTMLElement>(config: UseTriggerConfig) {
 
     if (node && node.parentNode) {
       const parentNode = node.parentNode;
-      const n = parentNode.removeChild(node);
 
-      const ls = parentNode.querySelectorAll(`.${tempNodeCls}`);
+      const back: AnyFunction = parentNode.removeChild.bind(parentNode);
 
-      // 确保所有节点在最后
-      if (ls && ls.length) {
-        ls.forEach((it: HTMLSpanElement) => {
-          parentNode.appendChild(parentNode.removeChild(it));
-        });
-      }
-
-      // 直接删除节点会导致react-refresh等刷新节点时报错, 所以将插入的节点放到容器最后, 减少对dom树的破坏
+      // 直接删除节点会导致react-refresh等刷新节点时报错, 所以需要添加一些补丁代码进行处理, 减少对dom树的破坏
       // 主要是为了使兄弟级的css选择器(~ +等)能保持正常运行
-      parentNode.appendChild(n);
+      // parentNode.appendChild(n);
+      parentNode.removeChild = (...arg: any) => {
+        back(...arg);
+      };
+
+      parentNode.removeChild(node);
     }
   });
 
