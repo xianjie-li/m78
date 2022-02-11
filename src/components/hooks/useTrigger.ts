@@ -1,7 +1,7 @@
 /** 支持的事件类型 */
 import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 import { useFn, useSelf } from '@lxjx/hooks';
-import { AnyFunction, isArray } from '@lxjx/utils';
+import { AnyFunction, dumpFn, isArray } from '@lxjx/utils';
 
 export enum UseTriggerTypeEnum {
   /** 点击 */
@@ -158,7 +158,11 @@ export function useTrigger<E = HTMLElement>(config: UseTriggerConfig) {
       // 主要是为了使兄弟级的css选择器(~ +等)能保持正常运行
       // parentNode.appendChild(n);
       parentNode.removeChild = (...arg: any) => {
-        back(...arg);
+        try {
+          back(...arg);
+        } catch (e) {
+          dumpFn(e);
+        }
       };
 
       parentNode.removeChild(node);
