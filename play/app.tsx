@@ -6,12 +6,14 @@ import { Button } from 'm78/button';
 import { useForm } from 'm78/form';
 import { SizeEnum } from 'm78/common';
 import { Bubble, BubbleTypeEnum } from 'm78/bubble';
-import { OverlayInstance } from 'm78/overlay';
+import { Overlay, OverlayInstance } from 'm78/overlay';
 
 const App = () => {
   const dark = m78Config.useState(state => state.darkMode);
 
   const [show, setShow] = useState(false);
+
+  const [mount, setMount] = useState(false);
 
   const insRef = useRef<OverlayInstance>(null!);
 
@@ -34,28 +36,32 @@ const App = () => {
         <Button>tooltip</Button>
       </Bubble>
 
-      <Bubble
-        title="Popper提示"
-        type={BubbleTypeEnum.popper}
-        content={
-          <div>
-            <div>气泡提示内容</div>
-            <div>适合放置一些相对复杂的内容</div>
-          </div>
-        }
-      >
-        <Button>popper</Button>
-      </Bubble>
+      {mount && (
+        <>
+          <Bubble
+            title="Popper提示"
+            type={BubbleTypeEnum.popper}
+            content={
+              <div>
+                <div>气泡提示内容</div>
+                <div>适合放置一些相对复杂的内容</div>
+              </div>
+            }
+          >
+            <Button>popper</Button>
+          </Bubble>
 
-      <Bubble
-        type={BubbleTypeEnum.confirm}
-        content="此操作不可撤, 是否确认?"
-        onConfirm={() => {
-          console.log('确认操作');
-        }}
-      >
-        <Button>confirm</Button>
-      </Bubble>
+          <Bubble
+            type={BubbleTypeEnum.confirm}
+            content="此操作不可撤, 是否确认?"
+            onConfirm={() => {
+              console.log('确认操作');
+            }}
+          >
+            <Button>confirm</Button>
+          </Bubble>
+        </>
+      )}
 
       <Bubble
         instanceRef={insRef}
@@ -69,6 +75,18 @@ const App = () => {
       <Button onClick={handleClick}>按钮3</Button>
       <Button onClick={handleClick}>按钮4</Button>
       <Button onClick={handleClick}>按钮5</Button>
+
+      <Button onClick={() => setMount(prev => !prev)}>setMount</Button>
+
+      <Overlay
+        content={meta => (
+          <div>
+            你好 <Button onClick={() => meta.setShow(false)}>close</Button>
+          </div>
+        )}
+      >
+        <Button>click</Button>
+      </Overlay>
     </div>
   );
 };

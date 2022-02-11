@@ -112,6 +112,8 @@ function touchGen(e: TouchEvent, ele: Element | null) {
   });
 }
 
+const tempNodeCls = 'm78-use-trigger-temp-node';
+
 /**
  * 用来为一个ReactElement绑定常用的事件
  * */
@@ -150,6 +152,16 @@ export function useTrigger<E = HTMLElement>(config: UseTriggerConfig) {
     if (node && node.parentNode) {
       const parentNode = node.parentNode;
       const n = parentNode.removeChild(node);
+
+      const ls = parentNode.querySelectorAll(`.${tempNodeCls}`);
+
+      // 确保所有节点在最后
+      if (ls && ls.length) {
+        ls.forEach((it: HTMLSpanElement) => {
+          parentNode.appendChild(parentNode.removeChild(it));
+        });
+      }
+
       // 直接删除节点会导致react-refresh等刷新节点时报错, 所以将插入的节点放到容器最后, 减少对dom树的破坏
       // 主要是为了使兄弟级的css选择器(~ +等)能保持正常运行
       parentNode.appendChild(n);
@@ -314,6 +326,7 @@ export function useTrigger<E = HTMLElement>(config: UseTriggerConfig) {
       React.createElement('span', {
         ref: refCallback,
         style: { display: 'none' },
+        className: tempNodeCls,
       }),
       element,
     );

@@ -7,8 +7,10 @@ import { useFormState } from '@lxjx/hooks';
 import { TransitionTypeEnum } from 'm78/transition';
 import { ContextMenuProps, omitContextMenuOverlayProps } from './types';
 
+const defaultTriggerType = [UseTriggerTypeEnum.contextMenu];
+
 const _ContextMenu = (props: ContextMenuProps) => {
-  const { content, children } = props;
+  const { content, children, triggerType = defaultTriggerType } = props;
 
   const overlayProps = useMemo(() => {
     return omit(props, [...(omitContextMenuOverlayProps as any), 'children']);
@@ -22,7 +24,7 @@ const _ContextMenu = (props: ContextMenuProps) => {
 
   const { node } = useTrigger({
     element: children,
-    type: [UseTriggerTypeEnum.contextMenu],
+    type: triggerType,
     onTrigger(e) {
       e.nativeEvent.stopPropagation();
 

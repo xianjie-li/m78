@@ -19,8 +19,7 @@ group:
 继承了[overlay](/docs/feedback/overlay)除了以下`props`的用法
 
 ```ts
-const omitContextMenuOverlayProps = [
-  'triggerType',
+export const omitContextMenuOverlayProps = [
   'xy',
   'alignment',
   'target',
@@ -33,3 +32,4 @@ const omitContextMenuOverlayProps = [
 - mountOnEnter/unmountOnExit 默认为 true
 - direction 默认为 OverlayDirectionEnum.rightStart
 - springProps 默认去除了动画, 可以通过 immediate: false 开启
+- triggerType [UseTriggerTypeEnum.contextMenu]

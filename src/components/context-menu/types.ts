@@ -2,7 +2,6 @@ import { OverlayProps } from 'm78/overlay';
 
 /** 应从Overlay中移除的props */
 export const omitContextMenuOverlayProps = [
-  'triggerType',
   'xy',
   'alignment',
   'target',
@@ -19,5 +18,6 @@ export type ContextMenuOmitOverlayProps = Omit<OverlayProps, ContextMenuOmitOver
  * - mountOnEnter/unmountOnExit 默认为true
  * - direction 默认为OverlayDirectionEnum.rightStart
  * - springProps 默认去除了动画, 可以通过 immediate: false 开启
+ * - triggerType [UseTriggerTypeEnum.contextMenu]
  * */
 export interface ContextMenuProps extends ContextMenuOmitOverlayProps {}

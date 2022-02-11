@@ -1,6 +1,6 @@
 import { AnyFunction, BoundSize, ComponentBaseProps, TupleNumber } from '@lxjx/utils';
 import React from 'react';
-import { SetState, UseMountStateConfig } from '@lxjx/hooks';
+import { SetFormState, SetState, UseMountStateConfig } from '@lxjx/hooks';
 import { RenderApiComponentProps } from '@m78/render-api';
 import { useTrigger, UseTriggerConfig } from 'm78/hooks';
 import { TransitionBaseProps, TransitionType } from 'm78/transition';
@@ -48,13 +48,20 @@ export type OverlayDirectionKeys = keyof typeof OverlayDirectionEnum;
 /** 方向 */
 export type OverlayDirection = OverlayDirectionEnum | OverlayDirectionKeys;
 
+/** 自定义渲染器的参数 */
+export interface OverlayCustomMeta {
+  props: OverlayProps;
+  show: boolean;
+  setShow: SetFormState<boolean>;
+}
+
 /** overlay props */
 export interface OverlayProps
   extends ComponentBaseProps,
     UseMountStateConfig,
     RenderApiComponentProps<OverlayProps, OverlayInstance> {
-  /** 内容 */
-  content: React.ReactNode;
+  /** 内容, 可以通过传入渲染器来便捷的进行一些显示控制操作 */
+  content: React.ReactNode | ((meta: OverlayCustomMeta) => React.ReactNode);
   /**
    * 传入children时, 将其作为控制开关, 在非受控时会直接代理show的值，受控时通过onChange回传最新状态
    * children包含以下限制:

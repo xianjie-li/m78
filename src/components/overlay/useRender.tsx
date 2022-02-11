@@ -6,6 +6,7 @@ import { animated } from 'react-spring';
 import { _Context } from 'm78/overlay/types';
 import { _Methods } from 'm78/overlay/useMethods';
 import { _LifeCycle } from 'm78/overlay/useLifeCycle';
+import { isFunction } from '@lxjx/utils';
 import { _Arrow as Arrow } from './arrow';
 import { getArrowBasePosition, transitionConfig } from './common';
 import { _MountTrigger as MountTrigger } from './mountTrigger';
@@ -13,7 +14,7 @@ import { _MountTrigger as MountTrigger } from './mountTrigger';
 const AnimatedArrow = animated(Arrow);
 
 export function _useRender(ctx: _Context, methods: _Methods, lifeCycle: _LifeCycle) {
-  const { props, state, arrowSp, show, containerRef, overlaysMask, trigger, sp } = ctx;
+  const { props, state, arrowSp, show, setShow, containerRef, overlaysMask, trigger, sp } = ctx;
 
   function renderArrow() {
     if (!methods.isArrowEnable()) return false;
@@ -68,7 +69,13 @@ export function _useRender(ctx: _Context, methods: _Methods, lifeCycle: _LifeCyc
         onMouseLeave: methods.unActiveContent,
       },
       <>
-        {props.content}
+        {isFunction(props.content)
+          ? props.content({
+              props,
+              show,
+              setShow,
+            })
+          : props.content}
         <MountTrigger onMount={lifeCycle.onContentMount} onUnmount={lifeCycle.onContentUnmount} />
         {renderArrow()}
       </>,
