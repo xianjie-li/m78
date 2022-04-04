@@ -6,7 +6,7 @@ import { isArray, isFunction } from '@lxjx/utils';
 import { useFn } from '@lxjx/hooks';
 import { CaretRightOutlined } from 'm78/icon';
 import React from 'react';
-import { stopPropagation, SizeEnum } from 'm78/common';
+import { stopPropagation, Size } from 'm78/common';
 import { Check } from 'm78/check';
 import { DragPartialEvent } from 'm78/dnd';
 import { filterIncludeDisableChildNode, isTruthyArray } from './common';
@@ -217,7 +217,7 @@ export default function _useTreeItem({ data, treeState, props }: Props) {
     return (
       <span {...stopPropagation}>
         <Check
-          size={SizeEnum.small}
+          size={Size.small}
           type="checkbox"
           partial={checkIsPartial()}
           checked={isChecked}

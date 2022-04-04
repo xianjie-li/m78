@@ -4,7 +4,7 @@ import { Button } from 'm78/button';
 import { useForm } from 'm78/form';
 import { ListView, ListViewItem } from 'm78/list-view';
 import { Check } from 'm78/check';
-import { PositionEnum } from 'm78/common';
+import { Position } from 'm78/common';
 import { required } from '@m78/verify';
 import { Input } from 'm78/input';
 import { Row } from 'm78/layout';
@@ -38,7 +38,7 @@ const Demo = () => {
       </Drawer>
 
       <Drawer
-        position={PositionEnum.right}
+        position={Position.right}
         header={<div>标题</div>}
         style={{ width: 400 }}
         content={
@@ -62,7 +62,7 @@ const Demo = () => {
       </Drawer>
 
       <Drawer
-        position={PositionEnum.top}
+        position={Position.top}
         header={<div>标题</div>}
         style={{ width: 400 }}
         content={
@@ -86,7 +86,7 @@ const Demo = () => {
       </Drawer>
 
       <Drawer
-        position={PositionEnum.left}
+        position={Position.left}
         header={<div>标题</div>}
         content={
           <div style={{ width: 400, paddingTop: 12 }}>

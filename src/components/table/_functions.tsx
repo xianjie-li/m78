@@ -1,5 +1,5 @@
 import { AnyObject, isArray, isBoolean, isFunction, isString } from '@lxjx/utils';
-import { throwError, SizeEnum } from 'm78/common';
+import { throwError, Size } from 'm78/common';
 import { SetState, UseScrollMeta } from '@lxjx/hooks';
 import React from 'react';
 import { stringifyArrayField } from './_common';
@@ -8,10 +8,10 @@ import {
   _InnerState,
   _TableColumnInside,
   TableColumn,
-  TableColumnFixedEnum,
+  TableColumnFixed,
   TableMeta,
   TableProps,
-  TableSortEnum,
+  TableSort,
 } from './_types';
 
 /**
@@ -49,7 +49,7 @@ export function getField(obj: AnyObject, field?: string | string[]) {
 }
 
 /** 获取尺寸 */
-export function getSizeNumber(size?: SizeEnum) {
+export function getSizeNumber(size?: Size) {
   const sizeMap = {
     small: 32,
     large: 48,
@@ -107,12 +107,12 @@ export function columnsBeforeFormat({ columns, showColumns }: TableProps) {
       }
     }
 
-    if (col.fixed === TableColumnFixedEnum.left) {
+    if (col.fixed === TableColumnFixed.left) {
       fixedLeft.push({ ...col, index });
       return;
     }
 
-    if (col.fixed === TableColumnFixedEnum.right) {
+    if (col.fixed === TableColumnFixed.right) {
       fixedRight.push({ ...col, index });
       return;
     }
@@ -171,13 +171,13 @@ export function handleSortClick(ctx: _Context, column: TableColumn, key?: string
   const [sortValue, setSort] = sortState;
   const [sortKey, sortType] = sortValue || [];
 
-  let nextType = TableSortEnum.asc;
+  let nextType = TableSort.asc;
 
   // 排序类型为boolean值，取反，上一个排序key与当前key不符时设置默认值
   if (isBoolean(column.sort)) {
     if (sortKey === key) {
-      if (sortType === TableSortEnum.asc) nextType = TableSortEnum.desc;
-      else nextType = TableSortEnum.asc;
+      if (sortType === TableSort.asc) nextType = TableSort.desc;
+      else nextType = TableSort.asc;
     }
     setSort([key, nextType]);
   }

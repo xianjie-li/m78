@@ -3,12 +3,7 @@ import { Tile } from 'm78/layout';
 import { Ellipsis } from 'm78/ellipsis';
 import { RightOutlined } from '@ant-design/icons';
 import classNames from 'clsx';
-import {
-  ListViewItemProps,
-  ListViewItemStyleEnum,
-  ListViewProps,
-  ListViewTitleProps,
-} from './types';
+import { ListViewItemProps, ListViewItemStyle, ListViewProps, ListViewTitleProps } from './types';
 import context from './context';
 
 const Provider = context.Provider;
@@ -20,14 +15,14 @@ function InternalListView(props: ListViewProps) {
     size,
     effect = true,
     column,
-    itemStyle = ListViewItemStyleEnum,
+    itemStyle = ListViewItemStyle,
     className,
     style,
   } = props;
 
   const hasColumn = column && column > 1;
-  const isBorderItem = itemStyle === ListViewItemStyleEnum.border;
-  const isSplitItem = itemStyle === ListViewItemStyleEnum.splitLine;
+  const isBorderItem = itemStyle === ListViewItemStyle.border;
+  const isSplitItem = itemStyle === ListViewItemStyle.splitLine;
 
   return (
     <Provider value={props}>

@@ -38,7 +38,7 @@ const omitBubbleOverlayProps = ['xy', 'alignment'] as const;
 
 ```ts
 interface BubbleProps {
-  /** BubbleTypeEnum.tooltip | 气泡类型 */
+  /** BubbleType.tooltip | 气泡类型 */
   type?: BubbleType;
   /** 标题, 仅在popper模式下生效 */
   title?: React.ReactNode;
@@ -59,7 +59,7 @@ interface BubbleProps {
 可用类型
 
 ```ts
-enum BubbleTypeEnum {
+enum BubbleType {
   tooltip = 'tooltip',
   popper = 'popper',
   confirm = 'confirm',
@@ -80,7 +80,7 @@ const defaultProps = {
   zIndex: Z_INDEX_MESSAGE,
   namespace: 'BUBBLE',
   lockScroll: false,
-  direction: OverlayDirectionEnum.top,
+  direction: OverlayDirection.top,
   arrow: true,
   autoFocus: false,
 };

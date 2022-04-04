@@ -2,12 +2,12 @@ import React from 'react';
 import { email, required, string, useForm } from 'm78/form';
 import { Input } from 'm78/input';
 import { Button } from 'm78/button';
-import { DirectionEnum } from 'm78/common';
+import { Direction } from 'm78/common';
 import { Row } from 'm78/layout';
 
 const Base = () => {
   const Form = useForm({
-    layout: DirectionEnum.horizontal,
+    layout: Direction.horizontal,
   });
 
   Form.submitEvent.useEvent(values => {

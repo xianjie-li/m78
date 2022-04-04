@@ -1,5 +1,4 @@
 import React from 'react';
-import 'm78/article-box/style';
 
 import { Tab, TabItem } from 'm78/tab';
 

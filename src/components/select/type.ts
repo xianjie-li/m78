@@ -2,8 +2,8 @@ import React from 'react';
 import { FormLikeWithExtra } from '@lxjx/hooks';
 import { FullSizeKeys, StatusKeys } from 'm78/common';
 import { ComponentBaseProps } from '@lxjx/utils';
-import { OverlayDirection } from 'm78/overlay';
-import { UseTriggerType } from 'm78/hooks';
+import { OverlayDirectionUnion } from 'm78/overlay';
+import { UseTriggerTypeUnion } from 'm78/hooks';
 
 export interface SelectOptionItem {
   /** 类目名, 如果不传入，将使用value作为label */
@@ -113,9 +113,9 @@ export interface SelectProps<ValType, Options = any>
   /** 38 | 虚拟滚动需要确定的高度(px)，如果列表项通过其他配置修改过，通过此项设置修改后的高度 */
   listItemHeight?: number;
   /** bottomStart | 列表展开方向 */
-  direction?: OverlayDirection;
+  direction?: OverlayDirectionUnion;
   /** 'click' | 气泡的触发方式 */
-  triggerType?: UseTriggerType;
+  triggerType?: UseTriggerTypeUnion;
   /** 是否显示气泡箭头 */
   arrow?: boolean;
   /** true | 是否显示选中的勾选图标, 传入children时不显示 */

@@ -33,7 +33,7 @@ group:
 **`<Button>`**
 
 ```tsx | pure
-export enum TransitionTypeEnum {
+export enum TransitionType {
   fade = 'fade',
   zoom = 'zoom',
   punch = 'punch',

@@ -1,6 +1,5 @@
 import React from 'react';
 import { message } from 'm78/message';
-import 'm78/message/style';
 
 import { Button } from 'm78/button';
 import 'm78/button/style';

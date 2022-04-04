@@ -24,14 +24,14 @@ interface ListViewProps {
   /** 多列模式 */
   column?: number;
   /** 调整布局紧凑程度、字号等 */
-  size?: SizeEnum | Size;
+  size?: Size;
   /** false | 列表容器显示边框 */
   border?: boolean;
   /**
    * 'splitLine' | 项的基础样式类型
    * - splitLine模式在开启了多列的情况下无效
    * */
-  itemStyle?: 'splitLine' | 'border' | 'none' | ListViewItemStyleEnum;
+  itemStyle?: 'splitLine' | 'border' | 'none' | ListViewItemStyle;
   /** true | 列表项交互效果 */
   effect?: boolean;
 }

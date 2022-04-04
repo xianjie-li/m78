@@ -5,7 +5,7 @@ import { animated, config, to, useSpring } from 'react-spring';
 import cls from 'clsx';
 import { ErrorIcon, WindmillIcon } from 'm78/icon';
 import { Button } from 'm78/button';
-import { DirectionEnum } from 'm78/common';
+import { Direction } from 'm78/common';
 import { Spin } from 'm78/spin';
 import { If } from 'm78/fork';
 import { Spacer } from 'm78/layout';
@@ -25,7 +25,7 @@ export const defaultProps = {
   webkitScrollBar: true,
   progressBar: false,
   scrollFlag: false,
-  direction: DirectionEnum.vertical,
+  direction: Direction.vertical,
   pullUpThreshold: 120,
   pullDownTips: true,
 };
@@ -136,7 +136,7 @@ const Scroller = React.forwardRef<ScrollerRef, ScrollerProps>((props, ref) => {
     hideScrollbar && state.scrollBarHeight && !state.hasTouch ? -state.scrollBarHeight : undefined;
 
   // 是否为纵向滚动
-  const isVertical = direction === DirectionEnum.vertical;
+  const isVertical = direction === Direction.vertical;
 
   // 滚动值的设置行为，隐藏滚动条时应始终显示滚动条
   const scrollerValue = hideScrollbar ? 'scroll' : 'auto';

@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { CaretDownOutlined, CaretUpOutlined } from 'm78/icon';
 import { If } from 'm78/fork';
 import { Spin } from 'm78/spin';
-import { stopPropagation, SizeEnum } from 'm78/common';
+import { stopPropagation, Size } from 'm78/common';
 import { Check } from 'm78/check';
 import { DNDContext } from 'm78/dnd';
 import Cell from './_cell';
@@ -14,9 +14,9 @@ import {
   _Context,
   _TableCellProps,
   _TableColumnInside,
-  TableColumnFixedEnum,
+  TableColumnFixed,
   TableMeta,
-  TableSortEnum,
+  TableSort,
 } from './_types';
 import { getField, getInitTableMeta, handleSortClick, getColumnKey } from './_functions';
 import TableRender from './_table-render';
@@ -83,19 +83,11 @@ export function render(ctx: _Context) {
         >
           <div className="m78-table_cont" ref={virtualList.wrapRef}>
             {fmtColumns.fixedLeft.length > 0 && (
-              <TableRender
-                type={TableColumnFixedEnum.left}
-                column={fmtColumns.fixedLeft}
-                ctx={ctx}
-              />
+              <TableRender type={TableColumnFixed.left} column={fmtColumns.fixedLeft} ctx={ctx} />
             )}
             <TableRender isMain column={fmtColumns.column} ctx={ctx} innerRef={tableElRef} />
             {fmtColumns.fixedRight.length > 0 && (
-              <TableRender
-                type={TableColumnFixedEnum.right}
-                column={fmtColumns.fixedRight}
-                ctx={ctx}
-              />
+              <TableRender type={TableColumnFixed.right} column={fmtColumns.fixedRight} ctx={ctx} />
             )}
           </div>
         </div>
@@ -212,7 +204,7 @@ export function renderThead(ctx: _Context, columns: _TableColumnInside[]) {
     if (treeState.isMCheck) {
       return (
         <Check
-          size={SizeEnum.small}
+          size={Size.small}
           type="checkbox"
           partial={valChecker.partialChecked}
           checked={valChecker.allChecked}
@@ -385,10 +377,10 @@ export function renderCellFork(ctx: _Context, meta: TableMeta, cellProps: _Table
             sortType && sortKey === columnKey && `__${sortType}`,
           )}
         >
-          <If when={isBoolean(sort) || sort === TableSortEnum.asc}>
+          <If when={isBoolean(sort) || sort === TableSort.asc}>
             <CaretUpOutlined />
           </If>
-          <If when={isBoolean(sort) || sort === TableSortEnum.desc}>
+          <If when={isBoolean(sort) || sort === TableSort.desc}>
             <CaretDownOutlined />
           </If>
         </span>

@@ -106,10 +106,10 @@ $unitSpace: 8px;
     &.__textarea {
       padding: 0;
       height: auto !important;
-      line-height: 1.4;
 
       textarea {
         padding: 10px;
+        line-height: 1.4;
         min-height: calc(20px + 2em * 1.4);
         white-space: normal !important;
         word-break: break-all;

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Overlay, OverlayDirectionEnum } from 'm78/overlay';
-import { TransitionTypeEnum } from 'm78/transition';
+import { Overlay, OverlayDirection } from 'm78/overlay';
+import { TransitionType } from 'm78/transition';
 import { Button } from 'm78/button';
 import { config } from 'react-spring';
 
@@ -9,8 +9,8 @@ const Transition = () => {
     <div>
       <div>
         <Overlay
-          transitionType={TransitionTypeEnum.fade}
-          direction={OverlayDirectionEnum.top}
+          transitionType={TransitionType.fade}
+          direction={OverlayDirection.top}
           childrenAsTarget
           content={<div style={{ padding: 32, fontSize: 32 }}>气泡内容</div>}
         >
@@ -18,8 +18,8 @@ const Transition = () => {
         </Overlay>
 
         <Overlay
-          transitionType={TransitionTypeEnum.zoom}
-          direction={OverlayDirectionEnum.top}
+          transitionType={TransitionType.zoom}
+          direction={OverlayDirection.top}
           childrenAsTarget
           content={<div style={{ padding: 32, fontSize: 32 }}>气泡内容</div>}
         >
@@ -27,8 +27,8 @@ const Transition = () => {
         </Overlay>
 
         <Overlay
-          transitionType={TransitionTypeEnum.punch}
-          direction={OverlayDirectionEnum.top}
+          transitionType={TransitionType.punch}
+          direction={OverlayDirection.top}
           childrenAsTarget
           content={<div style={{ padding: 32, fontSize: 32 }}>气泡内容</div>}
         >
@@ -36,8 +36,8 @@ const Transition = () => {
         </Overlay>
 
         <Overlay
-          transitionType={TransitionTypeEnum.slideLeft}
-          direction={OverlayDirectionEnum.top}
+          transitionType={TransitionType.slideLeft}
+          direction={OverlayDirection.top}
           childrenAsTarget
           content={<div style={{ padding: 32, fontSize: 32 }}>气泡内容</div>}
         >
@@ -45,8 +45,8 @@ const Transition = () => {
         </Overlay>
 
         <Overlay
-          transitionType={TransitionTypeEnum.slideRight}
-          direction={OverlayDirectionEnum.top}
+          transitionType={TransitionType.slideRight}
+          direction={OverlayDirection.top}
           childrenAsTarget
           content={<div style={{ padding: 32, fontSize: 32 }}>气泡内容</div>}
         >
@@ -54,8 +54,8 @@ const Transition = () => {
         </Overlay>
 
         <Overlay
-          transitionType={TransitionTypeEnum.slideTop}
-          direction={OverlayDirectionEnum.top}
+          transitionType={TransitionType.slideTop}
+          direction={OverlayDirection.top}
           childrenAsTarget
           content={<div style={{ padding: 32, fontSize: 32 }}>气泡内容</div>}
         >
@@ -63,8 +63,8 @@ const Transition = () => {
         </Overlay>
 
         <Overlay
-          transitionType={TransitionTypeEnum.slideBottom}
-          direction={OverlayDirectionEnum.top}
+          transitionType={TransitionType.slideBottom}
+          direction={OverlayDirection.top}
           childrenAsTarget
           content={<div style={{ padding: 32, fontSize: 32 }}>气泡内容</div>}
         >
@@ -72,8 +72,8 @@ const Transition = () => {
         </Overlay>
 
         <Overlay
-          transitionType={TransitionTypeEnum.bounce}
-          direction={OverlayDirectionEnum.top}
+          transitionType={TransitionType.bounce}
+          direction={OverlayDirection.top}
           childrenAsTarget
           content={<div style={{ padding: 32, fontSize: 32 }}>气泡内容</div>}
         >
@@ -86,8 +86,8 @@ const Transition = () => {
           springProps={{
             config: config.wobbly,
           }}
-          transitionType={TransitionTypeEnum.bounce}
-          direction={OverlayDirectionEnum.top}
+          transitionType={TransitionType.bounce}
+          direction={OverlayDirection.top}
           childrenAsTarget
           content={<div style={{ padding: 32, fontSize: 32 }}>气泡内容</div>}
         >

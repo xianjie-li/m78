@@ -1,8 +1,8 @@
 import { AnyFunction, AnyObject, BoundSize, isNumber, omit, TupleNumber } from '@lxjx/utils';
-import { TransitionTypeEnum } from 'm78/transition';
+import { TransitionType } from 'm78/transition';
 import { Z_INDEX_MODAL } from 'm78/common';
 import clamp from 'lodash/clamp';
-import { UseTriggerEvent, UseTriggerTypeEnum } from 'm78/hooks';
+import { UseTriggerEvent, UseTriggerType } from 'm78/hooks';
 import { useSame } from '@lxjx/hooks';
 import {
   _ArrowBasePosition,
@@ -11,8 +11,8 @@ import {
   _DirectionMeta,
   _DirectionMetaMap,
   omitApiProps,
+  OverlayDirectionUnion,
   OverlayDirection,
-  OverlayDirectionEnum,
   OverlayDirectionKeys,
   OverlayProps,
   OverlayRenderOption,
@@ -22,14 +22,14 @@ export const defaultAlignment: TupleNumber = [0.5, 0.5];
 
 export const defaultProps = {
   namespace: 'overlay',
-  transitionType: TransitionTypeEnum.zoom,
+  transitionType: TransitionType.zoom,
   zIndex: Z_INDEX_MODAL,
   clickAwayClosable: true,
   clickAwayQueue: true,
   lockScroll: true,
   arrowSize: [26, 8],
   offset: 0,
-  triggerType: UseTriggerTypeEnum.click,
+  triggerType: UseTriggerType.click,
   autoFocus: true,
 };
 
@@ -102,12 +102,12 @@ export function useOverlaysClickAway<Meta = AnyObject>(config?: SameConfig) {
 
 /** useTrigger回调 */
 export function onTrigger(e: UseTriggerEvent, setShow: AnyFunction, self: _Context['self']) {
-  if (e.type === UseTriggerTypeEnum.click) {
+  if (e.type === UseTriggerType.click) {
     setShow((prev: any) => !prev);
   }
 
-  if (e.type === UseTriggerTypeEnum.focus || e.type === UseTriggerTypeEnum.active) {
-    self.currentActiveStatus = e.type === UseTriggerTypeEnum.focus ? e.focus : e.active;
+  if (e.type === UseTriggerType.focus || e.type === UseTriggerType.active) {
+    self.currentActiveStatus = e.type === UseTriggerType.focus ? e.focus : e.active;
 
     if (!self.activeContent) {
       setShow(self.currentActiveStatus);
@@ -116,7 +116,7 @@ export function onTrigger(e: UseTriggerEvent, setShow: AnyFunction, self: _Conte
     }
   }
 
-  if (e.type === UseTriggerTypeEnum.contextMenu) {
+  if (e.type === UseTriggerType.contextMenu) {
     setShow(true);
   }
 }
@@ -143,21 +143,21 @@ export function getDirections(
     top: _t,
     left: xCenter,
     valid: _t >= clampBound.top,
-    direction: OverlayDirectionEnum.top,
+    direction: OverlayDirection.top,
   };
 
   const topStart = {
     top: top.top,
     left: t.left,
     valid: top.valid,
-    direction: OverlayDirectionEnum.topStart,
+    direction: OverlayDirection.topStart,
   };
 
   const topEnd = {
     top: top.top,
     left: t.left + wDiff,
     valid: top.valid,
-    direction: OverlayDirectionEnum.topEnd,
+    direction: OverlayDirection.topEnd,
   };
 
   const _bt = t.top + t.height + offset;
@@ -166,21 +166,21 @@ export function getDirections(
     top: _bt,
     left: top.left,
     valid: _bt + c.height <= clampBound.bottom,
-    direction: OverlayDirectionEnum.bottom,
+    direction: OverlayDirection.bottom,
   };
 
   const bottomStart = {
     top: bottom.top,
     left: topStart.left,
     valid: bottom.valid,
-    direction: OverlayDirectionEnum.bottomStart,
+    direction: OverlayDirection.bottomStart,
   };
 
   const bottomEnd = {
     top: bottom.top,
     left: topEnd.left,
     valid: bottom.valid,
-    direction: OverlayDirectionEnum.bottomEnd,
+    direction: OverlayDirection.bottomEnd,
   };
 
   const _l = t.left - c.width - offset;
@@ -189,21 +189,21 @@ export function getDirections(
     top: yCenter,
     left: t.left - c.width - offset,
     valid: _l >= clampBound.left,
-    direction: OverlayDirectionEnum.left,
+    direction: OverlayDirection.left,
   };
 
   const leftStart = {
     top: t.top,
     left: left.left,
     valid: left.valid,
-    direction: OverlayDirectionEnum.leftStart,
+    direction: OverlayDirection.leftStart,
   };
 
   const leftEnd = {
     top: t.top + hDiff,
     left: left.left,
     valid: left.valid,
-    direction: OverlayDirectionEnum.leftEnd,
+    direction: OverlayDirection.leftEnd,
   };
 
   const _r = t.left + t.width + offset;
@@ -212,21 +212,21 @@ export function getDirections(
     top: yCenter,
     left: _r,
     valid: _r + c.width <= clampBound.right,
-    direction: OverlayDirectionEnum.right,
+    direction: OverlayDirection.right,
   };
 
   const rightStart = {
     top: t.top,
     left: right.left,
     valid: right.valid,
-    direction: OverlayDirectionEnum.rightStart,
+    direction: OverlayDirection.rightStart,
   };
 
   const rightEnd = {
     top: t.top + hDiff,
     left: right.left,
     valid: right.valid,
-    direction: OverlayDirectionEnum.rightEnd,
+    direction: OverlayDirection.rightEnd,
   };
 
   return {
@@ -422,13 +422,13 @@ export function preventOverflow(
  * 获取箭头的的基础位置
  * */
 export function getArrowBasePosition(
-  direction: OverlayDirection,
+  direction: OverlayDirectionUnion,
   [w, h]: NonNullable<OverlayProps['arrowSize']>,
 ): _ArrowBasePosition {
   // 旋转后的偏移值
   const offset = (w - h) / 2;
 
-  if (direction.startsWith(OverlayDirectionEnum.top)) {
+  if (direction.startsWith(OverlayDirection.top)) {
     return {
       bottom: -h,
       left: 0,
@@ -436,7 +436,7 @@ export function getArrowBasePosition(
     };
   }
 
-  if (direction.startsWith(OverlayDirectionEnum.bottom)) {
+  if (direction.startsWith(OverlayDirection.bottom)) {
     return {
       top: -h,
       left: 0,
@@ -444,7 +444,7 @@ export function getArrowBasePosition(
     };
   }
 
-  if (direction.startsWith(OverlayDirectionEnum.left)) {
+  if (direction.startsWith(OverlayDirection.left)) {
     return {
       top: offset,
       right: -offset - h,
@@ -452,7 +452,7 @@ export function getArrowBasePosition(
     };
   }
 
-  if (direction.startsWith(OverlayDirectionEnum.right)) {
+  if (direction.startsWith(OverlayDirection.right)) {
     return {
       top: offset,
       left: -offset - h,
@@ -464,31 +464,27 @@ export function getArrowBasePosition(
 }
 
 /** 指定方向是否是x轴 */
-export function isX(direction: OverlayDirection) {
+export function isX(direction: OverlayDirectionUnion) {
   return (
-    direction.startsWith(OverlayDirectionEnum.top) ||
-    direction.startsWith(OverlayDirectionEnum.bottom)
+    direction.startsWith(OverlayDirection.top) || direction.startsWith(OverlayDirection.bottom)
   );
 }
 
 /** 指定的方向是否是右或者上 */
-export function isRightOrTop(direction: OverlayDirection) {
-  return (
-    direction.startsWith(OverlayDirectionEnum.right) ||
-    direction.startsWith(OverlayDirectionEnum.top)
-  );
+export function isRightOrTop(direction: OverlayDirectionUnion) {
+  return direction.startsWith(OverlayDirection.right) || direction.startsWith(OverlayDirection.top);
 }
 
 /** 是否为非Start和End的方向 */
-export function isLTRB(direction: OverlayDirection) {
+export function isLTRB(direction: OverlayDirectionUnion) {
   return !/(End|Start)$/.test(direction);
 }
 
-export function isStart(direction: OverlayDirection) {
+export function isStart(direction: OverlayDirectionUnion) {
   return /Start$/.test(direction);
 }
 
-export function isEnd(direction: OverlayDirection) {
+export function isEnd(direction: OverlayDirectionUnion) {
   return /End$/.test(direction);
 }
 

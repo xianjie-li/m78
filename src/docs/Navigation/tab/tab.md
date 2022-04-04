@@ -53,9 +53,9 @@ interface TabProps extends ComponentBaseProps, FormLike<string | number> {
   /** 一组TabItem */
   children?: TabItemElement[] | TabItemElement;
   /** tab的尺寸 */
-  size?: SizeEnum;
+  size?: Size;
   /** tab的位置 */
-  position?: PositionEnum;
+  position?: Position;
   /** tab项的每一项平分宽度，如果tab过多不建议开启, position为left和right时无效 */
   flexible?: boolean;
   /** 高度，position为left和right时必传, 横向切换时此配置无效 */

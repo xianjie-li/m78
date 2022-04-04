@@ -1,5 +1,5 @@
 import React from 'react';
-import { Overlay, OverlayDirectionEnum } from 'm78/overlay';
+import { Overlay, OverlayDirection } from 'm78/overlay';
 import { Button } from 'm78/button';
 import sty from './nest.module.scss';
 
@@ -9,7 +9,7 @@ const Nest = () => {
 
     return (
       <Overlay
-        direction={OverlayDirectionEnum.rightStart}
+        direction={OverlayDirection.rightStart}
         content={
           <div className={sty.list}>
             {renderNest(<div className={sty.listItem}>选项1</div>, index + 1)}
@@ -28,7 +28,7 @@ const Nest = () => {
   return (
     <div>
       <Overlay
-        direction={OverlayDirectionEnum.top}
+        direction={OverlayDirection.top}
         content={
           <div className={sty.list}>
             {renderNest(<div className={sty.listItem}>选项1</div>)}

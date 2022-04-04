@@ -1,13 +1,13 @@
 import React, { useMemo, useState } from 'react';
 import { defer, omit, TupleNumber } from '@lxjx/utils';
-import { useTrigger, UseTriggerTypeEnum } from 'm78/hooks';
-import { Overlay, OverlayDirectionEnum } from 'm78/overlay';
+import { useTrigger, UseTriggerType } from 'm78/hooks';
+import { Overlay, OverlayDirection } from 'm78/overlay';
 import clsx from 'clsx';
 import { useFormState } from '@lxjx/hooks';
-import { TransitionTypeEnum } from 'm78/transition';
+import { TransitionType } from 'm78/transition';
 import { ContextMenuProps, omitContextMenuOverlayProps } from './types';
 
-const defaultTriggerType = [UseTriggerTypeEnum.contextMenu];
+const defaultTriggerType = [UseTriggerType.contextMenu];
 
 const _ContextMenu = (props: ContextMenuProps) => {
   const { content, children, triggerType = defaultTriggerType } = props;
@@ -40,12 +40,12 @@ const _ContextMenu = (props: ContextMenuProps) => {
       <Overlay
         mountOnEnter
         unmountOnExit
-        direction={OverlayDirectionEnum.rightStart}
+        direction={OverlayDirection.rightStart}
         {...overlayProps}
         xy={xy}
         show={show}
         onChange={setShow}
-        transitionType={TransitionTypeEnum.fade}
+        transitionType={TransitionType.fade}
         content={
           <div
             className={clsx('m78-context-menu')}

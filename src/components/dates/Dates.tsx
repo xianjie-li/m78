@@ -5,8 +5,8 @@ import { useFormState, useSelf, useSetState } from '@lxjx/hooks';
 import moment, { Moment } from 'moment';
 import cls from 'clsx';
 
-import { Bubble, BubbleTypeEnum } from 'm78/bubble';
-import { Overlay, OverlayDirectionEnum } from 'm78/overlay';
+import { Bubble, BubbleType } from 'm78/bubble';
+import { Overlay, OverlayDirection } from 'm78/overlay';
 import { defaultFormat, parseValue, pickerTypeWrap, placeholderMaps } from './utils';
 import {
   renderPresetDates,
@@ -181,9 +181,9 @@ function Dates(props: DatesProps | DatesRangeProps) {
         className="m78-dates_popper"
         offset={4}
         content={renderMain()}
-        direction={OverlayDirectionEnum.bottomStart}
+        direction={OverlayDirection.bottomStart}
         show={state.show}
-        type={BubbleTypeEnum.popper}
+        type={BubbleType.popper}
         disabled={disabled}
         onChange={_show => {
           setState({

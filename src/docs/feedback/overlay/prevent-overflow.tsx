@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Overlay, OverlayDirectionEnum } from 'm78/overlay';
+import { Overlay, OverlayDirection } from 'm78/overlay';
 import { Button } from 'm78/button';
 
 const PreventOverflow = () => {
@@ -23,7 +23,7 @@ const PreventOverflow = () => {
     >
       <Overlay
         show
-        direction={OverlayDirectionEnum.top}
+        direction={OverlayDirection.top}
         arrow
         childrenAsTarget
         lockScroll={false}

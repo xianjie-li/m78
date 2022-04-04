@@ -3,7 +3,7 @@ import React from 'react';
 import { SetFormState, SetState, UseMountStateConfig } from '@lxjx/hooks';
 import { RenderApiComponentProps } from '@m78/render-api';
 import { useTrigger, UseTriggerConfig } from 'm78/hooks';
-import { TransitionBaseProps, TransitionType } from 'm78/transition';
+import { TransitionBaseProps, TransitionTypeUnion } from 'm78/transition';
 import { SpringValues } from '@react-spring/core/dist/declarations/src/types';
 import { SpringRef } from 'react-spring';
 import { defaultProps, useOverlaysClickAway, useOverlaysMask } from './common';
@@ -28,7 +28,7 @@ export type OverlayApiOmitKeys = typeof omitApiProps[number];
 /** 可用的目标类型 */
 export type OverlayTarget = BoundSize | React.RefObject<HTMLElement> | HTMLElement;
 
-export enum OverlayDirectionEnum {
+export enum OverlayDirection {
   topStart = 'topStart',
   top = 'top',
   topEnd = 'topEnd',
@@ -43,10 +43,10 @@ export enum OverlayDirectionEnum {
   rightEnd = 'rightEnd',
 }
 
-export type OverlayDirectionKeys = keyof typeof OverlayDirectionEnum;
+export type OverlayDirectionKeys = keyof typeof OverlayDirection;
 
 /** 方向 */
-export type OverlayDirection = OverlayDirectionEnum | OverlayDirectionKeys;
+export type OverlayDirectionUnion = OverlayDirection | OverlayDirectionKeys;
 
 /** 自定义渲染器的参数 */
 export interface OverlayCustomMeta {
@@ -141,7 +141,7 @@ export interface OverlayProps
 
   // ######## 动画 ########
   /** 'zoom' | 指定内置动画类型 */
-  transitionType?: TransitionType;
+  transitionType?: TransitionTypeUnion;
   /** 自定义进出场动画, 此项会覆盖transitionType配置 */
   transition?: Pick<TransitionBaseProps, 'to' | 'from'>;
   /**
@@ -152,7 +152,7 @@ export interface OverlayProps
 
   // ######## 气泡 ########
   /** 挂载方向 */
-  direction?: OverlayDirection;
+  direction?: OverlayDirectionUnion;
   /** 显示箭头, 仅在指定了direction时生效 */
   arrow?: boolean;
   /** [36, 10] | 箭头尺寸 */
@@ -197,7 +197,7 @@ export interface _Context {
   setShow: AnyFunction;
   state: {
     /** 最后使用的方向 */
-    lastDirection?: OverlayDirection;
+    lastDirection?: OverlayDirectionUnion;
     /** 所有滚动父级 */
     scrollParents: HTMLElement[];
   };
@@ -242,11 +242,11 @@ export interface _DirectionMeta {
   top: number;
   /** 该方向是否可用 */
   valid: boolean;
-  direction: OverlayDirection;
+  direction: OverlayDirectionUnion;
 }
 
 export type _DirectionMetaMap = {
-  [key in OverlayDirectionEnum]: _DirectionMeta;
+  [key in OverlayDirection]: _DirectionMeta;
 };
 
 /** 合并默认props的props, 避免确定已存在的属性访问出现类型错误 */

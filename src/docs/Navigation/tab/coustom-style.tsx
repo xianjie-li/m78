@@ -1,9 +1,8 @@
 import React from 'react';
-import 'm78/article-box/style';
 
 import { Tab, TabItem } from 'm78/tab';
 
-import { PositionEnum, SizeEnum } from 'm78/common';
+import { Position, Size } from 'm78/common';
 import { Divider } from 'm78/layout';
 import { AlertOutlined, HomeOutlined, RedEnvelopeOutlined, UserOutlined } from 'm78/icon';
 import sty from './sty.module.scss';
@@ -11,7 +10,7 @@ import sty from './sty.module.scss';
 const Demo = () => (
   <div>
     <h3>一个带tab描述的示例</h3>
-    <Tab size={SizeEnum.large}>
+    <Tab size={Size.large}>
       <TabItem
         label={
           <div>
@@ -79,8 +78,8 @@ const Demo = () => (
         lineHeight: 1.3,
         boxShadow: '0 -1px 4px rgba(0,0,0,0.2)',
       }}
-      size={SizeEnum.large}
-      position={PositionEnum.bottom}
+      size={Size.large}
+      position={Position.bottom}
       flexible
       noSplitLine
     >

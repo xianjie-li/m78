@@ -1,10 +1,31 @@
 
-### 1.0.0-beta.34
-**✨ feat**
-- 'scroller' component reduces API complexity by eliminating the number of entries displayed during pull-up loading
+## 更新日志
 
-### 1.0.0-beta.33
-**🛠 fix**
-- `ImagePreview` prevents scroll bars from appearing when dragging, and optimizes click-to-close behavior
-- Resolve react warning when `Check` component triggers an update through onchange
-- fix the display exception of the spatiotemporal data of the first loading of the `Scroller`
+**更名**
+BubbleTypeEnum -> BubbleType
+BubbleType -> BubbleTypeUnion
+AuthTypeEnum -> AuthType
+StatusEnum -> Status
+Status -> StatusUnion
+SizeEnum -> Size
+Size -> SizeUnion
+FullSizeEnum -> FullSize
+FullSize -> FullSizeUnion
+PositionEnum -> Position
+Position -> PositionUnion
+DirectionEnum -> Direction
+Direction -> DirectionUnion
+TableColumnFixedEnum -> TableColumnFixed
+OverlayDirection -> OverlayDirectionUnion
+OverlayDirectionEnum -> OverlayDirection
+ButtonColorEnum -> ButtonColor
+TransitionTypeEnum -> TransitionType
+TransitionType -> TransitionTypeUnion
+UseTriggerType -> UseTriggerTypeUnion
+UseTriggerTypeEnum -> UseTriggerType
+ListViewItemStyleEnum -> ListViewItemStyle
+
+**wine**
+依赖升级
+WineDragPositionEnum -> WineDragPosition
+

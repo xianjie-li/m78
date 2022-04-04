@@ -4,7 +4,7 @@ import { LoadingOutlined } from 'm78/icon';
 import { useTreeItem, TreeValueType } from 'm78/tree';
 import { areEqual } from 'react-window';
 import { Check } from 'm78/check';
-import { SizeEnum } from 'm78/common';
+import { Size } from 'm78/common';
 import { DND, DragBonus } from 'm78/dnd';
 import { _Context, _TableColumnInside, TableTreeNode } from './_types';
 import { getInitTableMeta, handleRowHover } from './_functions';
@@ -92,7 +92,7 @@ const _BodyRowItem = ({ data, index, ctx, columns, props }: Props) => {
       return (
         <span>
           <Check
-            size={SizeEnum.small}
+            size={Size.small}
             type="radio"
             checked={itemState.isChecked}
             disabled={itemState.isDisabled}

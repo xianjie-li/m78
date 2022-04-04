@@ -1,9 +1,8 @@
 import React from 'react';
-import 'm78/article-box/style';
 
 import { Tab, TabItem } from 'm78/tab';
 
-import { PositionEnum } from 'm78/common';
+import { Position } from 'm78/common';
 import { Spacer } from 'm78/layout';
 import sty from './sty.module.scss';
 
@@ -35,7 +34,7 @@ const Demo = () => (
 
     <Spacer height={60} />
 
-    <Tab position={PositionEnum.left} height={300}>
+    <Tab position={Position.left} height={300}>
       <TabItem label="Vanilla JS" value={1}>
         <div className={sty.H300BorderBox}>一个功能强大，使用及其广泛的框架</div>
       </TabItem>
@@ -61,7 +60,7 @@ const Demo = () => (
 
     <Spacer height={60} />
 
-    <Tab position={PositionEnum.bottom}>
+    <Tab position={Position.bottom}>
       <TabItem label="Vanilla JS" value={1}>
         <div className={sty.H300BorderBox}>一个功能强大，使用及其广泛的框架</div>
       </TabItem>
@@ -87,7 +86,7 @@ const Demo = () => (
 
     <Spacer height={60} />
 
-    <Tab position={PositionEnum.right} height={300}>
+    <Tab position={Position.right} height={300}>
       <TabItem label="Vanilla JS" value={1}>
         <div className={sty.H300BorderBox}>一个功能强大，使用及其广泛的框架</div>
       </TabItem>

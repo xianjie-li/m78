@@ -3,7 +3,7 @@ import { Table, TableColumns } from 'm78/table';
 import { Select } from 'm78/select';
 import { Row } from 'm78/layout';
 import { Input } from 'm78/input';
-import { Bubble, BubbleTypeEnum } from 'm78/bubble';
+import { Bubble, BubbleType } from 'm78/bubble';
 import { dataSource } from './dataSource';
 
 const columns: TableColumns = [
@@ -62,7 +62,7 @@ const columns: TableColumns = [
     extra: ({ ctx }) => {
       return (
         <Bubble
-          type={BubbleTypeEnum.popper}
+          type={BubbleType.popper}
           content={
             <Row crossAlign="center">
               <span className="mr-8">星级: </span>

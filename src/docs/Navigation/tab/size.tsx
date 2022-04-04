@@ -1,15 +1,14 @@
 import React from 'react';
-import 'm78/article-box/style';
 
 import { Tab, TabItem } from 'm78/tab';
 
-import { SizeEnum } from 'm78/common';
+import { Size } from 'm78/common';
 import { Spacer } from 'm78/layout';
 import sty from './sty.module.scss';
 
 const Demo = () => (
   <div>
-    <Tab size={SizeEnum.small}>
+    <Tab size={Size.small}>
       <TabItem label="Vanilla JS" value={1}>
         <div className={sty.H300BorderBox}>一个功能强大，使用及其广泛的框架</div>
       </TabItem>
@@ -61,7 +60,7 @@ const Demo = () => (
 
     <Spacer height={60} />
 
-    <Tab size={SizeEnum.large}>
+    <Tab size={Size.large}>
       <TabItem label="Vanilla JS" value={1}>
         <div className={sty.H300BorderBox}>一个功能强大，使用及其广泛的框架</div>
       </TabItem>

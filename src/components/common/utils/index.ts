@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FullSizeEnum } from 'm78/common';
+import { FullSize } from 'm78/common';
 
 /** 与style库同步，用于js代码的常用屏幕尺寸 */
 export const SM = 576;
@@ -16,9 +16,9 @@ export const Z_INDEX_MESSAGE = 2200;
 /** size */
 export const SIZE_MAP = {
   default: 32,
-  [FullSizeEnum.small]: 24,
-  [FullSizeEnum.large]: 40,
-  [FullSizeEnum.big]: 60,
+  [FullSize.small]: 24,
+  [FullSize.large]: 40,
+  [FullSize.big]: 60,
 };
 
 /** 禁止冒泡的便捷扩展对象 */

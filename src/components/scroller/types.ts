@@ -2,7 +2,7 @@ import React from 'react';
 import { useScroll, UseScrollMeta, SetState } from '@lxjx/hooks';
 
 import { Tips } from 'm78/tips';
-import { DirectionEnum } from 'm78/common';
+import { Direction } from 'm78/common';
 import { AnyFunction, ComponentBaseProps } from '@lxjx/utils';
 import { PullDownStatus, PullUpStatus } from './common';
 import { defaultProps } from './scroller';
@@ -64,7 +64,7 @@ export interface Share {
 
 export interface ScrollerProps extends ComponentBaseProps {
   /** Direction.vertical | 滚动方向 */
-  direction?: DirectionEnum;
+  direction?: Direction;
   /** 内容, 是否可滚动的依据是滚动内容尺寸大于滚动容器尺寸 */
   children?: React.ReactNode;
   /** 滚动时触发 */

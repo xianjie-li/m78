@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { config, Transition, TransitionTypeEnum } from 'm78/transition';
+import { config, Transition, TransitionType } from 'm78/transition';
 import { Button } from 'm78/button';
 import sty from './style.module.scss';
 
@@ -19,7 +19,7 @@ const Config = () => {
           springProps={{
             config: config.wobbly,
           }}
-          type={TransitionTypeEnum.slideBottom}
+          type={TransitionType.slideBottom}
           className={sty.box}
         >
           wobbly
@@ -31,7 +31,7 @@ const Config = () => {
           springProps={{
             config: config.default,
           }}
-          type={TransitionTypeEnum.slideBottom}
+          type={TransitionType.slideBottom}
           className={sty.box}
         >
           default
@@ -44,7 +44,7 @@ const Config = () => {
           springProps={{
             config: config.gentle,
           }}
-          type={TransitionTypeEnum.slideBottom}
+          type={TransitionType.slideBottom}
           className={sty.box}
         >
           gentle
@@ -57,7 +57,7 @@ const Config = () => {
           springProps={{
             config: config.molasses,
           }}
-          type={TransitionTypeEnum.slideBottom}
+          type={TransitionType.slideBottom}
           className={sty.box}
         >
           molasses
@@ -70,7 +70,7 @@ const Config = () => {
           springProps={{
             config: config.slow,
           }}
-          type={TransitionTypeEnum.slideBottom}
+          type={TransitionType.slideBottom}
           className={sty.box}
         >
           slow
@@ -83,7 +83,7 @@ const Config = () => {
           springProps={{
             config: config.stiff,
           }}
-          type={TransitionTypeEnum.slideBottom}
+          type={TransitionType.slideBottom}
           className={sty.box}
         >
           stiff
@@ -98,7 +98,7 @@ const Config = () => {
               config: config.stiff,
               loop: { reverse: true },
             }}
-            type={TransitionTypeEnum.slideBottom}
+            type={TransitionType.slideBottom}
             className={sty.box}
           >
             loop

@@ -12,7 +12,7 @@ import cls from 'clsx';
 
 import { useSelf, useMeasure } from '@lxjx/hooks';
 import { Button } from 'm78/button';
-import { SizeEnum } from 'm78/common';
+import { Size } from 'm78/common';
 import { MessageProps } from './type';
 
 function MessageWrap({ children }: any) {
@@ -144,7 +144,7 @@ const Message: React.FC<MessageProps> = ({
         </Toggle>
         <If when={loading}>
           <div className="m78-message_loading">
-            <Spin show text={content} size={SizeEnum.large} />
+            <Spin show text={content} size={Size.large} />
           </div>
         </If>
         <If when={!loading}>

@@ -1,60 +1,60 @@
 import React from 'react';
 
 /** 通用状态类型 */
-export enum StatusEnum {
+export enum Status {
   info = 'info',
   success = 'success',
   warning = 'warning',
   error = 'error',
 }
 
-export type StatusKeys = keyof typeof StatusEnum;
+export type StatusKeys = keyof typeof Status;
 
-export type Status = StatusEnum | StatusKeys;
+export type StatusUnion = Status | StatusKeys;
 
 /** 通用尺寸类型 40 | 32 | 24 */
-export enum SizeEnum {
+export enum Size {
   large = 'large',
   small = 'small',
 }
 
-export type SizeKeys = keyof typeof SizeEnum;
+export type SizeKeys = keyof typeof Size;
 
-export type Size = SizeEnum | SizeKeys;
+export type SizeUnion = Size | SizeKeys;
 
 /** 通用完整尺寸类型 */
 export type FullSizeKeys = 'big' | SizeKeys;
 
 /** 通用完整尺寸类型  */
-export enum FullSizeEnum {
+export enum FullSize {
   large = 'large',
   small = 'small',
   big = 'big',
 }
 
-export type FullSize = FullSizeEnum | FullSizeKeys;
+export type FullSizeUnion = FullSize | FullSizeKeys;
 
 /** 通用方向类型 */
-export enum PositionEnum {
+export enum Position {
   left = 'left',
   top = 'top',
   right = 'right',
   bottom = 'bottom',
 }
 
-export type PositionKeys = keyof typeof PositionEnum;
+export type PositionKeys = keyof typeof Position;
 
-export type Position = PositionEnum | PositionKeys;
+export type PositionUnion = Position | PositionKeys;
 
 /** 通用轴类型 */
-export enum DirectionEnum {
+export enum Direction {
   horizontal = 'horizontal',
   vertical = 'vertical',
 }
 
-export type DirectionKeys = keyof typeof DirectionEnum;
+export type DirectionKeys = keyof typeof Direction;
 
-export type Direction = DirectionEnum | DirectionKeys;
+export type DirectionUnion = Direction | DirectionKeys;
 
 /** 通用数据源类型 */
 export interface DataSourceItem<ValType = any> {

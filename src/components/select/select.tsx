@@ -14,9 +14,9 @@ import { VariableSizeList as FixedList } from 'react-window';
 import cls from 'clsx';
 
 import { useCheck, useFn, useFormState, useSelf, useSetState } from '@lxjx/hooks';
-import { OverlayDirectionEnum, OverlayInstance } from 'm78/overlay';
-import { UseTriggerTypeEnum } from 'm78/hooks';
-import { Bubble, BubbleTypeEnum } from 'm78/bubble';
+import { OverlayDirection, OverlayInstance } from 'm78/overlay';
+import { UseTriggerType } from 'm78/hooks';
+import { Bubble, BubbleType } from 'm78/bubble';
 import { RenderItemData, SelectCustomTagMeta, SelectProps } from './type';
 import {
   buildInTagRender,
@@ -64,8 +64,8 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
     debounceTime = 300,
     onSearch,
     onAddTag,
-    direction = OverlayDirectionEnum.bottomStart,
-    triggerType = UseTriggerTypeEnum.click,
+    direction = OverlayDirection.bottomStart,
+    triggerType = UseTriggerType.click,
     arrow,
     checkIcon = true,
     children,
@@ -456,7 +456,7 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
 
   return (
     <Bubble
-      type={BubbleTypeEnum.popper}
+      type={BubbleType.popper}
       offset={arrow ? 12 : 4}
       style={listStyle}
       className={cls('m78 m78-select_popper', listClassName, {

@@ -1,11 +1,9 @@
 import React from 'react';
 import { Viewer, ViewerRef } from 'm78/viewer';
-import 'm78/viewer/style';
 
 import 'm78/drawer/style';
 
 import { Button } from 'm78/button';
-import 'm78/button/style';
 
 import { getRandRange } from '@lxjx/utils';
 import img1 from '@/mock/img/333.jpg';

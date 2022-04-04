@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react';
 import { NamePath, AsyncValidator, Validator } from '@m78/verify';
 import { ComponentBaseProps } from '@lxjx/utils';
 import { CustomEventWithHook } from '@lxjx/hooks';
-import { Direction } from 'm78/common';
+import { DirectionUnion } from 'm78/common';
 import {
   VField,
   VFieldConfig,
@@ -120,7 +120,7 @@ export interface FieldProps<Val = any>
   /** 额外内容, 常用语说明文本 */
   extra?: React.ReactNode;
   /** 'vertical' | 表单的布局方向 */
-  layout?: Direction;
+  layout?: DirectionUnion;
   /** 隐藏必填标记 */
   hideRequiredMark?: boolean;
   /** 通过气泡来显示验证提示, extra等, 用于需要错误提示和extra不会破坏布局空间的情况 */

@@ -217,11 +217,11 @@ interface TableProps {
    * - border: 边框型
    * - regular: 常规型，行直接带分割线
    * */
-  divideStyle?: TableDivideStyleKeys | TableDivideStyleEnum;
+  divideStyle?: TableDivideStyleKeys | TableDivideStyle;
   /** true | 显示条纹背景 */
   stripe?: boolean;
   /** 表格尺寸 */
-  size?: SizeKeys | SizeEnum;
+  size?: SizeKeys | Size;
   /** 300px 单元格最大宽度, 用于防止某一列内容过长占用大量位置导致很差的显示效果 */
   cellMaxWidth?: string | number;
   /** 单元格未获取到有效值时(checkFieldValid()返回false), 用于显示的回退内容, 默认显示 “-” */
@@ -330,7 +330,7 @@ interface TableDataSourceItem {
    * */
   maxWidth?: string | number;
   /** 固定列到左侧或右侧, 如果声明了fixed的列在常规列中间，它会根据固定方向移动到表格两侧渲染 */
-  fixed?: TableColumnFixedKeys | TableColumnFixedEnum;
+  fixed?: TableColumnFixedKeys | TableColumnFixed;
   /**
    * 为该列所有单元格设置的props, 支持td标签的所有prop
    * - 可通过该配置为整列同时设置样式、对齐、事件等
@@ -353,7 +353,7 @@ interface TableDataSourceItem {
    * - 如果为boolean值true，则表示同时开启asc和desc两种类型的排序
    * - 如果为string类型，则表示只开启该类型的排序
    * */
-  sort?: boolean | TableSortKeys | TableSortEnum;
+  sort?: boolean | TableSortKeys | TableSort;
   /** 其他任意的键值 */
   [key: string]: any;
 }

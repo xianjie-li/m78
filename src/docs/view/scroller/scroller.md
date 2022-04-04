@@ -60,7 +60,7 @@ _适用于 pc 版_, 默认会在支持的浏览器上通过`-webkit-`私有前�
 ```tsx | pure
 interface ScrollerProps extends ComponentBaseProps {
   /** Direction.vertical | 滚动方向 */
-  direction?: DirectionEnum;
+  direction?: Direction;
   /** 内容, 是否可滚动的依据是滚动内容尺寸大于滚动容器尺寸 */
   children?: React.ReactNode;
   /** 滚动时触发 */

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useGesture } from 'react-use-gesture';
 import preventTopPullDown from 'prevent-top-pull-down';
 import _clamp from 'lodash/clamp';
-import { DirectionEnum } from 'm78/common';
+import { Direction } from 'm78/common';
 import { defer, isNumber } from '@lxjx/utils';
 import { SetDragPosArg, Share } from './types';
 import { useMethods } from './methods';
@@ -50,7 +50,7 @@ export function useHooks(methods: ReturnType<typeof useMethods>, share: Share) {
 
   /* 禁用一些默认事件，如、qq 微信 ios 的顶部下拉 */
   useEffect(() => {
-    if (props.direction !== DirectionEnum.vertical) {
+    if (props.direction !== Direction.vertical) {
       return;
     }
 
@@ -71,10 +71,10 @@ export function useHooks(methods: ReturnType<typeof useMethods>, share: Share) {
         const sMeta = sHelper.get();
 
         const yPrevent =
-          props.direction === DirectionEnum.vertical &&
+          props.direction === Direction.vertical &&
           ((dy > 0 && sMeta.touchTop) || (dy < 0 && sMeta.touchBottom));
         const xPrevent =
-          props.direction === DirectionEnum.horizontal &&
+          props.direction === Direction.horizontal &&
           ((dx > 0 && sMeta.touchLeft) || (dx < 0 && sMeta.touchRight));
 
         /* 触边拖动时禁用默认事件 */
@@ -113,13 +113,13 @@ export function useHooks(methods: ReturnType<typeof useMethods>, share: Share) {
           touchTop: sMeta.touchTop,
         };
 
-        if (props.direction === DirectionEnum.vertical) {
+        if (props.direction === Direction.vertical) {
           if (sMeta.touchTop || sMeta.touchBottom) {
             methods.setDragPos({ isVertical: true, ...dragPosArg });
           }
         }
 
-        if (props.direction === DirectionEnum.horizontal) {
+        if (props.direction === Direction.horizontal) {
           if (sMeta.touchLeft || sMeta.touchRight) {
             methods.setDragPos(dragPosArg);
           }
@@ -127,7 +127,7 @@ export function useHooks(methods: ReturnType<typeof useMethods>, share: Share) {
       },
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       onWheel({ direction: [_, dr], distance }) {
-        if (props.direction === DirectionEnum.vertical) return;
+        if (props.direction === Direction.vertical) return;
         if (dr !== 1 && dr !== -1) return; // 这段代码刚好能解决笔记本触控板高频触发的问题，测试用的触控板dr始终为0, 保持观望
 
         const d = distance / 7;
@@ -143,7 +143,7 @@ export function useHooks(methods: ReturnType<typeof useMethods>, share: Share) {
       domTarget: rootEl,
       eventOptions: { passive: false },
       drag: {
-        axis: props.direction === DirectionEnum.vertical ? 'y' : 'x',
+        axis: props.direction === Direction.vertical ? 'y' : 'x',
         filterTaps: true,
       },
     },

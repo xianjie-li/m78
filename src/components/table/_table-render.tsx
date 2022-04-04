@@ -1,10 +1,10 @@
 import React from 'react';
 import clsx from 'clsx';
-import { _Context, _TableColumnInside, TableColumnFixedEnum } from './_types';
+import { _Context, _TableColumnInside, TableColumnFixed } from './_types';
 import { renderColgroup, renderTbody, renderTfoot, renderThead } from './_renders';
 
 interface Props {
-  type?: TableColumnFixedEnum;
+  type?: TableColumnFixed;
   isMain?: boolean;
   column: _TableColumnInside[];
   ctx: _Context;

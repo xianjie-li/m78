@@ -27,7 +27,7 @@ group:
 
 ## 样式约定
 
-- 所有表单控件都尽可能的支持`large` `small` 两种额外的尺寸, 可以通过`types`包中的`Size/SizeEnum`类型声明
+- 所有表单控件都尽可能的支持`large` `small` 两种额外的尺寸, 可以通过`types`包中的`SizeUnion/Size`类型声明
   - 大部分组件参考高度为`40 | 32 | 24`, 特定组件可根据实际情况 +8 或 -8, 关联的可用值有`types`中的`Size/FullSize`类型声明, `base` 下的 scss 变量,`util` 下的 `SIZE_MAP` 映射
   - 部分组件会额外拥有`big`/`mini`等尺寸
 - 组件`z-index`统一使用内部提供的四种, 可以在`componet/util`中或 sass 中通过对应变量获取
@@ -59,7 +59,7 @@ group:
 - 对于需要将内部 dom 元素通过 ref 转发的，使用名为`innerRef`的 prop, 组件实例使用`instanceRef`/`useImperativeHandle`, 必要时再使用`forwordRef`转发获取组件实例, 因为这种方式对组件类型签名破坏太大。
 - 默认最优配置，尽量减少配置项，API 数，例如，常用 api 占 25%，那么可以将整体 api 压缩到 50%(25%的高频使用 api，25%的扩展型 api，剩余通过组件内部通过默认值管理), 后续再根据使用情况逐个放出有使用场景的 api，这样可以大大减少学习成本，并且降低出现破坏性变更的可能性。
 - 除非完全不需要 `SSR` 的组件，否则一律不要直接在 render 中使用`document`、`window`等浏览器对象，对这些对象的操作都放到`effect`中。
-- 组件的字符类参数应同时支持传入 string key 和 enum, 例如: `<Button type="large" />` | `<Button type={Size.large} />`, 以 Button 为例, 两种类型的命名应为`ButtonSizeKeys`/`ButtonSizeEnum`, 并声明一个用于直接使用的联合类型 `ButtonSizeKeys | ButtonSizeEnum`
+- 组件的字符类参数应同时支持传入 string key 和 enum, 例如: `<Button type="large" />` | `<Button type={Size.large} />`, 以 Button 为例, 两种类型的命名应为`ButtonSizeKeys`/`ButtonSize`, 并声明一个用于直接使用的联合类型 `ButtonSizeKeys | ButtonSize`
 - 某些依赖于数据源的组件如没有特殊含义，均命名为`dataSource`, 如`tree`组件, 选项格式为`{ label: ReactNode, value: any }`, 对应`components/types`中的`DataSourceItem`
 
 ## 文档

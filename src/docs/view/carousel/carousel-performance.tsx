@@ -1,6 +1,5 @@
 import React from 'react';
 import { Carousel, CarouselRef } from 'm78/carousel';
-import 'm78/carousel/style';
 
 import 'm78/button/style';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from 'm78/button';
-import { Bubble, BubbleTypeEnum } from 'm78/bubble';
+import { Bubble, BubbleType } from 'm78/bubble';
 import { message } from 'm78/message';
 
 const Demo = () => {
@@ -12,7 +12,7 @@ const Demo = () => {
 
       <Bubble
         title="Popper提示"
-        type={BubbleTypeEnum.popper}
+        type={BubbleType.popper}
         content={
           <div>
             <div>气泡提示内容</div>
@@ -24,7 +24,7 @@ const Demo = () => {
       </Bubble>
 
       <Bubble
-        type={BubbleTypeEnum.confirm}
+        type={BubbleType.confirm}
         content="此操作不可撤, 是否确认?"
         onConfirm={() => {
           message.tips({

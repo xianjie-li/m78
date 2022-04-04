@@ -1,6 +1,6 @@
 import React from 'react';
 import { Scroller } from 'm78/scroller';
-import { DirectionEnum } from 'm78/common';
+import { Direction } from 'm78/common';
 import { Divider } from 'm78/layout';
 import { mockData } from './util';
 
@@ -25,7 +25,7 @@ const Demo = () => (
     <h3>横向滚动</h3>
 
     <Scroller
-      direction={DirectionEnum.horizontal}
+      direction={Direction.horizontal}
       style={{ width: 300, height: 60, border: '1px solid #ccc', whiteSpace: 'nowrap' }}
     >
       {list.map(item => (

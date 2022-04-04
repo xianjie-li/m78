@@ -16,8 +16,8 @@ export type ContextMenuOmitOverlayProps = Omit<OverlayProps, ContextMenuOmitOver
 /**
  * 移除了部分prop的OverlayProps, 并且以下默认值有变更:
  * - mountOnEnter/unmountOnExit 默认为true
- * - direction 默认为OverlayDirectionEnum.rightStart
+ * - direction 默认为OverlayDirection.rightStart
  * - springProps 默认去除了动画, 可以通过 immediate: false 开启
- * - triggerType [UseTriggerTypeEnum.contextMenu]
+ * - triggerType [UseTriggerType.contextMenu]
  * */
 export interface ContextMenuProps extends ContextMenuOmitOverlayProps {}

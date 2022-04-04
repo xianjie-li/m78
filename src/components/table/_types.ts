@@ -1,6 +1,6 @@
 import { ComponentBaseProps } from '@lxjx/utils';
 import React from 'react';
-import { SizeEnum, SizeKeys } from 'm78/common';
+import { Size, SizeKeys } from 'm78/common';
 import {
   TreeBaseDataSourceItem,
   TreeBaseMultipleChoiceProps,
@@ -22,7 +22,7 @@ import { defaultProps } from './_common';
 export type TableColumnFixedKeys = 'left' | 'right';
 
 /** 列固定方向 */
-export enum TableColumnFixedEnum {
+export enum TableColumnFixed {
   left = 'left',
   right = 'right',
 }
@@ -41,7 +41,7 @@ export type TableDivideStyleKeys = 'border' | 'regular';
  * border - 边框,
  * regular - 单元格
  * */
-export enum TableDivideStyleEnum {
+export enum TableDivideStyle {
   border = 'border',
   regular = 'regular',
 }
@@ -50,7 +50,7 @@ export enum TableDivideStyleEnum {
 export type TableSortKeys = 'asc' | 'desc';
 
 /** 表格排序方式  */
-export enum TableSortEnum {
+export enum TableSort {
   asc = 'asc',
   desc = 'desc',
 }
@@ -61,7 +61,7 @@ export enum TableSortEnum {
  * ############################
  * */
 
-export type TableSortValue = [string, TableSortEnum | TableSortKeys];
+export type TableSortValue = [string, TableSort | TableSortKeys];
 
 /**
  * 一个元信息，可以用来表示表格中的某行、某列、或某一个特定的单元格
@@ -112,7 +112,7 @@ export interface TableColumn {
    * */
   maxWidth?: string | number;
   /** 固定列到左侧或右侧, 如果声明了fixed的列在常规列中间，它会根据固定方向移动到表格两侧渲染 */
-  fixed?: TableColumnFixedKeys | TableColumnFixedEnum;
+  fixed?: TableColumnFixedKeys | TableColumnFixed;
   /**
    * 为该列所有单元格设置的props, 支持td标签的所有prop
    * - 可通过该配置为整列同时设置样式、对齐、事件等
@@ -135,7 +135,7 @@ export interface TableColumn {
    * - 如果为boolean值true，则表示同时开启asc和desc两种类型的排序
    * - 如果为string类型，则表示只开启该类型的排序
    * */
-  sort?: boolean | TableSortKeys | TableSortEnum;
+  sort?: boolean | TableSortKeys | TableSort;
   /** 其他任意的键值 */
   [key: string]: any;
 }
@@ -199,11 +199,11 @@ export interface TableProps
    * - border: 边框型
    * - regular: 常规型，行直接带分割线
    * */
-  divideStyle?: TableDivideStyleKeys | TableDivideStyleEnum;
+  divideStyle?: TableDivideStyleKeys | TableDivideStyle;
   /** true | 显示条纹背景 */
   stripe?: boolean;
   /** 表格尺寸 */
-  size?: SizeKeys | SizeEnum;
+  size?: SizeKeys | Size;
   /** 300px 单元格最大宽度, 用于防止某一列内容过长占用大量位置导致很差的显示效果 */
   cellMaxWidth?: string | number;
   /** 单元格未获取到有效值时(checkFieldValid()返回false), 用于显示的回退内容, 默认显示 “-” */

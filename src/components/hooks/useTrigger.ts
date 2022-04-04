@@ -3,7 +3,7 @@ import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 import { useFn, useSelf } from '@lxjx/hooks';
 import { AnyFunction, dumpFn, isArray } from '@lxjx/utils';
 
-export enum UseTriggerTypeEnum {
+export enum UseTriggerType {
   /** 点击 */
   click = 'click',
   /**
@@ -22,15 +22,15 @@ export enum UseTriggerTypeEnum {
   contextMenu = 'contextMenu',
 }
 
-export type UseTriggerTypeKeys = keyof typeof UseTriggerTypeEnum;
+export type UseTriggerTypeKeys = keyof typeof UseTriggerType;
 
 /** 可用事件类型 */
-export type UseTriggerType = UseTriggerTypeEnum | UseTriggerTypeKeys;
+export type UseTriggerTypeUnion = UseTriggerType | UseTriggerTypeKeys;
 
 /** 自定义的触发事件对象 */
 export interface UseTriggerEvent {
   /** 触发的事件类型 */
-  type: UseTriggerType;
+  type: UseTriggerTypeUnion;
   /** 是否处于active事件中 */
   active: boolean;
   /** 是否处于focus状态 */
@@ -55,7 +55,7 @@ export interface UseTriggerConfig {
    * */
   element?: ReactElement;
   /** 需要绑定的事件类型 */
-  type: UseTriggerType | UseTriggerType[];
+  type: UseTriggerTypeUnion | UseTriggerTypeUnion[];
   /** 触发回调 */
   onTrigger?: (e: UseTriggerEvent) => void;
   /** active的特定配置 */
@@ -74,7 +74,7 @@ enum ActiveType {
 }
 
 /** 创建一个零值对象 */
-const createNilEvent = (type: UseTriggerType, e: Event): UseTriggerEvent => {
+const createNilEvent = (type: UseTriggerTypeUnion, e: Event): UseTriggerEvent => {
   return {
     type,
     active: false,
@@ -104,7 +104,7 @@ function touchGen(e: TouchEvent, ele: Element | null) {
 
   const tBound = ele.getBoundingClientRect();
 
-  return offsetSet(createNilEvent(UseTriggerTypeEnum.active, e), {
+  return offsetSet(createNilEvent(UseTriggerType.active, e), {
     x: touch.clientX,
     y: touch.clientY,
     offsetX: touch.clientX - tBound.left,
@@ -173,7 +173,7 @@ export function useTrigger<E = HTMLElement>(config: UseTriggerConfig) {
   const trigger = useFn(e => onTrigger?.(e));
 
   // 事件是否启用
-  const has = useFn((key: UseTriggerType) => types.includes(key));
+  const has = useFn((key: UseTriggerTypeUnion) => types.includes(key));
 
   /** 处理active事件延迟的帮助函数 */
   const activeDelayHelper = useFn((cb: AnyFunction, delay: number) => {
@@ -188,18 +188,18 @@ export function useTrigger<E = HTMLElement>(config: UseTriggerConfig) {
   });
 
   const clickHandle = useFn((e: MouseEvent) => {
-    const event = offsetSet(createNilEvent(UseTriggerTypeEnum.click, e), e);
+    const event = offsetSet(createNilEvent(UseTriggerType.click, e), e);
     trigger(event);
   });
 
   const focusHandle = useFn(e => {
-    const event = createNilEvent(UseTriggerTypeEnum.focus, e);
+    const event = createNilEvent(UseTriggerType.focus, e);
     event.focus = true;
     trigger(event);
   });
 
   const blurHandle = useFn(e => {
-    const event = createNilEvent(UseTriggerTypeEnum.focus, e);
+    const event = createNilEvent(UseTriggerType.focus, e);
     trigger(event);
   });
 
@@ -222,7 +222,7 @@ export function useTrigger<E = HTMLElement>(config: UseTriggerConfig) {
 
       const event =
         aType === ActiveType.mouse
-          ? offsetSet(createNilEvent(UseTriggerTypeEnum.active, e), e)
+          ? offsetSet(createNilEvent(UseTriggerType.active, e), e)
           : touchGen(e, el);
 
       if (!event) return;
@@ -247,7 +247,7 @@ export function useTrigger<E = HTMLElement>(config: UseTriggerConfig) {
 
       const event =
         aType === ActiveType.mouse
-          ? offsetSet(createNilEvent(UseTriggerTypeEnum.active, e), e)
+          ? offsetSet(createNilEvent(UseTriggerType.active, e), e)
           : touchGen(e, el);
 
       if (!event) return;
@@ -273,30 +273,30 @@ export function useTrigger<E = HTMLElement>(config: UseTriggerConfig) {
   });
 
   const contextMenuHandle = useFn(e => {
-    const hasContext = has(UseTriggerTypeEnum.contextMenu);
+    const hasContext = has(UseTriggerType.contextMenu);
 
     // context点击, 获取touch式的active时, 阻止上下文菜单
-    if (hasContext || (has(UseTriggerTypeEnum.active) && self.activeType === 2)) {
+    if (hasContext || (has(UseTriggerType.active) && self.activeType === 2)) {
       e.preventDefault();
     }
 
     if (!hasContext) return;
 
-    const event = offsetSet(createNilEvent(UseTriggerTypeEnum.contextMenu, e), e);
+    const event = offsetSet(createNilEvent(UseTriggerType.contextMenu, e), e);
     trigger(event);
   });
 
   useEffect(() => {
     if (!el) return;
 
-    if (has(UseTriggerTypeEnum.click)) {
+    if (has(UseTriggerType.click)) {
       el.addEventListener('click', clickHandle);
     }
-    if (has(UseTriggerTypeEnum.focus)) {
+    if (has(UseTriggerType.focus)) {
       el.addEventListener('focus', focusHandle);
       el.addEventListener('blur', blurHandle);
     }
-    if (has(UseTriggerTypeEnum.active)) {
+    if (has(UseTriggerType.active)) {
       el.addEventListener('mouseenter', mouseEnterHandle);
       el.addEventListener('mouseleave', mouseLeaveHandle);
       el.addEventListener('touchstart', touchStartHandle);

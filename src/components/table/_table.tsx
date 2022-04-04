@@ -1,6 +1,6 @@
 import { TreeBasePropsMix, useTreeStates } from 'm78/tree';
 import { useTreeLifeCycle } from 'm78/tree/life-cycle';
-import { SizeEnum } from 'm78/common';
+import { Size } from 'm78/common';
 import { isNumber } from '@lxjx/utils';
 import { defaultProps, tableHeaderHeight } from './_common';
 import { _useStates } from './_useStates';
@@ -23,7 +23,7 @@ function Table(props: TablePropsSingleChoice | TablePropsMultipleChoice) {
   const isVirtual = !!height;
 
   const treeState = useTreeStates<TableTreeNode>(props as TreeBasePropsMix, isVirtual, {
-    size: getSizeNumber(props.size as SizeEnum),
+    size: getSizeNumber(props.size as Size),
     height: isNumber(height) ? height : undefined,
     space: tableHeaderHeight,
   });

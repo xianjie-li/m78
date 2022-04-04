@@ -236,7 +236,7 @@ export interface OverlayInstance {
 ### Direction
 
 ```ts
-enum OverlayDirectionEnum {
+enum OverlayDirection {
   topStart = 'topStart',
   top = 'top',
   topEnd = 'topEnd',

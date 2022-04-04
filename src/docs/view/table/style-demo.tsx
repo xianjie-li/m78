@@ -1,8 +1,8 @@
 import React from 'react';
 import { Row } from 'm78/layout';
 import { RadioBox } from 'm78/radio-box';
-import { Table, TableColumns, TableDivideStyleEnum } from 'm78/table';
-import { SizeEnum } from 'm78/common';
+import { Table, TableColumns, TableDivideStyle } from 'm78/table';
+import { Size } from 'm78/common';
 import { Check } from 'm78/check';
 import { useSetState } from '@lxjx/hooks';
 import { dataSource } from './dataSource';
@@ -44,8 +44,8 @@ const columns: TableColumns = [
 
 const StyleDemo = () => {
   const [state, setState] = useSetState({
-    divideStyle: TableDivideStyleEnum.regular,
-    size: (undefined as unknown) as SizeEnum | undefined,
+    divideStyle: TableDivideStyle.regular,
+    size: (undefined as unknown) as Size | undefined,
     stripe: true,
   });
 
@@ -58,11 +58,11 @@ const StyleDemo = () => {
           options={[
             {
               label: '常规',
-              value: TableDivideStyleEnum.regular,
+              value: TableDivideStyle.regular,
             },
             {
               label: '边框',
-              value: TableDivideStyleEnum.border,
+              value: TableDivideStyle.border,
             },
           ]}
           value={state.divideStyle}
@@ -83,11 +83,11 @@ const StyleDemo = () => {
             },
             {
               label: '小',
-              value: SizeEnum.small,
+              value: Size.small,
             },
             {
               label: '大',
-              value: SizeEnum.large,
+              value: Size.large,
             },
           ]}
           value={state.size}

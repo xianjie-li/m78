@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Overlay, OverlayDirectionEnum, OverlayInstance } from 'm78/overlay';
+import { Overlay, OverlayDirection, OverlayInstance } from 'm78/overlay';
 import { Button } from 'm78/button';
 
 const InstanceReuse = () => {
@@ -26,7 +26,7 @@ const InstanceReuse = () => {
       <Overlay
         defaultShow
         instanceRef={overlayRef}
-        direction={OverlayDirectionEnum.top}
+        direction={OverlayDirection.top}
         arrow
         childrenAsTarget
         lockScroll={false}

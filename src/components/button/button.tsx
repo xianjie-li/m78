@@ -8,7 +8,7 @@ import { isArray } from '@lxjx/utils';
 
 import cls from 'clsx';
 
-import { FullSizeEnum } from 'm78/common';
+import { FullSize } from 'm78/common';
 import { ButtonPropsWithHTMLButton, ButtonPropsWithHTMLLink } from './type';
 
 const matchIcon = /.?(Outlined|Filled|TwoTone|Icon)$/;
@@ -115,7 +115,7 @@ function Button(btnProps: ButtonPropsWithHTMLLink | ButtonPropsWithHTMLButton) {
       ref: innerRef,
     },
     <>
-      <Spin style={{ color: '#333' }} show={!!loading} size={FullSizeEnum.small} full text="" />
+      <Spin style={{ color: '#333' }} show={!!loading} size={FullSize.small} full text="" />
       <span>{newChildren}</span>
     </>,
   );

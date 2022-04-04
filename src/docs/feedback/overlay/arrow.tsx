@@ -1,5 +1,5 @@
 import React from 'react';
-import { Overlay, OverlayDirectionEnum } from 'm78/overlay';
+import { Overlay, OverlayDirection } from 'm78/overlay';
 import { Button } from 'm78/button';
 import sty from './arrow.module.scss';
 
@@ -7,7 +7,7 @@ const Arrow = () => {
   return (
     <div>
       <Overlay
-        direction={OverlayDirectionEnum.top}
+        direction={OverlayDirection.top}
         arrow
         arrowSize={[70, 20]}
         content={
@@ -19,7 +19,7 @@ const Arrow = () => {
       </Overlay>
 
       <Overlay
-        direction={OverlayDirectionEnum.top}
+        direction={OverlayDirection.top}
         arrow
         arrowSize={[70, 20]}
         arrowProps={{

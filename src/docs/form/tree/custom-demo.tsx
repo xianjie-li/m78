@@ -8,7 +8,7 @@ import {
   FolderOutlined,
 } from 'm78/icon';
 import { Tree, TreeDataSourceItem } from 'm78/tree';
-import { SizeEnum } from 'm78/common';
+import { Size } from 'm78/common';
 
 const badgeSty: React.CSSProperties = {
   padding: '1px 4px',
@@ -111,7 +111,7 @@ const CustomDemo = () => {
         expansionIcon={open => (open ? <FolderOpenOutlined /> : <FolderOutlined />)}
         dataSource={ds}
         defaultOpenAll
-        size={SizeEnum.large}
+        size={Size.large}
       />
     </div>
   );

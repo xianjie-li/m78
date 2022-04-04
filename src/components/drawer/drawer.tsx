@@ -8,21 +8,21 @@ import {
   transitionConfig,
 } from 'm78/overlay';
 import { omit, TupleNumber } from '@lxjx/utils';
-import { TransitionType } from 'm78/transition';
-import { PositionEnum, Z_INDEX_DRAWER } from 'm78/common';
+import { TransitionTypeUnion } from 'm78/transition';
+import { Position, Z_INDEX_DRAWER } from 'm78/common';
 import { upperFirst } from 'lodash';
 import createRenderApi from '@m78/render-api';
 import { DrawerProps, omitDrawerOverlayProps, DrawerOmitOverlayProps } from './type';
 
 const positionMap = {
-  [PositionEnum.top]: [0.5, 0.02] as TupleNumber,
-  [PositionEnum.right]: [0.96, 0.5] as TupleNumber,
-  [PositionEnum.bottom]: [0.5, 0.96] as TupleNumber,
-  [PositionEnum.left]: [0.02, 0.5] as TupleNumber,
+  [Position.top]: [0.5, 0.02] as TupleNumber,
+  [Position.right]: [0.96, 0.5] as TupleNumber,
+  [Position.bottom]: [0.5, 0.96] as TupleNumber,
+  [Position.left]: [0.02, 0.5] as TupleNumber,
 };
 
 const defaultProps: Partial<DrawerProps> = {
-  position: PositionEnum.bottom,
+  position: Position.bottom,
   namespace: 'DRAWER',
   mask: true,
   zIndex: Z_INDEX_DRAWER,
@@ -49,7 +49,7 @@ const DrawerBase = (props: DrawerProps) => {
       {...overlayProps}
       className={clsx('m78 m78-drawer', `__${position}`, className)}
       alignment={positionMap[position!]}
-      transitionType={`slide${upperFirst(position)}` as TransitionType}
+      transitionType={`slide${upperFirst(position)}` as TransitionTypeUnion}
       content={renderContent()}
       springProps={{
         config: {

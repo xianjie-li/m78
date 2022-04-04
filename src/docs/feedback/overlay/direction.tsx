@@ -1,6 +1,6 @@
 import React from 'react';
-import { Overlay, OverlayDirectionEnum } from 'm78/overlay';
-import { UseTriggerTypeEnum } from 'm78/hooks';
+import { Overlay, OverlayDirection } from 'm78/overlay';
+import { UseTriggerType } from 'm78/hooks';
 import { Button } from 'm78/button';
 
 const Direction = () => {
@@ -10,8 +10,8 @@ const Direction = () => {
         <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', textAlign: 'center' }}>
           <Overlay
             arrow
-            direction={OverlayDirectionEnum.topStart}
-            triggerType={UseTriggerTypeEnum.active}
+            direction={OverlayDirection.topStart}
+            triggerType={UseTriggerType.active}
             content={<div style={{ padding: 16, fontSize: 16 }}>topStart</div>}
             childrenAsTarget
           >
@@ -19,8 +19,8 @@ const Direction = () => {
           </Overlay>
           <Overlay
             arrow
-            direction={OverlayDirectionEnum.top}
-            triggerType={UseTriggerTypeEnum.active}
+            direction={OverlayDirection.top}
+            triggerType={UseTriggerType.active}
             content={<div style={{ padding: 16, fontSize: 16 }}>top</div>}
             childrenAsTarget
           >
@@ -28,8 +28,8 @@ const Direction = () => {
           </Overlay>
           <Overlay
             arrow
-            direction={OverlayDirectionEnum.topEnd}
-            triggerType={UseTriggerTypeEnum.active}
+            direction={OverlayDirection.topEnd}
+            triggerType={UseTriggerType.active}
             content={<div style={{ padding: 16, fontSize: 16 }}>topEnd</div>}
             childrenAsTarget
           >
@@ -49,8 +49,8 @@ const Direction = () => {
         >
           <Overlay
             arrow
-            direction={OverlayDirectionEnum.rightStart}
-            triggerType={UseTriggerTypeEnum.active}
+            direction={OverlayDirection.rightStart}
+            triggerType={UseTriggerType.active}
             content={<div style={{ padding: 16, fontSize: 16 }}>rightStart</div>}
             childrenAsTarget
           >
@@ -58,8 +58,8 @@ const Direction = () => {
           </Overlay>
           <Overlay
             arrow
-            direction={OverlayDirectionEnum.right}
-            triggerType={UseTriggerTypeEnum.active}
+            direction={OverlayDirection.right}
+            triggerType={UseTriggerType.active}
             content={<div style={{ padding: 16, fontSize: 16 }}>right</div>}
             childrenAsTarget
           >
@@ -67,8 +67,8 @@ const Direction = () => {
           </Overlay>
           <Overlay
             arrow
-            direction={OverlayDirectionEnum.rightEnd}
-            triggerType={UseTriggerTypeEnum.active}
+            direction={OverlayDirection.rightEnd}
+            triggerType={UseTriggerType.active}
             content={<div style={{ padding: 16, fontSize: 16 }}>rightEnd</div>}
             childrenAsTarget
           >
@@ -81,8 +81,8 @@ const Direction = () => {
         >
           <Overlay
             arrow
-            direction={OverlayDirectionEnum.bottomStart}
-            triggerType={UseTriggerTypeEnum.active}
+            direction={OverlayDirection.bottomStart}
+            triggerType={UseTriggerType.active}
             content={<div style={{ padding: 16, fontSize: 16 }}>bottomStart</div>}
             childrenAsTarget
           >
@@ -90,8 +90,8 @@ const Direction = () => {
           </Overlay>
           <Overlay
             arrow
-            direction={OverlayDirectionEnum.bottom}
-            triggerType={UseTriggerTypeEnum.active}
+            direction={OverlayDirection.bottom}
+            triggerType={UseTriggerType.active}
             content={<div style={{ padding: 16, fontSize: 16 }}>bottom</div>}
             childrenAsTarget
           >
@@ -99,8 +99,8 @@ const Direction = () => {
           </Overlay>
           <Overlay
             arrow
-            direction={OverlayDirectionEnum.bottomEnd}
-            triggerType={UseTriggerTypeEnum.active}
+            direction={OverlayDirection.bottomEnd}
+            triggerType={UseTriggerType.active}
             content={<div style={{ padding: 16, fontSize: 16 }}>bottomEnd</div>}
             childrenAsTarget
           >
@@ -120,8 +120,8 @@ const Direction = () => {
         >
           <Overlay
             arrow
-            direction={OverlayDirectionEnum.leftStart}
-            triggerType={UseTriggerTypeEnum.active}
+            direction={OverlayDirection.leftStart}
+            triggerType={UseTriggerType.active}
             content={<div style={{ padding: 16, fontSize: 16 }}>leftStart</div>}
             childrenAsTarget
           >
@@ -129,8 +129,8 @@ const Direction = () => {
           </Overlay>
           <Overlay
             arrow
-            direction={OverlayDirectionEnum.left}
-            triggerType={UseTriggerTypeEnum.active}
+            direction={OverlayDirection.left}
+            triggerType={UseTriggerType.active}
             content={<div style={{ padding: 16, fontSize: 16 }}>left</div>}
             childrenAsTarget
           >
@@ -138,8 +138,8 @@ const Direction = () => {
           </Overlay>
           <Overlay
             arrow
-            direction={OverlayDirectionEnum.leftEnd}
-            triggerType={UseTriggerTypeEnum.active}
+            direction={OverlayDirection.leftEnd}
+            triggerType={UseTriggerType.active}
             content={<div style={{ padding: 16, fontSize: 16 }}>leftEnd</div>}
             childrenAsTarget
           >

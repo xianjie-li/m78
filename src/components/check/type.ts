@@ -1,4 +1,4 @@
-import { SizeEnum } from 'm78/common';
+import { Size } from 'm78/common';
 import React from 'react';
 import { ComponentBaseProps } from '@lxjx/utils';
 import { CheckCustom } from './check';
@@ -37,5 +37,5 @@ export interface CheckProps<Val> extends ComponentBaseProps {
   /** true | 是否启用外层的交互波纹效果，关闭后会让组件的整体大小更小 */
   waveWrap?: boolean;
   /** 组件尺寸, 目前支持两个尺寸，默认/小尺寸 */
-  size?: 'small' | SizeEnum.small;
+  size?: 'small' | Size.small;
 }

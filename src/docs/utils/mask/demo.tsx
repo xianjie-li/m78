@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Mask } from 'm78/mask';
-import 'm78/mask/style';
 
 import { Button } from 'm78/button';
 import 'm78/button/style';

@@ -73,8 +73,8 @@ export interface WineState extends RenderApiComponentProps<WineState, WineInstan
   width?: number;
   /** 高度, 会覆盖sizeRatio对应方向的配置 */
   height?: number;
-  /** WineBoundEnum.safeArea | 设置可拖动区域的类型 */
-  bound?: WineBoundEnum;
+  /** WineBound.safeArea | 设置可拖动区域的类型 */
+  bound?: WineBound;
   /** 根据此限定对象进行屏幕可用边界修正, 影响全屏窗口大小和自动调整窗口大小的各种操作 */
   limitBound?: Partial<Bound>;
   /** 初始化时最大化显示 */
@@ -110,7 +110,7 @@ export interface WineInstance {
 }
 
 /** 描述可拖动范围 */
-export enum WineBoundEnum {
+export enum WineBound {
   /** 窗口范围内 */
   window = 'window',
   /** 安全区域内, 确保不会因为误操作导致无法拖动 */
@@ -120,7 +120,7 @@ export enum WineBoundEnum {
 }
 
 /** 描述可拖动方向 */
-export enum WineDragPositionEnum {
+export enum WineDragPosition {
   L,
   T,
   R,

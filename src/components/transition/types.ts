@@ -28,7 +28,7 @@ interface Base extends ComponentBasePropsWithAny {
   unmountOnExit?: boolean;
 }
 
-export enum TransitionTypeEnum {
+export enum TransitionType {
   fade = 'fade',
   zoom = 'zoom',
   punch = 'punch',
@@ -39,9 +39,9 @@ export enum TransitionTypeEnum {
   bounce = 'bounce',
 }
 
-export type TransitionTypeKeys = keyof typeof TransitionTypeEnum;
+export type TransitionTypeKeys = keyof typeof TransitionType;
 
-export type TransitionType = TransitionTypeEnum | TransitionTypeKeys;
+export type TransitionTypeUnion = TransitionType | TransitionTypeKeys;
 
 /* 基础动画组件的类型 */
 export interface TransitionBaseProps extends Base {
@@ -60,7 +60,7 @@ export interface TransitionBaseProps extends Base {
 /* 预置组件的类型 */
 export interface TransitionProps extends Base {
   /** 动画类型 */
-  type: TransitionType;
+  type: TransitionTypeUnion;
   /** true | 为所有类型的动画附加fade动画，使其视觉效果更平滑 */
   alpha?: boolean;
 }

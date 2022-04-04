@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from 'm78/button';
-import { Overlay, OverlayDirectionEnum } from 'm78/overlay';
-import { UseTriggerTypeEnum } from 'm78/hooks';
+import { Overlay, OverlayDirection } from 'm78/overlay';
+import { UseTriggerType } from 'm78/hooks';
 
 const ShowControl = () => {
   const [show, setShow] = useState(false);
@@ -36,7 +36,7 @@ const ShowControl = () => {
 
       <div className="mt-32">
         <Overlay
-          direction={OverlayDirectionEnum.top}
+          direction={OverlayDirection.top}
           content={<div style={{ padding: 8, fontSize: 14 }}>通过点击触发</div>}
           childrenAsTarget
         >
@@ -44,8 +44,8 @@ const ShowControl = () => {
         </Overlay>
 
         <Overlay
-          triggerType={UseTriggerTypeEnum.active}
-          direction={OverlayDirectionEnum.top}
+          triggerType={UseTriggerType.active}
+          direction={OverlayDirection.top}
           content={<div style={{ padding: 8, fontSize: 14 }}>hover触发, 移动端按住触发</div>}
           childrenAsTarget
         >
@@ -53,8 +53,8 @@ const ShowControl = () => {
         </Overlay>
 
         <Overlay
-          triggerType={UseTriggerTypeEnum.focus}
-          direction={OverlayDirectionEnum.top}
+          triggerType={UseTriggerType.focus}
+          direction={OverlayDirection.top}
           content={<div style={{ padding: 8, fontSize: 14 }}>通过children代理show</div>}
           childrenAsTarget
         >

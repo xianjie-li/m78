@@ -5,13 +5,13 @@ import { Seed } from '@m78/seed';
 import { Button } from 'm78/button';
 import { Auth, ValidMeta } from '@m78/auth';
 import { useEffectEqual, useFn } from '@lxjx/hooks';
-import { Bubble, BubbleTypeEnum } from 'm78/bubble';
-import { AuthProProps, AuthProps, AuthTypeEnum, RCAuth, UseAuth } from './types';
+import { Bubble, BubbleType } from 'm78/bubble';
+import { AuthProProps, AuthProps, AuthType, RCAuth, UseAuth } from './types';
 
 /** 定制AuthPro反馈内容 */
 export const authProFeedback: NonNullable<AuthProProps['feedback']> = (
   rejects,
-  { icon, children, type = AuthTypeEnum.feedback },
+  { icon, children, type = AuthType.feedback },
 ) => {
   const title = '没有访问权限';
 
@@ -39,7 +39,7 @@ export const authProFeedback: NonNullable<AuthProProps['feedback']> = (
     }
   }
 
-  if (type === AuthTypeEnum.feedback) {
+  if (type === AuthType.feedback) {
     return (
       <Result type="notAuth" icon={icon} title={title}>
         {desc}
@@ -47,12 +47,12 @@ export const authProFeedback: NonNullable<AuthProProps['feedback']> = (
     );
   }
 
-  if (type === AuthTypeEnum.popper) {
+  if (type === AuthType.popper) {
     const renderChild = () => (isFunction(children) ? children() : children) as any;
     return (
       <Bubble
         className="m78-auth_popper"
-        type={BubbleTypeEnum.popper}
+        type={BubbleType.popper}
         icon={icon}
         content={
           <Result type="notAuth" title={title}>
@@ -74,7 +74,7 @@ export function createAuthComponent<S, V>(seed: Seed<S>, useAuth: RCAuth<S, V>['
       keys,
       extra,
       validators,
-      type = AuthTypeEnum.feedback,
+      type = AuthType.feedback,
       icon,
       disabled,
       feedback,
@@ -87,7 +87,7 @@ export function createAuthComponent<S, V>(seed: Seed<S>, useAuth: RCAuth<S, V>['
     if (disabled) return renderChild();
 
     if (rejects && rejects.length) {
-      if (type === AuthTypeEnum.hidden) return null;
+      if (type === AuthType.hidden) return null;
 
       if (feedback) {
         return feedback(rejects, props);
@@ -99,17 +99,13 @@ export function createAuthComponent<S, V>(seed: Seed<S>, useAuth: RCAuth<S, V>['
         firstRej.actions &&
         firstRej.actions.map(({ label, ...btnProps }) => {
           return (
-            <Button
-              key={label}
-              size={type === AuthTypeEnum.popper ? 'small' : undefined}
-              {...btnProps}
-            >
+            <Button key={label} size={type === AuthType.popper ? 'small' : undefined} {...btnProps}>
               {label}
             </Button>
           );
         });
 
-      if (type === AuthTypeEnum.feedback) {
+      if (type === AuthType.feedback) {
         return (
           <Result
             type="notAuth"
@@ -121,11 +117,11 @@ export function createAuthComponent<S, V>(seed: Seed<S>, useAuth: RCAuth<S, V>['
         );
       }
 
-      if (type === AuthTypeEnum.popper) {
+      if (type === AuthType.popper) {
         return (
           <Bubble
             className="m78-auth_popper"
-            type={BubbleTypeEnum.popper}
+            type={BubbleType.popper}
             icon={icon}
             content={
               <Result type="notAuth" title={firstRej.label} desc={firstRej.desc} actions={action} />

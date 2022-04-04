@@ -2,7 +2,7 @@ import React from 'react';
 import { Select, SelectOptionItem } from 'm78/select';
 import { Button } from 'm78/button';
 import { CaretDownOutlined } from 'm78/icon';
-import { OverlayDirectionEnum } from 'm78/overlay';
+import { OverlayDirection } from 'm78/overlay';
 
 const opt: SelectOptionItem[] = [
   {
@@ -46,7 +46,7 @@ const Dropdown = () => {
         }}
         options={opt}
         arrow
-        direction={OverlayDirectionEnum.bottom}
+        direction={OverlayDirection.bottom}
       >
         <Button text color="primary">
           自定义位置+气泡

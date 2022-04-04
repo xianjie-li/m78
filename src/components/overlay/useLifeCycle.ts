@@ -1,6 +1,6 @@
 import { useClickAway, useLockBodyScroll, useUpdateEffect } from '@lxjx/hooks';
 import { useEffect, useImperativeHandle, useMemo } from 'react';
-import { UseTriggerTypeEnum } from 'm78/hooks';
+import { UseTriggerType } from 'm78/hooks';
 import { ensureArray } from '@lxjx/utils';
 import { _Methods } from './useMethods';
 import { isBound } from './common';
@@ -64,7 +64,7 @@ export function _useLifeCycle(ctx: _Context, methods: _Methods) {
     // 每次出现时将焦点移入组件
     if (props.autoFocus && show && containerRef.current) {
       // 非focus模式时为容器设置focus
-      if (!ensureArray(props.triggerType).includes(UseTriggerTypeEnum.focus)) {
+      if (!ensureArray(props.triggerType).includes(UseTriggerType.focus)) {
         containerRef.current.focus();
       }
     }

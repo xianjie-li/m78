@@ -1,5 +1,5 @@
 import { OverlayProps } from 'm78/overlay';
-import { Position } from 'm78/common';
+import { PositionUnion } from 'm78/common';
 import React from 'react';
 
 /** 应从Overlay中移除的props */
@@ -23,7 +23,7 @@ export type DrawerOmitOverlayProps = Omit<OverlayProps, DrawerOmitOverlayKeys>;
 
 export interface DrawerProps extends DrawerOmitOverlayProps {
   /** 'bottom' | 出现位置 */
-  position?: Position;
+  position?: PositionUnion;
   /** 头部内容, 头部区域会固定在最顶部 */
   header?: React.ReactNode;
 }

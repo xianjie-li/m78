@@ -1,13 +1,15 @@
 import React from 'react';
 import { TileProps } from 'm78/layout';
-import { SizeEnum, SizeKeys } from 'm78/common';
+import { Size, SizeKeys } from 'm78/common';
 import { ComponentBasePropsWithAny, ComponentBaseProps } from '@lxjx/utils';
 
-export enum ListViewItemStyleEnum {
+export enum ListViewItemStyle {
   splitLine = 'splitLine',
   border = 'border',
   none = 'none',
 }
+
+export type ListViewItemStyleKeys = keyof typeof ListViewItemStyle;
 
 export interface ListViewProps extends ComponentBaseProps {
   /** 内容, 通常是一组ListViewItem */
@@ -15,14 +17,14 @@ export interface ListViewProps extends ComponentBaseProps {
   /** 多列模式 */
   column?: number;
   /** 调整布局紧凑程度、字号等 */
-  size?: SizeEnum | SizeKeys;
+  size?: Size | SizeKeys;
   /** false | 列表容器显示边框 */
   border?: boolean;
   /**
    * 'splitLine' | 项的基础样式类型
    * - splitLine模式在开启了多列的情况下无效
    * */
-  itemStyle?: 'splitLine' | 'border' | 'none' | ListViewItemStyleEnum;
+  itemStyle?: ListViewItemStyleKeys | ListViewItemStyle;
   /** true | 列表项交互效果 */
   effect?: boolean;
 }

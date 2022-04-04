@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react';
 import { isBoolean, isFunction, isTruthyOrZero } from '@lxjx/utils';
-import { DirectionEnum, FullSizeEnum } from 'm78/common';
+import { Direction, FullSize } from 'm78/common';
 import clsx from 'clsx';
 import { InfoCircleOutlined } from 'm78/icon';
-import { Overlay, OverlayDirectionEnum } from 'm78/overlay';
-import { UseTriggerTypeEnum } from 'm78/hooks';
+import { Overlay, OverlayDirection } from 'm78/overlay';
+import { UseTriggerType } from 'm78/hooks';
 import { Spin } from 'm78/spin';
 import { VFieldLike } from '@m78/vform';
 import { FieldProps, FieldRenderProps, LayoutCustomer, ListProps, RForm } from './types';
@@ -14,7 +14,7 @@ export const defaultFieldProps: Partial<FieldProps> = {
   valueKey: 'value',
   getValueFromEvent: (e: any) => e?.target?.value || e,
   deps: [],
-  layout: DirectionEnum.vertical,
+  layout: Direction.vertical,
   labelFixPad: 10,
   maxWidth: 440,
 };
@@ -52,7 +52,7 @@ export const defaultFieldRenderChildren: LayoutCustomer = (
   { fieldProps: props, field, innerRef, hidden, required }: FieldRenderProps,
   child: React.ReactElement,
 ) => {
-  const paddingTop = props.layout === DirectionEnum.horizontal ? props.labelFixPad : undefined;
+  const paddingTop = props.layout === Direction.horizontal ? props.labelFixPad : undefined;
   const hasLabel = isTruthyOrZero(props.label);
   const bubbleTips = props.bubbleTips;
 
@@ -78,8 +78,8 @@ export const defaultFieldRenderChildren: LayoutCustomer = (
           </div>
         }
         childrenAsTarget
-        direction={OverlayDirectionEnum.rightStart}
-        triggerType={UseTriggerTypeEnum.active}
+        direction={OverlayDirection.rightStart}
+        triggerType={UseTriggerType.active}
         lockScroll={false}
         springProps={{
           immediate: true,
@@ -95,9 +95,9 @@ export const defaultFieldRenderChildren: LayoutCustomer = (
     if (!bubbleTips || !props.extra) return null;
     return (
       <Overlay
-        triggerType={UseTriggerTypeEnum.active}
+        triggerType={UseTriggerType.active}
         content={props.extra}
-        direction={OverlayDirectionEnum.top}
+        direction={OverlayDirection.top}
         childrenAsTarget
         lockScroll={false}
         className="m78-form_bubble-extra"
@@ -137,7 +137,7 @@ export const defaultFieldRenderChildren: LayoutCustomer = (
           {!bubbleTips && field.touched && field.error}
         </div>
       </div>
-      <Spin size={FullSizeEnum.small} show={field.validating} full text={null} />
+      <Spin size={FullSize.small} show={field.validating} full text={null} />
     </div>
   );
 };

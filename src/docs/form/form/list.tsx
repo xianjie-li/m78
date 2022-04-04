@@ -2,7 +2,7 @@ import React from 'react';
 import { useForm, array, required, string } from 'm78/form';
 import { Input } from 'm78/input';
 import { Row, Spacer } from 'm78/layout';
-import { DirectionEnum } from 'm78/common';
+import { Direction } from 'm78/common';
 import { Button } from 'm78/button';
 import { ArrowDownOutlined, ArrowUpOutlined, DeleteOutlined } from 'm78/icon';
 
@@ -36,7 +36,7 @@ const List = () => {
                     <Form.Field
                       bind={item.bind}
                       name="address"
-                      layout={DirectionEnum.horizontal}
+                      layout={Direction.horizontal}
                       validator={[required()]}
                     >
                       <Input placeholder="输入地址" />
@@ -44,7 +44,7 @@ const List = () => {
                     <Form.Field
                       bind={item.bind}
                       name="phone"
-                      layout={DirectionEnum.horizontal}
+                      layout={Direction.horizontal}
                       validator={[required()]}
                     >
                       <Input placeholder="输入联系方式" />

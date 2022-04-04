@@ -134,7 +134,7 @@ interface AuthProps<S, V> {
    * - 可以通过二维数组来组合两个条件['key1', ['key2', 'key3']], 组合的条件表示逻辑 `or` */
   keys: AuthKeys<V>;
   /** 'feedback' | 反馈方式，分为占位节点、隐藏、气泡提示框三种, 当type为popper时，会自动拦截子元素的onClick事件, 同时，也需要确保子节点符合<Popper />组件的子节点规则 */
-  type?: AuthTypeKeys | AuthTypeEnum;
+  type?: AuthTypeKeys | AuthType;
   /** 传递给验证器的额外参数 */
   extra?: any;
   /**
@@ -258,7 +258,7 @@ interface AuthProProps {
    * */
   children: React.ReactElement | (() => React.ReactElement);
   /** 'feedback' | 反馈方式，分为占位节点、隐藏、气泡提示框三种, 当type为popper时，会自动拦截子元素的onClick事件, 同时，也需要确保子节点符合<Popper />组件的子节点规则 */
-  type?: AuthTypeKeys | AuthTypeEnum;
+  type?: AuthTypeKeys | AuthType;
   /** 是否禁用，禁用时直接显示子节点 */
   disabled?: boolean;
   /** 局部验证器 */

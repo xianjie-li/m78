@@ -1,10 +1,10 @@
 import React from 'react';
-import { FullSizeKeys, FullSizeEnum } from 'm78/common';
+import { FullSizeKeys, FullSize } from 'm78/common';
 import { ComponentBaseProps } from '@lxjx/utils';
 
 export interface SpinProps extends ComponentBaseProps {
   /** 大小 */
-  size?: FullSizeEnum | FullSizeKeys;
+  size?: FullSize | FullSizeKeys;
   /** 内联模式 */
   inline?: boolean;
   /** '加载中' | 提示文本 */

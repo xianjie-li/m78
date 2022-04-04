@@ -1,14 +1,13 @@
 import React from 'react';
 import { Spin } from 'm78/spin';
-import 'm78/spin/style';
-import { FullSizeEnum } from 'm78/common';
+import { FullSize } from 'm78/common';
 
 const IconDemo = () => (
   <div className="demo">
-    <Spin size={FullSizeEnum.small} />
+    <Spin size={FullSize.small} />
     <Spin />
-    <Spin size={FullSizeEnum.large} />
-    <Spin size={FullSizeEnum.big} />
+    <Spin size={FullSize.large} />
+    <Spin size={FullSize.big} />
   </div>
 );
 

@@ -1,6 +1,5 @@
 import React from 'react';
 import { ImagePreview } from 'm78/image-preview';
-import 'm78/viewer/style';
 
 import { Button } from 'm78/button';
 import 'm78/button/style';

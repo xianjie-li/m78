@@ -14,7 +14,7 @@ import {
 } from './common';
 import {
   _Context,
-  OverlayDirection,
+  OverlayDirectionUnion,
   OverlayInstance,
   OverlayTarget,
   OverlayUpdateType,
@@ -118,7 +118,7 @@ export function _useMethods(ctx: _Context) {
   /** 获取根据方向处理后的位置信息, 此函数假设位置信息存在, 在调用前需自行断言 */
   function getDirectionMeta(t: BoundSize) {
     const containerBound = containerRef.current.getBoundingClientRect();
-    const dir: OverlayDirection = state.lastDirection! || props.direction;
+    const dir: OverlayDirectionUnion = state.lastDirection! || props.direction;
 
     const offset = props.offset + (props.arrow ? props.arrowSize[1] + arrowSpace : 0);
 

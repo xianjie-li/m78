@@ -1,24 +1,24 @@
 import React, { useMemo } from 'react';
-import { Overlay, OverlayDirectionEnum, OverlayProps } from 'm78/overlay';
-import { BubbleProps, BubbleTypeEnum, omitBubbleOverlayProps } from './types';
-import { SizeEnum, Z_INDEX_MESSAGE } from 'm78/common';
+import { Overlay, OverlayDirection, OverlayProps } from 'm78/overlay';
+import { Size, Z_INDEX_MESSAGE } from 'm78/common';
 import clsx from 'clsx';
 import { Button } from 'm78/button';
 import { Row } from 'm78/layout';
 import { WarningIcon } from 'm78/icon';
 import { useFormState } from '@lxjx/hooks';
 import { isBoolean, omit } from '@lxjx/utils';
-import { UseTriggerTypeEnum } from 'm78/hooks';
+import { UseTriggerType } from 'm78/hooks';
+import { BubbleProps, BubbleType, omitBubbleOverlayProps } from './types';
 
 const defaultProps: Partial<BubbleProps> = {
-  type: BubbleTypeEnum.tooltip,
+  type: BubbleType.tooltip,
   cancelText: '取消',
   confirmText: '确认',
   childrenAsTarget: true,
   zIndex: Z_INDEX_MESSAGE,
   namespace: 'BUBBLE',
   lockScroll: false,
-  direction: OverlayDirectionEnum.top,
+  direction: OverlayDirection.top,
   arrow: true,
   autoFocus: false,
 };
@@ -35,7 +35,7 @@ const _Bubble = (props: BubbleProps) => {
     let m: boolean = true;
     let unm: boolean = false;
     // 提示和确认框使用时渲染, 不用时卸载
-    if (type === BubbleTypeEnum.tooltip || type === BubbleTypeEnum.confirm) {
+    if (type === BubbleType.tooltip || type === BubbleType.confirm) {
       m = true;
       unm = true;
     }
@@ -49,7 +49,7 @@ const _Bubble = (props: BubbleProps) => {
   // 在不同类型下使用不同的triggerType默认值
   const triggerType = useMemo(() => {
     let t: OverlayProps['triggerType'] =
-      type === BubbleTypeEnum.tooltip ? UseTriggerTypeEnum.active : UseTriggerTypeEnum.click;
+      type === BubbleType.tooltip ? UseTriggerType.active : UseTriggerType.click;
 
     if (props.triggerType !== undefined) t = props.triggerType;
 
@@ -63,9 +63,9 @@ const _Bubble = (props: BubbleProps) => {
   });
 
   function render() {
-    if (type === BubbleTypeEnum.tooltip) return props.content;
+    if (type === BubbleType.tooltip) return props.content;
 
-    if (type === BubbleTypeEnum.confirm) {
+    if (type === BubbleType.confirm) {
       return (
         <div>
           <Row crossAlign="start">
@@ -73,11 +73,11 @@ const _Bubble = (props: BubbleProps) => {
             {props.content}
           </Row>
           <Row className="m78-bubble_confirm-btn" mainAlign="end">
-            <Button size={SizeEnum.small} onClick={() => setShow(false)}>
+            <Button size={Size.small} onClick={() => setShow(false)}>
               {cancelText}
             </Button>
             <Button
-              size={SizeEnum.small}
+              size={Size.small}
               color="primary"
               onClick={() => {
                 onConfirm?.();

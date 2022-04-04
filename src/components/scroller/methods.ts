@@ -1,7 +1,7 @@
 import _clamp from 'lodash/clamp';
 import { UseScrollMeta } from '@lxjx/hooks';
 import { decimalPrecision, getScrollBarWidth } from '@lxjx/utils';
-import { DirectionEnum } from 'm78/common';
+import { Direction } from 'm78/common';
 import { SetDragPosArg, Share } from './types';
 import { PullDownStatus, pullDownText, PullUpStatus, pullUpText, rubberFactor } from './common';
 
@@ -113,7 +113,7 @@ export function useMethods(share: Share) {
       let leftFlag = false;
       let rightFlag = false;
 
-      if (props.direction === DirectionEnum.vertical) {
+      if (props.direction === Direction.vertical) {
         topFlag = yHas && !meta.touchTop;
         bottomFlag = yHas && !meta.touchBottom;
       } else {
@@ -281,14 +281,14 @@ export function useMethods(share: Share) {
   /** 设置到下拉位置到threshold处 */
   function pullDownToThreshold() {
     setSp({
-      y: (self.memoY = threshold),
+      y: self.memoY = threshold,
     });
   }
 
   /** 停止下拉并还原动画和状态文本 */
   function stopPullDown() {
     setSp({
-      y: (self.memoY = 0),
+      y: self.memoY = 0,
     });
 
     setState({
@@ -368,7 +368,7 @@ export function useMethods(share: Share) {
 
   /** 向前或向后滚动整页 */
   function slide(isPrev?: boolean) {
-    const isVertical = props.direction === DirectionEnum.vertical;
+    const isVertical = props.direction === Direction.vertical;
     const pos = isVertical ? 'y' : 'x';
     const sizeKey = isVertical ? 'height' : 'width';
 

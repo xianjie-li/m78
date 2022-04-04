@@ -70,7 +70,7 @@ export default () => <span />;
 ```tsx | pure
 interface ButtonProps {
   /** 按钮颜色 */
-  color?: 'blue' | 'red' | 'green' | 'yellow' | 'primary' | ButtonColorEnum;
+  color?: 'blue' | 'red' | 'green' | 'yellow' | 'primary' | ButtonColor;
   /** 大小 */
   size?: Size | 'mini';
   /** 圆形按钮 */

@@ -1,6 +1,5 @@
 import React from 'react';
 import { CountDown } from 'm78/count-down';
-import 'm78/count-down/style';
 
 const d = new Date();
 

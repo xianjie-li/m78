@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
 import { Select, SelectOptionItem } from 'm78/select';
-import { ListViewItemStyleEnum } from 'm78/list-view/types';
-import { SizeEnum } from 'm78/common';
+import { ListViewItemStyle } from 'm78/list-view/types';
+import { Size } from 'm78/common';
 import { Button } from 'm78/button';
 import { Spacer } from 'm78/layout';
 import { ListView, ListViewItem, ListViewTitle } from 'm78/list-view';
@@ -11,11 +11,11 @@ import { Check } from 'm78/check';
 const itemStyleDs: SelectOptionItem[] = [
   {
     label: '分割线',
-    value: ListViewItemStyleEnum.splitLine,
+    value: ListViewItemStyle.splitLine,
   },
   {
     label: '边框',
-    value: ListViewItemStyleEnum.border,
+    value: ListViewItemStyle.border,
   },
   {
     label: '无',
@@ -26,7 +26,7 @@ const itemStyleDs: SelectOptionItem[] = [
 const sizeDs: SelectOptionItem[] = [
   {
     label: '大',
-    value: SizeEnum.large,
+    value: Size.large,
   },
   {
     label: '常规',
@@ -34,14 +34,14 @@ const sizeDs: SelectOptionItem[] = [
   },
   {
     label: '小',
-    value: SizeEnum.small,
+    value: Size.small,
   },
 ];
 
 const Demo = () => {
   const [column, setColumn] = useState(0);
   const [border, setBorder] = useState(true);
-  const [itemStyle, setItemStyle] = useState(ListViewItemStyleEnum.splitLine);
+  const [itemStyle, setItemStyle] = useState(ListViewItemStyle.splitLine);
   const [size, setSize] = useState<undefined | string>();
   const [effect, setEffect] = useState(true);
 
@@ -82,7 +82,7 @@ const Demo = () => {
         border={border}
         column={column}
         itemStyle={itemStyle}
-        size={size as SizeEnum}
+        size={size as Size}
       >
         <ListViewTitle>收藏的水果</ListViewTitle>
 
