@@ -1,14 +1,14 @@
 const path = require('path');
 
 export default {
-  favicon: 'https://gitee.com/llixianjie/m78/raw/master/public/logo-small.png',
+  favicon: 'https://m78.vercel.app/bitbug_favicon.ico',
   alias: {
     '@': path.resolve(__dirname, '../src'),
     m78: path.resolve(__dirname, '../src/components'),
   },
   title: 'M78',
   description: 'components, hooks, utils, part of the react toolchain',
-  logo: 'https://gitee.com/llixianjie/m78/raw/master/public/logo-small.png',
+  logo: 'https://m78.vercel.app/logo-small.png',
   locales: [['zh-CN', '中文']],
   outputPath: 'docs',
   base: '/',
@@ -26,7 +26,7 @@ export default {
     },
     {
       title: 'github',
-      path: 'https://github.com/Iixianjie/m78',
+      path: 'https://github.com/xianjie-li/m78',
     },
     {
       title: 'm78-core',
