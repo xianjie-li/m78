@@ -1,5 +1,5 @@
 import React from 'react';
-import { createAuth } from 'm78/auth';
+import { createPermission } from 'm78/permission';
 import { message } from 'm78/message';
 import { Button } from 'm78/button';
 import { Divider } from 'm78/layout';
@@ -12,7 +12,7 @@ const seed = create({
   },
 });
 
-const Auth = createAuth({
+const Permission = createPermission({
   seed,
   /* 声明验证器 */
   validators: {
@@ -52,13 +52,13 @@ const ExtraDemo = () => {
       <Divider />
 
       <div>
-        <Auth keys={['onlySpecify']} extra="jxl">
+        <Permission keys={['onlySpecify']} extra="jxl">
           <div className="tc">
             <div className="fs-lg">😀</div>
             <div className="fs-md color-success bold">权限验证通过</div>
             <div className="fs color-second mt-8">这里是需要权限验证的内容</div>
           </div>
-        </Auth>
+        </Permission>
       </div>
     </div>
   );

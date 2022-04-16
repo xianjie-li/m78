@@ -1,11 +1,11 @@
 import React from 'react';
-import { createAuth } from 'm78/auth';
-import { message } from 'm78/message';
 import { Button } from 'm78/button';
 import { Divider } from 'm78/layout';
-import create from '@m78/seed';
+import { createPermission } from 'm78/permission';
+import { message } from 'm78/message';
+import { createSeed } from 'm78/seed';
 
-const seed = create({
+const seed = createSeed({
   /* 被所有验证器依赖数据 */
   state: {
     /** 登录用户 */
@@ -15,13 +15,14 @@ const seed = create({
   },
 });
 
-const auth = createAuth({
+// 创建实例
+const Permission = createPermission({
   seed,
   /* 声明验证器 */
   validators: {
     // 登录状态验证器
-    login(deps) {
-      if (!deps.user) {
+    login(state) {
+      if (!state.user) {
         // 验证未通过时，返回提示信息，还可以同时返回对应的操作
         return {
           label: '未登录',
@@ -73,22 +74,7 @@ const auth = createAuth({
   },
 });
 
-function MyComponent() {
-  return (
-    <div className="tc">
-      <div className="fs-lg">😀</div>
-      <div className="fs-md color-success bold">权限验证通过</div>
-      <div className="fs color-second mt-8">这里是需要权限验证的内容</div>
-    </div>
-  );
-}
-
-const AuthMyComponent = auth.withAuth({
-  /** 支持Auth组件除children外的所有props */
-  keys: ['login', 'admin'],
-})(MyComponent);
-
-const WithAuthDemo = () => {
+const BaseDemo = () => {
   return (
     <div>
       <Button size="small" onClick={() => seed.set({ user: 'lxj' })}>
@@ -107,11 +93,15 @@ const WithAuthDemo = () => {
         移除管理权限
       </Button>
 
-      <div className="fs color-second mtb-12">直接作为常规组件使用</div>
-
-      <AuthMyComponent />
+      <Permission keys={['login', 'admin']}>
+        <div className="tc">
+          <div className="fs-lg">😀</div>
+          <div className="fs-md color-success bold">权限验证通过</div>
+          <div className="fs color-second mt-8">这里是需要权限验证的内容</div>
+        </div>
+      </Permission>
     </div>
   );
 };
 
-export default WithAuthDemo;
+export default BaseDemo;

@@ -241,3 +241,7 @@ ul[role='slug-list'] li[data-depth='3'] {
 .markdown blockquote p {
   color: var(--m78-color-second) !important;
 }
+
+.__dumi-default-layout[data-route='/'] .__dumi-default-menu {
+  display: none;
+}

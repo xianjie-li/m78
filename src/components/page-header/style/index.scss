@@ -60,8 +60,6 @@
     height: 50px;
     padding: 0 var(--m78-space-2);
     line-height: 1;
-
-
   }
 
   &_main {
@@ -100,7 +98,8 @@
     border-top: 1px solid var(--m78-color-border);
   }
 
-  &_leading, &_actions {
+  &_leading,
+  &_actions {
     .anticon {
       font-size: 18px;
       cursor: pointer;

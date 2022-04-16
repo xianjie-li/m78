@@ -1,8 +1,8 @@
 import React from 'react';
-import { createAuth } from 'm78/auth';
-import { message } from 'm78/message';
 import { Button } from 'm78/button';
 import { Divider } from 'm78/layout';
+import { createPermission } from 'm78/permission';
+import { message } from 'm78/message';
 import create from '@m78/seed';
 
 const seed = create({
@@ -12,10 +12,12 @@ const seed = create({
     user: '',
     /** 是否是管理员 */
     admin: 2,
+    /** 是否是vip */
+    vip: 2,
   },
 });
 
-const Auth = createAuth({
+const Auth = createPermission({
   seed,
   /* 声明验证器 */
   validators: {
@@ -70,10 +72,30 @@ const Auth = createAuth({
         };
       }
     },
+    // 是否是vip
+    vip(deps) {
+      if (deps.vip !== 1) {
+        return {
+          label: 'vip可用',
+          desc: '请注册成为vip!',
+          actions: [
+            {
+              label: '注册vip',
+              color: 'blue',
+              onClick() {
+                message.tips({
+                  content: '注册vip',
+                });
+              },
+            },
+          ],
+        };
+      }
+    },
   },
 });
 
-const CustomDemo = () => {
+const OrDemo = () => {
   return (
     <div>
       <Button size="small" onClick={() => seed.set({ user: 'lxj' })}>
@@ -92,41 +114,17 @@ const CustomDemo = () => {
         移除管理权限
       </Button>
 
-      <div className="p-12">
-        <h3>自定义icon</h3>
-        <div className="fs color-second">通过定制icon来进行简单的自定义</div>
-        <Auth keys={['login', 'admin']} icon={<span>:(</span>}>
-          <div className="tc">
-            <div className="fs-lg">😀</div>
-            <div className="fs-md color-success bold">权限验证通过</div>
-            <div className="fs color-second mt-8">这里是需要权限验证的内容</div>
-          </div>
-        </Auth>
-      </div>
+      <Divider vertical />
 
-      <Divider margin={16} />
+      <Button size="small" onClick={() => seed.set({ vip: 1 })}>
+        设为vip
+      </Button>
+      <Button size="small" onClick={() => seed.set({ vip: 2 })}>
+        移除vip权限
+      </Button>
 
-      <div className="p-12">
-        <h3>完整的自定义</h3>
-        <div className="fs color-second mb-24">自行定制反馈内容</div>
-        <Auth
-          keys={['login', 'admin']}
-          feedback={rejectMetas => {
-            const rejectMeta = rejectMetas[0];
-            return (
-              <div>
-                <h3 className="color-error">{rejectMeta.label}</h3>
-                <h3 className="color-second">{rejectMeta.desc}</h3>
-                {rejectMeta.actions &&
-                  rejectMeta.actions.map(action => (
-                    <button key={action.label} type="button" onClick={action.onClick}>
-                      {action.label}
-                    </button>
-                  ))}
-              </div>
-            );
-          }}
-        >
+      <div>
+        <Auth keys={['login', ['admin', 'vip']]}>
           <div className="tc">
             <div className="fs-lg">😀</div>
             <div className="fs-md color-success bold">权限验证通过</div>
@@ -138,4 +136,4 @@ const CustomDemo = () => {
   );
 };
 
-export default CustomDemo;
+export default OrDemo;

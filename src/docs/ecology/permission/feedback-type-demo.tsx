@@ -1,5 +1,5 @@
 import React from 'react';
-import { createAuth, AuthType } from 'm78/auth';
+import { createPermission, PermissionType } from 'm78/permission';
 import { message } from 'm78/message';
 import { Button } from 'm78/button';
 import { Divider } from 'm78/layout';
@@ -15,7 +15,7 @@ const seed = create({
   },
 });
 
-const Auth = createAuth({
+const Permission = createPermission({
   seed,
   /* 声明验证器 */
   validators: {
@@ -95,13 +95,13 @@ const FeedbackTypeDemo = () => {
       <div className="p-12">
         <h3>占位形反馈</h3>
         <div className="fs color-second">通过占位节点替换无权限内容</div>
-        <Auth keys={['login', 'admin']}>
+        <Permission keys={['login', 'admin']}>
           <div className="tc">
             <div className="fs-lg">😀</div>
             <div className="fs-md color-success bold">权限验证通过</div>
             <div className="fs color-second mt-8">这里是需要权限验证的内容</div>
           </div>
-        </Auth>
+        </Permission>
       </div>
 
       <Divider margin={16} />
@@ -109,9 +109,9 @@ const FeedbackTypeDemo = () => {
       <div className="p-12">
         <h3>气泡提示型反馈</h3>
         <div className="fs color-second">通过气泡提示框进行权限提示</div>
-        <Auth keys={['login', 'admin']} type={AuthType.popper}>
+        <Permission keys={['login', 'admin']} type={PermissionType.popper}>
           <Button className="mtb-24">执行一个需要权限的操作</Button>
-        </Auth>
+        </Permission>
       </div>
 
       <Divider margin={16} />
@@ -119,13 +119,13 @@ const FeedbackTypeDemo = () => {
       <div className="p-12">
         <h3>隐藏无权限节点</h3>
         <div className="fs color-second">阻止渲染无权限内容</div>
-        <Auth keys={['login', 'admin']} type={AuthType.hidden}>
+        <Permission keys={['login', 'admin']} type={PermissionType.hidden}>
           <div className="tc">
             <div className="fs-lg">😀</div>
             <div className="fs-md color-success bold">权限验证通过</div>
             <div className="fs color-second mt-8">这里是需要权限验证的内容</div>
           </div>
-        </Auth>
+        </Permission>
       </div>
     </div>
   );

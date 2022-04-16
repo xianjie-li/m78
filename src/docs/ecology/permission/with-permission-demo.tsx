@@ -1,8 +1,8 @@
 import React from 'react';
+import { createPermission } from 'm78/permission';
+import { message } from 'm78/message';
 import { Button } from 'm78/button';
 import { Divider } from 'm78/layout';
-import { createAuth } from 'm78/auth';
-import { message } from 'm78/message';
 import create from '@m78/seed';
 
 const seed = create({
@@ -12,12 +12,10 @@ const seed = create({
     user: '',
     /** 是否是管理员 */
     admin: 2,
-    /** 是否是vip */
-    vip: 2,
   },
 });
 
-const Auth = createAuth({
+const Permission = createPermission({
   seed,
   /* 声明验证器 */
   validators: {
@@ -72,30 +70,26 @@ const Auth = createAuth({
         };
       }
     },
-    // 是否是vip
-    vip(deps) {
-      if (deps.vip !== 1) {
-        return {
-          label: 'vip可用',
-          desc: '请注册成为vip!',
-          actions: [
-            {
-              label: '注册vip',
-              color: 'blue',
-              onClick() {
-                message.tips({
-                  content: '注册vip',
-                });
-              },
-            },
-          ],
-        };
-      }
-    },
   },
 });
 
-const OrDemo = () => {
+function MyComponent() {
+  return (
+    <div className="tc">
+      <div className="fs-lg">😀</div>
+      <div className="fs-md color-success bold">权限验证通过</div>
+      <div className="fs color-second mt-8">这里是需要权限验证的内容</div>
+    </div>
+  );
+}
+
+// 创建了一个需要权限才能访问的组件
+const PermissionMyComponent = Permission.withPermission({
+  /** 支持Permission组件除children外的所有props */
+  keys: ['login', 'admin'],
+})(MyComponent);
+
+const WithPermissionDemo = () => {
   return (
     <div>
       <Button size="small" onClick={() => seed.set({ user: 'lxj' })}>
@@ -114,26 +108,11 @@ const OrDemo = () => {
         移除管理权限
       </Button>
 
-      <Divider vertical />
+      <div className="fs color-second mtb-12">直接作为常规组件使用</div>
 
-      <Button size="small" onClick={() => seed.set({ vip: 1 })}>
-        设为vip
-      </Button>
-      <Button size="small" onClick={() => seed.set({ vip: 2 })}>
-        移除vip权限
-      </Button>
-
-      <div>
-        <Auth keys={['login', ['admin', 'vip']]}>
-          <div className="tc">
-            <div className="fs-lg">😀</div>
-            <div className="fs-md color-success bold">权限验证通过</div>
-            <div className="fs color-second mt-8">这里是需要权限验证的内容</div>
-          </div>
-        </Auth>
-      </div>
+      <PermissionMyComponent />
     </div>
   );
 };
 
-export default OrDemo;
+export default WithPermissionDemo;

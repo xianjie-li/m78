@@ -1,5 +1,5 @@
 import React from 'react';
-import { createAuth } from 'm78/auth';
+import { createPermission } from 'm78/permission';
 import { message } from 'm78/message';
 import { Button } from 'm78/button';
 import { Divider } from 'm78/layout';
@@ -15,7 +15,7 @@ const seed = create({
   },
 });
 
-const { useAuth } = createAuth({
+const Permission = createPermission({
   seed,
   /* 声明验证器 */
   validators: {
@@ -73,9 +73,7 @@ const { useAuth } = createAuth({
   },
 });
 
-const UseAuthDemo = () => {
-  const rejects = useAuth(['login', 'admin']);
-
+const CustomDemo = () => {
   return (
     <div>
       <Button size="small" onClick={() => seed.set({ user: 'lxj' })}>
@@ -94,9 +92,50 @@ const UseAuthDemo = () => {
         移除管理权限
       </Button>
 
-      <pre className="p-12 mtb-12">{JSON.stringify(rejects, null, 2)}</pre>
+      <div className="p-12">
+        <h3>自定义icon</h3>
+        <div className="fs color-second">通过定制icon来进行简单的自定义</div>
+        <Permission keys={['login', 'admin']} icon={<span>:(</span>}>
+          <div className="tc">
+            <div className="fs-lg">😀</div>
+            <div className="fs-md color-success bold">权限验证通过</div>
+            <div className="fs color-second mt-8">这里是需要权限验证的内容</div>
+          </div>
+        </Permission>
+      </div>
+
+      <Divider margin={16} />
+
+      <div className="p-12">
+        <h3>完整的自定义</h3>
+        <div className="fs color-second mb-24">自行定制反馈内容</div>
+        <Permission
+          keys={['login', 'admin']}
+          feedback={rejectMetas => {
+            const rejectMeta = rejectMetas[0];
+            return (
+              <div>
+                <h3 className="color-error">{rejectMeta.label}</h3>
+                <h3 className="color-second">{rejectMeta.desc}</h3>
+                {rejectMeta.actions &&
+                  rejectMeta.actions.map(action => (
+                    <button key={action.label} type="button" onClick={action.onClick}>
+                      {action.label}
+                    </button>
+                  ))}
+              </div>
+            );
+          }}
+        >
+          <div className="tc">
+            <div className="fs-lg">😀</div>
+            <div className="fs-md color-success bold">权限验证通过</div>
+            <div className="fs color-second mt-8">这里是需要权限验证的内容</div>
+          </div>
+        </Permission>
+      </div>
     </div>
   );
 };
 
-export default UseAuthDemo;
+export default CustomDemo;

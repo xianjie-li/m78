@@ -1,11 +1,11 @@
 import React from 'react';
+import { createPermission } from 'm78/permission';
+import { message } from 'm78/message';
 import { Button } from 'm78/button';
 import { Divider } from 'm78/layout';
-import { createAuth } from 'm78/auth';
-import { message } from 'm78/message';
-import { createSeed } from 'm78/seed';
+import create from '@m78/seed';
 
-const seed = createSeed({
+const seed = create({
   /* 被所有验证器依赖数据 */
   state: {
     /** 登录用户 */
@@ -15,13 +15,13 @@ const seed = createSeed({
   },
 });
 
-const Auth = createAuth({
+const { usePermission } = createPermission({
   seed,
   /* 声明验证器 */
   validators: {
     // 登录状态验证器
-    login(state) {
-      if (!state.user) {
+    login(deps) {
+      if (!deps.user) {
         // 验证未通过时，返回提示信息，还可以同时返回对应的操作
         return {
           label: '未登录',
@@ -73,7 +73,9 @@ const Auth = createAuth({
   },
 });
 
-const BaseDemo = () => {
+const UsePermissionDemo = () => {
+  const rejects = usePermission(['login', 'admin']);
+
   return (
     <div>
       <Button size="small" onClick={() => seed.set({ user: 'lxj' })}>
@@ -92,15 +94,9 @@ const BaseDemo = () => {
         移除管理权限
       </Button>
 
-      <Auth keys={['login', 'admin']}>
-        <div className="tc">
-          <div className="fs-lg">😀</div>
-          <div className="fs-md color-success bold">权限验证通过</div>
-          <div className="fs color-second mt-8">这里是需要权限验证的内容</div>
-        </div>
-      </Auth>
+      <pre className="p-12 mtb-12">{JSON.stringify(rejects, null, 2)}</pre>
     </div>
   );
 };
 
-export default BaseDemo;
+export default UsePermissionDemo;

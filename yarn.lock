@@ -1880,6 +1880,17 @@
     lodash "^4.17.21"
     tslib "^2.2.0"
 
+"@m78/permission@^2.1.1":
+  version "2.1.1"
+  resolved "https://registry.npmmirror.com/@m78/permission/-/permission-2.1.1.tgz#975649ff7d64b77299b81c85343db9c88848b603"
+  integrity sha512-5HruYgCx44xY/MI60NNO2XwdK2zDQWsxUnxK+5RMwO5pBfSDH+VNwY3WUpAvlfv5ko6tI/FLdku0ffc22kTcdw==
+  dependencies:
+    "@lxjx/utils" "^1.7.9"
+    "@m78/seed" "^2.1.0"
+    "@types/lodash" "^4.14.170"
+    lodash "^4.17.21"
+    tslib "^2.3.1"
+
 "@m78/render-api@^1.4.1":
   version "1.4.1"
   resolved "https://registry.npmmirror.com/@m78/render-api/-/render-api-1.4.1.tgz#38229d42f42e28375e841f4bafe93c60bde5f8c7"
