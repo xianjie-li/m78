@@ -21,7 +21,7 @@ const GridsDemo = () => {
 
   return (
     <div style={{ border: '1px solid pink', position: 'relative', padding: 12 }}>
-      <Grids gutter={12}>
+      <Grids gutter={[0, 12]}>
         {Array.from({ length: 20 }).map((_, index) => (
           <GridsItem key={index} {...layout}>
             <Form.Field name={`field${index + 1}`} label={`字段${index + 1}`}>

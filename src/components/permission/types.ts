@@ -49,7 +49,7 @@ export type PermissionTypeKeys = keyof typeof PermissionType;
 /** api */
 export interface RCPermission<S, V> {
   /** 权限检测组件 */
-  (props: PermissionProps<S, V>): ReactElement<any, any> | null;
+  (props: PermissionProps<S, V>): ReactElement<any, any> | (() => ReactElement<any, any>) | null;
 
   /** 一个permission实例, 可用于主动执行权限验证 */
   permission: Permission<S, V>;

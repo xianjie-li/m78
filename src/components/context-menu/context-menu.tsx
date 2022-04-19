@@ -4,7 +4,6 @@ import { useTrigger, UseTriggerType } from 'm78/hooks';
 import { Overlay, OverlayDirection } from 'm78/overlay';
 import clsx from 'clsx';
 import { useFormState } from '@lxjx/hooks';
-import { TransitionType } from 'm78/transition';
 import { ContextMenuProps, omitContextMenuOverlayProps } from './types';
 
 const defaultTriggerType = [UseTriggerType.contextMenu];
@@ -45,7 +44,6 @@ const _ContextMenu = (props: ContextMenuProps) => {
         xy={xy}
         show={show}
         onChange={setShow}
-        transitionType={TransitionType.fade}
         content={
           <div
             className={clsx('m78-context-menu')}

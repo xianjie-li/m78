@@ -49,6 +49,7 @@
     width: 12px;
     background: linear-gradient(to left, var(--m78-color-border), transparent);
     pointer-events: none;
+    border-radius: 0 0 4px 4px;
 
     &.__start {
       left: 0;

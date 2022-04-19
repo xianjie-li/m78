@@ -1,5 +1,5 @@
 import React, { ReactElement, ReactNode } from 'react';
-import { ComponentBasePropsWithAny, ComponentBaseProps, Size } from '@lxjx/utils';
+import { ComponentBasePropsWithAny, ComponentBaseProps, Size, TupleNumber } from '@lxjx/utils';
 
 /*
  * ########################################
@@ -174,8 +174,8 @@ export interface GridsColMediaQueryProps extends ComponentBaseProps {
 export type GridsColNumberOrMediaQueryProps = number | GridsColMediaQueryProps;
 
 export interface GridsRowProps extends FlexWrapProps {
-  /** 间隔 */
-  gutter?: number;
+  /** 间隔, 为数字时控制4个方向, 两个时分别控制上下 */
+  gutter?: number | TupleNumber;
   /** true | 是否允许换行 */
   wrap?: boolean;
 }

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { GridsColProps, GridsRowProps, useMediaQuery } from 'm78/layout';
-import { isNumber } from '@lxjx/utils';
+import { isArray, isNumber } from '@lxjx/utils';
 import cls from 'clsx';
 import { getCurrentMqProps } from './common';
 
@@ -11,6 +11,13 @@ const context = React.createContext<Omit<GridsRowProps, 'children'>>({});
 
 const getStyleValue = (n?: number) => {
   if (isNumber(n)) return `${n * ONE_COLUMN}%`;
+};
+
+const getPadding = (gutter: GridsRowProps['gutter']) => {
+  if (isNumber(gutter)) return gutter / 2;
+  if (isArray(gutter) && gutter.length === 2) {
+    return `${gutter[0] / 2}px ${gutter[1] / 2}px`;
+  }
 };
 
 function Grids(props: GridsRowProps) {
@@ -29,7 +36,7 @@ function Grids(props: GridsRowProps) {
         )}
         style={{
           ...style,
-          padding: isNumber(gutter) ? gutter / 2 : undefined,
+          padding: getPadding(gutter),
         }}
       >
         {children}
@@ -71,8 +78,6 @@ function GridsItem(props: GridsColProps) {
 
   const { col, offset, move, order, flex, hidden, align, className, style } = current;
 
-  const _gutter = isNumber(gutter) ? gutter / 2 : undefined;
-
   return (
     <div
       {...ppp}
@@ -80,7 +85,7 @@ function GridsItem(props: GridsColProps) {
       style={{
         ...style,
         width: getStyleValue(col),
-        padding: _gutter,
+        padding: getPadding(gutter),
         marginLeft: getStyleValue(offset),
         left: getStyleValue(move),
         order,

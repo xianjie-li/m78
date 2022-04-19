@@ -9,6 +9,7 @@ import { useFormState } from '@lxjx/hooks';
 import { isBoolean, omit } from '@lxjx/utils';
 import { UseTriggerType } from 'm78/hooks';
 import { BubbleProps, BubbleType, omitBubbleOverlayProps } from './types';
+import { TransitionType } from 'm78/transition';
 
 const defaultProps: Partial<BubbleProps> = {
   type: BubbleType.tooltip,
@@ -101,6 +102,7 @@ const _Bubble = (props: BubbleProps) => {
 
   return (
     <Overlay
+      transitionType={TransitionType.fade}
       {...overlayProps}
       triggerType={triggerType}
       className={clsx('m78-init m78-bubble', `__${type}`, props.className)}
