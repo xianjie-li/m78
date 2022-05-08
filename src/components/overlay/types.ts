@@ -1,6 +1,6 @@
 import { AnyFunction, BoundSize, ComponentBaseProps, TupleNumber } from '@lxjx/utils';
 import React from 'react';
-import { SetFormState, SetState, UseMountStateConfig } from '@lxjx/hooks';
+import { SetFormState, SetState, UseMeasureBound, UseMountStateConfig } from '@lxjx/hooks';
 import { RenderApiComponentProps } from '@m78/render-api';
 import { useTrigger, UseTriggerConfig } from 'm78/hooks';
 import { TransitionBaseProps, TransitionTypeUnion } from 'm78/transition';
@@ -233,7 +233,7 @@ export interface _Context {
   trigger: ReturnType<typeof useTrigger>;
   overlaysClickAway: ReturnType<typeof useOverlaysClickAway>;
   overlaysMask: ReturnType<typeof useOverlaysMask>;
-  measure: DOMRectReadOnly;
+  measure: UseMeasureBound;
 }
 
 /** 描述位置和该位置是否可用的对象 */

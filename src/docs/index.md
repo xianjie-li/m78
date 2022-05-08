@@ -13,8 +13,7 @@ order: 1
 
 ## 🎉Introduction
 
-一个 react 基础库，包含常用组件、hooks、开发工具。[查看文档](http://llixianjie.gitee.io/m78/docs)
-
+一个 react 基础库，包含常用组件、hooks、开发工具。
 <br>
 
 ## ✨Features
