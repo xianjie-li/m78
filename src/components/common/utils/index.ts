@@ -28,6 +28,8 @@ export const stopPropagation = {
   },
 };
 
+export const MASK_NAMESPACE = 'M78-MASK';
+
 /** throw error */
 export function throwError(errorMsg: string, namespace?: string): never {
   throw new Error(`M78💥 -> ${namespace ? `${namespace} -> ` : ''} ${errorMsg}`);

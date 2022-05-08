@@ -29,16 +29,16 @@ $colors: rgba(#40a9ff, 0.95) rgba(#ffa940, 0.5) rgba(#ff4d4f, 0.95) rgb(#73d13d,
   }
 
   &.__small .m78-spin_unit-wrap {
-    font-size: var(--m78--unit-size-small);
-    height: var(--m78--unit-size-small);
+    font-size: var(--m78-unit-size-small);
+    height: var(--m78-unit-size-small);
   }
 
   &.__large .m78-spin_unit-wrap {
-    font-size: var(--m78--unit-size-large);
+    font-size: var(--m78-unit-size-large);
   }
 
   &.__big .m78-spin_unit-wrap {
-    font-size: var(--m78--unit-size-big);
+    font-size: var(--m78-unit-size-big);
   }
 }
 
@@ -67,7 +67,7 @@ $colors: rgba(#40a9ff, 0.95) rgba(#ffa940, 0.5) rgba(#ff4d4f, 0.95) rgb(#73d13d,
     display: inline-block;
     width: 1em;
     height: 1em;
-    font-size: var(--m78--unit-size);
+    font-size: var(--m78-unit-size);
   }
 
   &:nth-child(1) {

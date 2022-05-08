@@ -8,6 +8,7 @@ import { Size } from 'm78/common';
 import { Bubble, BubbleType } from 'm78/bubble';
 import { Overlay, OverlayInstance } from 'm78/overlay';
 import { Input } from 'm78/input';
+import NotifyExample from './notify/notify-example';
 
 const App = () => {
   const dark = m78Config.useState(state => state.darkMode);
@@ -33,8 +34,8 @@ const App = () => {
         {dark ? 'dark' : 'light'}
       </button>
 
-      <div style={{ width: 500 }}>
-        <Input placeholder="请输入内容" textArea maxLength={200} />
+      <div>
+        <NotifyExample />
       </div>
     </div>
   );

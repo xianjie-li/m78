@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from 'm78/button';
 import { Bubble, BubbleType } from 'm78/bubble';
-import { message } from 'm78/message';
+import { notify } from 'm78/notify';
 
 const Demo = () => {
   return (
@@ -27,7 +27,7 @@ const Demo = () => {
         type={BubbleType.confirm}
         content="此操作不可撤, 是否确认?"
         onConfirm={() => {
-          message.tips({
+          notify.render({
             content: '成功删除了"学习资料"',
           });
         }}

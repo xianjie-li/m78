@@ -11,21 +11,21 @@ import {
   WaitingIcon,
 } from 'm78/icon';
 
-import { message } from 'm78/message';
+import { notify } from 'm78/notify';
 
 const IconDemo2 = () => {
   function copyToClipboard(text: string) {
     if (!('clipboard' in navigator)) {
-      message.tips({
-        type: 'error',
+      notify.render({
+        status: 'error',
         content: `sorry! 你的浏览器不支持navigator.clipboard API`,
       });
       return;
     }
 
     navigator.clipboard.writeText(text).then(() => {
-      message.tips({
-        type: 'success',
+      notify.render({
+        status: 'success',
         content: `复制成功: <${text} />`,
       });
     });

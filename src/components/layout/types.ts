@@ -1,5 +1,6 @@
 import React, { ReactElement, ReactNode } from 'react';
 import { ComponentBasePropsWithAny, ComponentBaseProps, Size, TupleNumber } from '@lxjx/utils';
+import { DIVProps } from 'm78/common';
 
 /*
  * ########################################
@@ -7,16 +8,18 @@ import { ComponentBasePropsWithAny, ComponentBaseProps, Size, TupleNumber } from
  * ########################################
  * */
 
-export interface FlexWrapProps extends ComponentBasePropsWithAny {
+export interface FlexWrapProps extends DIVProps {
   /** 'start' | 主轴对齐方式 */
   mainAlign?: 'center' | 'start' | 'end' | 'around' | 'between' | 'evenly';
   /** 'start' | 交叉轴对齐方式 */
   crossAlign?: 'stretch' | 'start' | 'end' | 'center';
   /** 内容 */
   children: React.ReactNode;
+  /** 指向内部包裹dom的ref */
+  innerRef?: React.Ref<HTMLDivElement>;
 }
 
-export interface FlexProps extends ComponentBasePropsWithAny {
+export interface FlexProps extends DIVProps {
   /** 1 | 弹性系数 */
   flex?: number | string;
   /** 排序 */

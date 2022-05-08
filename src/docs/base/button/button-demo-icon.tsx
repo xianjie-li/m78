@@ -10,7 +10,7 @@ import {
   CaretLeftOutlined,
   CaretRightOutlined,
 } from 'm78/icon';
-import { message } from 'm78/message';
+import { notify } from 'm78/notify';
 
 const ButtonDemoColor = () => (
   <div>
@@ -78,7 +78,7 @@ const ButtonDemoColor = () => (
       <div className="mt-16">
         <Button
           color="primary"
-          onClick={() => message.tips({ type: 'success', content: '恭喜您成功脱发一根!' })}
+          onClick={() => notify.render({ status: 'success', content: '恭喜您成功脱发一根!' })}
         >
           <CaretLeftOutlined />
           点我

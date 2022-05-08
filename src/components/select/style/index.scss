@@ -149,12 +149,12 @@
     border-radius: var(--m78-border-radius);
 
     &.__small {
-      height: var(--m78--unit-size-small);
+      height: var(--m78-unit-size-small);
     }
 
     &.__large,
     &.__big {
-      height: var(--m78--unit-size-big);
+      height: var(--m78-unit-size-big);
       font-size: var(--m78-fs-md);
     }
 

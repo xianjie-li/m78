@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Check } from 'm78/check';
+import { Size } from 'm78/common';
 
 const Demo = () => (
   <div>
@@ -45,6 +46,21 @@ const Demo = () => (
       <Check disabled label="🍎苹果(缺货)" block />
       <Check label="🍇葡萄" block />
     </div>
+
+    <h3 className="mt-32">尺寸</h3>
+
+    <Check.Group>
+      <Check label="复选框" />
+      <Check type="radio" label="单选框" />
+      <Check type="switch" label="开关" />
+    </Check.Group>
+
+    <Check.Group>
+      <Check label="复选框" size={Size.small} />
+      <Check label="复选框" size={Size.small} partial />
+      <Check type="radio" label="单选框" size={Size.small} />
+      <Check type="switch" label="开关" size={Size.small} />
+    </Check.Group>
   </div>
 );
 

@@ -30,10 +30,12 @@ interface M78SeedState {
 }
 ```
 
-通过`seed api`来获取和更新状态
+获取和更新状态, 查看[seed](/docs/ecology/seed)获取更多用法
 
 ```ts
+import { m78Config } from 'm78/config';
+
 const darkMode = seed.get().darkMode;
 
-seed.set({ darkMode: !darkMode });
+m78Config.set({ darkMode: !darkMode });
 ```

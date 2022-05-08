@@ -215,9 +215,10 @@ export default function _useTreeItem({ data, treeState, props }: Props) {
   function renderMultiCheck() {
     if (!isMCheck) return null;
     return (
-      <span {...stopPropagation}>
+      <span {...stopPropagation} className="lh-1">
         <Check
-          size={Size.small}
+          className="mr-8"
+          waveWrap={false}
           type="checkbox"
           partial={checkIsPartial()}
           checked={isChecked}

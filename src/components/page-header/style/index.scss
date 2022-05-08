@@ -4,7 +4,6 @@
   position: relative;
   background-color: var(--m78-component-bg);
   z-index: var(--m78-z-index);
-  border: 1px solid var(--m78-color-border);
 
   /* 需要固定左右宽度 */
   &.__center {
@@ -23,7 +22,7 @@
   }
 
   &.__border {
-    box-shadow: none;
+    border: 1px solid var(--m78-color-border);
   }
 
   &.__color {

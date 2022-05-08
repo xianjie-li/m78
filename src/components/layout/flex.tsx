@@ -61,10 +61,20 @@ const Row = ({
   );
 };
 
-const Flex = ({ flex = 1, children, order, style, className, align, ...ppp }: FlexProps) => {
+const Flex = ({
+  flex = 1,
+  children,
+  order,
+  style,
+  className,
+  align,
+  innerRef,
+  ...ppp
+}: FlexProps) => {
   return (
     <div
       {...ppp}
+      ref={innerRef}
       className={cls('m78 m78-flex', className, align && `m78-self-${align}`)}
       style={{ flex, order, ...style }}
     >

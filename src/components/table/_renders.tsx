@@ -204,7 +204,8 @@ export function renderThead(ctx: _Context, columns: _TableColumnInside[]) {
     if (treeState.isMCheck) {
       return (
         <Check
-          size={Size.small}
+          className="mr-8"
+          waveWrap={false}
           type="checkbox"
           partial={valChecker.partialChecked}
           checked={valChecker.allChecked}

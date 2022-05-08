@@ -33,7 +33,7 @@ interface PageHeaderProps extends ComponentBaseProps {
    * */
   fixed?: boolean;
 
-  /** true | 开启阴影 */
+  /** 开启阴影 */
   shadow?: boolean;
   /** 开启边框, 优先级高于shadow */
   border?: boolean;
@@ -47,8 +47,8 @@ const PageHeader = ({
   desc,
   centerTitle,
   backIcon,
-  shadow = true,
-  border,
+  shadow = false,
+  border = false,
   bottom,
   actions,
   color,

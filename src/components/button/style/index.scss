@@ -12,7 +12,7 @@
   user-select: none;
   border: 1px solid var(--m78-color-border);
   padding: 0 18px;
-  height: var(--m78--unit-size);
+  height: var(--m78-unit-size);
   font-size: var(--m78-fs);
   line-height: 1;
   border-radius: var(--m78-border-radius);
@@ -75,13 +75,13 @@
 
   // 大小
   &.__large {
-    height: var(--m78--unit-size-large);
+    height: var(--m78-unit-size-large);
     padding: 0 26px;
     font-size: 18px;
   }
 
   &.__small {
-    height: var(--m78--unit-size-small);
+    height: var(--m78-unit-size-small);
     padding: 0 8px;
     font-size: 14px;
   }

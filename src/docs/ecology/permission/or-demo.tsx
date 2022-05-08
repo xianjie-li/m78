@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from 'm78/button';
 import { Divider } from 'm78/layout';
 import { createPermission } from 'm78/permission';
-import { message } from 'm78/message';
+import { notify } from 'm78/notify';
 import create from '@m78/seed';
 
 const seed = create({
@@ -34,7 +34,7 @@ const Auth = createPermission({
               label: '去登陆',
               color: 'red',
               onClick() {
-                message.tips({
+                notify.render({
                   content: '去登陆',
                 });
               },
@@ -42,7 +42,7 @@ const Auth = createPermission({
             {
               label: '算了',
               onClick() {
-                message.tips({
+                notify.render({
                   content: '算了',
                 });
               },
@@ -63,7 +63,7 @@ const Auth = createPermission({
               label: '联系管理员',
               color: 'blue',
               onClick() {
-                message.tips({
+                notify.render({
                   content: '联系管理员',
                 });
               },
@@ -83,7 +83,7 @@ const Auth = createPermission({
               label: '注册vip',
               color: 'blue',
               onClick() {
-                message.tips({
+                notify.render({
                   content: '注册vip',
                 });
               },

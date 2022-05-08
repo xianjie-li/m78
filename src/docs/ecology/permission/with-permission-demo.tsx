@@ -1,6 +1,6 @@
 import React from 'react';
 import { createPermission } from 'm78/permission';
-import { message } from 'm78/message';
+import { notify } from 'm78/notify';
 import { Button } from 'm78/button';
 import { Divider } from 'm78/layout';
 import create from '@m78/seed';
@@ -32,7 +32,7 @@ const Permission = createPermission({
               label: '去登陆',
               color: 'red',
               onClick() {
-                message.tips({
+                notify.render({
                   content: '去登陆',
                 });
               },
@@ -40,7 +40,7 @@ const Permission = createPermission({
             {
               label: '算了',
               onClick() {
-                message.tips({
+                notify.render({
                   content: '算了',
                 });
               },
@@ -61,7 +61,7 @@ const Permission = createPermission({
               label: '联系管理员',
               color: 'blue',
               onClick() {
-                message.tips({
+                notify.render({
                   content: '联系管理员',
                 });
               },

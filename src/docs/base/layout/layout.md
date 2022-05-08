@@ -332,20 +332,22 @@ interface MediaQueryMeta {
 **`Column/Row`**
 
 ```tsx | pure
-interface FlexWrapProps extends ComponentBasePropsWithAny {
+interface FlexWrapProps extends DIVProps {
   /** 'start' | 主轴对齐方式 */
   mainAlign?: 'center' | 'start' | 'end' | 'around' | 'between' | 'evenly';
-  /** 'stretch' | 交叉轴对齐方式 */
+  /** 'start' | 交叉轴对齐方式 */
   crossAlign?: 'stretch' | 'start' | 'end' | 'center';
   /** 内容 */
   children: React.ReactNode;
+  /** 指向内部包裹dom的ref */
+  innerRef?: React.Ref<HTMLDivElement>;
 }
 ```
 
 **`Flex`**
 
 ```tsx | pure
-nterface FlexProps extends ComponentBasePropsWithAny {
+interface FlexProps extends DIVProps {
   /** 1 | 弹性系数 */
   flex?: number | string;
   /** 排序 */
@@ -354,6 +356,8 @@ nterface FlexProps extends ComponentBasePropsWithAny {
   align?: FlexWrapProps['crossAlign'];
   /** 内容 */
   children?: React.ReactNode;
+  /** 指向内部包裹dom的ref */
+  innerRef?: React.Ref<HTMLDivElement>;
 }
 ```
 

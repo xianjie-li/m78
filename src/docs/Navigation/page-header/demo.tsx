@@ -115,6 +115,19 @@ const Demo = () => (
     <Spacer height={16} />
 
     <PageHeader
+      shadow
+      title="阴影模式"
+      desc="这是一段描述~"
+      actions={
+        <Button icon>
+          <SettingOutlined />
+        </Button>
+      }
+    />
+
+    <Spacer height={16} />
+
+    <PageHeader
       title="底部放置内容"
       desc="这是一段描述~"
       actions={

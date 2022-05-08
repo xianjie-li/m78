@@ -63,3 +63,5 @@ export interface DataSourceItem<ValType = any> {
   /** 选项值, 默认与label相同 */
   value: ValType;
 }
+
+export type DIVProps = React.PropsWithoutRef<JSX.IntrinsicElements['div']>;

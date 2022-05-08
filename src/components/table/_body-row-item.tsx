@@ -92,7 +92,8 @@ const _BodyRowItem = ({ data, index, ctx, columns, props }: Props) => {
       return (
         <span>
           <Check
-            size={Size.small}
+            className="mr-8"
+            waveWrap={false}
             type="radio"
             checked={itemState.isChecked}
             disabled={itemState.isDisabled}

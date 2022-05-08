@@ -10,6 +10,7 @@ import { isFunction } from '@lxjx/utils';
 import { _Arrow as Arrow } from './arrow';
 import { getArrowBasePosition, transitionConfig } from './common';
 import { _MountTrigger as MountTrigger } from './mountTrigger';
+import { MASK_NAMESPACE } from 'm78/common';
 
 const AnimatedArrow = animated(Arrow);
 
@@ -99,7 +100,7 @@ export function _useRender(ctx: _Context, methods: _Methods, lifeCycle: _LifeCyc
     return (
       <>
         <Portal namespace={props.namespace}>
-          {renderMask()}
+          <Portal namespace={MASK_NAMESPACE}>{renderMask()}</Portal>
           <animated.div
             ref={containerRef}
             className="m78 m78-overlay_wrap"

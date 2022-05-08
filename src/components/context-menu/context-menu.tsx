@@ -4,6 +4,7 @@ import { useTrigger, UseTriggerType } from 'm78/hooks';
 import { Overlay, OverlayDirection } from 'm78/overlay';
 import clsx from 'clsx';
 import { useFormState } from '@lxjx/hooks';
+import { TransitionType } from 'm78/transition';
 import { ContextMenuProps, omitContextMenuOverlayProps } from './types';
 
 const defaultTriggerType = [UseTriggerType.contextMenu];
@@ -40,6 +41,7 @@ const _ContextMenu = (props: ContextMenuProps) => {
         mountOnEnter
         unmountOnExit
         direction={OverlayDirection.rightStart}
+        transitionType={TransitionType.fade}
         {...overlayProps}
         xy={xy}
         show={show}

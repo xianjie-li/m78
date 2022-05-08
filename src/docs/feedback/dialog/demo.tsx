@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { Dialog } from 'm78/dialog';
 import { Button } from 'm78/button';
-import { message } from 'm78/message';
+import { notify } from 'm78/notify';
 
 const Demo = () => {
   const [loading, setLoading] = useState(false);
@@ -17,8 +17,8 @@ const Demo = () => {
         close
         title="这是标题"
         onClose={isConfirm => {
-          message.tips({
-            type: isConfirm ? 'success' : 'error',
+          notify.render({
+            status: isConfirm ? 'success' : 'error',
             content: isConfirm ? '你点击了确认' : '你关闭了弹窗',
           });
         }}

@@ -40,36 +40,32 @@ function getCheckCls({ focus, checked, disabled }: ShareMeta) {
 /** 内置样式实现 */
 const builtIn: BuiltIn = {
   radio: meta => (
-    <span className={cls('m78-check_base m78-effect __md', getCheckCls(meta))}>
+    <span className={cls('m78-check_base', getCheckCls(meta))}>
       <span className="m78-check_base-main">
         <span className="m78-check_base-inner" />
       </span>
+      <span className="m78-check_wave-node m78-effect __md" />
     </span>
   ),
   checkbox: (meta, { partial }) => (
     <span
-      className={cls(
-        'm78-check_base m78-effect __md',
-        '__checkbox',
-        partial && '__partial',
-        getCheckCls(meta),
-      )}
+      className={cls('m78-check_base', '__checkbox', partial && '__partial', getCheckCls(meta))}
     >
       <span className="m78-check_base-main">
         <span className="m78-check_base-inner" />
       </span>
+      <span className="m78-check_wave-node m78-effect __md" />
     </span>
   ),
   switch: (meta, { switchOff, switchOn }) => (
     <span className={cls('m78-check_switch', getCheckCls(meta))}>
-      <span
-        className={cls('m78-check_switch-inner m78-effect __md', meta.disabled && '__disabled')}
-      >
+      <span className={cls('m78-check_switch-inner', meta.disabled && '__disabled')}>
         <span className="m78-check_switch-handle">
           <If when={switchOff && switchOn}>
             <span>{meta.checked ? switchOn : switchOff}</span>
           </If>
         </span>
+        <span className="m78-check_wave-node m78-effect __md" />
       </span>
     </span>
   ),
@@ -136,7 +132,7 @@ const Check = <Val extends unknown = undefined>(_props: CheckProps<Val>) => {
     /* eslint-disable-next-line jsx-a11y/label-has-associated-control,jsx-a11y/label-has-for */
     <label
       className={cls('m78 m78-check', statusCls, className, size && `__${size}`, {
-        '__wave-wrap': waveWrap,
+        '__hide-wave': !waveWrap,
       })}
       style={style}
       onKeyPress={mouseUpHandel}

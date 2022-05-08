@@ -41,7 +41,7 @@ group:
 
 ## 组件约定
 
-- 表单均需要支持 `value/defaultValue/onChange(val)` 接口，即使是`Radio`等组件。不应使用`check/defaultCheck`等更语义化的名称，一是增加学习成本，二是能减少与验证库或其他第三方库集成。
+- 表单均需要支持 `value/defaultValue/onChange(val)` 接口，即使是`Radio`等组件。不应使用`check/defaultCheck`等更语义化的名称，一是增加学习成本，二是能减少与验证库或其他第三方库集成成本。
 - 所有表单控件 onChange 首参应输出直接可用的 value 类型，而不是未处理的特殊类型。类似`antd`时间控件的`onChange(moment)`，对使用者不友好。
 - 表单控件应该根据类型支持以下态或其他衍生状态
   - loading
@@ -52,7 +52,6 @@ group:
   - active
   - error
   - success
-  - warn
   - tabindex
   - 键盘操作
 - 复杂的条件渲染(参与验证的条件超过两个)，考虑使用 `If`, `Toggle`, `Fork` 等组件。

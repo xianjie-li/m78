@@ -1,7 +1,7 @@
 import React from 'react';
 import { createPermission } from 'm78/permission';
 import { Button } from 'm78/button';
-import { message } from 'm78/message';
+import { notify } from 'm78/notify';
 import create from '@m78/seed';
 
 const seed = create({
@@ -45,7 +45,7 @@ const ScopeDemo = () => {
                     label: '去登陆',
                     color: 'red',
                     onClick() {
-                      message.tips({
+                      notify.render({
                         content: '去登陆',
                       });
                     },
@@ -53,7 +53,7 @@ const ScopeDemo = () => {
                   {
                     label: '算了',
                     onClick() {
-                      message.tips({
+                      notify.render({
                         content: '算了',
                       });
                     },
