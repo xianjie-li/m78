@@ -264,7 +264,7 @@ export interface _TableColumnInside extends TableColumn {
   /** 因为要根据是否固定拆分为多个列表，所以列索引一律使用这个 */
   index: number;
   /** 根据位置生成的key */
-  key: string;
+  columnHeadKey: string;
 }
 
 /** 内部实例对象 */

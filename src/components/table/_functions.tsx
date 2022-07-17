@@ -165,7 +165,7 @@ export function nestHeaderColumnsFormat(column: TableColumn[], indexStart = 0) {
         _zIndex: index,
         _rowSum: 0,
         _colSum: 0,
-        key: createRandString(),
+        columnHeadKey: createRandString(),
         index: -1, // 组合列index设置为-1
       };
 
@@ -242,6 +242,8 @@ export function handleSortClick(ctx: _Context, column: TableColumn, key?: string
   const {
     states: { sortState },
   } = ctx;
+
+  console.log(key);
 
   if (!key) {
     throwError('Column identity key was not get', 'Table');

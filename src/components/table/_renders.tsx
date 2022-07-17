@@ -218,7 +218,7 @@ export function renderThead(ctx: _Context, columns: _TableColumnInside[][]) {
         <tr key={ind} style={{ height: tableHeaderHeight }}>
           {i.map(column => (
             <Cell
-              key={column.key}
+              key={column.columnHeadKey}
               colSpan={column._colSum || 1}
               rowSpan={fmtColumns.max - column._rowSum - column._zIndex}
               {...getInitTableMeta(ctx, {
