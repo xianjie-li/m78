@@ -50,11 +50,14 @@ export function formatNumeric(moneyStr = '', delimiter = buildInPattern.numeric.
 
 /* 处理 type=number */
 export function parserNumber(value = '') {
-  value = value.replace(/[^(0-9|.)]/g, '');
+  const firstIsMS = value[0] === '-';
+
+  value = value.replace(/[^(0-9.)]/g, '');
   // 去首位点
   if (value[0] === '.') {
     value = value.slice(1);
   }
+
   // 去1个以上的点
   const matchDot = value.match(/(\.)/g);
   if (matchDot && matchDot.length > 1) {
@@ -63,12 +66,25 @@ export function parserNumber(value = '') {
     const lastStr = value.slice(firstDotInd + 1).replace('.', '');
     value = firstStr + lastStr;
   }
+
+  if (firstIsMS) {
+    value = `-${value}`;
+  }
+
   return value;
 }
 
 /* 处理 type=integer */
 export function parserInteger(value = '') {
-  return value.replace(/[\D]/g, '');
+  const firstIsMS = value[0] === '-';
+
+  value = value.replace(/[\D]/g, '');
+
+  if (firstIsMS) {
+    value = `-${value}`;
+  }
+
+  return value;
 }
 
 /* 处理 type=general */

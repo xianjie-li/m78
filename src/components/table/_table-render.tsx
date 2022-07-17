@@ -12,6 +12,11 @@ interface Props {
 }
 
 const _TableRender = ({ type, innerRef, ctx, column, isMain }: Props) => {
+  let headAOA = ctx.states.fmtColumns.headAOA;
+
+  if (type === TableColumnFixed.left) headAOA = ctx.states.fmtColumns.headLeftAOA;
+  if (type === TableColumnFixed.right) headAOA = ctx.states.fmtColumns.headRightAOA;
+
   return (
     <div className={clsx('m78-table_main', type && `__${type}`)}>
       <table
@@ -19,7 +24,7 @@ const _TableRender = ({ type, innerRef, ctx, column, isMain }: Props) => {
         className={isMain ? undefined : clsx('m78-table_fixed-table', type && `__${type}`)}
       >
         {renderColgroup(ctx, column, isMain)}
-        {renderThead(ctx, column)}
+        {renderThead(ctx, headAOA)}
         {renderTbody(ctx, column, isMain)}
         {renderTfoot(ctx, column)}
       </table>

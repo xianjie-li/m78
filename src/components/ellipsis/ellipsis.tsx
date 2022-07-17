@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { getStyle } from '@lxjx/utils';
 import cls from 'clsx';
 
-export interface MaskProps extends React.PropsWithoutRef<JSX.IntrinsicElements['div']> {
+export interface EllipsisProps extends React.PropsWithoutRef<JSX.IntrinsicElements['div']> {
   /** 1 | 最大行数 */
   line?: number;
   /** 强制启用兼容模式 */
@@ -20,13 +20,14 @@ function multiLine(line: number) {
   } as const;
 }
 
-const Ellipsis: React.FC<MaskProps> = ({
+const Ellipsis: React.FC<EllipsisProps> = ({
   line = 1,
   forceCompat = false,
   disabled = false,
   className,
   style,
   children,
+  ...props
 }) => {
   const el = React.useRef<HTMLDivElement>(null!);
   const [state, setState] = useState({
@@ -63,7 +64,7 @@ const Ellipsis: React.FC<MaskProps> = ({
   if (disabled) {
     /* 没有挂载点的话会导致开关后样式不统一 */
     return (
-      <div className={className} style={style}>
+      <div {...props} className={className} style={style}>
         {children}
       </div>
     );
@@ -71,6 +72,7 @@ const Ellipsis: React.FC<MaskProps> = ({
 
   return (
     <div
+      {...props}
       ref={el}
       className={cls('m78 m78-ellipsis', className, {
         ellipsis: !shouldAddShadow && line === 1,

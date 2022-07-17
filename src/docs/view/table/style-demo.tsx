@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row } from 'm78/layout';
 import { RadioBox } from 'm78/radio-box';
-import { Table, TableColumns, TableDivideStyle } from 'm78/table';
+import { Table, TableColumns } from 'm78/table';
 import { Size } from 'm78/common';
 import { Check } from 'm78/check';
 import { useSetState } from '@lxjx/hooks';
@@ -44,34 +44,12 @@ const columns: TableColumns = [
 
 const StyleDemo = () => {
   const [state, setState] = useSetState({
-    divideStyle: TableDivideStyle.regular,
     size: (undefined as unknown) as Size | undefined,
     stripe: true,
   });
 
   return (
     <div>
-      <Row crossAlign="center">
-        <span className="mr-8">分割风格: </span>
-        <RadioBox
-          size="small"
-          options={[
-            {
-              label: '常规',
-              value: TableDivideStyle.regular,
-            },
-            {
-              label: '边框',
-              value: TableDivideStyle.border,
-            },
-          ]}
-          value={state.divideStyle}
-          onChange={divideStyle => {
-            setState({ divideStyle });
-          }}
-        />
-      </Row>
-
       <Row crossAlign="center">
         <span className="mr-8">尺寸: </span>
         <RadioBox

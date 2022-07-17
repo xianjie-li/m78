@@ -50,6 +50,18 @@ const NotifyExample = () => {
 
       <Button
         onClick={() => {
+          const ins = notify.loading({
+            mask: true,
+          });
+
+          setTimeout(ins.hide, 2000);
+        }}
+      >
+        loading
+      </Button>
+
+      <Button
+        onClick={() => {
           notify.render({
             title: '标题',
             content: '消息提示消息消息提示消息消息提示消息消息提示消息',

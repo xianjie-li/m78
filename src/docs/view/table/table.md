@@ -212,12 +212,6 @@ interface TableProps {
   /* ############## 定制选项 ############## */
   /** 表格宽度，默认为容器宽度 */
   width?: string | number;
-  /**
-   * 'regular' | 表格的数据分割类型:
-   * - border: 边框型
-   * - regular: 常规型，行直接带分割线
-   * */
-  divideStyle?: TableDivideStyleKeys | TableDivideStyle;
   /** true | 显示条纹背景 */
   stripe?: boolean;
   /** 表格尺寸 */
@@ -354,6 +348,12 @@ interface TableDataSourceItem {
    * - 如果为string类型，则表示只开启该类型的排序
    * */
   sort?: boolean | TableSortKeys | TableSort;
+  /**
+   * 实现表头分组
+   * - 包含children的项除了label其他选项都是未定义的, 不能确保其行为
+   * - 目前不支持对fixed列分组
+   * */
+  children?: TableColumn[];
   /** 其他任意的键值 */
   [key: string]: any;
 }

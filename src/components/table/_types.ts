@@ -19,41 +19,22 @@ import { defaultProps } from './_common';
  * */
 
 /** 列固定方向 */
-export type TableColumnFixedKeys = 'left' | 'right';
-
-/** 列固定方向 */
 export enum TableColumnFixed {
   left = 'left',
   right = 'right',
 }
 
-/**
- * 表格单元格分割风格:
- *
- * border - 边框,
- * regular - 单元格
- * */
-export type TableDivideStyleKeys = 'border' | 'regular';
-
-/**
- * 表格单元格分割风格:
- *
- * border - 边框,
- * regular - 单元格
- * */
-export enum TableDivideStyle {
-  border = 'border',
-  regular = 'regular',
-}
-
-/** 表格排序方式  */
-export type TableSortKeys = 'asc' | 'desc';
+/** 列固定方向 */
+export type TableColumnFixedKeys = keyof typeof TableColumnFixed;
 
 /** 表格排序方式  */
 export enum TableSort {
   asc = 'asc',
   desc = 'desc',
 }
+
+/** 表格排序方式  */
+export type TableSortKeys = keyof typeof TableSort;
 
 /*
  * ############################
@@ -136,6 +117,13 @@ export interface TableColumn {
    * - 如果为string类型，则表示只开启该类型的排序
    * */
   sort?: boolean | TableSortKeys | TableSort;
+  /**
+   * 实现表头分组
+   * - 包含children的项除了label其他选项都是未定义的, 不能确保其行为
+   * - 目前不支持对fixed列分组
+   * */
+  children?: TableColumn[];
+
   /** 其他任意的键值 */
   [key: string]: any;
 }
@@ -194,12 +182,6 @@ export interface TableProps
   /* ############## 定制选项 ############## */
   /** 表格宽度，默认为容器宽度 */
   width?: string | number;
-  /**
-   * 'regular' | 表格的数据分割类型:
-   * - border: 边框型
-   * - regular: 常规型，行直接带分割线
-   * */
-  divideStyle?: TableDivideStyleKeys | TableDivideStyle;
   /** true | 显示条纹背景 */
   stripe?: boolean;
   /** 表格尺寸 */
@@ -271,12 +253,18 @@ export interface _TableCellProps {
   prefixInline?: React.ReactNode;
   /** 和单元格一并渲染的额外节点 */
   extra?: React.ReactNode;
+  /** 强制设置rowSpan */
+  rowSpan?: number;
+  /** 强制设置colSpan */
+  colSpan?: number;
 }
 
 /** 内部使用的扩展TableColumn */
 export interface _TableColumnInside extends TableColumn {
   /** 因为要根据是否固定拆分为多个列表，所以列索引一律使用这个 */
   index: number;
+  /** 根据位置生成的key */
+  key: string;
 }
 
 /** 内部实例对象 */

@@ -1,5 +1,5 @@
 import React from 'react';
-import { isArray, getFirstTruthyOrZero, isTruthyOrZero } from '@lxjx/utils';
+import { isArray, getFirstTruthyOrZero, isTruthyOrZero, ensureArray } from '@lxjx/utils';
 import cls from 'clsx';
 import { CheckOutlined, CloseCircleOutlined } from 'm78/icon';
 import { ListChildComponentProps } from 'react-window';
@@ -16,24 +16,36 @@ export function getLabel(item: SelectOptionItem, key: string, vKey: string) {
 }
 
 /** 根据传入的key过滤出用于展示的选项列表 */
-export function filterOptionsHandler(
-  key: string,
-  options: SelectOptionItem[],
-  checked: any[],
-  hideSelected: boolean,
-  isChecked: (val: any) => void,
-  valueKey: string,
-) {
-  if (!key && !hideSelected) return options;
+export function filterOptionsHandler(props: {
+  key: string;
+  options: SelectOptionItem[];
+  checked: any[];
+  hideSelected: boolean;
+  isChecked: (val: any) => void;
+  valueKey: string;
+  searchKeys: SelectProps<any>['searchKeys'];
+}) {
+  if (!props.key && !props.hideSelected) return props.options;
 
-  return options.filter(option => {
-    if (typeof option.label !== 'string') return false;
-
-    if (hideSelected && isChecked(getValue(option, valueKey))) {
+  return props.options.filter(option => {
+    if (props.hideSelected && props.isChecked(getValue(option, props.valueKey))) {
       return false;
     }
 
-    return option.label.includes(key);
+    const label = getLabel(option, props.key, props.valueKey);
+
+    if (typeof label === 'string' && label.includes(props.key)) return true;
+
+    if (props.searchKeys) {
+      const list = ensureArray(props.searchKeys);
+
+      for (const k of list) {
+        const v = option[k];
+        if (typeof v === 'string' && v.includes(props.key)) return true;
+      }
+    }
+
+    return false;
   });
 }
 

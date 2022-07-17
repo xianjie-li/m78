@@ -86,6 +86,8 @@ export interface SelectProps<ValType, Options = any>
   search?: boolean;
   /** 300 | 搜索防抖延迟 */
   debounceTime?: number;
+  /** 默认情况下搜索作用于label字段, 此项用于指定需要搜索的额外字段 */
+  searchKeys?: string | string[];
 
   /** 关键词变更时触发，用于从服务端查询数据并同步到options中 */
   onSearch?(key: string): void;

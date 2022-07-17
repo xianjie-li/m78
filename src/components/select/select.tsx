@@ -69,6 +69,7 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
     arrow,
     checkIcon = true,
     children,
+    searchKeys = 'label',
   } = props;
 
   const self = useSelf({
@@ -130,7 +131,15 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
 
   /** 经过筛选后的选项列表 */
   const [filterOptions, setFilterOpt] = useState(() =>
-    filterOptionsHandler(inpVal, options, checked, hideSelected, isChecked, valueKey),
+    filterOptionsHandler({
+      key: inpVal,
+      options,
+      checked,
+      hideSelected,
+      isChecked,
+      valueKey,
+      searchKeys,
+    }),
   );
 
   /** 获取输入框宽度 */
@@ -151,8 +160,18 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
   });
 
   useEffect(() => {
-    setFilterOpt(filterOptionsHandler(inpVal, options, checked, hideSelected, isChecked, valueKey));
-  }, [inpDebounceVal, options, hideSelected]);
+    setFilterOpt(
+      filterOptionsHandler({
+        key: inpVal,
+        options,
+        checked,
+        hideSelected,
+        isChecked,
+        valueKey,
+        searchKeys,
+      }),
+    );
+  }, [inpDebounceVal, options, hideSelected, searchKeys.toString()]);
 
   const onKeyDebounceChange = useFn(
     key => {
@@ -170,6 +189,10 @@ function Select<ValType = string, Options = any>(props: SelectProps<ValType, Opt
 
   /** 点击某项 */
   const onCheckItem = useFn((_val: any) => {
+    if (inpVal) {
+      onKeyChange('');
+    }
+
     if (multiple) {
       if (maxLength !== undefined && checked.length >= maxLength) {
         if (isChecked(_val)) {

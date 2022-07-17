@@ -1,11 +1,9 @@
 import { isNumber, isString, isTruthyOrZero } from '@lxjx/utils';
 import { Tree } from 'm78/tree';
-import { TableDivideStyle } from './_types';
 
 export const defaultProps = {
   columns: [],
   primaryKey: '',
-  divideStyle: TableDivideStyle.regular,
   stripe: true,
   loading: false,
   cellMaxWidth: '300px',

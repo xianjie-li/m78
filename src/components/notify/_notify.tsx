@@ -19,7 +19,7 @@ const keys = Object.keys(NotifyPosition);
 /**
  * 容器, 分类不同方向的notify并在对应方向渲染
  * */
-export function _NotifyWrap({ children = [] }: { children: JSX.Element[] }) {
+export function NotifyWrap({ children = [] }: { children: JSX.Element[] }) {
   const lists = useMemo(() => {
     const map: { [key in NotifyPosition]: JSX.Element[] } = {} as any;
 
@@ -50,7 +50,7 @@ export function _NotifyWrap({ children = [] }: { children: JSX.Element[] }) {
 /**
  * 实现组件
  * */
-export function _Notify(props: NotifyProps) {
+export function Notify(props: NotifyProps) {
   const {
     status,
     content,
@@ -185,8 +185,8 @@ export function _Notify(props: NotifyProps) {
 
 /** 创建api */
 export const _notify = createRenderApi<NotifyState>({
-  component: _Notify,
-  wrap: _NotifyWrap,
+  component: Notify,
+  wrap: NotifyWrap,
   namespace: 'm78-notify',
 });
 
@@ -196,10 +196,7 @@ export function _loading(opt: LoadingOption = {}) {
   return _notify.render({
     ...o,
     duration: Infinity,
-    hideDelay: 500,
+    hideDelay: 300,
     content: () => <Spin text={opt.text} />,
   });
 }
-
-_NotifyWrap.displayName = 'NotifyWrap';
-_Notify.displayName = 'Notify';

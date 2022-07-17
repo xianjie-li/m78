@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { CaretDownOutlined, CaretUpOutlined } from 'm78/icon';
 import { If } from 'm78/fork';
 import { Spin } from 'm78/spin';
-import { stopPropagation, Size } from 'm78/common';
+import { stopPropagation } from 'm78/common';
 import { Check } from 'm78/check';
 import { DNDContext } from 'm78/dnd';
 import Cell from './_cell';
@@ -20,22 +20,12 @@ import {
 } from './_types';
 import { getField, getInitTableMeta, handleSortClick, getColumnKey } from './_functions';
 import TableRender from './_table-render';
+import { tableHeaderHeight } from './_common';
 
 /** 主内容render */
 export function render(ctx: _Context) {
   const {
-    props: {
-      size,
-      stripe,
-      loading,
-      divideStyle,
-      width,
-      height,
-      className,
-      style,
-      customScrollbar,
-      draggable,
-    },
+    props: { size, stripe, loading, width, height, className, style, customScrollbar, draggable },
     states: { state, wrapElRef, tableElRef, fmtColumns },
     treeState,
     isVirtual,
@@ -66,7 +56,6 @@ export function render(ctx: _Context) {
       <div
         className={clsx('m78 m78-table', className, size && `__${size}`, {
           __stripe: stripe,
-          [`__${divideStyle}`]: true,
           __touchLeft: state.touchLeft,
           __touchRight: state.touchRight,
         })}
@@ -90,6 +79,11 @@ export function render(ctx: _Context) {
               <TableRender type={TableColumnFixed.right} column={fmtColumns.fixedRight} ctx={ctx} />
             )}
           </div>
+          {!treeState.showList?.length && (
+            <div className="m78-table_empty">
+              <Empty desc="暂无数据" style={{ padding: '24px 12px' }} />
+            </div>
+          )}
         </div>
       </div>
     );
@@ -114,7 +108,8 @@ export function renderTbody(ctx: _Context, columns: _TableColumnInside[], isMain
       <tbody>
         <tr>
           <td colSpan={columns.length}>
-            <Empty desc="暂无数据" style={{ padding: '60px 12px' }} />
+            {/* 为empty node 腾出空间 */}
+            <div style={{ height: 150 }} />
           </td>
         </tr>
       </tbody>
@@ -190,10 +185,10 @@ export function renderColgroup(ctx: _Context, columns: _TableColumnInside[], isM
 }
 
 /** table head render */
-export function renderThead(ctx: _Context, columns: _TableColumnInside[]) {
+export function renderThead(ctx: _Context, columns: _TableColumnInside[][]) {
   const {
     treeState,
-    states: { tableElRef },
+    states: { tableElRef, fmtColumns },
   } = ctx;
 
   const valChecker = treeState.valChecker;
@@ -219,11 +214,13 @@ export function renderThead(ctx: _Context, columns: _TableColumnInside[]) {
 
   return (
     <thead>
-      <tr>
-        {columns.map(column => {
-          return (
+      {columns.map((i, ind) => (
+        <tr key={ind} style={{ height: tableHeaderHeight }}>
+          {i.map(column => (
             <Cell
-              key={column.index}
+              key={column.key}
+              colSpan={column._colSum || 1}
+              rowSpan={fmtColumns.max - column._rowSum - column._zIndex}
               {...getInitTableMeta(ctx, {
                 column,
                 colIndex: column.index,
@@ -233,9 +230,9 @@ export function renderThead(ctx: _Context, columns: _TableColumnInside[]) {
               tableElRef={tableElRef}
               prefixInline={renderPrefix(column.index)}
             />
-          );
-        })}
-      </tr>
+          ))}
+        </tr>
+      ))}
     </thead>
   );
 }

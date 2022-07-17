@@ -1,4 +1,4 @@
-import { AnyObject, isArray, isBoolean, isFunction, isString } from '@lxjx/utils';
+import { AnyObject, createRandString, isArray, isBoolean, isFunction, isString } from '@lxjx/utils';
 import { throwError, Size } from 'm78/common';
 import { SetState, UseScrollMeta } from '@lxjx/hooks';
 import React from 'react';
@@ -92,13 +92,14 @@ export function syncTouchStatus(
  * 接收props.columns并进行预处理
  * - 转换为_TableColumnInside
  * - 处理fixed列
+ * - 生成表头组渲染信息
  * */
 export function columnsBeforeFormat({ columns, showColumns }: TableProps) {
-  const fixedLeft: _TableColumnInside[] = [];
-  const column: _TableColumnInside[] = [];
-  const fixedRight: _TableColumnInside[] = [];
+  const fixedLeft: TableColumn[] = [];
+  const column: TableColumn[] = [];
+  const fixedRight: TableColumn[] = [];
 
-  columns.forEach((col, index) => {
+  columns.forEach(col => {
     // 过滤不显示的列
     if (showColumns?.length) {
       const key = getColumnKey(col);
@@ -108,21 +109,99 @@ export function columnsBeforeFormat({ columns, showColumns }: TableProps) {
     }
 
     if (col.fixed === TableColumnFixed.left) {
-      fixedLeft.push({ ...col, index });
+      fixedLeft.push(col);
       return;
     }
 
     if (col.fixed === TableColumnFixed.right) {
-      fixedRight.push({ ...col, index });
+      fixedRight.push(col);
       return;
     }
-    column.push({ ...col, index });
+
+    column.push(col);
   });
 
+  const nestLeft = nestHeaderColumnsFormat(fixedLeft);
+  const nest = nestHeaderColumnsFormat(column, nestLeft.indexStart);
+  const nestRight = nestHeaderColumnsFormat(fixedRight, nest.indexStart);
+  const max = Math.max(nest.max, nestLeft.max, nestRight.max);
+
+  const leftDiff = max - nestLeft.max;
+  const diff = max - nest.max;
+  const rightDiff = max - nestLeft.max;
+
+  // 高度不足最大高度时进行填充
+  if (leftDiff > 0) nestLeft.headAOA.push(...Array.from({ length: leftDiff }).map(() => []));
+  if (diff > 0) nest.headAOA.push(...Array.from({ length: diff }).map(() => []));
+  if (rightDiff > 0) nestRight.headAOA.push(...Array.from({ length: rightDiff }).map(() => []));
+
   return {
-    fixedLeft,
-    column,
-    fixedRight,
+    headLeftAOA: nestLeft.headAOA,
+    headRightAOA: nestRight.headAOA,
+    headAOA: nest.headAOA,
+    fixedLeft: nestLeft.actualColumn,
+    fixedRight: nestRight.actualColumn,
+    column: nest.actualColumn,
+    max,
+  };
+}
+
+export function nestHeaderColumnsFormat(column: TableColumn[], indexStart = 0) {
+  const newList: TableColumn[] = [...column];
+  const aoa: _TableColumnInside[][] = [];
+  const actualColumn: _TableColumnInside[] = [];
+
+  let maxZIndex = 0;
+
+  // 总层级 / 当前层级 / 下方总共有多少列 / 多少层
+
+  function handle(list: TableColumn[], index: number, parents: _TableColumnInside[]) {
+    // 总行数+1
+    parents.forEach(i => (i._rowSum += 1));
+
+    list.forEach((i, ind) => {
+      const item = {
+        ...i,
+        _zIndex: index,
+        _rowSum: 0,
+        _colSum: 0,
+        key: createRandString(),
+        index: -1, // 组合列index设置为-1
+      };
+
+      if (maxZIndex < index) maxZIndex = index;
+
+      list[ind] = item;
+
+      if (item.children && item.children.length) {
+        item.children = [...item.children];
+
+        handle(item.children, index + 1, [...parents, item]);
+      } else {
+        // 到底时总列数+1
+        parents.forEach(it => (it._colSum += 1));
+        item.index = indexStart;
+        indexStart += 1;
+        actualColumn.push(item);
+      }
+
+      if (!aoa[index]) aoa[index] = [];
+
+      aoa[index].push(item);
+    });
+  }
+
+  handle(newList, 0, []);
+
+  return {
+    /** 实际的表格列 */
+    actualColumn,
+    /** 头二位数组 */
+    headAOA: aoa,
+    /** 更新后的索引计数 */
+    indexStart,
+    /** 最大row数 */
+    max: maxZIndex + 1,
   };
 }
 

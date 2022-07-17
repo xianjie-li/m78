@@ -1,5 +1,5 @@
 import 'm78/input/style';
-import Input from './input';
+import Input from './_input';
 
 export * from './type';
 

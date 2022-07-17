@@ -21,7 +21,7 @@ import {
   parserThan,
 } from './utils';
 
-const Input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
+const _input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
   const {
     /* 处理特殊属性 */
     className,
@@ -314,14 +314,20 @@ const Input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
     /* 启用了formatArg时，对其格式化，否则返回原value */
 
     const isNumeric = formatArg && memoFormat === 'numeric';
-    // 备份后置string, 用于防止数值中小数位后参与格式化
+    // 备份前后置string, 用于防止数值中小数位后/`-`符号参与格式化
     let backupStr = '';
+    let backupPrevStr = '';
 
     if (isNumeric) {
       const sArr = val.split('.');
       if (sArr.length > 1) {
         val = sArr[0];
         backupStr = `.${sArr[1]}`;
+      }
+
+      if (val[0] === '-') {
+        val = val.slice(1);
+        backupPrevStr = '-';
       }
     }
 
@@ -331,7 +337,7 @@ const Input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
 
     // 对数值类型特殊处理
     if (isNumeric) {
-      formatValue = formatNumeric(formatValue) + backupStr;
+      formatValue = backupPrevStr + formatNumeric(formatValue) + backupStr;
     }
 
     /* value传入input前进行格式化(在传入了解析parser时才不会影响最终的value结果) */
@@ -453,6 +459,6 @@ const Input = React.forwardRef<InputRef, InputProps>((_props, ref) => {
   );
 });
 
-Input.displayName = 'Input';
+_input.displayName = 'Input';
 
-export default Input;
+export default _input;

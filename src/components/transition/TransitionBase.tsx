@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { useSpring, animated } from 'react-spring';
-import { useSelf, useMountState } from '@lxjx/hooks';
+import { useSelf, useMountState, useIsUnmountState } from '@lxjx/hooks';
 import { TransitionBaseProps } from './types';
 
 export const _TransitionBase = (props: TransitionBaseProps) => {
@@ -21,11 +21,13 @@ export const _TransitionBase = (props: TransitionBaseProps) => {
     children,
     ...passProps
   } = props;
+
   const self = useSelf({
     isFirst: true,
   });
 
   const [mount, unmount] = useMountState(show, props);
+  const isUnmount = useIsUnmountState();
 
   const Animated = useMemo(() => animated[tag as 'div'], []);
 
@@ -57,7 +59,7 @@ export const _TransitionBase = (props: TransitionBaseProps) => {
       if (springProps?.onRest) {
         springProps.onRest(...args);
       }
-      if (!show) unmount();
+      if (!show && !isUnmount()) unmount();
     },
   });
 

@@ -36,7 +36,7 @@ export function useInteractive(share: _Share) {
 
       !notShow.length && api.pause();
     } else {
-      interactiveFlag.current = setTimeout(api.resume, 500);
+      interactiveFlag.current = setTimeout(api.resume, 300);
     }
   });
 

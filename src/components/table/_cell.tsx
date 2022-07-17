@@ -41,12 +41,11 @@ const _Cell = (props: _TableCellProps) => {
   };
 
   // 单元格的合并数
-  const [rowSpan, colSpan] = useMemo(() => getCellSpan(ctx, meta), [
-    record,
-    column,
-    colIndex,
-    rowIndex,
-  ]);
+  const [rowSpan, colSpan] = useMemo(() => {
+    if (props.rowSpan !== undefined && props.colSpan !== undefined)
+      return [props.rowSpan, props.colSpan];
+    return getCellSpan(ctx, meta);
+  }, [record, column, colIndex, rowIndex, props.colSpan, props.rowSpan]);
 
   // 要为单元格设置的额外props
   const cellProps = useMemo(() => getCellProps(ctx, meta), [column.props, ctx.props.props]);
