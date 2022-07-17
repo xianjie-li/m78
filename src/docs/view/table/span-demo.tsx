@@ -38,7 +38,6 @@ const SpanDemo = () => {
     <div>
       <Table
         valueKey="id"
-        divideStyle="border"
         columns={columns}
         dataSource={dataSource}
         rowSpan={({ record, column, rowIndex }) => {

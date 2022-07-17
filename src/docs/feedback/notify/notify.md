@@ -8,16 +8,13 @@ group:
 
 # Notify 消息提醒
 
-各种轻提示: 消息、通知、loading等
-
+各种轻提示: 消息、通知、loading 等
 
 ## 用法/示例
 
 <code src="./demo.tsx" />
 
-
-
-此模块包含一个由[renderApi](/docs/ecology/render-api)创建的渲染对象 `notify`, 你可以通过它来渲染消息提示, 或管理/更新已渲染的实例, renderApi的更多用法请参考其文档.
+此模块包含一个由[renderApi](/docs/ecology/render-api)创建的渲染对象 `notify`, 你可以通过它来渲染消息提示, 或管理/更新已渲染的实例, renderApi 的更多用法请参考其文档.
 
 ```ts
 import { notify } from 'm78/notify';

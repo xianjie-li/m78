@@ -6,7 +6,7 @@ import { isArray, isFunction } from '@lxjx/utils';
 import { useFn } from '@lxjx/hooks';
 import { CaretRightOutlined } from 'm78/icon';
 import React from 'react';
-import { stopPropagation, Size } from 'm78/common';
+import { stopPropagation } from 'm78/common';
 import { Check } from 'm78/check';
 import { DragPartialEvent } from 'm78/dnd';
 import { filterIncludeDisableChildNode, isTruthyArray } from './common';

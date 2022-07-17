@@ -1932,17 +1932,7 @@
   dependencies:
     "@ant-design/colors" "^3.2.2"
 
-"@m78/verify@^1.1.2":
-  version "1.1.2"
-  resolved "https://registry.npmmirror.com/@m78/verify/download/@m78/verify-1.1.2.tgz#04ee0d1bd3e10a5b71a08ebabdde9f0e1580e3d2"
-  integrity sha512-r0UxLiY/ka7eSa2Pk9XD9ON5G2NCYD4+W42xL6kGlFJKuveVIgcWqKL1p9Lfdm8tIApkTB4rHovpnL07wnCOZg==
-  dependencies:
-    "@lxjx/utils" "^1.7.7"
-    "@types/lodash" "^4.14.172"
-    lodash "^4.17.21"
-    tslib "^2.3.1"
-
-"@m78/verify@^1.3.0":
+"@m78/verify@^1.1.2", "@m78/verify@^1.3.0":
   version "1.3.0"
   resolved "https://registry.npmmirror.com/@m78/verify/-/verify-1.3.0.tgz#dbd1d1f774c522fd893f81fbc9a4dee065dcedb5"
   integrity sha512-mu9N2yaPGcRkU6QJ5HP4q+v6CT3loJhUc3f5GJlh3DroDLcN/ZKNxZsgN6vUIvVR37K1R7TsWEiXDLzoRh7NLg==

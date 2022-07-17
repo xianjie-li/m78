@@ -8,8 +8,8 @@ import { WarningIcon } from 'm78/icon';
 import { useFormState } from '@lxjx/hooks';
 import { isBoolean, omit } from '@lxjx/utils';
 import { UseTriggerType } from 'm78/hooks';
-import { BubbleProps, BubbleType, omitBubbleOverlayProps } from './types';
 import { TransitionType } from 'm78/transition';
+import { BubbleProps, BubbleType, omitBubbleOverlayProps } from './types';
 
 const defaultProps: Partial<BubbleProps> = {
   type: BubbleType.tooltip,

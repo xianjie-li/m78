@@ -7,10 +7,10 @@ import { _Context } from 'm78/overlay/types';
 import { _Methods } from 'm78/overlay/useMethods';
 import { _LifeCycle } from 'm78/overlay/useLifeCycle';
 import { isFunction } from '@lxjx/utils';
+import { MASK_NAMESPACE } from 'm78/common';
 import { _Arrow as Arrow } from './arrow';
 import { getArrowBasePosition, transitionConfig } from './common';
 import { _MountTrigger as MountTrigger } from './mountTrigger';
-import { MASK_NAMESPACE } from 'm78/common';
 
 const AnimatedArrow = animated(Arrow);
 
