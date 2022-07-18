@@ -106,7 +106,7 @@
     white-space: nowrap;
     backface-visibility: hidden;
 
-    td {
+    td, th {
       background-color: var(--m78-component-bg);
     }
   }
@@ -116,7 +116,7 @@
     position: sticky;
     z-index: 12;
 
-    td.__effect {
+    th.__effect {
       cursor: pointer;
       user-select: none;
 
@@ -141,7 +141,7 @@
     position: relative;
   }
 
-  td {
+  td, th {
     position: relative;
   }
 
@@ -166,7 +166,7 @@
   // ##########################
   // 尺寸
   // ##########################
-  td {
+  td, th {
     height: 42px;
   }
 
@@ -199,7 +199,7 @@
   // ##########################
 
   // 边框样式
-  td {
+  td, th {
     border-left: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
   }

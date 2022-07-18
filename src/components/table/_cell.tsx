@@ -50,8 +50,10 @@ const _Cell = (props: _TableCellProps) => {
   // 要为单元格设置的额外props
   const cellProps = useMemo(() => getCellProps(ctx, meta), [column.props, ctx.props.props]);
 
+  const TagType = isHead ? 'th' : 'td';
+
   return (
-    <td
+    <TagType
       {...cellProps}
       ref={elRef}
       className={clsx(cellProps?.className, {
@@ -68,7 +70,7 @@ const _Cell = (props: _TableCellProps) => {
       {renderCellFork(ctx, meta, props)}
       {extra}
       {isBody && <CellEffectBg ctx={ctx} rowInd={rowIndex} />}
-    </td>
+    </TagType>
   );
 };
 
