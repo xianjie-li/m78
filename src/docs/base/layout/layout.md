@@ -367,6 +367,8 @@ interface FlexProps extends DIVProps {
 interface TileProps extends Omit<React.PropsWithoutRef<JSX.IntrinsicElements['div']>, 'title'> {
   /** 主要内容 */
   title?: React.ReactNode;
+  /** title的别名 */
+  children?: React.ReactNode;
   /** 次要内容 */
   desc?: React.ReactNode;
   /** 前导内容 */
@@ -375,6 +377,10 @@ interface TileProps extends Omit<React.PropsWithoutRef<JSX.IntrinsicElements['di
   trailing?: React.ReactNode;
   /** 纵轴的对齐方式 */
   crossAlign?: FlexWrapProps['crossAlign'];
+  /** 指向内部包裹dom的ref */
+  innerRef?: React.Ref<HTMLDivElement>;
+  /** 内容区域超出是否显示, 默认为隐藏, 以适应更多的场景 */
+  overflowVisible?: boolean;
 }
 ```
 

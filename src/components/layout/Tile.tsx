@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Row } from 'm78/layout';
 import cls from 'clsx';
 import { TileProps } from './types';
+import { isTruthyOrZero } from '@lxjx/utils';
 
 const Tile = ({
   className,
@@ -11,8 +12,15 @@ const Tile = ({
   trailing,
   crossAlign,
   innerRef,
+  overflowVisible,
+  children,
   ...ppp
 }: TileProps) => {
+  const _title = useMemo(() => {
+    if (isTruthyOrZero(title)) return title;
+    return children;
+  }, [title, children]);
+
   return (
     <Row
       {...ppp}
@@ -21,8 +29,8 @@ const Tile = ({
       crossAlign={crossAlign}
     >
       {leading && <div className="m78-tile_leading">{leading}</div>}
-      <div className="m78-tile_main">
-        {title && <div className="m78-tile_title">{title}</div>}
+      <div className="m78-tile_main" style={{ overflow: overflowVisible ? undefined : 'hidden' }}>
+        {_title && <div className="m78-tile_title">{_title}</div>}
         {desc && <div className="m78-tile_desc">{desc}</div>}
       </div>
       {trailing && <div className="m78-tile_trailing">{trailing}</div>}

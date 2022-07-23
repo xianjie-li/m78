@@ -7,24 +7,24 @@
   &.__small {
     .m78-list-view_item,
     .m78-list-view_title {
-      padding: var(--m78-space-2) var(--m78-space-3);
+      padding: var(--m78-space-1) var(--m78-space-2);
     }
 
     .m78-tile_title {
-      font-size: 15px;
+      font-size: var(--m78-fs);
     }
 
     .m78-list-view_title {
-      font-size: 20px;
+      font-size: var(--m78-fs-md);
     }
 
     .m78-list-view_title.__sub-title {
-      font-size: 16px;
-      margin-top: 12px;
+      font-size: var(--m78-fs);
+      margin-top: var(--m78-space-3);
     }
 
     .m78-tile_leading {
-      font-size: 18px;
+      font-size: var(--m78-fs-md);
       margin-right: var(--m78-space-1);
     }
   }
@@ -32,11 +32,11 @@
   &.__large {
     .m78-list-view_item,
     .m78-list-view_title {
-      padding: var(--m78-space-4) var(--m78-space-6);
+      padding: var(--m78-space-2) var(--m78-space-4);
     }
 
     .m78-tile_title {
-      font-size: 20px;
+      font-size: 18px;
     }
 
     .m78-tile_desc {
@@ -44,15 +44,15 @@
     }
 
     .m78-list-view_title {
-      font-size: 28px;
+      font-size: 22px;
     }
 
     .m78-list-view_title.__sub-title {
-      font-size: 20px;
+      font-size: 18px;
     }
 
     .m78-tile_leading {
-      font-size: 24px;
+      font-size: 18px;
     }
   }
 
@@ -95,7 +95,7 @@
     font-size: var(--m78-fs);
     color: var(--m78-color-primary);
     text-align: left;
-    padding: var(--m78-space-3) var(--m78-space-4);
+    padding: var(--m78-space-2) var(--m78-space-3);
     border-radius: var(--m78-border-radius);
 
     &.__disabled {
@@ -104,11 +104,11 @@
     }
 
     .m78-tile_leading {
-      font-size: 20px;
+      font-size: var(--m78-fs-md);
     }
 
     .m78-tile_title {
-      font-size: 17px;
+      font-size: var(--m78-fs-md);
     }
 
     .m78-tile_desc {
@@ -132,13 +132,14 @@
 
   &_title {
     width: 100%;
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 300;
-    padding: var(--m78-space-3) var(--m78-space-5);
+    padding: var(--m78-space-2) var(--m78-space-3);
 
     &.__sub-title {
-      font-size: 16px;
-      margin-top: 12px;
+      font-size: var(--m78-fs-md);
+      margin-top: var(--m78-space-2);
+      padding: var(--m78-space-1) var(--m78-space-3);
     }
 
     &-desc {
