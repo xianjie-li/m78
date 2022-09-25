@@ -1,0 +1,18 @@
+.__dumi-default-menu {
+  background-color: #fff !important;
+}
+
+.__dumi-default-menu-logo {
+  background: none !important;
+  background-image: none !important;
+  font-size: 60px;
+  text-decoration: none !important;
+}
+
+.__dumi-default-menu-logo::after {
+  content: "📌";
+}
+
+.__dumi-default-menu::after {
+  width: 1px !important;
+}

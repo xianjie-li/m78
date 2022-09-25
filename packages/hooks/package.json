@@ -1,0 +1,49 @@
+{
+  "name": "@m78/hooks",
+  "version": "0.0.4",
+  "description": "Use Your Imagination",
+  "keywords": [
+    "react",
+    "react hooks"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "main": "./index.js",
+  "typings": "./",
+  "repository": "https://github.com/xianjie-li/m78",
+  "files": [
+    "**"
+  ],
+  "author": {
+    "name": "Link",
+    "email": "1073830130@qq.com"
+  },
+  "devDependencies": {
+    "@m78/build-tools": "workspace:^",
+    "typescript": "^4.8.3"
+  },
+  "dependencies": {
+    "@m78/utils": "workspace:^",
+    "@swc/helpers": "^0.4.11",
+    "@types/lodash": "^4.14.185",
+    "@types/react": "^18.0.19",
+    "lodash": "^4.17.21",
+    "query-string": "^7.1.1",
+    "react": "^18.2.0",
+    "react-spring": "^9.5.2",
+    "resize-observer-polyfill": "^1.5.1"
+  },
+  "scripts": {
+    "lint:prettier": "prettier ./src ./test --write --no-error-on-unmatched-pattern",
+    "lint:script": "eslint ./src ./test --ext .js,.jsx,.ts,.tsx,.vue --fix",
+    "lint": "npm run lint:script && npm run lint:prettier",
+    "test": "jest",
+    "build": "m78-build-tools build",
+    "pub": "pnpm build && pnpm publish --access public --registry https://registry.npmjs.org",
+    "examples": "pnpm exec parcel ./examples/index.html"
+  },
+  "publishConfig": {
+    "directory": "dist",
+    "linkDirectory": true
+  }
+}

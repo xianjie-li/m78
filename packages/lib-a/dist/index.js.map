@@ -1,0 +1,1 @@
+{"version":3,"sources":["/Users/lixianjie/project/play/mono-test/packages/lib-a/src/index.ts"],"sourcesContent":["export const a = 123;\n\nexport const b = {\n  name: \"lxj\",\n};\n"],"names":["a","b","name"],"mappings":"AAAA,OAAO,IAAMA,CAAC,GAAG,GAAG,CAAC;AAErB,OAAO,IAAMC,CAAC,GAAG;IACfC,IAAI,EAAE,KAAK;CACZ,CAAC"}

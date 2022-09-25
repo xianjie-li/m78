@@ -1,0 +1,36 @@
+* {
+  box-sizing: border-box;
+}
+
+.container {
+  position: relative;
+  border: 1px solid blue;
+  border-radius: 4px;
+}
+
+.wrap {
+  will-change: transform;
+  /*transition: 0.05s;*/
+}
+
+.item {
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:global @keyframes demo_test_anime {
+  0% {
+    transform: translateX(100px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.animeItem :global {
+  width: 100%;
+  animation: demo_test_anime 0.3s ease-in-out;
+}

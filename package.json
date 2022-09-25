@@ -1,0 +1,14 @@
+{
+  "name": "m78-land",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "m78 projects",
+  "author": {
+    "name": "Link",
+    "email": "1073830130@qq.com"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@m78/build-tools": "workspace:^"
+  }
+}
