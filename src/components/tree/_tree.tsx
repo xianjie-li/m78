@@ -2,7 +2,7 @@ import React from 'react';
 import cls from 'clsx';
 import { Spin } from 'm78/spin';
 import { Empty } from 'm78/empty';
-import { useDelayToggle } from '@lxjx/hooks';
+import { useDurationToggle } from 'm78/hooks';
 import { DNDContext } from 'm78/dnd';
 import { isNumber } from '@lxjx/utils';
 import useTreeStates from './_use-tree-states';
@@ -50,7 +50,7 @@ function Tree(props: TreePropsSingleChoice | TreePropsMultipleChoice) {
   });
 
   /** 延迟设置的加载状态, 防止数据量较少时loading一闪而过 */
-  const loading = useDelayToggle(treeState.state.loading, 150);
+  const loading = useDurationToggle(treeState.state.loading, 150);
 
   const showList = treeState.showList;
 

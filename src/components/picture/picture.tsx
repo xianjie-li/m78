@@ -140,7 +140,7 @@ const Picture: React.FC<PictureProps> = ({
             {state.text}
           </span>
         ))}
-      <Spin loadingDelay={100} show={state.loading} full text="图片加载中" />
+      <Spin minDuration={100} show={state.loading} full text="图片加载中" />
     </span>
   );
 };

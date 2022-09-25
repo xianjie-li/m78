@@ -85,6 +85,22 @@ const NotifyExample = () => {
       >
         操作栏 + 更新实例
       </Button>
+
+      <Button
+        onClick={() => {
+          const ins = notify.loading({
+            // mask: true,
+          });
+
+          // ins.hide();
+
+          setTimeout(() => {
+            ins.hide();
+          }, 310);
+        }}
+      >
+        loading
+      </Button>
     </div>
   );
 };

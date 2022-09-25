@@ -1,4 +1,4 @@
-import { useDelayToggle } from '@lxjx/hooks';
+import { useDurationToggle } from 'm78/hooks';
 import React from 'react';
 import { Portal } from 'm78/portal';
 import { Share } from './types';
@@ -8,11 +8,7 @@ export function useRenders(share: Share) {
   const { dragFeedback } = props;
 
   /** 自定义dragFeedBack时，延迟到动画结束再将其卸载 */
-  const dragging = useDelayToggle(status.dragging, 300, {
-    leading: false,
-    trailing: true,
-    disabled: !dragFeedback,
-  });
+  const dragging = useDurationToggle(status.dragging, dragFeedback ? 300 : 0);
 
   /** 渲染用户自定义的dragFeedBack */
   function renderDragFeedback() {

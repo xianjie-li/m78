@@ -1,6 +1,7 @@
 import { createEvent } from '@lxjx/hooks';
 import { useEffect, useMemo, useRef } from 'react';
-import { isNumber } from '@lxjx/utils';
+import { config } from 'react-spring';
+import { useDurationToggle } from 'm78/hooks';
 import { _Share, NotifyPositionUnion } from './type';
 
 /**
@@ -13,7 +14,8 @@ export const initTransition = {
   height: 0,
   process: 100,
   opacity: 0,
-  transform: 'scale3d(0, 0, 0)',
+  transform: 'scale3d(0.7, 0.7, 0.7)',
+  config: config.stiff,
 };
 
 /**
@@ -95,21 +97,15 @@ export function useFixPad({ props, bound }: _Share) {
 export function useToggleController(share: _Share) {
   const { show, props, bound, api, hasDuration, duration } = share;
 
-  const hideDelayFlag = useRef<any>();
+  const dShow = useDurationToggle(show, props.minDuration);
 
   useEffect(() => {
-    const delay = props.hideDelay;
-
-    clearTimeout(hideDelayFlag.current);
-
-    if (show) {
+    if (dShow) {
       showHandle();
-    } else if (isNumber(delay) && delay) {
-      hideDelayFlag.current = setTimeout(hideHandle, delay);
     } else {
       hideHandle();
     }
-  }, [show, bound.height]);
+  }, [dShow, bound.height]);
 
   /**
    * 控制显示动画对应行为
@@ -145,4 +141,6 @@ export function useToggleController(share: _Share) {
       onRest: props.onDispose,
     });
   }
+
+  return dShow;
 }

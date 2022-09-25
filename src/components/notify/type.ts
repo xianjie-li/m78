@@ -40,17 +40,15 @@ export interface NotifyState {
   loading?: boolean;
   /** 触摸或光标移动到上方时是否暂停notify动画计时, tips和notify类型默认为true */
   interactive?: boolean;
-  /** 隐藏的延迟, 用于loading()实现, 防止loading状态一闪而过 */
-  hideDelay?: boolean;
+  /** 700 | 最小持续时间, 主要用于实现loading时防止loading过快消失造成不良体验, 用于loading()时, 此项默认值为800 */
+  minDuration?: number;
 }
 
 export interface NotifyProps extends NotifyState, Required<RenderApiComponentProps<NotifyState>> {}
 
 /** loading配置, 默认会有500ms的hideDelay */
-export interface LoadingOption extends Pick<NotifyState, 'position' | 'mask' | 'hideDelay'> {
-  /** loading提示文本 */
-  text?: React.ReactNode;
-}
+export interface LoadingOption
+  extends Pick<NotifyState, 'position' | 'mask' | 'minDuration' | 'content'> {}
 
 export interface _Share {
   hasDuration: boolean;

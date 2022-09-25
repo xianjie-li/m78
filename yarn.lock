@@ -1885,6 +1885,19 @@
     lodash "^4.17.21"
     tslib "^2.3.1"
 
+"@m78/render-api@1.4.3":
+  version "1.4.3"
+  resolved "https://registry.npmmirror.com/@m78/render-api/-/render-api-1.4.3.tgz#be60fb724aaa86c0592d75028eb52ed82d553f7a"
+  integrity sha512-vUdLK+ReKwX//NMHzK++roC10PuHG98ciMdXQihbf9vE8B+vdb1CflQlUiPSrzcrffqocF+pigH7oXg8TqCOHg==
+  dependencies:
+    "@lxjx/hooks" "^1.30.0"
+    "@lxjx/utils" "^1.7.9"
+    "@types/react" "^17.0.2"
+    "@types/react-dom" "^17.0.2"
+    react "^17.0.2"
+    react-dom "^17.0.2"
+    tslib "^2.4.0"
+
 "@m78/render-api@^1.4.1":
   version "1.4.1"
   resolved "https://registry.npmmirror.com/@m78/render-api/-/render-api-1.4.1.tgz#38229d42f42e28375e841f4bafe93c60bde5f8c7"
@@ -1897,19 +1910,6 @@
     react "^17.0.1"
     react-dom "^17.0.2"
     tslib "^2.3.1"
-
-"@m78/render-api@^1.4.2":
-  version "1.4.2"
-  resolved "https://registry.npmmirror.com/@m78/render-api/-/render-api-1.4.2.tgz#3ac9e927b14cf7dd439a367d5bd6483f91ca6c48"
-  integrity sha512-hKTE9zlzZpK41XPXoRBSIQjNz2mMbWg0T0m9aL+algwgi2/aCwrSZR3ig+nEnChItcX0XhkqVSItZ9N3sXgfOA==
-  dependencies:
-    "@lxjx/hooks" "^1.30.0"
-    "@lxjx/utils" "^1.7.9"
-    "@types/react" "^17.0.2"
-    "@types/react-dom" "^17.0.2"
-    react "^17.0.2"
-    react-dom "^17.0.2"
-    tslib "^2.4.0"
 
 "@m78/seed@^2.1.0":
   version "2.1.0"

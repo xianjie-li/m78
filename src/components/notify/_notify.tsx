@@ -84,7 +84,7 @@ export function Notify(props: NotifyProps) {
   /**
    * 显示/隐藏相关行为控制
    * */
-  useToggleController(share);
+  const dShow = useToggleController(share);
 
   /**
    * 根据是否开启了关闭按钮动态设置偏移, 防止其遮挡文字
@@ -95,7 +95,7 @@ export function Notify(props: NotifyProps) {
    * 所有启用了mask的overlay
    * */
   const overlaysMask = useOverlaysMask({
-    enable: show && props.mask,
+    enable: dShow && props.mask,
   });
 
   /**
@@ -162,7 +162,7 @@ export function Notify(props: NotifyProps) {
     <>
       <Portal namespace={MASK_NAMESPACE}>
         <Transition
-          show={show && overlaysMask.isFirst}
+          show={dShow && overlaysMask.isFirst}
           type="fade"
           className="m78 m78-mask"
           mountOnEnter
@@ -192,11 +192,11 @@ export const _notify = createRenderApi<NotifyState>({
 
 /** 简单的loading实现 */
 export function _loading(opt: LoadingOption = {}) {
-  const o = pick(opt, ['position', 'mask', 'hideDelay']) as any;
+  const o = pick(opt, ['position', 'mask', 'minDuration', 'content']) as any;
   return _notify.render({
+    minDuration: 700,
     ...o,
     duration: Infinity,
-    hideDelay: 300,
-    content: () => <Spin text={opt.text} />,
+    content: () => <Spin text={opt.content} />,
   });
 }

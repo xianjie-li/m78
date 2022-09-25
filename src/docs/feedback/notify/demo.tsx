@@ -54,7 +54,7 @@ const NotifyExample = () => {
             mask: true,
           });
 
-          setTimeout(ins.hide, 2000);
+          setTimeout(ins.hide, 1000);
         }}
       >
         loading

@@ -6,6 +6,8 @@ import { delay } from '@lxjx/utils';
 import { useFetch } from '@lxjx/hooks';
 import NotifyExample from './notify/notify-example';
 import { Tile } from '@/components/layout';
+import { Spin } from 'm78/spin';
+import { Button } from 'm78/button';
 
 const serv = () => delay(100, [1]);
 
@@ -31,6 +33,8 @@ const App = () => {
     }, 100);
   }
 
+  function loadi() {}
+
   return (
     <div className="m78 p-16">
       <button
@@ -44,9 +48,12 @@ const App = () => {
       <div>
         <NotifyExample />
 
-        <div style={{ width: 400 }}>
-          <Tile leading="呵" title="标题" desc="描述区域描述区域" trailing="你好" />
-          <Tile leading="😅" title="标题" desc="描述区域描述区域" trailing="🤣" />
+        <Button onClick={() => setLoading(p => !p)}>click</Button>
+
+        <Spin show={loading} />
+
+        <div style={{ width: 300, height: 300 }} className="border psr">
+          <Spin show={loading} full />
         </div>
       </div>
     </div>
