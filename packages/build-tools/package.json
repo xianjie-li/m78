@@ -11,7 +11,7 @@
     "lint:style": "prettier . --write --no-error-on-unmatched-pattern",
     "lint:script": "eslint . --ext .js,.jsx,.ts,.tsx,.vue --fix",
     "lint": "npm run lint:script && npm run lint:style",
-    "pub": "npm publish --access public --registry https://registry.npmjs.org"
+    "pub": "pnpm publish --access public --registry https://registry.npmjs.org"
   },
   "license": "MIT",
   "peerDependencies": {
