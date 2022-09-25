@@ -26,7 +26,7 @@ export async function init() {
     lint: "npm run lint:script && npm run lint:prettier",
     test: "jest",
     build: "m78-build-tools build",
-    pub: "pnpm build && pnpm publish --access public --registry https://registry.npmjs.org",
+    pub: "pnpm build && pnpm publish --access public --registry https://registry.npmjs.org --no-git-checks",
     examples: "pnpm exec parcel ./examples/index.html",
   };
 

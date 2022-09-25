@@ -1,6 +1,6 @@
 {
   "name": "@m78/build-tools",
-  "version": "0.0.13",
+  "version": "0.0.15",
   "description": "simple builder for M78 projects, which also contain several developer tools.",
   "main": "index.js",
   "type": "module",
@@ -11,7 +11,7 @@
     "lint:style": "prettier . --write --no-error-on-unmatched-pattern",
     "lint:script": "eslint . --ext .js,.jsx,.ts,.tsx,.vue --fix",
     "lint": "npm run lint:script && npm run lint:style",
-    "pub": "pnpm publish --access public --registry https://registry.npmjs.org"
+    "pub": "pnpm publish --access public --registry https://registry.npmjs.org --no-git-checks"
   },
   "license": "MIT",
   "peerDependencies": {

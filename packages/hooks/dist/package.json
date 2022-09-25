@@ -1,6 +1,6 @@
 {
   "name": "@m78/hooks",
-  "version": "0.0.5",
+  "version": "0.0.8",
   "description": "Use Your Imagination",
   "keywords": [
     "react",
@@ -39,7 +39,7 @@
     "lint": "npm run lint:script && npm run lint:prettier",
     "test": "jest",
     "build": "m78-build-tools build",
-    "pub": "pnpm build && pnpm publish --access public --registry https://registry.npmjs.org",
+    "pub": "pnpm build && pnpm publish --access public --registry https://registry.npmjs.org --no-git-checks",
     "examples": "pnpm exec parcel ./examples/index.html"
   },
   "publishConfig": {
