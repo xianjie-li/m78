@@ -6,4 +6,11 @@ nav:
   order: 1000
 --- 
 
+## 介绍
+
+一些常用的`react hook`
+
+## 安装
+
+`yarn add @m78/hooks`
 

@@ -1,5 +1,4 @@
 import React from "react";
-import { createRoot } from "react-dom/client";
 import { useVirtualList } from "../../src";
 
 import sty from "./style.module.css";

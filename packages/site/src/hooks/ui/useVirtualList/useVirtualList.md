@@ -22,7 +22,7 @@ group:
 
 ## 动态高度
 
-动态获取项高度(处于性能考虑，尺寸只在 list 变更时统一获取一次)
+动态获取项高度(出于性能考虑，尺寸只在 list 变更时统一获取一次)
 
 <code src="./useVirtualList.dynamic.demo.tsx" />
 

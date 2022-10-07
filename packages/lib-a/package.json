@@ -15,15 +15,17 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@m78/build-tools": "^0.0.13"
+    "@m78/build-tools": "workspace:^"
   },
   "files": [
     "**"
   ],
-  "type": "module",
   "typings": "./",
   "publishConfig": {
     "directory": "dist",
     "linkDirectory": true
+  },
+  "dependencies": {
+    "@m78/utils": "workspace:^"
   }
 }

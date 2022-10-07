@@ -1,6 +1,7 @@
 import path from "path";
 import glob from "glob";
-import { copyFile, readFile, writeFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
+import fse from "fs-extra";
 import { fileURLToPath } from "url";
 import commentJSON from "comment-json";
 import { setNamePathValue } from "@m78/utils";
@@ -67,7 +68,7 @@ export async function init() {
   ];
 
   const copyTasks = copeFiles.map((filepath) =>
-    copyFile(filepath, path.resolve(process.cwd(), path.basename(filepath)))
+    fse.copy(filepath, path.resolve(process.cwd(), path.basename(filepath)))
   );
 
   await Promise.all(copyTasks);

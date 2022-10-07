@@ -1,5 +1,4 @@
 import { defineConfig } from "dumi";
-import * as path from "path";
 
 export default defineConfig({
   title: "M78",
@@ -12,6 +11,13 @@ export default defineConfig({
     {
       title: "GitHub",
       path: "https://github.com/xianjie-li/m78",
+    },
+    {
+      title: "关联项目",
+      children: [
+        { title: "第一项", path: "/relation1" },
+        { title: "第二项", path: "/relation2" },
+      ],
     },
   ],
   resolve: {

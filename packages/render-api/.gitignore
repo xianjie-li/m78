@@ -4,7 +4,6 @@ node_modules
 lib
 /esm
 /cjs
-/.parcel-cache
 
 # local env files
 .env.local
