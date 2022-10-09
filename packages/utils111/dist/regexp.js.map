@@ -1,0 +1,1 @@
+{"version":3,"sources":["/Users/lixianjie/project/openSource/m78/packages/utils/src/regexp.ts"],"sourcesContent":["export const idCardRegexp = /(^\\d{15}$)|(^\\d{18}$)|(^\\d{17}(\\d|X|x)$)/;\n"],"names":["idCardRegexp"],"mappings":"AAAA,OAAO,IAAMA,YAAY,6CAA6C,CAAC"}

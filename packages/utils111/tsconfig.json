@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@m78/YOUR_PROJ": ["src/index.ts"]
+    },
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "jsx": "react",
+    "strictPropertyInitialization": false,
+    "importHelpers": true,
+    "skipLibCheck": true,
+    "allowJs": false,
+    "noImplicitAny": false
+  },
+  "include": [
+    "src/**/*"
+  ],
+  // 额外添加来确保不会生成多余的声明文件
+  "exclude": [
+    "./src/**/*.test.tsx",
+    "./src/**/*.test.ts",
+  ]
+}
