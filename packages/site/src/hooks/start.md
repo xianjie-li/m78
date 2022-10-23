@@ -8,7 +8,7 @@ nav:
 
 ## 介绍
 
-一些常用的`react hook`
+一些`react hook`
 
 ## 安装
 

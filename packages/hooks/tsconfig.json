@@ -4,7 +4,8 @@
     "paths": {
       "@m78/hooks": ["src/index.ts"]
     },
-    "target": "es5",
+    // 编译器使用swc, 这里是为了能让我们使用私有成员等最新特性
+    "target": "es2015",
     "lib": ["dom", "dom.iterable", "esnext"],
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,

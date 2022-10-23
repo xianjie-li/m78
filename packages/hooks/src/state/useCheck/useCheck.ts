@@ -88,9 +88,7 @@ export function useCheck<T, OPTION = T>(
       },
     },
     [],
-    {
-      ...conf,
-    }
+    conf
   );
 
   /** 提取所有选项为基础类型值, 基础值数组操作更方便 */
@@ -191,8 +189,7 @@ export function useCheck<T, OPTION = T>(
     // 排除禁用项和未选中项
     const rmList = removeList.filter((item) => {
       if (isDisabled(item)) return false;
-      if (!isChecked(item)) return false;
-      return true;
+      return isChecked(item);
     });
 
     setChecked((prev) => {

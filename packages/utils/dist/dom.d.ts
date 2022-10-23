@@ -1,4 +1,5 @@
 import { Bound, TupleNumber } from "./common-type.js";
+export * from "./dom/dom-adaption.js";
 /**
  * get a dom, multiple calls will return the same dom
  * @param namespace - create a uniq node by namespace
@@ -17,6 +18,9 @@ export declare function getScrollBarWidth(className?: string): TupleNumber;
  * @return - an object containing all available style values, an null means not supported
  *  */
 export declare function getStyle(dom: HTMLElement): Partial<CSSStyleDeclaration>;
+/** inject a css fragment to document */
+export declare function loadStyle(css: any): void;
+export declare function loadScript(url: string): Promise<void>;
 /**
  * check if element is visible
  * @param target - an element to be detected or an object that represents location information
@@ -40,10 +44,13 @@ export declare function checkElementVisible(target: HTMLElement | Partial<Bound>
 };
 interface TriggerHighlightConf {
     /** #1890ff | line color */
-    color: string;
+    color?: string;
     /** true | use outline, if false use box-shadow */
-    useOutline: boolean;
+    useOutline?: boolean;
 }
+/**
+ * highlight special node (outline or shadow), if node contain (input,select,textarea), will focus them;
+ * */
 export declare function triggerHighlight(target: HTMLElement, TriggerHighlightConf?: TriggerHighlightConf): void;
 export declare function triggerHighlight(selector: string, TriggerHighlightConf?: TriggerHighlightConf): void;
 export declare function triggerHighlight(t: string | HTMLElement, TriggerHighlightConf?: TriggerHighlightConf): void;
@@ -75,5 +82,4 @@ export declare function hasScroll(el: HTMLElement): {
     x: boolean;
     y: boolean;
 };
-export {};
 //# sourceMappingURL=dom.d.ts.map

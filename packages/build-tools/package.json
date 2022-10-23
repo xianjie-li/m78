@@ -18,7 +18,7 @@
     "@swc/helpers": "^0.4.11"
   },
   "dependencies": {
-    "@m78/utils": "workspace:^",
+    "@lxjx/utils": "1.7.9",
     "@swc/cli": "^0.1.57",
     "@swc/core": "^1.2.220",
     "@swc/helpers": "^0.4.11",

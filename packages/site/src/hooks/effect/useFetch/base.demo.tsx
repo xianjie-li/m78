@@ -30,7 +30,6 @@ const UseFetchBase = () => {
       initPayload: { score: Math.random().toFixed(2) }, // 传递给请求方法的初始参数
       deps: [count], // 依赖值发生改变时会自动以当前参数更新请求
       timeout: 3000, // 超时时间
-      pollingInterval: hasPoll ? 2000 : 0, // 轮询时间
       cacheKey: "USEFETCHCHACHEKEY", // 开启缓存、SWR
     },
   );

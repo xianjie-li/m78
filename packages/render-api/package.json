@@ -1,6 +1,6 @@
 {
   "name": "@m78/render-api",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "render react components through api",
   "main": "./index.js",
   "scripts": {
@@ -10,7 +10,7 @@
     "lint": "npm run lint:script && npm run lint:prettier",
     "build": "m78-build-tools build",
     "pub": "pnpm build && pnpm publish --access public --registry https://registry.npmjs.org --no-git-checks",
-    "examples": "pnpm exec parcel ./examples/index.html"
+    "examples": "pnpm exec parcel ./examples/index.html --dist-dir .examples-dist"
   },
   "keywords": [],
   "author": {

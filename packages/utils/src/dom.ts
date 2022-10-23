@@ -1,6 +1,8 @@
 import { Bound, TupleNumber } from "./common-type.js";
-import { isDom, isNumber } from "./is.js";
+import { isDom, isFunction, isNumber } from "./is.js";
 import { clamp } from "./number.js";
+
+export * from "./dom/dom-adaption.js";
 
 const portalsID = "J__PORTALS__NODE__";
 
@@ -69,6 +71,47 @@ export function getStyle(dom: HTMLElement): Partial<CSSStyleDeclaration> {
   if (!dom.currentStyle && !window.getComputedStyle) return {};
   // @ts-ignore
   return dom.currentStyle ? dom.currentStyle : window.getComputedStyle(dom);
+}
+
+/** inject a css fragment to document */
+export function loadStyle(css) {
+  if (!css || typeof document === "undefined") {
+    return;
+  }
+
+  const head = document.head || document.getElementsByTagName("head")[0];
+  const style = document.createElement("style");
+
+  head.appendChild(style);
+
+  // @ts-ignore
+  if (style.styleSheet) {
+    // @ts-ignore
+    style.styleSheet.cssText = css;
+  } else {
+    style.appendChild(document.createTextNode(css));
+  }
+}
+
+export function loadScript(url: string) {
+  return new Promise<void>((resolve, reject) => {
+    const existingScript = document.body.querySelector(`script[src="${url}"]`);
+
+    if (!existingScript) {
+      const script = document.createElement("script");
+      script.src = url;
+      script.onload = () => resolve();
+      script.onerror = reject;
+
+      if (document.head.firstChild) {
+        document.head.insertBefore(script, document.head.firstChild);
+      } else {
+        document.head.appendChild(script);
+      }
+    }
+
+    if (existingScript) resolve();
+  });
 }
 
 /**
@@ -190,11 +233,14 @@ function offsetCalc(bound, offset) {
 
 interface TriggerHighlightConf {
   /** #1890ff | line color */
-  color: string;
+  color?: string;
   /** true | use outline, if false use box-shadow */
-  useOutline: boolean;
+  useOutline?: boolean;
 }
 
+/**
+ * highlight special node (outline or shadow), if node contain (input,select,textarea), will focus them;
+ * */
 export function triggerHighlight(
   target: HTMLElement,
   TriggerHighlightConf?: TriggerHighlightConf
@@ -209,7 +255,7 @@ export function triggerHighlight(
 ): void;
 export function triggerHighlight(t, conf) {
   if (isDom(t)) {
-    mountHighlight(t, conf);
+    mountHighlight(t as HTMLElement, conf);
   } else {
     const temp = document.querySelectorAll(t);
     if (temp.length) {
@@ -223,7 +269,7 @@ const mountHighlightDefaultConf = {
   useOutline: true,
 };
 
-function mountHighlight(target, conf = {}) {
+function mountHighlight(target: HTMLElement, conf = {}) {
   const cf = {
     ...mountHighlightDefaultConf,
     ...conf,
@@ -232,22 +278,38 @@ function mountHighlight(target, conf = {}) {
   if (cf.useOutline) {
     target.style.outline = `1px auto ${cf.color}`;
   } else {
-    target.style.boxShadow = `0 0 0 4px ${cf.color}`;
+    target.style.boxShadow = `0 0 0 2px ${cf.color}`;
   }
 
-  function clickHandle() {
+  let inp: HTMLElement | null;
+
+  if (
+    target.tagName === "INPUT" ||
+    target.tagName === "SELECT" ||
+    target.tagName === "TEXTAREA"
+  ) {
+    inp = target;
+  } else {
+    inp = document.querySelector("input,select,textarea");
+  }
+
+  if (inp && isFunction(inp.focus)) inp.focus();
+
+  function clearHandle() {
     if (cf.useOutline) {
       target.style.outline = "";
     } else {
       target.style.boxShadow = "";
     }
 
-    document.removeEventListener("click", clickHandle);
-    document.removeEventListener("keydown", clickHandle);
+    document.removeEventListener("mousedown", clearHandle);
+    document.removeEventListener("touchstart", clearHandle);
+    document.removeEventListener("keydown", clearHandle);
   }
 
-  document.addEventListener("click", clickHandle);
-  document.addEventListener("keydown", clickHandle);
+  document.addEventListener("mousedown", clearHandle);
+  document.addEventListener("touchstart", clearHandle);
+  document.addEventListener("keydown", clearHandle);
 }
 
 /**

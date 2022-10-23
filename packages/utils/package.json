@@ -1,6 +1,6 @@
 {
   "name": "@m78/utils",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "utils for m78 projects",
   "keywords": [
     "javascript utils"
@@ -19,7 +19,8 @@
     "typescript": "^4.8.3"
   },
   "dependencies": {
-    "@swc/helpers": "^0.4.11"
+    "@swc/helpers": "^0.4.11",
+    "lodash": "^4.17.21"
   },
   "files": [
     "**"
@@ -30,7 +31,8 @@
     "lint": "npm run lint:script && npm run lint:prettier",
     "test": "jest",
     "build": "m78-build-tools build",
-    "pub": "pnpm build && pnpm publish --access public --registry https://registry.npmjs.org --no-git-checks"
+    "pub": "pnpm build && pnpm publish --access public --registry https://registry.npmjs.org --no-git-checks",
+    "examples": "pnpm exec parcel ./examples/index.html --dist-dir .examples-dist"
   },
   "publishConfig": {
     "directory": "dist",

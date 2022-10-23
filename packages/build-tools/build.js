@@ -4,7 +4,7 @@ import glob from "glob";
 import { writeFile, mkdir, copyFile, rm } from "node:fs/promises";
 import _ from "lodash";
 import { config } from "./config.js";
-import { ensureArray, isArray, isObject } from "@m78/utils";
+import { ensureArray, isArray, isObject } from "@lxjx/utils";
 import { spawnSync } from "node:child_process";
 import fse from "fs-extra";
 import * as url from "url";

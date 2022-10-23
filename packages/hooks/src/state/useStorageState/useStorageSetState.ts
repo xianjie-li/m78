@@ -7,12 +7,12 @@ import {
 } from "../../";
 import { AnyObject } from "@m78/utils";
 
+/**
+ * useSetState的storage版本
+ * */
 export const useStorageSetState = <T extends AnyObject>(
-  /** 缓存key */
   key: string,
-  /** 初始状态 */
   initState = {} as StateInitState<T>,
-  /** 其他选项 */
   options?: UseStorageStateOptions
 ): UseSetStateTuple<T> => {
   const [, update] = useState(0);

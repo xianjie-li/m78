@@ -4,7 +4,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import fse from "fs-extra";
 import { fileURLToPath } from "url";
 import commentJSON from "comment-json";
-import { setNamePathValue } from "@m78/utils";
+import { setNamePathValue } from "@lxjx/utils";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

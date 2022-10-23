@@ -1,17 +1,17 @@
-import React from 'react';
-import { useStorageState } from '@m78/hooks';
+import React from "react";
+import { useStorageState } from "@m78/hooks";
 
 const useStorageDemo = () => {
-  const [state, setState] = useStorageState('usestorage_demo', 0);
+  const [state, setState] = useStorageState("session_demo", 0);
 
-  const [state2, setState2] = useStorageState('usestorage_local_demo', 0, {
-    type: 'local',
+  const [state2, setState2] = useStorageState("local_demo", 0, {
+    type: "local",
   });
 
   return (
     <div>
       <h3>{state}</h3>
-      <p>通过sessionStorage缓存, 跟随会话失效</p>
+      <p>通过sessionStorage缓存</p>
       <button onClick={() => setState((prev) => prev + 1)}>add</button>
 
       <hr />

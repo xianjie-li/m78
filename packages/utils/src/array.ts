@@ -1,4 +1,4 @@
-import { isArray } from "./is.js";
+import { isArray, isTruthyOrZero } from "./is.js";
 
 /**
  * swap index of two items in array.
@@ -31,9 +31,11 @@ export function move<T extends Array<any>>(
 }
 
 /**
- * receive T or T[], return T[]
+ * receive T or T[], return T[], if val is falsy or 0, return []
  * */
 export function ensureArray<T>(val: T[] | T): T[] {
+  if (!isTruthyOrZero(val)) return [];
+
   return (isArray(val) ? val : [val]) as T[];
 }
 

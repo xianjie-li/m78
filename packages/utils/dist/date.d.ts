@@ -3,8 +3,8 @@
  *  */
 export declare function parseDate(date: any): Date | null;
 /**
- * format the date into readable date string, support Y | M | D | H | m | s
- * @param date - new Date() | any time(string/date object/timestamp etc.) that can be parsed by parseDate(), default current time
+ * format the date into readable date string, support YY | YYYY | MM | DD | HH | mm | ss
+ * @param date - new Date() | any time val (string/date object/timestamp etc.) that can be parsed by parseDate(), default current time
  * @param format - 'YYYY-MM-DD HH:mm:ss' | custom format
  * @return - formatted date string, if date is invalid, return an empty string
  * @example
@@ -15,7 +15,7 @@ export declare function parseDate(date: any): Date | null;
  datetime('hello'); // => ''
  datetime(new Date()); // => 2020-06-01 18:46:39
  */
-export declare function formatDate(date?: Date, format?: string): string;
+export declare function formatDate(date?: any, format?: string): string;
 /**
  * get d day, h hour, m minute, s second, ms millisecond between the current time and the specified time. If the current time exceeds the incoming time, all return to '00' and timeOut is true
  * @param date - any time that can be parsed by parseDate()
@@ -23,11 +23,47 @@ export declare function formatDate(date?: Date, format?: string): string;
  */
 export declare function getDateCountDown(date?: any): any;
 /**
- * Whether the current time or the specified time is within a certain period of time
- * @param startDate - start time
- * @param endDate - end time
- * @param currentDate - mid time, default is now
- * @return - whether within a time period
+ * return true if date is between targetDate
  * */
-export declare function isBetweenDate(startDate: any, endDate: any, currentDate: any): boolean;
+export declare function isBetweenDate(opt: {
+    /** start time, default current, receive all time formats supported by parseDate() */
+    startDate: any;
+    /** end time, default current, receive all time formats supported by parseDate() */
+    endDate: any;
+    /** target time, default current, receive all time formats supported by parseDate() */
+    targetDate: any;
+    /** true | include startDate = targetDate  */
+    startSame?: boolean;
+    /** true | include endDate = targetDate */
+    endSame?: boolean;
+}): boolean;
+export interface IsAfterAndBeforeOption {
+    /** time to be comparing, receive all time formats supported by parseDate() */
+    date: any;
+    /** target time, default current, receive all time formats supported by parseDate() */
+    targetDate?: any;
+    /** when date = targetDate, return true */
+    same?: boolean;
+}
+/**
+ * return true if date is after targetDate
+ * */
+export declare function isAfterDate(opt: IsAfterAndBeforeOption): boolean;
+/**
+ * return true if date is before targetDate
+ * */
+export declare function isBeforeDate(opt: IsAfterAndBeforeOption): boolean;
+/**
+ * create a time Reviser according to the specified time for revise the difference between local time and server time
+ * */
+export declare function createDateReviser(date: any): {
+    /** argument date */
+    date: Date;
+    /** local date and arg date diff (ms) */
+    diff: number;
+    /** revised current date */
+    getReviseCurrent(): Date;
+    /** revise specify date */
+    getReviseDate(d: any): Date;
+};
 //# sourceMappingURL=date.d.ts.map

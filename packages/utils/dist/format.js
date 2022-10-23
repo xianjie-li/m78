@@ -139,7 +139,7 @@ function getPatterns(str, pattern) {
     }
     return false;
 }
-/** 当左边的值不为truthy或0时，返回feedback */ export function vie(arg) {
+/** 当左边的值不为truthy或0时，返回feedback, 否则直接返回左边值 */ export function vie(arg) {
     var feedback = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : "-";
     return isTruthyOrZero(arg) ? arg : feedback;
 }

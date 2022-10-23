@@ -15,7 +15,7 @@ group:
 
 ## useStorageSetState
 
-[useSetState](/state/use-set-state)版本的 useStorageState, 除了包含缓存功能，其他完全一致
+[useSetState](/hooks/state/use-set-state) 版本的 useStorageState, 除了包含缓存功能，其他完全一致
 
 <code src="./useStorageSetState.demo.tsx" />
 
@@ -24,19 +24,11 @@ group:
 ## API
 
 ```ts
-function useStorageBase<T = undefined>(
-  /** 缓存key */
+function useStorageState<T = undefined>(
   key: string,
-  /** 初始状态 */
   initState?: StateInitState<T>,
-  /** 其他选项 */
   options?: UseStorageStateOptions
-): [
-  /** 状态 */
-  T,
-  /** 设置状态  */
-  SetStateBase<T>
-];
+): [T, SetStateBase<T>]
 ```
 
 **相关接口**
@@ -47,6 +39,8 @@ interface UseStorageStateOptions {
   type?: "local" | "session";
   /** false | 是否禁用缓存 */
   disabled?: boolean;
+  /** 缓存有效时间(ms) */
+  validTime?: number;
 }
 
 type StateInitState<T> = (() => T) | T;
@@ -55,3 +49,5 @@ interface SetStateBase<T> {
   (patch: T | ((prevState: T) => T)): void;
 }
 ```
+
+`useStorageState`上还挂载了内部使用到的`get`, `set`, `remove`静态方法, 用来操作底层的`storage`

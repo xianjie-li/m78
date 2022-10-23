@@ -14,11 +14,11 @@ import { isNumber, isWeakNumber } from "./is.js";
  * @return - 四舍五入到指定进度的小数
  * */ export function decimalPrecision(num) {
     var precision = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : 1;
-    var mid = +"1".concat(Array.from({
+    var mid = Number("1".concat(Array.from({
         length: precision
     }).map(function() {
         return "0";
-    }).join(""));
+    }).join("")));
     return Math.round(num * mid) / mid;
 }
 /** 将一组数字或类数字相加、非数字视为0 */ export function sum() {

@@ -89,7 +89,7 @@ export function useCheck(conf) {
         var // valMapSync(val); 强控制时在这里同步会有问题，统一转移到effect中
         ref;
         (ref = conf[triggerKey]) === null || ref === void 0 ? void 0 : ref.call(conf, val, getCheckedOptions(val));
-    })), [], _object_spread({}, conf)), 2), checked = ref[0], setChecked = ref[1];
+    })), [], conf), 2), checked = ref[0], setChecked = ref[1];
     /** 提取所有选项为基础类型值, 基础值数组操作更方便 */ var items = useMemo(function() {
         return collector ? options.map(function(item) {
             var v = collector(item);
@@ -182,8 +182,7 @@ export function useCheck(conf) {
         // 排除禁用项和未选中项
         var rmList = removeList.filter(function(item) {
             if (isDisabled(item)) return false;
-            if (!isChecked(item)) return false;
-            return true;
+            return isChecked(item);
         });
         setChecked(function(prev) {
             return _difference(prev, rmList);

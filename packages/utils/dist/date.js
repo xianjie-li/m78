@@ -1,5 +1,6 @@
 import { padSingleNumber } from "./format.js";
 import { DATE_TIME_FORMAT } from "./consts.js";
+import { throwError } from "./lang.js";
 /**
  * Receive a date string, timestamp (ms), date object, and return it after converting it into a date object, or return null if the conversion fail
  *  */ export function parseDate(date) {
@@ -15,8 +16,8 @@ import { DATE_TIME_FORMAT } from "./consts.js";
     return d;
 }
 /**
- * format the date into readable date string, support Y | M | D | H | m | s
- * @param date - new Date() | any time(string/date object/timestamp etc.) that can be parsed by parseDate(), default current time
+ * format the date into readable date string, support YY | YYYY | MM | DD | HH | mm | ss
+ * @param date - new Date() | any time val (string/date object/timestamp etc.) that can be parsed by parseDate(), default current time
  * @param format - 'YYYY-MM-DD HH:mm:ss' | custom format
  * @return - formatted date string, if date is invalid, return an empty string
  * @example
@@ -92,20 +93,72 @@ var oneD = 24 * oneH;
     };
 }
 /**
- * Whether the current time or the specified time is within a certain period of time
- * @param startDate - start time
- * @param endDate - end time
- * @param currentDate - mid time, default is now
- * @return - whether within a time period
- * */ export function isBetweenDate(startDate, endDate, currentDate) {
-    var s = parseDate(startDate);
-    var e = parseDate(endDate);
+ * return true if date is between targetDate
+ * */ export function isBetweenDate(opt) {
+    var _startSame = opt.startSame, startSame = _startSame === void 0 ? true : _startSame, _endSame = opt.endSame, endSame = _endSame === void 0 ? true : _endSame;
+    var s = parseDate(opt.startDate);
+    var e = parseDate(opt.endDate);
+    var t = parseDate(opt.targetDate) || new Date();
     if (!s || !e) return false;
-    if (currentDate) {
-        var c = parseDate(currentDate);
-        if (!c) return false;
-        return c <= e && c >= s;
+    var start = s.getTime();
+    var end = e.getTime();
+    var target = t.getTime();
+    if (startSame && endSame) {
+        return target <= end && target >= start;
     }
-    var c1 = new Date();
-    return c1 <= e && c1 >= s;
+    if (!startSame && !endSame) {
+        return target < end && target > start;
+    }
+    if (startSame) {
+        return target < end && target >= start;
+    } else {
+        return target <= end && target > start;
+    }
+}
+/**
+ * return true if date is after targetDate
+ * */ export function isAfterDate(opt) {
+    return isAfterOrBeforeHelper(opt);
+}
+/**
+ * return true if date is before targetDate
+ * */ export function isBeforeDate(opt) {
+    return isAfterOrBeforeHelper(opt, true);
+}
+/**
+ * create a time Reviser according to the specified time for revise the difference between local time and server time
+ * */ export function createDateReviser(date) {
+    var d = parseDate(date);
+    if (!d) {
+        throwError("".concat(date, " cannot be safety covert to Date"));
+    }
+    var diff = d.getTime() - new Date().getTime();
+    return {
+        /** argument date */ date: d,
+        /** local date and arg date diff (ms) */ diff: diff,
+        /** revised current date */ getReviseCurrent: function() {
+            return this.getReviseDate(new Date());
+        },
+        /** revise specify date */ getReviseDate: function(d) {
+            var _date = parseDate(d);
+            if (!_date) {
+                throwError("".concat(d, " cannot be safety covert to Date"));
+            }
+            _date.setTime(_date.getTime() + diff);
+            return _date;
+        }
+    };
+}
+/**
+ * isAfterDate and isBeforeDate common logic
+ * */ function isAfterOrBeforeHelper(opt, isBefore) {
+    var date = parseDate(opt.date);
+    if (!date) return false;
+    var targetDate = parseDate(opt.targetDate) || new Date();
+    if (opt.same) {
+        if (isBefore) return date.getTime() <= targetDate.getTime();
+        return date.getTime() >= targetDate.getTime();
+    }
+    if (isBefore) return date.getTime() < targetDate.getTime();
+    return date.getTime() > targetDate.getTime();
 }

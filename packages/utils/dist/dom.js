@@ -1,6 +1,7 @@
 import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import { isDom, isNumber } from "./is.js";
+import { isDom, isFunction, isNumber } from "./is.js";
 import { clamp } from "./number.js";
+export * from "./dom/dom-adaption.js";
 var portalsID = "J__PORTALS__NODE__";
 /**
  * get a dom, multiple calls will return the same dom
@@ -56,6 +57,40 @@ var portalsID = "J__PORTALS__NODE__";
     if (!dom.currentStyle && !window.getComputedStyle) return {};
     // @ts-ignore
     return dom.currentStyle ? dom.currentStyle : window.getComputedStyle(dom);
+}
+/** inject a css fragment to document */ export function loadStyle(css) {
+    if (!css || typeof document === "undefined") {
+        return;
+    }
+    var head = document.head || document.getElementsByTagName("head")[0];
+    var style = document.createElement("style");
+    head.appendChild(style);
+    // @ts-ignore
+    if (style.styleSheet) {
+        // @ts-ignore
+        style.styleSheet.cssText = css;
+    } else {
+        style.appendChild(document.createTextNode(css));
+    }
+}
+export function loadScript(url) {
+    return new Promise(function(resolve, reject) {
+        var existingScript = document.body.querySelector('script[src="'.concat(url, '"]'));
+        if (!existingScript) {
+            var script = document.createElement("script");
+            script.src = url;
+            script.onload = function() {
+                return resolve();
+            };
+            script.onerror = reject;
+            if (document.head.firstChild) {
+                document.head.insertBefore(script, document.head.firstChild);
+            } else {
+                document.head.appendChild(script);
+            }
+        }
+        if (existingScript) resolve();
+    });
 }
 /**
  * check if element is visible
@@ -167,19 +202,28 @@ function mountHighlight(target) {
     if (cf.useOutline) {
         target.style.outline = "1px auto ".concat(cf.color);
     } else {
-        target.style.boxShadow = "0 0 0 4px ".concat(cf.color);
+        target.style.boxShadow = "0 0 0 2px ".concat(cf.color);
     }
-    function clickHandle() {
+    var inp;
+    if (target.tagName === "INPUT" || target.tagName === "SELECT" || target.tagName === "TEXTAREA") {
+        inp = target;
+    } else {
+        inp = document.querySelector("input,select,textarea");
+    }
+    if (inp && isFunction(inp.focus)) inp.focus();
+    function clearHandle() {
         if (cf.useOutline) {
             target.style.outline = "";
         } else {
             target.style.boxShadow = "";
         }
-        document.removeEventListener("click", clickHandle);
-        document.removeEventListener("keydown", clickHandle);
+        document.removeEventListener("mousedown", clearHandle);
+        document.removeEventListener("touchstart", clearHandle);
+        document.removeEventListener("keydown", clearHandle);
     }
-    document.addEventListener("click", clickHandle);
-    document.addEventListener("keydown", clickHandle);
+    document.addEventListener("mousedown", clearHandle);
+    document.addEventListener("touchstart", clearHandle);
+    document.addEventListener("keydown", clearHandle);
 }
 /**
  * Query the incoming Node for the presence of a specified node in all of its parent nodes

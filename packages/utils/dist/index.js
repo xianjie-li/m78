@@ -1,5 +1,5 @@
-export * from "./is";
-export * from "./date";
+export * from "./is.js";
+export * from "./date.js";
 export * from "./format.js";
 export * from "./form.js";
 export * from "./object.js";

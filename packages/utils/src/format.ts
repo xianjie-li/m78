@@ -167,7 +167,7 @@ export function getFirstTruthyOrZero(...args) {
   return false;
 }
 
-/** 当左边的值不为truthy或0时，返回feedback */
+/** 当左边的值不为truthy或0时，返回feedback, 否则直接返回左边值 */
 export function vie(arg, feedback = "-") {
   return isTruthyOrZero(arg) ? arg : feedback;
 }

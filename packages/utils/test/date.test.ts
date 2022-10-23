@@ -1,3 +1,8 @@
+// query utilities:
+import { getByText } from "@testing-library/dom";
+// adds special assertions like toHaveTextContent
+import "@testing-library/jest-dom";
+
 import {
   createDateReviser,
   formatDate,
@@ -5,6 +10,7 @@ import {
   isBeforeDate,
   isBetweenDate,
   parseDate,
+  styleInject,
 } from "../src";
 
 test("formatDate()", () => {
