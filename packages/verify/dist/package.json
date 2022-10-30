@@ -1,6 +1,6 @@
 {
   "name": "@m78/verify",
-  "version": "1.4.1",
+  "version": "1.4.0",
   "description": "Your next JS validation library",
   "main": "./index.js",
   "scripts": {

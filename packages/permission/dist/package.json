@@ -1,7 +1,7 @@
 {
-  "name": "@m78/verify",
-  "version": "1.4.1",
-  "description": "Your next JS validation library",
+  "name": "@78/permission",
+  "version": "2.2.0",
+  "description": "permission library",
   "main": "./index.js",
   "scripts": {
     "test": "jest",
@@ -12,16 +12,8 @@
     "pub": "pnpm build && pnpm publish --access public --registry https://registry.npmjs.org --no-git-checks",
     "example-hello": "mbt example hello"
   },
-  "keywords": [
-    "js validation library",
-    "function argument validation",
-    "object validation",
-    "array validation",
-    "nest validation",
-    "async validation"
-  ],
   "author": {
-    "name": "lime",
+    "name": "Link",
     "email": "1073830130@qq.com"
   },
   "license": "MIT",
@@ -30,13 +22,14 @@
   ],
   "type": "module",
   "typings": "./",
+  "dependencies": {
+    "@m78/utils": "workspace:^",
+    "@m78/seed": "workspace:^",
+    "@types/lodash": "^4.14.170",
+    "lodash": "^4.17.21"
+  },
   "publishConfig": {
     "directory": "dist",
     "linkDirectory": true
-  },
-  "dependencies": {
-    "@m78/utils": "workspace:^",
-    "@types/lodash": "^4.14.185",
-    "lodash": "^4.17.21"
   }
 }
