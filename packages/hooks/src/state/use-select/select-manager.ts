@@ -7,8 +7,10 @@ import {
   isTruthyOrZero,
 } from "@m78/utils";
 
-type SelectManagerValue = string | number;
+/** 可用的选中值类型 */
+export type SelectManagerValue = string | number;
 
+/** 创建配置 */
 export interface SelectManagerOption<Item = SelectManagerValue> {
   /** 选项列表 */
   list: Item[];
@@ -20,7 +22,8 @@ export interface SelectManagerOption<Item = SelectManagerValue> {
   valueMapper?: string | ((i: Item) => SelectManagerValue);
 }
 
-export interface SelectManagerSelectedMeta<Item = SelectManagerValue> {
+/** 选中状态 */
+export interface SelectManagerSelectedState<Item = SelectManagerValue> {
   /** 当前选中项的值, 包含strangeSelected */
   selected: SelectManagerValue[];
   /** 选中项的原始选项, 包含strangeSelected */
@@ -30,11 +33,6 @@ export interface SelectManagerSelectedMeta<Item = SelectManagerValue> {
   /** 选中且list中包含的选项, 相当于 selected - strangeSelected */
   realSelected: SelectManagerValue[];
 }
-
-/**
- * partialSelected / allSelected 仅检测list中存在的权限
- * selectAll / toggleAll 仅选中list中存在的选项
- * */
 
 /**
  * 用于列表的选中项管理, 内置了对于超大数据量的优化
@@ -88,8 +86,21 @@ export class SelectManager<Item = SelectManagerValue> {
     return String(val) in this.#selectedMap;
   }
 
-  /** 当前选中项的信息 */
-  get state(): SelectManagerSelectedMeta<Item> {
+  /**
+   * 当前选中项的信息
+   *
+   * 对于性能很敏感的代码, 获取state并存储相比多次调用有更好的性能
+   * ```
+   *  ✅
+   *  const state = select.state;
+   *  state.selected
+   *  state.originalSelected
+   *  ❌
+   *  select.state.selected;
+   *  select.state.originalSelected;
+   * ```
+   * */
+  get state(): SelectManagerSelectedState<Item> {
     const originalSelected: Item[] = [];
     const realSelected: SelectManagerValue[] = [];
     const strangeSelected: SelectManagerValue[] = [];
@@ -148,7 +159,7 @@ export class SelectManager<Item = SelectManagerValue> {
   }
 
   /** 取消选中传入的值 */
-  unSelected(val: SelectManagerValue) {
+  unSelect(val: SelectManagerValue) {
     delete this.#selectedMap[val];
     this.#emitChange();
   }
@@ -171,7 +182,7 @@ export class SelectManager<Item = SelectManagerValue> {
   toggle(val: SelectManagerValue) {
     const unlock = this.#lock();
     if (this.isSelected(val)) {
-      this.unSelected(val);
+      this.unSelect(val);
     } else {
       this.select(val);
     }
@@ -202,7 +213,7 @@ export class SelectManager<Item = SelectManagerValue> {
     if (isSelect) {
       this.select(val);
     } else {
-      this.unSelected(val);
+      this.unSelect(val);
     }
     unlock();
     this.#emitChange();

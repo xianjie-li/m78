@@ -1,10 +1,10 @@
+import _object_spread from "@swc/helpers/src/_object_spread.mjs";
 /**
  * 替换html字符中的标签为指定字符
  * @param str - html文本
  * @param val - '' | 替换后的值
  * @return - 替换标签后的文本
- * */ import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-export function replaceHtmlTags() {
+ * */ export function replaceHtmlTags() {
     var str = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : "", val = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : "";
     var reg = /(<\/?.+?\/?>|&nbsp;|&mdash;)/g;
     return str.replace(reg, val);
@@ -86,4 +86,13 @@ var heightLightMatchStringDefaultConf = {
     if (!string) return "";
     var ls = string.split(separator);
     return ls[ls.length - 1];
+}
+/**
+ * 根据模板和给定对象进行插值
+ * - 插值语法为{key}, 通过\\{key}来避免插值, 如果未从obj中取到值，将其替换为 ''
+ * */ export function interpolate(tpl, obj) {
+    return tpl.replace(/((\\{|{).+?})/g, function(a) {
+        if (a.startsWith("\\{")) return a.slice(1);
+        return obj[a.slice(1, -1)] || "";
+    });
 }

@@ -1,0 +1,30 @@
+{
+  "name": "@m78/seed",
+  "version": "2.1.2",
+  "description": "",
+  "main": "./index.js",
+  "scripts": {
+    "test": "jest",
+    "lint:prettier": "prettier ./src ./test --write --no-error-on-unmatched-pattern",
+    "lint:script": "eslint ./src ./test --ext .js,.jsx,.ts,.tsx,.vue --fix",
+    "lint": "npm run lint:script && npm run lint:prettier",
+    "build": "mbt build",
+    "pub": "pnpm build && pnpm publish --access public --registry https://registry.npmjs.org --no-git-checks",
+    "example-hello": "mbt example hello"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "files": [
+    "**"
+  ],
+  "type": "module",
+  "typings": "./",
+  "publishConfig": {
+    "directory": "dist",
+    "linkDirectory": true
+  },
+  "dependencies": {
+    "@m78/utils": "workspace:^"
+  }
+}

@@ -1,1 +1,0 @@
-{"version":3,"file":"useMountState.d.ts","sourceRoot":"","sources":["../../../../../src/state/useMountState/useMountState.ts"],"names":[],"mappings":"AAGA,MAAM,WAAW,mBAAmB;IAClC,oCAAoC;IACpC,YAAY,CAAC,EAAE,OAAO,CAAC;IACvB,uBAAuB;IACvB,aAAa,CAAC,EAAE,OAAO,CAAC;CACzB;AAED;;;KAGK;AACL,wBAAgB,aAAa,CAC3B,MAAM,EAAE,OAAO,EACf,EAAE,YAAmB,EAAE,aAAqB,EAAE,GAAE,mBAAwB,kCA6BzE"}

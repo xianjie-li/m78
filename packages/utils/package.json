@@ -1,6 +1,6 @@
 {
   "name": "@m78/utils",
-  "version": "0.0.11",
+  "version": "0.0.16",
   "description": "utils for m78 projects",
   "keywords": [
     "javascript utils"
@@ -14,10 +14,6 @@
     "email": "1073830130@qq.com"
   },
   "license": "MIT",
-  "devDependencies": {
-    "@m78/build-tools": "workspace:^",
-    "typescript": "^4.8.3"
-  },
   "dependencies": {
     "@swc/helpers": "^0.4.11",
     "lodash": "^4.17.21"

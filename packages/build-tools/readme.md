@@ -2,6 +2,9 @@
 
 ## usage
 
+First, add `m78-build-tools` to your project, use your favorite package manager
+
+
 ### auto inject config
 
 generate config via cli, ⚠️ this operation will be overwrite same name file and change package.json
@@ -25,14 +28,20 @@ tsconfig.lib.json
 and modify these fields in package.json
 
 ```shell
-scripts devDependencies files main type typings publishConfig
+scripts 
+devDependencies 
+files 
+main 
+type 
+typings 
+publishConfig
 ```
 
-### manual
 
-#### build
 
-1. add `m78-lib.config.js` to project root.
+### build
+
+1. Make sure  `m78-lib.config.js  `  exist in project root. for config detail,  see  [defineConfig.d.ts](./defineConfig.d.ts)
 
 ```ts
 import sass from "sass";
@@ -49,25 +58,6 @@ export default defineConfig({
           type: "es6",
         },
       },
-      beforeCopy: async (meta) => {
-        if (meta.suffix === ".scss") {
-          const result = sass.compile(meta.filePath);
-
-          await mkdir(meta.outDir, { recursive: true });
-          await writeFile(meta.outPath.replace(/\.scss$/, ".css"), result.css);
-
-          return true;
-        }
-      },
-    },
-    {
-      inpDir: "src",
-      outDir: "umd",
-      swcConfig: {
-        module: {
-          type: "umd",
-        },
-      },
     },
   ],
 });
@@ -75,7 +65,9 @@ export default defineConfig({
 
 2.run `npx m78-build-tools build`
 
-#### test
+
+
+### test
 
 built-in test by `jest` and `@testing-library/react`.
 
@@ -93,7 +85,34 @@ export { default } from "@m78/lib-build/jest.config.js";
 npx jest
 ```
 
-#### lint
+
+
+### example
+
+start dev server, run your code.
+
+
+
+suppose the root directory has the following code
+
+```shell
+examples
+	| - func1
+		|- index.html
+		|- xxx.tsx		# use in index.html <script type="module" src="./index.tsx"></script>
+  | - func2
+		|- index.html
+```
+
+run the specified example
+
+```shell
+npx m78-build-tools example func1	# run func1
+```
+
+
+
+### lint
 
 provide eslint and prettier base config, usage by follow:
 

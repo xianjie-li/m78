@@ -11,13 +11,10 @@ const __dirname = path.dirname(__filename);
 
 export async function init() {
   const usrPkgPath = path.resolve(process.cwd(), "./package.json");
-  const curPkgPath = path.resolve(__dirname, "./package.json");
 
   let pkg = await readFile(usrPkgPath, "utf8");
-  let curPkg = await readFile(curPkgPath, "utf8");
 
   pkg = JSON.parse(pkg);
-  curPkg = JSON.parse(curPkg);
 
   // 添加命令
   const scripts = {
@@ -26,20 +23,14 @@ export async function init() {
     "lint:script": "eslint ./src ./test --ext .js,.jsx,.ts,.tsx,.vue --fix",
     lint: "npm run lint:script && npm run lint:prettier",
     test: "jest",
-    build: "m78-build-tools build",
+    build: "mbt build",
     pub: "pnpm build && pnpm publish --access public --registry https://registry.npmjs.org --no-git-checks",
-    examples: "pnpm exec parcel ./examples/index.html",
+    "example-hello": "mbt example hello",
   };
 
   pkg.scripts = {
     ...pkg.scripts,
     ...scripts,
-  };
-
-  pkg.devDependencies = {
-    ...pkg.devDependencies,
-    "@m78/build-tools": `^${curPkg.version}`,
-    typescript: curPkg.dependencies.typescript,
   };
 
   pkg.files = ["**"];
@@ -61,15 +52,18 @@ export async function init() {
   const copeFiles = [
     path.resolve(__dirname, "./.eslintignore"),
     path.resolve(__dirname, "./.prettierignore"),
-    ...glob.sync(path.resolve(__dirname, "./_copy-files/**/*"), {
+    ...glob.sync(path.resolve(__dirname, "./_copy-files/*"), {
       absolute: true,
       dot: true,
     }),
   ];
 
-  const copyTasks = copeFiles.map((filepath) =>
-    fse.copy(filepath, path.resolve(process.cwd(), path.basename(filepath)))
-  );
+  const copyTasks = copeFiles.map((filepath) => {
+    return fse.copy(
+      filepath,
+      path.resolve(process.cwd(), path.basename(filepath))
+    );
+  });
 
   await Promise.all(copyTasks);
 

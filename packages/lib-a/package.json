@@ -14,9 +14,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "@m78/build-tools": "workspace:^"
-  },
   "files": [
     "**"
   ],

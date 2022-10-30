@@ -1,33 +1,7 @@
 {
+  "extends": "@m78/build-tools/tsconfig-base.json",
   "compilerOptions": {
     "baseUrl": "./",
-    "paths": {
-      "@m78/render-api": [
-        "src/index.ts"
-      ]
-    },
-    "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "jsx": "react",
-    "strictPropertyInitialization": false,
-    "importHelpers": true,
-    "skipLibCheck": true,
-    "allowJs": false
   },
-  "include": [
-    "src/**/*",
-    "examples/**/*",
-    "test/**/*"
-  ]
+  "include": ["src/**/*", "examples/**/*", "test/**/*"],
 }

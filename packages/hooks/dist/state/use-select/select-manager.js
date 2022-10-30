@@ -9,9 +9,6 @@ import _type_of from "@swc/helpers/src/_type_of.mjs";
 import { createEvent, isFunction, isString, isTruthyOrZero } from "@m78/utils";
 var /** 将list映射为字典, 减少循环的频率, 若i为非0 falsy值, 则存储为null, 取值时取v(减少存储占用的内存) */ _listMap = /*#__PURE__*/ new WeakMap(), /** 已选值, 如果存在key则为已选, val存放选中的值(相对于key可以保留实际类型) */ _selectedMap = /*#__PURE__*/ new WeakMap(), /** 根据当前的option.list同步listMap */ _syncListMap = /*#__PURE__*/ new WeakSet(), _lockFlag = /*#__PURE__*/ new WeakMap(), /** 锁定change触发器, 锁定期间其他触发器调用不会触发 */ _lock = /*#__PURE__*/ new WeakSet(), /** 触发变更实际, 搭配changeLock使用 */ _emitChange = /*#__PURE__*/ new WeakSet();
 /**
- * partialSelected / allSelected 仅检测list中存在的权限
- * selectAll / toggleAll 仅选中list中存在的选项
- * */ /**
  * 用于列表的选中项管理, 内置了对于超大数据量的优化
  *
  * - 怪异选中, 如果选中了list中不存在的选项, 称为怪异选中, 可以通过 selected.strangeSelected 访问这些选项, 存在此行为时, 以下api行为需要注意:
@@ -71,7 +68,7 @@ var /** 将list映射为字典, 减少循环的频率, 若i为非0 falsy值, 则
         _class_private_field_get(this, _selectedMap)[val] = val;
         _class_private_method_get(this, _emitChange, emitChange).call(this);
     };
-    /** 取消选中传入的值 */ _proto.unSelected = function unSelected(val) {
+    /** 取消选中传入的值 */ _proto.unSelect = function unSelect(val) {
         delete _class_private_field_get(this, _selectedMap)[val];
         _class_private_method_get(this, _emitChange, emitChange).call(this);
     };
@@ -88,7 +85,7 @@ var /** 将list映射为字典, 减少循环的频率, 若i为非0 falsy值, 则
     /** 反选值 */ _proto.toggle = function toggle(val) {
         var unlock = _class_private_method_get(this, _lock, lock).call(this);
         if (this.isSelected(val)) {
-            this.unSelected(val);
+            this.unSelect(val);
         } else {
             this.select(val);
         }
@@ -116,7 +113,7 @@ var /** 将list映射为字典, 减少循环的频率, 若i为非0 falsy值, 则
         if (isSelect) {
             this.select(val);
         } else {
-            this.unSelected(val);
+            this.unSelect(val);
         }
         unlock();
         _class_private_method_get(this, _emitChange, emitChange).call(this);
@@ -137,8 +134,21 @@ var /** 将list映射为字典, 减少循环的频率, 若i为非0 falsy值, 则
     };
     _create_class(SelectManager, [
         {
-            key: "selected",
-            get: /** 当前选中项的信息 */ function get() {
+            key: "state",
+            get: /**
+   * 当前选中项的信息
+   *
+   * 对于性能很敏感的代码, 获取state并存储相比多次调用有更好的性能
+   * ```
+   *  ✅
+   *  const state = select.state;
+   *  state.selected
+   *  state.originalSelected
+   *  ❌
+   *  select.state.selected;
+   *  select.state.originalSelected;
+   * ```
+   * */ function get() {
                 var _this = this;
                 var originalSelected = [];
                 var realSelected = [];
@@ -177,7 +187,7 @@ var /** 将list映射为字典, 减少循环的频率, 若i为非0 falsy值, 则
         {
             key: "allSelected",
             get: /** 当前list中的选项是否全部选中, 不计入strangeSelected */ function get() {
-                var meta = this.selected;
+                var meta = this.state;
                 var realLength = meta.selected.length - meta.strangeSelected.length;
                 return realLength === this.option.list.length;
             }

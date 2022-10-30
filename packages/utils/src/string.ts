@@ -1,9 +1,12 @@
+import { AnyObject } from "./common-type";
+
 /**
  * 替换html字符中的标签为指定字符
  * @param str - html文本
  * @param val - '' | 替换后的值
  * @return - 替换标签后的文本
  * */
+
 export function replaceHtmlTags(str = "", val = "") {
   const reg = /(<\/?.+?\/?>|&nbsp;|&mdash;)/g;
   return str.replace(reg, val);
@@ -117,4 +120,15 @@ export function getStringLast(string = "", separator = " ") {
   if (!string) return "";
   const ls = string.split(separator);
   return ls[ls.length - 1];
+}
+
+/**
+ * 根据模板和给定对象进行插值
+ * - 插值语法为{key}, 通过\\{key}来避免插值, 如果未从obj中取到值，将其替换为 ''
+ * */
+export function interpolate(tpl: string, obj: AnyObject) {
+  return tpl.replace(/((\\{|{).+?})/g, (a) => {
+    if (a.startsWith("\\{")) return a.slice(1);
+    return obj[a.slice(1, -1)] || "";
+  });
 }

@@ -1,24 +1,8 @@
 {
+  "extends": "@m78/build-tools/tsconfig-base.json",
   "compilerOptions": {
     "baseUrl": "./",
-    "paths": {
-      "@m78/hooks": ["src/index.ts"]
-    },
-    // 编译器使用swc, 这里是为了能让我们使用私有成员等最新特性
-    "target": "es2015",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "jsx": "react",
-    "strictPropertyInitialization": false,
-    "importHelpers": true,
-    "skipLibCheck": true,
-    "allowJs": false
+    "target": "es2015"
   },
   "include": ["src/**/*", "examples/**/*", "test/**/*"],
 }

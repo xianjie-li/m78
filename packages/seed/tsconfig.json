@@ -1,0 +1,14 @@
+{
+  "extends": "@m78/build-tools/tsconfig-base.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+//    "paths": {
+//      "@m78/seed": ["src/index.ts"]
+//    }
+  },
+  "include": [
+    "src/**/*",
+    "examples/**/*",
+    "test/**/*"
+  ]
+}

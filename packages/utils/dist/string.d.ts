@@ -1,3 +1,4 @@
+import { AnyObject } from "./common-type";
 /**
  * 替换html字符中的标签为指定字符
  * @param str - html文本
@@ -49,5 +50,10 @@ export declare function heightLightMatchString(str: string, regExp: string | Reg
 export declare function getStringFirst(string?: string, separator?: string): string;
 /** get string last part. like YYYY-MM-DD hh:mm:ss to hh:mm:ss */
 export declare function getStringLast(string?: string, separator?: string): string;
+/**
+ * 根据模板和给定对象进行插值
+ * - 插值语法为{key}, 通过\\{key}来避免插值, 如果未从obj中取到值，将其替换为 ''
+ * */
+export declare function interpolate(tpl: string, obj: AnyObject): string;
 export {};
 //# sourceMappingURL=string.d.ts.map

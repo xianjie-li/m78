@@ -1,0 +1,1 @@
+{"version":3,"sources":["/Users/lixianjie/project/openSource/m78/packages/seed/src/index.ts"],"sourcesContent":["export { default } from './create';\n\nexport * from './types';\n"],"names":["default"],"mappings":"AAAA,SAASA,OAAO,QAAQ,UAAU,CAAC;AAEnC,cAAc,SAAS,CAAC"}

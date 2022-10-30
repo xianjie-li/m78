@@ -1,6 +1,6 @@
 {
   "name": "@m78/hooks",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Use Your Imagination",
   "keywords": [
     "react",
@@ -17,10 +17,6 @@
   "author": {
     "name": "Link",
     "email": "1073830130@qq.com"
-  },
-  "devDependencies": {
-    "@m78/build-tools": "workspace:^",
-    "typescript": "^4.8.3"
   },
   "dependencies": {
     "@m78/utils": "workspace:^",
@@ -40,7 +36,7 @@
     "test": "jest",
     "build": "m78-build-tools build",
     "pub": "pnpm build && pnpm publish --access public --registry https://registry.npmjs.org --no-git-checks",
-    "examples": "pnpm exec parcel ./examples/index.html --dist-dir .examples-dist"
+    "e:use-polling": "pnpm mbt example use-polling"
   },
   "publishConfig": {
     "directory": "dist",

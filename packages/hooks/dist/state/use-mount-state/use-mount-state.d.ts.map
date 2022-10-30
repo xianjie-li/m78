@@ -1,0 +1,1 @@
+{"version":3,"file":"use-mount-state.d.ts","sourceRoot":"","sources":["../../../../../src/state/use-mount-state/use-mount-state.ts"],"names":[],"mappings":"AAGA,MAAM,WAAW,mBAAmB;IAClC,oCAAoC;IACpC,YAAY,CAAC,EAAE,OAAO,CAAC;IACvB,uBAAuB;IACvB,aAAa,CAAC,EAAE,OAAO,CAAC;CACzB;AAED;;;KAGK;AACL,wBAAgB,aAAa,CAC3B,MAAM,EAAE,OAAO,EACf,EAAE,YAAmB,EAAE,aAAqB,EAAE,GAAE,mBAAwB,kCA6BzE"}
