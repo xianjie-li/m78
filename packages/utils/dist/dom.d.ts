@@ -1,4 +1,4 @@
-import { Bound, TupleNumber } from "./common-type.js";
+import { Bound, TupleNumber } from "./types";
 export * from "./dom/dom-adaption.js";
 /**
  * get a dom, multiple calls will return the same dom

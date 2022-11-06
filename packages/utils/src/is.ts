@@ -1,4 +1,4 @@
-import { AnyFunction } from "./common-type.js";
+import { AnyFunction } from "./types";
 
 type Primitive = null | undefined | boolean | number | string | symbol;
 

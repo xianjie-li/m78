@@ -1,6 +1,6 @@
-import { createEvent } from '@m78/hooks';
-import React from 'react';
-import { AnyFunction } from '@m78/utils';
+import { createEvent } from "@m78/hooks";
+import React from "react";
+import { AnyFunction } from "@m78/utils";
 
 /**
  * 一个更包容的组件接收器类型
@@ -10,7 +10,8 @@ export type ComponentType<P = any> = React.ComponentType<P> | AnyFunction;
 /**
  * 实现组件的标准props, 实现组件可以选择继承此接口(如果未自定义show/onChange的key)或RenderApiComponentBaseProps
  * */
-export interface RenderApiComponentProps<S, I = null> extends RenderApiComponentBaseProps<S, I> {
+export interface RenderApiComponentProps<S, I = null>
+  extends RenderApiComponentBaseProps<S, I> {
   /** 是否显示 */
   show?: boolean;
   /** show状态变更时通知父组件 */
@@ -29,7 +30,7 @@ export interface RenderApiComponentBaseProps<S, I = null> {
    * 更新state, 效果与RenderApiComponentInstance.setState相同, 区别是此回调由实现组件调用
    * 使用此回调来通知外部组件更新传递给自身的state
    * */
-  onUpdate?: RenderApiComponentInstance<S, I>['setState'];
+  onUpdate?: RenderApiComponentInstance<S, I>["setState"];
   /** 当需要对外暴露更多的api时使用, 将额外的api挂载到此ref */
   instanceRef?: React.Ref<I>;
 }
@@ -55,13 +56,17 @@ export interface RenderApiOption<S> {
   /** 'onChange' | 自定义show变更进行通知的方法 */
   changeKey?: string;
   /** 用于在调用render时过滤掉一些不想接收的state, 会以返回的state传递给render(state) */
-  omitState?: (state: Partial<RenderApiOmitBuiltState<S>>) => Partial<RenderApiOmitBuiltState<S>>;
+  omitState?: (
+    state: Partial<RenderApiOmitBuiltState<S>>
+  ) => Partial<RenderApiOmitBuiltState<S>>;
 }
 
 /** api实例，通过create()方法创建 */
 export interface RenderApiInstance<S, I> {
   /** 创建并渲染一个实例, 返回创建的实例 */
-  render: (state: RenderApiOmitBuiltState<S>) => RenderApiComponentInstance<S, I>;
+  render: (
+    state: RenderApiOmitBuiltState<S>
+  ) => RenderApiComponentInstance<S, I>;
   /**
    * 实例的挂载组件，一般会放在组件树的根节点下，并且应该避免其被延迟渲染
    * - 此配置存在的目的是保证外部挂载的组件被解析到主react实例树中从而使得React context等api正常可用
@@ -87,7 +92,10 @@ export interface RenderApiInstance<S, I> {
    * whiteList: ['defaultState', 'wrap', 'maxInstance']
    * */
   setOption: (
-    opt: Omit<RenderApiOption<S>, 'component' | 'namespace' | 'showKey' | 'changeKey'>,
+    opt: Omit<
+      RenderApiOption<S>,
+      "component" | "namespace" | "showKey" | "changeKey"
+    >
   ) => void;
   /**
    * 获取正在使用的配置副本
@@ -110,7 +118,7 @@ export interface RenderApiComponentInstance<S, I> {
   /**
    * 存放组件内部对外暴露的属性和方法，由于组件渲染过程是异步的，所以此属性会延迟设置，如果实现组件未扩展任何东西则始终为null
    * - 如果需要在render()执行后马上获取此实例, 请使用safe()并在其内部进行操作
-   * - 通常实现组件渲染的时间都非常的短, 除了在render后立刻访问, 直接使用instance.current访问实例也是可行的
+   * - 通常实现组件渲染的时间都非常的短, 如果不是需要在render后立刻访问, 直接使用instance.current访问实例也是可行的
    * */
   current: I;
   /**
@@ -131,9 +139,9 @@ export interface _ComponentItem {
 }
 
 /**
- * 过滤调内部属性的state
+ * 过滤掉内部属性的state
  * */
 export type RenderApiOmitBuiltState<S> = Omit<
   S,
-  'show' | 'onChange' | 'onDispose' | 'onUpdate' | 'instanceRef'
+  "show" | "onChange" | "onDispose" | "onUpdate" | "instanceRef"
 >;

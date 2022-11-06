@@ -1,4 +1,4 @@
-import { AnyFunction } from "./common-type.js";
+import { AnyFunction } from "./types";
 declare type Primitive = null | undefined | boolean | number | string | symbol;
 /**
  * 获取表示对象原始类型的字符串

@@ -111,7 +111,7 @@ function getPatterns(str, pattern) {
     }, 0);
     return opt.reverse ? strArr.reverse().join("") : strArr.join("");
 }
-/** 返回入参中第一个truthy值或0, 用于代替 xx || xx2 || xx3 */ export function getFirstTruthyOrZero() {
+/** 返回入参中第一个truthy值或0, 用于代替 xx || xx2 || xx3 */ export function pickValid() {
     for(var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++){
         args[_key] = arguments[_key];
     }
@@ -137,7 +137,7 @@ function getPatterns(str, pattern) {
             }
         }
     }
-    return false;
+    return null;
 }
 /** 当左边的值不为truthy或0时，返回feedback, 否则直接返回左边值 */ export function vie(arg) {
     var feedback = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : "-";

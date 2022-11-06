@@ -23,23 +23,23 @@ export declare function pick<R>(obj: any, props: string | string[]): R;
  *
  * 表示name的字符或字符数组，数组用法用于链式取值，如: ['user', 'address']、['1', 'name']、['list', '4', 'name']
  * */
-export declare type NamePath = string | number | (string | number)[];
+export declare type NamePath = string | string[];
 /**
  * Get value on obj through NamePath
  *
  * 通过NamePath在obj上获取值
  * */
-export declare function getNamePathValue(obj: any, name: any): any;
+export declare function getNamePathValue(obj: any, name: NamePath): any;
 /**
  * Convert NamePath to character form
  *
  * 将NamePath转换为字符形式
  * */
-export declare function stringifyNamePath(name: any): any;
+export declare function stringifyNamePath(name: NamePath): string;
 /**
  * Set value on obj through NamePath
  *
  * 通过NamePath在obj上设置值
  * */
-export declare function setNamePathValue(obj: any, name: any, val: any): void;
+export declare function setNamePathValue(obj: any, name: NamePath, val: any): void;
 //# sourceMappingURL=object.d.ts.map

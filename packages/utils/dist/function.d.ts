@@ -4,7 +4,7 @@
  * @param {object} receiver - 要绑定作用域的对象
  * @return promise - 转换后的函数
  */
-import { AnyFunction, EmptyFunction } from "./common-type.js";
+import { AnyFunction, EmptyFunction } from "./types";
 export declare function promisify<T = any>(fn: AnyFunction, receiver?: object): (...args: Parameters<AnyFunction>) => Promise<T>;
 /**
  * 返回一个延迟指定时间的Promise

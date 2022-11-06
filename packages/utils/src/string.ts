@@ -1,4 +1,4 @@
-import { AnyObject } from "./common-type";
+import { AnyObject } from "./types";
 
 /**
  * 替换html字符中的标签为指定字符

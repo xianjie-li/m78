@@ -29,7 +29,7 @@ export declare function formatString(str: any, pattern: any, options?: {}): any;
  */
 export declare function unFormatString(str: string, pattern: string, options?: FormatStringOption): any;
 /** 返回入参中第一个truthy值或0, 用于代替 xx || xx2 || xx3 */
-export declare function getFirstTruthyOrZero(...args: any[]): any;
+export declare function pickValid(...args: any[]): any;
 /** 当左边的值不为truthy或0时，返回feedback, 否则直接返回左边值 */
 export declare function vie(arg: any, feedback?: string): any;
 export {};

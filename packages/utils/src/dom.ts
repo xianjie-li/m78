@@ -1,4 +1,4 @@
-import { Bound, TupleNumber } from "./common-type.js";
+import { Bound, TupleNumber } from "./types";
 import { isDom, isFunction, isNumber } from "./is.js";
 import { clamp } from "./number.js";
 

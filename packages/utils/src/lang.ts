@@ -1,4 +1,4 @@
-import { AnyFunction } from "./common-type.js";
+import { AnyFunction } from "./types";
 
 /**
  * return the 'global' object according to different JS running environments

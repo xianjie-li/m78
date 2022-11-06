@@ -39,4 +39,4 @@ export interface IdProps {
 export interface DataProps {
     data: number;
 }
-//# sourceMappingURL=common-type.d.ts.map
+//# sourceMappingURL=types.d.ts.map

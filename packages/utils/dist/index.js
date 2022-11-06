@@ -11,5 +11,6 @@ export * from "./lang.js";
 export * from "./regexp.js";
 export * from "./bom.js";
 export * from "./array.js";
-export * from "./common-type.js";
+export * from "./types.js";
 export * from "./consts.js";
+export * from "./react.js";

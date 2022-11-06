@@ -10,6 +10,7 @@ First, add `m78-build-tools` to your project, use your favorite package manager
 generate config via cli, ⚠️ this operation will be overwrite same name file and change package.json
 
 ```shell
+npm init -y
 npx m78-build-tools init
 ```
 

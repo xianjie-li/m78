@@ -57,14 +57,14 @@ export function pick<R>(obj: any, props: string | string[]): R {
  *
  * 表示name的字符或字符数组，数组用法用于链式取值，如: ['user', 'address']、['1', 'name']、['list', '4', 'name']
  * */
-export type NamePath = string | number | (string | number)[];
+export type NamePath = string | string[];
 
 /**
  * Get value on obj through NamePath
  *
  * 通过NamePath在obj上获取值
  * */
-export function getNamePathValue(obj, name) {
+export function getNamePathValue(obj: any, name: NamePath) {
   if (isString(name)) {
     return obj?.[name];
   }
@@ -81,7 +81,7 @@ export function getNamePathValue(obj, name) {
  *
  * 将NamePath转换为字符形式
  * */
-export function stringifyNamePath(name) {
+export function stringifyNamePath(name: NamePath) {
   if (isString(name)) return name;
 
   return name.reduce((p, i) => {
@@ -102,7 +102,7 @@ export function stringifyNamePath(name) {
  *
  * 通过NamePath在obj上设置值
  * */
-export function setNamePathValue(obj, name, val) {
+export function setNamePathValue(obj: any, name: NamePath, val: any) {
   if (isString(name)) {
     obj[name] = val;
   }

@@ -158,13 +158,13 @@ export function unFormatString(
 }
 
 /** 返回入参中第一个truthy值或0, 用于代替 xx || xx2 || xx3 */
-export function getFirstTruthyOrZero(...args) {
+export function pickValid(...args) {
   for (const arg of args) {
     if (isTruthyOrZero(arg)) {
       return arg;
     }
   }
-  return false;
+  return null;
 }
 
 /** 当左边的值不为truthy或0时，返回feedback, 否则直接返回左边值 */

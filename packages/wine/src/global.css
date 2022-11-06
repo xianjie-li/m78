@@ -1,0 +1,17 @@
+.__dumi-default-menu-logo {
+  background-image: none !important;
+  text-decoration: none !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+.__dumi-default-menu-logo::after {
+  content: '📺';
+  font-size: 80px;
+  text-decoration: none;
+}
+
+.__dumi-default-navbar-logo {
+  background-image: none !important;
+  padding-left: 0 !important;
+}
