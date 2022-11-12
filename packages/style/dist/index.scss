@@ -1,0 +1,26 @@
+// ########## 主要模块
+// css变量, 少量的sass变量, 一些sass混合工具
+@import "var";
+
+// 初始化基础样式
+@import "normalize";
+
+// 原子类
+@import "atomic";
+
+// 组件
+@import "components";
+
+// ########## 根据需要引入 ##########
+
+// 网格系统
+//@import "grid";
+
+// 移动端特殊配置
+//@import "mobile";
+
+
+// 小程序环境的normalize
+//@import "normalize-for-mini-program";
+
+

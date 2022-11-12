@@ -1,0 +1,36 @@
+{
+  "name": "@m78/style",
+  "version": "2.1.5",
+  "description": "base style by m78",
+  "main": "./index.js",
+  "type": "module",
+  "authors": {
+    "name": "lixianjie",
+    "email": "1073830130@qq.com"
+  },
+  "scripts": {
+    "build": "mbt build",
+    "gcolors-var": "node ./script/generateColors.js",
+    "lint:prettier": "prettier ./src ./test --write --no-error-on-unmatched-pattern",
+    "lint": "npm run lint:prettier",
+    "pub": "pnpm build && pnpm publish --access public --registry https://registry.npmjs.org --no-git-checks",
+    "example-hello": "mbt example hello"
+  },
+  "devDependencies": {
+    "autoprefixer": "^9.8.6",
+    "inquirer": "^7.1.0",
+    "sass": "^1.54.9"
+  },
+  "dependencies": {
+    "@ant-design/colors": "^6.0.0"
+  },
+  "license": "MIT",
+  "files": [
+    "**"
+  ],
+  "typings": "./",
+  "publishConfig": {
+    "directory": "dist",
+    "linkDirectory": true
+  }
+}

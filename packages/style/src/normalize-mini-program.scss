@@ -1,0 +1,17 @@
+@import 'sass-vars';
+
+text,
+view {
+  box-sizing: border-box;
+}
+
+.m78-root {
+  color: var(--m78-color-primary);
+  font-size: var(--m78-fs);
+  line-height: var(--m78-line-height);
+  font-family: var(--m78-font-family);
+  font-variant: tabular-nums;
+  font-feature-settings: 'tnum';
+  background-color: var(--m78-body-bg);
+  height: 100%;
+}

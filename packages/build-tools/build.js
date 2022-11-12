@@ -39,15 +39,18 @@ export async function build() {
   await generateDeclaration(configList);
 }
 
-async function run({
-  inpDir,
-  outDir,
-  swcConfig,
-  extensions = COMPILE_SUFFIX,
-  ignore: _ignore = [],
-  copyfile = true,
-  beforeCopy,
-}) {
+async function run(
+  {
+    inpDir,
+    outDir,
+    swcConfig,
+    extensions = COMPILE_SUFFIX,
+    ignore: _ignore = [],
+    copyfile = true,
+    beforeCopy,
+  },
+  index
+) {
   const inpDirBase = path.resolve(process.cwd(), inpDir);
   const outDirBase = path.resolve(process.cwd(), outDir);
   const conf = _.defaultsDeep({}, swcConfig, config);
@@ -79,6 +82,10 @@ async function run({
   await rm(outDirBase, {
     recursive: true,
   }).catch(() => {});
+
+  if (index === 0) {
+    await fse.copy(pkgPath, `${outDirBase}/package.json`);
+  }
 
   // 编译
   await compile({
@@ -153,7 +160,7 @@ async function copyFileHandle({
       await copyFile(meta.filePath, outPath);
     }
 
-    console.log(`✨ copy completed.`);
+    console.log(`✨ copy completed. -> ${outPath.replace(outDirBase, "")}`);
   }
 }
 
@@ -213,15 +220,9 @@ async function generateDeclaration(configList) {
     return;
   }
 
-  let isFirstConf = true;
-
   for (const config of configList) {
     const outDirBase = path.resolve(process.cwd(), config.outDir);
 
-    if (isFirstConf) {
-      await fse.copy(pkgPath, `${outDirBase}/package.json`);
-      isFirstConf = false;
-    }
     await fse.copy(tempPath, outDirBase);
   }
 

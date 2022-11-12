@@ -1,0 +1,213 @@
+@import "colors";
+@import 'sass-vars';
+@import "utils";
+
+// 如果项目有旧浏览器的兼容需求，可以使用 https://github.com/postcss/postcss-custom-properties 插件来生成回退代码
+
+.m78 {
+  // 纯色
+  --m78-pure: var(--m78-gray-1);
+  // 窗体/大型区块 背景色
+  --m78-body-bg: var(--m78-pure);
+  // 组件背景色
+  --m78-component-bg: var(--m78-pure);
+
+  //主题色
+  --m78-color-1: var(--m78-cyan-1);
+  --m78-color-2: var(--m78-cyan-2);
+  --m78-color-3: var(--m78-cyan-3);
+  --m78-color-4: var(--m78-cyan-4);
+  --m78-color-5: var(--m78-cyan-5);
+  --m78-color-6: var(--m78-cyan-6);
+  --m78-color-7: var(--m78-cyan-7);
+  --m78-color-8: var(--m78-cyan-8);
+  --m78-color-9: var(--m78-cyan-9);
+  --m78-color-10: var(--m78-cyan-10);
+  --m78-color: var(--m78-color-6);
+  --m78-color-opacity-sm: #{rgba(#13c2c2, 0.2)};
+  --m78-color-opacity-md: #{rgba(#13c2c2, 0.5)};
+  --m78-color-opacity-lg: #{rgba(#13c2c2, 0.75)};
+
+  // 次要主题色
+  --m78-color-sub-1: var(--m78-red-1);
+  --m78-color-sub-2: var(--m78-red-2);
+  --m78-color-sub-3: var(--m78-red-3);
+  --m78-color-sub-4: var(--m78-red-4);
+  --m78-color-sub-5: var(--m78-red-5);
+  --m78-color-sub-6: var(--m78-red-6);
+  --m78-color-sub-7: var(--m78-red-7);
+  --m78-color-sub-8: var(--m78-red-8);
+  --m78-color-sub-9: var(--m78-red-9);
+  --m78-color-sub-10: var(--m78-red-10);
+  --m78-color-sub: var(--m78-color-sub-6);
+  --m78-color-sub-opacity-sm: #{rgba(#f5222d, 0.2)};
+  --m78-color-sub-opacity-md: #{rgba(#f5222d, 0.5)};
+  --m78-color-sub-opacity-lg: #{rgba(#f5222d, 0.75)};
+
+  // 灰色系
+  --m78-color-title-b: rgba(0, 0, 0, 0.9); // Title
+  --m78-color-primary-b: rgba(0, 0, 0, 0.75); // 主要文本色
+  --m78-color-second-b: rgba(0, 0, 0, 0.45); // 次要文本色
+  --m78-color-disable-b: rgba(0, 0, 0, 0.25); // 禁用
+  --m78-color-border-b: rgba(0, 0, 0, 0.15); // 边框
+  --m78-color-divider-b: rgba(0, 0, 0, 0.06); // 分割线
+  --m78-color-bg-b: rgba(0, 0, 0, 0.04); // 分割线
+
+  --m78-color-title-w: rgba(255, 255, 255, 0.95);
+  --m78-color-primary-w: rgba(255, 255, 255, 0.8);
+  --m78-color-second-w: rgba(255, 255, 255, 0.45);
+  --m78-color-disable-w: rgba(255, 255, 255, 0.30);
+  --m78-color-border-w: rgba(255, 255, 255, 0.20);
+  --m78-color-divider-w: rgba(255, 255, 255, 0.12);
+  --m78-color-bg-w: rgba(255, 255, 255, 0.08);
+
+  --m78-color-title: var(--m78-color-title-b); // Title
+  --m78-color-primary: var(--m78-color-primary-b); // 主要文本色
+  --m78-color-second: var(--m78-color-second-b); // 次要文本色
+  --m78-color-disable: var(--m78-color-disable-b); // 禁用
+  --m78-color-border: var(--m78-color-border-b); // 边框
+  --m78-color-divider: var(--m78-color-divider-b); // 分割线
+  --m78-color-bg: var(--m78-color-bg-b); // 背景
+
+  // 与当前主题相斥的前景色
+  --m78-color-title-rv: var(--m78-color-title-w); // Title
+  --m78-color-primary-rv: var(--m78-color-primary-w); // 主要文本色
+  --m78-color-second-rv: var(--m78-color-second-w); // 次要文本色
+  --m78-color-disable-rv: var(--m78-color-disable-w); // 禁用
+  --m78-color-border-rv: var(--m78-color-border-w); // 边框
+  --m78-color-divider-rv: var(--m78-color-divider-w); // 分割线
+  --m78-color-bg-rv: var(--m78-color-bg-w); // 背景
+
+  // 功能色
+  --m78-color-info: var(--m78-blue-5);
+  --m78-color-success: var(--m78-green-5);
+  --m78-color-error: var(--m78-red-5);
+  --m78-color-warn: var(--m78-orange-5);
+
+  // 文字
+  --m78-fs-sm: 12px;
+  --m78-fs: 14px;
+  --m78-fs-md: 16px;
+  --m78-fs-lg: 24px;
+
+  --m78-fw: 400;
+  --m78-fw-md: 500;
+  --m78-fw-bold: bold;
+
+  --m78-line-height: 1.6;
+
+  --m78-font-family: -apple-system, BlinkMacSystemFont, PingFang SC, Microsoft YaHei, Segoe UI, Segoe UI Emoji, Segoe UI Symbol, Apple Color Emoji,
+  Noto Color Emoji, sans-serif;
+  --m78-code-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
+
+  // 遮罩
+  --m78-mask-b: rgba(0, 0, 0, 0.8);
+  --m78-mask-w: rgba(255, 255, 255, 0.8);
+  --m78-mask: var(--m78-mask-w);
+
+  // 阴影
+  --m78-shadow-1-b: rgba(0, 0, 0, 0.2) 0px 2px 8px 0px;
+  --m78-shadow-1-b-focus: rgba(0, 0, 0, 0.3) 0px 2px 8px 0px;
+  --m78-shadow-2-b: rgba(0, 0, 0, 0.2) 0px 4px 24px 0px;
+  --m78-shadow-2-b-focus: rgba(0, 0, 0, 0.3) 0px 4px 24px 0px;
+  --m78-shadow-3-b: rgba(0, 0, 0, 0.24) 0px 12px 30px 0px;
+  --m78-shadow-3-b-focus: rgba(0, 0, 0, 0.3) 0px 12px 30px 0px;
+
+  --m78-shadow-1-w: rgba(255, 255, 255, 0.4) 0px 2px 8px 0px;
+  --m78-shadow-1-w-focus: rgba(255, 255, 255, 0.5) 0px 2px 8px 0px;
+  --m78-shadow-2-w: rgba(255, 255, 255, 0.4) 0px 4px 24px 0px;
+  --m78-shadow-2-w-focus: rgba(255, 255, 255, 0.5) 0px 4px 24px 0px;
+  --m78-shadow-3-w: rgba(255, 255, 255, 0.4) 0px 12px 30px 0px;
+  --m78-shadow-3-w-focus: rgba(255, 255, 255, 0.5) 0px 12px 30px 0px;
+
+  --m78-shadow-1: var(--m78-shadow-1-b);
+  --m78-shadow-1-focus: var(--m78-shadow-1-b-focus);
+  --m78-shadow-2: var(--m78-shadow-2-b);
+  --m78-shadow-2-focus: var(--m78-shadow-2);
+  --m78-shadow-3: var(--m78-shadow-3-b);
+  --m78-shadow-3-focus: var(--m78-shadow-3-b-focus);
+
+  --m78-stress-shadow-w: -1px -1px 2px #fff, 1px 1px 2px #fff, 1px -1px 2px #fff, -1px 1px 2px #fff;
+  --m78-stress-shadow-b: -1px -1px 2px #666, 1px 1px 2px #666, 1px -1px 2px #666, -1px 1px 2px #666;
+
+  // 性质
+  --m78-opacity: 0.45;
+
+  --m78-border-radius-sm: 2px;
+  --m78-border-radius: 4px;
+  --m78-border-radius-md: 8px;
+  --m78-border-radius-lg: 16px;
+
+  // 断点
+  --m78-xs: 0px; //	<576
+  --m78-sm: 576px; //	≥576
+  --m78-md: 768px; //	≥768
+  --m78-lg: 992px; //	≥992
+  --m78-xl: 1200px; //	≥1200
+  --m78-xxl: 1600px; //	≥1600
+
+  // 层级
+  --m78-z-index-base: 10; // 用于仅高于基础层的🎤节点
+  --m78-z-index: 1000;    // 所有内容之上, 弹层类控件之下的节点, 如mask
+  --m78-z-index-drawer: 1400;
+  --m78-z-index-modal: 1800;
+  --m78-z-index-message: 2200;
+
+  // 间距
+  --m78-space-1: 4px;
+  --m78-space-2: 8px;
+  --m78-space-3: 12px;
+  --m78-space-4: 16px;
+  --m78-space-5: 20px;
+  --m78-space-6: 24px;
+  --m78-space-7: 28px;
+  --m78-space-8: 32px;
+  --m78-space-9: 36px;
+  --m78-space-10: 40px;
+
+  // 动画
+  --m78-animate-slow: 0.3s;
+  --m78-animate-base: 0.2s;
+  --m78-animate-fast: 0.1s;
+}
+
+//  切换内置样式的主题色, 需要搭配css-var.scss模块使用
+//  当使用react等的state库管理主题时，可以同时在html上设置data-theme-dark使其生效
+
+:root[data-mode=dark].m78, :root[data-mode=dark] .m78 {
+  --m78-gray-1: #000000;
+  --m78-gray-2: #1f1f1f;
+  --m78-gray-3: #262626;
+  --m78-gray-4: #434343;
+  --m78-gray-5: #8c8c8c;
+  --m78-gray-6: #bfbfbf;
+  --m78-gray-7: #d9d9d9;
+  --m78-gray-8: #f5f5f5;
+  --m78-gray-9: #fafafa;
+  --m78-gray-10: #ffffff;
+
+  --m78-body-bg: #282c34;
+  --m78-component-bg: #21252b;
+
+  --m78-color-title: var(--m78-color-title-w);
+  --m78-color-primary: var(--m78-color-primary-w);
+  --m78-color-second: var(--m78-color-second-w);
+  --m78-color-disable: var(--m78-color-disable-w);
+  --m78-color-border: var(--m78-color-border-w);
+  --m78-color-divider: var(--m78-color-divider-w);
+  --m78-color-bg: var(--m78-color-bg-w);
+  --m78-color-title-rv: var(--m78-color-title-b);
+  --m78-color-primary-rv: var(--m78-color-primary-b);
+  --m78-color-second-rv: var(--m78-color-second-b);
+  --m78-color-disable-rv: var(--m78-color-disable-b);
+  --m78-color-border-rv: var(--m78-color-border-b);
+  --m78-color-divider-rv: var(--m78-color-divider-b);
+  --m78-color-bg-rv: var(--m78-color-bg-b);
+  --m78-mask: var(--m78-mask-b);
+  --m78-shadow-1: var(--m78-shadow-1-w);
+  --m78-shadow-1-focus: var(--m78-shadow-1-w-focus);
+  --m78-shadow-2: var(--m78-shadow-2-w);
+  --m78-shadow-2-focus: var(--m78-shadow-2-w-focus);
+  --m78-shadow-3: var(--m78-shadow-3-w);
+  --m78-shadow-3-focus: var(--m78-shadow-3-w-focus);
+}

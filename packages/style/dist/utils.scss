@@ -1,0 +1,185 @@
+@mixin full{
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+}
+
+// 占位文本颜色
+@mixin placeholder() {
+  &::placeholder {
+    color: var(--m78-color-second);
+  }
+}
+
+// 超出隐藏
+@mixin ellipsis-x($row-num: 1) {
+  @if $row-num!=1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: $row-num;
+    -webkit-box-orient: vertical;
+  } @else {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+// 清除浮动
+@mixin clearfix() {
+  &::after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+}
+
+// size
+@mixin size($size) {
+  width: $size;
+  height: $size;
+}
+
+@mixin wh($width, $height) {
+  width: $width;
+  height: $height;
+}
+
+// 以设计图的尺寸的1/10计算rem值
+@function rem($px) {
+  @return $px / $design-width * 10 + rem;
+}
+
+@function px($px) {
+  @return $px / $dpr + px;
+}
+
+// 元素状态背景色
+@mixin status-bg {
+
+  &.__red {
+    background-color: var(--m78-color-error);
+  }
+
+  &.__blue {
+    background-color: var(--m78-color-success);
+  }
+
+  &.__yellow {
+    background-color: var(--m78-color-warn);
+  }
+
+  &.__green {
+    background-color: var(--m78-color-success);
+  }
+}
+
+// 元素状态边框色
+@mixin status-bg {
+
+  &.__red {
+    border-color: var(--m78-color-error);
+  }
+
+  &.__blue {
+    border-color: var(--m78-color-info);
+  }
+
+  &.__yellow {
+    border-color: var(--m78-color-warn);
+  }
+
+  &.__green {
+    border-color: var(--m78-color-success);
+  }
+}
+
+// effect */
+@mixin effect-shadow {
+  cursor: pointer;
+  box-shadow: var(--m78-shadow-1);
+  transition: box-shadow var(--m78-animate-base);
+
+  &:hover {
+    box-shadow: var(--m78-shadow-2);
+  }
+
+  &:active {
+    transition: box-shadow var(--m78-animate-base) 0.1s;
+    box-shadow: var(--m78-shadow-1-focus);
+  }
+}
+
+@mixin effect-bg() {
+  cursor: pointer;
+  transition: background-color var(--m78-animate-base);
+
+  &:hover {
+    background-color: var(--m78-color-divider);
+  }
+
+  &:active {
+    transition: background-color var(--m78-animate-base) 0.1s;
+    background-color: var(--m78-color-border);
+  }
+}
+
+@mixin effect-border() {
+  cursor: pointer;
+  transition: border var(--m78-animate-base);
+  border: 1px solid transparent;
+
+  &:hover {
+    border: 1px solid var(--m78-color-border);
+  }
+
+  &:active {
+    transition: border var(--m78-animate-base) 0.1s;
+    border: 1px solid var(--m78-color-disable);
+  }
+}
+
+@mixin effect-opacity() {
+  cursor: pointer;
+  transition: opacity var(--m78-animate-base);
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &:active {
+    transition: opacity var(--m78-animate-base) 0.1s;
+    opacity: 0.7;
+  }
+}
+
+@mixin effect-scale() {
+  cursor: pointer;
+  transition: transform var(--m78-animate-base);
+
+  &:hover {
+    transform: scale3d(1.1, 1.1, 1.1);
+  }
+
+  &:active {
+    transition: transform var(--m78-animate-base) 0.1s;
+    transform: scale3d(1.05, 1.05, 1.05);
+  }
+}
+
+@mixin effect-font-color() {
+  cursor: pointer;
+  color: var(--m78-color);
+  transition: transform var(--m78-animate-base);
+
+
+  &:hover {
+    color: var(--m78-color-4);
+  }
+
+  &:active {
+    transition: transform var(--m78-animate-base) 0.1s;
+    color: var(--m78-color-8);
+  }
+}

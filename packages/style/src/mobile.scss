@@ -1,0 +1,24 @@
+// 移动端 */
+
+// 用于rem布局的横屏竖屏兼容 */
+@media screen and (orientation: portrait) {
+  //竖屏 css*/
+  html {
+    font-size: 10vw;
+  }
+}
+
+@media screen and (orientation: landscape) {
+  //横屏 css*/
+  html {
+    font-size: 10vh;
+  }
+}
+
+// 手页面设置最大尺寸，防止在pc或大宽度的设备上无限拉长 */
+@media screen and (min-width: 769px)  {
+  html {
+    width: 768px;
+    margin: 0 auto;
+  }
+}

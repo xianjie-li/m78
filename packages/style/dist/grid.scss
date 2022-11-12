@@ -1,0 +1,272 @@
+@import "sass-vars";
+
+$col-one-width: 100% / $grid-num;
+
+// 断点
+$xs: 0px !default; //	<576
+$sm: 576px !default; //	≥576
+$md: 768px !default; //	≥768
+$lg: 992px !default; //	≥992
+$xl: 1200px !default; //	≥1200
+$xxl: 1600px !default; //	≥1600
+
+// 容器*/
+.#{$prefix}-row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+// col */
+@for $i from 1 through $grid-num {
+  .#{$prefix}-col-#{$i} {
+    position: relative;
+    width: 100%;
+    min-height: 1px;
+  }
+}
+
+.#{$prefix}-col, .#{$prefix}-col-auto {
+  position: relative;
+  width: 100%;
+  min-height: 1px;
+}
+
+// 元素原始宽度 + 剩余宽度
+.#{$prefix}-col {
+  flex-basis: 0;
+  flex-grow: 1;
+  max-width: 100%;
+}
+
+// 元素原始宽度
+.#{$prefix}-col-auto {
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  width: auto;
+  max-width: none;
+}
+
+// 小于 576 | 所有情况 */
+@for $i from 1 through $grid-num {
+  .#{$prefix}-col-#{$i} {
+    flex: 0 0 $col-one-width * $i;
+    max-width: $col-one-width * $i;
+  }
+}
+@media (max-width: $sm) {
+  .#{$prefix}-xs-none {
+    display: none !important;
+  }
+}
+
+// 小屏(>=576px) */
+@media (min-width: $sm) {
+  @for $i from 1 through $grid-num {
+    .#{$prefix}-sm-#{$i} {
+      flex: 0 0 $col-one-width * $i;
+      max-width: $col-one-width * $i;
+    }
+  }
+}
+@media (min-width: $sm) and (max-width: $md) {
+  .#{$prefix}-sm-none {
+    display: none !important;
+  }
+}
+
+// 中屏(>=768px) */
+@media (min-width: $md) {
+
+
+  @for $i from 1 through $grid-num {
+    .#{$prefix}-md-#{$i} {
+      flex: 0 0 $col-one-width * $i;
+      max-width: $col-one-width * $i;
+    }
+  }
+}
+@media (min-width: $md) and (max-width: $lg) {
+  .#{$prefix}-md-none {
+    display: none !important;
+  }
+}
+
+// 大屏(>=992px) */
+@media (min-width: $lg) {
+  @for $i from 1 through $grid-num {
+    .#{$prefix}-lg-#{$i} {
+      flex: 0 0 $col-one-width * $i;
+      max-width: $col-one-width * $i;
+    }
+  }
+}
+@media (min-width: $lg) and (max-width: $xl) {
+  .#{$prefix}-lg-none {
+    display: none !important;
+  }
+}
+
+// 超大屏(>=1200px) */
+@media (min-width: $xl) {
+  @for $i from 1 through $grid-num {
+    .#{$prefix}-xl-#{$i} {
+      flex: 0 0 $col-one-width * $i;
+      max-width: $col-one-width * $i;
+    }
+  }
+}
+@media (min-width: $xl) and (max-width: $xxl) {
+  .#{$prefix}-xl-none {
+    display: none !important;
+  }
+}
+
+// 超大大屏(>=1600px) */
+@media (min-width: $xxl) {
+  .#{$prefix}-xxl-none {
+    display: none !important;
+  }
+
+  @for $i from 1 through $grid-num {
+    .#{$prefix}-xxl-#{$i} {
+      flex: 0 0 $col-one-width * $i;
+      max-width: $col-one-width * $i;
+    }
+  }
+}
+
+//order*/
+.#{$prefix}-order-first {
+  order: -1;
+}
+
+@for $i from 1 through $grid-num {
+  .#{$prefix}-order-#{$i} {
+    order: $i;
+  }
+}
+
+//offset */
+@for $i from 1 through ($grid-num - 1) {
+  .#{$prefix}-offset-#{$i} {
+    margin-left: $col-one-width * $i;
+  }
+}
+
+// pull */
+@for $i from 1 through ($grid-num - 1) {
+  .#{$prefix}-pull-#{$i} {
+    right: $col-one-width * $i;
+  }
+}
+
+// push */
+@for $i from 1 through ($grid-num - 1) {
+  .#{$prefix}-push-#{$i} {
+    left: $col-one-width * $i;
+  }
+}
+
+.#{$prefix}-flex-row {
+  flex-direction: row;
+}
+
+.#{$prefix}-flex-column {
+  flex-direction: column;
+}
+
+.#{$prefix}-flex-wrap {
+  flex-wrap: wrap;
+}
+
+.#{$prefix}-flex-nowrap {
+  flex-wrap: nowrap;
+}
+
+.#{$prefix}-justify-content-start {
+  justify-content: flex-start;
+}
+
+.#{$prefix}-justify-content-end {
+  justify-content: flex-end;
+}
+
+.#{$prefix}-justify-content-center {
+  justify-content: center;
+}
+
+.#{$prefix}-justify-content-between {
+  justify-content: space-between;
+}
+
+.#{$prefix}-justify-content-around {
+  justify-content: space-around;
+}
+
+.#{$prefix}-align-items-start {
+  align-items: flex-start;
+}
+
+.#{$prefix}-align-items-end {
+  align-items: flex-end;
+}
+
+.#{$prefix}-align-items-center {
+  align-items: center;
+}
+
+.#{$prefix}-align-items-baseline {
+  align-items: baseline;
+}
+
+.#{$prefix}-align-items-stretch {
+  align-items: stretch;
+}
+
+.#{$prefix}-align-content-start {
+  align-content: flex-start;
+}
+
+.#{$prefix}-align-content-end {
+  align-content: flex-end;
+}
+
+.#{$prefix}-align-content-center {
+  align-content: center;
+}
+
+.#{$prefix}-align-content-between {
+  align-content: space-between;
+}
+
+.#{$prefix}-align-content-around {
+  align-content: space-around;
+}
+
+.#{$prefix}-align-content-stretch {
+  align-content: stretch;
+}
+
+.#{$prefix}-align-self-auto {
+  align-self: auto;
+}
+
+.#{$prefix}-align-self-start {
+  align-self: flex-start;
+}
+
+.#{$prefix}-align-self-end {
+  align-self: flex-end;
+}
+
+.#{$prefix}-align-self-center {
+  align-self: center;
+}
+
+.#{$prefix}-align-self-baseline {
+  align-self: baseline;
+}
+
+.#{$prefix}-align-self-stretch {
+  align-self: stretch;
+}

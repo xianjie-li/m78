@@ -31,7 +31,7 @@ export interface BuildConfig {
   ignore?: string[];
   /** 支持编译的文件后缀, 默认为 ["js", "ts", "jsx", "tsx"] */
   extensions?: string[];
-  /** true| 是否直接复制不支持编译的文件 */
+  /** true | 是否直接复制不支持编译的文件 */
   copyfile?: boolean;
   /**
    * 执行复制操作之前, 会先经过此钩子, 可以在此对这些文件进行转换跳过复制

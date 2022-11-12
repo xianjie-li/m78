@@ -1,0 +1,11 @@
+@import "../index";
+
+.box {
+  flex: 1;
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-color: var(--m78-component-bg);
+  margin: 16px 40px;
+  border-radius: var(--m78-border-radius);
+}

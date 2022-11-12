@@ -2,7 +2,7 @@
   "name": "m78-land",
   "version": "1.0.0",
   "type": "module",
-  "description": "m78 projects",
+  "description": "front-end library, components, hooks, admin and...",
   "author": {
     "name": "Link",
     "email": "1073830130@qq.com"
@@ -11,19 +11,5 @@
   "devDependencies": {
     "@m78/build-tools": "workspace:^",
     "typescript": "^4.8.3"
-  },
-  "scripts": {
-    "lint:prettier": "prettier ./src ./test --write --no-error-on-unmatched-pattern",
-    "lint:script": "eslint ./src ./test --ext .js,.jsx,.ts,.tsx,.vue --fix",
-    "lint": "npm run lint:script && npm run lint:prettier",
-    "test": "jest",
-    "build": "mbt build",
-    "pub": "pnpm build && pnpm publish --access public --registry https://registry.npmjs.org --no-git-checks",
-    "example-hello": "mbt example hello"
-  },
-  "files": [
-    "**"
-  ],
-  "main": "./index.js",
-  "typings": "./"
+  }
 }

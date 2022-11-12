@@ -1,0 +1,130 @@
+@import 'sass-vars';
+
+// 注意区分组件和原子类, 组件是独立的个体, 使用.m78-前缀, 原子类作用在.m78类名下或本身,名称可以写的比较简洁
+// 并且, 原子类可以是组件的组成部分
+
+// -------------------- 小型组件 -------------------- //
+.m78-dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  background-color: var(--m78-color-disable);
+  border-radius: 50%;
+  vertical-align: middle;
+  margin-right: 4px;
+  @include status-bg;
+
+  &.__small {
+    width: 3px;
+    height: 3px;
+  }
+
+  &.__large {
+    width: 8px;
+    height: 8px;
+  }
+}
+
+
+.m78-triangle {
+  display: inline-block;
+  vertical-align: middle;
+  width: 0;
+  height: 0;
+  border: 5px solid transparent;
+  border-left: 5px solid var(--m78-color-second);
+  border-radius: 2px;
+}
+
+
+// --------------------- 动画 --------------------- //
+.m78-animated-spin {
+  transform-origin: center center;
+  animation: m78-spin 2s infinite linear;
+}
+
+.m78-animated-steps {
+  animation: m78-spin 1s infinite steps(8);
+}
+
+@keyframes m78-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes m78-active-effect {
+  0% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+
+  20% {
+    box-shadow: 0 0 0 6px var(--m78-color-opacity-sm);
+  }
+
+  100% {
+    box-shadow: 0 0 0 7px transparent;
+  }
+}
+
+// --------------------- 遮罩 --------------------- //
+.m78-mask {
+  position: fixed;
+  background-color: var(--m78-mask);
+  z-index: var(--m78-z-index);
+  @include full;
+}
+
+.m78-mask-b {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: var(--m78-z-index);
+  @include full;
+}
+
+
+// --------------------- 装饰 --------------------- //
+// 1px 线 //
+.m78-hb-t {
+  &:before {
+    position: absolute;
+    content: '';
+    height: 1px;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--m78-color-border);
+    transform: scaleY(0.5);
+  }
+}
+
+.m78-hb-b {
+  &:after {
+    position: absolute;
+    content: '';
+    height: 1px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--m78-color-border);
+    transform: scaleY(0.5);
+  }
+}
+
+
+// --------------------- 功能性 ---------------------
+// 防止文字与背景同色
+.m78-stress {
+  text-shadow: var(--m78-stress-shadow-b);
+}
+
+@supports (mix-blend-mode: difference) {
+  .m78-stress {
+    mix-blend-mode: difference;
+    text-shadow: none;
+  }
+}
+

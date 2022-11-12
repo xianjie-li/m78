@@ -1,0 +1,12 @@
+// 项目类前缀
+$prefix: m78 !default;
+
+// 网格列数
+$grid-num: 24 !default;
+
+// 设计图宽度
+$design-width: 750 !default;
+
+$dpr: 2 !default;
+
+@import "utils";
