@@ -13,36 +13,36 @@
   --m78-component-bg: var(--m78-pure);
 
   //主题色
-  --m78-color-1: var(--m78-cyan-1);
-  --m78-color-2: var(--m78-cyan-2);
-  --m78-color-3: var(--m78-cyan-3);
-  --m78-color-4: var(--m78-cyan-4);
-  --m78-color-5: var(--m78-cyan-5);
-  --m78-color-6: var(--m78-cyan-6);
-  --m78-color-7: var(--m78-cyan-7);
-  --m78-color-8: var(--m78-cyan-8);
-  --m78-color-9: var(--m78-cyan-9);
-  --m78-color-10: var(--m78-cyan-10);
+  --m78-color-1: var(--m78-blue-1);
+  --m78-color-2: var(--m78-blue-2);
+  --m78-color-3: var(--m78-blue-3);
+  --m78-color-4: var(--m78-blue-4);
+  --m78-color-5: var(--m78-blue-5);
+  --m78-color-6: var(--m78-blue-6);
+  --m78-color-7: var(--m78-blue-7);
+  --m78-color-8: var(--m78-blue-8);
+  --m78-color-9: var(--m78-blue-9);
+  --m78-color-10: var(--m78-blue-10);
   --m78-color: var(--m78-color-6);
-  --m78-color-opacity-sm: #{rgba(#13c2c2, 0.2)};
-  --m78-color-opacity-md: #{rgba(#13c2c2, 0.5)};
-  --m78-color-opacity-lg: #{rgba(#13c2c2, 0.75)};
+  --m78-color-opacity-sm: #{rgba(#1890ff, 0.1)};
+  --m78-color-opacity-md: #{rgba(#1890ff, 0.5)};
+  --m78-color-opacity-lg: #{rgba(#1890ff, 0.75)};
 
   // 次要主题色
-  --m78-color-sub-1: var(--m78-red-1);
-  --m78-color-sub-2: var(--m78-red-2);
-  --m78-color-sub-3: var(--m78-red-3);
-  --m78-color-sub-4: var(--m78-red-4);
-  --m78-color-sub-5: var(--m78-red-5);
-  --m78-color-sub-6: var(--m78-red-6);
-  --m78-color-sub-7: var(--m78-red-7);
-  --m78-color-sub-8: var(--m78-red-8);
-  --m78-color-sub-9: var(--m78-red-9);
-  --m78-color-sub-10: var(--m78-red-10);
+  --m78-color-sub-1: var(--m78-purple-1);
+  --m78-color-sub-2: var(--m78-purple-2);
+  --m78-color-sub-3: var(--m78-purple-3);
+  --m78-color-sub-4: var(--m78-purple-4);
+  --m78-color-sub-5: var(--m78-purple-5);
+  --m78-color-sub-6: var(--m78-purple-6);
+  --m78-color-sub-7: var(--m78-purple-7);
+  --m78-color-sub-8: var(--m78-purple-8);
+  --m78-color-sub-9: var(--m78-purple-9);
+  --m78-color-sub-10: var(--m78-purple-10);
   --m78-color-sub: var(--m78-color-sub-6);
-  --m78-color-sub-opacity-sm: #{rgba(#f5222d, 0.2)};
-  --m78-color-sub-opacity-md: #{rgba(#f5222d, 0.5)};
-  --m78-color-sub-opacity-lg: #{rgba(#f5222d, 0.75)};
+  --m78-color-sub-opacity-sm: #{rgba(#722ed1, 0.1)};
+  --m78-color-sub-opacity-md: #{rgba(#722ed1, 0.5)};
+  --m78-color-sub-opacity-lg: #{rgba(#722ed1, 0.75)};
 
   // 灰色系
   --m78-color-title-b: rgba(0, 0, 0, 0.9); // Title
@@ -79,15 +79,24 @@
   --m78-color-bg-rv: var(--m78-color-bg-w); // 背景
 
   // 功能色
-  --m78-color-info: var(--m78-blue-5);
-  --m78-color-success: var(--m78-green-5);
-  --m78-color-error: var(--m78-red-5);
-  --m78-color-warn: var(--m78-orange-5);
+  --m78-color-success: var(--m78-green-6);
+  --m78-color-success-opacity-sm: #{rgba(#52c41a, 0.1)};
+  --m78-color-success-opacity-md: #{rgba(#52c41a, 0.5)};
+  --m78-color-success-opacity-lg: #{rgba(#52c41a, 0.75)};
+  --m78-color-error: var(--m78-red-6);
+  --m78-color-error-opacity-sm: #{rgba(#f5222d, 0.1)};
+  --m78-color-error-opacity-md: #{rgba(#f5222d, 0.5)};
+  --m78-color-error-opacity-lg: #{rgba(#f5222d, 0.75)};
+  --m78-color-warn: var(--m78-orange-6);
+  --m78-color-warn-opacity-sm: #{rgba(#fa8c16, 0.1)};
+  --m78-color-warn-opacity-md: #{rgba(#fa8c16, 0.5)};
+  --m78-color-warn-opacity-lg: #{rgba(#fa8c16, 0.75)};
 
   // 文字
   --m78-fs-sm: 12px;
   --m78-fs: 14px;
   --m78-fs-md: 16px;
+  --m78-fs-mdp: 20px;
   --m78-fs-lg: 24px;
 
   --m78-fw: 400;

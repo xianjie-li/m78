@@ -11,5 +11,5 @@ export var Z_INDEX_MESSAGE = 2200;
 var _obj;
 /** size */ export var SIZE_MAP = (_obj = {
     default: 32
-}, _define_property(_obj, FullSize.small, 24), _define_property(_obj, FullSize.large, 40), _define_property(_obj, FullSize.big, 48), _obj);
+}, _define_property(_obj, FullSize.small, 24), _define_property(_obj, FullSize.large, 40), _define_property(_obj, FullSize.big, 60), _obj);
 export var MASK_NAMESPACE = "M78-MASK";

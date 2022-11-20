@@ -200,3 +200,8 @@ export function isEmpty(obj: any): boolean {
 export function isTruthyOrZero(arg: any): boolean {
   return !!arg || arg === 0;
 }
+
+/** 是否是promise like对象 */
+export function isPromiseLike(arg: any): arg is Promise<any> {
+  return !!arg && isFunction(arg.then) && isFunction(arg.finally);
+}

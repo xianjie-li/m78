@@ -2,7 +2,7 @@
   "name": "m78-land",
   "version": "1.0.0",
   "type": "module",
-  "description": "front-end library, components, hooks, admin and...",
+  "description": "front-end library, components, hooks, admin template, and...",
   "author": {
     "name": "Link",
     "email": "1073830130@qq.com"
@@ -10,6 +10,7 @@
   "license": "MIT",
   "devDependencies": {
     "@m78/build-tools": "workspace:^",
+    "@parcel/transformer-sass": "2.7.0",
     "typescript": "^4.8.3"
   }
 }

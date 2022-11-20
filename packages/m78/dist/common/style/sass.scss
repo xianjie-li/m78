@@ -2,3 +2,22 @@
 
 //noinspection CssUnknownTarget
 @import '@m78/style/sass-vars.scss';
+
+$OUTLINE_WIDTH: 4px;
+$OUTLINE_WIDTH_MIN: 0;
+
+// 通用表单项焦点和hover交互样式
+@mixin unit-effect($color) {
+  // 非disabled的情况下hover及focus的样式
+  &:not(:disabled):hover,
+  &:not(:disabled):focus {
+    transition: var(--m78-animate-base) box-shadow;
+    border-color: transparent;
+    box-shadow: 0 0 0 $OUTLINE_WIDTH $color;
+  }
+
+  &:not(:disabled):active {
+    box-shadow: 0 0 0 $OUTLINE_WIDTH_MIN $color;
+    transition-delay: 0.05s;
+  }
+}

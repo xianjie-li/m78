@@ -25,7 +25,7 @@ export interface BuildConfig {
   swcConfig: SwcConfig;
   /**
    * 要过滤的文件(通过glob匹配), 例: 排除play和demo目录 '**\/*(play|demo)/**\/*', 指定后缀的文件 '**\/*.test.tsx'
-   * - 默认会排除: ["**\/*.d.ts", "**\/*.test.*(js|ts|jsx|tsx)"], 传入新配置时不会覆盖默认配置
+   * - 默认会排除: 所有d.ts文件, 所有.test.tsx?, test.tsx?, 所有__开头的文件/目录
    * - 注意: 声明文件的输出不受此项影响, 需要在tsconfig中单独配置exclude
    * */
   ignore?: string[];

@@ -74,5 +74,7 @@ export declare function isTrueEmpty(obj: any): boolean;
 export declare function isEmpty(obj: any): boolean;
 /** 如果入参为truthy或0则返回true，否则返回false */
 export declare function isTruthyOrZero(arg: any): boolean;
+/** 是否是promise like对象 */
+export declare function isPromiseLike(arg: any): arg is Promise<any>;
 export {};
 //# sourceMappingURL=is.d.ts.map

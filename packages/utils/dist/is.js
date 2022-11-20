@@ -141,3 +141,6 @@ export function isWeakNumber(arg) {
 /** 如果入参为truthy或0则返回true，否则返回false */ export function isTruthyOrZero(arg) {
     return !!arg || arg === 0;
 }
+/** 是否是promise like对象 */ export function isPromiseLike(arg) {
+    return !!arg && isFunction(arg.then) && isFunction(arg.finally);
+}

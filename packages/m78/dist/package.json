@@ -17,9 +17,13 @@
     "build": "mbt build",
     "pub": "pnpm build && pnpm publish --access public --registry https://registry.npmjs.org --no-git-checks",
     "example-hello": "mbt example hello",
-    "example-seed": "mbt example seed"
+    "example-seed": "mbt example seed",
+    "example-i18n": "mbt example i18n",
+    "example-spin": "mbt example spin",
+    "example-button": "mbt example button"
   },
   "dependencies": {
+    "@ant-design/icons": "^4.8.0",
     "@lxjx/click-effect": "^1.0.1",
     "@m78/hooks": "workspace:^",
     "@m78/seed": "workspace:^",
@@ -27,12 +31,17 @@
     "@m78/utils": "workspace:^",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.8",
+    "i18next": "^22.0.5",
+    "i18next-browser-languagedetector": "^7.0.1",
+    "i18next-http-backend": "^2.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-i18next": "^12.0.0",
+    "react-spring": "^9.5.5",
     "use-sync-external-store": "^1.2.0"
   },
   "author": {
-    "name": "lxj",
+    "name": "Link",
     "email": "1073830130@qq.com"
   },
   "license": "MIT",

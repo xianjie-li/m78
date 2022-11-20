@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { CSSProperties } from "react";
 
 /** 通用状态类型 */
 export enum Status {
-  info = 'info',
-  success = 'success',
-  warning = 'warning',
-  error = 'error',
+  info = "info",
+  success = "success",
+  warning = "warning",
+  error = "error",
 }
 
 export type StatusKeys = keyof typeof Status;
@@ -14,32 +14,32 @@ export type StatusUnion = Status | StatusKeys;
 
 /** 通用尺寸类型 40 | 32 | 24 */
 export enum Size {
-  large = 'large',
-  small = 'small',
+  large = "large",
+  small = "small",
 }
 
 export type SizeKeys = keyof typeof Size;
 
 export type SizeUnion = Size | SizeKeys;
 
-/** 通用完整尺寸类型 */
-export type FullSizeKeys = 'big' | SizeKeys;
-
 /** 通用完整尺寸类型  */
 export enum FullSize {
-  large = 'large',
-  small = 'small',
-  big = 'big',
+  large = "large",
+  small = "small",
+  big = "big",
 }
+
+/** 通用完整尺寸类型 */
+export type FullSizeKeys = keyof typeof FullSize;
 
 export type FullSizeUnion = FullSize | FullSizeKeys;
 
 /** 通用方向类型 */
 export enum Position {
-  left = 'left',
-  top = 'top',
-  right = 'right',
-  bottom = 'bottom',
+  left = "left",
+  top = "top",
+  right = "right",
+  bottom = "bottom",
 }
 
 export type PositionKeys = keyof typeof Position;
@@ -48,8 +48,8 @@ export type PositionUnion = Position | PositionKeys;
 
 /** 通用轴类型 */
 export enum Direction {
-  horizontal = 'horizontal',
-  vertical = 'vertical',
+  horizontal = "horizontal",
+  vertical = "vertical",
 }
 
 export type DirectionKeys = keyof typeof Direction;
@@ -64,4 +64,18 @@ export interface DataSourceItem<ValType = any> {
   value: ValType;
 }
 
-export type DIVProps = React.PropsWithoutRef<JSX.IntrinsicElements['div']>;
+export type DIVProps = React.PropsWithoutRef<JSX.IntrinsicElements["div"]>;
+
+/** Component common props */
+export interface ComponentBaseProps {
+  /** 包裹元素的类名 */
+  className?: string;
+  /** 包裹元素样式 */
+  style?: CSSProperties;
+}
+
+/** Component common props */
+export interface ComponentBasePropsWithAny extends ComponentBaseProps {
+  /** 透传到包裹元素上的属性 */
+  [key: string]: any;
+}

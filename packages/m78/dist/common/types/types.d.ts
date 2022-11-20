@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { CSSProperties } from "react";
 /** 通用状态类型 */
 export declare enum Status {
     info = "info",
@@ -15,14 +15,14 @@ export declare enum Size {
 }
 export declare type SizeKeys = keyof typeof Size;
 export declare type SizeUnion = Size | SizeKeys;
-/** 通用完整尺寸类型 */
-export declare type FullSizeKeys = 'big' | SizeKeys;
 /** 通用完整尺寸类型  */
 export declare enum FullSize {
     large = "large",
     small = "small",
     big = "big"
 }
+/** 通用完整尺寸类型 */
+export declare type FullSizeKeys = keyof typeof FullSize;
 export declare type FullSizeUnion = FullSize | FullSizeKeys;
 /** 通用方向类型 */
 export declare enum Position {
@@ -47,5 +47,17 @@ export interface DataSourceItem<ValType = any> {
     /** 选项值, 默认与label相同 */
     value: ValType;
 }
-export declare type DIVProps = React.PropsWithoutRef<JSX.IntrinsicElements['div']>;
+export declare type DIVProps = React.PropsWithoutRef<JSX.IntrinsicElements["div"]>;
+/** Component common props */
+export interface ComponentBaseProps {
+    /** 包裹元素的类名 */
+    className?: string;
+    /** 包裹元素样式 */
+    style?: CSSProperties;
+}
+/** Component common props */
+export interface ComponentBasePropsWithAny extends ComponentBaseProps {
+    /** 透传到包裹元素上的属性 */
+    [key: string]: any;
+}
 //# sourceMappingURL=types.d.ts.map

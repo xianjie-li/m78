@@ -62,8 +62,8 @@
     background-color: var(--m78-color-error);
   }
 
-  &.__blue {
-    background-color: var(--m78-color-success);
+  &.__theme {
+    background-color: var(--m78-color);
   }
 
   &.__yellow {
@@ -82,8 +82,8 @@
     border-color: var(--m78-color-error);
   }
 
-  &.__blue {
-    border-color: var(--m78-color-info);
+  &.__theme {
+    border-color: var(--m78-color);
   }
 
   &.__yellow {

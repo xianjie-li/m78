@@ -1,0 +1,60 @@
+---
+title: Spin - 加载中
+group:
+  title: 基础组件
+---
+
+<!-- 样式 -->
+
+```tsx | inline
+import React from 'react';
+import './style.scss';
+
+export default () => <span />;
+```
+
+# Spin 加载中
+
+一个内联的加载提示元素, 也可将某个块设置为加载状态
+
+## 基本用法
+
+<code src="./spin-demo.tsx"/>
+
+## 填满容器
+
+> 💡 需要父元素是`position: static`以外的定位元素
+
+<code src="./spin-demo-full.tsx"/>
+
+## props
+
+```tsx | pure
+export interface SpinProps extends ComponentBaseProps {
+  /** true | 是否显示加载状态 */
+  open?: boolean;
+  /** 大小 */
+  size?: FullSize | FullSizeKeys;
+  /** '加载中' | 提示文本 */
+  text?: React.ReactNode;
+  /** 将text和加载指示器内联对齐*/
+  inline?: boolean;
+  /** 使spin充满父元素(需要父元素是`position: static`以外的定位元素) */
+  full?: boolean;
+  /** 开启了full时, 使用此项调整指示器在容器y轴的位置, 取值与常规css单位一致: 30, 30px, 30% */
+  offset?: number | string;
+  /** 300 | 每次出现的最小持续时间, 防止loading一闪而过 */
+  minDuration?: number;
+}
+```
+
+**相关接口**
+
+```tsx | pure
+export interface ComponentBaseProps {
+  /** 包裹元素的类名 */
+  className?: string;
+  /** 包裹元素样式 */
+  style?: CSSProperties;
+}
+```

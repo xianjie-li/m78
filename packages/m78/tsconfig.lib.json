@@ -6,6 +6,8 @@
   "exclude": [
     "./src/**/*.test.tsx",
     "./src/**/*.test.ts",
+    "./src/**/test.tsx",
+    "./src/**/test.ts",
     "./src/**/*.demo.tsx",
     "./src/**/*.demo.ts"
   ]

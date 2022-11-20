@@ -50,6 +50,8 @@ export * from "./state/use-Is-unmount-state/use-Is-unmount-state";
 
 export * from "./state/use-select";
 
+export * from "./state/use-delay-toggle/use-delay-toggle";
+
 /* UI */
 
 export * from "./ui/use-lock-body-scroll/use-lock-body-scroll";

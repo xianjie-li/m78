@@ -1,12 +1,12 @@
 ---
 hero:
   title: M78 Land
-  desc: front component, utils, and more...
+  desc: front-end library, components, hooks, admin template, and...
   image: /logo.png
   actions:
     - text: Getting Started
       link: /pages
-    - text: 文档
+    - text: Docs
       link: /pages
     
 features:

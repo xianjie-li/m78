@@ -62,8 +62,8 @@
     background-color: var(--m78-color-error);
   }
 
-  &.__blue {
-    background-color: var(--m78-color-success);
+  &.__theme {
+    background-color: var(--m78-color);
   }
 
   &.__yellow {
@@ -82,8 +82,8 @@
     border-color: var(--m78-color-error);
   }
 
-  &.__blue {
-    border-color: var(--m78-color-info);
+  &.__theme {
+    border-color: var(--m78-color);
   }
 
   &.__yellow {
@@ -181,5 +181,19 @@
   &:active {
     transition: transform var(--m78-animate-base) 0.1s;
     color: var(--m78-color-8);
+  }
+}
+
+@mixin effect-font {
+  cursor: pointer;
+  font-weight: 400;
+
+  &:hover {
+    font-weight: bold;
+  }
+
+  &:active {
+    font-weight: 600;
+    opacity: 0.6;
   }
 }

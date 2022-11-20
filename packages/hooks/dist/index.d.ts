@@ -22,6 +22,7 @@ export * from "./state/use-mount-state/use-mount-state";
 export * from "./state/use-first-mount-state/use-first-mount-state";
 export * from "./state/use-Is-unmount-state/use-Is-unmount-state";
 export * from "./state/use-select";
+export * from "./state/use-delay-toggle/use-delay-toggle";
 export * from "./ui/use-lock-body-scroll/use-lock-body-scroll";
 export * from "./ui/use-scroll/use-scroll";
 export * from "./ui/use-measure/use-measure";

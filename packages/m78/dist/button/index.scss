@@ -1,0 +1,196 @@
+@import '../common/style/sass';
+
+.m78-btn {
+  position: relative;
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 400;
+  user-select: none;
+  border: 1px solid var(--m78-color-border);
+  padding: 0 var(--m78-space-3);
+  height: var(--m78-unit-size);
+  border-radius: var(--m78-border-radius);
+  cursor: pointer;
+  color: var(--m78-color-primary);
+  vertical-align: middle;
+  /* 修复safari下overflow失效的问题 */
+  transform: translate3d(0, 0, 0);
+  outline: none !important;
+  text-decoration: none;
+  min-width: 60px;
+
+  @include ellipsis-x;
+
+  @include unit-effect(var(--m78-color-opacity-md));
+
+  & + & {
+    margin-left: var(--m78-space-2);
+  }
+
+  // 非disabled的情况下hover及focus的样式
+  &:not(:disabled):hover,
+  &:not(:disabled):focus {
+    border-color: transparent;
+  }
+
+  // 禁用
+  &:disabled,
+  &[disabled] {
+    cursor: not-allowed;
+    background: var(--m78-color-divider);
+    color: var(--m78-color-disable);
+  }
+
+  .m78-icon,
+  .anticon {
+    position: relative;
+    font-size: 1.3em;
+  }
+
+  &.__large {
+    height: var(--m78-unit-size-large);
+    padding: 0 var(--m78-space-5);
+    font-size: var(--m78-fs-md);
+  }
+
+  &.__small {
+    height: var(--m78-unit-size-small);
+    padding: 0 var(--m78-space-2);
+    min-width: 44px;
+
+    .m78-spin_unit {
+      width: 18px !important;
+      height: 18px !important;
+    }
+  }
+
+  // 块按钮
+  &.__block {
+    display: block;
+    width: 100%;
+    // 过长的按钮会很怪异
+    max-width: 340px;
+    margin: 0 auto;
+    text-align: center;
+
+    & + & {
+      margin: 16px auto 0;
+    }
+  }
+
+  &.__circle,
+  &.__icon {
+    width: var(--m78-unit-size);
+    height: var(--m78-unit-size);
+    padding: 0 !important;
+    border-radius: 50%;
+    overflow: hidden !important;
+    font-size: var(--m78-fs-md);
+    margin-right: 0;
+    min-width: 0;
+
+    &.__large {
+      width: var(--m78-unit-size-large);
+      height: var(--m78-unit-size-large);
+      font-size: var(--m78-fs-mdp);
+    }
+
+    &.__small {
+      width: var(--m78-unit-size-small);
+      height: var(--m78-unit-size-small);
+      font-size: var(--m78-fs);
+    }
+  }
+
+  // 图标按钮
+  &.__icon {
+    background: transparent !important;
+    border: none;
+  }
+
+  // text按钮
+  &.__text {
+    height: var(--m78-unit-size-small);
+    padding: 0 var(--m78-space-2);
+    //box-shadow: none !important;
+    background: transparent !important;
+    font-size: inherit;
+    border: none;
+    min-width: 0;
+  }
+
+  // link按钮和icon按钮禁用样式
+  &.__icon,
+  &.__text {
+    // 使用特有的交互样式
+    &:focus,
+    &:not(.__disabled):hover {
+      background-color: var(--m78-color-divider) !important;
+    }
+
+    &:disabled,
+    &[disabled] {
+      opacity: 0.5;
+    }
+  }
+}
+
+/**
+  * 生成按钮
+  * $name: 主题名
+  * $main-color: 主色
+  * $m-opa-sm: 主色 透明度高
+  * $m-opa-md: 主色 透明度中
+  */
+@mixin color-btn($name, $main-color, $m-opa-sm, $m-opa-md) {
+  // 基础样式
+  .m78-btn.__#{$name} {
+    color: var(--m78-color-title-rv);
+    background-color: $main-color;
+    border-color: $main-color;
+
+    @include unit-effect($m-opa-md);
+  }
+
+  .m78-btn.__#{$name}.__icon, .m78-btn.__#{$name}.__text {
+    color: $main-color;
+
+    &:focus,
+    &:not(.__disabled):hover {
+      background-color: $m-opa-sm !important;
+    }
+  }
+
+  // 边框按钮
+  .m78-btn.__#{$name}.__outline {
+    color: $main-color;
+    background-color: transparent;
+    background-image: none;
+    border: 1px solid $main-color;
+
+    // 单独配置背景色和颜色
+    &:not(:disabled):hover,
+    &:not(:disabled):focus {
+      color: #fff;
+      background-color: $main-color;
+    }
+  }
+
+  // 彩色按钮禁用
+  .m78-btn.__#{$name}:disabled,
+  .m78-btn.__#{$name}[disabled] {
+    cursor: not-allowed;
+    background-color: $m-opa-sm;
+    border-color: $m-opa-sm;
+    color: var(--m78-color-disable) !important;
+  }
+}
+
+@include color-btn('primary', var(--m78-color), var(--m78-color-opacity-sm), var(--m78-color-opacity-md));
+@include color-btn('second', var(--m78-color-sub), var(--m78-color-sub-opacity-sm), var(--m78-color-sub-opacity-md));
+@include color-btn('green', var(--m78-color-success), var(--m78-color-success-opacity-sm), var(--m78-color-success-opacity-md));
+@include color-btn('red', var(--m78-color-error), var(--m78-color-error-opacity-sm), var(--m78-color-error-opacity-md));
+@include color-btn('orange', var(--m78-color-warn), var(--m78-color-warn-opacity-sm), var(--m78-color-warn-opacity-md));
+

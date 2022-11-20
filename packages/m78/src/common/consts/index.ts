@@ -17,7 +17,7 @@ export const SIZE_MAP = {
   default: 32,
   [FullSize.small]: 24,
   [FullSize.large]: 40,
-  [FullSize.big]: 48,
+  [FullSize.big]: 60,
 };
 
 export const MASK_NAMESPACE = "M78-MASK";

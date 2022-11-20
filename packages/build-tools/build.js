@@ -12,7 +12,8 @@ import * as url from "url";
 const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 
 /** 默认过滤文件 */
-const BASE_IGNORE = ["**/*.d.ts", "**/*.test.*(js|ts|jsx|tsx)"];
+const BASE_IGNORE = ["**/*.d.ts", "**/?(*.)test.*(js|ts|jsx|tsx)", "**/__*/**"];
+
 /** 支持编译的文件后缀 */
 const COMPILE_SUFFIX = ["js", "ts", "jsx", "tsx"];
 

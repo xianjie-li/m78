@@ -1,0 +1,567 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`spin base 1`] = `
+<div>
+  <div
+    className="m78 m78-spin __small"
+    style={
+      Object {
+        "__progress": 0,
+        "opacity": 0,
+        "pointerEvents": "none",
+        "visibility": "hidden",
+      }
+    }
+  >
+    <div
+      className="m78-spin_inner"
+      style={
+        Object {
+          "top": undefined,
+        }
+      }
+    >
+      <svg
+        className="m78-spin-svg m78-spin_unit"
+        fill="transparent"
+        height={200}
+        viewBox="0 0 200 200"
+        width={200}
+      >
+        <circle
+          className="m78-spin-svg_bg"
+          cx={100}
+          cy={100}
+          r={70}
+          strokeWidth={60}
+        />
+        <circle
+          cx={100}
+          cy={100}
+          r={70}
+          stroke="url(#Gradient1)"
+          strokeDasharray="628.3185307179587 628.3185307179587"
+          strokeLinecap="round"
+          strokeWidth={60}
+        >
+          <animate
+            attributeName="stroke-dashoffset"
+            dur="5s"
+            repeatCount="indefinite"
+            values="628.3185307179587;0;628.3185307179587"
+          />
+        </circle>
+        <defs>
+          <linearGradient
+            id="Gradient1"
+          >
+            <stop
+              className="m78-spin-svg_stop1"
+              offset="0%"
+            />
+            <stop
+              className="m78-spin-svg_stop2"
+              offset="100%"
+            />
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+  </div>
+  <div
+    className="ml-12 m78 m78-spin"
+    style={
+      Object {
+        "__progress": 0,
+        "opacity": 0,
+        "pointerEvents": "none",
+        "visibility": "hidden",
+      }
+    }
+  >
+    <div
+      className="m78-spin_inner"
+      style={
+        Object {
+          "top": undefined,
+        }
+      }
+    >
+      <svg
+        className="m78-spin-svg m78-spin_unit"
+        fill="transparent"
+        height={200}
+        viewBox="0 0 200 200"
+        width={200}
+      >
+        <circle
+          className="m78-spin-svg_bg"
+          cx={100}
+          cy={100}
+          r={70}
+          strokeWidth={60}
+        />
+        <circle
+          cx={100}
+          cy={100}
+          r={70}
+          stroke="url(#Gradient1)"
+          strokeDasharray="628.3185307179587 628.3185307179587"
+          strokeLinecap="round"
+          strokeWidth={60}
+        >
+          <animate
+            attributeName="stroke-dashoffset"
+            dur="5s"
+            repeatCount="indefinite"
+            values="628.3185307179587;0;628.3185307179587"
+          />
+        </circle>
+        <defs>
+          <linearGradient
+            id="Gradient1"
+          >
+            <stop
+              className="m78-spin-svg_stop1"
+              offset="0%"
+            />
+            <stop
+              className="m78-spin-svg_stop2"
+              offset="100%"
+            />
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+  </div>
+  <div
+    className="ml-12 m78 m78-spin __large"
+    style={
+      Object {
+        "__progress": 0,
+        "opacity": 0,
+        "pointerEvents": "none",
+        "visibility": "hidden",
+      }
+    }
+  >
+    <div
+      className="m78-spin_inner"
+      style={
+        Object {
+          "top": undefined,
+        }
+      }
+    >
+      <svg
+        className="m78-spin-svg m78-spin_unit"
+        fill="transparent"
+        height={200}
+        viewBox="0 0 200 200"
+        width={200}
+      >
+        <circle
+          className="m78-spin-svg_bg"
+          cx={100}
+          cy={100}
+          r={70}
+          strokeWidth={60}
+        />
+        <circle
+          cx={100}
+          cy={100}
+          r={70}
+          stroke="url(#Gradient1)"
+          strokeDasharray="628.3185307179587 628.3185307179587"
+          strokeLinecap="round"
+          strokeWidth={60}
+        >
+          <animate
+            attributeName="stroke-dashoffset"
+            dur="5s"
+            repeatCount="indefinite"
+            values="628.3185307179587;0;628.3185307179587"
+          />
+        </circle>
+        <defs>
+          <linearGradient
+            id="Gradient1"
+          >
+            <stop
+              className="m78-spin-svg_stop1"
+              offset="0%"
+            />
+            <stop
+              className="m78-spin-svg_stop2"
+              offset="100%"
+            />
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+  </div>
+  <div
+    className="ml-12 m78 m78-spin __big"
+    style={
+      Object {
+        "__progress": 0,
+        "opacity": 0,
+        "pointerEvents": "none",
+        "visibility": "hidden",
+      }
+    }
+  >
+    <div
+      className="m78-spin_inner"
+      style={
+        Object {
+          "top": undefined,
+        }
+      }
+    >
+      <svg
+        className="m78-spin-svg m78-spin_unit"
+        fill="transparent"
+        height={200}
+        viewBox="0 0 200 200"
+        width={200}
+      >
+        <circle
+          className="m78-spin-svg_bg"
+          cx={100}
+          cy={100}
+          r={70}
+          strokeWidth={60}
+        />
+        <circle
+          cx={100}
+          cy={100}
+          r={70}
+          stroke="url(#Gradient1)"
+          strokeDasharray="628.3185307179587 628.3185307179587"
+          strokeLinecap="round"
+          strokeWidth={60}
+        >
+          <animate
+            attributeName="stroke-dashoffset"
+            dur="5s"
+            repeatCount="indefinite"
+            values="628.3185307179587;0;628.3185307179587"
+          />
+        </circle>
+        <defs>
+          <linearGradient
+            id="Gradient1"
+          >
+            <stop
+              className="m78-spin-svg_stop1"
+              offset="0%"
+            />
+            <stop
+              className="m78-spin-svg_stop2"
+              offset="100%"
+            />
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+  </div>
+  <div
+    className="m78 m78-spin __small"
+    style={
+      Object {
+        "__progress": 0,
+        "opacity": 0,
+        "pointerEvents": "none",
+        "visibility": "hidden",
+      }
+    }
+  >
+    <div
+      className="m78-spin_inner"
+      style={
+        Object {
+          "top": undefined,
+        }
+      }
+    >
+      <svg
+        className="m78-spin-svg m78-spin_unit"
+        fill="transparent"
+        height={200}
+        viewBox="0 0 200 200"
+        width={200}
+      >
+        <circle
+          className="m78-spin-svg_bg"
+          cx={100}
+          cy={100}
+          r={70}
+          strokeWidth={60}
+        />
+        <circle
+          cx={100}
+          cy={100}
+          r={70}
+          stroke="url(#Gradient1)"
+          strokeDasharray="628.3185307179587 628.3185307179587"
+          strokeLinecap="round"
+          strokeWidth={60}
+        >
+          <animate
+            attributeName="stroke-dashoffset"
+            dur="5s"
+            repeatCount="indefinite"
+            values="628.3185307179587;0;628.3185307179587"
+          />
+        </circle>
+        <defs>
+          <linearGradient
+            id="Gradient1"
+          >
+            <stop
+              className="m78-spin-svg_stop1"
+              offset="0%"
+            />
+            <stop
+              className="m78-spin-svg_stop2"
+              offset="100%"
+            />
+          </linearGradient>
+        </defs>
+      </svg>
+      <span
+        className="m78-spin_text"
+      >
+        加载中
+        <span
+          className="m78-spin_ellipsis"
+        />
+      </span>
+    </div>
+  </div>
+  <div
+    className="mt-12"
+  >
+    <div
+      className="m78 m78-spin __small __inline"
+      style={
+        Object {
+          "__progress": 0,
+          "opacity": 0,
+          "pointerEvents": "none",
+          "visibility": "hidden",
+        }
+      }
+    >
+      <div
+        className="m78-spin_inner"
+        style={
+          Object {
+            "top": undefined,
+          }
+        }
+      >
+        <svg
+          className="m78-spin-svg m78-spin_unit"
+          fill="transparent"
+          height={200}
+          viewBox="0 0 200 200"
+          width={200}
+        >
+          <circle
+            className="m78-spin-svg_bg"
+            cx={100}
+            cy={100}
+            r={70}
+            strokeWidth={60}
+          />
+          <circle
+            cx={100}
+            cy={100}
+            r={70}
+            stroke="url(#Gradient1)"
+            strokeDasharray="628.3185307179587 628.3185307179587"
+            strokeLinecap="round"
+            strokeWidth={60}
+          >
+            <animate
+              attributeName="stroke-dashoffset"
+              dur="5s"
+              repeatCount="indefinite"
+              values="628.3185307179587;0;628.3185307179587"
+            />
+          </circle>
+          <defs>
+            <linearGradient
+              id="Gradient1"
+            >
+              <stop
+                className="m78-spin-svg_stop1"
+                offset="0%"
+              />
+              <stop
+                className="m78-spin-svg_stop2"
+                offset="100%"
+              />
+            </linearGradient>
+          </defs>
+        </svg>
+        <span
+          className="m78-spin_text"
+        >
+          加载中
+          <span
+            className="m78-spin_ellipsis"
+          />
+        </span>
+      </div>
+    </div>
+    <div
+      className="ml-12 m78 m78-spin __small __inline"
+      style={
+        Object {
+          "__progress": 0,
+          "opacity": 0,
+          "pointerEvents": "none",
+          "visibility": "hidden",
+        }
+      }
+    >
+      <div
+        className="m78-spin_inner"
+        style={
+          Object {
+            "top": undefined,
+          }
+        }
+      >
+        <svg
+          className="m78-spin-svg m78-spin_unit"
+          fill="transparent"
+          height={200}
+          viewBox="0 0 200 200"
+          width={200}
+        >
+          <circle
+            className="m78-spin-svg_bg"
+            cx={100}
+            cy={100}
+            r={70}
+            strokeWidth={60}
+          />
+          <circle
+            cx={100}
+            cy={100}
+            r={70}
+            stroke="url(#Gradient1)"
+            strokeDasharray="628.3185307179587 628.3185307179587"
+            strokeLinecap="round"
+            strokeWidth={60}
+          >
+            <animate
+              attributeName="stroke-dashoffset"
+              dur="5s"
+              repeatCount="indefinite"
+              values="628.3185307179587;0;628.3185307179587"
+            />
+          </circle>
+          <defs>
+            <linearGradient
+              id="Gradient1"
+            >
+              <stop
+                className="m78-spin-svg_stop1"
+                offset="0%"
+              />
+              <stop
+                className="m78-spin-svg_stop2"
+                offset="100%"
+              />
+            </linearGradient>
+          </defs>
+        </svg>
+        <span
+          className="m78-spin_text"
+        >
+          自定义文本
+          <span
+            className="m78-spin_ellipsis"
+          />
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    className="d-spin-full-wrap"
+  >
+    Lorem ipsum
+    <div
+      className="m78 m78-spin __full"
+      style={
+        Object {
+          "__progress": 0,
+          "opacity": 0,
+          "pointerEvents": "none",
+          "visibility": "hidden",
+        }
+      }
+    >
+      <div
+        className="m78-spin_inner"
+        style={
+          Object {
+            "top": undefined,
+          }
+        }
+      >
+        <svg
+          className="m78-spin-svg m78-spin_unit"
+          fill="transparent"
+          height={200}
+          viewBox="0 0 200 200"
+          width={200}
+        >
+          <circle
+            className="m78-spin-svg_bg"
+            cx={100}
+            cy={100}
+            r={70}
+            strokeWidth={60}
+          />
+          <circle
+            cx={100}
+            cy={100}
+            r={70}
+            stroke="url(#Gradient1)"
+            strokeDasharray="628.3185307179587 628.3185307179587"
+            strokeLinecap="round"
+            strokeWidth={60}
+          >
+            <animate
+              attributeName="stroke-dashoffset"
+              dur="5s"
+              repeatCount="indefinite"
+              values="628.3185307179587;0;628.3185307179587"
+            />
+          </circle>
+          <defs>
+            <linearGradient
+              id="Gradient1"
+            >
+              <stop
+                className="m78-spin-svg_stop1"
+                offset="0%"
+              />
+              <stop
+                className="m78-spin-svg_stop2"
+                offset="100%"
+              />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -22,11 +22,11 @@
     "@m78/utils": "workspace:^",
     "@swc/helpers": "^0.4.11",
     "@types/lodash": "^4.14.185",
-    "@types/react": "^18.0.19",
+    "@types/react": "^18.0.24",
     "lodash": "^4.17.21",
     "query-string": "^7.1.1",
     "react": "^18.2.0",
-    "react-spring": "^9.5.2",
+    "react-spring": "^9.5.5",
     "resize-observer-polyfill": "^1.5.1"
   },
   "scripts": {
