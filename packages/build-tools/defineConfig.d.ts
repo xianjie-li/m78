@@ -46,3 +46,11 @@ export type Config = BuildConfig | BuildConfig[];
 
 /** 类型助手 */
 export function defineConfig(conf: Config): Config;
+
+export type CommonConfig = {
+  /** 生成声明文件时传递给tsc的额外参数 */
+  tscExtraArgs: string[];
+};
+
+/** 通用配置类型助手 */
+export function defineCommonConfig(conf: CommonConfig): CommonConfig;

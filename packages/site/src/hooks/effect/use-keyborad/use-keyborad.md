@@ -13,7 +13,7 @@ group:
 
 ## 示例
 
-<code src="./use-keyborad.demo.tsx" />
+<code src="./use-keyborad.demo.tsx"></code>
 
 ## API
 

@@ -22,7 +22,7 @@ interface UseMountStateConfig {
 
 ## 示例
 
-<code src="./useMountState.demo.tsx" />
+<code src="./useMountState.demo.tsx"></code>
 
 卸载的准确时机 hook 内是不能感知的，因为可能中间会存在动画或其他延迟行为，所以需要用户在正确时机调用 unmount()通知卸载
 

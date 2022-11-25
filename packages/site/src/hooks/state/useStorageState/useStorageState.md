@@ -11,13 +11,13 @@ group:
 
 ## 示例
 
-<code src="./useStorageState.demo.tsx" />
+<code src="./useStorageState.demo.tsx"></code>
 
 ## useStorageSetState
 
 [useSetState](/hooks/state/use-set-state) 版本的 useStorageState, 除了包含缓存功能，其他完全一致
 
-<code src="./useStorageSetState.demo.tsx" />
+<code src="./useStorageSetState.demo.tsx"></code>
 
 > ⛔ 由于`Storage` API 的机制，基础类型之外的值无法进行存储(也不应该存储)
 

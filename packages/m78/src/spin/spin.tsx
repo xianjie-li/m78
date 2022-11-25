@@ -5,9 +5,9 @@ import { useDelayToggle } from "@m78/hooks";
 import { Transition } from "../transition";
 
 import { SpinProps } from "./types";
-import { SpinIcon } from "./spin-icon";
+import { _SpinIcon } from "./spin-icon";
 
-export const Spin: React.FC<SpinProps> = ({
+export const _Spin: React.FC<SpinProps> = ({
   size,
   inline,
   text = "",
@@ -34,7 +34,7 @@ export const Spin: React.FC<SpinProps> = ({
       })}
     >
       <div className="m78-spin_inner" style={{ top: offset }}>
-        <SpinIcon className="m78-spin_unit" />
+        <_SpinIcon className="m78-spin_unit" />
         {text && (
           <span className="m78-spin_text">
             {text}
@@ -45,3 +45,5 @@ export const Spin: React.FC<SpinProps> = ({
     </Transition>
   );
 };
+
+_Spin.displayName = "Spin";

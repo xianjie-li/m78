@@ -1,5 +1,5 @@
 export const config = {
-  sourceMaps: true,
+  sourceMaps: false,
   jsc: {
     baseUrl: process.cwd(),
     parser: {

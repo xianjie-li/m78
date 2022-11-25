@@ -11,7 +11,7 @@ group:
 
 ## 示例
 
-<code src="./useDebounce.demo.tsx" />
+<code src="./useDebounce.demo.tsx"></code>
 
 ## API
 

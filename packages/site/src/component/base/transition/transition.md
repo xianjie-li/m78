@@ -2,6 +2,7 @@
 title: Transition - 过渡动画
 group:
   title: 基础组件
+  path: /base
 ---
 
 # Transition
@@ -12,19 +13,19 @@ group:
 
 ## 内置动画
 
-<code src="./builtIn.tsx" />
+<code src="./builtIn.tsx"></code>
 
 ## 定制动画
 
 使用`TransitionBase`来简单的实现各种自定义动画, 可以通过`interpolater`prop 或 render children 来进行更为强大的插值动画
 
-<code src="./custom.tsx" />
+<code src="./custom.tsx"></code>
 
 ## 动画配置
 
 动画配置, 可用于配置动画表现、行为、添加动画回调钩子等, 更多细节请参考[react-spring](https://www.react-spring.io/)
 
-<code src="./config.tsx" />
+<code src="./config.tsx"></code>
 
 ## API
 

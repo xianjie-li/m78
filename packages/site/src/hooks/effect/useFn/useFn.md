@@ -13,7 +13,7 @@ group:
 
 ## 示例
 
-<code src="./useFn.demo.tsx" />
+<code src="./useFn.demo.tsx"></code>
 
 ## API
 

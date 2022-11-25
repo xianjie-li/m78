@@ -10,7 +10,7 @@ group:
 
 ## 示例
 
-<code src="./useClickAway.demo.tsx" />
+<code src="./useClickAway.demo.tsx"></code>
 
 ## API 
 

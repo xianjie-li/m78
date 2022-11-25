@@ -1,11 +1,11 @@
 import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import { i18n } from "../i18n";
-/** 黑暗模式处理 */ export function darkModeHandle(darkMode) {
+/** 黑暗模式处理 */ export function _darkModeHandle(darkMode) {
     if (darkMode !== undefined && typeof window !== "undefined" && window.document) {
         document.documentElement.setAttribute("data-mode", darkMode ? "dark" : "light");
     }
 }
-/** 国际化处理 */ export function i18nHandle(i18nConf) {
+/** 国际化处理 */ export function _i18nHandle(i18nConf) {
     if (i18nConf) {
         if (i18nConf.appendResource) {
             // 每次只能添加一个命名空间, 这里需要循环处理一下

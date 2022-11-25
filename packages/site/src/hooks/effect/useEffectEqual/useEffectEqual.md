@@ -13,7 +13,7 @@ group:
 
 ## 示例
 
-<code src="./useEffectEqual.demo.tsx" />
+<code src="./useEffectEqual.demo.tsx"></code>
 
 ## API
 

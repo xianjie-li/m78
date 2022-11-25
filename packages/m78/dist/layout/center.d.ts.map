@@ -1,0 +1,1 @@
+{"version":3,"file":"center.d.ts","sourceRoot":"","sources":["../../../../src/layout/center.tsx"],"names":[],"mappings":"AAAA,OAAO,KAAK,MAAM,OAAO,CAAC;AAE1B,OAAO,EAAE,yBAAyB,EAAE,MAAM,WAAW,CAAC;AAEtD,UAAU,WAAY,SAAQ,yBAAyB;IACrD,uGAAuG;IACvG,MAAM,CAAC,EAAE,OAAO,CAAC;IACjB,iBAAiB;IACjB,QAAQ,CAAC,EAAE,KAAK,CAAC,YAAY,GAAG,MAAM,CAAC;CACxC;AAED,eAAO,MAAM,OAAO;uDAMjB,WAAW;;CAUb,CAAC"}

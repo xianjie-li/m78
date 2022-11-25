@@ -48,6 +48,8 @@ publishConfig
 import sass from "sass";
 import { mkdir, writeFile } from "node:fs/promises";
 import { defineConfig } from "@m78/build-tools/defineConfig.js";
+// import { defineCommonConfig } from "@m78/build-tools/defineConfig.js"; // commonConfig if need
+// export const commonConfig = defineCommonConfig({ ... })
 
 export default defineConfig({
   build: [
@@ -65,6 +67,10 @@ export default defineConfig({
 ```
 
 2.run `npx m78-build-tools build`
+
+
+
+> pass --skip-declaration-emit to block the student declaration file
 
 
 

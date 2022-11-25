@@ -11,7 +11,7 @@ group:
 
 ## 示例
 
-<code src="./useUpdateEffect.demo.tsx" />
+<code src="./useUpdateEffect.demo.tsx"></code>
 
 ## API
 

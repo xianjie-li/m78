@@ -8,7 +8,7 @@
 
 import { createSeed } from "../seed";
 import { M78SeedState } from "./types";
-import { darkModeHandle, i18nHandle } from "./handle";
+import { _darkModeHandle, _i18nHandle } from "./handle";
 
 const m78Config = createSeed<M78SeedState>({
   state: {
@@ -22,9 +22,9 @@ const m78Config = createSeed<M78SeedState>({
  * 某些配置变更时, 我们需要做一些处理, 统一在这里进行
  * */
 m78Config.subscribe((changes) => {
-  darkModeHandle(changes.darkMode);
+  _darkModeHandle(changes.darkMode);
 
-  i18nHandle(changes.i18n);
+  _i18nHandle(changes.i18n);
 });
 
 export { m78Config };

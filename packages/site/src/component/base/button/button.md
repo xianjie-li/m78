@@ -2,6 +2,7 @@
 title: Button - 按钮
 group:
   title: 基础组件
+  path: /base
 ---
 
 # Button 按钮
@@ -10,39 +11,39 @@ group:
 
 ## 颜色
 
-<code src="./button-demo-color.tsx" />
+<code src="./button-demo-color.tsx" ></code>
 
 ## 禁用
 
-<code src="./button-demo-disabled.tsx" />
+<code src="./button-demo-disabled.tsx"></code>
 
 ## 尺寸
 
-<code src="./button-demo-size.tsx" />
+<code src="./button-demo-size.tsx"></code>
 
 ## 圆形按钮
 
-<code src="./button-demo-circle.tsx" />
+<code src="./button-demo-circle.tsx"></code>
 
 ## 线框按钮
 
-<code src="./button-demo-outline.tsx" />
+<code src="./button-demo-outline.tsx"></code>
 
 ## 加载中
 
-<code src="./button-demo-loading.tsx" />
+<code src="./button-demo-loading.tsx"></code>
 
 ## 块级按钮
 
-<code src="./button-demo-block.tsx" />
+<code src="./button-demo-block.tsx"></code>
 
 ## 链接/文本按钮
 
-<code src="./button-demo-link.tsx" />
+<code src="./button-demo-link.tsx"></code>
 
 ## 图标按钮
 
-<code src="./button-demo-icon.tsx" />
+<code src="./button-demo-icon.tsx"></code>
 
 ## API
 

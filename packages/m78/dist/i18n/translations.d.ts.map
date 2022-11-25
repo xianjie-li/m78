@@ -1,0 +1,1 @@
+{"version":3,"file":"translations.d.ts","sourceRoot":"","sources":["../../../../src/i18n/translations.tsx"],"names":[],"mappings":"AAAA,OAAO,EACL,KAAK,IAAI,QAAQ,EACjB,WAAW,IAAI,cAAc,EAC7B,cAAc,IAAI,iBAAiB,EACpC,MAAM,eAAe,CAAC;AAIvB,eAAO,MAAM,eAAe,EAAE,OAAO,iBAKpC,CAAC;AAEF,eAAO,MAAM,YAAY,EAAE,OAAO,cAMjC,CAAC;AAKF,eAAO,MAAM,MAAM,EAAE,OAAO,QAE3B,CAAC"}

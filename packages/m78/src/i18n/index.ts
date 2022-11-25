@@ -24,6 +24,10 @@ const i18n = i18next.use(initReactI18next).createInstance(
   }
 );
 
-export * from "./_translations";
+export {
+  _useTranslation as useTranslation,
+  _Translation as Translation,
+  _Trans as Trans,
+} from "./translations";
 
 export { i18n };

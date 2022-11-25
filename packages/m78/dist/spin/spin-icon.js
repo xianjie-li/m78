@@ -9,7 +9,7 @@ var BW = 60;
 var BW_HALF = BW / 2;
 var R = 100 - BW_HALF;
 var ROUND_SIZE = Math.PI * S;
-export function SpinIcon(props) {
+export function _SpinIcon(props) {
     return /*#__PURE__*/ _jsxs("svg", _object_spread_props(_object_spread({}, props), {
         width: S,
         height: S,
@@ -57,3 +57,4 @@ export function SpinIcon(props) {
         ]
     }));
 }
+_SpinIcon.displayName = "SpinIcon";

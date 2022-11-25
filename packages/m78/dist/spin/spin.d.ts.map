@@ -1,1 +1,1 @@
-{"version":3,"file":"spin.d.ts","sourceRoot":"","sources":["../../../../src/spin/spin.tsx"],"names":[],"mappings":"AAAA,OAAO,KAAK,MAAM,OAAO,CAAC;AAM1B,OAAO,EAAE,SAAS,EAAE,MAAM,SAAS,CAAC;AAGpC,eAAO,MAAM,IAAI,EAAE,KAAK,CAAC,EAAE,CAAC,SAAS,CAqCpC,CAAC"}
+{"version":3,"file":"spin.d.ts","sourceRoot":"","sources":["../../../../src/spin/spin.tsx"],"names":[],"mappings":"AAAA,OAAO,KAAK,MAAM,OAAO,CAAC;AAM1B,OAAO,EAAE,SAAS,EAAE,MAAM,SAAS,CAAC;AAGpC,eAAO,MAAM,KAAK,EAAE,KAAK,CAAC,EAAE,CAAC,SAAS,CAqCrC,CAAC"}

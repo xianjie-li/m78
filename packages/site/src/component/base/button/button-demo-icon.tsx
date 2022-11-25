@@ -1,32 +1,31 @@
 import React from "react";
-import {
-  TagOutlined,
-  SettingOutlined,
-  QuestionCircleOutlined,
-  SearchOutlined,
-  BellOutlined,
-  BulbOutlined,
-} from "@ant-design/icons";
 import { Button } from "m78/button";
+
+import { IconTag } from "@m78/icons/icon-tag";
+import { IconBeachAccess } from "@m78/icons/icon-beach-access";
+import { IconBrightness7 } from "@m78/icons/icon-brightness-7";
+import { IconCatchingPokemon } from "@m78/icons/icon-catching-pokemon";
+import { IconAcUnit } from "@m78/icons/icon-ac-unit";
+import { IconFaceRetouchingNatural } from "@m78/icons/icon-face-retouching-natural";
 
 const ButtonDemoColor = () => (
   <div>
     <div className="mb-16">纯图标</div>
 
     <Button icon>
-      <TagOutlined />
+      <IconTag />
     </Button>
     <Button color="red" icon>
-      <SettingOutlined />
+      <IconBeachAccess />
     </Button>
     <Button color="green" icon disabled>
-      <QuestionCircleOutlined />
+      <IconBrightness7 />
     </Button>
     <Button color="primary" icon>
-      <SearchOutlined />
+      <IconCatchingPokemon />
     </Button>
     <Button color="orange" icon>
-      <BellOutlined />
+      <IconAcUnit />
     </Button>
     <Button color="red" icon>
       李
@@ -34,44 +33,44 @@ const ButtonDemoColor = () => (
 
     <div className="mt-16">
       <Button color="green" icon size="small">
-        <SettingOutlined />
+        <IconBeachAccess />
       </Button>
       <Button color="primary" icon>
-        <SettingOutlined />
+        <IconCatchingPokemon />
       </Button>
       <Button color="red" icon size="large">
-        <SettingOutlined />
+        <IconFaceRetouchingNatural />
       </Button>
     </div>
 
     <div className="mt-16">
       <div className="mb-16">文字图标混排</div>
       <Button>
-        <TagOutlined />
+        <IconBeachAccess />
         按钮
       </Button>
       <Button color="red">
-        <SettingOutlined />
+        <IconAcUnit />
         按钮
       </Button>
       <Button color="green">
-        <QuestionCircleOutlined />
+        <IconBeachAccess />
         按钮
       </Button>
       <Button color="primary">
-        <BellOutlined />
+        <IconFaceRetouchingNatural />
         按钮
       </Button>
       <Button color="orange">
-        <BulbOutlined />
+        <IconAcUnit />
         按钮
       </Button>
       <Button color="primary">
-        <BellOutlined />
+        <IconBrightness7 />
         文本
-        <BellOutlined />
+        <IconTag />
         文本
-        <SettingOutlined />
+        <IconBrightness7 />
       </Button>
     </div>
   </div>

@@ -1,9 +1,8 @@
 import React from "react";
-import { render } from "../utils";
 import { i18n, useTranslation, Translation } from "../../src/i18n";
 import { m78Config } from "../../src/config";
 
-function App() {
+export function I18NExample() {
   const { t } = useTranslation("common", { i18n });
 
   const loadCN = async () => {
@@ -36,5 +35,3 @@ function App() {
     </div>
   );
 }
-
-render(<App />);

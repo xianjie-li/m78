@@ -25,11 +25,11 @@
     "@m78/utils": "workspace:^",
     "@types/react": "^18.0.24",
     "@types/react-dom": "^18.0.8",
-    "@umijs/plugin-sass": "^1.1.1",
-    "dumi": "^1.1.47",
-    "lint-staged": "^10.0.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "@umijs/plugin-sass": "^1.1.1",
+    "dumi": "^1.1.48",
+    "lint-staged": "^10.0.7",
     "yorkie": "^2.0.0"
   },
   "pnpm": {
@@ -41,6 +41,7 @@
     }
   },
   "dependencies": {
+    "@m78/icons": "workspace:^",
     "m78": "workspace:^"
   }
 }

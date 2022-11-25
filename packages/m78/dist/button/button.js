@@ -10,10 +10,10 @@ import cls from "clsx";
 import { Spin } from "../spin";
 import { m78Config as config } from "../config";
 import { FullSize } from "../common";
-import { formatChildren } from "./utils";
+import { _formatChildren } from "./utils";
 import { useFn } from "@m78/hooks";
 import { isPromiseLike } from "@m78/utils";
-function Button(btnProps) {
+function _Button(btnProps) {
     var /*#__PURE__*/ _React;
     var size = btnProps.size, color = btnProps.color, circle = btnProps.circle, outline = btnProps.outline, block = btnProps.block, icon = btnProps.icon, disabled = btnProps.disabled, _loading = btnProps.loading, children = btnProps.children, className = btnProps.className, text = btnProps.text, href = btnProps.href, innerRef = btnProps.innerRef, props = _object_without_properties(btnProps, [
         "size",
@@ -41,7 +41,7 @@ function Button(btnProps) {
     var _obj;
     var classNames = cls("m78 m78-init m78-btn", "m78-effect", "__md", (_obj = {}, _define_property(_obj, "__".concat(color), color), _define_property(_obj, "__".concat(size), size), _define_property(_obj, "__circle", circle), _define_property(_obj, "__outline", outline), _define_property(_obj, "__block", block), _define_property(_obj, "__text", text), _define_property(_obj, "__icon", icon), _define_property(_obj, "__light", isLightEffect), _define_property(_obj, "__disabled", disabled || loading), _obj), className);
     var newChildren = useMemo(function() {
-        return formatChildren(children);
+        return _formatChildren(children);
     }, [
         children
     ]);
@@ -64,15 +64,16 @@ function Button(btnProps) {
             href: href
         }, props), {
             className: classNames,
-            disabled: !!disabled || !!loading,
+            disabled: !!disabled || loading,
             ref: innerRef,
             onClick: onClick
         }),
         /*#__PURE__*/ _jsx(Spin, {
-            open: !!loading,
+            open: loading,
             size: FullSize.small,
             full: true
         })
     ].concat(_to_consumable_array(newChildren)));
 }
-export { Button };
+_Button.displayName = "Button";
+export { _Button };

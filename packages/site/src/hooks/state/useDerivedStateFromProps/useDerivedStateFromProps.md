@@ -13,7 +13,7 @@ group:
 
 ## 示例
 
-<code src="./useDerivedStateFromProps.demo.tsx" />
+<code src="./useDerivedStateFromProps.demo.tsx"></code>
 
 ## API
 

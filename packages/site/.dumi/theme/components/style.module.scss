@@ -1,0 +1,16 @@
+
+.switchTheme {
+  position: fixed;
+  right: 24px;
+  top: 16px;
+  z-index: 101;
+  cursor: pointer;
+  user-select: none;
+  font-size: 18px;
+  line-height: 32px;
+  width: 32px;
+  height: 32px;
+  border: 1px solid #ccc;
+  text-align: center;
+  border-radius: 50%;
+}

@@ -7,8 +7,8 @@ import React from "react";
 import cls from "clsx";
 import { useDelayToggle } from "@m78/hooks";
 import { Transition } from "../transition";
-import { SpinIcon } from "./spin-icon";
-export var Spin = function(_param) {
+import { _SpinIcon } from "./spin-icon";
+export var _Spin = function(_param) {
     var size = _param.size, inline = _param.inline, _text = _param.text, text = _text === void 0 ? "" : _text, full = _param.full, _open = _param.open, open = _open === void 0 ? true : _open, className = _param.className, _minDuration = _param.minDuration, minDuration = _minDuration === void 0 ? 300 : _minDuration, offset = _param.offset, props = _object_without_properties(_param, [
         "size",
         "inline",
@@ -33,7 +33,7 @@ export var Spin = function(_param) {
                 top: offset
             },
             children: [
-                /*#__PURE__*/ _jsx(SpinIcon, {
+                /*#__PURE__*/ _jsx(_SpinIcon, {
                     className: "m78-spin_unit"
                 }),
                 text && /*#__PURE__*/ _jsxs("span", {
@@ -49,3 +49,4 @@ export var Spin = function(_param) {
         })
     }));
 };
+_Spin.displayName = "Spin";

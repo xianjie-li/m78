@@ -11,7 +11,7 @@ group:
 
 ## 示例
 
-<code src="./useThrottle.demo.tsx" />
+<code src="./useThrottle.demo.tsx"></code>
 
 ## API
 

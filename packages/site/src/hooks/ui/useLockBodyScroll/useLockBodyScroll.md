@@ -8,7 +8,7 @@ group:
 
 ## 示例
 
-<code src="./useLockBodyScroll.demo.tsx" />
+<code src="./useLockBodyScroll.demo.tsx"></code>
 
 ## API
 

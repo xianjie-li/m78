@@ -1,4 +1,5 @@
 import { defineConfig } from "dumi";
+import * as path from "path";
 
 export default defineConfig({
   title: "M78",
@@ -8,10 +9,6 @@ export default defineConfig({
   // more config: https://d.umijs.org/config
   navs: [
     null, // null 值代表保留约定式生成的导航，只做增量配置
-    {
-      title: "GitHub",
-      path: "https://github.com/xianjie-li/m78",
-    },
     {
       title: "关联项目",
       children: [

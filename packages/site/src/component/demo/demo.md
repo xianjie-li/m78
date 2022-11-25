@@ -8,7 +8,7 @@ group:
 
 ## 示例
 
-<code src="./Demo.tsx" />
+<code src="./Demo.tsx"></code>
 
 ## 内置组件
 ### 警告

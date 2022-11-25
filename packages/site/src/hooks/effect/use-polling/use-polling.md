@@ -12,7 +12,7 @@ group:
 
 每0.5s触发一次, 每次触发间隔比上次多1.1倍, 最多触发10次
 
-<code src="./use-polling.demo.tsx" />
+<code src="./use-polling.demo.tsx"></code>
 
 ## API
 

@@ -2,7 +2,7 @@ import { M78SeedState } from "./types";
 import { i18n } from "../i18n";
 
 /** 黑暗模式处理 */
-export function darkModeHandle(darkMode?: boolean) {
+export function _darkModeHandle(darkMode?: boolean) {
   if (
     darkMode !== undefined &&
     typeof window !== "undefined" &&
@@ -16,7 +16,7 @@ export function darkModeHandle(darkMode?: boolean) {
 }
 
 /** 国际化处理 */
-export function i18nHandle(i18nConf: M78SeedState["i18n"]) {
+export function _i18nHandle(i18nConf: M78SeedState["i18n"]) {
   if (i18nConf) {
     if (i18nConf.appendResource) {
       // 每次只能添加一个命名空间, 这里需要循环处理一下

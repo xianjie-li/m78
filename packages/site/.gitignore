@@ -14,10 +14,10 @@
 .DS_Store
 
 # umi
-.umi
-.umi-production
+.dumi/tmp
+.dumi/tmp-test
+.dumi/tmp-production
 .env.local
-.dumi
 
 # ide
 /.vscode

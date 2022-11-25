@@ -11,7 +11,7 @@ group:
 
 ## 示例
 
-<code src="./useFormState.demo.tsx" />
+<code src="./useFormState.demo.tsx"></code>
 
 ## API
 

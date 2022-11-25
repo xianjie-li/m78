@@ -11,7 +11,7 @@ group:
 
 ## 示例
 
-<code src="./useEvent.demo.tsx" />
+<code src="./useEvent.demo.tsx"></code>
 
 ## API
 

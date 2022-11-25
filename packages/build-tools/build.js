@@ -28,6 +28,7 @@ export async function build() {
   const res = await import(`${process.cwd()}/m78-lib.config.js`);
 
   let buildConf = res.default;
+  const commonConfig = res.commonConfig || {};
 
   if (!isArray(buildConf) && !isObject(buildConf)) {
     throw Error("build config is not found");
@@ -37,7 +38,9 @@ export async function build() {
 
   await Promise.all(configList.map(run));
 
-  await generateDeclaration(configList);
+  if (!commonConfig.isSkipDeclarationEmit) {
+    await generateDeclaration(configList, commonConfig);
+  }
 }
 
 async function run(
@@ -166,7 +169,7 @@ async function copyFileHandle({
 }
 
 /** 生成ts声明文件 */
-async function generateDeclaration(configList) {
+async function generateDeclaration(configList, { tscExtraArgs = [] }) {
   let userTsConf = "";
 
   // 优先读取tsconfig.lib.json, 以允许用户添加构建特殊配置
@@ -206,10 +209,14 @@ async function generateDeclaration(configList) {
 
   try {
     console.log("⏱ generate declaration...");
-    spawnSync("npx", ["tsc", "-p", libTsConfPath, "--outDir", tempPath], {
-      cwd: process.cwd(),
-      stdio: "inherit",
-    });
+    spawnSync(
+      "npx",
+      ["tsc", "-p", libTsConfPath, "--outDir", tempPath, ...tscExtraArgs],
+      {
+        cwd: process.cwd(),
+        stdio: "inherit",
+      }
+    );
   } catch (e) {
     if (e.stdout) {
       console.error(e.stdout);

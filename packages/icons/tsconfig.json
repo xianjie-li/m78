@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "md-icons": [
+        "src/index.ts"
+      ]
+    }
+  },
+  "extends": "@m78/build-tools/tsconfig-base.json",
+  "include": [
+    "src/**/*",
+    "examples/**/*",
+    "test/**/*"
+  ]
+}

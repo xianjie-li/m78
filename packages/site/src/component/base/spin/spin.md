@@ -2,6 +2,7 @@
 title: Spin - 加载中
 group:
   title: 基础组件
+  path: /base
 ---
 
 <!-- 样式 -->
@@ -19,13 +20,13 @@ export default () => <span />;
 
 ## 基本用法
 
-<code src="./spin-demo.tsx"/>
+<code src="./spin-demo.tsx"></code>
 
 ## 填满容器
 
 > 💡 需要父元素是`position: static`以外的定位元素
 
-<code src="./spin-demo-full.tsx"/>
+<code src="./spin-demo-full.tsx"></code>
 
 ## props
 

@@ -3,49 +3,47 @@
 /// <reference types="react" />
 /// <reference types="react-dom" />
 
-declare module 'dumi-theme-default/es/layout';
-
 declare namespace NodeJS {
   interface ProcessEnv {
-    readonly NODE_ENV: 'development' | 'production';
+    readonly NODE_ENV: "development" | "production";
   }
 }
 
-declare module 'vfile-message';
+declare module "vfile-message";
 
 /* 下面的类型和vite重复，可以直接去掉 */
-declare module '*.bmp' {
+declare module "*.bmp" {
   const src: string;
   export default src;
 }
 
-declare module '*.gif' {
+declare module "*.gif" {
   const src: string;
   export default src;
 }
 
-declare module '*.jpg' {
+declare module "*.jpg" {
   const src: string;
   export default src;
 }
 
-declare module '*.jpeg' {
+declare module "*.jpeg" {
   const src: string;
   export default src;
 }
 
-declare module '*.png' {
+declare module "*.png" {
   const src: string;
   export default src;
 }
 
-declare module '*.webp' {
+declare module "*.webp" {
   const src: string;
   export default src;
 }
 
-declare module '*.svg' {
-  import * as React from 'react';
+declare module "*.svg" {
+  import * as React from "react";
 
   export const ReactComponent: React.FunctionComponent<
     React.SVGProps<SVGSVGElement>
@@ -55,22 +53,22 @@ declare module '*.svg' {
   export default src;
 }
 
-declare module '*.module.css' {
+declare module "*.module.css" {
   const classes: { readonly [key: string]: string };
   export default classes;
 }
 
-declare module '*.module.scss' {
+declare module "*.module.scss" {
   const classes: { readonly [key: string]: string };
   export default classes;
 }
 
-declare module '*.module.sass' {
+declare module "*.module.sass" {
   const classes: { readonly [key: string]: string };
   export default classes;
 }
 
-declare module '*.module.less' {
+declare module "*.module.less" {
   const classes: { readonly [key: string]: string };
   export default classes;
 }

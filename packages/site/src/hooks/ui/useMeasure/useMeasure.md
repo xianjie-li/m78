@@ -10,7 +10,7 @@ group:
 
 ## 示例
 
-<code src="./useMeasure.demo.tsx" />
+<code src="./useMeasure.demo.tsx"></code>
 
 ## API
 

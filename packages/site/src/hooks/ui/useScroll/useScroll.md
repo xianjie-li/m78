@@ -10,7 +10,7 @@ group:
 
 ## 示例
 
-<code src="./useScroll.demo.tsx" />
+<code src="./useScroll.demo.tsx"></code>
 
 ## API
 

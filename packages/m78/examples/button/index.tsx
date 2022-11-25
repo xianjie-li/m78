@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "../../src/button";
-import { render } from "../utils";
 
 import {
   TagOutlined,
@@ -9,12 +8,10 @@ import {
   SearchOutlined,
   BellOutlined,
   BulbOutlined,
-  CaretLeftOutlined,
-  CaretRightOutlined,
 } from "@ant-design/icons";
 import { delay } from "@m78/utils";
 
-function App() {
+export function ButtonExample() {
   return (
     <div className="p-24">
       <Button>default</Button>
@@ -232,5 +229,3 @@ function App() {
     </div>
   );
 }
-
-render(<App />);

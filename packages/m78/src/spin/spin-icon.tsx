@@ -8,7 +8,7 @@ const BW_HALF = BW / 2;
 const R = 100 - BW_HALF;
 const ROUND_SIZE = Math.PI * S;
 
-export function SpinIcon(props: any) {
+export function _SpinIcon(props: any) {
   return (
     <svg
       {...props}
@@ -50,3 +50,5 @@ export function SpinIcon(props: any) {
     </svg>
   );
 }
+
+_SpinIcon.displayName = "SpinIcon";

@@ -2,7 +2,7 @@ import { Middleware } from "@m78/seed";
 import { _createUseState } from "./create-use-state";
 import { _createState } from "./create-state";
 
-export const insideMiddleware: Middleware = (bonus) => {
+export const _insideMiddleware: Middleware = (bonus) => {
   if (bonus.init) {
     return bonus.config;
   }

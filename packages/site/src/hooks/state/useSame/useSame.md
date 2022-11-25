@@ -17,7 +17,7 @@ group:
 
 ## 示例
 
-<code src="./useSame.demo.tsx" />
+<code src="./useSame.demo.tsx"></code>
 
 ## API
 

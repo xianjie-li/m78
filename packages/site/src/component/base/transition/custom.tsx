@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import { TransitionBase } from "m78/transition";
 import sty from "./style.module.scss";
+import { Button } from "m78/button";
 
 const Custom = () => {
   const [show, setShow] = useState(true);
@@ -9,9 +10,9 @@ const Custom = () => {
   return (
     <div>
       <div className="mb-16">
-        <button onClick={() => setShow((prev) => !prev)}>
+        <Button onClick={() => setShow((prev) => !prev)}>
           {show ? "show" : "hide"}
-        </button>
+        </Button>
       </div>
 
       <div className={sty.wrap}>

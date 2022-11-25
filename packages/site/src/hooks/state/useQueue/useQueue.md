@@ -13,7 +13,7 @@ group:
 
 ## 示例
 
-<code src="./useQueue.demo.tsx" />
+<code src="./useQueue.demo.tsx"></code>
 
 ## API
 

@@ -1,3 +1,3 @@
 import React from "react";
-export declare function formatChildren(children: React.ReactNode): any[];
+export declare function _formatChildren(children: React.ReactNode): any[];
 //# sourceMappingURL=utils.d.ts.map

@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Spin } from "../../src/spin";
-import { render } from "../utils";
 
-function App() {
+export function SpinExample() {
   const [open, setOpen] = useState(false);
 
   return (
@@ -69,5 +68,3 @@ function App() {
     </div>
   );
 }
-
-render(<App />);

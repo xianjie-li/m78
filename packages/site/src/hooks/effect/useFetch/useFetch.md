@@ -33,17 +33,17 @@ const fh = useFetch(queryUserInfo);
 
 ## 综合示例
 
-<code src="./base.demo.tsx" />
+<code src="./base.demo.tsx"></code>
 
 ## 节流/防抖
 
-<code src="./throttleDebounce.demo.tsx" />
+<code src="./throttleDebounce.demo.tsx"></code>
 
 ## param
 
 调用`send`很麻烦，大部分业务中，理想的请求时机是某个依赖的值发生改变时，通过`param`，可以轻松的实现这一点
 
-<code src="./param.demo.tsx" />
+<code src="./param.demo.tsx"></code>
 
 > 💡 内部通过\_.isEqual 来对比 param 相等性，保持 param 结构相对简单能够减少对比深度，从而提高性能
 

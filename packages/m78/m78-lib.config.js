@@ -9,5 +9,6 @@ export default defineConfig([
         type: "es6",
       },
     },
+    ignore: ["**/*.md"],
   },
 ]);

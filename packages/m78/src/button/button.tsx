@@ -6,13 +6,15 @@ import { m78Config as config } from "../config";
 
 import { FullSize } from "../common";
 import { ButtonPropsWithHTMLButton, ButtonPropsWithHTMLLink } from "./types";
-import { formatChildren } from "./utils";
+import { _formatChildren } from "./utils";
 import { useFn } from "@m78/hooks";
 import { isPromiseLike } from "@m78/utils";
 
-function Button(btnProps: ButtonPropsWithHTMLButton): JSX.Element;
-function Button(btnProps: ButtonPropsWithHTMLLink): JSX.Element;
-function Button(btnProps: ButtonPropsWithHTMLLink | ButtonPropsWithHTMLButton) {
+function _Button(btnProps: ButtonPropsWithHTMLButton): JSX.Element;
+function _Button(btnProps: ButtonPropsWithHTMLLink): JSX.Element;
+function _Button(
+  btnProps: ButtonPropsWithHTMLLink | ButtonPropsWithHTMLButton
+) {
   const {
     size,
     color,
@@ -58,7 +60,7 @@ function Button(btnProps: ButtonPropsWithHTMLLink | ButtonPropsWithHTMLButton) {
     className
   );
 
-  const newChildren = useMemo(() => formatChildren(children), [children]);
+  const newChildren = useMemo(() => _formatChildren(children), [children]);
 
   const isLink = !!href;
 
@@ -83,13 +85,15 @@ function Button(btnProps: ButtonPropsWithHTMLLink | ButtonPropsWithHTMLButton) {
       href,
       ...props,
       className: classNames,
-      disabled: !!disabled || !!loading,
+      disabled: !!disabled || loading,
       ref: innerRef,
       onClick,
     },
-    <Spin open={!!loading} size={FullSize.small} full />,
+    <Spin open={loading} size={FullSize.small} full />,
     ...newChildren
   );
 }
 
-export { Button };
+_Button.displayName = "Button";
+
+export { _Button };
