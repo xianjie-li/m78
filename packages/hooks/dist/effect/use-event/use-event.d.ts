@@ -9,7 +9,7 @@ export declare function enhance<Listener extends AnyFunction = AnyFunction>(even
  * */
 declare function createEvent<Listener extends AnyFunction = AnyFunction>(): CustomEventWithHook<Listener>;
 declare namespace createEvent {
-    var enhance: typeof import("./use-event").enhance;
+    var enhance: typeof import("./use-event.js").enhance;
 }
 export { createEvent };
 //# sourceMappingURL=use-event.d.ts.map

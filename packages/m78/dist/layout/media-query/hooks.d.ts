@@ -1,4 +1,4 @@
-import { MediaQueryConf, MediaQueryMeta, MediaQueryListenerProps, _MediaQueryBaseConf } from "./types";
+import { MediaQueryConf, MediaQueryMeta, MediaQueryListenerProps, _MediaQueryBaseConf } from "./types.js";
 /**
  * 窗口尺寸改变时通过回调通知传入子项帮助渲染
  * */

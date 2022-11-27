@@ -1,7 +1,7 @@
 import { RefObject, useEffect, useRef, useState } from "react";
 import ResizeObserver from "resize-observer-polyfill";
-import debounce from "lodash/debounce";
-import { getRefDomOrDom, useFn, useIsUnmountState } from "../../";
+import debounce from "lodash/debounce.js";
+import { getRefDomOrDom, useFn, useIsUnmountState } from "../../index.js";
 
 export interface UseMeasureBound extends Omit<DOMRectReadOnly, "toJSON"> {
   /** entry.contentRect中的宽高为contentSize, 所以额外提供此项 */

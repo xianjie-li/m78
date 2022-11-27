@@ -1,4 +1,4 @@
-import { FlexWrapProps, FlexProps } from "./types";
+import { FlexWrapProps, FlexProps } from "./types.js";
 declare const _Column: {
     ({ children, style, className, mainAlign, crossAlign, innerRef, ...ppp }: FlexWrapProps): JSX.Element;
     displayName: string;

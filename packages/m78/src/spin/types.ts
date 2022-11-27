@@ -1,5 +1,5 @@
 import React from "react";
-import { FullSizeKeys, FullSize, ComponentBaseProps } from "../common";
+import { FullSizeKeys, FullSize, ComponentBaseProps } from "../common/index.js";
 
 export interface SpinProps extends ComponentBaseProps {
   /** true | 是否显示加载状态 */

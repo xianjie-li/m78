@@ -1,6 +1,6 @@
 var count = 1;
 var devtool = function(bonus) {
-    if (typeof window === "undefined" || !window.__REDUX_DEVTOOLS_EXTENSION__) {
+    if (typeof window === "undefined" || !window.__REDUX_DEVTOOLS_EXTENSION__ || process.env.NODE_ENV !== "development") {
         return bonus.init ? bonus.config : undefined;
     }
     if (bonus.init) {
@@ -14,15 +14,20 @@ var devtool = function(bonus) {
         return bonus.config;
     }
     if (bonus.ctx.devtool) {
-        var ls = function() {
-            bonus.ctx.devtool.send("change state", bonus.apis.get());
+        var ls = function(changes) {
+            bonus.ctx.devtool.send("change state (".concat(Object.keys(changes) || "-", ")"), bonus.apis.get());
         };
-        var uls = bonus.apis.subscribe(ls);
+        // 局部变量放在对象中, 防止取到快照
+        var configStore = {
+            unsubscribe: null
+        };
+        configStore.unsubscribe = bonus.apis.subscribe(ls);
         bonus.ctx.devtool.subscribe(function(message) {
+            // 插件触发更新
             if (message.type === "DISPATCH" && message.state) {
-                uls();
+                configStore.unsubscribe();
                 bonus.apis.coverSet(JSON.parse(message.state));
-                uls = bonus.apis.subscribe(ls);
+                configStore.unsubscribe = bonus.apis.subscribe(ls);
             }
         });
     }

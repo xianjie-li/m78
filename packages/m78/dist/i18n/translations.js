@@ -3,7 +3,7 @@ import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
 import { jsx as _jsx } from "react/jsx-runtime";
 import { Trans as TransLib, Translation as TranslationLib, useTranslation as useTranslationLib } from "react-i18next";
 import React from "react";
-import { i18n } from "./index";
+import { i18n } from "./index.js";
 export var _useTranslation = function() {
     for(var _len = arguments.length, params = new Array(_len), _key = 0; _key < _len; _key++){
         params[_key] = arguments[_key];

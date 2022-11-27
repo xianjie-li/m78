@@ -1,4 +1,4 @@
-import { StateInitState, UseSetStateTuple, UseStorageStateOptions } from "../../";
+import { StateInitState, UseSetStateTuple, UseStorageStateOptions } from "../../index.js";
 import { AnyObject } from "@m78/utils";
 /**
  * useSetState的storage版本

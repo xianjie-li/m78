@@ -1,6 +1,6 @@
 import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import { useEffect, useState } from "react";
-import { useFn } from "../../";
+import { useFn } from "../../index.js";
 /**
  * 用于便捷的实现mountOnEnter/unmountOnExit接口
  * - 卸载的准确时机hook内是不能感知的，因为可能中间会存在动画或其他延迟行为，所以需要用户在正确时机调用unmount()通知卸载

@@ -7,10 +7,10 @@ import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
 import { jsx as _jsx } from "react/jsx-runtime";
 import React, { useMemo, useState } from "react";
 import cls from "clsx";
-import { Spin } from "../spin";
-import { m78Config as config } from "../config";
-import { FullSize } from "../common";
-import { _formatChildren } from "./utils";
+import { Spin } from "../spin/index.js";
+import { m78Config as config } from "../config/index.js";
+import { FullSize } from "../common/index.js";
+import { _formatChildren } from "./utils.js";
 import { useFn } from "@m78/hooks";
 import { isPromiseLike } from "@m78/utils";
 function _Button(btnProps) {

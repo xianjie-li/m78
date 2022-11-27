@@ -1,3 +1,3 @@
-export { default } from './create';
-export * from './types';
+export { default } from "./create.js";
+export * from "./types.js";
 //# sourceMappingURL=index.d.ts.map

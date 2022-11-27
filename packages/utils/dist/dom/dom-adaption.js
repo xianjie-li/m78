@@ -1,5 +1,5 @@
 import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _throttle from "lodash/throttle";
+import _throttle from "lodash/throttle.js";
 var defaultConfig = {
     designWidth: 1920,
     designHeight: 1080,

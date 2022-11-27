@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
-import { CellColProps, CellRowProps } from "./types";
-import { _useMediaQuery } from "../media-query/hooks";
-import { isArray, isNumber } from "@lxjx/utils";
+import { CellColProps, CellRowProps } from "./types.js";
+import { _useMediaQuery } from "../media-query/hooks.js";
+import { isArray, isNumber } from "@m78/utils";
 import cls from "clsx";
-import { _getCurrentMqProps } from "./common";
+import { _getCurrentMqProps } from "./common.js";
 import { dumpFn } from "@m78/utils";
 
 const MAX_COLUMN = 12;

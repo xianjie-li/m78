@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { _onChangeHandle } from "./common";
+import { _onChangeHandle } from "./common.js";
 export var _defaultContext = {
     onChange: function(size) {
         return _onChangeHandle(size, _defaultContext);

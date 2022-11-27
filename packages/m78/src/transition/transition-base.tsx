@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { useSpring, animated } from "react-spring";
 import { useSelf, useMountState, useIsUnmountState } from "@m78/hooks";
-import { TransitionBaseProps } from "./types";
+import { TransitionBaseProps } from "./types.js";
 
 export const _TransitionBase = (props: TransitionBaseProps) => {
   const {

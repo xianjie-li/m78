@@ -1,12 +1,12 @@
 import React, { useMemo, useState } from "react";
 import cls from "clsx";
 
-import { Spin } from "../spin";
-import { m78Config as config } from "../config";
+import { Spin } from "../spin/index.js";
+import { m78Config as config } from "../config/index.js";
 
-import { FullSize } from "../common";
-import { ButtonPropsWithHTMLButton, ButtonPropsWithHTMLLink } from "./types";
-import { _formatChildren } from "./utils";
+import { FullSize } from "../common/index.js";
+import { ButtonPropsWithHTMLButton, ButtonPropsWithHTMLLink } from "./types.js";
+import { _formatChildren } from "./utils.js";
 import { useFn } from "@m78/hooks";
 import { isPromiseLike } from "@m78/utils";
 

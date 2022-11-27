@@ -1,5 +1,5 @@
-import { Seed, SetState, Share, CoverSetState, SeedCreator } from './types';
-import { middlewareImpl, subscribeImpl } from './common';
+import { Seed, SetState, Share, CoverSetState, SeedCreator } from "./types.js";
+import { middlewareImpl, subscribeImpl } from "./common.js";
 
 const create: SeedCreator = (conf = {}) => {
   const [config, patchHandle] = middlewareImpl(conf);
@@ -11,16 +11,16 @@ const create: SeedCreator = (conf = {}) => {
     listeners: [],
   };
 
-  const setState: SetState = patch => {
+  const setState: SetState = (patch) => {
     share.state = { ...share.state!, ...patch };
     /** 触发listener */
-    share.listeners.forEach(listener => listener(patch));
+    share.listeners.forEach((listener) => listener(patch));
   };
 
-  const coverSetState: CoverSetState = patch => {
+  const coverSetState: CoverSetState = (patch) => {
     share.state = { ...patch };
     /** 触发listener */
-    share.listeners.forEach(listener => listener(patch));
+    share.listeners.forEach((listener) => listener(patch));
   };
 
   const subscribe = subscribeImpl(share);

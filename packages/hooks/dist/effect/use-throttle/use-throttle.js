@@ -2,7 +2,7 @@ import _object_spread from "@swc/helpers/src/_object_spread.mjs";
 import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
 import { useEffect } from "react";
 import { __GLOBAL__ } from "@m78/utils";
-import { useFn, useSelf } from "../../";
+import { useFn, useSelf } from "../../index.js";
 var defaultOption = {
     leading: true,
     trailing: true

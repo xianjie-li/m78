@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef } from "react";
-import { usePrev } from "../../";
-import _isEqualWith from "lodash/isEqualWith";
+import { usePrev } from "../../index.js";
+import _isEqualWith from "lodash/isEqualWith.js";
 /**
  *  支持对deps进行深度对比的`useEffect`
  *  💡保持deps值结构相对简单能够减少对比深度，从而提高性能

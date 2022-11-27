@@ -1,7 +1,7 @@
 import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
 import { useEffect } from "react";
 import { __GLOBAL__ } from "@m78/utils";
-import { useFn, useSelf } from "../../";
+import { useFn, useSelf } from "../../index.js";
 /**
  * 传入一个函数，经过防抖处理后返回, 返回函数的内存地址会一直保持不变
  * @param fn - 待防抖的函数

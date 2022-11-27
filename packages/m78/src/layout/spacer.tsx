@@ -1,7 +1,7 @@
 import React from "react";
 import cls from "clsx";
 import { isArray } from "@m78/utils";
-import { ComponentBasePropsWithAny } from "../common";
+import { ComponentBasePropsWithAny } from "../common/index.js";
 
 interface SpacerProps extends ComponentBasePropsWithAny {
   /** 宽度 */

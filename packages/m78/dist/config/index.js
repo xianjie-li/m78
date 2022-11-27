@@ -4,8 +4,8 @@
  *
  * config本身是一个seed, 可以使用seed的所有api
  * * * * * * * * * * * * * * * * * * * * *
- * */ import { createSeed } from "../seed";
-import { _darkModeHandle, _i18nHandle } from "./handle";
+ * */ import { createSeed } from "../seed/index.js";
+import { _darkModeHandle, _i18nHandle } from "./handle.js";
 var m78Config = createSeed({
     state: {
         darkMode: false,

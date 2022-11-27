@@ -1,4 +1,4 @@
-import { useFn } from "../../";
+import { useFn } from "../../index.js";
 import { useEffect } from "react";
 import { createEvent as create } from "@m78/utils";
 /** 增强一个现有事件对象 */ export function enhance(event) {

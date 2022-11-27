@@ -2,8 +2,8 @@ import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import { useEffect, useMemo, useRef } from "react";
 import { flushSync } from "react-dom";
 import { isFunction } from "@m78/utils";
-import { createEvent, getRefDomOrDom, useFn, useScroll, useSelf, useSetState } from "../../";
-import _debounce from "lodash/debounce";
+import { createEvent, getRefDomOrDom, useFn, useScroll, useSelf, useSetState } from "../../index.js";
+import _debounce from "lodash/debounce.js";
 export function useVirtualList(option) {
     var handleScroll = /** 核心混动逻辑 */ function handleScroll(meta, skipScrollingEmit) {
         if (disabled) return;

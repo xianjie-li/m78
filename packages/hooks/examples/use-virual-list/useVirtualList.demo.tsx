@@ -1,5 +1,5 @@
 import React from "react";
-import { useVirtualList } from "../../src";
+import { useVirtualList } from "../../src/index.js";
 
 import sty from "./style.module.css";
 

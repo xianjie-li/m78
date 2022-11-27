@@ -1,7 +1,7 @@
 /** 配置参数 */
-import { useFn } from "../use-fn/use-fn";
+import { useFn } from "../use-fn/use-fn.js";
 import { useEffect, useMemo } from "react";
-import { useSelf } from "../../state/use-self/use-self";
+import { useSelf } from "../../state/use-self/use-self.js";
 
 export interface UsePollingOption {
   /** 轮询触发时调用, 执行结束后才会开始下一次轮询计时 */

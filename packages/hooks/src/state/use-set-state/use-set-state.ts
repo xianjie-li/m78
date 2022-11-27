@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef } from "react";
-import { SetState, StateInitState } from "../../";
+import { SetState, StateInitState } from "../../index.js";
 import { AnyObject } from "@m78/utils";
 
 /**

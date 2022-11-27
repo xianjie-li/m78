@@ -1,4 +1,4 @@
-import { ComponentBaseProps } from "@lxjx/utils";
+import { ComponentBaseProps } from "../common/index.js";
 interface DividerProps extends ComponentBaseProps {
     /** false | 设置为垂直分割线 */
     vertical?: boolean;

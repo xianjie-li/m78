@@ -13,6 +13,7 @@
   // 实际使用中发现, 因为图标普遍小于文本, 并且细节比文本更多, 将其放大一定比例会更好, 否则基本每次使用都会单独再将其通过样式放大
   width: 1.5em;
   height: 1.5em;
+  font-size: 1.5em; // 兼容字体图标
   fill: currentColor;
   vertical-align: middle;
   line-height: 1;

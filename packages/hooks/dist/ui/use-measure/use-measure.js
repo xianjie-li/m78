@@ -1,8 +1,8 @@
 import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import { useEffect, useRef, useState } from "react";
 import ResizeObserver from "resize-observer-polyfill";
-import debounce from "lodash/debounce";
-import { getRefDomOrDom, useFn, useIsUnmountState } from "../../";
+import debounce from "lodash/debounce.js";
+import { getRefDomOrDom, useFn, useIsUnmountState } from "../../index.js";
 /**
  * 实时测量一个元素的尺寸
  * @param target - 目标节点

@@ -3,7 +3,7 @@ import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
 import { useEffect, useMemo, useRef } from "react";
 import { createRandString, isArray } from "@m78/utils";
-import { createEvent, useUpdateEffect, useUpdate } from "../../";
+import { createEvent, useUpdateEffect, useUpdate } from "../../index.js";
 /** 所有共享数据 */ var sameMap = {};
 /** 所有事件对象 */ var events = {};
 var defaultConfig = {

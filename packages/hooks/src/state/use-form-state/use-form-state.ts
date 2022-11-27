@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
-import { useUpdateEffect } from "../../";
+import { useUpdateEffect } from "../../index.js";
 import { isFunction, AnyObject, defer } from "@m78/utils";
-import _isEqual from "lodash/isEqual";
+import _isEqual from "lodash/isEqual.js";
 
 /**
  * 表单组件的统一接口

@@ -1,8 +1,8 @@
 import { RefObject, useEffect, useRef } from "react";
 
 import { isNumber, isDom } from "@m78/utils";
-import _clamp from "lodash/clamp";
-import { getRefDomOrDom, useSelf, useThrottle } from "../../";
+import _clamp from "lodash/clamp.js";
+import { getRefDomOrDom, useSelf, useThrottle } from "../../index.js";
 import { useSpring, config } from "react-spring";
 
 interface UseScrollOptions {

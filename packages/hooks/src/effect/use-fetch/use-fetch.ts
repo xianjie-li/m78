@@ -1,6 +1,6 @@
 import { __GLOBAL__, dumpFn, isEmpty, isFunction, isObject } from "@m78/utils";
-import _debounce from "lodash/debounce";
-import _throttle from "lodash/throttle";
+import _debounce from "lodash/debounce.js";
+import _throttle from "lodash/throttle.js";
 import React, { useEffect } from "react";
 import {
   useEffectEqual,
@@ -9,7 +9,7 @@ import {
   useSetState,
   useStorageState,
   SetStateBase,
-} from "../../";
+} from "../../index.js";
 
 const GLOBAL = __GLOBAL__ as Window;
 

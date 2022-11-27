@@ -1,0 +1,135 @@
+
+:root {
+  --ifm-color-primary: var(--m78-color);
+  --ifm-color-primary-dark: var(--m78-color-8);
+  --ifm-color-primary-darker: var(--m78-color-9);
+  --ifm-color-primary-darkest: var(--m78-color-10);
+  --ifm-color-primary-light: var(--m78-color-5);
+  --ifm-color-primary-lighter: var(--m78-color-4);
+  --ifm-color-primary-lightest: var(--m78-color-3);
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  --ifm-navbar-link-hover-color: var(--m78-color);
+  --docusaurus-tag-list-border: --m78-color !important;
+}
+
+// ## 基础样式重置
+html {
+  scroll-padding-top: 72px;
+}
+
+.markdown {
+  h2, h3, h4, h5, h6 {
+    margin-top: 2em !important;
+  }
+
+  code {
+    margin: 0 var(--m78-space-1);
+  }
+
+  pre code {
+    margin: 0;
+  }
+
+  blockquote {
+    color: var(--m78-color-second);
+  }
+}
+
+// ## 黑暗模式
+
+html[data-mode="dark"] {
+  .m78-root {
+    background-color: var(--m78-body-bg);
+  }
+
+  .navbar {
+    background-color: var(--m78-component-bg);
+  }
+}
+
+// ## 整体布局样式重置
+
+.hero {
+  padding: 120px 0 !important;
+  background: transparent;
+  color: var(--m78-color-primary);
+  height: 100% !important;
+}
+
+.button.button--secondary {
+  color: var(--m78-color-primary);
+  border: 1px solid var(--m78-color-border);
+}
+
+.navbar {
+  a {
+    color: inherit !important;
+    font-size: var(--m78-fs-md);
+  }
+
+  .navbar__link--active {
+    color: var(--m78-color) !important;
+  }
+}
+
+.table-of-contents {
+  a {
+    color: inherit !important;
+  }
+
+  .table-of-contents__link--active {
+    color: var(--m78-color) !important;
+  }
+}
+
+.footer {
+  padding: var(--m78-space-2) !important;
+  background-color: var(--m78-body-bg);
+  color: var(--m78-color-primary);
+  border-top: 1px solid var(--m78-color-border);
+
+  a {
+    color: inherit !important;
+  }
+}
+
+.theme-doc-sidebar-menu {
+  .menu__link {
+    color: var(--m78-color-primary) !important;
+  }
+
+  .menu__link--active {
+    color: var(--m78-color) !important;
+  }
+}
+
+.pagination-nav {
+  display: flex !important;
+  justify-content: space-between;
+}
+
+.pagination-nav__link {
+  flex: 1;
+  max-width: 40%;
+}
+
+.theme-code-block {
+  box-shadow: none !important;
+}
+
+// ## 组件样式重置
+
+.tabs-container {
+  > ul {
+    padding: var(--m78-space-2) var(--m78-space-1);
+
+    > li {
+      padding: var(--m78-space-2) var(--m78-space-4);
+    }
+
+    .tabs__item--active {
+      border-color: var(--m78-color);
+    }
+  }
+}

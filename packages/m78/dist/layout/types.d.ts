@@ -1,5 +1,5 @@
 import React from "react";
-import { DIVProps } from "../common";
+import { DIVProps } from "../common/index.js";
 /** flex wrap */
 export interface FlexWrapProps extends DIVProps {
     /** 'start' | 主轴对齐方式 */
@@ -25,7 +25,7 @@ export interface FlexProps extends DIVProps {
     innerRef?: React.Ref<HTMLDivElement>;
 }
 /** tile props */
-export interface TileProps extends Omit<React.PropsWithoutRef<JSX.IntrinsicElements["div"]>, "title"> {
+export interface TileProps extends Omit<DIVProps, "title"> {
     /** 主要内容 */
     title?: React.ReactNode;
     /** title的别名 */

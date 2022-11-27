@@ -1,5 +1,5 @@
 import React from "react";
-import { SizeUnion } from "../common";
+import { SizeUnion } from "../common/index.js";
 
 export enum ButtonColor {
   blue = "blue",

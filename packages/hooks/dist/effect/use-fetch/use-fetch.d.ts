@@ -1,5 +1,5 @@
 import React from "react";
-import { SetStateBase } from "../../";
+import { SetStateBase } from "../../index.js";
 interface UseFetchOptions<Data, Payload> {
     /** 传递给请求函数的参数, 当发生改变时，会以新值发起调用请求。传递此项时，payload会被忽略。 */
     param?: Payload;

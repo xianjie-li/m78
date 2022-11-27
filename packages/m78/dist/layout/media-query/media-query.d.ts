@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import { MediaQueryListenerProps, MediaQueryProps } from "./types";
+import { MediaQueryListenerProps, MediaQueryProps } from "./types.js";
 /**
  * 窗口尺寸改变时通过回调通知
  * */

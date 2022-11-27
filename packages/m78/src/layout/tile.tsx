@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
-import { _Row } from "./flex";
+import { _Row } from "./flex.js";
 import cls from "clsx";
-import { TileProps } from "./types";
+import { TileProps } from "./types.js";
 import { isTruthyOrZero } from "@m78/utils";
 
 const _Tile = ({

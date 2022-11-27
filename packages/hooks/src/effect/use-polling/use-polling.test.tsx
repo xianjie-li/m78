@@ -1,5 +1,5 @@
 import { render } from "@testing-library/react";
-import { usePolling } from "./use-polling";
+import { usePolling } from "./use-polling.js";
 import React from "react";
 
 test("usePolling", (done) => {

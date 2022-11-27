@@ -1,0 +1,40 @@
+.demo {
+  border: 1px solid var(--m78-color-border);
+  border-radius: var(--m78-border-radius);
+  overflow: hidden;
+  margin-bottom:  var(--m78-space-4);
+}
+
+.main {
+  padding: var(--m78-space-5);
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 40px;
+  border-top: 1px solid var(--m78-color-divider);
+  padding: 0 var(--m78-space-3);
+}
+
+.code {
+  border-top: 1px solid var(--m78-color-divider);
+
+  :global {
+    .prism-code, .tabs-container {
+      margin: 0;
+    }
+    .prism-code {
+      border-radius: 0;
+    }
+    .theme-code-block {
+      margin: 0 !important;
+      box-shadow: none;
+    }
+
+    [class^=buttonGroup_] {
+      display: none;
+    }
+  }
+}

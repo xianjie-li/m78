@@ -1,5 +1,5 @@
-import { Size } from "@lxjx/utils";
-import { _MediaQueryTypeContext, MediaQueryMeta, MediaQueryObject, MediaQueryTypeKeys } from "./types";
+import { Size } from "@m78/utils";
+import { _MediaQueryTypeContext, MediaQueryMeta, MediaQueryObject, MediaQueryTypeKeys } from "./types.js";
 /**
  * 根据尺寸检测是何种类型
  * */

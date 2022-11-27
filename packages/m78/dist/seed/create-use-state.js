@@ -1,6 +1,6 @@
 import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import { useState } from "react";
-import { useSyncExternalStore } from "use-sync-external-store/shim";
+import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 import { useFn } from "@m78/hooks";
 export function _createUseState(seed) {
     var defSelector = function(d) {

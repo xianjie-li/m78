@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import { initReactI18next } from "react-i18next";
 import enUS from "./locales/en-US.json";
-import { throwError } from "../common";
+import { throwError } from "../common/index.js";
 
 export const resources = {
   "en-US": enUS,
@@ -28,6 +28,6 @@ export {
   _useTranslation as useTranslation,
   _Translation as Translation,
   _Trans as Trans,
-} from "./translations";
+} from "./translations.js";
 
 export { i18n };

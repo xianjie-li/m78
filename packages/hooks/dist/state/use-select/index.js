@@ -1,2 +1,2 @@
-export * from "./select-manager";
-export * from "./use-select";
+export * from "./select-manager.js";
+export * from "./use-select.js";

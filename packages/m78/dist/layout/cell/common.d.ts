@@ -1,4 +1,4 @@
-import { MediaQueryMeta } from "../media-query/types";
+import { MediaQueryMeta } from "../media-query/types.js";
 import { CellColMediaQueryProps, CellColProps } from "./types";
 /**
  * 根据MediaQueryMeta从GridColProps中获取GridColMediaQueryProps

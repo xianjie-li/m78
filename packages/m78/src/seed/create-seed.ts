@@ -1,6 +1,6 @@
 import create, { CreateSeedConfig } from "@m78/seed";
-import { RCSeed, RCSeedCreator } from "./types";
-import { _insideMiddleware } from "./middleware";
+import { RCSeed, RCSeedCreator } from "./types.js";
+import { _insideMiddleware } from "./middleware.js";
 
 export const _CreateSeed: RCSeedCreator = (conf) => {
   const middleware: CreateSeedConfig["middleware"] = [_insideMiddleware];

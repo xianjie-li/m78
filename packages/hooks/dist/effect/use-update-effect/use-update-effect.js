@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useFirstMountState } from "../../";
+import { useFirstMountState } from "../../index.js";
 export var useUpdateEffect = function(effect, deps) {
     var isFirstMount = useFirstMountState();
     useEffect(function() {

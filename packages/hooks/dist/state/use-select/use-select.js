@@ -1,7 +1,7 @@
-import { SelectManager } from "./select-manager";
+import { SelectManager } from "./select-manager.js";
 import { useEffect, useMemo } from "react";
-import { useUpdate } from "../../effect/use-update/use-update";
-import { useUpdateEffect } from "../../effect/use-update-effect/use-update-effect";
+import { useUpdate } from "../../effect/use-update/use-update.js";
+import { useUpdateEffect } from "../../effect/use-update-effect/use-update-effect.js";
 /**
  * 用于列表的选中项管理, 内置了对于超大数据量的优化(用于m78组件的tree等组件高性能管理选中/展开等)
  * - 具体api见SelectManager

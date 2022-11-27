@@ -1,8 +1,8 @@
 import { Seed } from "@m78/seed";
 import { useState } from "react";
-import { useSyncExternalStore } from "use-sync-external-store/shim";
+import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 import { useFn } from "@m78/hooks";
-import { UseState } from "./types";
+import { UseState } from "./types.js";
 
 export function _createUseState(seed: Seed) {
   const defSelector = (d: any) => d;

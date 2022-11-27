@@ -5,10 +5,10 @@ import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
 import _ts_generator from "@swc/helpers/src/_ts_generator.mjs";
 import { __GLOBAL__, dumpFn, isEmpty, isFunction, isObject } from "@m78/utils";
-import _debounce from "lodash/debounce";
-import _throttle from "lodash/throttle";
+import _debounce from "lodash/debounce.js";
+import _throttle from "lodash/throttle.js";
 import React, { useEffect } from "react";
-import { useEffectEqual, useFn, useSelf, useSetState, useStorageState } from "../../";
+import { useEffectEqual, useFn, useSelf, useSetState, useStorageState } from "../../index.js";
 var GLOBAL = __GLOBAL__;
 /** 简单的判断是否为合成事件 */ function isSyntheticEvent(arg) {
     if (!arg) return false;

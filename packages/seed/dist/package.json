@@ -12,9 +12,12 @@
     "pub": "pnpm build && pnpm publish --access public --registry https://registry.npmjs.org --no-git-checks",
     "example-hello": "mbt example hello"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["state manage"],
+  "author": {
+    "name": "Link",
+    "email": "1073830130@qq.com"
+  },
+  "license": "MIT",
   "files": [
     "**"
   ],

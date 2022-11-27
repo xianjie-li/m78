@@ -1,6 +1,6 @@
 import _object_spread from "@swc/helpers/src/_object_spread.mjs";
 import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
-import { middlewareImpl, subscribeImpl } from "./common";
+import { middlewareImpl, subscribeImpl } from "./common.js";
 var create = function() {
     var conf = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {};
     var ref = _sliced_to_array(middlewareImpl(conf), 2), config = ref[0], patchHandle = ref[1];

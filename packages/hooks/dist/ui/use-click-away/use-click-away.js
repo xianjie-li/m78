@@ -1,7 +1,7 @@
 import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
 import { useEffect, useMemo, useRef } from "react";
 import { isArray } from "@m78/utils";
-import { getTargetDomList, useFn } from "../../";
+import { getTargetDomList, useFn } from "../../index.js";
 var defaultEvents = [
     "mousedown",
     "touchstart"

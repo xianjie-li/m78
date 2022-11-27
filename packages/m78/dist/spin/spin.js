@@ -6,8 +6,8 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from "react";
 import cls from "clsx";
 import { useDelayToggle } from "@m78/hooks";
-import { Transition } from "../transition";
-import { _SpinIcon } from "./spin-icon";
+import { Transition } from "../transition/index.js";
+import { _SpinIcon } from "./spin-icon.js";
 export var _Spin = function(_param) {
     var size = _param.size, inline = _param.inline, _text = _param.text, text = _text === void 0 ? "" : _text, full = _param.full, _open = _param.open, open = _open === void 0 ? true : _open, className = _param.className, _minDuration = _param.minDuration, minDuration = _minDuration === void 0 ? 300 : _minDuration, offset = _param.offset, props = _object_without_properties(_param, [
         "size",

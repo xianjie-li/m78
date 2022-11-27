@@ -1,5 +1,5 @@
-import { MediaQueryMeta, MediaQueryObject } from "../media-query/types";
-import { _mediaQueryGetter } from "../media-query/common";
+import { MediaQueryMeta, MediaQueryObject } from "../media-query/types.js";
+import { _mediaQueryGetter } from "../media-query/common.js";
 import {
   CellColMediaQueryProps,
   CellColNumberOrMediaQueryProps,

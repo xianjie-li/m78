@@ -1,6 +1,6 @@
 import { Middleware } from "@m78/seed";
-import { _createUseState } from "./create-use-state";
-import { _createState } from "./create-state";
+import { _createUseState } from "./create-use-state.js";
+import { _createState } from "./create-state.js";
 
 export const _insideMiddleware: Middleware = (bonus) => {
   if (bonus.init) {

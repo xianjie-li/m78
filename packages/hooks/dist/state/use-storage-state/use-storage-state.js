@@ -1,6 +1,6 @@
 import _object_spread from "@swc/helpers/src/_object_spread.mjs";
 import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
-import { useFn } from "../../";
+import { useFn } from "../../index.js";
 import { __GLOBAL__ } from "@m78/utils";
 import { useState } from "react";
 /** 缓存key前缀 */ var BASE_KEY = "USE_STORAGE_CACHE";

@@ -1,5 +1,6 @@
 import React from "react";
-interface SpacerProps {
+import { ComponentBasePropsWithAny } from "../common/index.js";
+interface SpacerProps extends ComponentBasePropsWithAny {
     /** 宽度 */
     width?: number;
     /** 16 | 高度,  */
@@ -9,7 +10,7 @@ interface SpacerProps {
 }
 /** pad space */
 declare const _Spacer: {
-    ({ width, height, children }: SpacerProps): any;
+    ({ width, height, children, ...props }: SpacerProps): any;
     displayName: string;
 };
 export { _Spacer };

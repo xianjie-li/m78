@@ -4,7 +4,7 @@ import {
   useTranslation as useTranslationLib,
 } from "react-i18next";
 import React from "react";
-import { i18n } from "./index";
+import { i18n } from "./index.js";
 
 export const _useTranslation: typeof useTranslationLib = (...params) => {
   return useTranslationLib(params[0], {

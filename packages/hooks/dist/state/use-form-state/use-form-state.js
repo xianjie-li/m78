@@ -1,8 +1,8 @@
 import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import { useState, useRef } from "react";
-import { useUpdateEffect } from "../../";
+import { useUpdateEffect } from "../../index.js";
 import { isFunction, defer } from "@m78/utils";
-import _isEqual from "lodash/isEqual";
+import _isEqual from "lodash/isEqual.js";
 /** 便捷的实现统一接口的受控、非受控表单组件, 也可用于任何需要受控、非受控状态的场景 */ export function useFormState(/** 透传消费组件的props，该组件需要实现FormLike接口 */ props, /** 默认值，会被value与defaultValue覆盖 */ defaultValue, /** 其他配置 */ config) {
     var ref = config || {}, _valueKey = ref.valueKey, valueKey = _valueKey === void 0 ? "value" : _valueKey, _defaultValueKey = ref.defaultValueKey, defaultValueKey = _defaultValueKey === void 0 ? "defaultValue" : _defaultValueKey, _triggerKey = ref.triggerKey, triggerKey = _triggerKey === void 0 ? "onChange" : _triggerKey, deep = ref.deep;
     var value = props[valueKey], onChange = props[triggerKey], propDefaultValue = props[defaultValueKey];

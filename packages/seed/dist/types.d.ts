@@ -1,4 +1,4 @@
-import { AnyObject } from '@lxjx/utils';
+import { AnyObject } from "@m78/utils";
 export declare type Share<S = any> = CreateSeedConfig<S> & {
     listeners: Array<Listener>;
 };

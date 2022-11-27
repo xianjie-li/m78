@@ -1,5 +1,5 @@
 import { isFunction, isNumber, isObject } from "@m78/utils";
-import { Middleware } from "./types";
+import { Middleware } from "./types.js";
 
 const PREFIX = "SEED_CACHE_";
 

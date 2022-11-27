@@ -1,7 +1,7 @@
 import { render, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
-import { useKeyboard, UseKeyboardModifier } from "./use-keyboard";
+import { useKeyboard, UseKeyboardModifier } from "./use-keyboard.js";
 
 test("use-keyboard", async () => {
   const user = userEvent.setup();

@@ -1,8 +1,8 @@
 /** 配置参数 */ import _async_to_generator from "@swc/helpers/src/_async_to_generator.mjs";
 import _ts_generator from "@swc/helpers/src/_ts_generator.mjs";
-import { useFn } from "../use-fn/use-fn";
+import { useFn } from "../use-fn/use-fn.js";
 import { useEffect, useMemo } from "react";
-import { useSelf } from "../../state/use-self/use-self";
+import { useSelf } from "../../state/use-self/use-self.js";
 /** 创建轮询任务 */ export function usePolling(option) {
     var _enable = option.enable, enable = _enable === void 0 ? true : _enable;
     var self = useSelf({

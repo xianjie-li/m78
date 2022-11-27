@@ -1,5 +1,5 @@
-import { M78SeedState } from "./types";
-import { i18n } from "../i18n";
+import { M78SeedState } from "./types.js";
+import { i18n } from "../i18n/index.js";
 
 /** 黑暗模式处理 */
 export function _darkModeHandle(darkMode?: boolean) {

@@ -1,6 +1,6 @@
 import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import { useEffect, useState } from "react";
-import { useSelf } from "../../";
+import { useSelf } from "../../index.js";
 /** 代理一个toggle状态, 确保其在关闭前至少开启了duration毫秒, 用于解决loading等组件的闪烁问题 */ export function useDelayToggle(toggle) {
     var duration = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : 300;
     var change = function change() {

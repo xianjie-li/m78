@@ -1,0 +1,141 @@
+---
+title: DocExample
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+在这里提供一些供复制的文档示例
+
+## 代码块
+
+```tsx
+import React from "react";
+// highlight-next-line
+import { Button } from "m78/button";
+
+const ExamCode = () => {
+  // highlight-start
+  return (
+    <div>
+      <Button>click me</Button>
+    </div>
+  );
+  // highlight-end
+};
+
+export default ExamCode;
+```
+
+## 选项卡
+
+注意在顶部包含这两个组件的导入
+
+<Tabs>
+  <TabItem value="apple" label="苹果" default>
+    这是个苹果 🍎
+  </TabItem>
+  <TabItem value="orange" label="橙子">
+    这是个橙子 🍊
+  </TabItem>
+  <TabItem value="banana" label="香蕉">
+    这是个香蕉 🍌
+  </TabItem>
+</Tabs>
+
+## 通知条
+
+:::note 标题
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi deleniti fuga id nisi? Aperiam autem, blanditiis, cum et in, laboriosam magnam minus natus necessitatibus neque quasi repellendus saepe sed voluptatum!
+
+:::
+
+:::tip 标题
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi deleniti fuga id nisi? Aperiam autem, blanditiis, cum et in, laboriosam magnam minus natus necessitatibus neque quasi repellendus saepe sed voluptatum!
+
+:::
+
+:::info 标题
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi deleniti fuga id nisi? Aperiam autem, blanditiis, cum et in, laboriosam magnam minus natus necessitatibus neque quasi repellendus saepe sed voluptatum!
+
+:::
+
+:::caution 标题
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi deleniti fuga id nisi? Aperiam autem, blanditiis, cum et in, laboriosam magnam minus natus necessitatibus neque quasi repellendus saepe sed voluptatum!
+
+:::
+
+:::danger 标题
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi deleniti fuga id nisi? Aperiam autem, blanditiis, cum et in, laboriosam magnam minus natus necessitatibus neque quasi repellendus saepe sed voluptatum!
+
+:::
+
+## Details 折叠
+
+<details>
+  <summary>点我！</summary>
+  <div>
+    <div>这是详情内容</div>
+    <br />
+    <details>
+      <summary>嵌套的下拉栏！ 内含惊喜……</summary>
+      <div>😲😲😲😲😲</div>
+    </details>
+  </div>
+</details>
+
+## 静态资源
+
+```md
+![logo](/img/logo-small.png)
+```
+
+![logo](/img/logo-small.png)
+
+md 语法为推荐的方式, 其目录自动指向 static, 你也可以使用 img 标签加 require()进行导入
+
+## 代码示例
+
+对最常用的 示例 + 代码 场景封装了全局的 demo 组件
+
+- props.demo 可以传入一个 react element 也可以传入一个组件
+- code 可以直接传入代码字符串/一项代码的配置/多项代码的配置数组
+
+<demo
+  demo={require("./exam-code.jsx")}
+  code={[
+    {
+      code: require("!!raw-loader!./exam-code.jsx"),
+      name: "index.js",
+    },
+    {
+      code: ".red { color: red }",
+      name: "style.css",
+      language: "css",
+    },
+  ]}
+/>
+
+```js
+<demo
+  demo={require("./exam-code.jsx")}
+  code={[
+    {
+      code: require("!!raw-loader!./exam-code.jsx"),
+      name: 'index.js'
+    },
+    {
+      code: ".red { color: red }",
+      name: 'style.css',
+      language: 'css'
+    },
+  ]}
+/>
+
+<demo demo={require("./exam-code.jsx")} code={require("!!raw-loader!./exam-code.jsx")}></demo>
+```

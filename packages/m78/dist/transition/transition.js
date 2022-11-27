@@ -4,7 +4,7 @@ import _object_without_properties from "@swc/helpers/src/_object_without_propert
 import { jsx as _jsx } from "react/jsx-runtime";
 import React from "react";
 import { config } from "react-spring";
-import { _TransitionBase as TransitionBase } from "./transition-base";
+import { _TransitionBase as TransitionBase } from "./transition-base.js";
 /* !这里的类型需要与./type.ts中的TransitionTypes同步 */ var transitionConfigs = {
     fade: {
         from: {

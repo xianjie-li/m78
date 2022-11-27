@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef } from "react";
 import { createRandString, isArray } from "@m78/utils";
-import { createEvent, useUpdateEffect, useUpdate } from "../../";
+import { createEvent, useUpdateEffect, useUpdate } from "../../index.js";
 
 /** 单个组件实例 */
 export interface SameItem<Meta = any> {

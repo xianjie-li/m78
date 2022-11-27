@@ -1,5 +1,5 @@
-import "../common/init";
+import "../common/init/index.js";
 import "./index.scss";
-export * from "./types";
-export { _Button as Button } from "./button";
+export * from "./types.js";
+export { _Button as Button } from "./button.js";
 //# sourceMappingURL=index.d.ts.map

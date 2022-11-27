@@ -1,4 +1,4 @@
-import { TransitionProps } from "./types";
+import { TransitionProps } from "./types.js";
 export declare const _Transition: {
     ({ type, alpha, ...props }: TransitionProps): JSX.Element;
     displayName: string;

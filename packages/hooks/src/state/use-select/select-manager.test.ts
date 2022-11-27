@@ -1,4 +1,4 @@
-import { SelectManager } from "./select-manager";
+import { SelectManager } from "./select-manager.js";
 
 describe("SelectManager", () => {
   const mockList = (length: number) =>

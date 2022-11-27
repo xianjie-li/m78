@@ -6,9 +6,9 @@
  * * * * * * * * * * * * * * * * * * * * *
  * */
 
-import { createSeed } from "../seed";
-import { M78SeedState } from "./types";
-import { _darkModeHandle, _i18nHandle } from "./handle";
+import { createSeed } from "../seed/index.js";
+import { M78SeedState } from "./types.js";
+import { _darkModeHandle, _i18nHandle } from "./handle.js";
 
 const m78Config = createSeed<M78SeedState>({
   state: {

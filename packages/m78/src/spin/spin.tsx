@@ -2,10 +2,10 @@ import React from "react";
 import cls from "clsx";
 
 import { useDelayToggle } from "@m78/hooks";
-import { Transition } from "../transition";
+import { Transition } from "../transition/index.js";
 
-import { SpinProps } from "./types";
-import { _SpinIcon } from "./spin-icon";
+import { SpinProps } from "./types.js";
+import { _SpinIcon } from "./spin-icon.js";
 
 export const _Spin: React.FC<SpinProps> = ({
   size,

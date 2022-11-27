@@ -7,7 +7,7 @@ import {
   MiddlewareBonusPatch,
   Share,
   Subscribe,
-} from "./types";
+} from "./types.js";
 
 /**
  * 生成和实现subscribe() api

@@ -1,4 +1,4 @@
-import { StateInitState, SetStateBase, useFn } from "../../";
+import { StateInitState, SetStateBase, useFn } from "../../index.js";
 import { __GLOBAL__ } from "@m78/utils";
 import { useState } from "react";
 

@@ -1,4 +1,4 @@
-import _throttle from "lodash/throttle";
+import _throttle from "lodash/throttle.js";
 
 export interface DomAdaptionConfig {
   /** 需要自适应的dom元素 */

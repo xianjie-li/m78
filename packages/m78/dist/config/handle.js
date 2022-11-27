@@ -1,5 +1,5 @@
 import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
-import { i18n } from "../i18n";
+import { i18n } from "../i18n/index.js";
 /** 黑暗模式处理 */ export function _darkModeHandle(darkMode) {
     if (darkMode !== undefined && typeof window !== "undefined" && window.document) {
         document.documentElement.setAttribute("data-mode", darkMode ? "dark" : "light");

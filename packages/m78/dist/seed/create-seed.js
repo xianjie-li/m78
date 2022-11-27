@@ -2,7 +2,7 @@ import _object_spread from "@swc/helpers/src/_object_spread.mjs";
 import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
 import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
 import create from "@m78/seed";
-import { _insideMiddleware } from "./middleware";
+import { _insideMiddleware } from "./middleware.js";
 export var _CreateSeed = function(conf) {
     var ref;
     var middleware = [

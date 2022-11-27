@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { __GLOBAL__, AnyFunction } from "@m78/utils";
-import { useFn, useSelf } from "../../";
+import { useFn, useSelf } from "../../index.js";
 
 /**
  * 传入一个函数，经过防抖处理后返回, 返回函数的内存地址会一直保持不变

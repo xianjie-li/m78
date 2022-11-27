@@ -1,8 +1,8 @@
 import _object_spread from "@swc/helpers/src/_object_spread.mjs";
 import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
 import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
-import { isArray } from "@lxjx/utils";
-import { MediaQueryTypeKeys, MediaQueryTypeValues } from "./types";
+import { isArray } from "@m78/utils";
+import { MediaQueryTypeKeys, MediaQueryTypeValues } from "./types.js";
 /**
  * 根据尺寸检测是何种类型
  * */ export function _calcType(size) {

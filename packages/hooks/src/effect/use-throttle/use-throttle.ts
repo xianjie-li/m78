@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { AnyFunction, __GLOBAL__ } from "@m78/utils";
-import { useFn, useSelf } from "../../";
+import { useFn, useSelf } from "../../index.js";
 
 export interface UseThrottleOption {
   /** true | 在节流开始前调用 */

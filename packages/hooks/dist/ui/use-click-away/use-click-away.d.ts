@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import { DomTarget } from "../../";
+import { DomTarget } from "../../index.js";
 export interface UseClickAwayConfig {
     /** 触发回调, e取决于events配置, 用户可根据events自行进行类型断言 */
     onTrigger: (e: Event) => void;

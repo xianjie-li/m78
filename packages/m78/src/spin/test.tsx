@@ -1,7 +1,7 @@
 import renderer from "react-test-renderer";
 import React from "react";
 import { FullSize } from "../common";
-import { Spin } from "./spin";
+import { Spin } from "./index";
 
 test("spin base", () => {
   const r = renderer

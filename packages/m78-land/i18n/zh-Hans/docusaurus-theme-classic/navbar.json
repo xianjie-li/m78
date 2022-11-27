@@ -1,0 +1,22 @@
+{
+  "title": {
+    "message": "M78 Land",
+    "description": "The title in the navbar"
+  },
+  "item.label.Components": {
+    "message": "Components",
+    "description": "Navbar item with label Components"
+  },
+  "item.label.Hooks": {
+    "message": "Hooks",
+    "description": "Navbar item with label Hooks"
+  },
+  "item.label.Blog": {
+    "message": "Blog",
+    "description": "Navbar item with label Blog"
+  },
+  "item.label.GitHub": {
+    "message": "GitHub",
+    "description": "Navbar item with label GitHub"
+  }
+}

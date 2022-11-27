@@ -1,5 +1,5 @@
 import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
-import { _mediaQueryGetter } from "../media-query/common";
+import { _mediaQueryGetter } from "../media-query/common.js";
 import { isNumber, isObject, isTruthyOrZero } from "@m78/utils";
 /**
  * 根据MediaQueryMeta从GridColProps中获取GridColMediaQueryProps

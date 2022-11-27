@@ -1,4 +1,4 @@
-import { StateInitState, SetStateBase } from "../../";
+import { StateInitState, SetStateBase } from "../../index.js";
 /** 配置 */
 export interface UseStorageStateOptions {
     /** 缓存类型 */

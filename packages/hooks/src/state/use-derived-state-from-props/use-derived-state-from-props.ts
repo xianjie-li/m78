@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useUpdateEffect } from "../../";
-import _isEqualWith from "lodash/isEqualWith";
+import { useUpdateEffect } from "../../index.js";
+import _isEqualWith from "lodash/isEqualWith.js";
 import { IsEqualCustomizer } from "lodash";
 
 /**

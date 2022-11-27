@@ -1,5 +1,5 @@
 import _define_property from "@swc/helpers/src/_define_property.mjs";
-import { FullSize } from "../types";
+import { FullSize } from "../types/index.js";
 /** 与style库同步，用于js代码的常用屏幕尺寸 */ export var SM = 576;
 export var MD = 768;
 export var LG = 992;

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef } from "react";
-import { usePrev } from "../../";
-import _isEqualWith from "lodash/isEqualWith";
+import { usePrev } from "../../index.js";
+import _isEqualWith from "lodash/isEqualWith.js";
 import { IsEqualCustomizer } from "lodash";
 
 /**

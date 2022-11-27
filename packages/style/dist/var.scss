@@ -24,7 +24,7 @@
   --m78-color-9: var(--m78-blue-9);
   --m78-color-10: var(--m78-blue-10);
   --m78-color: var(--m78-color-6);
-  --m78-color-opacity-sm: #{rgba(#1890ff, 0.2)};
+  --m78-color-opacity-sm: #{rgba(#1890ff, 0.1)};
   --m78-color-opacity-md: #{rgba(#1890ff, 0.5)};
   --m78-color-opacity-lg: #{rgba(#1890ff, 0.75)};
 
@@ -40,7 +40,7 @@
   --m78-color-sub-9: var(--m78-purple-9);
   --m78-color-sub-10: var(--m78-purple-10);
   --m78-color-sub: var(--m78-color-sub-6);
-  --m78-color-sub-opacity-sm: #{rgba(#722ed1, 0.2)};
+  --m78-color-sub-opacity-sm: #{rgba(#722ed1, 0.1)};
   --m78-color-sub-opacity-md: #{rgba(#722ed1, 0.5)};
   --m78-color-sub-opacity-lg: #{rgba(#722ed1, 0.75)};
 
@@ -80,15 +80,15 @@
 
   // 功能色
   --m78-color-success: var(--m78-green-6);
-  --m78-color-success-opacity-sm: #{rgba(#52c41a, 0.2)};
+  --m78-color-success-opacity-sm: #{rgba(#52c41a, 0.1)};
   --m78-color-success-opacity-md: #{rgba(#52c41a, 0.5)};
   --m78-color-success-opacity-lg: #{rgba(#52c41a, 0.75)};
   --m78-color-error: var(--m78-red-6);
-  --m78-color-error-opacity-sm: #{rgba(#f5222d, 0.2)};
+  --m78-color-error-opacity-sm: #{rgba(#f5222d, 0.1)};
   --m78-color-error-opacity-md: #{rgba(#f5222d, 0.5)};
   --m78-color-error-opacity-lg: #{rgba(#f5222d, 0.75)};
   --m78-color-warn: var(--m78-orange-6);
-  --m78-color-warn-opacity-sm: #{rgba(#fa8c16, 0.2)};
+  --m78-color-warn-opacity-sm: #{rgba(#fa8c16, 0.1)};
   --m78-color-warn-opacity-md: #{rgba(#fa8c16, 0.5)};
   --m78-color-warn-opacity-lg: #{rgba(#fa8c16, 0.75)};
 

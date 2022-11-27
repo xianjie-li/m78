@@ -9,8 +9,8 @@ import {
   UseScrollMeta,
   useSelf,
   useSetState,
-} from "../../";
-import _debounce from "lodash/debounce";
+} from "../../index.js";
+import _debounce from "lodash/debounce.js";
 
 export interface VirtualListOption<Item> {
   /** 需要进行虚拟滚动的列表 */

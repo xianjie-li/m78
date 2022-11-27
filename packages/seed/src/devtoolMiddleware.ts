@@ -1,4 +1,4 @@
-import { Middleware } from "./types";
+import { Middleware } from "./types.js";
 import { AnyObject } from "@m78/utils";
 
 let count = 1;

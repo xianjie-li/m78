@@ -1,4 +1,4 @@
-import { M78SeedState } from "./types";
+import { M78SeedState } from "./types.js";
 /** 黑暗模式处理 */
 export declare function _darkModeHandle(darkMode?: boolean): void;
 /** 国际化处理 */

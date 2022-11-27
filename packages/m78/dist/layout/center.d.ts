@@ -1,5 +1,5 @@
 import React from "react";
-import { ComponentBasePropsWithAny } from "../common";
+import { ComponentBasePropsWithAny } from "../common/index.js";
 interface CenterProps extends ComponentBasePropsWithAny {
     /** false | 挂载到父节点上, 为true时，将尺寸固定到与父元素一致(需要保证父元素position不是static), 为false时，需要通过className或style执行设置尺寸 */
     attach?: boolean;

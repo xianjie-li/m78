@@ -1,11 +1,11 @@
-import { isArray, Size } from "@lxjx/utils";
+import { isArray, Size } from "@m78/utils";
 import {
   _MediaQueryTypeContext,
   MediaQueryMeta,
   MediaQueryObject,
   MediaQueryTypeKeys,
   MediaQueryTypeValues,
-} from "./types";
+} from "./types.js";
 
 /**
  * 根据尺寸检测是何种类型

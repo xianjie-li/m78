@@ -1,0 +1,403 @@
+---
+title: Layout - 布局
+---
+
+# Layout 布局系统
+
+`Layout` 模块提供了大量能简化您布局方式的工具, 包括但不限于以下内容:
+
+- 一个功能强大的 12 列栅格系统和媒体查询工具, 让你能够更为简单的完成布局
+- 一些很常用的声明式布局组件, 如`Tile` `Spacer` `Divider` `AspectRatio` `Flexible`等
+- 大量用于布局的原子类, 如: `.bg-red` `.color-red` `fs-sm` `fs-md` `m-12` `bold` 等等...
+
+<br/>
+
+> 某些开发者会很排斥声明式的布局, 这看起来就像是在所有标签上直接用`style`布局一样, 非常反模式, 但是一旦你开始习惯, 你会发现:
+> 大块/整体的布局使用css, 简单/局部/微调等使用声明式的布局会大大的简化你的开发速度~
+>
+> 举个例子: 你不需要再为一个简单的上色/距离调整等创建一个单独的css文件或是绞尽脑汁的想一个类名了😄. 用你喜欢的方式做事, 不要受限于别人定制的标准, 那可能并不适用于你.
+
+
+## Cells
+
+一个12列栅格系统
+
+- 核心计算通过 js 实现，所以比传统的静态 css 栅格拥有更强的能力, 比如小数位的栅格, 断点几乎支持除了列数以外的所有属性
+- 采用 12 列的栅格系统, 可以更简单的心算, 且得益于小数位栅格的支持，同样可以实现非常灵活的布局，如： 二等分 6 / 三等分 4 / 四等分 3 / 五等分 2.4 / 六等分 2
+- 基于flex，可以提供比传统栅格更灵活的能力, 如自适应, 对齐, order等
+
+### 基础栅格
+
+使用`Cells`和`Cell`来进行栅格布局, 传入`col`来控制栅格数
+
+<demo demo={require("././_demos/cells/base.tsx")} code={require("!!raw-loader!././_demos/cells/base.tsx")}></demo>
+
+### 排列行为
+
+通过`mainAlign`和`crossAlign`来分别控制子项在主轴和交叉轴上的布局方式
+
+<demo demo={require("././_demos/cells/layouts.tsx")} code={require("!!raw-loader!././_demos/cells/layouts.tsx")}></demo>
+
+### 排序
+
+- 通过`offset`来为格设置左右偏移
+- 通过`move`来在不影响格布局流的情况下移动子项
+- 通过`order`来进行排序
+
+<demo demo={require("././_demos/cells/sort.tsx")} code={require("!!raw-loader!././_demos/cells/sort.tsx")}></demo>
+
+### flex
+
+`Cell`支持传入`flex`设置弹性系数
+
+<demo demo={require("././_demos/cells/flex.tsx")} code={require("!!raw-loader!././_demos/cells/flex.tsx")}></demo>
+
+### 响应式栅格
+
+基于后文中的`MediaQuery`组件,  提供了 6 种响应尺寸 `xs` `sm` `md` `lg` `xl` `xxl`
+
+<demo demo={require("./_demos/cells/media-query.tsx")} code={require("!!raw-loader!./_demos/cells/media-query.tsx")}></demo>
+
+这里有一些关于`MediaQuery`断点的注意事项:
+- 实际使用时不可能为每一个断点都设置值，所有断点遵循一套继承机制，以减少编码量: 断点设置会影响其后所有未设置值的断点，比如，设置了`xs`时, `xs`之后的所有断点都会继承`xs`的配置, 如果`xs`后任意一个断点也设置了值，则后续断点会改为继承该断点
+- `hidden` 的继承顺序与其他属性是相反的，也就是从大到小
+- 由于`MediaQuery`支持监听容器, 可以以指定容器而不是默认的窗口来进行响应式控制, 具体见其文档
+
+### API
+
+```ts
+// 继承所有div node的props
+interface Cells {
+  /** 间隔, 为数字时控制4个方向, 两个时分别控制纵横 */
+  gutter?: number | TupleNumber;
+  /** true | 是否允许换行 */
+  wrap?: boolean;
+  /** 'start' | 主轴对齐方式 */
+  mainAlign?: "center" | "start" | "end" | "around" | "between" | "evenly";
+  /** 'start' | 交叉轴对齐方式 */
+  crossAlign?: "stretch" | "start" | "end" | "center";
+  /** 内容 */
+  children: React.ReactNode;
+  /** 指向内部包裹dom的ref */
+  innerRef?: React.Ref<HTMLDivElement>;
+}
+
+interface Cell {
+  /** 占用栅格列数 1 ~ 12 */
+  col?: number;
+  /** 向左或向右偏移指定列数的距离, 影响文档流 */
+  offset?: number;
+  /** 向左或向右移动指定列数的距离, 不会影响原有文档流 */
+  move?: number;
+  /** 控制顺序 */
+  order?: number;
+  /** 手动指定该列的flex值 */
+  flex?: string | number;
+  /** 该项在交叉轴的对齐方式 */
+  align?: FlexWrapProps["crossAlign"];
+  /** 是否隐藏, 此属性与其他属性的继承顺序是相反的 */
+  hidden?: boolean;
+  /** 包裹元素的类名 */
+  className?: string;
+  /** 包裹元素样式 */
+  style?: CSSProperties;
+  /** 处于特定断点下的配置, 取值为number或上方任意字段组成的对象, 如 xs={6} 或 xs={{ col: 5, order: 3, className: "red" }}  */
+  xs?: CellColNumberOrMediaQueryProps;
+  sm?: CellColNumberOrMediaQueryProps;
+  md?: CellColNumberOrMediaQueryProps;
+  lg?: CellColNumberOrMediaQueryProps;
+  xl?: CellColNumberOrMediaQueryProps;
+  xxl?: CellColNumberOrMediaQueryProps;
+  /** 内容 */
+  children?: ReactNode;
+}
+console.log(555)
+```
+
+## MediaQuery
+
+媒体查询工具，帮助你轻松的实现响应式布局
+
+- 响应监听点可以是窗口，也可以是指定容器
+- 包含 6 种断点尺寸, 由小到大依次是 `xs` `sm` `md` `lg` `xl` `xxl`
+
+### 核心组件
+
+最常用的是断点组件`MediaQuery`，它通过 `render children` 接收断点信息来根据断点渲染不同的内容
+
+<demo demo={require("./_demos/media-query/base.tsx")} code={require("!!raw-loader!./_demos/media-query/base.tsx")}></demo>
+
+你也可以使用`MediaQuery`的内部实现 hook`useMediaQuery`, 用法几乎一致，但是 `hook` 的用法会在尺寸类型变更时更新整个消费组件
+
+```ts
+const { meta } = useMediaQuery();
+
+meta.type;
+meta.isSM();
+```
+
+### 断点值
+
+可以方便的为`MediaQuery`设置一组断点配置并在 `render children` 中接收符合当前尺寸的值
+
+> 为了减少断点声明，断点配置包含一组继承规则: 断点会影响其后所有未设置值的断点，比如，设置了xs时, xs之后的所有断点都会继承xs的配置, 如果xs后任意一个断点也设置了值，则后续断点会改为继承该断点
+
+```tsx | pure
+<MediaQuery xs="small" md="medium" xxl="large">
+  {(meta, value) => (
+    <div>
+      {meta.type} {value}
+    </div>
+  )}
+</MediaQuery>
+
+// 如果值的类型比较复杂, 可以通过泛型组件来指定
+<MediaQuery<string | number> xs="small" md={5} xxl="large">
+  {(meta, value /* 这里的类型为 string | number */) => (
+    <div>
+      {meta.type} {value}
+    </div>
+  )}
+</MediaQuery>
+```
+
+### 监听器
+
+一个获取`MediaQueryMeta`变更的事件订阅器，不会主动更新组件
+
+```tsx
+<MediaQueryListener onChange={meta => console.log(meta)} />
+```
+
+另一种更简单的订阅方式是使用`useMediaQueryListener`
+
+```ts
+const meta = useMediaQueryListener(meta => {
+  meta.type;
+  meta.isSM();
+});
+```
+
+### API
+
+```ts
+/**
+ * MediaQuery的所有类型
+ * - 判断是否在某一断点的方式为: 当前断点 <= width < 下一断点
+ * */
+enum MediaQueryTypeKeys {
+  XS = "xs",
+  SM = "sm",
+  MD = "md",
+  LG = "lg",
+  XL = "xl",
+  XXL = "xxl",
+}
+
+/** 主要类型, 包含断点的信息和状态  */
+export interface MediaQueryMeta {
+  /** 当前容器宽度 */
+  width: number;
+  /** 当前容器高度 */
+  height: number;
+  /** 当前类型 */
+  type: MediaQueryTypeKeys;
+  /** 检测是否为指定类型 */
+  isXS: () => boolean;
+  isSM: () => boolean;
+  isMD: () => boolean;
+  isLG: () => boolean;
+  isXL: () => boolean;
+  isXXL: () => boolean;
+  /** 当前尺寸是 xs或sm */
+  isSmall: () => boolean;
+  /** 当前尺寸是 md或lg */
+  isMedium: () => boolean;
+  /** 当前尺寸大于 lg */
+  isLarge: () => boolean;
+}
+
+/**
+ * 通用配置
+ * */
+interface Conf {
+  /** 延迟响应变更的时间(ms) */
+  debounce?: number;
+  /**
+   * 'type' | 监听类型
+   * - 为type时，只在MediaQueryTypeKey变更时更新, 需要注意的时，此时的width和height值为更新时的快照值, 不应该依赖其进行一些计算操作
+   * - 为size时，会在每一次尺寸变更时更新, size模式建议开启debounce, 防止频繁render
+   * */
+  listenType?: "type" | "size";
+  /**
+   * 为不同的断点设置一个值, 符合当前断点的值会传递给children, 实际使用时不可能为每一个断点都设置值，所有断点遵循一套继承机制，以减少编码量:
+   * - 断点会影响其后所有未设置值的断点，比如，设置了xs时, xs之后的所有断点都会继承xs的配置, 如果xs后任意一个断点也设置了值，则后续断点会改为继承该断点
+   * */
+  xs?: Val;
+  sm?: Val;
+  md?: Val;
+  lg?: Val;
+  xl?: Val;
+  xxl?: Val;
+  /** 默认的断点值继承机制为从左到右，传入此项将其继承顺序颠倒 */
+  reverse?: boolean;
+
+  /** ## MediaQuery组件特有配置 */
+  /** 接收断点信息并执行渲染的render函数, value为当前命中断点的传入值 */
+  children: (meta: MediaQueryMeta, value: Val) => ReactElement<any, any> | null;
+}
+
+/** useMediaQueryListener/MediaQueryListener 配置 */
+interface MediaQueryListenerProps {
+  /** 断点变更回调 */
+  onChange: (meta: MediaQueryMeta) => void;
+}
+```
+
+
+## Flexible
+
+基于 `flex` 的一组布局组件
+
+<demo demo={require("./_demos/flex.tsx")} code={require("!!raw-loader!./_demos/flex.tsx")}></demo>
+
+<br/>
+
+```ts | pure
+// Row/Column
+interface FlexWrapProps extends DIVProps {
+  /** 'start' | 主轴对齐方式 */
+  mainAlign?: "center" | "start" | "end" | "around" | "between" | "evenly";
+  /** 'start' | 交叉轴对齐方式 */
+  crossAlign?: "stretch" | "start" | "end" | "center";
+  /** 内容 */
+  children: React.ReactNode;
+  /** 指向内部包裹dom的ref */
+  innerRef?: React.Ref<HTMLDivElement>;
+}
+
+// Flex
+interface FlexProps extends DIVProps {
+  /** 1 | 弹性系数 */
+  flex?: number | string;
+  /** 排序 */
+  order?: number;
+  /** 单独设置在容器交叉轴上的对齐方式  */
+  align?: FlexWrapProps["crossAlign"];
+  /** 内容 */
+  children?: React.ReactNode;
+  /** 指向内部包裹dom的ref */
+  innerRef?: React.Ref<HTMLDivElement>;
+}
+```
+
+## Tile
+
+一个非常常用的布局组件，包含左侧、右侧、内容区、描述区四个位置
+
+<demo demo={require("./_demos/tile.tsx")} code={require("!!raw-loader!./_demos/tile.tsx")}></demo>
+
+```ts | pure
+interface TileProps extends Omit<DIVProps, "title"> {
+  /** 主要内容 */
+  title?: React.ReactNode;
+  /** title的别名 */
+  children?: React.ReactNode;
+  /** 次要内容 */
+  desc?: React.ReactNode;
+  /** 前导内容 */
+  leading?: React.ReactNode;
+  /** 尾随内容 */
+  trailing?: React.ReactNode;
+  /** 纵轴的对齐方式 */
+  crossAlign?: FlexWrapProps["crossAlign"];
+  /** 指向内部包裹dom的ref */
+  innerRef?: React.Ref<HTMLDivElement>;
+  /** 内容区域超出是否显示, 默认为隐藏, 以适应更多的场景 */
+  overflowVisible?: boolean;
+}
+```
+
+## AspectRatio
+
+一个永远保持固定宽高比的容器
+
+<demo demo={require("./_demos/aspect-ratio.tsx")} code={require("!!raw-loader!./_demos/aspect-ratio.tsx")}></demo>
+
+```ts | pure
+interface AspectRatioProps {
+  /** 1 | 网格项的宽高比 */
+  ratio?: number;
+  /** 内容 */
+  children?: React.ReactNode;
+  /** 包裹元素的类名 */
+  className?: string;
+  /** 包裹元素样式 */
+  style?: CSSProperties;
+}
+```
+
+## Divider
+
+横向或纵向元素间添加分割线
+
+<demo demo={require("./_demos/divider.tsx")} code={require("!!raw-loader!./_demos/divider.tsx")}></demo>
+
+```ts | pure
+interface DividerProps {
+  /** false | 设置为垂直分割线 */
+  vertical?: boolean;
+  /** 100%(横向) / 0.5(纵向) | 分割线尺寸 */
+  width?: number;
+  /** 0.5(横向) / 1.2em(纵向) | 分割线尺寸 */
+  height?: number;
+  /** 颜色 */
+  color?: string;
+  /** 12 | 间距 */
+  margin?: number;
+  /** 包裹元素的类名 */
+  className?: string;
+  /** 包裹元素样式 */
+  style?: CSSProperties;
+}
+```
+
+## Spacer
+
+横向或纵向元素间填充空白
+
+<demo demo={require("./_demos/spacer.tsx")} code={require("!!raw-loader!./_demos/spacer.tsx")}></demo>
+
+```ts | pure
+interface SpacerProps {
+  /** 宽度 */
+  width?: number;
+  /** 16 | 高度,  */
+  height?: number;
+  /** 如果子项传入一个列表，会在每一个子项间设置间距 */
+  children?: React.ReactElement[];
+  /** 包裹元素的类名 */
+  className?: string;
+  /** 包裹元素样式 */
+  style?: CSSProperties;
+}
+```
+
+## Center
+
+将子组件居中放置
+
+<demo demo={require("./_demos/center.tsx")} code={require("!!raw-loader!./_demos/center.tsx")}></demo>
+
+```ts | pure
+interface CenterProps {
+  /** false | 挂载到父节点上, 为true时，将尺寸固定到与父元素一致(需要保证父元素position不是static), 为false时，需要通过className或style执行设置尺寸 */
+  attach?: boolean;
+  /** 需要居中的单个子元素 */
+  children?: React.ReactElement | string;
+  /** 包裹元素的类名 */
+  className?: string;
+  /** 包裹元素样式 */
+  style?: CSSProperties;
+}
+```

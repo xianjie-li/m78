@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useFn } from "../../";
+import { useFn } from "../../index.js";
 
 export interface UseMountStateConfig {
   /** true | 如果为true，在第一次启用时才真正挂载内容 */

@@ -1,4 +1,4 @@
-import { Seed, CreateSeedConfig, Share, Subscribe } from './types';
+import { Seed, CreateSeedConfig, Share, Subscribe } from "./types.js";
 /**
  * 生成和实现subscribe() api
  * - 通知功能在setDeps内部

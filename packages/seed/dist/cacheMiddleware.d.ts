@@ -1,4 +1,4 @@
-import { Middleware } from './types';
+import { Middleware } from "./types.js";
 export interface CacheMiddlewareConf {
     /**
      * expire time (ms) for performance reasons, only check for expiration during initialization
@@ -17,7 +17,7 @@ export interface CacheMiddlewareConf {
      *
      * session | 缓存类型，不共享缓存key
      * */
-    type?: 'session' | 'local';
+    type?: "session" | "local";
     /**
      * cache all keys by default. Set this to enable caching for a specified key
      *

@@ -18,7 +18,7 @@ import { useRef, useMemo } from "react";
         memoFnRef.current = wrapper ? wrapper(memoFn) : memoFn;
     };
     var fnRef = useRef();
-    var memoFnRef = useRef(null);
+    var memoFnRef = useRef();
     // 更新缓存fn
     useMemo(function() {
         if (!memoFnRef.current) return;

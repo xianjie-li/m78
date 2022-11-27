@@ -3,8 +3,8 @@ import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
 import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import { useEffect, useRef } from "react";
 import { isNumber, isDom } from "@m78/utils";
-import _clamp from "lodash/clamp";
-import { getRefDomOrDom, useSelf, useThrottle } from "../../";
+import _clamp from "lodash/clamp.js";
+import { getRefDomOrDom, useSelf, useThrottle } from "../../index.js";
 import { useSpring, config } from "react-spring";
 export function useScroll() {
     var ref = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {}, el = ref.el, onScroll = ref.onScroll, _throttleTime = ref.throttleTime, throttleTime = _throttleTime === void 0 ? 100 : _throttleTime, _offset = ref.offset, offset = _offset === void 0 ? 0 : _offset, offsetX = ref.offsetX, offsetY = ref.offsetY, _touchOffset = ref.touchOffset, touchOffset = _touchOffset === void 0 ? 0 : _touchOffset;

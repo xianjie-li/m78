@@ -1,6 +1,6 @@
 import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import { useState, useCallback } from "react";
-import { useStorageState } from "../../";
+import { useStorageState } from "../../index.js";
 /**
  * useSetState的storage版本
  * */ export var useStorageSetState = function(key) {

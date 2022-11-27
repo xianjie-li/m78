@@ -1,4 +1,4 @@
-import { useFn } from "../../";
+import { useFn } from "../../index.js";
 import { useEffect } from "react";
 import { AnyFunction, CustomEvent, createEvent as create } from "@m78/utils";
 

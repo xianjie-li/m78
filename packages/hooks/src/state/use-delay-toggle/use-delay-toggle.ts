@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSelf } from "../../";
+import { useSelf } from "../../index.js";
 
 /** 代理一个toggle状态, 确保其在关闭前至少开启了duration毫秒, 用于解决loading等组件的闪烁问题 */
 export function useDelayToggle(toggle: boolean, duration = 300): boolean {

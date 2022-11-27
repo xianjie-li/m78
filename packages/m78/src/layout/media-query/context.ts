@@ -1,6 +1,6 @@
 import { createContext } from "react";
-import { _MediaQueryTypeContext } from "./types";
-import { _onChangeHandle } from "./common";
+import { _MediaQueryTypeContext } from "./types.js";
+import { _onChangeHandle } from "./common.js";
 
 export const _defaultContext: _MediaQueryTypeContext = {
   onChange: (size) => _onChangeHandle(size, _defaultContext),

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { useMeasure } from "@m78/hooks";
-import { _mediaQueryCtx } from "./context";
+import { _mediaQueryCtx } from "./context.js";
 
 const style: React.CSSProperties = {
   position: "absolute",

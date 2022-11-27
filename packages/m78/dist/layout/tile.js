@@ -3,7 +3,7 @@ import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
 import _object_without_properties from "@swc/helpers/src/_object_without_properties.mjs";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useMemo } from "react";
-import { _Row } from "./flex";
+import { _Row } from "./flex.js";
 import cls from "clsx";
 import { isTruthyOrZero } from "@m78/utils";
 var _Tile = function(_param) {

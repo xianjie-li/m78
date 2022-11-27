@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import React, { useEffect } from "react";
-import { useSelect } from "./use-select";
+import { useSelect } from "./use-select.js";
 
 test("useSelect", async () => {
   const list = [1, 2, 3, 4, 5];

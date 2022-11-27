@@ -1,6 +1,6 @@
 import { AnyObject, createRandString, isArray, isNumber } from "@m78/utils";
-import { useFn, useSelf, useSetState, useUpdate } from "../../";
-import _differenceBy from "lodash/differenceBy";
+import { useFn, useSelf, useSetState, useUpdate } from "../../index.js";
+import _differenceBy from "lodash/differenceBy.js";
 import { useEffect } from "react";
 
 type IDType = string | number;

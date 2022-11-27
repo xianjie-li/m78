@@ -1,5 +1,5 @@
-import { _createUseState } from "./create-use-state";
-import { _createState } from "./create-state";
+import { _createUseState } from "./create-use-state.js";
+import { _createState } from "./create-state.js";
 export var _insideMiddleware = function(bonus) {
     if (bonus.init) {
         return bonus.config;

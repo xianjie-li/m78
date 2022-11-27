@@ -1,6 +1,6 @@
 import React from "react";
 import cls from "clsx";
-import { FlexWrapProps, FlexProps } from "./types";
+import { FlexWrapProps, FlexProps } from "./types.js";
 
 function getClasses(
   mainAlign?: FlexWrapProps["mainAlign"],

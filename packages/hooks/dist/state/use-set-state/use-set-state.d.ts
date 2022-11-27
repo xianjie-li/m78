@@ -1,4 +1,4 @@
-import { SetState, StateInitState } from "../../";
+import { SetState, StateInitState } from "../../index.js";
 import { AnyObject } from "@m78/utils";
 /**
  * 实现类似react类组件的setState Api

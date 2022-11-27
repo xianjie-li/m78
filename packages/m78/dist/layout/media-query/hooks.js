@@ -1,9 +1,9 @@
 import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import { useContext, useEffect } from "react";
 import { useFn, useSetState } from "@m78/hooks";
-import _debounce from "lodash/debounce";
-import { _defaultContext, _mediaQueryCtx } from "./context";
-import { _mediaQueryGetter, _onChangeHandle } from "./common";
+import _debounce from "lodash/debounce.js";
+import { _defaultContext, _mediaQueryCtx } from "./context.js";
+import { _mediaQueryGetter, _onChangeHandle } from "./common.js";
 /**
  * 窗口尺寸改变时通过回调通知传入子项帮助渲染
  * */ export function _useMediaQuery(conf) {

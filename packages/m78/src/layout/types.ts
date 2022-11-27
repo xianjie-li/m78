@@ -1,5 +1,5 @@
 import React from "react";
-import { DIVProps } from "../common";
+import { DIVProps } from "../common/index.js";
 
 /* * * * * * * * * * * * * * * * * *
  * Flex

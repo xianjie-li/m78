@@ -1,4 +1,4 @@
-import { _useMediaQuery, _useMediaQueryListener } from "./hooks";
+import { _useMediaQuery, _useMediaQueryListener } from "./hooks.js";
 /**
  * 窗口尺寸改变时通过回调通知
  * */ export function _MediaQueryListener(param) {

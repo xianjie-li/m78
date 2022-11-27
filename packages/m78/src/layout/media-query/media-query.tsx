@@ -1,5 +1,5 @@
-import { MediaQueryListenerProps, MediaQueryProps } from "./types";
-import { _useMediaQuery, _useMediaQueryListener } from "./hooks";
+import { MediaQueryListenerProps, MediaQueryProps } from "./types.js";
+import { _useMediaQuery, _useMediaQueryListener } from "./hooks.js";
 
 /**
  * 窗口尺寸改变时通过回调通知

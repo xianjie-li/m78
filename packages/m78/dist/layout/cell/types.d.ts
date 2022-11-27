@@ -1,4 +1,4 @@
-import { ComponentBaseProps, ComponentBasePropsWithAny } from "../../common";
+import { ComponentBaseProps, ComponentBasePropsWithAny } from "../../common/index.js";
 import { FlexWrapProps } from "../types";
 import { TupleNumber } from "@m78/utils";
 import { ReactNode } from "react";

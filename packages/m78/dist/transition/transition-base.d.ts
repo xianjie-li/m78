@@ -1,4 +1,4 @@
-import { TransitionBaseProps } from "./types";
+import { TransitionBaseProps } from "./types.js";
 export declare const _TransitionBase: {
     (props: TransitionBaseProps): JSX.Element | null;
     displayName: string;

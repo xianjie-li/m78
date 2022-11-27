@@ -1,6 +1,6 @@
 import React from "react";
 import cls from "clsx";
-import { ComponentBasePropsWithAny } from "../common";
+import { ComponentBasePropsWithAny } from "../common/index.js";
 
 interface AspectRatioProps extends ComponentBasePropsWithAny {
   /** 1 | 网格项的宽高比 */

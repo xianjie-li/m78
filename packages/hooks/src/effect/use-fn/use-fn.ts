@@ -15,7 +15,7 @@ export function useFn<T extends AnyFunction>(
   deps = [] as any[]
 ) {
   const fnRef = useRef<T>();
-  const memoFnRef = useRef<T>(null!);
+  const memoFnRef = useRef<T>();
 
   // 更新缓存fn
   useMemo(() => {
@@ -39,5 +39,5 @@ export function useFn<T extends AnyFunction>(
     memoFnRef.current = wrapper ? wrapper(memoFn as T) : (memoFn as T);
   }
 
-  return memoFnRef.current;
+  return memoFnRef.current as T;
 }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useFn } from "../../";
+import { useFn } from "../../index.js";
 
 export function useToggle(init = false) {
   const [toggle, set] = useState(init);

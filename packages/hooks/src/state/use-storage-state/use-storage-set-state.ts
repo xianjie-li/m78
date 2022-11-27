@@ -4,7 +4,7 @@ import {
   UseSetStateTuple,
   UseStorageStateOptions,
   useStorageState,
-} from "../../";
+} from "../../index.js";
 import { AnyObject } from "@m78/utils";
 
 /**

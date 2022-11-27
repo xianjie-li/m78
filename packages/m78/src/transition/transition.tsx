@@ -1,7 +1,7 @@
 import React from "react";
 import { config } from "react-spring";
-import { TransitionProps, _TransitionConfigsType } from "./types";
-import { _TransitionBase as TransitionBase } from "./transition-base";
+import { TransitionProps, _TransitionConfigsType } from "./types.js";
+import { _TransitionBase as TransitionBase } from "./transition-base.js";
 
 /* !这里的类型需要与./type.ts中的TransitionTypes同步 */
 const transitionConfigs: _TransitionConfigsType = {

@@ -1,4 +1,4 @@
-import { CellColProps, CellRowProps } from "./types";
+import { CellColProps, CellRowProps } from "./types.js";
 declare function _Cells(props: CellRowProps): JSX.Element;
 declare namespace _Cells {
     var displayName: string;

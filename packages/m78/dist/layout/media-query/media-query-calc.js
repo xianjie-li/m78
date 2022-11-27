@@ -2,7 +2,7 @@ import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import { jsx as _jsx } from "react/jsx-runtime";
 import React, { useContext, useEffect } from "react";
 import { useMeasure } from "@m78/hooks";
-import { _mediaQueryCtx } from "./context";
+import { _mediaQueryCtx } from "./context.js";
 var style = {
     position: "absolute",
     visibility: "hidden",

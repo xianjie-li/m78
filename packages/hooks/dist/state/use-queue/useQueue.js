@@ -3,8 +3,8 @@ import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
 import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
 import { createRandString, isArray, isNumber } from "@m78/utils";
-import { useFn, useSelf, useSetState, useUpdate } from "../../";
-import _differenceBy from "lodash/differenceBy";
+import { useFn, useSelf, useSetState, useUpdate } from "../../index.js";
+import _differenceBy from "lodash/differenceBy.js";
 import { useEffect } from "react";
 /*
  * old[] <->  current  <-> list[]
