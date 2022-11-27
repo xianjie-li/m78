@@ -42,8 +42,6 @@ const copyFailIcon = <IconClose className="color-error" />;
 const Demo = ({ demo, code }: DemoProps) => {
   const [codeOpen, setCodeOpen] = useState(false);
 
-  console.log(code);
-
   const { list, first } = useMemo(() => {
     if (!code) return { list: [] as DemoCodeItem[], first: null };
 
