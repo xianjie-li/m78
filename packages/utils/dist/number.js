@@ -47,3 +47,9 @@ import { isNumber, isWeakNumber } from "./is.js";
     if (isNumber(max) && val > max) return max;
     return val;
 }
+/** 将元组中的每一项加上指定的值 */ export function tupleAdd(tup, num) {
+    return [
+        tup[0] + num,
+        tup[1] + num
+    ];
+}

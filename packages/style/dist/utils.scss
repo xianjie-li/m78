@@ -168,19 +168,19 @@
   }
 }
 
-@mixin effect-font-color() {
+@mixin effect-font-color($c1: var(--m78-color), $c2: var(--m78-color-4), $c3: var(--m78-color-8)) {
   cursor: pointer;
-  color: var(--m78-color);
+  color: $c1;
   transition: transform var(--m78-animate-base);
 
 
   &:hover {
-    color: var(--m78-color-4);
+    color: $c2;
   }
 
   &:active {
     transition: transform var(--m78-animate-base) 0.1s;
-    color: var(--m78-color-8);
+    color: $c3;
   }
 }
 

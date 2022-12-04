@@ -1,0 +1,1016 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`input base 1`] = `
+<div>
+  <div>
+    <span
+      className="m78 m78-init m78-input"
+    >
+      <input
+        className="m78-input_inner"
+        disabled={false}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onCompositionEnd={[Function]}
+        onCompositionStart={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        placeholder="一个输入框"
+        style={Object {}}
+        type="text"
+        value=""
+      />
+    </span>
+  </div>
+  <div
+    className="mt-16"
+  >
+    <span
+      className="m78 m78-init m78-input"
+    >
+      <input
+        className="m78-input_inner"
+        disabled={false}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onCompositionEnd={[Function]}
+        onCompositionStart={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        placeholder="搜索框"
+        style={Object {}}
+        type="text"
+        value=""
+      />
+      <div
+        className="m78 m78-divider __vertical"
+        style={
+          Object {
+            "backgroundColor": undefined,
+            "height": undefined,
+            "margin": "0 4px",
+            "width": undefined,
+          }
+        }
+      />
+      <svg
+        aria-label="search"
+        className="m78 m78-icon m78-icon_icon-search m78-input_icon"
+        data-name="icon-search"
+        focusable={false}
+        height={24}
+        onClick={[Function]}
+        onKeyPress={[Function]}
+        role="button"
+        tabIndex={0}
+        viewBox="0 0 24 24"
+        width={24}
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+        />
+      </svg>
+    </span>
+  </div>
+  <div
+    className="mt-16"
+  >
+    <span
+      className="m78 m78-init m78-input"
+    >
+      <span
+        className="m78-input_prefix"
+      >
+        🍀
+      </span>
+      <div
+        className="m78 m78-divider __vertical"
+        style={
+          Object {
+            "backgroundColor": undefined,
+            "height": undefined,
+            "margin": "0 4px",
+            "width": undefined,
+          }
+        }
+      />
+      <input
+        className="m78-input_inner"
+        disabled={false}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onCompositionEnd={[Function]}
+        onCompositionStart={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        placeholder="前置与后置内容"
+        style={Object {}}
+        type="text"
+        value=""
+      />
+      <div
+        className="m78 m78-divider __vertical"
+        style={
+          Object {
+            "backgroundColor": undefined,
+            "height": undefined,
+            "margin": "0 4px",
+            "width": undefined,
+          }
+        }
+      />
+      <span
+        className="m78-input_suffix"
+      >
+        ✨
+      </span>
+    </span>
+  </div>
+  <div
+    className="mt-16"
+  >
+    <span
+      className="m78 m78-init m78-input"
+    >
+      <span
+        className="m78-input_prefix"
+      >
+        邮箱
+      </span>
+      <div
+        className="m78 m78-divider __vertical"
+        style={
+          Object {
+            "backgroundColor": undefined,
+            "height": undefined,
+            "margin": "0 4px",
+            "width": undefined,
+          }
+        }
+      />
+      <input
+        className="m78-input_inner"
+        disabled={false}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onCompositionEnd={[Function]}
+        onCompositionStart={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        placeholder="任意合法的ReactNode"
+        style={Object {}}
+        type="text"
+        value=""
+      />
+      <div
+        className="m78 m78-divider __vertical"
+        style={
+          Object {
+            "backgroundColor": undefined,
+            "height": undefined,
+            "margin": "0 4px",
+            "width": undefined,
+          }
+        }
+      />
+      <span
+        className="m78-input_suffix"
+      >
+        @qq.com
+      </span>
+    </span>
+  </div>
+  <div
+    className="mt-16"
+  >
+    <span
+      className="m78 m78-init m78-input"
+    >
+      <input
+        className="m78-input_inner"
+        disabled={false}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onCompositionEnd={[Function]}
+        onCompositionStart={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        placeholder="一段密码"
+        style={Object {}}
+        type="password"
+        value=""
+      />
+      <div
+        className="m78 m78-divider __vertical"
+        style={
+          Object {
+            "backgroundColor": undefined,
+            "height": undefined,
+            "margin": "0 4px",
+            "width": undefined,
+          }
+        }
+      />
+      <svg
+        className="m78 m78-icon m78-icon_icon-visibility m78-input_icon"
+        data-name="icon-visibility"
+        focusable={false}
+        height={24}
+        onClick={[Function]}
+        viewBox="0 0 24 24"
+        width={24}
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M12 4C7 4 2.73 7.11 1 11.5 2.73 15.89 7 19 12 19s9.27-3.11 11-7.5C21.27 7.11 17 4 12 4zm0 12.5c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
+        />
+      </svg>
+    </span>
+  </div>
+  <div
+    className="mt-16"
+  >
+    <span
+      className="m78 m78-init m78-input"
+    >
+      <input
+        className="m78-input_inner"
+        disabled={false}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onCompositionEnd={[Function]}
+        onCompositionStart={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        placeholder="加载状态"
+        style={Object {}}
+        type="text"
+        value=""
+      />
+      <div
+        className="m78 m78-divider __vertical"
+        style={
+          Object {
+            "backgroundColor": undefined,
+            "height": undefined,
+            "margin": "0 4px",
+            "width": undefined,
+          }
+        }
+      />
+      <span
+        className="m78-input_icon"
+      >
+        <div
+          className="m78 m78-spin __small"
+          style={
+            Object {
+              "__progress": 0,
+              "opacity": 0,
+              "pointerEvents": "none",
+              "visibility": "hidden",
+            }
+          }
+        >
+          <div
+            className="m78-spin_inner"
+            style={
+              Object {
+                "top": undefined,
+              }
+            }
+          >
+            <svg
+              className="m78-spin-svg m78-spin_unit"
+              fill="transparent"
+              height={200}
+              viewBox="0 0 200 200"
+              width={200}
+            >
+              <circle
+                className="m78-spin-svg_bg"
+                cx={100}
+                cy={100}
+                r={70}
+                strokeWidth={60}
+              />
+              <circle
+                cx={100}
+                cy={100}
+                r={70}
+                stroke="url(#Gradient1)"
+                strokeDasharray="628.3185307179587 628.3185307179587"
+                strokeLinecap="round"
+                strokeWidth={60}
+              >
+                <animate
+                  attributeName="stroke-dashoffset"
+                  dur="5s"
+                  repeatCount="indefinite"
+                  values="628.3185307179587;0;628.3185307179587"
+                />
+              </circle>
+              <defs>
+                <linearGradient
+                  id="Gradient1"
+                >
+                  <stop
+                    className="m78-spin-svg_stop1"
+                    offset="0%"
+                  />
+                  <stop
+                    className="m78-spin-svg_stop2"
+                    offset="100%"
+                  />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+        </div>
+      </span>
+    </span>
+  </div>
+  <div
+    className="mt-16"
+  >
+    <span
+      className="m78 m78-init m78-input __disabled"
+    >
+      <input
+        className="m78-input_inner"
+        disabled={true}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onCompositionEnd={[Function]}
+        onCompositionStart={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        placeholder="阻塞型加载"
+        style={Object {}}
+        type="text"
+        value=""
+      />
+      <div
+        className="m78 m78-divider __vertical"
+        style={
+          Object {
+            "backgroundColor": undefined,
+            "height": undefined,
+            "margin": "0 4px",
+            "width": undefined,
+          }
+        }
+      />
+      <span
+        className="m78-input_icon"
+      >
+        <div
+          className="m78 m78-spin __small __full"
+          style={
+            Object {
+              "__progress": 0,
+              "opacity": 0,
+              "pointerEvents": "none",
+              "visibility": "hidden",
+            }
+          }
+        >
+          <div
+            className="m78-spin_inner"
+            style={
+              Object {
+                "top": undefined,
+              }
+            }
+          >
+            <svg
+              className="m78-spin-svg m78-spin_unit"
+              fill="transparent"
+              height={200}
+              viewBox="0 0 200 200"
+              width={200}
+            >
+              <circle
+                className="m78-spin-svg_bg"
+                cx={100}
+                cy={100}
+                r={70}
+                strokeWidth={60}
+              />
+              <circle
+                cx={100}
+                cy={100}
+                r={70}
+                stroke="url(#Gradient1)"
+                strokeDasharray="628.3185307179587 628.3185307179587"
+                strokeLinecap="round"
+                strokeWidth={60}
+              >
+                <animate
+                  attributeName="stroke-dashoffset"
+                  dur="5s"
+                  repeatCount="indefinite"
+                  values="628.3185307179587;0;628.3185307179587"
+                />
+              </circle>
+              <defs>
+                <linearGradient
+                  id="Gradient1"
+                >
+                  <stop
+                    className="m78-spin-svg_stop1"
+                    offset="0%"
+                  />
+                  <stop
+                    className="m78-spin-svg_stop2"
+                    offset="100%"
+                  />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+        </div>
+      </span>
+    </span>
+  </div>
+  <div
+    className="mt-16"
+  >
+    <span
+      className="m78 m78-init m78-input __readonly"
+    >
+      <input
+        className="m78-input_inner"
+        disabled={false}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onCompositionEnd={[Function]}
+        onCompositionStart={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        readOnly={true}
+        style={Object {}}
+        type="text"
+        value="readOnly"
+      />
+    </span>
+  </div>
+  <div
+    className="mt-16"
+  >
+    <span
+      className="m78 m78-init m78-input __disabled"
+    >
+      <input
+        className="m78-input_inner"
+        disabled={true}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onCompositionEnd={[Function]}
+        onCompositionStart={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        placeholder="禁用"
+        style={Object {}}
+        type="text"
+        value=""
+      />
+    </span>
+  </div>
+  <div
+    className="mt-16"
+  >
+    <span
+      className="m78 m78-init m78-input __info"
+    >
+      <input
+        className="m78-input_inner"
+        disabled={false}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onCompositionEnd={[Function]}
+        onCompositionStart={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        placeholder="强调"
+        style={Object {}}
+        type="text"
+        value=""
+      />
+    </span>
+  </div>
+  <div
+    className="mt-16"
+  >
+    <span
+      className="m78 m78-init m78-input __success"
+    >
+      <input
+        className="m78-input_inner"
+        disabled={false}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onCompositionEnd={[Function]}
+        onCompositionStart={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        placeholder="成功"
+        style={Object {}}
+        type="text"
+        value=""
+      />
+    </span>
+  </div>
+  <div
+    className="mt-16"
+  >
+    <span
+      className="m78 m78-init m78-input __warning"
+    >
+      <input
+        className="m78-input_inner"
+        disabled={false}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onCompositionEnd={[Function]}
+        onCompositionStart={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        placeholder="警告"
+        style={Object {}}
+        type="text"
+        value=""
+      />
+    </span>
+  </div>
+  <div
+    className="mt-16"
+  >
+    <span
+      className="m78 m78-init m78-input __error"
+    >
+      <input
+        className="m78-input_inner"
+        disabled={false}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onCompositionEnd={[Function]}
+        onCompositionStart={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        placeholder="失败"
+        style={Object {}}
+        type="text"
+        value=""
+      />
+    </span>
+  </div>
+  <div
+    className="mt-16"
+  >
+    <span
+      className="m78 m78-init m78-input"
+    >
+      <input
+        className="m78-input_inner"
+        disabled={false}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onCompositionEnd={[Function]}
+        onCompositionStart={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        placeholder="输入计数"
+        style={Object {}}
+        type="text"
+        value=""
+      />
+    </span>
+  </div>
+  <div
+    className="mt-16"
+  >
+    <span
+      className="m78 m78-init m78-input __small"
+    >
+      <input
+        className="m78-input_inner"
+        disabled={false}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onCompositionEnd={[Function]}
+        onCompositionStart={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        placeholder="小输入框"
+        style={Object {}}
+        type="text"
+        value=""
+      />
+    </span>
+  </div>
+  <div
+    className="mt-16"
+  >
+    <span
+      className="m78 m78-init m78-input"
+    >
+      <input
+        className="m78-input_inner"
+        disabled={false}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onCompositionEnd={[Function]}
+        onCompositionStart={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        placeholder="中输入框"
+        style={Object {}}
+        type="text"
+        value=""
+      />
+    </span>
+  </div>
+  <div
+    className="mt-16"
+  >
+    <span
+      className="m78 m78-init m78-input __large"
+    >
+      <input
+        className="m78-input_inner"
+        disabled={false}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onCompositionEnd={[Function]}
+        onCompositionStart={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        placeholder="大输入框"
+        style={Object {}}
+        type="text"
+        value=""
+      />
+    </span>
+  </div>
+  <div
+    className="mt-16"
+  >
+    <span
+      className="m78 m78-init m78-input __no-border"
+    >
+      <input
+        className="m78-input_inner"
+        disabled={false}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onCompositionEnd={[Function]}
+        onCompositionStart={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        placeholder="无边框"
+        style={Object {}}
+        type="text"
+        value=""
+      />
+    </span>
+  </div>
+  <div
+    className="mt-16"
+  >
+    <span
+      className="m78 m78-init m78-input __error __textarea"
+    >
+      <textarea
+        className="m78-input_inner"
+        disabled={false}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onCompositionEnd={[Function]}
+        onCompositionStart={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        placeholder="多行输入+最大长度+自动高度"
+        style={
+          Object {
+            "height": 0,
+            "overflow": "hidden",
+            "resize": "none",
+          }
+        }
+        type="text"
+        value=""
+      />
+    </span>
+  </div>
+  <div
+    className="mt-16"
+  >
+    <span
+      className="m78 m78-init m78-input __success __textarea"
+    >
+      <textarea
+        className="m78-input_inner"
+        disabled={false}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onCompositionEnd={[Function]}
+        onCompositionStart={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        placeholder="关闭自动高度"
+        style={
+          Object {
+            "height": 0,
+            "overflow": "auto",
+            "resize": undefined,
+          }
+        }
+        type="text"
+        value=""
+      />
+    </span>
+  </div>
+  <div
+    className="mt-16"
+  >
+    <span
+      className="m78 m78-init m78-input __full-width"
+    >
+      <input
+        className="m78-input_inner"
+        disabled={false}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onCompositionEnd={[Function]}
+        onCompositionStart={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        placeholder="不限制最大宽度"
+        style={Object {}}
+        type="text"
+        value=""
+      />
+    </span>
+  </div>
+</div>
+`;
+
+exports[`input num 1`] = `
+<div>
+  <div>
+    <span
+      className="m78 m78-init m78-input"
+    >
+      <input
+        className="m78-input_inner"
+        disabled={false}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onCompositionEnd={[Function]}
+        onCompositionStart={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        placeholder="只能输入数字"
+        style={Object {}}
+        type="tel"
+        value=""
+      />
+    </span>
+  </div>
+  <div
+    className="mt-16"
+  >
+    <span
+      className="m78 m78-init m78-input"
+    >
+      <input
+        className="m78-input_inner"
+        disabled={false}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onCompositionEnd={[Function]}
+        onCompositionStart={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        placeholder="只能输入整数"
+        style={Object {}}
+        type="tel"
+        value=""
+      />
+    </span>
+  </div>
+  <div
+    className="mt-16"
+  >
+    <span
+      className="m78 m78-init m78-input"
+    >
+      <input
+        autoFocus={true}
+        className="m78-input_inner"
+        disabled={false}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onCompositionEnd={[Function]}
+        onCompositionStart={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        placeholder="只能输入正整数"
+        style={Object {}}
+        type="tel"
+        value=""
+      />
+    </span>
+  </div>
+  <div
+    className="mt-16"
+  >
+    <span
+      className="m78 m78-init m78-input"
+    >
+      <input
+        className="m78-input_inner"
+        disabled={false}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onCompositionEnd={[Function]}
+        onCompositionStart={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        placeholder="最小-1000, 最大1000"
+        style={Object {}}
+        type="tel"
+        value=""
+      />
+    </span>
+  </div>
+  <div
+    className="mt-16"
+  >
+    <span
+      className="m78 m78-init m78-input"
+    >
+      <input
+        className="m78-input_inner"
+        disabled={false}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onCompositionEnd={[Function]}
+        onCompositionStart={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        placeholder="步进器"
+        style={Object {}}
+        type="tel"
+        value=""
+      />
+      <div
+        className="m78 m78-divider __vertical"
+        style={
+          Object {
+            "backgroundColor": undefined,
+            "height": undefined,
+            "margin": "0 4px",
+            "width": undefined,
+          }
+        }
+      />
+      <div
+        className="m78-input_icon m78-input_num-ctrl"
+      >
+        <button
+          className="m78 m78-init m78-btn m78-effect __md __small __icon __square-icon"
+          disabled={false}
+          onClick={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          type="button"
+        >
+          <svg
+            className="m78 m78-icon m78-icon_icon-remove"
+            data-name="icon-remove"
+            focusable={false}
+            height={24}
+            viewBox="0 0 24 24"
+            width={24}
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M18 13H6c-.55 0-1-.45-1-1s.45-1 1-1h12c.55 0 1 .45 1 1s-.45 1-1 1z"
+            />
+          </svg>
+        </button>
+        <button
+          className="m78 m78-init m78-btn m78-effect __md __small __icon __square-icon"
+          disabled={false}
+          onClick={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          type="button"
+        >
+          <svg
+            className="m78 m78-icon m78-icon_icon-add"
+            data-name="icon-add"
+            focusable={false}
+            height={24}
+            viewBox="0 0 24 24"
+            width={24}
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M18 13h-5v5c0 .55-.45 1-1 1s-1-.45-1-1v-5H6c-.55 0-1-.45-1-1s.45-1 1-1h5V6c0-.55.45-1 1-1s1 .45 1 1v5h5c.55 0 1 .45 1 1s-.45 1-1 1z"
+            />
+          </svg>
+        </button>
+      </div>
+    </span>
+  </div>
+  <div
+    className="mt-16"
+  >
+    <span
+      className="m78 m78-init m78-input"
+    >
+      <input
+        className="m78-input_inner"
+        disabled={false}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onCompositionEnd={[Function]}
+        onCompositionStart={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        placeholder="步进器"
+        style={Object {}}
+        type="tel"
+        value=""
+      />
+      <div
+        className="m78 m78-divider __vertical"
+        style={
+          Object {
+            "backgroundColor": undefined,
+            "height": undefined,
+            "margin": "0 4px",
+            "width": undefined,
+          }
+        }
+      />
+      <div
+        className="m78-input_icon m78-input_num-ctrl"
+      >
+        <button
+          className="m78 m78-init m78-btn m78-effect __md __small __icon __square-icon"
+          disabled={false}
+          onClick={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          type="button"
+        >
+          <svg
+            className="m78 m78-icon m78-icon_icon-remove"
+            data-name="icon-remove"
+            focusable={false}
+            height={24}
+            viewBox="0 0 24 24"
+            width={24}
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M18 13H6c-.55 0-1-.45-1-1s.45-1 1-1h12c.55 0 1 .45 1 1s-.45 1-1 1z"
+            />
+          </svg>
+        </button>
+        <button
+          className="m78 m78-init m78-btn m78-effect __md __small __icon __square-icon"
+          disabled={false}
+          onClick={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          type="button"
+        >
+          <svg
+            className="m78 m78-icon m78-icon_icon-add"
+            data-name="icon-add"
+            focusable={false}
+            height={24}
+            viewBox="0 0 24 24"
+            width={24}
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M18 13h-5v5c0 .55-.45 1-1 1s-1-.45-1-1v-5H6c-.55 0-1-.45-1-1s.45-1 1-1h5V6c0-.55.45-1 1-1s1 .45 1 1v5h5c.55 0 1 .45 1 1s-.45 1-1 1z"
+            />
+          </svg>
+        </button>
+      </div>
+    </span>
+  </div>
+</div>
+`;

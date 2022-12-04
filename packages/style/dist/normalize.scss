@@ -306,6 +306,8 @@ a.m78,
   cursor: pointer;
   transition: color 0.3s;
   -webkit-text-decoration-skip: objects; // remove gaps in links underline in iOS 8+ and Safari 8+.
+  outline-color: var(--m78-color);
+
 
   &:hover {
     color: var(--m78-color-5);
@@ -313,16 +315,6 @@ a.m78,
 
   &:active {
     color: var(--m78-color-7);
-  }
-
-  &:active,
-  &:hover {
-    text-decoration: none;
-    outline: 0;
-  }
-
-  &:focus {
-    outline: var(--m78-color) auto 1px;
   }
 
   &[disabled] {
@@ -336,8 +328,12 @@ a.m78,
   }
 }
 
-.outline:focus, [tabindex]:focus {
-  outline: var(--m78-color) auto 1px;
+[tabindex] {
+  outline-color: var(--m78-color);
+}
+
+[tabindex]:focus:not(:focus-visible) {
+  outline: none;
 }
 
 //

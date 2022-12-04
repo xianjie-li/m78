@@ -136,7 +136,6 @@ importers:
 
   packages/m78:
     specifiers:
-      '@ant-design/icons': ^4.8.0
       '@lxjx/click-effect': ^1.0.1
       '@m78/hooks': workspace:^
       '@m78/icons': workspace:^
@@ -147,6 +146,7 @@ importers:
       '@types/react': ^18.0.25
       '@types/react-dom': ^18.0.8
       '@types/use-sync-external-store': ^0.0.3
+      '@use-gesture/react': ^10.2.22
       clsx: ^1.2.1
       i18next: ^22.0.5
       i18next-browser-languagedetector: ^7.0.1
@@ -158,7 +158,6 @@ importers:
       react-spring: ^9.5.5
       use-sync-external-store: ^1.2.0
     dependencies:
-      '@ant-design/icons': 4.8.0_biqbaboplfbrettd7655fr4n2y
       '@lxjx/click-effect': 1.0.1
       '@m78/hooks': link:../hooks/dist
       '@m78/icons': link:../icons/dist
@@ -168,6 +167,7 @@ importers:
       '@material-design-icons/svg': 0.14.2
       '@types/react': 18.0.25
       '@types/react-dom': 18.0.8
+      '@use-gesture/react': 10.2.22_react@18.2.0
       clsx: 1.2.1
       i18next: 22.0.5
       i18next-browser-languagedetector: 7.0.1
@@ -487,26 +487,6 @@ packages:
     resolution: {integrity: sha512-qAZRvPzfdWHtfameEGP2Qvuf838NhergR35o+EuVyB5XvSA98xod5r4utvi4TJ3ywmevm290g9nsCG5MryrdWQ==}
     dependencies:
       '@ctrl/tinycolor': 3.4.1
-    dev: false
-
-  /@ant-design/icons-svg/4.2.1:
-    resolution: {integrity: sha512-EB0iwlKDGpG93hW8f85CTJTs4SvMX7tt5ceupvhALp1IF44SeUFOMhKUOYqpsoYWQKAOuTRDMqn75rEaKDp0Xw==}
-    dev: false
-
-  /@ant-design/icons/4.8.0_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-T89P2jG2vM7OJ0IfGx2+9FC5sQjtTzRSz+mCHTXkFn/ELZc2YpfStmYHmqzq2Jx55J0F7+O6i5/ZKFSVNWCKNg==}
-    engines: {node: '>=8'}
-    peerDependencies:
-      react: '>=16.0.0'
-      react-dom: '>=16.0.0'
-    dependencies:
-      '@ant-design/colors': 6.0.0
-      '@ant-design/icons-svg': 4.2.1
-      '@babel/runtime': 7.20.1
-      classnames: 2.3.2
-      rc-util: 5.24.4_biqbaboplfbrettd7655fr4n2y
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
     dev: false
 
   /@babel/code-frame/7.18.6:
@@ -4761,6 +4741,19 @@ packages:
       eslint-visitor-keys: 3.3.0
     dev: false
 
+  /@use-gesture/core/10.2.22:
+    resolution: {integrity: sha512-Ek0JZFYfk+hicLmoG094gm3YOuDMBNckHb988e59YOZoAkETT8dQSzT+g3QkSHSiP1m5wFXAGPSgxvOuwvGKHQ==}
+    dev: false
+
+  /@use-gesture/react/10.2.22_react@18.2.0:
+    resolution: {integrity: sha512-ECo7ig16SxBE06ENIURO1woKEB6TC8qY3a0rugJjQ2f1o0Tj28xS/eYNyJuqzQB5YT0q5IrF7ZFpbx1p/5ohYA==}
+    peerDependencies:
+      react: '>= 16.8.0'
+    dependencies:
+      '@use-gesture/core': 10.2.22
+      react: 18.2.0
+    dev: false
+
   /@vitejs/plugin-react/2.2.0_vite@3.2.4:
     resolution: {integrity: sha512-FFpefhvExd1toVRlokZgxgy2JtnBOdp4ZDsq7ldCWaqGSGn9UhWMAVm/1lxPL14JfNS5yGz+s9yFrQY6shoStA==}
     engines: {node: ^14.18.0 || >=16.0.0}
@@ -5721,6 +5714,7 @@ packages:
 
   /classnames/2.3.2:
     resolution: {integrity: sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==}
+    dev: true
 
   /clean-css/5.3.1:
     resolution: {integrity: sha512-lCr8OHhiWCTw4v8POJovCoh4T7I9U11yVsPjMWWnnMmp9ZowCxyad1Pathle/9HjaDp+fdQKjO9fQydE6RHTZg==}
@@ -10767,19 +10761,6 @@ packages:
       schema-utils: 3.1.1
     dev: false
 
-  /rc-util/5.24.4_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-2a4RQnycV9eV7lVZPEJ7QwJRPlZNc06J7CwcwZo4vIHr3PfUqtYgl1EkUV9ETAc6VRRi8XZOMFhYG63whlIC9Q==}
-    peerDependencies:
-      react: '>=16.9.0'
-      react-dom: '>=16.9.0'
-    dependencies:
-      '@babel/runtime': 7.20.1
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-      react-is: 16.13.1
-      shallowequal: 1.1.0
-    dev: false
-
   /rc/1.2.8:
     resolution: {integrity: sha512-y3bGgqKj3QBdxLbLkomlohkvsA8gdAiUQlSBJnBhfn+BPxg4bc62d8TcBW15wavDfgexCgccckhcZvywyQYPOw==}
     hasBin: true
@@ -11764,6 +11745,7 @@ packages:
 
   /shallowequal/1.1.0:
     resolution: {integrity: sha512-y0m1JoUZSlPAjXVtPPW70aZWfIL/dSP7AFkRnniLCrK/8MDKog3TySTBmckD+RObVxH0v4Tox67+F14PdED2oQ==}
+    dev: true
 
   /shebang-command/2.0.0:
     resolution: {integrity: sha512-kHxr2zZpYtdmrN1qDjrrX/Z1rR1kG8Dx+gkpK1G4eXmvXswmcE1hTWBWYUzlraYw1/yZp6YuDY77YtvbN0dmDA==}
