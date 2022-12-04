@@ -2,6 +2,8 @@
 title: Icon - 图标
 ---
 
+import IconDemo from "./_icon-demo.tsx";
+
 使用 [material-design-icons](https://github.com/google/material-design-icons) 作为底层图标库, 并且所有图标均已由`svg`转换为了`react`组件, 方便按需导入和使用.
 
 ## 使用
@@ -25,16 +27,15 @@ import { IconFace2 } from "@m78/icons/icon-face-2";
 <IconFace2 />
 ```
 
-> 没有提供统一的出口, 因为图标总数约4k+, 即使你的打包器支持tree shake, 导入分析也会对你的智能编辑器造成巨大的负担, 严重影响开发体验.
+> 没有提供统一的出口, 因为图标总数约 4k+, 即使你的打包器支持 tree shake, 导入分析也会对你的智能编辑器造成巨大的负担, 严重影响开发体验.
 
 ## 图标列表
 
-<demo demo={require("./_icon-demo.tsx")} code={require("!!raw-loader!./_icon-demo.tsx")}></demo>
-
+<IconDemo />
 
 ## 调整样式
 
-`icon`没有提供任何特别的配置项, 你可以通过[layout](/component/base/layout)中提供的原子类像对待一个常规dom节点一样对其进行定制
+`icon`没有提供任何特别的配置项, 你可以通过[layout](/component/base/layout)中提供的原子类像对待一个常规 dom 节点一样对其进行定制
 
 ```tsx | pure
 <Icon4k className="fs-24" />  // 控制大小
@@ -42,6 +43,7 @@ import { IconFace2 } from "@m78/icons/icon-face-2";
 ```
 
 另外, `icon` 包含了一段非常基础的控制样式, 如果你的项目中未依赖其他组件, 这段样式可能不会被自动注入, 需要手动添加到您的项目中.
+
 ```css
 .m78-icon {
   display: inline-block;
@@ -56,7 +58,7 @@ import { IconFace2 } from "@m78/icons/icon-face-2";
 
 ## 扩充图标
 
-如果内置图标中缺少你想要的, 你可以随意添加任意来源的图标, 比如字体图标, svg图标, 图片等, 但是为了和内置图标样式保持统一, 可以选择为它们添加`m78-icon`类名
+如果内置图标中缺少你想要的, 你可以随意添加任意来源的图标, 比如字体图标, svg 图标, 图片等, 但是为了和内置图标样式保持统一, 可以选择为它们添加`m78-icon`类名
 
 ```js
 <span className="fr-xx-icon m78-icon" />
@@ -66,6 +68,7 @@ import { IconFace2 } from "@m78/icons/icon-face-2";
 ## 关于可访问性
 
 通常图标用于装饰目的, 如果你要渲染一个具有语义的图标, 可以搭配`Button`组件使用
+
 ```tsx
 <Button aria-label="delete" icon>
   <FilledDelete />

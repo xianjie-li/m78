@@ -1,4 +1,5 @@
 import { isNumber, isWeakNumber } from "./is.js";
+import { TupleNumber } from "./types.js";
 
 /**
  * 获取指定区间内的随机数(双开区间)
@@ -52,4 +53,9 @@ export function clamp(val, min, max) {
   if (isNumber(min) && val < min) return min;
   if (isNumber(max) && val > max) return max;
   return val;
+}
+
+/** 将元组中的每一项加上指定的值 */
+export function tupleAdd(tup: TupleNumber, num: number): TupleNumber {
+  return [tup[0] + num, tup[1] + num];
 }

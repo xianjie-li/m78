@@ -3,3 +3,19 @@
   background-color: var(--m78-color-border);
   border-radius: 6px;
 }
+
+.grid {
+  width: 600px;
+  margin-top: 24px;
+  border-top: 1px solid var(--m78-color-border);
+  border-left: 1px solid var(--m78-color-border);
+}
+
+.gridItem {
+  border-right: 1px solid var(--m78-color-border);
+  border-bottom: 1px solid var(--m78-color-border);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

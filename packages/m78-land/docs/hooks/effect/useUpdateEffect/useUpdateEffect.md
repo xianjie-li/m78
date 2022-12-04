@@ -1,8 +1,5 @@
 ---
 title: useUpdateEffect
-group:
-  path: /effect
-  order: 2
 ---
 
 # useUpdateEffect

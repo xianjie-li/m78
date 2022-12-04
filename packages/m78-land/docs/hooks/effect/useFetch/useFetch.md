@@ -1,8 +1,5 @@
 ---
 title: useFetch
-group:
-  path: /effect
-  order: 2
 ---
 
 # useFetch
@@ -26,9 +23,13 @@ group:
 const fh = useFetch(queryUserInfo);
 
 // 像同步代码一样使用接口的响应或请求状态
-<div>{fh.data?.name}</div>
-{fh.loading && 'loading...'}
-{fh.error && 'error...'}
+<div>{fh.data?.name}</div>;
+{
+  fh.loading && "loading...";
+}
+{
+  fh.error && "error...";
+}
 ```
 
 ## 综合示例
@@ -45,7 +46,6 @@ const fh = useFetch(queryUserInfo);
 
 <demo demo={require("./param.demo.tsx")} code={require("!!raw-loader!./param.demo.tsx")}></demo>
 
-
 > 💡 内部通过\_.isEqual 来对比 param 相等性，保持 param 结构相对简单能够减少对比深度，从而提高性能
 
 > 💡 为什么`cacheKey`没有缓存 param?
@@ -61,7 +61,7 @@ const fh = useFetch(queryDataLevel1);
 
 // 前一个请求成功后, 会自动以id作为参数开始下一个请求
 const fh2 = useFetch(fh.data && queryDataLevel2, {
-  param: fh.data?.id
+  param: fh.data?.id,
 });
 ```
 
@@ -71,7 +71,7 @@ const fh2 = useFetch(fh.data && queryDataLevel2, {
 const fh = useFetch(service, options?);
 ```
 
-**service** - 获取数据的函数, 其必须返回一个Promise对象, useFetch会根据promise的状态决定请求的结果, 如果此项不为函数时不会走请求流程, 表现与options.pass相似, 可以用来实现简短的串联请求
+**service** - 获取数据的函数, 其必须返回一个 Promise 对象, useFetch 会根据 promise 的状态决定请求的结果, 如果此项不为函数时不会走请求流程, 表现与 options.pass 相似, 可以用来实现简短的串联请求
 
 **options** - 请求配置
 

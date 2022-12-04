@@ -1,3 +1,4 @@
+import { TupleNumber } from "./types.js";
 /**
  * 获取指定区间内的随机数(双开区间)
  * @param min - 最小值
@@ -20,4 +21,6 @@ export declare function subtract(...nums: any[]): number;
 export declare function weakNumber(arg: any): number | null;
 /** 将数值限定到指定区间 */
 export declare function clamp(val: any, min: any, max: any): any;
+/** 将元组中的每一项加上指定的值 */
+export declare function tupleAdd(tup: TupleNumber, num: number): TupleNumber;
 //# sourceMappingURL=number.d.ts.map

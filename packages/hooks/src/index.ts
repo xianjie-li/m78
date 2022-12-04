@@ -11,6 +11,8 @@ export * from "./effect/use-fn/use-fn.js";
 
 export * from "./effect/use-polling/use-polling.js";
 
+export * from "./effect/use-destroy/use-destroy.js";
+
 // export * from './effect/useRRQuery/useRRQuery';
 
 export * from "./effect/use-throttle/use-throttle.js";

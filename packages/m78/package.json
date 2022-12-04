@@ -19,7 +19,6 @@
     "example": "mbt example main"
   },
   "dependencies": {
-    "@ant-design/icons": "^4.8.0",
     "@lxjx/click-effect": "^1.0.1",
     "@m78/hooks": "workspace:^",
     "@m78/icons": "workspace:^",
@@ -29,6 +28,7 @@
     "@material-design-icons/svg": "^0.14.2",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.8",
+    "@use-gesture/react": "^10.2.22",
     "clsx": "^1.2.1",
     "i18next": "^22.0.5",
     "i18next-browser-languagedetector": "^7.0.1",

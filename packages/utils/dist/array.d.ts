@@ -11,7 +11,7 @@ export declare function move<T extends Array<any>>(array: T, form: number, to: n
 /**
  * receive T or T[], return T[], if val is falsy or 0, return []
  * */
-export declare function ensureArray<T>(val: T[] | T): T[];
+export declare function ensureArray<T>(val: T[] | T): NonNullable<T>[];
 /**
  * array deduplication, use shallow compare
  * */

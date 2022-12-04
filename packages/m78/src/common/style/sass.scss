@@ -8,10 +8,11 @@ $OUTLINE_WIDTH_MIN: 0;
 
 // 通用表单项焦点和hover交互样式
 @mixin unit-effect($color) {
+  transition: var(--m78-animate-base) box-shadow;
+
   // 非disabled的情况下hover及focus的样式
   &:not(:disabled):hover,
   &:not(:disabled):focus {
-    transition: var(--m78-animate-base) box-shadow;
     border-color: transparent;
     box-shadow: 0 0 0 $OUTLINE_WIDTH $color;
   }
@@ -19,5 +20,26 @@ $OUTLINE_WIDTH_MIN: 0;
   &:not(:disabled):active {
     box-shadow: 0 0 0 $OUTLINE_WIDTH_MIN $color;
     transition-delay: 0.05s;
+  }
+}
+
+// 通用表单项焦点和hover交互样式 以border作为hover交互
+@mixin unit-effect-border($color, $border-color) {
+  transition: var(--m78-animate-base) box-shadow;
+
+  // 非disabled的情况下hover及focus的样式
+  &:not(:disabled, .__disabled):hover {
+    border-color: $border-color;
+    transition-delay: 0s;
+  }
+
+  &:not(:disabled, .__disabled):active {
+    box-shadow: 0 0 0 $OUTLINE_WIDTH_MIN $color;
+    transition-delay: 0.1s;
+  }
+
+  &:focus, &.__focus {
+    border-color: $border-color;
+    box-shadow: 0 0 0 $OUTLINE_WIDTH $color;
   }
 }

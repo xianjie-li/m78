@@ -23,6 +23,8 @@ export interface ButtonProps {
     block?: boolean;
     /** icon按钮, children可以是Icon或文字 */
     icon?: boolean;
+    /** 方型按钮图标, 相比icon减少了实际占用空间, 适合在一些布局空间紧凑的地方使用 */
+    squareIcon?: boolean;
     text?: boolean;
     /** 设置禁用状态 */
     disabled?: boolean;

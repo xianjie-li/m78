@@ -1,0 +1,183 @@
+@import '../common/style/sass';
+
+$unitSpace: var(--m78-space-1);
+
+.m78-input {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: var(--m78-unit-size);
+  width: 100%;
+  max-width: var(--m78-unit-hor-size);
+  border: 1px solid var(--m78-color-border);
+  border-radius: var(--m78-border-radius);
+  padding: 0 var(--m78-space-2);
+  line-height: 1;
+  overflow: hidden;
+  vertical-align: middle;
+
+  @include unit-effect-border(var(--m78-color-opacity-sm), var(--m78-color));
+
+  &.__textarea {
+    padding: 0;
+    height: auto !important;
+
+    textarea {
+      padding: 10px;
+      line-height: 1.4;
+      min-height: calc(20px + 2em * 1.4);
+      white-space: normal !important;
+      word-break: break-all;
+    }
+
+    .m78-input_tip-text {
+      position: absolute;
+      right: 4px;
+      bottom: 4px;
+      text-shadow: var(--m78-stress-shadow-w);
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .m78-input_icon-clear {
+      position: absolute;
+      right: 1px;
+      top: 1px;
+      text-shadow: var(--m78-stress-shadow-w);
+    }
+
+    .m78-input_loading:not(.__full) {
+      position: absolute;
+      right: 10px;
+    }
+  }
+
+  &.__full-width {
+    max-width: 100%;
+  }
+
+  &.__readonly {
+    border-style: dashed;
+  }
+
+  &.__readonly-solid {
+    border-style: solid;
+  }
+
+  &.__disabled {
+    background-color: var(--m78-color-divider);
+    cursor: not-allowed;
+  }
+
+  /* 尺寸 */
+  &.__small {
+    height: var(--m78-unit-size-sm);
+    font-size: var(--m78-fs-sm);
+    max-width: var(--m78-unit-hor-size-sm);
+  }
+
+  &.__large {
+    height: var(--m78-unit-size-lg);
+    font-size: var(--m78-fs-mdp);
+
+    .m78-input_inner {
+      letter-spacing: 1px;
+    }
+  }
+
+  /* 状态色 */
+  &.__info {
+    border-color: var(--m78-color);
+    @include unit-effect-border(var(--m78-color-opacity-sm), var(--m78-color));
+  }
+
+  &.__success {
+    border-color: var(--m78-color-success);
+    @include unit-effect-border(var(--m78-color-success-opacity-sm), var(--m78-color-success));
+  }
+
+  &.__warning {
+    border-color: var(--m78-color-warn);
+    @include unit-effect-border(var(--m78-color-warn-opacity-sm), var(--m78-color-warn));
+  }
+
+  &.__error {
+    border-color: var(--m78-color-error);
+    @include unit-effect-border(var(--m78-color-error-opacity-sm), var(--m78-color-error));
+  }
+
+  &.__no-border{
+    border-color: transparent !important;
+  }
+
+  &_inner {
+    flex: 1;
+    appearance: none;
+    margin: 0;
+    display: inline-block;
+    width: 100%;
+    outline: none;
+    border: none;
+    height: 80%;
+    color: var(--m78-color-title);
+    background-color: transparent;
+    font-size: inherit;
+    border-radius: var(--m78-border-radius);  // 让某些浏览器的自动填充背景显得不那么生硬
+
+    @include ellipsis-x;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      appearance: none;
+      margin: 0;
+    }
+
+    &:disabled {
+      color: var(--m78-color-disable);
+      cursor: not-allowed;
+    }
+
+    @include placeholder;
+  }
+
+  &_icon {
+    user-select: none;
+    font-size: var(--m78-fs);
+    cursor: pointer;
+    margin-left: var(--m78-space-1);
+
+    @include effect-font-color(
+      var(--m78-color-second),
+      var(--m78-color-primary),
+      var(--m78-color-title),
+    );
+  }
+
+  &_tip-text {
+    font-size: var(--m78-fs-sm);
+    margin-left: $unitSpace;
+    color: var(--m78-color-second);
+  }
+
+  &_prefix,
+  &_suffix {
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  &_prefix {
+    margin-right: $unitSpace;
+  }
+
+  &_suffix {
+    margin-left: $unitSpace;
+  }
+
+  &_num-ctrl {
+    .m78-btn {
+      &:hover {
+        transform: scale(1.1) !important;
+      }
+    }
+  }
+}

@@ -10,8 +10,14 @@ export interface AnyFunction {
 export interface EmptyFunction {
     (): void;
 }
+/** tuple type */
+export declare type Tuple<T> = [T, T];
 /** a number tuple */
-export declare type TupleNumber = [number, number];
+export declare type TupleNumber = Tuple<number>;
+/** a string tuple */
+export declare type TupleString = Tuple<string>;
+/** T or T[] */
+export declare type ArrayOrItem<T> = T | T[];
 /** size */
 export interface Size {
     width: number;

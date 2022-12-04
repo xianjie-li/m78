@@ -5,6 +5,7 @@ import css from "./style.module.scss";
 import { Spin } from "m78/spin";
 import { useFn } from "@m78/hooks";
 import { Button, ButtonColor } from "m78/button";
+import { Input } from "m78/input";
 import { copyToClipboard } from "../../../../src/common/common";
 
 const IconDemo = () => {
@@ -62,8 +63,8 @@ const IconDemo = () => {
   }, []);
 
   const kwChange = useFn(
-    ({ target }) => {
-      setKw(target.value);
+    (val) => {
+      setKw(val);
     },
     (fn) => _debounce(fn, 200)
   );
@@ -105,7 +106,11 @@ const IconDemo = () => {
         >
           双色图标
         </Button>
-        <input placeholder="输入关键词搜索" onChange={kwChange} />
+        <Input
+          className="ml-8"
+          placeholder="输入关键词搜索"
+          onChange={kwChange}
+        />
       </div>
       {loading && (
         <div className="p-12">

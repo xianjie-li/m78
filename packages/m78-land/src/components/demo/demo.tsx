@@ -7,6 +7,8 @@ import { IconClose } from "@m78/icons/icon-close";
 import { IconContentCopy } from "@m78/icons/icon-content-copy";
 import { Size } from "m78/common";
 
+import BrowserOnly from "@docusaurus/BrowserOnly";
+
 import css from "./style.module.scss";
 import { ensureArray, isString } from "@m78/utils";
 import { useSelf } from "@m78/hooks";

@@ -1,8 +1,5 @@
 ---
 title: useDebounce
-group:
-  path: /effect
-  order: 2
 ---
 
 # useDebounce
@@ -12,7 +9,6 @@ group:
 ## 示例
 
 <demo demo={require("./useDebounce.demo.tsx")} code={require("!!raw-loader!./useDebounce.demo.tsx")}></demo>
-
 
 ## API
 

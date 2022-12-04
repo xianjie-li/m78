@@ -15,13 +15,14 @@ import { useFn } from "@m78/hooks";
 import { isPromiseLike } from "@m78/utils";
 function _Button(btnProps) {
     var /*#__PURE__*/ _React;
-    var size = btnProps.size, color = btnProps.color, circle = btnProps.circle, outline = btnProps.outline, block = btnProps.block, icon = btnProps.icon, disabled = btnProps.disabled, _loading = btnProps.loading, children = btnProps.children, className = btnProps.className, text = btnProps.text, href = btnProps.href, innerRef = btnProps.innerRef, props = _object_without_properties(btnProps, [
+    var size = btnProps.size, color = btnProps.color, circle = btnProps.circle, outline = btnProps.outline, block = btnProps.block, icon = btnProps.icon, squareIcon = btnProps.squareIcon, disabled = btnProps.disabled, _loading = btnProps.loading, children = btnProps.children, className = btnProps.className, text = btnProps.text, href = btnProps.href, innerRef = btnProps.innerRef, props = _object_without_properties(btnProps, [
         "size",
         "color",
         "circle",
         "outline",
         "block",
         "icon",
+        "squareIcon",
         "disabled",
         "loading",
         "children",
@@ -39,7 +40,7 @@ function _Button(btnProps) {
     // 配置了color切是text/icon以外的按钮类型, 或是无color且darkMode下，直接使用亮色水波纹
     var isLightEffect = !!color && !text && !icon || !color && darkMode;
     var _obj;
-    var classNames = cls("m78 m78-init m78-btn", "m78-effect", "__md", (_obj = {}, _define_property(_obj, "__".concat(color), color), _define_property(_obj, "__".concat(size), size), _define_property(_obj, "__circle", circle), _define_property(_obj, "__outline", outline), _define_property(_obj, "__block", block), _define_property(_obj, "__text", text), _define_property(_obj, "__icon", icon), _define_property(_obj, "__light", isLightEffect), _define_property(_obj, "__disabled", disabled || loading), _obj), className);
+    var classNames = cls("m78 m78-init m78-btn", "m78-effect", "__md", (_obj = {}, _define_property(_obj, "__".concat(color), color), _define_property(_obj, "__".concat(size), size), _define_property(_obj, "__circle", circle), _define_property(_obj, "__outline", outline), _define_property(_obj, "__block", block), _define_property(_obj, "__text", text), _define_property(_obj, "__icon", icon || squareIcon), _define_property(_obj, "__square-icon", squareIcon), _define_property(_obj, "__light", isLightEffect), _define_property(_obj, "__disabled", disabled || loading), _obj), className);
     var newChildren = useMemo(function() {
         return _formatChildren(children);
     }, [

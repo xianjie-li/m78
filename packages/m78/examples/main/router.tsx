@@ -11,6 +11,8 @@ import { I18NExample } from "../i18n";
 import { ButtonExample } from "../button";
 import IconExample from "../icon/icon-example";
 import LayoutExample from "../layout";
+import { Row } from "../../src/layout";
+import InputExample from "../input/input-example";
 
 export const router = createHashRouter([
   {
@@ -42,6 +44,10 @@ export const router = createHashRouter([
         path: "seed",
         element: <SeedExample />,
       },
+      {
+        path: "input",
+        element: <InputExample />,
+      },
     ],
   },
 ]);
@@ -65,12 +71,21 @@ function renderLinks(routes: RouteObject[], parentPath = ""): React.ReactNode {
 }
 
 function Root() {
+  function toggleMode() {
+    const mode = document.documentElement.getAttribute("data-mode") || "light";
+    document.documentElement.setAttribute(
+      "data-mode",
+      mode === "light" ? "dark" : "light"
+    );
+  }
+
   return (
-    <div>
-      <div className="border p-8 radius mb-16">
-        {renderLinks(router.routes)}
-      </div>
-      <div>
+    <div className="p-12">
+      <Row mainAlign="between" className="border p-8 radius mb-16">
+        <div>{renderLinks(router.routes)}</div>
+        <button onClick={toggleMode}>dark</button>
+      </Row>
+      <div className="border p-8 radius" style={{ paddingBottom: 600 }}>
         <Outlet />
       </div>
     </div>

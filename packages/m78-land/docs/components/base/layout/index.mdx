@@ -10,33 +10,36 @@ title: Layout - 布局
 - 一些很常用的声明式布局组件, 如`Tile` `Spacer` `Divider` `AspectRatio` `Flexible`等
 - 大量用于布局的原子类, 如: `.bg-red` `.color-red` `fs-sm` `fs-md` `m-12` `bold` 等等...
 
-<br/>
+<br />
 
 > 某些开发者会很排斥声明式的布局, 这看起来就像是在所有标签上直接用`style`布局一样, 非常反模式, 但是一旦你开始习惯, 你会发现:
-> 大块/整体的布局使用css, 简单/局部/微调等使用声明式的布局会大大的简化你的开发速度~
->
-> 举个例子: 你不需要再为一个简单的上色/距离调整等创建一个单独的css文件或是绞尽脑汁的想一个类名了😄. 用你喜欢的方式做事, 不要受限于别人定制的标准, 那可能并不适用于你.
-
+> 大块/整体的布局使用 css, 简单/局部/微调等使用声明式的布局会大大的简化你的开发速度~举个例子: 你不需要再为一个简单的上色/距离调整等创建一个单独的 css 文件或是绞尽脑汁的想一个类名了 😄. 用你喜欢的方式做事, 不要受限于别人定制的标准, 那可能并不适用于你.
 
 ## Cells
 
-一个12列栅格系统
+一个 12 列栅格系统
 
 - 核心计算通过 js 实现，所以比传统的静态 css 栅格拥有更强的能力, 比如小数位的栅格, 断点几乎支持除了列数以外的所有属性
 - 采用 12 列的栅格系统, 可以更简单的心算, 且得益于小数位栅格的支持，同样可以实现非常灵活的布局，如： 二等分 6 / 三等分 4 / 四等分 3 / 五等分 2.4 / 六等分 2
-- 基于flex，可以提供比传统栅格更灵活的能力, 如自适应, 对齐, order等
+- 基于 flex，可以提供比传统栅格更灵活的能力, 如自适应, 对齐, order 等
 
 ### 基础栅格
 
 使用`Cells`和`Cell`来进行栅格布局, 传入`col`来控制栅格数
 
-<demo demo={require("././_demos/cells/base.tsx")} code={require("!!raw-loader!././_demos/cells/base.tsx")}></demo>
+<demo
+  demo={require("././_demos/cells/base.tsx")}
+  code={require("!!raw-loader!././_demos/cells/base.tsx")}
+></demo>
 
 ### 排列行为
 
 通过`mainAlign`和`crossAlign`来分别控制子项在主轴和交叉轴上的布局方式
 
-<demo demo={require("././_demos/cells/layouts.tsx")} code={require("!!raw-loader!././_demos/cells/layouts.tsx")}></demo>
+<demo
+  demo={require("././_demos/cells/layouts.tsx")}
+  code={require("!!raw-loader!././_demos/cells/layouts.tsx")}
+></demo>
 
 ### 排序
 
@@ -44,21 +47,31 @@ title: Layout - 布局
 - 通过`move`来在不影响格布局流的情况下移动子项
 - 通过`order`来进行排序
 
-<demo demo={require("././_demos/cells/sort.tsx")} code={require("!!raw-loader!././_demos/cells/sort.tsx")}></demo>
+<demo
+  demo={require("././_demos/cells/sort.tsx")}
+  code={require("!!raw-loader!././_demos/cells/sort.tsx")}
+></demo>
 
 ### flex
 
 `Cell`支持传入`flex`设置弹性系数
 
-<demo demo={require("././_demos/cells/flex.tsx")} code={require("!!raw-loader!././_demos/cells/flex.tsx")}></demo>
+<demo
+  demo={require("././_demos/cells/flex.tsx")}
+  code={require("!!raw-loader!././_demos/cells/flex.tsx")}
+></demo>
 
 ### 响应式栅格
 
-基于后文中的`MediaQuery`组件,  提供了 6 种响应尺寸 `xs` `sm` `md` `lg` `xl` `xxl`
+基于后文中的`MediaQuery`组件, 提供了 6 种响应尺寸 `xs` `sm` `md` `lg` `xl` `xxl`
 
-<demo demo={require("./_demos/cells/media-query.tsx")} code={require("!!raw-loader!./_demos/cells/media-query.tsx")}></demo>
+<demo
+  demo={require("./_demos/cells/media-query.tsx")}
+  code={require("!!raw-loader!./_demos/cells/media-query.tsx")}
+></demo>
 
 这里有一些关于`MediaQuery`断点的注意事项:
+
 - 实际使用时不可能为每一个断点都设置值，所有断点遵循一套继承机制，以减少编码量: 断点设置会影响其后所有未设置值的断点，比如，设置了`xs`时, `xs`之后的所有断点都会继承`xs`的配置, 如果`xs`后任意一个断点也设置了值，则后续断点会改为继承该断点
 - `hidden` 的继承顺序与其他属性是相反的，也就是从大到小
 - 由于`MediaQuery`支持监听容器, 可以以指定容器而不是默认的窗口来进行响应式控制, 具体见其文档
@@ -111,7 +124,7 @@ interface Cell {
   /** 内容 */
   children?: ReactNode;
 }
-console.log(555)
+console.log(555);
 ```
 
 ## MediaQuery
@@ -125,7 +138,10 @@ console.log(555)
 
 最常用的是断点组件`MediaQuery`，它通过 `render children` 接收断点信息来根据断点渲染不同的内容
 
-<demo demo={require("./_demos/media-query/base.tsx")} code={require("!!raw-loader!./_demos/media-query/base.tsx")}></demo>
+<demo
+  demo={require("./_demos/media-query/base.tsx")}
+  code={require("!!raw-loader!./_demos/media-query/base.tsx")}
+></demo>
 
 你也可以使用`MediaQuery`的内部实现 hook`useMediaQuery`, 用法几乎一致，但是 `hook` 的用法会在尺寸类型变更时更新整个消费组件
 
@@ -140,7 +156,7 @@ meta.isSM();
 
 可以方便的为`MediaQuery`设置一组断点配置并在 `render children` 中接收符合当前尺寸的值
 
-> 为了减少断点声明，断点配置包含一组继承规则: 断点会影响其后所有未设置值的断点，比如，设置了xs时, xs之后的所有断点都会继承xs的配置, 如果xs后任意一个断点也设置了值，则后续断点会改为继承该断点
+> 为了减少断点声明，断点配置包含一组继承规则: 断点会影响其后所有未设置值的断点，比如，设置了 xs 时, xs 之后的所有断点都会继承 xs 的配置, 如果 xs 后任意一个断点也设置了值，则后续断点会改为继承该断点
 
 ```tsx | pure
 <MediaQuery xs="small" md="medium" xxl="large">
@@ -166,13 +182,13 @@ meta.isSM();
 一个获取`MediaQueryMeta`变更的事件订阅器，不会主动更新组件
 
 ```tsx
-<MediaQueryListener onChange={meta => console.log(meta)} />
+<MediaQueryListener onChange={(meta) => console.log(meta)} />
 ```
 
 另一种更简单的订阅方式是使用`useMediaQueryListener`
 
 ```ts
-const meta = useMediaQueryListener(meta => {
+const meta = useMediaQueryListener((meta) => {
   meta.type;
   meta.isSM();
 });
@@ -254,14 +270,16 @@ interface MediaQueryListenerProps {
 }
 ```
 
-
 ## Flexible
 
 基于 `flex` 的一组布局组件
 
-<demo demo={require("./_demos/flex.tsx")} code={require("!!raw-loader!./_demos/flex.tsx")}></demo>
+<demo
+  demo={require("./_demos/flex.tsx")}
+  code={require("!!raw-loader!./_demos/flex.tsx")}
+></demo>
 
-<br/>
+<br />
 
 ```ts | pure
 // Row/Column
@@ -295,7 +313,10 @@ interface FlexProps extends DIVProps {
 
 一个非常常用的布局组件，包含左侧、右侧、内容区、描述区四个位置
 
-<demo demo={require("./_demos/tile.tsx")} code={require("!!raw-loader!./_demos/tile.tsx")}></demo>
+<demo
+  demo={require("./_demos/tile.tsx")}
+  code={require("!!raw-loader!./_demos/tile.tsx")}
+></demo>
 
 ```ts | pure
 interface TileProps extends Omit<DIVProps, "title"> {
@@ -322,7 +343,10 @@ interface TileProps extends Omit<DIVProps, "title"> {
 
 一个永远保持固定宽高比的容器
 
-<demo demo={require("./_demos/aspect-ratio.tsx")} code={require("!!raw-loader!./_demos/aspect-ratio.tsx")}></demo>
+<demo
+  demo={require("./_demos/aspect-ratio.tsx")}
+  code={require("!!raw-loader!./_demos/aspect-ratio.tsx")}
+></demo>
 
 ```ts | pure
 interface AspectRatioProps {
@@ -341,7 +365,10 @@ interface AspectRatioProps {
 
 横向或纵向元素间添加分割线
 
-<demo demo={require("./_demos/divider.tsx")} code={require("!!raw-loader!./_demos/divider.tsx")}></demo>
+<demo
+  demo={require("./_demos/divider.tsx")}
+  code={require("!!raw-loader!./_demos/divider.tsx")}
+></demo>
 
 ```ts | pure
 interface DividerProps {
@@ -366,7 +393,10 @@ interface DividerProps {
 
 横向或纵向元素间填充空白
 
-<demo demo={require("./_demos/spacer.tsx")} code={require("!!raw-loader!./_demos/spacer.tsx")}></demo>
+<demo
+  demo={require("./_demos/spacer.tsx")}
+  code={require("!!raw-loader!./_demos/spacer.tsx")}
+></demo>
 
 ```ts | pure
 interface SpacerProps {
@@ -387,7 +417,10 @@ interface SpacerProps {
 
 将子组件居中放置
 
-<demo demo={require("./_demos/center.tsx")} code={require("!!raw-loader!./_demos/center.tsx")}></demo>
+<demo
+  demo={require("./_demos/center.tsx")}
+  code={require("!!raw-loader!./_demos/center.tsx")}
+></demo>
 
 ```ts | pure
 interface CenterProps {
@@ -401,3 +434,22 @@ interface CenterProps {
   style?: CSSProperties;
 }
 ```
+
+## Grid
+
+`Cells` + `AspectRatio` 可以轻松的创建一个网格, 并且支持自适应 😁
+
+<demo
+  demo={require("./_demos/grid.tsx")}
+  code={[
+    {
+      code: require("!!raw-loader!./_demos/grid.tsx"),
+      name: "grid.tsx",
+    },
+    {
+      code: require("!!raw-loader!./_demos/grid.module.scss"),
+      name: "grid.module.scss",
+      language: "sass",
+    },
+  ]}
+></demo>

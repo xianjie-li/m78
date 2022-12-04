@@ -62,13 +62,13 @@
   }
 
   &.__small .m78-spin_unit {
-    width: var(--m78-unit-size-small);
-    height: var(--m78-unit-size-small);
+    width: var(--m78-unit-size-sm);
+    height: var(--m78-unit-size-sm);
   }
 
   &.__large .m78-spin_unit {
-    width: var(--m78-unit-size-large);
-    height: var(--m78-unit-size-large);
+    width: var(--m78-unit-size-lg);
+    height: var(--m78-unit-size-lg);
   }
 
   &.__big .m78-spin_unit {

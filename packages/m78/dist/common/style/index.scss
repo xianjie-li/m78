@@ -2,10 +2,15 @@
 
 .m78 {
   // 常规单位尺寸
-  --m78-unit-size-small: 24px;
+  --m78-unit-size-sm: 24px;
   --m78-unit-size: 32px;
-  --m78-unit-size-large: 40px;
+  --m78-unit-size-lg: 40px;
   --m78-unit-size-big: 60px;
+
+  // 对于大部分表单和交互控件的最大宽度
+  --m78-unit-hor-size-sm: 240px;
+  --m78-unit-hor-size: 320px;
+  --m78-unit-hor-size-lg: 400px;
 }
 
 .m78-icon {

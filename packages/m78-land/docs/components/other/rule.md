@@ -8,17 +8,17 @@ title: 文档&组件约定
 
   - 导出名一致, 有效避免混淆, 减少记忆成本, 不会出现 `$` `jquery` `_` `lodash` 等各式各样的命名, 如果出现重名, 通过`as`重命名也非常简单
   - 更精准的智能编辑器预测, 更好的提供自动导入
-  - 一个包通常会包含很多导出, 比如 `button` 模块包含组件/枚举/ts 类型等导出, 这样看起来似乎更好?
+  - 一个包通常会包含很多导出, 比如 `button` 模块包含组件/枚举/ts 类型等导出
 
     ```ts
-    import { Button, ButtonColor, ButtonProps } from "m78/button";
+    import { Button, ButtonColor, ButtonProps } from "m78/button"; // 这样看起来似乎更好?
 
     import React, { useEffect, useState } from "react";
     ```
 
 - **类型:**
-  - 某一组件类型很多时, 集中放到`types.ts`下管理, 并在入库集中导出
-  - 依赖的第三方库如果通过`@types/*`提供, 将类型包安装为 `dependencies`, 这样用户不用处理 `peerDependencies` 就能获得间接使用库的类型
+  - 某一组件类型很多时, 集中放到`types.ts`下管理, 并在`index.ts`入口集中导出
+  - 依赖的第三方库如果通过`@types/*`提供并且需要暴露给用户, 将类型包安装为 `dependencies`, 这样用户不用处理 `peerDependencies` 就能正常获取到类型
 - **ESM:**
   - 严格遵循 ESM, 所有导入项添加`.js`后缀
 - **命名:**
@@ -66,7 +66,9 @@ title: 文档&组件约定
 - **ref:** 转发内部 dom 使用`props.innerRef`, 组件实例使用`props.instanceRef`, 使用`forwordRef`对组件类型签名破坏太大并且除了能直接传 ref 没有实质性的好处。
 - 复杂的条件渲染(参与验证的条件超过两个)，考虑使用 `If`, `Toggle`, `Fork` 等组件。
 - 默认最优配置，尽量减少配置项，API 数，例如，常用 api 占 25%，那么可以将整体 api 压缩到 50%(25%的高频使用 api，25%的扩展型 api，剩余通过组件内部通过默认值管理), 后续再根据使用情况逐个放出有使用场景的 api，这样可以大大减少学习成本，并且降低出现破坏性变更的可能性。
-- 除非完全不需要 `SSR` 的组件，否则一律不要直接在 render 中直接使用`document`、`window`等浏览器 api，对这些对象的操作都放到`effect`中。
+- **ssr/ssg:**
+  - 除了仅需要支持浏览器渲染的组件，不要直接在 render 中直接使用`document`、`window`等浏览器 api，对这些对象的操作都放到`effect`中, 或使用 `BrowserOnly` 组件包裹
+  - 另外, 不要使用 `typeof window !== 'undefined` 这类的代码来条件性的渲染 ui(纯文本可以, 但是最终 dom 结构不同不行), 这会导致进行 hydration 操作时 dom 结构不一致而产生错误
 - 组件的字符类参数应同时支持传入 string key 和 enum, 例如: `<Button type="large" />` | `<Button type={Size.large} />`, 以 Button 为例, 两种类型的命名应为`ButtonSizeKeys`/`ButtonSize`, 并声明一个用于直接使用的联合类型 `ButtonSizeKeys | ButtonSize`
 - 某些依赖于数据源的组件如没有特殊含义，均命名为`dataSource`, 如`tree`组件, 选项格式为`{ label: ReactNode, value: any }`, 对应`components/types`中的`DataSourceItem`
 

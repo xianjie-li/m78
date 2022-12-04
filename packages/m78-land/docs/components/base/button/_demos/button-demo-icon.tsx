@@ -43,6 +43,20 @@ const ButtonDemoColor = () => (
       </Button>
     </div>
 
+    <div className="mb-16">方型图标按钮, 占用空间更小</div>
+
+    <div className="mt-16">
+      <Button color="green" squareIcon size="small">
+        <IconBeachAccess />
+      </Button>
+      <Button color="primary" squareIcon>
+        <IconCatchingPokemon />
+      </Button>
+      <Button color="red" squareIcon size="large">
+        <IconFaceRetouchingNatural />
+      </Button>
+    </div>
+
     <div className="mt-16">
       <div className="mb-16">文字图标混排</div>
       <Button>

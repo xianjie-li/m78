@@ -2,10 +2,15 @@
 
 .m78 {
   // 常规单位尺寸
-  --m78-unit-size-small: 24px;
+  --m78-unit-size-sm: 24px;
   --m78-unit-size: 32px;
-  --m78-unit-size-large: 40px;
+  --m78-unit-size-lg: 40px;
   --m78-unit-size-big: 60px;
+
+  // 对于大部分表单和交互控件的最大宽度
+  --m78-unit-hor-size-sm: 240px;
+  --m78-unit-hor-size: 320px;
+  --m78-unit-hor-size-lg: 400px;
 }
 
 .m78-icon {
@@ -13,7 +18,6 @@
   // 实际使用中发现, 因为图标普遍小于文本, 并且细节比文本更多, 将其放大一定比例会更好, 否则基本每次使用都会单独再将其通过样式放大
   width: 1.5em;
   height: 1.5em;
-  font-size: 1.5em; // 兼容字体图标
   fill: currentColor;
   vertical-align: middle;
   line-height: 1;

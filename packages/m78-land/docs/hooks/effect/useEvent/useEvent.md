@@ -1,8 +1,5 @@
 ---
 title: useEvent
-group:
-  path: /effect
-  order: 2
 ---
 
 # useEvent

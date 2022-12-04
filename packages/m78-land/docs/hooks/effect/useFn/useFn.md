@@ -1,8 +1,5 @@
 ---
 title: useFn
-group:
-  path: /effect
-  order: 2
 ---
 
 # useFn

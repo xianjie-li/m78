@@ -48,13 +48,13 @@
   }
 
   &.__large {
-    height: var(--m78-unit-size-large);
+    height: var(--m78-unit-size-lg);
     padding: 0 var(--m78-space-5);
     font-size: var(--m78-fs-md);
   }
 
   &.__small {
-    height: var(--m78-unit-size-small);
+    height: var(--m78-unit-size-sm);
     padding: 0 var(--m78-space-2);
     min-width: 44px;
 
@@ -90,14 +90,14 @@
     min-width: 0;
 
     &.__large {
-      width: var(--m78-unit-size-large);
-      height: var(--m78-unit-size-large);
+      width: var(--m78-unit-size-lg);
+      height: var(--m78-unit-size-lg);
       font-size: var(--m78-fs-mdp);
     }
 
     &.__small {
-      width: var(--m78-unit-size-small);
-      height: var(--m78-unit-size-small);
+      width: var(--m78-unit-size-sm);
+      height: var(--m78-unit-size-sm);
       font-size: var(--m78-fs);
     }
   }
@@ -108,9 +108,28 @@
     border: none;
   }
 
+  // 方型按钮均减少一个尺寸, small按钮减少4px, 否则会过小
+  &.__icon.__square-icon {
+    border-radius: var(--m78-border-radius);
+
+    width: var(--m78-unit-size-sm);
+    height: var(--m78-unit-size-sm);
+
+    &.__large {
+
+      width: var(--m78-unit-size);
+      height: var(--m78-unit-size);
+    }
+
+    &.__small {
+      width: calc(var(--m78-unit-size-sm) - 4px);
+      height: calc(var(--m78-unit-size-sm) - 4px);
+    }
+  }
+
   // text按钮
   &.__text {
-    height: var(--m78-unit-size-small);
+    height: var(--m78-unit-size-sm);
     padding: 0 var(--m78-space-2);
     //box-shadow: none !important;
     background: transparent !important;
@@ -145,7 +164,7 @@
 @mixin color-btn($name, $main-color, $m-opa-sm, $m-opa-md) {
   // 基础样式
   .m78-btn.__#{$name} {
-    color: var(--m78-color-title-rv);
+    color: var(--m78-color-title-w);
     background-color: $main-color;
     border-color: $main-color;
 

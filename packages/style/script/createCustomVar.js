@@ -26,7 +26,7 @@ inquirer
     });
 
     console.log(`--m78-color: ${colors[6]};`);
-    console.log(`--m78-color-opacity-sm: #{rgba(${colors[6]}, 0.1)};`);
-    console.log(`--m78-color-opacity-md: #{rgba(${colors[6]}, 0.5)};`);
-    console.log(`--m78-color-opacity-lg: #{rgba(${colors[6]}, 0.75)};`);
+    console.log(`--m78-color-opacity-sm: #{rgba(${colors[6]}, 0.2)};`);
+    console.log(`--m78-color-opacity-md: #{rgba(${colors[6]}, 0.4)};`);
+    console.log(`--m78-color-opacity-lg: #{rgba(${colors[6]}, 0.7)};`);
   });

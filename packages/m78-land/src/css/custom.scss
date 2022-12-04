@@ -25,6 +25,7 @@ html {
 
   code {
     margin: 0 var(--m78-space-1);
+    //white-space: nowrap;
   }
 
   pre {
@@ -122,6 +123,17 @@ html[data-mode="dark"] {
   box-shadow: none !important;
 }
 
+a[class*=sidebarItemLinkActive_] {
+  color: var(--m78-color) !important;
+}
+
+ul[class*=sidebarItemList_] {
+  a {
+    color: var(--m78-color-primary);
+  }
+}
+
+
 // ## 组件样式重置
 
 .tabs-container {
@@ -136,4 +148,15 @@ html[data-mode="dark"] {
       border-color: var(--m78-color);
     }
   }
+}
+
+.theme-admonition {
+  padding: var(--m78-space-3);
+  box-shadow: none;
+  border-width: 1px;
+  border-color: var(--m78-color-border);
+}
+
+details[class^=details_] {
+  background-color: transparent;
 }

@@ -1,7 +1,5 @@
 ---
 title: usePolling
-group:
-  path: /effect
 ---
 
 # usePolling
@@ -10,10 +8,9 @@ group:
 
 ## 示例
 
-每0.5s触发一次, 每次触发间隔比上次多1.1倍, 最多触发10次
+每 0.5s 触发一次, 每次触发间隔比上次多 1.1 倍, 最多触发 10 次
 
 <demo demo={require("./use-polling.demo.tsx")} code={require("!!raw-loader!./use-polling.demo.tsx")}></demo>
-
 
 ## API
 

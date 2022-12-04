@@ -1,8 +1,5 @@
 ---
 title: useEffectEqual
-group:
-  path: /effect
-  order: 2
 ---
 
 # useEffectEqual
@@ -14,7 +11,6 @@ group:
 ## 示例
 
 <demo demo={require("./useEffectEqual.demo.tsx")} code={require("!!raw-loader!./useEffectEqual.demo.tsx")}></demo>
-
 
 ## API
 

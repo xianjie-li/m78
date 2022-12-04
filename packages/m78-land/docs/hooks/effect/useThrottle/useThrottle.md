@@ -1,8 +1,5 @@
 ---
 title: useThrottle
-group:
-  path: /effect
-  order: 2
 ---
 
 # useThrottle

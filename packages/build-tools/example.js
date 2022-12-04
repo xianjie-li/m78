@@ -21,7 +21,7 @@ export async function example(exampleName) {
   }
 
   try {
-    spawnSync("npx", ["vite", ePath, "--config", viteConfig], {
+    spawnSync("npx", ["vite", ePath, "--config", viteConfig, "--host"], {
       cwd: process.cwd(),
       stdio: "inherit",
     });

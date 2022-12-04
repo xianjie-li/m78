@@ -4,6 +4,7 @@ export * from "./effect/use-effect-equal/use-effect-equal.js";
 export * from "./effect/use-fetch/use-fetch.js";
 export * from "./effect/use-fn/use-fn.js";
 export * from "./effect/use-polling/use-polling.js";
+export * from "./effect/use-destroy/use-destroy.js";
 export * from "./effect/use-throttle/use-throttle.js";
 export * from "./effect/use-update-effect/use-update-effect.js";
 export * from "./effect/use-update/use-update.js";

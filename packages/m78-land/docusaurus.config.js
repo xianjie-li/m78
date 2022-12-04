@@ -26,7 +26,7 @@ const config = {
   // to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: "zh-Hans",
-    locales: ["zh-Hans", "en-US"],
+    locales: ["zh-Hans", "en"],
   },
 
   plugins: [
@@ -74,11 +74,12 @@ const config = {
       ],
       navbar: {
         title: "M78 Land",
+
         logo: {
           alt: "M78 Land Logo",
           src: "img/logo-small.png",
         },
-        hideOnScroll: true,
+        // hideOnScroll: true,
         items: [
           {
             type: "doc",
@@ -92,9 +93,19 @@ const config = {
             position: "left",
             label: "Hooks",
           },
+          {
+            type: "doc",
+            docId: "admin/start",
+            position: "left",
+            label: "M78Admin",
+          },
           { to: "/blog", label: "Blog", position: "left" },
           {
             type: "search",
+            position: "right",
+          },
+          {
+            type: "localeDropdown",
             position: "right",
           },
           {

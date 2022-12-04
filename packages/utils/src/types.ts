@@ -13,8 +13,17 @@ export interface EmptyFunction {
   (): void;
 }
 
+/** tuple type */
+export type Tuple<T> = [T, T];
+
 /** a number tuple */
-export type TupleNumber = [number, number];
+export type TupleNumber = Tuple<number>;
+
+/** a string tuple */
+export type TupleString = Tuple<string>;
+
+/** T or T[] */
+export type ArrayOrItem<T> = T | T[];
 
 /** size */
 export interface Size {

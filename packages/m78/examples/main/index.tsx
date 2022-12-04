@@ -4,11 +4,7 @@ import { render } from "../utils";
 import { router } from "./router";
 
 function App() {
-  return (
-    <div className="p-12">
-      <RouterProvider router={router} fallbackElement="loading..." />
-    </div>
-  );
+  return <RouterProvider router={router} fallbackElement="loading..." />;
 }
 
 render(<App />);
