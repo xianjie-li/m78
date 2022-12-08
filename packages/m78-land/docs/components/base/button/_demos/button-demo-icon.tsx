@@ -43,7 +43,7 @@ const ButtonDemoColor = () => (
       </Button>
     </div>
 
-    <div className="mb-16">方型图标按钮, 占用空间更小</div>
+    <div className="mt-16">方型图标按钮, 占用空间更小</div>
 
     <div className="mt-16">
       <Button color="green" squareIcon size="small">

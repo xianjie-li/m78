@@ -11,7 +11,7 @@ $unitSpace: var(--m78-space-1);
   max-width: var(--m78-unit-hor-size);
   border: 1px solid var(--m78-color-border);
   border-radius: var(--m78-border-radius);
-  padding: 0 var(--m78-space-2);
+  padding: 0 var(--m78-space-1);
   line-height: 1;
   overflow: hidden;
   vertical-align: middle;
@@ -123,6 +123,7 @@ $unitSpace: var(--m78-space-1);
     background-color: transparent;
     font-size: inherit;
     border-radius: var(--m78-border-radius);  // 让某些浏览器的自动填充背景显得不那么生硬
+    padding: 0 var(--m78-space-1);
 
     @include ellipsis-x;
 
@@ -165,19 +166,4 @@ $unitSpace: var(--m78-space-1);
     white-space: nowrap;
   }
 
-  &_prefix {
-    margin-right: $unitSpace;
-  }
-
-  &_suffix {
-    margin-left: $unitSpace;
-  }
-
-  &_num-ctrl {
-    .m78-btn {
-      &:hover {
-        transform: scale(1.1) !important;
-      }
-    }
-  }
 }

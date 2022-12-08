@@ -1,116 +1,112 @@
 ---
-title: useScroll
+title: useTrigger
 group:
-  path: /ui
+path: /ui
 ---
 
-# useScroll
+# useTrigger
 
-获取、设置滚动条位置，支持滚动到点、滚动到元素、增值滚动
+便捷的将节点设置为触发器, 多用于各种气泡类组件
 
-## 示例
+## hook 用法
 
-<demo demo={require("./useScroll.demo.tsx")} code={require("!!raw-loader!./useScroll.demo.tsx")}></demo>
+<demo demo={require("./demo1.tsx")} code={require("!!raw-loader!./demo1.tsx")}></demo>
+
+## 组件用法
+
+<demo demo={require("./demo2.tsx")} code={require("!!raw-loader!./demo2.tsx")}></demo>
 
 ## API
 
-```tsx | pure
-const { get, set, scrollToElement, ref } =
-      useScroll<HTMLDivElement>(option?: UseScrollOptions);
+**useTrigger**
 
-return (
-	<div ref={ref}>...</div>
-)
+```tsx | pure
+const node = useTrigger({
+  type: UseTriggerType.click,
+  element: <button>click</button>,
+});
+
+// 在需要的位置渲染
+node;
 ```
 
-**get** - 获取滚动位置信息
+<br/>
+
+**Trigger**
+
+`useTrigger`的组件用法, element 改为通过 children 传递, 其他用法一致
+
+<br/>
+
+**核心接口**
 
 ```ts
-function get(): UseScrollMeta;
+/** 支持的事件类型 */
+export enum UseTriggerType {
+  /** 点击 */
+  click = "click",
+  /**
+   * 获得焦点, 该事件在获取焦点和失去焦点时均会触发, 可通过e.focus判断是否聚焦, 事件的x/y, offsetX/Y等坐标信息始终为0
+   * - 需要确保element或其任意子级是focusable的
+   * */
+  focus = "focus",
+  /**
+   * 根据不同的设备, 会有不同的表现, 该事件在开始和结束时均会触发:
+   * - 支持鼠标事件的设备 - hover
+   * - 不支持鼠标且支持touch的设备 - 按住
+   *
+   * 此事件自动附加了一个触发延迟, 用于在大部分场景下获得更好的体验(比如鼠标快速划过)
+   * */
+  active = "active",
+  /** 通常是鼠标的副键点击, 在移动设备, 按住超过一定时间后也会触发, 并且会和通过touch触发的active一同触发, 所以不建议将两者混合使用 */
+  contextMenu = "contextMenu",
+}
 
-export interface UseScrollMeta {
-  /** 滚动元素 */
-  el: HTMLElement;
-  /** x轴位置 */
+/** 事件配置 */
+export interface UseTriggerConfig {
+  /**
+   * 事件目标节点, 根据绑定的事件类型, 需要支持以下事件props:
+   * - click -> onClick
+   * - focus -> onFocus/onBlur
+   * - active -> 使用鼠标的设备: onMouseEnter/onMouseLeave  触控设备: onTouchStart/onTouchEnd, 如果需要两端都兼容, 需要同时支持传入这4个事件
+   * - contextMenu -> onContextMenu
+   * */
+  element: ReactElement;
+  /** 需要绑定的事件类型 */
+  type: UseTriggerTypeUnion | UseTriggerTypeUnion[];
+  /** 触发回调 */
+  onTrigger?: (e: UseTriggerEvent) => void;
+  /** active的特有配置 */
+  active?: {
+    /** 开始触发延迟(ms), mouse和touch方式触发的默认值分别是 140/400, 防止鼠标快速划过触发或移动端点击触发 */
+    triggerDelay?: number;
+    /** 离开触发延迟(ms) */
+    leaveDelay?: number;
+  };
+}
+
+/** Trigger的props, 对element进行了更名 */
+export interface UseTriggerProps extends Omit<UseTriggerConfig, "element"> {
+  children: UseTriggerConfig["element"];
+}
+
+/** 事件对象 */
+export interface UseTriggerEvent<E extends Event = Event> {
+  /** 触发的事件类型 */
+  type: UseTriggerTypeUnion;
+  /** 是否处于active状态 */
+  active: boolean;
+  /** 是否处于focus状态 */
+  focus: boolean;
+  /** 触发位置相对屏幕的x坐标 */
   x: number;
-  /** y轴位置 */
+  /** 触发位置相对屏幕的y坐标 */
   y: number;
-  /** 可接受的x轴滚动最大值(值大于0说明可滚动， 但不能保证开启了滚动) */
-  xMax: number;
-  /** 可接受的y轴滚动最大值(值大于0说明可滚动， 但不能保证开启了滚动) */
-  yMax: number;
-  /** 元素高度 */
-  height: number;
-  /** 元素宽度 */
-  width: number;
-  /** 元素总高度 */
-  scrollHeight: number;
-  /** 元素总宽度 */
-  scrollWidth: number;
-  /** 滚动条位于最底部 */
-  touchBottom: boolean;
-  /** 滚动条位于最右侧 */
-  touchRight: boolean;
-  /** 滚动条位于最顶部 */
-  touchTop: boolean;
-  /** 滚动条位于最左侧 */
-  touchLeft: boolean;
-}
-```
-
-**set** - 设置滚动条位置
-
-```ts
-function set(options: UseScrollSetArg);
-
-interface UseScrollSetArg {
-  /** 指定滚动的x轴 */
-  x?: number;
-  /** 指定滚动的y轴 */
-  y?: number;
-  /** 以当前滚动位置为基础进行增减滚动 */
-  raise?: boolean;
-  /** 为true时阻止动画 */
-  immediate?: boolean;
-}
-```
-
-**scrollToElement** - 滚动到指定元素
-
-```ts
-// selector - 滚动到以该选择器命中的第一个元素
-function scrollToElement(selector: string, immediate?: boolean): void;
-// element - 滚动到指定元素
-function scrollToElement(element: HTMLElement, immediate?: boolean): void;
-```
-
-**ref** - 默认使用`document.documentElement`作为滚动元素，可以通过这个属性自行指定滚动元素
-
-```tsx | pure
-const { set, ref } = useScroll<HTMLDivElement>();
-
-return <div ref={ref}>...</div>;
-```
-
-**option** - 其他选项
-
-```ts
-useScroll(option?: UseScrollOptions)
-
-interface UseScrollOptions {
-  /** 指定滚动元素或ref，el、el.current、ref.current取值，只要有任意一个为dom元素则返回, 默认的滚动元素是documentElement */
-  el?: HTMLElement | RefObject<any>;
-  /** 滚动时触发 */
-  onScroll?(meta: UseScrollMeta): void;
-  /** 100 | 配置了onScroll时，设置throttle时间, 单位(ms) */
-  throttleTime?: number;
-  /** 0 | 滚动偏移值, 使用scrollToElement时，会根据此值进行修正 */
-  offset?: number;
-  /** y轴的偏移距离，优先级高于offset */
-  offsetX?: number;
-  /** x轴的偏移距离，优先级高于offset */
-  offsetY?: number;
-  /** 0 | touch系列属性的触发修正值 */
-  touchOffset?: number;
+  /** 触发位置相对目标左上角的x坐标 */
+  offsetX: number;
+  /** 触发位置相对目标左上角的y坐标 */
+  offsetY: number;
+  /** 原生事件对象, 可能是touch/mouse事件对象, 在最新的浏览器里可能是pointer对象, 如需操作需自行注意处理兼容问题 */
+  nativeEvent: E;
 }
 ```

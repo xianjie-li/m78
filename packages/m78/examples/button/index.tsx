@@ -1,14 +1,12 @@
 import React from "react";
 import { Button } from "../../src/button";
 
-import {
-  TagOutlined,
-  SettingOutlined,
-  QuestionCircleOutlined,
-  SearchOutlined,
-  BellOutlined,
-  BulbOutlined,
-} from "@ant-design/icons";
+import { IconTag } from "@m78/icons/icon-tag";
+import { IconBeachAccess } from "@m78/icons/icon-beach-access";
+import { IconBrightness7 } from "@m78/icons/icon-brightness-7";
+import { IconCatchingPokemon } from "@m78/icons/icon-catching-pokemon";
+import { IconAcUnit } from "@m78/icons/icon-ac-unit";
+import { IconFaceRetouchingNatural } from "@m78/icons/icon-face-retouching-natural";
 import { delay } from "@m78/utils";
 
 export function ButtonExample() {
@@ -142,19 +140,19 @@ export function ButtonExample() {
       <div className="mb-16">纯图标</div>
 
       <Button icon>
-        <TagOutlined />
+        <IconTag />
       </Button>
       <Button color="red" icon>
-        <SettingOutlined />
+        <IconBeachAccess />
       </Button>
       <Button color="green" icon disabled>
-        <QuestionCircleOutlined />
+        <IconBrightness7 />
       </Button>
       <Button color="primary" icon>
-        <SearchOutlined />
+        <IconCatchingPokemon />
       </Button>
       <Button color="orange" icon>
-        <BellOutlined />
+        <IconAcUnit />
       </Button>
       <Button color="red" icon>
         李
@@ -162,44 +160,88 @@ export function ButtonExample() {
 
       <div className="mt-16">
         <Button color="green" icon size="small">
-          <SettingOutlined />
+          <IconBeachAccess />
         </Button>
         <Button color="primary" icon>
-          <SettingOutlined />
+          <IconCatchingPokemon />
         </Button>
         <Button color="red" icon size="large">
-          <SettingOutlined />
+          <IconFaceRetouchingNatural />
+        </Button>
+      </div>
+
+      <div className="mt-16">
+        <Button color="green" icon outline size="small">
+          <IconBeachAccess />
+        </Button>
+        <Button color="primary" outline icon>
+          <IconCatchingPokemon />
+        </Button>
+        <Button color="red" icon outline size="large">
+          <IconFaceRetouchingNatural />
+        </Button>
+      </div>
+
+      <div className="mt-16">方型图标按钮, 占用空间更小</div>
+
+      <div className="mt-16">
+        <Button color="green" squareIcon size="small">
+          <IconBeachAccess />
+        </Button>
+        <Button squareIcon>
+          <IconBrightness7 />
+        </Button>
+        <Button color="primary" squareIcon>
+          <IconCatchingPokemon />
+        </Button>
+        <Button color="red" squareIcon size="large">
+          <IconFaceRetouchingNatural />
+        </Button>
+      </div>
+
+      <div className="mt-16">
+        <Button color="green" squareIcon outline size="small">
+          <IconBeachAccess />
+        </Button>
+        <Button squareIcon outline>
+          <IconBrightness7 />
+        </Button>
+        <Button color="primary" squareIcon outline>
+          <IconCatchingPokemon />
+        </Button>
+        <Button color="red" squareIcon outline size="large">
+          <IconFaceRetouchingNatural />
         </Button>
       </div>
 
       <div className="mt-16">
         <div className="mb-16">文字图标混排</div>
         <Button>
-          <TagOutlined />
+          <IconBeachAccess />
           按钮
         </Button>
         <Button color="red">
-          <SettingOutlined />
+          <IconAcUnit />
           按钮
         </Button>
         <Button color="green">
-          <QuestionCircleOutlined />
+          <IconBeachAccess />
           按钮
         </Button>
         <Button color="primary">
-          <BellOutlined />
+          <IconFaceRetouchingNatural />
           按钮
         </Button>
         <Button color="orange">
-          <BulbOutlined />
+          <IconAcUnit />
           按钮
         </Button>
         <Button color="primary">
-          <BellOutlined />
+          <IconBrightness7 />
           文本
-          <BellOutlined />
+          <IconTag />
           文本
-          <SettingOutlined />
+          <IconBrightness7 />
         </Button>
       </div>
 
@@ -223,9 +265,6 @@ export function ButtonExample() {
       >
         ab
       </Button>
-
-      <Button size="small">猪</Button>
-      <Button size="large">猪</Button>
     </div>
   );
 }

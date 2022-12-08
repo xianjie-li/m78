@@ -2,7 +2,6 @@ import _object_spread from "@swc/helpers/src/_object_spread.mjs";
 import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Button } from "../button/index.js";
-import { Size } from "../common/index.js";
 import { IconRemove } from "@m78/icons/icon-remove.js";
 import { IconAdd } from "@m78/icons/icon-add.js";
 import React from "react";
@@ -54,11 +53,11 @@ export function _useStepper(ctx) {
         }, 80);
     }
     return /*#__PURE__*/ _jsxs("div", {
-        className: "m78-input_icon m78-input_num-ctrl",
+        className: "m78-input_icon",
         children: [
             /*#__PURE__*/ _jsx(Button, _object_spread_props(_object_spread({
                 squareIcon: true,
-                size: Size.small,
+                outline: true,
                 disabled: ctx.isDisabled,
                 onClick: function() {
                     return stepHandle(false);
@@ -68,7 +67,7 @@ export function _useStepper(ctx) {
             })),
             /*#__PURE__*/ _jsx(Button, _object_spread_props(_object_spread({
                 squareIcon: true,
-                size: Size.small,
+                outline: true,
                 disabled: ctx.isDisabled,
                 onClick: function() {
                     return stepHandle(true);

@@ -105,18 +105,17 @@
   // 图标按钮
   &.__icon {
     background: transparent !important;
-    border: none;
   }
 
   // 方型按钮均减少一个尺寸, small按钮减少4px, 否则会过小
   &.__icon.__square-icon {
     border-radius: var(--m78-border-radius);
+    border-color: transparent;
 
     width: var(--m78-unit-size-sm);
     height: var(--m78-unit-size-sm);
 
     &.__large {
-
       width: var(--m78-unit-size);
       height: var(--m78-unit-size);
     }
@@ -127,6 +126,11 @@
     }
   }
 
+  // 图标允许和outline一起使用
+  &.__icon.__outline {
+    border: 1px solid var(--m78-color-border) !important;
+  }
+
   // text按钮
   &.__text {
     height: var(--m78-unit-size-sm);
@@ -134,13 +138,14 @@
     //box-shadow: none !important;
     background: transparent !important;
     font-size: inherit;
-    border: none;
     min-width: 0;
   }
 
   // link按钮和icon按钮禁用样式
   &.__icon,
   &.__text {
+    border: none;
+
     // 使用特有的交互样式
     &:focus,
     &:not(.__disabled):hover {
@@ -185,13 +190,13 @@
     color: $main-color;
     background-color: transparent;
     background-image: none;
-    border: 1px solid $main-color;
+    border: 1px solid $main-color !important;
 
     // 单独配置背景色和颜色
     &:not(:disabled):hover,
     &:not(:disabled):focus {
       color: #fff;
-      background-color: $main-color;
+      background-color: $main-color !important;
     }
   }
 

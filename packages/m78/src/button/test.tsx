@@ -202,8 +202,6 @@ test("button icon", () => {
   const r = renderer
     .create(
       <div>
-        <div className="mb-16">纯图标</div>
-
         <Button icon>
           <IconTag />
         </Button>
@@ -231,6 +229,50 @@ test("button icon", () => {
             <IconCatchingPokemon />
           </Button>
           <Button color="red" icon size="large">
+            <IconFaceRetouchingNatural />
+          </Button>
+        </div>
+
+        <div className="mt-16">
+          <Button color="green" icon outline size="small">
+            <IconBeachAccess />
+          </Button>
+          <Button color="primary" outline icon>
+            <IconCatchingPokemon />
+          </Button>
+          <Button color="red" icon outline size="large">
+            <IconFaceRetouchingNatural />
+          </Button>
+        </div>
+
+        <div className="mt-16">方型图标按钮, 占用空间更小</div>
+
+        <div className="mt-16">
+          <Button color="green" squareIcon size="small">
+            <IconBeachAccess />
+          </Button>
+          <Button squareIcon>
+            <IconBrightness7 />
+          </Button>
+          <Button color="primary" squareIcon>
+            <IconCatchingPokemon />
+          </Button>
+          <Button color="red" squareIcon size="large">
+            <IconFaceRetouchingNatural />
+          </Button>
+        </div>
+
+        <div className="mt-16">
+          <Button color="green" squareIcon outline size="small">
+            <IconBeachAccess />
+          </Button>
+          <Button squareIcon outline>
+            <IconBrightness7 />
+          </Button>
+          <Button color="primary" squareIcon outline>
+            <IconCatchingPokemon />
+          </Button>
+          <Button color="red" squareIcon outline size="large">
             <IconFaceRetouchingNatural />
           </Button>
         </div>

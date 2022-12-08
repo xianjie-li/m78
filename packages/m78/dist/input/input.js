@@ -312,7 +312,8 @@ export function _Input(_props) {
             __focus: focus,
             __disabled: isDisabled,
             __textarea: textArea,
-            __readonly: readonly
+            __readonly: readonly,
+            __stepper: stepper
         }),
         style: style,
         ref: innerWrapRef,

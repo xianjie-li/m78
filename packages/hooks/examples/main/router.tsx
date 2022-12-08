@@ -5,14 +5,9 @@ import {
   Outlet,
   RouteObject,
 } from "react-router-dom";
-import { SpinExample } from "../spin";
-import { SeedExample } from "../seed";
-import { I18NExample } from "../i18n";
-import { ButtonExample } from "../button";
-import IconExample from "../icon/icon-example";
-import LayoutExample from "../layout";
-import { Row } from "../../src/layout";
-import InputExample from "../input/input-example";
+import UseTriggerExample from "../use-trigger-example/use-trigger-example.js";
+
+import css from "./style.module.css";
 
 export const router = createHashRouter([
   {
@@ -20,33 +15,14 @@ export const router = createHashRouter([
     element: <Root />,
     children: [
       {
-        path: "spin",
+        path: "hello",
         index: true,
-        element: <SpinExample />,
+        element: <span>hello</span>,
       },
       {
-        path: "button",
-        element: <ButtonExample />,
-      },
-      {
-        path: "icon",
-        element: <IconExample />,
-      },
-      {
-        path: "layout",
-        element: <LayoutExample />,
-      },
-      {
-        path: "i18n",
-        element: <I18NExample />,
-      },
-      {
-        path: "seed",
-        element: <SeedExample />,
-      },
-      {
-        path: "input",
-        element: <InputExample />,
+        path: "useTrigger",
+        index: true,
+        element: <UseTriggerExample />,
       },
     ],
   },
@@ -62,7 +38,8 @@ function renderLinks(routes: RouteObject[], parentPath = ""): React.ReactNode {
       <NavLink
         key={p}
         to={p}
-        className={({ isActive }) => (isActive ? "mr-12 color-red" : "mr-12")}
+        className={({ isActive }) => (isActive ? css.red : "")}
+        style={{ marginRight: 12 }}
       >
         {p}
       </NavLink>
@@ -71,21 +48,10 @@ function renderLinks(routes: RouteObject[], parentPath = ""): React.ReactNode {
 }
 
 function Root() {
-  function toggleMode() {
-    const mode = document.documentElement.getAttribute("data-mode") || "light";
-    document.documentElement.setAttribute(
-      "data-mode",
-      mode === "light" ? "dark" : "light"
-    );
-  }
-
   return (
-    <div className="p-12">
-      <Row mainAlign="between" className="border p-8 radius mb-16">
-        <div>{renderLinks(router.routes)}</div>
-        <button onClick={toggleMode}>dark</button>
-      </Row>
-      <div className="border p-8 radius" style={{ paddingBottom: 600 }}>
+    <div style={{ padding: 12 }}>
+      <div>{renderLinks(router.routes)}</div>
+      <div style={{ padding: 16, paddingBottom: 600 }}>
         <Outlet />
       </div>
     </div>

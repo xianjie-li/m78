@@ -2,6 +2,7 @@
   "extends": "@m78/build-tools/tsconfig-base.json",
   "compilerOptions": {
     "baseUrl": "./",
+    // 编译器使用swc, 这里是为了能让我们使用私有成员等最新特性
     "target": "es2015"
   },
   "include": ["src/**/*", "examples/**/*", "test/**/*"],

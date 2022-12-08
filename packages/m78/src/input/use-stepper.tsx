@@ -70,10 +70,10 @@ export function _useStepper(ctx: _InputContext) {
   }
 
   return (
-    <div className="m78-input_icon m78-input_num-ctrl">
+    <div className="m78-input_icon">
       <Button
         squareIcon
-        size={Size.small}
+        outline
         disabled={ctx.isDisabled}
         onClick={() => stepHandle(false)}
         {...incBind()}
@@ -82,7 +82,7 @@ export function _useStepper(ctx: _InputContext) {
       </Button>
       <Button
         squareIcon
-        size={Size.small}
+        outline
         disabled={ctx.isDisabled}
         onClick={() => stepHandle(true)}
         {...subBind()}

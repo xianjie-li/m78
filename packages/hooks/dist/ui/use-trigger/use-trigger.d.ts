@@ -1,0 +1,79 @@
+import React, { ReactElement } from "react";
+/** 支持的事件类型 */
+export declare enum UseTriggerType {
+    /** 点击 */
+    click = "click",
+    /**
+     * 获得焦点, 该事件在获取焦点和失去焦点时均会触发, 可通过e.focus判断是否聚焦, 事件的x/y, offsetX/Y等坐标信息始终为0
+     * - 需要确保element或其任意子级是focusable的
+     * */
+    focus = "focus",
+    /**
+     * 根据不同的设备, 会有不同的表现, 该事件在开始和结束时均会触发:
+     * - 支持鼠标事件的设备 - hover
+     * - 不支持鼠标且支持touch的设备 - 按住
+     *
+     * 此事件自动附加了一个触发延迟, 用于在大部分场景下获得更好的体验(比如鼠标快速划过)
+     * */
+    active = "active",
+    /** 通常是鼠标的副键点击, 在移动设备, 按住超过一定时间后也会触发, 并且会和通过touch触发的active一同触发, 所以不建议将两者混合使用 */
+    contextMenu = "contextMenu"
+}
+export declare type UseTriggerTypeKeys = keyof typeof UseTriggerType;
+/** 可用事件类型 */
+export declare type UseTriggerTypeUnion = UseTriggerType | UseTriggerTypeKeys;
+/** 事件对象 */
+export interface UseTriggerEvent<E extends Event = Event> {
+    /** 触发的事件类型 */
+    type: UseTriggerTypeUnion;
+    /** 是否处于active状态 */
+    active: boolean;
+    /** 是否处于focus状态 */
+    focus: boolean;
+    /** 触发位置相对屏幕的x坐标 */
+    x: number;
+    /** 触发位置相对屏幕的y坐标 */
+    y: number;
+    /** 触发位置相对目标左上角的x坐标 */
+    offsetX: number;
+    /** 触发位置相对目标左上角的y坐标 */
+    offsetY: number;
+    /** 原生事件对象, 可能是touch/mouse事件对象, 在最新的浏览器里可能是pointer对象, 如需操作需自行注意处理兼容问题 */
+    nativeEvent: E;
+    /** 接收至UseTriggerConfig.data */
+    data?: any;
+}
+/** 事件配置 */
+export interface UseTriggerConfig {
+    /**
+     * 事件目标节点, 根据绑定的事件类型, 需要支持以下事件props:
+     * - click -> onClick
+     * - focus -> onFocus/onBlur
+     * - active -> 使用鼠标的设备: onMouseEnter/onMouseLeave  触控设备: onTouchStart/onTouchEnd, 如果需要两端都兼容, 需要同时支持传入这4个事件
+     * - contextMenu -> onContextMenu
+     * */
+    element: ReactElement;
+    /** 需要绑定的事件类型 */
+    type: UseTriggerTypeUnion | UseTriggerTypeUnion[];
+    /** 触发回调 */
+    onTrigger?: (e: UseTriggerEvent) => void;
+    /** active的特有配置 */
+    active?: {
+        /** 开始触发延迟(ms), mouse和touch方式触发的默认值分别是 140/400, 防止鼠标快速划过触发或移动端点击触发 */
+        triggerDelay?: number;
+        /** 离开触发延迟(ms) */
+        leaveDelay?: number;
+    };
+    /** 传递给事件回调的数据, 某些场景会很有用, 比如一个事件处理函数在多个trigger中复用订阅时 */
+    data?: any;
+}
+/** Trigger的props, 对element进行了更名 */
+export interface UseTriggerProps extends Omit<UseTriggerConfig, "element"> {
+    children: UseTriggerConfig["element"];
+}
+/**
+ * 用来为一个ReactElement绑定常用的触发事件
+ * */
+export declare function useTrigger(config: UseTriggerConfig): React.ReactElement<any, string | React.JSXElementConstructor<any>>;
+export declare function Trigger(config: UseTriggerProps): React.ReactElement<any, string | React.JSXElementConstructor<any>>;
+//# sourceMappingURL=use-trigger.d.ts.map

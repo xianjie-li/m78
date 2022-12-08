@@ -380,6 +380,7 @@ export function _Input(_props: InputProps) {
           __disabled: isDisabled,
           __textarea: textArea,
           __readonly: readonly,
+          __stepper: stepper,
         }
       )}
       style={style}

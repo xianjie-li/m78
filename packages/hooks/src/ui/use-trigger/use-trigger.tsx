@@ -1,13 +1,6 @@
-import {
-  ReactElement,
-  Fragment,
-  createElement,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-import { AnyFunction, dumpFn, isArray } from "@m78/utils";
-import { useFn, useSelf, useSetState } from "../../index.js";
+import React, { ReactElement, useMemo } from "react";
+import { AnyFunction, AnyObject, ensureArray, isFunction } from "@m78/utils";
+import { useFn, useSelf } from "../../index.js";
 
 /** 支持的事件类型 */
 export enum UseTriggerType {
@@ -15,6 +8,7 @@ export enum UseTriggerType {
   click = "click",
   /**
    * 获得焦点, 该事件在获取焦点和失去焦点时均会触发, 可通过e.focus判断是否聚焦, 事件的x/y, offsetX/Y等坐标信息始终为0
+   * - 需要确保element或其任意子级是focusable的
    * */
   focus = "focus",
   /**
@@ -35,7 +29,7 @@ export type UseTriggerTypeKeys = keyof typeof UseTriggerType;
 export type UseTriggerTypeUnion = UseTriggerType | UseTriggerTypeKeys;
 
 /** 事件对象 */
-export interface UseTriggerEvent {
+export interface UseTriggerEvent<E extends Event = Event> {
   /** 触发的事件类型 */
   type: UseTriggerTypeUnion;
   /** 是否处于active状态 */
@@ -51,27 +45,39 @@ export interface UseTriggerEvent {
   /** 触发位置相对目标左上角的y坐标 */
   offsetY: number;
   /** 原生事件对象, 可能是touch/mouse事件对象, 在最新的浏览器里可能是pointer对象, 如需操作需自行注意处理兼容问题 */
-  nativeEvent: Event;
+  nativeEvent: E;
+  /** 接收至UseTriggerConfig.data */
+  data?: any;
 }
 
+/** 事件配置 */
 export interface UseTriggerConfig {
   /**
-   * 事件目标
-   * - element的渲染结果必须是一个正常的dom节点, 不能是文本等特殊节点
-   * - 渲染的dom必须位于组件声明的位置, 即不能使用 ReactDOM.createPortal() 这类会更改渲染位置的api
+   * 事件目标节点, 根据绑定的事件类型, 需要支持以下事件props:
+   * - click -> onClick
+   * - focus -> onFocus/onBlur
+   * - active -> 使用鼠标的设备: onMouseEnter/onMouseLeave  触控设备: onTouchStart/onTouchEnd, 如果需要两端都兼容, 需要同时支持传入这4个事件
+   * - contextMenu -> onContextMenu
    * */
-  element?: ReactElement;
+  element: ReactElement;
   /** 需要绑定的事件类型 */
   type: UseTriggerTypeUnion | UseTriggerTypeUnion[];
   /** 触发回调 */
   onTrigger?: (e: UseTriggerEvent) => void;
   /** active的特有配置 */
   active?: {
-    /** 开始触发延迟(ms), mouse和touch方式触发的默认值分别是 140/400 */
+    /** 开始触发延迟(ms), mouse和touch方式触发的默认值分别是 140/400, 防止鼠标快速划过触发或移动端点击触发 */
     triggerDelay?: number;
     /** 离开触发延迟(ms) */
     leaveDelay?: number;
   };
+  /** 传递给事件回调的数据, 某些场景会很有用, 比如一个事件处理函数在多个trigger中复用订阅时 */
+  data?: any;
+}
+
+/** Trigger的props, 对element进行了更名 */
+export interface UseTriggerProps extends Omit<UseTriggerConfig, "element"> {
+  children: UseTriggerConfig["element"];
 }
 
 enum ActiveType {
@@ -82,7 +88,8 @@ enum ActiveType {
 
 const createNilEvent = (
   type: UseTriggerTypeUnion,
-  e: Event
+  e: Event,
+  data = null
 ): UseTriggerEvent => {
   return {
     type,
@@ -93,6 +100,7 @@ const createNilEvent = (
     offsetX: 0,
     offsetY: 0,
     nativeEvent: e,
+    data,
   };
 };
 
@@ -106,14 +114,14 @@ const offsetSet = (e: UseTriggerEvent, e2: any) => {
 };
 
 /** 根据touch事件和目标节点生成事件对象 */
-function touchGen(e: TouchEvent, ele: Element | null) {
+function touchGen(e: TouchEvent, ele: Element | null, data = null) {
   const touch = e.changedTouches[0];
 
   if (!touch || !ele) return null;
 
   const tBound = ele.getBoundingClientRect();
 
-  return offsetSet(createNilEvent(UseTriggerType.active, e), {
+  return offsetSet(createNilEvent(UseTriggerType.active, e, data), {
     x: touch.clientX,
     y: touch.clientY,
     offsetX: touch.clientX - tBound.left,
@@ -121,24 +129,27 @@ function touchGen(e: TouchEvent, ele: Element | null) {
   });
 }
 
-const tempNodeCls = "m78-use-trigger-temp-node";
+/** 调用eType指定的element.props事件, 自动进行空处理, 用来确保内部事件不会覆盖用户主动向节点传入的事件 */
+const elementPropsEventCall = (
+  element: React.ReactElement,
+  eType: string,
+  e: React.SyntheticEvent
+) => {
+  const call = element?.props?.[eType];
+
+  if (isFunction(call)) {
+    call(e);
+  }
+};
 
 /**
- * 用来为一个ReactElement绑定常用的事件
+ * 用来为一个ReactElement绑定常用的触发事件
  * */
-export function useTrigger<E extends HTMLElement = HTMLElement>(
-  config: UseTriggerConfig
-) {
-  const { element, type, onTrigger, active = {} } = config;
+export function useTrigger(config: UseTriggerConfig) {
+  const { element, type, onTrigger, active = {}, data = null } = config;
   const { triggerDelay, leaveDelay = 100 } = active;
 
-  const [state, setState] = useSetState({
-    el: null as E | null,
-  });
-
-  const types = useMemo(() => {
-    return isArray(type) ? type : [type];
-  }, [type]);
+  const types = ensureArray(type);
 
   const self = useSelf({
     /**
@@ -150,38 +161,6 @@ export function useTrigger<E extends HTMLElement = HTMLElement>(
     active: false,
     /** active delay 计时器 */
     activeTimer: null as any,
-  });
-
-  const refCallback = useFn((node) => {
-    if (!node) {
-      if (state.el) setState({ el: null });
-      return;
-    }
-
-    if (state.el !== node.nextSibling) {
-      setState({
-        el: node.nextSibling,
-      });
-    }
-
-    if (node && node.parentNode) {
-      const parentNode = node.parentNode;
-
-      const back: AnyFunction = parentNode.removeChild.bind(parentNode);
-
-      // 直接删除节点会导致react-refresh等刷新节点时报错, 所以需要添加一些补丁代码进行处理, 减少对dom树的破坏
-      // 主要是为了使兄弟级的css选择器(~ +等)能保持正常运行
-      // parentNode.appendChild(n);
-      parentNode.removeChild = (...arg: any) => {
-        try {
-          back(...arg);
-        } catch (e) {
-          dumpFn(e);
-        }
-      };
-
-      parentNode.removeChild(node);
-    }
   });
 
   // 保持事件回调引用
@@ -202,19 +181,28 @@ export function useTrigger<E extends HTMLElement = HTMLElement>(
     cb();
   });
 
-  const clickHandle = useFn((e: MouseEvent) => {
-    const event = offsetSet(createNilEvent(UseTriggerType.click, e), e);
+  const clickHandle = useFn((e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    elementPropsEventCall(element, "onClick", e);
+    const event = offsetSet(
+      createNilEvent(UseTriggerType.click, e.nativeEvent, data),
+      e.nativeEvent
+    );
     trigger(event);
   });
 
-  const focusHandle = useFn((e) => {
-    const event = createNilEvent(UseTriggerType.focus, e);
+  const focusHandle = useFn((e: React.FocusEvent<HTMLElement, MouseEvent>) => {
+    elementPropsEventCall(element, "onFocus", e);
+    e.stopPropagation();
+    const event = createNilEvent(UseTriggerType.focus, e.nativeEvent, data);
     event.focus = true;
     trigger(event);
   });
 
-  const blurHandle = useFn((e) => {
-    const event = createNilEvent(UseTriggerType.focus, e);
+  const blurHandle = useFn((e: React.FocusEvent<HTMLElement, MouseEvent>) => {
+    elementPropsEventCall(element, "onBlur", e);
+    e.stopPropagation();
+    const event = createNilEvent(UseTriggerType.focus, e.nativeEvent, data);
+    event.data = data;
     trigger(event);
   });
 
@@ -238,8 +226,11 @@ export function useTrigger<E extends HTMLElement = HTMLElement>(
 
         const event =
           aType === ActiveType.mouse
-            ? offsetSet(createNilEvent(UseTriggerType.active, e), e)
-            : touchGen(e, state.el);
+            ? offsetSet(
+                createNilEvent(UseTriggerType.active, e, data),
+                e.nativeEvent
+              )
+            : touchGen(e, e.nativeEvent.currentTarget, data);
 
         if (!event) return;
 
@@ -264,8 +255,11 @@ export function useTrigger<E extends HTMLElement = HTMLElement>(
 
       const event =
         aType === ActiveType.mouse
-          ? offsetSet(createNilEvent(UseTriggerType.active, e), e)
-          : touchGen(e, state.el);
+          ? offsetSet(
+              createNilEvent(UseTriggerType.active, e, data),
+              e.nativeEvent
+            )
+          : touchGen(e, e.nativeEvent.currentTarget, data);
 
       if (!event) return;
 
@@ -273,86 +267,83 @@ export function useTrigger<E extends HTMLElement = HTMLElement>(
     }, leaveDelay);
   });
 
-  const mouseEnterHandle = useFn((e) => {
-    activeEnterHandle(e, ActiveType.mouse, ActiveType.touch);
-  });
+  const mouseEnterHandle = useFn(
+    (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+      elementPropsEventCall(element, "onMouseEnter", e);
+      activeEnterHandle(e, ActiveType.mouse, ActiveType.touch);
+    }
+  );
 
-  const mouseLeaveHandle = useFn((e) => {
-    activeLeaveHandle(e, ActiveType.mouse);
-  });
+  const mouseLeaveHandle = useFn(
+    (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+      elementPropsEventCall(element, "onMouseLeave", e);
+      activeLeaveHandle(e, ActiveType.mouse);
+    }
+  );
 
-  const touchStartHandle = useFn((e: TouchEvent) => {
+  const touchStartHandle = useFn((e: React.TouchEvent<HTMLElement>) => {
+    elementPropsEventCall(element, "onTouchStart", e);
     activeEnterHandle(e, ActiveType.touch, ActiveType.mouse);
   });
 
-  const touchEndHandle = useFn((e) => {
+  const touchEndHandle = useFn((e: React.TouchEvent<HTMLElement>) => {
+    elementPropsEventCall(element, "onTouchEnd", e);
     activeLeaveHandle(e, ActiveType.touch);
   });
 
-  const contextMenuHandle = useFn((e) => {
-    const hasContext = has(UseTriggerType.contextMenu);
+  const contextMenuHandle = useFn(
+    (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+      elementPropsEventCall(element, "onContextMenu", e);
+      const hasContext = has(UseTriggerType.contextMenu);
 
-    // context点击, 获取touch式的active时, 阻止上下文菜单
-    if (hasContext || (has(UseTriggerType.active) && self.activeType === 2)) {
-      e.preventDefault();
+      // context点击, 获取touch式的active时, 阻止上下文菜单
+      if (hasContext || (has(UseTriggerType.active) && self.activeType === 2)) {
+        e.preventDefault();
+      }
+
+      if (!hasContext) return;
+
+      const event = offsetSet(
+        createNilEvent(UseTriggerType.contextMenu, e.nativeEvent),
+        e.nativeEvent
+      );
+      trigger(event);
     }
+  );
 
-    if (!hasContext) return;
-
-    const event = offsetSet(createNilEvent(UseTriggerType.contextMenu, e), e);
-    trigger(event);
-  });
-
-  useEffect(() => {
-    const el = state.el;
-    if (!el) return;
+  const events = useMemo(() => {
+    const events: AnyObject = {
+      // active会在按压时禁用右键菜单, 防止误触发, 所以此事件触发条件在处理函数内部进行
+      onContextMenu: contextMenuHandle,
+    };
 
     if (has(UseTriggerType.click)) {
-      el.addEventListener("click", clickHandle);
+      events["onClick"] = clickHandle;
     }
     if (has(UseTriggerType.focus)) {
-      el.addEventListener("focus", focusHandle);
-      el.addEventListener("blur", blurHandle);
+      events["onFocus"] = focusHandle;
+      events["onBlur"] = blurHandle;
     }
     if (has(UseTriggerType.active)) {
-      el.addEventListener("mouseenter", mouseEnterHandle);
-      el.addEventListener("mouseleave", mouseLeaveHandle);
-      el.addEventListener("touchstart", touchStartHandle);
-      el.addEventListener("touchend", touchEndHandle);
+      events["onMouseEnter"] = mouseEnterHandle;
+      events["onMouseLeave"] = mouseLeaveHandle;
+      events["onTouchStart"] = touchStartHandle;
+      events["onTouchEnd"] = touchEndHandle;
     }
+    return events;
+  }, types);
 
-    // active会在按压时禁用右键菜单, 防止误触发, 所以此事件触发条件在处理函数内部进行
-    el.addEventListener("contextmenu", contextMenuHandle);
+  return useMemo(() => {
+    return React.cloneElement(element, {
+      ...element.props,
+      ...events,
+    });
+  }, [events, element]);
+}
 
-    return () => {
-      el.removeEventListener("click", clickHandle);
-      el.removeEventListener("focus", focusHandle);
-      el.removeEventListener("blur", blurHandle);
-      el.removeEventListener("mouseenter", mouseEnterHandle);
-      el.removeEventListener("mouseleave", mouseLeaveHandle);
-      el.removeEventListener("touchstart", touchStartHandle);
-      el.removeEventListener("touchend", touchEndHandle);
-      el.removeEventListener("contextmenu", contextMenuHandle);
-    };
-  }, [state.el, ...types]);
-
-  function render() {
-    if (!element) return null;
-
-    return createElement(
-      Fragment,
-      null,
-      createElement("i", {
-        ref: refCallback,
-        style: { display: "none" },
-        className: tempNodeCls,
-      }),
-      element
-    );
-  }
-
-  return {
-    node: render(),
-    el: state.el,
-  };
+export function Trigger(config: UseTriggerProps) {
+  return useTrigger({
+    ...config,
+    element: config.children,
+  });
 }
