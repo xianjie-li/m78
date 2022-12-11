@@ -1,4 +1,4 @@
-import { loadScript, loadStyle } from "../src";
+import { loadStyle } from "../src";
 
 test("loadStyle()", () => {
   const css = `

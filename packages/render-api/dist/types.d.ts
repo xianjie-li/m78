@@ -1,17 +1,17 @@
-import { createEvent } from '@m78/hooks';
-import React from 'react';
-import { AnyFunction } from '@m78/utils';
+import { createEvent } from "@m78/hooks";
+import React from "react";
+import { AnyFunction } from "@m78/utils";
 /**
  * 一个更包容的组件接收器类型
  * */
 export declare type ComponentType<P = any> = React.ComponentType<P> | AnyFunction;
 /**
- * 实现组件的标准props, 实现组件可以选择继承此接口(如果未自定义show/onChange的key)或RenderApiComponentBaseProps
+ * 实现组件的标准props, 实现组件可以选择继承此接口(如果未自定义open/onChange的key)或RenderApiComponentBaseProps
  * */
 export interface RenderApiComponentProps<S, I = null> extends RenderApiComponentBaseProps<S, I> {
     /** 是否显示 */
-    show?: boolean;
-    /** show状态变更时通知父组件 */
+    open?: boolean;
+    /** open状态变更时通知父组件 */
     onChange?: (cur: boolean) => void;
 }
 /**
@@ -26,7 +26,7 @@ export interface RenderApiComponentBaseProps<S, I = null> {
      * 更新state, 效果与RenderApiComponentInstance.setState相同, 区别是此回调由实现组件调用
      * 使用此回调来通知外部组件更新传递给自身的state
      * */
-    onUpdate?: RenderApiComponentInstance<S, I>['setState'];
+    onUpdate?: RenderApiComponentInstance<S, I>["setState"];
     /** 当需要对外暴露更多的api时使用, 将额外的api挂载到此ref */
     instanceRef?: React.Ref<I>;
 }
@@ -46,9 +46,9 @@ export interface RenderApiOption<S> {
     maxInstance?: number;
     /** 将实例渲染到指定命名空间的节点下, 而不是使用默认的渲染节点 */
     namespace?: string;
-    /** 'show' | 自行定义控制组件显示/隐藏的props key */
-    showKey?: string;
-    /** 'onChange' | 自定义show变更进行通知的方法 */
+    /** 'open' | 自行定义控制组件显示/隐藏的props key */
+    openKey?: string;
+    /** 'onChange' | 自定义open变更进行通知的方法 */
     changeKey?: string;
     /** 用于在调用render时过滤掉一些不想接收的state, 会以返回的state传递给render(state) */
     omitState?: (state: Partial<RenderApiOmitBuiltState<S>>) => Partial<RenderApiOmitBuiltState<S>>;
@@ -65,9 +65,9 @@ export interface RenderApiInstance<S, I> {
      * */
     RenderTarget: ComponentType;
     /** 关闭全部实例 */
-    hideAll: () => void;
+    closeAll: () => void;
     /** 开启全部实例 */
-    showAll: () => void;
+    openAll: () => void;
     /** 销毁全部实例 */
     disposeAll: () => void;
     /** 获取所有实例的列表 */
@@ -81,7 +81,7 @@ export interface RenderApiInstance<S, I> {
      * 更改create()时传入的配置, 只有白名单内的配置可以更改
      * whiteList: ['defaultState', 'wrap', 'maxInstance']
      * */
-    setOption: (opt: Omit<RenderApiOption<S>, 'component' | 'namespace' | 'showKey' | 'changeKey'>) => void;
+    setOption: (opt: Omit<RenderApiOption<S>, "component" | "namespace" | "openKey" | "changeKey">) => void;
     /**
      * 获取正在使用的配置副本
      * */
@@ -90,9 +90,9 @@ export interface RenderApiInstance<S, I> {
 /** render实例, 调用render()后生成 */
 export interface RenderApiComponentInstance<S, I> {
     /** 隐藏 */
-    hide: () => void;
+    close: () => void;
     /** 显示 */
-    show: () => void;
+    open: () => void;
     /** 销毁 */
     dispose: () => void;
     /** 渲染组件的state */
@@ -102,7 +102,7 @@ export interface RenderApiComponentInstance<S, I> {
     /**
      * 存放组件内部对外暴露的属性和方法，由于组件渲染过程是异步的，所以此属性会延迟设置，如果实现组件未扩展任何东西则始终为null
      * - 如果需要在render()执行后马上获取此实例, 请使用safe()并在其内部进行操作
-     * - 通常实现组件渲染的时间都非常的短, 除了在render后立刻访问, 直接使用instance.current访问实例也是可行的
+     * - 通常实现组件渲染的时间都非常的短, 如果不是需要在render后立刻访问, 直接使用instance.current访问实例也是可行的
      * */
     current: I;
     /**
@@ -121,7 +121,7 @@ export interface _ComponentItem {
     updateFlag: number;
 }
 /**
- * 过滤调内部属性的state
+ * 过滤掉内部属性的state
  * */
-export declare type RenderApiOmitBuiltState<S> = Omit<S, 'show' | 'onChange' | 'onDispose' | 'onUpdate' | 'instanceRef'>;
+export declare type RenderApiOmitBuiltState<S> = Omit<S, "open" | "onChange" | "onDispose" | "onUpdate" | "instanceRef">;
 //# sourceMappingURL=types.d.ts.map

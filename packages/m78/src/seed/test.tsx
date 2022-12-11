@@ -1,4 +1,5 @@
 import React from "react";
+import { jest } from "@jest/globals";
 import { createSeed } from "./index";
 import { render, waitFor } from "@testing-library/react";
 

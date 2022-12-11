@@ -8,13 +8,13 @@ import { AnyFunction } from "@m78/utils";
 export type ComponentType<P = any> = React.ComponentType<P> | AnyFunction;
 
 /**
- * 实现组件的标准props, 实现组件可以选择继承此接口(如果未自定义show/onChange的key)或RenderApiComponentBaseProps
+ * 实现组件的标准props, 实现组件可以选择继承此接口(如果未自定义open/onChange的key)或RenderApiComponentBaseProps
  * */
 export interface RenderApiComponentProps<S, I = null>
   extends RenderApiComponentBaseProps<S, I> {
   /** 是否显示 */
-  show?: boolean;
-  /** show状态变更时通知父组件 */
+  open?: boolean;
+  /** open状态变更时通知父组件 */
   onChange?: (cur: boolean) => void;
 }
 
@@ -51,9 +51,9 @@ export interface RenderApiOption<S> {
   maxInstance?: number;
   /** 将实例渲染到指定命名空间的节点下, 而不是使用默认的渲染节点 */
   namespace?: string;
-  /** 'show' | 自行定义控制组件显示/隐藏的props key */
-  showKey?: string;
-  /** 'onChange' | 自定义show变更进行通知的方法 */
+  /** 'open' | 自行定义控制组件显示/隐藏的props key */
+  openKey?: string;
+  /** 'onChange' | 自定义open变更进行通知的方法 */
   changeKey?: string;
   /** 用于在调用render时过滤掉一些不想接收的state, 会以返回的state传递给render(state) */
   omitState?: (
@@ -75,9 +75,9 @@ export interface RenderApiInstance<S, I> {
    * */
   RenderTarget: ComponentType;
   /** 关闭全部实例 */
-  hideAll: () => void;
+  closeAll: () => void;
   /** 开启全部实例 */
-  showAll: () => void;
+  openAll: () => void;
   /** 销毁全部实例 */
   disposeAll: () => void;
   /** 获取所有实例的列表 */
@@ -94,7 +94,7 @@ export interface RenderApiInstance<S, I> {
   setOption: (
     opt: Omit<
       RenderApiOption<S>,
-      "component" | "namespace" | "showKey" | "changeKey"
+      "component" | "namespace" | "openKey" | "changeKey"
     >
   ) => void;
   /**
@@ -106,9 +106,9 @@ export interface RenderApiInstance<S, I> {
 /** render实例, 调用render()后生成 */
 export interface RenderApiComponentInstance<S, I> {
   /** 隐藏 */
-  hide: () => void;
+  close: () => void;
   /** 显示 */
-  show: () => void;
+  open: () => void;
   /** 销毁 */
   dispose: () => void;
   /** 渲染组件的state */
@@ -143,5 +143,5 @@ export interface _ComponentItem {
  * */
 export type RenderApiOmitBuiltState<S> = Omit<
   S,
-  "show" | "onChange" | "onDispose" | "onUpdate" | "instanceRef"
+  "open" | "onChange" | "onDispose" | "onUpdate" | "instanceRef"
 >;

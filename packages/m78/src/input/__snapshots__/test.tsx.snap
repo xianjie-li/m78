@@ -850,7 +850,7 @@ exports[`input num 1`] = `
     className="mt-16"
   >
     <span
-      className="m78 m78-init m78-input"
+      className="m78 m78-init m78-input __stepper"
     >
       <input
         className="m78-input_inner"
@@ -878,10 +878,10 @@ exports[`input num 1`] = `
         }
       />
       <div
-        className="m78-input_icon m78-input_num-ctrl"
+        className="m78-input_icon"
       >
         <button
-          className="m78 m78-init m78-btn m78-effect __md __small __icon __square-icon"
+          className="m78 m78-init m78-btn m78-effect __md __outline __icon __square-icon"
           disabled={false}
           onClick={[Function]}
           onKeyDown={[Function]}
@@ -904,7 +904,7 @@ exports[`input num 1`] = `
           </svg>
         </button>
         <button
-          className="m78 m78-init m78-btn m78-effect __md __small __icon __square-icon"
+          className="m78 m78-init m78-btn m78-effect __md __outline __icon __square-icon"
           disabled={false}
           onClick={[Function]}
           onKeyDown={[Function]}
@@ -933,7 +933,7 @@ exports[`input num 1`] = `
     className="mt-16"
   >
     <span
-      className="m78 m78-init m78-input"
+      className="m78 m78-init m78-input __stepper"
     >
       <input
         className="m78-input_inner"
@@ -961,10 +961,10 @@ exports[`input num 1`] = `
         }
       />
       <div
-        className="m78-input_icon m78-input_num-ctrl"
+        className="m78-input_icon"
       >
         <button
-          className="m78 m78-init m78-btn m78-effect __md __small __icon __square-icon"
+          className="m78 m78-init m78-btn m78-effect __md __outline __icon __square-icon"
           disabled={false}
           onClick={[Function]}
           onKeyDown={[Function]}
@@ -987,7 +987,7 @@ exports[`input num 1`] = `
           </svg>
         </button>
         <button
-          className="m78 m78-init m78-btn m78-effect __md __small __icon __square-icon"
+          className="m78 m78-init m78-btn m78-effect __md __outline __icon __square-icon"
           disabled={false}
           onClick={[Function]}
           onKeyDown={[Function]}

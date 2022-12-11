@@ -109,24 +109,6 @@ importers:
       resize-observer-polyfill: 1.5.1
     publishDirectory: dist
 
-  packages/icons:
-    specifiers:
-      '@material-design-icons/svg': ^0.14.2
-      '@svgr/core': ^6.5.1
-      clsx: ^1.2.1
-      glob: ^8.0.3
-      lodash: ^4.17.21
-      rollup: ^3.4.0
-    dependencies:
-      clsx: 1.2.1
-      rollup: 3.4.0
-    devDependencies:
-      '@material-design-icons/svg': 0.14.2
-      '@svgr/core': 6.5.1
-      glob: 8.0.3
-      lodash: 4.17.21
-    publishDirectory: dist
-
   packages/lib-a:
     specifiers:
       '@m78/utils': workspace:^
@@ -138,7 +120,8 @@ importers:
     specifiers:
       '@lxjx/click-effect': ^1.0.1
       '@m78/hooks': workspace:^
-      '@m78/icons': workspace:^
+      '@m78/icons': ^1.0.0
+      '@m78/render-api': workspace:^
       '@m78/seed': workspace:^
       '@m78/style': workspace:^
       '@m78/utils': workspace:^
@@ -160,7 +143,8 @@ importers:
     dependencies:
       '@lxjx/click-effect': 1.0.1
       '@m78/hooks': link:../hooks/dist
-      '@m78/icons': link:../icons/dist
+      '@m78/icons': 1.0.0
+      '@m78/render-api': link:../render-api/dist
       '@m78/seed': link:../seed/dist
       '@m78/style': link:../style/dist
       '@m78/utils': link:../utils/dist
@@ -189,7 +173,7 @@ importers:
       '@docusaurus/preset-classic': 2.2.0
       '@docusaurus/theme-live-codeblock': ^2.2.0
       '@m78/hooks': workspace:^
-      '@m78/icons': workspace:^
+      '@m78/icons': ^1.0.0
       '@m78/utils': workspace:^
       '@mdx-js/react': ^1.6.22
       '@tsconfig/docusaurus': ^1.0.5
@@ -207,7 +191,7 @@ importers:
       typescript: ^4.7.4
     dependencies:
       '@m78/hooks': link:../hooks/dist
-      '@m78/icons': link:../icons/dist
+      '@m78/icons': 1.0.0
       '@m78/utils': link:../utils/dist
       '@types/react': 18.0.25
       '@types/react-dom': 18.0.8
@@ -2511,7 +2495,7 @@ packages:
     peerDependencies:
       react: '*'
     dependencies:
-      '@types/react': 18.0.25
+      '@types/react': 18.0.26
       prop-types: 15.8.1
       react: 18.2.0
     dev: true
@@ -3343,8 +3327,15 @@ packages:
       tslib: 2.4.0
     dev: false
 
+  /@m78/icons/1.0.0:
+    resolution: {integrity: sha512-jqXGMAl58dokcpufUbeLKGlYTBKD55BuqswWVx3YDAj4qDzgRc2MMQYRxALjb/WqT2KgZx9D2tiF4x1QfG43qQ==}
+    dependencies:
+      clsx: 1.2.1
+    dev: false
+
   /@material-design-icons/svg/0.14.2:
     resolution: {integrity: sha512-QjAzZmqV+7VI8+0eONVYBvSSlytpR+QQ/elT+YADoYq7R5Tc7kU1PaR0xOrEhwMR9MYK2yhUXqXymP8QY01ehg==}
+    dev: false
 
   /@mdx-js/mdx/1.6.22:
     resolution: {integrity: sha512-AMxuLxPz2j5/6TpF/XSdKpQP1NlG0z11dFOlq+2IP/lSgl11GY8ji6S/rgsViN/L0BDvHvUMruRb7ub+24LUYA==}
@@ -3393,48 +3384,48 @@ packages:
       json5: 2.2.1
     dev: true
 
-  /@msgpackr-extract/msgpackr-extract-darwin-arm64/2.1.2:
-    resolution: {integrity: sha512-TyVLn3S/+ikMDsh0gbKv2YydKClN8HaJDDpONlaZR+LVJmsxLFUgA+O7zu59h9+f9gX1aj/ahw9wqa6rosmrYQ==}
+  /@msgpackr-extract/msgpackr-extract-darwin-arm64/2.2.0:
+    resolution: {integrity: sha512-Z9LFPzfoJi4mflGWV+rv7o7ZbMU5oAU9VmzCgL240KnqDW65Y2HFCT3MW06/ITJSnbVLacmcEJA8phywK7JinQ==}
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
     dev: true
     optional: true
 
-  /@msgpackr-extract/msgpackr-extract-darwin-x64/2.1.2:
-    resolution: {integrity: sha512-YPXtcVkhmVNoMGlqp81ZHW4dMxK09msWgnxtsDpSiZwTzUBG2N+No2bsr7WMtBKCVJMSD6mbAl7YhKUqkp/Few==}
+  /@msgpackr-extract/msgpackr-extract-darwin-x64/2.2.0:
+    resolution: {integrity: sha512-vq0tT8sjZsy4JdSqmadWVw6f66UXqUCabLmUVHZwUFzMgtgoIIQjT4VVRHKvlof3P/dMCkbMJ5hB1oJ9OWHaaw==}
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
     dev: true
     optional: true
 
-  /@msgpackr-extract/msgpackr-extract-linux-arm/2.1.2:
-    resolution: {integrity: sha512-42R4MAFeIeNn+L98qwxAt360bwzX2Kf0ZQkBBucJ2Ircza3asoY4CDbgiu9VWklq8gWJVSJSJBwDI+c/THiWkA==}
+  /@msgpackr-extract/msgpackr-extract-linux-arm/2.2.0:
+    resolution: {integrity: sha512-SaJ3Qq4lX9Syd2xEo9u3qPxi/OB+5JO/ngJKK97XDpa1C587H9EWYO6KD8995DAjSinWvdHKRrCOXVUC5fvGOg==}
     cpu: [arm]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /@msgpackr-extract/msgpackr-extract-linux-arm64/2.1.2:
-    resolution: {integrity: sha512-vHZ2JiOWF2+DN9lzltGbhtQNzDo8fKFGrf37UJrgqxU0yvtERrzUugnfnX1wmVfFhSsF8OxrfqiNOUc5hko1Zg==}
+  /@msgpackr-extract/msgpackr-extract-linux-arm64/2.2.0:
+    resolution: {integrity: sha512-hlxxLdRmPyq16QCutUtP8Tm6RDWcyaLsRssaHROatgnkOxdleMTgetf9JsdncL8vLh7FVy/RN9i3XR5dnb9cRA==}
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /@msgpackr-extract/msgpackr-extract-linux-x64/2.1.2:
-    resolution: {integrity: sha512-RjRoRxg7Q3kPAdUSC5EUUPlwfMkIVhmaRTIe+cqHbKrGZ4M6TyCA/b5qMaukQ/1CHWrqYY2FbKOAU8Hg0pQFzg==}
+  /@msgpackr-extract/msgpackr-extract-linux-x64/2.2.0:
+    resolution: {integrity: sha512-94y5PJrSOqUNcFKmOl7z319FelCLAE0rz/jPCWS+UtdMZvpa4jrQd+cJPQCLp2Fes1yAW/YUQj/Di6YVT3c3Iw==}
     cpu: [x64]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /@msgpackr-extract/msgpackr-extract-win32-x64/2.1.2:
-    resolution: {integrity: sha512-rIZVR48zA8hGkHIK7ED6+ZiXsjRCcAVBJbm8o89OKAMTmEAQ2QvoOxoiu3w2isAaWwzgtQIOFIqHwvZDyLKCvw==}
+  /@msgpackr-extract/msgpackr-extract-win32-x64/2.2.0:
+    resolution: {integrity: sha512-XrC0JzsqQSvOyM3t04FMLO6z5gCuhPE6k4FXuLK5xf52ZbdvcFe1yBmo7meCew9B8G2f0T9iu9t3kfTYRYROgA==}
     cpu: [x64]
     os: [win32]
     requiresBuild: true
@@ -4502,7 +4493,7 @@ packages:
     resolution: {integrity: sha512-Fv/5kb2STAEMT3wHzdKQK2z8xKq38EDIGVrutYLmQVVLe+4orDFquU52hQrULnEHinMKv9FSA6lf9+uNT1ITtA==}
     dependencies:
       '@types/history': 4.7.11
-      '@types/react': 18.0.25
+      '@types/react': 18.0.26
     dev: true
 
   /@types/react-test-renderer/18.0.0:
@@ -4533,6 +4524,14 @@ packages:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.2
       csstype: 3.1.1
+
+  /@types/react/18.0.26:
+    resolution: {integrity: sha512-hCR3PJQsAIXyxhTNSiDFY//LhnMZWpNNr5etoCqx/iUfGc5gXWtQR2Phl908jVR6uPXacojQWTg4qRpkxTuGug==}
+    dependencies:
+      '@types/prop-types': 15.7.5
+      '@types/scheduler': 0.16.2
+      csstype: 3.1.1
+    dev: true
 
   /@types/responselike/1.0.0:
     resolution: {integrity: sha512-85Y2BjiufFzaMIlvJDvTTB8Fxl2xfLo4HgmHzVBz08w4wDePCTjYw66PdrolO0kzli3yam/YCgRufyo1DdQVTA==}
@@ -5498,6 +5497,7 @@ packages:
     resolution: {integrity: sha512-XnAIvQ8eM+kC6aULx6wuQiwVsnzsi9d3WxzV3FpWTGA19F621kwdbsAcFKXgKUHZWsy+mY6iL1sHTxWEFCytDA==}
     dependencies:
       balanced-match: 1.0.2
+    dev: false
 
   /braces/3.0.2:
     resolution: {integrity: sha512-b8um+L1RzM3WDSzvhm6gIz1yfTbBt6YTlcEKAvsmqCZZFw46z626lVj9j1yEPW33H5H+lBQpZMP1k8l+78Ha0A==}
@@ -7704,6 +7704,7 @@ packages:
       inherits: 2.0.4
       minimatch: 5.1.0
       once: 1.4.0
+    dev: false
 
   /global-dirs/3.0.1:
     resolution: {integrity: sha512-NBcGGFbBA9s1VzD41QXDG+3++t9Mn5t1FpLdhESY6oKY4gYTFpX4wO3sqGUa0Srjtbfj3szX0RnemmrVRUdULA==}
@@ -9580,6 +9581,7 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       brace-expansion: 2.0.1
+    dev: false
 
   /minimist/1.2.7:
     resolution: {integrity: sha512-bzfL1YUZsP41gmu/qjrEk0Q6i2ix/cVeAhbCbqH9u3zYutS1cLg00qhrD0M2MVdCcx4Sc0UpP2eBWo9rotpq6g==}
@@ -9605,26 +9607,26 @@ packages:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
     dev: true
 
-  /msgpackr-extract/2.1.2:
-    resolution: {integrity: sha512-cmrmERQFb19NX2JABOGtrKdHMyI6RUyceaPBQ2iRz9GnDkjBWFjNJC0jyyoOfZl2U/LZE3tQCCQc4dlRyA8mcA==}
+  /msgpackr-extract/2.2.0:
+    resolution: {integrity: sha512-0YcvWSv7ZOGl9Od6Y5iJ3XnPww8O7WLcpYMDwX+PAA/uXLDtyw94PJv9GLQV/nnp3cWlDhMoyKZIQLrx33sWog==}
     hasBin: true
     requiresBuild: true
     dependencies:
       node-gyp-build-optional-packages: 5.0.3
     optionalDependencies:
-      '@msgpackr-extract/msgpackr-extract-darwin-arm64': 2.1.2
-      '@msgpackr-extract/msgpackr-extract-darwin-x64': 2.1.2
-      '@msgpackr-extract/msgpackr-extract-linux-arm': 2.1.2
-      '@msgpackr-extract/msgpackr-extract-linux-arm64': 2.1.2
-      '@msgpackr-extract/msgpackr-extract-linux-x64': 2.1.2
-      '@msgpackr-extract/msgpackr-extract-win32-x64': 2.1.2
+      '@msgpackr-extract/msgpackr-extract-darwin-arm64': 2.2.0
+      '@msgpackr-extract/msgpackr-extract-darwin-x64': 2.2.0
+      '@msgpackr-extract/msgpackr-extract-linux-arm': 2.2.0
+      '@msgpackr-extract/msgpackr-extract-linux-arm64': 2.2.0
+      '@msgpackr-extract/msgpackr-extract-linux-x64': 2.2.0
+      '@msgpackr-extract/msgpackr-extract-win32-x64': 2.2.0
     dev: true
     optional: true
 
   /msgpackr/1.7.1:
     resolution: {integrity: sha512-p2YUTuwFAUtoPACKPDfoibJn4oBuzSCXs0/AudNLqczL8R2Ult32987Ih69df5zaaMnWT/3JizgP8q8d3s2ZlQ==}
     optionalDependencies:
-      msgpackr-extract: 2.1.2
+      msgpackr-extract: 2.2.0
     dev: true
 
   /multicast-dns/7.2.5:
@@ -11446,14 +11448,6 @@ packages:
   /rollup/2.79.1:
     resolution: {integrity: sha512-uKxbd0IhMZOhjAiD5oAFp7BqvkA4Dv47qpOCtaNvng4HBwdbWtdOh8f5nZNuk2rp51PMGk3bzfWu5oayNEuYnw==}
     engines: {node: '>=10.0.0'}
-    hasBin: true
-    optionalDependencies:
-      fsevents: 2.3.2
-    dev: false
-
-  /rollup/3.4.0:
-    resolution: {integrity: sha512-4g8ZrEFK7UbDvy3JF+d5bLiC8UKkS3n/27/cnVeESwB1LVPl6MoPL32/6+SCQ1vHTp6Mvp2veIHtwELhi+uXEw==}
-    engines: {node: '>=14.18.0', npm: '>=8.0.0'}
     hasBin: true
     optionalDependencies:
       fsevents: 2.3.2

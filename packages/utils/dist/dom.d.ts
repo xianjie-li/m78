@@ -66,7 +66,7 @@ export declare function getCurrentParent(node: Element, matcher: (node: Element)
  * When setting or getting scrollTop/scrollLeft on document.documentElement and document.body, the performance of different browsers will be inconsistent, so when the scroll element is document.documentElement or document.body, document.documentElement is returned uniformly for easy identification
  * */
 export declare function getScrollParent(ele: HTMLElement, getAll?: false): HTMLElement | null;
-export declare function getScrollParent(ele: HTMLElement, getAll?: boolean): HTMLElement | HTMLElement[] | null;
+export declare function getScrollParent(ele: HTMLElement, getAll?: true): HTMLElement[];
 /** get doc scroll offset, used to solve the problem of different versions of the browser to get inconsistent */
 export declare function getDocScrollOffset(): {
     x: number;

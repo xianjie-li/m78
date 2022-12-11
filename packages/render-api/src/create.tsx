@@ -39,7 +39,7 @@ function create<S extends object, I = null>(
   const {
     component: Component,
     namespace = "RENDER__BOX",
-    showKey = "show",
+    openKey = "open",
     changeKey = "onChange",
   } = option;
 
@@ -59,25 +59,25 @@ function create<S extends object, I = null>(
     targetIsRender: false,
   };
 
-  function hide(id: string) {
+  function close(id: string) {
     const current = getItemById(id);
 
     if (!current) return;
-    if (!current.state[showKey]) return;
+    if (!current.state[openKey]) return;
 
     setStateByCurrent(current, {
-      [showKey]: false,
+      [openKey]: false,
     } as any);
   }
 
-  function show(id: string) {
+  function open(id: string) {
     const current = getItemById(id);
 
     if (!current) return;
-    if (current.state[showKey]) return;
+    if (current.state[openKey]) return;
 
     setStateByCurrent(current, {
-      [showKey]: true,
+      [openKey]: true,
     } as any);
   }
 
@@ -97,12 +97,12 @@ function create<S extends object, I = null>(
   }
 
   /** 设置所有实例的开启或关闭状态 */
-  function setAllShow(open: boolean) {
+  function setAllOpen(open: boolean) {
     ctx.list.forEach((item) =>
       setStateByCurrent(
         item,
         {
-          [showKey]: open,
+          [openKey]: open,
         } as any,
         false
       )
@@ -167,9 +167,9 @@ function create<S extends object, I = null>(
       ...state,
 
       // RenderApiComponentProps
-      [showKey]: true,
+      [openKey]: true,
       [changeKey]: (cur: boolean) => {
-        setStateById(id, { [showKey]: cur } as any);
+        setStateById(id, { [openKey]: cur } as any);
         changeEvent.emit();
       },
 
@@ -188,8 +188,8 @@ function create<S extends object, I = null>(
     };
 
     const instance: RenderApiComponentInstance<S, any> = {
-      hide: hide.bind(null, id),
-      show: show.bind(null, id),
+      close: close.bind(null, id),
+      open: open.bind(null, id),
       dispose: dispose.bind(null, id),
       state: _state as any,
       setState: _state.onUpdate!,
@@ -308,8 +308,8 @@ function create<S extends object, I = null>(
   return {
     RenderTarget,
     render,
-    hideAll: () => setAllShow(false),
-    showAll: () => setAllShow(true),
+    closeAll: () => setAllOpen(false),
+    openAll: () => setAllOpen(true),
     disposeAll,
     getInstances: () => ctx.list.map((item) => item.instance),
     events: {

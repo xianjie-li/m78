@@ -13,6 +13,7 @@ import IconExample from "../icon/icon-example";
 import LayoutExample from "../layout";
 import { Row } from "../../src/layout";
 import InputExample from "../input/input-example";
+import OverlayExample from "../overlay/overlay-example.js";
 
 export const router = createHashRouter([
   {
@@ -47,6 +48,10 @@ export const router = createHashRouter([
       {
         path: "input",
         element: <InputExample />,
+      },
+      {
+        path: "overlay",
+        element: <OverlayExample />,
       },
     ],
   },

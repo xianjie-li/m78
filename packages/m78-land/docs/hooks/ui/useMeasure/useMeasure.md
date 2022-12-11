@@ -10,7 +10,6 @@ group:
 
 ## 示例
 
-<code src="./useMeasure.demo.tsx"></code>
 <demo demo={require("./useMeasure.demo.tsx")} code={require("!!raw-loader!./useMeasure.demo.tsx")}></demo>
 
 ## API

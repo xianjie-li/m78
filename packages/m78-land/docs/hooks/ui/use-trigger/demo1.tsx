@@ -1,6 +1,5 @@
 import * as React from "react";
 import {
-  useFn,
   useSetState,
   useTrigger,
   UseTriggerEvent,
@@ -14,28 +13,7 @@ const Demo1 = () => {
     text: [] as string[],
   });
 
-  const evHandle = useFn((e: UseTriggerEvent) => {
-    if (e.type === UseTriggerType.focus) {
-      setState({
-        focus: e.focus,
-        text: [...state.text, e.focus ? "focus" : "blur"],
-      });
-    }
-    if (e.type === UseTriggerType.active) {
-      setState({
-        active: e.active,
-        text: [...state.text, e.active ? "active" : "inactive"],
-      });
-    }
-    if (e.type == UseTriggerType.click) {
-      setState({
-        text: [...state.text, "click"],
-      });
-    }
-    console.log(e);
-  });
-
-  const btn1 = useTrigger({
+  const trigger = useTrigger({
     element: (
       <button
         style={{
@@ -47,10 +25,29 @@ const Demo1 = () => {
       </button>
     ),
     type: [UseTriggerType.click, UseTriggerType.focus, UseTriggerType.active],
-    onTrigger: evHandle,
+    onTrigger: (e: UseTriggerEvent) => {
+      if (e.type === UseTriggerType.focus) {
+        setState({
+          focus: e.focus,
+          text: [...state.text, e.focus ? "focus" : "blur"],
+        });
+      }
+      if (e.type === UseTriggerType.active) {
+        setState({
+          active: e.active,
+          text: [...state.text, e.active ? "active" : "inactive"],
+        });
+      }
+      if (e.type == UseTriggerType.click) {
+        setState({
+          text: [...state.text, "click"],
+        });
+      }
+      console.log(e);
+    },
   });
 
-  const btn2 = useTrigger({
+  const trigger2 = useTrigger({
     element: <button>contextMenu</button>,
     type: UseTriggerType.contextMenu,
     onTrigger(e) {
@@ -64,7 +61,7 @@ const Demo1 = () => {
   return (
     <div>
       <div>
-        {btn1} {btn2}
+        {trigger.node} {trigger2.node}
       </div>
       <div>
         {state.text.map((i, ind) => (

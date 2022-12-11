@@ -4,19 +4,14 @@ import _debounce from "lodash/debounce";
 import css from "./style.module.scss";
 import { Spin } from "m78/spin";
 import { useFn } from "@m78/hooks";
-import { Button, ButtonColor } from "m78/button";
 import { Input } from "m78/input";
-import { copyToClipboard } from "../../../../src/common/common";
+import { copyToClipboard } from "@site/src/common/common";
 
 const IconDemo = () => {
   const [list, setList] = useState<any>([]);
   const [list2, setList2] = useState<any>([]);
   const [loading, setLoading] = useState(true);
   const [kw, setKw] = useState("");
-
-  const [index, setIndex] = useState(0);
-  // 默认只渲染第一页
-  const [renderNotIndex, setRenderNotIndex] = useState(false);
 
   const [error, setError] = useState();
 
@@ -35,7 +30,7 @@ const IconDemo = () => {
 
   useEffect(() => {
     // @ts-ignore
-    import("@m78/icons/bundle")
+    import("@m78/icons/_bundle.js")
       .then((bundle) => {
         const l1: any = [];
         const l2: any = [];
@@ -91,26 +86,7 @@ const IconDemo = () => {
   return (
     <div className="fs-24">
       <div className="p-8">
-        <Button
-          color={index === 0 ? ButtonColor.primary : undefined}
-          onClick={() => setIndex(0)}
-        >
-          单色图标
-        </Button>
-        <Button
-          color={index === 1 ? ButtonColor.primary : undefined}
-          onClick={() => {
-            setIndex(1);
-            setRenderNotIndex(true);
-          }}
-        >
-          双色图标
-        </Button>
-        <Input
-          className="ml-8"
-          placeholder="输入关键词搜索"
-          onChange={kwChange}
-        />
+        <Input placeholder="输入关键词搜索" onChange={kwChange} />
       </div>
       {loading && (
         <div className="p-12">
@@ -133,31 +109,13 @@ const IconDemo = () => {
         </div>
       )}
 
-      <div
-        style={{
-          display: index === 0 && !kw ? "block" : "none",
-        }}
-      >
+      <div>
         {list.map((i: any) => (
           <div key={i.key} className={css.item}>
             <i.Icon onClick={(e: any) => copy(e, i)} />
           </div>
         ))}
       </div>
-      {renderNotIndex && (
-        <div
-          style={{
-            display: index === 1 && !kw ? "block" : "none",
-          }}
-          className="color"
-        >
-          {list2.map((i: any) => (
-            <div key={i.key} className={css.item}>
-              <i.Icon onClick={(e: any) => copy(e, i)} />
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 };

@@ -4,8 +4,6 @@ import { UseTriggerType, Trigger } from "@m78/hooks";
 const Demo2 = () => {
   const [text, setText] = useState<string[]>([]);
 
-  console.log(text);
-
   return (
     <div>
       <Trigger

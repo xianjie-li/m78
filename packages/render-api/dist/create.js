@@ -28,17 +28,17 @@ var setStateWhiteList = [
  * - I - 组件扩展api
  * @param opt - 创建配置
  * */ function create(opt) {
-    var hide = function hide(id) {
+    var close = function close(id) {
         var current = getItemById(id);
         if (!current) return;
-        if (!current.state[showKey]) return;
-        setStateByCurrent(current, _define_property({}, showKey, false));
+        if (!current.state[openKey]) return;
+        setStateByCurrent(current, _define_property({}, openKey, false));
     };
-    var show = function show(id) {
+    var open = function open(id) {
         var current = getItemById(id);
         if (!current) return;
-        if (current.state[showKey]) return;
-        setStateByCurrent(current, _define_property({}, showKey, true));
+        if (current.state[openKey]) return;
+        setStateByCurrent(current, _define_property({}, openKey, true));
     };
     var dispose = function dispose(id) {
         var ind = getIndexById(id);
@@ -50,9 +50,9 @@ var setStateWhiteList = [
         ctx.list = [];
         changeEvent.emit();
     };
-    var setAllShow = /** 设置所有实例的开启或关闭状态 */ function setAllShow(open) {
+    var setAllOpen = /** 设置所有实例的开启或关闭状态 */ function setAllOpen(open) {
         ctx.list.forEach(function(item) {
-            return setStateByCurrent(item, _define_property({}, showKey, open), false);
+            return setStateByCurrent(item, _define_property({}, openKey, open), false);
         });
         changeEvent.emit();
     };
@@ -92,8 +92,8 @@ var setStateWhiteList = [
         }
         var _obj;
         /** 创建组件state */ var _state = _object_spread_props(_object_spread({}, option.defaultState, state), (_obj = {}, // RenderApiComponentProps
-        _define_property(_obj, showKey, true), _define_property(_obj, changeKey, function(cur) {
-            setStateById(id, _define_property({}, showKey, cur));
+        _define_property(_obj, openKey, true), _define_property(_obj, changeKey, function(cur) {
+            setStateById(id, _define_property({}, openKey, cur));
             changeEvent.emit();
         }), // below RenderApiComponentBaseProps
         _define_property(_obj, "onDispose", dispose.bind(null, id)), _define_property(_obj, "onUpdate", setStateById.bind(null, id)), _define_property(_obj, "instanceRef", function(instance) {
@@ -106,8 +106,8 @@ var setStateWhiteList = [
             }
         }), _obj));
         var instance = {
-            hide: hide.bind(null, id),
-            show: show.bind(null, id),
+            close: close.bind(null, id),
+            open: open.bind(null, id),
             dispose: dispose.bind(null, id),
             state: _state,
             setState: _state.onUpdate,
@@ -189,7 +189,7 @@ var setStateWhiteList = [
     };
     var option = _object_spread({}, opt);
     // updateOptionWhiteList类的配置是可更改的, 必须在使用时实时获取
-    var Component = option.component, _namespace = option.namespace, namespace = _namespace === void 0 ? "RENDER__BOX" : _namespace, _showKey = option.showKey, showKey = _showKey === void 0 ? "show" : _showKey, _changeKey = option.changeKey, changeKey = _changeKey === void 0 ? "onChange" : _changeKey;
+    var Component = option.component, _namespace = option.namespace, namespace = _namespace === void 0 ? "RENDER__BOX" : _namespace, _openKey = option.openKey, openKey = _openKey === void 0 ? "open" : _openKey, _changeKey = option.changeKey, changeKey = _changeKey === void 0 ? "onChange" : _changeKey;
     /** 对组件进行强缓存, 只允许在_updateFlag变更时更新 */ var MemoComponent = /*#__PURE__*/ React.memo(Component, function(prev, next) {
         return prev._updateFlag === next._updateFlag;
     });
@@ -219,11 +219,11 @@ var setStateWhiteList = [
     return {
         RenderTarget: RenderTarget,
         render: render,
-        hideAll: function() {
-            return setAllShow(false);
+        closeAll: function() {
+            return setAllOpen(false);
         },
-        showAll: function() {
-            return setAllShow(true);
+        openAll: function() {
+            return setAllOpen(true);
         },
         disposeAll: disposeAll,
         getInstances: function() {

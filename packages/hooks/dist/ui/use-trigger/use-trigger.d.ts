@@ -1,5 +1,8 @@
-import React, { ReactElement } from "react";
-/** 支持的事件类型 */
+import { ReactElement } from "react";
+/**
+ * 支持的事件类型
+ * - 在触控设备上, 会自动添加css到目标dom并使用preventEvent来阻止一些默认行为
+ * */
 export declare enum UseTriggerType {
     /** 点击 */
     click = "click",
@@ -11,12 +14,12 @@ export declare enum UseTriggerType {
     /**
      * 根据不同的设备, 会有不同的表现, 该事件在开始和结束时均会触发:
      * - 支持鼠标事件的设备 - hover
-     * - 不支持鼠标且支持touch的设备 - 按住
+     * - 不支持鼠标且支持touch的设备 - 按住一段时间
      *
      * 此事件自动附加了一个触发延迟, 用于在大部分场景下获得更好的体验(比如鼠标快速划过)
      * */
     active = "active",
-    /** 通常是鼠标的副键点击, 在移动设备, 按住超过一定时间后也会触发, 并且会和通过touch触发的active一同触发, 所以不建议将两者混合使用 */
+    /** 通常是鼠标的副键点击, 在移动设备, 按住超过一定时间后也会触发, 这和active在移动设备的行为一致, 所以不建议将两者混合使用 */
     contextMenu = "contextMenu"
 }
 export declare type UseTriggerTypeKeys = keyof typeof UseTriggerType;
@@ -40,19 +43,18 @@ export interface UseTriggerEvent<E extends Event = Event> {
     offsetY: number;
     /** 原生事件对象, 可能是touch/mouse事件对象, 在最新的浏览器里可能是pointer对象, 如需操作需自行注意处理兼容问题 */
     nativeEvent: E;
+    /** 事件目标节点 */
+    target: EventTarget;
     /** 接收至UseTriggerConfig.data */
     data?: any;
 }
 /** 事件配置 */
 export interface UseTriggerConfig {
     /**
-     * 事件目标节点, 根据绑定的事件类型, 需要支持以下事件props:
-     * - click -> onClick
-     * - focus -> onFocus/onBlur
-     * - active -> 使用鼠标的设备: onMouseEnter/onMouseLeave  触控设备: onTouchStart/onTouchEnd, 如果需要两端都兼容, 需要同时支持传入这4个事件
-     * - contextMenu -> onContextMenu
+     * 事件目标元素, 元素渲染结果必须是单个dom节点, 文本或多个dom会导致事件监听异常
+     * - 弱传入无效值则不进行任何监听
      * */
-    element: ReactElement;
+    element?: ReactElement;
     /** 需要绑定的事件类型 */
     type: UseTriggerTypeUnion | UseTriggerTypeUnion[];
     /** 触发回调 */
@@ -74,6 +76,9 @@ export interface UseTriggerProps extends Omit<UseTriggerConfig, "element"> {
 /**
  * 用来为一个ReactElement绑定常用的触发事件
  * */
-export declare function useTrigger(config: UseTriggerConfig): React.ReactElement<any, string | React.JSXElementConstructor<any>>;
-export declare function Trigger(config: UseTriggerProps): React.ReactElement<any, string | React.JSXElementConstructor<any>>;
+export declare function useTrigger(config: UseTriggerConfig): {
+    node: JSX.Element;
+    el: HTMLElement | null;
+};
+export declare function Trigger(config: UseTriggerProps): JSX.Element;
 //# sourceMappingURL=use-trigger.d.ts.map

@@ -362,10 +362,7 @@ export function getScrollParent(
   ele: HTMLElement,
   getAll?: false
 ): HTMLElement | null;
-export function getScrollParent(
-  ele: HTMLElement,
-  getAll?: boolean
-): HTMLElement | HTMLElement[] | null;
+export function getScrollParent(ele: HTMLElement, getAll?: true): HTMLElement[];
 export function getScrollParent(ele: HTMLElement, getAll?: boolean): any {
   let node: any = getAll ? [] : null;
 

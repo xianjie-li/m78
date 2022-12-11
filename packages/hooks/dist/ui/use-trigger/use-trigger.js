@@ -1,8 +1,11 @@
 import _object_spread from "@swc/helpers/src/_object_spread.mjs";
 import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
-import React, { useMemo } from "react";
-import { ensureArray, isFunction } from "@m78/utils";
-import { useFn, useSelf } from "../../index.js";
+import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
+import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
+import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
+import React, { useEffect } from "react";
+import { dumpFn, ensureArray } from "@m78/utils";
+import { useFn, useSelf, useSetState } from "../../index.js";
 export var UseTriggerType;
 (function(UseTriggerType) {
     UseTriggerType[/** 点击 */ "click"] = "click";
@@ -13,11 +16,11 @@ export var UseTriggerType;
     UseTriggerType[/**
    * 根据不同的设备, 会有不同的表现, 该事件在开始和结束时均会触发:
    * - 支持鼠标事件的设备 - hover
-   * - 不支持鼠标且支持touch的设备 - 按住
+   * - 不支持鼠标且支持touch的设备 - 按住一段时间
    *
    * 此事件自动附加了一个触发延迟, 用于在大部分场景下获得更好的体验(比如鼠标快速划过)
    * */ "active"] = "active";
-    UseTriggerType[/** 通常是鼠标的副键点击, 在移动设备, 按住超过一定时间后也会触发, 并且会和通过touch触发的active一同触发, 所以不建议将两者混合使用 */ "contextMenu"] = "contextMenu";
+    UseTriggerType[/** 通常是鼠标的副键点击, 在移动设备, 按住超过一定时间后也会触发, 这和active在移动设备的行为一致, 所以不建议将两者混合使用 */ "contextMenu"] = "contextMenu";
 })(UseTriggerType || (UseTriggerType = {}));
 var ActiveType;
 (function(ActiveType) {
@@ -25,8 +28,8 @@ var ActiveType;
     ActiveType[ActiveType["mouse"] = 1] = "mouse";
     ActiveType[ActiveType["touch"] = 2] = "touch";
 })(ActiveType || (ActiveType = {}));
-var createNilEvent = function(type, e) {
-    var data = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : null;
+var createNilEvent = function(type, e, target) {
+    var data = arguments.length > 3 && arguments[3] !== void 0 ? arguments[3] : null;
     return {
         type: type,
         active: false,
@@ -36,6 +39,7 @@ var createNilEvent = function(type, e) {
         offsetX: 0,
         offsetY: 0,
         nativeEvent: e,
+        target: target,
         data: data
     };
 };
@@ -51,20 +55,13 @@ var createNilEvent = function(type, e) {
     var touch = e.changedTouches[0];
     if (!touch || !ele) return null;
     var tBound = ele.getBoundingClientRect();
-    return offsetSet(createNilEvent(UseTriggerType.active, e, data), {
+    return offsetSet(createNilEvent(UseTriggerType.active, e, ele, data), {
         x: touch.clientX,
         y: touch.clientY,
         offsetX: touch.clientX - tBound.left,
         offsetY: touch.clientY - tBound.top
     });
 }
-/** 调用eType指定的element.props事件, 自动进行空处理, 用来确保内部事件不会覆盖用户主动向节点传入的事件 */ var elementPropsEventCall = function(element, eType, e) {
-    var ref;
-    var call = element === null || element === void 0 ? void 0 : (ref = element.props) === null || ref === void 0 ? void 0 : ref[eType];
-    if (isFunction(call)) {
-        call(e);
-    }
-};
 /**
  * 用来为一个ReactElement绑定常用的触发事件
  * */ export function useTrigger(config) {
@@ -96,21 +93,18 @@ var createNilEvent = function(type, e) {
         cb();
     });
     var clickHandle = useFn(function(e) {
-        elementPropsEventCall(element, "onClick", e);
-        var event = offsetSet(createNilEvent(UseTriggerType.click, e.nativeEvent, data), e.nativeEvent);
+        var event = offsetSet(createNilEvent(UseTriggerType.click, e, state.el, data), e);
         trigger(event);
     });
     var focusHandle = useFn(function(e) {
-        elementPropsEventCall(element, "onFocus", e);
         e.stopPropagation();
-        var event = createNilEvent(UseTriggerType.focus, e.nativeEvent, data);
+        var event = createNilEvent(UseTriggerType.focus, e, state.el, data);
         event.focus = true;
         trigger(event);
     });
     var blurHandle = useFn(function(e) {
-        elementPropsEventCall(element, "onBlur", e);
         e.stopPropagation();
-        var event = createNilEvent(UseTriggerType.focus, e.nativeEvent, data);
+        var event = createNilEvent(UseTriggerType.focus, e, state.el, data);
         event.data = data;
         trigger(event);
     });
@@ -126,7 +120,7 @@ var createNilEvent = function(type, e) {
         }
         activeDelayHelper(function() {
             if (self.active) return;
-            var event = aType === ActiveType.mouse ? offsetSet(createNilEvent(UseTriggerType.active, e, data), e.nativeEvent) : touchGen(e, e.nativeEvent.currentTarget, data);
+            var event = aType === ActiveType.mouse ? offsetSet(createNilEvent(UseTriggerType.active, e, state.el, data), e) : touchGen(e, state.el, data);
             if (!event) return;
             self.active = true;
             event.active = true;
@@ -140,67 +134,119 @@ var createNilEvent = function(type, e) {
         activeDelayHelper(function() {
             if (!self.active) return;
             self.active = false;
-            var event = aType === ActiveType.mouse ? offsetSet(createNilEvent(UseTriggerType.active, e, data), e.nativeEvent) : touchGen(e, e.nativeEvent.currentTarget, data);
+            var event = aType === ActiveType.mouse ? offsetSet(createNilEvent(UseTriggerType.active, e, state.el, data), e) : touchGen(e, state.el, data);
             if (!event) return;
             trigger(event);
         }, leaveDelay);
     });
     var mouseEnterHandle = useFn(function(e) {
-        elementPropsEventCall(element, "onMouseEnter", e);
         activeEnterHandle(e, ActiveType.mouse, ActiveType.touch);
     });
     var mouseLeaveHandle = useFn(function(e) {
-        elementPropsEventCall(element, "onMouseLeave", e);
         activeLeaveHandle(e, ActiveType.mouse);
     });
     var touchStartHandle = useFn(function(e) {
-        elementPropsEventCall(element, "onTouchStart", e);
         activeEnterHandle(e, ActiveType.touch, ActiveType.mouse);
     });
     var touchEndHandle = useFn(function(e) {
-        elementPropsEventCall(element, "onTouchEnd", e);
         activeLeaveHandle(e, ActiveType.touch);
     });
     var contextMenuHandle = useFn(function(e) {
-        elementPropsEventCall(element, "onContextMenu", e);
         var hasContext = has(UseTriggerType.contextMenu);
         // context点击, 获取touch式的active时, 阻止上下文菜单
         if (hasContext || has(UseTriggerType.active) && self.activeType === 2) {
             e.preventDefault();
         }
         if (!hasContext) return;
-        var event = offsetSet(createNilEvent(UseTriggerType.contextMenu, e.nativeEvent), e.nativeEvent);
+        var event = offsetSet(createNilEvent(UseTriggerType.contextMenu, e, state.el, data), e);
         trigger(event);
     });
-    var events = useMemo(function() {
-        var events = {
-            // active会在按压时禁用右键菜单, 防止误触发, 所以此事件触发条件在处理函数内部进行
-            onContextMenu: contextMenuHandle
-        };
+    var ref = _sliced_to_array(useSetState({
+        el: null
+    }), 2), state = ref[0], setState = ref[1];
+    // 通过ref测量element实际渲染的dom
+    var refCallback = useFn(function(node) {
+        if (!node) return;
+        if (state.el !== node.nextSibling) {
+            setState({
+                el: node.nextSibling
+            });
+        }
+        // 从dom中删除测量节点
+        if (node && node.parentNode) {
+            var parentNode = node.parentNode;
+            var back = parentNode.removeChild.bind(parentNode);
+            // 直接删除节点会导致react-refresh等刷新节点时报错, 所以需要添加一些补丁代码进行处理, 减少对dom树的破坏
+            // 主要是为了使兄弟级的css选择器(~ +等)能保持正常运行
+            // parentNode.appendChild(n);
+            parentNode.removeChild = function() {
+                for(var _len = arguments.length, arg = new Array(_len), _key = 0; _key < _len; _key++){
+                    arg[_key] = arguments[_key];
+                }
+                try {
+                    back.apply(void 0, _to_consumable_array(arg));
+                } catch (e) {
+                    dumpFn(e);
+                }
+            };
+            parentNode.removeChild(node);
+        }
+    });
+    // 事件绑定
+    useEffect(function() {
+        var el = state.el;
+        if (!el) return;
         if (has(UseTriggerType.click)) {
-            events["onClick"] = clickHandle;
+            el.addEventListener("click", clickHandle);
         }
         if (has(UseTriggerType.focus)) {
-            events["onFocus"] = focusHandle;
-            events["onBlur"] = blurHandle;
+            el.addEventListener("focus", focusHandle);
+            el.addEventListener("blur", blurHandle);
         }
         if (has(UseTriggerType.active)) {
-            events["onMouseEnter"] = mouseEnterHandle;
-            events["onMouseLeave"] = mouseLeaveHandle;
-            events["onTouchStart"] = touchStartHandle;
-            events["onTouchEnd"] = touchEndHandle;
+            el.addEventListener("mouseenter", mouseEnterHandle);
+            el.addEventListener("mouseleave", mouseLeaveHandle);
+            el.addEventListener("touchstart", touchStartHandle);
+            el.addEventListener("touchend", touchEndHandle);
         }
-        return events;
-    }, types);
-    return useMemo(function() {
-        return /*#__PURE__*/ React.cloneElement(element, _object_spread({}, element.props, events));
+        // active内部故意没有处理preventDefault, 因为会导致contextmenu不触发, 放到contextMenu事件中一起处理
+        el.addEventListener("contextmenu", contextMenuHandle);
+        // 综合考虑还是主动为用户禁用默认行为, 在触控设备上自动添加阻止默认行为css
+        if ("ontouchstart" in document.documentElement && (has(UseTriggerType.active) || has(UseTriggerType.contextMenu))) {
+            el.style.touchAction = "none";
+            el.style.userSelect = "none";
+        }
+        return function() {
+            el.removeEventListener("click", clickHandle);
+            el.removeEventListener("focus", focusHandle);
+            el.removeEventListener("blur", blurHandle);
+            el.removeEventListener("mouseenter", mouseEnterHandle);
+            el.removeEventListener("mouseleave", mouseLeaveHandle);
+            el.removeEventListener("touchstart", touchStartHandle);
+            el.removeEventListener("touchend", touchEndHandle);
+            el.removeEventListener("contextmenu", contextMenuHandle);
+        };
     }, [
-        events,
-        element
-    ]);
+        state.el
+    ].concat(_to_consumable_array(types)));
+    return {
+        node: /*#__PURE__*/ _jsxs(_Fragment, {
+            children: [
+                /*#__PURE__*/ React.isValidElement(element) && /*#__PURE__*/ _jsx("span", {
+                    style: {
+                        display: "none"
+                    },
+                    ref: refCallback
+                }, String(Math.random())),
+                element
+            ]
+        }),
+        el: state.el
+    };
 }
 export function Trigger(config) {
-    return useTrigger(_object_spread_props(_object_spread({}, config), {
+    var trigger = useTrigger(_object_spread_props(_object_spread({}, config), {
         element: config.children
     }));
+    return trigger.node;
 }

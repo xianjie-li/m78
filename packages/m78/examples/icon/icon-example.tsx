@@ -11,10 +11,6 @@ const IconExample = () => {
   const [loading, setLoading] = useState(true);
   const [kw, setKw] = useState("");
 
-  const [index, setIndex] = useState(0);
-  // 默认只渲染第一页
-  const [renderNotIndex, setRenderNotIndex] = useState(false);
-
   const [error, setError] = useState();
 
   const filterList = useMemo(() => {
@@ -31,7 +27,8 @@ const IconExample = () => {
   }, [kw]);
 
   useEffect(() => {
-    import("@m78/icons/bundle")
+    // @ts-ignore
+    import("@m78/icons/_bundle.js")
       .then((bundle) => {
         const l1: any = [];
         const l2: any = [];
@@ -67,16 +64,7 @@ const IconExample = () => {
 
   return (
     <div className="fs-24">
-      <div>
-        <button onClick={() => setIndex(0)}>单色图标</button>
-        <button
-          onClick={() => {
-            setIndex(1);
-            setRenderNotIndex(true);
-          }}
-        >
-          双色图标
-        </button>
+      <div className="p-8">
         <input placeholder="输入关键词搜索" onChange={kwChange} />
       </div>
       {error && <div className="p-12 color-red">{error}</div>}
@@ -101,11 +89,7 @@ const IconExample = () => {
         </div>
       )}
 
-      <div
-        style={{
-          display: index === 0 && !kw ? "block" : "none",
-        }}
-      >
+      <div>
         {list.map((i: any) => (
           <div key={i.key} className={css.item}>
             <div>
@@ -114,22 +98,6 @@ const IconExample = () => {
           </div>
         ))}
       </div>
-      {renderNotIndex && (
-        <div
-          style={{
-            display: index === 1 && !kw ? "block" : "none",
-          }}
-          className="color"
-        >
-          {list2.map((i: any) => (
-            <div key={i.key} className={css.item}>
-              <div>
-                <i.Icon />
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 };
