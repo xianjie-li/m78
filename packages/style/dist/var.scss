@@ -92,6 +92,18 @@
   --m78-color-warn-opacity-md: #{rgba(#fa8c16, 0.4)};
   --m78-color-warn-opacity-lg: #{rgba(#fa8c16, 0.7)};
 
+  // 灰色
+  --m78-gray-10: #000000;
+  --m78-gray-9: #1f1f1f;
+  --m78-gray-8: #262626;
+  --m78-gray-7: #434343;
+  --m78-gray-6: #8c8c8c;
+  --m78-gray-5: #bfbfbf;
+  --m78-gray-4: #d9d9d9;
+  --m78-gray-3: #f5f5f5;
+  --m78-gray-2: #fafafa;
+  --m78-gray-1: #ffffff;
+
   // 文字
   --m78-fs-sm: 12px;
   --m78-fs: 14px;
@@ -195,6 +207,7 @@
   --m78-gray-9: #fafafa;
   --m78-gray-10: #ffffff;
 
+  // 拉低背景纯度
   --m78-body-bg: #282c34;
   --m78-component-bg: #21252b;
 

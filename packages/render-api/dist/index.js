@@ -1,3 +1,2 @@
-import create from "./create";
-export { RenderApiOption, RenderApiInstance, RenderApiComponentBaseProps, RenderApiComponentProps, RenderApiComponentInstance } from "./types";
+import create from "./create.js";
 export default create;

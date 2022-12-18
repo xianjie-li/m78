@@ -1,0 +1,83 @@
+---
+title: Bubble - 气泡框
+---
+
+提供气泡展示功能
+
+## 类型
+
+三种气泡类型, 通过 `type` 属性来控制.
+
+- tooltip 简单的文本提示
+- popover 展示一段相对复杂的内容
+- confirm 进行快捷询问
+
+<demo demo={require("./demo.tsx")} code={require("!!raw-loader!./demo.tsx")} />
+
+## 状态
+
+显示状态图标
+
+<demo
+  demo={require("./status.tsx")}
+  code={require("!!raw-loader!./status.tsx")}
+/>
+
+## overlay
+
+你可以在 [Overlay](/docs/components/feedback/overlay/#气泡) 中找到其他气泡相关的用法, 如 方向/箭头/防遮挡/动画 等等, 以及其他弹层类组件共有的进阶用法.
+
+## API
+
+继承 [overlay](/docs/components/feedback/overlay/) 除 "xy", "alignment" 之外的所有 prop.
+
+```ts
+export interface BubbleProps extends BubbleOmitOverlayProps {
+  /** BubbleType.tooltip | 气泡类型 */
+  type?: BubbleTypeUnion;
+  /** 标题, 仅在popper模式下生效 */
+  title?: React.ReactNode;
+  /** 快捷的设置状态图标 */
+  status?: StatusUnion;
+  /** 手动指定图标, 会替换掉status配置 */
+  icon?: React.ReactNode;
+
+  /* ###### confirm 特有配置 ###### */
+  /** 确认 | 类型为confirm时，确认按钮的文字 */
+  confirmText?: React.ReactNode;
+  /** 取消 | 类型为confirm时，取消按钮的文字 */
+  cancelText?: React.ReactNode;
+  /** 点击确认的回调 */
+  onConfirm?(): void;
+}
+
+export enum BubbleType {
+  /** 简单的文本提示 */
+  tooltip = "tooltip",
+  /** 展示一些稍微复杂内容 */
+  popper = "popper",
+  /** 进行快捷询问 */
+  confirm = "confirm",
+}
+```
+
+此外, 默认值也有一些变更:
+
+- mountOnEnter/unmountOnExit
+  - type 为 tooltip/confirm 时, 均为 true
+  - 其他情况使用 overlay 的默认配置: mountOnEnter: true, unmountOnExit: false
+- type 为 tooltip 时, triggerType 为 active, 否则为 click
+- 其他所有 props 默认值如下:
+
+```ts
+const defaultProps: Partial<BubbleProps> = {
+  type: BubbleType.tooltip,
+  childrenAsTarget: true,
+  zIndex: Z_INDEX_MESSAGE,
+  namespace: "BUBBLE",
+  lockScroll: false,
+  direction: OverlayDirection.top,
+  arrow: true,
+  autoFocus: false,
+};
+```

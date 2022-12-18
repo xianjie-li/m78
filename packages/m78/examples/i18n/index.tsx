@@ -6,7 +6,7 @@ export function I18NExample() {
   const { t } = useTranslation("common", { i18n });
 
   const loadCN = async () => {
-    const zhCN = await import("../../src/i18n/locales/zh-CN.json");
+    const zhCN = await import("../../src/i18n/locales/zh-Hans.json");
 
     m78Config.set({
       i18n: {

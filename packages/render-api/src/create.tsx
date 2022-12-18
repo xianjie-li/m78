@@ -17,7 +17,7 @@ import {
   _ComponentItem,
   RenderApiComponentBaseProps,
   RenderApiOmitBuiltState,
-} from "./types";
+} from "./types.js";
 
 // RenderApiInstance.setOption()的有效值
 const updateOptionWhiteList = ["defaultState", "wrap", "maxInstance"];
@@ -302,7 +302,12 @@ function create<S extends object, I = null>(
 
     const node = Wrap ? <Wrap>{renderList()}</Wrap> : renderList();
 
-    return ReactDom.createPortal(node, getPortalsNode(namespace));
+    return ReactDom.createPortal(
+      node,
+      getPortalsNode(namespace, {
+        className: "m78-root m78",
+      })
+    );
   }
 
   return {

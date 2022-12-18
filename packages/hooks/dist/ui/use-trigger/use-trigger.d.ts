@@ -1,4 +1,5 @@
 import { ReactElement } from "react";
+import { AnyObject } from "@m78/utils";
 /**
  * 支持的事件类型
  * - 在触控设备上, 会自动添加css到目标dom并使用preventEvent来阻止一些默认行为
@@ -45,10 +46,10 @@ export interface UseTriggerEvent<E extends Event = Event> {
     nativeEvent: E;
     /** 事件目标节点 */
     target: EventTarget;
-    /** 接收至UseTriggerConfig.data */
+    /** 接收至UseTriggerConfig.data, 使用Trigger组件时, 自动将所有接受到的props传入 */
     data?: any;
 }
-/** 事件配置 */
+/** 事件配置, 配置以外的字段会被传递给事件对象的data属性 */
 export interface UseTriggerConfig {
     /**
      * 事件目标元素, 元素渲染结果必须是单个dom节点, 文本或多个dom会导致事件监听异常
@@ -66,8 +67,6 @@ export interface UseTriggerConfig {
         /** 离开触发延迟(ms) */
         leaveDelay?: number;
     };
-    /** 传递给事件回调的数据, 某些场景会很有用, 比如一个事件处理函数在多个trigger中复用订阅时 */
-    data?: any;
 }
 /** Trigger的props, 对element进行了更名 */
 export interface UseTriggerProps extends Omit<UseTriggerConfig, "element"> {
@@ -76,9 +75,9 @@ export interface UseTriggerProps extends Omit<UseTriggerConfig, "element"> {
 /**
  * 用来为一个ReactElement绑定常用的触发事件
  * */
-export declare function useTrigger(config: UseTriggerConfig): {
+export declare function useTrigger(config: UseTriggerConfig & AnyObject): {
     node: JSX.Element;
     el: HTMLElement | null;
 };
-export declare function Trigger(config: UseTriggerProps): JSX.Element;
+export declare function Trigger(config: UseTriggerProps & AnyObject): JSX.Element;
 //# sourceMappingURL=use-trigger.d.ts.map

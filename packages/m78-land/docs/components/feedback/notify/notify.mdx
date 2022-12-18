@@ -1,0 +1,107 @@
+---
+title: Notify - 消息提醒
+---
+
+各种轻提示: 消息、通知、loading 等
+
+## 综合示例
+
+<demo
+  demo={require("./notify.tsx")}
+  code={require("!!raw-loader!./notify.tsx")}
+/>
+
+## 快捷 api
+
+提供了一组快捷 api, 用于唤起提示
+
+```ts
+import { notify, NotifyPosition } from "m78/notify";
+
+notify.loading("加载中");
+notify.quicker("普通文本提示");
+notify.info("稍微重要的信息");
+notify.success("成功提示");
+notify.error("失败提示");
+notify.warning("警告信息");
+
+notify.info("设置位置", NotifyPosition.top);
+```
+
+## render-api
+
+此组件基于 [render-api](/docs/components/ecology/render-api) 提供基础全局渲染逻辑, 你可以查看其文档了解更多用法
+
+## API
+
+```ts
+/** notify的可用显示方向 */
+export enum NotifyPosition {
+  top = "top",
+  bottom = "bottom",
+  center = "center",
+  leftTop = "leftTop",
+  leftBottom = "leftBottom",
+  rightTop = "rightTop",
+  rightBottom = "rightBottom",
+}
+
+export interface NotifyProps
+  extends NotifyState,
+    Required<RenderApiComponentProps<NotifyState>> {}
+
+export interface NotifyState {
+  /** 显示的内容 */
+  content?: React.ReactNode;
+  /** 'info' | 状态 */
+  status?: StatusUnion;
+  /** 标题 */
+  title?: React.ReactNode;
+  /** 'center' | 显示的位置 */
+  position?: NotifyPositionUnion;
+  /** 1000 | 持续时间，如果不需要自动关闭，传Infinity */
+  duration?: number;
+  /** 渲染操作栏, 可通过props.onChange(false)来主动关闭, props.onUpdate(newState)来更新状态 */
+  actions?: (props: NotifyProps) => React.ReactNode;
+  /** 显示关闭按钮 */
+  cancel?: boolean;
+  /** 是否启用遮罩层, 通过loading()触发时默认为true  */
+  mask?: boolean;
+  /** 触摸或光标移动到上方时是否暂停notify动画计时, tips和notify类型默认为true */
+  interactive?: boolean;
+  /** 设置为加载状态 */
+  loading?: boolean;
+  /** 800 | 最小持续时间, 主要用于实现loading时防止loading过快消失造成不良体验, 用于loading()时, 此项默认值为800 */
+  minDuration?: number;
+  /** 完全自定义内容区域, 此项会覆盖掉大部分其他的ui配置, 如loading/cancel等, 渲染函数内可通过props.onChange(false)来主动关闭, props.onUpdate(newState)来更新状态 */
+  customer?: (props: NotifyProps) => React.ReactNode;
+}
+
+/**
+ * 实现组件的标准props, 实现组件可以选择继承此接口(如果未自定义open/onChange的key)或RenderApiComponentBaseProps
+ * */
+export interface RenderApiComponentProps<S, I = null>
+  extends RenderApiComponentBaseProps<S, I> {
+  /** 是否显示 */
+  open?: boolean;
+  /** open状态变更时通知父组件 */
+  onChange?: (cur: boolean) => void;
+}
+
+/**
+ * 实现组件会接受的基础props, 实现组件可以以此类型作为基础props
+ *
+ * 变更此类型时应注意是否需要同步setStateWhiteList和_OmitBuiltState
+ * */
+export interface RenderApiComponentBaseProps<S, I = null> {
+  /** 通知上层组件销毁本组件的实例 */
+  onDispose?: () => void;
+  /**
+   * 更新state, 效果与RenderApiComponentInstance.setState相同, 区别是此回调由实现组件调用
+   * 使用此回调来通知外部组件更新传递给自身的state
+   * */
+  onUpdate?: RenderApiComponentInstance<S, I>["setState"];
+  /** 当需要对外暴露更多的api时使用, 将额外的api挂载到此ref */
+  instanceRef?: React.Ref<I>;
+}
+```

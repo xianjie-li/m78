@@ -1,0 +1,439 @@
+---
+title: Overlay - 覆盖层
+---
+
+一个负责创建覆盖层的组件, 提供了弹层类组件所需的所有能力, 比如 `定位`/`显示控制`/`气泡`/`防遮挡`/`嵌套`/`动画` 等
+
+> 此组件定位为下层组件, 实际业务中, 最好的方式是使用其对应上层实现, 比如 `Modal` `Bubble` `ContextMenu` `Notify`等.
+> 当然, 如果你需要实现自己的弹层类组件, `Overlay`能给你提供极大的方便.
+
+## 定位
+
+弹层定位有三种方式:
+
+- `xy`: 通过窗口绝对坐标定位
+- `alignment`: 通过窗口相对坐标定位, 比如 `[0.5, 0.5]`表示窗口中间, `[1, 1]`表示窗口右下角, 常用于`modal`类组件
+- `target`: 通过 `dom` 或一个描述位置的`bound`对象定位, 常用于气泡类组件
+
+<demo
+  demo={require("./positioning.tsx")}
+  code={require("!!raw-loader!./positioning.tsx")}
+/>
+
+⛔️ 注意事项:
+
+- 如果需要频繁更新位置, 请使用实例用法, 直接在 `render` 种频繁更新会非常影响性能
+- 同时传入时, 会按这个顺序覆盖: `xy` > `alignment` > `target`, 使用实例方法更新无此限制
+
+## 显示控制
+
+控制显示有两种主要方式:
+
+- 第一种是类似表单控件, 通过`open`/`onChange(open)`/`defaultOpen`来进行受控、非受控显示.
+- 第二种用法是最简单和常用的, 通过 `Overlay` 的 `children` 自动管理显示, 这种方式可以通过 triggerType 来设置触发方式
+
+<demo
+  demo={require("./open-control.tsx")}
+  code={require("!!raw-loader!./open-control.tsx")}
+/>
+
+> 在`children`代理用法中, 子项的类型有一定的限制, 必须保证`children`能够正常渲染出一个`dom`节点
+
+## 气泡
+
+提供用于`Bubble`实现的一系列功能
+
+### 方向
+
+将内容区域显示在目标的指定方向
+
+<demo
+  demo={require("./direction.tsx")}
+  code={require("!!raw-loader!./direction.tsx")}
+/>
+
+### 箭头
+
+在目标和内容的连接处显示箭头
+
+<demo
+  demo={require("./arrow.tsx")}
+  code={[
+    {
+      code: require("!!raw-loader!./arrow.tsx"),
+      name: "direction.tsx",
+      language: "tsx",
+    },
+    {
+      code: require("!!raw-loader!./arrow.module.scss"),
+      name: "arrow.module.scss",
+      language: "sass",
+    },
+  ]}
+/>
+
+### 防遮挡
+
+包含以下行为来实现防遮挡:
+
+- 横轴方向上, 内容和箭头都会动态调整位置, 挂载目标离开可见区域一段距离后隐藏内容
+- 纵轴方向上, 气泡即将被遮挡时会自动调整到其他可见的位置, 挂载目标离开可见区域一段距离后隐藏内容
+
+在横轴和纵轴滚动以下内容查看效果:
+
+<demo
+  demo={require("./prevent-overflow.tsx")}
+  code={require("!!raw-loader!./prevent-overflow.tsx")}
+/>
+
+### 实例复用
+
+在虚拟滚动或是其他需要渲染超级多`Overlay`的场景下, 由于每个实例都有自己的位置更新逻辑, 会造成一定程度上的性能浪费, 如果能复用一个实例那绝对是最好的.
+
+`Overlay`实例上暴露了`OverlayInstance.trigger`处理函数, 你可以搭配 [`<Trigger/>`](/docs/hooks/ui/use-trigger/) 来非常方便的复用实例.
+
+下面例子中, 所有按钮都使用一个`Overlay`实例!
+
+<demo
+  demo={require("./instance-reuse.tsx")}
+  code={require("!!raw-loader!./instance-reuse.tsx")}
+/>
+
+> 绝大多数情况下, 你都不需要过度关心性能问题, 比如这个文档页面同时挂载了几十个`Overlay`, 但根本不会出现性能问题, 原因如下:
+>
+> - `Overlay`位置计算耗费的性能很小
+> - `Overlay`如果处于关闭状态, 不会进行计算
+
+## 多实例控制
+
+### clickAway 顺序
+
+如果同时开启了多个启用了`clickAwayClosable`的弹层(默认启用), 点击弹窗内容区域以外时, 只有最后开启的弹层会被关闭, 此特性用于
+防止开启了多个弹层时`clickAway`同时关闭掉所有弹层.
+
+<demo demo={require("./nest.tsx")} code={require("!!raw-loader!./nest.tsx")} />
+
+> 可通过`clickAwayQueue=false`使当前实例不加入队列, 当你启用了一个会一直保持打开的弹层时, 这尤其有用, 因为它会阻止其他弹层被关闭.
+
+### 级联菜单
+
+> 如果不是有特殊定制需求的话, 推荐使用开箱即用的 [Menu](/docs/components/feedback/overlay/)
+
+级联菜单常见的有两种:
+
+- 一种是所有层都是`hover` (`Overlay`中为`active`) 触发, 这个借助上面提到的嵌套用法很容易实现
+- 另一种是`click`是打开首个菜单, 其他菜单均通过`hover`触发, 这种方式需要进行一点细微的调整
+
+第一种实现方式:
+
+<demo demo={require("./menu.tsx")} code={require("!!raw-loader!./menu.tsx")} />
+
+第二种实现方式:
+
+<demo
+  demo={require("./menu2.tsx")}
+  code={require("!!raw-loader!./menu2.tsx")}
+/>
+
+> 与前者几乎没区别, 仅仅是第一次的开启时的触发方式变为了`click`, 实现方式是动态设置 `Overlay.triggerType`
+
+## 拖动
+
+可以内容区任意位置使用 `<DragHandle/>` 组件来挂载一个拖动节点, 通过拖动节点可以拖动整个弹层.
+
+<demo demo={require("./drag.tsx")} code={require("!!raw-loader!./drag.tsx")} />
+
+> 💡`bind()` 会展开为对应的事件处理函数, 如 `{ onMouseMove, onMouseEnter, ... }`, 你需要确保组件支持接受事件
+
+## 杂项
+
+显示遮罩, 点击区域外关闭(默认开启), 滚动条锁定(默认开启), 定位偏移(用于带方向的 overlay)等
+
+<demo
+  demo={require("./features.tsx")}
+  code={require("!!raw-loader!./features.tsx")}
+/>
+
+## 动画
+
+动画的底层是[`Transition`](/docs/components/base/transition/)组件, 所以也继承了它所有的能力.
+
+- 最简单的, 你可以通过`transitionType`来设置内置动画
+- 也可以通过 `transition` 来设置自定义的动画
+
+然后, `Transition`组件是基于 [react-spring](https://github.com/pmndrs/react-spring) 实现的, 你可以基于两者来实现你想要的动画效果.
+
+<demo
+  demo={require("./transition.tsx")}
+  code={require("!!raw-loader!./transition.tsx")}
+/>
+
+## 挂载行为控制
+
+通过 `mountOnEnter/unmountOnExit` 来控制内容在不同节点的挂载行为, 在合适的场景选择合适的配置能大大提升性能.
+
+- `mountOnEnter` 默认为 true, 表示在第一次开启时才真正挂载内容, 设置为 false 时, 内容会随组件在第一时间挂载
+- `unmountOnExit` 默认为 false, 表示在关闭后是否保留内容节点, 如果内容频繁切换且需要维护状态, false 是更明智的选择, 像 tooltip 这类低创建和销毁成本的功能则可以选择开启
+
+## API
+
+### Props
+
+```ts
+/** overlay props */
+export interface OverlayProps
+  extends ComponentBaseProps,
+    UseMountStateConfig,
+    RenderApiComponentProps<OverlayProps, OverlayInstance> {
+  /** 内容, 可以通过传入渲染器来便捷的进行一些显示控制操作 */
+  content: React.ReactNode | ((meta: OverlayCustomMeta) => React.ReactNode);
+  /**
+   * 传入children时, 将其作为控制开关, 在非受控时会直接代理open的值，受控时通过onChange回传最新状态
+   * children包含以下限制:
+   * - children的渲染结果必须是一个正常的dom节点, 不能是文本等特殊节点
+   * - 渲染的dom必须位于组件声明的位置, 即不能使用 ReactDOM.createPortal() 这类会更改渲染位置的api
+   *
+   * 通过设置childrenAsTarget, 可以将children渲染结果作为target使用, 实现挂载overlay到children位置的效果
+   *
+   * 也可以传入一个返回element的render函数, 并根据接受的meta定制element样式, 比如打开时添加高亮色等
+   * */
+  children?:
+    | React.ReactElement
+    | ((meta: OverlayCustomMeta) => React.ReactElement);
+  /**
+   * 'click' | 设置了children来触发开关时, 配置触发方式
+   * - 明显互斥的触发方式不支持同时使用, 如: active和click
+   * */
+  triggerType?: UseTriggerConfig["type"];
+
+  /**
+   * ########## 显示控制/性能 ##########
+   * - 除了defaultOpen外, 还有继承至RenderApiComponentProps的open/onChange
+   * - 以及继承至UseMountStateConfig的mountOnEnter/unmountOnExit用来控制overlay显示/未显示时的内容是否挂载
+   * */
+  /** 是否非受控显示 */
+  defaultOpen?: boolean;
+
+  /**
+   * ########## 位置 ##########
+   * 设置位置有三种种方式:
+   * - xy: 通过窗口绝对坐标直接定位
+   * - alignment: 通过窗口相对坐标定位, 常用于modal等组件
+   * - target: 通过dom或一个描述位置的对象定位, 常用于气泡类组件
+   *
+   * - 同时传入时, 会按这个顺序覆盖: xy > alignment > target (使用实例方法更新无此限制)
+   * - 如果需要频繁更新位置, 请使用OverlayInstance, 直接在render节点频繁更新会非常影响性能
+   * */
+  /** 通过窗口绝对坐标直接定位 */
+  xy?: TupleNumber;
+  /**
+   * 通过窗口相对坐标定位, 取值为 0 ~ 1
+   * 例：[0.5, 0.5] -> 居中， [1, 0] -> 右上， [1, 1] -> 右下
+   * */
+  alignment?: TupleNumber;
+  /**
+   * 通过dom或一个描述位置的对象定位, 支持以下类型:
+   * - BoundSize    一个描述位置和尺寸的对象,
+   * - RefObject<HTMLElement> 一个包含了dom节点的ref对象
+   * - HTMLElement  一个dom节点
+   *
+   * 此外, 可以通过childrenAsTarget来将children渲染的dom作为target, 这个特性对气泡组件定位非常有效
+   * */
+  target?: OverlayTarget;
+  /** 将通过children获取到的节点作为target使用 */
+  childrenAsTarget?: boolean;
+
+  // ######## 其他 ########
+  /** 1800 | overlay显示层级, 所有弹层层级应不低于/等于1000, 因为1000是m78约定的内容和弹层中间的层级, 用于放置mask等组件 */
+  zIndex?: number;
+  /** 'OVERLAY' | 自定义挂载点的命名空间, 不同命名空间的overlay将被挂载到不同的容器中 */
+  namespace?: string;
+  /** 是否启用mask */
+  mask?: boolean;
+  /** 透传给mask节点的任意props */
+  maskProps?: any;
+  /** true | 点击内容或触发区域外时是否关闭 */
+  clickAwayClosable?: boolean;
+  /** true | 存在多个开启了clickAwayClosable的overlay时, 如果启用此项, 每次触发会逐个关闭而不是一次性全部关闭 */
+  clickAwayQueue?: boolean;
+  /** 如果你需要定制自己的弹层组件并且不想和默认的弹层共用clickAwayQueue, 可以通过此项单独配置 */
+  clickAwayQueueNameSpace?: string;
+  /** true | 出现时是否锁定滚动条 */
+  lockScroll?: boolean;
+  /** 获取内部wrap dom的ref */
+  innerRef?: React.Ref<HTMLDivElement>;
+  /**
+   * 0 | 气泡的偏移位置, 如果包含arrow, 偏移 = offset + 箭头高度 + 4 , 其中4为补白
+   * - 未设置direction时offset无效
+   * - 通过children + active模式控制开关时, 过大的offset会影响触发体验
+   * */
+  offset?: number;
+  /** 禁用 */
+  disabled?: boolean;
+  /** true | 弹层出现时, 会自动获取焦点, 便于后续的tab控制, 如果不需要此行为可通过传入false关闭 */
+  autoFocus?: boolean;
+  /** 传递给容器的额外props */
+  extraProps?: AnyObject;
+
+  // ######## 动画 ########
+  /** TransitionType.fade | 指定内置动画类型 */
+  transitionType?: TransitionTypeUnion;
+  /** 自定义进出场动画, 此项会覆盖transitionType配置 */
+  transition?: Pick<TransitionBaseProps, "to" | "from">;
+  /**
+   * 接收react-spring动画配置, 用于对react-spring进行深度定制, 传入to、from等内部占用配置无效
+   * - 可用来更改动画表现、设置事件回调、延迟和循环动画等
+   * */
+  springProps?: any;
+
+  // ######## 气泡 ########
+  /** 挂载方向 */
+  direction?: OverlayDirectionUnion;
+  /** 显示箭头, 仅在指定了direction时生效 */
+  arrow?: boolean;
+  /** [36, 10] | 箭头尺寸 */
+  arrowSize?: TupleNumber;
+  /**
+   * 透传给arrow节点的props, 可以通过此项来设置className/style等
+   * 部分内部使用的属性会被忽略, 传入children来自定义svg节点, 用来添加边框, 阴影等
+   * */
+  arrowProps?: any;
+}
+```
+
+**继承的类型**
+
+```ts
+/** Component common props */
+export interface ComponentBaseProps {
+  /** 包裹元素的类名 */
+  className?: string;
+  /** 包裹元素样式 */
+  style?: CSSProperties;
+}
+
+export interface UseMountStateConfig {
+  /** 默认为 true, 表示在第一次开启时才真正挂载内容, 设置为 false 时, 内容会随组件在第一时间挂载 */
+  mountOnEnter?: boolean;
+  /** 默认为 false, 表示在关闭后是否保留内容节点, 如果内容频繁切换且需要维护状态, false是更明智的选择, 像 tooltip 这类低创建和销毁成本的功能则可以选择开启 */
+  unmountOnExit?: boolean;
+}
+
+// ## 这些类型来自render-api 可参考文档 /docs/components/ecology/render-api
+
+/**
+ * 实现组件的标准props, 实现组件可以选择继承此接口(如果未自定义open/onChange的key)或RenderApiComponentBaseProps
+ * */
+export interface RenderApiComponentProps<S, I = null>
+  extends RenderApiComponentBaseProps<S, I> {
+  /** 是否显示 */
+  open?: boolean;
+  /** open状态变更时通知父组件 */
+  onChange?: (cur: boolean) => void;
+}
+
+/**
+ * 实现组件会接受的基础props, 实现组件可以以此类型作为基础props
+ *
+ * 变更此类型时应注意是否需要同步setStateWhiteList和_OmitBuiltState
+ * */
+export interface RenderApiComponentBaseProps<S, I = null> {
+  /** 通知上层组件销毁本组件的实例 */
+  onDispose?: () => void;
+  /**
+   * 更新state, 效果与RenderApiComponentInstance.setState相同, 区别是此回调由实现组件调用
+   * 使用此回调来通知外部组件更新传递给自身的state
+   * */
+  onUpdate?: RenderApiComponentInstance<S, I>["setState"];
+  /** 当需要对外暴露更多的api时使用, 将额外的api挂载到此ref */
+  instanceRef?: React.Ref<I>;
+}
+```
+
+### OverlayDirection
+
+```ts
+export enum OverlayDirection {
+  topStart = "topStart",
+  top = "top",
+  topEnd = "topEnd",
+  leftStart = "leftStart",
+  left = "left",
+  leftEnd = "leftEnd",
+  bottomStart = "bottomStart",
+  bottom = "bottom",
+  bottomEnd = "bottomEnd",
+  rightStart = "rightStart",
+  right = "right",
+  rightEnd = "rightEnd",
+}
+```
+
+### OverlayInstance
+
+```ts
+/** overlay实例, 通过instanceRef或api用法使用 */
+export interface OverlayInstance {
+  /** 更新xy */
+  updateXY(xy: TupleNumber, immediate?: boolean): void;
+
+  /** 更新alignment */
+  updateAlignment(alignment: TupleNumber, immediate?: boolean): void;
+
+  /** 更新气泡目标 */
+  updateTarget(target: OverlayTarget, immediate?: boolean): void;
+
+  /** 以最后的更新类型刷新overlay定位 */
+  update(immediate?: boolean): void;
+
+  /** 搭配useTrigger或<Trigger />实现单个实例多个触发点进行复用 */
+  trigger: (e: UseTriggerEvent) => void;
+}
+```
+
+### 其他
+
+```ts
+/** 自定义渲染器的参数 */
+export interface OverlayCustomMeta {
+  /** 组件原始props */
+  props: OverlayProps;
+  /** 当前开关状态 */
+  open: boolean;
+  /** 设置开关状态 */
+  setOpen: SetFormState<boolean>;
+}
+
+/** 例: [5, 8] */
+export type TupleNumber = Tuple<number>;
+```
+
+### Trigger
+
+触发逻辑基于 [use-trigger](/docs/hooks/ui/use-trigger/), 你可以完整查看其文档, 但是通常你只会使用以下类型:
+
+```ts
+/**
+ * 支持的事件类型
+ * - 在触控设备上, 会自动添加css到目标dom并使用preventEvent来阻止一些默认行为
+ * */
+export enum UseTriggerType {
+  /** 点击 */
+  click = "click",
+  /**
+   * 获得焦点, 该事件在获取焦点和失去焦点时均会触发, 可通过e.focus判断是否聚焦, 事件的x/y, offsetX/Y等坐标信息始终为0
+   * - 需要确保element或其任意子级是focusable的
+   * */
+  focus = "focus",
+  /**
+   * 根据不同的设备, 会有不同的表现, 该事件在开始和结束时均会触发:
+   * - 支持鼠标事件的设备 - hover
+   * - 不支持鼠标且支持touch的设备 - 按住一段时间
+   *
+   * 此事件自动附加了一个触发延迟, 用于在大部分场景下获得更好的体验(比如鼠标快速划过)
+   * */
+  active = "active",
+  /** 通常是鼠标的副键点击, 在移动设备, 按住超过一定时间后也会触发, 这和active在移动设备的行为一致, 所以不建议将两者混合使用 */
+  contextMenu = "contextMenu",
+}
+```

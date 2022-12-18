@@ -5,9 +5,7 @@
 // 1. remove the margin in all browsers.
 // 2. As a best practice, apply a default `body-background`.
 
-// HTML & Body reset
-html.m78, .m78-root.m78 {
-  min-height: 100%;
+.m78-root.m78 {
   color: var(--m78-color-primary);
   font-size: var(--m78-fs);
   line-height: var(--m78-line-height);
@@ -19,6 +17,11 @@ html.m78, .m78-root.m78 {
   -ms-overflow-style: scrollbar; // 5
   -webkit-tap-highlight-color: transparent; // 6
   -webkit-font-smoothing: antialiased;
+}
+
+// HTML & Body reset
+html.m78-root.m78 {
+  min-height: 100%;
 
   body {
     min-height: 100%;

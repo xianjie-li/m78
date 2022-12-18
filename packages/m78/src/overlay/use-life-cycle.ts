@@ -1,8 +1,7 @@
 import {
   useClickAway,
-  useFn,
+  useDestroy,
   useLockBodyScroll,
-  UseTriggerEvent,
   UseTriggerType,
   useUpdateEffect,
 } from "@m78/hooks";
@@ -11,6 +10,7 @@ import { ensureArray, isDom } from "@m78/utils";
 import { _Methods } from "./use-methods.js";
 import { isBound } from "./common.js";
 import { _Context } from "./types.js";
+import { _useTypeProcess } from "./use-type-process.js";
 
 export function _useLifeCycle(ctx: _Context, methods: _Methods) {
   const {
@@ -40,6 +40,9 @@ export function _useLifeCycle(ctx: _Context, methods: _Methods) {
   /** 暴露实例 */
   useImperativeHandle(props.instanceRef, () => instance);
 
+  /** 对type从click -> active进行处理, 用于更方便的实现嵌套气泡 */
+  _useTypeProcess(ctx);
+
   /** 根据xy, alignment, target合成useEffect的更新deps, 减少不必要的更新 */
   const updateTargetDeps = useMemo(() => {
     const deps: any[] = [
@@ -56,8 +59,11 @@ export function _useLifeCycle(ctx: _Context, methods: _Methods) {
         props.target.height
       );
     } else {
-      deps.push(props.target);
+      // 保持deps长度相同
+      deps.push(0, 0, 0, 0);
     }
+
+    deps.push(props.target);
 
     return deps;
   }, [props.xy, props.alignment, props.target, open]);
@@ -93,7 +99,7 @@ export function _useLifeCycle(ctx: _Context, methods: _Methods) {
   /** children变更时, 更新 */
   useUpdateEffect(methods.updateChildrenEl, [trigger.el]);
 
-  /** open变更时, 先立即调整位置 */
+  /** open变更 */
   useEffect(() => {
     // 每次出现时将焦点移入组件
     if (props.autoFocus && open && containerRef.current) {
@@ -103,7 +109,7 @@ export function _useLifeCycle(ctx: _Context, methods: _Methods) {
       }
     }
 
-    // 内容已挂载时才出发, 防止第一次渲染时和
+    // 内容已挂载时调整位置
     if (self.contentExist) methods.update(true);
     clearTimeout(self.shouldCloseTimer);
   }, [open]);
@@ -153,6 +159,12 @@ export function _useLifeCycle(ctx: _Context, methods: _Methods) {
     props.onDispose?.();
     self.contentExist = false;
   };
+
+  /** 清理 */
+  useDestroy(() => {
+    clearTimeout(self.triggerMultipleTimer);
+    clearTimeout(self.shouldCloseTimer);
+  });
 
   return {
     onContentMount,

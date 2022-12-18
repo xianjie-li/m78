@@ -1,0 +1,36 @@
+@import '../common/style/sass';
+
+.m78-bubble {
+
+  &.__tooltip {
+    padding: var(--m78-space-2) var(--m78-space-3);
+    max-width: 200px;
+    min-width: 1em;
+    line-height: 1.4;
+  }
+
+  &.__popper {
+    min-width: 220px;
+  }
+
+  &.__confirm {
+    min-width: 180px;
+    max-width: 220px;
+    font-size: var(--m78-fs-md);
+    padding: var(--m78-space-3);
+  }
+
+  &_title {
+    border-bottom: 1px solid var(--m78-color-divider);
+    font-weight: bold;
+    padding: var(--m78-space-2) var(--m78-space-3);
+  }
+
+  &_cont {
+    padding: var(--m78-space-3);
+  }
+
+  &_confirm-btn {
+    margin-top: var(--m78-space-3);
+  }
+}

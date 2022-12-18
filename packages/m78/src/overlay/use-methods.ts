@@ -1,30 +1,38 @@
-import { BoundSize, getScrollParent, isDom, TupleNumber } from "@m78/utils";
+import {
+  BoundSize,
+  getScrollParent,
+  isBoolean,
+  isDom,
+  TupleNumber,
+} from "@m78/utils";
 import {
   getRefDomOrDom,
   useFn,
   UseTriggerEvent,
   UseTriggerType,
 } from "@m78/hooks";
-import throttle from "lodash/throttle";
-import debounce from "lodash/debounce";
+import throttle from "lodash/throttle.js";
+import debounce from "lodash/debounce.js";
 import {
   _arrowSpace,
   _calcAlignment,
   _defaultAlignment,
+  _defaultProps,
   _flip,
   _getDirections,
   _getMinClampBound,
-  isBound,
   _preventOverflow,
+  isBound,
 } from "./common.js";
 import {
+  _ClampBound,
   _Context,
   OverlayDirectionUnion,
   OverlayInstance,
   OverlayTarget,
   OverlayUpdateType,
 } from "./types.js";
-import { t } from "i18next";
+import { EventTypes, Handler } from "@use-gesture/core/types";
 
 export function _useMethods(ctx: _Context) {
   const {
@@ -227,6 +235,8 @@ export function _useMethods(ctx: _Context) {
       };
     }
 
+    self.lastPosition = [tBound.left, tBound.top];
+
     spApi.start({
       to: {
         x: tBound.left,
@@ -268,7 +278,7 @@ export function _useMethods(ctx: _Context) {
       }
 
       self.lastTarget = target;
-      update(immediate || notPrev);
+      update(isBoolean(immediate) ? immediate : notPrev);
     }
   );
 
@@ -301,9 +311,9 @@ export function _useMethods(ctx: _Context) {
 
   /** 防止高频调用的update */
   const throttleUpdate = useFn(
-    () => update(),
+    () => update(true),
     (fn) => {
-      return throttle(fn, 30, { trailing: true });
+      return throttle(fn, 5, { trailing: true });
     }
   );
 
@@ -317,6 +327,8 @@ export function _useMethods(ctx: _Context) {
 
   // 多触发点的特殊handle
   const onTriggerMultiple = useFn((e: UseTriggerEvent) => {
+    clearTimeout(self.triggerMultipleTimer);
+
     let isOpen = true;
 
     if (e.type === UseTriggerType.click) {
@@ -331,12 +343,50 @@ export function _useMethods(ctx: _Context) {
       isOpen = true;
     }
 
-    if (isOpen) {
-      updateTarget(e.target as HTMLElement, true);
-      ctx.triggerHandle(e);
-    } else if (self.lastTarget === e.target) {
-      ctx.triggerHandle(e);
+    if (isOpen && !self.lastTriggerMultipleOpen) {
+      self.lastTriggerMultipleOpen = isOpen;
     }
+
+    self.triggerMultipleTimer = setTimeout(() => {
+      const _isOpen = !!self.lastTriggerMultipleOpen;
+
+      if (_isOpen) {
+        updateTarget(e.target as HTMLElement, true);
+        ctx.triggerHandle(e);
+      } else if (self.lastTarget === e.target) {
+        ctx.triggerHandle(e);
+      }
+    }, 30);
+  });
+
+  /** 拖动处理 */
+  const onDragHandle: Handler<"drag", EventTypes["drag"]> = useFn((e) => {
+    if (props.direction) {
+      console.warn(
+        `${_defaultProps.namespace}: direction and drag can't be used at the same time`
+      );
+      return;
+    }
+
+    updateXY(e.offset, true);
+  });
+
+  /** 获取拖动的初始坐标 */
+  const getDragInitXY = useFn(() => {
+    if (!self.lastPosition) return [0, 0] as TupleNumber;
+    return self.lastPosition;
+  });
+
+  /** 获取拖动的初始坐标 */
+  const getDragBound = useFn(() => {
+    // 拖动时containerRef必然已挂载
+    const bound = containerRef.current?.getBoundingClientRect();
+    return {
+      left: 0,
+      top: 0,
+      right: window.innerWidth - bound.width,
+      bottom: window.innerHeight - bound.height,
+    } as _ClampBound;
   });
 
   return {
@@ -355,6 +405,9 @@ export function _useMethods(ctx: _Context) {
     throttleUpdate,
     debounceUpdate,
     onTriggerMultiple,
+    onDragHandle,
+    getDragInitXY,
+    getDragBound,
   };
 }
 

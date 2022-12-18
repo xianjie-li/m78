@@ -18,14 +18,12 @@ import {
   useOverlaysClickAway,
   useOverlaysMask,
 } from "./common.js";
-import {
-  ComponentBaseProps,
-  ComponentBasePropsWithAny,
-} from "../common/index.js";
+import { ComponentBaseProps } from "../common/index.js";
 import {
   TransitionBaseProps,
   TransitionTypeUnion,
 } from "../transition/index.js";
+import { EventTypes, Handler } from "@use-gesture/core/types";
 
 /** 在使用api调用时所有应该剔除的props */
 export const omitApiProps = [
@@ -72,14 +70,17 @@ export type OverlayDirectionUnion = OverlayDirection | OverlayDirectionKeys;
 
 /** 自定义渲染器的参数 */
 export interface OverlayCustomMeta {
+  /** 组件原始props */
   props: OverlayProps;
+  /** 当前开关状态 */
   open: boolean;
+  /** 设置开关状态 */
   setOpen: SetFormState<boolean>;
 }
 
 /** overlay props */
 export interface OverlayProps
-  extends ComponentBasePropsWithAny,
+  extends ComponentBaseProps,
     UseMountStateConfig,
     RenderApiComponentProps<OverlayProps, OverlayInstance> {
   /** 内容, 可以通过传入渲染器来便捷的进行一些显示控制操作 */
@@ -91,9 +92,16 @@ export interface OverlayProps
    * - 渲染的dom必须位于组件声明的位置, 即不能使用 ReactDOM.createPortal() 这类会更改渲染位置的api
    *
    * 通过设置childrenAsTarget, 可以将children渲染结果作为target使用, 实现挂载overlay到children位置的效果
+   *
+   * 也可以传入一个返回element的render函数, 并根据接受的meta定制element样式, 比如打开时添加高亮色等
    * */
-  children?: React.ReactElement;
-  /** 'click' | 设置了children来触发开关时, 配置触发方式 */
+  children?:
+    | React.ReactElement
+    | ((meta: OverlayCustomMeta) => React.ReactElement);
+  /**
+   * 'click' | 设置了children来触发开关时, 配置触发方式
+   * - 明显互斥的触发方式不支持同时使用, 如: active和click
+   * */
   triggerType?: UseTriggerConfig["type"];
 
   /**
@@ -146,6 +154,8 @@ export interface OverlayProps
   clickAwayClosable?: boolean;
   /** true | 存在多个开启了clickAwayClosable的overlay时, 如果启用此项, 每次触发会逐个关闭而不是一次性全部关闭 */
   clickAwayQueue?: boolean;
+  /** 如果你需要定制自己的弹层组件并且不想和默认的弹层共用clickAwayQueue, 可以通过此项单独配置 */
+  clickAwayQueueNameSpace?: string;
   /** true | 出现时是否锁定滚动条 */
   lockScroll?: boolean;
   /** 获取内部wrap dom的ref */
@@ -164,7 +174,7 @@ export interface OverlayProps
   extraProps?: AnyObject;
 
   // ######## 动画 ########
-  /** 'zoom' | 指定内置动画类型 */
+  /** TransitionType.fade | 指定内置动画类型 */
   transitionType?: TransitionTypeUnion;
   /** 自定义进出场动画, 此项会覆盖transitionType配置 */
   transition?: Pick<TransitionBaseProps, "to" | "from">;
@@ -202,7 +212,7 @@ export interface OverlayInstance {
   /** 以最后的更新类型刷新overlay定位 */
   update(immediate?: boolean): void;
 
-  /** 搭配useTrigger或<Trigger />实现单个实例多个触发点进行复用 */
+  /** 多实例trigger专用的处理函数, 搭配useTrigger或<Trigger />实现单个实例多个触发点 */
   trigger: (e: UseTriggerEvent) => void;
 }
 
@@ -238,6 +248,8 @@ export interface _Context {
     lastAlignment: OverlayProps["alignment"];
     /** 最后更新使用的target, 无论是手动还是钩子更新, 都应提前更新此值然后以此值为基准触发update */
     lastTarget: OverlayProps["target"];
+    /** 无论何种定位方式, 都将最终的定位值记录在此处 */
+    lastPosition: OverlayProps["xy"];
     /** 内容区域是否处于活动状态 */
     activeContent: boolean;
     /** 内容节点是否已挂载 */
@@ -248,6 +260,12 @@ export interface _Context {
     shouldCloseTimer?: any;
     /** 正在触发的active或focus的状态 */
     currentActiveStatus?: boolean;
+    /** 最后触发focus的时间, 用于放置focus后马上触发click  */
+    lastFocusTime?: number;
+    /** 多触发点触发计时器, 用于快速连续触发时过滤掉无效触发, 比如两个focus目标, 前者失焦到后者聚焦, 前者的失焦事件其实是无效的并且还会对后者显示造成干扰  */
+    triggerMultipleTimer?: any;
+    /** 多触发点事件中用于标记最终open状态 */
+    lastTriggerMultipleOpen?: boolean;
   };
   /** 组件props */
   props: _MergeDefaultProps;
@@ -263,6 +281,7 @@ export interface _Context {
   measure: UseMeasureBound;
   triggerHandle: OverlayInstance["trigger"];
   isUnmount: () => boolean;
+  customRenderMeta: OverlayCustomMeta;
 }
 
 /** 描述位置和该位置是否可用的对象 */
@@ -296,4 +315,14 @@ export interface _ClampBound {
   top: number;
   right: number;
   bottom: number;
+}
+
+/** drag Context */
+export interface _DragContext {
+  /** 拖动回调 */
+  onDrag: Handler<"drag", EventTypes["drag"]>;
+  /** 获取当前xy坐标 */
+  getXY: () => TupleNumber;
+  /** 获取可拖动的bound */
+  getBound: () => _ClampBound;
 }

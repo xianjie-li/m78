@@ -38,8 +38,6 @@ export const _Arrow = ({ width, height, children, ...props }: Props) => {
         d={`M 0 ${h} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${w / 2} 0 C ${
           w - c2x
         } ${c2y}, ${w - c1x} ${c1y}, ${w} ${h}`}
-        stroke="#ccc"
-        fill="white"
       />
       {children}
     </svg>

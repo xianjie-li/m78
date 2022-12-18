@@ -6,24 +6,29 @@ title: Spin - 加载中
 
 ## 基本用法
 
-<demo demo={require("./_spin-demo.tsx")} code={require("!!raw-loader!./_spin-demo.tsx")}></demo>
-
+<demo
+  demo={require("./_spin-demo.tsx")}
+  code={require("!!raw-loader!./_spin-demo.tsx")}
+></demo>
 
 ## 填满容器
 
 > 💡 需要父元素是`position: static`以外的定位元素
 
-<demo demo={require("./_spin-demo-full.tsx")} code={require("!!raw-loader!./_spin-demo-full.tsx")}></demo>
+<demo
+  demo={require("./_spin-demo-full.tsx")}
+  code={require("!!raw-loader!./_spin-demo-full.tsx")}
+></demo>
 
 ## props
 
-```tsx | pure
+```tsx
 export interface SpinProps extends ComponentBaseProps {
   /** true | 是否显示加载状态 */
   open?: boolean;
   /** 大小 */
   size?: FullSize | FullSizeKeys;
-  /** '加载中' | 提示文本 */
+  /**  提示文本 */
   text?: React.ReactNode;
   /** 将text和加载指示器内联对齐*/
   inline?: boolean;

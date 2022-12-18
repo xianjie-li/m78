@@ -1,18 +1,23 @@
 import i18next from "i18next";
 import { initReactI18next } from "react-i18next";
-import enUS from "./locales/en-US.json";
+import enUS from "./locales/en.json";
 import { throwError } from "../common/index.js";
 
 export const resources = {
   "en-US": enUS,
 } as const;
 
+export const COMMON_NS = "common";
+export const BUTTON_NS = "button";
+export const INPUT_NS = "input";
+export const DIALOG_NS = "dialog";
+
 const i18n = i18next.use(initReactI18next).createInstance(
   {
     fallbackLng: "en-US",
     fallbackNS: "common",
     defaultNS: "common",
-    ns: ["common", "button"],
+    ns: [COMMON_NS, BUTTON_NS, INPUT_NS, DIALOG_NS],
     debug: process.env.NODE_ENV === "development",
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default

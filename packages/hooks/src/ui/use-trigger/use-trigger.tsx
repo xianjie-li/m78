@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect } from "react";
-import { AnyFunction, dumpFn, ensureArray } from "@m78/utils";
+import { AnyFunction, AnyObject, dumpFn, ensureArray } from "@m78/utils";
 import { useFn, useSelf, useSetState } from "../../index.js";
 
 /**
@@ -51,11 +51,11 @@ export interface UseTriggerEvent<E extends Event = Event> {
   nativeEvent: E;
   /** 事件目标节点 */
   target: EventTarget;
-  /** 接收至UseTriggerConfig.data */
+  /** 接收至UseTriggerConfig.data, 使用Trigger组件时, 自动将所有接受到的props传入 */
   data?: any;
 }
 
-/** 事件配置 */
+/** 事件配置, 配置以外的字段会被传递给事件对象的data属性 */
 export interface UseTriggerConfig {
   /**
    * 事件目标元素, 元素渲染结果必须是单个dom节点, 文本或多个dom会导致事件监听异常
@@ -73,8 +73,6 @@ export interface UseTriggerConfig {
     /** 离开触发延迟(ms) */
     leaveDelay?: number;
   };
-  /** 传递给事件回调的数据, 某些场景会很有用, 比如一个事件处理函数在多个trigger中复用订阅时 */
-  data?: any;
 }
 
 /** Trigger的props, 对element进行了更名 */
@@ -92,7 +90,7 @@ const createNilEvent = (
   type: UseTriggerTypeUnion,
   e: Event,
   target: HTMLElement,
-  data = null
+  data: AnyObject
 ): UseTriggerEvent => {
   return {
     type,
@@ -118,7 +116,7 @@ const offsetSet = (e: UseTriggerEvent, e2: any) => {
 };
 
 /** 根据touch事件和目标节点生成事件对象 */
-function touchGen(e: TouchEvent, ele: HTMLElement, data = null) {
+function touchGen(e: TouchEvent, ele: HTMLElement, data: AnyObject) {
   const touch = e.changedTouches[0];
 
   if (!touch || !ele) return null;
@@ -136,8 +134,8 @@ function touchGen(e: TouchEvent, ele: HTMLElement, data = null) {
 /**
  * 用来为一个ReactElement绑定常用的触发事件
  * */
-export function useTrigger(config: UseTriggerConfig) {
-  const { element, type, onTrigger, active = {}, data = null } = config;
+export function useTrigger(config: UseTriggerConfig & AnyObject) {
+  const { element, type, onTrigger, active = {}, ...data } = config;
   const { triggerDelay, leaveDelay = 100 } = active;
 
   const types = ensureArray(type);
@@ -387,10 +385,11 @@ export function useTrigger(config: UseTriggerConfig) {
   };
 }
 
-export function Trigger(config: UseTriggerProps) {
+export function Trigger(config: UseTriggerProps & AnyObject) {
   const trigger = useTrigger({
     ...config,
     element: config.children,
+    children: undefined,
   });
 
   return trigger.node;

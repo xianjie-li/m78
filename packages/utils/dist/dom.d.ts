@@ -1,11 +1,12 @@
-import { Bound, TupleNumber } from "./types";
+import { AnyObject, Bound, TupleNumber } from "./types.js";
 export * from "./dom/dom-adaption.js";
 /**
  * get a dom, multiple calls will return the same dom
  * @param namespace - create a uniq node by namespace
+ * @param extraProps - set additional props to dom elements
  * @return - dom
  * */
-export declare const getPortalsNode: (namespace?: string) => HTMLDivElement;
+export declare const getPortalsNode: (namespace?: string, extraProps?: AnyObject) => HTMLDivElement;
 /**
  * get scrollbar width
  * @param className - If the element customizes the scroll bar through css, pass in the class name for customization

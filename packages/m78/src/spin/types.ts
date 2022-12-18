@@ -6,7 +6,7 @@ export interface SpinProps extends ComponentBaseProps {
   open?: boolean;
   /** 大小 */
   size?: FullSize | FullSizeKeys;
-  /** '加载中' | 提示文本 */
+  /**  提示文本 */
   text?: React.ReactNode;
   /** 将text和加载指示器内联对齐*/
   inline?: boolean;

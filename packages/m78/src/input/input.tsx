@@ -26,6 +26,7 @@ import { _useTextAreaCalc } from "./use-text-area-calc.js";
 import { _integer, _number, _numberRange, _positive } from "./interceptor.js";
 
 import { _useStepper } from "./use-stepper.js";
+import { i18n, INPUT_NS } from "../i18n/index.js";
 
 export function _Input(_props: InputProps) {
   const {
@@ -338,7 +339,9 @@ export function _Input(_props: InputProps) {
       nodes.push(
         <span className="m78-input_tip-text">
           {value.length}
-          {maxLength ? `/${maxLength}` : "字"}
+          {maxLength
+            ? `/${maxLength}`
+            : i18n.t("word count", { ns: [INPUT_NS] })}
         </span>
       );
     }

@@ -1,0 +1,17 @@
+{
+  "common": {
+    "submit": "submit",
+    "confirm": "confirm",
+    "cancel": "cancel",
+    "loading": "loading"
+  },
+  "input": {
+    "word count": " words"
+  },
+  "button": {
+    "test": "test something"
+  },
+  "dialog": {
+    "default title": "note"
+  }
+}

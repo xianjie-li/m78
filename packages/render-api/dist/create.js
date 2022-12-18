@@ -185,7 +185,9 @@ var setStateWhiteList = [
         var node = Wrap ? /*#__PURE__*/ _jsx(Wrap, {
             children: renderList()
         }) : renderList();
-        return /*#__PURE__*/ ReactDom.createPortal(node, getPortalsNode(namespace));
+        return /*#__PURE__*/ ReactDom.createPortal(node, getPortalsNode(namespace, {
+            className: "m78-root m78"
+        }));
     };
     var option = _object_spread({}, opt);
     // updateOptionWhiteList类的配置是可更改的, 必须在使用时实时获取

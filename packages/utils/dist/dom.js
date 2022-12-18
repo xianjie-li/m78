@@ -1,4 +1,5 @@
 import _object_spread from "@swc/helpers/src/_object_spread.mjs";
+import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import { isDom, isFunction, isNumber } from "./is.js";
 import { clamp } from "./number.js";
 export * from "./dom/dom-adaption.js";
@@ -6,12 +7,35 @@ var portalsID = "J__PORTALS__NODE__";
 /**
  * get a dom, multiple calls will return the same dom
  * @param namespace - create a uniq node by namespace
+ * @param extraProps - set additional props to dom elements
  * @return - dom
- * */ export var getPortalsNode = function(namespace) {
+ * */ export var getPortalsNode = function(namespace, extraProps) {
     var id = portalsID + (namespace ? namespace.toLocaleUpperCase() : "DEFAULT");
     var portalsEl = document.getElementById(id);
     if (!portalsEl) {
         var el = document.createElement("div");
+        if (extraProps) {
+            var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = undefined;
+            try {
+                for(var _iterator = Object.entries(extraProps)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true){
+                    var _value = _sliced_to_array(_step.value, 2), key = _value[0], val = _value[1];
+                    el[key] = val;
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally{
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return != null) {
+                        _iterator.return();
+                    }
+                } finally{
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
+            }
+        }
         el.id = id;
         portalsEl = document.body.appendChild(el);
     }

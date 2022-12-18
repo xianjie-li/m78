@@ -1,0 +1,116 @@
+@import '../common/style/sass';
+
+.m78-notify {
+  &_container {
+    pointer-events: none;
+    flex-wrap: wrap;
+    position: fixed;
+    z-index: var(--m78-z-index-message);
+  }
+
+  &_top {
+    left: 50%;
+    transform: translateX(-50%);
+    top: var(--m78-space-5);
+    text-align: center;
+  }
+
+  &_bottom {
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: var(--m78-space-5);
+    text-align: center;
+  }
+
+  &_center {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+
+  &_leftTop {
+    left: var(--m78-space-5);
+    top: var(--m78-space-5);
+  }
+
+  &_leftBottom {
+    left: var(--m78-space-5);
+    bottom: var(--m78-space-5);
+  }
+
+  &_rightTop {
+    right: var(--m78-space-5);
+    top: var(--m78-space-5);
+    text-align: right;
+  }
+
+  &_rightBottom {
+    right: var(--m78-space-5);
+    bottom: var(--m78-space-5);
+    text-align: right;
+  }
+
+  &_item {
+    position: relative;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  &_item-main {
+    margin: var(--m78-space-2);
+    pointer-events: auto;
+    display: inline-block;
+    position: relative;
+    background-color: var(--m78-component-bg);
+    min-width: 40px;
+    min-height: 40px;
+    box-shadow: var(--m78-shadow-1-b-focus);
+    border: 1px solid var(--m78-color-border);
+    border-radius: var(--m78-border-radius-md);
+    overflow: hidden;
+  }
+
+  &_process {
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    width: 0;
+    height: 3px;
+    background-color: var(--m78-color-opacity-md);
+  }
+
+  &_normal {
+    padding: 10px var(--m78-space-3);
+    display: inline-flex;
+    align-items: flex-start;
+    max-width: 258px;
+    text-align: left;
+
+    &_leading {
+      margin-right: var(--m78-space-1);
+      margin-left: -4px;
+    }
+
+    &_actions {
+      margin-top: var(--m78-space-1);
+      text-align: right;
+    }
+
+    &_title {
+      font-size: var(--m78-fs-md);
+      font-weight: var(--m78-fw-md);
+    }
+  }
+
+  &_custom {
+    margin: var(--m78-space-2);
+  }
+
+  &_close-btn {
+    pointer-events: auto;
+    position: absolute !important;
+    right: var(--m78-space-1);
+    top: var(--m78-space-1);
+  }
+}

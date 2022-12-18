@@ -13,7 +13,11 @@ import { _LifeCycle } from "./use-life-cycle.js";
 import { isFunction } from "@m78/utils";
 import { MASK_NAMESPACE } from "../common/index.js";
 import { _Arrow as Arrow } from "./arrow.js";
-import { _getArrowBasePosition, transitionConfig } from "./common.js";
+import {
+  _getArrowBasePosition,
+  dragContext,
+  transitionConfig,
+} from "./common.js";
 import { _MountTrigger as MountTrigger } from "./mount-trigger.js";
 
 const AnimatedArrow = animated(Arrow);
@@ -28,7 +32,6 @@ export function _useRender(
     state,
     arrowSp,
     open,
-    setOpen,
     containerRef,
     overlaysMask,
     trigger,
@@ -72,8 +75,10 @@ export function _useRender(
         type: props.transitionType!,
         className: clsx(
           "m78-overlay",
+          props.className,
           state.lastDirection && `__${state.lastDirection}`
         ),
+        style: props.style,
         mountOnEnter: props.mountOnEnter,
         unmountOnExit: props.unmountOnExit,
         from: transition?.from,
@@ -88,20 +93,22 @@ export function _useRender(
         onMouseEnter: methods.activeContent,
         onMouseLeave: methods.unActiveContent,
       },
-      <>
+      <dragContext.Provider
+        value={{
+          onDrag: methods.onDragHandle,
+          getXY: methods.getDragInitXY,
+          getBound: methods.getDragBound,
+        }}
+      >
         {isFunction(props.content)
-          ? props.content({
-              props,
-              open: open,
-              setOpen: setOpen,
-            })
+          ? props.content(ctx.customRenderMeta)
           : props.content}
         <MountTrigger
           onMount={lifeCycle.onContentMount}
           onUnmount={lifeCycle.onContentUnmount}
         />
         {renderArrow()}
-      </>
+      </dragContext.Provider>
     );
   }
 
@@ -127,9 +134,12 @@ export function _useRender(
             tabIndex={-1}
             {...props.extraProps}
             ref={containerRef}
-            className={clsx("m78 m78-overlay_wrap", props.className)}
+            className={clsx(
+              "m78 m78-overlay_wrap",
+              props.extraProps?.className
+            )}
             style={{
-              ...props.style,
+              ...props.extraProps?.style,
               ...sp,
               visibility: open ? "visible" : "hidden",
               zIndex: props.zIndex,

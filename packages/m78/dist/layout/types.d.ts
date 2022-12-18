@@ -7,7 +7,7 @@ export interface FlexWrapProps extends DIVProps {
     /** 'start' | 交叉轴对齐方式 */
     crossAlign?: "stretch" | "start" | "end" | "center";
     /** 内容 */
-    children: React.ReactNode;
+    children: React.ReactNode | React.ReactNode[];
     /** 指向内部包裹dom的ref */
     innerRef?: React.Ref<HTMLDivElement>;
 }

@@ -1,4 +1,4 @@
-import { RenderApiInstance, RenderApiOption } from "./types";
+import { RenderApiInstance, RenderApiOption } from "./types.js";
 /**
  * 接收配置并创建一个api实例
  * - S - 组件能够接收的状态, 对应实现组件的扩展props

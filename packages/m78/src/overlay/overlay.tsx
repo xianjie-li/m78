@@ -21,6 +21,7 @@ import {
   useOverlaysClickAway,
   useOverlaysMask,
 } from "./common.js";
+import { isFunction } from "@m78/utils";
 
 /**
  * overlay抽象了所有弹层类组件(modal, drawer, popper等需要的基础能力), 使实现这些组件变得非常的简单
@@ -47,6 +48,7 @@ export function _Overlay(p: OverlayProps) {
     lastXY: props.xy,
     lastAlignment: props.alignment,
     lastTarget: props.target,
+    lastPosition: [0, 0],
     activeContent: false,
     contentExist: false,
   });
@@ -78,18 +80,31 @@ export function _Overlay(p: OverlayProps) {
   });
 
   /** 所有启用了clickAwayClosable的overlay */
-  const overlaysClickAway = useOverlaysClickAway({
-    enable: open && props.clickAwayQueue && props.clickAwayClosable,
-  });
+  const overlaysClickAway = useOverlaysClickAway(
+    {
+      enable: open && props.clickAwayQueue && props.clickAwayClosable,
+    },
+    props.clickAwayQueueNameSpace
+  );
+
+  /** 给content render和children render的参数 */
+  const customRenderMeta = {
+    props,
+    open: open,
+    setOpen,
+  };
+
+  const children = props.children;
+  const element = isFunction(children) ? children(customRenderMeta) : children;
 
   /** 触发器回调 */
-  const triggerHandle = useFn((e: UseTriggerEvent) => {
-    _onTrigger(e, setOpen, self);
-  });
+  const triggerHandle = useFn((e: UseTriggerEvent) =>
+    _onTrigger(e, setOpen, self)
+  );
 
   /** 触发器 */
   const trigger = useTrigger({
-    element: props.children,
+    element,
     type: props.triggerType,
     onTrigger: triggerHandle,
   });
@@ -115,6 +130,7 @@ export function _Overlay(p: OverlayProps) {
     measure,
     triggerHandle,
     isUnmount: useIsUnmountState(),
+    customRenderMeta,
   };
 
   const methods = useMethods(ctx);

@@ -18,6 +18,7 @@ import { Divider } from "../layout/index.js";
 import { _useTextAreaCalc } from "./use-text-area-calc.js";
 import { _integer, _number, _numberRange, _positive } from "./interceptor.js";
 import { _useStepper } from "./use-stepper.js";
+import { i18n, INPUT_NS } from "../i18n/index.js";
 export function _Input(_props) {
     var manualChange = /** 手动设置值并通过change()触发更新 */ function manualChange(val) {
         inputRef.current.value = val;
@@ -124,7 +125,11 @@ export function _Input(_props) {
                 className: "m78-input_tip-text",
                 children: [
                     value.length,
-                    maxLength ? "/".concat(maxLength) : "字"
+                    maxLength ? "/".concat(maxLength) : i18n.t("word count", {
+                        ns: [
+                            INPUT_NS
+                        ]
+                    })
                 ]
             }));
         }

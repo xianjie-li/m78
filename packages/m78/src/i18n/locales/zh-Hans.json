@@ -1,0 +1,17 @@
+{
+  "common": {
+    "submit": "提交",
+    "confirm": "确认",
+    "cancel": "取消",
+    "loading": "加载中"
+  },
+  "input": {
+    "word count": "字"
+  },
+  "button": {
+    "test": "测试"
+  },
+  "dialog": {
+    "default title": "提示"
+  }
+}

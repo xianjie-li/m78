@@ -1,0 +1,61 @@
+@import '../common/style/sass';
+
+// 增加样式权重
+.m78.m78-dialog {
+  padding: 20px;
+  border-radius: var(--m78-border-radius-lg);
+  overflow: hidden;
+}
+
+.m78-dialog {
+  &_close-icon {
+    position: absolute !important;
+    right: 6px;
+    top: 6px;
+    cursor: pointer;
+    text-shadow: var(--m78-stress-shadow-w);
+    font-size: var(--m78-fs-sm) !important;
+    z-index: 1;
+
+    &:hover {
+      font-weight: bold;
+    }
+  }
+
+  &_title {
+    color: var(--m78-color-title);
+    font-size: 18px;
+  }
+
+  &_cont {
+    position: relative;
+    padding: 0 12px;
+    margin: 8px -12px; // 为Input等组件腾出空间, 防止交互效果被遮挡
+    font-size: 14px;
+    max-height: 70vh;
+    min-height: 58px;
+    overflow: auto;
+  }
+
+  &_footer {
+    position: relative;
+    text-align: right;
+
+    &.__full {
+      display: flex;
+      .m78-btn {
+        flex: 1;
+      }
+    }
+  }
+
+  &_drag-handle {
+    touch-action: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 24px;
+    width: 100%;
+    cursor: grab;
+  }
+}

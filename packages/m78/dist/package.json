@@ -25,6 +25,7 @@
     "@m78/seed": "workspace:^",
     "@m78/style": "workspace:^",
     "@m78/utils": "workspace:^",
+    "@m78/render-api": "workspace:^",
     "@material-design-icons/svg": "^0.14.2",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.8",

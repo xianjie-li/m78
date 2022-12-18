@@ -5,6 +5,7 @@ import css from "./style.module.scss";
 import { Spin } from "m78/spin";
 import { useFn } from "@m78/hooks";
 import { Input } from "m78/input";
+import { notify } from "m78/notify";
 import { copyToClipboard } from "@site/src/common/common";
 
 const IconDemo = () => {
@@ -79,7 +80,11 @@ const IconDemo = () => {
       }
     }
 
-    copyToClipboard(`import { ${item.key} } from "@m78/icons/${cls}";`);
+    copyToClipboard(`import { ${item.key} } from "@m78/icons/${cls}";`).then(
+      () => {
+        notify.success("复制成功");
+      }
+    );
     console.log(`import { ${item.key} } from "@m78/icons/${cls}";`);
   });
 

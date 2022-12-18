@@ -1,5 +1,6 @@
 import _object_spread from "@swc/helpers/src/_object_spread.mjs";
 import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
+import _object_without_properties from "@swc/helpers/src/_object_without_properties.mjs";
 import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
@@ -28,8 +29,7 @@ var ActiveType;
     ActiveType[ActiveType["mouse"] = 1] = "mouse";
     ActiveType[ActiveType["touch"] = 2] = "touch";
 })(ActiveType || (ActiveType = {}));
-var createNilEvent = function(type, e, target) {
-    var data = arguments.length > 3 && arguments[3] !== void 0 ? arguments[3] : null;
+var createNilEvent = function(type, e, target, data) {
     return {
         type: type,
         active: false,
@@ -50,8 +50,7 @@ var createNilEvent = function(type, e, target) {
     e.offsetY = e2.offsetY || 0;
     return e;
 };
-/** 根据touch事件和目标节点生成事件对象 */ function touchGen(e, ele) {
-    var data = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : null;
+/** 根据touch事件和目标节点生成事件对象 */ function touchGen(e, ele, data) {
     var touch = e.changedTouches[0];
     if (!touch || !ele) return null;
     var tBound = ele.getBoundingClientRect();
@@ -65,7 +64,12 @@ var createNilEvent = function(type, e, target) {
 /**
  * 用来为一个ReactElement绑定常用的触发事件
  * */ export function useTrigger(config) {
-    var element = config.element, type = config.type, onTrigger = config.onTrigger, _active = config.active, active = _active === void 0 ? {} : _active, _data = config.data, data = _data === void 0 ? null : _data;
+    var element = config.element, type = config.type, onTrigger = config.onTrigger, _active = config.active, active = _active === void 0 ? {} : _active, data = _object_without_properties(config, [
+        "element",
+        "type",
+        "onTrigger",
+        "active"
+    ]);
     var triggerDelay = active.triggerDelay, _leaveDelay = active.leaveDelay, leaveDelay = _leaveDelay === void 0 ? 100 : _leaveDelay;
     var types = ensureArray(type);
     var self = useSelf({
@@ -246,7 +250,8 @@ var createNilEvent = function(type, e, target) {
 }
 export function Trigger(config) {
     var trigger = useTrigger(_object_spread_props(_object_spread({}, config), {
-        element: config.children
+        element: config.children,
+        children: undefined
     }));
     return trigger.node;
 }

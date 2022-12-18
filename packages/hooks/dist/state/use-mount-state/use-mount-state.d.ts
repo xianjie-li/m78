@@ -1,7 +1,7 @@
 export interface UseMountStateConfig {
-    /** true | 如果为true，在第一次启用时才真正挂载内容 */
+    /** 默认为 true, 表示在第一次开启时才真正挂载内容, 设置为 false 时, 内容会随组件在第一时间挂载 */
     mountOnEnter?: boolean;
-    /** false | 在关闭时卸载内容 */
+    /** 默认为 false, 表示在关闭后是否保留内容节点, 如果内容频繁切换且需要维护状态, false是更明智的选择, 像 tooltip 这类低创建和销毁成本的功能则可以选择开启 */
     unmountOnExit?: boolean;
 }
 /**

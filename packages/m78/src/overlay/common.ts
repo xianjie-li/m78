@@ -1,13 +1,16 @@
+import React from "react";
 import {
   AnyFunction,
   BoundSize,
+  dumpFn,
   isNumber,
   omit,
   TupleNumber,
 } from "@m78/utils";
+import { config } from "react-spring";
 import { TransitionType } from "../transition/index.js";
 import { Z_INDEX_MODAL } from "../common/index.js";
-import clamp from "lodash/clamp";
+import clamp from "lodash/clamp.js";
 import { useSame, UseTriggerEvent, UseTriggerType } from "@m78/hooks";
 import {
   _ArrowBasePosition,
@@ -15,19 +18,20 @@ import {
   _Context,
   _DirectionMeta,
   _DirectionMetaMap,
+  _DragContext,
   omitApiProps,
-  OverlayDirectionUnion,
   OverlayDirection,
   OverlayDirectionKeys,
+  OverlayDirectionUnion,
   OverlayProps,
   OverlayRenderOption,
-} from "./types";
+} from "./types.js";
 
 export const _defaultAlignment: TupleNumber = [0.5, 0.5];
 
 export const _defaultProps = {
   namespace: "overlay",
-  transitionType: TransitionType.zoom,
+  transitionType: TransitionType.fade,
   zIndex: Z_INDEX_MODAL,
   clickAwayClosable: true,
   clickAwayQueue: true,
@@ -38,13 +42,16 @@ export const _defaultProps = {
   autoFocus: true,
 };
 
-export const transitionConfig = {
-  tension: 360,
-  friction: 24,
-};
+export const transitionConfig = config.stiff;
 
 /** 箭头和目标之间的补白 */
 export const _arrowSpace = 4;
+
+export const dragContext = React.createContext<_DragContext>({
+  onDrag: dumpFn,
+  getXY: dumpFn,
+  getBound: dumpFn,
+});
 
 /** 检测入参是否为BoundSize */
 export function isBound(a: any): a is BoundSize {
@@ -95,11 +102,16 @@ export function useOverlaysMask(config?: SameConfig) {
   };
 }
 
+const defaultClickAwaySameNameSpace = "m78-overlay-clickAway";
+
 /**
  * 所有弹层类组件共享的useSame包装, 用于统一clickAway
  * */
-export function useOverlaysClickAway(config?: SameConfig) {
-  const [index, list, id] = useSame("m78-overlay-clickAway", config);
+export function useOverlaysClickAway(config?: SameConfig, namespace?: string) {
+  const [index, list, id] = useSame(
+    namespace || defaultClickAwaySameNameSpace,
+    config
+  );
 
   return {
     index,
@@ -117,7 +129,20 @@ export function _onTrigger(
   self: _Context["self"]
 ) {
   if (e.type === UseTriggerType.click) {
-    setOpen((prev: any) => !prev);
+    if (self.lastFocusTime) {
+      // focus和click前后间隔400ms才触发
+      const diff = Date.now() - self.lastFocusTime;
+      if (diff > 400) {
+        setOpen((prev: any) => !prev);
+      }
+    } else {
+      setOpen((prev: any) => !prev);
+    }
+  }
+
+  // 标记正常出发focus, 并在open改变时取消
+  if (e.type === UseTriggerType.focus && e.focus) {
+    self.lastFocusTime = Date.now();
   }
 
   if (e.type === UseTriggerType.focus || e.type === UseTriggerType.active) {

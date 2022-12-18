@@ -1,4 +1,4 @@
-import { Bound, TupleNumber } from "./types";
+import { AnyObject, Bound, TupleNumber } from "./types.js";
 import { isDom, isFunction, isNumber } from "./is.js";
 import { clamp } from "./number.js";
 
@@ -9,9 +9,13 @@ const portalsID = "J__PORTALS__NODE__";
 /**
  * get a dom, multiple calls will return the same dom
  * @param namespace - create a uniq node by namespace
+ * @param extraProps - set additional props to dom elements
  * @return - dom
  * */
-export const getPortalsNode = (namespace?: string): HTMLDivElement => {
+export const getPortalsNode = (
+  namespace?: string,
+  extraProps?: AnyObject
+): HTMLDivElement => {
   const id =
     portalsID + (namespace ? namespace.toLocaleUpperCase() : "DEFAULT");
 
@@ -19,7 +23,15 @@ export const getPortalsNode = (namespace?: string): HTMLDivElement => {
 
   if (!portalsEl) {
     const el = document.createElement("div");
+
+    if (extraProps) {
+      for (const [key, val] of Object.entries(extraProps)) {
+        el[key] = val;
+      }
+    }
+
     el.id = id;
+
     portalsEl = document.body.appendChild(el);
   }
   return portalsEl as HTMLDivElement;

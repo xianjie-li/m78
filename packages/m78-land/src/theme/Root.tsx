@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import "m78/common/init";
-import { useColorMode } from "@docusaurus/theme-common";
+import Head from "@docusaurus/Head";
 
 // 默认实现，你可以自定义
 export default function Root({ children }: any) {
@@ -12,7 +12,14 @@ export default function Root({ children }: any) {
       root.classList.add("m78-root");
       root.classList.add("m78");
     }
-  }, []);
+  });
 
-  return children;
+  return (
+    <>
+      <Head>
+        <html className="extra-html-class" />
+      </Head>
+      {children}
+    </>
+  );
 }
