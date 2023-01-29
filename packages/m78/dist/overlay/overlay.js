@@ -62,12 +62,13 @@ import { isFunction } from "@m78/utils";
     var children = props.children;
     var element = isFunction(children) ? children(customRenderMeta) : children;
     /** 触发器回调 */ var triggerHandle = useFn(function(e) {
-        return _onTrigger(e, setOpen, self);
+        return _onTrigger(e, setOpen, self, props);
     });
     /** 触发器 */ var trigger = useTrigger({
         element: element,
         type: props.triggerType,
-        onTrigger: triggerHandle
+        onTrigger: triggerHandle,
+        innerRef: props.triggerNodeRef
     });
     /** 尺寸变更时修复位置 */ var ref4 = _sliced_to_array(useMeasure(containerRef, 200), 1), measure = ref4[0];
     var ctx = {

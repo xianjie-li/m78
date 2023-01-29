@@ -59,7 +59,6 @@ export function _Input(_props: InputProps) {
     onClear,
     interceptor,
     readonly,
-    fullWidth,
     value: _value,
     defaultValue: _defaultValue,
     onChange: _onChange,
@@ -378,7 +377,6 @@ export function _Input(_props: InputProps) {
         size && `__${size}`,
         {
           "__no-border": !textArea && border,
-          "__full-width": fullWidth,
           __focus: focus,
           __disabled: isDisabled,
           __textarea: textArea,

@@ -155,7 +155,7 @@ export function _Input(_props) {
             null
         ].concat(_to_consumable_array(nodes)));
     };
-    var /* 处理特殊属性 */ className = _props.className, style = _props.style, _disabled = _props.disabled, disabled = _disabled === void 0 ? false : _disabled, _loading = _props.loading, loading = _loading === void 0 ? false : _loading, _blockLoading = _props.blockLoading, blockLoading = _blockLoading === void 0 ? false : _blockLoading, tmp = _props.type, _type = tmp === void 0 ? InputType.text : tmp, /* 组件props */ size = _props.size, _clear = _props.clear, clear = _clear === void 0 ? true : _clear, _onFocus = _props.onFocus, onFocus = _onFocus === void 0 ? dumpFn : _onFocus, _onBlur = _props.onBlur, onBlur = _onBlur === void 0 ? dumpFn : _onBlur, _onKeyDown = _props.onKeyDown, onKeyDown = _onKeyDown === void 0 ? dumpFn : _onKeyDown, _onPressEnter = _props.onPressEnter, onPressEnter = _onPressEnter === void 0 ? dumpFn : _onPressEnter, _onSearch = _props.onSearch, onSearch = _onSearch === void 0 ? dumpFn : _onSearch, status = _props.status, border = _props.border, maxLength = _props.maxLength, _search = _props.search, search = _search === void 0 ? false : _search, prefix = _props.prefix, suffix = _props.suffix, _textArea = _props.textArea, textArea = _textArea === void 0 ? false : _textArea, _autoSize = _props.autoSize, autoSize = _autoSize === void 0 ? true : _autoSize, _charCount = _props.charCount, charCount = _charCount === void 0 ? false : _charCount, innerInputRef = _props.innerInputRef, innerWrapRef = _props.innerWrapRef, onClear = _props.onClear, interceptor = _props.interceptor, readonly = _props.readonly, fullWidth = _props.fullWidth, _value = _props.value, _defaultValue = _props.defaultValue, _onChange = _props.onChange, min = _props.min, max = _props.max, stepper = _props.stepper, props = _object_without_properties(_props, [
+    var /* 处理特殊属性 */ className = _props.className, style = _props.style, _disabled = _props.disabled, disabled = _disabled === void 0 ? false : _disabled, _loading = _props.loading, loading = _loading === void 0 ? false : _loading, _blockLoading = _props.blockLoading, blockLoading = _blockLoading === void 0 ? false : _blockLoading, tmp = _props.type, _type = tmp === void 0 ? InputType.text : tmp, /* 组件props */ size = _props.size, _clear = _props.clear, clear = _clear === void 0 ? true : _clear, _onFocus = _props.onFocus, onFocus = _onFocus === void 0 ? dumpFn : _onFocus, _onBlur = _props.onBlur, onBlur = _onBlur === void 0 ? dumpFn : _onBlur, _onKeyDown = _props.onKeyDown, onKeyDown = _onKeyDown === void 0 ? dumpFn : _onKeyDown, _onPressEnter = _props.onPressEnter, onPressEnter = _onPressEnter === void 0 ? dumpFn : _onPressEnter, _onSearch = _props.onSearch, onSearch = _onSearch === void 0 ? dumpFn : _onSearch, status = _props.status, border = _props.border, maxLength = _props.maxLength, _search = _props.search, search = _search === void 0 ? false : _search, prefix = _props.prefix, suffix = _props.suffix, _textArea = _props.textArea, textArea = _textArea === void 0 ? false : _textArea, _autoSize = _props.autoSize, autoSize = _autoSize === void 0 ? true : _autoSize, _charCount = _props.charCount, charCount = _charCount === void 0 ? false : _charCount, innerInputRef = _props.innerInputRef, innerWrapRef = _props.innerWrapRef, onClear = _props.onClear, interceptor = _props.interceptor, readonly = _props.readonly, _value = _props.value, _defaultValue = _props.defaultValue, _onChange = _props.onChange, min = _props.min, max = _props.max, stepper = _props.stepper, props = _object_without_properties(_props, [
         "className",
         "style",
         "disabled",
@@ -183,7 +183,6 @@ export function _Input(_props) {
         "onClear",
         "interceptor",
         "readonly",
-        "fullWidth",
         "value",
         "defaultValue",
         "onChange",
@@ -313,7 +312,6 @@ export function _Input(_props) {
     return /*#__PURE__*/ _jsxs("span", {
         className: clsx("m78 m78-init m78-input", className, status && "__".concat(status), size && "__".concat(size), {
             "__no-border": !textArea && border,
-            "__full-width": fullWidth,
             __focus: focus,
             __disabled: isDisabled,
             __textarea: textArea,

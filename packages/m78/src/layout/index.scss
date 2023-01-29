@@ -190,17 +190,73 @@
 // Divider
 // #######################
 .m78-divider {
+  position: relative;
   background-color: var(--m78-color-divider);
-  height: 0.5px;
+  height: 1px;
   width: 100%;
-  margin: 12px 0;
+  margin: var(--m78-space-3) 0;
 
   &.__vertical {
     display: inline-block;
     vertical-align: middle;
-    height: 1.2em;
-    width: 0.5px;
-    margin: 0 12px;
+    min-height: 1.2em;
+    width: 1px;
+    margin: 0 var(--m78-space-3);
+  }
+
+  &_row {
+    .m78-divider_node {
+      white-space: nowrap;
+      padding: 0 var(--m78-space-3);
+    }
+
+    .m78-divider {
+      flex: 1;
+    }
+
+    &.__start {
+      .m78-divider:first-of-type {
+        flex: 0 0 auto;
+        width: var(--m78-space-5);
+      }
+    }
+
+    &.__end {
+      .m78-divider:last-of-type {
+        flex: 0 0 auto;
+        width: var(--m78-space-5);
+      }
+    }
+  }
+
+  &_column {
+    display: inline-flex;
+    vertical-align: middle;
+
+    .m78-divider_node {
+      width: 1.2em;
+      text-align: center;
+      padding: var(--m78-space-2) 0;
+      line-height: 1.2;
+    }
+
+    .m78-divider {
+      flex: 1;
+    }
+
+    &.__start {
+      .m78-divider:first-of-type {
+        flex: 0 0 auto;
+        height: var(--m78-space-2);
+      }
+    }
+
+    &.__end {
+      .m78-divider:last-of-type {
+        flex: 0 0 auto;
+        height: var(--m78-space-2);
+      }
+    }
   }
 }
 
@@ -238,9 +294,12 @@
 // Tile
 // #######################
 .m78-tile {
-  &_leading {
+  flex-wrap: wrap;
+
+  &_leading, &_trailing {
     flex: 0 0 auto;
-    margin-right: 10px;
+    //line-height: 1;
+    max-width: 70%; // 内容过多优化显示
   }
 
   &_main {
@@ -248,7 +307,16 @@
   }
 
   &_trailing {
+    margin-left: var(--m78-space-2);
+  }
+
+  &_leading {
+    margin-right: var(--m78-space-2);
+  }
+
+  &_foot {
+    width: 100%;
     flex: 0 0 auto;
-    margin-left: 10px;
+    margin-top: var(--m78-space-1);
   }
 }

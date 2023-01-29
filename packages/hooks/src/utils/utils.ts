@@ -1,4 +1,4 @@
-import { isArray, isDom } from "@m78/utils";
+import { ensureArray, isArray, isDom } from "@m78/utils";
 import { RefObject } from "react";
 
 /** 用于获取dom的target */
@@ -24,7 +24,7 @@ export function getTargetDomList<H = HTMLElement>(
   ref?: RefObject<any>
 ): H[] | undefined {
   if (target) {
-    const targetList: DomTarget[] = isArray(target) ? target : [target];
+    const targetList: DomTarget[] = ensureArray(target);
 
     const ls = targetList
       .map((item) => getRefDomOrDom<H>(item))

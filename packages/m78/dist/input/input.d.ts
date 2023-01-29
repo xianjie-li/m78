@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import { InputProps } from "./types.js";
 export declare function _Input(_props: InputProps): JSX.Element;
 export declare namespace _Input {

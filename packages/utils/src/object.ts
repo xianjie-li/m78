@@ -15,7 +15,7 @@ export const shakeFalsy = (source: object): object => {
   return source;
 };
 
-function pickOrOmit(obj: any, props: string | string[], isPick = false) {
+function pickOrOmit(obj: any, props: string | string[], isPick = false): any {
   if (isString(props)) {
     props = props.split(",").map((key) => key.trim());
   }
@@ -38,8 +38,8 @@ function pickOrOmit(obj: any, props: string | string[], isPick = false) {
  * @param props - Key to be removed, comma separated string or string array
  * @return - New object after removal
  * */
-export function omit<R>(obj: any, props: string | string[]): R {
-  return pickOrOmit(obj, props) as R;
+export function omit(obj: any, props: string | string[]): any {
+  return pickOrOmit(obj, props);
 }
 
 /**

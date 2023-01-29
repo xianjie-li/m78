@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import { _Context } from "./types.js";
 import { _Methods } from "./use-methods.js";
 import { _LifeCycle } from "./use-life-cycle.js";

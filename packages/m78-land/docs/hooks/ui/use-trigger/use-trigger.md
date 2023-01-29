@@ -85,6 +85,8 @@ export interface UseTriggerConfig {
     /** 离开触发延迟(ms) */
     leaveDelay?: number;
   };
+  /** trigger对应的dom节点的ref */
+  innerRef?: React.Ref<HTMLElement | null>;
 }
 
 /** Trigger的props, 对element进行了更名 */

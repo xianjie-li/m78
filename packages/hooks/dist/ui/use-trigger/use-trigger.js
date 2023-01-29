@@ -4,7 +4,7 @@ import _object_without_properties from "@swc/helpers/src/_object_without_propert
 import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
-import React, { useEffect } from "react";
+import React, { useEffect, useImperativeHandle } from "react";
 import { dumpFn, ensureArray } from "@m78/utils";
 import { useFn, useSelf, useSetState } from "../../index.js";
 export var UseTriggerType;
@@ -64,11 +64,12 @@ var createNilEvent = function(type, e, target, data) {
 /**
  * 用来为一个ReactElement绑定常用的触发事件
  * */ export function useTrigger(config) {
-    var element = config.element, type = config.type, onTrigger = config.onTrigger, _active = config.active, active = _active === void 0 ? {} : _active, data = _object_without_properties(config, [
+    var element = config.element, type = config.type, onTrigger = config.onTrigger, _active = config.active, active = _active === void 0 ? {} : _active, innerRef = config.innerRef, data = _object_without_properties(config, [
         "element",
         "type",
         "onTrigger",
-        "active"
+        "active",
+        "innerRef"
     ]);
     var triggerDelay = active.triggerDelay, _leaveDelay = active.leaveDelay, leaveDelay = _leaveDelay === void 0 ? 100 : _leaveDelay;
     var types = ensureArray(type);
@@ -113,8 +114,8 @@ var createNilEvent = function(type, e, target, data) {
         trigger(event);
     });
     // active start基础逻辑
-    var activeEnterHandle = useFn(function(e, aType, reverseType) {
-        if (self.activeType === reverseType) return;
+    var activeEnterHandle = useFn(function(e, aType) {
+        if (self.activeType && self.activeType !== aType) return;
         self.activeType = aType;
         var d = triggerDelay;
         // 如果未设置, 根据类型为其设置默认值
@@ -123,7 +124,6 @@ var createNilEvent = function(type, e, target, data) {
             if (aType === ActiveType.touch) d = 400;
         }
         activeDelayHelper(function() {
-            if (self.active) return;
             var event = aType === ActiveType.mouse ? offsetSet(createNilEvent(UseTriggerType.active, e, state.el, data), e) : touchGen(e, state.el, data);
             if (!event) return;
             self.active = true;
@@ -133,10 +133,10 @@ var createNilEvent = function(type, e, target, data) {
     });
     // active end基础逻辑
     var activeLeaveHandle = useFn(function(e, aType) {
-        if (self.activeType !== aType) return;
+        if (self.activeType && self.activeType !== aType) return;
+        self.activeType = aType;
         clearTimeout(self.activeTimer);
         activeDelayHelper(function() {
-            if (!self.active) return;
             self.active = false;
             var event = aType === ActiveType.mouse ? offsetSet(createNilEvent(UseTriggerType.active, e, state.el, data), e) : touchGen(e, state.el, data);
             if (!event) return;
@@ -144,13 +144,13 @@ var createNilEvent = function(type, e, target, data) {
         }, leaveDelay);
     });
     var mouseEnterHandle = useFn(function(e) {
-        activeEnterHandle(e, ActiveType.mouse, ActiveType.touch);
+        activeEnterHandle(e, ActiveType.mouse);
     });
     var mouseLeaveHandle = useFn(function(e) {
         activeLeaveHandle(e, ActiveType.mouse);
     });
     var touchStartHandle = useFn(function(e) {
-        activeEnterHandle(e, ActiveType.touch, ActiveType.mouse);
+        activeEnterHandle(e, ActiveType.touch);
     });
     var touchEndHandle = useFn(function(e) {
         activeLeaveHandle(e, ActiveType.touch);
@@ -168,6 +168,11 @@ var createNilEvent = function(type, e, target, data) {
     var ref = _sliced_to_array(useSetState({
         el: null
     }), 2), state = ref[0], setState = ref[1];
+    useImperativeHandle(innerRef, function() {
+        return state.el;
+    }, [
+        state.el
+    ]);
     // 通过ref测量element实际渲染的dom
     var refCallback = useFn(function(node) {
         if (!node) return;

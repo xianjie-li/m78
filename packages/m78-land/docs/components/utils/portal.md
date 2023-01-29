@@ -6,7 +6,7 @@ title: Portal - 传送门
 
 ```ts
 import { Portal } from "m78/portal";
-console.log(123123);
+
 function Portal({
   children,
   namespace,

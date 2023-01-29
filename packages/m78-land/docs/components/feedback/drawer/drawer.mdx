@@ -1,0 +1,46 @@
+---
+title: Drawer - 抽屉
+---
+
+从屏幕边缘出现的内容区
+
+## 综合示例
+
+<demo
+  demo={require("./drawer.tsx")}
+  code={require("!!raw-loader!./drawer.tsx")}
+/>
+
+## API
+
+```ts
+/**
+ * DrawerProps 剔除了部分 OverlayProps
+ * */
+export interface DrawerProps extends DrawerOmitOverlayProps {
+  /** 'bottom' | 出现位置 */
+  position?: PositionUnion;
+  /** 头部内容, 固定在最顶部 */
+  header?: React.ReactNode;
+  /** 底部内容, 固定在最底部 */
+  footer?: React.ReactNode;
+}
+```
+
+继承 [overlay](/docs/components/feedback/overlay/) 除下列项之外的所有 prop.
+
+```ts
+/** 应从Overlay中移除的props */
+export const omitDrawerOverlayProps = [
+  "xy",
+  "alignment",
+  "target",
+  "childrenAsTarget",
+  "offset",
+  "direction",
+  "arrow",
+  "arrowSize",
+  "arrowProps",
+  "transitionType",
+] as const;
+```

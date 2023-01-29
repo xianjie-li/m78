@@ -37,8 +37,8 @@ const _Bubble = (props: BubbleProps) => {
     ...other
   } = props;
 
-  const overlayProps = useMemo(() => {
-    return omit<OverlayProps>(other, omitBubbleOverlayProps as any);
+  const overlayProps: OverlayProps = useMemo(() => {
+    return omit(other, omitBubbleOverlayProps as any);
   }, [props]);
 
   // 在不同类型下使用不同的mountOnEnter/unmountOnExit默认值

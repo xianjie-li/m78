@@ -22,7 +22,7 @@
     "@m78/utils": "workspace:^",
     "@swc/helpers": "^0.4.11",
     "@types/lodash": "^4.14.185",
-    "@types/react": "^18.0.24",
+    "@types/react": "^18.0.26",
     "lodash": "^4.17.21",
     "query-string": "^7.1.1",
     "react": "^18.2.0",

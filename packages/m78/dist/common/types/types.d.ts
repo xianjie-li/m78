@@ -40,12 +40,27 @@ export declare enum Direction {
 }
 export declare type DirectionKeys = keyof typeof Direction;
 export declare type DirectionUnion = Direction | DirectionKeys;
+/** 通用的value类型 */
+export declare type ValueType = string | number;
 /** 通用数据源类型 */
-export interface DataSourceItem<ValType = any> {
+export interface DataSourceItem<T = any> {
     /** 选项名 */
-    label: React.ReactNode;
+    label?: React.ReactNode;
     /** 选项值, 默认与label相同 */
-    value: ValType;
+    value?: ValueType;
+    /** 子项 */
+    children?: T[];
+    /** 用于使用DataSourceItemCustom定制的情况 */
+    [key: string]: any;
+}
+/** 用于DataSourceItem 建定制 */
+export interface DataSourceItemCustom {
+    /** 自定义获取label的key */
+    labelKey?: string;
+    /** 自定义获取value的key */
+    valueKey?: string;
+    /** 自定义获取children的key */
+    childrenKey?: string;
 }
 export declare type DIVProps = React.PropsWithoutRef<JSX.IntrinsicElements["div"]>;
 /** Component common props */

@@ -17,7 +17,7 @@ export function StatusIconSuccess() {
 }
 export function StatusIconWarning() {
     return /*#__PURE__*/ _jsx(IconError, {
-        className: "color-warn"
+        className: "color-warning"
     });
 }
 export function StatusIconError() {

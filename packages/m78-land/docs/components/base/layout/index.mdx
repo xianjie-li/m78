@@ -281,7 +281,7 @@ interface MediaQueryListenerProps {
 
 <br />
 
-```ts | pure
+```ts
 // Row/Column
 interface FlexWrapProps extends DIVProps {
   /** 'start' | 主轴对齐方式 */
@@ -318,7 +318,7 @@ interface FlexProps extends DIVProps {
   code={require("!!raw-loader!./_demos/tile.tsx")}
 ></demo>
 
-```ts | pure
+```ts
 interface TileProps extends Omit<DIVProps, "title"> {
   /** 主要内容 */
   title?: React.ReactNode;
@@ -330,6 +330,69 @@ interface TileProps extends Omit<DIVProps, "title"> {
   leading?: React.ReactNode;
   /** 尾随内容 */
   trailing?: React.ReactNode;
+  /** 纵轴的对齐方式 */
+  crossAlign?: FlexWrapProps["crossAlign"];
+  /** 指向内部包裹dom的ref */
+  innerRef?: React.Ref<HTMLDivElement>;
+  /** 内容区域超出是否显示, 默认为隐藏, 以适应更多的场景 */
+  overflowVisible?: boolean;
+}
+```
+
+## Lay
+
+在 [Tile](/docs/components/base/layout/#tile) 的基础上提供了预设样式, 可用于很多布局场景, 比如列表, 表单, 卡片等.
+
+<demo
+  demo={require("./_demos/lay.tsx")}
+  code={require("!!raw-loader!./_demos/lay.tsx")}
+></demo>
+
+```ts
+export enum LayStyle {
+  /** 分割线 */
+  splitLine = "splitLine",
+  /** 边框模式 */
+  border = "border",
+  /** 背景色模式 */
+  background = "background",
+  /** 无分割样式 */
+  none = "none",
+}
+
+export interface LayProps extends TileProps {
+  /** 显示右侧箭头 */
+  arrow?: boolean;
+  /** 禁用（视觉禁用） */
+  disabled?: boolean;
+  /** 调整布局紧凑程度、字号等 */
+  size?: SizeUnion;
+  /** 项的分隔样式 */
+  itemStyle?: LayStyleUnion;
+  /** true | 交互效果 */
+  effect?: boolean;
+  /** 标记为选中 */
+  active?: boolean;
+  /** 是否高亮当前项 */
+  highlight?: boolean;
+  /** 状态 */
+  status?: StatusUnion;
+}
+
+// 继承的props, 还可接收所有div支持的属性
+export interface TileProps extends Omit<DIVProps, "title"> {
+  /** 主要内容 */
+  title?: React.ReactNode;
+  /** title的别名 */
+  children?: React.ReactNode;
+  /** 次要内容 */
+  desc?: React.ReactNode;
+  /** 前导内容 */
+  leading?: React.ReactNode;
+  /** 尾随内容 */
+  trailing?: React.ReactNode;
+  /** 底部内容 */
+  foot?: React.ReactNode;
   /** 纵轴的对齐方式 */
   crossAlign?: FlexWrapProps["crossAlign"];
   /** 指向内部包裹dom的ref */
@@ -363,29 +426,27 @@ interface AspectRatioProps {
 
 ## Divider
 
-横向或纵向元素间添加分割线
+在横向或纵向元素间添加分割线
 
 <demo
   demo={require("./_demos/divider.tsx")}
   code={require("!!raw-loader!./_demos/divider.tsx")}
 ></demo>
 
-```ts | pure
-interface DividerProps {
-  /** false | 设置为垂直分割线 */
+```ts
+interface DividerProps extends ComponentBaseProps {
+  /** false | 是否为垂直分割线 */
   vertical?: boolean;
-  /** 100%(横向) / 0.5(纵向) | 分割线尺寸 */
-  width?: number;
-  /** 0.5(横向) / 1.2em(纵向) | 分割线尺寸 */
-  height?: number;
+  /** 分割线厚度 */
+  size?: number;
   /** 颜色 */
   color?: string;
   /** 12 | 间距 */
   margin?: number;
-  /** 包裹元素的类名 */
-  className?: string;
-  /** 包裹元素样式 */
-  style?: CSSProperties;
+  /** 放置于分割线内的文本 */
+  children?: React.ReactNode;
+  /** 传入children时, 控制其对齐位置 */
+  align?: "start" | "center" | "end";
 }
 ```
 

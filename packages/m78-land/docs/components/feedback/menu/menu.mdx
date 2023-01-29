@@ -1,0 +1,106 @@
+---
+title: Menu - 菜单
+---
+
+气泡列表, 用于显示菜单项或上下文菜单.
+
+## 示例
+
+<demo
+  demo={require("./menu-example.tsx")}
+  code={require("!!raw-loader!./menu-example.tsx")}
+></demo>
+
+## API
+
+### MenuProps
+
+```ts
+interface MenuProps {
+  // #### 特有配置 ####
+  /** 菜单选项, 所有选项必须有一个唯一的value */
+  options: MenuOption[];
+  /** 子级, 需遵循useTrigger子级规则 */
+  children: UseTriggerProps["children"];
+  /** 点击选中某项后触发 */
+  onConfirm?: (val: ValueType, option: MenuOption) => void;
+  /**
+   * 子菜单的触发方式, 默认为active(鼠标悬浮), 设备为移动设备时(目前没有很理想的检测方式), 会自动切换为click
+   * */
+  subMenuTriggerType?: UseTriggerType.active | UseTriggerType.click;
+
+  // #### 选项取值定制, 继承至DataSourceItemCustom ####
+  /** 自定义获取label的key */
+  labelKey?: string;
+  /** 自定义获取value的key */
+  valueKey?: string;
+  /** 自定义获取children的key */
+  childrenKey?: string;
+}
+```
+
+支持 [overlay](/docs/components/feedback/overlay/) 除以下列出项之外的所有 props, 如果需要实现更加复杂的功能, 可以参考
+
+```ts
+export const omitMenuOverlayProps = [
+  "xy",
+  "alignment",
+  "target",
+  "childrenAsTarget",
+  "content",
+  "children",
+  "triggerNodeRef",
+  "open",
+  "defaultOpen",
+  "autoFocus",
+] as const;
+```
+
+### MenuOption
+
+```ts
+/** 通用的value类型 */
+export type ValueType = string | number;
+
+interface Option {
+  // #### 值相关prop, 继承至DataSourceItem ####
+  /** 选项名 */
+  label?: React.ReactNode;
+  /** 选项值, 默认与label相同 */
+  value?: ValueType;
+  /** 子项 */
+  children?: Option[];
+  /** 用于使用DataSourceItemCustom定制的情况 */
+  [key: string]: any;
+
+  // #### 布局相关prop, 大部分继承至 LayProps ####
+  /** 次要内容 */
+  desc?: React.ReactNode;
+  /** 前导内容 */
+  leading?: React.ReactNode;
+  /** 尾随内容 */
+  trailing?: React.ReactNode;
+  /** 底部内容 */
+  foot?: React.ReactNode;
+  /** 纵轴的对齐方式 */
+  crossAlign?: FlexWrapProps["crossAlign"];
+  /** 内容区域超出是否显示, 默认为隐藏, 以适应更多的场景 */
+  overflowVisible?: boolean;
+  /** 显示右侧箭头 */
+  arrow?: boolean;
+  /** 禁用（视觉禁用） */
+  disabled?: boolean;
+  /** 项的分隔样式 */
+  itemStyle?: LayStyleUnion;
+  /** true | 交互效果 */
+  effect?: boolean;
+  /** 是否高亮当前项 */
+  highlight?: boolean;
+  /** 状态 */
+  status?: StatusUnion;
+
+  // #### 特有prop ####
+  /** 完全自定义项的渲染内容, 节点需要声明唯一key */
+  customer?: React.ReactNode | ((close: EmptyFunction) => React.ReactElement);
+}
+```

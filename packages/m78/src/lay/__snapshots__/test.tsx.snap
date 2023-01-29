@@ -1,0 +1,1372 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Lay 1`] = `
+<div>
+  <div
+    style={
+      Object {
+        "maxWidth": 400,
+      }
+    }
+  >
+    <div>
+      <p
+        className="fs-md"
+      >
+        默认样式
+      </p>
+      <div>
+        <div
+          className="m78 m78-row m78-tile m78-lay __effect __splitLine m78-cross-center"
+        >
+          <div
+            className="m78-tile_leading"
+          >
+            🍊
+          </div>
+          <div
+            className="m78-tile_main"
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <div
+              className="m78-tile_title"
+            >
+              橘子
+            </div>
+          </div>
+        </div>
+        <div
+          className="m78 m78-row m78-tile m78-lay __effect __splitLine m78-cross-center"
+        >
+          <div
+            className="m78-tile_leading"
+          >
+            🍉
+          </div>
+          <div
+            className="m78-tile_main"
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <div
+              className="m78-tile_title"
+            >
+              西瓜
+            </div>
+            <div
+              className="m78-tile_desc"
+            >
+              夏天的水果
+            </div>
+          </div>
+          <div
+            className="m78-tile_trailing"
+          >
+            <div
+              className="m78 m78-row m78-cross-center"
+            >
+              <svg
+                className="m78 m78-icon m78-icon_icon-keyboard-arrow-right m78-lay_arrow"
+                data-name="icon-keyboard-arrow-right"
+                focusable={false}
+                height={24}
+                viewBox="0 0 24 24"
+                width={24}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9.29 15.88 13.17 12 9.29 8.12a.996.996 0 1 1 1.41-1.41l4.59 4.59c.39.39.39 1.02 0 1.41L10.7 17.3a.996.996 0 0 1-1.41 0c-.38-.39-.39-1.03 0-1.42z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div
+          className="m78 m78-row m78-tile m78-lay __effect __splitLine m78-cross-center"
+        >
+          <div
+            className="m78-tile_leading"
+          >
+            🥝
+          </div>
+          <div
+            className="m78-tile_main"
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <div
+              className="m78-tile_title"
+            >
+              猕猴桃
+            </div>
+          </div>
+          <div
+            className="m78-tile_trailing"
+          >
+            <div
+              className="m78 m78-row m78-cross-center"
+            >
+              桃凉凉
+              <svg
+                className="m78 m78-icon m78-icon_icon-keyboard-arrow-right m78-lay_arrow"
+                data-name="icon-keyboard-arrow-right"
+                focusable={false}
+                height={24}
+                viewBox="0 0 24 24"
+                width={24}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9.29 15.88 13.17 12 9.29 8.12a.996.996 0 1 1 1.41-1.41l4.59 4.59c.39.39.39 1.02 0 1.41L10.7 17.3a.996.996 0 0 1-1.41 0c-.38-.39-.39-1.03 0-1.42z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div
+          className="m78 m78-row m78-tile m78-lay __disabled __effect __splitLine m78-cross-center"
+        >
+          <div
+            className="m78-tile_leading"
+          >
+            🍇
+          </div>
+          <div
+            className="m78-tile_main"
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <div
+              className="m78-tile_title"
+            >
+              葡萄
+            </div>
+          </div>
+          <div
+            className="m78-tile_trailing"
+          >
+            <div
+              className="m78 m78-row m78-cross-center"
+            >
+              没货了
+              <svg
+                className="m78 m78-icon m78-icon_icon-keyboard-arrow-right m78-lay_arrow"
+                data-name="icon-keyboard-arrow-right"
+                focusable={false}
+                height={24}
+                viewBox="0 0 24 24"
+                width={24}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9.29 15.88 13.17 12 9.29 8.12a.996.996 0 1 1 1.41-1.41l4.59 4.59c.39.39.39 1.02 0 1.41L10.7 17.3a.996.996 0 0 1-1.41 0c-.38-.39-.39-1.03 0-1.42z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div
+          className="m78 m78-row m78-tile m78-lay __splitLine m78-cross-center"
+        >
+          <div
+            className="m78-tile_leading"
+          >
+            🍋
+          </div>
+          <div
+            className="m78-tile_main"
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <div
+              className="m78-tile_title"
+            >
+              柠檬
+            </div>
+            <div
+              className="m78-tile_desc"
+            >
+              一年一度的“我吃柠檬”挑战又要开始啦~，请记住我们的活动代号“#WCNM#”
+            </div>
+          </div>
+          <div
+            className="m78-tile_trailing"
+          >
+            <div
+              className="m78 m78-row m78-cross-center"
+            >
+              <input
+                type="checkbox"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <p
+        className="fs-md mt-32"
+      >
+        边框风格
+      </p>
+      <div>
+        <div
+          className="m78 m78-row m78-tile m78-lay __effect __border m78-cross-center"
+        >
+          <div
+            className="m78-tile_leading"
+          >
+            🍊
+          </div>
+          <div
+            className="m78-tile_main"
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <div
+              className="m78-tile_title"
+            >
+              橘子
+            </div>
+          </div>
+        </div>
+        <div
+          className="m78 m78-row m78-tile m78-lay __border m78-cross-center"
+        >
+          <div
+            className="m78-tile_leading"
+          >
+            🍉
+          </div>
+          <div
+            className="m78-tile_main"
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <div
+              className="m78-tile_title"
+            >
+              西瓜
+            </div>
+            <div
+              className="m78-tile_desc"
+            >
+              夏天的水果
+            </div>
+          </div>
+          <div
+            className="m78-tile_trailing"
+          >
+            <div
+              className="m78 m78-row m78-cross-center"
+            >
+              <svg
+                className="m78 m78-icon m78-icon_icon-keyboard-arrow-right m78-lay_arrow"
+                data-name="icon-keyboard-arrow-right"
+                focusable={false}
+                height={24}
+                viewBox="0 0 24 24"
+                width={24}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9.29 15.88 13.17 12 9.29 8.12a.996.996 0 1 1 1.41-1.41l4.59 4.59c.39.39.39 1.02 0 1.41L10.7 17.3a.996.996 0 0 1-1.41 0c-.38-.39-.39-1.03 0-1.42z"
+                />
+              </svg>
+            </div>
+          </div>
+          <div
+            className="m78-tile_foot"
+          >
+            <div
+              className="tr"
+            >
+              <button
+                className="m78 m78-init m78-btn m78-effect __md __small"
+                disabled={false}
+                onClick={[Function]}
+                type="button"
+              >
+                操作1
+              </button>
+              <button
+                className="m78 m78-init m78-btn m78-effect __md __small"
+                disabled={false}
+                onClick={[Function]}
+                type="button"
+              >
+                操作2
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          className="m78 m78-row m78-tile m78-lay __effect __border m78-cross-center"
+        >
+          <div
+            className="m78-tile_leading"
+          >
+            🥝
+          </div>
+          <div
+            className="m78-tile_main"
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <div
+              className="m78-tile_title"
+            >
+              猕猴桃
+            </div>
+          </div>
+          <div
+            className="m78-tile_trailing"
+          >
+            <div
+              className="m78 m78-row m78-cross-center"
+            >
+              桃凉凉
+              <svg
+                className="m78 m78-icon m78-icon_icon-keyboard-arrow-right m78-lay_arrow"
+                data-name="icon-keyboard-arrow-right"
+                focusable={false}
+                height={24}
+                viewBox="0 0 24 24"
+                width={24}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9.29 15.88 13.17 12 9.29 8.12a.996.996 0 1 1 1.41-1.41l4.59 4.59c.39.39.39 1.02 0 1.41L10.7 17.3a.996.996 0 0 1-1.41 0c-.38-.39-.39-1.03 0-1.42z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div
+          className="m78 m78-row m78-tile m78-lay __disabled __effect __border m78-cross-center"
+        >
+          <div
+            className="m78-tile_leading"
+          >
+            🍇
+          </div>
+          <div
+            className="m78-tile_main"
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <div
+              className="m78-tile_title"
+            >
+              葡萄
+            </div>
+          </div>
+          <div
+            className="m78-tile_trailing"
+          >
+            <div
+              className="m78 m78-row m78-cross-center"
+            >
+              没货了
+              <svg
+                className="m78 m78-icon m78-icon_icon-keyboard-arrow-right m78-lay_arrow"
+                data-name="icon-keyboard-arrow-right"
+                focusable={false}
+                height={24}
+                viewBox="0 0 24 24"
+                width={24}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9.29 15.88 13.17 12 9.29 8.12a.996.996 0 1 1 1.41-1.41l4.59 4.59c.39.39.39 1.02 0 1.41L10.7 17.3a.996.996 0 0 1-1.41 0c-.38-.39-.39-1.03 0-1.42z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div
+          className="m78 m78-row m78-tile m78-lay __border m78-cross-center"
+        >
+          <div
+            className="m78-tile_leading"
+          >
+            🍋
+          </div>
+          <div
+            className="m78-tile_main"
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <div
+              className="m78-tile_title"
+            >
+              柠檬
+            </div>
+            <div
+              className="m78-tile_desc"
+            >
+              一年一度的“我吃柠檬”挑战又要开始啦~，请记住我们的活动代号“#WCNM#”
+            </div>
+          </div>
+          <div
+            className="m78-tile_trailing"
+          >
+            <div
+              className="m78 m78-row m78-cross-center"
+            >
+              <input
+                type="checkbox"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <p
+        className="fs-md mt-32"
+      >
+        背景色风格
+      </p>
+      <div>
+        <div
+          className="m78 m78-row m78-tile m78-lay __effect __background m78-cross-center"
+        >
+          <div
+            className="m78-tile_leading"
+          >
+            🍊
+          </div>
+          <div
+            className="m78-tile_main"
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <div
+              className="m78-tile_title"
+            >
+              橘子
+            </div>
+          </div>
+        </div>
+        <div
+          className="m78 m78-row m78-tile m78-lay __effect __background m78-cross-center"
+        >
+          <div
+            className="m78-tile_leading"
+          >
+            🍉
+          </div>
+          <div
+            className="m78-tile_main"
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <div
+              className="m78-tile_title"
+            >
+              西瓜
+            </div>
+            <div
+              className="m78-tile_desc"
+            >
+              夏天的水果
+            </div>
+          </div>
+          <div
+            className="m78-tile_trailing"
+          >
+            <div
+              className="m78 m78-row m78-cross-center"
+            >
+              <svg
+                className="m78 m78-icon m78-icon_icon-keyboard-arrow-right m78-lay_arrow"
+                data-name="icon-keyboard-arrow-right"
+                focusable={false}
+                height={24}
+                viewBox="0 0 24 24"
+                width={24}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9.29 15.88 13.17 12 9.29 8.12a.996.996 0 1 1 1.41-1.41l4.59 4.59c.39.39.39 1.02 0 1.41L10.7 17.3a.996.996 0 0 1-1.41 0c-.38-.39-.39-1.03 0-1.42z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div
+          className="m78 m78-row m78-tile m78-lay __effect __background m78-cross-center"
+        >
+          <div
+            className="m78-tile_leading"
+          >
+            🥝
+          </div>
+          <div
+            className="m78-tile_main"
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <div
+              className="m78-tile_title"
+            >
+              猕猴桃
+            </div>
+          </div>
+          <div
+            className="m78-tile_trailing"
+          >
+            <div
+              className="m78 m78-row m78-cross-center"
+            >
+              桃凉凉
+              <svg
+                className="m78 m78-icon m78-icon_icon-keyboard-arrow-right m78-lay_arrow"
+                data-name="icon-keyboard-arrow-right"
+                focusable={false}
+                height={24}
+                viewBox="0 0 24 24"
+                width={24}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9.29 15.88 13.17 12 9.29 8.12a.996.996 0 1 1 1.41-1.41l4.59 4.59c.39.39.39 1.02 0 1.41L10.7 17.3a.996.996 0 0 1-1.41 0c-.38-.39-.39-1.03 0-1.42z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div
+          className="m78 m78-row m78-tile m78-lay __disabled __effect __background m78-cross-center"
+        >
+          <div
+            className="m78-tile_leading"
+          >
+            🍇
+          </div>
+          <div
+            className="m78-tile_main"
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <div
+              className="m78-tile_title"
+            >
+              葡萄
+            </div>
+          </div>
+          <div
+            className="m78-tile_trailing"
+          >
+            <div
+              className="m78 m78-row m78-cross-center"
+            >
+              没货了
+              <svg
+                className="m78 m78-icon m78-icon_icon-keyboard-arrow-right m78-lay_arrow"
+                data-name="icon-keyboard-arrow-right"
+                focusable={false}
+                height={24}
+                viewBox="0 0 24 24"
+                width={24}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9.29 15.88 13.17 12 9.29 8.12a.996.996 0 1 1 1.41-1.41l4.59 4.59c.39.39.39 1.02 0 1.41L10.7 17.3a.996.996 0 0 1-1.41 0c-.38-.39-.39-1.03 0-1.42z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div
+          className="m78 m78-row m78-tile m78-lay __background m78-cross-center"
+        >
+          <div
+            className="m78-tile_leading"
+          >
+            🍋
+          </div>
+          <div
+            className="m78-tile_main"
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <div
+              className="m78-tile_title"
+            >
+              柠檬
+            </div>
+            <div
+              className="m78-tile_desc"
+            >
+              一年一度的“我吃柠檬”挑战又要开始啦~，请记住我们的活动代号“#WCNM#”
+            </div>
+          </div>
+          <div
+            className="m78-tile_trailing"
+          >
+            <div
+              className="m78 m78-row m78-cross-center"
+            >
+              <input
+                type="checkbox"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <p
+        className="fs-md mt-32"
+      >
+        尺寸 - 小
+      </p>
+      <div>
+        <div
+          className="m78 m78-row m78-tile m78-lay __effect __small __border m78-cross-center"
+        >
+          <div
+            className="m78-tile_leading"
+          >
+            🍊
+          </div>
+          <div
+            className="m78-tile_main"
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <div
+              className="m78-tile_title"
+            >
+              橘子
+            </div>
+          </div>
+        </div>
+        <div
+          className="m78 m78-row m78-tile m78-lay __effect __small __border m78-cross-center"
+        >
+          <div
+            className="m78-tile_leading"
+          >
+            🍉
+          </div>
+          <div
+            className="m78-tile_main"
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <div
+              className="m78-tile_title"
+            >
+              西瓜
+            </div>
+            <div
+              className="m78-tile_desc"
+            >
+              夏天的水果
+            </div>
+          </div>
+          <div
+            className="m78-tile_trailing"
+          >
+            <div
+              className="m78 m78-row m78-cross-center"
+            >
+              <svg
+                className="m78 m78-icon m78-icon_icon-keyboard-arrow-right m78-lay_arrow"
+                data-name="icon-keyboard-arrow-right"
+                focusable={false}
+                height={24}
+                viewBox="0 0 24 24"
+                width={24}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9.29 15.88 13.17 12 9.29 8.12a.996.996 0 1 1 1.41-1.41l4.59 4.59c.39.39.39 1.02 0 1.41L10.7 17.3a.996.996 0 0 1-1.41 0c-.38-.39-.39-1.03 0-1.42z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div
+          className="m78 m78-row m78-tile m78-lay __effect __small __border m78-cross-center"
+        >
+          <div
+            className="m78-tile_leading"
+          >
+            🥝
+          </div>
+          <div
+            className="m78-tile_main"
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <div
+              className="m78-tile_title"
+            >
+              猕猴桃
+            </div>
+          </div>
+          <div
+            className="m78-tile_trailing"
+          >
+            <div
+              className="m78 m78-row m78-cross-center"
+            >
+              桃凉凉
+              <svg
+                className="m78 m78-icon m78-icon_icon-keyboard-arrow-right m78-lay_arrow"
+                data-name="icon-keyboard-arrow-right"
+                focusable={false}
+                height={24}
+                viewBox="0 0 24 24"
+                width={24}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9.29 15.88 13.17 12 9.29 8.12a.996.996 0 1 1 1.41-1.41l4.59 4.59c.39.39.39 1.02 0 1.41L10.7 17.3a.996.996 0 0 1-1.41 0c-.38-.39-.39-1.03 0-1.42z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div
+          className="m78 m78-row m78-tile m78-lay __disabled __effect __small __border m78-cross-center"
+        >
+          <div
+            className="m78-tile_leading"
+          >
+            🍇
+          </div>
+          <div
+            className="m78-tile_main"
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <div
+              className="m78-tile_title"
+            >
+              葡萄
+            </div>
+          </div>
+          <div
+            className="m78-tile_trailing"
+          >
+            <div
+              className="m78 m78-row m78-cross-center"
+            >
+              没货了
+              <svg
+                className="m78 m78-icon m78-icon_icon-keyboard-arrow-right m78-lay_arrow"
+                data-name="icon-keyboard-arrow-right"
+                focusable={false}
+                height={24}
+                viewBox="0 0 24 24"
+                width={24}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9.29 15.88 13.17 12 9.29 8.12a.996.996 0 1 1 1.41-1.41l4.59 4.59c.39.39.39 1.02 0 1.41L10.7 17.3a.996.996 0 0 1-1.41 0c-.38-.39-.39-1.03 0-1.42z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div
+          className="m78 m78-row m78-tile m78-lay __small __border m78-cross-center"
+        >
+          <div
+            className="m78-tile_leading"
+          >
+            🍋
+          </div>
+          <div
+            className="m78-tile_main"
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <div
+              className="m78-tile_title"
+            >
+              柠檬
+            </div>
+            <div
+              className="m78-tile_desc"
+            >
+              一年一度的“我吃柠檬”挑战又要开始啦~，请记住我们的活动代号“#WCNM#”
+            </div>
+          </div>
+          <div
+            className="m78-tile_trailing"
+          >
+            <div
+              className="m78 m78-row m78-cross-center"
+            >
+              <input
+                type="checkbox"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <p
+        className="fs-md mt-32"
+      >
+        尺寸 - 大
+      </p>
+      <div>
+        <div
+          className="m78 m78-row m78-tile m78-lay __effect __large __border m78-cross-center"
+        >
+          <div
+            className="m78-tile_leading"
+          >
+            🍊
+          </div>
+          <div
+            className="m78-tile_main"
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <div
+              className="m78-tile_title"
+            >
+              橘子
+            </div>
+          </div>
+        </div>
+        <div
+          className="m78 m78-row m78-tile m78-lay __effect __large __border m78-cross-center"
+        >
+          <div
+            className="m78-tile_leading"
+          >
+            🍉
+          </div>
+          <div
+            className="m78-tile_main"
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <div
+              className="m78-tile_title"
+            >
+              西瓜
+            </div>
+            <div
+              className="m78-tile_desc"
+            >
+              夏天的水果
+            </div>
+          </div>
+          <div
+            className="m78-tile_trailing"
+          >
+            <div
+              className="m78 m78-row m78-cross-center"
+            >
+              <svg
+                className="m78 m78-icon m78-icon_icon-keyboard-arrow-right m78-lay_arrow"
+                data-name="icon-keyboard-arrow-right"
+                focusable={false}
+                height={24}
+                viewBox="0 0 24 24"
+                width={24}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9.29 15.88 13.17 12 9.29 8.12a.996.996 0 1 1 1.41-1.41l4.59 4.59c.39.39.39 1.02 0 1.41L10.7 17.3a.996.996 0 0 1-1.41 0c-.38-.39-.39-1.03 0-1.42z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div
+          className="m78 m78-row m78-tile m78-lay __effect __large __border m78-cross-center"
+        >
+          <div
+            className="m78-tile_leading"
+          >
+            🥝
+          </div>
+          <div
+            className="m78-tile_main"
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <div
+              className="m78-tile_title"
+            >
+              猕猴桃
+            </div>
+          </div>
+          <div
+            className="m78-tile_trailing"
+          >
+            <div
+              className="m78 m78-row m78-cross-center"
+            >
+              桃凉凉
+              <svg
+                className="m78 m78-icon m78-icon_icon-keyboard-arrow-right m78-lay_arrow"
+                data-name="icon-keyboard-arrow-right"
+                focusable={false}
+                height={24}
+                viewBox="0 0 24 24"
+                width={24}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9.29 15.88 13.17 12 9.29 8.12a.996.996 0 1 1 1.41-1.41l4.59 4.59c.39.39.39 1.02 0 1.41L10.7 17.3a.996.996 0 0 1-1.41 0c-.38-.39-.39-1.03 0-1.42z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div
+          className="m78 m78-row m78-tile m78-lay __disabled __effect __large __border m78-cross-center"
+        >
+          <div
+            className="m78-tile_leading"
+          >
+            🍇
+          </div>
+          <div
+            className="m78-tile_main"
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <div
+              className="m78-tile_title"
+            >
+              葡萄
+            </div>
+          </div>
+          <div
+            className="m78-tile_trailing"
+          >
+            <div
+              className="m78 m78-row m78-cross-center"
+            >
+              没货了
+              <svg
+                className="m78 m78-icon m78-icon_icon-keyboard-arrow-right m78-lay_arrow"
+                data-name="icon-keyboard-arrow-right"
+                focusable={false}
+                height={24}
+                viewBox="0 0 24 24"
+                width={24}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9.29 15.88 13.17 12 9.29 8.12a.996.996 0 1 1 1.41-1.41l4.59 4.59c.39.39.39 1.02 0 1.41L10.7 17.3a.996.996 0 0 1-1.41 0c-.38-.39-.39-1.03 0-1.42z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div
+          className="m78 m78-row m78-tile m78-lay __large __border m78-cross-center"
+        >
+          <div
+            className="m78-tile_leading"
+          >
+            🍋
+          </div>
+          <div
+            className="m78-tile_main"
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <div
+              className="m78-tile_title"
+            >
+              柠檬
+            </div>
+            <div
+              className="m78-tile_desc"
+            >
+              一年一度的“我吃柠檬”挑战又要开始啦~，请记住我们的活动代号“#WCNM#”
+            </div>
+          </div>
+          <div
+            className="m78-tile_trailing"
+          >
+            <div
+              className="m78 m78-row m78-cross-center"
+            >
+              <input
+                type="checkbox"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <p
+        className="fs-md mt-32"
+      >
+        状态
+      </p>
+      <div>
+        <div
+          className="m78 m78-row m78-tile m78-lay __effect __border __highlight m78-cross-center"
+        >
+          <div
+            className="m78-tile_leading"
+          >
+            🍌
+          </div>
+          <div
+            className="m78-tile_main"
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <div
+              className="m78-tile_title"
+            >
+              香蕉
+            </div>
+          </div>
+          <div
+            className="m78-tile_trailing"
+          >
+            <div
+              className="m78 m78-row m78-cross-center"
+            >
+              <svg
+                className="m78 m78-icon m78-icon_icon-keyboard-arrow-right m78-lay_arrow"
+                data-name="icon-keyboard-arrow-right"
+                focusable={false}
+                height={24}
+                viewBox="0 0 24 24"
+                width={24}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9.29 15.88 13.17 12 9.29 8.12a.996.996 0 1 1 1.41-1.41l4.59 4.59c.39.39.39 1.02 0 1.41L10.7 17.3a.996.996 0 0 1-1.41 0c-.38-.39-.39-1.03 0-1.42z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div
+          className="m78 m78-row m78-tile m78-lay __effect __border m78-cross-center"
+        >
+          <div
+            className="m78-tile_leading"
+          >
+            🍊
+          </div>
+          <div
+            className="m78-tile_main"
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <div
+              className="m78-tile_title"
+            >
+              橘子
+            </div>
+          </div>
+        </div>
+        <div
+          className="m78 m78-row m78-tile m78-lay __effect __active __border m78-cross-center"
+        >
+          <div
+            className="m78-tile_leading"
+          >
+            🍉
+          </div>
+          <div
+            className="m78-tile_main"
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <div
+              className="m78-tile_title"
+            >
+              西瓜
+            </div>
+            <div
+              className="m78-tile_desc"
+            >
+              夏天的水果
+            </div>
+          </div>
+          <div
+            className="m78-tile_trailing"
+          >
+            <div
+              className="m78 m78-row m78-cross-center"
+            >
+              <svg
+                className="m78 m78-icon m78-icon_icon-keyboard-arrow-right m78-lay_arrow"
+                data-name="icon-keyboard-arrow-right"
+                focusable={false}
+                height={24}
+                viewBox="0 0 24 24"
+                width={24}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9.29 15.88 13.17 12 9.29 8.12a.996.996 0 1 1 1.41-1.41l4.59 4.59c.39.39.39 1.02 0 1.41L10.7 17.3a.996.996 0 0 1-1.41 0c-.38-.39-.39-1.03 0-1.42z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div
+          className="m78 m78-row m78-tile m78-lay __effect __border __status __info m78-cross-center"
+        >
+          <div
+            className="m78-tile_leading"
+          >
+            🥝
+          </div>
+          <div
+            className="m78-tile_main"
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <div
+              className="m78-tile_title"
+            >
+              猕猴桃
+            </div>
+          </div>
+          <div
+            className="m78-tile_trailing"
+          >
+            <div
+              className="m78 m78-row m78-cross-center"
+            >
+              桃凉凉
+              <svg
+                className="m78 m78-icon m78-icon_icon-keyboard-arrow-right m78-lay_arrow"
+                data-name="icon-keyboard-arrow-right"
+                focusable={false}
+                height={24}
+                viewBox="0 0 24 24"
+                width={24}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9.29 15.88 13.17 12 9.29 8.12a.996.996 0 1 1 1.41-1.41l4.59 4.59c.39.39.39 1.02 0 1.41L10.7 17.3a.996.996 0 0 1-1.41 0c-.38-.39-.39-1.03 0-1.42z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div
+          className="m78 m78-row m78-tile m78-lay __effect __border __status __success m78-cross-center"
+        >
+          <div
+            className="m78-tile_leading"
+          >
+            🍇
+          </div>
+          <div
+            className="m78-tile_main"
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <div
+              className="m78-tile_title"
+            >
+              葡萄
+            </div>
+          </div>
+          <div
+            className="m78-tile_trailing"
+          >
+            <div
+              className="m78 m78-row m78-cross-center"
+            >
+              没货了
+              <svg
+                className="m78 m78-icon m78-icon_icon-keyboard-arrow-right m78-lay_arrow"
+                data-name="icon-keyboard-arrow-right"
+                focusable={false}
+                height={24}
+                viewBox="0 0 24 24"
+                width={24}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9.29 15.88 13.17 12 9.29 8.12a.996.996 0 1 1 1.41-1.41l4.59 4.59c.39.39.39 1.02 0 1.41L10.7 17.3a.996.996 0 0 1-1.41 0c-.38-.39-.39-1.03 0-1.42z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div
+          className="m78 m78-row m78-tile m78-lay __border __status __error m78-cross-center"
+        >
+          <div
+            className="m78-tile_leading"
+          >
+            🍋
+          </div>
+          <div
+            className="m78-tile_main"
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <div
+              className="m78-tile_title"
+            >
+              柠檬
+            </div>
+            <div
+              className="m78-tile_desc"
+            >
+              一年一度的“我吃柠檬”挑战又要开始啦~，请记住我们的活动代号“#WCNM#”
+            </div>
+          </div>
+          <div
+            className="m78-tile_trailing"
+          >
+            <div
+              className="m78 m78-row m78-cross-center"
+            >
+              <input
+                type="checkbox"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          className="m78 m78-row m78-tile m78-lay __effect __border __status __warning m78-cross-center"
+        >
+          <div
+            className="m78-tile_leading"
+          >
+            🍓
+          </div>
+          <div
+            className="m78-tile_main"
+            style={
+              Object {
+                "overflow": "hidden",
+              }
+            }
+          >
+            <div
+              className="m78-tile_title"
+            >
+              草莓
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p
+    className="fs-md mt-32"
+  >
+    多列
+  </p>
+  <div
+    className="m78 m78-cell"
+  >
+    <div
+      className="m78-cell_cont m78-flex-wrap"
+      style={
+        Object {
+          "margin": -3,
+        }
+      }
+    />
+  </div>
+</div>
+`;

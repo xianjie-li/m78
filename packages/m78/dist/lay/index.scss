@@ -1,0 +1,152 @@
+@import '../common/style/sass';
+
+.m78-lay {
+  width: 100%;
+  position: relative;
+  line-height: var(--m78-line-height);
+  font-size: var(--m78-fs);
+  color: var(--m78-color-primary);
+  text-align: left;
+  padding: var(--m78-space-2);
+  border-radius: var(--m78-border-radius);
+
+  &.__effect {
+    @include effect-bg;
+  }
+
+  .m78-tile_leading {
+    font-size: var(--m78-fs-md);
+  }
+
+  .m78-tile_title {
+    font-size: var(--m78-fs-md);
+  }
+
+  .m78-tile_desc {
+    color: var(--m78-color-second);
+  }
+
+  .m78-tile_trailing {
+    color: var(--m78-color-second);
+  }
+
+  &.__highlight {
+    background-color: var(--m78-color-divider) !important;
+  }
+
+  &.__active {
+    background-color: var(--m78-color) !important;
+    color: var(--m78-color-title-w);
+
+    .m78-lay_arrow {
+      color: #fff;
+    }
+
+    .m78-tile_trailing, .m78-tile_desc, .m78-tile_foot {
+      color: var(--m78-color-primary-w);
+    }
+  }
+
+  &.__border {
+    border: 1px solid var(--m78-color-border);
+
+    & + & {
+      margin-top: var(--m78-space-1);
+    }
+  }
+
+  &.__background {
+    background-color: var(--m78-color-bg);
+
+    & + & {
+      margin-top: var(--m78-space-1);
+    }
+  }
+
+  &.__splitLine {
+    & + &::before {
+      position: absolute;
+      top: -0.5px;
+      left: 1%;
+      content: '';
+      height: 1px;
+      width: 98%;
+      transform: scaleY(0.5);
+      background-color: var(--m78-color-divider);
+    }
+  }
+
+  &.__info {
+    border: 2px dashed var(--m78-color);
+  }
+
+  &.__success {
+    border: 2px dashed var(--m78-color-success);
+  }
+
+  &.__error {
+    border: 2px dashed var(--m78-color-error);
+  }
+
+  &.__warning {
+    border: 2px dashed var(--m78-color-warning);
+  }
+
+  // 带状态和高亮的项添加间距
+  & + &.__status {
+    margin-top: var(--m78-space-1);
+
+    & + .m78-lay {
+      margin-top: var(--m78-space-1);
+    }
+  }
+
+  &.__disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  &.__large {
+    padding: var(--m78-space-3);
+
+    .m78-tile_title {
+      font-size: 18px;
+    }
+
+    .m78-tile_desc {
+      font-size: 16px;
+    }
+
+    .m78-tile_leading {
+      font-size: 18px;
+    }
+
+    .m78-lay_arrow {
+      font-size: 18px;
+    }
+  }
+
+  &.__small {
+    padding: var(--m78-space-1) var(--m78-space-2);
+
+    .m78-tile_title {
+      font-size: var(--m78-fs);
+    }
+
+    .m78-tile_desc {
+      font-size: var(--m78-fs-sm);
+    }
+
+    .m78-tile_leading {
+      font-size: var(--m78-fs-md);
+    }
+  }
+
+  &_arrow {
+    margin-left: var(--m78-space-1);
+    color: var(--m78-color-disable);
+    flex: 0 0 auto;
+    font-size: var(--m78-fs-md);
+    margin-right: -6px; // 图标右侧空白区域
+  }
+}

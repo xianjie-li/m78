@@ -11,4 +11,6 @@ export declare function getPlatform(): {
     android: boolean;
     linux: boolean;
 };
+/** 检测是否是移动设备 */
+export declare function isMobileDevice(): boolean;
 //# sourceMappingURL=bom.d.ts.map

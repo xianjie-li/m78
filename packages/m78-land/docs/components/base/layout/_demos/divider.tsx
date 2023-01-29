@@ -1,41 +1,34 @@
-import React from 'react';
-import { Divider } from 'm78/layout';
+import React from "react";
+import { Divider } from "m78/layout";
 
 const AspectRatioDemo = () => {
   return (
     <div>
-      <div>
-        Lorem ipsum <Divider vertical /> dolor sit amet <Divider vertical /> consectetur
-        <Divider vertical />
-        adipisicing elit. Ad aliquid aperiam aspernatur debitis eaque earum, est et impedit sint
-        tempore. Alias at aut corporis eligendi enim, excepturi explicabo labore. Similique.
-      </div>
-
+      <Divider />
+      <Divider>分割线</Divider>
+      <Divider align="start">分割线</Divider>
+      <Divider align="end">分割线</Divider>
+      <Divider style={{ height: 300 }} vertical>
+        分割线
+      </Divider>
+      <Divider style={{ height: 300 }} vertical align="start">
+        分割线
+      </Divider>
+      <Divider style={{ height: 300 }} vertical align="end">
+        分割线
+      </Divider>
+      <Divider>纵向分割 / 尺寸</Divider>
+      内联的 <Divider vertical /> 分割线, 可以设置不同的尺寸
       <Divider color="red" vertical />
-      <Divider color="orange" width={2} vertical />
-      <Divider color="yellow" width={3} vertical />
-      <Divider color="green" width={4} vertical />
-      <Divider color="cyan" width={5} vertical />
-      <Divider color="blue" width={6} vertical />
-      <Divider color="purple" width={7} vertical />
-
-      <Divider />
-      <Divider height={2} />
-      <Divider height={4} />
-
-      <div>
-        Lorem ipsum <Divider vertical /> dolor sit amet, consectetur <Divider vertical />{' '}
-        adipisicing elit. Ad aliquid aperiam aspernatur debitis eaque earum, est et impedit sint
-        tempore. Alias at aut corporis eligendi enim, excepturi explicabo labore. Similique.
-      </div>
-
-      <Divider />
-
-      <div>
-        Lorem ipsum <Divider vertical /> dolor sit amet, consectetur <Divider vertical />{' '}
-        adipisicing elit. Ad aliquid aperiam aspernatur debitis eaque earum, est et impedit sint
-        tempore. Alias at aut corporis eligendi enim, excepturi explicabo labore. Similique.
-      </div>
+      <Divider color="orange" size={2} vertical />
+      <Divider color="yellow" size={3} vertical />
+      <Divider color="green" size={4} vertical />
+      <Divider color="cyan" size={5} vertical />
+      <Divider color="blue" size={6} vertical />
+      <Divider color="purple" size={7} vertical />
+      <Divider color="orange" size={2} />
+      <Divider color="cyan" size={5} />
+      <Divider color="purple" size={7} />
     </div>
   );
 };

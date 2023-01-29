@@ -2,7 +2,7 @@ import React from "react";
 import { Input } from "m78/input";
 
 const InputDemo = () => (
-  <div>
+  <div style={{ width: 360 }}>
     <div>
       <Input placeholder="一个输入框" />
     </div>
@@ -76,9 +76,6 @@ const InputDemo = () => (
         autoSize={false}
         status="success"
       />
-    </div>
-    <div className="mt-16">
-      <Input placeholder="不限制最大宽度" fullWidth />
     </div>
   </div>
 );

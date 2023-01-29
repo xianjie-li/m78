@@ -214,5 +214,5 @@
 @include color-btn('second', var(--m78-color-sub), var(--m78-color-sub-opacity-sm), var(--m78-color-sub-opacity-md));
 @include color-btn('green', var(--m78-color-success), var(--m78-color-success-opacity-sm), var(--m78-color-success-opacity-md));
 @include color-btn('red', var(--m78-color-error), var(--m78-color-error-opacity-sm), var(--m78-color-error-opacity-md));
-@include color-btn('orange', var(--m78-color-warn), var(--m78-color-warn-opacity-sm), var(--m78-color-warn-opacity-md));
+@include color-btn('orange', var(--m78-color-warning), var(--m78-color-warning-opacity-sm), var(--m78-color-warning-opacity-md));
 

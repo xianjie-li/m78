@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useSelf } from "@m78/hooks";
+import {
+  DataSourceItem,
+  DataSourceItemCustom,
+  ValueType,
+} from "../types/index.js";
+import { isNumber, isString, isTruthyOrZero } from "@m78/utils";
 
 /** 禁止冒泡的便捷扩展对象 */
 export const stopPropagation = {
@@ -59,4 +65,49 @@ export function useDelayToggle(
   }, [toggle]);
 
   return isDisabled ? toggle : innerState;
+}
+
+export const DEFAULT_VALUE_KEY = "value";
+export const DEFAULT_LABEL_KEY = "label";
+export const DEFAULT_CHILDREN_KEY = "children";
+
+/** 从DataSourceItem中获取value, 如果未获取到并且label是字符串时, 使用label作为value, 支持自定义取值的key */
+export function getValueByDataSource(
+  item: DataSourceItem,
+  cus?: DataSourceItemCustom
+): ValueType | null {
+  const valueKey = cus?.valueKey || DEFAULT_VALUE_KEY;
+  const labelKey = cus?.labelKey || DEFAULT_LABEL_KEY;
+
+  if (isTruthyOrZero(item[valueKey])) return item[valueKey];
+  if (isString(item[labelKey]) || isNumber(item[labelKey])) {
+    return item[labelKey] as ValueType;
+  }
+
+  return null;
+}
+
+/** 从DataSourceItem中获取label, 如果未获取到并且value是有效时, 使用value作为label, 支持自定义取值的key */
+export function getLabelByDataSource(
+  item: DataSourceItem,
+  cus?: DataSourceItemCustom
+): any {
+  const valueKey = cus?.valueKey || DEFAULT_VALUE_KEY;
+  const labelKey = cus?.labelKey || DEFAULT_LABEL_KEY;
+
+  if (isTruthyOrZero(item[labelKey])) return item[labelKey];
+  if (isTruthyOrZero(item[valueKey])) {
+    return item[valueKey];
+  }
+  return null;
+}
+
+/** 从DataSourceItem中获取children, 支持自定义取值的key */
+export function getChildrenByDataSource<T = any>(
+  item: T,
+  cus?: DataSourceItemCustom
+): T[] {
+  const childrenKey = cus?.childrenKey || DEFAULT_CHILDREN_KEY;
+
+  return (item as any)[childrenKey] || [];
 }

@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import { OverlayInstance } from "../overlay/index.js";
 import { DialogProps, DialogQuicker } from "./types.js";
 declare const _Dialog: {

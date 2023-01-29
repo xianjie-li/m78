@@ -125,6 +125,10 @@ export interface OverlayProps extends ComponentBaseProps, UseMountStateConfig, R
     autoFocus?: boolean;
     /** 传递给容器的额外props */
     extraProps?: AnyObject;
+    /** 内部trigger触发时调用 */
+    onTrigger?: UseTriggerConfig["onTrigger"];
+    /** 指向trigger node 的ref */
+    triggerNodeRef?: UseTriggerConfig["innerRef"];
     /** TransitionType.fade | 指定内置动画类型 */
     transitionType?: TransitionTypeUnion;
     /** 自定义进出场动画, 此项会覆盖transitionType配置 */

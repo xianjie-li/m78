@@ -40,7 +40,7 @@ export function _useLifeCycle(ctx: _Context, methods: _Methods) {
   /** 暴露实例 */
   useImperativeHandle(props.instanceRef, () => instance);
 
-  /** 对type从click -> active进行处理, 用于更方便的实现嵌套气泡 */
+  /** 对triggerType从其他类型变更为active的情况进行特殊处理 */
   _useTypeProcess(ctx);
 
   /** 根据xy, alignment, target合成useEffect的更新deps, 减少不必要的更新 */

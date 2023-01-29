@@ -38,7 +38,7 @@ export interface UseKeyboardOption {
   type?: UseKeyboardTriggerType | UseKeyboardTriggerTypeKeys;
   /** 0 | 事件优先级, 越大则相对其他绑定越早触发 */
   priority?: number;
-  /** true | 启用事件覆盖, 允许事件被更靠后注册的事件或更高优先级的同键位事件覆盖(由 修饰键 + 案件 标识唯一性) */
+  /** false | 启用事件覆盖, 允许事件被更靠后注册的事件或更高优先级的同键位事件覆盖(由 修饰键 + 按件 标识唯一性) */
   cover?: boolean;
 }
 
@@ -149,7 +149,7 @@ const defaultOption = {
   enable: true,
   type: UseKeyboardTriggerType.down,
   priority: 0,
-  cover: true,
+  cover: false,
   code: [],
   modifier: [],
 };

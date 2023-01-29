@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import { FlexWrapProps, FlexProps } from "./types.js";
 declare const _Column: {
     ({ children, style, className, mainAlign, crossAlign, innerRef, ...ppp }: FlexWrapProps): JSX.Element;

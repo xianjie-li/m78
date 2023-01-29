@@ -67,7 +67,7 @@
   }
 
   &.__yellow {
-    background-color: var(--m78-color-warn);
+    background-color: var(--m78-color-warning);
   }
 
   &.__green {
@@ -87,7 +87,7 @@
   }
 
   &.__yellow {
-    border-color: var(--m78-color-warn);
+    border-color: var(--m78-color-warning);
   }
 
   &.__green {
@@ -113,14 +113,12 @@
 
 @mixin effect-bg() {
   cursor: pointer;
-  transition: background-color var(--m78-animate-base);
 
   &:hover {
     background-color: var(--m78-color-divider);
   }
 
   &:active {
-    transition: background-color var(--m78-animate-base) 0.1s;
     background-color: var(--m78-color-border);
   }
 }

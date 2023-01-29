@@ -98,8 +98,6 @@ export interface InputProps extends FormLike<string>, InputPropsBase {
   blockLoading?: boolean;
   /** true | 显示边框 */
   border?: boolean;
-  /** false | 不限制宽度 */
-  fullWidth?: boolean;
   /** 前置内容 */
   prefix?: React.ReactNode;
   /** 后置内容 */

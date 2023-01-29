@@ -3,16 +3,24 @@ import ReactDom from "react-dom";
 
 import { getPortalsNode } from "@m78/utils";
 
-export const _Portal: React.FC<{
+const testEnv = process.env.NODE_ENV === "test";
+
+export const _Portal = ({
+  children,
+  namespace,
+}: {
   namespace?: string;
   children?: React.ReactNode;
-}> = ({ children, namespace }) => {
+}) => {
   const dom = useMemo(() => {
     return getPortalsNode(namespace, {
       className: "m78-root m78",
     });
   }, [namespace]);
-  return ReactDom.createPortal(children, dom);
+
+  if (testEnv) return children as React.ReactElement;
+
+  return ReactDom.createPortal(children, dom) as React.ReactElement;
 };
 
 _Portal.displayName = "Portal";

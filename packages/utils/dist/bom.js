@@ -5,8 +5,12 @@ var storagePrefix = "UTIL_STORAGE_";
 }
 /** shortcut of localStorage api, automatic JSON.parse, can only take the value set by setStorage */ export function getStorage(key) {
     var s = localStorage.getItem("".concat(storagePrefix).concat(key).toUpperCase());
-    if (!s) return null;
-    return JSON.parse(s);
+    if (s === null) return null;
+    try {
+        return JSON.parse(s);
+    } catch (e) {
+        return null;
+    }
 }
 var cachePlatform = null;
 /** get os platform */ export function getPlatform() {
@@ -39,4 +43,8 @@ var cachePlatform = null;
         linux: /linux/.test(platform)
     };
     return cachePlatform;
+}
+/** 检测是否是移动设备 */ export function isMobileDevice() {
+    var platform = getPlatform();
+    return platform.iphone || platform.ipad || platform.android;
 }

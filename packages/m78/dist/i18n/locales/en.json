@@ -3,7 +3,8 @@
     "submit": "submit",
     "confirm": "confirm",
     "cancel": "cancel",
-    "loading": "loading"
+    "loading": "loading",
+    "empty": "no data"
   },
   "input": {
     "word count": " words"
@@ -13,5 +14,12 @@
   },
   "dialog": {
     "default title": "note"
+  },
+  "fork": {
+    "error": "request exception",
+    "timeout": "request timeout",
+    "reload": "reload",
+    "retry tip": "please try again later",
+    "retry tip with button": "please try again later or "
   }
 }

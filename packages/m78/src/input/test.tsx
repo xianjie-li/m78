@@ -1,6 +1,6 @@
 import renderer from "react-test-renderer";
 import React from "react";
-import { Input, InputType } from "../input";
+import { Input, InputType } from "../input/index.js";
 
 test("input base", () => {
   const r = renderer
@@ -83,9 +83,6 @@ test("input base", () => {
             autoSize={false}
             status="success"
           />
-        </div>
-        <div className="mt-16">
-          <Input placeholder="不限制最大宽度" fullWidth />
         </div>
       </div>
     )

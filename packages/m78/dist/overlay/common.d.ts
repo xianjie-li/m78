@@ -55,7 +55,7 @@ export declare function useOverlaysClickAway(config?: SameConfig, namespace?: st
     isLast: boolean;
 };
 /** useTrigger回调 */
-export declare function _onTrigger(e: UseTriggerEvent, setOpen: AnyFunction, self: _Context["self"]): void;
+export declare function _onTrigger(e: UseTriggerEvent, setOpen: AnyFunction, self: _Context["self"], props: OverlayProps): void;
 /**
  * 根据t, c获取内容在OverlayDirection各个位置上的坐标信息_DirectionMeta
  * */

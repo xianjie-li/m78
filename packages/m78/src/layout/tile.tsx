@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { _Row } from "./flex.js";
+import { _Row, _Column } from "./flex.js";
 import cls from "clsx";
 import { TileProps } from "./types.js";
 import { isTruthyOrZero } from "@m78/utils";
@@ -14,6 +14,7 @@ const _Tile = ({
   innerRef,
   overflowVisible,
   children,
+  foot,
   ...ppp
 }: TileProps) => {
   const _title = useMemo(() => {
@@ -25,7 +26,7 @@ const _Tile = ({
     <_Row
       {...ppp}
       innerRef={innerRef}
-      className={cls("m78 m78-tile", className)}
+      className={cls("m78-tile", className)}
       crossAlign={crossAlign}
     >
       {leading && <div className="m78-tile_leading">{leading}</div>}
@@ -37,8 +38,11 @@ const _Tile = ({
         {desc && <div className="m78-tile_desc">{desc}</div>}
       </div>
       {trailing && <div className="m78-tile_trailing">{trailing}</div>}
+      {foot && <div className="m78-tile_foot">{foot}</div>}
     </_Row>
   );
 };
+
+_Tile.displayName = "Tile";
 
 export { _Tile };

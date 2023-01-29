@@ -14,7 +14,7 @@ export function StatusIconSuccess() {
 }
 
 export function StatusIconWarning() {
-  return <IconError className="color-warn" />;
+  return <IconError className="color-warning" />;
 }
 
 export function StatusIconError() {

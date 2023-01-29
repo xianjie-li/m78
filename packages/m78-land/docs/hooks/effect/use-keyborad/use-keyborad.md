@@ -6,7 +6,7 @@ title: useKeyboard
 
 订阅键盘事件
 
-- 此hook主要目的是简化按键事件的绑定和分派, 不处理兼容性, 如果需要兼容旧的浏览器, 需要自行处理兼容
+- 此 hook 主要目的是简化按键事件的绑定和分派, 不处理兼容性, 如果需要兼容旧的浏览器, 需要自行处理兼容
 - 订阅时间越晚的事件越先触发
 
 ## 示例
@@ -16,7 +16,7 @@ title: useKeyboard
 ## API
 
 ```ts
-function useKeyboard(option: UseKeyboardOption): void
+function useKeyboard(option: UseKeyboardOption): void;
 ```
 
 ```ts
@@ -34,7 +34,7 @@ export interface UseKeyboardOption {
   type?: UseKeyboardTriggerType | UseKeyboardTriggerTypeKeys;
   /** 0 | 事件优先级, 越大则相对其他绑定越早触发 */
   priority?: number;
-  /** true | 启用事件覆盖, 允许事件被更靠后注册的事件或更高优先级的同键位事件覆盖(由 修饰键 + 案件 标识唯一性) */
+  /** false | 启用事件覆盖, 允许事件被更靠后注册的事件或更高优先级的同键位事件覆盖(由 修饰键 + 按件 标识唯一性) */
   cover?: boolean;
 }
 

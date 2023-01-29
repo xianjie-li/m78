@@ -172,6 +172,10 @@ export interface OverlayProps
   autoFocus?: boolean;
   /** 传递给容器的额外props */
   extraProps?: AnyObject;
+  /** 内部trigger触发时调用 */
+  onTrigger?: UseTriggerConfig["onTrigger"];
+  /** 指向trigger node 的ref */
+  triggerNodeRef?: UseTriggerConfig["innerRef"];
 
   // ######## 动画 ########
   /** TransitionType.fade | 指定内置动画类型 */

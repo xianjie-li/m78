@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from "react";
+import React, { ReactElement, useEffect, useImperativeHandle } from "react";
 import { AnyFunction, AnyObject, dumpFn, ensureArray } from "@m78/utils";
 import { useFn, useSelf, useSetState } from "../../index.js";
 
@@ -73,6 +73,8 @@ export interface UseTriggerConfig {
     /** 离开触发延迟(ms) */
     leaveDelay?: number;
   };
+  /** trigger对应的dom节点的ref */
+  innerRef?: React.Ref<HTMLElement | null>;
 }
 
 /** Trigger的props, 对element进行了更名 */
@@ -135,7 +137,7 @@ function touchGen(e: TouchEvent, ele: HTMLElement, data: AnyObject) {
  * 用来为一个ReactElement绑定常用的触发事件
  * */
 export function useTrigger(config: UseTriggerConfig & AnyObject) {
-  const { element, type, onTrigger, active = {}, ...data } = config;
+  const { element, type, onTrigger, active = {}, innerRef, ...data } = config;
   const { triggerDelay, leaveDelay = 100 } = active;
 
   const types = ensureArray(type);
@@ -193,50 +195,46 @@ export function useTrigger(config: UseTriggerConfig & AnyObject) {
   });
 
   // active start基础逻辑
-  const activeEnterHandle = useFn(
-    (e, aType: ActiveType, reverseType: ActiveType) => {
-      if (self.activeType === reverseType) return;
+  const activeEnterHandle = useFn((e, aType: ActiveType) => {
+    if (self.activeType && self.activeType !== aType) return;
 
-      self.activeType = aType;
+    self.activeType = aType;
 
-      let d = triggerDelay;
+    let d = triggerDelay;
 
-      // 如果未设置, 根据类型为其设置默认值
-      if (d === undefined) {
-        if (aType === ActiveType.mouse) d = 140;
-        if (aType === ActiveType.touch) d = 400;
-      }
-
-      activeDelayHelper(() => {
-        if (self.active) return;
-
-        const event =
-          aType === ActiveType.mouse
-            ? offsetSet(
-                createNilEvent(UseTriggerType.active, e, state.el!, data),
-                e
-              )
-            : touchGen(e, state.el!, data);
-
-        if (!event) return;
-
-        self.active = true;
-        event.active = true;
-
-        trigger(event);
-      }, d!);
+    // 如果未设置, 根据类型为其设置默认值
+    if (d === undefined) {
+      if (aType === ActiveType.mouse) d = 140;
+      if (aType === ActiveType.touch) d = 400;
     }
-  );
+
+    activeDelayHelper(() => {
+      const event =
+        aType === ActiveType.mouse
+          ? offsetSet(
+              createNilEvent(UseTriggerType.active, e, state.el!, data),
+              e
+            )
+          : touchGen(e, state.el!, data);
+
+      if (!event) return;
+
+      self.active = true;
+      event.active = true;
+
+      trigger(event);
+    }, d!);
+  });
 
   // active end基础逻辑
   const activeLeaveHandle = useFn((e, aType: ActiveType) => {
-    if (self.activeType !== aType) return;
+    if (self.activeType && self.activeType !== aType) return;
+
+    self.activeType = aType;
 
     clearTimeout(self.activeTimer);
 
     activeDelayHelper(() => {
-      if (!self.active) return;
-
       self.active = false;
 
       const event =
@@ -254,7 +252,7 @@ export function useTrigger(config: UseTriggerConfig & AnyObject) {
   });
 
   const mouseEnterHandle = useFn((e: MouseEvent) => {
-    activeEnterHandle(e, ActiveType.mouse, ActiveType.touch);
+    activeEnterHandle(e, ActiveType.mouse);
   });
 
   const mouseLeaveHandle = useFn((e: MouseEvent) => {
@@ -262,7 +260,7 @@ export function useTrigger(config: UseTriggerConfig & AnyObject) {
   });
 
   const touchStartHandle = useFn((e: TouchEvent) => {
-    activeEnterHandle(e, ActiveType.touch, ActiveType.mouse);
+    activeEnterHandle(e, ActiveType.touch);
   });
 
   const touchEndHandle = useFn((e: TouchEvent) => {
@@ -289,6 +287,8 @@ export function useTrigger(config: UseTriggerConfig & AnyObject) {
   const [state, setState] = useSetState({
     el: null as null | HTMLElement,
   });
+
+  useImperativeHandle(innerRef, () => state.el, [state.el]);
 
   // 通过ref测量element实际渲染的dom
   const refCallback = useFn((node) => {

@@ -99,7 +99,7 @@ export function _Overlay(p: OverlayProps) {
 
   /** 触发器回调 */
   const triggerHandle = useFn((e: UseTriggerEvent) =>
-    _onTrigger(e, setOpen, self)
+    _onTrigger(e, setOpen, self, props)
   );
 
   /** 触发器 */
@@ -107,6 +107,7 @@ export function _Overlay(p: OverlayProps) {
     element,
     type: props.triggerType,
     onTrigger: triggerHandle,
+    innerRef: props.triggerNodeRef,
   });
 
   /** 尺寸变更时修复位置 */

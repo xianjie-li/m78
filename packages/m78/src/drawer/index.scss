@@ -1,0 +1,64 @@
+@import '../common/style/sass';
+
+.m78-drawer {
+  position: relative;
+  background-color: var(--m78-component-bg);
+  border-radius: var(--m78-border-radius-lg);
+  display: flex;
+  flex-direction: column;
+  max-height: 96vw;
+  max-width: 96vw;
+
+  &_content {
+    flex: 1;
+    overflow: auto;
+    padding: var(--m78-space-5);
+  }
+
+  &_header {
+    display: flex;
+    align-items: center;
+    padding: var(--m78-space-3) var(--m78-space-5);
+    font-size: var(--m78-fs-lg);
+
+    & + .m78-drawer_content {
+      padding-top: 0;
+    }
+  }
+
+  &.__footer {
+    .m78-drawer_content {
+      padding-bottom: 0;
+    }
+  }
+
+  &_footer {
+    padding: var(--m78-space-5);
+    text-align: right;
+  }
+
+  &.__top {
+    border-radius:  0 0 var(--m78-border-radius-lg) var(--m78-border-radius-lg);
+    // 为动画预留一定空间, 防止弹簧效果显示出地区区域
+    padding-top: 30px;
+    top: -30px;
+  }
+
+  &.__bottom {
+    border-radius: var(--m78-border-radius-lg) var(--m78-border-radius-lg) 0 0;
+    padding-bottom: 30px;
+    top: 30px;
+  }
+
+  &.__right {
+    border-radius: var(--m78-border-radius-lg) 0 0 var(--m78-border-radius-lg);
+    padding-right: 30px;
+    left: 30px;
+  }
+
+  &.__left {
+    border-radius: 0 var(--m78-border-radius-lg) var(--m78-border-radius-lg) 0;
+    padding-left: 30px;
+    left: -30px;
+  }
+}

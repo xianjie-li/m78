@@ -19,7 +19,7 @@ export function _useLifeCycle(ctx, methods) {
     /** 暴露实例 */ useImperativeHandle(props.instanceRef, function() {
         return instance;
     });
-    /** 对type从click -> active进行处理, 用于更方便的实现嵌套气泡 */ _useTypeProcess(ctx);
+    /** 对triggerType从其他类型变更为active的情况进行特殊处理 */ _useTypeProcess(ctx);
     /** 根据xy, alignment, target合成useEffect的更新deps, 减少不必要的更新 */ var updateTargetDeps = useMemo(function() {
         var deps = _to_consumable_array(props.xy || [
             0,

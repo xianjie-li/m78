@@ -1,0 +1,107 @@
+@import '../common/style/sass';
+
+.m78-result {
+  position: relative;
+  z-index: var(--m78-z-index-base);
+  text-align: center;
+  padding: var(--m78-space-4);
+  max-width: var(--m78-sm);
+
+  &.__small {
+    .m78-result_icon {
+      font-size: 50px;
+    }
+
+    .m78-result_title {
+      font-size: var(--m78-fs-md);
+      margin-top: var(--m78-space-1);
+    }
+
+    .m78-result_desc {
+      margin-top: var(--m78-space-1);
+    }
+
+    .m78-result_extra {
+      padding: var(--m78-space-2);
+      margin: var(--m78-space-3) 0;
+      margin-top: var(--m78-space-2);
+    }
+
+    .m78-result_actions {
+      margin-top: var(--m78-space-2);
+
+      .m78-btn {
+        min-width: 0px;
+      }
+
+      .m78-btn + .m78-btn {
+        margin-left: var(--m78-space-2);
+      }
+    }
+  }
+
+  &.__large {
+    .m78-result_icon {
+      font-size: 100px;
+    }
+
+    .m78-result_title {
+      font-size: var(--m78-fs-lg);
+      margin-top: var(--m78-space-3);
+    }
+
+    .m78-result_desc {
+      font-size: var(--m78-fs-md);
+      margin-top: var(--m78-space-3);
+    }
+
+    .m78-result_extra {
+      padding: var(--m78-space-4);
+      margin: var(--m78-space-7) 0;
+      margin-top: var(--m78-space-4);
+      font-size: var(--m78-fs-md);
+    }
+  }
+
+  // 没有图标时, 去掉首元素的上边距
+  & > div:first-child {
+    margin-top: 0;
+  }
+
+  &_icon {
+    font-size: 60px;
+    line-height: 1;
+  }
+
+  &_title {
+    font-size: var(--m78-fs-lg);
+    color: var(--m78-color-title);
+    margin-top: var(--m78-space-2);
+  }
+
+  &_desc {
+    font-size: var(--m78-fs);
+    color: var(--m78-color-second);
+    margin-top: var(--m78-space-2);
+  }
+
+  &_extra {
+    border-radius: var(--m78-border-radius);
+    background-color: var(--m78-color-bg);
+    text-align: left;
+    padding: var(--m78-space-3);
+    margin: var(--m78-space-6) 0;
+    margin-top: var(--m78-space-3);
+  }
+
+  &_actions {
+    margin-top: var(--m78-space-4);
+    .m78-btn {
+      min-width: 80px;
+    }
+
+    .m78-btn + .m78-btn {
+      margin-left: var(--m78-space-4);
+    }
+  }
+}

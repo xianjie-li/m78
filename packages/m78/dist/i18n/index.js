@@ -9,6 +9,7 @@ export var COMMON_NS = "common";
 export var BUTTON_NS = "button";
 export var INPUT_NS = "input";
 export var DIALOG_NS = "dialog";
+export var FORK_NS = "fork";
 var i18n = i18next.use(initReactI18next).createInstance({
     fallbackLng: "en-US",
     fallbackNS: "common",
@@ -17,7 +18,8 @@ var i18n = i18next.use(initReactI18next).createInstance({
         COMMON_NS,
         BUTTON_NS,
         INPUT_NS,
-        DIALOG_NS
+        DIALOG_NS,
+        FORK_NS
     ],
     debug: process.env.NODE_ENV === "development",
     interpolation: {

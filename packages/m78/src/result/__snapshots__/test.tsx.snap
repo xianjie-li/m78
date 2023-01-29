@@ -1,0 +1,196 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`result should render with props 1`] = `
+<div>
+  <div
+    class="m78-result extra-cls"
+    style="color: red;"
+  >
+    <div
+      class="m78-result_title"
+    >
+      title
+    </div>
+  </div>
+</div>
+`;
+
+exports[`result should render with props 2`] = `
+<div>
+  <div
+    class="m78-result"
+    style=""
+  >
+    <div
+      class="m78-result_title"
+    >
+      title
+    </div>
+    <div
+      class="m78-result_desc"
+    >
+      desc
+    </div>
+  </div>
+</div>
+`;
+
+exports[`result should render with props 3`] = `
+<div>
+  <div
+    class="m78-result"
+    style=""
+  >
+    <div
+      class="m78-result_title"
+    >
+      title
+    </div>
+    <div
+      class="m78-result_desc"
+    >
+      desc
+    </div>
+    <div
+      class="m78-result_extra"
+    >
+      extra
+    </div>
+  </div>
+</div>
+`;
+
+exports[`result should render with props 4`] = `
+<div>
+  <div
+    class="m78-result"
+    style=""
+  >
+    <div
+      class="m78-result_title"
+    >
+      title
+    </div>
+    <div
+      class="m78-result_desc"
+    >
+      desc
+    </div>
+    <div
+      class="m78-result_extra"
+    >
+      extra
+    </div>
+    <div
+      class="m78-result_actions"
+    >
+      actions
+    </div>
+  </div>
+</div>
+`;
+
+exports[`result should render with props 5`] = `
+<div>
+  <div
+    class="m78-result"
+    style=""
+  >
+    <div
+      class="m78-result_icon"
+    >
+      icon
+    </div>
+    <div
+      class="m78-result_title"
+    >
+      title
+    </div>
+    <div
+      class="m78-result_desc"
+    >
+      desc
+    </div>
+    <div
+      class="m78-result_extra"
+    >
+      extra
+    </div>
+    <div
+      class="m78-result_actions"
+    >
+      actions
+    </div>
+  </div>
+</div>
+`;
+
+exports[`result should render with props 6`] = `
+<div>
+  <div
+    class="m78-result __small"
+    style=""
+  >
+    <div
+      class="m78-result_icon"
+    >
+      icon
+    </div>
+    <div
+      class="m78-result_title"
+    >
+      title
+    </div>
+    <div
+      class="m78-result_desc"
+    >
+      desc
+    </div>
+    <div
+      class="m78-result_extra"
+    >
+      extra
+    </div>
+    <div
+      class="m78-result_actions"
+    >
+      actions
+    </div>
+  </div>
+</div>
+`;
+
+exports[`result should render with props 7`] = `
+<div>
+  <div
+    class="m78-result __large"
+    style=""
+  >
+    <div
+      class="m78-result_icon"
+    >
+      icon
+    </div>
+    <div
+      class="m78-result_title"
+    >
+      title
+    </div>
+    <div
+      class="m78-result_desc"
+    >
+      desc
+    </div>
+    <div
+      class="m78-result_extra"
+    >
+      extra
+    </div>
+    <div
+      class="m78-result_actions"
+    >
+      actions
+    </div>
+  </div>
+</div>
+`;

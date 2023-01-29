@@ -1,0 +1,45 @@
+---
+title: Result - 结果
+---
+
+用于不同状态的结果状态展示
+
+## 综合示例
+
+<demo
+  demo={require("./result-example.tsx")}
+  code={require("!!raw-loader!./result-example.tsx")}
+></demo>
+
+## API
+
+```ts
+interface ResultProps extends ComponentBasePropsWithAny {
+  /** 尺寸 */
+  size?: SizeUnion;
+  /** 状态图标 */
+  icon?: React.ReactNode;
+  /** 标题内容 */
+  title?: React.ReactNode;
+  /** 明细文本 */
+  desc?: React.ReactNode;
+  /** 额外内容 */
+  extra?: React.ReactNode;
+  /** 操作区，一般会传递一组按钮或连接 */
+  actions?: React.ReactNode;
+}
+
+/** Component common props */
+export interface ComponentBaseProps {
+  /** 包裹元素的类名 */
+  className?: string;
+  /** 包裹元素样式 */
+  style?: CSSProperties;
+}
+
+/** Component common props */
+export interface ComponentBasePropsWithAny extends ComponentBaseProps {
+  /** 透传到包裹元素上的属性 */
+  [key: string]: any;
+}
+```

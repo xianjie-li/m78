@@ -1,8 +1,6 @@
 import React from "react";
-import { Input, InputType, Interceptor } from "../../src/input";
+import { Input, InputType } from "../../src/input";
 import { Cell, Cells } from "../../src/layout/index.js";
-import { IconAdd } from "@m78/icons/icon-add";
-import { IconHorizontalRule } from "@m78/icons/icon-horizontal-rule";
 
 const InputExample = () => {
   return (
@@ -85,9 +83,6 @@ const InputExample = () => {
             autoSize={false}
             status="success"
           />
-        </div>
-        <div className="mt-16">
-          <Input placeholder="不限制最大宽度" fullWidth />
         </div>
       </Cell>
 

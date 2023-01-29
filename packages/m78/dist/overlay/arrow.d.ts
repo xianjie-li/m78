@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import { ComponentBasePropsWithAny } from "../common/index.js";
 interface Props extends ComponentBasePropsWithAny {
     width: number;

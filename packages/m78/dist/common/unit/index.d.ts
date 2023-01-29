@@ -1,3 +1,4 @@
+/// <reference types="react" />
 export declare function StatusIconInfo(): JSX.Element;
 export declare function StatusIconSuccess(): JSX.Element;
 export declare function StatusIconWarning(): JSX.Element;

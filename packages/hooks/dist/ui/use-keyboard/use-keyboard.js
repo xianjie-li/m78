@@ -73,7 +73,7 @@ function handle(e) {
     enable: true,
     type: UseKeyboardTriggerType.down,
     priority: 0,
-    cover: true,
+    cover: false,
     code: [],
     modifier: []
 };

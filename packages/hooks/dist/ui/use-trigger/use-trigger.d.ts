@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import React, { ReactElement } from "react";
 import { AnyObject } from "@m78/utils";
 /**
  * 支持的事件类型
@@ -67,6 +67,8 @@ export interface UseTriggerConfig {
         /** 离开触发延迟(ms) */
         leaveDelay?: number;
     };
+    /** trigger对应的dom节点的ref */
+    innerRef?: React.Ref<HTMLElement | null>;
 }
 /** Trigger的props, 对element进行了更名 */
 export interface UseTriggerProps extends Omit<UseTriggerConfig, "element"> {

@@ -5,12 +5,13 @@ import { IconCode } from "@m78/icons/icon-code";
 import { IconCheck } from "@m78/icons/icon-check";
 import { IconClose } from "@m78/icons/icon-close";
 import { IconContentCopy } from "@m78/icons/icon-content-copy";
-import { Size } from "m78/common";
+import { ComponentBasePropsWithAny, Size } from "m78/common";
 
 import css from "./style.module.scss";
 import { ensureArray, isString } from "@m78/utils";
 import { useSelf } from "@m78/hooks";
 import { copyToClipboard } from "../../common/common";
+import clsx from "clsx";
 
 interface DemoCodeItem {
   /** 代码内容 */
@@ -21,7 +22,7 @@ interface DemoCodeItem {
   language?: string;
 }
 
-interface DemoProps {
+interface DemoProps extends ComponentBasePropsWithAny {
   /** 待渲染的demo区域 */
   demo:
     | React.ReactNode
@@ -39,7 +40,7 @@ interface DemoProps {
 const copySuccessIcon = <IconCheck className="color-success" />;
 const copyFailIcon = <IconClose className="color-error" />;
 
-const Demo = ({ demo, code }: DemoProps) => {
+const Demo = ({ demo, code, ...other }: DemoProps) => {
   const [codeOpen, setCodeOpen] = useState(false);
 
   const { list, first } = useMemo(() => {
@@ -111,7 +112,7 @@ const Demo = ({ demo, code }: DemoProps) => {
   }
 
   return (
-    <div className={css.demo}>
+    <div {...other} className={clsx(css.demo, other.className)}>
       <div className={css.main}>{renderDemo()}</div>
       <div className={css.toolbar}>
         <div role="tablist" className={css.tab}>

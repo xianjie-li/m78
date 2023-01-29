@@ -45,6 +45,8 @@ export interface TileProps extends Omit<DIVProps, "title"> {
   leading?: React.ReactNode;
   /** 尾随内容 */
   trailing?: React.ReactNode;
+  /** 底部内容 */
+  foot?: React.ReactNode;
   /** 纵轴的对齐方式 */
   crossAlign?: FlexWrapProps["crossAlign"];
   /** 指向内部包裹dom的ref */

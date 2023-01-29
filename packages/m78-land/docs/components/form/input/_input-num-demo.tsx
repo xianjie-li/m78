@@ -2,7 +2,7 @@ import React from "react";
 import { Input, InputType } from "m78/input";
 
 const InputDemo = () => (
-  <div>
+  <div style={{ width: 360 }}>
     <div>
       <Input type={InputType.number} placeholder="只能输入数字" />
     </div>

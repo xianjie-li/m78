@@ -732,28 +732,6 @@ exports[`input base 1`] = `
       />
     </span>
   </div>
-  <div
-    className="mt-16"
-  >
-    <span
-      className="m78 m78-init m78-input __full-width"
-    >
-      <input
-        className="m78-input_inner"
-        disabled={false}
-        onBlur={[Function]}
-        onChange={[Function]}
-        onCompositionEnd={[Function]}
-        onCompositionStart={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        placeholder="不限制最大宽度"
-        style={Object {}}
-        type="text"
-        value=""
-      />
-    </span>
-  </div>
 </div>
 `;
 

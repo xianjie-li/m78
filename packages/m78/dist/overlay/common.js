@@ -83,7 +83,9 @@ var defaultClickAwaySameNameSpace = "m78-overlay-clickAway";
         isLast: index === list.length - 1
     };
 }
-/** useTrigger回调 */ export function _onTrigger(e, setOpen, self) {
+/** useTrigger回调 */ export function _onTrigger(e, setOpen, self, props) {
+    var ref;
+    (ref = props.onTrigger) === null || ref === void 0 ? void 0 : ref.call(props, e);
     if (e.type === UseTriggerType.click) {
         if (self.lastFocusTime) {
             // focus和click前后间隔400ms才触发

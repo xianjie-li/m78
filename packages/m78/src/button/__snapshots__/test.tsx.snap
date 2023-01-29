@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`button base 1`] = `
+exports[`Button base 1`] = `
 <div>
   <button
     className="m78 m78-init m78-btn m78-effect __md"
@@ -53,7 +53,7 @@ exports[`button base 1`] = `
 </div>
 `;
 
-exports[`button block 1`] = `
+exports[`Button block 1`] = `
 <div>
   <button
     className="m78 m78-init m78-btn m78-effect __md __red __block __light"
@@ -82,7 +82,7 @@ exports[`button block 1`] = `
 </div>
 `;
 
-exports[`button circle 1`] = `
+exports[`Button circle 1`] = `
 <div>
   <button
     className="m78 m78-init m78-btn m78-effect __md __red __large __circle __outline __light"
@@ -111,7 +111,7 @@ exports[`button circle 1`] = `
 </div>
 `;
 
-exports[`button disabled 1`] = `
+exports[`Button disabled 1`] = `
 <div>
   <button
     className="m78 m78-init m78-btn m78-effect __md __disabled"
@@ -164,7 +164,7 @@ exports[`button disabled 1`] = `
 </div>
 `;
 
-exports[`button icon 1`] = `
+exports[`Button icon 1`] = `
 <div>
   <button
     className="m78 m78-init m78-btn m78-effect __md __icon"
@@ -846,7 +846,7 @@ exports[`button icon 1`] = `
 </div>
 `;
 
-exports[`button link 1`] = `
+exports[`Button link 1`] = `
 <div>
   <button
     className="m78 m78-init m78-btn m78-effect __md __text"
@@ -899,7 +899,7 @@ exports[`button link 1`] = `
 </div>
 `;
 
-exports[`button loading 1`] = `
+exports[`Button loading 1`] = `
 <div>
   <button
     className="m78 m78-init m78-btn m78-effect __md __second __large __light __disabled"
@@ -1352,7 +1352,7 @@ exports[`button loading 1`] = `
 </div>
 `;
 
-exports[`button outline 1`] = `
+exports[`Button outline 1`] = `
 <div>
   <button
     className="m78 m78-init m78-btn m78-effect __md __primary __outline __light"
@@ -1389,7 +1389,7 @@ exports[`button outline 1`] = `
 </div>
 `;
 
-exports[`button size 1`] = `
+exports[`Button size 1`] = `
 <div>
   <button
     className="m78 m78-init m78-btn m78-effect __md __large"

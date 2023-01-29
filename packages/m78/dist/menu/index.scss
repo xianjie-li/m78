@@ -1,0 +1,10 @@
+
+.m78-menu {
+  padding: var(--m78-space-1);
+  min-width: 200px;
+  user-select: none;
+
+  &_wrap {
+    overflow: auto;
+  }
+}

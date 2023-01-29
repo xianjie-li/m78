@@ -12,9 +12,13 @@ export function setStorage(key: string, val: any) {
 export function getStorage(key: string) {
   const s = localStorage.getItem(`${storagePrefix}${key}`.toUpperCase());
 
-  if (!s) return null;
+  if (s === null) return null;
 
-  return JSON.parse(s);
+  try {
+    return JSON.parse(s);
+  } catch (e) {
+    return null;
+  }
 }
 
 let cachePlatform: {
@@ -67,4 +71,10 @@ export function getPlatform() {
   };
 
   return cachePlatform;
+}
+
+/** 检测是否是移动设备 */
+export function isMobileDevice() {
+  const platform = getPlatform();
+  return platform.iphone || platform.ipad || platform.android;
 }

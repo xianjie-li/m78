@@ -126,8 +126,11 @@ export function useOverlaysClickAway(config?: SameConfig, namespace?: string) {
 export function _onTrigger(
   e: UseTriggerEvent,
   setOpen: AnyFunction,
-  self: _Context["self"]
+  self: _Context["self"],
+  props: OverlayProps
 ) {
+  props.onTrigger?.(e);
+
   if (e.type === UseTriggerType.click) {
     if (self.lastFocusTime) {
       // focus和click前后间隔400ms才触发

@@ -20,6 +20,11 @@ import BubbleExample from "./bubble/bubble-example.js";
 import { m78Config } from "../src/config/index.js";
 import { Button } from "../src/button/index.js";
 import DialogExample from "./dialog/dialog-example.js";
+import LayExample from "./lay/lay-example.js";
+import MenuExample from "./menu/menu-example.js";
+import DrawerExample from "./overlay/drawer-example.js";
+import ResultExample from "./result/result-example.js";
+import ForkExample from "./fork/fork-example.js";
 
 export const router = createHashRouter([
   {
@@ -72,8 +77,28 @@ export const router = createHashRouter([
         element: <BubbleExample />,
       },
       {
+        path: "menu",
+        element: <MenuExample />,
+      },
+      {
         path: "dialog",
         element: <DialogExample />,
+      },
+      {
+        path: "lay",
+        element: <LayExample />,
+      },
+      {
+        path: "drawer",
+        element: <DrawerExample />,
+      },
+      {
+        path: "result",
+        element: <ResultExample />,
+      },
+      {
+        path: "fork",
+        element: <ForkExample />,
       },
     ],
   },

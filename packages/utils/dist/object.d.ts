@@ -10,7 +10,7 @@ export declare const shakeFalsy: (source: object) => object;
  * @param props - Key to be removed, comma separated string or string array
  * @return - New object after removal
  * */
-export declare function omit<R>(obj: any, props: string | string[]): R;
+export declare function omit(obj: any, props: string | string[]): any;
 /**
  * Pick the specified key value from the target object
  * @param obj - Target object

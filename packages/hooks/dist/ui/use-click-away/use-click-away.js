@@ -1,6 +1,4 @@
-import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
-import { useEffect, useMemo, useRef } from "react";
-import { isArray } from "@m78/utils";
+import { useEffect, useRef } from "react";
 import { getTargetDomList, useFn } from "../../index.js";
 var defaultEvents = [
     "mousedown",
@@ -15,33 +13,14 @@ export function useClickAway(param) {
         });
     };
     var ref = useRef();
-    var domList = useRef([]);
     var handle = useFn(function(e) {
-        if (!domList.current.length) return;
-        var isInner = domList.current.some(function(dom) {
+        var domLs = getTargetDomList(target, ref);
+        if (!(domLs === null || domLs === void 0 ? void 0 : domLs.length)) return;
+        var isInner = domLs.some(function(dom) {
             return dom.contains(e.target);
         });
         !isInner && onTrigger(e);
     });
-    var targetLs = useMemo(function() {
-        var r = ref;
-        if (!target) return [
-            r
-        ];
-        if (!isArray(target)) return [
-            target,
-            r
-        ];
-        return _to_consumable_array(target).concat([
-            r
-        ]);
-    }, [
-        target,
-        ref.current
-    ]);
-    useEffect(function() {
-        domList.current = getTargetDomList(targetLs) || [];
-    }, targetLs);
     useEffect(function() {
         bindHelper();
         return function() {
