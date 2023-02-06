@@ -32,3 +32,5 @@ interface SetState<T> {
 ```ts
 type SetStateInitState<T> = (() => T) | T;
 ```
+
+> 如果新状态对象第一层的所有值与之前相等, 则不会重新触发 render

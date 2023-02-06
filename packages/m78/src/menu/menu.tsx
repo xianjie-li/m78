@@ -167,10 +167,11 @@ export const _Menu = (props: MenuProps) => {
 
   /** 如果是移动设备(不精确检测), 子菜单触发方式改为click */
   useEffect(() => {
-    if (isMobileDevice())
+    if (isMobileDevice()) {
       setState({
         subMenuTriggerType: UseTriggerType.click,
       });
+    }
   }, []);
 
   /** 递归渲染选项列表 */
@@ -220,7 +221,7 @@ export const _Menu = (props: MenuProps) => {
               </div>
             }
             direction={OverlayDirection.rightStart}
-            triggerType={UseTriggerType.active}
+            triggerType={state.subMenuTriggerType}
             offset={8}
             onChange={(open) => openChangeHandle(open, value, list)}
           >

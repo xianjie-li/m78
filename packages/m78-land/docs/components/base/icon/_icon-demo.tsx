@@ -80,7 +80,7 @@ const IconDemo = () => {
       }
     }
 
-    copyToClipboard(`import { ${item.key} } from "@m78/icons/${cls}";`).then(
+    copyToClipboard(`import { ${item.key} } from "@m78/icons/${cls}.js";`).then(
       () => {
         notify.success("复制成功");
       }

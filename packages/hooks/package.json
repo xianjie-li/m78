@@ -26,8 +26,11 @@
     "lodash": "^4.17.21",
     "query-string": "^7.1.1",
     "react": "^18.2.0",
-    "react-spring": "^9.5.5",
+    "react-spring": "^9.6.1",
     "resize-observer-polyfill": "^1.5.1"
+  },
+  "devDependencies": {
+    "react-router-dom": "^6.4.3"
   },
   "scripts": {
     "lint:prettier": "prettier ./src ./test --write --no-error-on-unmatched-pattern",

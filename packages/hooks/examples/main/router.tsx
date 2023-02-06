@@ -8,6 +8,7 @@ import {
 import UseTriggerExample from "../use-trigger-example/use-trigger-example.js";
 
 import css from "./style.module.css";
+import UseScrollExample from "../use-scroll/use-scroll-example.js";
 
 export const router = createHashRouter([
   {
@@ -23,6 +24,11 @@ export const router = createHashRouter([
         path: "useTrigger",
         index: true,
         element: <UseTriggerExample />,
+      },
+      {
+        path: "useScroll",
+        index: true,
+        element: <UseScrollExample />,
       },
     ],
   },

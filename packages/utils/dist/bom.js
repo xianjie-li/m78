@@ -34,13 +34,15 @@ var cachePlatform = null;
         return "unknown";
     };
     var platform = getPlatform();
+    var hasTouch = "ontouchstart" in document;
+    // mac和ipad都返回MacIntel, 需要额外检测触屏
     cachePlatform = {
-        mac: /mac/.test(platform),
-        iphone: /(iphone|ipod)/.test(platform),
-        ipad: /ipad/.test(platform),
-        windows: /win/.test(platform),
-        android: /android/.test(platform),
-        linux: /linux/.test(platform)
+        mac: /mac/i.test(platform) && !hasTouch,
+        ipad: /(ipad|mac)/i.test(platform) && hasTouch,
+        iphone: /(iphone|ipod)/i.test(platform),
+        windows: /win/i.test(platform),
+        android: /android/i.test(platform),
+        linux: /linux/i.test(platform)
     };
     return cachePlatform;
 }

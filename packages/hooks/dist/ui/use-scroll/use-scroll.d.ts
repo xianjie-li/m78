@@ -56,6 +56,10 @@ export interface UseScrollMeta {
     touchTop: boolean;
     /** 滚动条位于最左侧 */
     touchLeft: boolean;
+    /** 是否是x轴滚动, 通过判断上一个滚动值来获取, 某些场景可能不准确, 比如通过该api控制滚动式 */
+    isScrollX: boolean;
+    /** 是否是y轴滚动, 通过判断上一个滚动值来获取, 某些场景可能不准确, 比如通过该api控制滚动式 */
+    isScrollY: boolean;
 }
 export declare function useScroll<ElType extends HTMLElement>({ el, onScroll, throttleTime, offset, offsetX, offsetY, touchOffset, }?: UseScrollOptions): {
     set: ({ x, y, raise, immediate }: UseScrollSetArg) => void;

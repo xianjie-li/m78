@@ -38,12 +38,18 @@
 
 
 // --------------------- 动画 --------------------- //
-.m78-animated-spin {
+.m78-animate-spin {
   transform-origin: center center;
   animation: m78-spin 2s infinite linear;
 }
 
-.m78-animated-steps {
+.m78-animate-spin-fast {
+  transform-origin: center center;
+  animation: m78-spin 1.2s infinite linear;
+}
+
+
+.m78-animate-steps {
   animation: m78-spin 1s infinite steps(8);
 }
 

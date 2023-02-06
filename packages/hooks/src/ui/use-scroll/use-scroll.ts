@@ -64,6 +64,10 @@ export interface UseScrollMeta {
   touchTop: boolean;
   /** 滚动条位于最左侧 */
   touchLeft: boolean;
+  /** 是否是x轴滚动, 通过判断上一个滚动值来获取, 某些场景可能不准确, 比如通过该api控制滚动式 */
+  isScrollX: boolean;
+  /** 是否是y轴滚动, 通过判断上一个滚动值来获取, 某些场景可能不准确, 比如通过该api控制滚动式 */
+  isScrollY: boolean;
 }
 
 interface UseScrollPosBase {
@@ -89,6 +93,8 @@ export function useScroll<ElType extends HTMLElement>(
   const self = useSelf({
     docEl: null! as HTMLElement,
     bodyEl: null! as HTMLElement,
+    lastX: 0,
+    lastY: 0,
   });
 
   const [spValue, spApi] = useSpring<{ y: number; x: number }>(() => ({
@@ -122,13 +128,19 @@ export function useScroll<ElType extends HTMLElement>(
     };
   }, [el, ref.current]);
 
+  /** 记录初始化滚动位置, 用于计算滚动方向 */
+  useEffect(() => {
+    const meta = get();
+    self.lastX = meta.x;
+    self.lastY = meta.y;
+  }, [el, ref.current]);
+
   /** 执行滚动、拖动操作时，停止当前正在进行的滚动操作 */
   useEffect(() => {
     const sEl = getEl();
 
     function wheelHandle() {
       if (spValue.x.isAnimating || spValue.y.isAnimating) {
-        // @ts-ignore
         spApi.stop();
       }
     }
@@ -297,7 +309,7 @@ export function useScroll<ElType extends HTMLElement>(
       ? self.docEl.scrollTop + self.bodyEl.scrollTop
       : sEl.scrollTop;
 
-    /* chrome高分屏+缩放时，滚动值会是小数，想上取整防止计算错误 */
+    /* chrome高分屏+缩放时，滚动值会是小数，向上取整防止计算错误 */
     x = Math.ceil(x);
     y = Math.ceil(y);
 
@@ -309,6 +321,12 @@ export function useScroll<ElType extends HTMLElement>(
     /* chrome下(高分屏+缩放),无滚动的情况下scrollWidth会大于width */
     const xMax = Math.max(0, scrollWidth - width);
     const yMax = Math.max(0, scrollHeight - height);
+
+    const isScrollX = x !== self.lastX;
+    const isScrollY = y !== self.lastY;
+
+    self.lastX = x;
+    self.lastY = y;
 
     return {
       el: sEl,
@@ -326,6 +344,8 @@ export function useScroll<ElType extends HTMLElement>(
       touchTop: y <= touchOffset,
       offsetWidth: sEl.offsetWidth,
       offsetHeight: sEl.offsetHeight,
+      isScrollX,
+      isScrollY,
     };
   }
 

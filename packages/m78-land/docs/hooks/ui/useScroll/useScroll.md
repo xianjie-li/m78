@@ -43,6 +43,10 @@ export interface UseScrollMeta {
   height: number;
   /** 元素宽度 */
   width: number;
+  /** 元素实际高度(包含边框/滚动条/内边距等) */
+  offsetWidth: number;
+  /** 元素实际宽度(包含边框/滚动条/内边距等) */
+  offsetHeight: number;
   /** 元素总高度 */
   scrollHeight: number;
   /** 元素总宽度 */
@@ -55,6 +59,10 @@ export interface UseScrollMeta {
   touchTop: boolean;
   /** 滚动条位于最左侧 */
   touchLeft: boolean;
+  /** 是否是x轴滚动, 通过判断上一个滚动值来获取, 某些场景可能不准确, 比如通过该api控制滚动式 */
+  isScrollX: boolean;
+  /** 是否是y轴滚动, 通过判断上一个滚动值来获取, 某些场景可能不准确, 比如通过该api控制滚动式 */
+  isScrollY: boolean;
 }
 ```
 

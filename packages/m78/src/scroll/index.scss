@@ -1,0 +1,226 @@
+
+.m78-scroll {
+  position: relative;
+  //border: 1px solid blue;
+  overflow: hidden;
+
+  &_wrap {
+    position: absolute;
+    // 以下两行是为了处理padding不会使右侧非wrap文本换行
+    display: flex;
+    flex-wrap: wrap;
+    will-change: scroll-position, transform;
+
+    left: 0;
+    top: 0;
+
+    // 预留滚动条尺寸
+    padding-right: 40px;
+    padding-bottom: 40px;
+    box-sizing: content-box;
+
+    touch-action: manipulation;
+  }
+
+  &_bar {
+    position: absolute;
+    background: var(--m78-color-border);
+    z-index: var(--m78-z-index);
+    border-radius: var(--m78-border-radius-md);
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity var(--m78-animate-slow);
+    pointer-events: none;
+
+    &.__x {
+      height: 8px;
+      bottom: 3px;
+      left: 3px;
+      right: 3px;
+
+      // 扩大点击面积
+      &::after {
+        left: 0;
+        top: -10px;
+        bottom: -10px;
+        right: 0;
+      }
+
+      .m78-scroll_bar_thumb {
+        width: 30%;
+        height: 100%;
+
+        // 扩大点击面积
+        &::after {
+          position: absolute;
+          content: "";
+          left: 0;
+          top: -10px;
+          bottom: -10px;
+          right: 0;
+          z-index: -1;
+        }
+      }
+
+      &:hover {
+        transform: scaleY(1.5);
+        transform-origin: bottom;
+      }
+    }
+
+    &.__y {
+      width: 8px;
+      right: 3px;
+      top: 3px;
+      bottom: 3px;
+
+      // 扩大点击面积
+      &::after {
+        left: -10px;
+        top: 0;
+        bottom: 0;
+        right: -10px;
+      }
+
+      .m78-scroll_bar_thumb {
+        height: 30%;
+        width: 100%;
+
+        // 扩大点击面积
+        &::after {
+          position: absolute;
+          content: "";
+          left: -10px;
+          top: 0;
+          bottom: 0;
+          right: -10px;
+          z-index: -1;
+        }
+      }
+
+      &:hover {
+        transform: scaleX(1.5);
+        transform-origin: right;
+      }
+    }
+
+    &.__show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    // 扩大点击面积
+    &::after {
+      position: absolute;
+      content: "";
+      z-index: -1;
+    }
+  }
+
+  &_bar_thumb {
+    background: var(--m78-color-second);
+    border-radius: var(--m78-border-radius-md);
+    touch-action: none;
+    z-index: var(--m78-z-index-base);
+  }
+
+  &.__mini-bar {
+    .m78-scroll_bar {
+      &.__x {
+        height: 5px;
+      }
+
+      &.__y {
+        width: 5px;
+      }
+    }
+  }
+
+  // 两个轴都存在滚动条时, 防止重叠
+  &.__xy {
+    .m78-scroll_bar.__x {
+      right: 11px;
+    }
+
+    .m78-scroll_bar.__y {
+      bottom: 11px;
+    }
+  }
+
+  &_indicator {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 16px;
+    background: linear-gradient(to left, var(--m78-color-border), transparent);
+    pointer-events: none;
+    border-radius: 0 0 4px 4px;
+
+    &.__start {
+      left: 0;
+      right: auto;
+      transform: rotate(180deg);
+    }
+
+    &.__is-y{
+      left: 0;
+      right: 0;
+      width: auto;
+      height: 16px;
+      background: linear-gradient(to top, var(--m78-color-border), transparent);
+      bottom: 0;
+      top: auto;
+
+      &.__start {
+        top: 0;
+        bottom: auto;
+      }
+    }
+  }
+
+  &_cont {
+    touch-action: manipulation;
+    background-color: var(--m78-component-bg);
+  }
+
+  &_pull-down {
+    position: absolute;
+    top: 0;
+    z-index: 1;
+    left: 0;
+    right: 0;
+    height: auto;
+    transform: translateY(-100%);
+
+
+    &_cont {
+      padding: var(--m78-space-4) var(--m78-space-3);
+    }
+
+    &_indicator {
+      transform-origin: center;
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    &_indicator-icon {
+      display: inline-block;
+    }
+
+    &_text {
+      color: var(--m78-color-second);
+      font-size: var(--m78-fs-sm);
+      user-select: none;
+    }
+  }
+}
+
+.temp-item {
+  //background-color: pink;
+  //border: 1px solid #eee;
+
+  & + & {
+    margin-top: 8px;
+  }
+}

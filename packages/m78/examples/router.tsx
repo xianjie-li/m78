@@ -25,6 +25,7 @@ import MenuExample from "./menu/menu-example.js";
 import DrawerExample from "./overlay/drawer-example.js";
 import ResultExample from "./result/result-example.js";
 import ForkExample from "./fork/fork-example.js";
+import ScrollExample from "./scroll/scroll-example.js";
 
 export const router = createHashRouter([
   {
@@ -99,6 +100,10 @@ export const router = createHashRouter([
       {
         path: "fork",
         element: <ForkExample />,
+      },
+      {
+        path: "scroll",
+        element: <ScrollExample />,
       },
     ],
   },

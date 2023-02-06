@@ -113,7 +113,7 @@ export function useScroll() {
         var sEl = getEl();
         var x = isDoc ? self.docEl.scrollLeft + self.bodyEl.scrollLeft : sEl.scrollLeft;
         var y = isDoc ? self.docEl.scrollTop + self.bodyEl.scrollTop : sEl.scrollTop;
-        /* chrome高分屏+缩放时，滚动值会是小数，想上取整防止计算错误 */ x = Math.ceil(x);
+        /* chrome高分屏+缩放时，滚动值会是小数，向上取整防止计算错误 */ x = Math.ceil(x);
         y = Math.ceil(y);
         var height = sEl.clientHeight;
         var width = sEl.clientWidth;
@@ -121,6 +121,10 @@ export function useScroll() {
         var scrollWidth = sEl.scrollWidth;
         /* chrome下(高分屏+缩放),无滚动的情况下scrollWidth会大于width */ var xMax = Math.max(0, scrollWidth - width);
         var yMax = Math.max(0, scrollHeight - height);
+        var isScrollX = x !== self.lastX;
+        var isScrollY = y !== self.lastY;
+        self.lastX = x;
+        self.lastY = y;
         return {
             el: sEl,
             x: x,
@@ -136,7 +140,9 @@ export function useScroll() {
             touchRight: xMax - x - touchOffset <= 0,
             touchTop: y <= touchOffset,
             offsetWidth: sEl.offsetWidth,
-            offsetHeight: sEl.offsetHeight
+            offsetHeight: sEl.offsetHeight,
+            isScrollX: isScrollX,
+            isScrollY: isScrollY
         };
     };
     var setDocPos = /** 设置根级的滚动位置 */ function setDocPos(x, y) {
@@ -155,7 +161,9 @@ export function useScroll() {
     // 获取documentElement和body, 放到useEffect以兼容SSR
     var self = useSelf({
         docEl: null,
-        bodyEl: null
+        bodyEl: null,
+        lastX: 0,
+        lastY: 0
     });
     var ref2 = _sliced_to_array(useSpring(function() {
         return {
@@ -184,10 +192,17 @@ export function useScroll() {
         el,
         ref1.current
     ]);
+    /** 记录初始化滚动位置, 用于计算滚动方向 */ useEffect(function() {
+        var meta = get();
+        self.lastX = meta.x;
+        self.lastY = meta.y;
+    }, [
+        el,
+        ref1.current
+    ]);
     /** 执行滚动、拖动操作时，停止当前正在进行的滚动操作 */ useEffect(function() {
         var wheelHandle = function wheelHandle() {
             if (spValue.x.isAnimating || spValue.y.isAnimating) {
-                // @ts-ignore
                 spApi.stop();
             }
         };
