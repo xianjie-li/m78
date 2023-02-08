@@ -1,4 +1,3 @@
-/// <reference types="react" />
 import { BubbleProps } from "./types.js";
 declare const _Bubble: {
     (props: BubbleProps): JSX.Element;

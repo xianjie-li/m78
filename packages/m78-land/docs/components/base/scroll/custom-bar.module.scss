@@ -1,0 +1,11 @@
+.customBar {
+  :global {
+    .m78-scroll_bar {
+      background-color: red;
+    }
+
+    .m78-scroll_bar_thumb {
+      background-color: blue;
+    }
+  }
+}

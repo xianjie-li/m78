@@ -3,13 +3,15 @@ import { RefObject, useEffect, useRef } from "react";
 import { isNumber, isDom } from "@m78/utils";
 import _clamp from "lodash/clamp.js";
 import { getRefDomOrDom, useSelf, useThrottle } from "../../index.js";
-import { useSpring, config } from "react-spring";
+import { useSpring, config, UseSpringProps } from "react-spring";
 
 interface UseScrollOptions {
   /** 指定滚动元素或ref，el、el.current、ref.current取值，只要有任意一个为dom元素则返回, 默认的滚动元素是documentElement */
   el?: HTMLElement | RefObject<any>;
+
   /** 滚动时触发 */
   onScroll?(meta: UseScrollMeta): void;
+
   /** 100 | 配置了onScroll时，设置throttle时间, 单位(ms) */
   throttleTime?: number;
   /** 0 | 滚动偏移值, 使用scrollToElement时，会根据此值进行修正 */
@@ -31,6 +33,8 @@ export interface UseScrollSetArg {
   raise?: boolean;
   /** 为true时阻止动画 */
   immediate?: boolean;
+  /** 动画配置 */
+  config?: UseSpringProps;
 }
 
 export interface UseScrollMeta {
@@ -169,12 +173,14 @@ export function useScroll<ElType extends HTMLElement>(
   function animateTo(
     sEl: HTMLElement,
     next: UseScrollPosBase,
-    now: UseScrollPosBase
+    now: UseScrollPosBase,
+    other?: any
   ) {
     const isDoc = elIsDoc(sEl);
 
-    spApi({
+    spApi.stop().start({
       ...next,
+      ...other,
       from: now,
       onChange(result: any) {
         const x = result.value.x;
@@ -191,7 +197,7 @@ export function useScroll<ElType extends HTMLElement>(
   }
 
   /** 根据传入的x、y值设置滚动位置 */
-  function set({ x, y, raise, immediate }: UseScrollSetArg) {
+  function set({ x, y, raise, immediate, config }: UseScrollSetArg) {
     const scroller = getEl();
 
     const { xMax, yMax, x: oldX, y: oldY } = get();
@@ -230,6 +236,8 @@ export function useScroll<ElType extends HTMLElement>(
       const isDoc = elIsDoc(scroller);
 
       if (immediate) {
+        spApi.stop();
+
         if (isNumber(nextPos.x)) {
           if (isDoc) {
             setDocPos(nextPos.x);
@@ -245,7 +253,7 @@ export function useScroll<ElType extends HTMLElement>(
           }
         }
       } else {
-        animateTo(scroller, nextPos, nowPos);
+        animateTo(scroller, nextPos, nowPos, config);
       }
     }
   }

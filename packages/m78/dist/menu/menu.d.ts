@@ -1,4 +1,3 @@
-/// <reference types="react" />
 import { MenuProps } from "./types.js";
 export declare const _Menu: {
     (props: MenuProps): JSX.Element;

@@ -8,9 +8,10 @@ import { _PULL_DOWN_SWIPE_RATIO, _PULL_DOWN_TRIGGER_RATIO } from "./common.js";
 import { Column } from "../layout/index.js";
 import clsx from "clsx";
 import { isFunction } from "@m78/utils";
+import { useDestroy, UseScrollMeta } from "@m78/hooks";
 
-const _usePullActions = (ctx: _Context) => {
-  const { scroller, setState, state, pullDownEnabled, props } = ctx;
+export const _usePullActions = (ctx: _Context) => {
+  const { scroller, setState, state, pullDownEnabled, props, self } = ctx;
 
   const [sp, api] = useSpring<ScrollPullDownAnimateValues>(() => ({
     from: {
@@ -37,10 +38,6 @@ const _usePullActions = (ctx: _Context) => {
 
       if (!down) {
         if (ratio >= _PULL_DOWN_TRIGGER_RATIO) {
-          api.start({
-            y: maxOffset,
-            ratio,
-          });
           onPullDown();
         } else {
           api.start({
@@ -53,7 +50,7 @@ const _usePullActions = (ctx: _Context) => {
 
       if (down && meta.touchTop) {
         // 起始位置只能下拉
-        if (!isPullDown && moveY === 0) return;
+        if (!isPullDown && moveY <= 0) return;
 
         const y = moveY * _PULL_DOWN_SWIPE_RATIO;
         const rotate = maxTurn * ratio;
@@ -86,8 +83,21 @@ const _usePullActions = (ctx: _Context) => {
     return preventTopPull(scroller.ref.current);
   }, [scroller.ref.current, pullDownEnabled]);
 
+  // 清除上拉定时器
+  useDestroy(() => clearTimeout(self.pullUpTimer));
+
+  /** 触发下拉 */
   async function onPullDown() {
     setState({ pullDownRunning: true });
+
+    const maxOffset = pullDownRef.current.clientHeight;
+
+    await Promise.all(
+      api.start({
+        y: maxOffset,
+        ratio: 1,
+      })
+    );
 
     await props.onPullDown!();
 
@@ -167,10 +177,28 @@ const _usePullActions = (ctx: _Context) => {
       : props.pullDownIndicator;
   }
 
+  /** 滚动, 主要用于上拉加载处理 */
+  async function onScroll(meta: UseScrollMeta) {
+    if (!props.onPullUp) return;
+    const ratio = meta.y / meta.yMax;
+
+    if (ratio >= props.pullUpTriggerRatio) {
+      if (self.pullUpLock) return;
+
+      self.pullUpLock = true;
+
+      await props.onPullUp();
+
+      self.pullUpLock = false;
+    }
+  }
+
   return {
     springStyle: sp,
     pullDownNode: renderPullDownNode(),
+    onPullDown,
+    onScroll,
   };
 };
 
-export default _usePullActions;
+export type _UsePullActionsReturns = ReturnType<typeof _usePullActions>;

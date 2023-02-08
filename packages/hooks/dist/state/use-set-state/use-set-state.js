@@ -8,7 +8,7 @@ import { useState, useCallback, useRef } from "react";
  * @return tuple[0] - 当前状态
  * @return tuple[1] - 类似类组件的setState，不支持回调
  *
- * - 如果新状态对象第一层的所有值与之前相等, 则不会重新出发render
+ * - 如果新状态对象第一层的所有值与之前相等, 则不会重新触发render
  * */ export var useSetState = function() {
     var initState = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {};
     var ref = _sliced_to_array(useState(initState), 2), state = ref[0], set = ref[1];

@@ -16,9 +16,10 @@ import {
 import { _useBar } from "./use-bar.js";
 import { _useLifeCycle } from "./use-life-cycle.js";
 import { _useMethod } from "./use-method.js";
-import _useIndicator from "./use-indicator.js";
-import _usePullActions from "./use-pull-actions.js";
+import { _useIndicator } from "./use-indicator.js";
+import { _usePullActions } from "./use-pull-actions.js";
 import { animated } from "react-spring";
+import { _useDragScroll } from "./use-drag-scroll.js";
 
 export const _Scroll = (p: ScrollProps) => {
   const props = p as _Context["props"];
@@ -41,12 +42,16 @@ export const _Scroll = (p: ScrollProps) => {
     xMax: 0,
     yMax: 0,
     pullDownRunning: false,
+    infiniteWidth: 0,
+    infiniteHeight: 0,
+    isMobile: true,
   });
 
   /** 组件实例属性 */
   const self = useSelf<_Context["self"]>({
     delayHiddenTimer: 0,
     delayHiddenLock: false,
+    pullUpLock: false,
   });
 
   /** 滚动容器样式 */
@@ -72,22 +77,28 @@ export const _Scroll = (p: ScrollProps) => {
     self,
     directionStyle,
     bound,
-    pullDownEnabled: !!props.onPullDown,
+    pullDownEnabled: !!props.onPullDown && !props.dragScroll,
+    xEnabled: directionStyle.overflowX === "scroll",
+    yEnabled: directionStyle.overflowY === "scroll",
+    dragScrollEnable: !!props.dragScroll && !state.isMobile,
   };
 
   /** 滚动条相关 */
   const bar = _useBar(ctx);
 
+  /** 上下拉相关 */
+  const pull = _usePullActions(ctx);
+
+  _useDragScroll(ctx);
+
   /** 方法 */
   const methods = _useMethod(ctx);
 
   /** 钩子 */
-  const lifeCycle = _useLifeCycle(ctx, methods, bar);
+  const lifeCycle = _useLifeCycle(ctx, methods, bar, pull);
 
   /** 滚动标记 */
   const indicator = _useIndicator(ctx, methods);
-
-  const pull = _usePullActions(ctx);
 
   function onScroll(meta: UseScrollMeta) {
     lifeCycle.onScroll(meta);
@@ -110,7 +121,9 @@ export const _Scroll = (p: ScrollProps) => {
           ...directionStyle,
           ...bar.offsetStyle,
           y: pull.springStyle.y,
-          userSelect: ctx.pullDownEnabled ? "none" : undefined,
+          userSelect:
+            ctx.pullDownEnabled || ctx.dragScrollEnable ? "none" : undefined,
+          touchAction: ctx.dragScrollEnable ? "none" : undefined,
         }}
         ref={scroller.ref as RefObject<HTMLDivElement>}
       >

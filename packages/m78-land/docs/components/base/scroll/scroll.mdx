@@ -1,0 +1,179 @@
+---
+title: Scroll - 滚动容器
+---
+
+用于代替原生`overflow: scroll`使用的滚动容器
+
+- 提供了自定义滚动条, 因为原生滚动条在不同平台表现不一致, 且基本做不到夸浏览器的自定义
+- 其他常用的滚动功能, 如上拉/下拉, 在桌面平台启用拖动滚动等.
+
+## 基础用法
+
+<demo
+  demo={require("./base-example.tsx")}
+  code={require("!!raw-loader!./base-example.tsx")}
+></demo>
+
+## 定制滚动条
+
+### 迷你滚动条
+
+<demo
+  demo={require("./mini-bar-example.tsx")}
+  code={require("!!raw-loader!./mini-bar-example.tsx")}
+></demo>
+
+### 隐藏滚动条
+
+<demo
+  demo={require("./hide-bar-example.tsx")}
+  code={require("!!raw-loader!./hide-bar-example.tsx")}
+></demo>
+
+### css 定制
+
+<demo
+  demo={require("./cus-bar-example.tsx")}
+  code={[
+    {
+      code: require("!!raw-loader!./cus-bar-example.tsx"),
+      name: "index.js",
+    },
+    {
+      code: require("!!raw-loader!./custom-bar.module.scss"),
+      name: "style.css",
+      language: "css",
+    },
+  ]}
+/>
+
+## 拖拽滚动
+
+在桌面平台提供模拟的拖拽滚动, 开启后下拉刷新相关配置失效, 可通过`dragScrollInertia`关闭惯性滚动
+
+<demo
+  demo={require("./drag-bar-example.tsx")}
+  code={require("!!raw-loader!./drag-bar-example.tsx")}
+></demo>
+
+## 下拉
+
+下拉功能, 通常用于实现下拉刷新, 也可以完全定制下来节点来容纳广告/提示文本等
+
+> 可参考下方的[滚动实例](/docs/components/base/scroll/#滚动实例)部分手动触发下拉刷新
+
+### 下拉刷新
+
+<demo
+  demo={require("./pull-down-example.tsx")}
+  code={require("!!raw-loader!./pull-down-example.tsx")}
+></demo>
+
+### 自定义下拉节点
+
+<demo
+  demo={require("./pull-down-cus-node-example.tsx")}
+  code={require("!!raw-loader!./pull-down-cus-node-example.tsx")}
+></demo>
+
+## 上拉
+
+> 代码仅供参考, 后续会通过和[useFetch](/docs/hooks/effect/useFetch/)搭配实现使用更简单的用法
+
+<demo
+  demo={require("./pull-up-example.tsx")}
+  code={require("!!raw-loader!./pull-up-example.tsx")}
+></demo>
+
+## API
+
+一些类型和[useScroll](/docs/hooks/ui/useScroll/)关联, 可参考其文档
+
+### 滚动实例
+
+可以 ref 手动获取滚动实例来控制容器滚动, 实例包含以下 api
+
+```ts
+interface ScrollInstance {
+  /** 手动触发下拉 */
+  triggerPullDown: () => Promise<void>;
+
+  // 以下为 useScroll 返回的 api
+
+  /** 设置滚动位置, 可配置动画和自增 */
+  set: ({ x, y, raise, immediate, config }: UseScrollSetArg) => void;
+  /** 获取当前滚动位置信息 */
+  get: () => UseScrollMeta;
+  /** 滚动到指定节点 */
+  scrollToElement: {
+    (selector: string, immediate?: boolean): void;
+    (element: HTMLElement, immediate?: boolean): void;
+  };
+  /** 指向容器的ref */
+  ref: RefObject<ElType>;
+}
+```
+
+### Props
+
+```ts
+export interface ScrollProps extends ComponentBaseProps {
+  /** ScrollDirection.xy | 滚动方向 */
+  direction?: ScrollDirectionUnion;
+  /** 显示的内容 */
+  children?: React.ReactNode;
+  /** 对应方向包含可滚动区域时显示阴影标记 */
+  indicator?: boolean;
+  /** true | 显示滚动条 */
+  scrollbar?: boolean;
+  /** false | 在可滚动的方向显示滚动指示器 */
+  scrollIndicator?: boolean;
+  /** 启用迷你滚动条 */
+  miniBar?: boolean;
+  /** 滚动时触发 */
+  onScroll?: (meta: UseScrollMeta) => void;
+  /** 容器级防止的额外节点, 用于功能扩展 */
+  wrapExtra?: React.ReactNode;
+  /** 用于控制滚动的实例 */
+  instanceRef?: React.Ref<ScrollInstance>;
+
+  /* # # # # # # # 拖拽滚动 # # # # # # # */
+  /** 在桌面平台提供模拟的拖拽滚动, 开启后下拉刷新相关配置失效 */
+  dragScroll?: boolean;
+  /** true | 拖拽滚动是否带惯性 */
+  dragScrollInertia?: boolean;
+
+  /* # # # # # # # 下拉 & 上拉 (只负责触发事件, 距离请求逻辑可搭配useFetch实现) # # # # # # # */
+  /** 下拉触发, 传入即视为启用下拉 */
+  onPullDown?: () => Promise<any>;
+  /** 自定义指示器节点 */
+  pullDownIndicator?: ScrollPullDownCustomer;
+  /** 添加额外的下拉加载文本 */
+  pullDownText?: ScrollPullDownCustomer;
+  /** 指示节点是否旋转 */
+  pullDownIndicatorRotate?: boolean;
+  /** 使用自定义节点完全替换默认节点 */
+  pullDownNode?: ScrollPullDownCustomer;
+
+  /** 上拉加载触发, 传入即视为启用上拉加载 */
+  onPullUp?: () => Promise<any>;
+  /** 0.7 | 触发上拉加载所需的距离比例 */
+  pullUpTriggerRatio?: number;
+}
+
+export type ScrollPullDownCustomer =
+  | React.ReactNode
+  /** offset - 当前下拉偏移值, ratio - 下拉比例 */
+  | ((springValues: ScrollPullDownAnimateValues) => React.ReactNode);
+
+export type ScrollPullDownAnimateValues = {
+  /** Y轴移动距离 */
+  y: SpringValue<number>;
+  /** 控制指示器图标旋转 */
+  rotate: SpringValue<number>;
+  /** 已拖动的比例 */
+  ratio: SpringValue<number>;
+  /** 下拉正处于运行状态 */
+  running: boolean;
+};
+```

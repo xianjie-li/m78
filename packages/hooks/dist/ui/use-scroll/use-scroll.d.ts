@@ -1,4 +1,5 @@
 import { RefObject } from "react";
+import { UseSpringProps } from "react-spring";
 interface UseScrollOptions {
     /** 指定滚动元素或ref，el、el.current、ref.current取值，只要有任意一个为dom元素则返回, 默认的滚动元素是documentElement */
     el?: HTMLElement | RefObject<any>;
@@ -24,6 +25,8 @@ export interface UseScrollSetArg {
     raise?: boolean;
     /** 为true时阻止动画 */
     immediate?: boolean;
+    /** 动画配置 */
+    config?: UseSpringProps;
 }
 export interface UseScrollMeta {
     /** 滚动元素 */
@@ -62,7 +65,7 @@ export interface UseScrollMeta {
     isScrollY: boolean;
 }
 export declare function useScroll<ElType extends HTMLElement>({ el, onScroll, throttleTime, offset, offsetX, offsetY, touchOffset, }?: UseScrollOptions): {
-    set: ({ x, y, raise, immediate }: UseScrollSetArg) => void;
+    set: ({ x, y, raise, immediate, config }: UseScrollSetArg) => void;
     get: () => UseScrollMeta;
     scrollToElement: {
         (selector: string, immediate?: boolean): void;

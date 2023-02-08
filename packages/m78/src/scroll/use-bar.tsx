@@ -1,4 +1,4 @@
-import { useFn, UseScrollMeta, useUpdateEffect } from "@m78/hooks";
+import { useFn, UseScrollMeta } from "@m78/hooks";
 import { animated, useSpring } from "react-spring";
 import React, { useEffect, useRef } from "react";
 import { _Context } from "./types.js";

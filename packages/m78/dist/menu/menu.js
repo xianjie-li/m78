@@ -118,9 +118,11 @@ export var _Menu = function(props) {
     };
     useKeyboardHandle(ctx);
     /** 如果是移动设备(不精确检测), 子菜单触发方式改为click */ useEffect(function() {
-        if (isMobileDevice()) setState({
-            subMenuTriggerType: UseTriggerType.click
-        });
+        if (isMobileDevice()) {
+            setState({
+                subMenuTriggerType: UseTriggerType.click
+            });
+        }
     }, []);
     /** 递归渲染选项列表 */ function renderMenuList(list) {
         return list.map(function(item) {
@@ -155,7 +157,7 @@ export var _Menu = function(props) {
                         children: renderMenuList(children)
                     }),
                     direction: OverlayDirection.rightStart,
-                    triggerType: UseTriggerType.active,
+                    triggerType: state.subMenuTriggerType,
                     offset: 8,
                     onChange: function(open) {
                         return openChangeHandle(open, value, list);

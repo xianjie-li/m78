@@ -1,4 +1,4 @@
-import { ScrollDirection, ScrollDirectionUnion, ScrollProps } from "./types.js";
+import { ScrollDirection, ScrollDirectionUnion } from "./types.js";
 import { CSSProperties } from "react";
 
 /** 预留的滚动条区域, 应大于所有浏览器的最大值 */
@@ -16,6 +16,7 @@ export const _defaultProps = {
   scrollbar: true,
   scrollIndicator: true,
   pullDownIndicatorRotate: true,
+  pullUpTriggerRatio: 0.65,
 };
 
 /** 滚动条thumb最大尺寸(轨道尺寸 / _BAR_MAX_SIZE_RATIO) */

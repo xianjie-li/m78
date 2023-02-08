@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Scroll base 1`] = `
+<div>
+  <div
+    class="m78 m78-scroll __xy"
+    style="height: 300px; width: 300px; border: 1px solid red;"
+  >
+    <div
+      class="m78-scroll_wrap"
+      style="overflow-x: scroll; overflow-y: scroll; bottom: -40px; right: -40px; transform: none; user-select: none;"
+    >
+      <div
+        class="m78-scroll_cont"
+      >
+        <div
+          style="width: 600px; height: 600px;"
+        >
+          lorem
+        </div>
+      </div>
+    </div>
+    <div
+      class="m78-scroll_bar __x"
+      style="display: none;"
+    >
+      <div
+        class="m78-scroll_bar_thumb"
+        style="width: 0px; transform: none;"
+      />
+    </div>
+    <div
+      class="m78-scroll_bar __y"
+      style="display: none;"
+    >
+      <div
+        class="m78-scroll_bar_thumb"
+        style="height: 0px; transform: none;"
+      />
+    </div>
+  </div>
+</div>
+`;

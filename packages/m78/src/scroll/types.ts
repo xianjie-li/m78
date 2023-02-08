@@ -56,21 +56,16 @@ export interface ScrollProps extends ComponentBaseProps {
   /** 容器级防止的额外节点, 用于功能扩展 */
   wrapExtra?: React.ReactNode;
   /** 用于控制滚动的实例 */
-  instanceRef?: React.Ref<ReturnType<typeof useScroll>>;
+  instanceRef?: React.Ref<ScrollInstance>;
 
-  /** 强制在所有设备上启用模拟的拖拽滚动, 与下拉刷新相关配置不兼容 */
+  /* # # # # # # # 拖拽滚动 # # # # # # # */
+  /** 在桌面平台提供模拟的拖拽滚动, 开启后下拉刷新相关配置失效 */
   dragScroll?: boolean;
+  /** true | 拖拽滚动是否带惯性 */
+  dragScrollInertia?: boolean;
 
-  /* # # # # # # # 无限滚动 # # # # # # # */
-  /** 使容器可以无限滚动, 用于作为canvas等绘制的滚动容器 */
-  infiniteScroll?: boolean;
-  /** 无限滚动的最大值(相对于中心点) */
-  infiniteMax?: number;
-  /** 无限滚动的最小值(相对于中心点) */
-  infiniteMin?: number;
-
-  /* # # # # # # # 下拉刷新 # # # # # # # */
-  /** 下拉刷新触发, 传入即视为启用下拉刷新 */
+  /* # # # # # # # 下拉 & 上拉 (只负责触发事件, 距离请求逻辑可搭配useFetch实现) # # # # # # # */
+  /** 下拉触发, 传入即视为启用下拉 */
   onPullDown?: () => Promise<any>;
   /** 自定义指示器节点 */
   pullDownIndicator?: ScrollPullDownCustomer;
@@ -80,6 +75,17 @@ export interface ScrollProps extends ComponentBaseProps {
   pullDownIndicatorRotate?: boolean;
   /** 使用自定义节点完全替换默认节点 */
   pullDownNode?: ScrollPullDownCustomer;
+
+  /** 上拉加载触发, 传入即视为启用上拉加载 */
+  onPullUp?: () => Promise<any>;
+  /** 0.7 | 触发上拉加载所需的距离比例 */
+  pullUpTriggerRatio?: number;
+}
+
+/** 组件实例 */
+export interface ScrollInstance extends ReturnType<typeof useScroll> {
+  /** 手动触发下拉 */
+  triggerPullDown: () => Promise<void>;
 }
 
 export interface _Context {
@@ -105,6 +111,11 @@ export interface _Context {
     yMax: number;
     /** 下拉正在执行 */
     pullDownRunning: boolean;
+    /** 无限滚动尺寸 */
+    infiniteWidth: number;
+    infiniteHeight: number;
+    /** 是否是常见的移动设备 */
+    isMobile: boolean;
   };
   setState: SetState<_Context["state"]>;
   self: {
@@ -112,6 +123,12 @@ export interface _Context {
     delayHiddenTimer: any;
     /** 用于临时锁定自动关闭滚动条(即为true时不关闭) */
     delayHiddenLock: boolean;
+    /** 上拉触发锁定 */
+    pullUpLock: boolean;
+    /** 最后触发上拉时间 */
+    pullUpTriggerTime?: number;
+    /** 保证触发间隔的计时器 */
+    pullUpTimer?: any;
   };
   /** 控制容器启用滚动的css style object */
   directionStyle: React.CSSProperties;
@@ -119,4 +136,10 @@ export interface _Context {
   bound: UseMeasureBound;
   /** 下拉刷新是否启用 */
   pullDownEnabled: boolean;
+  /** x轴滚动是否启用 */
+  xEnabled: boolean;
+  /** y轴滚动是否启用 */
+  yEnabled: boolean;
+  /** 如果是移动设备, 则禁用dragScroll拖动, 使用原生拖动 */
+  dragScrollEnable: boolean;
 }

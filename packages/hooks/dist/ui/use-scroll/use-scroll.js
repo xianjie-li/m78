@@ -15,9 +15,9 @@ export function useScroll() {
     var getEl = /** 根据参数获取滚动元素，默认为文档元素 */ function getEl() {
         return getRefDomOrDom(el, ref1) || self.docEl;
     };
-    var animateTo = /** 动画滚动到指定位置 */ function animateTo(sEl, next, now) {
+    var animateTo = /** 动画滚动到指定位置 */ function animateTo(sEl, next, now, other) {
         var isDoc = elIsDoc(sEl);
-        spApi(_object_spread_props(_object_spread({}, next), {
+        spApi.stop().start(_object_spread_props(_object_spread({}, next, other), {
             from: now,
             onChange: function(result) {
                 var x = result.value.x;
@@ -32,7 +32,7 @@ export function useScroll() {
         }));
     };
     var set = /** 根据传入的x、y值设置滚动位置 */ function set(param) {
-        var x = param.x, y = param.y, raise = param.raise, immediate = param.immediate;
+        var x = param.x, y = param.y, raise = param.raise, immediate = param.immediate, config = param.config;
         var scroller = getEl();
         var ref = get(), xMax = ref.xMax, yMax = ref.yMax, oldX = ref.x, oldY = ref.y;
         var nextPos = {};
@@ -61,6 +61,7 @@ export function useScroll() {
         if ("x" in nextPos || "y" in nextPos) {
             var isDoc = elIsDoc(scroller);
             if (immediate) {
+                spApi.stop();
                 if (isNumber(nextPos.x)) {
                     if (isDoc) {
                         setDocPos(nextPos.x);
@@ -76,7 +77,7 @@ export function useScroll() {
                     }
                 }
             } else {
-                animateTo(scroller, nextPos, nowPos);
+                animateTo(scroller, nextPos, nowPos, config);
             }
         }
     };

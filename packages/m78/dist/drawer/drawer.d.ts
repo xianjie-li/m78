@@ -1,4 +1,3 @@
-/// <reference types="react" />
 import { OverlayInstance } from "../overlay/index.js";
 import { DrawerProps } from "./types.js";
 declare const _Drawer: {
