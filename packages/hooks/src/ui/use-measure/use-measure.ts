@@ -1,7 +1,5 @@
-import { RefObject, useEffect, useRef, useState } from "react";
-import ResizeObserver from "resize-observer-polyfill";
-import debounce from "lodash/debounce.js";
-import { getRefDomOrDom, useFn, useIsUnmountState } from "../../index.js";
+import { RefObject, useState } from "react";
+import { useMeasureNotify } from "./useMeasureNotify.js";
 
 export interface UseMeasureBound extends Omit<DOMRectReadOnly, "toJSON"> {
   /** entry.contentRect中的宽高为contentSize, 所以额外提供此项 */
@@ -22,10 +20,6 @@ export function useMeasure<T extends Element = HTMLElement>(
   target?: HTMLElement | RefObject<HTMLElement>,
   debounceDelay?: number
 ) {
-  const ref = useRef<T>(null!);
-
-  const isUnmount = useIsUnmountState();
-
   const [bounds, set] = useState<UseMeasureBound>({
     left: 0,
     top: 0,
@@ -39,47 +33,13 @@ export function useMeasure<T extends Element = HTMLElement>(
     offsetWidth: 0,
   });
 
-  const cb = useFn(
-    ([entry]) => {
-      const rect = entry.contentRect;
-      !isUnmount() &&
-        set({
-          // rect属性不可遍历, 所以这里用蠢一点的办法逐个复制
-          left: rect.left,
-          top: rect.top,
-          width: rect.width,
-          height: rect.height,
-          x: rect.x,
-          y: rect.y,
-          right: rect.right,
-          bottom: rect.bottom,
-          offsetHeight: (entry.target as HTMLElement).offsetHeight,
-          offsetWidth: (entry.target as HTMLElement).offsetWidth,
-        });
+  const ref = useMeasureNotify<T>({
+    target,
+    debounceDelay,
+    onChange: (bounds) => {
+      set(bounds);
     },
-    (fn) => {
-      if (debounceDelay) {
-        return debounce(fn, debounceDelay);
-      }
-      return fn;
-    },
-    [debounceDelay]
-  );
-
-  const [ro] = useState(() => new ResizeObserver(cb));
-
-  function getEl() {
-    const el = getRefDomOrDom(target);
-    if (el) return el;
-    return ref.current;
-  }
-
-  useEffect(() => {
-    const el = getEl();
-
-    if (el) ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
+  });
 
   return [bounds as UseMeasureBound, ref] as const;
 }

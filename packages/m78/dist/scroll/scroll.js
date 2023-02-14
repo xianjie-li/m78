@@ -69,7 +69,7 @@ export var _Scroll = function(p) {
     };
     /** 滚动条相关 */ var bar = _useBar(ctx);
     /** 上下拉相关 */ var pull = _usePullActions(ctx);
-    _useDragScroll(ctx);
+    /** 拖拽滚动 */ _useDragScroll(ctx);
     /** 方法 */ var methods = _useMethod(ctx);
     /** 钩子 */ var lifeCycle = _useLifeCycle(ctx, methods, bar, pull);
     /** 滚动标记 */ var indicator = _useIndicator(ctx, methods);
@@ -86,7 +86,8 @@ export var _Scroll = function(p) {
                 }),
                 ref: scroller.ref,
                 children: /*#__PURE__*/ _jsx("div", {
-                    className: "m78-scroll_cont",
+                    className: clsx("m78-scroll_cont", props.contClassName),
+                    style: props.contStyle,
                     ref: contRef,
                     children: props.children
                 })

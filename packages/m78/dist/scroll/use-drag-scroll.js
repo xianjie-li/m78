@@ -32,7 +32,7 @@ export var _useDragScroll = function(ctx) {
                 y: yEnabled ? newY : undefined,
                 raise: true,
                 config: {
-                    config: config.molasses
+                    config: config.slow
                 }
             });
         }

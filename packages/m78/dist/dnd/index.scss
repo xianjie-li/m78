@@ -1,0 +1,26 @@
+@import '../common/style/sass';
+
+.box {
+  display: inline-block;
+  user-select: none;
+  touch-action: none;
+  margin: 24px;
+}
+
+.m78-dnd {
+  &_feedback {
+    position: fixed !important;
+    left: 0;
+    top: 0;
+    z-index: 100000 !important;
+    user-select: none;
+    touch-action: none;
+    cursor: grabbing;
+    opacity: 0.2;
+    margin: 0 !important;
+  }
+
+  &_draging {
+
+  }
+}

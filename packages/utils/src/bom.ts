@@ -1,3 +1,6 @@
+import { __GLOBAL__ } from "./lang.js";
+import { EmptyFunction } from "./types.js";
+
 const storagePrefix = "UTIL_STORAGE_";
 
 /** shortcut to the localStorage api, including automatic JSON.stringify and a spliced unique prefix */
@@ -82,3 +85,26 @@ export function isMobileDevice() {
   const platform = getPlatform();
   return platform.iphone || platform.ipad || platform.android;
 }
+
+/** 对requestAnimationFrame的简单兼容性包装, 并且返回清理函数而不是清理标记 */
+export const raf = (
+  frameRequestCallback: FrameRequestCallback
+): EmptyFunction => {
+  const _raf =
+    __GLOBAL__.requestAnimationFrame ||
+    // @ts-ignore
+    __GLOBAL__.webkitRequestAnimationFrame ||
+    // @ts-ignore
+    __GLOBAL__.mozRequestAnimationFrame ||
+    // @ts-ignore
+    __GLOBAL__.oRequestAnimationFrame ||
+    // @ts-ignore
+    __GLOBAL__.msRequestAnimationFrame ||
+    setTimeout;
+
+  const clearFn = __GLOBAL__.cancelAnimationFrame || __GLOBAL__.clearTimeout;
+
+  const flag = _raf(frameRequestCallback);
+
+  return () => clearFn(flag);
+};

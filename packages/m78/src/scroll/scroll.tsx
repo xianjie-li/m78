@@ -89,6 +89,7 @@ export const _Scroll = (p: ScrollProps) => {
   /** 上下拉相关 */
   const pull = _usePullActions(ctx);
 
+  /** 拖拽滚动 */
   _useDragScroll(ctx);
 
   /** 方法 */
@@ -129,7 +130,8 @@ export const _Scroll = (p: ScrollProps) => {
       >
         {/* 内容容器 */}
         <div
-          className="m78-scroll_cont"
+          className={clsx("m78-scroll_cont", props.contClassName)}
+          style={props.contStyle}
           ref={contRef as RefObject<HTMLDivElement>}
         >
           {props.children}

@@ -1,0 +1,13 @@
+.box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 140px;
+  height: 140px;
+  border: 2px solid red;
+  border-radius: var(--m78-border-radius);
+  margin-right: 32px;
+  touch-action: none;
+  user-select: none;
+  font-size: 48px;
+}

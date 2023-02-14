@@ -14,4 +14,5 @@ export { _Spacer as Spacer } from "./spacer.js";
 export { _AspectRatio as AspectRatio } from "./aspect-ratio.js";
 export { _Center as Center } from "./center.js";
 export { _Divider as Divider } from "./divider.js";
+export * from "../lay/index.js";
 //# sourceMappingURL=index.d.ts.map

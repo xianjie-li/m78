@@ -45,6 +45,10 @@ export interface ScrollProps extends ComponentBaseProps {
     wrapExtra?: React.ReactNode;
     /** 用于控制滚动的实例 */
     instanceRef?: React.Ref<ScrollInstance>;
+    /** 内容容器节点的额外style */
+    contStyle?: React.CSSProperties;
+    /** 内容容器节点的额外className */
+    contClassName?: string;
     /** 在桌面平台提供模拟的拖拽滚动, 开启后下拉刷新相关配置失效 */
     dragScroll?: boolean;
     /** true | 拖拽滚动是否带惯性 */

@@ -26,6 +26,7 @@ import DrawerExample from "./overlay/drawer-example.js";
 import ResultExample from "./result/result-example.js";
 import ForkExample from "./fork/fork-example.js";
 import ScrollExample from "./scroll/scroll-example.js";
+import DndExample from "./dnd/dnd-example.js";
 
 export const router = createHashRouter([
   {
@@ -104,6 +105,10 @@ export const router = createHashRouter([
       {
         path: "scroll",
         element: <ScrollExample />,
+      },
+      {
+        path: "dnd",
+        element: <DndExample />,
       },
     ],
   },

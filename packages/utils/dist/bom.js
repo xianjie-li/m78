@@ -1,4 +1,5 @@
 import _object_spread from "@swc/helpers/src/_object_spread.mjs";
+import { __GLOBAL__ } from "./lang.js";
 var storagePrefix = "UTIL_STORAGE_";
 /** shortcut to the localStorage api, including automatic JSON.stringify and a spliced unique prefix */ export function setStorage(key, val) {
     localStorage.setItem("".concat(storagePrefix).concat(key).toUpperCase(), JSON.stringify(val));
@@ -50,3 +51,15 @@ var cachePlatform = null;
     var platform = getPlatform();
     return platform.iphone || platform.ipad || platform.android;
 }
+/** 对requestAnimationFrame的简单兼容性包装, 并且返回清理函数而不是清理标记 */ export var raf = function(frameRequestCallback) {
+    var _raf = __GLOBAL__.requestAnimationFrame || // @ts-ignore
+    __GLOBAL__.webkitRequestAnimationFrame || // @ts-ignore
+    __GLOBAL__.mozRequestAnimationFrame || // @ts-ignore
+    __GLOBAL__.oRequestAnimationFrame || // @ts-ignore
+    __GLOBAL__.msRequestAnimationFrame || setTimeout;
+    var clearFn = __GLOBAL__.cancelAnimationFrame || __GLOBAL__.clearTimeout;
+    var flag = _raf(frameRequestCallback);
+    return function() {
+        return clearFn(flag);
+    };
+};

@@ -1,0 +1,80 @@
+.box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 140px;
+  height: 140px;
+  border: 3px dashed var(--m78-color-title);
+  border-radius: var(--m78-border-radius);
+  margin-right: 32px;
+  touch-action: none;
+  user-select: none;
+  font-size: 40px;
+  vertical-align: top;
+}
+
+.column {
+  display: inline-block;
+  width: 200px;
+  margin-right: 12px;
+  border-radius: var(--m78-border-radius);
+  border: 6px solid var(--m78-component-bg);
+  box-shadow: var(--m78-shadow-1);
+  margin-bottom: 12px;
+
+  &Active {
+    background: var(--m78-color-opacity-sm);
+  }
+
+  &Title {
+    font-size: 16px;
+    font-weight: bold;
+    padding: 8px;
+    cursor: move;
+    touch-action: none;
+    user-select: none;
+  }
+
+  &List {
+    height: 300px;
+    border-radius: var(--m78-border-radius);
+    box-shadow: -1px -1px 6px var(--m78-color-border) inset;
+  }
+
+  &Task {
+    position: relative;
+    box-shadow: var(--m78-shadow-1);
+    border: none !important;
+    touch-action: none;
+    user-select: none;
+    overflow: hidden;
+
+    & + & {
+      margin-top: 8px !important;
+    }
+  }
+
+  &TipLineTop {
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 8px;
+      background-color: var(--m78-color);
+    }
+  }
+
+  &TipLineBottom {
+    &::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 8px;
+      background-color: var(--m78-color);
+    }
+  }
+}
