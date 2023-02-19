@@ -1,4 +1,4 @@
-import { isString, isArray, isNumber, isWeakNumber, isObject } from "./is.js";
+import { isString, isArray, isNumber, isObject } from "./is.js";
 /**
  * Delete all falsy values of the object (except 0)
  * @param source - Target object
@@ -50,7 +50,8 @@ function pickOrOmit(obj, props) {
  *
  * 通过NamePath在obj上获取值
  * */ export function getNamePathValue(obj, name) {
-    if (isString(name)) {
+    if (!isObject(obj) && !isArray(obj)) return undefined;
+    if (isString(name) || isNumber(name)) {
         return obj === null || obj === void 0 ? void 0 : obj[name];
     }
     if (isArray(name) && name.length) {
@@ -64,10 +65,10 @@ function pickOrOmit(obj, props) {
  *
  * 将NamePath转换为字符形式
  * */ export function stringifyNamePath(name) {
-    if (isString(name)) return name;
+    if (isString(name) || isNumber(name)) return String(name);
     return name.reduce(function(p, i) {
-        if (isNumber(Number(i))) {
-            return "".concat(p, "[").concat(i, "]");
+        if (isNumber(i)) {
+            return p.length ? "".concat(p, "[").concat(i, "]") : String(i);
         }
         if (isString(i)) {
             return p.length ? "".concat(p, ".").concat(i) : i;
@@ -80,7 +81,7 @@ function pickOrOmit(obj, props) {
  *
  * 通过NamePath在obj上设置值
  * */ export function setNamePathValue(obj, name, val) {
-    if (isString(name)) {
+    if (isString(name) || isNumber(name)) {
         obj[name] = val;
     }
     if (isArray(name) && name.length) {
@@ -94,7 +95,7 @@ function pickOrOmit(obj, props) {
                 return;
             }
             // 确保要操作的对象存在
-            if (isWeakNumber(nextN)) {
+            if (isNumber(nextN)) {
                 if (!isArray(lastObj[n])) {
                     lastObj[n] = [];
                 }

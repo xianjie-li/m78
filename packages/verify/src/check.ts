@@ -9,23 +9,23 @@ import {
   stringifyNamePath,
   ensureArray,
   interpolate,
+  NamePath,
 } from "@m78/utils";
 import {
   Config,
   ErrorTemplateType,
   Meta,
-  NamePath,
   RejectMeta,
   Schema,
   Validator,
   Verify,
-} from "./types";
+} from "./types.js";
 import {
   fmtValidator,
   isErrorTemplateInterpolate,
   SOURCE_ROOT_NAME,
-} from "./common";
-import { isVerifyEmpty } from "./validator/required";
+} from "./common.js";
+import { isVerifyEmpty } from "./validator/required.js";
 
 /**
  * 获取check api，verify此时还不可操作, 仅可作为引用传递
@@ -86,6 +86,9 @@ export function getCheckApi(conf: Required<Config>, verify: Verify) {
         type: Object.prototype.toString.call(value),
       };
 
+      // 当前schema是否通过验证, 未通过时其值集验证器不进行验证
+      let currentPass = true;
+
       // 验证validators
       if (validators?.length) {
         for (const validator of validators) {
@@ -131,6 +134,8 @@ export function getCheckApi(conf: Required<Config>, verify: Verify) {
               message: interpolate(errorTemplate, interpolateValues),
             });
 
+            currentPass = false;
+
             break;
           }
         }
@@ -147,6 +152,8 @@ export function getCheckApi(conf: Required<Config>, verify: Verify) {
         }
       }
 
+      if (!currentPass) return;
+
       if (schema.schema?.length) {
         if (isSync) {
           checkSchemas(schema.schema, realNamePath).then();
@@ -162,7 +169,7 @@ export function getCheckApi(conf: Required<Config>, verify: Verify) {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           _schemas = value.map((_, index) => ({
             ...schema.eachSchema,
-            name: String(index),
+            name: index,
           }));
         }
 

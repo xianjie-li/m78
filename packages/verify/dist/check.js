@@ -5,8 +5,8 @@ import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
 import _ts_generator from "@swc/helpers/src/_ts_generator.mjs";
 import { getNamePathValue, isArray, isFunction, isObject, isString, stringifyNamePath, ensureArray, interpolate } from "@m78/utils";
-import { fmtValidator, isErrorTemplateInterpolate, SOURCE_ROOT_NAME } from "./common";
-import { isVerifyEmpty } from "./validator/required";
+import { fmtValidator, isErrorTemplateInterpolate, SOURCE_ROOT_NAME } from "./common.js";
+import { isVerifyEmpty } from "./validator/required.js";
 /**
  * 获取check api，verify此时还不可操作, 仅可作为引用传递
  * - 这里要注意的点是，同步和异步 check流程极为相似，为了最大程度的复用，在同步验证时这里通过syncCallBack来对检测结果进行同步回调
@@ -22,7 +22,7 @@ import { isVerifyEmpty } from "./validator/required";
                 // 如果传入parentNames，会将当前项作为指向并将parentNames与当前name拼接
                 // 同步调用时需要使用checkItemSyncCallback通知跳过验证
                 _async_to_generator(function(schema, parentNames, checkItemSyncCallback) {
-                    var ref, isRootSchema, parentNamePath, namePath, realNamePath, value, name, label, isEmpty, validators, interpolateValues, _tmp, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, validator, errorTemplate, meta, _tmp1, result, _tmp2, err, _tmp3, _tmp4, err1, needBreak, _schemas;
+                    var ref, isRootSchema, parentNamePath, namePath, realNamePath, value, name, label, isEmpty, validators, interpolateValues, _tmp, currentPass, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, validator, errorTemplate, meta, _tmp1, result, _tmp2, err, _tmp3, _tmp4, err1, needBreak, _schemas;
                     return _ts_generator(this, function(_state) {
                         switch(_state.label){
                             case 0:
@@ -39,6 +39,7 @@ import { isVerifyEmpty } from "./validator/required";
                                 validators = fmtValidator(schema.validator, isEmpty);
                                 _tmp = {};
                                 interpolateValues = (_tmp.name = name, _tmp.label = label, _tmp.value = value, _tmp.type = Object.prototype.toString.call(value), _tmp);
+                                currentPass = true;
                                 if (!(validators === null || validators === void 0 ? void 0 : validators.length)) return [
                                     3,
                                     13
@@ -113,6 +114,7 @@ import { isVerifyEmpty } from "./validator/required";
                                 _tmp4 = {};
                                 if (isString(errorTemplate) && !!errorTemplate.trim()) {
                                     rejectMeta.push(_object_spread_props(_object_spread(_tmp3, meta), (_tmp4.message = interpolate(errorTemplate, interpolateValues), _tmp4)));
+                                    currentPass = false;
                                     return [
                                         3,
                                         10
@@ -167,6 +169,9 @@ import { isVerifyEmpty } from "./validator/required";
                                         ];
                                     }
                                 }
+                                if (!currentPass) return [
+                                    2
+                                ];
                                 if (!((ref = schema.schema) === null || ref === void 0 ? void 0 : ref.length)) return [
                                     3,
                                     16
@@ -198,7 +203,7 @@ import { isVerifyEmpty } from "./validator/required";
                                     // eslint-disable-next-line @typescript-eslint/no-unused-vars
                                     _schemas = value.map(function(_, index) {
                                         return _object_spread_props(_object_spread({}, schema.eachSchema), {
-                                            name: String(index)
+                                            name: index
                                         });
                                     });
                                 }

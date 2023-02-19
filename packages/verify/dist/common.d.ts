@@ -1,4 +1,4 @@
-import { AsyncValidator, ErrorTemplateInterpolate, Schema, Validator } from "./types";
+import { AsyncValidator, ErrorTemplateInterpolate, Schema, Validator } from "./types.js";
 /** 根schema的默认name */
 export declare const SOURCE_ROOT_NAME = "M78_VERIFY_ROOT_NAME";
 /** 格式化并返回验证器数组 */

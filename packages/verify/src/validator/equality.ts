@@ -1,5 +1,5 @@
-import { Meta, NamePath, Validator } from "../types";
-import { stringifyNamePath } from "@m78/utils";
+import { Meta, Validator } from "../types.js";
+import { stringifyNamePath, NamePath } from "@m78/utils";
 
 export const equalityValidatorKey = "verifyEquality";
 

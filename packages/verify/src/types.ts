@@ -1,4 +1,4 @@
-import { AnyObject, NamePath } from "@m78/utils";
+import { AnyObject, NameItem, NamePath } from "@m78/utils";
 
 /** 错误模板值允许的类型 */
 export type ErrorTemplateType = string | ((meta: Meta) => string);
@@ -69,7 +69,7 @@ export interface CheckConfig {
  * */
 export interface Schema {
   /** 用来在source中取值的key */
-  name: NamePath;
+  name: NameItem;
   /** 用于验证显示的字段名, 不传时取name转换为string的值 */
   label?: string;
   /**
@@ -83,9 +83,9 @@ export interface Schema {
     | Validator
     | AsyncValidator
     | (Validator | AsyncValidator | null | undefined)[];
-  /** 如果对象为嵌套结构(数组、对象)，对其执行嵌套验证, 子项的name前会自动添加其所有父级的name */
+  /** 如果对象为嵌套结构(数组、对象)，对其执行嵌套验证 */
   schema?: Schema[];
-  /** 验证值为array或object时, 所有 数组项/对象值 必须与此Schema匹配, 如果该值的类型不为array或object，此配置会被忽略 */
+  /** 验证值为array或object时, 所有 数组项/对象值 必须与此Schema匹配 */
   eachSchema?: SchemaWithoutName;
   /** 在对值进行操作、验证前将其转换, 对于引用类型的值，应避免对其操作, 因为它是当前验证data的局部直接引用 */
   transform?: (value: any) => any;
@@ -152,4 +152,4 @@ export interface Verify {
   readonly languagePack: AnyObject;
 }
 
-export { NamePath };
+export type { NamePath } from "@m78/utils";

@@ -128,7 +128,7 @@ importers:
       '@m78/seed': workspace:^
       '@m78/style': workspace:^
       '@m78/utils': workspace:^
-      '@material-design-icons/svg': ^0.14.2
+      '@m78/verify': workspace:^
       '@types/react': ^18.0.26
       '@types/react-dom': ^18.0.10
       '@types/use-sync-external-store': ^0.0.3
@@ -151,7 +151,7 @@ importers:
       '@m78/seed': link:../seed/dist
       '@m78/style': link:../style/dist
       '@m78/utils': link:../utils/dist
-      '@material-design-icons/svg': 0.14.2
+      '@m78/verify': link:../verify/dist
       '@types/react': 18.0.26
       '@types/react-dom': 18.0.10
       '@use-gesture/react': 10.2.24_react@18.2.0
@@ -3374,10 +3374,6 @@ packages:
     resolution: {integrity: sha512-jqXGMAl58dokcpufUbeLKGlYTBKD55BuqswWVx3YDAj4qDzgRc2MMQYRxALjb/WqT2KgZx9D2tiF4x1QfG43qQ==}
     dependencies:
       clsx: 1.2.1
-    dev: false
-
-  /@material-design-icons/svg/0.14.2:
-    resolution: {integrity: sha512-QjAzZmqV+7VI8+0eONVYBvSSlytpR+QQ/elT+YADoYq7R5Tc7kU1PaR0xOrEhwMR9MYK2yhUXqXymP8QY01ehg==}
     dev: false
 
   /@mdx-js/mdx/1.6.22:

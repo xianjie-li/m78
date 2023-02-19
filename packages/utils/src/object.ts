@@ -1,4 +1,4 @@
-import { isString, isArray, isNumber, isWeakNumber, isObject } from "./is.js";
+import { isString, isArray, isNumber, isObject } from "./is.js";
 
 /**
  * Delete all falsy values of the object (except 0)
@@ -52,12 +52,14 @@ export function pick<R>(obj: any, props: string | string[]): R {
   return pickOrOmit(obj, props, true) as R;
 }
 
+export type NameItem = string | number;
+
 /**
- * Represents the character or character array of name. The array usage is used for chain value, such as: ['user', 'address']、['1', 'name']、['list', '4', 'name']
+ * Represents the character or character array of name. usage for get chain value, such as: ['user', 'address']、['1', 'name']、['list', '4', 'name']
  *
- * 表示name的字符或字符数组，数组用法用于链式取值，如: ['user', 'address']、['1', 'name']、['list', '4', 'name']
+ * 表示name的字符或字符数组，用于链式取值，如: ['user', 'address']、[1, 'name']、['list', 4, 'name']
  * */
-export type NamePath = string | string[];
+export type NamePath = NameItem | NameItem[];
 
 /**
  * Get value on obj through NamePath
@@ -65,7 +67,9 @@ export type NamePath = string | string[];
  * 通过NamePath在obj上获取值
  * */
 export function getNamePathValue(obj: any, name: NamePath) {
-  if (isString(name)) {
+  if (!isObject(obj) && !isArray(obj)) return undefined;
+
+  if (isString(name) || isNumber(name)) {
     return obj?.[name];
   }
 
@@ -82,11 +86,11 @@ export function getNamePathValue(obj: any, name: NamePath) {
  * 将NamePath转换为字符形式
  * */
 export function stringifyNamePath(name: NamePath) {
-  if (isString(name)) return name;
+  if (isString(name) || isNumber(name)) return String(name);
 
-  return name.reduce((p, i) => {
-    if (isNumber(Number(i))) {
-      return `${p}[${i}]`;
+  return name.reduce((p: string, i) => {
+    if (isNumber(i)) {
+      return p.length ? `${p}[${i}]` : String(i);
     }
 
     if (isString(i)) {
@@ -103,7 +107,7 @@ export function stringifyNamePath(name: NamePath) {
  * 通过NamePath在obj上设置值
  * */
 export function setNamePathValue(obj: any, name: NamePath, val: any) {
-  if (isString(name)) {
+  if (isString(name) || isNumber(name)) {
     obj[name] = val;
   }
 
@@ -121,7 +125,7 @@ export function setNamePathValue(obj: any, name: NamePath, val: any) {
       }
 
       // 确保要操作的对象存在
-      if (isWeakNumber(nextN)) {
+      if (isNumber(nextN)) {
         if (!isArray(lastObj[n])) {
           lastObj[n] = [];
         }

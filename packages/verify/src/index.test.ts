@@ -6,8 +6,8 @@ import {
   regexp,
   required,
   string,
-} from "./index";
-import { fmtValidator, SOURCE_ROOT_NAME } from "./common";
+} from "./index.js";
+import { fmtValidator, SOURCE_ROOT_NAME } from "./common.js";
 
 const verify = createVerify();
 

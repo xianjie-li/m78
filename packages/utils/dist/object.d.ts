@@ -18,12 +18,13 @@ export declare function omit(obj: any, props: string | string[]): any;
  * @return - A new object containing the selection key value
  * */
 export declare function pick<R>(obj: any, props: string | string[]): R;
+export declare type NameItem = string | number;
 /**
- * Represents the character or character array of name. The array usage is used for chain value, such as: ['user', 'address']、['1', 'name']、['list', '4', 'name']
+ * Represents the character or character array of name. usage for get chain value, such as: ['user', 'address']、['1', 'name']、['list', '4', 'name']
  *
- * 表示name的字符或字符数组，数组用法用于链式取值，如: ['user', 'address']、['1', 'name']、['list', '4', 'name']
+ * 表示name的字符或字符数组，用于链式取值，如: ['user', 'address']、[1, 'name']、['list', 4, 'name']
  * */
-export declare type NamePath = string | string[];
+export declare type NamePath = NameItem | NameItem[];
 /**
  * Get value on obj through NamePath
  *

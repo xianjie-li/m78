@@ -1,4 +1,4 @@
-import { english } from "./language-pack";
+import { english } from "./language-pack.js";
 var defaultConfig = {
     verifyFirst: true,
     languagePack: english

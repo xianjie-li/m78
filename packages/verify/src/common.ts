@@ -4,7 +4,7 @@ import {
   ErrorTemplateInterpolate,
   Schema,
   Validator,
-} from "./types";
+} from "./types.js";
 
 /** 根schema的默认name */
 export const SOURCE_ROOT_NAME = "M78_VERIFY_ROOT_NAME";
