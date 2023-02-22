@@ -86,6 +86,10 @@ importers:
       typescript: 4.8.3
       vite: 3.2.4_7vpvpb7bjbsjnu3hsa6olizcw4
 
+  packages/form:
+    specifiers: {}
+    publishDirectory: dist
+
   packages/hooks:
     specifiers:
       '@m78/utils': workspace:^
