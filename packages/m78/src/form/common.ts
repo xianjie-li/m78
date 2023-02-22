@@ -83,7 +83,10 @@ export function _notifyFilter(
 }
 
 /** 用于namePath路径的通配占位, 匹配eachSchema等没有name的层级 */
-export const ANY_NAME_PLACE_HOLD = "__ANY_NAME_PLACE_HOLD";
+export const _ANY_NAME_PLACE_HOLD = "__ANY_NAME_PLACE_HOLD__";
+
+/** 用于在某些情况作为根schema的name标注 */
+export const ROOT_SCHEMA_NAME = "__ROOT_SCHEMA_NAME__";
 
 /** 递归删除指定的namePath值, 支持在namePath中使用ANY_NAME_PLACE_HOLD进行通配占位 */
 export function _recursionDeleteNamePath(values: any, names: NamePath) {
@@ -101,7 +104,7 @@ export function _recursionDeleteNamePath(values: any, names: NamePath) {
   if (name.length === 1) {
     if (isObj) {
       // 清理全部
-      if (currentName === ANY_NAME_PLACE_HOLD) {
+      if (currentName === _ANY_NAME_PLACE_HOLD) {
         Object.keys(values).forEach((key) => delete values[key]);
         return;
       }
@@ -109,7 +112,7 @@ export function _recursionDeleteNamePath(values: any, names: NamePath) {
     }
     if (isArr) {
       // 清理全部
-      if (currentName === ANY_NAME_PLACE_HOLD) {
+      if (currentName === _ANY_NAME_PLACE_HOLD) {
         values.splice(0, values.length);
         return;
       }
@@ -121,7 +124,7 @@ export function _recursionDeleteNamePath(values: any, names: NamePath) {
     return;
   }
 
-  if (currentName !== ANY_NAME_PLACE_HOLD) {
+  if (currentName !== _ANY_NAME_PLACE_HOLD) {
     _recursionDeleteNamePath(values[currentName], rest);
     return;
   }

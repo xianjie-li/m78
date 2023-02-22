@@ -4,22 +4,13 @@
 
 <p align="center" style="color:#666">Your next JS validation library</p>
 
-<br>
-
-<p align="center">
-    <a href="./README.md">en</a> | 
-    <span>中文</span>
-</p>
-
-<br>
-
 <!-- TOC -->
 
 - [Features](#features)
 - [usage](#usage)
   - [基础](#基础)
   - [异步验证&单值验证](#异步验证单值验证)
-  - [name取值示例](#name取值示例)
+  - [name 取值示例](#name取值示例)
   - [验证器](#验证器)
   - [嵌套验证](#嵌套验证)
   - [自定义提示模板](#自定义提示模板)
@@ -37,16 +28,13 @@
 
 <br>
 
-
 ## Features
 
-- 支持各种验证类型, object/array验证，复杂嵌套结构验证，异步验证,  函数参数验证等。
+- 支持各种验证类型, object/array 验证，复杂嵌套结构验证，异步验证, 函数参数验证等。
 - 很小的体积。
 - 全验证器用法，易学，易组合， 以及更少的概念。
 - 完善的验证模板定制能力。
 - 很多常用的内置验证器。
-
-
 
 <br>
 
@@ -59,15 +47,15 @@
 2. 导入并使用
 
 ```typescript
-import { createVerify, required, string, number } from '@m78/verify';
+import { createVerify, required, string, number } from "@m78/verify";
 
 // 创建一个verify实例，可以创建多个实例，每个实例拥有独立的配置
 const verify = createVerify(/* config */);
 
 // 待验证的数据源
-const data =  {
-    user: 'lxj',
-    sex: 1,
+const data = {
+  user: "lxj",
+  sex: 1,
 };
 
 // 验证schema配置
@@ -77,30 +65,27 @@ const schema = {
   // 验证内部字段
   schema: [
     {
-        name: 'user',
-        validator: [required(), string({ min: 4 })],
+      name: "user",
+      validator: [required(), string({ min: 4 })],
     },
     {
-        name: 'sex',
-        validator: [required(), number()],
+      name: "sex",
+      validator: [required(), number()],
     },
-	]
+  ],
 };
 
 // 执行验证
 const rejects = verify.check(data, schema);
 
-
 // 如果rejects为null， 表示验证通过，验证失败时为一个包含了多个Meta对象的数组, Meta对象的详情见下方Meta部分
 [
-    {
-         message: '...',
-      	 // more...
-    }
-]
+  {
+    message: "...",
+    // more...
+  },
+];
 ```
-
-
 
 ### 异步验证
 
@@ -108,8 +93,8 @@ const rejects = verify.check(data, schema);
 
 ```typescript
 // 待验证的数据源
-const data =  {
-    user: 'lxj',
+const data = {
+  user: "lxj",
 };
 
 // 验证schema配置
@@ -117,25 +102,26 @@ const schema = {
   validator: required(),
   schema: [
     {
-        name: 'user',
-        validator: [
-          	required(),
-            string({ min: 4 }),
-            // 添加异步验证器，通常会放在常规验证器底部, 异步验证器就是同步验证器的Promise版本，详情见API的Validator部分
-            async () => {
-                await someThing();
-            }
-        ],
+      name: "user",
+      validator: [
+        required(),
+        string({ min: 4 }),
+        // 添加异步验证器，通常会放在常规验证器底部, 异步验证器就是同步验证器的Promise版本，详情见API的Validator部分
+        async () => {
+          await someThing();
+        },
+      ],
     },
-	]
+  ],
 };
 
-verify.asyncCheck(data, schema).then(rejects => {
-   // rejects与上一示例中的相同
+verify.asyncCheck(data, schema).catch((err) => {
+  if (err instanceof VerifyError) {
+    // err.rejects
+    // rejects与上一示例中的相同
+  }
 });
 ```
-
-
 
 ### 单值验证
 
@@ -143,33 +129,29 @@ verify.asyncCheck(data, schema).then(rejects => {
 
 ```ts
 const rejects = verify.check(123, {
-	validator: [required(), number({ max: 100 })],
+  validator: [required(), number({ max: 100 })],
 });
 ```
-
-
-
-
 
 ### 函数参数验证
 
 ```typescript
 function fn(...args) {
-    const rejects = verify.check(args, {
-      validator: required(),
-      schema: [
-        {
-            name: '0',
-            validator: required(),
-        },
-        {
-            name: '1',
-            validator: required(),
-        },
-    	]
-    });
+  const rejects = verify.check(args, {
+    validator: required(),
+    schema: [
+      {
+        name: "0",
+        validator: required(),
+      },
+      {
+        name: "1",
+        validator: required(),
+      },
+    ],
+  });
 
-    // 处理rejects
+  // 处理rejects
 }
 
 fn();
@@ -179,117 +161,97 @@ fn();
 
 ```typescript
 function fn(name, age) {
-    const rejects = verify.check(arguments, {
-      validator: required(),
-      schema: [
-        {
-            name: '0',
-            validator: required(),
-        },
-        {
-            name: '1',
-            validator: required(),
-        },
-    	]
-    });
+  const rejects = verify.check(arguments, {
+    validator: required(),
+    schema: [
+      {
+        name: "0",
+        validator: required(),
+      },
+      {
+        name: "1",
+        validator: required(),
+      },
+    ],
+  });
 
-    // 处理rejects
+  // 处理rejects
 }
 
 fn();
 ```
 
+### name 取值示例
 
-
-
-
-### name取值示例
-
-Schema的name支持嵌套取值
+Schema 的 name 支持嵌套取值
 
 ```
 {
 	name: 'key',	// 字段取值, 对应 source.key
-	name: '0',		// 数组取值, 对应 source['0']
+	name: 0,		// 数组取值, 对应 source[0]
 	name: ['user', 'name'],		// 对象嵌套取值, 对应 source.user.name
-	name: ['list', '1', 'title'],		// 对象数组嵌套取值, 对应 source.list[1].name
-	name: ['0', 'title'],		// 数组嵌套取值, 对应 source[1].name
+	name: ['list', 1, 'title'],		// 对象数组嵌套取值, 对应 source.list[1].name
+	name: [0, 'title'],		// 数组嵌套取值, 对应 source[1].name
 }
 ```
 
-
-
-
-
 ### 空值
 
-以下值都会被认定为空值,  可以使用 `required()` 验证器来进行空值验证
+以下值都会被认定为空值, 可以使用 `required()` 验证器来进行空值验证
 
 ```
 undefined, null ,'', NaN, [], {}, 空白字符
 ```
 
-
-
-另外,  如果待校验的值是空值, 验证器执行会被直接跳过, 这类似其他库中的`可选字段`, 字段存在值才校验, 不存在则跳过, 可以通过`[required(), ...]`可以将字段标记为必传, 如:
+另外, 如果待校验的值是空值, 验证器执行会被直接跳过, 这类似其他库中的`可选字段`, 字段存在值才校验, 不存在则跳过, 可以通过`[required(), ...]`可以将字段标记为必传, 如:
 
 这个示例中的 `number` 不会执行, 因为待验证值为空
 
 ```ts
 // 待验证的值
-null
-
-// 验证器
-[number()]
+null[
+  // 验证器
+  number()
+];
 ```
 
 通常需要这样写, 先进行空检测, 有值后才会执行后面的校验
 
 ```ts
 // 待验证的值
-null
-
-// 验证器
-[required(), number()]
+null[
+  // 验证器
+  (required(), number())
+];
 ```
-
-
 
 ### 验证器
 
 验证器分为同步验证器和异步验证器
 
-验证器接收Meta对象，它包含了很多关于验证的信息，如果验证器返回了一个string或抛出错误, 则视为验证失败, 下面是一个同步验证器的示例。
+验证器接收 Meta 对象，它包含了很多关于验证的信息，如果验证器返回了一个 string 或抛出错误, 则视为验证失败, 下面是一个同步验证器的示例。
 
 ```js
 function string({ value }) {
-	if (typeof value !== 'string') return '必须为字符类型';
-    
-    // 如果验证器抛出错误，则将错误对象的message作为验证反馈, 通过下面代码可以实现相同的效果
-    if (typeof value !== 'string') throw new Error('必须为字符类型');
+  if (typeof value !== "string") return "必须为字符类型";
+
+  // 如果验证器抛出错误，则将错误对象的message作为验证反馈, 通过下面代码可以实现相同的效果
+  if (typeof value !== "string") throw new Error("必须为字符类型");
 }
 ```
 
-
-
-异步验证器与同步验证器编写方式几乎一致，除了它返回一个Promise，这个Promise的resolve值与同步验证器的返回值等效
+异步验证器与同步验证器编写方式几乎一致，除了它返回一个 Promise，这个 Promise 的 resolve 值与同步验证器的返回值等效
 
 ```js
 async function asyncCheck({ value }) {
-    // 执行一些异步操作
+  // 执行一些异步操作
   const val = await fetchSomething();
-    
-	if (val === value) return '该值已存在';
+
+  if (val === value) return "该值已存在";
 }
 ```
 
-
-
 更多验证器的细节请见下方`Validator`部分
-
-
-
-
 
 ### 嵌套验证
 
@@ -297,86 +259,82 @@ async function asyncCheck({ value }) {
 
 ```typescript
 const data = {
-    name: 'lxj',
-    list: ['1', '2', 3],
-    map: {
-        field1: '123',
-        field2: 123,
+  name: "lxj",
+  list: ["1", "2", 3],
+  map: {
+    field1: "123",
+    field2: 123,
+  },
+  listMap: [
+    {
+      key: "123",
     },
-    listMap: [
-        {
-            key: '123',
-        },
-        {
-            key: 123,
-        },
-    ],
-    listList: [['xxx'], ['xxx'], 123, [123]],
+    {
+      key: 123,
+    },
+  ],
+  listList: [["xxx"], ["xxx"], 123, [123]],
 };
 
 const schema = {
   schema: [
     {
-        name: 'name',
-        validator: string({ length: 4 }),
+      name: "name",
+      validator: string({ length: 4 }),
     },
     // 一个数组，该数组的每一个子级都是string
     {
-        name: 'list',
-        validator: array(),
-        eachSchema: {
-            validator: string(),
-        },
+      name: "list",
+      validator: array(),
+      eachSchema: {
+        validator: string(),
+      },
     },
     // 一个对象，对其字段进行验证
     {
-        name: 'map',
-        validator: object(),
-        schema: [
-            {
-                name: 'field1',
-                validator: number(),
-            },
-            {
-                name: 'field2',
-                validator: string(),
-            },
-        ],
+      name: "map",
+      validator: object(),
+      schema: [
+        {
+          name: "field1",
+          validator: number(),
+        },
+        {
+          name: "field2",
+          validator: string(),
+        },
+      ],
     },
     // 一个数组，每一个子级都是一个对象，同时也这个对象的结构进行了限制
     {
-        name: 'listMap',
-        validator: array(),
-        eachSchema: {
-            validator: object(),
-            schema: [
-                {
-                    name: 'key',
-                    validator: number(),
-                },
-            ],
-        },
+      name: "listMap",
+      validator: array(),
+      eachSchema: {
+        validator: object(),
+        schema: [
+          {
+            name: "key",
+            validator: number(),
+          },
+        ],
+      },
     },
     // 一个二维数组，二维数组的子项必须为number
     {
-        name: 'listList',
-        validator: [required(), array()],
+      name: "listList",
+      validator: [required(), array()],
+      eachSchema: {
+        validator: [array()],
         eachSchema: {
-            validator: [array()],
-            eachSchema: {
-                validator: [number()],
-            },
+          validator: [number()],
         },
+      },
     },
-	]
-}
+  ],
+};
 
 verify2.check(data, schema);
 ```
-
-
-
-
 
 ### 自定义提示模板
 
@@ -390,9 +348,7 @@ const verify = createVerify({
 });
 ```
 
-
-
-可以通过如下方式修改部分配置，模板配置会进行深合并，不会影响其他配置, 你可以任意扩展提示模板，并在自定义验证器中通过meta访问
+可以通过如下方式修改部分配置，模板配置会进行深合并，不会影响其他配置, 你可以任意扩展提示模板，并在自定义验证器中通过 meta 访问
 
 ```typescript
 import { createVerify } from '@m78/verify';
@@ -413,75 +369,67 @@ const verify = createVerify({
 });
 ```
 
-
-
 如果有任何疑惑，可以参考默认语言模板配置
 
 ```js
 export const english = {
-  required: 'Required',
-  object: 'Must be a regular object',
-  bool: 'Must be a Boolean value',
-  fn: 'Must be function',
-  symbol: 'Must be a symbol value',
-  regexp: 'Must be a regexp object',
-  regexpString: 'Must be a valid regular character',
-  url: 'Must be a valid url',
-  email: 'Must be a valid email',
+  required: "Required",
+  object: "Must be a regular object",
+  bool: "Must be a Boolean value",
+  fn: "Must be function",
+  symbol: "Must be a symbol value",
+  regexp: "Must be a regexp object",
+  regexpString: "Must be a valid regular character",
+  url: "Must be a valid url",
+  email: "Must be a valid email",
   // 额外插值: regexp
-  pattern: 'Invalid format',
+  pattern: "Invalid format",
   // 额外插值: specific
-  specific: 'Only be a {specific}',
+  specific: "Only be a {specific}",
   // 额外插值: targetLabel
-  equality: 'Must be a the same as {targetLabel}',
+  equality: "Must be a the same as {targetLabel}",
   // 额外插值: within
-  within: 'Must be a member of {within}',
+  within: "Must be a member of {within}",
   // 额外插值: without
-  without: 'Must be a value other than {without}',
+  without: "Must be a value other than {without}",
   // 额外插值: max, min, length
   string: {
-    notExpected: 'Must be a string',
-    max: 'Length cannot be greater than {max}',
-    min: 'Length cannot be less than {min}',
-    length: 'The length can only be {length}',
+    notExpected: "Must be a string",
+    max: "Length cannot be greater than {max}",
+    min: "Length cannot be less than {min}",
+    length: "The length can only be {length}",
   },
   // 额外插值: max, min, length
   array: {
-    notExpected: 'Must be a array',
-    max: 'No more than {max} items',
-    min: 'No less than {min} items',
-    length: 'Must be {length} items',
+    notExpected: "Must be a array",
+    max: "No more than {max} items",
+    min: "No less than {min} items",
+    length: "Must be {length} items",
   },
   // 额外插值: max, min, size
   number: {
-    notExpected: 'Must be a number',
-    notInteger: 'Must be a integer',
-    max: 'Cannot be greater than {max}',
-    min: 'Cannot be less than {min}',
-    size: 'Must be {size}',
+    notExpected: "Must be a number",
+    notInteger: "Must be a integer",
+    max: "Cannot be greater than {max}",
+    min: "Cannot be less than {min}",
+    size: "Must be {size}",
   },
   // 除notExpected外的额外插值: max, min, at
   date: {
-    notExpected: 'Must be a valid date',
-    max: 'Cannot be after {max}',
-    min: 'Cannot be before {min}',
-    at: 'Must be {at}',
-    between: 'Must be between {min} ~ {max}',
+    notExpected: "Must be a valid date",
+    max: "Cannot be after {max}",
+    min: "Cannot be before {min}",
+    at: "Must be {at}",
+    between: "Must be between {min} ~ {max}",
   },
   // match包含额外插值keyword,  list.miss包含额外插值miss, 表示缺少的项
-  match: 'No content matching {keyword}',
+  match: "No content matching {keyword}",
   list: {
-    miss: 'Missing {miss}',
-    diffLength: 'Length does not match',
+    miss: "Missing {miss}",
+    diffLength: "Length does not match",
   },
 };
 ```
-
-
-
-
-
-
 
 <br>
 
@@ -491,8 +439,6 @@ export const english = {
 
 请查阅: https://github.com/xianjie-li/m78/tree/master/packages/verify/src/validator
 
-
-
 ### NamePath
 
 ```typescript
@@ -501,10 +447,6 @@ export const english = {
  * */
 export type NamePath = string | string[];
 ```
-
-
-
-
 
 ### Verify
 
@@ -520,7 +462,7 @@ export interface Verify {
     config?: CheckConfig
   ) => RejectMeta | null;
   /**
-   * 执行异步验证, 异步验证中也支持使用同步验证器, 验证失败时, reject类型为RejectMeta
+   * 执行异步验证, 异步验证中也支持使用同步验证器, 验证失败时, resolve值为包含RejectMeta的错误对象VerifyError
    * */
   asyncCheck: (
     source: any,
@@ -531,8 +473,6 @@ export interface Verify {
   readonly languagePack: AnyObject;
 }
 ```
-
-
 
 ### Schema
 
@@ -567,8 +507,6 @@ export interface Schema {
 }
 ```
 
-
-
 ### Validator
 
 ```typescript
@@ -601,8 +539,6 @@ export interface AsyncValidator {
   checkEmpty?: boolean;
 }
 ```
-
-
 
 ### Meta
 
@@ -639,11 +575,9 @@ export interface Meta {
 }
 ```
 
-
-
 ### RejectMeta
 
-描述验证失败信息的对象, 除了新增了一个message字段外与Meta完全相同
+描述验证失败信息的对象, 除了新增了一个 message 字段外与 Meta 完全相同
 
 ```typescript
 /** 验证失败时的反馈对象 */
@@ -653,11 +587,9 @@ export interface RejectMetaItem extends Meta {
 }
 ```
 
-
-
 ### Config
 
-共有两种配置, 一是创建verify时的配置，二是执行验证检测的配置
+共有两种配置, 一是创建 verify 时的配置，二是执行验证检测的配置
 
 ```typescript
 /** verify创建配置 */
@@ -684,6 +616,3 @@ export interface CheckConfig {
   extraMeta: AnyObject;
 }
 ```
-
-
-

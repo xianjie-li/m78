@@ -26,6 +26,7 @@ import {
   SOURCE_ROOT_NAME,
 } from "./common.js";
 import { isVerifyEmpty } from "./validator/required.js";
+import { VerifyError } from "./error.js";
 
 /**
  * 获取check api，verify此时还不可操作, 仅可作为引用传递
@@ -227,8 +228,16 @@ export function getCheckApi(conf: Required<Config>, verify: Verify) {
     return rejectMeta;
   };
 
-  const asyncCheck: Verify["asyncCheck"] = (...args) => {
-    return baseCheck(args) as Promise<void>;
+  const asyncCheck: Verify["asyncCheck"] = async (...args) => {
+    try {
+      await baseCheck(args);
+    } catch (e) {
+      if (isArray(e)) {
+        throw new VerifyError(e);
+      } else {
+        throw new VerifyError([]);
+      }
+    }
   };
 
   return {

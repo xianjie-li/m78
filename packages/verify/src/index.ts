@@ -21,6 +21,7 @@ function createVerify(config?: Config): Verify {
 export { simplifiedChinese, english, createVerify };
 
 export * from "./types.js";
+export * from "./error.js";
 export * from "./validator/required.js";
 export * from "./validator/object.js";
 export * from "./validator/bool.js";

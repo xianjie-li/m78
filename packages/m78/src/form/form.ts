@@ -7,6 +7,7 @@ import { _notifyFilter } from "./common.js";
 import { _implValue } from "./impl-value.js";
 import { _implSchema } from "./impl-schema.js";
 import { _implAction } from "./impl-action.js";
+import { _implList } from "./impl-list.js";
 
 export function createForm(config: FormConfig): FormInstance {
   const conf: FormConfig = {
@@ -19,17 +20,17 @@ export function createForm(config: FormConfig): FormInstance {
     notifyFilter: _notifyFilter,
   } as any;
 
-  const ctx: _Context = {
+  const ctx = {
     defaultValue: clone(config.defaultValue),
     values: clone(config.defaultValue),
     state: {},
+    listNames: [],
+    listData: {},
     instance,
     schema: config.schema,
     config: conf,
     lockNotify: false,
-    debounceVerify: (() => {}) as any,
-    getSchemasAndInvalid: (() => {}) as any,
-  };
+  } as any as _Context;
 
   _implEvent(ctx);
 
@@ -40,6 +41,13 @@ export function createForm(config: FormConfig): FormInstance {
   _implSchema(ctx);
 
   _implAction(ctx);
+
+  _implList(ctx);
+
+  // 这里进行一次ctx.listNames数据的同步
+  ctx.getFormatterSchemas();
+  // 根据同步过的listNames记录key
+  ctx.syncLists();
 
   return instance;
 }

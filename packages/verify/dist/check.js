@@ -7,6 +7,7 @@ import _ts_generator from "@swc/helpers/src/_ts_generator.mjs";
 import { getNamePathValue, isArray, isFunction, isObject, isString, stringifyNamePath, ensureArray, interpolate } from "@m78/utils";
 import { fmtValidator, isErrorTemplateInterpolate, SOURCE_ROOT_NAME } from "./common.js";
 import { isVerifyEmpty } from "./validator/required.js";
+import { VerifyError } from "./error.js";
 /**
  * 获取check api，verify此时还不可操作, 仅可作为引用传递
  * - 这里要注意的点是，同步和异步 check流程极为相似，为了最大程度的复用，在同步验证时这里通过syncCallBack来对检测结果进行同步回调
@@ -397,11 +398,55 @@ import { isVerifyEmpty } from "./validator/required.js";
         return rejectMeta;
     };
     var asyncCheck = function() {
-        for(var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++){
-            args[_key] = arguments[_key];
-        }
-        return baseCheck(args);
-    };
+        var _ref = _async_to_generator(function() {
+            var _len, args, _key, e;
+            var _arguments = arguments;
+            return _ts_generator(this, function(_state) {
+                switch(_state.label){
+                    case 0:
+                        for(_len = _arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++){
+                            args[_key] = _arguments[_key];
+                        }
+                        _state.label = 1;
+                    case 1:
+                        _state.trys.push([
+                            1,
+                            3,
+                            ,
+                            4
+                        ]);
+                        return [
+                            4,
+                            baseCheck(args)
+                        ];
+                    case 2:
+                        _state.sent();
+                        return [
+                            3,
+                            4
+                        ];
+                    case 3:
+                        e = _state.sent();
+                        if (isArray(e)) {
+                            throw new VerifyError(e);
+                        } else {
+                            throw new VerifyError([]);
+                        }
+                        return [
+                            3,
+                            4
+                        ];
+                    case 4:
+                        return [
+                            2
+                        ];
+                }
+            });
+        });
+        return function asyncCheck() {
+            return _ref.apply(this, arguments);
+        };
+    }();
     return {
         check: check,
         asyncCheck: asyncCheck

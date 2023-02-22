@@ -3,27 +3,34 @@ import {
   ensureArray,
   isArray,
   isFunction,
+  isObject,
   NameItem,
   NamePath,
 } from "@m78/utils";
-import { ANY_NAME_PLACE_HOLD } from "./common.js";
+import { _ANY_NAME_PLACE_HOLD, ROOT_SCHEMA_NAME } from "./common.js";
 
 export function _implSchema(ctx: _Context) {
   const { instance } = ctx;
 
-  ctx.getSchemasAndInvalid = () => {
-    const names: NamePath[] = [];
-    const schemas = recursionHandleSchemas(
-      ctx.schema,
-      [],
-      (name) => names.push(name),
-      true
-    );
-    return [schemas!, names];
+  ctx.getFormatterSchemas = () => {
+    // 所有invalid项的name
+    const invalidNames: NamePath[] = [];
+
+    const schemas = recursionHandleSchemas({
+      schema: ctx.schema,
+      parentNames: [],
+      invalidCB: (name) => invalidNames.push(name),
+      listCB: (name) => ctx.listNames.push(name),
+      isRoot: true,
+    });
+
+    ctx.syncLists();
+
+    return [schemas!, invalidNames];
   };
 
   instance.getSchemas = () => {
-    const [schemas] = ctx.getSchemasAndInvalid();
+    const [schemas] = ctx.getFormatterSchemas();
     return schemas;
   };
 
@@ -66,20 +73,22 @@ export function _implSchema(ctx: _Context) {
   instance.setSchemas = (schema) => {
     ctx.schema = schema;
 
+    // 使用新的schema进行一次刷新, 同步list
+    ctx.getFormatterSchemas();
+    ctx.syncLists();
+
     if (!ctx.lockNotify) {
       instance.events.update.emit();
     }
 
-    instance.verify();
+    instance.verify().catch(() => {});
   };
 
   /** 对Schema上的dynamic进行处理, 并克隆validator */
   function schemaBaseClone(schema: FormSchemaWithoutName | FormSchema) {
     if (isFunction(schema.dynamic)) {
       const dProps = schema.dynamic(instance);
-      // @ts-ignore
-      delete dProps["dynamic"];
-      Object.assign(schema, dProps);
+      if (isObject(dProps)) Object.assign(schema, dProps);
     }
 
     // 在这这里对一些可能会被以外更改的引用值进行手动克隆
@@ -88,13 +97,21 @@ export function _implSchema(ctx: _Context) {
     }
   }
 
-  /** 递归一个schema, 处理其所有项的dynamic并对每一项进行拷贝 */
-  function recursionHandleSchemas(
-    schema: FormSchemaWithoutName | FormSchema,
-    parentNames: NamePath,
-    invalidCB: (name: NamePath) => void,
-    isRoot = false
-  ) {
+  /** 递归一个schema, 处理其所有项的dynamic/invalid/list并对每一项进行拷贝 */
+  function recursionHandleSchemas(args: {
+    /** 当前schema */
+    schema: FormSchemaWithoutName | FormSchema;
+    /** 传入父级的name */
+    parentNames: NamePath;
+    /** 对invalid的项进行回调 */
+    invalidCB: (name: NamePath) => void;
+    /** 对启用了list的项进行回调 */
+    listCB: (name: NamePath) => void;
+    /** 根schema */
+    isRoot?: boolean;
+  }) {
+    const { schema, parentNames, invalidCB, listCB, isRoot = false } = args;
+
     const combine: FormSchema | FormSchemaWithoutName = Object.assign(
       {},
       schema
@@ -116,7 +133,7 @@ export function _implSchema(ctx: _Context) {
       if (hasName) {
         names.push((combine as any).name);
       } else {
-        names.push(ANY_NAME_PLACE_HOLD);
+        names.push(_ANY_NAME_PLACE_HOLD);
       }
     }
 
@@ -129,10 +146,20 @@ export function _implSchema(ctx: _Context) {
       return;
     }
 
+    // 记录list项
+    if (combine.list && !names.includes(_ANY_NAME_PLACE_HOLD)) {
+      listCB(isRoot ? ROOT_SCHEMA_NAME : names);
+    }
+
     if (combine.schema) {
       combine.schema = combine.schema
         .map((s: FormSchema) => {
-          return recursionHandleSchemas(s, names, invalidCB);
+          return recursionHandleSchemas({
+            schema: s,
+            parentNames: names,
+            invalidCB,
+            listCB,
+          });
         })
         .filter((i) => !!i) as FormSchema[];
 
@@ -142,11 +169,12 @@ export function _implSchema(ctx: _Context) {
     }
 
     if (combine.eachSchema) {
-      combine.eachSchema = recursionHandleSchemas(
-        combine.eachSchema,
-        names,
-        invalidCB
-      );
+      combine.eachSchema = recursionHandleSchemas({
+        schema: combine.eachSchema,
+        parentNames: names,
+        invalidCB,
+        listCB,
+      });
 
       if (!combine.eachSchema) {
         delete combine.eachSchema;

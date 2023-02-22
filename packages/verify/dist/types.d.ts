@@ -119,7 +119,7 @@ export interface Verify {
     /** 执行同步验证 */
     check: (source: any, rootSchema: SchemaWithoutName, config?: CheckConfig) => RejectMeta | null;
     /**
-     * 执行异步验证, 异步验证中也支持使用同步验证器, 验证失败时, reject类型为RejectMeta
+     * 执行异步验证, 异步验证中也支持使用同步验证器, 验证失败时, resolve值为包含RejectMeta的错误对象VerifyError
      * */
     asyncCheck: (source: any, rootSchema: SchemaWithoutName, config?: CheckConfig) => Promise<void>;
     /** 当前使用的languagePack */

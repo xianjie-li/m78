@@ -8,6 +8,7 @@ import {
   string,
 } from "./index.js";
 import { fmtValidator, SOURCE_ROOT_NAME } from "./common.js";
+import { VerifyError } from "./error.js";
 
 const verify = createVerify();
 
@@ -85,10 +86,12 @@ describe("base", () => {
           ],
         }
       )
-      .catch((reject) => {
-        expect(reject).not.toBeNull();
-        expect(reject?.length).toBe(1);
-        expect(reject?.[0]?.name).toBe("user");
+      .catch((err) => {
+        expect(err).not.toBeNull();
+        if (err instanceof VerifyError) {
+          expect(err.rejects?.length).toBe(1);
+          expect(err.rejects?.[0]?.name).toBe("user");
+        }
       });
   });
 

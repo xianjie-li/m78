@@ -19,6 +19,15 @@ const form = createForm({
       null,
     ],
     list2: [0, 1, 2],
+    list3: [0, 1, 2],
+    list4: [
+      {
+        title: "物品1",
+      },
+      {
+        title: "物品2",
+      },
+    ],
   } as any,
   schema: {
     validator: [required()],
@@ -48,6 +57,10 @@ const form = createForm({
               name: "desc",
               validator: [required()],
             },
+            {
+              name: "desc2",
+              list: true,
+            },
           ],
         },
       },
@@ -66,6 +79,22 @@ const form = createForm({
             name: 2,
           },
         ],
+      },
+      {
+        name: "list3",
+        list: true,
+      },
+      {
+        name: "list4",
+        list: true,
+        eachSchema: {
+          schema: [
+            {
+              name: "title",
+              validator: [required()],
+            },
+          ],
+        },
       },
     ],
   },
@@ -98,6 +127,18 @@ form.events.change.on(
 form.events.update.on(
   form.notifyFilter(["list"], (name, relation) => {
     console.log("update", name, relation);
+  })
+);
+
+form.events.change.on(
+  form.notifyFilter("list3", (name, relation) => {
+    console.log("change list3", name, relation);
+  })
+);
+
+form.events.update.on(
+  form.notifyFilter("list3", (name, relation) => {
+    console.log("update list3", name, relation);
   })
 );
 
@@ -257,6 +298,70 @@ const FormExample = () => {
         }}
       >
         getErrors
+      </button>
+      <button
+        onClick={() => {
+          console.log(form.getList("list2"));
+        }}
+      >
+        getList list2
+      </button>
+      <button
+        onClick={() => {
+          console.log(form.getList("list3"));
+        }}
+      >
+        getList list3
+      </button>
+      <button
+        onClick={() => {
+          console.log(form.getList("list4"));
+        }}
+      >
+        getList list4
+      </button>
+
+      <button
+        onClick={() => {
+          form.listAdd("list3", [3, 4, 5]);
+        }}
+      >
+        add item to list3
+      </button>
+      <button
+        onClick={() => {
+          form.listAdd("list3", [7, 8], 0);
+        }}
+      >
+        add item to list3 before
+      </button>
+      <button
+        onClick={() => {
+          form.listRemove("list3", 2);
+        }}
+      >
+        remove item 2 from list3
+      </button>
+      <button
+        onClick={() => {
+          form.listMove("list3", 0, 2);
+        }}
+      >
+        move 0 - 2
+      </button>
+      <button
+        onClick={() => {
+          form.listSwap("list3", 0, 2);
+        }}
+      >
+        swap 0 - 2
+      </button>
+      <button
+        onClick={() => {
+          form.setValue("list3", [7, 8, 9]);
+        }}
+      >
+        setValue list3
       </button>
     </div>
   );

@@ -1,13 +1,12 @@
 import { Verify, Config, Schema, RejectMeta } from "@m78/verify";
 import { AnyFunction, EmptyFunction, NamePath, CustomEvent } from "@m78/utils";
-import React from "react";
 
 export interface FormConfig extends Config {
   /** 默认值 */
   defaultValue: any;
   /** 描述表单值结构的对象 */
   schema: FormSchemaWithoutName;
-  /** 自定义内部的事件创建器(很少需要用到) */
+  /** 自定义内部的事件创建器(通常不需要关注, 用于实现ui层时扩展事件订阅器用法) */
   eventCreator?: AnyFunction;
 }
 
@@ -63,11 +62,35 @@ export interface FormInstance {
   /** 重置表单状态 */
   reset(): void;
 
-  /** 执行验证, 若验证通过则触发submit事件 */
+  /** 执行验证, 若验证通过则触发submit事件, 验证失败时与verify一样reject VerifyError类型 */
   submit(): Promise<void>;
 
-  /** 执行校验, 未通过时promise会reject包含错误信息的数组 */
+  /** 执行校验, 未通过时promise会reject包含VerifyError类型的错误 */
   verify: (name?: NamePath) => Promise<void>;
+
+  /**
+   * 获取指定list的数据, 若未在schema中配置为list则返回null, 若根schema设置为list, 可传入ROOT_SCHEMA_NAME来获取
+   * */
+  getList<Item = any>(
+    name: NamePath
+  ): Array<{
+    /** 列表项的唯一key */
+    key: string;
+    /** 列表项的数据 */
+    item: Item;
+  }> | null;
+
+  /** 为list新增一项或多项, index为起始位置, 默认追加到结尾. 若name不是有效list或其他原因导致失败会将返回false */
+  listAdd(name: NamePath, items: any | any[], index?: number): boolean;
+
+  /** 移除list指定索引的元素 */
+  listRemove(name: NamePath, index: number): boolean;
+
+  /** 移动list的指定原素到另一位置 */
+  listMove(name: NamePath, from: number, to: number): boolean;
+
+  /** 交换list的两个元素 */
+  listSwap(name: NamePath, from: number, to: number): boolean;
 
   /** 事件 */
   events: {
@@ -101,14 +124,23 @@ export interface FormSchema extends Schema {
   /** valid为false时, 该schema不会参与验证, 并且提交时会排除掉schema指向的值 */
   valid?: boolean;
   /** 动态设置其他参数 */
-  dynamic?: (form: FormInstance) => Omit<FormSchemaWithoutName, "dynamic">;
+  dynamic?: (
+    form: FormInstance
+  ) => Omit<FormSchemaWithoutName, "dynamic" | "name" | "list"> | void;
   /** 如果对象为嵌套结构(数组、对象)，对其执行嵌套验证 */
   schema?: FormSchema[];
   /** 验证值为array或object时, 所有 数组项/对象值 必须与此Schema匹配, 如果该值的类型不为array或object，此配置会被忽略 */
-  eachSchema?: FormSchemaWithoutName;
+  eachSchema?: FormSchemaPartial;
+  /**
+   * 设置该项为list项, 设置后可使用list系列的api对其子项进行新增/删除/排序等操作
+   * - 限制: 不能将eachSchema下的任意级子项设置为list, 若用于root项, 其子级不能再包含list项, list项通过getList(ROOT_SCHEMA_NAME)获取
+   * */
+  list?: boolean;
 }
 
 export type FormSchemaWithoutName = Omit<FormSchema, "name">;
+
+export type FormSchemaPartial = Omit<FormSchema, "name" | "list">;
 
 /** 需要存储的一些值状态 */
 export interface _State {
@@ -129,6 +161,12 @@ export interface _Context {
   values: any;
   /** 存储一些字段状态 */
   state: _Store;
+  /** 记录所有开启了list的schema */
+  listNames: NamePath[];
+  /** 为所有配置为list的schema项记录每一项的key信息 */
+  listData: {
+    [key: string]: string[];
+  };
   /** 当前配置 */
   config: FormConfig;
   /** 当前schema */
@@ -139,33 +177,16 @@ export interface _Context {
   lockNotify: boolean;
   /** debounce版本的verify */
   debounceVerify: FormInstance["verify"];
-  /** 获取当前schemas和所有valid为false的值 */
-  getSchemasAndInvalid(): [FormSchemaWithoutName, NamePath[]];
-}
 
-export interface FormSchema {
-  hidden?: boolean;
-  disabled?: boolean;
-}
+  /** 获取当前schema并处理dynamic, 更新invalid/list等 */
+  getFormatterSchemas(): [FormSchemaWithoutName, NamePath[]];
 
-export interface FormFieldProps {
-  name: NamePath;
-  children: (form: FormInstance) => React.ReactNode;
-  onChange: () => void;
-}
+  /** 根据当前记录的ctx.listNames同步listData配置, 确保所有项都被标注了key */
+  syncLists(): void;
 
-export interface FormValueRenderProps {
-  name: NamePath;
+  /** 设置值, 可传入参数跳过列表状态同步 */
+  setValuesInner(values: any, skipListSync?: boolean): void;
 
-  children(value: any): React.ReactNode;
-}
-
-export interface FormListProps {
-  name: NamePath;
-  children: (form: FormInstance, list: any, listOper: any) => React.ReactNode;
-}
-
-export interface FormRenderArgs {
-  form: FormInstance;
-  schema: FormSchema;
+  /** 设置值, 可传入参数跳过列表状态同步 */
+  setValueInner(name: NamePath, val: any, skipListSync?: boolean): void;
 }

@@ -141,7 +141,7 @@ export interface Verify {
     config?: CheckConfig
   ) => RejectMeta | null;
   /**
-   * 执行异步验证, 异步验证中也支持使用同步验证器, 验证失败时, reject类型为RejectMeta
+   * 执行异步验证, 异步验证中也支持使用同步验证器, 验证失败时, resolve值为包含RejectMeta的错误对象VerifyError
    * */
   asyncCheck: (
     source: any,

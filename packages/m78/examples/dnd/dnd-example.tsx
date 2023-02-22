@@ -5,11 +5,7 @@ import { Row } from "../../src/layout/index.js";
 
 import css from "./style.module.scss";
 
-const DNDDetailShowBox = ({
-  status,
-  enables,
-  children,
-}: Omit<DNDRenderProps, "ref" | "handleRef">) => {
+const DNDDetailShowBox = ({ status, enables, children }: any) => {
   return (
     <div
       style={{
