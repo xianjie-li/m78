@@ -22,9 +22,9 @@ $unitSpace: var(--m78-space-1);
     height: auto !important;
 
     textarea {
-      padding: 10px;
+      padding: 8px;
       line-height: 1.4;
-      min-height: calc(20px + 2em * 1.4);
+      min-height: calc(16px + 2em * 1.4);
       white-space: normal !important;
       word-break: break-all;
     }

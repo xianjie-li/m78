@@ -20,6 +20,9 @@
   outline: none !important;
   text-decoration: none;
   min-width: 60px;
+  // 防止作为 flex 子级时变形
+  flex: 0 0 auto;
+
 
   @include ellipsis-x;
 

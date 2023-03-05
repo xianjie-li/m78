@@ -1,8 +1,6 @@
 import { array, createVerify, required } from "@m78/verify/index.js";
 import React from "react";
-import { createForm } from "../../src/form/form.js";
-
-const verify = createVerify({});
+import { createForm } from "../../src/form-vanilla/index.js";
 
 const form = createForm({
   defaultValue: {
@@ -29,7 +27,7 @@ const form = createForm({
       },
     ],
   } as any,
-  schema: {
+  schemas: {
     validator: [required()],
     schema: [
       {

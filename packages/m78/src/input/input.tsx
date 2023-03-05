@@ -6,7 +6,13 @@ import {
   useSelf,
   useUpdate,
 } from "@m78/hooks";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   dumpFn,
   ensureArray,
@@ -142,6 +148,10 @@ export function _Input(_props: InputProps) {
     }
   });
 
+  useLayoutEffect(() => {
+    calcTextHeight(value);
+  }, [value]);
+
   /** 值变更时触发, 如果返回false, 表示更新被阻止, 需要确保组件内部的值变更可以通过manualChange来进行 */
   const change = useFn((e?: React.ChangeEvent<HTMLInputElement>) => {
     const el = inputRef.current;
@@ -189,8 +199,6 @@ export function _Input(_props: InputProps) {
     if (cursorIsChange) {
       self.cursor = cursor;
     }
-
-    calcTextHeight(val);
 
     setValue(val);
 

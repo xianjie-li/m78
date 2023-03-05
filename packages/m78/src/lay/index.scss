@@ -18,7 +18,7 @@
     font-size: var(--m78-fs-md);
   }
 
-  .m78-tile_title {
+  .m78-tile_cont {
     font-size: var(--m78-fs-md);
   }
 
@@ -109,7 +109,7 @@
   &.__large {
     padding: var(--m78-space-3);
 
-    .m78-tile_title {
+    .m78-tile_cont {
       font-size: 18px;
     }
 
@@ -129,7 +129,7 @@
   &.__small {
     padding: var(--m78-space-1) var(--m78-space-2);
 
-    .m78-tile_title {
+    .m78-tile_cont {
       font-size: var(--m78-fs);
     }
 

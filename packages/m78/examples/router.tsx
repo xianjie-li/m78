@@ -28,6 +28,7 @@ import ForkExample from "./fork/fork-example.js";
 import ScrollExample from "./scroll/scroll-example.js";
 import DndExample from "./dnd/dnd-example.js";
 import FormExample from "./form/form-example.js";
+import RformExample from "./form/rform-example.js";
 
 export const router = createHashRouter([
   {
@@ -114,6 +115,10 @@ export const router = createHashRouter([
       {
         path: "form",
         element: <FormExample />,
+      },
+      {
+        path: "rform",
+        element: <RformExample />,
       },
     ],
   },

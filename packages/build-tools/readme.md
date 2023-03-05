@@ -4,10 +4,9 @@
 
 First, add `m78-build-tools` to your project, use your favorite package manager
 
-
 ### auto inject config
 
-generate config via cli, ⚠️ this operation will be overwrite same name file and change package.json
+generate config via cli, ⚠️ this operation will be overwritten same name file and change package.json
 
 ```shell
 npm init -y
@@ -29,20 +28,18 @@ tsconfig.lib.json
 and modify these fields in package.json
 
 ```shell
-scripts 
-devDependencies 
-files 
-main 
-type 
-typings 
+scripts
+devDependencies
+files
+main
+type
+typings
 publishConfig
 ```
 
-
-
 ### build
 
-1. Make sure  `m78-lib.config.js  `  exist in project root. for config detail,  see  [defineConfig.d.ts](./defineConfig.d.ts)
+1. Make sure `m78-lib.config.js ` exist in project root. for config detail, see [defineConfig.d.ts](./defineConfig.d.ts)
 
 ```ts
 import sass from "sass";
@@ -68,11 +65,7 @@ export default defineConfig({
 
 2.run `npx m78-build-tools build`
 
-
-
 > pass --skip-declaration-emit to block the student declaration file
-
-
 
 ### test
 
@@ -92,13 +85,9 @@ export { default } from "@m78/lib-build/jest.config.js";
 npx jest
 ```
 
-
-
 ### example
 
 start dev server, run your code.
-
-
 
 suppose the root directory has the following code
 
@@ -116,8 +105,6 @@ run the specified example
 ```shell
 npx m78-build-tools example func1	# run func1
 ```
-
-
 
 ### lint
 

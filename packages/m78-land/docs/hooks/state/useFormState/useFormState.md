@@ -19,10 +19,10 @@ group:
 function useFormState<T, Ext = any>(
   /** 透传消费组件的props，该组件需要实现FormLike接口 */
   props: AnyObject,
-  /** 默认值，会被value与defaultValue覆盖*/
+  /** 默认值，会作为value或defaultValue的回退值 */
   defaultValue: T,
   /** 其他配置 */
-  config?: Config
+  config?: UseFormStateConfig
 ): [
   /** 当前值 */
   T,
@@ -53,5 +53,14 @@ export interface FormLikeWithExtra<T, Ext = any> {
   value?: T;
   onChange?: (value: T, extra: Ext) => void;
   defaultValue?: T;
+}
+
+export interface UseFormStateConfig {
+  /** 'value' | 自定义获取value的key */
+  valueKey?: string;
+  /** 'defaultValue' | 自定义获取defaultValue的key */
+  defaultValueKey?: string;
+  /** 'onChange' | 自定义onChange的key */
+  triggerKey?: string;
 }
 ```

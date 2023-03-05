@@ -1,7 +1,6 @@
-import { useState, useRef } from "react";
-import { useUpdateEffect } from "../../index.js";
-import { isFunction, AnyObject, defer } from "@m78/utils";
-import _isEqual from "lodash/isEqual.js";
+import { useRef } from "react";
+import { useFn, useSetState } from "../../index.js";
+import { isFunction, AnyObject } from "@m78/utils";
 
 /**
  * 表单组件的统一接口
@@ -35,32 +34,26 @@ export interface UseFormStateConfig {
   defaultValueKey?: string;
   /** 'onChange' | 自定义onChange的key */
   triggerKey?: string;
-  /**
-   * false | 对value执行深度对比，以支持引用类型，你只会在极少的情况下使用到此配置
-   * - 默认情况下，传入的value与上一个value全等判断成功时才会同步到本地并触发onChange，大部分时候这都没有问题，但是
-   * 如果你内联式的传入`value={[1, 2, 3]}`, 会造成每一次render都触发onChange,
-   * 此时你如果通过onChange更新状态则会造成内存泄露, 开启此项可以对引用类型的值进行深对比，从而避免这种情况
-   * - 🎉如果循正常用例，将value放到useState等hook中进行管理，是不需要开启这个配置的，因为引用只会在变更时改变
-   * - 如果value的层次结构过于复杂或者很大，不要使用此配置，因为大数据的深对比很消耗性能
-   * */
-  deep?: boolean;
 }
 
-/** 便捷的实现统一接口的受控、非受控表单组件, 也可用于任何需要受控、非受控状态的场景 */
+/**
+ * 便捷的实现统一接口的受控、非受控表单组件, 也可用于任何需要受控、非受控状态的场景
+ * @param props - 透传消费组件的props，该组件需要实现FormLike接口
+ * @param defaultValue - 默认值，会作为value或defaultValue的回退值
+ * @param config - 其他配置
+ * */
 export function useFormState<T, Ext = any>(
-  /** 透传消费组件的props，该组件需要实现FormLike接口 */
   props: AnyObject,
-  /** 默认值，会被value与defaultValue覆盖 */
   defaultValue: T,
-  /** 其他配置 */
   config?: UseFormStateConfig
 ) {
   const {
     valueKey = "value",
     defaultValueKey = "defaultValue",
     triggerKey = "onChange",
-    deep,
   } = config || {};
+
+  const isControllable = valueKey in props; // 允许 props[valueKey] === undefined
 
   const {
     [valueKey]: value,
@@ -68,65 +61,54 @@ export function useFormState<T, Ext = any>(
     [defaultValueKey]: propDefaultValue,
   } = props;
 
-  // 用于在一些特定的位置能立即获取到`state
-  const stateRef = useRef<T>();
+  // 实时存储value
+  const stateRef = useRef<T>(value);
 
-  // 设置表单状态
-  const [state, setState] = useState(() => {
-    // 初始状态获取说明: value > defaultValue > useFormState中配置的defaultValue
-    let val = defaultValue;
-    if (valueKey in props) {
-      val = props[valueKey] === undefined ? defaultValue : value;
-    }
-    if (defaultValueKey in props) {
-      val =
-        props[defaultValueKey] === undefined ? defaultValue : propDefaultValue;
-    }
+  stateRef.current = value;
 
-    return (stateRef.current = val);
+  // 非受控时使用的表单状态
+  const [innerState, setInnerState] = useSetState(() => {
+    return {
+      value: propDefaultValue === undefined ? defaultValue : propDefaultValue,
+    };
   });
 
-  /* 为受控组件同步状态 */
-  useUpdateEffect(() => {
-    if (valueKey in props) {
-      if (deep) {
-        !_isEqual(value, stateRef.current) &&
-          setState((stateRef.current = value));
-      } else {
-        value !== stateRef.current && setState((stateRef.current = value));
-      }
-    }
-  }, [value]);
-
-  /* 处理修改表单值 */
-  const setFormState: SetFormState<T, Ext> = (patch, extra) => {
-    /* 是受控组件则将新值通过onChange回传即可，非受控组件设置本地状态并通过onChange通知 */
-    const hasValue = valueKey in props;
+  /**
+   * 处理修改表单值,
+   * 受控组件则将新值通过onChange回传，非受控组件设置本地状态并通过onChange通知
+   * */
+  const setFormState: SetFormState<T, Ext> = useFn((patch, extra) => {
     if (isFunction(patch)) {
-      if (!hasValue) {
-        setState((prev) => {
-          const patchResult = patch(prev);
-
-          defer(() => {
-            onChange && onChange(patchResult, extra);
-          });
-
-          return patchResult;
-        });
-      } else {
+      // patch函数处理
+      if (isControllable) {
         const patchResult = patch(stateRef.current!);
+        onChange && onChange(patchResult, extra);
+      } else {
+        const patchResult = patch(innerState.value);
+
+        setInnerState({
+          value: patchResult,
+        });
+
         onChange && onChange(patchResult, extra);
       }
     } else {
-      onChange && onChange(patch, extra);
-      if (!hasValue) {
-        setState(patch);
+      // 直接设置
+      if (!isControllable) {
+        setInnerState({
+          value: patch,
+        });
       }
+
+      onChange && onChange(patch, extra);
     }
-  };
+  });
 
-  return [state, setFormState] as const;
+  let v = isControllable ? value : innerState.value;
+
+  if (v === undefined) {
+    v = defaultValue;
+  }
+
+  return [v, setFormState] as const;
 }
-
-// 别名
-export { useFormState as useControllableValue };

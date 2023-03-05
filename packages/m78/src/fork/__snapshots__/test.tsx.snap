@@ -72,7 +72,7 @@ exports[`AsyncRender 1`] = `
         }
       >
         <div
-          className="m78-tile_title"
+          className="m78-list_main"
         >
           request exception
         </div>
@@ -126,7 +126,7 @@ exports[`AsyncRender 1`] = `
         }
       >
         <div
-          className="m78-tile_title"
+          className="m78-list_main"
         >
           request timeout
         </div>
@@ -452,7 +452,7 @@ exports[`AsyncRender 1`] = `
         }
       >
         <div
-          className="m78-tile_title"
+          className="m78-list_main"
         >
           abcd
         </div>
@@ -506,7 +506,7 @@ exports[`AsyncRender 1`] = `
         }
       >
         <div
-          className="m78-tile_title"
+          className="m78-list_main"
         >
           abcd
         </div>

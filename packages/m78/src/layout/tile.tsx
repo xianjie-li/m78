@@ -34,7 +34,7 @@ const _Tile = ({
         className="m78-tile_main"
         style={{ overflow: overflowVisible ? undefined : "hidden" }}
       >
-        {_title && <div className="m78-tile_title">{_title}</div>}
+        {_title && <div className="m78-tile_cont">{_title}</div>}
         {desc && <div className="m78-tile_desc">{desc}</div>}
       </div>
       {trailing && <div className="m78-tile_trailing">{trailing}</div>}

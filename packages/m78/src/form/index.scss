@@ -1,0 +1,107 @@
+@import '../common/style/sass';
+
+.m78-form {
+
+  // 增加权重, 覆盖 lay 附带的样式
+  @at-root :root div.m78-form_field {
+    padding: 0;
+
+    &.__small {
+
+      .m78-form_horizontal-label, .m78-form_tile-label {
+        min-height: var(--m78-unit-size-sm);
+        padding-top: 1px;
+        font-size: var(--m78-fs-sm);
+      }
+
+      .m78-form_vertical-label {
+        margin-bottom: 2px;
+        line-height: 1.4;
+        font-size: var(--m78-fs-sm);
+      }
+
+      .m78-form_error {
+        min-height: 20px;
+      }
+
+      .m78-form_error, .m78-form_describe {
+        line-height: 1.2;
+      }
+    }
+
+    &.__large {
+      .m78-form_horizontal-label, .m78-form_tile-label {
+        min-height: var(--m78-unit-size-lg);
+        padding-top: 10px;
+      }
+    }
+  }
+
+  &_tile {
+    .m78-form_describe {
+      margin-top: 0;
+    }
+  }
+
+  &_unit {
+    position: relative;
+  }
+
+  &_error {
+    color: var(--m78-color-error);
+    padding-top: 2px;
+    font-size: 12px;
+    min-height: 24px;
+    transition: var(--m78-animate-base);
+  }
+
+  &_bubble-error {
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    color: var(--m78-color-error);
+    font-size: 12px;
+    padding: 4px;
+    border-radius: var(--m78-border-radius);
+    box-shadow: var(--m78-shadow-1-b);
+    transform: translateY(100%);
+    z-index: var(--m78-z-index);
+    background-color: var(--m78-component-bg);
+    line-height: 1.1;
+    transition: var(--m78-animate-base);
+  }
+
+  &_describe {
+    color: var(--m78-color-second);
+    font-size: var(--m78-fs-sm);
+    margin-top: var(--m78-space-1);
+  }
+
+  &_describe-icon {
+    position: relative;
+    top: -1px;
+    color: var(--m78-color-second);
+    vertical-align: middle;
+    margin-left: 2px;
+  }
+
+  &_horizontal-label {
+    font-size: var(--m78-fs);
+    min-height: var(--m78-unit-size);
+    padding-top: 4px;
+    width: 5em;
+    text-align: right;
+  }
+
+  &_vertical-label {
+    font-size: var(--m78-fs);
+    margin-bottom: var(--m78-space-1);
+  }
+
+  &_tile-label {
+    font-size: var(--m78-fs);
+    min-height: var(--m78-unit-size);
+    padding-top: 4px;
+  }
+
+}

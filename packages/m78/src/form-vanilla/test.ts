@@ -7,13 +7,13 @@ import {
   VerifyError,
 } from "@m78/verify/index.js";
 import { jest } from "@jest/globals";
-import { createForm } from "./form.js";
+import { createForm } from "./index.js";
 
 describe("form", () => {
   test("root single value test", async () => {
     const form = createForm({
       defaultValue: 1,
-      schema: {
+      schemas: {
         validator: [required(), string()],
       },
     });
@@ -32,7 +32,7 @@ describe("form", () => {
   test("root array test", async () => {
     const form = createForm({
       defaultValue: [1, 2, 3, "4"],
-      schema: {
+      schemas: {
         eachSchema: {
           validator: [required(), number()],
         },
@@ -75,7 +75,7 @@ describe("form", () => {
           },
         },
       },
-      schema: {
+      schemas: {
         schema: [
           {
             name: "nestArrayFiled1",
@@ -444,7 +444,7 @@ describe("form", () => {
           },
         ],
       },
-      schema: {
+      schemas: {
         validator: required(),
         schema: [
           {
@@ -563,7 +563,7 @@ describe("form", () => {
           },
         ],
       },
-      schema: {
+      schemas: {
         schema: [
           {
             name: "noList",
@@ -616,11 +616,133 @@ describe("form", () => {
     expect(updateCB.mock.calls.length).toBe(5);
     expect(changeCB.mock.calls.length).toBe(5);
 
+    // root list
     const form2 = createForm({
       defaultValue: [1, 2, 3],
-      schema: {
+      schemas: {
         list: true,
       },
     });
+
+    const keys = form2.getList([])!.map((i) => i.key);
+    const list = form2.getList([])!.map((i) => i.item);
+
+    expect(keys.length).toEqual(3);
+    expect(list).toEqual([1, 2, 3]);
+
+    form2.listSwap([], 0, 2);
+
+    expect(keys[0]).toEqual(form2.getList([])![2].key);
+    expect(keys[2]).toEqual(form2.getList([])![0].key);
+
+    form2.listAdd([], [5, 5, 5], 2);
+
+    expect(form2.getList([])!.map((i) => i.item)).toEqual([3, 2, 5, 5, 5, 1]);
+    expect(keys[0]).toEqual(form2.getList([])![5].key);
+  });
+
+  it("nest list change", () => {
+    // nest list change
+    const form3 = createForm({
+      defaultValue: {
+        list: [
+          {
+            title: "1",
+            list2: [1, 2, 3],
+          },
+          {
+            title: "2",
+            list2: [1, 2, 3],
+          },
+          {
+            title: "3",
+            list2: [1, 2, 3],
+          },
+        ],
+      },
+      schemas: {
+        schema: [
+          {
+            name: "list",
+            list: true,
+            eachSchema: {
+              schema: [
+                {
+                  name: "list2",
+                  list: true,
+                },
+              ],
+            },
+          },
+        ],
+      },
+    });
+
+    const form3List00Keys = form3
+      .getList(["list", 0, "list2"])!
+      .map((i) => i.key);
+    const form3List01Keys = form3
+      .getList(["list", 1, "list2"])!
+      .map((i) => i.key);
+    const form3List02Keys = form3
+      .getList(["list", 2, "list2"])!
+      .map((i) => i.key);
+
+    form3.listSwap(["list", 1, "list2"], 0, 2);
+
+    expect(form3.getList(["list", 1, "list2"])!.map((i) => i.key)[2]).toBe(
+      form3List01Keys[0]
+    );
+    expect(form3.getList(["list", 1, "list2"])!.map((i) => i.key)[0]).toBe(
+      form3List01Keys[2]
+    );
+
+    form3.listSwap(["list", 1, "list2"], 0, 2);
+
+    expect(form3List01Keys).toEqual(
+      form3.getList(["list", 1, "list2"])!.map((i) => i.key)
+    );
+
+    // 测试切换父级list索引后自己顺序是否会同步
+
+    expect(form3.getList(["list", 0, "list2"])!.map((i) => i.key)).toEqual(
+      form3List00Keys
+    );
+    expect(form3.getList(["list", 1, "list2"])!.map((i) => i.key)).toEqual(
+      form3List01Keys
+    );
+    expect(form3.getList(["list", 2, "list2"])!.map((i) => i.key)).toEqual(
+      form3List02Keys
+    );
+
+    form3.listSwap("list", 0, 2);
+
+    expect(form3.getList(["list", 0, "list2"])!.map((i) => i.key)).toEqual(
+      form3List02Keys
+    );
+
+    expect(form3.getList(["list", 2, "list2"])!.map((i) => i.key)).toEqual(
+      form3List00Keys
+    );
+
+    expect(form3.getList(["list", 1, "list2"])!.map((i) => i.key)).toEqual(
+      form3List01Keys
+    );
+
+    form3.listAdd("list", [{ title: "abc" }, { title: "efg" }], 0);
+
+    expect(form3.getList(["list", 2, "list2"])!.map((i) => i.key)).toEqual(
+      form3List02Keys
+    );
+
+    expect(form3.getList(["list", 4, "list2"])!.map((i) => i.key)).toEqual(
+      form3List00Keys
+    );
+
+    expect(form3.getList(["list", 3, "list2"])!.map((i) => i.key)).toEqual(
+      form3List01Keys
+    );
+
+    expect(form3.getList(["list"])!.length).toEqual(5);
   });
 });

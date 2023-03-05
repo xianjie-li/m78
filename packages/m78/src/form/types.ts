@@ -1,53 +1,80 @@
-import { Verify, Config, Schema, RejectMeta } from "@m78/verify";
-import { AnyFunction, EmptyFunction, NamePath, CustomEvent } from "@m78/utils";
+import {
+  FormConfig as VanillaFormConfig,
+  FormInstance as VanillaFormInstance,
+  FormNamesNotify as VanillaFormNamesNotify,
+  FormSchema as VanillaFormSchema,
+} from "../form-vanilla/index.js";
+import React from "react";
+import { CustomEvent, EmptyFunction, NamePath } from "@m78/utils";
+import { CustomEventWithHook, SetState } from "@m78/hooks";
+import { RejectMeta } from "@m78/verify";
+import { SizeUnion } from "../common/index.js";
 
-export interface FormConfig extends Config {
-  /** 默认值 */
-  defaultValue: any;
-  /** 描述表单值结构的对象 */
-  schema: FormSchemaWithoutName;
-  /** 自定义内部的事件创建器(通常不需要关注, 用于实现ui层时扩展事件订阅器用法) */
-  eventCreator?: AnyFunction;
+/** 要剔除的原Config属性 */
+export const _omitConfigs = [
+  "eventCreator",
+  "languagePack",
+  "extendLanguagePack",
+  "verifyFirst",
+] as const;
+
+type OmitType = typeof _omitConfigs[number];
+
+/** 支持的布局类型 */
+export enum FormLayoutType {
+  horizontal = "horizontal",
+  vertical = "vertical",
+  tile = "tile",
 }
 
-export interface FormInstance {
-  /** 指定值是否与默认值相同 */
-  getChanged(name: NamePath): boolean;
+export type FormLayoutTypeKeys = keyof typeof FormLayoutType;
 
-  /** 表单当前值是否与默认值相同 */
-  getFormChanged(): boolean;
+export type FormLayoutTypeUnion = FormLayoutTypeKeys | FormLayoutType;
 
-  /** 指定值是否被操作过 */
-  getTouched(name: NamePath): boolean;
+export type FormRegisterConfig = FormKeyCustomer & {
+  component: React.ReactElement;
+};
 
-  /** 设置指定值touched为false */
-  setTouched(name: NamePath, touched: boolean): void;
+export interface FormConfig
+  extends Omit<VanillaFormConfig, OmitType | "schemas">,
+    FormProps {
+  /* # # # # # # # 重写 # # # # # # # */
+  /** 描述表单值结构的对象 */
+  schemas?: FormSchemaWithoutName;
+  /** 需要注册的组件, 可以直接是一个组件或包含配置项的对象 */
+  components?: Record<string, FormRegisterConfig | React.ReactElement>;
+}
 
-  /** 表单是否被操作过 */
-  getFormTouched(): boolean;
+export interface FormSchema
+  extends Omit<
+      VanillaFormSchema,
+      "label" | "dynamic" | "schema" | "eachSchema"
+    >,
+    FormCommonProps {
+  /* # # # # # # # 重写 # # # # # # # */
+  /** 动态设置其他参数 */
+  dynamic?: (
+    form: FormInstance
+  ) => Omit<FormSchemaWithoutName, "dynamic" | "name" | "list" | "deps"> | void;
+  /** 类型为数组、对象时, 对其结构进行验证 */
+  schema?: FormSchema[];
+  /** 验证值为array或object时, 子级的所有 数组项/对象值 必须与此Schema匹配, 如果该值的类型不为array或object，此配置会被忽略 */
+  eachSchema?: FormSchemaPartial;
+}
 
-  /** 设置整个表单的touched状态 */
-  setFormTouched(touched: boolean): void;
+/** 不包含name的schema */
+export type FormSchemaWithoutName = Omit<FormSchema, "name">;
 
-  /** 获取当前数据 */
-  getValues<T = any>(): T;
+/** 去除了部分配置的schema */
+export type FormSchemaPartial = Omit<FormSchema, "name" | "list">;
 
-  /** 获取指定name的值 */
-  getValue<T = any>(name: NamePath): T;
-
-  /** 设置所有值 */
-  setValues(values: any): void;
-
-  /** 获取指定name的值 */
-  setValue(name: NamePath, val: any): void;
-
-  /** 获取当前的默认值 */
-  getDefaultValues<T = any>(): T;
-
-  /** 重新设置当前的默认值, 设置后, 下一次reset调用会使用此值 */
-  setDefaultValues(values: any): void;
-
-  /** 获取当前schema副本并对dynamic进行处理 */
+export interface FormInstance
+  extends Omit<
+    VanillaFormInstance,
+    "getSchemas" | "setSchemas" | "getSchema" | "events" | "getConfig"
+  > {
+  /* # # # # # # # 重写 # # # # # # # */
+  /** 获取对dynamic进行处理进行处理后的schema副本 */
   getSchemas(): FormSchemaWithoutName;
 
   /** 重新设置当前schemas */
@@ -56,137 +83,235 @@ export interface FormInstance {
   /** 获取指定的schema */
   getSchema(name: NamePath): FormSchema | FormSchemaWithoutName | null;
 
-  /** 获取错误信息 */
-  getErrors(name: NamePath): RejectMeta;
-
-  /** 重置表单状态 */
-  reset(): void;
-
-  /** 执行验证, 若验证通过则触发submit事件, 验证失败时与verify一样reject VerifyError类型 */
-  submit(): Promise<void>;
-
-  /** 执行校验, 未通过时promise会reject包含VerifyError类型的错误 */
-  verify: (name?: NamePath) => Promise<void>;
-
-  /**
-   * 获取指定list的数据, 若未在schema中配置为list则返回null, 若根schema设置为list, 可传入ROOT_SCHEMA_NAME来获取
-   * */
-  getList<Item = any>(
-    name: NamePath
-  ): Array<{
-    /** 列表项的唯一key */
-    key: string;
-    /** 列表项的数据 */
-    item: Item;
-  }> | null;
-
-  /** 为list新增一项或多项, index为起始位置, 默认追加到结尾. 若name不是有效list或其他原因导致失败会将返回false */
-  listAdd(name: NamePath, items: any | any[], index?: number): boolean;
-
-  /** 移除list指定索引的元素 */
-  listRemove(name: NamePath, index: number): boolean;
-
-  /** 移动list的指定原素到另一位置 */
-  listMove(name: NamePath, from: number, to: number): boolean;
-
-  /** 交换list的两个元素 */
-  listSwap(name: NamePath, from: number, to: number): boolean;
+  /** 获取表单配置 */
+  getConfig(): FormConfig;
 
   /** 事件 */
   events: {
     /** 字段值或状态变更时, 这里是更新ui状态的理想位置 */
-    update: CustomEvent<FormNamesNotify>;
-    /** 字段值改变事件. 此外, update也会在change之后触发 */
-    change: CustomEvent<FormNamesNotify>;
+    update: CustomEventWithHook<VanillaFormNamesNotify>;
+    /** 字段值改变事件. 此外, update也会包含了change的触发时机 */
+    change: CustomEventWithHook<VanillaFormNamesNotify>;
     /** 提交事件 */
-    submit: CustomEvent<EmptyFunction>;
-    /** 验证失败的回调 */
-    fail: CustomEvent<(errors: RejectMeta) => void>;
+    submit: CustomEventWithHook<EmptyFunction>;
+    /** 验证失败的回调, 由 setValue 触发自动校验时, isValueChangeTrigger 为 true */
+    fail: CustomEventWithHook<
+      (errors: RejectMeta, isValueChangeTrigger?: boolean) => void
+    >;
     /** 重置事件 */
-    reset: CustomEvent<EmptyFunction>;
+    reset: CustomEventWithHook<EmptyFunction>;
   };
 
-  /** 创建用于update/change事件回调的过滤器, 帮助识别变更是否与当前name关联 */
-  notifyFilter: (name: NamePath, notify: FormNamesNotify) => FormNamesNotify;
+  /* # # # # # # # 新增 # # # # # # # */
+  /** 用于表示并绑定到表单字段 */
+  Field: (props: FormFieldProps) => React.ReactElement;
+  /** 渲染列表 */
+  List: <Item = any>(props: FormListProps<Item>) => React.ReactElement;
+}
 
-  /** 内部使用的`@m78/verify` 实例 */
-  verifyInstance: Verify;
+/** FormProps中的所有key, 用于在分别根据Field/schema/config获取配置时检测是否可安全获取 */
+export const _formPropsKeys = [
+  "layoutType",
+  "fieldCustomer",
+  "bubbleFeedback",
+  "maxWidth",
+  "size",
+  "disabled",
+  "className",
+  "style",
+];
+
+/** 样式相关的一些配置, 支持在 config/schema/field 中传入, 优先级从右到左 */
+export interface FormProps {
+  /** 布局类型 */
+  layoutType?: FormLayoutTypeUnion;
+  /** 自定义字段的默认样式, 也可以用于自定义value/onChange绑定等 */
+  fieldCustomer?: FormRenderChildren;
+  /** 使用气泡显示提示和错误文本, 此模式下 field 假设布局空间会非常紧凑, 使用者需要自行为 field 添加适当的边距 */
+  bubbleFeedback?: boolean;
+  /** 表单项的最大宽度, 用于防止宽度过大造成表单控件变形或不易操作 */
+  maxWidth?: number | string;
+  /** 尺寸(布局紧凑程度, 会同时向表单组件传递props.size, 需要表单控件支持才能正常启用) */
+  size?: SizeUnion;
+  /** 禁用表单, 不阻止提交 (需要表单组件支持disabled) */
+  disabled?: boolean;
+  /** 为 filed 根节点添加类名 */
+  className?: string;
+  /** 为 field 根节点添加样式 */
+  style?: React.CSSProperties;
+}
+
+/** 在Field和schema中均可用的配置, FormProps的扩展, 优先级 Field > schema */
+export interface FormCommonProps extends FormProps, FormKeyCustomer {
+  /**
+   * 表单项标题 */
+  label?: React.ReactNode;
+  /**
+   * 需要渲染的表单控件
+   * - 传入 ReactElement 时, 作为表单控件, 规则与FormFieldProps.children 相同
+   * - 若为 string 类型, 则表示创建时注册的组件 key
+   * */
+  component?: React.ReactElement | string;
+  /** component配置为string 时, 传递给 component 组件的 props */
+  componentProps?: Record<string, any>;
+  /** 额外显示的字段描述 */
+  describe?: React.ReactNode;
+  /** 隐藏表单 */
+  hidden?: boolean;
+  /** 依赖的值, 若通过dynamic依赖了其他值, 需要在此处声明使字段能响应其他字段的变更 */
+  deps?: NamePath[];
+  /** 跳过布局容器, 直接渲染表单组件, 配置此项后, 其他样式相关的配置不再有效 */
+  noLayout?: boolean;
+}
+
+/** 用于支持定制 value/onChange/disabled/size key 的一些配置 */
+export interface FormKeyCustomer {
+  /** value |  用于受控绑定表单的props */
+  valueKey?: string;
+  /** onChange | 值变更的回调 */
+  changeKey?: string;
+  /** disabled | 配置通过什么key来禁用表单 */
+  disabledKey?: string;
+  /** size | 配置通过什么key来设置表单的尺寸 */
+  sizeKey?: string;
+  /** 默认取值方式为onChange(value), 可通过此项进行定制 */
+  valueGetter?: (...value: any) => any;
+  /** 如果某个表单控件不支持 size/disabled 等 key, 可以单独为字段配置此项来避免传入导致 react 产生警告 */
+  ignoreBindKeys?: string | string[];
+}
+
+/** FormKeyCustomer的所有 key */
+export const _formKeyCustomerKeys = [
+  "valueKey",
+  "changeKey",
+  "disabledKey",
+  "sizeKey",
+  "valueGetter",
+  "ignoreBindKeys",
+];
+
+/** 依次从 Field.props > schema > config 中获取通用配置 */
+export interface FormCommonPropsGetter {
+  <K extends keyof FormCommonProps>(key: K): FormCommonProps[K];
+}
+
+/** Filed Props */
+export interface FormFieldProps extends FormCommonProps {
+  /** 表单name */
+  name: NamePath;
+  /**
+   * 挂载表单组件, 默认情况下需要表单组件支持value/onChange(value)接口, 可通过 valueKey/changeKey 等进行配置
+   * 传入render 函数时, 与fieldCustomer等效
+   * */
+  children?: React.ReactElement | FormRenderChildren;
 }
 
 /**
- * 用于update/change事件的回调
- * @param name 触发变更的name, 不传是时应更新所有字段
- * @param relation 为true时表示应该更新与当前name关联的值
+ * List Props 相比 Field 少了一些配置项
+ * - 目前, list 中传入 disabled 不会影响其子级, 后续可能会对此进行调整
  * */
-export type FormNamesNotify = (name?: NamePath, relation?: boolean) => void;
-
-export interface FormSchema extends Schema {
-  /** valid为false时, 该schema不会参与验证, 并且提交时会排除掉schema指向的值 */
-  valid?: boolean;
-  /** 动态设置其他参数 */
-  dynamic?: (
-    form: FormInstance
-  ) => Omit<FormSchemaWithoutName, "dynamic" | "name" | "list"> | void;
-  /** 如果对象为嵌套结构(数组、对象)，对其执行嵌套验证 */
-  schema?: FormSchema[];
-  /** 验证值为array或object时, 所有 数组项/对象值 必须与此Schema匹配, 如果该值的类型不为array或object，此配置会被忽略 */
-  eachSchema?: FormSchemaPartial;
-  /**
-   * 设置该项为list项, 设置后可使用list系列的api对其子项进行新增/删除/排序等操作
-   * - 限制: 不能将eachSchema下的任意级子项设置为list, 若用于root项, 其子级不能再包含list项, list项通过getList(ROOT_SCHEMA_NAME)获取
-   * */
-  list?: boolean;
+export interface FormListProps<Item = any>
+  extends Omit<
+    FormFieldProps,
+    | "children"
+    | "component"
+    | "componentProps"
+    | "fieldCustomer"
+    | keyof FormKeyCustomer
+  > {
+  children: FormListRenderChildren<Item>;
 }
 
-export type FormSchemaWithoutName = Omit<FormSchema, "name">;
+/** 作为 list 时, 应从 Filed 或 schema 等剔除的配置 */
+export const _lisIgnoreKeys = [
+  "component",
+  "componentProps",
+  "fieldCustomer",
+  "valueKey",
+  "changeKey",
+  "disabledKey",
+  "sizeKey",
+  "valueGetter",
+  "ignoreBindKeys",
+];
 
-export type FormSchemaPartial = Omit<FormSchema, "name" | "list">;
-
-/** 需要存储的一些值状态 */
-export interface _State {
-  name: NamePath;
-  touched?: boolean;
-  errors?: RejectMeta;
+/**
+ * FormRenderChildren 入参
+ * */
+export interface FormCustomRenderArgs {
+  /** 用于展开绑定到表单组件的props, 默认情况可能包含value/onChange/disabled等 */
+  bind: any;
+  /** Form实例 */
+  form: FormInstance;
+  /** 创建配置 */
+  config: FormConfig;
+  /** 传递给field的参数 */
+  props: FormFieldProps;
+  /** 用于获取通用配置FormCommonProps */
+  getProps: FormCommonPropsGetter;
 }
 
-/** 用于记录值某些状态的内部对象 */
-export interface _Store {
-  [key: string]: _State;
+/**
+ * FormListRenderChildren 入参
+ * */
+export interface FormListCustomRenderArgs<Item = any>
+  extends Omit<FormCustomRenderArgs, "bind"> {
+  /** 用于渲染列表 */
+  render(
+    renderCB: (meta: {
+      /** 该项的值 */
+      item: Item;
+      /** 该项索引 */
+      index: number;
+      /** 将指定 name 前拼接上 List 父级的 name 后返回 */
+      getName(name: NamePath): NamePath;
+      /** 总长度 */
+      length: number;
+    }) => React.ReactElement
+  ): React.ReactElement[];
+
+  /** 为list新增一项或多项, index为起始位置, 默认追加到结尾. 若name不是有效list或其他原因导致失败会将返回false */
+  add(items: Item | Item[], index?: number): boolean;
+
+  /** 移除list指定索引的元素 */
+  remove(index: number): boolean;
+
+  /** 移动list的指定原素到另一位置 */
+  move(from: number, to: number): boolean;
+
+  /** 交换list的两个元素 */
+  swap(from: number, to: number): boolean;
+}
+
+/**
+ * Filed自定义渲染函数
+ * */
+export interface FormRenderChildren {
+  (args: FormCustomRenderArgs): React.ReactNode;
+}
+
+/**
+ * Filed自定义渲染函数
+ * */
+export interface FormListRenderChildren<Item = any> {
+  (args: FormListCustomRenderArgs<Item>): React.ReactNode;
 }
 
 export interface _Context {
-  /** 默认值 */
-  defaultValue: any;
-  /** 当前values */
-  values: any;
-  /** 存储一些字段状态 */
-  state: _Store;
-  /** 记录所有开启了list的schema */
-  listNames: NamePath[];
-  /** 为所有配置为list的schema项记录每一项的key信息 */
-  listData: {
-    [key: string]: string[];
-  };
-  /** 当前配置 */
   config: FormConfig;
-  /** 当前schema */
-  schema: FormSchemaWithoutName;
-  /** form实例, 此时实例只能在实例方法间使用, 因为它是不完整的 */
-  instance: FormInstance;
-  /** 暂时锁定更新notify, 锁定期间不触发更新 */
-  lockNotify: boolean;
-  /** debounce版本的verify */
-  debounceVerify: FormInstance["verify"];
+  form: FormInstance;
+  /** 注册的组件 */
+  components: Record<string, FormRegisterConfig | React.ReactElement>;
+}
 
-  /** 获取当前schema并处理dynamic, 更新invalid/list等 */
-  getFormatterSchemas(): [FormSchemaWithoutName, NamePath[]];
-
-  /** 根据当前记录的ctx.listNames同步listData配置, 确保所有项都被标注了key */
-  syncLists(): void;
-
-  /** 设置值, 可传入参数跳过列表状态同步 */
-  setValuesInner(values: any, skipListSync?: boolean): void;
-
-  /** 设置值, 可传入参数跳过列表状态同步 */
-  setValueInner(name: NamePath, val: any, skipListSync?: boolean): void;
+export interface _FieldContext {
+  state: {
+    schema: FormSchema | FormSchemaWithoutName | null;
+    renderKey: number;
+  };
+  setState: SetState<_FieldContext["state"]>;
+  isList: boolean;
+  props: FormFieldProps;
+  name: NamePath;
+  wrapRef: React.MutableRefObject<HTMLDivElement>;
 }

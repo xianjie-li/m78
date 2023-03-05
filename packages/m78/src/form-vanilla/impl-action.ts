@@ -1,8 +1,8 @@
 import { _Context, FormInstance } from "./types.js";
 import { RejectMeta, VerifyError } from "@m78/verify";
-import { isArray, stringifyNamePath } from "@m78/utils";
+import { ensureArray, isArray, stringifyNamePath } from "@m78/utils";
 import clone from "lodash/cloneDeep.js";
-import { _eachState, _getState } from "./common.js";
+import { _eachState, _getState, _isLeftEqual } from "./common.js";
 import debounce from "lodash/debounce.js";
 
 export function _implAction(ctx: _Context) {
@@ -11,17 +11,31 @@ export function _implAction(ctx: _Context) {
   instance.verify = async (name) => {
     const schema = instance.getSchemas();
 
-    // 需要在成功或失败后马上重置, 然后再执行后续处理, 反正多个verify产生的竞态问题
+    const isValueChangeTrigger = ctx.isValueChangeTrigger;
+
+    ctx.isValueChangeTrigger = false;
+
+    // 需要在成功或失败后马上重置, 然后再执行后续处理, 防止多个verify产生的竞态问题
     const resetErrorAndTouch = () => {
       // 重置所有错误并在未指定name时设置touched状态
       _eachState(ctx, (st) => {
-        if (!name) {
+        if (name) {
+          // 含 name 时, 清理自身及子级的 error 状态
+          const isSelfOrChild = _isLeftEqual(
+            ensureArray(name),
+            ensureArray(st.name)
+          );
+
+          if (isSelfOrChild) {
+            st.errors = [];
+          }
+        } else {
           st.errors = [];
           st.touched = true;
         }
       });
 
-      // 传入name时设置指定项touched
+      // 传入name时设置指定项touched TODO: 这里应清理所有子级的 error 状态
       if (name) {
         const st = _getState(ctx, name);
         st.errors = [];
@@ -65,7 +79,7 @@ export function _implAction(ctx: _Context) {
           });
 
           if (errors.length) {
-            instance.events.fail.emit(errors);
+            instance.events.fail.emit(errors, isValueChangeTrigger);
             throw new VerifyError(errors);
           }
         }
@@ -79,10 +93,17 @@ export function _implAction(ctx: _Context) {
     }
   };
 
-  ctx.debounceVerify = debounce(instance.verify, 300, {
-    leading: false,
-    trailing: true,
-  }) as FormInstance["verify"];
+  ctx.debounceVerify = debounce(
+    (...args) => {
+      ctx.isValueChangeTrigger = true;
+      return instance.verify(...args).catch(() => {});
+    },
+    200,
+    {
+      leading: true,
+      trailing: true,
+    }
+  ) as FormInstance["verify"];
 
   instance.submit = async () => {
     await instance.verify();
@@ -95,8 +116,7 @@ export function _implAction(ctx: _Context) {
     ctx.state = {};
 
     // 清空现有list信息, 并使用新的values进行一次刷新, 同步list
-    ctx.listData = {};
-    ctx.syncLists();
+    ctx.listState = {};
 
     if (!ctx.lockNotify) {
       instance.events.change.emit();

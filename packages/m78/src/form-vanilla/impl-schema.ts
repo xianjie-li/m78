@@ -7,7 +7,7 @@ import {
   NameItem,
   NamePath,
 } from "@m78/utils";
-import { _ANY_NAME_PLACE_HOLD, ROOT_SCHEMA_NAME } from "./common.js";
+import { _ANY_NAME_PLACE_HOLD } from "./common.js";
 
 export function _implSchema(ctx: _Context) {
   const { instance } = ctx;
@@ -20,11 +20,8 @@ export function _implSchema(ctx: _Context) {
       schema: ctx.schema,
       parentNames: [],
       invalidCB: (name) => invalidNames.push(name),
-      listCB: (name) => ctx.listNames.push(name),
       isRoot: true,
     });
-
-    ctx.syncLists();
 
     return [schemas!, invalidNames];
   };
@@ -73,10 +70,6 @@ export function _implSchema(ctx: _Context) {
   instance.setSchemas = (schema) => {
     ctx.schema = schema;
 
-    // 使用新的schema进行一次刷新, 同步list
-    ctx.getFormatterSchemas();
-    ctx.syncLists();
-
     if (!ctx.lockNotify) {
       instance.events.update.emit();
     }
@@ -105,12 +98,10 @@ export function _implSchema(ctx: _Context) {
     parentNames: NamePath;
     /** 对invalid的项进行回调 */
     invalidCB: (name: NamePath) => void;
-    /** 对启用了list的项进行回调 */
-    listCB: (name: NamePath) => void;
     /** 根schema */
     isRoot?: boolean;
   }) {
-    const { schema, parentNames, invalidCB, listCB, isRoot = false } = args;
+    const { schema, parentNames, invalidCB, isRoot = false } = args;
 
     const combine: FormSchema | FormSchemaWithoutName = Object.assign(
       {},
@@ -146,11 +137,6 @@ export function _implSchema(ctx: _Context) {
       return;
     }
 
-    // 记录list项
-    if (combine.list && !names.includes(_ANY_NAME_PLACE_HOLD)) {
-      listCB(isRoot ? ROOT_SCHEMA_NAME : names);
-    }
-
     if (combine.schema) {
       combine.schema = combine.schema
         .map((s: FormSchema) => {
@@ -158,7 +144,6 @@ export function _implSchema(ctx: _Context) {
             schema: s,
             parentNames: names,
             invalidCB,
-            listCB,
           });
         })
         .filter((i) => !!i) as FormSchema[];
@@ -173,7 +158,6 @@ export function _implSchema(ctx: _Context) {
         schema: combine.eachSchema,
         parentNames: names,
         invalidCB,
-        listCB,
       });
 
       if (!combine.eachSchema) {
