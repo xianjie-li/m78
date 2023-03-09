@@ -30,6 +30,10 @@ import DndExample from "./dnd/dnd-example.js";
 import FormExample from "./form/form-example.js";
 import RformExample from "./form/rform-example.js";
 
+import zhHans from "../src/i18n/locales/zh-Hans.js";
+import en from "../src/i18n/locales/en.js";
+import { i18n } from "../src/i18n/index.js";
+
 export const router = createHashRouter([
   {
     path: "/",
@@ -142,14 +146,6 @@ function renderLinks(routes: RouteObject[], parentPath = ""): React.ReactNode {
   });
 }
 
-async function fetchCN() {
-  return import("../src/i18n/locales/zh-Hans.json");
-}
-
-async function fetchEN() {
-  return import("../src/i18n/locales/en.json");
-}
-
 function Root() {
   function toggleMode() {
     const mode = document.documentElement.getAttribute("data-mode") || "light";
@@ -159,21 +155,14 @@ function Root() {
     );
   }
 
-  const toggleLang = async () => {
-    const cur = m78Config.get().i18n?.lng;
+  const toggleLang = () => {
+    const cur = i18n.language;
 
     const next = cur === "zh-Hans" ? "en" : "zh-Hans";
-    const method = next === "zh-Hans" ? fetchCN : fetchEN;
-
-    const res = await method();
+    const resource = next === "zh-Hans" ? zhHans : en;
 
     m78Config.set({
-      i18n: {
-        lng: next,
-        appendResource: {
-          [next]: res,
-        },
-      },
+      i18n: [next, resource],
     });
   };
 

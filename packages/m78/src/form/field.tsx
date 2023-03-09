@@ -274,18 +274,16 @@ export function _implField(ctx: _Context) {
         {!bubbleFeedback && describe && (
           <div className="m78-form_describe">{describe}</div>
         )}
-        {!bubbleFeedback && (
-          <div
-            className="m78-form_error"
-            role="alert"
-            style={{
-              opacity: showRegularError ? 1 : 0,
-              visibility: showRegularError ? "visible" : "hidden",
-            }}
-          >
-            {error}
-          </div>
-        )}
+        <div
+          className="m78-form_error"
+          role="alert"
+          style={{
+            opacity: showRegularError ? 1 : 0,
+            visibility: showRegularError ? "visible" : "hidden",
+          }}
+        >
+          {bubbleFeedback ? "" : error}
+        </div>
       </Lay>
     );
   };

@@ -14,11 +14,16 @@ import { createEvent } from "@m78/hooks";
 import { _implField } from "./field.js";
 import { omit } from "@m78/utils";
 import { _implList } from "./list.js";
+import { i18n } from "../i18n/index.js";
 
 export const _createForm = (config: FormConfig) => {
+  // 目前以创建时语言为准, 不考虑做动态切换, 场景应该十分有限
+  const languagePack = i18n.getResourceBundle(i18n.language, "form");
+
   const conf: FormConfig = {
     layoutType: FormLayoutType.horizontal,
     schemas: {},
+    languagePack,
     ...omit(config, _omitConfigs as any),
   };
 

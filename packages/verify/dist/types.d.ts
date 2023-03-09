@@ -35,10 +35,13 @@ export interface AsyncValidator {
 }
 /** verify创建配置 */
 export interface Config {
-    /** true | 当其中一项验证失败后，停止后续字段的验证 */
+    /**
+     * true | 当其中一项验证失败后，停止后续字段的验证
+     * - 注意, 如果是嵌套验证器, 父级验证失败了, 子级验证器通常就没有执行的意义了, 即使关闭了verifyFirst, 无效的子级验证器也不会执行
+     * */
     verifyFirst?: boolean;
     /**
-     * 语言包配置，错误模板可以是字符，也可以是接收Meta返回字符的函数, 传入对象会与当前对象深合并，所以如果只更改了部分错误模板，不会影响到其他模板
+     * 语言包配置，错误模板可以是字符，也可以是接收Meta返回字符的函数, 传入对象会与默认语言配置深合并，所以如果只更改了部分错误模板，不会影响到其他模板
      * - 模板字符串会被注入以下变量, 通过{name}进行插值，如果插值语法和原有字符冲突，使用\\{name}来避免插值
      *    - name:  Schema.name
      *    - label: 对应Schema.label, 未传时与 name相同，用于展示字段名时应始终使用此值
@@ -49,6 +52,8 @@ export interface Config {
     languagePack?: AnyObject;
     /** 不需要定制语言包, 仅需要对其扩展或覆盖时使用此项, 会与默认语言包进行深合并 */
     extendLanguagePack?: AnyObject;
+    /** true | 配置是否忽略怪异值(schema中未声明的值), 关闭后未声明的值会产生错误 */
+    ignoreStrangeValue?: boolean;
 }
 /** 验证时传入的配置 */
 export interface CheckConfig {
@@ -122,6 +127,8 @@ export interface Verify {
      * 执行异步验证, 异步验证中也支持使用同步验证器, 验证失败时, resolve值为包含RejectMeta的错误对象VerifyError
      * */
     asyncCheck: (source: any, rootSchema: SchemaWithoutName, config?: CheckConfig) => Promise<void>;
+    /** 从错误对象中获取适当的消息用于反馈, 主要用于自动处理VerifyError */
+    getRejectMessage: (err: any) => string;
     /** 当前使用的languagePack */
     readonly languagePack: AnyObject;
 }

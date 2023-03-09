@@ -3,8 +3,10 @@
 .m78-form {
 
   // 增加权重, 覆盖 lay 附带的样式
-  @at-root :root div.m78-form_field {
+  @at-root :root .m78-form_field {
     padding: 0;
+    outline-offset: 8px;
+    outline-color: var(--m78-color-opacity-md) !important;
 
     &.__small {
 
@@ -49,19 +51,20 @@
 
   &_error {
     color: var(--m78-color-error);
-    padding-top: 2px;
     font-size: 12px;
-    min-height: 24px;
+    min-height: 18px;
     transition: var(--m78-animate-base);
+    line-height: 1.1;
+    word-break: break-word;
   }
 
   &_bubble-error {
     position: absolute;
-    bottom: -2px;
+    bottom: -1px;
     left: 0;
     color: var(--m78-color-error);
     font-size: 12px;
-    padding: 4px;
+    padding: 2px 4px;
     border-radius: var(--m78-border-radius);
     box-shadow: var(--m78-shadow-1-b);
     transform: translateY(100%);

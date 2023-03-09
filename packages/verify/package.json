@@ -1,7 +1,7 @@
 {
   "name": "@m78/verify",
   "version": "1.4.1",
-  "description": "Your next JS validation library",
+  "description": "Lightweight and fast js validator",
   "main": "./index.js",
   "scripts": {
     "test": "jest",

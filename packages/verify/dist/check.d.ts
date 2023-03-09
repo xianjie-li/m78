@@ -6,5 +6,6 @@ import { Config, RejectMeta, Verify } from "./types.js";
 export declare function getCheckApi(conf: Required<Config>, verify: Verify): {
     check: (source: any, rootSchema: import("./types.js").SchemaWithoutName, config?: import("./types.js").CheckConfig | undefined) => RejectMeta | null;
     asyncCheck: (source: any, rootSchema: import("./types.js").SchemaWithoutName, config?: import("./types.js").CheckConfig | undefined) => Promise<void>;
+    getRejectMessage: (err: any) => string;
 };
 //# sourceMappingURL=check.d.ts.map

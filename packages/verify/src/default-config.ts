@@ -4,6 +4,7 @@ import { english } from "./language-pack.js";
 const defaultConfig: Config = {
   verifyFirst: true,
   languagePack: english,
+  ignoreStrangeValue: true,
 };
 
 export { defaultConfig };

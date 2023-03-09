@@ -34,6 +34,10 @@ const schemas: FormSchemaWithoutName = {
     {
       name: "list",
       list: true,
+      dynamic: (form) => ({
+        valid: form.getValue("name") !== "123",
+      }),
+      deps: ["name"],
       validator: required(),
       eachSchema: {
         validator: required(),
@@ -68,7 +72,7 @@ const RformExample = () => {
       },
       schemas,
       // size: Size.small,
-      layoutType: FormLayoutType.horizontal,
+      layoutType: FormLayoutType.vertical,
       bubbleFeedback: true,
       components: {
         input: {
@@ -108,15 +112,15 @@ const RformExample = () => {
   return (
     <div style={{ padding: 32 }}>
       <div>
-        <Form.Field name="name" style={{ padding: 12 }} component="input" />
-        <Form.Field name="topic" style={{ padding: 12 }} label="标签">
+        <Form.Field name="name" component="input" />
+        <Form.Field name="topic" label="标签">
           <Input />
         </Form.Field>
-        <Form.Field name="desc" style={{ padding: 12 }}>
+        <Form.Field name="desc">
           <Input textArea />
         </Form.Field>
 
-        <Form.List name="list" style={{ padding: 12 }} label="物品">
+        <Form.List name="list" label="物品">
           {(args) => {
             return (
               <div>
@@ -127,7 +131,7 @@ const RformExample = () => {
                   const next = index + 1 > max ? min : index + 1;
 
                   return (
-                    <Row style={{ marginBottom: 16 }}>
+                    <Row>
                       <Form.Field
                         name={getName("title")}
                         layoutType={FormLayoutType.vertical}
@@ -140,6 +144,13 @@ const RformExample = () => {
                         layoutType={FormLayoutType.vertical}
                       >
                         <Input placeholder="描述" />
+                      </Form.Field>
+                      <Form.Field
+                        style={{ marginLeft: 8 }}
+                        name={getName("bbb")}
+                        layoutType={FormLayoutType.vertical}
+                      >
+                        <Input placeholder="bbb" />
                       </Form.Field>
 
                       <Button
@@ -188,6 +199,7 @@ const RformExample = () => {
               console.log(Form.getValues());
             } catch (e) {
               console.log(22, e);
+              console.log(22, (e as any).rejects);
             }
           }}
         >

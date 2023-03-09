@@ -5,7 +5,7 @@ import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
 import _ts_generator from "@swc/helpers/src/_ts_generator.mjs";
 import { getNamePathValue, isArray, isFunction, isObject, isString, stringifyNamePath, ensureArray, interpolate } from "@m78/utils";
-import { fmtValidator, isErrorTemplateInterpolate, SOURCE_ROOT_NAME } from "./common.js";
+import { fmtValidator, getExtraKeys, isErrorTemplateInterpolate, SOURCE_ROOT_NAME } from "./common.js";
 import { isVerifyEmpty } from "./validator/required.js";
 import { VerifyError } from "./error.js";
 /**
@@ -14,16 +14,15 @@ import { VerifyError } from "./error.js";
  * */ export function getCheckApi(conf, verify) {
     var baseCheck = function() {
         var _ref = _async_to_generator(function(args, syncCallback) {
-            var isSync, _args, source, _rootSchema, _config, rootSchema, _tmp, _tmp1, rejectMeta, getValueByName, _rejectMeta;
-            function checkSchema(schema, parentNames, checkItemSyncCallback) {
+            var isSync, _args, source, _rootSchema, _config, rootSchema, _tmp, _tmp1, rejectMeta, needBreak, getValueByName, _rejectMeta;
+            function checkSchema(schema, parentNames) {
                 return _checkSchema.apply(this, arguments);
             }
             function _checkSchema() {
                 _checkSchema = // 对一项schema执行检测, 返回true时可按需跳过后续schema的验证
                 // 如果传入parentNames，会将当前项作为指向并将parentNames与当前name拼接
-                // 同步调用时需要使用checkItemSyncCallback通知跳过验证
-                _async_to_generator(function(schema, parentNames, checkItemSyncCallback) {
-                    var ref, isRootSchema, parentNamePath, namePath, realNamePath, value, name, label, isEmpty, validators, interpolateValues, _tmp, currentPass, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, validator, errorTemplate, meta, _tmp1, result, _tmp2, err, _tmp3, _tmp4, err1, needBreak, _schemas;
+                _async_to_generator(function(schema, parentNames) {
+                    var ref, isRootSchema, parentNamePath, namePath, realNamePath, value, name, label, isEmpty, validators, interpolateValues, _tmp, currentPass, meta, _tmp1, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, validator, errorTemplate, result, _tmp2, err, _tmp3, _tmp4, err1, extraKeys, template, _schemas;
                     return _ts_generator(this, function(_state) {
                         switch(_state.label){
                             case 0:
@@ -41,6 +40,8 @@ import { VerifyError } from "./error.js";
                                 _tmp = {};
                                 interpolateValues = (_tmp.name = name, _tmp.label = label, _tmp.value = value, _tmp.type = Object.prototype.toString.call(value), _tmp);
                                 currentPass = true;
+                                _tmp1 = {};
+                                meta = _object_spread((_tmp1.verify = verify, _tmp1.name = name, _tmp1.label = label, _tmp1.value = value, _tmp1.values = source, _tmp1.schema = schema, _tmp1.rootSchema = rootSchema, _tmp1.getValueByName = getValueByName, _tmp1.config = conf, _tmp1.parentNamePath = parentNamePath, _tmp1.namePath = namePath, _tmp1.isEmpty = isEmpty, _tmp1), _config === null || _config === void 0 /* 扩展接口 */  ? void 0 : _config.extraMeta);
                                 if (!(validators === null || validators === void 0 ? void 0 : validators.length)) return [
                                     3,
                                     13
@@ -63,8 +64,6 @@ import { VerifyError } from "./error.js";
                                 ];
                                 validator = _step.value;
                                 errorTemplate = "";
-                                _tmp1 = {};
-                                meta = _object_spread((_tmp1.verify = verify, _tmp1.name = name, _tmp1.label = label, _tmp1.value = value, _tmp1.values = source, _tmp1.schema = schema, _tmp1.rootSchema = rootSchema, _tmp1.getValueByName = getValueByName, _tmp1.config = conf, _tmp1.parentNamePath = parentNamePath, _tmp1.namePath = namePath, _tmp1.isEmpty = isEmpty, _tmp1), _config === null || _config === void 0 /* 扩展接口 */  ? void 0 : _config.extraMeta);
                                 _state.label = 3;
                             case 3:
                                 _state.trys.push([
@@ -155,21 +154,28 @@ import { VerifyError } from "./error.js";
                                     7
                                 ];
                             case 13:
-                                needBreak = !!(conf.verifyFirst && rejectMeta.length);
-                                if (needBreak) {
-                                    if (isSync) {
-                                        checkItemSyncCallback === null || checkItemSyncCallback === void 0 ? void 0 : checkItemSyncCallback(needBreak);
-                                        return [
-                                            2,
-                                            null
-                                        ];
-                                    } else {
-                                        return [
-                                            2,
-                                            needBreak
-                                        ];
+                                // 处理StrangeValue
+                                if (!conf.ignoreStrangeValue) {
+                                    extraKeys = getExtraKeys(namePath, schema, value);
+                                    if (extraKeys.length) {
+                                        template = conf.languagePack.commonMessage.strangeValue;
+                                        extraKeys.forEach(function(nameKey) {
+                                            var msg = interpolate(template, {
+                                                name: nameKey
+                                            });
+                                            rejectMeta.push(_object_spread_props(_object_spread({}, meta), {
+                                                message: msg,
+                                                rand: Math.random()
+                                            }));
+                                        });
                                     }
                                 }
+                                // 检测是否需要中断后续验证
+                                needBreak = !!(conf.verifyFirst && rejectMeta.length);
+                                if (needBreak) return [
+                                    2
+                                ];
+                                // 未通过验证时不再进行子级验证
                                 if (!currentPass) return [
                                     2
                                 ];
@@ -247,7 +253,7 @@ import { VerifyError } from "./error.js";
             function _checkSchemas() {
                 _checkSchemas = // 检测一组schema
                 _async_to_generator(function(_schemas, parentNames) {
-                    var _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, schema, needBreak, needBreak1, err1;
+                    var _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, schema, err1;
                     return _ts_generator(this, function(_state) {
                         switch(_state.label){
                             case 0:
@@ -272,9 +278,7 @@ import { VerifyError } from "./error.js";
                                     3,
                                     3
                                 ];
-                                checkSchema(schema, parentNames, function(nb) {
-                                    return needBreak = nb;
-                                }).then();
+                                checkSchema(schema, parentNames).then();
                                 if (needBreak) return [
                                     3,
                                     6
@@ -289,8 +293,8 @@ import { VerifyError } from "./error.js";
                                     checkSchema(schema, parentNames)
                                 ];
                             case 4:
-                                needBreak1 = _state.sent();
-                                if (needBreak1) return [
+                                _state.sent();
+                                if (needBreak) return [
                                     3,
                                     6
                                 ];
@@ -345,6 +349,7 @@ import { VerifyError } from "./error.js";
                         _tmp1 = {};
                         rootSchema = _object_spread_props(_object_spread(_tmp, _rootSchema), (_tmp1.name = SOURCE_ROOT_NAME, _tmp1));
                         rejectMeta = [];
+                        needBreak = false;
                         getValueByName = function(name) {
                             return getNamePathValue(source, name);
                         };
@@ -447,8 +452,21 @@ import { VerifyError } from "./error.js";
             return _ref.apply(this, arguments);
         };
     }();
+    var getRejectMessage = function(e) {
+        var msg = "";
+        if (e instanceof VerifyError) {
+            if (e.rejects.length) {
+                msg = e.rejects[0].message;
+            }
+        }
+        if (!msg) {
+            msg = (e === null || e === void 0 ? void 0 : e.message) || VerifyError.defaultMessage;
+        }
+        return msg;
+    };
     return {
         check: check,
-        asyncCheck: asyncCheck
+        asyncCheck: asyncCheck,
+        getRejectMessage: getRejectMessage
     };
 }

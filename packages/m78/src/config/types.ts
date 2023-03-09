@@ -4,13 +4,12 @@ import { Resource } from "i18next";
 export interface M78SeedState {
   /** 黑暗模式 */
   darkMode?: boolean;
-  /** 国际化 */
-  i18n?: {
-    /** 切换到指定语言(需要语言配置了对应的Resource) */
-    lng?: string;
-    /** 扩展国际化资源 */
-    appendResource?: Resource;
-  };
+  /**
+   * 国际化配置
+   * - 传入string时, 表示为语言key, 如zh-Hands, en, 需要已加载对应语言包
+   * - 如果要添加语言包, 请使用数组形式, [lang, Resource]
+   * */
+  i18n?: string | [string, Resource];
   /** empty组件特有配置 */
   empty: {
     /** 全局配置Empty组件的空状态图片 */

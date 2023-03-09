@@ -5,6 +5,7 @@ import {
   object,
   regexp,
   required,
+  SchemaWithoutName,
   string,
 } from "./index.js";
 import { fmtValidator, SOURCE_ROOT_NAME } from "./common.js";
@@ -17,6 +18,7 @@ describe("base", () => {
     expect(verify).toStrictEqual({
       check: expect.any(Function),
       asyncCheck: expect.any(Function),
+      getRejectMessage: expect.any(Function),
       languagePack: expect.any(Object),
     });
   });
@@ -355,5 +357,90 @@ describe("base", () => {
     );
 
     expect(list3).toEqual([_number, _regexp, _required]);
+  });
+
+  test("ignoreStrangeValue", () => {
+    const verify2 = createVerify({
+      verifyFirst: false,
+      ignoreStrangeValue: false,
+    });
+
+    const schema: SchemaWithoutName = {
+      validator: required(),
+      schema: [
+        {
+          name: "name",
+        },
+        {
+          name: "things",
+          eachSchema: {
+            schema: [
+              {
+                name: "title",
+              },
+            ],
+          },
+        },
+        {
+          name: "obj",
+          schema: [
+            {
+              name: "objf1",
+            },
+          ],
+        },
+        {
+          name: "arr2",
+          schema: [
+            {
+              name: 0,
+            },
+          ],
+        },
+      ],
+    };
+
+    const reject = verify2.check(
+      {
+        name: "lxj",
+        things: [
+          {
+            title: "thing1",
+            content: "123123",
+          },
+        ],
+        obj: {
+          objf1: "123",
+          objf2: "123",
+        },
+        arr2: [1, 2],
+      },
+      schema
+    );
+
+    expect(reject!.map((i) => i.message)).toEqual([
+      "Has an unexpected field: things[0].content",
+      "Has an unexpected field: obj.objf2",
+      "Has an unexpected field: arr2[1]",
+    ]);
+
+    const reject2 = verify2.check(
+      {
+        name: "lxj",
+        things: [
+          {
+            title: "thing1",
+            content: "123123",
+          },
+        ],
+        obj: {
+          objf1: "123",
+          objf2: "123",
+        },
+        arr2: [1, 2],
+        abc: "!23",
+      },
+      schema
+    );
   });
 });

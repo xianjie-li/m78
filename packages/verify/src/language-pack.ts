@@ -1,4 +1,8 @@
 export const simplifiedChinese = {
+  // 非验证器抛出的通用错误信息
+  commonMessage: {
+    strangeValue: "存在预期外的字段: {name}",
+  },
   required: "不能为空",
   object: "必须为常规对象",
   bool: "必须为布尔值",
@@ -57,6 +61,10 @@ export const simplifiedChinese = {
 };
 
 export const english = {
+  // 非验证器抛出的通用错误信息
+  commonMessage: {
+    strangeValue: "Has an unexpected field: {name}",
+  },
   required: "Required",
   object: "Must be a regular object",
   bool: "Must be a Boolean value",

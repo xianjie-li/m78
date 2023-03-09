@@ -22,6 +22,7 @@ import {
 } from "./types.js";
 import {
   fmtValidator,
+  getExtraKeys,
   isErrorTemplateInterpolate,
   SOURCE_ROOT_NAME,
 } from "./common.js";
@@ -47,19 +48,18 @@ export function getCheckApi(conf: Required<Config>, verify: Verify) {
       name: SOURCE_ROOT_NAME,
     };
 
+    // 验证器错误
     const rejectMeta: RejectMeta = [];
+
+    // 为true时, 中断后续验证
+    let needBreak = false;
 
     const getValueByName: Meta["getValueByName"] = (name) =>
       getNamePathValue(source, name);
 
     // 对一项schema执行检测, 返回true时可按需跳过后续schema的验证
     // 如果传入parentNames，会将当前项作为指向并将parentNames与当前name拼接
-    // 同步调用时需要使用checkItemSyncCallback通知跳过验证
-    async function checkSchema(
-      schema: Schema,
-      parentNames: NamePath,
-      checkItemSyncCallback?: AnyFunction
-    ) {
+    async function checkSchema(schema: Schema, parentNames: NamePath) {
       const isRootSchema = schema.name === SOURCE_ROOT_NAME;
 
       const parentNamePath = ensureArray(parentNames);
@@ -79,7 +79,7 @@ export function getCheckApi(conf: Required<Config>, verify: Verify) {
 
       const validators = fmtValidator(schema.validator, isEmpty);
 
-      // 插值对象
+      // 基础插值对象
       const interpolateValues: AnyObject = {
         name,
         label,
@@ -87,29 +87,29 @@ export function getCheckApi(conf: Required<Config>, verify: Verify) {
         type: Object.prototype.toString.call(value),
       };
 
-      // 当前schema是否通过验证, 未通过时其值集验证器不进行验证
+      // 当前schema是否通过验证, 未通过时其子级验证器不进行验证
       let currentPass = true;
+
+      const meta: Meta = {
+        verify,
+        name,
+        label,
+        value,
+        values: source,
+        schema,
+        rootSchema,
+        getValueByName,
+        config: conf,
+        parentNamePath,
+        namePath,
+        isEmpty,
+        ..._config?.extraMeta /* 扩展接口 */,
+      };
 
       // 验证validators
       if (validators?.length) {
         for (const validator of validators) {
           let errorTemplate: ErrorTemplateType = "";
-
-          const meta: Meta = {
-            verify,
-            name,
-            label,
-            value,
-            values: source,
-            schema,
-            rootSchema,
-            getValueByName,
-            config: conf,
-            parentNamePath,
-            namePath,
-            isEmpty,
-            ..._config?.extraMeta /* 扩展接口 */,
-          };
 
           try {
             const result = isSync
@@ -142,17 +142,30 @@ export function getCheckApi(conf: Required<Config>, verify: Verify) {
         }
       }
 
-      const needBreak = !!(conf.verifyFirst && rejectMeta.length);
+      // 处理StrangeValue
+      if (!conf.ignoreStrangeValue) {
+        const extraKeys = getExtraKeys(namePath, schema, value);
 
-      if (needBreak) {
-        if (isSync) {
-          checkItemSyncCallback?.(needBreak);
-          return null;
-        } else {
-          return needBreak;
+        if (extraKeys.length) {
+          const template = conf.languagePack.commonMessage.strangeValue;
+
+          extraKeys.forEach((nameKey) => {
+            const msg = interpolate(template, { name: nameKey });
+
+            rejectMeta.push({
+              ...meta,
+              message: msg,
+            });
+          });
         }
       }
 
+      // 检测是否需要中断后续验证
+      needBreak = !!(conf.verifyFirst && rejectMeta.length);
+
+      if (needBreak) return;
+
+      // 未通过验证时不再进行子级验证
       if (!currentPass) return;
 
       if (schema.schema?.length) {
@@ -193,12 +206,12 @@ export function getCheckApi(conf: Required<Config>, verify: Verify) {
     async function checkSchemas(_schemas: Schema[], parentNames: NamePath) {
       for (const schema of _schemas) {
         if (isSync) {
-          let needBreak;
-          checkSchema(schema, parentNames, (nb) => (needBreak = nb)).then();
+          checkSchema(schema, parentNames).then();
 
           if (needBreak) break;
         } else {
-          const needBreak = await checkSchema(schema, parentNames);
+          await checkSchema(schema, parentNames);
+
           if (needBreak) break;
         }
       }
@@ -240,8 +253,25 @@ export function getCheckApi(conf: Required<Config>, verify: Verify) {
     }
   };
 
+  const getRejectMessage: Verify["getRejectMessage"] = (e: any) => {
+    let msg = "";
+
+    if (e instanceof VerifyError) {
+      if (e.rejects.length) {
+        msg = e.rejects[0].message;
+      }
+    }
+
+    if (!msg) {
+      msg = e?.message || VerifyError.defaultMessage;
+    }
+
+    return msg;
+  };
+
   return {
     check,
     asyncCheck,
+    getRejectMessage,
   };
 }

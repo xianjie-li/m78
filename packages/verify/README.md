@@ -2,35 +2,13 @@
 
 <br>
 
-<p align="center" style="color:#666">Your next JS validation library</p>
+<p align="center" style="color:#666">Lightweight and fast js validator</p>
 
-<!-- TOC -->
 
-- [Features](#features)
-- [usage](#usage)
-  - [基础](#基础)
-  - [异步验证&单值验证](#异步验证单值验证)
-  - [name 取值示例](#name取值示例)
-  - [验证器](#验证器)
-  - [嵌套验证](#嵌套验证)
-  - [自定义提示模板](#自定义提示模板)
-  - [函数参数验证](#函数参数验证)
-- [API](#api)
-  - [NamePath](#namepath)
-  - [Verify](#verify)
-  - [Schema](#schema)
-  - [Validator](#validator)
-  - [Meta](#meta)
-  - [RejectMeta](#rejectmeta)
-  - [Config](#config)
-
-<!-- /TOC -->
-
-<br>
 
 ## Features
 
-- 支持各种验证类型, object/array 验证，复杂嵌套结构验证，异步验证, 函数参数验证等。
+- 支持各种验证类型, object/array 验证，复杂嵌套结构验证，异步验证,  函数参数验证等。
 - 很小的体积。
 - 全验证器用法，易学，易组合， 以及更少的概念。
 - 完善的验证模板定制能力。
@@ -47,7 +25,8 @@
 2. 导入并使用
 
 ```typescript
-import { createVerify, required, string, number } from "@m78/verify";
+import { createVerify } from "@m78/verify";
+import { required, string, number } from "@m78/verify/validator";
 
 // 创建一个verify实例，可以创建多个实例，每个实例拥有独立的配置
 const verify = createVerify(/* config */);
@@ -78,7 +57,7 @@ const schema = {
 // 执行验证
 const rejects = verify.check(data, schema);
 
-// 如果rejects为null， 表示验证通过，验证失败时为一个包含了多个Meta对象的数组, Meta对象的详情见下方Meta部分
+// 如果rejects为null， 表示验证通过，验证失败时为一个包含了多个RejectMeta对象的数组, RejectMeta对象的详情见下方RejectMeta部分
 [
   {
     message: "...",
@@ -86,6 +65,8 @@ const rejects = verify.check(data, schema);
   },
 ];
 ```
+
+
 
 ### 异步验证
 
@@ -116,12 +97,19 @@ const schema = {
 };
 
 verify.asyncCheck(data, schema).catch((err) => {
+  // 有两种方式获取错误消息, 第一种是这样使用内部提供的工具函数, 会自动根据错误类型获取适当的错误消息
+  const message = verify.getRejectMessage(err);
+  
+  
+  // 另一种方式, 手动获取, 通常需要依次处理 err.rejects > err.message
   if (err instanceof VerifyError) {
     // err.rejects
     // rejects与上一示例中的相同
   }
 });
 ```
+
+
 
 ### 单值验证
 
@@ -132,6 +120,8 @@ const rejects = verify.check(123, {
   validator: [required(), number({ max: 100 })],
 });
 ```
+
+
 
 ### 函数参数验证
 
@@ -157,7 +147,9 @@ function fn(...args) {
 fn();
 ```
 
-另一种方式是使用隐藏的`arguments`参数
+
+
+另一种方式是使用 `arguments`
 
 ```typescript
 function fn(name, age) {
@@ -181,19 +173,23 @@ function fn(name, age) {
 fn();
 ```
 
+
+
 ### name 取值示例
 
 Schema 的 name 支持嵌套取值
 
-```
+```json
 {
 	name: 'key',	// 字段取值, 对应 source.key
-	name: 0,		// 数组取值, 对应 source[0]
-	name: ['user', 'name'],		// 对象嵌套取值, 对应 source.user.name
+	name: 0,		  // 数组取值, 对应 source[0]
+	name: ['user', 'name'],		    // 对象嵌套取值, 对应 source.user.name
 	name: ['list', 1, 'title'],		// 对象数组嵌套取值, 对应 source.list[1].name
 	name: [0, 'title'],		// 数组嵌套取值, 对应 source[1].name
 }
 ```
+
+
 
 ### 空值
 
@@ -203,14 +199,16 @@ Schema 的 name 支持嵌套取值
 undefined, null ,'', NaN, [], {}, 空白字符
 ```
 
-另外, 如果待校验的值是空值, 验证器执行会被直接跳过, 这类似其他库中的`可选字段`, 字段存在值才校验, 不存在则跳过, 可以通过`[required(), ...]`可以将字段标记为必传, 如:
+另外,  类似一些编程语言中的null, 空值是所有验证器的子集, 如果待校验的值是空值, 验证器执行会被直接跳过, 可以通过`[required(), ...]`可以将字段标记为必传, 如:
 
 这个示例中的 `number` 不会执行, 因为待验证值为空
 
 ```ts
 // 待验证的值
-null[
-  // 验证器
+null
+
+// 验证器
+[
   number()
 ];
 ```
@@ -219,11 +217,16 @@ null[
 
 ```ts
 // 待验证的值
-null[
+null
+
+[
   // 验证器
-  (required(), number())
+  required(), 
+  number()
 ];
 ```
+
+
 
 ### 验证器
 
@@ -240,7 +243,7 @@ function string({ value }) {
 }
 ```
 
-异步验证器与同步验证器编写方式几乎一致，除了它返回一个 Promise，这个 Promise 的 resolve 值与同步验证器的返回值等效
+异步验证器与同步验证器编写方式几乎一致，除了它返回一个 Promise
 
 ```js
 async function asyncCheck({ value }) {
@@ -252,6 +255,8 @@ async function asyncCheck({ value }) {
 ```
 
 更多验证器的细节请见下方`Validator`部分
+
+
 
 ### 嵌套验证
 
@@ -336,6 +341,8 @@ const schema = {
 verify2.check(data, schema);
 ```
 
+
+
 ### 自定义提示模板
 
 内置了中文和英文两种提示模板，在创建实例时通过如下方式配置
@@ -369,69 +376,9 @@ const verify = createVerify({
 });
 ```
 
-如果有任何疑惑，可以参考默认语言模板配置
+如果有任何疑惑，可以参考默认语言模板配置 [language-pack.ts](./src/language-pack.ts) 
 
-```js
-export const english = {
-  required: "Required",
-  object: "Must be a regular object",
-  bool: "Must be a Boolean value",
-  fn: "Must be function",
-  symbol: "Must be a symbol value",
-  regexp: "Must be a regexp object",
-  regexpString: "Must be a valid regular character",
-  url: "Must be a valid url",
-  email: "Must be a valid email",
-  // 额外插值: regexp
-  pattern: "Invalid format",
-  // 额外插值: specific
-  specific: "Only be a {specific}",
-  // 额外插值: targetLabel
-  equality: "Must be a the same as {targetLabel}",
-  // 额外插值: within
-  within: "Must be a member of {within}",
-  // 额外插值: without
-  without: "Must be a value other than {without}",
-  // 额外插值: max, min, length
-  string: {
-    notExpected: "Must be a string",
-    max: "Length cannot be greater than {max}",
-    min: "Length cannot be less than {min}",
-    length: "The length can only be {length}",
-  },
-  // 额外插值: max, min, length
-  array: {
-    notExpected: "Must be a array",
-    max: "No more than {max} items",
-    min: "No less than {min} items",
-    length: "Must be {length} items",
-  },
-  // 额外插值: max, min, size
-  number: {
-    notExpected: "Must be a number",
-    notInteger: "Must be a integer",
-    max: "Cannot be greater than {max}",
-    min: "Cannot be less than {min}",
-    size: "Must be {size}",
-  },
-  // 除notExpected外的额外插值: max, min, at
-  date: {
-    notExpected: "Must be a valid date",
-    max: "Cannot be after {max}",
-    min: "Cannot be before {min}",
-    at: "Must be {at}",
-    between: "Must be between {min} ~ {max}",
-  },
-  // match包含额外插值keyword,  list.miss包含额外插值miss, 表示缺少的项
-  match: "No content matching {keyword}",
-  list: {
-    miss: "Missing {miss}",
-    diffLength: "Length does not match",
-  },
-};
-```
 
-<br>
 
 ## API
 
@@ -439,40 +386,48 @@ export const english = {
 
 请查阅: https://github.com/xianjie-li/m78/tree/master/packages/verify/src/validator
 
+
+
 ### NamePath
 
 ```typescript
-/**
- * 表示name的字符或字符数组，数组用法用于链式取值，如: ['user', 'address']、['1', 'name']、['list', '4', 'name']
- * */
-export type NamePath = string | string[];
+// 表示name的字符或字符数组，用于链式取值，如: ['user', 'address']、[1, 'name']、['list', 4, 'name']
+export type NameItem = string | number;
+export type NamePath = NameItem | NameItem[];
 ```
 
-### Verify
 
-验证器实例
+
+### Config
+
+共有两种配置, 一是创建 verify 时的配置，二是执行验证检测的配置
 
 ```typescript
-/** Verify 实例 */
-export interface Verify {
-  /** 执行同步验证 */
-  check: (
-    source: any,
-    rootSchema: SchemaWithoutName,
-    config?: CheckConfig
-  ) => RejectMeta | null;
+/** verify创建配置 */
+export interface Config {
   /**
-   * 执行异步验证, 异步验证中也支持使用同步验证器, 验证失败时, resolve值为包含RejectMeta的错误对象VerifyError
+   * true | 当其中一项验证失败后，停止后续字段的验证
+   * - 注意, 如果是嵌套验证器, 父级验证失败了, 子级验证器通常就没有执行的意义了, 即使关闭了verifyFirst, 无效的子级验证器也不会执行
    * */
-  asyncCheck: (
-    source: any,
-    rootSchema: SchemaWithoutName,
-    config?: CheckConfig
-  ) => Promise<void>;
-  /** 当前使用的languagePack */
-  readonly languagePack: AnyObject;
+  verifyFirst?: boolean;
+  /**
+   * 语言包配置，错误模板可以是字符，也可以是接收Meta返回字符的函数, 传入对象会与默认语言配置深合并，所以如果只更改了部分错误模板，不会影响到其他模板
+   * - 模板字符串会被注入以下变量, 通过{name}进行插值，如果插值语法和原有字符冲突，使用\\{name}来避免插值
+   *    - name:  Schema.name
+   *    - label: 对应Schema.label, 未传时与 name相同，用于展示字段名时应始终使用此值
+   *    - value: 字段值, 应只在验证值为基础类型时使用
+   *    - valueType: value类型的字符串表示
+   * - 在特定的验证器中还会注入额外的插值，具体可以查看对应验证器的文档
+   * */
+  languagePack?: AnyObject;
+  /** 不需要定制语言包, 仅需要对其扩展或覆盖时使用此项, 会与默认语言包进行深合并 */
+  extendLanguagePack?: AnyObject;
+  /** true | 配置是否忽略怪异值(schema中未声明的值), 关闭后未声明的值会产生错误 */
+  ignoreStrangeValue?: boolean;
 }
 ```
+
+
 
 ### Schema
 
@@ -507,6 +462,40 @@ export interface Schema {
 }
 ```
 
+
+
+### Verify
+
+验证器实例
+
+```typescript
+/** Verify 实例 */
+export interface Verify {
+  /** 执行同步验证 */
+  check: (
+    source: any,
+    rootSchema: SchemaWithoutName,
+    config?: CheckConfig
+  ) => RejectMeta | null;
+  /**
+   * 执行异步验证, 异步验证中也支持使用同步验证器, 验证失败时, resolve值为包含RejectMeta的错误对象VerifyError
+   * */
+  asyncCheck: (
+    source: any,
+    rootSchema: SchemaWithoutName,
+    config?: CheckConfig
+  ) => Promise<void>;
+  /** 从错误对象中获取适当的消息用于反馈, 主要用于自动处理VerifyError */
+  getRejectMessage: (err: any) => string;
+  /** 当前使用的languagePack */
+  readonly languagePack: AnyObject;
+}
+```
+
+
+
+
+
 ### Validator
 
 ```typescript
@@ -539,6 +528,8 @@ export interface AsyncValidator {
   checkEmpty?: boolean;
 }
 ```
+
+
 
 ### Meta
 
@@ -575,6 +566,8 @@ export interface Meta {
 }
 ```
 
+
+
 ### RejectMeta
 
 描述验证失败信息的对象, 除了新增了一个 message 字段外与 Meta 完全相同
@@ -587,32 +580,3 @@ export interface RejectMetaItem extends Meta {
 }
 ```
 
-### Config
-
-共有两种配置, 一是创建 verify 时的配置，二是执行验证检测的配置
-
-```typescript
-/** verify创建配置 */
-export interface Config {
-  /** true | 当其中一项验证失败后，停止后续字段的验证 */
-  verifyFirst?: boolean;
-  /**
-   * 语言包配置，错误模板可以是字符，也可以是接收Meta返回字符的函数, 传入对象会与默认语言配置深合并，所以如果只更改了部分错误模板，不会影响到其他模板
-   * - 模板字符串会被注入以下变量, 通过{name}进行插值，如果插值语法和原有字符冲突，使用\\{name}来避免插值
-   *    - name:  Schema.name
-   *    - label: 对应Schema.label, 未传时与 name相同，用于展示字段名时应始终使用此值
-   *    - value: 字段值, 应只在验证值为基础类型时使用
-   *    - valueType: value类型的字符串表示
-   * - 在特定的验证器中还会注入额外的插值，具体可以查看对应验证器的文档
-   * */
-  languagePack?: AnyObject;
-  /** 不需要定制语言包, 仅需要对其扩展或覆盖时使用此项, 会与默认语言包进行深合并 */
-  extendLanguagePack?: AnyObject;
-}
-
-/** 验证时传入的配置 */
-export interface CheckConfig {
-  /** 此对象会合并到 Meta 中，如果与内置key同名则覆盖内置key */
-  extraMeta: AnyObject;
-}
-```

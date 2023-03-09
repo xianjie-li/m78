@@ -1,4 +1,7 @@
 export declare const simplifiedChinese: {
+    commonMessage: {
+        strangeValue: string;
+    };
     required: string;
     object: string;
     bool: string;
@@ -46,6 +49,9 @@ export declare const simplifiedChinese: {
     };
 };
 export declare const english: {
+    commonMessage: {
+        strangeValue: string;
+    };
     required: string;
     object: string;
     bool: string;

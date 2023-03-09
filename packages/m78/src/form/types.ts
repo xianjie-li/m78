@@ -5,7 +5,7 @@ import {
   FormSchema as VanillaFormSchema,
 } from "../form-vanilla/index.js";
 import React from "react";
-import { CustomEvent, EmptyFunction, NamePath } from "@m78/utils";
+import { EmptyFunction, NamePath } from "@m78/utils";
 import { CustomEventWithHook, SetState } from "@m78/hooks";
 import { RejectMeta } from "@m78/verify";
 import { SizeUnion } from "../common/index.js";
@@ -16,6 +16,7 @@ export const _omitConfigs = [
   "languagePack",
   "extendLanguagePack",
   "verifyFirst",
+  "ignoreStrangeValue",
 ] as const;
 
 type OmitType = typeof _omitConfigs[number];
@@ -158,7 +159,10 @@ export interface FormCommonProps extends FormProps, FormKeyCustomer {
   describe?: React.ReactNode;
   /** 隐藏表单 */
   hidden?: boolean;
-  /** 依赖的值, 若通过dynamic依赖了其他值, 需要在此处声明使字段能响应其他字段的变更 */
+  /**
+   * 依赖的值, 若通过dynamic依赖了其他值, 需要在此处声明使字段能响应其他字段的变更
+   * - 此配置是为了减少Field不必要的re-render, 使字段能够在关联字段变更时才更为精确的更新
+   * */
   deps?: NamePath[];
   /** 跳过布局容器, 直接渲染表单组件, 配置此项后, 其他样式相关的配置不再有效 */
   noLayout?: boolean;
