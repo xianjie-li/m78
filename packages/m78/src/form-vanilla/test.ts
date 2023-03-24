@@ -9,7 +9,7 @@ import {
 import { jest } from "@jest/globals";
 import { createForm } from "./index.js";
 
-describe("form", () => {
+describe("form-vanilla", () => {
   test("root single value test", async () => {
     const form = createForm({
       defaultValue: 1,
@@ -52,6 +52,7 @@ describe("form", () => {
 
   test("all round test", async () => {
     const form = createForm({
+      autoVerify: false,
       defaultValue: {
         filed1: "m78 form",
         nestObjField1: {
@@ -259,11 +260,14 @@ describe("form", () => {
     expect(form.getFormChanged()).toBe(true);
 
     form.setValue("filed1", "m78 form");
+    expect(updateCB.mock.calls.length).toBe(5);
     form.setValue(["nestArrayFiled1", 1], 2);
+    expect(updateCB.mock.calls.length).toBe(6);
     form.setValue(
       ["nestDeepField1", "nestDeepField1_1", "nestDeepField1_1_1", "title"],
       "nestDeepTitle"
     );
+    expect(updateCB.mock.calls.length).toBe(6);
 
     expect(form.getTouched("filed1")).toBe(true);
     expect(form.getTouched(["nestArrayFiled1", 1])).toBe(true);
@@ -294,6 +298,9 @@ describe("form", () => {
 
     // reset & defaultValues
     form.reset();
+
+    expect(updateCB.mock.calls.length).toBe(8);
+    expect(changeCB.mock.calls.length).toBe(8);
 
     expect(form.getTouched("filed1")).toBe(false);
     expect(form.getTouched(["nestArrayFiled1", 1])).toBe(false);
@@ -362,6 +369,9 @@ describe("form", () => {
 
     form.setValue("nestArrayFiled1", [1, 2, 3]);
 
+    expect(updateCB.mock.calls.length).toBe(13);
+    expect(changeCB.mock.calls.length).toBe(11);
+
     try {
       await form.verify("nestArrayFiled1");
     } catch (e: any) {
@@ -378,7 +388,7 @@ describe("form", () => {
         .map((i: any) => `${i.name}:${i.message}`)
     ).toEqual(["nestArrayFiled1:No less than 4 items"]);
 
-    expect(updateCB.mock.calls.length).toBe(15);
+    expect(updateCB.mock.calls.length).toBe(13);
     expect(changeCB.mock.calls.length).toBe(11);
 
     form.setValue("nestArrayFiled1", [1, 2, 3, 4]);
@@ -387,7 +397,7 @@ describe("form", () => {
       "abcd"
     );
 
-    expect(updateCB.mock.calls.length).toBe(16);
+    expect(updateCB.mock.calls.length).toBe(14);
     expect(changeCB.mock.calls.length).toBe(12);
 
     await form.verify();
@@ -477,6 +487,11 @@ describe("form", () => {
                       },
                     ],
             }),
+          },
+          {
+            name: "field5",
+            // @ts-ignore 测试extraValidGetter
+            disabled: true,
           },
         ],
       },
@@ -641,7 +656,7 @@ describe("form", () => {
     expect(keys[0]).toEqual(form2.getList([])![5].key);
   });
 
-  it("nest list change", () => {
+  test("nest list change", () => {
     // nest list change
     const form3 = createForm({
       defaultValue: {
@@ -744,5 +759,119 @@ describe("form", () => {
     );
 
     expect(form3.getList(["list"])!.length).toEqual(5);
+  });
+
+  test("getChangedValues", () => {
+    const form = createForm({
+      defaultValue: {
+        field1: "abc",
+        filed2: "efg",
+        // field3: xx, 不存在的字段测试
+        list1: [1, 2, 3],
+        list2: [
+          {
+            title: "1",
+          },
+          {
+            title: "2",
+          },
+          {
+            title: "3",
+          },
+        ],
+        obj: {
+          field1: "abc",
+          filed2: "efg",
+        },
+        delFiled: "del",
+        delList: [
+          {
+            title: "1",
+          },
+          {
+            title: "2",
+          },
+        ],
+        delObj: {
+          field1: "abc",
+          filed2: "efg",
+        },
+      },
+      schemas: {},
+    });
+
+    expect(form.getChangedValues()).toEqual(null);
+
+    form.setValue("field1", "abc1");
+
+    expect(form.getChangedValues()).toEqual({ field1: "abc1" });
+
+    form.setValue("field3", "");
+
+    expect(form.getChangedValues()).toEqual({ field1: "abc1" });
+
+    form.setValue(["list1", 1], 5);
+    form.setValue(["list2", 1, "title"], "55");
+
+    expect(form.getChangedValues()).toEqual({
+      field1: "abc1",
+      list1: [1, 5, 3],
+      list2: [{ title: "1" }, { title: "55" }, { title: "3" }],
+    });
+
+    form.setValue(["obj", "filed2"], "efg1");
+
+    expect(form.getChangedValues()).toEqual({
+      field1: "abc1",
+      list1: [1, 5, 3],
+      list2: [{ title: "1" }, { title: "55" }, { title: "3" }],
+      obj: {
+        field1: "abc",
+        filed2: "efg1",
+      },
+    });
+
+    form.setValue("delFiled", "");
+
+    expect(form.getChangedValues()).toEqual({
+      field1: "abc1",
+      list1: [1, 5, 3],
+      list2: [{ title: "1" }, { title: "55" }, { title: "3" }],
+      obj: {
+        field1: "abc",
+        filed2: "efg1",
+      },
+      delFiled: "",
+    });
+
+    form.setValue(["delObj"], undefined);
+
+    expect(form.getChangedValues()).toEqual({
+      field1: "abc1",
+      list1: [1, 5, 3],
+      list2: [{ title: "1" }, { title: "55" }, { title: "3" }],
+      obj: {
+        field1: "abc",
+        filed2: "efg1",
+      },
+      delFiled: "",
+      delObj: null,
+    });
+
+    form.setValue("delList", undefined);
+    form.setValue("delObj", undefined);
+
+    expect(form.getChangedValues()).toEqual({
+      field1: "abc1",
+      list1: [1, 5, 3],
+      list2: [{ title: "1" }, { title: "55" }, { title: "3" }],
+      obj: {
+        field1: "abc",
+        filed2: "efg1",
+      },
+      delFiled: "",
+      delList: null,
+      delObj: null,
+    });
   });
 });

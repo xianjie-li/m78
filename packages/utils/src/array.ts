@@ -31,7 +31,7 @@ export function move<T extends Array<any>>(
 }
 
 /**
- * receive T or T[], return T[], if val is falsy or 0, return []
+ * receive T or T[], return T[], if val is falsy and not 0, return []
  * */
 export function ensureArray<T>(val: T[] | T): NonNullable<T>[] {
   if (!isTruthyOrZero(val)) return [];

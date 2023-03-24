@@ -164,8 +164,7 @@ import { VerifyError } from "./error.js";
                                                 name: nameKey
                                             });
                                             rejectMeta.push(_object_spread_props(_object_spread({}, meta), {
-                                                message: msg,
-                                                rand: Math.random()
+                                                message: msg
                                             }));
                                         });
                                     }

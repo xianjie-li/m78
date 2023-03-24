@@ -33,7 +33,6 @@ $unitSpace: var(--m78-space-1);
       position: absolute;
       right: 4px;
       bottom: 4px;
-      text-shadow: var(--m78-stress-shadow-w);
       user-select: none;
       pointer-events: none;
     }
@@ -42,7 +41,6 @@ $unitSpace: var(--m78-space-1);
       position: absolute;
       right: 1px;
       top: 1px;
-      text-shadow: var(--m78-stress-shadow-w);
     }
 
     .m78-input_loading:not(.__full) {

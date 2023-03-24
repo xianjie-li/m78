@@ -6,7 +6,7 @@ import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { InputType } from "./types.js";
 import { useDerivedStateFromProps, useFn, useFormState, useSelf, useUpdate } from "@m78/hooks";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { dumpFn, ensureArray, isFunction, isString, keypressAndClick } from "@m78/utils";
 import clsx from "clsx";
 import { IconSearch } from "@m78/icons/icon-search.js";
@@ -242,6 +242,11 @@ export function _Input(_props) {
             self.cursor = null;
         }
     });
+    useLayoutEffect(function() {
+        calcTextHeight(value);
+    }, [
+        value
+    ]);
     /** 值变更时触发, 如果返回false, 表示更新被阻止, 需要确保组件内部的值变更可以通过manualChange来进行 */ var change = useFn(function(e) {
         var el = inputRef.current;
         var val = el.value;
@@ -300,7 +305,6 @@ export function _Input(_props) {
         if (cursorIsChange) {
             self.cursor = cursor;
         }
-        calcTextHeight(val);
         setValue(val);
         // 存在字符处理后和前一个value相同的情况, 需要手动更新来触发光标修复等行为
         if (interceptorList.length && val === value) {

@@ -21,20 +21,25 @@ const form = createForm({
         component: <Input placeholder="简要介绍一下自己" textArea />,
       },
       {
-        label: "基础信息",
-        name: "base",
-        schema: [
-          {
-            name: "age",
-            component: (
-              <Input placeholder="填写年龄" type={InputType.integer} />
-            ),
-          },
-          {
-            name: "sex",
-            component: <Input placeholder="输入性别" />,
-          },
-        ],
+        label: "物品信息",
+        name: "things",
+        // 设置该项为list项
+        list: true,
+        // 每一个子项应遵循的的schema
+        eachSchema: {
+          // 由于这里是多个子字段, 所以传入了schema数组, 如果是单个字段可以直接在eachSchema中配置字段
+          schema: [
+            {
+              name: "title",
+              component: <Input placeholder="名称" />,
+              validator: required(),
+            },
+            {
+              name: "remark",
+              component: <Input placeholder="备注" />,
+            },
+          ],
+        },
       },
     ],
   },
@@ -53,14 +58,18 @@ const ManualBase = () => {
       <form.Field name="name" />
       <form.Field name="describe" />
 
-      <form.Field name="base">
-        {() => (
-          <Row>
-            <form.Field name={["base", "age"]} />
-            <form.Field name={["base", "sex"]} style={{ marginLeft: 12 }} />
-          </Row>
+      <form.List
+        name="things"
+        layoutRender={(meta) => (
+          <>
+            <form.Field name={meta.getName("title")} />
+            <form.Field
+              name={meta.getName("remark")}
+              style={{ marginLeft: 12 }}
+            />
+          </>
         )}
-      </form.Field>
+      />
 
       <div style={{ paddingLeft: "5em", marginLeft: 8 }}>
         <Button onClick={form.reset}>重置</Button>

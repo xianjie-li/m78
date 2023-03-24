@@ -56,6 +56,85 @@ const schemas: FormSchemaWithoutName = {
   ],
 };
 
+const schemas2: FormSchemaWithoutName = {
+  schema: [
+    {
+      name: "name",
+      validator: required(),
+      label: "姓名",
+      dynamic: (form) => ({
+        hidden: form.getValue("desc") === "abc",
+      }),
+      deps: ["desc"],
+      describe:
+        "填入你的姓名, 填入你的姓名填入你的姓名填入你的姓名填入你的姓名填入你的姓名, 填入你的姓名.",
+      component: <Input />,
+    },
+    {
+      name: "desc",
+      label: "描述",
+      validator: required(),
+      component: <Input textArea />,
+    },
+    {
+      name: "obj",
+      label: "对象",
+      validator: required(),
+      schema: [
+        {
+          name: "title",
+          validator: required(),
+          component: <Input placeholder="名称" />,
+        },
+        {
+          name: "desc",
+          validator: required(),
+          component: <Input placeholder="描述" />,
+        },
+      ],
+    },
+    {
+      name: "list",
+      label: "列表",
+      list: true,
+      dynamic: (form) => ({
+        valid: form.getValue("name") !== "123",
+      }),
+      deps: ["name"],
+      validator: required(),
+      eachSchema: {
+        schema: [
+          {
+            name: "title",
+            validator: required(),
+            component: <Input placeholder="名称" />,
+          },
+          {
+            name: "desc",
+            validator: required(),
+            component: <Input placeholder="描述" />,
+          },
+        ],
+      },
+    },
+    {
+      name: "list2",
+      label: "列表3",
+      list: true,
+      listDefaultValue: "11",
+      dynamic: (form) => ({
+        valid: form.getValue("name") !== "123",
+      }),
+      deps: ["name"],
+      validator: required(),
+      eachSchema: {
+        validator: required(),
+        component: <Input />,
+      },
+    },
+  ],
+};
+
 const RformExample = () => {
   const Form = useMemo(() => {
     return createForm({
@@ -97,20 +176,80 @@ const RformExample = () => {
     });
   }, []);
 
-  const Form3 = useMemo(() => {
+  const Form4 = useMemo(() => {
     return createForm({
       defaultValue: {
         name: "m78",
         desc: "",
-        abc: "1",
       },
-      schemas,
-      layoutType: FormLayoutType.tile,
+      schemas: schemas2,
+      layoutType: FormLayoutType.horizontal,
+      modifyMarker: true,
+      // requireMarker: true,
     });
   }, []);
 
   return (
     <div style={{ padding: 32 }}>
+      <div>
+        <Form4.SchemaRender />
+
+        <Button
+          onClick={() => {
+            Form4.updateProps({
+              layoutType: FormLayoutType.vertical,
+            });
+          }}
+        >
+          updateStyle vertical
+        </Button>
+        <Button
+          onClick={() => {
+            Form4.updateProps({
+              layoutType: FormLayoutType.horizontal,
+            });
+          }}
+        >
+          updateStyle horizontal
+        </Button>
+        <Button
+          onClick={() => {
+            Form4.updateProps({
+              maxWidth: 600,
+            });
+          }}
+        >
+          updateStyle maxWidth 600
+        </Button>
+        <Button
+          onClick={() => {
+            Form4.updateProps({
+              disabled: true,
+            });
+          }}
+        >
+          updateStyle disabled
+        </Button>
+        <Button
+          onClick={() => {
+            Form4.setValues({
+              name: "12356",
+              list: [{}, { title: "455" }, { desc: "978" }],
+            });
+          }}
+        >
+          updateStyle setValue
+        </Button>
+
+        <Button
+          onClick={() => {
+            console.log(Form4.getChangedValues());
+          }}
+        >
+          getChanged
+        </Button>
+      </div>
+
       <div>
         <Form.Field name="name" component="input" />
         <Form.Field name="topic" label="标签">
@@ -213,27 +352,20 @@ const RformExample = () => {
         <Form2.Field name="name">
           <Input />
         </Form2.Field>
+        <Row style={{ width: 348 }}>
+          <Form2.Field name="name">
+            <Input />
+          </Form2.Field>
+          <Form2.Field name="desc" style={{ marginLeft: 12 }}>
+            <Input />
+          </Form2.Field>
+        </Row>
         <Form2.Field name="topic" label="topic">
           <Input />
         </Form2.Field>
         <Form2.Field name="desc">
           <Input textArea />
         </Form2.Field>
-        123123
-      </div>
-
-      <Divider />
-
-      <div style={{ maxWidth: 500 }}>
-        <Form3.Field name="name">
-          <Input style={{ width: 160 }} />
-        </Form3.Field>
-        <Form3.Field name="topic" label="topic">
-          <Input style={{ width: 160 }} />
-        </Form3.Field>
-        <Form3.Field name="desc">
-          <Input textArea style={{ width: 220 }} />
-        </Form3.Field>
       </div>
     </div>
   );

@@ -6,6 +6,7 @@ import { Button, ButtonColor } from "m78/button";
 import { Size } from "m78/common";
 
 const form = createForm({
+  bubbleFeedback: true,
   schemas: {
     schema: [
       {
@@ -17,24 +18,14 @@ const form = createForm({
       {
         label: "简介",
         name: "describe",
-        validator: string({ max: 20 }),
+        validator: [required(), string({ max: 20 })],
         component: <Input placeholder="简要介绍一下自己" textArea />,
       },
     ],
   },
 });
 
-const SchemaLayout = () => {
-  const [layout, setLayout] = React.useState<FormLayoutType>(
-    FormLayoutType.horizontal
-  );
-
-  useEffect(() => {
-    form.updateProps({
-      layoutType: layout,
-    });
-  }, [layout]);
-
+const BubbleFeedback = () => {
   form.events.submit.useEvent(() => {
     Dialog.render({
       title: "表单数据",
@@ -44,22 +35,9 @@ const SchemaLayout = () => {
 
   return (
     <div className="ptb-32">
-      <div className="mb-32 tc">
-        {Object.keys(FormLayoutType).map((key) => (
-          <Button
-            key={key}
-            size={Size.small}
-            color={layout === key ? ButtonColor.primary : undefined}
-            onClick={() => setLayout(key as FormLayoutType)}
-          >
-            {key}
-          </Button>
-        ))}
-      </div>
-
       <form.SchemaRender />
     </div>
   );
 };
 
-export default SchemaLayout;
+export default BubbleFeedback;

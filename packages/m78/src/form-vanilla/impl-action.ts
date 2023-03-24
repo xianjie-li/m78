@@ -1,9 +1,8 @@
-import { _Context, FormInstance } from "./types.js";
+import { _Context, _State, FormInstance } from "./types.js";
 import { RejectMeta, VerifyError } from "@m78/verify";
 import { ensureArray, isArray, stringifyNamePath } from "@m78/utils";
 import clone from "lodash/cloneDeep.js";
-import { _eachState, _getState, _isLeftEqual } from "./common.js";
-import debounce from "lodash/debounce.js";
+import { _eachState, _getState, _isRelationName } from "./common.js";
 
 export function _implAction(ctx: _Context) {
   const { instance } = ctx;
@@ -15,31 +14,33 @@ export function _implAction(ctx: _Context) {
 
     ctx.isValueChangeTrigger = false;
 
+    const resetState = (st: _State) => {
+      if (name) {
+        // 含 name 时, 清理自身及子级/父级的 error 状态
+        const isRelationName = _isRelationName(
+          ensureArray(name),
+          ensureArray(st.name)
+        );
+
+        if (isRelationName) {
+          st.errors = [];
+        }
+      } else {
+        st.errors = [];
+        st.touched = true;
+      }
+    };
+
     // 需要在成功或失败后马上重置, 然后再执行后续处理, 防止多个verify产生的竞态问题
     const resetErrorAndTouch = () => {
       // 重置所有错误并在未指定name时设置touched状态
-      _eachState(ctx, (st) => {
-        if (name) {
-          // 含 name 时, 清理自身及子级的 error 状态
-          const isSelfOrChild = _isLeftEqual(
-            ensureArray(name),
-            ensureArray(st.name)
-          );
+      _eachState(ctx, resetState);
 
-          if (isSelfOrChild) {
-            st.errors = [];
-          }
-        } else {
-          st.errors = [];
-          st.touched = true;
-        }
-      });
-
-      // 传入name时设置指定项touched TODO: 这里应清理所有子级的 error 状态
+      // 指定了项
       if (name) {
         const st = _getState(ctx, name);
-        st.errors = [];
-        st.touched = true;
+
+        resetState(st);
       }
     };
 
@@ -93,17 +94,27 @@ export function _implAction(ctx: _Context) {
     }
   };
 
-  ctx.debounceVerify = debounce(
-    (...args) => {
+  // 存放debounceVerify计时器
+  const debounceVerifyTimerMap: any = {};
+
+  ctx.debounceVerify = (name) => {
+    const key = stringifyNamePath(name || []) || "default";
+    // 立即执行一次
+    if (!debounceVerifyTimerMap[key]) {
       ctx.isValueChangeTrigger = true;
-      return instance.verify(...args).catch(() => {});
-    },
-    200,
-    {
-      leading: true,
-      trailing: true,
+      instance.verify(name).catch(() => {});
     }
-  ) as FormInstance["verify"];
+
+    if (debounceVerifyTimerMap[key]) {
+      clearTimeout(debounceVerifyTimerMap[key]);
+    }
+
+    debounceVerifyTimerMap[key] = setTimeout(() => {
+      ctx.isValueChangeTrigger = true;
+      delete debounceVerifyTimerMap[key];
+      instance.verify(name).catch(() => {});
+    }, 200);
+  };
 
   instance.submit = async () => {
     await instance.verify();

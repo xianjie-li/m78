@@ -5,6 +5,8 @@ import {
   _formPropsKeys,
   _lisIgnoreKeys,
   FormCommonPropsGetter,
+  FormCustomRender,
+  FormCustomRenderArgs,
   FormLayoutType,
   FormListCustomRenderArgs,
 } from "./types.js";
@@ -13,11 +15,12 @@ import {
   ensureArray,
   isArray,
   isBoolean,
+  isFunction,
   isString,
   NamePath,
 } from "@m78/utils";
 import { _defaultValueGetter } from "./common.js";
-import { isValidElement } from "react";
+import React, { isValidElement } from "react";
 
 export function _useFieldMethods(ctx: _Context, fieldCtx: _FieldContext) {
   const { form, config } = ctx;
@@ -180,6 +183,32 @@ export function _useFieldMethods(ctx: _Context, fieldCtx: _FieldContext) {
     return component;
   }
 
+  /** 渲染 node | (arg) => node 定制节点 */
+  function extraNodeRenderHelper(node: React.ReactNode | FormCustomRender) {
+    if (isFunction(node)) {
+      return node({
+        config,
+        form,
+        bind: getBind(),
+        props,
+        getProps,
+      });
+    }
+
+    return node;
+  }
+
+  /** 获取render arg */
+  function getRenderArgs(): FormCustomRenderArgs {
+    return {
+      config,
+      form,
+      bind: getBind(),
+      props,
+      getProps,
+    };
+  }
+
   return {
     getProps,
     onChange,
@@ -189,6 +218,8 @@ export function _useFieldMethods(ctx: _Context, fieldCtx: _FieldContext) {
     getError,
     listApiSimplify,
     getRegisterComponent,
+    extraNodeRenderHelper,
+    getRenderArgs,
   };
 }
 

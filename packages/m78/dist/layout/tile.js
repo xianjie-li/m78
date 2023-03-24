@@ -42,7 +42,7 @@ var _Tile = function(_param) {
                 },
                 children: [
                     _title && /*#__PURE__*/ _jsx("div", {
-                        className: "m78-tile_title",
+                        className: "m78-tile_cont",
                         children: _title
                     }),
                     desc && /*#__PURE__*/ _jsx("div", {

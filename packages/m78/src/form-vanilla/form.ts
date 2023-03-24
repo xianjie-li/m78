@@ -12,6 +12,7 @@ import { _implList } from "./impl-list.js";
 export function _createForm(config: FormConfig): FormInstance {
   const conf: FormConfig = {
     verifyFirst: false,
+    autoVerify: true,
     ...config,
   };
 
@@ -21,9 +22,11 @@ export function _createForm(config: FormConfig): FormInstance {
     getConfig: () => ({ ...conf }),
   } as any;
 
+  const defaultValue = config.defaultValue || {};
+
   const ctx = {
-    defaultValue: clone(config.defaultValue),
-    values: clone(config.defaultValue),
+    defaultValue: clone(defaultValue),
+    values: clone(defaultValue),
     state: {},
     listState: {},
     instance,

@@ -24,5 +24,12 @@ export default {
     "retry tip": "please try again later",
     "retry tip with button": "please try again later or ",
   },
-  form: english,
+  formLangPack: english,
+  form: {
+    "delete current item": "delete current item",
+    "drag sort": "drag sort",
+    "add item": "add item",
+    submit: "submit",
+    reset: "reset",
+  },
 };

@@ -1,4 +1,4 @@
-import { array, createVerify, required } from "@m78/verify/index.js";
+import { array, required } from "@m78/verify/index.js";
 import React from "react";
 import { createForm } from "../../src/form-vanilla/index.js";
 
@@ -143,8 +143,7 @@ form.events.update.on(
 const FormExample = () => {
   return (
     <div>
-      <div>111</div>
-
+      <div className="f-red f-red_b">111</div>
       <button
         onClick={() => {
           form

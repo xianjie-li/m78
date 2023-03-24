@@ -1,38 +1,35 @@
 import {
   _Context,
-  FormLayoutType,
-  _formPropsKeys,
-  FormCommonPropsGetter,
-  FormListRenderChildren,
-  FormListCustomRenderArgs,
-  _lisIgnoreKeys,
   _FieldContext,
-} from "./types";
-import { useFn, useSetState } from "@m78/hooks";
-import React, { isValidElement, useRef } from "react";
+  FormLayoutType,
+  FormListCustomRenderArgs,
+  FormListProps,
+} from "./types.js";
+import { useSetState } from "@m78/hooks";
+import React, { isValidElement, useMemo, useRef } from "react";
 import {
+  createRandString,
   ensureArray,
-  isArray,
-  isBoolean,
   isFunction,
-  isObject,
-  NamePath,
   stringifyNamePath,
 } from "@m78/utils";
 import { Lay } from "../lay/index.js";
 import { Bubble } from "../bubble/index.js";
 import { IconErrorOutline } from "@m78/icons/icon-error-outline.js";
 import clsx from "clsx";
-import { throwError } from "../common/index.js";
 import { _useFieldMethods } from "./use-field-methods.js";
 import { _useFieldLifeCircle } from "./use-field-life-circle.js";
+import { _listLayoutRenderImpl, _listRenderImpl } from "./list.js";
+import { requiredValidatorKey } from "@m78/verify/index.js";
 
-export function _implField(ctx: _Context) {
+export function _fieldImpl(ctx: _Context) {
   const { form } = ctx;
 
   /** 实现Field组件 */
   form.Field = (props) => {
     const { name, children } = props;
+
+    const id = useMemo(() => createRandString(2), []);
 
     const [state, setState] = useSetState(() => ({
       /** 当前组件的schema */
@@ -42,9 +39,12 @@ export function _implField(ctx: _Context) {
     }));
 
     const schema = state.schema;
+    const validator = ensureArray(schema?.validator) || [];
 
     // 由于 list 和 field 逻辑基本一致, 所以通过私有 props 来区分, 并在内部做特殊处理
     const isList = (props as any).__isList;
+    // 是否由schema render的根级渲染, 只在这个情况下需要进行wrapCustomer处理
+    const isSchemaRootRender = (props as any).__isSchemaRoot;
 
     const wrapRef = useRef<HTMLDivElement>(null!);
 
@@ -55,6 +55,8 @@ export function _implField(ctx: _Context) {
       props,
       name,
       wrapRef,
+      id,
+      strName: stringifyNamePath(name),
     };
 
     // 组件方法
@@ -72,8 +74,18 @@ export function _implField(ctx: _Context) {
     const noLayout = getProps("noLayout");
     const fieldCustomer = getProps("fieldCustomer");
     const bubbleFeedback = getProps("bubbleFeedback");
+    const leftNode = getProps("leftNode");
+    const rightNode = getProps("rightNode");
+    const bottomNode = getProps("bottomNode");
+    const topNode = getProps("topNode");
+    const wrapCustomer = getProps("wrapCustomer");
+    const crossAlign = getProps("crossAlign") || "start";
+    let spacePad = getProps("spacePad");
+
+    if (spacePad === undefined) spacePad = true;
 
     const touched = form.getTouched(name);
+    const changed = form.getChanged(name);
     const error = methods.getError(name);
 
     // 是否应显示error / 显示何种类型的错误
@@ -81,8 +93,13 @@ export function _implField(ctx: _Context) {
     const showRegularError = showError && !bubbleFeedback;
     const showBubbleError = showError && bubbleFeedback;
 
-    // 显示tile类型的表单布局
-    const showTileFormUnit = layoutType === FormLayoutType.tile;
+    const hasRequired = useMemo(() => {
+      const marker = getProps("requireMarker");
+
+      if (marker === false) return false;
+
+      return validator.find((i) => i.key === requiredValidatorKey);
+    }, [validator]);
 
     if (!methods.shouldRender()) return null;
 
@@ -95,31 +112,29 @@ export function _implField(ctx: _Context) {
     const bubbleDescribe = renderBubbleDescribe();
     // 是否应该显示label容器, 有label或者有气泡描述时显示
     const shouldShowLabel = !!label || !!bubbleDescribe;
+    const labelNode = hasRequired ? (
+      <>
+        <span className="color-red fs-md vm mr">*</span>
+        {label}
+      </>
+    ) : (
+      label
+    );
 
     // 渲染表单控件
-    function render(): any {
+    function render(): React.ReactNode {
       // 列表渲染
       if (isList) return renderList();
 
       const bind = methods.getBind();
 
-      // chidren 渲染
-      if (isFunction(children)) {
-        return children({
-          ...ctx,
-          bind,
-          props,
-          getProps,
-        }) as React.ReactElement;
+      if (isFunction(fieldCustomer)) {
+        return fieldCustomer(methods.getRenderArgs()) as React.ReactElement;
       }
 
-      if (isFunction(fieldCustomer)) {
-        return fieldCustomer({
-          ...ctx,
-          bind,
-          props,
-          getProps,
-        }) as React.ReactElement;
+      // children 渲染
+      if (isFunction(children)) {
+        return children(methods.getRenderArgs()) as React.ReactElement;
       }
 
       if (isValidElement<any>(children)) {
@@ -130,7 +145,12 @@ export function _implField(ctx: _Context) {
       const component = methods.getRegisterComponent();
       const componentProps = getProps("componentProps");
 
-      if (!isValidElement<any>(component)) return;
+      if (!isValidElement<any>(component)) {
+        console.warn(
+          `Form: "${filedCtx.strName} - Failed to get form component with rendering, please configure it through children/fieldCustomer or register.`
+        );
+        return;
+      }
 
       return React.cloneElement(component, {
         ...component.props,
@@ -143,55 +163,40 @@ export function _implField(ctx: _Context) {
     function renderList() {
       if (!isList) return null;
 
-      if (!isFunction(children) || !schema?.list) {
+      const listProps = props as FormListProps;
+
+      const hasChildren = isFunction(listProps.children);
+      const hasLayoutRender = isFunction(listProps.layoutRender);
+
+      if ((!hasChildren && !hasLayoutRender) || !schema?.list) {
         console.warn(
-          `Form: "${stringifyNamePath(
-            name
-          )}" - List must passed a function as children, and schema must have list config.`
+          `Form: "${filedCtx.strName}" - List must passed a function as children or layoutRender, and schema must have list config.`
         );
         return null;
       }
 
-      const list = form.getList(name) || [];
-
-      const renderImpl: FormListCustomRenderArgs["render"] = (renderCB) => {
-        if (!isFunction(renderCB)) {
-          throwError(
-            "Form: List args.render must passed a function as argument."
-          );
-        }
-        return list.map((i, index) => {
-          const element = renderCB({
-            item: i.item,
-            index,
-            length: list.length,
-            getName: (childName) => [
-              ...ensureArray(name),
-              index,
-              ...ensureArray(childName),
-            ],
-          });
-
-          if (!isValidElement<any>(element)) {
-            throwError(
-              `Form: List args.render must return a valid react element.`
-            );
-          }
-
-          return React.cloneElement(element, {
-            ...element.props,
-            key: i.key,
-          });
-        });
-      };
-
-      return (children as any as FormListRenderChildren)({
-        ...ctx,
+      const args: FormListCustomRenderArgs = {
+        config: ctx.config,
+        form: ctx.form,
         props,
         getProps,
-        render: renderImpl,
+        render: _listRenderImpl(ctx, props),
         ...methods.listApiSimplify(name),
-      });
+      };
+
+      if (hasChildren) {
+        // 由于是复用field, 这里可以确认children类型是FormListRenderChildren
+        return listProps.children!(args);
+      }
+
+      if (hasLayoutRender) {
+        return _listLayoutRenderImpl(
+          ctx,
+          filedCtx,
+          methods,
+          schema
+        )(args, listProps.layoutRender!);
+      }
     }
 
     // 渲染使用气泡展示的错误消息
@@ -220,72 +225,102 @@ export function _implField(ctx: _Context) {
       );
     }
 
-    return (
-      <Lay
-        innerRef={wrapRef}
-        disabled={getProps("disabled")}
-        crossAlign="start"
-        leading={
-          layoutType === FormLayoutType.horizontal &&
-          shouldShowLabel && (
-            <div className="m78-form_label m78-form_horizontal-label">
-              {label}
+    // 渲染lay组件的leading部分
+    function renderLayLeading() {
+      const _leftNode = methods.extraNodeRenderHelper(leftNode);
+
+      if (layoutType === FormLayoutType.horizontal && shouldShowLabel) {
+        return (
+          <div className="m78-form_label m78-form_horizontal-label">
+            {_leftNode}
+            {labelNode}
+            {bubbleDescribe}
+          </div>
+        );
+      }
+
+      return _leftNode;
+    }
+
+    // 渲染lay组件的trailing部分
+    function renderLayTrailing() {
+      return methods.extraNodeRenderHelper(rightNode);
+    }
+
+    // 处理wrapCustomer渲染
+    function wrapCustomerRender(node: React.ReactElement) {
+      if (isSchemaRootRender && isFunction(wrapCustomer)) {
+        return wrapCustomer(methods.getRenderArgs(), node) as any;
+      }
+      return node;
+    }
+
+    // 主内容
+    function renderMain() {
+      return (
+        <Lay
+          innerRef={wrapRef}
+          crossAlign={crossAlign}
+          leading={renderLayLeading()}
+          effect={false}
+          overflowVisible={true}
+          className={clsx(
+            "m78-form_field",
+            `m78-form_${layoutType}`,
+            size && `__${size}`,
+            bubbleFeedback && "__bubble",
+            getProps("className")
+          )}
+          style={{ maxWidth: methods.getWidth(), ...getProps("style") }}
+          trailing={renderLayTrailing()}
+        >
+          {layoutType === FormLayoutType.vertical && shouldShowLabel && (
+            <div className="m78-form_label m78-form_vertical-label">
+              {labelNode}
               {bubbleDescribe}
             </div>
-          )
-        }
-        effect={false}
-        overflowVisible={true}
-        className={clsx(
-          "m78-form_field",
-          `m78-form_${layoutType}`,
-          size && `__${size}`,
-          bubbleFeedback && "__bubble",
-          getProps("className")
-        )}
-        style={{ maxWidth: methods.getWidth(), ...getProps("style") }}
-        trailing={
-          showTileFormUnit && (
-            <div className="m78-form_unit">
-              {render()}
-              {renderBubbleError()}
-            </div>
-          )
-        }
-      >
-        {layoutType === FormLayoutType.vertical && shouldShowLabel && (
-          <div className="m78-form_label m78-form_vertical-label">
-            {label}
-            {bubbleDescribe}
-          </div>
-        )}
-        {layoutType === FormLayoutType.tile && shouldShowLabel && (
-          <div className="m78-form_label m78-form_tile-label">
-            {label}
-            {bubbleDescribe}
-          </div>
-        )}
-        {!showTileFormUnit && (
+          )}
           <div className="m78-form_unit">
             {render()}
             {renderBubbleError()}
           </div>
-        )}
-        {!bubbleFeedback && describe && (
-          <div className="m78-form_describe">{describe}</div>
-        )}
-        <div
-          className="m78-form_error"
-          role="alert"
-          style={{
-            opacity: showRegularError ? 1 : 0,
-            visibility: showRegularError ? "visible" : "hidden",
-          }}
-        >
-          {bubbleFeedback ? "" : error}
-        </div>
-      </Lay>
-    );
+          {!bubbleFeedback && describe && (
+            <div className="m78-form_describe">{describe}</div>
+          )}
+          <div
+            className={clsx(
+              "m78-form_error",
+              !spacePad && "m78-form_empty-hide"
+            )}
+            role="alert"
+            style={{
+              opacity: showRegularError ? 1 : 0,
+              visibility: showRegularError ? "visible" : "hidden",
+            }}
+          >
+            {bubbleFeedback || !showRegularError ? "" : error}
+          </div>
+          {changed && getProps("modifyMarker") && (
+            <span className="m78-form_changed-mark" />
+          )}
+        </Lay>
+      );
+    }
+
+    const _topNode = methods.extraNodeRenderHelper(topNode);
+    const _bottomNode = methods.extraNodeRenderHelper(bottomNode);
+
+    if (_topNode || _bottomNode) {
+      return wrapCustomerRender(
+        <>
+          {_topNode}
+          {renderMain()}
+          {_bottomNode}
+        </>
+      );
+    }
+
+    return wrapCustomerRender(renderMain());
   };
 
   (form.Field as React.FunctionComponent).displayName = "Field";

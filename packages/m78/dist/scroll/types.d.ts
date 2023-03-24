@@ -117,6 +117,8 @@ export interface _Context {
         pullUpTriggerTime?: number;
         /** 保证触发间隔的计时器 */
         pullUpTimer?: any;
+        /** 是否是在顶部触发的下拉 */
+        pullDownFlag?: boolean;
     };
     /** 控制容器启用滚动的css style object */
     directionStyle: React.CSSProperties;

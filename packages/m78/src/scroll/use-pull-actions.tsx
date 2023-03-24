@@ -37,20 +37,26 @@ export const _usePullActions = (ctx: _Context) => {
       const ratio = moveY / maxY;
 
       if (!down) {
-        if (ratio >= _PULL_DOWN_TRIGGER_RATIO) {
-          onPullDown();
-        } else {
-          api.start({
-            y: 0,
-            rotate: 0,
-            ratio: 0,
-          });
+        if (self.pullDownFlag) {
+          self.pullDownFlag = false;
+
+          if (ratio >= _PULL_DOWN_TRIGGER_RATIO) {
+            onPullDown();
+          } else {
+            api.start({
+              y: 0,
+              rotate: 0,
+              ratio: 0,
+            });
+          }
         }
       }
 
       if (down && meta.touchTop) {
         // 起始位置只能下拉
         if (!isPullDown && moveY <= 0) return;
+
+        self.pullDownFlag = true;
 
         const y = moveY * _PULL_DOWN_SWIPE_RATIO;
         const rotate = maxTurn * ratio;

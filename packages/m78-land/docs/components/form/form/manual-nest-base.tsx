@@ -1,8 +1,9 @@
 import React from "react";
 import { createForm, required, string } from "m78/form";
-import { Input } from "m78/input";
+import { Input, InputType } from "m78/input";
 import { Dialog } from "m78/dialog";
 import { Button, ButtonColor } from "m78/button";
+import { Row } from "m78/layout";
 
 const form = createForm({
   schemas: {
@@ -18,6 +19,22 @@ const form = createForm({
         name: "describe",
         validator: string({ max: 20 }),
         component: <Input placeholder="简要介绍一下自己" textArea />,
+      },
+      {
+        label: "基础信息",
+        name: "base",
+        schema: [
+          {
+            name: "age",
+            component: (
+              <Input placeholder="填写年龄" type={InputType.integer} />
+            ),
+          },
+          {
+            name: "sex",
+            component: <Input placeholder="输入性别" />,
+          },
+        ],
       },
     ],
   },
@@ -35,6 +52,15 @@ const ManualBase = () => {
     <div className="ptb-32">
       <form.Field name="name" />
       <form.Field name="describe" />
+
+      <form.Field name="base">
+        {() => (
+          <Row>
+            <form.Field name={["base", "age"]} />
+            <form.Field name={["base", "sex"]} style={{ marginLeft: 12 }} />
+          </Row>
+        )}
+      </form.Field>
 
       <div style={{ paddingLeft: "5em", marginLeft: 8 }}>
         <Button onClick={form.reset}>重置</Button>

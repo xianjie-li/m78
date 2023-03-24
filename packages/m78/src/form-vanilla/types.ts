@@ -2,13 +2,18 @@ import { Verify, Config, Schema, RejectMeta } from "@m78/verify";
 import { AnyFunction, EmptyFunction, NamePath, CustomEvent } from "@m78/utils";
 
 export interface FormConfig extends Config {
-  /** 默认值 */
-  defaultValue: any;
   /** 描述表单值结构的对象 */
   schemas: FormSchemaWithoutName;
+  /** {} | 默认值 */
+  defaultValue?: any;
   /** 自定义内部的事件创建器(通常不需要关注, 用于实现ui层时扩展事件订阅器用法) */
   eventCreator?: AnyFunction;
+  /** true | 值变更时是否自动触发verify */
+  autoVerify?: boolean;
 }
+
+// /** 可通过此项额外提供用于判定schema.valid的选项, 比如上层库实现了disabled, 并且需要disabled为true时视为valid开启, 则可使用此配置 */
+// extraValidGetter?: (schema: AnyObject) => boolean | undefined;
 
 export interface FormInstance {
   /** 指定值是否与默认值相同 */
@@ -46,6 +51,14 @@ export interface FormInstance {
 
   /** 重新设置当前的默认值, 设置后, 下一次reset会使用此值 */
   setDefaultValues(values: any): void;
+
+  /**
+   * 获取变更的值, 没有变更时返回null
+   * - 如果values本身是一个基础类型值, 则会在与默认值不同时直接返回
+   * - 只有根级别的字段会参与对比, 如果根字段发生了变更, 其子级字段会一同返回
+   * - values是对象是, 会将defaultValue中存在但被删除的字段设置为初始值(字符串为"", 其他类型为null)
+   * */
+  getChangedValues(): any | null;
 
   /** 获取对dynamic进行处理进行处理后的schema副本 */
   getSchemas(): FormSchemaWithoutName;
@@ -127,7 +140,7 @@ export type FormNamesNotify = (name?: NamePath, relation?: boolean) => void;
 
 /** 描述schema的单个项 */
 export interface FormSchema extends Schema {
-  /** valid为false时, 该schema不会参与验证, 并且提交时会排除掉schema指向的值 */
+  /** valid为false时, 该schema不会参与验证, 并且提交时会排除掉schema指向的值, 不可用于list项的第一级子项(应使用list相关api操作) */
   valid?: boolean;
   /** 动态设置其他参数 */
   dynamic?: (
@@ -194,7 +207,7 @@ export interface _Context {
   /** 暂时锁定更新notify, 锁定期间不触发更新 */
   lockListState: boolean;
   /** debounce版本的verify */
-  debounceVerify: FormInstance["verify"];
+  debounceVerify: (name?: NamePath) => void;
   /** 用于帮助识别是否为setValue触发的 verify 调用 */
   isValueChangeTrigger: boolean;
 

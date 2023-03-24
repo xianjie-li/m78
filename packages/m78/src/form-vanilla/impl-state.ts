@@ -1,4 +1,4 @@
-import { getNamePathValue } from "@m78/utils";
+import { getNamePathValue, isArray, isObject } from "@m78/utils";
 import isEqual from "lodash/isEqual.js";
 import { _Context } from "./types";
 import { _getState } from "./common.js";
@@ -9,7 +9,20 @@ export function _implState(ctx: _Context) {
   instance.getChanged = (name) => {
     const cur = getNamePathValue(ctx.values, name);
     const def = getNamePathValue(ctx.defaultValue, name);
-    return cur !== def;
+
+    // 这里开始做一些空值处理, 如果默认值本身为undefined, 且新增值也是无效值("", [], {}等), 则认为其未改变
+
+    // 跳过字符串
+    if (cur === "" && def === undefined) return false;
+
+    // 跳过空数组
+    if (isArray(cur) && cur.length === 0 && def === undefined) return false;
+
+    // 跳过空对象
+    if (isObject(cur) && Object.keys(cur).length === 0 && def === undefined)
+      return false;
+
+    return !isEqual(cur, def);
   };
 
   instance.getFormChanged = () => {

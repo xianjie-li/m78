@@ -1,6 +1,6 @@
 import React from "react";
 import { createForm, required, string } from "m78/form";
-import { Input } from "m78/input";
+import { Input, InputType } from "m78/input";
 import { Dialog } from "m78/dialog";
 
 const form = createForm({
@@ -15,14 +15,30 @@ const form = createForm({
       {
         label: "简介",
         name: "describe",
-        validator: [required(), string({ max: 20 })],
+        validator: string({ max: 20 }),
         component: <Input placeholder="简要介绍一下自己" textArea />,
+      },
+      {
+        label: "基础信息",
+        name: "base",
+        schema: [
+          {
+            name: "age",
+            component: (
+              <Input placeholder="填写年龄" type={InputType.integer} />
+            ),
+          },
+          {
+            name: "sex",
+            component: <Input placeholder="输入性别" />,
+          },
+        ],
       },
     ],
   },
 });
 
-const SchemaBase = () => {
+const SchemaNestBase = () => {
   form.events.submit.useEvent(() => {
     Dialog.render({
       title: "表单数据",
@@ -37,4 +53,4 @@ const SchemaBase = () => {
   );
 };
 
-export default SchemaBase;
+export default SchemaNestBase;

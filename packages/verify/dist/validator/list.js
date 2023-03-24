@@ -1,4 +1,4 @@
-import { array } from "./array";
+import { array } from "./array.js";
 export var ListValidatorType;
 (function(ListValidatorType) {
     ListValidatorType["contain"] = "contain";

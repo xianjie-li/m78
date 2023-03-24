@@ -2,6 +2,7 @@ import { _Context, FormSchema, FormSchemaWithoutName } from "./types.js";
 import {
   ensureArray,
   isArray,
+  isBoolean,
   isFunction,
   isObject,
   NameItem,
@@ -10,7 +11,7 @@ import {
 import { _ANY_NAME_PLACE_HOLD } from "./common.js";
 
 export function _implSchema(ctx: _Context) {
-  const { instance } = ctx;
+  const { instance, config } = ctx;
 
   ctx.getFormatterSchemas = () => {
     // 所有invalid项的name
@@ -127,6 +128,15 @@ export function _implSchema(ctx: _Context) {
         names.push(_ANY_NAME_PLACE_HOLD);
       }
     }
+
+    // let extraValid: undefined | boolean;
+
+    // if (isFunction(config.extraValidGetter)) {
+    //   const extra = config.extraValidGetter(combine);
+    //   if (isBoolean(extra) && !extra) {
+    //     extraValid = false;
+    //   }
+    // }
 
     if (hasName && combine.valid === false) {
       invalidCB(names);

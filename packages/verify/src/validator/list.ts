@@ -1,5 +1,5 @@
-import { Meta, Validator } from "../types";
-import { array } from "./array";
+import { Meta, Validator } from "../types.js";
+import { array } from "./array.js";
 
 export enum ListValidatorType {
   contain = "contain",

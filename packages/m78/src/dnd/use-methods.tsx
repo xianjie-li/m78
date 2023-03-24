@@ -80,6 +80,7 @@ export function _useMethods(ctx: _Context) {
   const onDrag = useFn((ev: FullGestureState<"drag">) => {
     const {
       first,
+      last,
       down,
       xy: [x, y],
       event: e,
@@ -110,7 +111,7 @@ export function _useMethods(ctx: _Context) {
     // 开始拖动时更新所有节点位置信息, 拖动中间歇更新(大部分情况节点位置不会改变, 这样可以节省性能)
     if (first) {
       _updateEvent.emit(false, ctx.props.group);
-    } else if (down) {
+    } else {
       _updateEvent.emit(true, ctx.props.group);
     }
 
@@ -147,7 +148,14 @@ export function _useMethods(ctx: _Context) {
     /* # # # # # # # 反馈阶段处理 # # # # # # # */
 
     // 初始化反馈节点
-    if (down) {
+    if (last) {
+      // reset
+      self.feedbackInitOffset = undefined;
+      if (self.feedbackEl) {
+        self.feedbackEl.parentNode!.removeChild(self.feedbackEl);
+        self.feedbackEl = undefined;
+      }
+    } else {
       if (!self.feedbackEl) {
         initFeedbackEl();
       }
@@ -180,13 +188,6 @@ export function _useMethods(ctx: _Context) {
           self.feedbackInitOffset = [oX, oY];
         }
       }
-    } else {
-      // reset
-      self.feedbackInitOffset = undefined;
-      if (self.feedbackEl) {
-        self.feedbackEl.parentNode!.removeChild(self.feedbackEl);
-        self.feedbackEl = undefined;
-      }
     }
 
     /* # # # # # # # 自动滚动 # # # # # # # */
@@ -199,7 +200,12 @@ export function _useMethods(ctx: _Context) {
     if (!inBoundList.length) {
       if (first) {
         props.onDrag?.(event);
-      } else if (down) {
+      } else if (last) {
+        props.onDrop?.(event);
+        // 通知所有组件
+        _resetEvent.emit();
+        self.lastEntryDND = undefined;
+      } else {
         props.onMove?.(event);
         // 通知其他组件重置状态
         _resetEvent.emit([ctx.id], true);
@@ -208,11 +214,6 @@ export function _useMethods(ctx: _Context) {
           self.lastEntryDND.props.onSourceLeave?.(event);
           self.lastEntryDND = undefined;
         }
-      } else {
-        props.onDrop?.(event);
-        // 通知所有组件
-        _resetEvent.emit();
-        self.lastEntryDND = undefined;
       }
       return;
     }
@@ -235,25 +236,25 @@ export function _useMethods(ctx: _Context) {
     if (!dndState.status.over) {
       // 之前未启用, 触发进入事件
       dnd.props.onSourceEnter?.(event as DNDFullEvent);
-    } else if (down) {
-      // 已启用且未松开, 触发移动事件
-      dnd.props.onSourceMove?.(event as DNDFullEvent);
-    } else {
+    } else if (last) {
       const isAccept = _checkIfAcceptable(enables, status);
 
       if (isAccept) {
         // 触发接收事件
         dnd.props.onSourceAccept?.(event as DNDFullEvent);
       }
+    } else {
+      // 已启用且未松开, 触发移动事件
+      dnd.props.onSourceMove?.(event as DNDFullEvent);
     }
 
     // 有命中时的drag出发
     if (first) {
       props.onDrag?.(event);
-    } else if (down) {
-      props.onMove?.(event);
-    } else {
+    } else if (last) {
       props.onDrop?.(event);
+    } else {
+      props.onMove?.(event);
     }
 
     // 状态有变时进行更新
@@ -267,12 +268,12 @@ export function _useMethods(ctx: _Context) {
       });
     }
 
-    if (down) {
-      // 通知重置
-      _resetEvent.emit([ctx.id, dnd.ctx.id], true);
-    } else {
+    if (last) {
       _resetEvent.emit([]);
       self.lastEntryDND = undefined;
+    } else {
+      // 通知重置
+      _resetEvent.emit([ctx.id, dnd.ctx.id], true);
     }
   });
 

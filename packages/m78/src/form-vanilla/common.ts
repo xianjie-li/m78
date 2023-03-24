@@ -1,13 +1,16 @@
 import {
   ensureArray,
+  getNamePathValue,
   isArray,
   isEmpty,
   isNumber,
   isObject,
+  NameItem,
   NamePath,
+  setNamePathValue,
   stringifyNamePath,
 } from "@m78/utils";
-import { _Context, _State, FormNamesNotify } from "./types.js";
+import { _Context, _State, FormInstance, FormNamesNotify } from "./types.js";
 import isEqual from "lodash/isEqual.js";
 
 /** 获取指定name的state, 状态对象还不存在时会自动进行创建 */
@@ -60,12 +63,7 @@ export function _notifyFilter(
     if (relation) {
       for (const n of names) {
         // 需要更新关联值
-        const min = Math.min(n.length, np2.length);
-
-        const arr1 = n.slice(0, min);
-        const arr2 = np2.slice(0, min);
-
-        if (isEqual(arr1, arr2)) {
+        if (_isRelationName(n, np2)) {
           notify(triggerName, relation);
           break;
         }
@@ -143,7 +141,7 @@ export function _recursionDeleteNamePath(values: any, names: NamePath) {
 }
 
 /** 数组1是否与数组2的左侧相等或完全相等 */
-export function _isLeftEqual(arr1: any[], arr2: any[]) {
+export function _isLeftEqualName(arr1: any[], arr2: any[]) {
   if (arr1.length > arr2.length) return false;
 
   for (let i = 0; i < arr1.length; i++) {
@@ -151,6 +149,16 @@ export function _isLeftEqual(arr1: any[], arr2: any[]) {
   }
 
   return true;
+}
+
+// 检测两个name是否是另一个的子级/父级/自身
+export function _isRelationName(n: NameItem[], n2: NameItem[]) {
+  const min = Math.min(n.length, n2.length);
+
+  const arr1 = n.slice(0, min);
+  const arr2 = n2.slice(0, min);
+
+  return isEqual(arr1, arr2);
 }
 
 /** 从listState中获取指定name的子级, 每次命中会触发回调, 也可以使用返回值 */
@@ -171,7 +179,7 @@ export function _getListChild(
 
     if (currentName.length === arrName.length) return;
 
-    if (_isLeftEqual(arrName, currentName)) {
+    if (_isLeftEqualName(arrName, currentName)) {
       child.push(currentName);
       eachCB?.(key, currentName);
     }

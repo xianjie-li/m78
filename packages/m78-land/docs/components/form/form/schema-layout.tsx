@@ -1,7 +1,9 @@
-import React from "react";
-import { createForm, required, string } from "m78/form";
+import React, { useEffect } from "react";
+import { createForm, FormLayoutType, required, string } from "m78/form";
 import { Input, InputType } from "m78/input";
 import { Dialog } from "m78/dialog";
+import { Button, ButtonColor } from "m78/button";
+import { Size } from "m78/common";
 
 const form = createForm({
   schemas: {
@@ -18,27 +20,21 @@ const form = createForm({
         validator: string({ max: 20 }),
         component: <Input placeholder="简要介绍一下自己" textArea />,
       },
-      {
-        label: "基础信息",
-        name: "base",
-        schema: [
-          {
-            name: "age",
-            component: (
-              <Input placeholder="填写年龄" type={InputType.integer} />
-            ),
-          },
-          {
-            name: "sex",
-            component: <Input placeholder="输入性别" />,
-          },
-        ],
-      },
     ],
   },
 });
 
-const SchemaNestBase = () => {
+const SchemaLayout = () => {
+  const [layout, setLayout] = React.useState<FormLayoutType>(
+    FormLayoutType.horizontal
+  );
+
+  useEffect(() => {
+    form.updateProps({
+      layoutType: layout,
+    });
+  }, [layout]);
+
   form.events.submit.useEvent(() => {
     Dialog.render({
       title: "表单数据",
@@ -48,9 +44,22 @@ const SchemaNestBase = () => {
 
   return (
     <div className="ptb-32">
+      <div className="mb-32 tc">
+        {Object.keys(FormLayoutType).map((key) => (
+          <Button
+            key={key}
+            size={Size.small}
+            color={layout === key ? ButtonColor.primary : undefined}
+            onClick={() => setLayout(key as FormLayoutType)}
+          >
+            {key}
+          </Button>
+        ))}
+      </div>
+
       <form.SchemaRender />
     </div>
   );
 };
 
-export default SchemaNestBase;
+export default SchemaLayout;

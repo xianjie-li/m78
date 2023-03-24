@@ -1,5 +1,5 @@
-import { Meta, Validator } from "../types";
-import { string } from "./string";
+import { Meta, Validator } from "../types.js";
+import { string } from "./string.js";
 
 export const matchValidatorKey = "verifyMatch";
 

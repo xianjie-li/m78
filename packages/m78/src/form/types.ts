@@ -9,6 +9,7 @@ import { EmptyFunction, NamePath } from "@m78/utils";
 import { CustomEventWithHook, SetState } from "@m78/hooks";
 import { RejectMeta } from "@m78/verify";
 import { SizeUnion } from "../common/index.js";
+import { CellColProps, CellRowProps, TileProps } from "../layout/index.js";
 
 /** 要剔除的原Config属性 */
 export const _omitConfigs = [
@@ -25,7 +26,6 @@ type OmitType = typeof _omitConfigs[number];
 export enum FormLayoutType {
   horizontal = "horizontal",
   vertical = "vertical",
-  tile = "tile",
 }
 
 export type FormLayoutTypeKeys = keyof typeof FormLayoutType;
@@ -36,6 +36,7 @@ export type FormRegisterConfig = FormKeyCustomer & {
   component: React.ReactElement;
 };
 
+/** 创建form实例时传入的配置 */
 export interface FormConfig
   extends Omit<VanillaFormConfig, OmitType | "schemas">,
     FormProps {
@@ -61,6 +62,8 @@ export interface FormSchema
   schema?: FormSchema[];
   /** 验证值为array或object时, 子级的所有 数组项/对象值 必须与此Schema匹配, 如果该值的类型不为array或object，此配置会被忽略 */
   eachSchema?: FormSchemaPartial;
+  /** {} | list新增项时使用的默认值, 用于schema render, 且仅在项的值类型不为对象时需要配置 */
+  listDefaultValue?: any;
 }
 
 /** 不包含name的schema */
@@ -87,6 +90,9 @@ export interface FormInstance
   /** 获取表单配置 */
   getConfig(): FormConfig;
 
+  /** 更改部分样式配置 */
+  updateProps(props: FormProps): void;
+
   /** 事件 */
   events: {
     /** 字段值或状态变更时, 这里是更新ui状态的理想位置 */
@@ -105,9 +111,11 @@ export interface FormInstance
 
   /* # # # # # # # 新增 # # # # # # # */
   /** 用于表示并绑定到表单字段 */
-  Field: (props: FormFieldProps) => React.ReactElement;
+  Field: React.FunctionComponent<FormFieldProps>;
   /** 渲染列表 */
   List: <Item = any>(props: FormListProps<Item>) => React.ReactElement;
+  /** 根据当前的schema配置直接渲染表单 */
+  SchemaRender: React.FunctionComponent<FormSchemaRenderProps>;
 }
 
 /** FormProps中的所有key, 用于在分别根据Field/schema/config获取配置时检测是否可安全获取 */
@@ -120,26 +128,45 @@ export const _formPropsKeys = [
   "disabled",
   "className",
   "style",
+  "spacePad",
+  "wrapCustomer",
+  "requireMarker",
+  "modifyMarker",
 ];
 
-/** 样式相关的一些配置, 支持在 config/schema/field 中传入, 优先级从右到左 */
+/** 这些配置支持在 config/schema/Field 中传入, 优先级从右到左 */
 export interface FormProps {
   /** 布局类型 */
   layoutType?: FormLayoutTypeUnion;
-  /** 自定义字段的默认样式, 也可以用于自定义value/onChange绑定等 */
-  fieldCustomer?: FormRenderChildren;
-  /** 使用气泡显示提示和错误文本, 此模式下 field 假设布局空间会非常紧凑, 使用者需要自行为 field 添加适当的边距 */
+  /** 自定义字段渲染, 常用于定制样式/自定义value/onChange绑定等 */
+  fieldCustomer?: FormCustomRender;
+  /** 使用气泡显示提示和错误文本 */
   bubbleFeedback?: boolean;
   /** 表单项的最大宽度, 用于防止宽度过大造成表单控件变形或不易操作 */
   maxWidth?: number | string;
   /** 尺寸(布局紧凑程度, 会同时向表单组件传递props.size, 需要表单控件支持才能正常启用) */
   size?: SizeUnion;
-  /** 禁用表单, 不阻止提交 (需要表单组件支持disabled) */
+  /** 禁用表单, 与标准disabled的区别是, disabled不会影响值的提交. 此外, 需要表单组件支持接收disabled并显示对应样式 */
   disabled?: boolean;
   /** 为 filed 根节点添加类名 */
   className?: string;
   /** 为 field 根节点添加样式 */
   style?: React.CSSProperties;
+  /** 是否在表单项底部显示固定的空白区域, 以保持表单项之间的间距 */
+  spacePad?: boolean;
+  /**
+   * 为组件添加包裹节点, 通常在schema render时才会使用, 与fieldCustomer/children/组件注册的区别是它更适合用来进行容器节点
+   * 定制, 因为后面这些配置会有一定的作用优先级, 并且会相互覆盖.
+   * node为原始节点, 需要在合适的位置渲染.
+   * */
+  wrapCustomer?: (
+    args: FormCustomRenderArgs,
+    node: React.ReactElement
+  ) => React.ReactElement;
+  /** true | 是否显示根据validator生成的必输标记 */
+  requireMarker?: boolean;
+  /** 是否显示修改标记 */
+  modifyMarker?: boolean;
 }
 
 /** 在Field和schema中均可用的配置, FormProps的扩展, 优先级 Field > schema */
@@ -166,6 +193,16 @@ export interface FormCommonProps extends FormProps, FormKeyCustomer {
   deps?: NamePath[];
   /** 跳过布局容器, 直接渲染表单组件, 配置此项后, 其他样式相关的配置不再有效 */
   noLayout?: boolean;
+  /** 渲染在field左侧的额外节点 */
+  leftNode?: React.ReactNode | FormCustomRender;
+  /** 渲染在field右侧的额外节点 */
+  rightNode?: React.ReactNode | FormCustomRender;
+  /** 渲染在field下方的额外节点 */
+  bottomNode?: React.ReactNode | FormCustomRender;
+  /** 渲染在field上方的额外节点 */
+  topNode?: React.ReactNode | FormCustomRender;
+  /** start | 控制元素(label/表单控件/leftNode等...)在交叉轴上的对齐方式 */
+  crossAlign?: TileProps["crossAlign"];
 }
 
 /** 用于支持定制 value/onChange/disabled/size key 的一些配置 */
@@ -207,7 +244,7 @@ export interface FormFieldProps extends FormCommonProps {
    * 挂载表单组件, 默认情况下需要表单组件支持value/onChange(value)接口, 可通过 valueKey/changeKey 等进行配置
    * 传入render 函数时, 与fieldCustomer等效
    * */
-  children?: React.ReactElement | FormRenderChildren;
+  children?: React.ReactElement | FormCustomRender;
 }
 
 /**
@@ -223,7 +260,21 @@ export interface FormListProps<Item = any>
     | "fieldCustomer"
     | keyof FormKeyCustomer
   > {
-  children: FormListRenderChildren<Item>;
+  /** 渲染list子级, 相比layoutRender不包含预设的布局 */
+  children?: FormListRenderChildren<Item>;
+  /** 使用预设list布局进行渲染, 包含了新增/排序/删除等布局控件 */
+  layoutRender?: FormListCustomRenderCallback;
+}
+
+export interface FormSchemaRenderProps {
+  /** true | 是否显示预置的重置/提交等按钮 */
+  showActionButtons?: boolean;
+  /** 提交回调, 触发表示验证已通过 */
+  onSubmit?: (values: any) => void;
+  /** 根节点为一个<Cells/>组件, 可通过此项配置其props, 用于多列表单渲染 */
+  cellsProps?: Omit<CellRowProps, "children">;
+  /** 每个根field/List均由<Cell/>组件包裹, 可通过此项配置其props, 用于多列表单渲染 */
+  cellProps?: Omit<CellColProps, "children">;
 }
 
 /** 作为 list 时, 应从 Filed 或 schema 等剔除的配置 */
@@ -255,24 +306,25 @@ export interface FormCustomRenderArgs {
   getProps: FormCommonPropsGetter;
 }
 
+export type FormListCustomRenderCallback<Item = any> = (meta: {
+  /** 该项的值 */
+  item: Item;
+  /** 该项索引 */
+  index: number;
+  /** 总长度 */
+  length: number;
+
+  /** 将指定 name 前拼接上 List 父级的 name 后返回 */
+  getName(name?: NamePath): NamePath;
+}) => React.ReactElement;
+
 /**
  * FormListRenderChildren 入参
  * */
 export interface FormListCustomRenderArgs<Item = any>
   extends Omit<FormCustomRenderArgs, "bind"> {
   /** 用于渲染列表 */
-  render(
-    renderCB: (meta: {
-      /** 该项的值 */
-      item: Item;
-      /** 该项索引 */
-      index: number;
-      /** 将指定 name 前拼接上 List 父级的 name 后返回 */
-      getName(name: NamePath): NamePath;
-      /** 总长度 */
-      length: number;
-    }) => React.ReactElement
-  ): React.ReactElement[];
+  render(renderCB: FormListCustomRenderCallback): React.ReactElement;
 
   /** 为list新增一项或多项, index为起始位置, 默认追加到结尾. 若name不是有效list或其他原因导致失败会将返回false */
   add(items: Item | Item[], index?: number): boolean;
@@ -290,7 +342,7 @@ export interface FormListCustomRenderArgs<Item = any>
 /**
  * Filed自定义渲染函数
  * */
-export interface FormRenderChildren {
+export interface FormCustomRender {
   (args: FormCustomRenderArgs): React.ReactNode;
 }
 
@@ -298,14 +350,18 @@ export interface FormRenderChildren {
  * Filed自定义渲染函数
  * */
 export interface FormListRenderChildren<Item = any> {
-  (args: FormListCustomRenderArgs<Item>): React.ReactNode;
+  (args: FormListCustomRenderArgs<Item>): React.ReactElement;
 }
+
+/** List项render函数入参 */
 
 export interface _Context {
   config: FormConfig;
   form: FormInstance;
   /** 注册的组件 */
   components: Record<string, FormRegisterConfig | React.ReactElement>;
+  /** updateProps调用时通知组件更新 */
+  updatePropsEvent: CustomEventWithHook<EmptyFunction>;
 }
 
 export interface _FieldContext {
@@ -318,4 +374,8 @@ export interface _FieldContext {
   props: FormFieldProps;
   name: NamePath;
   wrapRef: React.MutableRefObject<HTMLDivElement>;
+  /** 组件的唯一标识, 目前仅用于list拖拽排序分组 */
+  id: string;
+  /** name的string化 */
+  strName: string;
 }

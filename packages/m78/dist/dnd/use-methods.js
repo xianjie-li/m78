@@ -73,7 +73,7 @@ export function _useMethods(ctx) {
         });
     });
     /** 拖动处理, 大部分功能的核心实现都在此处 */ var onDrag = useFn(function(ev) {
-        var first = ev.first, down = ev.down, _xy = _sliced_to_array(ev.xy, 2), x = _xy[0], y = _xy[1], e = ev.event, cancel = ev.cancel, tap = ev.tap, forceBreakEvent = ev.memo;
+        var first = ev.first, last = ev.last, down = ev.down, _xy = _sliced_to_array(ev.xy, 2), x = _xy[0], y = _xy[1], e = ev.event, cancel = ev.cancel, tap = ev.tap, forceBreakEvent = ev.memo;
         if (tap) return;
         // 防止重叠节点一起触发
         e.stopPropagation();
@@ -90,7 +90,7 @@ export function _useMethods(ctx) {
         // 开始拖动时更新所有节点位置信息, 拖动中间歇更新(大部分情况节点位置不会改变, 这样可以节省性能)
         if (first) {
             _updateEvent.emit(false, ctx.props.group);
-        } else if (down) {
+        } else {
             _updateEvent.emit(true, ctx.props.group);
         }
         // 拖动目标
@@ -117,7 +117,14 @@ export function _useMethods(ctx) {
             });
         }
         /* # # # # # # # 反馈阶段处理 # # # # # # # */ // 初始化反馈节点
-        if (down) {
+        if (last) {
+            // reset
+            self.feedbackInitOffset = undefined;
+            if (self.feedbackEl) {
+                self.feedbackEl.parentNode.removeChild(self.feedbackEl);
+                self.feedbackEl = undefined;
+            }
+        } else {
             if (!self.feedbackEl) {
                 initFeedbackEl();
             }
@@ -149,13 +156,6 @@ export function _useMethods(ctx) {
                     ];
                 }
             }
-        } else {
-            // reset
-            self.feedbackInitOffset = undefined;
-            if (self.feedbackEl) {
-                self.feedbackEl.parentNode.removeChild(self.feedbackEl);
-                self.feedbackEl = undefined;
-            }
         }
         /* # # # # # # # 自动滚动 # # # # # # # */ // xy在元素范围边缘一定距离时, 距离靠近边缘移动越快
         ctx.group.scrollParents.forEach(function(ele) {
@@ -165,24 +165,24 @@ export function _useMethods(ctx) {
             if (first) {
                 var ref;
                 (ref = props.onDrag) === null || ref === void 0 ? void 0 : ref.call(props, event);
-            } else if (down) {
+            } else if (last) {
                 var ref1;
-                (ref1 = props.onMove) === null || ref1 === void 0 ? void 0 : ref1.call(props, event);
+                (ref1 = props.onDrop) === null || ref1 === void 0 ? void 0 : ref1.call(props, event);
+                // 通知所有组件
+                _resetEvent.emit();
+                self.lastEntryDND = undefined;
+            } else {
+                var ref2;
+                (ref2 = props.onMove) === null || ref2 === void 0 ? void 0 : ref2.call(props, event);
                 // 通知其他组件重置状态
                 _resetEvent.emit([
                     ctx.id
                 ], true);
                 if (self.lastEntryDND) {
-                    var _props, ref2;
-                    (ref2 = (_props = self.lastEntryDND.props).onSourceLeave) === null || ref2 === void 0 ? void 0 : ref2.call(_props, event);
+                    var _props, ref3;
+                    (ref3 = (_props = self.lastEntryDND.props).onSourceLeave) === null || ref3 === void 0 ? void 0 : ref3.call(_props, event);
                     self.lastEntryDND = undefined;
                 }
-            } else {
-                var ref3;
-                (ref3 = props.onDrop) === null || ref3 === void 0 ? void 0 : ref3.call(props, event);
-                // 通知所有组件
-                _resetEvent.emit();
-                self.lastEntryDND = undefined;
             }
             return;
         }
@@ -198,28 +198,28 @@ export function _useMethods(ctx) {
             var // 之前未启用, 触发进入事件
             _props1, ref4;
             (ref4 = (_props1 = dnd.props).onSourceEnter) === null || ref4 === void 0 ? void 0 : ref4.call(_props1, event);
-        } else if (down) {
-            var // 已启用且未松开, 触发移动事件
-            _props2, ref5;
-            (ref5 = (_props2 = dnd.props).onSourceMove) === null || ref5 === void 0 ? void 0 : ref5.call(_props2, event);
-        } else {
+        } else if (last) {
             var isAccept = _checkIfAcceptable(enables, status);
             if (isAccept) {
                 var // 触发接收事件
-                _props3, ref6;
-                (ref6 = (_props3 = dnd.props).onSourceAccept) === null || ref6 === void 0 ? void 0 : ref6.call(_props3, event);
+                _props2, ref5;
+                (ref5 = (_props2 = dnd.props).onSourceAccept) === null || ref5 === void 0 ? void 0 : ref5.call(_props2, event);
             }
+        } else {
+            var // 已启用且未松开, 触发移动事件
+            _props3, ref6;
+            (ref6 = (_props3 = dnd.props).onSourceMove) === null || ref6 === void 0 ? void 0 : ref6.call(_props3, event);
         }
         // 有命中时的drag出发
         if (first) {
             var ref7;
             (ref7 = props.onDrag) === null || ref7 === void 0 ? void 0 : ref7.call(props, event);
-        } else if (down) {
+        } else if (last) {
             var ref8;
-            (ref8 = props.onMove) === null || ref8 === void 0 ? void 0 : ref8.call(props, event);
+            (ref8 = props.onDrop) === null || ref8 === void 0 ? void 0 : ref8.call(props, event);
         } else {
             var ref9;
-            (ref9 = props.onDrop) === null || ref9 === void 0 ? void 0 : ref9.call(props, event);
+            (ref9 = props.onMove) === null || ref9 === void 0 ? void 0 : ref9.call(props, event);
         }
         // 状态有变时进行更新
         if (!isEqual(dndState.enables, enables) || !isEqual(dndState.status, status)) {
@@ -228,15 +228,15 @@ export function _useMethods(ctx) {
                 status: status
             });
         }
-        if (down) {
+        if (last) {
+            _resetEvent.emit([]);
+            self.lastEntryDND = undefined;
+        } else {
             // 通知重置
             _resetEvent.emit([
                 ctx.id,
                 dnd.ctx.id
             ], true);
-        } else {
-            _resetEvent.emit([]);
-            self.lastEntryDND = undefined;
         }
     });
     return {

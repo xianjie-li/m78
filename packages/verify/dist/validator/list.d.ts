@@ -1,4 +1,4 @@
-import { Validator } from "../types";
+import { Validator } from "../types.js";
 export declare enum ListValidatorType {
     contain = "contain",
     equal = "equal"

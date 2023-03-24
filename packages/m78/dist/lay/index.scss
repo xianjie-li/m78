@@ -18,7 +18,7 @@
     font-size: var(--m78-fs-md);
   }
 
-  .m78-tile_title {
+  .m78-tile_cont {
     font-size: var(--m78-fs-md);
   }
 
@@ -104,12 +104,17 @@
   &.__disabled {
     opacity: 0.5;
     pointer-events: none;
+
+    // 嵌套时, 内部不添加禁用样式
+    & & {
+      opacity: 1;
+    }
   }
 
   &.__large {
     padding: var(--m78-space-3);
 
-    .m78-tile_title {
+    .m78-tile_cont {
       font-size: 18px;
     }
 
@@ -129,7 +134,7 @@
   &.__small {
     padding: var(--m78-space-1) var(--m78-space-2);
 
-    .m78-tile_title {
+    .m78-tile_cont {
       font-size: var(--m78-fs);
     }
 
