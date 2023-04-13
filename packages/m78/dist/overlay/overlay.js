@@ -5,7 +5,7 @@ import { useSpring } from "react-spring";
 import { _useMethods as useMethods } from "./use-methods.js";
 import { _useLifeCycle as useLifeCycle } from "./use-life-cycle.js";
 import { _useRender as useRender } from "./use-render.js";
-import { _defaultProps, _onTrigger, transitionConfig, useOverlaysClickAway, useOverlaysMask } from "./common.js";
+import { _defaultProps, _onTrigger, overlayTransitionConfig, useOverlaysClickAway, useOverlaysMask } from "./common.js";
 import { isFunction } from "@m78/utils";
 /**
  * overlay抽象了所有弹层类组件(modal, drawer, popper等需要的基础能力), 使实现这些组件变得非常的简单
@@ -38,7 +38,7 @@ import { isFunction } from "@m78/utils";
                 y: 0,
                 isHidden: true
             },
-            config: transitionConfig
+            config: overlayTransitionConfig
         };
     }), 2), sp = ref2[0], spApi = ref2[1];
     /** arrow定位动画 */ var ref3 = _sliced_to_array(useSpring(function() {

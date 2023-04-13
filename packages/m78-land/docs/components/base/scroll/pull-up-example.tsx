@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { delay } from "@m78/utils";
-import { Scroll } from "m78/scroll";
-import { Lay, LayStyle } from "m78/lay";
+import { Lay, LayStyle, Scroll } from "m78";
 
 const PullUpExample = () => {
   // 加载中

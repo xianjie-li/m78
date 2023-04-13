@@ -1,1 +1,1 @@
-{"version":3,"file":"create-use-state.d.ts","sourceRoot":"","sources":["../../../../src/seed/create-use-state.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,IAAI,EAAE,MAAM,WAAW,CAAC;AAIjC,OAAO,EAAE,QAAQ,EAAE,MAAM,YAAY,CAAC;AAEtC,wBAAgB,eAAe,CAAC,IAAI,EAAE,IAAI,iBA6BzC"}
+{"version":3,"file":"create-use-state.d.ts","sourceRoot":"","sources":["../../../../src/seed/create-use-state.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,IAAI,EAAE,MAAM,WAAW,CAAC;AAIjC,OAAO,EAAE,cAAc,EAAE,MAAM,YAAY,CAAC;AAE5C,wBAAgB,eAAe,CAAC,IAAI,EAAE,IAAI,uBA6BzC"}

@@ -1,8 +1,5 @@
 import React from "react";
-import { Lay, LayStyle } from "m78/lay/index.js";
-import { Size, Status } from "m78/common/index.js";
-import { Cell, Cells } from "m78/layout/index.js";
-import { Button } from "m78/button/index.js";
+import { Lay, LayStyle, Button, Cell, Cells, Size, Status } from "m78";
 
 const LayExample = () => {
   return (

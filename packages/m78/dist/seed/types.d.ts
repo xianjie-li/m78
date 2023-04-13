@@ -3,9 +3,9 @@ import React from "react";
 import { AnyObject } from "@m78/utils";
 export interface RCSeed<S> extends Seed<S> {
     /** 获取当前state的hook */
-    useState: UseState<S>;
+    useState: RcSeedUseState<S>;
     /** 通过render children获取state */
-    State: State<S>;
+    State: RCSeedState<S>;
 }
 /**
  * 创建函数
@@ -13,7 +13,7 @@ export interface RCSeed<S> extends Seed<S> {
 export interface RCSeedCreator {
     <S extends AnyObject = AnyObject>(conf?: CreateSeedConfig<S>): RCSeed<S>;
 }
-export interface UseState<S> {
+export interface RcSeedUseState<S> {
     <ScopeS = S>(
     /**
      * 从state中选择部分state并返回，如果省略参数，会返回整个state对象
@@ -30,7 +30,7 @@ export interface UseState<S> {
 /**
  * 泛型组件不能根据selector的返回进行类型推导, 这里该为any类型, 用户通过泛型组件手动声明或在children入参处声明类型
  * */
-export declare type State<S> = {
+export declare type RCSeedState<S> = {
     <ScopeS = S>(props: {
         /** 同 UseState 的 selector 参数 */
         selector?: (state: S) => ScopeS;

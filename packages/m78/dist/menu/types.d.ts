@@ -41,7 +41,7 @@ export interface _FlatOption extends MenuOption {
 export interface _FlatMap {
     [key: string]: _FlatOption;
 }
-export interface _Context {
+export interface _MenuContext {
     openChangeHandle: (open: boolean, val: ValueType, sibling?: MenuOption[], skipSetActive?: any) => void;
     props: MenuProps;
     hasSelected: boolean;
@@ -66,7 +66,7 @@ export interface _Context {
         /** subMenuTriggerType */
         subMenuTriggerType: UseTriggerType;
     };
-    setState: SetState<_Context["state"]>;
+    setState: SetState<_MenuContext["state"]>;
     close: () => void;
 }
 //# sourceMappingURL=types.d.ts.map

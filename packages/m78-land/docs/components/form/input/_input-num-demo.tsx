@@ -1,5 +1,5 @@
 import React from "react";
-import { Input, InputType } from "m78/input";
+import { Input, InputType } from "m78";
 
 const InputDemo = () => (
   <div style={{ width: 360 }}>

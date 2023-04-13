@@ -233,7 +233,7 @@ export enum OverlayUpdateType {
 }
 
 /** 多个部分间共享的状态 */
-export interface _Context {
+export interface _OverlayContext {
   open: boolean;
   setOpen: AnyFunction;
   state: {
@@ -242,7 +242,7 @@ export interface _Context {
     /** 所有滚动父级 */
     scrollParents: HTMLElement[];
   };
-  setState: SetState<_Context["state"]>;
+  setState: SetState<_OverlayContext["state"]>;
   self: {
     /** 最后更新类型 */
     lastUpdateType?: OverlayUpdateType;

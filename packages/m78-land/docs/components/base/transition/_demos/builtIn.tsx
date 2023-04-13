@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 
-import { Transition, TransitionType } from "m78/transition";
+import { Transition, TransitionType, Button } from "m78";
 import sty from "./style.module.scss";
-import { Button } from "m78/button";
 
 const BuiltIn = () => {
   const [show, setShow] = useState(true);

@@ -1,5 +1,5 @@
 import React from "react";
-import { MediaQuery, MediaQueryContext, MediaQueryMeta } from "m78/layout";
+import { MediaQuery, MediaQueryContext, MediaQueryMeta } from "m78";
 import sty from "./style.module.scss";
 
 const Base = () => {

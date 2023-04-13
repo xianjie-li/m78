@@ -1,5 +1,5 @@
 import React from "react";
-import { Cells, Cell } from "m78/layout";
+import { Cells, Cell } from "m78";
 import sty from "./style.module.scss";
 
 const Flex = () => {

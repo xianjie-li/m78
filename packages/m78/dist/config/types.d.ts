@@ -1,6 +1,6 @@
 import React from "react";
 import { Resource } from "i18next";
-export interface M78SeedState {
+export interface M78SeedConfig {
     /** 黑暗模式 */
     darkMode?: boolean;
     /**

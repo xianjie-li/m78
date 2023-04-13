@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "../../src/button";
 import {
-  DragHandle,
+  OverlayDragHandle,
   Overlay,
   OverlayDirection,
   OverlayInstance,
@@ -60,9 +60,9 @@ const OverlayExample = () => {
           content={
             <div className="p-24">
               内容内容
-              <DragHandle>
+              <OverlayDragHandle>
                 {(bind) => <button {...bind()}>drag me</button>}
-              </DragHandle>
+              </OverlayDragHandle>
             </div>
           }
         >
@@ -76,9 +76,9 @@ const OverlayExample = () => {
           content={
             <div className="p-24">
               内容内容
-              <DragHandle>
+              <OverlayDragHandle>
                 {(bind) => <button {...bind()}>drag me</button>}
-              </DragHandle>
+              </OverlayDragHandle>
             </div>
           }
         >

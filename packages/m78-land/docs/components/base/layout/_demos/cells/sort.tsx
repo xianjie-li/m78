@@ -1,4 +1,4 @@
-import { Cell, Cells } from "m78/layout";
+import { Cell, Cells } from "m78";
 import React from "react";
 
 import sty from "./style.module.scss";

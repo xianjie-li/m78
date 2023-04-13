@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { _Context, ScrollPullDownAnimateValues } from "./types.js";
+import { _ScrollContext, ScrollPullDownAnimateValues } from "./types.js";
 import { preventTopPull } from "./prevent-top-pull.js";
 import { useDrag } from "@use-gesture/react";
 import { animated, useSpring } from "react-spring";
@@ -10,7 +10,7 @@ import clsx from "clsx";
 import { isFunction } from "@m78/utils";
 import { useDestroy, UseScrollMeta } from "@m78/hooks";
 
-export const _usePullActions = (ctx: _Context) => {
+export const _usePullActions = (ctx: _ScrollContext) => {
   const { scroller, setState, state, pullDownEnabled, props, self } = ctx;
 
   const [sp, api] = useSpring<ScrollPullDownAnimateValues>(() => ({
@@ -70,7 +70,7 @@ export const _usePullActions = (ctx: _Context) => {
       }
     },
     {
-      target: scroller.ref,
+      target: ctx.innerWrapRef,
       enabled: pullDownEnabled,
       bounds: () => {
         return {
@@ -84,10 +84,10 @@ export const _usePullActions = (ctx: _Context) => {
 
   /** 阻止部分浏览器的顶部下拉bounce效果(不完美) */
   useEffect(() => {
-    if (!scroller.ref.current || !pullDownEnabled) return;
+    if (!ctx.innerWrapRef.current || !pullDownEnabled) return;
 
-    return preventTopPull(scroller.ref.current);
-  }, [scroller.ref.current, pullDownEnabled]);
+    return preventTopPull(ctx.innerWrapRef.current);
+  }, [ctx.innerWrapRef.current, pullDownEnabled]);
 
   // 清除上拉定时器
   useDestroy(() => clearTimeout(self.pullUpTimer));

@@ -1,7 +1,7 @@
 import { UseScrollMeta } from "@m78/hooks";
-import { _Context } from "./types.js";
+import { _ScrollContext } from "./types.js";
 
-export function _useMethod(ctx: _Context) {
+export function _useMethod(ctx: _ScrollContext) {
   const { setState, scroller } = ctx;
 
   /** 刷新指示器状态 */

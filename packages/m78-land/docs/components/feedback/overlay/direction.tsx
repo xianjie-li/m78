@@ -1,7 +1,6 @@
 import React from "react";
-import { Overlay, OverlayDirection } from "m78/overlay";
+import { Overlay, OverlayDirection, Button } from "m78";
 import { UseTriggerType } from "@m78/hooks";
-import { Button } from "m78/button";
 
 const Direction = () => {
   return (

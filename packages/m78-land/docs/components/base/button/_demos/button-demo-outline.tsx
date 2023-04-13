@@ -1,4 +1,4 @@
-import { Button } from "m78/button";
+import { Button } from "m78";
 import React from "react";
 
 const ButtonDemoColor = () => (

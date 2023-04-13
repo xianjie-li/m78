@@ -13,11 +13,11 @@ import { useSpring } from "react-spring";
 import { _useMethods as useMethods } from "./use-methods.js";
 import { _useLifeCycle as useLifeCycle } from "./use-life-cycle.js";
 import { _useRender as useRender } from "./use-render.js";
-import { _Context, _MergeDefaultProps, OverlayProps } from "./types.js";
+import { _OverlayContext, _MergeDefaultProps, OverlayProps } from "./types.js";
 import {
   _defaultProps,
   _onTrigger,
-  transitionConfig,
+  overlayTransitionConfig,
   useOverlaysClickAway,
   useOverlaysMask,
 } from "./common.js";
@@ -38,13 +38,13 @@ export function _Overlay(p: OverlayProps) {
   const containerRef = useRef<HTMLDivElement>(null!);
 
   /** 组件状态 */
-  const [state, setState] = useSetState<_Context["state"]>({
+  const [state, setState] = useSetState<_OverlayContext["state"]>({
     lastDirection: props.direction,
     scrollParents: [],
   });
 
   /** 实例对象 */
-  const self = useSelf<_Context["self"]>({
+  const self = useSelf<_OverlayContext["self"]>({
     lastXY: props.xy,
     lastAlignment: props.alignment,
     lastTarget: props.target,
@@ -61,7 +61,7 @@ export function _Overlay(p: OverlayProps) {
         y: 0,
         isHidden: true,
       },
-      config: transitionConfig,
+      config: overlayTransitionConfig,
     };
   });
 
@@ -113,7 +113,7 @@ export function _Overlay(p: OverlayProps) {
   /** 尺寸变更时修复位置 */
   const [measure] = useMeasure(containerRef, 200);
 
-  const ctx: _Context = {
+  const ctx: _OverlayContext = {
     open: open && !props.disabled,
     setOpen,
     state,

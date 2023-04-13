@@ -1,7 +1,7 @@
 import { AnyFunction } from "@m78/utils";
-import { _Context } from "./types.js";
+import { _FormContext } from "./types.js";
 
-export function _useUpdatePropsChange(ctx: _Context, update: AnyFunction) {
+export function _useUpdatePropsChange(ctx: _FormContext, update: AnyFunction) {
   ctx.updatePropsEvent.useEvent(() => {
     update();
   });

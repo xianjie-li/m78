@@ -1,6 +1,5 @@
 import React from "react";
-import { Overlay, OverlayDirection } from "m78/overlay";
-import { Button } from "m78/button";
+import { Overlay, OverlayDirection, Button } from "m78";
 import sty from "./arrow.module.scss";
 
 const Arrow = () => {

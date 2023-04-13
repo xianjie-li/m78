@@ -9,10 +9,10 @@ import { useEffect, useImperativeHandle, useMemo } from "react";
 import { ensureArray, isDom } from "@m78/utils";
 import { _Methods } from "./use-methods.js";
 import { isBound } from "./common.js";
-import { _Context } from "./types.js";
+import { _OverlayContext } from "./types.js";
 import { _useTypeProcess } from "./use-type-process.js";
 
-export function _useLifeCycle(ctx: _Context, methods: _Methods) {
+export function _useLifeCycle(ctx: _OverlayContext, methods: _Methods) {
   const {
     props,
     setOpen,

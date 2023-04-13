@@ -143,11 +143,13 @@ importers:
       i18next: ^22.0.5
       i18next-browser-languagedetector: ^7.0.1
       i18next-http-backend: ^2.0.1
+      konva: ^8.4.3
       react: ^18.2.0
       react-dom: ^18.2.0
       react-i18next: ^12.0.0
       react-router-dom: ^6.4.3
       react-spring: ^9.6.1
+      stats.js: ^0.17.0
       use-sync-external-store: ^1.2.0
     dependencies:
       '@lxjx/click-effect': 1.0.1
@@ -165,14 +167,16 @@ importers:
       i18next: 22.0.5
       i18next-browser-languagedetector: 7.0.1
       i18next-http-backend: 2.0.1
+      konva: 8.4.3
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-i18next: 12.0.0_e52s5leb62x5eudkmfoztpifde
-      react-spring: 9.6.1_biqbaboplfbrettd7655fr4n2y
+      react-spring: 9.6.1_tbagvnph2utfj5xyzoveciwt3a
       use-sync-external-store: 1.2.0_react@18.2.0
     devDependencies:
       '@types/use-sync-external-store': 0.0.3
       react-router-dom: 6.4.3_biqbaboplfbrettd7655fr4n2y
+      stats.js: 0.17.0
     publishDirectory: dist
 
   packages/m78-land:
@@ -4026,6 +4030,21 @@ packages:
       '@react-spring/rafz': 9.6.1
       '@react-spring/shared': 9.6.1_react@18.2.0
       '@react-spring/types': 9.6.1
+      react: 18.2.0
+    dev: false
+
+  /@react-spring/konva/9.6.1_konva@8.4.3+react@18.2.0:
+    resolution: {integrity: sha512-MevnU+tnG1LPsmMRpfJfevfLtI0ObIvrwYc+Xg+kmYJe00vwMRSdulQOztKANKalFXBewwk72XrQCeRLXFaUIg==}
+    peerDependencies:
+      konva: '>=2.6'
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-konva: ^16.8.0 || ^17.0.0
+    dependencies:
+      '@react-spring/animated': 9.6.1_react@18.2.0
+      '@react-spring/core': 9.6.1_react@18.2.0
+      '@react-spring/shared': 9.6.1_react@18.2.0
+      '@react-spring/types': 9.6.1
+      konva: 8.4.3
       react: 18.2.0
     dev: false
 
@@ -9430,6 +9449,10 @@ packages:
     engines: {node: '>= 8'}
     dev: true
 
+  /konva/8.4.3:
+    resolution: {integrity: sha512-ARqdgAbdNIougRlOKvkQwHlGhXPRBV4KvhCP+qoPpGoVQwwiJe4Hkdu4HHdRPb9rGUp04jDTAxBzEwBsE272pg==}
+    dev: false
+
   /latest-version/5.1.0:
     resolution: {integrity: sha512-weT+r0kTkRQdCdYCNtkMwWXQTMEswKrFBkm4ckQOMVhhqhIMI1UT2hMj+1iigIhgSZm5gTmrRXBNoGUgaTY1xA==}
     engines: {node: '>=8'}
@@ -11283,6 +11306,30 @@ packages:
       - zdog
     dev: false
 
+  /react-spring/9.6.1_tbagvnph2utfj5xyzoveciwt3a:
+    resolution: {integrity: sha512-BeP80R4SLb1bZHW/Q62nECoScHw/fH+jzGkD7dc892HNGa+lbGIJXURc6U7N8JfZ8peEO46nPxR57aUMuYzquQ==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@react-spring/core': 9.6.1_react@18.2.0
+      '@react-spring/konva': 9.6.1_konva@8.4.3+react@18.2.0
+      '@react-spring/native': 9.6.1_react@18.2.0
+      '@react-spring/three': 9.6.1_react@18.2.0
+      '@react-spring/web': 9.6.1_biqbaboplfbrettd7655fr4n2y
+      '@react-spring/zdog': 9.6.1_biqbaboplfbrettd7655fr4n2y
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    transitivePeerDependencies:
+      - '@react-three/fiber'
+      - konva
+      - react-konva
+      - react-native
+      - react-zdog
+      - three
+      - zdog
+    dev: false
+
   /react-test-renderer/18.2.0_react@18.2.0:
     resolution: {integrity: sha512-JWD+aQ0lh2gvh4NM3bBM42Kx+XybOxCpgYK7F8ugAlpaTSnWsX+39Z4XkOykGZAHrjwwTZT3x3KxswVWxHPUqA==}
     peerDependencies:
@@ -12122,6 +12169,10 @@ packages:
 
   /state-toggle/1.0.3:
     resolution: {integrity: sha512-d/5Z4/2iiCnHw6Xzghyhb+GcmF89bxwgXG60wjIiZaxnymbyOmI8Hk4VqHXiVVp6u2ysaskFfXg3ekCj4WNftQ==}
+    dev: true
+
+  /stats.js/0.17.0:
+    resolution: {integrity: sha512-hNKz8phvYLPEcRkeG1rsGmV5ChMjKDAWU7/OJJdDErPBNChQXxCo3WZurGpnWc6gZhAzEPFad1aVgyOANH1sMw==}
     dev: true
 
   /statuses/1.5.0:

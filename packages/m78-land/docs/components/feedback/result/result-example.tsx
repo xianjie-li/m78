@@ -6,11 +6,11 @@ import {
   StatusIconInfo,
   StatusIconSuccess,
   StatusIconWarning,
-} from "m78/common";
-import { Button } from "m78/button";
-import { Result } from "m78/result";
+  Button,
+  Result,
+  Divider,
+} from "m78";
 import { IconDrafts } from "@m78/icons/icon-drafts";
-import { Divider } from "m78/layout";
 
 const ResultExample = () => {
   return (

@@ -1,6 +1,6 @@
-import { _Context } from "./types.js";
+import { _ScrollContext } from "./types.js";
 import { UseScrollMeta } from "@m78/hooks";
-export declare const _usePullActions: (ctx: _Context) => {
+export declare const _usePullActions: (ctx: _ScrollContext) => {
     springStyle: {
         rotate: import("@react-spring/core/dist/declarations/src/SpringValue.js").SpringValue<number>;
         y: import("@react-spring/core/dist/declarations/src/SpringValue.js").SpringValue<number>;

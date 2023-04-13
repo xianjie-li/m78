@@ -2,7 +2,7 @@ import React from "react";
 import { AnyFunction, BoundSize, TupleNumber } from "@m78/utils";
 import { TransitionType } from "../transition/index.js";
 import { useSame, UseTriggerEvent, UseTriggerType } from "@m78/hooks";
-import { _ArrowBasePosition, _ClampBound, _Context, _DirectionMeta, _DirectionMetaMap, _DragContext, OverlayDirectionKeys, OverlayDirectionUnion, OverlayProps, OverlayRenderOption } from "./types.js";
+import { _ArrowBasePosition, _ClampBound, _OverlayContext, _DirectionMeta, _DirectionMetaMap, _DragContext, OverlayDirectionKeys, OverlayDirectionUnion, OverlayProps, OverlayRenderOption } from "./types.js";
 export declare const _defaultAlignment: TupleNumber;
 export declare const _defaultProps: {
     namespace: string;
@@ -16,7 +16,7 @@ export declare const _defaultProps: {
     triggerType: UseTriggerType;
     autoFocus: boolean;
 };
-export declare const transitionConfig: {
+export declare const overlayTransitionConfig: {
     readonly tension: 210;
     readonly friction: 20;
 };
@@ -32,7 +32,7 @@ export declare function isBound(a: any): a is BoundSize;
  * */
 export declare function _calcAlignment(alignment: TupleNumber, size: TupleNumber): number[];
 /** 当要为其他上层组件创建api时, 通过此函数来剔除不必要的props */
-export declare function getApiProps(props: OverlayProps): OverlayRenderOption;
+export declare function getOverlayApiProps(props: OverlayProps): OverlayRenderOption;
 declare type SameConfig = Parameters<typeof useSame>[1];
 /**
  * 所有弹层类组件共享的useSame包装, 用于统一mask显示
@@ -55,7 +55,7 @@ export declare function useOverlaysClickAway(config?: SameConfig, namespace?: st
     isLast: boolean;
 };
 /** useTrigger回调 */
-export declare function _onTrigger(e: UseTriggerEvent, setOpen: AnyFunction, self: _Context["self"], props: OverlayProps): void;
+export declare function _onTrigger(e: UseTriggerEvent, setOpen: AnyFunction, self: _OverlayContext["self"], props: OverlayProps): void;
 /**
  * 根据t, c获取内容在OverlayDirection各个位置上的坐标信息_DirectionMeta
  * */

@@ -1,7 +1,7 @@
 import { useFn, UseScrollMeta } from "@m78/hooks";
 import { animated, useSpring } from "react-spring";
 import React, { useEffect, useRef } from "react";
-import { _Context } from "./types.js";
+import { _ScrollContext } from "./types.js";
 import clsx from "clsx";
 import clamp from "lodash/clamp.js";
 import { Toggle } from "../fork/index.js";
@@ -28,7 +28,7 @@ import { stopPropagation } from "../common/index.js";
  * # # # # # # # # # # # # # # # # # */
 
 /** 滚动条实现/汇总 */
-export function _useBar(ctx: _Context) {
+export function _useBar(ctx: _ScrollContext) {
   const { state, setState, self, scroller, directionStyle, props, bound } = ctx;
 
   const yBar = _useBarImpl(ctx, {
@@ -62,7 +62,7 @@ export function _useBar(ctx: _Context) {
     xBar.refreshScrollPosition();
     yBar.refreshScrollPosition();
 
-    const wrap = scroller.ref.current!;
+    const wrap = ctx.innerWrapRef.current!;
 
     newState.barXSize = wrap.offsetWidth - wrap.clientWidth;
     newState.barYSize = wrap.offsetHeight - wrap.clientHeight;
@@ -156,7 +156,7 @@ interface _BarImplOption {
 
 /** 单个滚动条实现, isY用于 */
 export function _useBarImpl(
-  ctx: _Context,
+  ctx: _ScrollContext,
   { isY, delayHidden }: _BarImplOption
 ) {
   const { state, self, scroller, props } = ctx;
@@ -213,7 +213,7 @@ export function _useBarImpl(
     if (!props.scrollbar) return;
     offsetRatio = clamp(offsetRatio, 0, 1);
 
-    const wrapEl = ctx.scroller.ref.current;
+    const wrapEl = ctx.innerWrapRef.current;
     const barEl = barRef.current;
 
     if (!wrapEl) return;
@@ -331,7 +331,7 @@ export function _useBarImpl(
 
   // 有代码依赖于scroll_bar.childNode[0] 获取thumb元素, 若要改变接口需同步更改对应代码
   const barNode = (
-    <Toggle when={state.enableStatus.y}>
+    <Toggle when={isY ? state.enableStatus.y : state.enableStatus.x}>
       <div
         className={clsx(
           "m78-scroll_bar",

@@ -1,10 +1,10 @@
 import { useFn, useKeyboard } from "@m78/hooks";
-import { _Context, _FlatOption, MenuOption } from "./types.js";
+import { _MenuContext, _FlatOption, MenuOption } from "./types.js";
 import { getValueByDataSource } from "../common/index.js";
 import { _flatOptions, _getOptionAllValues } from "./common.js";
 import { useEffect } from "react";
 
-export function useKeyboardHandle(ctx: _Context) {
+export function useKeyboardHandle(ctx: _MenuContext) {
   const {
     hasSelected,
     props,

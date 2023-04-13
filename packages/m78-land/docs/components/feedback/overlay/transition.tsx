@@ -1,7 +1,5 @@
 import React from "react";
-import { Overlay, OverlayDirection } from "m78/overlay";
-import { TransitionType } from "m78/transition";
-import { Button } from "m78/button";
+import { Overlay, OverlayDirection, Button, TransitionType } from "m78";
 import { config } from "react-spring";
 import { UseTriggerType } from "@m78/hooks";
 

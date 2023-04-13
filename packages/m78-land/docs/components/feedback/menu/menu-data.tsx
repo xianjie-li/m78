@@ -7,8 +7,7 @@ import { IconInsertDriveFile } from "@m78/icons/icon-insert-drive-file.js";
 import { IconHistory } from "@m78/icons/icon-history.js";
 import { IconExitToApp } from "@m78/icons/icon-exit-to-app.js";
 import React from "react";
-import { Divider } from "m78/layout";
-import { MenuOption } from "m78/menu";
+import { Divider, MenuOption } from "m78";
 
 export const menuData: MenuOption[] = [
   {

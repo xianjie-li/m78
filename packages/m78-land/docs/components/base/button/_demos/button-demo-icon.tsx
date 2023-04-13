@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "m78/button";
+import { Button } from "m78";
 
 import { IconTag } from "@m78/icons/icon-tag";
 import { IconBeachAccess } from "@m78/icons/icon-beach-access";

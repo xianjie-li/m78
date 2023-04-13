@@ -1,6 +1,6 @@
 import React, { isValidElement } from "react";
 import {
-  _Context,
+  _FormContext,
   _FieldContext,
   FormFieldProps,
   FormListCustomRenderArgs,
@@ -20,7 +20,7 @@ import { IconAddCircleOutline } from "@m78/icons/icon-add-circle-outline.js";
 import { _UseFieldMethods } from "./use-field-methods.js";
 import { FORM_NS, Translation } from "../i18n/index.js";
 
-export function _listImpl(ctx: _Context) {
+export function _listImpl(ctx: _FormContext) {
   const { form } = ctx;
 
   form.List = (props) => {
@@ -38,7 +38,7 @@ export function _listImpl(ctx: _Context) {
 
 /** FormListCustomRenderArgs.render核心逻辑实现 */
 export function _listRenderImpl(
-  ctx: _Context,
+  ctx: _FormContext,
   props: FormFieldProps
 ): FormListCustomRenderArgs["render"] {
   const { form } = ctx;
@@ -79,7 +79,7 @@ export function _listRenderImpl(
 
 /** 实现内置list布局 */
 export function _listLayoutRenderImpl(
-  ctx: _Context,
+  ctx: _FormContext,
   filedCtx: _FieldContext,
   methods: _UseFieldMethods,
   schema: FormSchema | FormSchemaWithoutName | null

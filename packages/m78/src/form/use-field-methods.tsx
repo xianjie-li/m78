@@ -1,5 +1,5 @@
 import {
-  _Context,
+  _FormContext,
   _FieldContext,
   _formKeyCustomerKeys,
   _formPropsKeys,
@@ -22,7 +22,7 @@ import {
 import { _defaultValueGetter } from "./common.js";
 import React, { isValidElement } from "react";
 
-export function _useFieldMethods(ctx: _Context, fieldCtx: _FieldContext) {
+export function _useFieldMethods(ctx: _FormContext, fieldCtx: _FieldContext) {
   const { form, config } = ctx;
 
   const { state, isList, props, name } = fieldCtx;

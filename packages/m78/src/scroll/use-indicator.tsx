@@ -1,9 +1,12 @@
 import React, { useEffect } from "react";
-import { _Context } from "./types.js";
+import { _ScrollContext } from "./types.js";
 import { _UseMethodReturns } from "./use-method.js";
 import { If } from "../fork/index.js";
 
-export const _useIndicator = (ctx: _Context, methods: _UseMethodReturns) => {
+export const _useIndicator = (
+  ctx: _ScrollContext,
+  methods: _UseMethodReturns
+) => {
   const { bound, props, state, xEnabled, yEnabled } = ctx;
 
   /** 滚动指示器初始化&更新 */

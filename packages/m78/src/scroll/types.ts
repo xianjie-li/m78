@@ -57,6 +57,10 @@ export interface ScrollProps extends ComponentBaseProps {
   wrapExtra?: React.ReactNode;
   /** 用于控制滚动的实例 */
   instanceRef?: React.Ref<ScrollInstance>;
+  /** 内部容器节点 */
+  innerRef?: React.Ref<HTMLDivElement>;
+  /** 用于获取内部滚动容器dom */
+  innerWrapRef?: React.RefObject<HTMLDivElement>;
   /** 内容容器节点的额外style */
   contStyle?: React.CSSProperties;
   /** 内容容器节点的额外className */
@@ -92,7 +96,7 @@ export interface ScrollInstance extends ReturnType<typeof useScroll> {
   triggerPullDown: () => Promise<void>;
 }
 
-export interface _Context {
+export interface _ScrollContext {
   props: ScrollProps & typeof _defaultProps;
   scroller: ReturnType<typeof useScroll>;
   state: {
@@ -121,7 +125,7 @@ export interface _Context {
     /** 是否是常见的移动设备 */
     isMobile: boolean;
   };
-  setState: SetState<_Context["state"]>;
+  setState: SetState<_ScrollContext["state"]>;
   self: {
     /** 自动关闭滚动条时使用的计时器 */
     delayHiddenTimer: any;
@@ -148,4 +152,5 @@ export interface _Context {
   yEnabled: boolean;
   /** 如果是移动设备, 则禁用dragScroll拖动, 使用原生拖动 */
   dragScrollEnable: boolean;
+  innerWrapRef: React.RefObject<HTMLDivElement>;
 }

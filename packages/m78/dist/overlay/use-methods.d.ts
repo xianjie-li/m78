@@ -1,8 +1,8 @@
 import { BoundSize, TupleNumber } from "@m78/utils";
 import { UseTriggerEvent } from "@m78/hooks";
-import { _ClampBound, _Context, OverlayTarget, OverlayUpdateType } from "./types.js";
+import { _ClampBound, _OverlayContext, OverlayTarget, OverlayUpdateType } from "./types.js";
 import { Handler } from "@use-gesture/core/types";
-export declare function _useMethods(ctx: _Context): {
+export declare function _useMethods(ctx: _OverlayContext): {
     getBoundWithXY: (xy: TupleNumber) => BoundSize;
     getBoundWithAlignment: (alignment: TupleNumber) => BoundSize;
     getBoundWithTarget: (target: OverlayTarget) => BoundSize;

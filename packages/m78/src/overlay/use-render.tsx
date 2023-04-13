@@ -7,7 +7,7 @@ import React from "react";
 import clsx from "clsx";
 import { Portal } from "../portal/index.js";
 import { animated } from "react-spring";
-import { _Context } from "./types.js";
+import { _OverlayContext } from "./types.js";
 import { _Methods } from "./use-methods.js";
 import { _LifeCycle } from "./use-life-cycle.js";
 import { isFunction } from "@m78/utils";
@@ -16,14 +16,14 @@ import { _Arrow as Arrow } from "./arrow.js";
 import {
   _getArrowBasePosition,
   dragContext,
-  transitionConfig,
+  overlayTransitionConfig,
 } from "./common.js";
 import { _MountTrigger as MountTrigger } from "./mount-trigger.js";
 
 const AnimatedArrow = animated(Arrow);
 
 export function _useRender(
-  ctx: _Context,
+  ctx: _OverlayContext,
   methods: _Methods,
   lifeCycle: _LifeCycle
 ) {
@@ -84,7 +84,7 @@ export function _useRender(
         from: transition?.from,
         to: transition?.to,
         springProps: {
-          config: transitionConfig,
+          config: overlayTransitionConfig,
           ...props.springProps,
         },
         innerRef: props.innerRef,

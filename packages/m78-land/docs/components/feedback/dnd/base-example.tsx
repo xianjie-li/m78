@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { DND, DNDPartialEvent, DNDFullEvent } from "m78/dnd";
+import { DND, DNDPartialEvent, DNDFullEvent } from "m78";
 
 import css from "./style.module.scss";
 

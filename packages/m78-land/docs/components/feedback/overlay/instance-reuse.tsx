@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Trigger, UseTriggerType } from "@m78/hooks";
-import { Overlay, OverlayInstance } from "m78/overlay";
-import { Button } from "m78/button";
+import { Overlay, OverlayInstance, Button } from "m78";
 
 const InstanceReuse = () => {
   const [overlay, setOverlay] = useState<OverlayInstance | null>(null);

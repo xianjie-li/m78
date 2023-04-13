@@ -15,7 +15,7 @@ import { useSame, UseTriggerEvent, UseTriggerType } from "@m78/hooks";
 import {
   _ArrowBasePosition,
   _ClampBound,
-  _Context,
+  _OverlayContext,
   _DirectionMeta,
   _DirectionMetaMap,
   _DragContext,
@@ -42,7 +42,7 @@ export const _defaultProps = {
   autoFocus: true,
 };
 
-export const transitionConfig = config.stiff;
+export const overlayTransitionConfig = config.stiff;
 
 /** 箭头和目标之间的补白 */
 export const _arrowSpace = 4;
@@ -81,7 +81,7 @@ export function _calcAlignment(alignment: TupleNumber, size: TupleNumber) {
 }
 
 /** 当要为其他上层组件创建api时, 通过此函数来剔除不必要的props */
-export function getApiProps(props: OverlayProps): OverlayRenderOption {
+export function getOverlayApiProps(props: OverlayProps): OverlayRenderOption {
   return omit(props, omitApiProps as any) as OverlayRenderOption;
 }
 
@@ -126,7 +126,7 @@ export function useOverlaysClickAway(config?: SameConfig, namespace?: string) {
 export function _onTrigger(
   e: UseTriggerEvent,
   setOpen: AnyFunction,
-  self: _Context["self"],
+  self: _OverlayContext["self"],
   props: OverlayProps
 ) {
   props.onTrigger?.(e);

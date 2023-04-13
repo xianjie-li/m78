@@ -1,4 +1,4 @@
-import { _Context } from "./types.js";
+import { _OverlayContext } from "./types.js";
 import { usePrev, UseTriggerType, useUpdateEffect } from "@m78/hooks";
 import { ensureArray } from "@m78/utils";
 
@@ -6,7 +6,7 @@ import { ensureArray } from "@m78/utils";
  * 对triggerType从其他类型变更为active的情况进行特殊处理
  * - 主要是让overlay能更方便的实现嵌套菜单(事件需要通过click打开, 然后切换为active, 具体可见menu组件)
  * */
-export function _useTypeProcess(ctx: _Context) {
+export function _useTypeProcess(ctx: _OverlayContext) {
   const { self, props } = ctx;
 
   const typeArray = ensureArray(props.triggerType);

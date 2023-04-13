@@ -29,7 +29,7 @@ export var _defaultProps = {
     triggerType: UseTriggerType.click,
     autoFocus: true
 };
-export var transitionConfig = config.stiff;
+export var overlayTransitionConfig = config.stiff;
 /** 箭头和目标之间的补白 */ export var _arrowSpace = 4;
 export var dragContext = React.createContext({
     onDrag: dumpFn,
@@ -55,7 +55,7 @@ export var dragContext = React.createContext({
         y
     ];
 }
-/** 当要为其他上层组件创建api时, 通过此函数来剔除不必要的props */ export function getApiProps(props) {
+/** 当要为其他上层组件创建api时, 通过此函数来剔除不必要的props */ export function getOverlayApiProps(props) {
     return omit(props, omitApiProps);
 }
 /**

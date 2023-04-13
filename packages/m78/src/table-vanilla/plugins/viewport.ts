@@ -1,4 +1,4 @@
-import { TablePlugin } from "../../plugin.js";
+import { TablePlugin } from "../plugin.js";
 import {
   BoundSize,
   isArray,
@@ -12,11 +12,11 @@ import {
   TableItems,
   TableItemsFull,
   TableRow,
-} from "../../types.js";
+} from "../types.js";
 import clamp from "lodash/clamp.js";
 import Konva from "konva";
 import clsx from "clsx";
-import { _removeNode } from "../../common.js";
+import { _removeNode } from "../common.js";
 
 // @ts-ignore
 import Stats from "stats.js";
@@ -161,7 +161,7 @@ export class TableViewportPlugin extends TablePlugin {
   x(x?: number) {
     if (x === undefined) return this.table.layer.x();
     this.table.layer.x(
-      clamp(x, -(this.table.contentWidth() - this.table.width()), 0)
+      clamp(x, -(this.table.contentWidth() - this.getZoomWidth()), 0)
     );
     this.render();
   }
@@ -169,7 +169,7 @@ export class TableViewportPlugin extends TablePlugin {
   y(y?: number) {
     if (y === undefined) return this.table.layer.y();
     this.table.layer.y(
-      clamp(y, -(this.table.contentHeight() - this.table.height()), 0)
+      clamp(y, -(this.table.contentHeight() - this.getZoomHeight()), 0)
     );
     this.render();
   }
@@ -182,8 +182,8 @@ export class TableViewportPlugin extends TablePlugin {
     }
 
     layer.position({
-      x: clamp(x, -(this.table.contentWidth() - this.table.width()), 0),
-      y: clamp(y, -(this.table.contentHeight() - this.table.height()), 0),
+      x: clamp(x, -(this.table.contentWidth() - this.getZoomWidth()), 0),
+      y: clamp(y, -(this.table.contentHeight() - this.getZoomHeight()), 0),
     });
 
     this.render();
@@ -384,11 +384,12 @@ export class TableViewportPlugin extends TablePlugin {
     );
 
     const width = Math.max(
-      table.width() - ctx.rightFixedWidth - ctx.leftFixedWidth,
+      this.getZoomWidth() - ctx.rightFixedWidth - ctx.leftFixedWidth,
       0
     );
+    x;
     const height = Math.max(
-      table.height() - ctx.bottomFixedHeight - ctx.topFixedHeight,
+      this.getZoomHeight() - ctx.bottomFixedHeight - ctx.topFixedHeight,
       0
     );
 
@@ -408,48 +409,48 @@ export class TableViewportPlugin extends TablePlugin {
       return items;
     }
 
-    const lf = this.table.leftFixed;
-    const rf = this.table.rightFixed;
-
-    // 截取固定列中可见单元格
-    [...lf, ...rf].forEach((column) => {
-      const slice = column.cells.slice(startRowIndex, endRowIndex + 1);
-
-      slice.forEach((cell) => {
-        cells.push(cell);
-      });
-    });
-
-    columns.unshift(...lf);
-    columns.push(...rf);
-
-    const tf = this.table.topFixed;
-    const bf = this.table.bottomFixed;
-
-    // 截取固定行中可用单元格
-    [...tf, ...bf].forEach((row) => {
-      let startColumnInd = startColumnIndex!;
-      let endColumnInd = endColumnIndex! + 1;
-
-      // 裁去固定列索引
-      if (startColumnInd < lf.length) {
-        startColumnInd = lf.length;
-      }
-
-      if (endColumnInd > row.cells.length - rf.length) {
-        endColumnInd = row.cells.length - rf.length;
-      }
-
-      const slice = row.cells.slice(startColumnInd, endColumnInd);
-
-      // 固定列单独处理
-      const startSlice = row.cells.slice(0, lf.length);
-      const endSlice = row.cells.slice(-rf.length);
-
-      [...startSlice, ...slice, ...endSlice].forEach((cell) => {
-        cells.push(cell);
-      });
-    });
+    // const lf = this.table.leftFixed;
+    // const rf = this.table.rightFixed;
+    //
+    // // 截取固定列中可见单元格
+    // [...lf, ...rf].forEach((column) => {
+    //   const slice = column.cells.slice(startRowIndex, endRowIndex + 1);
+    //
+    //   slice.forEach((cell) => {
+    //     cells.push(cell);
+    //   });
+    // });
+    //
+    // columns.unshift(...lf);
+    // columns.push(...rf);
+    //
+    // const tf = this.table.topFixed;
+    // const bf = this.table.bottomFixed;
+    //
+    // // 截取固定行中可用单元格
+    // [...tf, ...bf].forEach((row) => {
+    //   let startColumnInd = startColumnIndex!;
+    //   let endColumnInd = endColumnIndex! + 1;
+    //
+    //   // 裁去固定列索引
+    //   if (startColumnInd < lf.length) {
+    //     startColumnInd = lf.length;
+    //   }
+    //
+    //   if (endColumnInd > row.cells.length - rf.length) {
+    //     endColumnInd = row.cells.length - rf.length;
+    //   }
+    //
+    //   const slice = row.cells.slice(startColumnInd, endColumnInd);
+    //
+    //   // 固定列单独处理
+    //   const startSlice = row.cells.slice(0, lf.length);
+    //   const endSlice = row.cells.slice(-rf.length);
+    //
+    //   [...startSlice, ...slice, ...endSlice].forEach((cell) => {
+    //     cells.push(cell);
+    //   });
+    // });
 
     return {
       rows,
@@ -569,16 +570,18 @@ export class TableViewportPlugin extends TablePlugin {
   }
 
   /** 滚动 */
-  onScroll = (e: Event) => {
-    e.preventDefault();
+  onScroll = (e?: Event) => {
+    if (e) {
+      e.preventDefault();
+    }
 
-    const el = e.target as HTMLDivElement;
+    const el = this.context.domEl;
 
     let xRatio = el.scrollLeft / (el.scrollWidth - el.offsetWidth);
-    const maxX = this.table.contentWidth() - this.table.width();
+    const maxX = this.table.contentWidth() - this.getZoomWidth();
 
     let yRatio = el.scrollTop / (el.scrollHeight - el.offsetHeight);
-    const maxY = this.table.contentHeight() - this.table.height();
+    const maxY = this.table.contentHeight() - this.getZoomHeight();
 
     // scrollTop scrollHeight offsetHeight均为0时, 会出现 0 / 0 产生NaN的情况
     if (isNaN(xRatio)) xRatio = 0;
@@ -761,5 +764,17 @@ export class TableViewportPlugin extends TablePlugin {
           : context.restoreHeight;
       context.restoreHeight = undefined;
     }
+  }
+
+  /** 获取缩放后的容器尺寸, 最大尺寸不会超过contentWidth */
+  getZoomWidth() {
+    const table = this.table;
+    return Math.min(table.width() / table.zoom(), table.contentWidth());
+  }
+
+  /** 获取缩放后的容器尺寸, 最大尺寸不会超过contentHeight */
+  getZoomHeight() {
+    const table = this.table;
+    return Math.min(table.height() / table.zoom(), table.contentHeight());
   }
 }

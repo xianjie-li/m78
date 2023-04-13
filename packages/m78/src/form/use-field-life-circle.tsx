@@ -1,10 +1,10 @@
-import { _Context, _FieldContext } from "./types.js";
+import { _FormContext, _FieldContext } from "./types.js";
 import { _UseFieldMethods } from "./use-field-methods.js";
 import { isFunction, stringifyNamePath, triggerHighlight } from "@m78/utils";
 import { _useUpdatePropsChange } from "./use-update-props-change.js";
 
 export function _useFieldLifeCircle(
-  ctx: _Context,
+  ctx: _FormContext,
   fieldCtx: _FieldContext,
   methods: _UseFieldMethods
 ) {

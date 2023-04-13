@@ -1,5 +1,5 @@
-import React, { RefObject, useMemo } from "react";
-import { _Context, ScrollProps } from "./types.js";
+import React, { RefObject, useMemo, useRef } from "react";
+import { _ScrollContext, ScrollProps } from "./types.js";
 import {
   _defaultProps,
   _getScrollStyleByDirection,
@@ -22,11 +22,15 @@ import { animated } from "react-spring";
 import { _useDragScroll } from "./use-drag-scroll.js";
 
 export const _Scroll = (p: ScrollProps) => {
-  const props = p as _Context["props"];
+  const props = p as _ScrollContext["props"];
   const { direction } = props;
 
+  const _innerWrapRef = useRef<HTMLDivElement>(null!);
+
+  const innerWrapRef = p.innerWrapRef || _innerWrapRef;
+
   /** 组件状态 */
-  const [state, setState] = useSetState<_Context["state"]>({
+  const [state, setState] = useSetState<_ScrollContext["state"]>({
     enableStatus: {
       x: false,
       y: false,
@@ -48,7 +52,7 @@ export const _Scroll = (p: ScrollProps) => {
   });
 
   /** 组件实例属性 */
-  const self = useSelf<_Context["self"]>({
+  const self = useSelf<_ScrollContext["self"]>({
     delayHiddenTimer: 0,
     delayHiddenLock: false,
     pullUpLock: false,
@@ -61,6 +65,7 @@ export const _Scroll = (p: ScrollProps) => {
 
   /** 滚动控制器 */
   const scroller = useScroll({
+    el: innerWrapRef,
     throttleTime: 0,
     onScroll,
   });
@@ -69,7 +74,7 @@ export const _Scroll = (p: ScrollProps) => {
   const [bound, contRef] = useMeasure(undefined, 200);
 
   /** 上下文对象, 用于切分代码 */
-  const ctx: _Context = {
+  const ctx: _ScrollContext = {
     props,
     scroller,
     state,
@@ -81,6 +86,7 @@ export const _Scroll = (p: ScrollProps) => {
     xEnabled: directionStyle.overflowX === "scroll",
     yEnabled: directionStyle.overflowY === "scroll",
     dragScrollEnable: !!props.dragScroll && !state.isMobile,
+    innerWrapRef,
   };
 
   /** 滚动条相关 */
@@ -107,6 +113,7 @@ export const _Scroll = (p: ScrollProps) => {
 
   return (
     <div
+      ref={p.innerRef}
       className={clsx(
         "m78 m78-scroll",
         props.className,
@@ -126,7 +133,7 @@ export const _Scroll = (p: ScrollProps) => {
             ctx.pullDownEnabled || ctx.dragScrollEnable ? "none" : undefined,
           touchAction: ctx.dragScrollEnable ? "none" : undefined,
         }}
-        ref={scroller.ref as RefObject<HTMLDivElement>}
+        ref={innerWrapRef}
       >
         {/* 内容容器 */}
         <div

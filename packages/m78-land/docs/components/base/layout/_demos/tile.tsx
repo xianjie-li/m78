@@ -1,8 +1,7 @@
 import React from "react";
-import { Spacer, Tile } from "m78/layout";
+import { Spacer, Tile, Button } from "m78";
 import { IconMapsHomeWork } from "@m78/icons/icon-maps-home-work";
 import { IconKeyboardArrowRight } from "@m78/icons/icon-keyboard-arrow-right";
-import { Button } from "m78/button";
 
 const labelSty: React.CSSProperties = {
   minWidth: "3em",

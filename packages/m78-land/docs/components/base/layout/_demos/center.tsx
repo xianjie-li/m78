@@ -1,5 +1,5 @@
 import React from "react";
-import { Center } from "m78/layout";
+import { Center } from "m78";
 
 import css from "./style.module.scss";
 

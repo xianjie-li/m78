@@ -72,7 +72,7 @@ export interface _FlatMap {
   [key: string]: _FlatOption;
 }
 
-export interface _Context {
+export interface _MenuContext {
   openChangeHandle: (
     open: boolean,
     val: ValueType,
@@ -100,6 +100,6 @@ export interface _Context {
     /** subMenuTriggerType */
     subMenuTriggerType: UseTriggerType;
   };
-  setState: SetState<_Context["state"]>;
+  setState: SetState<_MenuContext["state"]>;
   close: () => void;
 }

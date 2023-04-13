@@ -1,7 +1,7 @@
 import { UseScrollMeta } from "@m78/hooks";
-import { _Context } from "./types.js";
+import { _ScrollContext } from "./types.js";
 /** 滚动条实现/汇总 */
-export declare function _useBar(ctx: _Context): {
+export declare function _useBar(ctx: _ScrollContext): {
     refresh: () => void;
     onScroll: (meta: UseScrollMeta) => void;
     barNode: JSX.Element;
@@ -17,7 +17,7 @@ interface _BarImplOption {
     delayHidden: () => void;
 }
 /** 单个滚动条实现, isY用于 */
-export declare function _useBarImpl(ctx: _Context, { isY, delayHidden }: _BarImplOption): {
+export declare function _useBarImpl(ctx: _ScrollContext, { isY, delayHidden }: _BarImplOption): {
     barNode: JSX.Element;
     refreshScrollPosition: (offsetRatio?: number) => void;
     refresh: () => void;

@@ -1,9 +1,6 @@
-import React, { useEffect } from "react";
-import { createForm, FormLayoutType, required, string } from "m78/form";
-import { Input, InputType } from "m78/input";
-import { Dialog } from "m78/dialog";
-import { Button, ButtonColor } from "m78/button";
-import { Size } from "m78/common";
+import React from "react";
+import { createForm, Input, Dialog } from "m78";
+import { required, string } from "m78/form/validator.js";
 
 const form = createForm({
   bubbleFeedback: true,

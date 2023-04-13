@@ -1,7 +1,6 @@
 import React, { useRef, useState } from "react";
 import { getRandRange, TupleNumber } from "@m78/utils";
-import { Button } from "m78/button";
-import { Overlay } from "m78/overlay";
+import { Button, Overlay } from "m78";
 
 import sty from "./style.module.scss";
 

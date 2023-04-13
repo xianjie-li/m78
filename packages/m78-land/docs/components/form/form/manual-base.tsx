@@ -1,8 +1,6 @@
 import React from "react";
-import { createForm, required, string } from "m78/form";
-import { Input } from "m78/input";
-import { Dialog } from "m78/dialog";
-import { Button, ButtonColor } from "m78/button";
+import { createForm, Input, Dialog, Button, ButtonColor } from "m78";
+import { required, string } from "m78/form/validator.js";
 
 const form = createForm({
   schemas: {

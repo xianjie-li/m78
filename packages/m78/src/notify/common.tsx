@@ -2,7 +2,7 @@ import { createEvent, useDelayToggle } from "@m78/hooks";
 import { useEffect, useMemo, useRef } from "react";
 import { config } from "react-spring";
 import {
-  _Share,
+  _NotifyContext,
   NotifyPositionUnion,
   NotifyQuicker,
   NotifyState,
@@ -27,7 +27,7 @@ export const _initTransition = {
 /**
  * 添加交互行为, 在聚焦时防止带延迟的同位置notify隐藏
  * */
-export function _useInteractive(share: _Share) {
+export function _useInteractive(share: _NotifyContext) {
   const { position, open, hasDuration, api } = share;
 
   const interactiveFlag = useRef<any>();
@@ -71,7 +71,7 @@ export function _useInteractive(share: _Share) {
 /**
  * 根据是否开启了关闭按钮动态设置偏移和边距, 防止关闭按钮遮挡文字
  * */
-export function _useFixPad({ props, bound }: _Share) {
+export function _useFixPad({ props, bound }: _NotifyContext) {
   const { title, cancel } = props;
 
   return useMemo(() => {
@@ -102,7 +102,7 @@ export function _useFixPad({ props, bound }: _Share) {
 /**
  *
  * */
-export function _useToggleController(share: _Share) {
+export function _useToggleController(share: _NotifyContext) {
   const { open, props, bound, api, hasDuration, duration } = share;
 
   const dShow = useDelayToggle(open, props.minDuration);

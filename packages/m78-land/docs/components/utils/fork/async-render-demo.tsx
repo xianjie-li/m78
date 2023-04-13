@@ -1,7 +1,6 @@
 import React from "react";
 import { useFetch } from "@m78/hooks";
-import { Button } from "m78/button";
-import { AsyncRender } from "m78/fork";
+import { Button, AsyncRender } from "m78";
 
 // 模拟一个有一定几率成功、失败、超时、无数据的请求接口
 export const mockService = () => {

@@ -1,4 +1,4 @@
-import { _Context, ScrollInstance } from "./types.js";
+import { _ScrollContext, ScrollInstance } from "./types.js";
 import { _UseBarReturns } from "./use-bar.js";
 import { UseScrollMeta, useUpdateEffect } from "@m78/hooks";
 import { useEffect, useImperativeHandle, useMemo } from "react";
@@ -7,7 +7,7 @@ import { _UsePullActionsReturns } from "./use-pull-actions.js";
 import { isMobileDevice } from "@m78/utils";
 
 export function _useLifeCycle(
-  ctx: _Context,
+  ctx: _ScrollContext,
   methods: _UseMethodReturns,
   bar: _UseBarReturns,
   pull: _UsePullActionsReturns

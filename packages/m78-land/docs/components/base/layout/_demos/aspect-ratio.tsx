@@ -1,5 +1,5 @@
 import React from "react";
-import { AspectRatio } from "m78/layout";
+import { AspectRatio } from "m78";
 
 import css from "./style.module.scss";
 

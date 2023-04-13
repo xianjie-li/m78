@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  _Context,
+  _FormContext,
   FormLayoutType,
   FormSchema,
   FormSchemaWithoutName,
@@ -12,7 +12,7 @@ import { _useUpdatePropsChange } from "./use-update-props-change.js";
 import { useUpdate } from "@m78/hooks";
 import { FORM_NS, Translation } from "../i18n/index.js";
 
-export function _schemaRenderImpl(ctx: _Context) {
+export function _schemaRenderImpl(ctx: _FormContext) {
   const { form } = ctx;
 
   form.SchemaRender = (props) => {

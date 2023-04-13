@@ -1,7 +1,6 @@
 import React from "react";
 import { UseTriggerType } from "@m78/hooks";
-import { DragHandle, Overlay } from "m78/overlay";
-import { Button } from "m78/button";
+import { OverlayDragHandle, Overlay, Button } from "m78";
 
 import css from "./style.module.scss";
 
@@ -13,7 +12,7 @@ const Drag = () => {
         content={
           <div className={css.modal}>
             <div>
-              <DragHandle>
+              <OverlayDragHandle>
                 {(bind) => (
                   <button
                     {...bind()}
@@ -22,7 +21,7 @@ const Drag = () => {
                     drag me
                   </button>
                 )}
-              </DragHandle>
+              </OverlayDragHandle>
             </div>
             <div className="mt-12">
               Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi,

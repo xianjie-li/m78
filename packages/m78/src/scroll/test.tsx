@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
 import React from "react";
-import { Scroll } from "./index.js";
+import { Scroll } from "./index";
 
 describe("Scroll", () => {
   test("base", () => {

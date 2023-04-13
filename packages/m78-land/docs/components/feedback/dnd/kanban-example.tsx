@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 
 import css from "./style.module.scss";
-import { Lay, LayStyle } from "m78/layout";
-import { DND, DNDFullEvent } from "m78/dnd";
-import { Scroll } from "m78/scroll";
+import { Lay, LayStyle, DND, DNDFullEvent, Scroll } from "m78";
 import { useFn } from "@m78/hooks";
 import clsx from "clsx";
 import { isString, swap } from "@m78/utils";

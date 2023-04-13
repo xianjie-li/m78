@@ -1,7 +1,7 @@
-import { _Context, _FieldContext, FormCommonPropsGetter, FormCustomRender, FormCustomRenderArgs } from "./types.js";
+import { _FormContext, _FieldContext, FormCommonPropsGetter, FormCustomRender, FormCustomRenderArgs } from "./types.js";
 import { NamePath } from "@m78/utils";
 import React from "react";
-export declare function _useFieldMethods(ctx: _Context, fieldCtx: _FieldContext): {
+export declare function _useFieldMethods(ctx: _FormContext, fieldCtx: _FieldContext): {
     getProps: FormCommonPropsGetter;
     onChange: (...args: any[]) => void;
     shouldRender: () => boolean;

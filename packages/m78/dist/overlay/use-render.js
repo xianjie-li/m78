@@ -11,7 +11,7 @@ import { animated } from "react-spring";
 import { isFunction } from "@m78/utils";
 import { MASK_NAMESPACE } from "../common/index.js";
 import { _Arrow as Arrow } from "./arrow.js";
-import { _getArrowBasePosition, dragContext, transitionConfig } from "./common.js";
+import { _getArrowBasePosition, dragContext, overlayTransitionConfig } from "./common.js";
 import { _MountTrigger as MountTrigger } from "./mount-trigger.js";
 var AnimatedArrow = animated(Arrow);
 export function _useRender(ctx, methods, lifeCycle) {
@@ -45,7 +45,7 @@ export function _useRender(ctx, methods, lifeCycle) {
             from: transition === null || transition === void 0 ? void 0 : transition.from,
             to: transition === null || transition === void 0 ? void 0 : transition.to,
             springProps: _object_spread({
-                config: transitionConfig
+                config: overlayTransitionConfig
             }, props.springProps),
             innerRef: props.innerRef,
             onTouchStart: methods.activeContent,

@@ -1,6 +1,5 @@
 import React from "react";
-import { PULL_DOWN_TRIGGER_RATIO, Scroll } from "m78/scroll";
-import { Lay, LayStyle } from "m78/lay";
+import { PULL_DOWN_TRIGGER_RATIO, Scroll, Lay, LayStyle } from "m78";
 import { delay } from "@m78/utils";
 import { animated } from "react-spring";
 

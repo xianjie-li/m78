@@ -1,5 +1,5 @@
 import React from "react";
-import { Spin } from "m78/spin";
+import { Spin } from "m78";
 
 import css from "./style.module.scss";
 

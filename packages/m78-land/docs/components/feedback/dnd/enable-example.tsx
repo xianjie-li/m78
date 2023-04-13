@@ -1,6 +1,5 @@
 import React from "react";
-import { DND } from "m78/dnd";
-import { Row } from "m78/layout";
+import { DND, Row } from "m78";
 
 import css from "./style.module.scss";
 

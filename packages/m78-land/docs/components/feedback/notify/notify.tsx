@@ -1,8 +1,6 @@
 import React from "react";
 import mockjs from "mockjs";
-import { Status } from "m78/common";
-import { notify, NotifyPosition } from "m78/notify";
-import { Button } from "m78/button";
+import { Status, notify, NotifyPosition, Button } from "m78";
 
 const Random = mockjs.Random;
 

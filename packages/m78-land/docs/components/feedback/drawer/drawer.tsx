@@ -1,8 +1,5 @@
 import React from "react";
-import { Lay } from "m78/lay/index.js";
-import { Drawer } from "m78/drawer/index.js";
-import { Button } from "m78/button/index.js";
-import { Position, Size } from "m78/common/index.js";
+import { Lay, Drawer, Button, Position, Size } from "m78";
 
 const DrawerExample = () => {
   return (

@@ -1,6 +1,5 @@
 import React from "react";
-import { Spin } from "m78/spin";
-import { FullSize } from "m78/common";
+import { Spin, FullSize } from "m78";
 
 const IconDemo = () => (
   <div>

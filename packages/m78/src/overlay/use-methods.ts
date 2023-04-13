@@ -26,7 +26,7 @@ import {
 } from "./common.js";
 import {
   _ClampBound,
-  _Context,
+  _OverlayContext,
   OverlayDirectionUnion,
   OverlayInstance,
   OverlayTarget,
@@ -34,7 +34,7 @@ import {
 } from "./types.js";
 import { EventTypes, Handler } from "@use-gesture/core/types";
 
-export function _useMethods(ctx: _Context) {
+export function _useMethods(ctx: _OverlayContext) {
   const {
     containerRef,
     props,

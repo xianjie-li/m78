@@ -4,7 +4,7 @@ import {
   FormSchema as VanillaFormSchema,
 } from "../form-vanilla/index.js";
 import {
-  _Context,
+  _FormContext,
   _formPropsKeys,
   _omitConfigs,
   FormConfig,
@@ -36,7 +36,7 @@ export const _createForm = (config: FormConfig) => {
 
   const form = vForm as FormInstance;
 
-  const ctx: _Context = {
+  const ctx: _FormContext = {
     config: conf,
     form: vForm as FormInstance,
     components: {

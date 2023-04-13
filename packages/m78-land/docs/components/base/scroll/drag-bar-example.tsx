@@ -1,6 +1,5 @@
 import React from "react";
-import { Scroll } from "m78/scroll";
-import HideBarExample from "./hide-bar-example.js";
+import { Scroll } from "m78";
 
 const DragBarExample = () => {
   return (

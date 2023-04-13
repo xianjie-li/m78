@@ -1,6 +1,5 @@
 import React from "react";
-import { Button } from "m78/button";
-import { Menu } from "m78/menu";
+import { Button, Menu } from "m78";
 import { UseTriggerType } from "@m78/hooks";
 import { menuData } from "./menu-data";
 

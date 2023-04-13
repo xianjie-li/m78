@@ -1,8 +1,5 @@
 import React, { useState } from "react";
-import { Status } from "m78/common";
-import { Dialog } from "m78/dialog";
-import { notify } from "m78/notify";
-import { Button } from "m78/button";
+import { Status, Dialog, notify, Button } from "m78";
 import { delay } from "@m78/utils";
 
 const DialogExample = () => {

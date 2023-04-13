@@ -1,8 +1,6 @@
 import React from "react";
-import { createForm, required, string } from "m78/form";
-import { Input } from "m78/input";
-import { Dialog } from "m78/dialog";
-import Divider from "../../base/layout/_demos/divider.js";
+import { createForm, Input, Dialog } from "m78";
+import { required, string } from "m78/form/validator.js";
 
 const form = createForm({
   schemas: {

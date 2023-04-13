@@ -16,7 +16,7 @@ import { Transition } from "../transition/index.js";
 import { Portal } from "../portal/index.js";
 import { useMeasure } from "@m78/hooks";
 import {
-  _Share,
+  _NotifyContext,
   LoadingOption,
   NotifyPosition,
   NotifyProps,
@@ -88,7 +88,7 @@ export function notify(props: NotifyProps) {
     config: config.stiff,
   }));
 
-  const share: _Share = {
+  const share: _NotifyContext = {
     hasDuration,
     duration,
     position,

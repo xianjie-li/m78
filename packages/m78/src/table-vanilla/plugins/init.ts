@@ -1,4 +1,4 @@
-import { TableInitInterceptor, TablePlugin } from "../../plugin.js";
+import { TableInitInterceptor, TablePlugin } from "../plugin.js";
 import {
   TableCell,
   TableColumn,
@@ -7,7 +7,7 @@ import {
   TableRow,
   TableRowConfig,
   TableRowFixed,
-} from "../../types.js";
+} from "../types.js";
 import { isFunction, isNumber, omit } from "@m78/utils";
 
 /**

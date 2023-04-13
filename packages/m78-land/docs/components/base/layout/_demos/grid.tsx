@@ -1,4 +1,4 @@
-import { Cells, Cell, AspectRatio } from "m78/layout";
+import { Cells, Cell, AspectRatio } from "m78";
 import React from "react";
 
 import css from "./grid.module.scss";

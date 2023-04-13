@@ -355,7 +355,7 @@ export interface FormListRenderChildren<Item = any> {
 
 /** List项render函数入参 */
 
-export interface _Context {
+export interface _FormContext {
   config: FormConfig;
   form: FormInstance;
   /** 注册的组件 */

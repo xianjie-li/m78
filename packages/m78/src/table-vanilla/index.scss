@@ -1,0 +1,26 @@
+
+.m78-table {
+  position: relative;
+
+
+  &_dom {
+    z-index: 1;
+  }
+
+  &_expand-size {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+  }
+
+  &_default-scroll {
+    overflow: auto;
+    overscroll-behavior: none;
+  }
+
+  &_canvas {
+    z-index: 0;
+  }
+}

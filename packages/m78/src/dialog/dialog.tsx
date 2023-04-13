@@ -8,7 +8,7 @@ import { useFormState } from "@m78/hooks";
 import cls from "clsx";
 import { isFunction, isString, omit } from "@m78/utils";
 import {
-  DragHandle,
+  OverlayDragHandle,
   omitApiProps,
   Overlay,
   OverlayApiOmitKeys,
@@ -130,11 +130,11 @@ const _DialogBase = (props: DialogProps) => {
     return (
       <>
         {draggable && (
-          <DragHandle>
+          <OverlayDragHandle>
             {(bind) => (
               <span {...bind()} className="m78-dialog_drag-handle"></span>
             )}
-          </DragHandle>
+          </OverlayDragHandle>
         )}
         <div
           {...headerProps}

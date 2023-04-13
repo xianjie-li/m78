@@ -2,10 +2,8 @@ import React, { useEffect, useMemo, useState } from "react";
 import _debounce from "lodash/debounce";
 
 import css from "./style.module.scss";
-import { Spin } from "m78/spin";
+import { Spin, Input, notify } from "m78";
 import { useFn } from "@m78/hooks";
-import { Input } from "m78/input";
-import { notify } from "m78/notify";
 import { copyToClipboard } from "@site/src/common/common";
 
 const IconDemo = () => {

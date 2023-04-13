@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 
-import { TransitionBase } from "m78/transition";
+import { TransitionBase, Button } from "m78";
 import sty from "./style.module.scss";
-import { Button } from "m78/button";
 
 const Custom = () => {
   const [show, setShow] = useState(true);

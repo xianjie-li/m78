@@ -12,7 +12,7 @@ import { Spin } from "../spin/index.js";
 import { useFormState } from "@m78/hooks";
 import cls from "clsx";
 import { isFunction, isString, omit } from "@m78/utils";
-import { DragHandle, omitApiProps, Overlay } from "../overlay/index.js";
+import { OverlayDragHandle, omitApiProps, Overlay } from "../overlay/index.js";
 import createRenderApi from "@m78/render-api";
 import { Status, statusIconMap } from "../common/index.js";
 import { COMMON_NS, DIALOG_NS, Translation } from "../i18n/index.js";
@@ -66,7 +66,7 @@ var _DialogBase = function(props) {
         var statusIcon = statusIconMap[status];
         return /*#__PURE__*/ _jsxs(_Fragment, {
             children: [
-                draggable && /*#__PURE__*/ _jsx(DragHandle, {
+                draggable && /*#__PURE__*/ _jsx(OverlayDragHandle, {
                     children: function(bind) {
                         return /*#__PURE__*/ _jsx("span", _object_spread_props(_object_spread({}, bind()), {
                             className: "m78-dialog_drag-handle"

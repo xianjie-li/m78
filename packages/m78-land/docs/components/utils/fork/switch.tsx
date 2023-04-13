@@ -1,6 +1,5 @@
 import React from "react";
-import { Divider } from "m78/layout/index.js";
-import { If, Switch, Toggle } from "m78/fork";
+import { Divider, If, Switch, Toggle } from "m78";
 
 const SwitchDemo = () => {
   return (

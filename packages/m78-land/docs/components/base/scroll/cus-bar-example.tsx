@@ -1,5 +1,5 @@
 import React from "react";
-import { Scroll } from "m78/scroll";
+import { Scroll } from "m78";
 import clsx from "clsx";
 
 import css from "./custom-bar.module.scss";

@@ -1,8 +1,8 @@
-import { _Context } from "./types.js";
+import { _ScrollContext } from "./types.js";
 import { useDrag } from "@use-gesture/react";
 import { config } from "react-spring";
 
-export const _useDragScroll = (ctx: _Context) => {
+export const _useDragScroll = (ctx: _ScrollContext) => {
   const { scroller, xEnabled, yEnabled, dragScrollEnable } = ctx;
 
   useDrag(
@@ -52,7 +52,7 @@ export const _useDragScroll = (ctx: _Context) => {
     },
     {
       from: [0, 0],
-      target: scroller.ref,
+      target: ctx.innerWrapRef,
       filterTaps: true,
       enabled: dragScrollEnable,
     }

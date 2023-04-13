@@ -1,4 +1,4 @@
-import { M78SeedState } from "./types.js";
+import { M78SeedConfig } from "./types.js";
 import { i18n } from "../i18n/index.js";
 import { Resource } from "i18next";
 import { isArray, isString } from "@m78/utils";
@@ -18,7 +18,7 @@ export function _darkModeHandle(darkMode?: boolean) {
 }
 
 /** 国际化处理 */
-export function _i18nHandle(i18nConf: M78SeedState["i18n"]) {
+export function _i18nHandle(i18nConf: M78SeedConfig["i18n"]) {
   if (!i18nConf) return;
 
   let lng: string | undefined;

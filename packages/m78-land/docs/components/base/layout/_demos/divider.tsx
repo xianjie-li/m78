@@ -1,5 +1,5 @@
 import React from "react";
-import { Divider } from "m78/layout";
+import { Divider } from "m78";
 
 const AspectRatioDemo = () => {
   return (

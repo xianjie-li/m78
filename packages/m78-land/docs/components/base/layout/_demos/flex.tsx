@@ -1,5 +1,5 @@
 import React from "react";
-import { Column, Flex, Row } from "m78/layout";
+import { Column, Flex, Row } from "m78";
 import css from "./style.module.scss";
 
 const FlexDemo = () => {

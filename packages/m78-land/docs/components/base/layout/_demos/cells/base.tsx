@@ -1,5 +1,5 @@
 import React from "react";
-import { Cell, Cells } from "m78/layout";
+import { Cell, Cells } from "m78";
 import sty from "./style.module.scss";
 
 const Base = () => {

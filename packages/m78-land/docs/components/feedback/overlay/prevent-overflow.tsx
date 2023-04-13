@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { Overlay, OverlayDirection } from "m78/overlay";
-import { Button } from "m78/button";
+import { Overlay, OverlayDirection, Button } from "m78";
 
 const PreventOverflow = () => {
   const contRef = useRef<HTMLDivElement>(null!);

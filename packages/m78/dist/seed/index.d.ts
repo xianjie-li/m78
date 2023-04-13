@@ -3,7 +3,7 @@
  * */
 import cacheMiddleware from "@m78/seed/cacheMiddleware.js";
 import devtoolMiddleware from "@m78/seed/devtoolMiddleware.js";
-export * from "@m78/seed";
+export type { Middleware, MiddlewareBonusInit, MiddlewareBonusPatch, CreateSeedConfig, Listener, Subscribe, } from "@m78/seed";
 export * from "./types.js";
 export { cacheMiddleware, devtoolMiddleware };
 export { _CreateSeed as createSeed } from "./create-seed.js";

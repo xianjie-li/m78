@@ -33,6 +33,7 @@ import RformExample from "./form/rform-example.js";
 import zhHans from "../src/i18n/locales/zh-Hans.js";
 import en from "../src/i18n/locales/en.js";
 import { i18n } from "../src/i18n/index.js";
+import TableExample from "./table/index.js";
 
 export const router = createHashRouter([
   {
@@ -123,6 +124,10 @@ export const router = createHashRouter([
       {
         path: "rform",
         element: <RformExample />,
+      },
+      {
+        path: "table",
+        element: <TableExample />,
       },
     ],
   },

@@ -1,5 +1,5 @@
 import {
-  _Context,
+  _FormContext,
   _FieldContext,
   FormLayoutType,
   FormListCustomRenderArgs,
@@ -22,7 +22,7 @@ import { _useFieldLifeCircle } from "./use-field-life-circle.js";
 import { _listLayoutRenderImpl, _listRenderImpl } from "./list.js";
 import { requiredValidatorKey } from "@m78/verify/index.js";
 
-export function _fieldImpl(ctx: _Context) {
+export function _fieldImpl(ctx: _FormContext) {
   const { form } = ctx;
 
   /** 实现Field组件 */

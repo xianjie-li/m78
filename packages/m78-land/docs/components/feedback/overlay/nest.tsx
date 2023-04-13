@@ -1,6 +1,5 @@
 import React from "react";
-import { Overlay } from "m78/overlay";
-import { Button } from "m78/button";
+import { Overlay, Button } from "m78";
 
 import css from "./style.module.scss";
 

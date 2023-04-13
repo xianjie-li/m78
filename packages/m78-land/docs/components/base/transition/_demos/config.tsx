@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 
-import { config, Transition, TransitionType } from "m78/transition";
+import { transitionConfig, Transition, TransitionType, Button } from "m78";
 import sty from "./style.module.scss";
-import { Button } from "m78/button";
 
 const Config = () => {
   const [show, setShow] = useState(true);
@@ -19,7 +18,7 @@ const Config = () => {
         <Transition
           open={show}
           springProps={{
-            config: config.wobbly,
+            config: transitionConfig.wobbly,
           }}
           type={TransitionType.slideBottom}
           className={sty.box}
@@ -31,7 +30,7 @@ const Config = () => {
         <Transition
           open={show}
           springProps={{
-            config: config.default,
+            config: transitionConfig.default,
           }}
           type={TransitionType.slideBottom}
           className={sty.box}
@@ -44,7 +43,7 @@ const Config = () => {
         <Transition
           open={show}
           springProps={{
-            config: config.gentle,
+            config: transitionConfig.gentle,
           }}
           type={TransitionType.slideBottom}
           className={sty.box}
@@ -57,7 +56,7 @@ const Config = () => {
         <Transition
           open={show}
           springProps={{
-            config: config.molasses,
+            config: transitionConfig.molasses,
           }}
           type={TransitionType.slideBottom}
           className={sty.box}
@@ -70,7 +69,7 @@ const Config = () => {
         <Transition
           open={show}
           springProps={{
-            config: config.slow,
+            config: transitionConfig.slow,
           }}
           type={TransitionType.slideBottom}
           className={sty.box}
@@ -83,7 +82,7 @@ const Config = () => {
         <Transition
           open={show}
           springProps={{
-            config: config.stiff,
+            config: transitionConfig.stiff,
           }}
           type={TransitionType.slideBottom}
           className={sty.box}

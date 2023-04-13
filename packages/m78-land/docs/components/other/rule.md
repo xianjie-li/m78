@@ -11,7 +11,7 @@ title: 文档&组件约定
   - 一个包通常会包含很多导出, 比如 `button` 模块包含组件/枚举/ts 类型等导出
 
     ```ts
-    import { Button, ButtonColor, ButtonProps } from "m78/button"; // 这样看起来似乎更好?
+    import { Button, ButtonColor, ButtonProps } from "m78"; // 这样看起来似乎更好?
 
     import React, { useEffect, useState } from "react";
     ```

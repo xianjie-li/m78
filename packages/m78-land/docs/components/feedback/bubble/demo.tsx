@@ -1,7 +1,5 @@
 import React from "react";
-import { Bubble, BubbleType } from "m78/bubble";
-import { Button } from "m78/button";
-import { notify } from "m78/notify";
+import { Bubble, BubbleType, Button, notify } from "m78";
 
 const Demo = () => {
   return (

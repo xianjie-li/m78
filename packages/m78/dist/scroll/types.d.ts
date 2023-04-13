@@ -73,7 +73,7 @@ export interface ScrollInstance extends ReturnType<typeof useScroll> {
     /** 手动触发下拉 */
     triggerPullDown: () => Promise<void>;
 }
-export interface _Context {
+export interface _ScrollContext {
     props: ScrollProps & typeof _defaultProps;
     scroller: ReturnType<typeof useScroll>;
     state: {
@@ -105,7 +105,7 @@ export interface _Context {
         /** 是否是常见的移动设备 */
         isMobile: boolean;
     };
-    setState: SetState<_Context["state"]>;
+    setState: SetState<_ScrollContext["state"]>;
     self: {
         /** 自动关闭滚动条时使用的计时器 */
         delayHiddenTimer: any;

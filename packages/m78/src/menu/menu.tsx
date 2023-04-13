@@ -26,7 +26,7 @@ import {
   UseTriggerEvent,
   UseTriggerType,
 } from "@m78/hooks";
-import { _Context, MenuOption, MenuProps } from "./types.js";
+import { _MenuContext, MenuOption, MenuProps } from "./types.js";
 import { Lay } from "../lay/index.js";
 import {
   isArray,
@@ -57,7 +57,7 @@ const MAIN_MENU = "__MAIN_MENU__";
 const MAIN_TRIGGER = "__MAIN_TRIGGER__";
 
 export const _Menu = (props: MenuProps) => {
-  const self = useSelf<_Context["self"]>({
+  const self = useSelf<_MenuContext["self"]>({
     menuTargets: {},
     targets: [],
     lastActive: null as null,
@@ -65,7 +65,7 @@ export const _Menu = (props: MenuProps) => {
   });
 
   // 使用useSetState确保能实时获取到最新的type
-  const [state, setState] = useSetState<_Context["state"]>({
+  const [state, setState] = useSetState<_MenuContext["state"]>({
     xy: undefined,
     current: null,
     subMenuTriggerType: UseTriggerType.active,
@@ -152,7 +152,7 @@ export const _Menu = (props: MenuProps) => {
     }
   });
 
-  const ctx: _Context = {
+  const ctx: _MenuContext = {
     openChangeHandle,
     props,
     hasSelected,

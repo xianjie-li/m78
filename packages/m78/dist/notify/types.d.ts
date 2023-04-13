@@ -50,7 +50,7 @@ export interface NotifyQuicker {
 /** loading配置 */
 export interface LoadingOption extends Pick<NotifyState, "position" | "mask" | "minDuration"> {
 }
-export interface _Share {
+export interface _NotifyContext {
     hasDuration: boolean;
     duration: number;
     position: NotifyPositionUnion;

@@ -1,6 +1,6 @@
 import { _Methods } from "./use-methods.js";
-import { _Context } from "./types.js";
-export declare function _useLifeCycle(ctx: _Context, methods: _Methods): {
+import { _OverlayContext } from "./types.js";
+export declare function _useLifeCycle(ctx: _OverlayContext, methods: _Methods): {
     onContentMount: () => void;
     onContentUnmount: () => void;
 };

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Button } from "m78/button";
-import { Overlay, OverlayDirection } from "m78/overlay";
+import { Button, Overlay, OverlayDirection } from "m78";
 import { UseTriggerType } from "@m78/hooks";
 
 const OpenControl = () => {
