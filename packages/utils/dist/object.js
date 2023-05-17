@@ -50,7 +50,7 @@ function pickOrOmit(obj, props) {
  *
  * 通过NamePath在obj上获取值
  * */ export function getNamePathValue(obj, name) {
-    if (!isObject(obj) && !isArray(obj)) return undefined;
+    if (!(obj instanceof Object)) return undefined; // 过滤掉数字/字符串等
     if (isString(name) || isNumber(name)) {
         return obj === null || obj === void 0 ? void 0 : obj[name];
     }

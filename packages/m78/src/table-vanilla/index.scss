@@ -1,10 +1,17 @@
+$border-color: var(--m78-gray-5);
+$border: 1px solid $border-color;
+$bg-highlight: var(--m78-gray-2);
 
 .m78-table {
   position: relative;
+  user-select: none;
+  font-size: var(--m78-fs);
+  line-height: 1.2;
+  box-sizing: border-box;
+  outline: $border;
 
-
-  &_dom {
-    z-index: 1;
+  > * {
+    box-sizing: border-box;
   }
 
   &_expand-size {
@@ -13,6 +20,89 @@
     right: 0;
     bottom: 0;
     top: 0;
+  }
+
+  &_view {
+
+  }
+
+  &_view-content {
+    position: relative;
+    overflow: hidden; // ZOOM: #2 scale后内容大于容器时, 容器的scrollWidth会被撑开, 需要设置隐藏来放置此行为
+  }
+
+  &_cell {
+    position: absolute;
+    padding: 2px 4px;
+    display: flex;
+    align-items: center;
+    border-right: $border;
+    border-bottom: $border;
+    background-color: var(--m78-component-bg);
+
+    // 奇偶标记
+
+    &.__even-y {
+      background-color: $bg-highlight;
+    }
+
+    // 表头标记
+
+    &.__head-x, &.__head-y  {
+      background-color: $bg-highlight;  // 防止表头出现斑马纹
+    }
+
+    &.__head-y {
+      font-weight: 600;
+    }
+
+    &.__head-x {
+      justify-content: center;
+      text-align: center;
+      font-size: 12px;
+    }
+
+    // 固定项信息
+
+    &.__fixed {
+      z-index: 10;
+    }
+
+    &.__cross-fixed {
+      z-index: 20;
+    }
+
+    // ## 在固定项中的特殊位置
+
+    // 左固定末尾行
+    &.__lf-last {
+      //border-right: 2px solid $border-color;
+    }
+
+    // 下固定末尾行
+    &.__tf-last {
+      //border-bottom: 2px solid $border-color;
+    }
+
+    // 右固定首列
+    &.__rf-first {
+      border-left: 1px solid $border-color;
+    }
+
+    // 下固定首行
+    &.__bf-first {
+      border-top: 1px solid $border-color;
+    }
+
+    // 普通列和固定列右侧末尾列
+    &.__last-x {
+      border-right: none;
+    }
+
+    // 普通行和固定行下方末尾行
+    &.__last-y {
+      border-bottom: none;
+    }
   }
 
   &_default-scroll {

@@ -9,7 +9,7 @@ export declare function swap<T extends Array<any>>(arr: T, sourceInd: number, ta
  * */
 export declare function move<T extends Array<any>>(array: T, form: number, to: number): T | undefined;
 /**
- * receive T or T[], return T[], if val is falsy or 0, return []
+ * receive T or T[], return T[], if val is falsy and not 0, return []
  * */
 export declare function ensureArray<T>(val: T[] | T): NonNullable<T>[];
 /**

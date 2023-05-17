@@ -1,0 +1,55 @@
+$border: 1px solid var(--m78-gray-6);
+
+.m78-table {
+  position: relative;
+  user-select: none;
+  font-size: var(--m78-fs);
+  line-height: 1.2;
+  box-sizing: border-box;
+
+  > * {
+    box-sizing: border-box;
+  }
+
+  &_expand-size {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+  }
+
+  &_view {
+
+  }
+
+  &_view-content {
+    position: relative;
+    overflow: hidden; // ZOOM: #2 scale后内容大于容器时, 容器的scrollWidth会被撑开, 需要设置隐藏来放置此行为
+  }
+
+  &_cell {
+    position: absolute;
+    padding: 4px;
+    border-right: $border;
+    border-bottom: $border;
+    background-color: var(--m78-component-bg);
+  }
+
+  &_rf-first {
+    border-left: $border;
+  }
+
+  &_bf-first {
+    border-top: $border;
+  }
+
+  &_default-scroll {
+    overflow: auto;
+    overscroll-behavior: none;
+  }
+
+  &_canvas {
+    z-index: 0;
+  }
+}

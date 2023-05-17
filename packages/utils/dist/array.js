@@ -23,7 +23,7 @@ import { isArray, isTruthyOrZero } from "./is.js";
     return array;
 }
 /**
- * receive T or T[], return T[], if val is falsy or 0, return []
+ * receive T or T[], return T[], if val is falsy and not 0, return []
  * */ export function ensureArray(val) {
     if (!isTruthyOrZero(val)) return [];
     return isArray(val) ? val : [

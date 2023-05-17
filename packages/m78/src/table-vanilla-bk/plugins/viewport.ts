@@ -1,25 +1,22 @@
 import { TablePlugin } from "../plugin.js";
-import { isFunction, isNumber, isTruthyOrZero } from "@m78/utils";
-import {
-  TableCell,
-  TableCellWidthDom,
-  TableColumnFixed,
-  TableRowFixed,
-} from "../types.js";
+import { isFunction, isTruthyOrZero } from "@m78/utils";
+import { TableCell, TableColumnFixed, TableRowFixed } from "../types.js";
 import { _getSizeString, _removeNode } from "../common.js";
-import { _TableGetterPlugin } from "./getter.js";
-import clsx from "clsx";
+
+// @ts-ignore
+import Stats from "stats.js";
+import { WheelEvent } from "react";
+import { _TableGetter } from "./getter.js";
 
 /**
  * 视口/尺寸/滚动相关的核心功能实现
  * */
 export class _TableViewportPlugin extends TablePlugin {
-  state = {
-    // 当前插件跳过cellRender hook, 因为改hook是他本省发出的
-    skipCellRenderHook: true,
-  };
+  stats = new Stats();
 
   init() {
+    document.body.appendChild(this.stats.dom);
+
     // 映射实现方法
     this.methodMapper(this.table, [
       "width",
@@ -35,23 +32,19 @@ export class _TableViewportPlugin extends TablePlugin {
     this.updateSize();
   }
 
-  /** 合并实现plugin.cellRender和config.render */
-  cellRenderImpl(
-    cell: TableCellWidthDom,
-    isFirstRender: boolean
-  ): boolean | void {
-    if (this.config.render) {
-      const res = this.config.render(cell, isFirstRender);
-      if (res) return res;
-    }
-
-    for (const p of this.plugins) {
-      if (p.cellRender) {
-        const res = p.cellRender(cell, isFirstRender);
-        if (res) return res;
-      }
-    }
+  initialized() {
+    this.context.viewEl.addEventListener("wheel", this.onWheel as any);
+    this.context.viewEl.addEventListener("scroll", this.onScroll);
   }
+
+  /** 解除所有事件/引用类型占用 */
+  beforeDestroy() {
+    const ctx = this.context;
+    ctx.viewEl.removeEventListener("wheel", this.onWheel as any);
+    ctx.viewEl.removeEventListener("scroll", this.onScroll);
+  }
+
+  /* # # # # # # # 实现 # # # # # # # */
 
   width(width?: number | string) {
     const el = this.config.el;
@@ -122,19 +115,19 @@ export class _TableViewportPlugin extends TablePlugin {
   }
 
   render() {
-    // this.stats.begin();
+    this.stats.begin();
 
-    const getter = this.getPlugin(_TableGetterPlugin)!;
+    const getter = this.getPlugin(_TableGetter)!;
 
     const visibleItems = getter.getViewportItems();
-
-    // console.log(visibleItems);
 
     // 清理由可见转为不可见的项
     this.removeHideNodes(
       this.context.lastViewportItems?.cells,
       visibleItems.cells
     );
+
+    // console.log(visibleItems);
 
     // 内容渲染
     this.renderCell(visibleItems.cells);
@@ -146,7 +139,7 @@ export class _TableViewportPlugin extends TablePlugin {
 
     this.context.lastViewportItems = visibleItems;
 
-    // this.stats.end();
+    this.stats.end();
   }
 
   /** 绘制单元格 */
@@ -162,7 +155,6 @@ export class _TableViewportPlugin extends TablePlugin {
 
     const zoom = this.table.zoom();
 
-    // 缩放前后的差异尺寸
     let diffX = 0;
     let diffY = 0;
 
@@ -176,49 +168,46 @@ export class _TableViewportPlugin extends TablePlugin {
     cells.forEach((cell) => {
       const row = cell.row;
       const column = cell.column;
+      const dom = cell.dom;
 
-      const lastText = cell.text;
-      const _text = row.data[column.key];
-      cell.text = isTruthyOrZero(_text) ? String(_text!) : "";
+      const isFixedRight = column.config.fixed == TableColumnFixed.right;
+      const isFixedBottom = row.config.fixed == TableRowFixed.bottom;
 
-      if (!cell.dom) {
-        this.initCellDom(cell);
+      let cellX = column.isFixed ? column.fixedOffset! + x : column.x;
+      let cellY = row.isFixed ? row.fixedOffset! + y : row.y;
+
+      // ZOOM: #4
+      // 缩放处理
+      if (zoom !== 1) {
+        if (isFixedRight) {
+          cellX = column.fixedOffset! + diffX + x;
+        }
+        if (isFixedBottom) {
+          cellY = row.fixedOffset! + diffY + y;
+        }
       }
 
-      const dom = cell.dom!;
+      const lastText = cell.text;
+      const _text = row.data[column.config.key];
+      cell.text = isTruthyOrZero(_text) ? String(_text!) : "";
 
-      // 固定项需要持续更新位置
+      // 固定项
       if (cell.isFixed) {
-        const isFixedRight = column.config.fixed == TableColumnFixed.right;
-        const isFixedBottom = row.config.fixed == TableRowFixed.bottom;
-
-        let cellX = column.isFixed ? column.fixedOffset! + x : column.x;
-        let cellY = row.isFixed ? row.fixedOffset! + y : row.y;
-
-        // ZOOM: #5
-        // 缩放处理
-        if (zoom !== 1) {
-          if (isFixedRight) {
-            cellX = column.fixedOffset! + diffX + x;
-          }
-          if (isFixedBottom) {
-            cellY = row.fixedOffset! + diffY + y;
-          }
-        }
-
         dom.style.top = `${cellY}px`;
         dom.style.left = `${cellX}px`;
+      }
+
+      // 初始化设置
+      if (!cell.isMount) {
+        cell.dom.style.left = `${cellX}px`;
+        cell.dom.style.top = `${cellY}px`;
       }
 
       // 是否阻止默认的text渲染
       let blockTextRender = false;
 
       if (hasRender) {
-        const rRes = this.cellRenderImpl(
-          cell as TableCellWidthDom,
-          !cell.state.__rendered
-        );
-        cell.state.__rendered = true;
+        const rRes = render(cell);
         if (rRes) blockTextRender = true;
       }
 
@@ -235,82 +224,20 @@ export class _TableViewportPlugin extends TablePlugin {
     });
   }
 
-  /** 初始化cell.dom */
-  initCellDom(cell: TableCell) {
-    const ctx = this.context;
-    const column = cell.column;
-    const row = cell.row;
-    const mergeMapMain = ctx.mergeMapMain;
-
-    let width = cell.column.width;
-    let height = cell.row.height;
-
-    const mergeSize = mergeMapMain[cell.key];
-
-    // 合并处理
-    if (mergeSize) {
-      if (isNumber(mergeSize.width)) width = mergeSize.width!;
-      if (isNumber(mergeSize.height)) height = mergeSize.height!;
+  /** 滚动 */
+  onWheel = (e: WheelEvent) => {
+    if (e) {
+      e.preventDefault();
     }
 
-    const dom = document.createElement("div");
+    this.table.xy(this.table.x() + e.deltaX, this.table.y() + e.deltaY);
+  };
 
-    const lastLeftFixed = ctx.leftFixedList[ctx.leftFixedList.length - 1];
-    const lastTopFixed = ctx.topFixedList[ctx.topFixedList.length - 1];
-
-    let isLeftLast = lastLeftFixed === column.key;
-    let isTopLast = lastTopFixed === row.key;
-
-    const leftFixedInd = ctx.leftFixedList.indexOf(column.key);
-    const topFixedInd = ctx.topFixedList.indexOf(row.key);
-
-    // 合并的项是左/上的末尾项时, 需要将其视为末尾项
-    if (leftFixedInd !== -1 && cell.config.mergeX) {
-      if (leftFixedInd + mergeSize.xLength === ctx.leftFixedList.length) {
-        isLeftLast = true;
-      }
-    }
-
-    if (topFixedInd !== -1 && cell.config.mergeY) {
-      if (topFixedInd + mergeSize.yLength === ctx.topFixedList.length) {
-        isTopLast = true;
-      }
-    }
-
-    const styleObj: any = {
-      "__even-x": column.isEven,
-      "__even-y": row.isEven,
-      "__last-x": cell.isLastX,
-      "__last-y": cell.isLastY,
-      "__head-y": row.isHeader,
-      "__head-x": column.isHeader,
-    };
-
-    if (cell.isFixed) {
-      Object.assign(styleObj, {
-        // 固定项标识
-        __fixed: true,
-        "__cross-fixed": cell.isCrossFixed,
-        // 边缘项标识, 通常用于去掉末尾边框
-        "__rf-first": ctx.rightFixedList[0] === column.key,
-        "__bf-first": ctx.bottomFixeList[0] === row.key,
-        "__lf-last": isLeftLast,
-        "__tf-last": isTopLast,
-      });
-    }
-
-    dom.className = clsx("m78-table_cell", styleObj);
-
-    dom.style.width = `${width}px`;
-    dom.style.height = `${height}px`;
-
-    if (!cell.isFixed) {
-      dom.style.left = `${column.x}px`;
-      dom.style.top = `${row.y}px`;
-    }
-
-    cell.dom = dom;
-  }
+  /** 操作滚动条时同步滚动位置 */
+  onScroll = () => {
+    const el = this.context.viewEl;
+    this.table.xy(el.scrollLeft, el.scrollTop);
+  };
 
   /** 根据配置更新各种容器尺寸相关的内容 */
   updateSize() {

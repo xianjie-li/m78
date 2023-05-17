@@ -1,9 +1,9 @@
 import Konva from "konva";
-import { AnyObject, BoundSize, CustomEvent } from "@m78/utils";
+import { AnyObject, BoundSize, TupleNumber } from "@m78/utils";
 import { TablePlugin } from "./plugin.js";
 
 /** 表示单元格位置的元组, 分别表示 x轴索引, y轴索引 */
-export type TablePosition = [number, number];
+export type TableCellPosition = [number, number];
 
 export type TableKey = string | number;
 
@@ -12,17 +12,20 @@ export interface TableConfig {
   el: HTMLDivElement;
   /** 数据源 */
   data: AnyObject[];
-  /** 数据主键, 用于标识数据的唯一性, 对应的值类型必须为字符串或数字 */
-  primaryKey: string;
   /** 列配置 */
   columns: TableColumnConfig[];
-  /** 行配置, 用于特别指定某些行的配置 */
+  /** 数据主键, 用于标识数据的唯一性, 对应的值类型必须为字符串或数字 */
+  primaryKey: string;
+  /** 行配置, 用于特别指定某些行的配置, 对象的key为行索引 */
   rows?: {
-    [key: string]: TableRowConfig;
+    [index: string]: TableRowConfig;
   };
-  /** 单元格配置, 用于特别指定某些单元格的配置, 对象的key为`${rowKey}_${columnKey}` */
+  /**
+   * 单元格配置, 用于特别指定某些单元格的配置, 对象的key为`${rowIndex}_${columnIndex}`
+   * - 例: { 5_2: { mergeX: 3 } } 表示第5行第2列的单元格向右合并3格
+   * */
   cells?: {
-    [key: string]: TableCellConfig;
+    [index: string]: TableCellConfig;
   };
   /** 表格高度, 不传时使用挂载节点的高度 */
   height?: number | string;
@@ -36,13 +39,13 @@ export interface TableConfig {
   columnWidth?: number;
 
   /**
-   * 自定义单元格渲染, 返回true可以阻止默认渲染或其他插件的render渲染, 主要有两种用途:
+   * 自定义单元格渲染, 返回false可以阻止默认text渲染, 主要有两种用途:
    * - 自定义节点样式或属性: 比如cell.dom.style.color = "red", 这种情况不需要返回true来阻止渲染
-   * - 自定义子级: 完全定制cell.dom的内部节点, 同时返回true阻止渲染
+   * - 自定义子级: 完全定制cell.dom的内部节点, 同时返回true阻止默认渲染
    *
-   * 此外, 由于render执行频率很高, 对于更新频率需求不高的, 比如样式调整等, 可以通过isFirstRender来避免重复渲染
+   * 此外, 由于render执行频率很高, 对于更新频率需求不高的节点, 可以设置自定义状态来跳过除第一次以外的渲染, 比如 cell.state.customStyle = true
    * */
-  render?: (cell: TableCellWidthDom, isFirstRender: boolean) => boolean | void;
+  render?: (cell: TableCell) => boolean | void;
 
   /* # # # # # # # 极少使用 # # # # # # # */
   /** 插件 */
@@ -51,8 +54,6 @@ export interface TableConfig {
   viewEl?: HTMLDivElement;
   /** domEl的子级, 用于放置实际的dom内容, 仅在需要自定义滚动容器时使用 */
   viewContentEl?: HTMLDivElement;
-  /** 传入定制的createEvent, 内部事件将使用此工厂函数创建 */
-  eventCreator?: any;
 
   // 待实现
   /** 相邻行显示不同的背景色 */
@@ -69,7 +70,7 @@ export interface TableConfig {
 }
 
 export interface TableInstance extends TableGetter {
-  /* # # # # # # # 视口&渲染相关 # # # # # # # */
+  /* # # # # # # # 视口相关 # # # # # # # */
   /** 获取x */
   x(): number;
 
@@ -112,10 +113,6 @@ export interface TableInstance extends TableGetter {
   /** 内容区域高度 */
   contentHeight(): number;
 
-  /* # # # # # # # 事件 # # # # # # # */
-  event: TableEvent;
-
-  /* # # # # # # # 控制 # # # # # # # */
   /** 重绘表格, 表格会在需要时进行重绘, 大部分情况不需要手动调用 */
   render(): void;
 
@@ -126,6 +123,8 @@ export interface TableInstance extends TableGetter {
    * */
   reload(opt?: TableReloadOptions): void;
 
+  /* # # # # # # # 控制 # # # # # # # */
+
   /** 销毁表格, 解除所有引用/事件 */
   destroy(): void;
 
@@ -135,23 +134,17 @@ export interface TableInstance extends TableGetter {
 
   /** 变更传入项对应的配置, 始终只应传入变更项, 因为 data/columns/rows等变更时会额外执行一些初始化操作 */
   config(config: Partial<TableConfig>): void;
-
-  /** processing为true时, 后续的mutation操作会被阻止 */
-  processing(): boolean;
-
-  /** 设置processing */
-  processing(processing: boolean): void;
 }
 
 /** 选择器 */
 export interface TableGetter {
   /**
-   * 获取指定区域的row/column/cell, 点的取值区间为[0, 内容总尺寸]
-   * @param target - 可以是包含区域信息的bound对象, 也可以是表示[x, y]的位置元组
+   * 获取指定区域的row/column/cell
+   * @param target - 可以是包含区域信息的bound对象, 也可以是表示[x, y]的元组, 参数为元组时, row/column/cell都最多只会包含一个
    * @param skipFixed - false | 是否跳过fixed项获取
    * */
   getBoundItems(
-    target: BoundSize | TablePosition,
+    target: BoundSize | TupleNumber,
     skipFixed?: boolean
   ): TableItems;
 
@@ -159,46 +152,14 @@ export interface TableGetter {
    * 获取当前视口内可见的row/column/cell */
   getViewportItems(): TableItems;
 
-  /** 获取两个点区间内的元素, 点的区间为: [0, 内容总尺寸] */
-  getAreaBound(p1: TablePosition, p2?: TablePosition): TableItems;
-
-  /**
-   * 根据表格视口内的点获取可用于getBoundItems()的实际点以及相关信息, 传入点的区间为: [0, 表格容器尺寸].
-   * 内部包含了对缩放的处理
-   * */
-  getPointInfo([x, y]: TablePosition): TablePointInfo;
-
   /** 获取指定行 */
-  getRow(key: TableKey): TableRow;
+  getRow(index: number): TableRow;
 
   /** 获取指定列 */
-  getColumn(key: TableKey): TableColumn;
+  getColumn(index: number): TableColumn;
 
   /** 获取指定单元格 */
-  getCell(rowKey: TableKey, columnKey: TableKey): TableCell;
-
-  /** 获取指定索引记录的key. 注意, 此处的索引为经过内部数据重铸后的索引, 并不是config.data中项的索引 */
-  getKeyByRowIndex(ind: number): TableKey;
-
-  /** 获取指定column的key.  注意, 此处的索引为经过内部数据重铸后的索引, 并不是config.columns中项的索引 */
-  getKeyByColumnIndex(ind: number): TableKey;
-
-  /** 获取key的row索引. 注意, 此处的索引为经过内部数据重铸后的索引, 并不是config.data中项的索引 */
-  getIndexByRowKey(key: TableKey): number;
-
-  /** 获取key的column索引.  注意, 此处的索引为经过内部数据重铸后的索引, 并不是config.columns中项的索引 */
-  getIndexByColumnKey(key: TableKey): number;
-}
-
-export interface TableEvent {
-  /**
-   * 内部抛出的一些提示性错误, 比如 "粘贴内容与选中单元格不匹配" 等
-   * - 注意: 不包含运行时错误, 比如未正确配置key等会直接crash而不是通过error提示
-   * */
-  error: CustomEvent<(msg: string) => void>;
-  /** 点击, event为原始事件对象, 可能是MouseEvent/PointerEvent */
-  click: CustomEvent<(cell: TableCell, event: Event) => void>;
-  mutation: CustomEvent<(mutation: any) => void>;
+  getCell(rowIndex: number, columnIndex: number): TableCell;
 }
 
 /** 在插件和实例内共享的一组状态 */
@@ -212,18 +173,6 @@ export interface TablePluginContext {
   /** viewContentEl子级, 用于集中挂载内容, 便于做一些统一控制(比如缩放) */
   stageEL: HTMLDivElement;
 
-  /** 浅拷贝后的数据, 在数据项第一次需要改写时需对对应的项进行浅拷贝, 从而实现超大数据量的按需高速复制 */
-  data: AnyObject[];
-
-  /** 本地化后的行配置, 注入了表头相关的行/列配置 */
-  rows: NonNullable<TableConfig["rows"]>;
-
-  /** 本地化后的列配置, 扁平化并处理了合并表头等 */
-  columns: TableColumnLeafConfig[];
-
-  /** 本地化后的cells配置, 注入了表头合并单元格相关的配置 */
-  cells: NonNullable<TableConfig["cells"]>;
-
   /** 上一帧中在视口中显示的row/cell/column */
   lastViewportItems?: TableItems;
 
@@ -233,34 +182,12 @@ export interface TablePluginContext {
   /** 预计算好的总尺寸 */
   contentWidth: number;
   contentHeight: number;
-
-  /**
-   * data的映射, 根据实际显示顺序进行了排序, 比如fixed项排列到了前/后方
-   * - TableKey为数据在data中的key, number为数据在data中的索引
-   * */
-  dataFixedSortList: [TableKey, number][];
-  /**
-   * columns的映射, 根据实际显示顺序进行了排序, 比如fixed项排列到了前/后方
-   * - TableKey为数据在column中的key, number为数据在column中的索引
-   * */
-  columnsFixedSortList: [TableKey, number][];
-  /**
-   * data的key映射, 用于快速查找key的索引
-   * - [number, number] 分别是在dataFixedSortList中的索引和在data中的索引
-   * */
-  dataKeyIndexMap: {
-    [key: string]: [number, number];
-  };
-  /**
-   * columns的key映射, 用于快速查找key的索引
-   * - [number, number] 分别是在columnsFixedSortList中的索引和在data中的索引
-   * */
-  columnKeyIndexMap: {
-    [key: string]: [number, number];
-  };
-
-  /** config.rows 的所有keys */
-  rowConfigNumberKeys: TableKey[];
+  /** config.rows 的所有keys, 已经过数字化处理 */
+  rowConfigNumberKeys: number[];
+  /** data的索引映射, 将fixed项排列到了前/后方, 方便根据一些顺序相关的计算  */
+  dataFixedSortList: number[];
+  /** columns的索引映射, 将fixed项排列到了前/后方, 方便根据一些顺序相关的计算  */
+  columnsFixedSortList: number[];
   /** 固定项占用尺寸 */
   topFixedHeight: number;
   bottomFixedHeight: number;
@@ -272,40 +199,34 @@ export interface TablePluginContext {
   leftFixedMap: FixedMap<TableColumnConfig>;
   rightFixedMap: FixedMap<TableColumnConfig>;
   /** 固定项的索引列表, 有序 */
-  topFixedList: TableKey[];
-  bottomFixeList: TableKey[];
-  leftFixedList: TableKey[];
-  rightFixedList: TableKey[];
+  topFixedList: number[];
+  bottomFixeList: number[];
+  leftFixedList: number[];
+  rightFixedList: number[];
 
   /** 记录最后的单元格索引, 用于控制边框显示 */
-  lastColumnKey?: TableKey;
-  lastRowKey?: TableKey;
-  lastFixedColumnKey?: TableKey;
-  lastFixedRowKey?: TableKey;
+  lastColumnIndex?: number;
+  lastRowIndex?: number;
+  lastFixedColumnIndex?: number;
+  lastFixedRowIndex?: number;
 
   /** 合并项信息, key 为 rowInd_colInd */
   mergeMapMain: {
-    [key: string]: {
-      /** 合并后占用的宽度 */
-      width: number;
-      /** 合并后占用的高度 */
+    [ind: string]: {
+      width?: number;
       height: number;
-      /** 被合并的列数 */
-      xLength: number;
-      /** 被合并的行数 */
-      yLength: number;
     };
   };
   /** 被合并项信息, 结构为 `被合并项: 合并项`, 格式均为 [rowInd, colInd], 合并关系包含起始单元格本身  */
   mergeMapSub: {
-    [key: string]: [TableKey, TableKey];
+    [ind: string]: [number, number];
   };
-  /** 记录合并项是否是末尾项, key 为 rowKey_colKey */
+  /** 记录合并项是否是末尾项, key 为 rowInd_colInd */
   lastMergeXMap: {
-    [key: string]: boolean | undefined;
+    [ind: string]: boolean | undefined;
   };
   lastMergeYMap: {
-    [key: string]: boolean | undefined;
+    [ind: string]: boolean | undefined;
   };
 
   /** 触发autoSize时, 如果未配置config.width/height, 对当前的wrap尺寸进行记录, 并在配置变更时进行恢复 */
@@ -314,22 +235,16 @@ export interface TablePluginContext {
 
   /** 缓存 */
   rowCache: {
-    [key: string]: TableRow | undefined;
+    [ind: string]: TableRow | undefined;
   };
   columnCache: {
-    [key: string]: TableColumn | undefined;
+    [ind: string]: TableColumn | undefined;
   };
   cellCache: {
     /** key格式为: `${rowIndex}_${columnIndex}` */
-    [key: string]: TableCell | undefined;
+    [ind: string]: TableCell | undefined;
   };
 
-  /** 所有表头项的key */
-  yHeaderKeyList: TableKey[];
-  /** 行头的key(仅有一项) */
-  xHeaderKey: TableKey;
-
-  /** 用户插件自定义的属性, 自定义插件应该集中属性名到额外的命名空间下, 防止和内部冲突,比如context.myPlugin.xxx */
   [key: string]: any;
 }
 
@@ -351,7 +266,6 @@ export type TableColumnFixedKeys = keyof typeof TableColumnFixed;
 
 export type TableColumnFixedUnion = TableColumnFixed | TableColumnFixedKeys;
 
-/** 表示table中的一个行 */
 export interface TableRow {
   /** 该项的唯一key, 通过config.primaryKey 获取 */
   key: string;
@@ -373,8 +287,6 @@ export interface TableRow {
   fixedOffset?: number;
   /** 是否是偶数行, 由于固定列的存在, index并不能准确的判断, 故提供此属性 */
   isEven: boolean;
-  /** 是否是表头 */
-  isHeader: boolean;
 }
 
 /**
@@ -387,7 +299,6 @@ export interface TableRowConfig {
   fixed?: TableRowFixedUnion;
 }
 
-/** 表示table中的一列 */
 export interface TableColumn {
   /** 该项的唯一key, 与 TableColumnConfig.key 相同 */
   key: string;
@@ -400,52 +311,34 @@ export interface TableColumn {
   /** x轴位置 */
   x: number;
   /** 对应的列配置 */
-  config: TableColumnLeafConfig;
+  config: TableColumnConfig;
   /** 是否是固定项 */
   isFixed: boolean;
   /** 如果是固定项, 表示其在视口的偏移位置 */
   fixedOffset?: number;
   /** 是否是偶数列, 由于固定列的存在, index并不能准确的判断, 故提供此属性 */
   isEven: boolean;
-  /** 是否是行头 */
-  isHeader: boolean;
 }
 
 /**
- * 列配置
+ * 列配置, 是TableColumn的子集, 用于配置列的部分属性
  */
-export type TableColumnConfig = TableColumnLeafConfig | TableColumnBranchConfig;
-
-/** 包含子项的列配置, 用于生成合并表头 */
-export interface TableColumnBranchConfig {
-  /** 表头文本 */
-  label: string;
-  /** 生成嵌套表头 */
-  children?: TableColumnConfig[];
-  /** 控制列固定, 所有合并子项会以最顶层列的fixed配置为准 */
-  fixed?: TableColumnFixedUnion;
-}
-
-/** 常规列配置项 */
-export interface TableColumnLeafConfig {
-  /** 该列对应的唯一key, 用于获取value或显示的文本, 另外也作为表格变异操作的标识, 从key获取到的值类型必须为字符串或数字 */
+export interface TableColumnConfig {
+  /** 该列对应的唯一key, 用于获取value或显示的文本, 另外也作为表格变异操作的标识, 对应的值类型必须为字符串或数字 */
   key: string;
-  /** 表头文本 */
-  label: string;
   /** 列宽度 */
   width?: number;
-  /** 控制列固定, 如果该列是被合并列, 会以最上层的列fixed配置为准 */
+  /** 控制列固定 */
   fixed?: TableColumnFixedUnion;
 }
 
-/** 表示table中的一个单元格 */
 export interface TableCell {
   /** 所在行 */
   row: TableRow;
   /** 所在列 */
   column: TableColumn;
   /** 单元格对应的dom节点 */
-  dom?: HTMLDivElement;
+  dom: HTMLDivElement;
   /** 单元格key, 格式为 rowIndex_columnIndex */
   key: string;
   /** 根据columnConfig.key取到的单元格文本, 非实时, 仅在render时更新 */
@@ -464,10 +357,6 @@ export interface TableCell {
   isLastY: boolean;
   /** 用户可在此处挂载自定义状态 */
   state: AnyObject;
-}
-
-export interface TableCellWidthDom extends TableCell {
-  dom: HTMLDivElement;
 }
 
 export interface TableCellConfig {
@@ -515,15 +404,4 @@ export interface TableItemsFull {
   endRowIndex?: number;
   startColumnIndex?: number;
   endColumnIndex?: number;
-}
-
-/** 表格内指定点和其相关属性 */
-export interface TablePointInfo {
-  x: number;
-  y: number;
-  xy: TablePosition;
-  leftFixed: boolean;
-  topFixed: boolean;
-  rightFixed: boolean;
-  bottomFixed: boolean;
 }

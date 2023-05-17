@@ -6,11 +6,6 @@
 - 事件通过通过 wrap 节点单次绑定, 配合 getBoundXX()这类的 api 确定操作的单元格
 - chrome 节点最大尺寸为 +/-16777216 https://bugs.chromium.org/p/chromium/issues/detail?id=401762, 这对最大数据承载量造成了一定限制
 
-下一步: 缩放后的选区获取, 行头/列头
-
-fixed 限制
-行头
-
 ## api 风格
 
 只有 getter 接口时, 格式为 getXxx
@@ -38,13 +33,11 @@ fixed 限制
 
 ## 简单
 
-### stripe 2 -
-
-### 固定区阴影反馈
+### stripe 2
 
 cell 判断 index 变更背景色
 
-## 自定义渲染 =
+## 自定义渲染 >>非 react 部分完成
 
 1. TableColumnConfig.render
 
@@ -93,7 +86,7 @@ ins.renderList.map((cell, n: React.ReactElement | null) => {
 });
 ```
 
-## 滚动 =
+## 滚动 >>移动端滚动待实现
 
 固定项滚动抖动/虚拟滚动快速滚动短暂空白: 使用 wheel 代替 scroll 事件, 后者是滚动后触发, 进行渲染时已经处于滚动后了, 所以会有明显的延迟感
 
@@ -122,18 +115,17 @@ getRow(y)
 getColumn(x)
 getViewportItems()
 getBoundItems()
-...
 
-## 事件 -
+## 事件
 
 onError // 内部抛出的可能需要对用户展示的错误信息, 比如 "粘贴数据与选中单元格不匹配" 之类
+onRowClick
+onColumnClick
 onCellClick
 
 ## 表头& 行头
 
-根据 Columns 配置生成固定项配置
-
-表头决定分组时, 最顶层决定下方所有列是否固定, 忽略底层 fixed
+react 中 覆盖 columns 类型实现
 
 ## 拖动调整列宽/行高
 
@@ -181,13 +173,9 @@ delete 删除内容
 
 ## mutation 💦
 
-变更流程: 发送通知 - 记录 action - 进行数据/配置 更新操作 - 触发 reload - 用户保存更改
+变更流程: 发送通知 - 记录 action - 用户进行数据/配置 更新操作 - 根据新的入参触发 reload
 
-核心:
-
-- 实例化时对传入的 config.data / config 进行浅拷贝, 当数据发生变更时, 再对变更项进行浅拷贝, 达到高性能复制
-
-浅拷贝时使用: ls.slice(), 测试发现 50 万条数据用时 0.5ms 而 `{...obj}` 用时 47ms, 注意, 此测试在浏览器控制台进行, 在使用编译器工具时, 最终代码可能会自动编译为 ls.slice(), 所以测试不准确
+核心: 实例化时传入的 config.data 是 mutation 的, 这能够有效减小重复创建的成本, 如果需要保留源数据/配置, 请在传入前拷贝备份
 
 另外内部需要维护一个需要持久化的配置对象
 
@@ -217,8 +205,6 @@ onChange(actionType: actionEnum, arg: any) {
 - 需要进行数据变更时, 需要能确定行/列的 key, column.key / primaryKey | getPrimary
 
 reload(keepState = false) 重置时可以选择是否清理当前状态: 滚动条位置, 操作历史, 变更状态等, 如果是全新的数据源, 应为 ture, 如果是当前数据源的变异版本, 应为 false
-
-### data
 
 ### 历史记录 💦
 

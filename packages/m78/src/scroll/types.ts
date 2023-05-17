@@ -65,6 +65,8 @@ export interface ScrollProps extends ComponentBaseProps {
   contStyle?: React.CSSProperties;
   /** 内容容器节点的额外className */
   contClassName?: string;
+  /** 禁止滚动 */
+  disabledScroll?: boolean;
 
   /* # # # # # # # 拖拽滚动 # # # # # # # */
   /** 在桌面平台提供模拟的拖拽滚动, 开启后下拉刷新相关配置失效 */

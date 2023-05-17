@@ -307,6 +307,8 @@ export function _useBarImpl(
 
   /** 轨道点击, 滚动位置到同比例位置 */
   const onTrackClick = useFn((e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+
     const rect = barRef.current.getBoundingClientRect();
 
     const size = isY ? barRef.current.offsetHeight : barRef.current.offsetWidth;

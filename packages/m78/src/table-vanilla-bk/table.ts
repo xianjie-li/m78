@@ -7,10 +7,8 @@ import "./index.scss";
 import { _TableZoomPlugin } from "./plugins/zoom.js";
 import { getNamePathValue, setNamePathValue } from "@m78/utils";
 import { _privateInstanceKey } from "./common.js";
-import { _TableLifePlugin } from "./plugins/life.js";
-import { _TableGetterPlugin } from "./plugins/getter.js";
-import { _TableEventPlugin } from "./plugins/event.js";
-import { _TableHeaderPlugin } from "./plugins/header.js";
+import { _TableLifeController } from "./plugins/life-controller.js";
+import { _TableGetter } from "./plugins/getter.js";
 
 export function createTable(config: TableConfig): TableInstance {
   const defaultConfig: Partial<TableConfig> = {
@@ -52,23 +50,15 @@ export function createTable(config: TableConfig): TableInstance {
   };
 
   // 内置插件
-  // 注意: 在实现上, 鉴于完整功能的复杂度, 内部插件之间并不是完全解耦的, 插件之间会互相访问状态/方法
-  // 比如初始化阶段, 不同插件可能都需要对配置和数据进行遍历, 预计算等, 这些操作应该在单次完成, 避免重复计算.
   const plugins = [
     new _TableInitPlugin(pluginConfig),
-    new _TableGetterPlugin(pluginConfig),
-    new _TableEventPlugin(pluginConfig),
-    new _TableHeaderPlugin(pluginConfig),
     new _TableViewportPlugin(pluginConfig),
     new _TableZoomPlugin(pluginConfig),
+    new _TableLifeController(pluginConfig),
+    new _TableGetter(pluginConfig),
   ];
 
-  // 用户插件
-  pluginConfig.plugins.push(
-    ...plugins,
-    // 因为涉及销毁操作, 需要在所有插件之后执行, 防止插件的前后依赖导致异常
-    new _TableLifePlugin(pluginConfig)
-  );
+  pluginConfig.plugins.push(...plugins);
 
   // 用户插件
   const customPlugins = conf.plugins!.map((Plugin) => {
@@ -95,6 +85,25 @@ export function createTable(config: TableConfig): TableInstance {
   pluginConfig.plugins.forEach((plugin) => {
     plugin.mount?.();
   });
+
+  instance.reload = (...arg: any) => {
+    pluginConfig.plugins.forEach((plugin) => {
+      plugin.reload?.(...arg);
+    });
+  };
+
+  instance.destroy = () => {
+    setNamePathValue(config.el, _privateInstanceKey, undefined);
+
+    /* # # # # # # # beforeDestroy # # # # # # # */
+    pluginConfig.plugins.forEach((plugin) => {
+      setNamePathValue(config.el, _privateInstanceKey, undefined);
+      plugin.beforeDestroy?.();
+    });
+  };
+
+  // 在节点上添加实例信息, 防止热重载等场景下反复创建实例
+  setNamePathValue(config.el, _privateInstanceKey, instance);
 
   return instance;
 }

@@ -126,7 +126,7 @@ export const _Scroll = (p: ScrollProps) => {
       <animated.div
         className="m78-scroll_wrap"
         style={{
-          ...directionStyle,
+          ...(props.disabledScroll ? {} : directionStyle),
           ...bar.offsetStyle,
           y: pull.springStyle.y,
           userSelect:

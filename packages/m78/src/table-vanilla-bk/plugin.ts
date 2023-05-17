@@ -3,9 +3,8 @@ import {
   TableConfig,
   TableInstance,
   TablePluginContext,
-  TableCellWidthDom,
 } from "./types.js";
-import { AnyObject, isArray, isFunction, isString } from "@m78/utils";
+import { AnyObject, isFunction } from "@m78/utils";
 
 /**
  * 插件类, 用于扩展table的功能
@@ -66,33 +65,13 @@ export class TablePlugin {
    * */
   beforeDestroy?(): void;
 
-  /** 定制单元格渲染, 与TableConfig.render具有相同的方法签名, 但TableConfig.render的渲染优先级高于插件配置, 即渲染顺序为 [conf.render, plugin1Render, plugin2Render..., defaultRender] */
-  cellRender?(cell: TableCellWidthDom, isFirstRender: boolean): boolean | void;
-
-  /**
-   * 工具函数, 将当对象上的指定函数映射到指定对象上
-   * - 默认情况下, 将methods的每一项同名方法映射到table实例上, 可通过数组指定别名, 如: [['conf', 'config']] 表示将conf方法映射到config上
-   * */
-  methodMapper<T extends object = AnyObject>(
-    obj: T,
-    methods: (keyof T | [string, keyof T])[]
-  ) {
+  /** 工具函数, 将当对象上的指定函数映射到指定对象上 */
+  methodMapper<T extends object = AnyObject>(obj: T, methods: (keyof T)[]) {
     methods.forEach((m) => {
-      let methodName = ""; // 方法名
-      let aliseName = ""; // 别名
-
-      if (isString(m)) {
-        methodName = m;
-        aliseName = m;
-      } else if (isArray(m)) {
-        methodName = m[1] as string;
-        aliseName = m[0];
-      }
-
       // @ts-ignore
-      if (isFunction(this[aliseName])) {
+      if (isFunction(this[m])) {
         // @ts-ignore
-        obj[methodName] = this[aliseName].bind(this);
+        obj[m] = (...args: any[]) => this[m](...args);
       }
     });
   }
