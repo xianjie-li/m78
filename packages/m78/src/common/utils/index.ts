@@ -111,3 +111,27 @@ export function getChildrenByDataSource<T = any>(
 
   return (item as any)[childrenKey] || [];
 }
+
+/** 为节点添加className */
+export function addCls(el: HTMLElement, cls: string) {
+  if (el.classList) {
+    el.classList.add(cls);
+  } else {
+    const currentClassName = el.className;
+    const regex = new RegExp("(^|\\s)" + cls + "(\\s|$)", "g");
+    if (!regex.test(currentClassName)) {
+      el.className = (currentClassName + " " + cls).trim();
+    }
+  }
+}
+
+/** 为节点移除className */
+export function removeCls(el: HTMLElement, cls: string) {
+  if (el.classList) {
+    el.classList.remove(cls);
+  } else {
+    const currentClassName = el.className;
+    const regex = new RegExp("(^|\\s)" + cls + "(\\s|$)", "g");
+    el.className = currentClassName.replace(regex, " ").trim();
+  }
+}

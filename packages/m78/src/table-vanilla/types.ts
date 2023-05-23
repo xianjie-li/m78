@@ -1,26 +1,66 @@
-import Konva from "konva";
-import { AnyObject, BoundSize, CustomEvent } from "@m78/utils";
+import {
+  ActionHistory,
+  AnyObject,
+  BoundSize,
+  CustomEvent,
+  EmptyFunction,
+} from "@m78/utils";
 import { TablePlugin } from "./plugin.js";
+import { _configCanNotChange } from "./common.js";
 
 /** 表示单元格位置的元组, 分别表示 x轴索引, y轴索引 */
 export type TablePosition = [number, number];
 
+/** 表示列或行的key */
 export type TableKey = string | number;
+
+/** 重载级别, 更高的级别会包含低级别的重载内容 */
+export enum TableReloadLevel {
+  /** 基础信息计算, 比如固定/合并/尺寸等信息, 计算比较快速 */
+  base,
+  /** 重新计算索引, 通常在组件内部备份的data和columns顺序变更时使用, 组件使用者很少会使用到此级别, 由于包含了对data/column的遍历, 性能消耗会更高 */
+  index,
+  /** 重要配置发生了变更, 比如data/column完全改变, 会执行初始化阶段的大部分操作 */
+  full,
+}
+
+export type TableReloadLevelKeys = keyof typeof TableReloadLevel;
+
+export type TableReloadLevelUnion = TableReloadLevel | TableReloadLevelKeys;
+
+export interface TableRenderCtx {
+  isFirstRender: boolean;
+  disableDefaultRender: boolean;
+  disableLaterRender: boolean;
+}
+
+/** 内部会向data/column中注入的一些私有标记 */
+export enum _TablePrivateProperty {
+  /** 表示是由table注入的数据 */
+  fake = "__M78TableFake",
+  /** 表示该条数据需要在计算时被忽略 */
+  ignore = "__M78TableIgnore",
+  /** 表示对关联数据的引用 */
+  ref = "__M78TableRef",
+}
+
+/** 不能通过table.config()变更的配置 */
+export type TableConfigCanNotChanges = typeof _configCanNotChange[number];
 
 export interface TableConfig {
   /** 用于挂载表格的div节点 */
   el: HTMLDivElement;
-  /** 数据源 */
-  data: AnyObject[];
   /** 数据主键, 用于标识数据的唯一性, 对应的值类型必须为字符串或数字 */
   primaryKey: string;
+  /** 数据源 */
+  data: AnyObject[];
   /** 列配置 */
   columns: TableColumnConfig[];
   /** 行配置, 用于特别指定某些行的配置 */
   rows?: {
     [key: string]: TableRowConfig;
   };
-  /** 单元格配置, 用于特别指定某些单元格的配置, 对象的key为`${rowKey}_${columnKey}` */
+  /** 单元格配置, 用于特别指定某些单元格的配置, 对象的key为`${rowKey}##${columnKey}` */
   cells?: {
     [key: string]: TableCellConfig;
   };
@@ -34,15 +74,28 @@ export interface TableConfig {
   rowHeight?: number;
   /** 100 | 默认列宽 */
   columnWidth?: number;
+  /** true | 相邻行显示不同的背景色 */
+  stripe?: boolean;
 
   /**
-   * 自定义单元格渲染, 返回true可以阻止默认渲染或其他插件的render渲染, 主要有两种用途:
-   * - 自定义节点样式或属性: 比如cell.dom.style.color = "red", 这种情况不需要返回true来阻止渲染
-   * - 自定义子级: 完全定制cell.dom的内部节点, 同时返回true阻止渲染
+   * 自定义单元格渲染, 主要有两种用途:
+   * - 自定义节点样式或属性: 比如cell.dom.style.color = "red"
+   * - 自定义子级: 完全定制cell.dom的内部节点, 同时设置ctx.disableDefaultRender为true来阻止默认的文本渲染
    *
-   * 此外, 由于render执行频率很高, 对于更新频率需求不高的, 比如样式调整等, 可以通过isFirstRender来避免重复渲染
+   * 插件和配置都会注入render, 所以渲染回调额外接收了ctx作为上下文对象, 用于控制渲染行为.
+   * ctx.isFirstRender 表示是否初次渲染, 由于render频率是很高的, 所以很多情况我们只需要在第一次render时插入节点, 后续只需要在已有节点上更新即可
+   * ctx.disableDefaultRender 表示是否阻止默认的文本渲染, 通常用于自定义子级时使用
+   * ctx.disableLaterRender 设置为true, 将会组织后面的一切render函数调用
+   *
+   * 可以通过cell.state.xx来保存一些针对当前单元格的渲染状态
    * */
-  render?: (cell: TableCellWidthDom, isFirstRender: boolean) => boolean | void;
+  render?: (cell: TableCellWidthDom, ctx: TableRenderCtx) => void;
+
+  /* # # # # # # # 选中 # # # # # # # */
+  /** 配置行选中, 可传boolean进行开关控制或传入函数根据行单独控制 */
+  rowSelectable?: boolean | ((row: TableRow) => boolean);
+  /** 配置单元格选中, 可传boolean进行开关控制或传入函数根据单元格单独控制 */
+  cellSelectable?: boolean | ((cell: TableCell) => boolean);
 
   /* # # # # # # # 极少使用 # # # # # # # */
   /** 插件 */
@@ -53,10 +106,6 @@ export interface TableConfig {
   viewContentEl?: HTMLDivElement;
   /** 传入定制的createEvent, 内部事件将使用此工厂函数创建 */
   eventCreator?: any;
-
-  // 待实现
-  /** 相邻行显示不同的背景色 */
-  stripe?: boolean;
 
   /** 是否允许拖拽排序行 */
   sortRow?: boolean;
@@ -116,31 +165,81 @@ export interface TableInstance extends TableGetter {
   event: TableEvent;
 
   /* # # # # # # # 控制 # # # # # # # */
-  /** 重绘表格, 表格会在需要时进行重绘, 大部分情况不需要手动调用 */
+  /** 重绘表格. 注: 表格会在需要时自动进行重绘, 大部分情况不需要手动调用 */
   render(): void;
 
   /**
-   * 重载表格, 清理所有缓存, 重新进行尺寸/位置等数据的预计算
-   * - 大部分情况下, 仅需要使用 render() 方法即可, 它拥有更好的性能
+   * 重载表格
+   * - 大部分情况下, 仅需要使用 render() 方法即可, 它有更好的性能
    * - 另外, 在必要配置变更后, 会自动调用 reload() 方法, 你只在极少情况下会使用它
+   * - reload包含一个level概念, 不同的配置项变更会对应不同的级别, 在渲染十万以上级别的数据时尤其值得关注, 然而, 通过table.config()修改配置时会自动根据修改内容选择重置级别
    * */
   reload(opt?: TableReloadOptions): void;
 
   /** 销毁表格, 解除所有引用/事件 */
   destroy(): void;
 
-  /** 待实现 */
-  /** 获取配置 */
-  config(): TableConfig;
-
-  /** 变更传入项对应的配置, 始终只应传入变更项, 因为 data/columns/rows等变更时会额外执行一些初始化操作 */
-  config(config: Partial<TableConfig>): void;
-
   /** processing为true时, 后续的mutation操作会被阻止 */
   processing(): boolean;
 
   /** 设置processing */
   processing(processing: boolean): void;
+
+  /**
+   * 启用后, 所有的render/reload操作会被暂时拦截, 并在解除后进行单次更新, 在编写插件或表格功能进行扩展时可能会有用
+   *
+   * ## example
+   * ```ts
+   * const trigger = table.takeover()
+   * doSomething();    // 这里的操作不会触发更新
+   * trigger(); // 触发更新. 若没有调用, 会导致后续所有更新失效
+   * ```
+   * */
+  takeover(): EmptyFunction;
+
+  /* # # # # # # # 历史记录 # # # # # # # */
+  /** 记录数据和配置的所有变更操作 */
+  history: ActionHistory;
+
+  /* # # # # # # # 配置管理 # # # # # # # */
+  /** 获取配置 */
+  config(): TableConfig;
+
+  /**
+   * 更改配置, 可单个或批量传入, 配置更新后会自动reload(), 另外, 像 el, primaryKey, plugins 这类的配置项不允许更新
+   * - 可传入keepPosition保持当前滚动位置
+   * - 此外, 每调用只应传入发生变更的配置项, 因为不同的配置有不同的重置级别, 某些配置只需要部分更新, 而另一些则需要完全更新
+   *
+   * ## example
+   * ```ts
+   * table.config({ rowHeight: 40, columnWidth: 150 }); // 批量更改
+   * table.config({ rowHeight: 40 }); // 单个更改
+   * ```
+   * */
+  config(
+    config: Omit<Partial<TableConfig>, TableConfigCanNotChanges>,
+    keepPosition?: boolean
+  ): void;
+
+  /* # # # # # # # 选中 # # # # # # # */
+
+  /** 指定行是否选中 */
+  isSelectedRow(key: TableKey): boolean;
+
+  /** 指定单元格是否选中 */
+  isSelectedCell(key: TableKey): boolean;
+
+  /** 获取选中的行 */
+  getSelectedRows(): TableRow[];
+
+  /** 获取选中的单元格 */
+  getSelectedCells(): TableCell[][];
+
+  /** 设置选中的行, 传入merge可保留之前的行选中 */
+  selectRows(rowKeys: TableKey[], merge?: boolean): void;
+
+  /** 设置选中的单元格, 传入merge可保留之前的单元格选中 */
+  selectCells(cellKeys: TableKey[], merge?: boolean): void;
 }
 
 /** 选择器 */
@@ -163,10 +262,16 @@ export interface TableGetter {
   getAreaBound(p1: TablePosition, p2?: TablePosition): TableItems;
 
   /**
-   * 根据表格视口内的点获取可用于getBoundItems()的实际点以及相关信息, 传入点的区间为: [0, 表格容器尺寸].
-   * 内部包含了对缩放的处理
+   * 根据表格视区内的点获取基于内容尺寸的点, 传入点的区间为: [0, 表格容器尺寸].
+   * 包含了对缩放的处理
    * */
-  getPointInfo([x, y]: TablePosition): TablePointInfo;
+  transformViewportPoint([x, y]: TablePosition): TablePointInfo;
+
+  /**
+   * 转换内容区域的点为表格视区内的点, 传入点的区间为: [0, 表格内容尺寸].
+   * 包含了对缩放的处理
+   * */
+  transformContentPoint([x, y]: TablePosition): TablePointInfo;
 
   /** 获取指定行 */
   getRow(key: TableKey): TableRow;
@@ -188,6 +293,12 @@ export interface TableGetter {
 
   /** 获取key的column索引.  注意, 此处的索引为经过内部数据重铸后的索引, 并不是config.columns中项的索引 */
   getIndexByColumnKey(key: TableKey): number;
+
+  /** 指定key的数据是否存在 */
+  isRowExist(key: TableKey): boolean;
+
+  /** 指定key的列是否存在 */
+  isColumnExist(key: TableKey): boolean;
 }
 
 export interface TableEvent {
@@ -198,6 +309,18 @@ export interface TableEvent {
   error: CustomEvent<(msg: string) => void>;
   /** 点击, event为原始事件对象, 可能是MouseEvent/PointerEvent */
   click: CustomEvent<(cell: TableCell, event: Event) => void>;
+  /** zoom变更 */
+  zoom: CustomEvent<(zoom: number) => void>;
+  /** 表格容器尺寸变更时, 这对插件作者应该会有用 */
+  resize: CustomEvent<ResizeObserverCallback>;
+  /** 任意选中项变更 */
+  select: CustomEvent<EmptyFunction>;
+  /** 行选中变更 */
+  rowSelect: CustomEvent<EmptyFunction>;
+  /** 单元格选中变更 */
+  cellSelect: CustomEvent<EmptyFunction>;
+  /** 容器尺寸/位置变更 */
+  // bound: ...
   mutation: CustomEvent<(mutation: any) => void>;
 }
 
@@ -205,7 +328,7 @@ export interface TableEvent {
 export interface TablePluginContext {
   /** 当前zoom */
   zoom: number;
-  /** 挂载dom的节点 */
+  /** 挂载dom的节点, 也是滚动容器节点 */
   viewEl: HTMLDivElement;
   /** domElement的子级, 用于实际挂载滚动区的dom节点 */
   viewContentEl: HTMLDivElement;
@@ -227,36 +350,28 @@ export interface TablePluginContext {
   /** 上一帧中在视口中显示的row/cell/column */
   lastViewportItems?: TableItems;
 
-  /** 用于控制内部某些操作是否要自动进行render */
-  skipRender?: boolean;
-
   /** 预计算好的总尺寸 */
   contentWidth: number;
   contentHeight: number;
 
-  /**
-   * data的映射, 根据实际显示顺序进行了排序, 比如fixed项排列到了前/后方
-   * - TableKey为数据在data中的key, number为数据在data中的索引
-   * */
-  dataFixedSortList: [TableKey, number][];
-  /**
-   * columns的映射, 根据实际显示顺序进行了排序, 比如fixed项排列到了前/后方
-   * - TableKey为数据在column中的key, number为数据在column中的索引
-   * */
-  columnsFixedSortList: [TableKey, number][];
+  ignoreDataLength: number;
+  ignoreColumnLength: number;
+  /** X轴忽略项索引 */
+  ignoreXList: number[];
+  /** Y轴忽略项索引 */
+  ignoreYList: number[];
+
   /**
    * data的key映射, 用于快速查找key的索引
-   * - [number, number] 分别是在dataFixedSortList中的索引和在data中的索引
    * */
   dataKeyIndexMap: {
-    [key: string]: [number, number];
+    [key: string]: number;
   };
   /**
    * columns的key映射, 用于快速查找key的索引
-   * - [number, number] 分别是在columnsFixedSortList中的索引和在data中的索引
    * */
   columnKeyIndexMap: {
-    [key: string]: [number, number];
+    [key: string]: number;
   };
 
   /** config.rows 的所有keys */
@@ -325,12 +440,25 @@ export interface TablePluginContext {
   };
 
   /** 所有表头项的key */
-  yHeaderKeyList: TableKey[];
+  yHeaderKeys: TableKey[];
   /** 行头的key(仅有一项) */
   xHeaderKey: TableKey;
 
+  /** 所有非表头行的key */
+  allRowKeys: TableKey[];
+  /** 所有非行头列的key */
+  allColumnKeys: TableKey[];
+
+  /**
+   * 实现table.takeover(), takeKey持有值的时候, render/reload会被阻止, 并在解除时统一执行一次更新
+   * - 用于防止 takeover() 期间的代码再次调用takeover()或解除对父级操作影响
+   * */
+  takeKey?: string;
+  /** takeover启用期间, 如果发生reload, 通过此项进行标记, 并将统一更新的操作由render改为reload */
+  takeReload?: boolean;
+
   /** 用户插件自定义的属性, 自定义插件应该集中属性名到额外的命名空间下, 防止和内部冲突,比如context.myPlugin.xxx */
-  [key: string]: any;
+  // [key: string]: any;
 }
 
 export enum TableRowFixed {
@@ -357,7 +485,7 @@ export interface TableRow {
   key: string;
   /** 最终高度 */
   height: number;
-  /** 行索引 */
+  /** 行索引. 注意, 该索引对应行在表格中的实际显示位置, 可能与config.data中的索引不同 */
   index: number;
   /** 在数据中的实际索引, index会计入自动生成的表头等, 如果需要访问该行在config.data中的索引, 请使用此项 */
   dataIndex?: number;
@@ -393,7 +521,7 @@ export interface TableColumn {
   key: string;
   /** 最终宽度 */
   width: number;
-  /** 列索引 */
+  /** 列索引. 注意, 该索引对应列在表格中的实际显示位置, 可能与config.columns中的索引不同 */
   index: number;
   /** 在数据中的实际索引, index会计入自动生成的行头等, 如果需要访问该行在config.columns中的索引, 请使用此项 */
   dataIndex?: number;
@@ -475,10 +603,6 @@ export interface TableCellConfig {
   mergeX?: number;
   /** 向下合并指定数量的单元格 */
   mergeY?: number;
-  /** 单元格框体配置 */
-  rectConfig?: Konva.RectConfig;
-  /** 单元格文本配置 */
-  textConfig?: Konva.TextConfig;
 }
 
 /** 固定项信息 */
@@ -496,6 +620,8 @@ type FixedMap<T> = {
 export interface TableReloadOptions {
   /** 为true时, 保持当前滚动位置 */
   keepPosition?: boolean;
+  /** TableReloadLevel.base | 重置级别 */
+  level?: TableReloadLevelUnion;
 }
 
 /** 包含表格行/列/单元格的结构 */
@@ -526,4 +652,12 @@ export interface TablePointInfo {
   topFixed: boolean;
   rightFixed: boolean;
   bottomFixed: boolean;
+}
+
+export interface TableAction {
+  /** 执行操作 */
+  redo(): void;
+
+  /** 重做 */
+  undo(): void;
 }

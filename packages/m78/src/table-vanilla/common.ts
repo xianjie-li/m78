@@ -1,6 +1,7 @@
-import clsx from "clsx";
 import { BoundSize, isNumber } from "@m78/utils";
-import { TableKey, TablePosition } from "./types.js";
+import { TableConfig, TableKey, TablePosition } from "./types.js";
+
+export const _prefix = "m78-table";
 
 /** 用于在config.el上存储当前实例 */
 export const _privateInstanceKey = "__M78TableInstance";
@@ -8,10 +9,23 @@ export const _privateInstanceKey = "__M78TableInstance";
 /** 用于在domEl上挂载是否为其是否为内部创建的信息 */
 export const _privateScrollerDomKey = "__M78PrivateScrollerDom";
 
-/** 内部会向行数据中注入的一些私有标记 */
-export enum RowPrivateProperty {
-  fakeData = "__M78TableFakeData",
-}
+/** 重置级别3的所有配置, 未在其中的所有配置默认为级别1 */
+export const _level2ConfigKeys: (keyof TableConfig)[] = [
+  "data",
+  "columns",
+  "rows",
+  "cells",
+];
+
+/** 不能通过table.config()变更的配置 */
+export const _configCanNotChange = [
+  "el",
+  "primaryKey",
+  "plugins",
+  "viewEl",
+  "viewContentEl",
+  "eventCreator",
+] as const;
 
 /** 若存在, 从节点的父节点将其删除 */
 export function _removeNode(node?: Node) {
@@ -19,15 +33,8 @@ export function _removeNode(node?: Node) {
   node.parentNode.removeChild(node);
 }
 
-/** 为节点添加className */
-export function _addCls(el: HTMLElement, cls: string) {
-  if (!el.className.includes(cls)) {
-    el.className = clsx(el.className, cls);
-  }
-}
-
 /** 解析rowIndex##columnIndex格式的字符串为[rowIndex, columnIndex], 数组长度为2表示解析正常 */
-export function _getCellKeyByStr(s?: string) {
+export function _getCellKeysByStr(s?: string) {
   if (!s) return [];
   return s.split("##");
 }
@@ -43,7 +50,7 @@ export function _getSizeString(size: number | string) {
 }
 
 /** 根据两个点获取Bound */
-export function _getBoundByTwoPoint(
+export function _getBoundByPoint(
   p1: TablePosition,
   p2: TablePosition
 ): BoundSize {

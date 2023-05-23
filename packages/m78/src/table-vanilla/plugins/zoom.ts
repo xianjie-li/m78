@@ -28,7 +28,7 @@ export class _TableZoomPlugin extends TablePlugin {
     stageEL.style.transform = `scale(${zoom})`;
     stageEL.style.transformOrigin = `left top`;
 
-    this.getPlugin(_TableViewportPlugin)!.updateSize();
+    this.getPlugin(_TableViewportPlugin).updateDom();
 
     const afterSize = contentEl.getBoundingClientRect().width;
 
@@ -40,5 +40,7 @@ export class _TableZoomPlugin extends TablePlugin {
     // 还原比例
     domEl.scrollLeft = domEl.scrollLeft * diffRatio;
     domEl.scrollTop = domEl.scrollTop * diffRatio;
+
+    this.table.event.zoom.emit(zoom);
   }
 }

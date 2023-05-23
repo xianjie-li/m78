@@ -4,6 +4,7 @@ import {
   TableCell,
   TableCellWidthDom,
   TableColumnFixed,
+  TableRenderCtx,
   TableRowFixed,
 } from "../types.js";
 import { _getSizeString, _removeNode } from "../common.js";
@@ -14,11 +15,6 @@ import clsx from "clsx";
  * 视口/尺寸/滚动相关的核心功能实现
  * */
 export class _TableViewportPlugin extends TablePlugin {
-  state = {
-    // 当前插件跳过cellRender hook, 因为改hook是他本省发出的
-    skipCellRenderHook: true,
-  };
-
   init() {
     // 映射实现方法
     this.methodMapper(this.table, [
@@ -32,23 +28,20 @@ export class _TableViewportPlugin extends TablePlugin {
       "render",
     ]);
 
-    this.updateSize();
+    this.updateDom();
   }
 
   /** 合并实现plugin.cellRender和config.render */
-  cellRenderImpl(
-    cell: TableCellWidthDom,
-    isFirstRender: boolean
-  ): boolean | void {
+  cellRenderImpl(cell: TableCellWidthDom, ctx: TableRenderCtx): void {
     if (this.config.render) {
-      const res = this.config.render(cell, isFirstRender);
-      if (res) return res;
+      this.config.render(cell, ctx);
+      if (ctx.disableLaterRender) return;
     }
 
     for (const p of this.plugins) {
       if (p.cellRender) {
-        const res = p.cellRender(cell, isFirstRender);
-        if (res) return res;
+        p.cellRender(cell, ctx);
+        if (ctx.disableLaterRender) return;
       }
     }
   }
@@ -92,7 +85,7 @@ export class _TableViewportPlugin extends TablePlugin {
 
     viewEl.scrollLeft = x;
 
-    if (!ctx.skipRender) this.render();
+    this.render();
   }
 
   y(y?: number) {
@@ -102,7 +95,7 @@ export class _TableViewportPlugin extends TablePlugin {
 
     viewEl.scrollTop = y;
 
-    if (!ctx.skipRender) this.render();
+    this.render();
   }
 
   xy(x?: number, y?: number) {
@@ -113,22 +106,18 @@ export class _TableViewportPlugin extends TablePlugin {
       return [viewEl.scrollLeft, viewEl.scrollTop];
     }
 
-    ctx.skipRender = true;
+    const trigger = this.table.takeover();
     this.x(x);
     this.y(y);
-    ctx.skipRender = false;
-
-    this.render();
+    trigger();
   }
 
   render() {
-    // this.stats.begin();
+    if (this.context.takeKey) return;
 
-    const getter = this.getPlugin(_TableGetterPlugin)!;
+    const getter = this.getPlugin(_TableGetterPlugin);
 
     const visibleItems = getter.getViewportItems();
-
-    // console.log(visibleItems);
 
     // 清理由可见转为不可见的项
     this.removeHideNodes(
@@ -152,9 +141,6 @@ export class _TableViewportPlugin extends TablePlugin {
   /** 绘制单元格 */
   renderCell(cells: TableCell[]) {
     const table = this.table;
-
-    const render = this.config.render;
-    const hasRender = isFunction(render);
 
     // ZOOM: #3
     const x = table.x() / this.table.zoom();
@@ -210,20 +196,23 @@ export class _TableViewportPlugin extends TablePlugin {
         dom.style.left = `${cellX}px`;
       }
 
-      // 是否阻止默认的text渲染
-      let blockTextRender = false;
+      const renderCtx: TableRenderCtx = {
+        isFirstRender: !cell.state.__m78_table_rendered,
+        disableLaterRender: false,
+        disableDefaultRender: false,
+      };
 
-      if (hasRender) {
-        const rRes = this.cellRenderImpl(
-          cell as TableCellWidthDom,
-          !cell.state.__rendered
-        );
-        cell.state.__rendered = true;
-        if (rRes) blockTextRender = true;
+      this.cellRenderImpl(cell as TableCellWidthDom, renderCtx);
+
+      if (!cell.state.__m78_table_rendered) {
+        cell.state.__m78_table_rendered = true;
       }
 
+      const disableDefaultRender =
+        renderCtx.disableDefaultRender || renderCtx.disableLaterRender;
+
       // 处理text, 因为.innerText读写都比较慢, 所以额外做一层判断
-      if (!blockTextRender && lastText !== cell.text) {
+      if (!disableDefaultRender && lastText !== cell.text) {
         dom.innerText = cell.text;
       }
 
@@ -313,7 +302,7 @@ export class _TableViewportPlugin extends TablePlugin {
   }
 
   /** 根据配置更新各种容器尺寸相关的内容 */
-  updateSize() {
+  updateDom() {
     const config = this.config;
     const ctx = this.context;
     const cH = this.config.height;
@@ -352,6 +341,12 @@ export class _TableViewportPlugin extends TablePlugin {
         config.el.style.height = `${contH}px`;
       }
     }
+
+    // 处理stripe
+    config.el.className = clsx(
+      config.el.className,
+      config.stripe && "__stripe"
+    );
   }
 
   /** 获取缩放后的容器尺寸, 最大尺寸不超过contentWidth */

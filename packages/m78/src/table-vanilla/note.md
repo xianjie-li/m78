@@ -6,10 +6,7 @@
 - 事件通过通过 wrap 节点单次绑定, 配合 getBoundXX()这类的 api 确定操作的单元格
 - chrome 节点最大尺寸为 +/-16777216 https://bugs.chromium.org/p/chromium/issues/detail?id=401762, 这对最大数据承载量造成了一定限制
 
-下一步: 缩放后的选区获取, 行头/列头
-
-fixed 限制
-行头
+next: ~~历史记录~~, ~~滚动阴影~~, ~~容器监听并重置~~, ~~处理 cells/rows 中的无效选项~~ ~~updateConfig~~, 选中
 
 ## api 风格
 
@@ -17,9 +14,9 @@ fixed 限制
 
 包含 getter/setter 时, 格式为 xxx() 取值 xxx(v) 更新值
 
-> 最开始是计划实现基于 konva 的 canvas 表格, 所以接口风格与其相似, 但是在常规优化手段都用上后(禁用所有图形事件, 关闭叠图优化等等), 发现视口内渲染的单元格较多时卡顿明显,
+> 最开始是计划实现基于 konva 的 canvas 表格, 所以接口风格与其相似, 但是在常规优化手段都用上后(禁用所有图形事件, 关闭叠图优化等等), 发现视口内渲染的单元格较多时卡顿明显
 > 后改为 canvas 渲染, 但是在 safari 下滚动不流畅, 并且还要单独写高清屏适配, 文本对其/溢出计算等等..., 故又弃之
-> 最后还是回到了 dom 渲染, 发现在行列都虚拟化后性能意外的还不错? 并且用户门槛也更低了, 配合 dom 大大增强了可定制性.
+> 最后还是回到了 dom 渲染, 发现在行列都虚拟化后性能意外的还不错? 并且使用难度也更低了, 配合 dom 大大增强了可定制性.
 
 ## 缩放实现 >>部分
 
@@ -129,11 +126,17 @@ getBoundItems()
 onError // 内部抛出的可能需要对用户展示的错误信息, 比如 "粘贴数据与选中单元格不匹配" 之类
 onCellClick
 
-## 表头& 行头
+### 事件过滤
+
+选中或其他交互事件中, 如何在指定节点上避免冒泡
+
+eventFilter: (dom) => boolean // 若返回 false, 该 dom 不会参与事件
+
+## 表头& 行头 -
 
 根据 Columns 配置生成固定项配置
 
-表头决定分组时, 最顶层决定下方所有列是否固定, 忽略底层 fixed
+表头分组时, 最顶层决定下方所有列是否固定, 忽略底层 fixed
 
 ## 拖动调整列宽/行高
 
@@ -153,39 +156,37 @@ paste(csv?, { x, y, endy, endx }?) 粘贴粘贴板上的 csv 格式内容到选�
 
 ## 选中 💦
 
-onSelect // 任意选中变更
-onCellSelect
-onRowSelect
-onColumnSelect
-ins.getSelected()
-ins.selected.cells
-ins.selected.rows
-ins.selected.columns
+列选中在目前表格场景中场景不大, 暂时不加
 
-ins.selectRows()
-ins.selectColumns()
-ins.selectCells();
+rowSelectable: boolean | (row) => boolean;
+cellSelectable: boolean | (cell) => boolean;
 
-提供选中行/列/单元格的 api
+event.select // 任意选中变更
+event.cellSelect
+event.rowSelect
 
-- 行/列设置是否可选中
-- 框选跨视口时,自动滚动
-- 框选 fixed 项/表头/行头时的处理
-- 点击聚焦节点, 快速滑动时框选, 移动端按住并拖动进行框选
-- 多选行/列/全选
+ins.getSelectedCells(): [][] // 返回并排序选中的单元格
+ins.getSelectedRows()
 
-shift/ctrl 手势 包括点击, 框选
-交叉格处理, 批量选择处理
+ins.selectRows(rowKeys[], merge = false)
+ins.selectCells(cellKeys[], merge = false);
 
-delete 删除内容
+提供选中行/单元格的 api
+
+其他:
+
+- 框选跨视口时,自动滚动, 固定项拖动到边缘后, 如果滚动位置未靠边, 将其滚动到边
+- 移动端按住并拖动进行框选 或 在已选中单元格上拖动进行框选
+- shift/ctrl 手势 包括点击, 框选
+
+事件派发, api 分发
 
 ## mutation 💦
 
-变更流程: 发送通知 - 记录 action - 进行数据/配置 更新操作 - 触发 reload - 用户保存更改
-
-核心:
-
-- 实例化时对传入的 config.data / config 进行浅拷贝, 当数据发生变更时, 再对变更项进行浅拷贝, 达到高性能复制
+- 初始化, 将 data/columns 本地化并进行格式处理
+- 发生变异操作, 本地更改 data/columns, 记录 action
+- 触发变更事件
+- 记录对获取变更有用的数据
 
 浅拷贝时使用: ls.slice(), 测试发现 50 万条数据用时 0.5ms 而 `{...obj}` 用时 47ms, 注意, 此测试在浏览器控制台进行, 在使用编译器工具时, 最终代码可能会自动编译为 ls.slice(), 所以测试不准确
 
@@ -193,9 +194,9 @@ delete 删除内容
 
 数据同步方式:
 
-- 实时同步: 监听 onChange 事件, 将所有类型的变更实时同步到服务器, 同时, 返回 promise, 当 promise 抛出异常时操作会被还原, 否则操作会被更新到当前状态中
-- 统一完整提交: 操作完成后, 判断 dataChanged 和 configChanged, 若有变更, 将变更后的数据或配置完整提交
-- 统一局部提交: 操作完成后, 对变更项 ins.changed / ins.removed / ins.sorted 进行提交, 如果 configChanged = true 则同时提交配置
+- 统一完整提交: 操作完成后, 判断 dataChanged 和 configChanged, 若有变更, 将变更后的数据或配置完整提交, 这是最简单的方式, 但是单词数据量过大时可能体验不佳
+- 统一局部提交: 操作完成后, 对变更项 ins.add / ins.changed / ins.removed / ins.sorted ([[oInd, nInd]])进行提交, 如果 configChanged = true 则同时提交配置
+- 实时局部提交: 监听事件, 发生变更时将上述状态提交, 提交期间可通过 processing 阻塞表格, 完成后可清理对应的变更状态
 
 通常, 数据量较少时, 第二种方式更好, 数据量大时, 第三种方式更好, 你可能还需要根据后端支持的接口操作来决定
 
@@ -236,6 +237,7 @@ MAX_HISTORY_LENGTH: 1000
 接口需要暴露给插件使用
 
 实现者应在输入框聚焦等特殊场景中忽略用户的撤销和重做操作
+实现者应确保在合适的时机拷贝数据, 放置前后操作由于引用产生错乱
 
 ### 数据排序
 
@@ -247,6 +249,8 @@ MAX_HISTORY_LENGTH: 1000
 onSort(column, ordType)
 
 ### 拖拽排序 💦
+
+长按行头/列头时可拖拽排序, 界面显示反馈提示
 
 onRowSort // 变更数据源
 onColumnSort // 变更配置, 额外添加一个 sortColumns, 记录变更顺序的列, 在初始化时与 columns 同步
@@ -264,6 +268,7 @@ moveRange(form: [s, e], to: ind)
 - 单击单元格时, 单元格聚焦, 如果配置了 dom render, 将其附加渲染为对应组件
 - 编辑角标
 - 校验: 错误时单元格显示红色, 点击后显示错误信息
+- 列头显示可编辑和必填标记
 
 actionType.valueChange [newValue]
 
@@ -277,6 +282,10 @@ removeRow(index | index[]);
 removeRange(start, end);
 
 ## 隐藏/行列
+
+## 提示区域
+
+选中 xx 行, 新增 xx 行, 删除 xx 行, 修改 xx 行, 保存前确认
 
 ## react 💦
 

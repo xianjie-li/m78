@@ -15,6 +15,11 @@ export class _TableEventPlugin extends TablePlugin {
     this.table.event = {
       error: eventCreator(),
       click: eventCreator(),
+      zoom: eventCreator(),
+      resize: eventCreator(),
+      select: eventCreator(),
+      rowSelect: eventCreator(),
+      cellSelect: eventCreator(),
       mutation: eventCreator(),
     };
 
@@ -30,7 +35,9 @@ export class _TableEventPlugin extends TablePlugin {
   }
 
   onClick = (e: MouseEvent) => {
-    const pInfo = this.table.getPointInfo(_getOffset(e, this.config.el));
+    const pInfo = this.table.transformViewportPoint(
+      _getOffset(e, this.config.el)
+    );
 
     const event = this.table.event;
 

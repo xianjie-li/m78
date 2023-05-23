@@ -4,8 +4,16 @@ import {
   TableInstance,
   TablePluginContext,
   TableCellWidthDom,
+  TableRenderCtx,
 } from "./types.js";
-import { AnyObject, isArray, isFunction, isString } from "@m78/utils";
+import {
+  AnyObject,
+  isArray,
+  isFunction,
+  isString,
+  throwError,
+} from "@m78/utils";
+import { _prefix } from "./common.js";
 
 /**
  * 插件类, 用于扩展table的功能
@@ -66,8 +74,8 @@ export class TablePlugin {
    * */
   beforeDestroy?(): void;
 
-  /** 定制单元格渲染, 与TableConfig.render具有相同的方法签名, 但TableConfig.render的渲染优先级高于插件配置, 即渲染顺序为 [conf.render, plugin1Render, plugin2Render..., defaultRender] */
-  cellRender?(cell: TableCellWidthDom, isFirstRender: boolean): boolean | void;
+  /** 定制单元格渲染, 与TableConfig.render具有相同的方法签名, 渲染顺序为 [conf.render, plugin1Render, plugin2Render..., defaultRender] */
+  cellRender?(cell: TableCellWidthDom, ctx: TableRenderCtx): void;
 
   /**
    * 工具函数, 将当对象上的指定函数映射到指定对象上
@@ -97,11 +105,16 @@ export class TablePlugin {
     });
   }
 
-  /** 获取指定插件类的实例 */
+  /** 获取指定插件类的实例, 不存在对应类型的插件时, 抛出异常 */
   getPlugin<T extends TablePlugin = any>(
     pluginClass: new (...args: any[]) => T
-  ): T | null {
-    const ins = this.plugins.find((p) => p instanceof pluginClass) || null;
+  ): T {
+    const ins = this.plugins.find((p) => p instanceof pluginClass);
+
+    if (!ins) {
+      throwError(`No plugin of type ${pluginClass.name} was found.`, _prefix);
+    }
+
     return ins as T;
   }
 }

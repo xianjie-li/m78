@@ -1,7 +1,11 @@
 import { TablePlugin } from "../plugin.js";
-import { TableReloadOptions } from "../types.js";
+import { TableReloadLevel, TableReloadOptions } from "../types.js";
 import { _TableInitPlugin } from "./init.js";
-import { getNamePathValue, setNamePathValue } from "@m78/utils";
+import {
+  createRandString,
+  getNamePathValue,
+  setNamePathValue,
+} from "@m78/utils";
 import {
   _getSizeString,
   _privateInstanceKey,
@@ -16,6 +20,7 @@ export class _TableLifePlugin extends TablePlugin {
     this.methodMapper(this.table, [
       ["reloadHandle", "reload"],
       ["destroyHandle", "destroy"],
+      "takeover",
     ]);
   }
 
@@ -24,7 +29,10 @@ export class _TableLifePlugin extends TablePlugin {
     setNamePathValue(this.config.el, _privateInstanceKey, this.table);
   }
 
-  reload({ keepPosition }: TableReloadOptions = {}) {
+  reload({
+    keepPosition,
+    level = TableReloadLevel.base,
+  }: TableReloadOptions = {}) {
     const ctx = this.context;
     const viewport = this.getPlugin(_TableViewportPlugin);
 
@@ -35,11 +43,19 @@ export class _TableLifePlugin extends TablePlugin {
       ctx.viewEl.scrollLeft = 0;
     }
 
-    // 重新进行预处理
-    this.getPlugin(_TableInitPlugin)?.preHandle();
+    const initPlugin = this.getPlugin(_TableInitPlugin);
+
+    if (level === TableReloadLevel.base) {
+      initPlugin.baseHandle();
+    } else if (level === TableReloadLevel.index) {
+      initPlugin.indexHandle();
+    } else {
+      this.table.history.reset();
+      initPlugin.fullHandle();
+    }
 
     if (viewport) {
-      viewport.updateSize();
+      viewport.updateDom();
     }
 
     this.table.render();
@@ -53,7 +69,11 @@ export class _TableLifePlugin extends TablePlugin {
 
     ctx.data = [];
     ctx.columns = [];
-    ctx.yHeaderKeyList = [];
+    ctx.rows = {};
+    ctx.cells = {};
+    ctx.yHeaderKeys = [];
+    ctx.ignoreXList = [];
+    ctx.ignoreYList = [];
 
     this.commonAction();
 
@@ -65,6 +85,7 @@ export class _TableLifePlugin extends TablePlugin {
       ctx.viewContentEl.style.height = "auto";
     }
 
+    setNamePathValue(this.table, "history", undefined);
     setNamePathValue(this.table, "canvasElement", undefined);
     setNamePathValue(ctx, "domEl", undefined);
     setNamePathValue(ctx, "domContentEl", undefined);
@@ -72,6 +93,12 @@ export class _TableLifePlugin extends TablePlugin {
 
   /** 实现table.reload() */
   reloadHandle(...arg: any) {
+    // 实现 takeover
+    if (this.context.takeKey) {
+      this.context.takeReload = true;
+      return;
+    }
+
     this.plugins.forEach((plugin) => {
       plugin.reload?.(...arg);
     });
@@ -83,18 +110,36 @@ export class _TableLifePlugin extends TablePlugin {
 
     /* # # # # # # # beforeDestroy # # # # # # # */
     this.plugins.forEach((plugin) => {
+      if (plugin === this) return; // 当前组件需要最后执行beforeDestroy
       plugin.beforeDestroy?.();
     });
+
+    this.beforeDestroy();
+  }
+
+  takeover() {
+    const ctx = this.context;
+    if (ctx.takeKey) return;
+
+    ctx.takeKey = createRandString(2);
+
+    return () => {
+      this.context.takeKey = undefined;
+
+      if (this.context.takeReload) {
+        this.table.reload();
+      } else {
+        this.table.render();
+      }
+
+      this.context.takeReload = false;
+    };
   }
 
   commonAction() {
     const ctx = this.context;
 
     ctx.lastViewportItems = undefined;
-    ctx.dataFixedSortList = [];
-    ctx.columnsFixedSortList = [];
-    ctx.dataKeyIndexMap = {};
-    ctx.columnKeyIndexMap = {};
     ctx.topFixedMap = {};
     ctx.bottomFixedMap = {};
     ctx.leftFixedMap = {};
@@ -106,8 +151,6 @@ export class _TableLifePlugin extends TablePlugin {
     ctx.rowCache = {};
     ctx.columnCache = {};
     ctx.cellCache = {};
-    ctx.rows = {};
-    ctx.cells = {};
 
     ctx.stageEL.innerHTML = ""; // 清空
   }

@@ -1,33 +1,41 @@
 import {
+  _TablePrivateProperty,
   TableCellWidthDom,
   TableColumnBranchConfig,
   TableColumnConfig,
   TableColumnFixed,
   TableColumnLeafConfig,
   TableConfig,
+  TableRenderCtx,
   TableRowFixed,
 } from "../types.js";
-import { AnyObject } from "@m78/utils";
-import { _getCellKey, RowPrivateProperty } from "../common.js";
+import { AnyObject, setNamePathValue } from "@m78/utils";
+import { _getCellKey } from "../common.js";
 import { TablePlugin } from "../plugin.js";
 
 export class _TableHeaderPlugin extends TablePlugin {
   /** 渲染行头内容 */
-  cellRender(cell: TableCellWidthDom, isFirstRender: boolean): boolean | void {
-    if (!isFirstRender || cell.row.isHeader) return;
+  cellRender(cell: TableCellWidthDom, ctx: TableRenderCtx): boolean | void {
+    if (!ctx.isFirstRender || !cell.column.isHeader) return;
+
+    if (cell.row.isHeader) {
+      cell.dom.innerText = "行号";
+      return;
+    }
+
     cell.dom.innerText = String(
-      cell.row.index - this.context.yHeaderKeyList.length + 1
+      cell.row.index - this.context.yHeaderKeys.length + 1
     );
   }
 
   /** 处理行头/表头 */
   process() {
-    this.processHeaderY();
-    this.processHeaderX();
+    this.handleHeaderY();
+    this.handleHeaderX();
   }
 
   /** 处理表头 */
-  processHeaderY() {
+  handleHeaderY() {
     const ctx = this.context;
     const conf = this.config;
     /** 将columns扁平化 */
@@ -63,7 +71,7 @@ export class _TableHeaderPlugin extends TablePlugin {
         const key = this.getDefaultYKey(depth);
         currentRow = injectRows[depth] = {
           [conf.primaryKey]: key,
-          [RowPrivateProperty.fakeData]: true, // 表明是由table注入的数据
+          [_TablePrivateProperty.fake]: true,
         };
         rows[key] = { fixed: TableRowFixed.top, height: conf.rowHeight! + 8 };
         injectRows[depth] = currentRow;
@@ -145,7 +153,7 @@ export class _TableHeaderPlugin extends TablePlugin {
       });
     });
 
-    ctx.yHeaderKeyList = injectRows.map((i) => i[conf.primaryKey]);
+    ctx.yHeaderKeys = injectRows.map((i) => i[conf.primaryKey]);
 
     ctx.data.unshift(...injectRows);
     ctx.columns = columns;
@@ -154,7 +162,7 @@ export class _TableHeaderPlugin extends TablePlugin {
   }
 
   /** 处理行头 */
-  processHeaderX() {
+  handleHeaderX() {
     const key = this.getDefaultXKey();
 
     // 生成行头配置
@@ -165,9 +173,11 @@ export class _TableHeaderPlugin extends TablePlugin {
       label: "序号",
     };
 
+    setNamePathValue(headerColumn, _TablePrivateProperty.fake, true);
+
     // // 表头向下合并
     this.context.cells[_getCellKey(this.getDefaultYKey(0), key)] = {
-      mergeY: this.context.yHeaderKeyList.length,
+      mergeY: this.context.yHeaderKeys.length,
     };
 
     this.context.xHeaderKey = key;

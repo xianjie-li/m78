@@ -29,3 +29,5 @@ export * from "./types.js";
 export * from "./consts.js";
 
 export * from "./react.js";
+
+export * from "./extra/action-history.js";
