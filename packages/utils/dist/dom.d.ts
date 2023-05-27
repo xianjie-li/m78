@@ -1,5 +1,6 @@
 import { AnyObject, Bound, TupleNumber } from "./types.js";
 export * from "./dom/dom-adaption.js";
+export * from "./dom/auto-scroll.js";
 /**
  * get a dom, multiple calls will return the same dom
  * @param namespace - create a uniq node by namespace
@@ -78,8 +79,8 @@ export declare function setDocScrollOffset(conf?: {
     x?: number;
     y?: number;
 }): void;
-/** check whether the dom node is scrollable */
-export declare function hasScroll(el: HTMLElement): {
+/** check whether the dom node is scrollable, if checkOverflowAttr is true, will check dom overflow property to be 'auto' or 'scroll'. */
+export declare function hasScroll(el: HTMLElement, checkOverflowAttr?: boolean): {
     x: boolean;
     y: boolean;
 };

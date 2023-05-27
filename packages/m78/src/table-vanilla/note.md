@@ -154,32 +154,43 @@ paste(csv?, { x, y, endy, endx }?) 粘贴粘贴板上的 csv 格式内容到选�
 
 间隔复制
 
-## 选中 💦
+## 选中 -
 
-列选中在目前表格场景中场景不大, 暂时不加
+列选中在目前表格场景中场景不大, 暂不考虑
 
+禁用控制
 rowSelectable: boolean | (row) => boolean;
 cellSelectable: boolean | (cell) => boolean;
 
+// 事件
 event.select // 任意选中变更
 event.cellSelect
 event.rowSelect
 
+// 获取选项信息
 ins.getSelectedCells(): [][] // 返回并排序选中的单元格
 ins.getSelectedRows()
 
+// api 触发选中
 ins.selectRows(rowKeys[], merge = false)
 ins.selectCells(cellKeys[], merge = false);
 
-提供选中行/单元格的 api
+// 自动滚动
 
-其他:
+实现比较麻烦, 可能需要考虑的点:
 
-- 框选跨视口时,自动滚动, 固定项拖动到边缘后, 如果滚动位置未靠边, 将其滚动到边
-- 移动端按住并拖动进行框选 或 在已选中单元格上拖动进行框选
-- shift/ctrl 手势 包括点击, 框选
+**固定项自动靠边**: 固定项拖动到边缘后, 如果对应方向滚动位置未靠边, 将其滚动到边
+**视口边缘自动滚动**: 框选到达视口边缘或超过时, 自动向对应方向滚动
+**前两者产生的歧义**: 前两种行为在同一方向会同时发生, 如何消歧?
 
-事件派发, api 分发
+**自动滚动后框选区需要动态调整**
+
+**移动设备**: 在已选中单元格上拖动进行框选
+
+**shift/ctrl**
+未按下 shift 时, 记录最后的 point
+按下 shift 时, 以最后点代替作为起始点
+move 时, 以当前点和最后的正常点计算范围, 取当前 和 最后可组成的最大矩形区
 
 ## mutation 💦
 
@@ -250,7 +261,7 @@ onSort(column, ordType)
 
 ### 拖拽排序 💦
 
-长按行头/列头时可拖拽排序, 界面显示反馈提示
+长按行头/列头时可拖拽排序, 界面显示反馈提示 / 启用时出现拖动标记, 仅可摘标记上拖动
 
 onRowSort // 变更数据源
 onColumnSort // 变更配置, 额外添加一个 sortColumns, 记录变更顺序的列, 在初始化时与 columns 同步
@@ -317,3 +328,4 @@ removeRange(start, end);
 
 - 光标聚焦显示隐藏的完整内容
 - 内容查找(不联网, 高亮匹配内容)
+- 导出: 导出选中/导出所有/勾选要导出的列

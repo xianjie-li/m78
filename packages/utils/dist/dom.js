@@ -3,6 +3,7 @@ import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import { isDom, isFunction, isNumber } from "./is.js";
 import { clamp } from "./number.js";
 export * from "./dom/dom-adaption.js";
+export * from "./dom/auto-scroll.js";
 var portalsID = "J__PORTALS__NODE__";
 /**
  * get a dom, multiple calls will return the same dom
@@ -332,12 +333,13 @@ export function getScrollParent(ele, getAll) {
         document.body.scrollTop = document.documentElement.scrollTop = conf.y;
     }
 }
-/** check whether the dom node is scrollable */ export function hasScroll(el) {
+/** check whether the dom node is scrollable, if checkOverflowAttr is true, will check dom overflow property to be 'auto' or 'scroll'. */ export function hasScroll(el) {
+    var checkOverflowAttr = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : true;
     var x = Math.max(0, el.scrollWidth - el.clientWidth) > 0;
     var y = Math.max(0, el.scrollHeight - el.clientHeight) > 0;
     if (el === document.documentElement || el === document.body) {
     // ...
-    } else {
+    } else if (checkOverflowAttr) {
         var ref = getStyle(el), overflowX = ref.overflowX, overflowY = ref.overflowY;
         if (overflowX !== "scroll" && overflowX !== "auto") {
             x = false;

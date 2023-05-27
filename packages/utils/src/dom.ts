@@ -4,6 +4,8 @@ import { clamp } from "./number.js";
 
 export * from "./dom/dom-adaption.js";
 
+export * from "./dom/auto-scroll.js";
+
 const portalsID = "J__PORTALS__NODE__";
 
 /**
@@ -445,14 +447,17 @@ export function setDocScrollOffset(conf: { x?: number; y?: number } = {}) {
   }
 }
 
-/** check whether the dom node is scrollable */
-export function hasScroll(el: HTMLElement): { x: boolean; y: boolean } {
+/** check whether the dom node is scrollable, if checkOverflowAttr is true, will check dom overflow property to be 'auto' or 'scroll'. */
+export function hasScroll(
+  el: HTMLElement,
+  checkOverflowAttr = true
+): { x: boolean; y: boolean } {
   let x = Math.max(0, el.scrollWidth - el.clientWidth) > 0;
   let y = Math.max(0, el.scrollHeight - el.clientHeight) > 0;
 
   if (el === document.documentElement || el === document.body) {
     // ...
-  } else {
+  } else if (checkOverflowAttr) {
     const { overflowX, overflowY } = getStyle(el);
     if (overflowX !== "scroll" && overflowX !== "auto") {
       x = false;

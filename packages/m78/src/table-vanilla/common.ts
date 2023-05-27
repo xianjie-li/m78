@@ -49,26 +49,45 @@ export function _getSizeString(size: number | string) {
   return isNumber(size) ? `${size}px` : size;
 }
 
-/** 根据两个点获取Bound */
-export function _getBoundByPoint(
-  p1: TablePosition,
-  p2: TablePosition
-): BoundSize {
-  const [x1, y1] = p1;
-  const [x2, y2] = p2;
+/** 根据n个点获取最大Bound */
+export function _getBoundByPoint(...pointers: TablePosition[]): BoundSize {
+  const [p1, p2] = _getMaxPointByPoint(...pointers);
 
-  // p1/p2可能存在的点为四个, 左上/右上/左下/右下
-  const minX = Math.min(x1, x2);
-  const minY = Math.min(y1, y2);
-  const maxX = Math.max(x1, x2);
-  const maxY = Math.max(y1, y2);
+  const left = p1[0];
+  const top = p1[1];
 
   return {
-    left: minX,
-    top: minY,
-    width: maxX - minX,
-    height: maxY - minY,
+    left,
+    top,
+    width: p2[0] - left,
+    height: p2[1] - top,
   };
+}
+
+/** 根据n个点获取可以组成最大矩形的两个点 */
+export function _getMaxPointByPoint(
+  ...pointers: TablePosition[]
+): TablePosition[] {
+  const allX: number[] = [];
+  const allY: number[] = [];
+
+  pointers.forEach((p) => {
+    if (p.length === 2) {
+      allX.push(p[0]);
+      allY.push(p[1]);
+    }
+  });
+
+  // 最小和最大的四个点
+  const minX = Math.min(...allX);
+  const minY = Math.min(...allY);
+  const maxX = Math.max(...allX);
+  const maxY = Math.max(...allY);
+
+  return [
+    [minX, minY],
+    [maxX, maxY],
+  ];
 }
 
 /** 根据鼠标/触摸/指针事件获取offsetSize, 也就是点击位置相距目标左上角的偏移 */

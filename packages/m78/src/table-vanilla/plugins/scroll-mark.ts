@@ -62,13 +62,10 @@ export class _TableScrollMarkPlugin extends TablePlugin {
     const ctx = this.context;
     const x = this.table.x();
     const y = this.table.y();
-    const zoom = this.table.zoom();
     const touchTop = y === 0;
-    const touchBottom =
-      y === this.table.contentHeight() / zoom - this.table.height();
+    const touchBottom = Math.ceil(y) >= this.table.maxY(); // 为什么会出现小数?
     const touchLeft = x === 0;
-    const touchRight =
-      x === this.table.contentWidth() / zoom - this.table.width();
+    const touchRight = Math.ceil(x) >= this.table.maxX();
 
     this.tEl.style.opacity = touchTop || !ctx.topFixedHeight ? "0" : "1";
     this.bEl.style.opacity = touchBottom || !ctx.bottomFixedHeight ? "0" : "1";

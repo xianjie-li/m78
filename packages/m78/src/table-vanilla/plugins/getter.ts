@@ -45,7 +45,10 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
     ]);
   }
 
-  transformViewportPoint([x, y]: TablePosition): TablePointInfo {
+  transformViewportPoint(
+    [x, y]: TablePosition,
+    fixedOffset = 0
+  ): TablePointInfo {
     const ctx = this.context;
 
     // 需要处理缩放, 缩放后, 实际显示的内容变多了, 但我们节点的绝对坐标是一样的, 将缩放后的点转换为正常尺寸点再参与计算即可
@@ -55,16 +58,16 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
     y = y / zoom;
 
     const lStart = 0;
-    const lEnd = lStart + ctx.leftFixedWidth;
+    const lEnd = lStart + ctx.leftFixedWidth + fixedOffset;
 
     const tStart = 0;
-    const tEnd = tStart + ctx.topFixedHeight;
+    const tEnd = tStart + ctx.topFixedHeight + fixedOffset;
 
     const bEnd = this.table.height() / zoom;
-    const bStart = bEnd - ctx.bottomFixedHeight;
+    const bStart = bEnd - ctx.bottomFixedHeight - fixedOffset;
 
     const rEnd = this.table.width() / zoom;
-    const rStart = rEnd - ctx.rightFixedWidth;
+    const rStart = rEnd - ctx.rightFixedWidth - fixedOffset;
 
     const isFixedLeft = x >= lStart && x <= lEnd;
     const isFixedTop = y >= tStart && y <= tEnd;
@@ -100,6 +103,8 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
       x: realX,
       y: realY,
       xy: [realX, realY],
+      originY: y,
+      originX: x,
     };
   }
 
@@ -156,6 +161,8 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
       x: realX,
       y: realY,
       xy: [realX, realY],
+      originY: pos[1],
+      originX: pos[0],
     };
   }
 

@@ -80,16 +80,24 @@ export function getPlatform() {
   return cachePlatform;
 }
 
-/** 检测是否是移动设备 */
+/** Detect if is mobile device */
 export function isMobileDevice() {
   const platform = getPlatform();
   return platform.iphone || platform.ipad || platform.android;
 }
 
-/** 对requestAnimationFrame的简单兼容性包装, 并且返回清理函数而不是清理标记 */
-export const raf = (
-  frameRequestCallback: FrameRequestCallback
-): EmptyFunction => {
+/** Get command key by system, apple series: command,  other: control */
+export function getCmdKeyStatus(e: Event) {
+  const platform = getPlatform();
+
+  const key =
+    platform.mac || platform.ipad || platform.iphone ? "metaKey" : "ctrlKey";
+
+  return !!e[key];
+}
+
+/** A simple compatibility wrapper for requestAnimationFrame and returns a cleanup function instead of a cleanup tag */
+export function raf(frameRequestCallback: FrameRequestCallback): EmptyFunction {
   const _raf =
     __GLOBAL__.requestAnimationFrame ||
     // @ts-ignore
@@ -99,12 +107,33 @@ export const raf = (
     // @ts-ignore
     __GLOBAL__.oRequestAnimationFrame ||
     // @ts-ignore
-    __GLOBAL__.msRequestAnimationFrame ||
-    setTimeout;
+    __GLOBAL__.msRequestAnimationFrame;
 
-  const clearFn = __GLOBAL__.cancelAnimationFrame || __GLOBAL__.clearTimeout;
+  const clearFn = _raf
+    ? __GLOBAL__.cancelAnimationFrame
+    : __GLOBAL__.clearTimeout;
 
-  const flag = _raf(frameRequestCallback);
+  const flag = _raf
+    ? _raf(frameRequestCallback)
+    : setTimeout(() => frameRequestCallback(Date.now()), 60); // 约等于s/60fps
 
   return () => clearFn(flag);
-};
+}
+
+export type RafFunction = typeof raf;
+
+/** 用于将requestAnimationFrame使用在指令式用法中, 比如拖拽移动dom的场景, rafCaller能确保每帧只会对最新一次回调进行调用, 其他回调会被直接忽略 */
+export function rafCaller() {
+  let last: FrameRequestCallback | undefined;
+
+  return function rafCall(frameRequestCallback: FrameRequestCallback) {
+    last = frameRequestCallback;
+
+    return raf((arg) => {
+      if (last) {
+        last(arg);
+        last = undefined;
+      }
+    });
+  };
+}

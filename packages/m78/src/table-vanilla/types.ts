@@ -137,6 +137,12 @@ export interface TableInstance extends TableGetter {
   /** 更新y */
   xy(x: number, y: number): void;
 
+  /** 获取x最大值 */
+  maxX(): number;
+
+  /** 过去y最大值 */
+  maxY(): number;
+
   /** 获取缩放值, 区间为 0.8 ~ 1.5 */
   zoom(): number;
 
@@ -167,6 +173,8 @@ export interface TableInstance extends TableGetter {
   /* # # # # # # # 控制 # # # # # # # */
   /** 重绘表格. 注: 表格会在需要时自动进行重绘, 大部分情况不需要手动调用 */
   render(): void;
+  /** render()的同步版本, 没有requestAnimationFrame调用 */
+  renderSync(): void;
 
   /**
    * 重载表格
@@ -175,6 +183,8 @@ export interface TableInstance extends TableGetter {
    * - reload包含一个level概念, 不同的配置项变更会对应不同的级别, 在渲染十万以上级别的数据时尤其值得关注, 然而, 通过table.config()修改配置时会自动根据修改内容选择重置级别
    * */
   reload(opt?: TableReloadOptions): void;
+  /** reload()的同步版本, 没有requestAnimationFrame调用 */
+  reloadSync(opt?: TableReloadOptions): void;
 
   /** 销毁表格, 解除所有引用/事件 */
   destroy(): void;
@@ -263,9 +273,13 @@ export interface TableGetter {
 
   /**
    * 根据表格视区内的点获取基于内容尺寸的点, 传入点的区间为: [0, 表格容器尺寸].
-   * 包含了对缩放的处理
+   * - 可传入fixedOffset来修改fixed项的判定区域增加或减少
+   * - 包含了对缩放的处理
    * */
-  transformViewportPoint([x, y]: TablePosition): TablePointInfo;
+  transformViewportPoint(
+    [x, y]: TablePosition,
+    fixedOffset?: number
+  ): TablePointInfo;
 
   /**
    * 转换内容区域的点为表格视区内的点, 传入点的区间为: [0, 表格内容尺寸].
@@ -652,6 +666,10 @@ export interface TablePointInfo {
   topFixed: boolean;
   rightFixed: boolean;
   bottomFixed: boolean;
+  /** 转换之前的x */
+  originX: number;
+  /** 转换之前的y */
+  originY: number;
 }
 
 export interface TableAction {

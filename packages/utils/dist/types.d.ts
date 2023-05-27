@@ -37,6 +37,8 @@ export interface BoundSize {
     width: number;
     height: number;
 }
+/** point describing location */
+export declare type Position = TupleNumber;
 /** object containing id field */
 export interface IdProps {
     id: number;

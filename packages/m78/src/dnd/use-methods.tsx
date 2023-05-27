@@ -193,7 +193,7 @@ export function _useMethods(ctx: _Context) {
     /* # # # # # # # 自动滚动 # # # # # # # */
     // xy在元素范围边缘一定距离时, 距离靠近边缘移动越快
     ctx.group.scrollParents.forEach((ele) => {
-      _autoScrollByStatus(ele as any, _getAutoScrollStatus(ele, x, y), down);
+      _autoScrollByStatus(ele, down, _getAutoScrollStatus(ele, x, y));
     });
 
     /* # # # # # # # 无放置点命中时的处理 # # # # # # # */

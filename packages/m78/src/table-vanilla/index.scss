@@ -8,6 +8,7 @@ $high3-z-index: 30;
 .m78-table {
   position: relative;
   user-select: none;
+  -webkit-user-select: none;  // 2023年了, safari还要加前缀, 真有你的
   font-size: var(--m78-fs);
   line-height: 1.2;
   box-sizing: border-box;
@@ -118,6 +119,7 @@ $high3-z-index: 30;
 
     // ## 选中
     &.__selected {
+
       &::after {
         pointer-events: none;
         content: "";

@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from "react";
-import { createRandString, getPlatform } from "@m78/utils";
+import { createRandString, getCmdKeyStatus } from "@m78/utils";
 
 /** 支持的事件类型 */
 export enum UseKeyboardTriggerType {
@@ -98,8 +98,6 @@ function handle(e: KeyboardEvent) {
   // 标记同键位事件是否调用过, key是 修饰键 + 按钮
   const triggerFlags = new Map<string, boolean>();
 
-  const platform = getPlatform();
-
   const event: UseKeyboardEvent = {
     code: e.code,
     key: e.key,
@@ -107,7 +105,7 @@ function handle(e: KeyboardEvent) {
     ctrlKey: e.ctrlKey,
     metaKey: e.metaKey,
     shiftKey: e.shiftKey,
-    sysCmdKey: platform.mac ? e.metaKey : e.ctrlKey,
+    sysCmdKey: getCmdKeyStatus(e),
     repeat: e.repeat,
     isComposing: e.isComposing,
     type: typeMapper(e.type) as UseKeyboardTriggerType, // handle只会被内部的两种事件触发,

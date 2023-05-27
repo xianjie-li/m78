@@ -1,6 +1,9 @@
 import { clamp } from "@m78/utils/number.js";
 import { TablePlugin } from "../plugin.js";
 import { _TableViewportPlugin } from "./viewport.js";
+
+// TODO: 若放大后固定项尺寸超过容器尺寸, 则禁止放大
+
 export class _TableZoomPlugin extends TablePlugin {
   static MIN_ZOOM = 0.8;
   static MAX_ZOOM = 1.5;

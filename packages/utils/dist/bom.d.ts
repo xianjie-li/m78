@@ -12,8 +12,13 @@ export declare function getPlatform(): {
     android: boolean;
     linux: boolean;
 };
-/** 检测是否是移动设备 */
+/** Detect if is mobile device */
 export declare function isMobileDevice(): boolean;
-/** 对requestAnimationFrame的简单兼容性包装, 并且返回清理函数而不是清理标记 */
-export declare const raf: (frameRequestCallback: FrameRequestCallback) => EmptyFunction;
+/** Get command key by system, apple series: command,  other: control */
+export declare function getCmdKeyStatus(e: Event): boolean;
+/** A simple compatibility wrapper for requestAnimationFrame and returns a cleanup function instead of a cleanup tag */
+export declare function raf(frameRequestCallback: FrameRequestCallback): EmptyFunction;
+export declare type RafFunction = typeof raf;
+/** 用于将requestAnimationFrame使用在指令式用法中, 比如拖拽移动dom的场景, rafCaller能确保每帧只会对最新一次回调进行调用, 其他回调会被直接忽略 */
+export declare function rafCaller(): (frameRequestCallback: FrameRequestCallback) => EmptyFunction;
 //# sourceMappingURL=bom.d.ts.map

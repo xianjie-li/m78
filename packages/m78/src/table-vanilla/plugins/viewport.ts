@@ -1,5 +1,11 @@
 import { TablePlugin } from "../plugin.js";
-import { isFunction, isNumber, isTruthyOrZero } from "@m78/utils";
+import {
+  EmptyFunction,
+  isNumber,
+  isTruthyOrZero,
+  rafCaller,
+  RafFunction,
+} from "@m78/utils";
 import {
   TableCell,
   TableCellWidthDom,
@@ -10,11 +16,17 @@ import {
 import { _getSizeString, _removeNode } from "../common.js";
 import { _TableGetterPlugin } from "./getter.js";
 import clsx from "clsx";
+import { addCls, removeCls } from "../../common/index.js";
 
 /**
  * 视口/尺寸/滚动相关的核心功能实现
  * */
 export class _TableViewportPlugin extends TablePlugin {
+  /** 优化render函数 */
+  rafCaller: RafFunction;
+  /** 清理raf */
+  rafClear?: EmptyFunction;
+
   init() {
     // 映射实现方法
     this.methodMapper(this.table, [
@@ -25,10 +37,19 @@ export class _TableViewportPlugin extends TablePlugin {
       "x",
       "y",
       "xy",
+      "maxX",
+      "maxY",
       "render",
+      "renderSync",
     ]);
 
+    this.rafCaller = rafCaller();
+
     this.updateDom();
+  }
+
+  beforeDestroy() {
+    if (this.rafClear) this.rafClear();
   }
 
   /** 合并实现plugin.cellRender和config.render */
@@ -112,9 +133,27 @@ export class _TableViewportPlugin extends TablePlugin {
     trigger();
   }
 
+  maxX(): number {
+    return this.context.viewEl.scrollWidth - this.context.viewEl.clientWidth;
+  }
+
+  maxY(): number {
+    return this.context.viewEl.scrollHeight - this.context.viewEl.clientHeight;
+  }
+
   render() {
     if (this.context.takeKey) return;
+    this.rafClear = this.rafCaller(() => this.renderMain());
+  }
 
+  /** render的同步版本 */
+  renderSync() {
+    if (this.context.takeKey) return;
+    this.renderMain();
+  }
+
+  /** render核心逻辑 */
+  renderMain() {
     const getter = this.getPlugin(_TableGetterPlugin);
 
     const visibleItems = getter.getViewportItems();
@@ -134,8 +173,6 @@ export class _TableViewportPlugin extends TablePlugin {
     });
 
     this.context.lastViewportItems = visibleItems;
-
-    // this.stats.end();
   }
 
   /** 绘制单元格 */
@@ -343,10 +380,9 @@ export class _TableViewportPlugin extends TablePlugin {
     }
 
     // 处理stripe
-    config.el.className = clsx(
-      config.el.className,
-      config.stripe && "__stripe"
-    );
+    config.stripe
+      ? addCls(config.el, "__stripe")
+      : removeCls(config.el, "__stripe");
   }
 
   /** 获取缩放后的容器尺寸, 最大尺寸不超过contentWidth */

@@ -353,10 +353,15 @@ const AUTO_SCROLL_BASE_OFFSET = 16;
  * 元素不包含滚动条时无返回,
  * 同时只会有一个方向有值
  * */
-export function _getAutoScrollStatus(el: HTMLElement, x: number, y: number) {
+export function _getAutoScrollStatus(
+  el: HTMLElement,
+  x: number,
+  y: number,
+  checkOverflowAttr = true
+) {
   const isDocOrBody = el === document.documentElement || el === document.body;
 
-  const si = hasScroll(el);
+  const si = hasScroll(el, checkOverflowAttr);
 
   if (!isDocOrBody && !si.x && !si.y) return;
 
@@ -431,18 +436,24 @@ export function _getAutoScrollStatus(el: HTMLElement, x: number, y: number) {
 
 /**
  * 根据getAutoScrollStatus的返回值滚动元素
+ *
+ * @param element 滚动元素
+ * @param enable status有效时, 是否启用自动滚动, 若滚动一开始, 至少需要传入一次false来关闭自动滚动
+ * @param status 光标在模板元素边缘的信息, getAutoScrollStatus的返回值
  * */
 export function _autoScrollByStatus(
-  el: HTMLElement & { ctx: _AutoScrollCtx },
-  status: ReturnType<typeof _getAutoScrollStatus>,
-  down: boolean
+  element: HTMLElement,
+  enable: boolean,
+  status: ReturnType<typeof _getAutoScrollStatus>
 ) {
+  const el = element as HTMLElement & { ctx: _AutoScrollCtx };
+
   // 滚动元素本身是一个非常理想的存储局部滚动状态的对象
   if (!el.ctx) {
     el.ctx = {} as _AutoScrollCtx;
   }
 
-  el.ctx.autoScrollDown = down;
+  el.ctx.autoScrollDown = enable;
 
   if (!el || !status) return;
 

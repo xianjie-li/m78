@@ -3,7 +3,10 @@ import { TableReloadLevel, TableReloadOptions } from "../types.js";
 import { _TableInitPlugin } from "./init.js";
 import {
   createRandString,
+  EmptyFunction,
   getNamePathValue,
+  rafCaller,
+  RafFunction,
   setNamePathValue,
 } from "@m78/utils";
 import {
@@ -16,12 +19,20 @@ import { _TableViewportPlugin } from "./viewport.js";
 
 /** 表格生命周期相关控制 */
 export class _TableLifePlugin extends TablePlugin {
+  /** 优化reload函数 */
+  rafCaller: RafFunction;
+  /** 清理raf */
+  rafClear?: EmptyFunction;
+
   init() {
     this.methodMapper(this.table, [
       ["reloadHandle", "reload"],
       ["destroyHandle", "destroy"],
+      "reloadSync",
       "takeover",
     ]);
+
+    this.rafCaller = rafCaller();
   }
 
   initialized() {
@@ -29,6 +40,39 @@ export class _TableLifePlugin extends TablePlugin {
     setNamePathValue(this.config.el, _privateInstanceKey, this.table);
   }
 
+  /** 解除所有事件/引用类型占用 */
+  beforeDestroy() {
+    if (this.rafClear) this.rafClear();
+
+    const ctx = this.context;
+
+    this.restoreWrapSize();
+
+    ctx.data = [];
+    ctx.columns = [];
+    ctx.rows = {};
+    ctx.cells = {};
+    ctx.yHeaderKeys = [];
+    ctx.ignoreXList = [];
+    ctx.ignoreYList = [];
+
+    this.commonAction();
+
+    // 如果是内部创建的dom容器, 将其移除
+    if (getNamePathValue(ctx.viewEl, _privateScrollerDomKey)) {
+      _removeNode(this.context.viewEl);
+    } else {
+      ctx.viewContentEl.style.width = "auto";
+      ctx.viewContentEl.style.height = "auto";
+    }
+
+    setNamePathValue(this.table, "history", undefined);
+    setNamePathValue(this.table, "canvasElement", undefined);
+    setNamePathValue(ctx, "domEl", undefined);
+    setNamePathValue(ctx, "domContentEl", undefined);
+  }
+
+  /** 核心reload逻辑 */
   reload({
     keepPosition,
     level = TableReloadLevel.base,
@@ -58,37 +102,7 @@ export class _TableLifePlugin extends TablePlugin {
       viewport.updateDom();
     }
 
-    this.table.render();
-  }
-
-  /** 解除所有事件/引用类型占用 */
-  beforeDestroy() {
-    const ctx = this.context;
-
-    this.restoreWrapSize();
-
-    ctx.data = [];
-    ctx.columns = [];
-    ctx.rows = {};
-    ctx.cells = {};
-    ctx.yHeaderKeys = [];
-    ctx.ignoreXList = [];
-    ctx.ignoreYList = [];
-
-    this.commonAction();
-
-    // 如果是内部创建的dom容器, 将其移除
-    if (getNamePathValue(ctx.viewEl, _privateScrollerDomKey)) {
-      _removeNode(this.context.viewEl);
-    } else {
-      ctx.viewContentEl.style.width = "auto";
-      ctx.viewContentEl.style.height = "auto";
-    }
-
-    setNamePathValue(this.table, "history", undefined);
-    setNamePathValue(this.table, "canvasElement", undefined);
-    setNamePathValue(ctx, "domEl", undefined);
-    setNamePathValue(ctx, "domContentEl", undefined);
+    viewport.renderSync();
   }
 
   /** 实现table.reload() */
@@ -99,6 +113,22 @@ export class _TableLifePlugin extends TablePlugin {
       return;
     }
 
+    this.rafCaller(() => this.reloadMain(...arg));
+  }
+
+  /** reloadHandle的同步版本 */
+  reloadSync(...arg: any) {
+    // 实现 takeover
+    if (this.context.takeKey) {
+      this.context.takeReload = true;
+      return;
+    }
+
+    this.reloadMain(...arg);
+  }
+
+  /** 触发插件reload */
+  reloadMain(...arg: any) {
     this.plugins.forEach((plugin) => {
       plugin.reload?.(...arg);
     });
