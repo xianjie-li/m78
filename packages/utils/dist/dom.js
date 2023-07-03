@@ -4,6 +4,7 @@ import { isDom, isFunction, isNumber } from "./is.js";
 import { clamp } from "./number.js";
 export * from "./dom/dom-adaption.js";
 export * from "./dom/auto-scroll.js";
+export * from "./dom/physical-scroll.js";
 var portalsID = "J__PORTALS__NODE__";
 /**
  * get a dom, multiple calls will return the same dom
@@ -352,4 +353,21 @@ export function getScrollParent(ele, getAll) {
         x: x,
         y: y
     };
+}
+/** Obtaining offsets from different events */ export function getEventOffset(e, target) {
+    var touch = e.changedTouches;
+    var clientX = 0;
+    var clientY = 0;
+    if (touch) {
+        clientX = touch[0].clientX;
+        clientY = touch[0].clientY;
+    } else {
+        clientX = e.clientX;
+        clientY = e.clientY;
+    }
+    var ref = target.getBoundingClientRect(), left = ref.left, top = ref.top;
+    return [
+        clientX - left,
+        clientY - top
+    ];
 }
