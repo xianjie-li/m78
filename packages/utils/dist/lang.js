@@ -36,13 +36,23 @@ export var __GLOBAL__ = getGlobal();
             return listener.apply(void 0, _to_consumable_array(args));
         });
     };
+    var empty = function empty() {
+        listeners.length = 0;
+    };
     var listeners = [];
     return {
         on: on,
         off: off,
-        emit: emit
+        emit: emit,
+        empty: empty,
+        get length () {
+            return listeners.length;
+        }
     };
 }
 /** 抛出错误 */ export function throwError(msg, prefix) {
     throw new Error("".concat(prefix ? "".concat(prefix, ":: ") : "").concat(msg));
+}
+/** simple deep clone */ export function deepClone(obj) {
+    return JSON.parse(JSON.stringify(obj));
 }

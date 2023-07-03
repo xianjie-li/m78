@@ -1,22 +1,17 @@
 import { TablePlugin } from "../plugin.js";
 import {
-  _TablePrivateProperty,
-  TableColumnFixed,
-  TableColumnLeafConfig,
-  TableConfig,
-  TableKey,
-  TableRowFixed,
-} from "../types.js";
-import {
+  deepClone,
   getNamePathValue,
   isEmpty,
   isNumber,
+  isObject,
   isString,
   setNamePathValue,
   throwError,
 } from "@m78/utils";
 import clsx from "clsx";
 import {
+  _defaultTexts,
   _getCellKey,
   _getCellKeysByStr,
   _prefix,
@@ -25,6 +20,18 @@ import {
 import { _TableGetterPlugin } from "./getter.js";
 import { _TableHeaderPlugin } from "./header.js";
 import { addCls } from "../../common/index.js";
+import {
+  _TablePrivateProperty,
+  TableColumnFixed,
+  TableKey,
+  TableRowFixed,
+} from "../types/base-type.js";
+import { TableConfig } from "../types/config.js";
+
+import { TableColumnLeafConfig } from "../types/items.js";
+
+import { TableReloadLevel } from "./life.js";
+import { _TableHidePlugin } from "./hide.js";
 
 /**
  * 进行配置整理/预计算等
@@ -37,6 +44,8 @@ export class _TableInitPlugin extends TablePlugin {
 
     this.createDomElement();
 
+    this.mergeTexts();
+
     this.fullHandle();
   }
 
@@ -46,33 +55,59 @@ export class _TableInitPlugin extends TablePlugin {
   }
 
   fullHandle() {
-    this.initDataAndColumn();
+    this.plugins.forEach((plugin) =>
+      plugin.loadStage?.(TableReloadLevel.full, true)
+    );
+
+    this.initHandle();
 
     this.getPlugin(_TableHeaderPlugin).process();
 
     this.fmtDataAndColumns();
 
+    this.plugins.forEach((plugin) =>
+      plugin.loadStage?.(TableReloadLevel.full, false)
+    );
+
     this.indexHandle();
   }
 
-  /** 为当前ctx.data/columns创建索引, 对应TableReloadLevel.index */
+  /** 为当前ctx.data/columns创建索引, 并合并持久化配置 对应TableReloadLevel.index */
   indexHandle() {
-    this.updateKeyIndexMap();
+    this.plugins.forEach((plugin) =>
+      plugin.loadStage?.(TableReloadLevel.index, true)
+    );
+
+    this.mergeTexts();
+
+    this.mergePersistenceConfig();
+
+    this.updateIndexAndMerge();
+
+    this.mergePersistenceConfigAfter();
+
+    this.plugins.forEach((plugin) =>
+      plugin.loadStage?.(TableReloadLevel.index, false)
+    );
+
     this.baseHandle();
   }
 
   /** 基础预处理, 减少后续渲染的计算工作, , 对应TableReloadLevel.base */
   baseHandle() {
+    this.plugins.forEach((plugin) =>
+      plugin.loadStage?.(TableReloadLevel.base, true)
+    );
+
     const ctx = this.context;
 
-    ctx.zoom = 1;
+    ctx.rowCache = {};
+    ctx.columnCache = {};
+    ctx.cellCache = {};
     ctx.mergeMapMain = {};
     ctx.mergeMapSub = {};
     ctx.lastMergeXMap = {};
     ctx.lastMergeYMap = {};
-    ctx.rowCache = {};
-    ctx.columnCache = {};
-    ctx.cellCache = {};
     ctx.topFixedMap = {};
     ctx.bottomFixedMap = {};
     ctx.leftFixedMap = {};
@@ -81,25 +116,44 @@ export class _TableInitPlugin extends TablePlugin {
     ctx.bottomFixeList = [];
     ctx.leftFixedList = [];
     ctx.rightFixedList = [];
+    ctx.leftFixedListALl = [];
+    ctx.rightFixedListAll = [];
 
     this.preHandleSize();
 
     this.preCalcLastInfo();
 
     this.preHandleMerge();
+
+    this.plugins.forEach((plugin) =>
+      plugin.loadStage?.(TableReloadLevel.base, false)
+    );
   }
 
-  /** 拷贝data/columns */
-  initDataAndColumn() {
+  /** 拷贝data/columns/persistenceConfig等需要本地化的配置 */
+  initHandle() {
     const ctx = this.context;
 
     ctx.data = this.config.data.slice();
     ctx.columns = [];
     ctx.cells = {};
     ctx.rows = {};
+    ctx.cellDomCaChe = {};
+    ctx.cellStateCaChe = {};
+
+    this.context.persistenceConfig = isObject(this.config.persistenceConfig)
+      ? deepClone(this.config.persistenceConfig)
+      : {};
+
+    ctx.backupRows = {};
+    ctx.backupCells = {};
+    ctx.backupColumns = {};
+    ctx.backupFirstColumns = {};
+    ctx.backupFirstRows = {};
+    ctx.backupFirstCells = {};
   }
 
-  /** 将data/columns进行预处理后拷贝到其对应的ctx.xxx, 并对固定性进行处理 */
+  /** 将data/columns进行预处理后拷贝到其对应的ctx.xxx, 并对固定项进行处理 */
   fmtDataAndColumns() {
     const ctx = this.context;
     const { columns, data, rows } = ctx;
@@ -111,9 +165,6 @@ export class _TableInitPlugin extends TablePlugin {
     const rf: TableColumnLeafConfig[] = [];
     const tf: any[] = [];
     const bf: any[] = [];
-
-    ctx.ignoreColumnLength = 0;
-    ctx.ignoreDataLength = 0;
 
     // 从行头/表头开始, 拷贝并备份数据, 然后将fixed项移植首尾位置
 
@@ -129,12 +180,9 @@ export class _TableInitPlugin extends TablePlugin {
         const nCur = {
           ...cur,
           [_TablePrivateProperty.fake]: true,
-          [_TablePrivateProperty.ref]: clone,
         };
 
         setNamePathValue(clone, _TablePrivateProperty.ignore, true);
-        setNamePathValue(clone, _TablePrivateProperty.ref, nCur);
-        ctx.ignoreColumnLength++;
 
         if (cur.fixed === TableColumnFixed.left) {
           lf.push(nCur);
@@ -160,12 +208,9 @@ export class _TableInitPlugin extends TablePlugin {
         const nCur = {
           ...cur,
           [_TablePrivateProperty.fake]: true,
-          [_TablePrivateProperty.ref]: clone,
         };
 
         setNamePathValue(clone, _TablePrivateProperty.ignore, true);
-        setNamePathValue(clone, _TablePrivateProperty.ref, nCur);
-        ctx.ignoreDataLength++;
 
         if (conf.fixed === TableRowFixed.top) {
           tf.push(nCur);
@@ -191,18 +236,67 @@ export class _TableInitPlugin extends TablePlugin {
     ctx.columns = listX;
   }
 
-  /** 处理dataKeyIndexMap/columnKeyIndexMap */
-  updateKeyIndexMap() {
+  mergePersistenceConfig() {
+    const ctx = this.context;
+
+    const pConfig = ctx.persistenceConfig;
+
+    // 合并持久化rows
+    if (isObject(pConfig.rows)) {
+      Object.entries(pConfig.rows).forEach(([key, value]) => {
+        this.persistenceConfigHandle(
+          ctx.rows,
+          ctx.backupRows,
+          ctx.backupFirstRows,
+          key,
+          value
+        );
+      });
+    }
+
+    // 合并持久化cells
+    if (isObject(pConfig.cells)) {
+      Object.entries(pConfig.cells).forEach(([key, value]) => {
+        this.persistenceConfigHandle(
+          ctx.cells,
+          ctx.backupCells,
+          ctx.backupFirstCells,
+          key,
+          value
+        );
+      });
+    }
+  }
+
+  mergePersistenceConfigAfter() {
+    const ctx = this.context;
+
+    const rowHeaderConf = ctx.columns[0];
+
+    // 同步行头尺寸
+    if (
+      rowHeaderConf &&
+      rowHeaderConf.key === ctx.xHeaderKey &&
+      isNumber(rowHeaderConf.width)
+    ) {
+      ctx.xHeaderWidth = rowHeaderConf.width;
+    }
+  }
+
+  /** 处理dataKeyIndexMap/columnKeyIndexMap, 合并persistenceConfig.columns/rows/cells 至ctx上同名配置 */
+  updateIndexAndMerge() {
     const ctx = this.context;
 
     ctx.ignoreXList = [];
     ctx.ignoreYList = [];
+
     ctx.allRowKeys = [];
     ctx.allColumnKeys = [];
 
     const dataMap: any = {};
     const columnMap: any = {};
 
+    // 列索引/合并持久化配置
     ctx.columns.forEach((cur, i) => {
       // 在此处确保所有key都是可用的, 后续代码中就可以直接安全取用了
       if (!isString(cur.key) && !isNumber(cur.key)) {
@@ -212,20 +306,46 @@ export class _TableInitPlugin extends TablePlugin {
         );
       }
 
-      if (!getNamePathValue(cur, _TablePrivateProperty.fake)) {
+      const ignore = getNamePathValue(cur, _TablePrivateProperty.ignore);
+
+      // 存在持久化配置时, 对齐进行合并等操作
+      const persistenceConf = getNamePathValue(ctx.persistenceConfig, [
+        "columns",
+        cur.key,
+      ]);
+
+      if (persistenceConf) {
+        this.persistenceConfigHandle(
+          ctx.columns,
+          ctx.backupColumns,
+          ctx.backupFirstColumns,
+          cur.key,
+          persistenceConf,
+          i
+        );
+      }
+
+      const isFake = getNamePathValue(cur, _TablePrivateProperty.fake);
+
+      if (!isFake) {
         ctx.allColumnKeys.push(cur.key);
       }
 
-      const ignore = getNamePathValue(cur, _TablePrivateProperty.ignore);
-
       if (ignore) {
         ctx.ignoreXList.push(i);
-        return;
+
+        // 固定项已拷贝并移动到列表前/后位置, 跳过后续设置
+        // 对fixed的ignore项进行标记
+        if (!isFake && (cur.fixed || persistenceConf?.fixed)) {
+          columnMap[`${cur.key}${_TablePrivateProperty.ref}`] = i;
+          return;
+        }
       }
 
       columnMap[cur.key] = i;
     });
 
+    // 行索引
     ctx.data.forEach((cur, i) => {
       const k = cur[this.config.primaryKey];
 
@@ -237,7 +357,9 @@ export class _TableInitPlugin extends TablePlugin {
         );
       }
 
-      if (!getNamePathValue(cur, _TablePrivateProperty.fake)) {
+      const isFake = getNamePathValue(cur, _TablePrivateProperty.fake);
+
+      if (!isFake) {
         ctx.allRowKeys.push(k);
       }
 
@@ -245,13 +367,94 @@ export class _TableInitPlugin extends TablePlugin {
 
       if (ignore) {
         ctx.ignoreYList.push(i);
-        return;
+
+        const conf = ctx.rows[k];
+
+        // 固定项已拷贝并移动到列表前/后位置, 跳过后续设置
+        if (!isFake && conf?.fixed) {
+          dataMap[`${k}${_TablePrivateProperty.ref}`] = i;
+          return;
+        }
       }
+
       dataMap[k] = i;
     });
 
     ctx.dataKeyIndexMap = dataMap;
     ctx.columnKeyIndexMap = columnMap;
+  }
+
+  /**
+   * row/cells持久化处理通用逻辑, 根据情况备份/还原/合并持久化配置到当前配置
+   *
+   * @param map 对应的配置, 比如ctx.rows/ctx.cells
+   * @param backupMap 对应的备份配置, 比如ctx.backupRows/ctx.backupCells
+   * @param backupFirstMap 对应的备份配置, 如backupFirstColumns
+   * @param key 对应map中的key
+   * @param conf 需要合并的持久化配置
+   * @param index 对应map中的index, 如果map是一个数组
+   * */
+  persistenceConfigHandle(
+    map: any,
+    backupMap: any,
+    backupFirstMap: any,
+    key: TableKey,
+    conf: any,
+    index?: number
+  ) {
+    const indOrKey = isNumber(index) ? index : key;
+
+    const backup = backupMap[key];
+    const item = map[indOrKey];
+
+    const ignore = getNamePathValue(item, _TablePrivateProperty.ignore);
+
+    if (ignore) return;
+
+    if (!map[indOrKey]) {
+      map[indOrKey] = {};
+    }
+
+    // 记录首个值
+    if (!backupFirstMap[key]) {
+      backupFirstMap[key] = { ...map[indOrKey] };
+    }
+
+    // 合并
+    Object.assign(map[indOrKey], conf);
+
+    // 清理无效配置, 若存在首个配置记录, 还原为首个配置
+    if (backup) {
+      this.persistenceConfigCleanHandle(
+        map[indOrKey],
+        backup,
+        conf || {},
+        backupFirstMap[key]
+      );
+    }
+
+    backupMap[key] = { ...conf };
+  }
+
+  // 根据传入的最新current和历史backup配置, 从obj中清理backup中存在但current不存在的配置
+  persistenceConfigCleanHandle(
+    obj: any,
+    backup: any,
+    current: any,
+    first: any
+  ) {
+    const backupKeys = Object.keys(backup);
+    const currentKeys = Object.keys(current);
+
+    const diffKeys = backupKeys.filter((k) => !currentKeys.includes(k));
+
+    diffKeys.forEach((k) => {
+      if (first[k] !== undefined) {
+        obj[k] = first[k];
+        return;
+      }
+      delete obj[k];
+    });
   }
 
   /** 预处理尺寸/固定项相关信息 */
@@ -264,52 +467,78 @@ export class _TableInitPlugin extends TablePlugin {
 
     const { columns, rows, data } = ctx;
 
+    const ignoreDataLength = ctx.ignoreYList.length;
+    const ignoreColumnLength = ctx.ignoreXList.length;
+
     let leftFixedWidth = 0;
     let rightFixedWidth = 0;
 
-    let contentWidth = (columns.length - ctx.ignoreColumnLength) * columnWidth!;
+    let contentWidth = (columns.length - ignoreColumnLength) * columnWidth!;
 
     // x轴
     columns.forEach((c) => {
-      if (getNamePathValue(c, _TablePrivateProperty.ignore)) return;
+      const ignore = getNamePathValue(c, _TablePrivateProperty.ignore);
+      const hide = getNamePathValue(c, _TablePrivateProperty.hide);
 
       const w = isNumber(c.width) ? c.width : columnWidth!;
 
       if (c.fixed) {
         if (c.fixed === TableColumnFixed.left) {
-          ctx.leftFixedMap[c.key] = {
-            offset: leftFixedWidth,
-            viewPortOffset: leftFixedWidth,
-            config: c,
-          };
-          leftFixedWidth += w;
-          ctx.leftFixedList.push(c.key);
+          // 隐藏的hide项依然记录
+          if (!ignore || hide) {
+            ctx.leftFixedMap[c.key] = {
+              offset: leftFixedWidth,
+              viewPortOffset: leftFixedWidth,
+              config: c,
+            };
+            ctx.leftFixedListALl.push(c.key);
+          }
+
+          if (!ignore) {
+            leftFixedWidth += w;
+            ctx.leftFixedList.push(c.key);
+          }
         }
 
         if (c.fixed === TableColumnFixed.right) {
-          ctx.rightFixedMap[c.key] = {
-            offset: rightFixedWidth,
-            viewPortOffset: rightFixedWidth,
-            config: c,
-          };
-          rightFixedWidth += w;
-          ctx.rightFixedList.push(c.key);
+          if (!ignore || hide) {
+            ctx.rightFixedMap[c.key] = {
+              offset: rightFixedWidth,
+              viewPortOffset: rightFixedWidth,
+              config: c,
+            };
+            ctx.rightFixedListAll.push(c.key);
+          }
+
+          if (!ignore) {
+            rightFixedWidth += w;
+            ctx.rightFixedList.push(c.key);
+          }
         }
       }
 
-      contentWidth -= columnWidth!;
-      contentWidth += w;
+      if (!ignore) {
+        contentWidth -= columnWidth!;
+        contentWidth += w;
+      }
     });
 
     ctx.leftFixedWidth = leftFixedWidth;
     ctx.rightFixedWidth = rightFixedWidth;
     ctx.contentWidth = contentWidth;
 
-    const rowKeys = Object.keys(rows!).filter((key) => getter.isRowExist(key));
+    const rowKeys = Object.keys(rows!)
+      .filter((key) => getter.isRowExist(key))
+      .sort((a, b) => {
+        const aIndex = ctx.dataKeyIndexMap[a];
+        const bIndex = ctx.dataKeyIndexMap[b];
+
+        return aIndex - bIndex;
+      });
 
     let topFixedHeight = 0;
     let bottomFixedHeight = 0;
-    let contentHeight = (data.length - ctx.ignoreDataLength) * rowHeight!;
+    let contentHeight = (data.length - ignoreDataLength) * rowHeight!;
 
     // y轴
     rowKeys.forEach((key) => {
@@ -473,6 +702,7 @@ export class _TableInitPlugin extends TablePlugin {
     const { columns, rows, data } = ctx;
 
     const getter = this.getPlugin(_TableGetterPlugin);
+    const sortHide = this.getPlugin(_TableHidePlugin);
 
     const key = start;
     const originalInd = isRow
@@ -497,6 +727,12 @@ export class _TableInitPlugin extends TablePlugin {
     }
 
     while (mergeNum > 0) {
+      const exist = isRow
+        ? getter.isRowExistByIndex(ind)
+        : getter.isColumnExistByIndex(ind);
+
+      if (!exist) break;
+
       const _key = isRow
         ? getter.getKeyByRowIndex(ind)
         : getter.getKeyByColumnIndex(ind);
@@ -507,21 +743,16 @@ export class _TableInitPlugin extends TablePlugin {
 
       const cur = isRow ? data![originalInd] : columns![originalInd];
 
-      if (getNamePathValue(cur, _TablePrivateProperty.ignore)) {
-        ind++;
-        continue;
-      }
-
       const conf = isRow ? rows![_key] : columns![originalInd];
+
+      const isFixed = !!conf?.fixed;
 
       // 根据主项是否是固定项做不同处理
 
       if (!isMainFixed) {
-        const _isFixed = !!conf?.fixed;
-
         // 合并项不是fixed时, 跳过fixed的被合并项
-        if (_isFixed) {
-          ind += 1;
+        if (isFixed) {
+          ind++;
           continue;
         }
 
@@ -533,22 +764,46 @@ export class _TableInitPlugin extends TablePlugin {
       const defSize = isRow ? rowHeight : columnWidth;
       const s = isNumber(cSize) ? cSize : defSize!;
 
-      mergeList.push(_key);
+      const isHideColumn = sortHide.isHideColumn(_key);
 
-      size += s;
-      mergeNum -= 1;
+      if (isHideColumn) {
+        // 跳过隐藏列, 不计入尺寸
+
+        mergeNum--;
+        mergeList.push(_key);
+      } else if (getNamePathValue(cur, _TablePrivateProperty.ignore)) {
+        // 忽略ignore列
+
+        ind++;
+        continue;
+      } else {
+        mergeList.push(_key);
+
+        size += s;
+        mergeNum--;
+      }
+
+      ind += 1;
 
       if (isMainFixed) {
-        const curInd = fixedList.indexOf(_key);
+        const conf = isRow
+          ? rows![getter.getKeyByRowIndex(ind)]
+          : columns![ind];
 
-        if (curInd === fixedList.length - 1 || curInd === -1) break;
+        if (!conf || !conf.fixed) break;
 
-        const k = fixedList[curInd + 1];
-        ind = isRow
-          ? getter.getIndexByRowKey(k)
-          : getter.getIndexByColumnKey(k);
-      } else {
-        ind += 1;
+        // const curConf = this.
+
+        // const curInd = fixedList.indexOf(_key);
+        //
+        // if (curInd === fixedList.length - 1) break;
+        //
+        // if (!isHideColumn && curInd === -1) break;
+        //
+        // const k = fixedList[curInd + 1];
+        // ind = isRow
+        //   ? getter.getIndexByRowKey(k)
+        //   : getter.getIndexByColumnKey(k);
       }
     }
 
@@ -604,5 +859,13 @@ export class _TableInitPlugin extends TablePlugin {
     stage.className = "m78-table_stage";
     this.context.stageEL = stage;
     this.context.viewContentEl.appendChild(stage);
+  }
+
+  /** 合并消息文本 */
+  mergeTexts() {
+    this.context.texts = {
+      ..._defaultTexts,
+      ...this.config.texts,
+    };
   }
 }

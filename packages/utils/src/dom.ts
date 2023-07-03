@@ -6,6 +6,8 @@ export * from "./dom/dom-adaption.js";
 
 export * from "./dom/auto-scroll.js";
 
+export * from "./dom/physical-scroll.js";
+
 const portalsID = "J__PORTALS__NODE__";
 
 /**
@@ -471,4 +473,25 @@ export function hasScroll(
     x,
     y,
   };
+}
+
+/** Obtaining offsets from different events */
+export function getEventOffset(
+  e: MouseEvent | TouchEvent | PointerEvent,
+  target: HTMLElement
+): TupleNumber {
+  const touch = (e as TouchEvent).changedTouches;
+  let clientX = 0;
+  let clientY = 0;
+
+  if (touch) {
+    clientX = touch[0].clientX;
+    clientY = touch[0].clientY;
+  } else {
+    clientX = (e as MouseEvent).clientX;
+    clientY = (e as MouseEvent).clientY;
+  }
+
+  const { left, top } = target.getBoundingClientRect();
+  return [clientX - left, clientY - top];
 }

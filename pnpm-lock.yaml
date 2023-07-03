@@ -138,7 +138,8 @@ importers:
       '@types/react': ^18.0.28
       '@types/react-dom': ^18.0.11
       '@types/use-sync-external-store': ^0.0.3
-      '@use-gesture/react': ^10.2.24
+      '@use-gesture/react': ^10.2.27
+      '@use-gesture/vanilla': ^10.2.27
       clsx: ^1.2.1
       i18next: ^22.0.5
       i18next-browser-languagedetector: ^7.0.1
@@ -163,7 +164,8 @@ importers:
       '@m78/verify': link:../verify/dist
       '@types/react': 18.0.28
       '@types/react-dom': 18.0.11
-      '@use-gesture/react': 10.2.24_react@18.2.0
+      '@use-gesture/react': 10.2.27_react@18.2.0
+      '@use-gesture/vanilla': 10.2.27
       clsx: 1.2.1
       i18next: 22.0.5
       i18next-browser-languagedetector: 7.0.1
@@ -5125,17 +5127,23 @@ packages:
       eslint-visitor-keys: 3.3.0
     dev: false
 
-  /@use-gesture/core/10.2.24:
-    resolution: {integrity: sha512-ZL7F9mgOn3Qlnp6QLI9jaOfcvqrx6JPE/BkdVSd8imveaFTm/a3udoO6f5Us/1XtqnL4347PsIiK6AtCvMHk2Q==}
+  /@use-gesture/core/10.2.27:
+    resolution: {integrity: sha512-V4XV7hn9GAD2MYu8yBBVi5iuWBsAMfjPRMsEVzoTNGYH72tf0kFP+OKqGKc8YJFQIJx6yj+AOqxmEHOmx2/MEA==}
     dev: false
 
-  /@use-gesture/react/10.2.24_react@18.2.0:
-    resolution: {integrity: sha512-rAZ8Nnpu1g4eFzqCPlaq+TppJpMy0dTpYOQx5KpfoBF4P3aWnCqwj7eKxcmdIb1NJKpIJj50DPugUH4mq5cpBg==}
+  /@use-gesture/react/10.2.27_react@18.2.0:
+    resolution: {integrity: sha512-7E5vnWCxeslWlxwZ8uKIcnUZVMTRMZ8cvSnLLKF1NkyNb3PnNiAzoXM4G1vTKJKRhgOTeI6wK1YsEpwo9ABV5w==}
     peerDependencies:
       react: '>= 16.8.0'
     dependencies:
-      '@use-gesture/core': 10.2.24
+      '@use-gesture/core': 10.2.27
       react: 18.2.0
+    dev: false
+
+  /@use-gesture/vanilla/10.2.27:
+    resolution: {integrity: sha512-K/9bpGgEm5mqFsWmMCEIJyBhJ/cgC52oRgQTsM+JTxNGe5Vz9mvecH9MaSuyItXRlvOy2nbJqaK+h/TGRbparA==}
+    dependencies:
+      '@use-gesture/core': 10.2.27
     dev: false
 
   /@vitejs/plugin-react/3.1.0_vite@4.2.1:

@@ -1,6 +1,7 @@
-$border-color: var(--m78-gray-5);
+$border-color: var(--m78-gray-4);
 $border: 1px solid $border-color;
-$bg-highlight: var(--m78-gray-2);
+$bg-highlight: var(--m78-gray-2); // 斑马纹等高亮格的背景色
+$scroll-flag: rgba(0, 0, 0, 0.12); // 可滚动标记
 $high1-z-index: 10;
 $high2-z-index: 20;
 $high3-z-index: 30;
@@ -8,11 +9,13 @@ $high3-z-index: 30;
 .m78-table {
   position: relative;
   user-select: none;
-  -webkit-user-select: none;  // 2023年了, safari还要加前缀, 真有你的
+  -webkit-user-select: none; // 2023年了, safari还要加前缀, 真有你的
   font-size: var(--m78-fs);
   line-height: 1.2;
   box-sizing: border-box;
   outline: $border;
+  touch-action: none;
+  height: 100%;
 
   > * {
     box-sizing: border-box;
@@ -32,7 +35,6 @@ $high3-z-index: 30;
 
   &_view-content {
     position: relative;
-    overflow: hidden; // ZOOM: #2 scale后内容大于容器时, 容器的scrollWidth会被撑开, 需要设置隐藏来放置此行为
   }
 
   &.__stripe {
@@ -62,7 +64,7 @@ $high3-z-index: 30;
     // 表头标记
 
     &.__head-x, &.__head-y {
-      background-color: $bg-highlight; // 防止表头出现斑马纹
+      background: $bg-highlight; // 防止表头出现斑马纹
     }
 
     &.__head-y {
@@ -118,17 +120,28 @@ $high3-z-index: 30;
     }
 
     // ## 选中
-    &.__selected {
-
+    &.__selected, &.__disabled  {
       &::after {
-        pointer-events: none;
         content: "";
         position: absolute;
         left: -1px;
         right: -1px;
         top: -1px;
         bottom: -1px;
-        background: var(--m78-color-opacity-sm);
+      }
+    }
+
+    &.__selected {
+      &::after {
+        background-color: var(--m78-color-opacity-sm);
+      }
+    }
+
+    // ## 禁用
+    &.__disabled {
+      &::after {
+        background-color: var(--m78-color-primary-rv);
+        cursor: not-allowed;
       }
     }
   }
@@ -151,7 +164,7 @@ $high3-z-index: 30;
       width: 8px;
       height: 100%;
       top: 0;
-      background: linear-gradient(90deg, var(--m78-color-border-b), rgba(0, 0, 0, 0));
+      background: linear-gradient(90deg, $scroll-flag, rgba(0, 0, 0, 0));
       border-radius: 0 12px 12px 0;
     }
 
@@ -159,7 +172,7 @@ $high3-z-index: 30;
       width: 8px;
       height: 100%;
       top: 0;
-      background: linear-gradient(-90deg, var(--m78-color-border-b), rgba(0, 0, 0, 0));
+      background: linear-gradient(-90deg, $scroll-flag, rgba(0, 0, 0, 0));
       border-radius: 12px 0 0 12px;
     }
 
@@ -167,7 +180,7 @@ $high3-z-index: 30;
       height: 8px;
       width: 100%;
       left: 0;
-      background: linear-gradient(180deg, var(--m78-color-border-b), rgba(0, 0, 0, 0));
+      background: linear-gradient(180deg, $scroll-flag, rgba(0, 0, 0, 0));
       border-radius: 0 0 12px 12px;
     }
 
@@ -175,8 +188,122 @@ $high3-z-index: 30;
       height: 8px;
       width: 100%;
       left: 0;
-      background: linear-gradient(0, var(--m78-color-border-b), rgba(0, 0, 0, 0));
+      background: linear-gradient(0, $scroll-flag, rgba(0, 0, 0, 0));
       border-radius: 12px 12px 0 0;
     }
+  }
+
+
+  // ## 提示线
+
+  &_tip-line-x {
+    display: none;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 0;
+    border-left: 3px dashed var(--m78-color);
+  }
+
+  &_tip-line-y {
+    display: none;
+    pointer-events: none;
+    position: absolute;
+    left: 0;
+    height: 0;
+    width: 100%;
+    border-top: 3px dashed var(--m78-color);
+  }
+
+  //  ## 空节点
+
+  &_empty {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: var(--m78-fs-md);
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--m78-component-bg);
+    pointer-events: none;
+    visibility: hidden;
+  }
+
+  // ## 隐藏
+  &_hide-expand {
+    position: absolute;
+    cursor: pointer;
+    z-index: $high1-z-index;
+
+    &.__default {
+      line-height: 0.6;
+      font-size: 14px;
+      border-radius: var(--m78-border-radius);
+      text-align: center;
+      background-color: var(--m78-component-bg);
+      border: 1px solid var(--m78-color-border);
+      height: 12px;
+      width: 12px;
+    }
+  }
+
+  // ## 高亮
+  &_highlight {
+    animation: m78-table-highlight 2s;
+  }
+
+  // ## 拖拽
+  &_drag-area-x, &_drag-area-y {
+    position: absolute;
+    cursor: move;
+    z-index: $high3-z-index;
+    background-color: var(--m78-color-divider);
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  &_drag-area-x {
+    left: 0;
+    top: 0;
+    height: 0;
+    width: 100%;
+  }
+
+  &_drag-area-y {
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+  }
+
+  &_drag-line-x, &_drag-line-y {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: $high3-z-index;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  &_drag-line-x {
+    border-top: 3px double var(--m78-color);
+    width: 100%;
+    height: 0;
+  }
+
+  &_drag-line-y {
+    border-left: 3px double var(--m78-color);
+    height: 100%;
+    width: 0;
+  }
+}
+
+
+@keyframes m78-table-highlight {
+  10% {
+    background-color: var(--m78-color-2);
   }
 }

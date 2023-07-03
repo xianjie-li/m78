@@ -1,5 +1,6 @@
 import { BoundSize, isNumber } from "@m78/utils";
-import { TableConfig, TableKey, TablePosition } from "./types.js";
+import { TableKey, TablePosition } from "./types/base-type.js";
+import { TableConfig } from "./types/config.js";
 
 export const _prefix = "m78-table";
 
@@ -8,6 +9,10 @@ export const _privateInstanceKey = "__M78TableInstance";
 
 /** 用于在domEl上挂载是否为其是否为内部创建的信息 */
 export const _privateScrollerDomKey = "__M78PrivateScrollerDom";
+
+export const _defaultTexts = {
+  sortMergeColumn: "Can not sort column when has merge header",
+} as const;
 
 /** 重置级别3的所有配置, 未在其中的所有配置默认为级别1 */
 export const _level2ConfigKeys: (keyof TableConfig)[] = [
@@ -27,13 +32,7 @@ export const _configCanNotChange = [
   "eventCreator",
 ] as const;
 
-/** 若存在, 从节点的父节点将其删除 */
-export function _removeNode(node?: Node) {
-  if (!node || !node.parentNode) return;
-  node.parentNode.removeChild(node);
-}
-
-/** 解析rowIndex##columnIndex格式的字符串为[rowIndex, columnIndex], 数组长度为2表示解析正常 */
+/** 解析rowKey##columnKey格式的字符串为[rowKey, columnKey], 数组长度为2表示解析正常 */
 export function _getCellKeysByStr(s?: string) {
   if (!s) return [];
   return s.split("##");
@@ -90,23 +89,54 @@ export function _getMaxPointByPoint(
   ];
 }
 
-/** 根据鼠标/触摸/指针事件获取offsetSize, 也就是点击位置相距目标左上角的偏移 */
-export function _getOffset(
-  e: MouseEvent | TouchEvent | PointerEvent,
-  target: HTMLElement
-): [number, number] {
-  const touch = (e as TouchEvent).changedTouches;
-  let clientX = 0;
-  let clientY = 0;
+/** 用于在正在交互的节点符合条件时跳过table内部的选取/聚焦等事件, 返回true表示需要跳过内部事件 */
+type TableEventFilter = (target: HTMLElement) => void | boolean;
 
-  if (touch) {
-    clientX = touch[0].clientX;
-    clientY = touch[0].clientY;
-  } else {
-    clientX = (e as MouseEvent).clientX;
-    clientY = (e as MouseEvent).clientY;
+/** 节点树包含这些className时应跳过事件 */
+export const _tableInterruptTriggerClassName =
+  /m78-scroll_bar|m78-table_hide-expand/;
+
+/** 节点树包含这些类型的节点时应跳过事件 */
+export const _tableInterruptTriggerTagName =
+  /INPUT|TEXTAREA|BUTTON|SELECT|AUDIO|VIDEO/;
+
+/** 内置事件过滤器 */
+export const _tableTriggerFilters = [
+  (target: HTMLElement) => {
+    if (_tableInterruptTriggerClassName.test(target.className)) return true;
+    if (_tableInterruptTriggerTagName.test(target.tagName)) return true;
+  },
+];
+
+/** 执行一组过滤器, 若该节点需要跳过则返回true, 内部会递归对target所有父级进行校验, 直到stopNode节点为止 */
+export function _triggerFilterList(
+  target: HTMLElement,
+  list: TableEventFilter[],
+  stopNode: HTMLElement
+): boolean {
+  let cur: HTMLElement | null;
+
+  cur = target;
+
+  while (cur !== null) {
+    for (let i = 0; i < list.length; i++) {
+      const res = list[i](target);
+      if (res) return true;
+    }
+
+    const parent = cur.parentNode as HTMLElement;
+
+    if (!parent || parent === stopNode) {
+      return false;
+    }
+
+    cur = parent;
   }
 
-  const { left, top } = target.getBoundingClientRect();
-  return [clientX - left, clientY - top];
+  return false;
+}
+
+/** 检测传入的事件是否是touch事件 */
+export function isTouch(e: Event) {
+  return e.type.startsWith("touch") || (e as any).pointerType === "touch";
 }

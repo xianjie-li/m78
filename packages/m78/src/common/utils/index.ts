@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelf } from "@m78/hooks";
 import {
   DataSourceItem,
@@ -134,4 +134,10 @@ export function removeCls(el: HTMLElement, cls: string) {
     const regex = new RegExp("(^|\\s)" + cls + "(\\s|$)", "g");
     el.className = currentClassName.replace(regex, " ").trim();
   }
+}
+
+/** 若存在, 从节点的父节点将其删除 */
+export function removeNode(node?: Node) {
+  if (!node || !node.parentNode) return;
+  node.parentNode.removeChild(node);
 }

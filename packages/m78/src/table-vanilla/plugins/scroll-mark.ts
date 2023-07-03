@@ -1,5 +1,6 @@
 import { TablePlugin } from "../plugin.js";
-import { _removeNode } from "../common.js";
+
+import { removeNode } from "../../common/index.js";
 
 export class _TableScrollMarkPlugin extends TablePlugin {
   /** 容器 */
@@ -32,30 +33,20 @@ export class _TableScrollMarkPlugin extends TablePlugin {
     this.config.el.appendChild(wrapNode);
 
     this.updateBound();
-    this.updateVisible();
-  }
-
-  initialized() {
-    this.context.viewEl.addEventListener("scroll", this.updateVisible);
-    this.table.event.zoom.on(this.handleZoomChange);
   }
 
   beforeDestroy() {
-    this.context.viewEl.removeEventListener("scroll", this.updateVisible);
-    this.table.event.zoom.off(this.handleZoomChange);
+    removeNode(this.wrapNode);
+  }
 
-    _removeNode(this.wrapNode);
+  rendering() {
+    this.updateVisible();
   }
 
   reload() {
     this.updateBound();
     this.updateVisible();
   }
-
-  handleZoomChange = () => {
-    this.updateBound();
-    this.updateVisible();
-  };
 
   /** 可见性更新 */
   updateVisible = () => {
@@ -76,12 +67,11 @@ export class _TableScrollMarkPlugin extends TablePlugin {
   /** 位置尺寸更新 */
   updateBound() {
     const ctx = this.context;
-    const zoom = this.table.zoom();
 
-    const left = ctx.leftFixedWidth * zoom;
-    const top = ctx.topFixedHeight * zoom;
-    const right = ctx.rightFixedWidth * zoom;
-    const bottom = ctx.bottomFixedHeight * zoom;
+    const left = ctx.leftFixedWidth;
+    const top = ctx.topFixedHeight;
+    const right = ctx.rightFixedWidth;
+    const bottom = ctx.bottomFixedHeight;
 
     // 下面的1px为修正位置, 使阴影看起来更贴合边缘
     this.tEl.style.top = `${top - 1}px`;

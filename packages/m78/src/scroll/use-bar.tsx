@@ -202,6 +202,7 @@ export function _useBarImpl(
         bottom: isY ? barEl.offsetHeight - thumbEl.offsetHeight : 0,
       };
     },
+    preventDefault: true,
   });
 
   /* # # # # # # # # # # # # # # # # #
@@ -249,6 +250,8 @@ export function _useBarImpl(
 
   /** 拖动thumb */
   function onDrag(e: FullGestureState<"drag">) {
+    e.event.stopPropagation();
+
     /** 锁定自动关闭 防止干扰 */
     if (e.first) {
       onActive();

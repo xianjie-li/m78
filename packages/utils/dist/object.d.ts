@@ -1,9 +1,15 @@
 /**
- * Delete all falsy values of the object (except 0)
- * @param source - Target object
- * @return - Processed original object
+ * Delete all empty values (except 0) of the object/array
+ * @param source - Target object/array
+ * @return - Processed original object/array
+ *
+ * empty values: undefined, null ,'', NaN, [], {}
  */
-export declare const shakeFalsy: (source: object) => object;
+export declare function shakeEmpty(source: any): any;
+/**
+ * Recursion delete all empty values of the object/array, use shakeEmpty() internally, return the processed original object/array
+ * */
+export declare function recursionShakeEmpty(source: any): any;
 /**
  * Deletes the specified key value from the target object
  * @param obj - Target object
@@ -25,22 +31,20 @@ export declare type NameItem = string | number;
  * 表示name的字符或字符数组，用于链式取值，如: ['user', 'address']、[1, 'name']、['list', 4, 'name']
  * */
 export declare type NamePath = NameItem | NameItem[];
-/**
- * Get value on obj through NamePath
- *
- * 通过NamePath在obj上获取值
- * */
+/** Get value on obj through NamePath */
 export declare function getNamePathValue(obj: any, name: NamePath): any;
-/**
- * Convert NamePath to character form
- *
- * 将NamePath转换为字符形式
- * */
+/** Convert NamePath to string */
 export declare function stringifyNamePath(name: NamePath): string;
 /**
- * Set value on obj through NamePath
+ * Set value on obj through NamePath, if skipExist is passed in, the value will be skipped if it already exists
  *
- * 通过NamePath在obj上设置值
+ * 通过NamePath在obj上设置值, 如果传入skipExist, 在值已存在时会跳过
  * */
-export declare function setNamePathValue(obj: any, name: NamePath, val: any): void;
+export declare function setNamePathValue(obj: any, name: NamePath, val: any, skipExist?: boolean): void;
+/**
+ * Delete value on obj through NamePath
+ *
+ * 通过NamePath在obj上删除值
+ * */
+export declare function deleteNamePathValue(obj: any, name: NamePath): void;
 //# sourceMappingURL=object.d.ts.map

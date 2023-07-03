@@ -1,6 +1,9 @@
-import { hasScroll } from "../../dist/index.js";
+import { hasScroll } from "../dom.js";
 import { raf } from "../bom.js";
-import { Bound, EmptyFunction } from "../types.js";
+import { EmptyFunction, Point } from "../types.js";
+import { isBoolean, isNumber } from "../is.js";
+import { getNamePathValue, setNamePathValue } from "../object.js";
+import { getDocScrollOffset, setDocScrollOffset } from "../dom.js";
 
 /** 在多个滚动帮助函数间共享 */
 export interface AutoScrollCtx {
@@ -12,6 +15,14 @@ export interface AutoScrollCtx {
   autoScrollVal: number;
   /** 清理函数 */
   clearFn?: EmptyFunction;
+  /** 节点是否是document或body */
+  isDocOrBody: boolean;
+  // 最后进行方向检测的点
+  lastDetectX?: number;
+  lastDetectY?: number;
+  // 滚动距离是增加还是减少
+  isIncreaseX?: boolean;
+  isIncreaseY?: boolean;
 }
 
 export interface AutoScrollConfig {
@@ -36,16 +47,32 @@ export interface AutoScrollConfig {
   boundElement?: HTMLElement;
   /** 自动滚动时触发, 可用isX判断x/y轴, offset为该次滚动的距离 */
   onScroll?: (isX: boolean, offset: number) => void;
+  /** 仅通过onScroll进行通知, 内部不再直接设置滚动位置 */
+  onlyNotify?: boolean;
 }
 
-/** 方向禁用配置 */
-export type AutoScrollDisableConfig = {
+/** 内部标记配置 */
+interface InternalConfig {
+  /** 是否将滚动状态信息绑定到dom节点, 用于使用可直接使用的autoScrollTrigger */
+  __isDomBind?: boolean;
+}
+
+// 存放ctx到dom的key
+const autoScrollDataKey = "AUTO_SCROLL_DATA";
+
+// 修正isIncreaseX的判定范围, 减少细微操作时的误触发
+const adjustDistance = 4;
+
+/** trigger配置 */
+export type AutoScrollTriggerConfig = {
+  /** 对应方向是否禁用 */
   left?: boolean;
   right?: boolean;
   bottom?: boolean;
   top?: boolean;
 };
 
+/** 实例 */
 export type AutoScroll = ReturnType<typeof createAutoScroll>;
 
 /** 一个光标在目标边缘时自动滚动节点的工具 */
@@ -64,22 +91,73 @@ export function createAutoScroll(config: AutoScrollConfig) {
     boundElement: config.boundElement || config.el,
   };
 
-  const isDocOrBody =
-    conf.el === document.documentElement || conf.el === document.body;
+  // 上下文信息是否绑定到dom上
+  const isDomBind = (conf as InternalConfig).__isDomBind;
 
-  const ctx = {
+  let ctx: AutoScrollCtx;
+
+  const initCtx = {
     autoScrollToggle: false,
   } as AutoScrollCtx;
 
+  if (isDomBind) {
+    let domCtx = getNamePathValue(conf.el, autoScrollDataKey);
+
+    if (!domCtx) {
+      setNamePathValue(conf.el, autoScrollDataKey, initCtx);
+      domCtx = initCtx;
+    }
+
+    ctx = domCtx;
+  } else {
+    ctx = initCtx;
+  }
+
+  ctx.isDocOrBody =
+    conf.el === document.documentElement || conf.el === document.body;
+
   /** 获取光标和目标位置的边缘覆盖状态 */
   function getAutoScrollStatus(
-    x: number,
-    y: number,
-    disableConf: AutoScrollDisableConfig = {}
+    [x, y]: Point,
+    isLast: boolean,
+    disableConf: AutoScrollTriggerConfig = {}
   ) {
     const scrollData = hasScroll(conf.el, conf.checkOverflowAttr);
 
-    if (!isDocOrBody && !scrollData.x && !scrollData.y) return;
+    if (!ctx.isDocOrBody && !scrollData.x && !scrollData.y) return;
+
+    if (!isNumber(ctx.lastDetectX) || !isNumber(ctx.lastDetectY)) {
+      ctx.lastDetectX = x;
+      ctx.lastDetectY = y;
+      return;
+    }
+
+    if (isLast) {
+      ctx.isIncreaseY = undefined;
+      ctx.isIncreaseX = undefined;
+      ctx.lastDetectX = undefined;
+      ctx.lastDetectY = undefined;
+    }
+
+    if (ctx.lastDetectX !== undefined) {
+      if (x >= ctx.lastDetectX + adjustDistance) {
+        ctx.isIncreaseX = true;
+        ctx.lastDetectX = x;
+      } else if (x <= ctx.lastDetectX - adjustDistance) {
+        ctx.isIncreaseX = false;
+        ctx.lastDetectX = x;
+      }
+    }
+
+    if (ctx.lastDetectY !== undefined) {
+      if (y >= ctx.lastDetectY + adjustDistance) {
+        ctx.isIncreaseY = true;
+        ctx.lastDetectY = y;
+      } else if (y <= ctx.lastDetectY - adjustDistance) {
+        ctx.isIncreaseY = false;
+        ctx.lastDetectY = y;
+      }
+    }
 
     // 是否在指定边最大/小处
     const touchLeft = conf.el.scrollLeft === 0;
@@ -91,7 +169,7 @@ export function createAutoScroll(config: AutoScrollConfig) {
 
     // 滚动容器为body或html根时, 取窗口尺寸
     // eslint-disable-next-line prefer-const
-    let { left, top, right, bottom, width, height } = isDocOrBody
+    let { left, top, right, bottom, width, height } = ctx.isDocOrBody
       ? {
           left: 0,
           top: 0,
@@ -161,11 +239,39 @@ export function createAutoScroll(config: AutoScrollConfig) {
       }
     }
 
+    const isIncreaseY = ctx.isIncreaseY;
+    const isIncreaseX = ctx.isIncreaseX;
+
+    const topEnable =
+      isBoolean(isIncreaseY) &&
+      !isIncreaseY &&
+      scrollData.y &&
+      !touchTop &&
+      !disableConf.top;
+    const bottomEnable =
+      isBoolean(isIncreaseY) &&
+      isIncreaseY &&
+      scrollData.y &&
+      !touchBottom &&
+      !disableConf.bottom;
+    const leftEnable =
+      isBoolean(isIncreaseX) &&
+      !isIncreaseX &&
+      scrollData.x &&
+      !touchLeft &&
+      !disableConf.left;
+    const rightEnable =
+      isBoolean(isIncreaseX) &&
+      isIncreaseX &&
+      scrollData.x &&
+      !touchRight &&
+      !disableConf.right;
+
     return {
-      top: scrollData.y && !touchTop && !disableConf.top ? t : 0,
-      bottom: scrollData.y && !touchBottom && !disableConf.bottom ? b : 0,
-      left: scrollData.x && !touchLeft && !disableConf.left ? l : 0,
-      right: scrollData.x && !touchRight && !disableConf.right ? r : 0,
+      top: topEnable ? t : 0,
+      bottom: bottomEnable ? b : 0,
+      left: leftEnable ? l : 0,
+      right: rightEnable ? r : 0,
     };
   }
 
@@ -218,25 +324,40 @@ export function createAutoScroll(config: AutoScrollConfig) {
 
   function autoScroll(el: HTMLElement) {
     raf(() => {
-      if (!ctx.autoScrollToggle) return;
+      if (!ctx.autoScrollToggle) {
+        return;
+      }
 
-      el[ctx.autoScrollPosKey] += ctx.autoScrollVal;
+      const val = Math.round(ctx.autoScrollVal);
 
-      // 处理浏览器兼容
-      if (el === document.documentElement) {
-        document.body[ctx.autoScrollPosKey] += ctx.autoScrollVal;
+      if (!conf.onlyNotify) {
+        // 处理浏览器兼容
+        if (ctx.isDocOrBody) {
+          let key: string;
+
+          if (ctx.autoScrollPosKey === "scrollTop") key = "y";
+          else key = "x";
+
+          const old = getDocScrollOffset();
+
+          setDocScrollOffset({
+            ...old,
+            [key]: (old[key] += val),
+          });
+        } else {
+          el[ctx.autoScrollPosKey] += val;
+        }
       }
 
       if (conf.onScroll) {
         const isX = ctx.autoScrollPosKey === "scrollLeft";
-        conf.onScroll(isX, ctx.autoScrollVal);
+        conf.onScroll(isX, val);
       }
 
       autoScroll(el);
     });
   }
 
-  /** 清理计时器, 如果当前正在滚动则停止 */
   function clear() {
     if (ctx.clearFn) {
       ctx.clearFn();
@@ -245,27 +366,43 @@ export function createAutoScroll(config: AutoScrollConfig) {
     ctx.autoScrollToggle = false;
   }
 
-  function trigger(
-    x: number,
-    y: number,
-    disableConf?: AutoScrollDisableConfig
-  ) {
-    const status = getAutoScrollStatus(x, y, disableConf);
+  function trigger(xy: Point, isLast: boolean, conf?: AutoScrollTriggerConfig) {
+    const status = getAutoScrollStatus(xy, isLast, conf);
     autoScrollByStatus(status);
   }
 
   return {
-    /** 根据当前的AutoScrollCtx来自动滚动目标元素 */
+    /** 清理计时器, 如果当前正在滚动则停止 */
     clear,
-    /** 根据指定的位置进行滚动触发 */
+    /** 根据指定的位置进行滚动触发, isLast用于区分是否为最后一次事件 */
     trigger,
     /** 是否正在滚动 */
     get scrolling() {
       return ctx.autoScrollToggle;
     },
-    /** 更新配置, 后续trigger以配置进行 */
+    /** 更新配置, 后续trigger以合并后的配置进行 */
     updateConfig(newConf: Partial<AutoScrollConfig>) {
       Object.assign(conf, newConf);
     },
   };
+}
+
+/** 独立的autoScroll, 状态存储于dom之上, 可以不用提前创建实例直接使用, 性能略低于单独实例用法 */
+export function autoScrollTrigger(
+  conf: {
+    xy: Point;
+    isLast: boolean;
+    disableConfig?: AutoScrollTriggerConfig;
+  } & AutoScrollConfig
+) {
+  const { xy, isLast, disableConfig, ...config } = conf;
+
+  const as = createAutoScroll({
+    ...config,
+    __isDomBind: true,
+  } as any);
+
+  as.trigger(xy, isLast, disableConfig);
+
+  return () => as.clear();
 }

@@ -7,6 +7,7 @@ import {
 } from "./types.js";
 import { FullGestureState } from "@use-gesture/react";
 import {
+  autoScrollTrigger,
   checkElementVisible,
   getScrollParent,
   isDom,
@@ -24,11 +25,8 @@ import {
   _checkIfAcceptable,
   _filterInBoundDNDs,
   _getCurrentTriggerByMultipleTrigger,
-  _getAutoScrollStatus,
-  _autoScrollByStatus,
   _isIgnoreEl,
   _getObjectByNewValues,
-  _groupMap,
 } from "./common.js";
 import clsx from "clsx";
 
@@ -193,7 +191,12 @@ export function _useMethods(ctx: _Context) {
     /* # # # # # # # 自动滚动 # # # # # # # */
     // xy在元素范围边缘一定距离时, 距离靠近边缘移动越快
     ctx.group.scrollParents.forEach((ele) => {
-      _autoScrollByStatus(ele, down, _getAutoScrollStatus(ele, x, y));
+      autoScrollTrigger({
+        xy: ev.xy,
+        isLast: last,
+        el: ele,
+      });
+      // _autoScrollByStatus(ele, down, _getAutoScrollStatus(ele, x, y));
     });
 
     /* # # # # # # # 无放置点命中时的处理 # # # # # # # */

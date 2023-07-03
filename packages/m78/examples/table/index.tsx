@@ -1,24 +1,30 @@
 import React, { useEffect, useRef } from "react";
 import { createTable } from "../../src/table-vanilla/table.js";
 import { Scroll } from "../../src/index.js";
-import {
-  TableColumnConfig,
-  TableColumnFixed,
-  TableInstance,
-  TableReloadLevel,
-  TableRowFixed,
-} from "../../src/table-vanilla/types.js";
+import { TableInstance } from "../../src/table-vanilla/types/instance.js";
 
-const list = Array.from({ length: 10000 }).map((_, i) => {
+import { TableColumnConfig } from "../../src/table-vanilla/types/items.js";
+import { TableReloadLevel } from "../../src/table-vanilla/plugins/life.js";
+import {
+  TableColumnFixed,
+  TableRowFixed,
+} from "../../src/table-vanilla/types/base-type.js";
+import { createRandString } from "@m78/utils";
+
+const createRow = (key: any) => {
   const obj: any = {
-    id: `id${i}`,
+    id: `id${key}`,
   };
 
   Array.from({ length: 40 }).forEach((_, j) => {
-    obj[`field${j}`] = `${i}-${j}`;
+    obj[`field${j}`] = `${key}-${j}`;
   });
 
   return obj;
+};
+
+const list = Array.from({ length: 1000 }).map((_, i) => {
+  return createRow(i);
 });
 
 const list2 = Array.from({ length: 1000 }).map((_, i) => {
@@ -32,6 +38,8 @@ const list2 = Array.from({ length: 1000 }).map((_, i) => {
 
   return obj;
 });
+
+const list3: any[] = [];
 
 const columns: TableColumnConfig[] = Array.from({ length: 40 }).map((_, j) => {
   const c: any = {
@@ -66,6 +74,27 @@ const columns2: TableColumnConfig[] = Array.from({ length: 20 }).map((_, j) => {
 
   if (j > 6 && j < 9) {
     c.fixed = "left";
+  }
+
+  return c;
+});
+
+const columns3: TableColumnConfig[] = Array.from({ length: 40 }).map((_, j) => {
+  const c: any = {
+    key: `field${j}`,
+    label: `field${j}`,
+  };
+
+  if (j === 4) {
+    c.width = 200;
+  }
+
+  if (j > 6 && j < 9) {
+    c.fixed = "left";
+  }
+
+  if (j > 20 && j < 23) {
+    c.fixed = "right";
   }
 
   return c;
@@ -148,10 +177,6 @@ mergeColumns.push(
   ]
 );
 
-const ls = [1, 2, 3, 4, 5];
-let seed = 5;
-const getNew = () => (seed += 1);
-
 const TableExample = () => {
   const ref = useRef<HTMLDivElement>(null!);
   const scrollRef = useRef<HTMLDivElement>(null!);
@@ -162,28 +187,21 @@ const TableExample = () => {
     console.time("1");
 
     const table = createTable({
-      rowSelectable: (row) => {
-        return row.key !== "id5" && row.key !== "id6" && row.key !== "id8";
-      },
-      cellSelectable: (cell) => {
-        return cell.column.key !== "field22";
-      },
       el: ref.current,
       data: list,
-      // columns: columns,
-      columns: mergeColumns,
+      columns: columns3,
+      // columns: mergeColumns,
       primaryKey: "id",
+      dragSortRow: true,
+      dragSortColumn: true,
       rows: {
-        // id17: {
-        //   fixed: TableRowFixed.top,
-        // },
-        id29: {
+        id5: {
           fixed: TableRowFixed.top,
         },
-        id30: {
+        id6: {
           fixed: TableRowFixed.top,
         },
-        id31: {
+        id7: {
           fixed: TableRowFixed.top,
         },
         id80: {
@@ -214,39 +232,44 @@ const TableExample = () => {
           mergeX: 2,
         },
       },
+      persistenceConfig: {
+        sortColumns: ["field27", "field28", "field3"],
+        // hideColumns: ["field17", "field18", "field19", "field20"],
+        rows: {
+          id12: {
+            height: 100,
+          },
+        },
+      },
+      rowSelectable: (row) => {
+        return row.key !== "id5" && row.key !== "id6" && row.key !== "id8";
+      },
+      cellSelectable: (cell) => {
+        return cell.column.key !== "field22";
+      },
       viewEl: scrollRef.current,
       viewContentEl: scrollContRef.current,
       render(cell, ctx) {
-        if (
-          ctx.isFirstRender &&
-          cell.column.key === "field22" &&
-          !cell.row.isHeader
-        ) {
+        if (cell.row.isFake) return;
+
+        if (cell.column.key === "field22") {
+          ctx.disableDefaultRender = true;
+        }
+
+        if (ctx.isFirstRender && cell.column.key === "field22") {
           const btn = document.createElement("button");
           btn.innerHTML = "操作";
           cell.dom.appendChild(btn);
-          ctx.disableDefaultRender = true;
         }
       },
     });
 
-    table.event.click.on((cell, event) => {
-      // console.log("click", cell, event);
-      // tableRef.current.addRange({
-      //   left: cell.column.x,
-      //   top: cell.row.y,
-      //   width: cell.column.width,
-      //   height: cell.row.height,
-      // });
-      // tableRef.current.addRange({
-      //   left: cell.column.x - 100,
-      //   top: cell.row.y - 32,
-      //   width: cell.column.width + 200,
-      //   height: cell.row.height + 64,
-      // });
-    });
-
+    // @ts-ignore
     window.temp = table;
+
+    table.event.mutation.on((e) => {
+      console.log(e);
+    });
 
     tableRef.current = table;
 
@@ -368,7 +391,7 @@ const TableExample = () => {
             });
           }}
         >
-          config list1
+          list1
         </button>
         <button
           onClick={() => {
@@ -378,7 +401,17 @@ const TableExample = () => {
             });
           }}
         >
-          config list2
+          list2
+        </button>
+        <button
+          onClick={() => {
+            tableRef.current.config({
+              data: list3 as any,
+              columns: columns2,
+            });
+          }}
+        >
+          list3
         </button>
         <button
           onClick={() => {
@@ -433,100 +466,31 @@ const TableExample = () => {
       >
         getBound
       </button>
-      <button
-        onClick={() => {
-          console.log(tableRef.current.zoom());
-        }}
-      >
-        getZoom
-      </button>
-      <button
-        onClick={() => {
-          tableRef.current.zoom(tableRef.current.zoom() - 0.1);
-        }}
-      >
-        - zoom
-      </button>
-      <button
-        onClick={() => {
-          tableRef.current.zoom(tableRef.current.zoom() + 0.1);
-        }}
-      >
-        + zoom
-      </button>
 
       <div>
+        <strong>history:</strong>
         <button
           onClick={() => {
-            const num = getNew();
-
-            tableRef.current.redo({
-              redo() {
-                ls.push(num);
-              },
-              undo() {
-                ls.pop();
-                console.log(222);
-              },
-            });
-
-            console.log(ls);
-          }}
-        >
-          push
-        </button>
-        <button
-          onClick={() => {
-            const num = getNew();
-
-            tableRef.current.redo({
-              redo() {
-                ls.unshift(num);
-              },
-              undo() {
-                ls.shift();
-              },
-            });
-
-            console.log(ls);
-          }}
-        >
-          unshif
-        </button>
-        <button
-          onClick={() => {
-            const num = getNew();
-            const center = Math.floor(ls.length / 2);
-
-            tableRef.current.redo({
-              redo() {
-                ls.splice(center, 0, num);
-              },
-              undo() {
-                ls.splice(center, 1);
-              },
-            });
-
-            console.log(ls);
-          }}
-        >
-          insert
-        </button>
-        <button
-          onClick={() => {
-            tableRef.current.undo();
-            console.log(ls);
+            tableRef.current.history.undo();
+            console.log(tableRef.current.history);
           }}
         >
           undo
         </button>
         <button
           onClick={() => {
-            tableRef.current.redo();
-            console.log(ls);
+            tableRef.current.history.redo();
+            console.log(tableRef.current.history);
           }}
         >
           redo
+        </button>
+        <button
+          onClick={() => {
+            console.log(tableRef.current.history);
+          }}
+        >
+          log
         </button>
 
         <div>
@@ -566,6 +530,291 @@ const TableExample = () => {
           </button>
         </div>
       </div>
+
+      <div>
+        <strong>debug:</strong>
+
+        <button
+          onClick={() => {
+            // @ts-ignore
+            console.log(tableRef.current.__ctx);
+          }}
+        >
+          log ctx
+        </button>
+      </div>
+
+      <div>
+        <strong>mutation:</strong>
+        <button
+          onClick={() => {
+            console.log(tableRef.current.getChangedConfigKeys());
+          }}
+        >
+          getChangedConfigKeys
+        </button>
+        <button
+          onClick={() => {
+            console.log(tableRef.current.getPersistenceConfig());
+          }}
+        >
+          getPersistenceConfig
+        </button>
+        <button
+          onClick={() => {
+            const list =
+              tableRef.current.getPersistenceConfig().hideColumns || [];
+
+            const ind17 = list.indexOf("field17");
+
+            if (ind17 === -1) {
+              tableRef.current.setPersistenceConfig("hideColumns", [
+                ...list,
+                "field17",
+                "field18",
+              ]);
+            } else {
+              tableRef.current.setPersistenceConfig(
+                "hideColumns",
+                list.filter((i) => i !== "field17" && i !== "field18")
+              );
+            }
+          }}
+        >
+          toggle field17/18"
+        </button>
+        <button
+          onClick={() => {
+            const list =
+              tableRef.current.getPersistenceConfig().hideColumns || [];
+
+            const ind = list.indexOf("field7");
+
+            if (ind === -1) {
+              tableRef.current.setPersistenceConfig("hideColumns", [
+                ...list,
+                "field7",
+                "field8",
+                "field21",
+              ]);
+            } else {
+              tableRef.current.setPersistenceConfig(
+                "hideColumns",
+                list.filter(
+                  (i) => i !== "field7" && i !== "field8" && i !== "field21"
+                )
+              );
+            }
+          }}
+        >
+          toggle 7
+        </button>
+        <button
+          onClick={() => {
+            tableRef.current.addRow(createRow(createRandString().slice(0, 4)));
+          }}
+        >
+          add 1
+        </button>
+        <button
+          onClick={() => {
+            tableRef.current.addRow(
+              createRow(createRandString().slice(0, 4)),
+              "id999",
+              true
+            );
+          }}
+        >
+          add 1 to end
+        </button>
+        <button
+          onClick={() => {
+            tableRef.current.addRow([
+              createRow(createRandString().slice(0, 4)),
+              createRow(createRandString().slice(0, 4)),
+              createRow(createRandString().slice(0, 4)),
+            ]);
+          }}
+        >
+          add 3
+        </button>
+        <button
+          onClick={() => {
+            tableRef.current.addRow(
+              createRow(createRandString().slice(0, 4)),
+              "id4"
+            );
+          }}
+        >
+          add 1 to id4
+        </button>
+        <button
+          onClick={() => {
+            tableRef.current.removeRow(["id6", "id1", "id2"]);
+          }}
+        >
+          remove 6,1,2
+        </button>
+        <div>
+          row:
+          <button
+            onClick={() => {
+              tableRef.current.moveRow(["id1", "id2"], "id6");
+            }}
+          >
+            move n to f: 1,2 to 6
+          </button>
+          <button
+            onClick={() => {
+              tableRef.current.moveRow(["id998", "id999"], "id6");
+            }}
+          >
+            move n to f: 998,999 to 6
+          </button>
+          <button
+            onClick={() => {
+              tableRef.current.moveRow(["id5", "id6"], "id2");
+            }}
+          >
+            move f to n: 5,6 to 2
+          </button>
+          <button
+            onClick={() => {
+              tableRef.current.moveRow(["id100"], "id6");
+            }}
+          >
+            move f to f: 100 to 6
+          </button>
+          <button
+            onClick={() => {
+              tableRef.current.moveRow(
+                ["id0", "id1", "id2", "id3", "id4"],
+                "id15"
+              );
+            }}
+          >
+            move n to n: 0,1,2,3,4 to 15
+          </button>
+          <button
+            onClick={() => {
+              tableRef.current.moveRow(["id1", "id2"], "id6", true);
+            }}
+          >
+            move n to f: 1,2 to 6 after
+          </button>
+        </div>
+        <div>
+          col:
+          <button
+            onClick={() => {
+              tableRef.current.moveColumn(["field5", "field6"], "field2");
+            }}
+          >
+            move n to n: 5,6 to 2
+          </button>
+          <button
+            onClick={() => {
+              tableRef.current.moveColumn(["field5", "field6"], "field8");
+            }}
+          >
+            move n to f: 5,6 to 8
+          </button>
+          <button
+            onClick={() => {
+              tableRef.current.moveColumn(["field7"], "field3");
+            }}
+          >
+            move f to n: 7 to 3
+          </button>
+          <button
+            onClick={() => {
+              tableRef.current.moveColumn(["field29"], "field27");
+            }}
+          >
+            move: 29 to 27
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <strong>highlight:</strong>
+        <button
+          onClick={() => {
+            tableRef.current.highlight([
+              tableRef.current.getCellKey("id2", "field1"),
+              tableRef.current.getCellKey("id6", "field3"),
+              tableRef.current.getCellKey("id4", "field1"),
+              tableRef.current.getCellKey("id6", "field1"),
+            ]);
+          }}
+        >
+          highlight cell
+        </button>
+        <button
+          onClick={() => {
+            tableRef.current.highlight([
+              tableRef.current.getCellKey("id25", "field14"),
+            ]);
+          }}
+        >
+          highlight cell2
+        </button>
+        <button
+          onClick={() => {
+            tableRef.current.highlightColumn("field14");
+          }}
+        >
+          highlight field14
+        </button>
+        <button
+          onClick={() => {
+            tableRef.current.highlightRow("id99");
+          }}
+        >
+          highlight id99
+        </button>
+      </div>
+
+      <div>
+        <strong>disabled:</strong>
+        <button
+          onClick={() => {
+            tableRef.current.setCellDisable([
+              tableRef.current.getCellKey("id2", "field1"),
+              tableRef.current.getCellKey("id6", "field3"),
+              tableRef.current.getCellKey("id4", "field1"),
+              tableRef.current.getCellKey("id6", "field1"),
+            ]);
+          }}
+        >
+          disabled cell
+        </button>
+        <button
+          onClick={() => {
+            tableRef.current.setCellDisable([
+              tableRef.current.getCellKey("id25", "field14"),
+            ]);
+          }}
+        >
+          disabled cell25/14
+        </button>
+        <button
+          onClick={() => {
+            tableRef.current.setColumnDisable(["field14"]);
+          }}
+        >
+          disabled field14
+        </button>
+        <button
+          onClick={() => {
+            tableRef.current.setRowDisable(["id99"]);
+          }}
+        >
+          disabled id99
+        </button>
+      </div>
+
+      <div id="output"></div>
     </div>
   );
 };

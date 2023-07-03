@@ -1,21 +1,17 @@
 import { TablePlugin } from "../plugin.js";
-import { TableReloadLevel, TableReloadOptions } from "../types.js";
 import { _TableInitPlugin } from "./init.js";
 import {
   createRandString,
   EmptyFunction,
   getNamePathValue,
+  isNumber,
   rafCaller,
   RafFunction,
   setNamePathValue,
 } from "@m78/utils";
-import {
-  _getSizeString,
-  _privateInstanceKey,
-  _privateScrollerDomKey,
-  _removeNode,
-} from "../common.js";
+import { _privateInstanceKey, _privateScrollerDomKey } from "../common.js";
 import { _TableViewportPlugin } from "./viewport.js";
+import { removeNode } from "../../common/index.js";
 
 /** 表格生命周期相关控制 */
 export class _TableLifePlugin extends TablePlugin {
@@ -30,7 +26,10 @@ export class _TableLifePlugin extends TablePlugin {
       ["destroyHandle", "destroy"],
       "reloadSync",
       "takeover",
+      "isTaking",
     ]);
+
+    this.context.lastReloadKey = createRandString();
 
     this.rafCaller = rafCaller();
   }
@@ -46,12 +45,14 @@ export class _TableLifePlugin extends TablePlugin {
 
     const ctx = this.context;
 
-    this.restoreWrapSize();
+    this.getPlugin(_TableViewportPlugin).restoreWrapSize();
 
     ctx.data = [];
     ctx.columns = [];
     ctx.rows = {};
     ctx.cells = {};
+    ctx.cellDomCaChe = {};
+    ctx.cellStateCaChe = {};
     ctx.yHeaderKeys = [];
     ctx.ignoreXList = [];
     ctx.ignoreYList = [];
@@ -60,7 +61,7 @@ export class _TableLifePlugin extends TablePlugin {
 
     // 如果是内部创建的dom容器, 将其移除
     if (getNamePathValue(ctx.viewEl, _privateScrollerDomKey)) {
-      _removeNode(this.context.viewEl);
+      removeNode(this.context.viewEl);
     } else {
       ctx.viewContentEl.style.width = "auto";
       ctx.viewContentEl.style.height = "auto";
@@ -80,6 +81,8 @@ export class _TableLifePlugin extends TablePlugin {
     const ctx = this.context;
     const viewport = this.getPlugin(_TableViewportPlugin);
 
+    ctx.lastReloadKey = createRandString();
+
     this.commonAction();
 
     if (!keepPosition) {
@@ -98,39 +101,40 @@ export class _TableLifePlugin extends TablePlugin {
       initPlugin.fullHandle();
     }
 
-    if (viewport) {
-      viewport.updateDom();
-    }
+    viewport.updateDom();
 
     viewport.renderSync();
   }
 
   /** 实现table.reload() */
-  reloadHandle(...arg: any) {
+  reloadHandle(opt?: TableReloadOptions) {
     // 实现 takeover
     if (this.context.takeKey) {
       this.context.takeReload = true;
+      this.mergeTakeReloadOptions(opt);
       return;
     }
 
-    this.rafCaller(() => this.reloadMain(...arg));
+    this.rafCaller(() => this.reloadMain(opt));
   }
 
   /** reloadHandle的同步版本 */
-  reloadSync(...arg: any) {
+  reloadSync(opt?: TableReloadOptions) {
     // 实现 takeover
     if (this.context.takeKey) {
       this.context.takeReload = true;
+      this.context.takeSyncReload = true;
+      this.mergeTakeReloadOptions(opt);
       return;
     }
 
-    this.reloadMain(...arg);
+    this.reloadMain(opt);
   }
 
   /** 触发插件reload */
-  reloadMain(...arg: any) {
+  reloadMain(opt?: TableReloadOptions) {
     this.plugins.forEach((plugin) => {
-      plugin.reload?.(...arg);
+      plugin.reload?.(opt);
     });
   }
 
@@ -147,29 +151,79 @@ export class _TableLifePlugin extends TablePlugin {
     this.beforeDestroy();
   }
 
-  takeover() {
+  takeover: TableLife["takeover"] = (cb) => {
     const ctx = this.context;
-    if (ctx.takeKey) return;
 
-    ctx.takeKey = createRandString(2);
+    const obtain = !ctx.takeKey;
 
-    return () => {
+    if (obtain) {
+      ctx.takeKey = createRandString(2);
+    }
+
+    cb();
+
+    if (obtain) {
       this.context.takeKey = undefined;
 
       if (this.context.takeReload) {
-        this.table.reload();
+        if (this.context.takeSyncReload) {
+          this.table.reloadSync(this.context.takeReloadOptions);
+        } else {
+          this.table.reload(this.context.takeReloadOptions);
+        }
       } else {
-        this.table.render();
+        if (this.context.takeSyncRender) {
+          this.table.renderSync();
+        } else {
+          this.table.render();
+        }
       }
 
       this.context.takeReload = false;
-    };
+      this.context.takeSyncReload = false;
+      this.context.takeSyncRender = false;
+      this.context.takeReloadOptions = undefined;
+    }
+  };
+
+  /** 是否正在执行takeover */
+  isTaking() {
+    return !!this.context.takeKey;
   }
 
-  commonAction() {
+  /** 对不同的reloadOpt进行特殊合并 */
+  private mergeTakeReloadOptions(opt?: TableReloadOptions) {
+    const ctxOpt = this.context.takeReloadOptions;
+
+    if (!ctxOpt && opt) {
+      this.context.takeReloadOptions = opt;
+      return;
+    }
+
+    if (!ctxOpt) return;
+
+    const level = opt?.level;
+    const keepPosition = opt?.keepPosition;
+
+    // 取最高的level
+    if (isNumber(level)) {
+      if (level >= (ctxOpt.level || 0)) {
+        ctxOpt.level = level;
+      }
+    }
+
+    // 有任意一次不保持位置, 则不保持位置
+    if (ctxOpt.keepPosition === false) return;
+    ctxOpt.keepPosition = keepPosition;
+  }
+
+  private commonAction() {
     const ctx = this.context;
 
     ctx.lastViewportItems = undefined;
+    ctx.rowCache = {};
+    ctx.columnCache = {};
+    ctx.cellCache = {};
     ctx.topFixedMap = {};
     ctx.bottomFixedMap = {};
     ctx.leftFixedMap = {};
@@ -178,34 +232,61 @@ export class _TableLifePlugin extends TablePlugin {
     ctx.mergeMapSub = {};
     ctx.lastMergeXMap = {};
     ctx.lastMergeYMap = {};
-    ctx.rowCache = {};
-    ctx.columnCache = {};
-    ctx.cellCache = {};
 
     ctx.stageEL.innerHTML = ""; // 清空
   }
+}
 
-  /** 若包含restoreWidth/restoreHeight, 则在恢复时将容器尺寸视情况恢复 */
-  restoreWrapSize() {
-    const config = this.config;
-    const context = this.context;
+/** 重载级别, 更高的级别会包含低级别的重载内容 */
+export enum TableReloadLevel {
+  /** 基础信息计算, 比如固定/合并/尺寸等信息, 计算比较快速 */
+  base,
+  /** 重新计算索引, 通常在组件内部备份的data和columns顺序变更时使用, 组件使用者很少会使用到此级别, 由于包含了对data/column的遍历, 性能消耗会更高 */
+  index,
+  /** 重要配置发生了变更, 比如data/column完全改变, 会执行初始化阶段的大部分操作 */
+  full,
+}
 
-    if (context.restoreWidth) {
-      // 恢复尺寸
-      config.el.style.width =
-        config.width !== undefined
-          ? _getSizeString(config.width)
-          : context.restoreWidth;
-      context.restoreWidth = undefined;
-    }
+export type TableReloadLevelKeys = keyof typeof TableReloadLevel;
+export type TableReloadLevelUnion = TableReloadLevel | TableReloadLevelKeys;
 
-    if (context.restoreHeight) {
-      // 恢复尺寸
-      config.el.style.height =
-        config.height !== undefined
-          ? _getSizeString(config.height)
-          : context.restoreHeight;
-      context.restoreHeight = undefined;
-    }
-  }
+/** 重置配置 */
+export interface TableReloadOptions {
+  /** 为true时, 保持当前滚动位置 */
+  keepPosition?: boolean;
+  /** TableReloadLevel.base | 重置级别 */
+  level?: TableReloadLevelUnion;
+}
+
+export interface TableLife {
+  /**
+   * 重载表格
+   * - 大部分情况下, 仅需要使用 render() 方法即可, 它有更好的性能
+   * - 另外, 在必要配置变更后, 会自动调用 reload() 方法, 你只在极少情况下会使用它
+   * - reload包含一个level概念, 不同的配置项变更会对应不同的级别, 在渲染十万以上级别的数据时尤其值得关注, 然而, 通过table.config()修改配置时会自动根据修改内容选择重置级别
+   * */
+  reload(opt?: TableReloadOptions): void;
+
+  /** reload()的同步版本, 没有requestAnimationFrame调用 */
+  reloadSync(opt?: TableReloadOptions): void;
+
+  /** 销毁表格, 解除所有引用/事件 */
+  destroy(): void;
+
+  /**
+   * 回调执行期间, 所有的render/reload操作会被暂时拦截, 在回调结束后如果开启了autoTrigger(默认为true), 将根据期间的render/reload调用自动进行更新
+   *
+   * ## example
+   * ```ts
+   * table.takeover(() => {
+   *   // 所有操作都不会触发更新
+   *   doSomething();
+   * });
+   * // 调用完成后会自动触发更新
+   * ```
+   * */
+  takeover(cb: EmptyFunction, autoTrigger?: boolean): void;
+
+  /** 是否正在执行takeover */
+  isTaking(): boolean;
 }

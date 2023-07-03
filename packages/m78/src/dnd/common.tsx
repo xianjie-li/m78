@@ -10,16 +10,13 @@ import {
   _Context,
   _PendingItem,
   _LevelContext,
-  _AutoScrollCtx,
 } from "./types.js";
 import {
   AnyObject,
   Bound,
-  hasScroll,
   isBoolean,
   isFunction,
   isObject,
-  raf,
   TupleNumber,
 } from "@m78/utils";
 import { createEvent } from "@m78/hooks";
@@ -336,188 +333,6 @@ export function _getCurrentTriggerByMultipleTrigger(
   }
 
   return current;
-}
-
-/** 在距离边缘此比例时即开始滚动(比例) */
-const AUTO_SCROLL_OFFSET = 0.1;
-
-/** 根据AUTO_SCROLL_OFFSET计算后的距离不大于此值(px) */
-const AUTO_SCROLL_OFFSET_MAX = 40;
-
-/** 自动滚动的基准距离, 越大则滚动速度越快 */
-const AUTO_SCROLL_BASE_OFFSET = 16;
-
-/**
- * 计算光标在某个元素四个方向的自定滚动比例 0-1,
- * 不包含滚动条的方向返回值始终为0,
- * 元素不包含滚动条时无返回,
- * 同时只会有一个方向有值
- * */
-export function _getAutoScrollStatus(
-  el: HTMLElement,
-  x: number,
-  y: number,
-  checkOverflowAttr = true
-) {
-  const isDocOrBody = el === document.documentElement || el === document.body;
-
-  const si = hasScroll(el, checkOverflowAttr);
-
-  if (!isDocOrBody && !si.x && !si.y) return;
-
-  // 滚动容器为body或html根时, 取窗口尺寸
-  // eslint-disable-next-line prefer-const
-  let { left, top, right, bottom, width, height } = isDocOrBody
-    ? {
-        left: 0,
-        top: 0,
-        bottom: window.innerHeight,
-        right: window.innerWidth,
-        width: window.innerWidth,
-        height: window.innerHeight,
-      }
-    : el.getBoundingClientRect();
-
-  // 取最小、最大触发位置
-  left = Math.max(left, 0);
-  top = Math.max(top, 0);
-  right = Math.min(right, window.innerWidth);
-  bottom = Math.min(bottom, window.innerHeight);
-
-  const xTriggerOffset = Math.min(
-    AUTO_SCROLL_OFFSET_MAX,
-    width * AUTO_SCROLL_OFFSET
-  );
-  const yTriggerOffset = Math.min(
-    AUTO_SCROLL_OFFSET_MAX,
-    height * AUTO_SCROLL_OFFSET
-  );
-
-  // 计算偏移
-  left += xTriggerOffset;
-  top += yTriggerOffset;
-  right -= xTriggerOffset;
-  bottom -= yTriggerOffset;
-
-  let t = 0;
-  let r = 0;
-  let b = 0;
-  let l = 0;
-
-  // 在y轴范围内, 且在可触发自动滚动的范围内(边界前后 yTriggerOffset 范围)
-  if (x > left && x < right) {
-    if (y < top && y > top - yTriggerOffset * 2) {
-      t = Math.min(1, (top - y) / yTriggerOffset);
-    }
-
-    if (y > bottom && y < bottom + yTriggerOffset * 2) {
-      b = Math.min(1, (y - bottom) / yTriggerOffset);
-    }
-  }
-
-  // 在x轴范围内
-  if (y > top && y < bottom) {
-    if (x < left && x > left - xTriggerOffset * 2) {
-      l = Math.min(1, (left - x) / xTriggerOffset);
-    }
-
-    if (x > right && x < right + xTriggerOffset * 2) {
-      r = Math.min(1, (x - right) / xTriggerOffset);
-    }
-  }
-
-  return {
-    top: si.y ? t : 0,
-    bottom: si.y ? b : 0,
-    left: si.x ? l : 0,
-    right: si.x ? r : 0,
-  };
-}
-
-/**
- * 根据getAutoScrollStatus的返回值滚动元素
- *
- * @param element 滚动元素
- * @param enable status有效时, 是否启用自动滚动, 若滚动一开始, 至少需要传入一次false来关闭自动滚动
- * @param status 光标在模板元素边缘的信息, getAutoScrollStatus的返回值
- * */
-export function _autoScrollByStatus(
-  element: HTMLElement,
-  enable: boolean,
-  status: ReturnType<typeof _getAutoScrollStatus>
-) {
-  const el = element as HTMLElement & { ctx: _AutoScrollCtx };
-
-  // 滚动元素本身是一个非常理想的存储局部滚动状态的对象
-  if (!el.ctx) {
-    el.ctx = {} as _AutoScrollCtx;
-  }
-
-  el.ctx.autoScrollDown = enable;
-
-  if (!el || !status) return;
-
-  // 基础滚动距离
-  el.ctx.autoScrollVal = 1;
-
-  if (status.bottom) {
-    el.ctx.autoScrollPosKey = "scrollTop";
-    el.ctx.autoScrollType = 1;
-    el.ctx.autoScrollVal += status.bottom * AUTO_SCROLL_BASE_OFFSET;
-  }
-
-  if (status.left) {
-    el.ctx.autoScrollPosKey = "scrollLeft";
-    el.ctx.autoScrollType = 2;
-    el.ctx.autoScrollVal += status.left * AUTO_SCROLL_BASE_OFFSET;
-  }
-
-  if (status.top) {
-    el.ctx.autoScrollPosKey = "scrollTop";
-    el.ctx.autoScrollType = 2;
-    el.ctx.autoScrollVal += status.top * AUTO_SCROLL_BASE_OFFSET;
-  }
-
-  if (status.right) {
-    el.ctx.autoScrollPosKey = "scrollLeft";
-    el.ctx.autoScrollType = 1;
-    el.ctx.autoScrollVal += status.right * AUTO_SCROLL_BASE_OFFSET;
-  }
-
-  // 根据状态开关滚动动画
-  if (!(status.bottom || status.top || status.left || status.right)) {
-    el.ctx.autoScrollToggle = false;
-  } else {
-    if (!el.ctx.autoScrollToggle) {
-      autoScroll(el);
-    }
-    el.ctx.autoScrollToggle = true;
-  }
-}
-
-/** 根据当前的AutoScrollCtx来自动滚动目标元素 */
-function autoScroll(el: HTMLElement & { ctx: _AutoScrollCtx }) {
-  raf(() => {
-    if (el.ctx.autoScrollType === 1) {
-      el[el.ctx.autoScrollPosKey] += el.ctx.autoScrollVal;
-
-      // 处理浏览器兼容
-      if (el === document.documentElement) {
-        document.body[el.ctx.autoScrollPosKey] += el.ctx.autoScrollVal;
-      }
-    } else {
-      el[el.ctx.autoScrollPosKey] -= el.ctx.autoScrollVal;
-
-      // 处理浏览器兼容
-      if (el === document.documentElement) {
-        document.body[el.ctx.autoScrollPosKey] -= el.ctx.autoScrollVal;
-      }
-    }
-
-    if (!el.ctx.autoScrollDown || !el.ctx.autoScrollToggle) return;
-
-    autoScroll(el);
-  });
 }
 
 /** 禁止拖动的元素tagName */

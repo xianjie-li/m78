@@ -1,58 +1,40 @@
 import { TablePlugin } from "../plugin.js";
 import {
   AnyObject,
-  BoundSize,
+  AutoScroll,
+  AutoScrollTriggerConfig,
   createAutoScroll,
   getCmdKeyStatus,
+  getEventOffset,
   isBoolean,
   isEmpty,
   isFunction,
   isString,
-  AutoScroll,
-  isNumber,
-  AutoScrollDisableConfig,
 } from "@m78/utils";
 import throttle from "lodash/throttle.js";
 import {
   _getCellKey,
   _getCellKeysByStr,
   _getMaxPointByPoint,
-  _getOffset,
+  _tableTriggerFilters,
+  _triggerFilterList,
+  isTouch,
 } from "../common.js";
+import { addCls, removeCls } from "../../common/index.js";
+import { TableKey, TablePointInfo, TablePosition } from "../types/base-type.js";
+import { TableInstance } from "../types/instance.js";
+
 import {
   TableCell,
-  TableCellWidthDom,
-  TableInstance,
+  TableCellWithDom,
   TableItems,
-  TableKey,
-  TablePointInfo,
-  TablePosition,
-  TableReloadOptions,
   TableRow,
-} from "../types.js";
-import { addCls, removeCls } from "../../common/index.js";
-
-// dnd改为新版autoscroll, 修正自动滚动后的位置, zoom处理
-// 拖动距离超过一定值后才出发自动跳边
-
-/** 选区类型 */
-export enum TableRangeType {
-  row,
-  column,
-  cell,
-}
-
-export interface TableRange extends BoundSize {
-  id: string;
-  type: TableRangeType;
-}
-
-interface SelectMap {
-  [key: string]: 1;
-}
+} from "../types/items.js";
+import { _TableRowColumnResize } from "./row-column-resize.js";
+import { DragGesture, FullGestureState } from "@use-gesture/vanilla";
 
 /** 实现选区和选中功能 */
-export class _TableSelectPlugin extends TablePlugin {
+export class _TableSelectPlugin extends TablePlugin implements TableSelect {
   /** 选中的行 */
   selectedRows: SelectMap = {};
   /** 选中的单元格 */
@@ -76,7 +58,7 @@ export class _TableSelectPlugin extends TablePlugin {
   lastPoint: TablePosition[] | null = null;
 
   /** 处理自动滚动行为间的冲突, 用于记录 autoScrollConflictDisabledConfigGenerate 方法的状态 */
-  conflictDisableConfig: AutoScrollDisableConfig | null;
+  conflictDisableConfig: AutoScrollTriggerConfig | null;
 
   /** 边缘自动滚动控制器 */
   autoScroll: AutoScroll;
@@ -86,6 +68,9 @@ export class _TableSelectPlugin extends TablePlugin {
 
   /** 自动滚动距离边缘前的此位置开始触发 */
   static EDGE_SIZE = 32;
+
+  /** 拖动控制 */
+  drag: DragGesture;
 
   init() {
     this.methodMapper(this.table, [
@@ -99,11 +84,15 @@ export class _TableSelectPlugin extends TablePlugin {
   }
 
   mount() {
-    this.context.viewEl.addEventListener("mousedown", this.selectStart);
-    document.documentElement.addEventListener("mousemove", this.selectMove);
-    document.documentElement.addEventListener("mouseup", this.selectEnd);
     this.table.event.click.on(this.clickHandle);
-    this.table.event.zoom.on(this.updateAutoScrollBound);
+
+    this.drag = new DragGesture(this.config.el, this.dragDispatch, {
+      // filterTaps: true,
+      pointer: {
+        // https://github.com/pmndrs/use-gesture/issues/611
+        capture: false,
+      },
+    });
 
     this.autoScroll = createAutoScroll({
       el: this.context.viewEl,
@@ -111,26 +100,34 @@ export class _TableSelectPlugin extends TablePlugin {
       checkOverflowAttr: false,
       baseOffset: 10,
       adjust: this.getAutoScrollBound(),
+      onlyNotify: true,
+      onScroll: (isX, offset) => {
+        // 这里需要通过 takeover 手动将x/y赋值调整为同步
+        this.table.takeover(() => {
+          if (isX) {
+            this.table.x(this.table.x() + offset);
+          } else {
+            this.table.y(this.table.y() + offset);
+          }
+
+          this.table.renderSync();
+        });
+      },
     });
   }
 
-  reload({ level }: TableReloadOptions = {}) {
-    if (isNumber(level) && level > 1) {
-      this.updateAutoScrollBound();
-    }
+  reload() {
+    this.updateAutoScrollBound();
   }
 
   beforeDestroy() {
-    this.context.viewEl.removeEventListener("mousedown", this.selectStart);
-    document.documentElement.removeEventListener("mousemove", this.selectMove);
-    document.documentElement.removeEventListener("mouseup", this.selectEnd);
     this.table.event.click.off(this.clickHandle);
-    this.table.event.zoom.off(this.updateAutoScrollBound);
+    this.drag.destroy();
     this.autoScroll.clear();
     this.autoScroll = null!;
   }
 
-  cellRender(cell: TableCellWidthDom) {
+  cellRender(cell: TableCellWithDom) {
     const selected =
       this.isSelectedCell(cell.key) ||
       this.isSelectedTempCell(cell.key) ||
@@ -142,8 +139,22 @@ export class _TableSelectPlugin extends TablePlugin {
       : removeCls(cell.dom, "__selected");
   }
 
+  /** 派发drag到start/move/end */
+  dragDispatch = (e: FullGestureState<"drag">) => {
+    if (e.first) {
+      this.selectStart(e);
+      return;
+    }
+
+    this.selectMove(e);
+
+    if (e.last) {
+      this.selectEnd();
+    }
+  };
+
   /** 选取开始 */
-  selectStart = (e: MouseEvent) => {
+  selectStart = (e: FullGestureState<"drag">) => {
     if (
       this.config.rowSelectable === false &&
       this.config.cellSelectable === false
@@ -151,16 +162,27 @@ export class _TableSelectPlugin extends TablePlugin {
       return;
     }
 
-    if (e.type === "mousedown" && e.button !== 0) return;
+    const interrupt = _triggerFilterList(
+      e.target as HTMLElement,
+      _tableTriggerFilters,
+      this.config.el
+    );
+
+    if (interrupt) return;
+
+    const resize = this.getPlugin(_TableRowColumnResize);
+
+    // 防止和拖拽行列冲突
+    if (resize.dragging || resize.virtualBound.hasBound(e.xy)) return;
 
     // 包含前置点时处理shift按下
     this.isShift = e.shiftKey && !!this.lastPoint;
 
     // 合并还是覆盖, 控制键按下时为覆盖
-    const isMerge = getCmdKeyStatus(e);
+    const isMerge = getCmdKeyStatus(e as any);
 
     const startPoint = this.table.transformViewportPoint(
-      _getOffset(e, this.context.viewEl)
+      getEventOffset(e.event as any, this.context.viewEl)
     );
 
     let p1 = startPoint.xy;
@@ -170,6 +192,8 @@ export class _TableSelectPlugin extends TablePlugin {
     if (this.isShift) {
       [p1, p2] = _getMaxPointByPoint(p1, ...this.lastPoint!);
     }
+
+    const isTouchEvent = isTouch(e.event);
 
     const valid = this.selectByPoint(p1, p2, (items) => {
       const first = items.cells[0];
@@ -182,6 +206,22 @@ export class _TableSelectPlugin extends TablePlugin {
       if (
         isFunction(this.config.cellSelectable) &&
         !this.config.cellSelectable(first)
+      ) {
+        return false;
+      }
+
+      // touch事件下, 仅表头可选中
+      if (isTouchEvent && !(first.row.isHeader || first.column.isHeader)) {
+        return false;
+      }
+
+      if (this.table.isDisabledCell(first.key)) return false;
+
+      // 启用了dragSortRow时, 需要禁止在已选中行上重新触发选中
+      if (
+        first.column.isHeader &&
+        this.config.dragSortRow &&
+        this.isSelectedRow(first.row.key)
       ) {
         return false;
       }
@@ -203,39 +243,35 @@ export class _TableSelectPlugin extends TablePlugin {
       if (!this.isShift) {
         this.lastPoint = [p1, p2];
       }
+
+      this.table.event.selectStart.emit();
     }
   };
 
   /** 选取已开始, 并开始移动 */
-  selectMove = throttle((e: MouseEvent) => {
+  selectMove = throttle((e: FullGestureState<"drag">) => {
     if (!this.startPoint) return;
 
-    const zoom = this.table.zoom();
-
-    const offset = _getOffset(e, this.context.viewEl);
-    const zoomOffset = [offset[0] / zoom, offset[1] / zoom];
+    const offset = getEventOffset(e.event as any, this.context.viewEl);
 
     this.moveDistance += Math.abs(
-      this.startPoint.originX -
-        zoomOffset[0] +
-        this.startPoint.originY -
-        zoomOffset[1]
+      this.startPoint.originX - offset[0] + this.startPoint.originY - offset[1]
     );
 
     const isMoved = this.moveDistance > 8;
 
     this.autoScroll.trigger(
-      e.clientX,
-      e.clientY,
+      e.xy,
+      e.last,
       this.autoScrollConflictDisabledConfigGenerate(offset)
     );
 
     if (this.autoScroll.scrolling) return;
 
-    const sX = (this.table.x() - this.autoScrollBeforePosition![0]) / zoom;
-    const sY = (this.table.y() - this.autoScrollBeforePosition![1]) / zoom;
+    const sX = this.table.x() - this.autoScrollBeforePosition![0];
+    const sY = this.table.y() - this.autoScrollBeforePosition![1];
 
-    const patchOffset: TablePosition = [zoomOffset[0] + sX, zoomOffset[1] + sY];
+    const patchOffset: TablePosition = [offset[0] + sX, offset[1] + sY];
 
     let [p1, p2] = this.transformSelectedPoint(this.startPoint, patchOffset);
 
@@ -417,6 +453,8 @@ export class _TableSelectPlugin extends TablePlugin {
 
     this.clearTempSelected();
 
+    // 框选中不能重置大小
+
     // 是否有选中项
     let hasSelected = false;
 
@@ -426,7 +464,7 @@ export class _TableSelectPlugin extends TablePlugin {
 
       if (row.isHeader && column.isHeader) return;
 
-      if (row.isHeader && !column.isHeader) return;
+      if (row.isFake && !column.isHeader) return;
 
       hasSelected = true;
 
@@ -465,6 +503,7 @@ export class _TableSelectPlugin extends TablePlugin {
         const pass = rowSelectable(row);
         if (!pass) return false;
       }
+      if (this.table.isDisabledRow(key)) return false;
     }
 
     if (isCell) {
@@ -480,6 +519,7 @@ export class _TableSelectPlugin extends TablePlugin {
         const pass = cellSelectable(cell);
         if (!pass) return false;
       }
+      if (this.table.isDisabledCell(key)) return false;
     }
 
     map[key] = 1;
@@ -498,7 +538,7 @@ export class _TableSelectPlugin extends TablePlugin {
 
     const curPoint = this.table.transformViewportPoint(
       pos,
-      _TableSelectPlugin.EDGE_SIZE / this.table.zoom()
+      _TableSelectPlugin.EDGE_SIZE
     );
 
     if (!this.conflictDisableConfig) {
@@ -534,7 +574,7 @@ export class _TableSelectPlugin extends TablePlugin {
   moveFixedEdgeHandle([x, y]: TablePosition) {
     if (!this.conflictDisableConfig) return;
 
-    const edgeSize = _TableSelectPlugin.EDGE_SIZE / this.table.zoom();
+    const edgeSize = _TableSelectPlugin.EDGE_SIZE;
 
     const ctx = this.context;
 
@@ -601,12 +641,11 @@ export class _TableSelectPlugin extends TablePlugin {
 
   /** 自动触发滚动便捷的修正位置 */
   getAutoScrollBound() {
-    const zoom = this.table.zoom();
     return {
-      top: this.context.topFixedHeight * zoom,
-      left: this.context.leftFixedWidth * zoom,
-      right: this.context.rightFixedWidth * zoom,
-      bottom: this.context.bottomFixedHeight * zoom,
+      top: this.context.topFixedHeight,
+      left: this.context.leftFixedWidth,
+      right: this.context.rightFixedWidth,
+      bottom: this.context.bottomFixedHeight,
     };
   }
 
@@ -643,4 +682,40 @@ export class _TableSelectPlugin extends TablePlugin {
 
     return [startInfo.xy, now];
   }
+}
+
+interface SelectMap {
+  [key: string]: 1;
+}
+
+/** 选中相关的配置 */
+export interface TableSelectConfig {
+  /**
+   * 配置行选中, 可传boolean进行开关控制或传入函数根据行单独控制
+   * - 注意: 行选中与单元格选中是独立的, 禁用行并不会影响对应行单元格的选中, 因为复制粘贴等操作都是很有保留必要的
+   * */
+  rowSelectable?: boolean | ((row: TableRow) => boolean);
+  /** 配置单元格选中, 可传boolean进行开关控制或传入函数根据单元格单独控制 */
+  cellSelectable?: boolean | ((cell: TableCell) => boolean);
+}
+
+/** 选中相关的api */
+export interface TableSelect {
+  /** 指定行是否选中 */
+  isSelectedRow(key: TableKey): boolean;
+
+  /** 指定单元格是否选中 */
+  isSelectedCell(key: TableKey): boolean;
+
+  /** 获取选中的行 */
+  getSelectedRows(): TableRow[];
+
+  /** 获取选中的单元格 */
+  getSelectedCells(): TableCell[][];
+
+  /** 设置选中的行, 传入merge可保留之前的行选中 */
+  selectRows(rowKeys: TableKey[], merge?: boolean): void;
+
+  /** 设置选中的单元格, 传入merge可保留之前的单元格选中 */
+  selectCells(cellKeys: TableKey[], merge?: boolean): void;
 }

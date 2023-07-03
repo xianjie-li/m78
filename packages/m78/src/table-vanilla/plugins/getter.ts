@@ -7,22 +7,30 @@ import {
   throwError,
   TupleNumber,
 } from "@m78/utils";
+import { _TableViewportPlugin } from "./viewport.js";
+import {
+  _getBoundByPoint,
+  _getCellKey,
+  _getCellKeysByStr,
+  _prefix,
+} from "../common.js";
+import clamp from "lodash/clamp.js";
 import {
   _TablePrivateProperty,
-  TableCell,
-  TableColumn,
-  TableGetter,
-  TableItems,
-  TableItemsFull,
   TableKey,
   TablePointInfo,
   TablePosition,
-  TableRow,
   TableRowFixed,
-} from "../types.js";
-import { _TableViewportPlugin } from "./viewport.js";
-import { _getBoundByPoint, _getCellKey, _prefix } from "../common.js";
-import clamp from "lodash/clamp.js";
+} from "../types/base-type.js";
+
+import {
+  TableCell,
+  TableColumn,
+  TableItems,
+  TableItemsFull,
+  TableRow,
+} from "../types/items.js";
+import { TableMergeData } from "../types/context.js";
 
 export class _TableGetterPlugin extends TablePlugin implements TableGetter {
   init() {
@@ -36,12 +44,17 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
       "getRow",
       "getColumn",
       "getCell",
+      "getCellKey",
+      "getCellByStrKey",
       "getKeyByRowIndex",
       "getKeyByColumnIndex",
       "getIndexByRowKey",
       "getIndexByColumnKey",
+      "getKeyByRowData",
       "isRowExist",
       "isColumnExist",
+      "getMergedData",
+      "getMergeData",
     ]);
   }
 
@@ -51,22 +64,16 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
   ): TablePointInfo {
     const ctx = this.context;
 
-    // 需要处理缩放, 缩放后, 实际显示的内容变多了, 但我们节点的绝对坐标是一样的, 将缩放后的点转换为正常尺寸点再参与计算即可
-    const zoom = this.table.zoom();
-
-    x = x / zoom;
-    y = y / zoom;
-
     const lStart = 0;
     const lEnd = lStart + ctx.leftFixedWidth + fixedOffset;
 
     const tStart = 0;
     const tEnd = tStart + ctx.topFixedHeight + fixedOffset;
 
-    const bEnd = this.table.height() / zoom;
+    const bEnd = this.table.height();
     const bStart = bEnd - ctx.bottomFixedHeight - fixedOffset;
 
-    const rEnd = this.table.width() / zoom;
+    const rEnd = this.table.width();
     const rStart = rEnd - ctx.rightFixedWidth - fixedOffset;
 
     const isFixedLeft = x >= lStart && x <= lEnd;
@@ -74,8 +81,8 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
     const isFixedBottom = y >= bStart && y <= bEnd;
     const isFixedRight = x >= rStart && x <= rEnd;
 
-    let realX = x + this.table.x() / zoom;
-    let realY = y + this.table.y() / zoom;
+    let realX = x + this.table.x();
+    let realY = y + this.table.y();
 
     if (isFixedLeft) {
       realX = x;
@@ -112,28 +119,26 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
     const contW = this.table.contentWidth();
     const contH = this.table.contentHeight();
 
-    const zoom = this.table.zoom();
-
     // 基础位置, 限制在可用区域内
-    const x = clamp(pos[0], 0, contW) / zoom;
-    const y = clamp(pos[1], 0, contH) / zoom;
+    const x = clamp(pos[0], 0, contW);
+    const y = clamp(pos[1], 0, contH);
 
     const lStart = 0;
     const lEnd = this.context.leftFixedWidth;
     const tStart = 0;
     const tEnd = this.context.topFixedHeight;
     const rStart = contW - this.context.rightFixedWidth;
-    const rEnd = contW / zoom;
+    const rEnd = contW;
     const bStart = contH - this.context.bottomFixedHeight;
-    const bEnd = contH / zoom;
+    const bEnd = contH;
 
     const isFixedLeft = x >= lStart && x <= lEnd;
     const isFixedTop = y >= tStart && y <= tEnd;
     const isFixedRight = x >= rStart && x <= rEnd;
     const isFixedBottom = y >= bStart && y <= bEnd;
 
-    let realX = x - this.table.x() / zoom;
-    let realY = y - this.table.y() / zoom;
+    let realX = x - this.table.x();
+    let realY = y - this.table.y();
 
     if (isFixedLeft) {
       realX = x;
@@ -227,11 +232,12 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
     const binarySearchHandle = (isRow: boolean) => {
       return (item: any, index: number) => {
         const key = isRow ? item[this.config.primaryKey] : item.key;
+
+        if (getNamePathValue(item, _TablePrivateProperty.ignore)) return null;
+
         const cur: any = isRow ? this.getRow(key) : this.getColumn(key);
 
         const xORy = isRow ? y : x;
-
-        if (getNamePathValue(item, _TablePrivateProperty.ignore)) return null;
 
         if (skipFixed && cur.isFixed) return null;
 
@@ -281,9 +287,10 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
     if (startRow) {
       for (let i = startRowIndex; i < data.length; i++) {
         const key = this.getKeyByRowIndex(i);
-        const row = this.getRow(key);
 
         if (getNamePathValue(data[i], _TablePrivateProperty.ignore)) continue;
+
+        const row = this.getRow(key);
 
         if (skipFixed && row.isFixed) continue;
 
@@ -297,10 +304,11 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
     if (startColumn) {
       for (let i = startColumnIndex; i < columns.length; i++) {
         const key = this.getKeyByColumnIndex(i);
-        const column = this.getColumn(key);
 
         if (getNamePathValue(columns[i], _TablePrivateProperty.ignore))
           continue;
+
+        const column = this.getColumn(key);
 
         if (skipFixed && column.isFixed) continue;
 
@@ -355,26 +363,20 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
 
     // 截取非fixed区域内容
 
-    // ZOOM: #6  缩放时, 元素的实际尺寸发生了改变, 但是我们记录的位置是不变的, 所以只需要把要显示的内容区域和滚动位置进行伸守计算
-    const zoom = this.table.zoom();
-
-    const x = Math.min(
-      table.x() / zoom + ctx.leftFixedWidth,
-      viewport.contentWidth()
-    );
+    const x = Math.min(table.x() + ctx.leftFixedWidth, viewport.contentWidth());
 
     const y = Math.min(
-      table.y() / zoom + ctx.topFixedHeight,
+      table.y() + ctx.topFixedHeight,
       viewport.contentHeight()
     );
 
     const width = Math.max(
-      this.table.width() / zoom - ctx.rightFixedWidth - ctx.leftFixedWidth,
+      this.table.width() - ctx.rightFixedWidth - ctx.leftFixedWidth,
       0
     );
 
     const height = Math.max(
-      this.table.height() / zoom - ctx.bottomFixedHeight - ctx.topFixedHeight,
+      this.table.height() - ctx.bottomFixedHeight - ctx.topFixedHeight,
       0
     );
 
@@ -406,14 +408,22 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
 
     const push = this.cellMergeHelper(cells);
 
-    const lf = ctx.leftFixedList.map((key) => this.getColumn(key));
-    const rf = ctx.rightFixedList.map((key) => this.getColumn(key));
+    const lf = ctx.leftFixedList
+      .map((key) => this.getColumn(key))
+      .filter((i) => !getNamePathValue(i.config, _TablePrivateProperty.ignore));
+    const rf = ctx.rightFixedList
+      .map((key) => this.getColumn(key))
+      .filter((i) => !getNamePathValue(i.config, _TablePrivateProperty.ignore));
 
     [...lf, ...rf].forEach((column) => {
       // 截取固定列中可见单元格
       for (let i = startRowIndex; i <= endRowIndex; i++) {
         const cell = this.getCell(this.getKeyByRowIndex(i), column.key);
-        if (cell.row.isFixed) continue;
+        if (
+          cell.row.isFixed ||
+          getNamePathValue(cell.row.data, _TablePrivateProperty.ignore)
+        )
+          continue;
         if (push(cell)) continue;
         cells.push(cell);
       }
@@ -425,29 +435,34 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
     const tf = ctx.topFixedList.map((key) => this.getRow(key));
     const bf = ctx.bottomFixeList.map((key) => this.getRow(key));
 
-    const temp: any[] = [];
-    const push2 = this.cellMergeHelper(temp);
-
     [...tf, ...bf].forEach((row) => {
       // 截取固定行中可用单元格
       for (let i = startColumnIndex!; i <= endColumnIndex!; i++) {
+        const curConf = this.context.columns[i];
+        if (getNamePathValue(curConf, _TablePrivateProperty.ignore)) continue;
+
         const cell = this.getCell(row.key, this.getKeyByColumnIndex(i));
+
         if (cell.column.isFixed) continue;
         if (push(cell)) continue;
+
         cells.push(cell);
       }
 
       // 添加四个角的固定项
       [...ctx.leftFixedList, ...ctx.rightFixedList].forEach((key) => {
         const cell = this.getCell(row.key, key);
-        if (push2(cell)) return;
-        temp.push(cell);
+        if (getNamePathValue(cell.column.config, _TablePrivateProperty.ignore))
+          return;
+        if (getNamePathValue(cell.row.data, _TablePrivateProperty.ignore))
+          return;
+        if (push(cell)) return;
+        cells.push(cell);
       });
     });
 
     rows.unshift(...tf);
     rows.push(...bf);
-    cells.push(...temp);
 
     return {
       rows,
@@ -465,24 +480,50 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
 
     const index = ctx.dataKeyIndexMap[key];
 
+    if (!isNumber(index)) {
+      throwError(`row key ${key} is invalid`, _prefix);
+    }
+
     const conf = ctx.rows![key] || {};
     const height = isNumber(conf.height) ? conf.height : this.config.rowHeight!;
     const data = ctx.data[index];
 
-    const beforeIgnoreLength = ctx.ignoreYList.filter((i) => i < index).length;
+    const isFixed = !!conf.fixed;
+    const isHeader = ctx.yHeaderKeys.includes(key);
+
+    const beforeIgnoreLength = this.getBeforeIgnoreY(index).length;
 
     const realIndex = index - beforeIgnoreLength;
+
+    let dataIndex = index - ctx.topFixedList.length;
+
+    const fIndex = ctx.dataKeyIndexMap[`${key}${_TablePrivateProperty.ref}`];
+
+    if (isFixed) {
+      if (isNumber(fIndex)) {
+        dataIndex = fIndex - ctx.topFixedList.length;
+      }
+    }
+
+    const hasRef = isNumber(fIndex);
+
+    // 数据被标记为fake, 并且没有ref才视为fake数据, 因为对于用户来说, 包含ref数据指向一个有效数据
+    const isFake =
+      !!getNamePathValue(data, _TablePrivateProperty.fake) && !hasRef;
 
     const row: TableRow = {
       key: data[this.config.primaryKey],
       height,
       index: realIndex,
+      dataIndex: isHeader ? -1 : dataIndex,
+      realIndex: index,
       y: this.getBeforeSizeY(index),
       config: conf,
       data,
-      isFixed: !!conf.fixed,
+      isFixed,
       isEven: realIndex % 2 === 0,
-      isHeader: ctx.yHeaderKeys.includes(key),
+      isHeader,
+      isFake,
     };
 
     if (row.isFixed) {
@@ -505,22 +546,50 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
 
     const index = ctx.columnKeyIndexMap[key];
 
+    if (!isNumber(index)) {
+      throwError(`column key ${key} is invalid`, _prefix);
+    }
+
     const conf = ctx.columns[index];
+
     const width = isNumber(conf.width) ? conf.width : this.config.columnWidth!;
 
-    const beforeIgnoreLength = ctx.ignoreXList.filter((i) => i < index).length;
+    const beforeIgnoreLength = this.getBeforeIgnoreX(index).length;
+
+    const isFixed = !!conf.fixed;
+
+    const isHeader = ctx.xHeaderKey === key;
 
     const realIndex = index - beforeIgnoreLength;
+
+    let dataIndex = index - ctx.leftFixedList.length;
+
+    const fIndex = ctx.columnKeyIndexMap[`${key}${_TablePrivateProperty.ref}`];
+
+    if (isFixed) {
+      if (isNumber(fIndex)) {
+        dataIndex = fIndex - ctx.leftFixedList.length;
+      }
+    }
+
+    const hasRef = isNumber(fIndex);
+
+    // 数据被标记为fake, 并且没有ref才视为fake数据, 因为对于用户来说, 包含ref数据指向一个有效数据
+    const isFake =
+      !!getNamePathValue(conf, _TablePrivateProperty.fake) && !hasRef;
 
     const column: TableColumn = {
       key: conf.key,
       width,
       index: realIndex,
+      dataIndex: isHeader ? -1 : dataIndex,
+      realIndex: index,
       x: this.getBeforeSizeX(index),
       config: conf,
-      isFixed: !!conf.fixed,
+      isFixed,
       isEven: realIndex % 2 === 0,
-      isHeader: ctx.xHeaderKey === key,
+      isHeader: isHeader,
+      isFake,
     };
 
     if (column.isFixed) {
@@ -535,6 +604,21 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
     return column;
   }
 
+  getCellKey(rowKey: TableKey, columnKey: TableKey): string {
+    return _getCellKey(rowKey, columnKey);
+  }
+
+  /** 根据单元格key获取cell */
+  getCellByStrKey(key: string): TableCell {
+    const keys = _getCellKeysByStr(key);
+
+    if (keys.length !== 2) {
+      throwError(`key ${key} is invalid`, _prefix);
+    }
+
+    return this.getCell(keys[0], keys[1]);
+  }
+
   /** 获取指定行, 列坐标对应的TableCell */
   getCell(rowKey: TableKey, columnKey: TableKey): TableCell {
     const key = _getCellKey(rowKey, columnKey);
@@ -547,6 +631,13 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
     const row = this.getRow(rowKey);
     const column = this.getColumn(columnKey);
     const config = ctx.cells![key] || {};
+
+    let state = ctx.cellStateCaChe[key];
+
+    if (!state) {
+      ctx.cellStateCaChe[key] = {};
+      state = ctx.cellStateCaChe[key];
+    }
 
     const cell: TableCell = {
       row,
@@ -565,7 +656,7 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
         rowKey === ctx.lastRowKey ||
         rowKey === ctx.lastFixedRowKey ||
         !!ctx.lastMergeYMap[key],
-      state: {},
+      state,
     };
 
     ctx.cellCache[key] = cell;
@@ -723,8 +814,9 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
     const cur = this.context.data[ind];
     const key = cur[this.config.primaryKey];
     if (key === undefined) {
-      console.warn(
-        `[Table] primaryKey: ${this.config.primaryKey} does not exist in data on row ${ind}`
+      throwError(
+        `primaryKey: ${this.config.primaryKey} does not exist in data on row ${ind}`,
+        _prefix
       );
     }
     return key;
@@ -734,7 +826,7 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
     const cur = this.context.columns[ind];
     const key = cur.key;
     if (key === undefined) {
-      console.warn(`[Table] key: No key with index ${ind} exists`);
+      throwError(`key: No key with index ${ind} exists`, _prefix);
     }
     return key;
   }
@@ -742,9 +834,7 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
   getIndexByRowKey(key: TableKey): number {
     const ind = this.context.dataKeyIndexMap[key];
     if (key === undefined) {
-      console.warn(
-        `[Table]: row key ${key} does not have a corresponding index`
-      );
+      throwError(`row key ${key} does not have a corresponding index`, _prefix);
     }
     return ind;
   }
@@ -752,14 +842,15 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
   getIndexByColumnKey(key: TableKey): number {
     const ind = this.context.columnKeyIndexMap[key];
     if (key === undefined) {
-      console.warn(
-        `[Table]: column key ${key} does not have a corresponding index`
+      throwError(
+        `column key ${key} does not have a corresponding index`,
+        _prefix
       );
     }
     return ind;
   }
 
-  getKeyByRowData(cur: any): string {
+  getKeyByRowData(cur: any): TableKey {
     const key = cur[this.config.primaryKey];
 
     if (key === undefined || key === null) {
@@ -777,12 +868,21 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
     return this.context.dataKeyIndexMap[key] !== undefined;
   }
 
+  isColumnExistByIndex(ind: number): boolean {
+    return this.context.columns[ind] !== undefined;
+  }
+
+  isRowExistByIndex(ind: number): boolean {
+    return this.context.data[ind] !== undefined;
+  }
+
   /** 处理merge项, 防止cell列表重复推入相同项, 并在确保cell中包含被合并项的父项, 回调返回true时表示以处理, 需要跳过后续流程 */
   cellMergeHelper(list: TableCell[]): (cell: TableCell) => boolean {
     const existCache: any = {};
 
     return (cell: TableCell) => {
       if (existCache[cell.key]) return true;
+
       existCache[cell.key] = true;
 
       // 跳过被合并项, 并确保被合并项的主单元格存在
@@ -795,7 +895,10 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
       const merged = this.getMergedData(cell);
 
       if (merged) {
-        list.push(this.getCell(merged[0], merged[1]));
+        const parent = this.getCell(merged[0], merged[1]);
+        if (parent && !existCache[parent.key]) {
+          list.push(this.getCell(merged[0], merged[1]));
+        }
         return true;
       }
 
@@ -803,13 +906,98 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
     };
   }
 
-  /** 获取合并信息, 若有返回则表示是一个合并项 */
   getMergeData(cell: TableCell) {
     return this.context.mergeMapMain[cell.key];
   }
 
-  /** 获取被合并信息, 若有返回则表示是一个被合并项 */
   getMergedData(cell: TableCell) {
     return this.context.mergeMapSub[cell.key];
   }
+
+  /** 获取指定索引前的所有忽略项 */
+  getBeforeIgnoreX(index: number): number[] {
+    return this.context.ignoreXList.filter((i) => i < index);
+  }
+
+  /** 获取指定索引前的所有忽略项 */
+  getBeforeIgnoreY(index: number): number[] {
+    return this.context.ignoreYList.filter((i) => i < index);
+  }
+}
+
+/** 选择器 */
+export interface TableGetter {
+  /**
+   * 获取指定区域的row/column/cell, 点的取值区间为[0, 内容总尺寸]
+   * @param target - 可以是包含区域信息的bound对象, 也可以是表示[x, y]的位置元组
+   * @param skipFixed - false | 是否跳过fixed项获取
+   * */
+  getBoundItems(
+    target: BoundSize | TablePosition,
+    skipFixed?: boolean
+  ): TableItems;
+
+  /**
+   * 获取当前视口内可见的row/column/cell */
+  getViewportItems(): TableItems;
+
+  /** 获取两个点区间内的元素, 点的区间为: [0, 内容总尺寸] */
+  getAreaBound(p1: TablePosition, p2?: TablePosition): TableItems;
+
+  /**
+   * 根据表格视区内的点获取基于内容尺寸的点, 传入点的区间为: [0, 表格容器尺寸].
+   * - 可传入fixedOffset来对fixed项的判定区域增加或减少
+   * */
+  transformViewportPoint(
+    [x, y]: TablePosition,
+    fixedOffset?: number
+  ): TablePointInfo;
+
+  /**
+   * 转换内容区域的点为表格视区内的点, 传入点的区间为: [0, 表格内容尺寸].
+   * 包含了对缩放的处理
+   * */
+  transformContentPoint([x, y]: TablePosition): TablePointInfo;
+
+  /** 获取指定行 */
+  getRow(key: TableKey): TableRow;
+
+  /** 获取指定列 */
+  getColumn(key: TableKey): TableColumn;
+
+  /** 获取指定单元格 */
+  getCell(rowKey: TableKey, columnKey: TableKey): TableCell;
+
+  /** 根据行和列的key生成cell key */
+  getCellKey(rowKey: TableKey, columnKey: TableKey): TableKey;
+
+  /** 根据单元格key获取cell */
+  getCellByStrKey(key: string): TableCell;
+
+  /** 获取指定索引记录的key. 注意, 此处的索引为经过内部数据重铸后的索引, 并不是config.data中项的索引 */
+  getKeyByRowIndex(ind: number): TableKey;
+
+  /** 获取指定column的key.  注意, 此处的索引为经过内部数据重铸后的索引, 并不是config.columns中项的索引 */
+  getKeyByColumnIndex(ind: number): TableKey;
+
+  /** 获取key的row索引. 注意, 此处的索引为经过内部数据重铸后的索引, 并不是config.data中项的索引 */
+  getIndexByRowKey(key: TableKey): number;
+
+  /** 获取key的column索引.  注意, 此处的索引为经过内部数据重铸后的索引, 并不是config.columns中项的索引 */
+  getIndexByColumnKey(key: TableKey): number;
+
+  /** 指定key的数据是否存在 */
+  isRowExist(key: TableKey): boolean;
+
+  /** 指定key的列是否存在 */
+  isColumnExist(key: TableKey): boolean;
+
+  /** 获取被合并信息, 若有返回则表示是一个被合并项 */
+  getMergedData(cell: TableCell): [TableKey, TableKey] | undefined;
+
+  /** 获取合并信息, 若有返回则表示是一个合并项 */
+  getMergeData(cell: TableCell): TableMergeData | undefined;
+
+  /** 从数据上获取key */
+  getKeyByRowData(cur: any): TableKey;
 }

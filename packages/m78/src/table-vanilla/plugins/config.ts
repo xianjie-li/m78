@@ -1,18 +1,15 @@
 import { TablePlugin } from "../plugin.js";
-import {
-  TableConfig,
-  TableConfigCanNotChanges,
-  TableReloadLevel,
-} from "../types.js";
 import { isBoolean, isEmpty, omit } from "@m78/utils";
 import { _configCanNotChange, _level2ConfigKeys } from "../common.js";
+import { TableConfig, TableConfigCanNotChanges } from "../types/config.js";
+import { TableReloadLevel } from "./life.js";
 
 export class _TableConfigPlugin extends TablePlugin {
   init() {
-    this.methodMapper(this.table, [["handleConfigChange", "config"]]);
+    this.methodMapper(this.table, [["configHandle", "config"]]);
   }
 
-  handleConfigChange = (
+  configHandle = (
     config?: Omit<Partial<TableConfig>, TableConfigCanNotChanges>,
     keepPosition?: boolean
   ): void | TableConfig => {

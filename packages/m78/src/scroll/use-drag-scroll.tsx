@@ -29,7 +29,7 @@ export const _useDragScroll = (ctx: _ScrollContext) => {
       const yAb = Math.abs(movementY);
 
       // 拖动距离过小时不产生惯性
-      const triggerOffset = 14;
+      const triggerOffset = 20;
 
       if (xAb > triggerOffset) {
         newX = newX * (velocityX * 4);

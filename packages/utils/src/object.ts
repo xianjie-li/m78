@@ -1,19 +1,52 @@
-import { isString, isArray, isNumber, isObject } from "./is.js";
+import { isArray, isEmpty, isNumber, isObject, isString } from "./is.js";
 
 /**
- * Delete all falsy values of the object (except 0)
- * @param source - Target object
- * @return - Processed original object
+ * Delete all empty values (except 0) of the object/array
+ * @param source - Target object/array
+ * @return - Processed original object/array
+ *
+ * empty values: undefined, null ,'', NaN, [], {}
  */
-export const shakeFalsy = (source: object): object => {
+export function shakeEmpty(source: any): any {
+  if (isArray(source)) {
+    const res = source.filter((i) => !isEmpty(i) || i === 0 || i === false);
+    source.length = 0;
+
+    source.splice(0, 0, ...res);
+
+    return source;
+  }
+
   Object.keys(source).forEach((key) => {
-    const val = source[key];
-    if (!val && val !== 0) {
+    const i = source[key];
+
+    if (isEmpty(i) && i !== 0 && i !== false) {
       delete source[key];
     }
   });
   return source;
-};
+}
+
+/**
+ * Recursion delete all empty values of the object/array, use shakeEmpty() internally, return the processed original object/array
+ * */
+export function recursionShakeEmpty(source: any): any {
+  const handle = (i: any) => {
+    if (isObject(i) || isArray(i)) {
+      recursionShakeEmpty(i);
+    }
+  };
+
+  if (isArray(source)) {
+    source.forEach(handle);
+  }
+
+  if (isObject(source)) {
+    Object.keys(source).forEach((k) => handle(source[k]));
+  }
+
+  return shakeEmpty(source);
+}
 
 function pickOrOmit(obj: any, props: string | string[], isPick = false): any {
   if (isString(props)) {
@@ -61,11 +94,7 @@ export type NameItem = string | number;
  * */
 export type NamePath = NameItem | NameItem[];
 
-/**
- * Get value on obj through NamePath
- *
- * 通过NamePath在obj上获取值
- * */
+/** Get value on obj through NamePath */
 export function getNamePathValue(obj: any, name: NamePath) {
   if (!(obj instanceof Object)) return undefined; // 过滤掉数字/字符串等
 
@@ -80,11 +109,7 @@ export function getNamePathValue(obj: any, name: NamePath) {
   }
 }
 
-/**
- * Convert NamePath to character form
- *
- * 将NamePath转换为字符形式
- * */
+/** Convert NamePath to string */
 export function stringifyNamePath(name: NamePath) {
   if (isString(name) || isNumber(name)) return String(name);
 
@@ -102,39 +127,76 @@ export function stringifyNamePath(name: NamePath) {
 }
 
 /**
- * Set value on obj through NamePath
+ * Set value on obj through NamePath, if skipExist is passed in, the value will be skipped if it already exists
  *
- * 通过NamePath在obj上设置值
+ * 通过NamePath在obj上设置值, 如果传入skipExist, 在值已存在时会跳过
  * */
-export function setNamePathValue(obj: any, name: NamePath, val: any) {
+export function setNamePathValue(
+  obj: any,
+  name: NamePath,
+  val: any,
+  skipExist?: boolean
+) {
   if (isString(name) || isNumber(name)) {
     obj[name] = val;
+    return;
   }
 
   if (isArray(name) && name.length) {
-    let lastObj = obj;
+    const [lastObj, n] = getLastObj(obj, name);
 
-    for (let i = 0; i < name.length; i++) {
-      const n = name[i]; // 当前name
-      const nextN = name[i + 1]; // 下一个name
-      const hasNextN = nextN !== undefined; // 是否有下个
-
-      if (!hasNextN) {
-        lastObj[n] = val;
-        return;
-      }
-
-      // 确保要操作的对象存在
-      if (isNumber(nextN)) {
-        if (!isArray(lastObj[n])) {
-          lastObj[n] = [];
-        }
-        // 不是数字的话则为对象
-      } else if (!isObject(lastObj[n])) {
-        lastObj[n] = {};
-      }
-
-      lastObj = lastObj[n];
-    }
+    if (skipExist && lastObj[n] !== undefined) return;
+    lastObj[n] = val;
   }
+}
+
+/**
+ * Delete value on obj through NamePath
+ *
+ * 通过NamePath在obj上删除值
+ * */
+export function deleteNamePathValue(obj: any, name: NamePath) {
+  if (isString(name)) {
+    delete obj[name];
+    return;
+  }
+
+  if (isNumber(name)) {
+    obj.splice(name, 1);
+    return;
+  }
+
+  if (isArray(name) && name.length) {
+    const [lastObj, n] = getLastObj(obj, name);
+    isNumber(n) ? lastObj.splice(n, 1) : delete lastObj[n];
+  }
+}
+
+/** 从对象中获取用于设置值的对象, 和最后一个name */
+function getLastObj(obj: any, names: NameItem[]): [any, NameItem] {
+  let lastObj = obj;
+
+  for (let i = 0; i < names.length; i++) {
+    const n = names[i]; // 当前name
+    const nextN = names[i + 1]; // 下一个name
+    const hasNextN = nextN !== undefined; // 是否有下个
+
+    if (!hasNextN) {
+      return [lastObj, n];
+    }
+
+    // 确保要操作的对象存在
+    if (isNumber(nextN)) {
+      if (!isArray(lastObj[n])) {
+        lastObj[n] = [];
+      }
+      // 不是数字的话则为对象
+    } else if (!isObject(lastObj[n])) {
+      lastObj[n] = {};
+    }
+
+    lastObj = lastObj[n];
+  }
+
+  throw new Error("Names can't be empty");
 }

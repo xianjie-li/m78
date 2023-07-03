@@ -1,4 +1,4 @@
-import { EmptyFunction } from "../types.js";
+import { EmptyFunction, Point } from "../types.js";
 /** 在多个滚动帮助函数间共享 */
 export interface AutoScrollCtx {
     /** 自动滚动的开关 */
@@ -9,6 +9,12 @@ export interface AutoScrollCtx {
     autoScrollVal: number;
     /** 清理函数 */
     clearFn?: EmptyFunction;
+    /** 节点是否是document或body */
+    isDocOrBody: boolean;
+    lastDetectX?: number;
+    lastDetectY?: number;
+    isIncreaseX?: boolean;
+    isIncreaseY?: boolean;
 }
 export interface AutoScrollConfig {
     /** 待检测和滚动的节点 */
@@ -32,24 +38,34 @@ export interface AutoScrollConfig {
     boundElement?: HTMLElement;
     /** 自动滚动时触发, 可用isX判断x/y轴, offset为该次滚动的距离 */
     onScroll?: (isX: boolean, offset: number) => void;
+    /** 仅通过onScroll进行通知, 内部不再直接设置滚动位置 */
+    onlyNotify?: boolean;
 }
-/** 方向禁用配置 */
-export declare type AutoScrollDisableConfig = {
+/** trigger配置 */
+export declare type AutoScrollTriggerConfig = {
+    /** 对应方向是否禁用 */
     left?: boolean;
     right?: boolean;
     bottom?: boolean;
     top?: boolean;
 };
+/** 实例 */
 export declare type AutoScroll = ReturnType<typeof createAutoScroll>;
 /** 一个光标在目标边缘时自动滚动节点的工具 */
 export declare function createAutoScroll(config: AutoScrollConfig): {
-    /** 根据当前的AutoScrollCtx来自动滚动目标元素 */
+    /** 清理计时器, 如果当前正在滚动则停止 */
     clear: () => void;
-    /** 根据指定的位置进行滚动触发 */
-    trigger: (x: number, y: number, disableConf?: AutoScrollDisableConfig) => void;
+    /** 根据指定的位置进行滚动触发, isLast用于区分是否为最后一次事件 */
+    trigger: (xy: import("../types.js").TupleNumber, isLast: boolean, conf?: AutoScrollTriggerConfig) => void;
     /** 是否正在滚动 */
     readonly scrolling: boolean;
-    /** 更新配置, 后续trigger以配置进行 */
+    /** 更新配置, 后续trigger以合并后的配置进行 */
     updateConfig(newConf: Partial<AutoScrollConfig>): void;
 };
+/** 独立的autoScroll, 状态存储于dom之上, 可以不用提前创建实例直接使用, 性能略低于单独实例用法 */
+export declare function autoScrollTrigger(conf: {
+    xy: Point;
+    isLast: boolean;
+    disableConfig?: AutoScrollTriggerConfig;
+} & AutoScrollConfig): () => void;
 //# sourceMappingURL=auto-scroll.d.ts.map

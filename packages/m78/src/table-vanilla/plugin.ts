@@ -1,12 +1,4 @@
 import {
-  TableReloadOptions,
-  TableConfig,
-  TableInstance,
-  TablePluginContext,
-  TableCellWidthDom,
-  TableRenderCtx,
-} from "./types.js";
-import {
   AnyObject,
   isArray,
   isFunction,
@@ -14,6 +6,13 @@ import {
   throwError,
 } from "@m78/utils";
 import { _prefix } from "./common.js";
+import { TablePluginContext } from "./types/context.js";
+import { TableConfig } from "./types/config.js";
+import { TableInstance } from "./types/instance.js";
+
+import { TableCellWithDom } from "./types/items.js";
+import { TableReloadLevel, TableReloadOptions } from "./plugins/life.js";
+import { TableRenderCtx } from "./types/base-type.js";
 
 /**
  * 插件类, 用于扩展table的功能
@@ -22,8 +21,10 @@ import { _prefix } from "./common.js";
 export class TablePlugin {
   /** table实例 */
   table: TableInstance;
+
   /** 当前注册的所有plugin */
   plugins: TablePlugin[];
+
   /** 同table.config */
   config: TableConfig;
 
@@ -45,6 +46,9 @@ export class TablePlugin {
     this.context = config.context;
   }
 
+  /** init前调用 */
+  beforeInit?(): void;
+
   /**
    * 初始化阶段调用, 此时table实例可能还未创建完成, 可在此时改写配置/实例
    * - 可以访问在当前插件之前注册插件挂载的实例属性或方法
@@ -61,13 +65,20 @@ export class TablePlugin {
    * */
   mount?(): void;
 
-  /**
-   * 每次渲染完成后
-   * */
+  /** 渲染中, 本阶段内部渲染基本上已完成, 可以再次附加自定义的渲染 */
+  rendering?(): void;
+
+  /** 每次渲染完成后 */
   rendered?(): void;
 
   /** 重载表格时 */
   reload?(opt?: TableReloadOptions): void;
+
+  /**
+   * 在reload/初始化的不同级别操作(TableReloadLevel): 开始前/完成后 触发, isBefore可用于识别是在操作前还是操作后
+   * - 注意, isBefore = false 触发的时机是每个阶段对应的代码完成后, full是在其对应的操作完成后, index开始前, 而不是整个full完成后
+   * */
+  loadStage?(level: TableReloadLevel, isBefore: boolean): void;
 
   /**
    * 卸载前调用
@@ -75,7 +86,7 @@ export class TablePlugin {
   beforeDestroy?(): void;
 
   /** 定制单元格渲染, 与TableConfig.render具有相同的方法签名, 渲染顺序为 [conf.render, plugin1Render, plugin2Render..., defaultRender] */
-  cellRender?(cell: TableCellWidthDom, ctx: TableRenderCtx): void;
+  cellRender?(cell: TableCellWithDom, ctx: TableRenderCtx): void;
 
   /**
    * 工具函数, 将当对象上的指定函数映射到指定对象上

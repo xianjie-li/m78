@@ -33,6 +33,10 @@ export interface CustomEvent<Listener extends AnyFunction> {
   off: (listener: Listener) => void;
   /** trigger listeners */
   emit: (...args: Parameters<Listener>) => void;
+  /** empty all listener */
+  empty: () => void;
+  /** 订阅的listener总数 */
+  length: number;
 }
 
 /**
@@ -56,14 +60,27 @@ export function createEvent<
     listeners.forEach((listener) => listener(...args));
   }
 
+  function empty() {
+    listeners.length = 0;
+  }
+
   return {
     on,
     off,
     emit,
+    empty,
+    get length() {
+      return listeners.length;
+    },
   };
 }
 
 /** 抛出错误 */
 export function throwError(msg: string, prefix?: string): never {
   throw new Error(`${prefix ? `${prefix}:: ` : ""}${msg}`);
+}
+
+/** simple deep clone */
+export function deepClone<T>(obj: T): T {
+  return JSON.parse(JSON.stringify(obj));
 }

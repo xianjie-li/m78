@@ -8,6 +8,8 @@
 
 next: ~~历史记录~~, ~~滚动阴影~~, ~~容器监听并重置~~, ~~处理 cells/rows 中的无效选项~~ ~~updateConfig~~, 选中
 
+next: 指定滚动只在向对应方向移动时触发
+
 ## api 风格
 
 只有 getter 接口时, 格式为 getXxx
@@ -18,26 +20,11 @@ next: ~~历史记录~~, ~~滚动阴影~~, ~~容器监听并重置~~, ~~处理 ce
 > 后改为 canvas 渲染, 但是在 safari 下滚动不流畅, 并且还要单独写高清屏适配, 文本对其/溢出计算等等..., 故又弃之
 > 最后还是回到了 dom 渲染, 发现在行列都虚拟化后性能意外的还不错? 并且使用难度也更低了, 配合 dom 大大增强了可定制性.
 
-## 缩放实现 >>部分
-
-缩放 stage 后, 元素实际位置/尺寸不变, 但是实际可展示内容的空间变多/少, 需要调整对根据尺寸进行计算的地方,
-改为使用缩放后的实际尺寸, 并根据变更比例调整当前 dom 容器的滚动位置
-
-- .m78-table_view-content 根据缩放调整尺寸, 使 scrollWidth 正常响应, 因为直接使用 scale 在 chrome 上只有大于滚动容器才会更新滚动尺寸
-- 单元格等表格元素均放到更深一层的节点中, 通过这个节点来统一设置缩放
-- 滚动位置等比例调整
-- 显示的内容视口尺寸调整
-
-- 减少同时绘制的单元格数量
-- dom 节点
-
-后续功能开发后需要验证影响
-
 ## 简单
 
 ### stripe 2 -
 
-### 固定区阴影反馈
+### 固定区阴影反馈 -
 
 cell 判断 index 变更背景色
 
@@ -100,7 +87,7 @@ ins.renderList.map((cell, n: React.ReactElement | null) => {
 
 触控设备: 由于不支持 wheel 事件, 需要使用 touch 手动实现滚动
 
-## 固定 1 -
+## 固定 -
 
 预计算固定项信息 -> 渲染
 
@@ -126,11 +113,11 @@ getBoundItems()
 onError // 内部抛出的可能需要对用户展示的错误信息, 比如 "粘贴数据与选中单元格不匹配" 之类
 onCellClick
 
-### 事件过滤
+**事件过滤**
 
 选中或其他交互事件中, 如何在指定节点上避免冒泡
 
-eventFilter: (dom) => boolean // 若返回 false, 该 dom 不会参与事件
+eventFilter: (dom) => boolean // 若返回 true, 该 dom 不会参与内置事件
 
 ## 表头& 行头 -
 
@@ -138,12 +125,13 @@ eventFilter: (dom) => boolean // 若返回 false, 该 dom 不会参与事件
 
 表头分组时, 最顶层决定下方所有列是否固定, 忽略底层 fixed
 
-## 拖动调整列宽/行高
+## 拖动调整列宽/行高 -
 
-onRowResize
-onColumnResize
+TODO: fixed 项超过内容尺寸如何处理?
 
 合并项拖动?
+
+行列均以以后侧的线为拖拽点, 固定项的首行/列前后侧的点均用于控制自身
 
 ## copy/paste
 
@@ -194,24 +182,21 @@ move 时, 以当前点和最后的正常点计算范围, 取当前 和 最后可
 
 ## mutation 💦
 
-- 初始化, 将 data/columns 本地化并进行格式处理
-- 发生变异操作, 本地更改 data/columns, 记录 action
+### 基础
+
+**基本流程**
+
+- 初始化, 将 data/columns/persistenceConfig 本地化并进行格式处理
+- 发生变异操作, 本地更改 data/columns/persistenceConfig, 记录 action
 - 触发变更事件
-- 记录对获取变更有用的数据
 
-浅拷贝时使用: ls.slice(), 测试发现 50 万条数据用时 0.5ms 而 `{...obj}` 用时 47ms, 注意, 此测试在浏览器控制台进行, 在使用编译器工具时, 最终代码可能会自动编译为 ls.slice(), 所以测试不准确
+**数据同步方式**
 
-另外内部需要维护一个需要持久化的配置对象
-
-数据同步方式:
-
-- 统一完整提交: 操作完成后, 判断 dataChanged 和 configChanged, 若有变更, 将变更后的数据或配置完整提交, 这是最简单的方式, 但是单词数据量过大时可能体验不佳
+- 统一完整提交: 操作完成后, 判断 dataChanged 和 configChanged, 若有变更, 将变更后的数据或配置完整提交, 这是最简单的方式, 但是数据量过大时可能体验不佳
 - 统一局部提交: 操作完成后, 对变更项 ins.add / ins.changed / ins.removed / ins.sorted ([[oInd, nInd]])进行提交, 如果 configChanged = true 则同时提交配置
 - 实时局部提交: 监听事件, 发生变更时将上述状态提交, 提交期间可通过 processing 阻塞表格, 完成后可清理对应的变更状态
 
-通常, 数据量较少时, 第二种方式更好, 数据量大时, 第三种方式更好, 你可能还需要根据后端支持的接口操作来决定
-
-onChange:
+**onChange**
 
 ```ts
 // 根据enum类型, 有多个不同的重写版本
@@ -223,14 +208,17 @@ onChange(actionType: actionEnum, arg: any) {
 }
 ```
 
-其他:
-
-- 数据改变后, 对变更行和变更单元格进行标记
-- 需要进行数据变更时, 需要能确定行/列的 key, column.key / primaryKey | getPrimary
-
-reload(keepState = false) 重置时可以选择是否清理当前状态: 滚动条位置, 操作历史, 变更状态等, 如果是全新的数据源, 应为 ture, 如果是当前数据源的变异版本, 应为 false
-
 ### data
+
+### config
+
+- 支持接收 config.persistenceConfig, 用于还原需要持久化的配置
+- 初始化/重置时, 将该配置克隆本地化, 并将代码中的 key 和本地同名 key 配置合并
+- 对应配置变更时, 通过 event.configChange(keys) 通知, 并写入 history
+- 示例上提供 table.configChanged 判断配置是否变更, table.configChangedKeys 获取变更的配置项, table.persistenceConfig 获取当前配置
+
+若自定义排序后, 代码中配置了新列, 根据 key 的前后关系放入 sortColumns 中
+通过 redo, undo 直接操作本地化的配置
 
 ### 历史记录 💦
 
@@ -248,7 +236,7 @@ MAX_HISTORY_LENGTH: 1000
 接口需要暴露给插件使用
 
 实现者应在输入框聚焦等特殊场景中忽略用户的撤销和重做操作
-实现者应确保在合适的时机拷贝数据, 放置前后操作由于引用产生错乱
+实现者应确保在合适的时机拷贝数据, 防止前后操作由于引用产生错乱
 
 ### 数据排序
 
@@ -261,17 +249,14 @@ onSort(column, ordType)
 
 ### 拖拽排序 💦
 
-长按行头/列头时可拖拽排序, 界面显示反馈提示 / 启用时出现拖动标记, 仅可摘标记上拖动
+行拖动: 在选中项上 drag
+列拖动: 过滤 tap, drag 时拖动
 
-onRowSort // 变更数据源
-onColumnSort // 变更配置, 额外添加一个 sortColumns, 记录变更顺序的列, 在初始化时与 columns 同步
-
-move(form: ind | ind[], to: ind)
-moveRange(form: [s, e], to: ind)
-
-拖拽排序: 拖拽调整列/行头顺序(点按时), 对已选中单元格进行拖拽时
+操作后, 调用 moveRow/moveColumn 进行变更
 
 ### 编辑 💦
+
+数据改变后, 对变更行和变更单元格进行标记
 
 单元格值不再限制为 string
 
@@ -283,20 +268,29 @@ moveRange(form: [s, e], to: ind)
 
 actionType.valueChange [newValue]
 
-### 增删数据
+使用一个独立的 form 实例来管理表单状态
 
-actionType.addRow
-actionType.removeRow
+### 增删/移动数据 -
 
-addRow(data | data[], index?);
-removeRow(index | index[]);
-removeRange(start, end);
+actionType.addRow // arg: data[] index
+actionType.removeRow // keys[]
 
-## 隐藏/行列
+// 添加的固定项时, 移动至常规项顶部
+addRow(data | data[], index?); // 没有主键时需要手动为其生成
+
+removeRow(keys | keys[]);
+
+moveRow/moveColumn
+
+## 隐藏列 -
+
+隐藏列的位置显示展开标记, 点击可恢复
 
 ## 提示区域
 
 选中 xx 行, 新增 xx 行, 删除 xx 行, 修改 xx 行, 保存前确认
+
+撤销/重做等的提示
 
 ## react 💦
 
@@ -312,11 +306,35 @@ removeRange(start, end);
 复制单元格/粘贴/上方新增[可编辑]行/下方新增[可编辑]行/复制行/删除行
 拖拽行头调整顺序(点按时)
 
+隐藏列
+
 ### 工具栏
 
 新增行/删除行/导出/缩放(添加 hook, 可以触发导出时自定义数据源, 暴露导出方法)/筛选/当前页内容查找(不联网, 高亮匹配内容)
 
 ## 移动端优化 💦
+
+## 拖拽冲突
+
+通过 event 来检测是否为 touch 事件:
+
+event: PointerEvent | MouseEvent | TouchEvent
+
+分别检测
+
+pointerType === "touch" || type.startWith("touch")
+
+检测为 touch 事件时, 做移动端处理
+
+移动端:
+
+- 滚动: 拖拽
+- 框选: 拖拽行头/双指开始视为拖动
+
+PC:
+
+- 滚动: 滑轮
+- 框选: 拖拽
 
 ## 文档
 
@@ -329,3 +347,28 @@ removeRange(start, end);
 - 光标聚焦显示隐藏的完整内容
 - 内容查找(不联网, 高亮匹配内容)
 - 导出: 导出选中/导出所有/勾选要导出的列
+
+## virtualBound -
+
+// 框选添加最小距离限制
+
+事件冲突解决
+
+```ts
+interface Bound {
+  zIndex: number; // 0
+  type: any; // 对应的块类型
+  cursor: string; // 鼠标样式, 未在任何bound时使用默认样式er;
+  data: any;
+}
+
+getBound(xy): bound[];  如果在区域内 可以阻止其他事件
+hasBound(xy);  // 该点包含其他点
+
+v.bounds = [bound];
+v.cursor;
+
+v.click;
+v.hover(bound);
+v.drag(bound);
+```
