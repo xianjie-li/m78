@@ -30,7 +30,7 @@ const ScrollExample = () => {
 
       <Divider>dragScroll</Divider>
 
-      <Scroll direction="xy" style={{ height: 340, width: 340 }} dragScroll>
+      <Scroll direction="x" style={{ height: 340, width: 340 }} dragScroll>
         <div
           style={{
             height: 1000,
@@ -63,7 +63,7 @@ const ScrollExample = () => {
         </div>
       </Scroll>
 
-      <Divider />
+      <Divider>miniBar</Divider>
 
       <Scroll style={{ whiteSpace: "nowrap", height: 60, width: 200 }} miniBar>
         {Array.from({ length: 10 }).map((_, i) => (

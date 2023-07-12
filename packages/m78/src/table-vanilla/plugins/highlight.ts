@@ -18,6 +18,7 @@ export class _TableHighlightPlugin
 {
   init() {
     this.methodMapper(this.table, [
+      "locate",
       "highlight",
       "highlightColumn",
       "highlightRow",
@@ -30,7 +31,8 @@ export class _TableHighlightPlugin
     let first = list[0];
 
     // 自动滚动到目标时的额外距离
-    const edgeOffset = 50;
+    const edgeOffsetX = 80;
+    const edgeOffsetY = 60;
 
     if (list.length > 1) {
       let minRowIndex: number | undefined;
@@ -70,10 +72,10 @@ export class _TableHighlightPlugin
     let yHide = false;
 
     const overLeft = column.x < left;
-    const overRight = column.x + column.width > right;
+    const overRight = column.x + first.width > right;
 
     const overTop = row.y < top;
-    const overBottom = row.y + row.height > bottom;
+    const overBottom = row.y + first.height > bottom;
 
     // 对应方向非固定项并且不在可见区域时, 对其标记
     if (!column.isFixed && (overLeft || overRight)) {
@@ -90,17 +92,17 @@ export class _TableHighlightPlugin
 
       if (xHide) {
         if (overLeft) {
-          xOffset = column.x - this.context.leftFixedWidth - edgeOffset;
+          xOffset = column.x - this.context.leftFixedWidth - edgeOffsetX;
         } else if (overRight) {
-          xOffset = column.x - leftContW + column.width + edgeOffset;
+          xOffset = column.x - leftContW + first.width + edgeOffsetX;
         }
       }
 
       if (yHide) {
         if (overTop) {
-          yOffset = row.y - this.context.topFixedHeight - edgeOffset;
+          yOffset = row.y - this.context.topFixedHeight - edgeOffsetY;
         } else if (overBottom) {
-          yOffset = row.y - topContH + row.height + edgeOffset;
+          yOffset = row.y - topContH + first.height + edgeOffsetY;
         }
       }
 

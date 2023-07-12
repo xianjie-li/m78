@@ -16,7 +16,8 @@ next: 指定滚动只在向对应方向移动时触发
 
 包含 getter/setter 时, 格式为 xxx() 取值 xxx(v) 更新值
 
-> 最开始是计划实现基于 konva 的 canvas 表格, 所以接口风格与其相似, 但是在常规优化手段都用上后(禁用所有图形事件, 关闭叠图优化等等), 发现视口内渲染的单元格较多时卡顿明显
+> 最开始是计划实现基于 konva 的 canvas 表格, 所以接口风格与其相似, 但是在常规优化手段都用上后(禁用所有图形事件,
+> 关闭叠图优化等等), 发现视口内渲染的单元格较多时卡顿明显
 > 后改为 canvas 渲染, 但是在 safari 下滚动不流畅, 并且还要单独写高清屏适配, 文本对其/溢出计算等等..., 故又弃之
 > 最后还是回到了 dom 渲染, 发现在行列都虚拟化后性能意外的还不错? 并且使用难度也更低了, 配合 dom 大大增强了可定制性.
 
@@ -79,7 +80,8 @@ ins.renderList.map((cell, n: React.ReactElement | null) => {
 
 ## 滚动 =
 
-固定项滚动抖动/虚拟滚动快速滚动短暂空白: 使用 wheel 代替 scroll 事件, 后者是滚动后触发, 进行渲染时已经处于滚动后了, 所以会有明显的延迟感
+固定项滚动抖动/虚拟滚动快速滚动短暂空白: 使用 wheel 代替 scroll 事件, 后者是滚动后触发, 进行渲染时已经处于滚动后了,
+所以会有明显的延迟感
 
 滚动容器依然使用 overflow: hidden + scrollLeft/Top 来实现, 但是滚动位置由 wheel/触摸 事件更新
 
@@ -133,7 +135,7 @@ TODO: fixed 项超过内容尺寸如何处理?
 
 行列均以以后侧的线为拖拽点, 固定项的首行/列前后侧的点均用于控制自身
 
-## copy/paste
+## copy/paste -
 
 copy({ x, y, endy, endx }?): csv 复制当前选中的单元格或指定单元格
 paste(csv?, { x, y, endy, endx }?) 粘贴粘贴板上的 csv 格式内容到选中单元格或指定单元格, 需要记录 action
@@ -141,6 +143,8 @@ paste(csv?, { x, y, endy, endx }?) 粘贴粘贴板上的 csv 格式内容到选�
 复制行数据/复制列数据
 
 间隔复制
+
+不在显示区域的单元格不粘贴
 
 ## 选中 -
 
@@ -192,15 +196,23 @@ move 时, 以当前点和最后的正常点计算范围, 取当前 和 最后可
 
 **数据同步方式**
 
-- 统一完整提交: 操作完成后, 判断 dataChanged 和 configChanged, 若有变更, 将变更后的数据或配置完整提交, 这是最简单的方式, 但是数据量过大时可能体验不佳
-- 统一局部提交: 操作完成后, 对变更项 ins.add / ins.changed / ins.removed / ins.sorted ([[oInd, nInd]])进行提交, 如果 configChanged = true 则同时提交配置
+- 统一完整提交: 操作完成后, 判断 dataChanged 和 configChanged, 若有变更, 将变更后的数据或配置完整提交, 这是最简单的方式,
+  但是数据量过大时可能体验不佳
+- 统一局部提交: 操作完成后, 对变更项 ins.add / ins.changed / ins.removed / ins.sorted ([[oInd, nInd]])进行提交, 如果
+  configChanged = true 则同时提交配置
 - 实时局部提交: 监听事件, 发生变更时将上述状态提交, 提交期间可通过 processing 阻塞表格, 完成后可清理对应的变更状态
 
 **onChange**
 
 ```ts
 // 根据enum类型, 有多个不同的重写版本
-onChange(actionType: actionEnum, arg: any) {
+onChange(actionType
+:
+actionEnum, arg
+:
+any
+)
+{
   actionType.addRow
   actionType.sort
   actionType.config
@@ -215,7 +227,8 @@ onChange(actionType: actionEnum, arg: any) {
 - 支持接收 config.persistenceConfig, 用于还原需要持久化的配置
 - 初始化/重置时, 将该配置克隆本地化, 并将代码中的 key 和本地同名 key 配置合并
 - 对应配置变更时, 通过 event.configChange(keys) 通知, 并写入 history
-- 示例上提供 table.configChanged 判断配置是否变更, table.configChangedKeys 获取变更的配置项, table.persistenceConfig 获取当前配置
+- 示例上提供 table.configChanged 判断配置是否变更, table.configChangedKeys 获取变更的配置项, table.persistenceConfig
+  获取当前配置
 
 若自定义排序后, 代码中配置了新列, 根据 key 的前后关系放入 sortColumns 中
 通过 redo, undo 直接操作本地化的配置
@@ -256,19 +269,53 @@ onSort(column, ordType)
 
 ### 编辑 💦
 
-数据改变后, 对变更行和变更单元格进行标记
+基础部分:
 
-单元格值不再限制为 string
+在核心库中实现, 在只存着单个选中单元格并对其进行点击时, 进入`interactive`状态, interactive 并非一定表示单元格编辑,
+也可能是渲染某个组件
 
-- 聚焦后, 如果发生录入, 替换当前值并聚焦输入
-- 单击单元格时, 单元格聚焦, 如果配置了 dom render, 将其附加渲染为对应组件
-- 编辑角标
-- 校验: 错误时单元格显示红色, 点击后显示错误信息
-- 列头显示可编辑和必填标记
+interactiveRender({ cell, attachNode }): clearFn?;
 
-actionType.valueChange [newValue]
+```tsx
+let current = null;
+// 一个假想的在react中进行集成的方式
+function interactiveRender({ attachNode }) {
+  current = createPortal(<input />, attachNode);
+}
 
-使用一个独立的 form 实例来管理表单状态
+// 实际的react上下文中
+return <div>{current}</div>;
+```
+
+- react 中通过 portal api 渲染, 并将其返回的 reactElement 渲染到实际上下文中
+- dom 环境下, 直接改写 attachNode, 并通过返回 clearFn 来在 interactive 项变更时执行清理
+
+attachNode 会实时依附到对应的 cell 上, 并跟随其尺寸变化, 用户应自行控制在 attachNode 下的表单控件样式
+attachNode 需要提供清理方式, 并支持延迟卸载来应对关闭动画或者 react 等框架的渲染延迟
+
+增强部分:
+
+- 在 react 中实现, 包含校验功能
+
+js 版本提供单个单元格点击后触发的替换行为 onCellInteractive 单元格开始交互, 只会同时有一个单元格进入交互状态
+
+并提供最简单的单元格编辑功能, 使用遮盖的方式显示编辑层, 原单元格保持不变
+
+单元格值可为任意值, 特殊类型值可以自定义 render
+
+- 聚焦单元格只有单个时, 渲染其表单控件
+
+actionType.valueChange [row, column, newValue]
+
+实现:
+每一行都是一个 form 实例, 在变更后创建实例并进行校验(需要保证行对象引用不变 + form 能直接操作原对象), 提交时拼接
+eachSchema 进行校验
+
+交互方式:
+值变更时, 对所有有变更的行进行校验, 标记变更过的行/单元格(检测是否有 form 实例, 实例是否 changed, 需要忽略私有字段)
+校验失败的项, 在单元格显示红色边框, 点击右下角红色角标可显示错误信息
+表头显示 可编辑 浅蓝 必填 - 橙色标记
+提交时要全部校验, 高亮第一行错误
 
 ### 增删/移动数据 -
 
@@ -312,9 +359,9 @@ moveRow/moveColumn
 
 新增行/删除行/导出/缩放(添加 hook, 可以触发导出时自定义数据源, 暴露导出方法)/筛选/当前页内容查找(不联网, 高亮匹配内容)
 
-## 移动端优化 💦
+## 移动端优化 =
 
-## 拖拽冲突
+## 拖拽冲突 -
 
 通过 event 来检测是否为 touch 事件:
 
@@ -329,12 +376,16 @@ pointerType === "touch" || type.startWith("touch")
 移动端:
 
 - 滚动: 拖拽
-- 框选: 拖拽行头/双指开始视为拖动
+- 框选: 无
 
 PC:
 
 - 滚动: 滑轮
 - 框选: 拖拽
+
+## 可访问性
+
+交互中时, 点击 tab 切换到下个相邻单元格
 
 ## 文档
 
@@ -362,7 +413,11 @@ interface Bound {
   data: any;
 }
 
-getBound(xy): bound[];  如果在区域内 可以阻止其他事件
+getBound(xy)
+:
+bound[];
+如果在区域内
+可以阻止其他事件
 hasBound(xy);  // 该点包含其他点
 
 v.bounds = [bound];

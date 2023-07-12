@@ -29,15 +29,18 @@
     "@m78/verify": "workspace:^",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
-    "@use-gesture/react": "^10.2.24",
+    "@use-gesture/react": "^10.2.27",
+    "@use-gesture/vanilla": "^10.2.27",
     "clsx": "^1.2.1",
     "i18next": "^22.0.5",
     "i18next-browser-languagedetector": "^7.0.1",
     "i18next-http-backend": "^2.0.1",
+    "konva": "^8.4.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^12.0.0",
     "react-spring": "^9.6.1",
+    "resize-observer-polyfill": "^1.5.1",
     "use-sync-external-store": "^1.2.0"
   },
   "overrides": {
@@ -61,6 +64,7 @@
   },
   "devDependencies": {
     "@types/use-sync-external-store": "^0.0.3",
-    "react-router-dom": "^6.4.3"
+    "react-router-dom": "^6.4.3",
+    "stats.js": "^0.17.0"
   }
 }

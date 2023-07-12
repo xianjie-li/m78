@@ -6,12 +6,14 @@ import {
   TableCellConfig,
   TableCellWithDom,
   TableColumnConfig,
+  TableColumnLeafConfigFormatted,
   TableRowConfig,
 } from "./items.js";
 import { TableSelectConfig } from "../plugins/select.js";
 import { TableKey, TableRenderCtx } from "./base-type.js";
 import { TableEmptyConfig } from "../plugins/empty.js";
-import { TableDragSort } from "../plugins/drag-sort.js";
+import { TableDragSortConfig } from "../plugins/drag-sort.js";
+import { EditableCoreConfig } from "../plugins/interactive-core.js";
 
 /** 不能通过table.config()变更的配置 */
 export type TableConfigCanNotChanges = typeof _configCanNotChange[number];
@@ -28,7 +30,7 @@ export interface TablePersistenceConfig {
   hideColumns?: TableKey[];
   /** 变更的列 */
   columns?: {
-    [key: string]: Omit<TableColumnConfig, "key">;
+    [key: string]: Omit<TableColumnLeafConfigFormatted, "key" | "originalKey">;
   };
   /** 变更的行 */
   rows?: TableConfig["rows"];
@@ -46,7 +48,8 @@ export interface TablePersistenceConfig {
 export interface TableConfig
   extends TableSelectConfig,
     TableEmptyConfig,
-    TableDragSort {
+    TableDragSortConfig,
+    EditableCoreConfig {
   /** 用于挂载表格的div节点 */
   el: HTMLDivElement;
   /** 数据主键, 用于标识数据的唯一性, 对应的值类型必须为字符串或数字 */

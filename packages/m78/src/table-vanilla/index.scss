@@ -13,9 +13,14 @@ $high3-z-index: 30;
   font-size: var(--m78-fs);
   line-height: 1.2;
   box-sizing: border-box;
-  outline: $border;
+  border: $border;
   touch-action: none;
   height: 100%;
+  outline-offset: 3px;
+
+  &:focus {
+    outline-color: transparent !important;
+  }
 
   > * {
     box-sizing: border-box;
@@ -47,11 +52,18 @@ $high3-z-index: 30;
     position: absolute;
     padding: 2px 4px;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     border-right: $border;
     border-bottom: $border;
     background-color: var(--m78-component-bg);
     overflow: hidden;
+    word-break: break-all;
+
+    // 搭配 align-items: flex-start; 使自己在超出高度时上对齐, 其他情况下居中
+    > * {
+      margin-top: auto;
+      margin-bottom: auto;
+    }
 
     // 奇偶标记
 
@@ -203,7 +215,7 @@ $high3-z-index: 30;
     top: 0;
     height: 100%;
     width: 0;
-    border-left: 3px dashed var(--m78-color);
+    border-left: 3px solid var(--m78-color);
   }
 
   &_tip-line-y {
@@ -213,7 +225,7 @@ $high3-z-index: 30;
     left: 0;
     height: 0;
     width: 100%;
-    border-top: 3px dashed var(--m78-color);
+    border-top: 3px solid var(--m78-color);
   }
 
   //  ## 空节点
@@ -298,6 +310,13 @@ $high3-z-index: 30;
     border-left: 3px double var(--m78-color);
     height: 100%;
     width: 0;
+  }
+
+  // ## 编辑
+  &_edit-attach {
+    position: absolute;
+    background-color: var(--m78-component-bg);
+    border: 2px solid var(--m78-color);;
   }
 }
 

@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import { _DNDMapEntry, _GroupState, DNDEnableInfos, DNDNode, DNDPosition, DNDProps, DNDStatus, _Context, _PendingItem, _LevelContext, _AutoScrollCtx } from "./types.js";
+import { _DNDMapEntry, _GroupState, DNDEnableInfos, DNDNode, DNDPosition, DNDProps, DNDStatus, _Context, _PendingItem, _LevelContext } from "./types.js";
 import { AnyObject, Bound, TupleNumber } from "@m78/utils";
 export declare const _DEFAULT_GROUP = "M78-DND-DEFAULT-GROUP";
 /** 所有分组数据 */
@@ -45,24 +45,6 @@ export declare function _filterInBoundDNDs(ctx: _Context, first: boolean, xy: Tu
  * - 规则: 获取level最高的放置点, 若依然存在多个, 获取挂载时间最靠后的一个
  * */
 export declare function _getCurrentTriggerByMultipleTrigger(inBoundList: _PendingItem[]): _PendingItem;
-/**
- * 计算光标在某个元素四个方向的自定滚动比例 0-1,
- * 不包含滚动条的方向返回值始终为0,
- * 元素不包含滚动条时无返回,
- * 同时只会有一个方向有值
- * */
-export declare function _getAutoScrollStatus(el: HTMLElement, x: number, y: number): {
-    top: number;
-    bottom: number;
-    left: number;
-    right: number;
-} | undefined;
-/**
- * 根据getAutoScrollStatus的返回值滚动元素
- * */
-export declare function _autoScrollByStatus(el: HTMLElement & {
-    ctx: _AutoScrollCtx;
-}, status: ReturnType<typeof _getAutoScrollStatus>, down: boolean): void;
 /**  根据事件元素类型决定是否禁止拖动 */
 export declare function _isIgnoreEl(event?: any, ignoreElFilter?: DNDProps["ignore"]): boolean;
 //# sourceMappingURL=common.d.ts.map

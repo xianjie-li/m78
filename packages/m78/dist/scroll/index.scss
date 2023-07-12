@@ -1,7 +1,6 @@
 
 .m78-scroll {
   position: relative;
-  //border: 1px solid blue;
   overflow: hidden;
 
   &_wrap {
@@ -10,6 +9,7 @@
     display: flex;
     flex-wrap: wrap;
     will-change: scroll-position, transform;
+    overflow: hidden;
 
     left: 0;
     top: 0;
@@ -182,7 +182,7 @@
   }
 
   &_cont {
-    min-width: 100%;
+    //min-width: 100%;
   }
 
   &_pull-down {

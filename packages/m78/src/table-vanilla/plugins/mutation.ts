@@ -50,6 +50,8 @@ export class _TableMutationPlugin extends TablePlugin {
       "removeRow",
       "moveRow",
       "moveColumn",
+      "setValue",
+      "getValue",
     ]);
   }
 
@@ -344,6 +346,85 @@ export class _TableMutationPlugin extends TablePlugin {
     this.moveCommon(key, to, true, insertAfter);
   };
 
+  getValue: TableMutation["getValue"] = (a, b?: any) => {
+    const [cell] = this.valueActionGetter(a, b);
+
+    if (!cell) return;
+
+    return getNamePathValue(cell.row.data, cell.column.config.originalKey);
+  };
+
+  setValue: TableMutation["setValue"] = (a, b, c?: any) => {
+    const [cell, value] = this.valueActionGetter(a, b, c);
+
+    if (!cell) return;
+
+    const { row, column } = cell;
+
+    const oldValue = deepClone(
+      getNamePathValue(row.data, column.config.originalKey)
+    );
+
+    this.table.history.redo({
+      redo: () => {
+        setNamePathValue(row.data, column.config.originalKey, value);
+
+        const event: TableMutationValueEvent = {
+          type: TableMutationType.value,
+          cell: cell!,
+          value,
+          oldValue,
+        };
+
+        this.table.event.mutation.emit(event);
+
+        this.table.render();
+
+        this.table.highlight(event.cell.key, false);
+      },
+      undo: () => {
+        setNamePathValue(row.data, column.config.originalKey, oldValue);
+
+        const event: TableMutationValueEvent = {
+          type: TableMutationType.value,
+          cell: cell!,
+          value: oldValue,
+          oldValue: value,
+        };
+
+        this.table.event.mutation.emit(event);
+
+        this.table.render();
+
+        this.table.highlight(event.cell.key, false);
+      },
+    });
+  };
+
+  /** 处理setValue/getValue的不同参数, 并返回cell和value */
+  private valueActionGetter(a: any, b: any, c?: any) {
+    let cell: TableCell | null = null;
+    let value: any;
+
+    if (this.table.isCellLike(a)) {
+      cell = a;
+      value = b;
+    } else if (this.table.isRowLike(a) && this.table.isColumnLike(b)) {
+      cell = this.table.getCell(a.key, b.key);
+      value = c;
+    } else if (this.table.isTableKey(a) && this.table.isTableKey(b)) {
+      cell = this.table.getCell(a, b);
+      value = c;
+    }
+
+    if (!cell) return [cell, value] as const;
+
+    if (cell.row.isHeader || cell.column.isHeader)
+      return [null, value] as const;
+
+    return [cell, value] as const;
+  }
+
   private moveColumn: TableMutation["moveColumn"] = (key, to, insertAfter) => {
     if (this.context.xHeaderKey === to) {
       console.warn(`[${_prefix}] moveColumn: can't move column to header`);
@@ -351,7 +432,9 @@ export class _TableMutationPlugin extends TablePlugin {
     }
 
     if (this.context.hasMergeHeader) {
-      this.table.event.error.emit(this.context.texts.sortMergeColumn);
+      console.warn(
+        `[${_prefix}] persistenceConfig.sortColumns: Can not sort column when has merge header`
+      );
       return;
     }
 
@@ -414,10 +497,12 @@ export class _TableMutationPlugin extends TablePlugin {
 
           // 同步sortColumns
           if (!isRow) {
-            this.setPersistenceConfig(
-              "sortColumns",
-              this.table.getColumnSortKeys()
-            );
+            this.table.history.ignore(() => {
+              this.setPersistenceConfig(
+                "sortColumns",
+                this.table.getColumnSortKeys()
+              );
+            });
           }
 
           this.table.event.mutation.emit({
@@ -469,10 +554,12 @@ export class _TableMutationPlugin extends TablePlugin {
 
           // 同步sortColumns
           if (!isRow) {
-            this.setPersistenceConfig(
-              "sortColumns",
-              this.table.getColumnSortKeys()
-            );
+            this.table.history.ignore(() => {
+              this.setPersistenceConfig(
+                "sortColumns",
+                this.table.getColumnSortKeys()
+              );
+            });
           }
 
           this.table.event.mutation.emit({
@@ -598,10 +685,12 @@ export class _TableMutationPlugin extends TablePlugin {
 
           // 保持fixed一致
           if (hasFixed && !fixedEqual) {
-            this.setPersistenceConfig(
-              [isRow ? "rows" : "columns", i.ins.key, "fixed"],
-              toConf.fixed
-            );
+            this.table.history.ignore(() => {
+              this.setPersistenceConfig(
+                [isRow ? "rows" : "columns", i.ins.key, "fixed"],
+                toConf.fixed
+              );
+            });
           }
 
           // 转为fixed项或固定项到固定项
@@ -658,10 +747,12 @@ export class _TableMutationPlugin extends TablePlugin {
 
           // 还原fixed
           if (hasFixed && !fixedEqual) {
-            this.setPersistenceConfig(
-              [isRow ? "rows" : "columns", i.ins.key, "fixed"],
-              conf.fixed
-            );
+            this.table.history.ignore(() => {
+              this.setPersistenceConfig(
+                [isRow ? "rows" : "columns", i.ins.key, "fixed"],
+                conf.fixed
+              );
+            });
           }
 
           if (isToFixed || isFixedToFixed) {
@@ -890,11 +981,13 @@ export class _TableMutationPlugin extends TablePlugin {
 export enum TableMutationType {
   /** 持久化配置变更 */
   config = "config",
-  /** 记录变更 */
+  /** 记录变更, 通常表示新增/删除/排序 */
   data = "data",
+  /** 单元格值变更 */
+  value = "value",
 }
 
-/** TableMutationType.row变更类型 */
+/** TableMutationType.data变更类型 */
 export enum TableMutationDataType {
   add = "add",
   remove = "remove",
@@ -903,7 +996,8 @@ export enum TableMutationDataType {
 
 export type TableMutationEvent =
   | TableMutationConfigEvent
-  | TableMutationDataEvent;
+  | TableMutationDataEvent
+  | TableMutationValueEvent;
 
 /** 持久化配置变更事件 */
 export interface TableMutationConfigEvent {
@@ -940,6 +1034,18 @@ export interface TableMutationDataEvent {
     /** 移动的行数据 */
     data: AnyObject;
   }>;
+}
+
+/** 单元格值变更事件 */
+export interface TableMutationValueEvent {
+  /** 事件类型 */
+  type: TableMutationType.value;
+  /** 变更的单元格 */
+  cell: TableCell;
+  /** 变更前的值 */
+  oldValue: any;
+  /** 变更后的值 */
+  value: any;
 }
 
 // 全部改为使用key作为参照
@@ -990,4 +1096,22 @@ export interface TableMutation {
     to: TableKey,
     insertAfter?: boolean
   ): void;
+
+  /** 设置单元格值 */
+  setValue(cell: TableCell, value: any): void;
+
+  /** 根据row&column设置单元格值 */
+  setValue(row: TableRow, column: TableColumn, value: any): void;
+
+  /** 根据row&column key设置单元格值 */
+  setValue(rowKey: TableKey, columnKey: TableKey, value: any): void;
+
+  /** 获取单元格值 */
+  getValue(cell: TableCell): any;
+
+  /** 根据row&column获取单元格值 */
+  getValue(row: TableRow, column: TableColumn): any;
+
+  /** 根据row&column key获取单元格值 */
+  getValue(rowKey: TableKey, columnKey: TableKey): any;
 }

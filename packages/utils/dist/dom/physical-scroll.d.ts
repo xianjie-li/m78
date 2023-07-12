@@ -1,3 +1,4 @@
+import { RafFunction } from "../bom.js";
 import { TupleNumber, EmptyFunction } from "../types.js";
 /** 支持的事件处理类型 */
 export declare enum PhysicalScrollEventType {
@@ -19,7 +20,7 @@ export interface PhysicalScrollEvent {
  * 在指定元素上模拟拖拽滚动的物理效果
  *
  * 前置条件:
- * - 滚动容器必须设置为overflow: hidden, 并且容器内容尺寸需超过滚动容器
+ * - 滚动容器必须满足滚动条件, 设置overflow并且容器内容尺寸需超过滚动容器
  * - 在触摸设备, 通常要为滚动容器添加css: touch-action: none
  * */
 export declare class PhysicalScroll {
@@ -39,12 +40,14 @@ export declare class PhysicalScroll {
         /** 指定如何设置滚动位置, 省略时设置el.scrollTop/Left */
         positionSetter?: (xy: TupleNumber) => void;
     };
+    rafCaller: RafFunction;
+    rafCallerClear?: EmptyFunction;
     prevX?: number;
     prevY?: number;
     startX?: number;
     startY?: number;
     startTime?: number;
-    rafClear: EmptyFunction;
+    rafClear?: EmptyFunction;
     autoScrollStartTime?: number;
     lastDistanceX: any;
     lastDistanceY: any;

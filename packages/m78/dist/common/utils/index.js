@@ -1,5 +1,5 @@
 import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelf } from "@m78/hooks";
 import { isNumber, isString, isTruthyOrZero } from "@m78/utils";
 /** 禁止冒泡的便捷扩展对象 */ export var stopPropagation = {
@@ -63,4 +63,28 @@ export var DEFAULT_CHILDREN_KEY = "children";
 /** 从DataSourceItem中获取children, 支持自定义取值的key */ export function getChildrenByDataSource(item, cus) {
     var childrenKey = (cus === null || cus === void 0 ? void 0 : cus.childrenKey) || DEFAULT_CHILDREN_KEY;
     return item[childrenKey] || [];
+}
+/** 为节点添加className */ export function addCls(el, cls) {
+    if (el.classList) {
+        el.classList.add(cls);
+    } else {
+        var currentClassName = el.className;
+        var regex = new RegExp("(^|\\s)" + cls + "(\\s|$)", "g");
+        if (!regex.test(currentClassName)) {
+            el.className = (currentClassName + " " + cls).trim();
+        }
+    }
+}
+/** 为节点移除className */ export function removeCls(el, cls) {
+    if (el.classList) {
+        el.classList.remove(cls);
+    } else {
+        var currentClassName = el.className;
+        var regex = new RegExp("(^|\\s)" + cls + "(\\s|$)", "g");
+        el.className = currentClassName.replace(regex, " ").trim();
+    }
+}
+/** 若存在, 从节点的父节点将其删除 */ export function removeNode(node) {
+    if (!node || !node.parentNode) return;
+    node.parentNode.removeChild(node);
 }

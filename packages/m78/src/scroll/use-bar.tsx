@@ -11,7 +11,6 @@ import {
   _RESERVE_BAR_SIZE,
 } from "./common.js";
 import { FullGestureState, useDrag } from "@use-gesture/react";
-import { stopPropagation } from "../common/index.js";
 
 /* # # # # # # # # # # # # # # # # #
  * ## 成员
@@ -35,6 +34,7 @@ export function _useBar(ctx: _ScrollContext) {
     isY: true,
     delayHidden,
   });
+
   const xBar = _useBarImpl(ctx, {
     isY: false,
     delayHidden,
@@ -83,19 +83,19 @@ export function _useBar(ctx: _ScrollContext) {
     meta.isScrollX && xBar.refreshScrollPosition(meta.x / meta.xMax);
     meta.isScrollY && yBar.refreshScrollPosition(meta.y / meta.yMax);
 
-    if (!self.delayHiddenLock) {
-      let key = "";
+    // if (!self.delayHiddenLock) {
+    let key = "";
 
-      // isScroll不是完全可靠的, 所以这里严格鉴别
-      if (meta.isScrollX) key = "x";
-      if (meta.isScrollY) key = "y";
+    // isScroll不是完全可靠的, 所以这里严格鉴别
+    if (meta.isScrollX) key = "x";
+    if (meta.isScrollY) key = "y";
 
-      if (key) {
-        setState({
-          [`${key}Visible`]: true,
-        });
-      }
+    if (key) {
+      setState({
+        [`${key}Visible`]: true,
+      });
     }
+    // }
 
     delayHidden();
   }
@@ -108,7 +108,7 @@ export function _useBar(ctx: _ScrollContext) {
     xBar.refresh();
   }
 
-  function delayHidden() {
+  function delayHidden(delay = 800) {
     if (self.delayHiddenLock) return;
     clearTimeout(self.delayHiddenTimer);
 
@@ -117,7 +117,7 @@ export function _useBar(ctx: _ScrollContext) {
         xVisible: false,
         yVisible: false,
       });
-    }, 800);
+    }, delay);
   }
 
   /** 检测各轴是否开启了滚动及是否可滚动 */
@@ -151,7 +151,7 @@ interface _BarImplOption {
   // 控制生成X/Y轴滚动条
   isY: boolean;
   /** 触发滚动条延迟隐藏 */
-  delayHidden: () => void;
+  delayHidden: (delay?: number) => void;
 }
 
 /** 单个滚动条实现, isY用于 */
@@ -259,7 +259,7 @@ export function _useBarImpl(
     }
 
     /** 触发自动关闭 */
-    if (!e.down) {
+    if (e.last) {
       self.delayHiddenLock = false;
     }
 
@@ -308,9 +308,39 @@ export function _useBarImpl(
     delayHidden();
   });
 
+  /** 显示滚动条, 并触发延迟自动关闭 */
+  const showBar = useFn(() => {
+    ctx.setState({
+      [`${isY ? "y" : "x"}Visible`]: true,
+    });
+
+    delayHidden(1600);
+  });
+
+  /** 滚动条thumb点击 */
+  const onBarClick = useFn((e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+
+    const visible = isY ? state.yVisible : state.xVisible;
+
+    // 隐藏时改为线上滚动条
+    if (!visible) {
+      showBar();
+      return;
+    }
+  });
+
   /** 轨道点击, 滚动位置到同比例位置 */
   const onTrackClick = useFn((e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
+
+    const visible = isY ? state.yVisible : state.xVisible;
+
+    // 隐藏时改为线上滚动条
+    if (!visible) {
+      showBar();
+      return;
+    }
 
     const rect = barRef.current.getBoundingClientRect();
 
@@ -338,11 +368,10 @@ export function _useBarImpl(
   const barNode = (
     <Toggle when={isY ? state.enableStatus.y : state.enableStatus.x}>
       <div
-        className={clsx(
-          "m78-scroll_bar",
-          `__${isY ? "y" : "x"}`,
-          isVisible && "__show"
-        )}
+        className={clsx("m78-scroll_bar", `__${isY ? "y" : "x"}`)}
+        style={{
+          opacity: isVisible ? 1 : 0,
+        }}
         ref={barRef}
         onTouchMove={onActive}
         onTouchEnd={onUnActive}
@@ -356,7 +385,7 @@ export function _useBarImpl(
             [offsetKey]: sp.offset.to((o) => `${o}px`),
             [sizeKey]: sp.size.to((o) => `${o}px`),
           }}
-          {...stopPropagation}
+          onClick={onBarClick}
           {...bind()}
         />
       </div>

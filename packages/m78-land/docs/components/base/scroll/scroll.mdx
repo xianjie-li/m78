@@ -5,7 +5,7 @@ title: Scroll - 滚动容器
 用于代替原生`overflow: scroll`使用的滚动容器
 
 - 提供了自定义滚动条, 因为原生滚动条在不同平台表现不一致, 且无法做到跨浏览器的定制
-- 其他常用的滚动功能, 如上拉/下拉, 在桌面平台启用拖动滚动等
+- 其他常用的滚动功能, 如上拉/下拉, 隐藏滚动条, 在桌面平台启用拖动滚动等
 
 ## 基础用法
 
@@ -49,7 +49,7 @@ title: Scroll - 滚动容器
 
 ## 拖拽滚动
 
-在桌面平台提供模拟的拖拽滚动, 开启后下拉刷新相关配置失效, 可通过`dragScrollInertia`关闭惯性滚动
+在使用光标时提供模拟的拖拽滚动, 不能和下拉刷新相关配置同时使用
 
 <demo
   demo={require("./drag-bar-example.tsx")}
@@ -117,7 +117,7 @@ interface ScrollInstance {
 ### Props
 
 ```ts
-export interface ScrollProps extends ComponentBaseProps {
+interface ScrollProps extends ComponentBaseProps {
   /** ScrollDirection.xy | 滚动方向 */
   direction?: ScrollDirectionUnion;
   /** 显示的内容 */
@@ -132,10 +132,14 @@ export interface ScrollProps extends ComponentBaseProps {
   miniBar?: boolean;
   /** 滚动时触发 */
   onScroll?: (meta: UseScrollMeta) => void;
-  /** 容器级防止的额外节点, 用于功能扩展 */
+  /** 容器级放置的额外节点, 用于功能扩展 */
   wrapExtra?: React.ReactNode;
   /** 用于控制滚动的实例 */
   instanceRef?: React.Ref<ScrollInstance>;
+  /** 内部容器节点 */
+  innerRef?: React.Ref<HTMLDivElement>;
+  /** 用于获取内部滚动容器dom */
+  innerWrapRef?: React.RefObject<HTMLDivElement>;
   /** 内容容器节点的额外style */
   contStyle?: React.CSSProperties;
   /** 内容容器节点的额外className */
@@ -144,10 +148,8 @@ export interface ScrollProps extends ComponentBaseProps {
   disabledScroll?: boolean;
 
   /* # # # # # # # 拖拽滚动 # # # # # # # */
-  /** 在桌面平台提供模拟的拖拽滚动, 开启后下拉刷新相关配置失效 */
+  /** 在光标操作时使用模拟的拖拽滚动, 开启后下拉刷新相关配置失效 */
   dragScroll?: boolean;
-  /** true | 拖拽滚动是否带惯性 */
-  dragScrollInertia?: boolean;
 
   /* # # # # # # # 下拉 & 上拉 (只负责触发事件, 距离请求逻辑可搭配useFetch实现) # # # # # # # */
   /** 下拉触发, 传入即视为启用下拉 */

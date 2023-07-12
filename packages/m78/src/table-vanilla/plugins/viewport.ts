@@ -2,16 +2,18 @@ import { TablePlugin } from "../plugin.js";
 import {
   EmptyFunction,
   getNamePathValue,
+  isFocus,
   isNumber,
   isTruthyOrZero,
   rafCaller,
   RafFunction,
+  replaceHtmlTags,
   setNamePathValue,
 } from "@m78/utils";
 import { _getSizeString } from "../common.js";
 import { _TableGetterPlugin } from "./getter.js";
 import clsx from "clsx";
-import { removeNode, addCls, removeCls } from "../../common/index.js";
+import { addCls, removeCls, removeNode } from "../../common/index.js";
 
 import {
   TableCell,
@@ -21,6 +23,8 @@ import {
 } from "../types/items.js";
 import { _TablePrivateProperty, TableRenderCtx } from "../types/base-type.js";
 import { _TableEventPlugin } from "./event.js";
+import { TouchEvent } from "react";
+import debounce from "lodash/debounce.js";
 
 /**
  * 视口/尺寸/滚动相关的核心功能实现
@@ -33,6 +37,8 @@ export class _TableViewportPlugin extends TablePlugin {
 
   /** 用于滚动订阅优化 */
   event: _TableEventPlugin;
+
+  getter: _TableGetterPlugin;
 
   init() {
     // 映射实现方法
@@ -51,17 +57,25 @@ export class _TableViewportPlugin extends TablePlugin {
       "isRowVisible",
       "isColumnVisible",
       "isCellVisible",
+      "isFocus",
+      "isActive",
     ]);
 
     this.rafCaller = rafCaller();
 
     this.event = this.getPlugin(_TableEventPlugin);
+    this.getter = this.getPlugin(_TableGetterPlugin);
 
     this.updateDom();
   }
 
+  mount() {
+    this.isActiveEventBind();
+  }
+
   beforeDestroy() {
     if (this.rafClear) this.rafClear();
+    this.isActiveEventUnBind();
   }
 
   /** 合并实现plugin.cellRender和config.render */
@@ -81,14 +95,14 @@ export class _TableViewportPlugin extends TablePlugin {
 
   width(width?: number | string) {
     const el = this.config.el;
-    if (width === undefined) return el.offsetWidth;
+    if (width === undefined) return el.clientWidth;
     el.style.width = _getSizeString(width);
     this.render();
   }
 
   height(height?: number | string) {
     const el = this.config.el;
-    if (height === undefined) return el.offsetHeight;
+    if (height === undefined) return el.clientHeight;
     el.style.height = _getSizeString(height);
     this.render();
   }
@@ -222,10 +236,6 @@ export class _TableViewportPlugin extends TablePlugin {
       const row = cell.row;
       const column = cell.column;
 
-      const lastText = cell.text;
-      const _text = row.data[column.key];
-      cell.text = isTruthyOrZero(_text) ? String(_text!) : "";
-
       // 确保dom存在
       this.initCellDom(cell);
 
@@ -261,11 +271,18 @@ export class _TableViewportPlugin extends TablePlugin {
         renderCtx.disableDefaultRender || renderCtx.disableLaterRender;
 
       // 处理text, 因为.innerText读写都比较慢, 所以额外做一层判断
-      if (!disableDefaultRender && lastText !== cell.text) {
-        dom.innerText = cell.text;
+      if (!disableDefaultRender) {
+        const lastText = cell.text;
+
+        cell.text = this.getter.getText(cell);
+
+        if (lastText !== cell.text) {
+          const filter = replaceHtmlTags(cell.text);
+          dom.innerHTML = `<span>${filter}</span>`;
+        }
       }
 
-      // 添加节点
+      // 添加节点到画布
       if (!cell.isMount) {
         cell.isMount = true;
         this.context.stageEL.appendChild(dom);
@@ -277,18 +294,18 @@ export class _TableViewportPlugin extends TablePlugin {
   initCellDom(cell: TableCell) {
     const ctx = this.context;
 
-    if (!ctx.cellDomCaChe[cell.key]) {
-      ctx.cellDomCaChe[cell.key] = document.createElement("div");
+    if (!cell.dom) {
+      cell.dom = document.createElement("div");
     }
 
-    const dom = ctx.cellDomCaChe[cell.key];
+    const dom = cell.dom;
 
     const lastReloadKey = getNamePathValue(
       dom,
       _TablePrivateProperty.reloadKey
     );
 
-    // 同一次reload中跳过后续操作
+    // 同一次reload中只进行一直更新
     if (lastReloadKey && lastReloadKey === ctx.lastReloadKey) {
       return;
     }
@@ -365,8 +382,6 @@ export class _TableViewportPlugin extends TablePlugin {
       dom.style.left = `${column.x}px`;
       dom.style.top = `${row.y}px`;
     }
-
-    cell.dom = dom;
   }
 
   /** 根据配置更新各种容器尺寸相关的内容 */
@@ -423,6 +438,8 @@ export class _TableViewportPlugin extends TablePlugin {
 
     config.el.style.minWidth = `${minWidth}px`;
     config.el.style.minHeight = `${minHeight}px`;
+
+    config.el.tabIndex = 0;
 
     // 处理stripe
     config.stripe
@@ -498,6 +515,10 @@ export class _TableViewportPlugin extends TablePlugin {
     );
   };
 
+  isFocus: TableViewPort["isFocus"] = (checkChildren) => {
+    return isFocus(this.config.el, checkChildren);
+  };
+
   /** isColumnVisible/isRowVisible通用逻辑 */
   private visibleCommon(isRow: boolean, key: string, partial: boolean) {
     const ctx = this.context;
@@ -533,6 +554,120 @@ export class _TableViewportPlugin extends TablePlugin {
 
     return isVisible;
   }
+
+  _isActive = false;
+
+  // 尽可能满足所有符合active的情况
+  private isActiveEventBind() {
+    document.documentElement.addEventListener(
+      "mousedown",
+      this.onIsActiveCheck
+    );
+    document.documentElement.addEventListener(
+      "touchstart",
+      this.onIsActiveCheck as any
+    );
+
+    this.config.el.addEventListener("mouseenter", this.onIsActiveCheck);
+
+    this.context.viewEl.addEventListener("scroll", this.onActive);
+
+    this.config.el.addEventListener("focus", this.onActive);
+
+    window.addEventListener("blur", this.onWindowBlur);
+  }
+
+  private isActiveEventUnBind() {
+    document.documentElement.removeEventListener(
+      "mousedown",
+      this.onIsActiveCheck
+    );
+    document.documentElement.removeEventListener(
+      "touchstart",
+      this.onIsActiveCheck as any
+    );
+
+    this.config.el.removeEventListener("mouseenter", this.onIsActiveCheck);
+
+    this.context.viewEl.removeEventListener("scroll", this.onActive);
+
+    this.config.el.removeEventListener("focus", this.onActive);
+
+    window.removeEventListener("blur", this.onWindowBlur);
+  }
+
+  // 开始滚动时更新isActive
+  private onActive = debounce(
+    () => {
+      if (this._isActive) return;
+
+      this._isActive = true;
+
+      addCls(this.config.el, "__active");
+    },
+    200,
+    {
+      leading: true,
+      trailing: false,
+    }
+  );
+
+  // 点击/移入时更新isActive
+  private onIsActiveCheck = debounce(
+    (e: MouseEvent | TouchEvent) => {
+      const mouseEvent = e as MouseEvent;
+      const touchEvent = e as TouchEvent;
+
+      const el = this.config.el;
+
+      let active: boolean;
+
+      if (e.type === "mouseenter") {
+        active = true;
+      } else {
+        let x;
+        let y;
+
+        if (e.type === "mousedown") {
+          x = mouseEvent.clientX;
+          y = mouseEvent.clientY;
+        } else {
+          x = touchEvent.touches[0].clientX;
+          y = touchEvent.touches[0].clientY;
+        }
+
+        const rect = el.getBoundingClientRect();
+
+        active =
+          x >= rect.left &&
+          x <= rect.right &&
+          y >= rect.top &&
+          y <= rect.bottom;
+      }
+
+      if (active === this._isActive) return;
+
+      this._isActive = active;
+
+      if (this._isActive) {
+        addCls(el, "__active");
+      } else {
+        removeCls(el, "__active");
+      }
+    },
+    200,
+    { leading: true, trailing: true }
+  );
+
+  private onWindowBlur = () => {
+    if (!this._isActive) return;
+
+    this._isActive = false;
+
+    removeCls(this.config.el, "__active");
+  };
+
+  isActive: TableViewPort["isActive"] = () => this._isActive;
 }
 
 export interface TableViewPort {
@@ -578,10 +713,14 @@ export interface TableViewPort {
   /** 内容区域高度 */
   contentHeight(): number;
 
-  /** 重绘表格. 注: 表格会在需要时自动进行重绘, 大部分情况不需要手动调用 */
+  /**
+   * 重绘表格. 注: 表格会在需要时自动进行重绘, 大部分情况不需要手动调用
+   *
+   * 多次调用的render会合并为一次并在浏览器的下一个渲染帧执行, 如果需要同步执行, 请使用renderSync
+   * */
   render(): void;
 
-  /** render()的同步版本, 没有requestAnimationFrame调用 */
+  /** render()的同步版本 */
   renderSync(): void;
 
   /** 指定列是否可见, partial为true时, 元素部分可见也视为可见, 默认为true */
@@ -592,4 +731,10 @@ export interface TableViewPort {
 
   /** 指定单元格是否可见, partial为true时, 元素部分可见也视为可见, 默认为true */
   isCellVisible(rowKey: string, columnKey: string, partial?: boolean): boolean;
+
+  /** 表格是否聚焦, checkChildren为true时会检测子级是否聚焦 */
+  isFocus(checkChildren?: boolean): boolean;
+
+  /** 表格是否处于活动状态, 即: 最近进行过点击, hover, 滚动等 */
+  isActive(): boolean;
 }

@@ -22,4 +22,10 @@ export declare function getValueByDataSource(item: DataSourceItem, cus?: DataSou
 export declare function getLabelByDataSource(item: DataSourceItem, cus?: DataSourceItemCustom): any;
 /** 从DataSourceItem中获取children, 支持自定义取值的key */
 export declare function getChildrenByDataSource<T = any>(item: T, cus?: DataSourceItemCustom): T[];
+/** 为节点添加className */
+export declare function addCls(el: HTMLElement, cls: string): void;
+/** 为节点移除className */
+export declare function removeCls(el: HTMLElement, cls: string): void;
+/** 若存在, 从节点的父节点将其删除 */
+export declare function removeNode(node?: Node): void;
 //# sourceMappingURL=index.d.ts.map

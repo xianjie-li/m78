@@ -51,8 +51,9 @@ export class _TableLifePlugin extends TablePlugin {
     ctx.columns = [];
     ctx.rows = {};
     ctx.cells = {};
-    ctx.cellDomCaChe = {};
-    ctx.cellStateCaChe = {};
+    ctx.rowCache = {};
+    ctx.columnCache = {};
+    ctx.cellCache = {};
     ctx.yHeaderKeys = [];
     ctx.ignoreXList = [];
     ctx.ignoreYList = [];
@@ -221,9 +222,6 @@ export class _TableLifePlugin extends TablePlugin {
     const ctx = this.context;
 
     ctx.lastViewportItems = undefined;
-    ctx.rowCache = {};
-    ctx.columnCache = {};
-    ctx.cellCache = {};
     ctx.topFixedMap = {};
     ctx.bottomFixedMap = {};
     ctx.leftFixedMap = {};

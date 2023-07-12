@@ -11,7 +11,10 @@ export const _privateInstanceKey = "__M78TableInstance";
 export const _privateScrollerDomKey = "__M78PrivateScrollerDom";
 
 export const _defaultTexts = {
-  sortMergeColumn: "Can not sort column when has merge header",
+  pasteUnalignedRow: "Pasted rows does not match the number of selected rows.",
+  pasteUnalignedColumn:
+    "Pasted column does not match the number of selected column.",
+  pasteSingleValueLimit: "Paste single value can't exceed {num} cell.",
 } as const;
 
 /** 重置级别3的所有配置, 未在其中的所有配置默认为级别1 */

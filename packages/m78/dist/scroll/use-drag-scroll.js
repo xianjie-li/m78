@@ -1,48 +1,42 @@
 import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
-import { useDrag } from "@use-gesture/react";
-import { config } from "react-spring";
+import { useEffect, useMemo } from "react";
+import { PhysicalScroll, PhysicalScrollEventType, rafCaller } from "@m78/utils";
 export var _useDragScroll = function(ctx) {
-    var scroller = ctx.scroller, xEnabled = ctx.xEnabled, yEnabled = ctx.yEnabled, dragScrollEnable = ctx.dragScrollEnable;
-    useDrag(function(param) {
-        var _delta = _sliced_to_array(param.delta, 2), x = _delta[0], y = _delta[1], down = param.down, _velocity = _sliced_to_array(param.velocity, 2), velocityX = _velocity[0], velocityY = _velocity[1], _movement = _sliced_to_array(param.movement, 2), movementX = _movement[0], movementY = _movement[1];
-        if (down) {
-            scroller.set({
-                x: xEnabled ? -x : undefined,
-                y: yEnabled ? -y : undefined,
-                raise: true,
-                immediate: true
-            });
-            return;
-        }
-        var newX = -movementX;
-        var newY = -movementY;
-        var xAb = Math.abs(movementX);
-        var yAb = Math.abs(movementY);
-        // 拖动距离过小时不产生惯性
-        var triggerOffset = 14;
-        if (xAb > triggerOffset) {
-            newX = newX * (velocityX * 4);
-        }
-        if (yAb > triggerOffset) {
-            newY = newY * (velocityY * 4);
-        }
-        if (xAb > triggerOffset || yAb > triggerOffset) {
-            scroller.set({
-                x: xEnabled ? newX : undefined,
-                y: yEnabled ? newY : undefined,
-                raise: true,
-                config: {
-                    config: config.slow
+    var props = ctx.props, xEnabled = ctx.xEnabled, yEnabled = ctx.yEnabled, innerWrapRef = ctx.innerWrapRef;
+    var refCall = useMemo(function() {
+        return rafCaller();
+    }, []);
+    useEffect(function() {
+        var ins;
+        var refClear;
+        if (props.dragScroll) {
+            ins = new PhysicalScroll({
+                el: ctx.innerWrapRef.current,
+                type: [
+                    PhysicalScrollEventType.mouse
+                ],
+                // 需要实现xEnabled/yEnabled, 所以根据事件自行更新
+                onlyNotify: true,
+                onScroll: function(param, isAutoScroll) {
+                    var _param = _sliced_to_array(param, 2), x = _param[0], y = _param[1];
+                    var dom = innerWrapRef.current;
+                    if (isAutoScroll) {
+                        yEnabled && (dom.scrollTop = y);
+                        xEnabled && (dom.scrollLeft = x);
+                    } else {
+                        refClear = refCall(function() {
+                            yEnabled && (dom.scrollTop = y);
+                            xEnabled && (dom.scrollLeft = x);
+                        });
+                    }
                 }
             });
         }
-    }, {
-        from: [
-            0,
-            0
-        ],
-        target: scroller.ref,
-        filterTaps: true,
-        enabled: dragScrollEnable
-    });
+        return function() {
+            ins && ins.destroy();
+            refClear && refClear();
+        };
+    }, [
+        props.dragScroll
+    ]);
 };

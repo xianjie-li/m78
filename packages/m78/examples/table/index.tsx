@@ -9,7 +9,7 @@ import {
   TableColumnFixed,
   TableRowFixed,
 } from "../../src/table-vanilla/types/base-type.js";
-import { createRandString } from "@m78/utils";
+import { createRandString, delay } from "@m78/utils";
 
 const createRow = (key: any) => {
   const obj: any = {
@@ -18,6 +18,17 @@ const createRow = (key: any) => {
 
   Array.from({ length: 40 }).forEach((_, j) => {
     obj[`field${j}`] = `${key}-${j}`;
+
+    if (j === 1) {
+      obj[`field${j}`] = ["abc", `${key}-${j}`];
+    }
+
+    if (j === 2) {
+      obj[`field${j}`] = {
+        value: `${key}-${j}`,
+        other: 123,
+      };
+    }
   });
 
   return obj;
@@ -95,6 +106,14 @@ const columns3: TableColumnConfig[] = Array.from({ length: 40 }).map((_, j) => {
 
   if (j > 20 && j < 23) {
     c.fixed = "right";
+  }
+
+  if (j === 1) {
+    c.key = [`field${j}`, 0];
+  }
+
+  if (j === 2) {
+    c.key = [`field${j}`, "value"];
   }
 
   return c;
@@ -247,6 +266,39 @@ const TableExample = () => {
       cellSelectable: (cell) => {
         return cell.column.key !== "field22";
       },
+      interactive: (cell) => {
+        return cell.column.key !== "field22";
+      },
+      interactiveRender: ({ cell, node, value, done }) => {
+        const inp = document.createElement("input");
+        inp.value = value;
+        node.appendChild(inp);
+        inp.style.width = "100%";
+        inp.style.height = "100%";
+        inp.style.outline = "none";
+        inp.style.border = "none";
+        inp.focus({ preventScroll: true });
+
+        inp.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            done();
+          }
+        });
+
+        inp.addEventListener("blur", () => {
+          done();
+        });
+
+        return (isSubmit) => {
+          if (isSubmit) {
+            console.log("提交");
+            if (inp.value === value) return;
+            table.setValue(cell, inp.value);
+          } else {
+            console.log("取消");
+          }
+        };
+      },
       viewEl: scrollRef.current,
       viewContentEl: scrollContRef.current,
       render(cell, ctx) {
@@ -268,6 +320,9 @@ const TableExample = () => {
     window.temp = table;
 
     table.event.mutation.on((e) => {
+      console.log(e);
+    });
+    table.event.error.on((e) => {
       console.log(e);
     });
 
@@ -511,6 +566,13 @@ const TableExample = () => {
           </button>
           <button
             onClick={() => {
+              console.log(tableRef.current.getSortedSelectedCells());
+            }}
+          >
+            getSortedSelectedCells
+          </button>
+          <button
+            onClick={() => {
               tableRef.current.selectRows(["id15", "id16", "id18"]);
             }}
           >
@@ -734,6 +796,28 @@ const TableExample = () => {
             move: 29 to 27
           </button>
         </div>
+
+        <div>
+          value:
+          <button
+            onClick={() => {
+              tableRef.current.setValue("id3", "field3", "abcdefg");
+            }}
+          >
+            id3 field3
+          </button>
+          <button
+            onClick={() => {
+              tableRef.current.history.batch(() => {
+                tableRef.current.setValue("id3", "field3", "abcd1");
+                tableRef.current.setValue("id4", "field3", "abcd2");
+                tableRef.current.setValue("id5", "field3", "abcd3");
+              });
+            }}
+          >
+            batch
+          </button>
+        </div>
       </div>
 
       <div>
@@ -815,6 +899,8 @@ const TableExample = () => {
       </div>
 
       <div id="output"></div>
+
+      <input />
     </div>
   );
 };

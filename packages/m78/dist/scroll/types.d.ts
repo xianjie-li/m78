@@ -41,18 +41,22 @@ export interface ScrollProps extends ComponentBaseProps {
     miniBar?: boolean;
     /** 滚动时触发 */
     onScroll?: (meta: UseScrollMeta) => void;
-    /** 容器级防止的额外节点, 用于功能扩展 */
+    /** 容器级放置的额外节点, 用于功能扩展 */
     wrapExtra?: React.ReactNode;
     /** 用于控制滚动的实例 */
     instanceRef?: React.Ref<ScrollInstance>;
+    /** 内部容器节点 */
+    innerRef?: React.Ref<HTMLDivElement>;
+    /** 用于获取内部滚动容器dom */
+    innerWrapRef?: React.RefObject<HTMLDivElement>;
     /** 内容容器节点的额外style */
     contStyle?: React.CSSProperties;
     /** 内容容器节点的额外className */
     contClassName?: string;
-    /** 在桌面平台提供模拟的拖拽滚动, 开启后下拉刷新相关配置失效 */
+    /** 禁止滚动 */
+    disabledScroll?: boolean;
+    /** 在光标操作时使用模拟的拖拽滚动, 开启后下拉刷新相关配置失效 */
     dragScroll?: boolean;
-    /** true | 拖拽滚动是否带惯性 */
-    dragScrollInertia?: boolean;
     /** 下拉触发, 传入即视为启用下拉 */
     onPullDown?: () => Promise<any>;
     /** 自定义指示器节点 */
@@ -130,7 +134,6 @@ export interface _ScrollContext {
     xEnabled: boolean;
     /** y轴滚动是否启用 */
     yEnabled: boolean;
-    /** 如果是移动设备, 则禁用dragScroll拖动, 使用原生拖动 */
-    dragScrollEnable: boolean;
+    innerWrapRef: React.RefObject<HTMLDivElement>;
 }
 //# sourceMappingURL=types.d.ts.map

@@ -1,7 +1,6 @@
 
 .m78-scroll {
   position: relative;
-  //border: 1px solid blue;
   overflow: hidden;
 
   &_wrap {
@@ -30,10 +29,7 @@
     background: var(--m78-color-border);
     z-index: var(--m78-z-index);
     border-radius: var(--m78-border-radius-md);
-    cursor: pointer;
-    opacity: 0;
     transition: opacity var(--m78-animate-slow);
-    pointer-events: none;
 
     &.__x {
       height: 8px;
@@ -105,11 +101,6 @@
         transform: scaleX(1.2);
         transform-origin: right;
       }
-    }
-
-    &.__show {
-      opacity: 1;
-      pointer-events: auto;
     }
 
     // 扩大点击面积

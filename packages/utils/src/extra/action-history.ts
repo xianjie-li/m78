@@ -1,3 +1,8 @@
+import { EmptyFunction } from "../types.js";
+
+const ACTION_IN_ACTION_WARNING =
+  "can't call redo() when redo() or undo() is running";
+
 /** implement action history */
 export class ActionHistory {
   /** 最大记录长度 */
@@ -11,6 +16,10 @@ export class ActionHistory {
   private isDoing = false;
   /** 正在执行undo()操作 */
   private isUndoing = false;
+  /** batch操作期间缓冲的所有action */
+  private batchActionList: ActionHistoryItem[] | undefined;
+  /** 为true期间不计入历史记录 */
+  private ignoreFlag = false;
 
   /**
    * 执行一项操作并推入历史, 若后方有其他操作历史, 将全部移除.
@@ -23,8 +32,13 @@ export class ActionHistory {
   redo(arg?: ActionHistoryItem) {
     if (!arg) {
       if (this.isDoing || this.isUndoing) {
+        console.warn(ACTION_IN_ACTION_WARNING);
+        return;
+      }
+
+      if (this.batchActionList) {
         console.warn(
-          "can't call redo() without argument when redo() or undo() is running"
+          "can't call redo() without argument when batch() is running"
         );
         return;
       }
@@ -43,8 +57,15 @@ export class ActionHistory {
       return;
     }
 
+    if (this.ignoreFlag) return;
+
     if (this.isDoing || this.isUndoing) {
-      arg.redo();
+      console.warn(ACTION_IN_ACTION_WARNING);
+      return;
+    }
+
+    if (this.batchActionList) {
+      this.batchActionList.push(arg);
       return;
     }
 
@@ -75,12 +96,17 @@ export class ActionHistory {
    * 在undo()执行期间内执行的redo(action)会被合并undo操作并且不计入历史
    * */
   undo() {
-    if (this.cursor === -1) return;
-
     if (this.isDoing || this.isUndoing) {
       console.warn("can't call undo() when redo() or undo() is running");
       return;
     }
+
+    if (this.batchActionList) {
+      console.warn("can't call undo() when batch() is running");
+      return;
+    }
+
+    if (this.cursor === -1) return;
 
     const prev = this.cursor;
     const cur = this.history[prev];
@@ -93,6 +119,45 @@ export class ActionHistory {
     this.cursor--;
 
     this.isUndoing = false;
+  }
+
+  /**
+   * 批量执行, 在action内执行的所有redo(action)操作都会被合并为单个
+   * */
+  batch(action: EmptyFunction) {
+    if (this.batchActionList) return;
+
+    this.batchActionList = [];
+
+    action();
+
+    const list = this.batchActionList.slice();
+
+    this.batchActionList = undefined;
+
+    this.redo({
+      redo: () => {
+        list.forEach((item) => item.redo());
+      },
+      undo: () => {
+        // 需要以相反顺序执行undo
+        list
+          .slice()
+          .reverse()
+          .forEach((item) => item.undo());
+      },
+    });
+  }
+
+  /**
+   * 忽略action内执行的所有redo(action)操作, 使它们不计入history
+   * */
+  ignore(action: EmptyFunction) {
+    this.ignoreFlag = true;
+
+    action();
+
+    this.ignoreFlag = false;
   }
 
   /** 重置历史 */

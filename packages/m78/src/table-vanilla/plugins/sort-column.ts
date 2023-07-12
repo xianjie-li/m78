@@ -1,6 +1,6 @@
 import { TablePlugin } from "../plugin.js";
 import { TableReloadLevel } from "./life.js";
-import { TableColumnLeafConfig } from "../types/items.js";
+import { TableColumnLeafConfigFormatted } from "../types/items.js";
 import {
   _TablePrivateProperty,
   TableColumnFixed,
@@ -42,17 +42,17 @@ export class _TableSortColumnPlugin
 
     if (ctx.hasMergeHeader) {
       console.warn(
-        `[${_prefix}] persistenceConfig.sortColumns: ${this.context.texts.sortMergeColumn}`
+        `[${_prefix}] persistenceConfig.sortColumns: Can not sort column when has merge header`
       );
       return;
     }
 
-    const sortMap: { [key: string]: TableColumnLeafConfig } = {};
+    const sortMap: { [key: string]: TableColumnLeafConfigFormatted } = {};
 
     // 不存在于sortColumns中的项
-    const regularColumns: TableColumnLeafConfig[] = [];
-    const regularFixedLeft: TableColumnLeafConfig[] = [];
-    const regularFixedRight: TableColumnLeafConfig[] = [];
+    const regularColumns: TableColumnLeafConfigFormatted[] = [];
+    const regularFixedLeft: TableColumnLeafConfigFormatted[] = [];
+    const regularFixedRight: TableColumnLeafConfigFormatted[] = [];
 
     ctx.columns.forEach((i) => {
       const fake = getNamePathValue(i, _TablePrivateProperty.fake);

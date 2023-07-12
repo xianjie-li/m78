@@ -4,7 +4,7 @@
 // 重新开始拖动时, 停止之前的惯性滚动
 
 // 触发阈值, 用于用户操作移动幅度过小时跳过惯性
-import { raf } from "../bom.js";
+import { raf, rafCaller, RafFunction } from "../bom.js";
 import { getEventOffset } from "../dom.js";
 import { TupleNumber, EmptyFunction } from "../types.js";
 import { clamp } from "../number.js";
@@ -45,10 +45,13 @@ export interface PhysicalScrollEvent {
  * 在指定元素上模拟拖拽滚动的物理效果
  *
  * 前置条件:
- * - 滚动容器必须设置为overflow: hidden, 并且容器内容尺寸需超过滚动容器
+ * - 滚动容器必须满足滚动条件, 设置overflow并且容器内容尺寸需超过滚动容器
  * - 在触摸设备, 通常要为滚动容器添加css: touch-action: none
  * */
 export class PhysicalScroll {
+  rafCaller: RafFunction;
+  rafCallerClear?: EmptyFunction;
+
   // 前一次触发的xy位置
   prevX?: number;
   prevY?: number;
@@ -59,7 +62,7 @@ export class PhysicalScroll {
   startTime?: number;
 
   // 自动滚动的raf清理函数
-  rafClear: EmptyFunction;
+  rafClear?: EmptyFunction;
   // 自动滚动开始的时间
   autoScrollStartTime?: number;
   // 自动滚动最后一次的移动距离
@@ -101,6 +104,8 @@ export class PhysicalScroll {
   }
 
   private mount() {
+    this.rafCaller = rafCaller();
+
     if (this.mouseEnable) {
       this.config.el.addEventListener("mousedown", this.mouseStart);
       document.addEventListener("mousemove", this.mouseMove);
@@ -124,6 +129,8 @@ export class PhysicalScroll {
       this.unBindTouchEvent(this.lastBindTarget);
       this.lastBindTarget = undefined;
     }
+
+    this.clear();
   }
 
   private mouseStart = (e: MouseEvent) => {
@@ -328,7 +335,7 @@ export class PhysicalScroll {
 
       // 这里需要同步更新滚动位置
       if (!this.config.onlyNotify) {
-        this.setScrollPosition([x, y]);
+        this.setScrollPosition([x, y], true);
       }
 
       this.config.onScroll?.([x, y], true);
@@ -343,6 +350,7 @@ export class PhysicalScroll {
   /** 清理当前状态/自动滚动 */
   private clear = () => {
     if (this.rafClear) this.rafClear();
+    if (this.rafCallerClear) this.rafCallerClear();
     this.autoScrollStartTime = undefined;
     this.lastDistanceY = undefined;
     this.lastDistanceX = undefined;
@@ -362,14 +370,23 @@ export class PhysicalScroll {
     return [conf.el.scrollLeft, conf.el.scrollTop];
   }
 
-  private setScrollPosition(xy: TupleNumber) {
+  private setScrollPosition(xy: TupleNumber, skipRaf?: boolean) {
     const conf = this.config;
     if (conf.positionSetter) {
       conf.positionSetter(xy);
       return;
     }
-    conf.el.scrollLeft = xy[0];
-    conf.el.scrollTop = xy[1];
+
+    const run = () => {
+      conf.el.scrollLeft = xy[0];
+      conf.el.scrollTop = xy[1];
+    };
+
+    if (skipRaf) {
+      run();
+    } else {
+      this.rafCallerClear = this.rafCaller(run);
+    }
   }
 
   /** 根据一组[offset, time]和提供的起始时间获取该时间之后移动距离的平均值, 如果最后一段时间未移动, 可能返回undefined */

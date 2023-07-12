@@ -1,11 +1,11 @@
 import _object_spread from "@swc/helpers/src/_object_spread.mjs";
 import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
 import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
-import { checkElementVisible, getScrollParent, isDom, isFunction, isObject } from "@m78/utils";
+import { autoScrollTrigger, checkElementVisible, getScrollParent, isDom, isFunction, isObject } from "@m78/utils";
 import { useFn } from "@m78/hooks";
 import throttle from "lodash/throttle.js";
 import isEqual from "lodash/isEqual.js";
-import { _defaultDNDEnableInfos, _defaultDNDStatus, _resetEvent, _updateEvent, _checkIfAcceptable, _filterInBoundDNDs, _getCurrentTriggerByMultipleTrigger, _getAutoScrollStatus, _autoScrollByStatus, _isIgnoreEl, _getObjectByNewValues } from "./common.js";
+import { _defaultDNDEnableInfos, _defaultDNDStatus, _resetEvent, _updateEvent, _checkIfAcceptable, _filterInBoundDNDs, _getCurrentTriggerByMultipleTrigger, _isIgnoreEl, _getObjectByNewValues } from "./common.js";
 import clsx from "clsx";
 export function _useMethods(ctx) {
     var initFeedbackEl = /** 开始拖动时使用, 初始化self.feedbackEl以便使用 */ function initFeedbackEl() {
@@ -159,7 +159,12 @@ export function _useMethods(ctx) {
         }
         /* # # # # # # # 自动滚动 # # # # # # # */ // xy在元素范围边缘一定距离时, 距离靠近边缘移动越快
         ctx.group.scrollParents.forEach(function(ele) {
-            _autoScrollByStatus(ele, _getAutoScrollStatus(ele, x, y), down);
+            autoScrollTrigger({
+                xy: ev.xy,
+                isLast: last,
+                el: ele
+            });
+        // _autoScrollByStatus(ele, down, _getAutoScrollStatus(ele, x, y));
         });
         /* # # # # # # # 无放置点命中时的处理 # # # # # # # */ if (!inBoundList.length) {
             if (first) {

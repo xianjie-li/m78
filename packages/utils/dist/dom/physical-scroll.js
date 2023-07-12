@@ -5,7 +5,7 @@
 // 触发阈值, 用于用户操作移动幅度过小时跳过惯性
 import _class_call_check from "@swc/helpers/src/_class_call_check.mjs";
 import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
-import { raf } from "../bom.js";
+import { raf, rafCaller } from "../bom.js";
 import { getEventOffset } from "../dom.js";
 import { clamp } from "../number.js";
 var triggerThreshold = 2;
@@ -28,7 +28,7 @@ export var PhysicalScrollEventType;
  * 在指定元素上模拟拖拽滚动的物理效果
  *
  * 前置条件:
- * - 滚动容器必须设置为overflow: hidden, 并且容器内容尺寸需超过滚动容器
+ * - 滚动容器必须满足滚动条件, 设置overflow并且容器内容尺寸需超过滚动容器
  * - 在触摸设备, 通常要为滚动容器添加css: touch-action: none
  * */ export var PhysicalScroll = /*#__PURE__*/ function() {
     "use strict";
@@ -155,6 +155,7 @@ export var PhysicalScrollEventType;
         };
         this.clear = function() {
             if (_this.rafClear) _this.rafClear();
+            if (_this.rafCallerClear) _this.rafCallerClear();
             _this.autoScrollStartTime = undefined;
             _this.lastDistanceY = undefined;
             _this.lastDistanceX = undefined;
@@ -171,6 +172,7 @@ export var PhysicalScrollEventType;
     }
     var _proto = PhysicalScroll.prototype;
     _proto.mount = function mount() {
+        this.rafCaller = rafCaller();
         if (this.mouseEnable) {
             this.config.el.addEventListener("mousedown", this.mouseStart);
             document.addEventListener("mousemove", this.mouseMove);
@@ -190,6 +192,7 @@ export var PhysicalScrollEventType;
             this.unBindTouchEvent(this.lastBindTarget);
             this.lastBindTarget = undefined;
         }
+        this.clear();
     };
     _proto.getEventByMouse = function getEventByMouse(e) {
         return {
@@ -240,7 +243,7 @@ export var PhysicalScrollEventType;
                 _this.setScrollPosition([
                     x,
                     y
-                ]);
+                ], true);
             }
             (ref = (_config = _this.config).onScroll) === null || ref === void 0 ? void 0 : ref.call(_config, [
                 x,
@@ -259,14 +262,21 @@ export var PhysicalScrollEventType;
             conf.el.scrollTop
         ];
     };
-    _proto.setScrollPosition = function setScrollPosition(xy) {
+    _proto.setScrollPosition = function setScrollPosition(xy, skipRaf) {
         var conf = this.config;
         if (conf.positionSetter) {
             conf.positionSetter(xy);
             return;
         }
-        conf.el.scrollLeft = xy[0];
-        conf.el.scrollTop = xy[1];
+        var run = function() {
+            conf.el.scrollLeft = xy[0];
+            conf.el.scrollTop = xy[1];
+        };
+        if (skipRaf) {
+            run();
+        } else {
+            this.rafCallerClear = this.rafCaller(run);
+        }
     };
     /** 根据一组[offset, time]和提供的起始时间获取该时间之后移动距离的平均值, 如果最后一段时间未移动, 可能返回undefined */ _proto.getSampleOffset = function getSampleOffset(startTime, list) {
         var svg;

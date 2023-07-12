@@ -495,3 +495,14 @@ export function getEventOffset(
   const { left, top } = target.getBoundingClientRect();
   return [clientX - left, clientY - top];
 }
+
+/** checkChildren = false | check dom is focus, detected childrens focus when checkChildren is true */
+export function isFocus(dom: HTMLElement, checkChildren = false) {
+  const activeElement = document.activeElement;
+
+  if (checkChildren) {
+    return dom.contains(activeElement);
+  } else {
+    return dom === activeElement;
+  }
+}

@@ -2,7 +2,7 @@ import _object_spread from "@swc/helpers/src/_object_spread.mjs";
 import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
 import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import React, { useMemo } from "react";
+import React, { useMemo, useRef } from "react";
 import { _defaultProps, _getScrollStyleByDirection, _RESERVE_BAR_SIZE } from "./common.js";
 import clsx from "clsx";
 import { useMeasure, useScroll, useSelf, useSetState } from "@m78/hooks";
@@ -13,12 +13,18 @@ import { _useIndicator } from "./use-indicator.js";
 import { _usePullActions } from "./use-pull-actions.js";
 import { animated } from "react-spring";
 import { _useDragScroll } from "./use-drag-scroll.js";
-export var _Scroll = function(p) {
+/**
+ * 下拉卡主
+ * 鼠标放到滚动条位置时显示滚动条
+ * 滚动条偶尔不自动隐藏, 显示逻辑优化
+ * */ export var _Scroll = function(p) {
     var onScroll = function onScroll(meta) {
         lifeCycle.onScroll(meta);
     };
     var props = p;
     var direction = props.direction;
+    var _innerWrapRef = useRef(null);
+    var innerWrapRef = p.innerWrapRef || _innerWrapRef;
     /** 组件状态 */ var ref = _sliced_to_array(useSetState({
         enableStatus: {
             x: false,
@@ -50,6 +56,7 @@ export var _Scroll = function(p) {
         direction
     ]);
     /** 滚动控制器 */ var scroller = useScroll({
+        el: innerWrapRef,
         throttleTime: 0,
         onScroll: onScroll
     });
@@ -65,7 +72,7 @@ export var _Scroll = function(p) {
         pullDownEnabled: !!props.onPullDown && !props.dragScroll,
         xEnabled: directionStyle.overflowX === "scroll",
         yEnabled: directionStyle.overflowY === "scroll",
-        dragScrollEnable: !!props.dragScroll && !state.isMobile
+        innerWrapRef: innerWrapRef
     };
     /** 滚动条相关 */ var bar = _useBar(ctx);
     /** 上下拉相关 */ var pull = _usePullActions(ctx);
@@ -74,17 +81,17 @@ export var _Scroll = function(p) {
     /** 钩子 */ var lifeCycle = _useLifeCycle(ctx, methods, bar, pull);
     /** 滚动标记 */ var indicator = _useIndicator(ctx, methods);
     return /*#__PURE__*/ _jsxs("div", {
+        ref: p.innerRef,
         className: clsx("m78 m78-scroll", props.className, "__".concat(direction), props.miniBar && "__mini-bar"),
         style: props.style,
         children: [
             /*#__PURE__*/ _jsx(animated.div, {
                 className: "m78-scroll_wrap",
-                style: _object_spread_props(_object_spread({}, directionStyle, bar.offsetStyle), {
+                style: _object_spread_props(_object_spread({}, props.disabledScroll ? {} : directionStyle, bar.offsetStyle), {
                     y: pull.springStyle.y,
-                    userSelect: ctx.pullDownEnabled || ctx.dragScrollEnable ? "none" : undefined,
-                    touchAction: ctx.dragScrollEnable ? "none" : undefined
+                    userSelect: ctx.pullDownEnabled || props.dragScroll ? "none" : undefined
                 }),
-                ref: scroller.ref,
+                ref: innerWrapRef,
                 children: /*#__PURE__*/ _jsx("div", {
                     className: clsx("m78-scroll_cont", props.contClassName),
                     style: props.contStyle,

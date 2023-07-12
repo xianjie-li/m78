@@ -158,6 +158,14 @@ export class _TableDragSortPlugin extends TablePlugin {
           this.targetColumn,
           this.isTargetAfter
         );
+      }
+
+      if (this.lastRows && this.targetRow) {
+        this.triggerMoveRow(this.lastRows, this.targetRow, this.isTargetAfter);
+      }
+
+      if (this.lastColumns) {
+        this.updateColumnNode(e, contPoint, offset);
 
         this.table.setColumnDisable(
           this.lastColumns.map((column) => column.key),
@@ -165,17 +173,14 @@ export class _TableDragSortPlugin extends TablePlugin {
         );
       }
 
-      if (this.lastRows && this.targetRow) {
-        this.triggerMoveRow(this.lastRows, this.targetRow, this.isTargetAfter);
+      if (this.lastRows) {
+        this.updateRowNode(e, contPoint, offset);
 
         this.table.setRowDisable(
           this.lastRows.map((row) => row.key),
           false
         );
       }
-
-      this.lastColumns && this.updateColumnNode(e, contPoint, offset);
-      this.lastRows && this.updateRowNode(e, contPoint, offset);
 
       this.autoScroll.clear();
 
@@ -506,7 +511,7 @@ export class _TableDragSortPlugin extends TablePlugin {
   };
 }
 
-export interface TableDragSort {
+export interface TableDragSortConfig {
   /** 是否允许拖拽排序行 */
   dragSortRow?: boolean;
   /** 是否允许拖拽排序列 */

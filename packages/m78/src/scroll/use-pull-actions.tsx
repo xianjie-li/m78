@@ -24,7 +24,7 @@ export const _usePullActions = (ctx: _ScrollContext) => {
   const pullDownRef = useRef<HTMLDivElement>(null!);
 
   useDrag(
-    ({ direction, movement: [, moveY], down }) => {
+    ({ direction, movement: [, moveY], last }) => {
       if (state.pullDownRunning) return;
 
       const meta = scroller.get();
@@ -33,10 +33,11 @@ export const _usePullActions = (ctx: _ScrollContext) => {
       // 最大旋转圈数
       const maxTurn = 2 * 360;
       const maxY = maxOffset / _PULL_DOWN_SWIPE_RATIO;
+
       // 旋转比例
       const ratio = moveY / maxY;
 
-      if (!down) {
+      if (last) {
         if (self.pullDownFlag) {
           self.pullDownFlag = false;
 
@@ -52,7 +53,7 @@ export const _usePullActions = (ctx: _ScrollContext) => {
         }
       }
 
-      if (down && meta.touchTop) {
+      if (!last && meta.touchTop) {
         // 起始位置只能下拉
         if (!isPullDown && moveY <= 0) return;
 

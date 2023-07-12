@@ -28,7 +28,7 @@ import {
 } from "../types/base-type.js";
 import { TableConfig } from "../types/config.js";
 
-import { TableColumnLeafConfig } from "../types/items.js";
+import { TableColumnLeafConfigFormatted } from "../types/items.js";
 
 import { TableReloadLevel } from "./life.js";
 import { _TableHidePlugin } from "./hide.js";
@@ -101,9 +101,6 @@ export class _TableInitPlugin extends TablePlugin {
 
     const ctx = this.context;
 
-    ctx.rowCache = {};
-    ctx.columnCache = {};
-    ctx.cellCache = {};
     ctx.mergeMapMain = {};
     ctx.mergeMapSub = {};
     ctx.lastMergeXMap = {};
@@ -135,11 +132,14 @@ export class _TableInitPlugin extends TablePlugin {
     const ctx = this.context;
 
     ctx.data = this.config.data.slice();
+
+    ctx.rowCache = {};
+    ctx.columnCache = {};
+    ctx.cellCache = {};
+
     ctx.columns = [];
     ctx.cells = {};
     ctx.rows = {};
-    ctx.cellDomCaChe = {};
-    ctx.cellStateCaChe = {};
 
     this.context.persistenceConfig = isObject(this.config.persistenceConfig)
       ? deepClone(this.config.persistenceConfig)
@@ -153,16 +153,16 @@ export class _TableInitPlugin extends TablePlugin {
     ctx.backupFirstCells = {};
   }
 
-  /** 将data/columns进行预处理后拷贝到其对应的ctx.xxx, 并对固定项进行处理 */
+  /** 将data/columns进行预处理, 并对固定项进行处理 */
   fmtDataAndColumns() {
     const ctx = this.context;
     const { columns, data, rows } = ctx;
 
-    const listX: TableColumnLeafConfig[] = [];
+    const listX: TableColumnLeafConfigFormatted[] = [];
     const listY: any[] = [];
 
-    const lf: TableColumnLeafConfig[] = [];
-    const rf: TableColumnLeafConfig[] = [];
+    const lf: TableColumnLeafConfigFormatted[] = [];
+    const rf: TableColumnLeafConfigFormatted[] = [];
     const tf: any[] = [];
     const bf: any[] = [];
 
@@ -577,8 +577,8 @@ export class _TableInitPlugin extends TablePlugin {
     ctx.contentHeight = contentHeight;
     ctx.rowConfigNumberKeys = rowKeys;
 
-    const rightFixedStart = this.config.el.offsetWidth - rightFixedWidth;
-    const bottomFixedStart = this.config.el.offsetHeight - bottomFixedHeight;
+    const rightFixedStart = this.config.el.clientWidth - rightFixedWidth;
+    const bottomFixedStart = this.config.el.clientHeight - bottomFixedHeight;
 
     // 计算右/下固定项偏移信息
 

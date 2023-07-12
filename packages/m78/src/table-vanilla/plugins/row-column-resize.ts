@@ -21,6 +21,7 @@ export class _TableRowColumnResize extends TablePlugin {
   /** 提示线 */
   xLine: HTMLDivElement;
   yLine: HTMLDivElement;
+  lineWrap: HTMLDivElement;
 
   /** 标识resize把手的key */
   static VIRTUAL_COLUMN_HANDLE_KEY = "__m78-table-virtual-column-handle__";
@@ -52,12 +53,15 @@ export class _TableRowColumnResize extends TablePlugin {
     // 创建line节点
     this.xLine = document.createElement("div");
     this.yLine = document.createElement("div");
+    this.lineWrap = document.createElement("div");
 
     this.xLine.className = "m78-table_tip-line-x";
     this.yLine.className = "m78-table_tip-line-y";
+    this.lineWrap.className = "m78-table_rc-resize";
 
-    this.config.el.appendChild(this.xLine);
-    this.config.el.appendChild(this.yLine);
+    this.lineWrap.appendChild(this.xLine);
+    this.lineWrap.appendChild(this.yLine);
+    this.config.el.appendChild(this.lineWrap);
 
     // 创建raf用于优化动画
     this.rafCaller = rafCaller();
@@ -113,8 +117,7 @@ export class _TableRowColumnResize extends TablePlugin {
     this.table.event.selectStart.empty();
     this.table.event.select.empty();
 
-    removeNode(this.xLine);
-    removeNode(this.yLine);
+    removeNode(this.lineWrap);
   }
 
   /** 每次render后根据ctx.lastViewportItems更新虚拟拖拽节点 */

@@ -1,6 +1,11 @@
 import { useEffect, useMemo } from "react";
 import { createRandString, getCmdKeyStatus } from "@m78/utils";
 
+// 组合按键支持
+// 除了默认触发类型, 事件可以随意指定down/up
+// 事件拦截器
+// 支持自定义匹配器, 比如用正则来判断是否作用
+
 /** 支持的事件类型 */
 export enum UseKeyboardTriggerType {
   down = "down",

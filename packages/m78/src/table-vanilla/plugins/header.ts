@@ -1,9 +1,10 @@
-import { AnyObject, setNamePathValue } from "@m78/utils";
+import { AnyObject, setNamePathValue, stringifyNamePath } from "@m78/utils";
 import { _getCellKey } from "../common.js";
 import { TablePlugin } from "../plugin.js";
 import {
   _TablePrivateProperty,
   TableColumnFixed,
+  TableRenderCtx,
   TableRowFixed,
 } from "../types/base-type.js";
 import { TableConfig } from "../types/config.js";
@@ -12,27 +13,20 @@ import {
   TableCellWithDom,
   TableColumnBranchConfig,
   TableColumnConfig,
-  TableColumnLeafConfig,
+  TableColumnLeafConfigFormatted,
 } from "../types/items.js";
 
 export class _TableHeaderPlugin extends TablePlugin {
   /** 渲染行头内容 */
-  cellRender(cell: TableCellWithDom): boolean | void {
-    if (!cell.column.isHeader) return;
+  cellRender(cell: TableCellWithDom, ctx: TableRenderCtx): boolean | void {
+    const isCrossHeader = cell.row.isHeader && cell.column.isHeader;
 
-    if (!cell.row.isHeader) {
-      const ind = String(cell.row.index - this.context.yHeaderKeys.length + 1);
-
-      // innerText访问比较耗时
-      if (cell.state.text !== ind) {
-        cell.dom.innerText = ind;
-        cell.state.text = ind;
-        return;
-      }
+    if (isCrossHeader) {
+      ctx.disableDefaultRender = true;
     }
 
-    if (cell.row.isHeader) {
-      cell.dom.innerText = "行号"; // TODO: i18n
+    if (ctx.isFirstRender && isCrossHeader) {
+      cell.dom.innerHTML = "<span>行号</span>"; // TODO: i18n
       return;
     }
   }
@@ -50,8 +44,8 @@ export class _TableHeaderPlugin extends TablePlugin {
 
     ctx.mergeHeaderRelationMap = {};
 
-    /** 将columns扁平化 */
-    const columns: TableColumnLeafConfig[] = [];
+    /** 将columns扁平化并处理namePath类型的key */
+    const columns: TableColumnLeafConfigFormatted[] = [];
     /** 需要注入的行配置 */
     const rows: NonNullable<TableConfig["rows"]> = {};
     /** 需要注入的单元格配置 */
@@ -59,7 +53,7 @@ export class _TableHeaderPlugin extends TablePlugin {
     /** 需要注入的记录 */
     const injectRows: AnyObject[] = [];
     /** 每一行的所有列, 用于最后计算mergeY */
-    const depthColumns: TableColumnLeafConfig[][] = [];
+    const depthColumns: TableColumnLeafConfigFormatted[][] = [];
 
     const defHeight = conf.rowHeight! + 8;
 
@@ -101,29 +95,32 @@ export class _TableHeaderPlugin extends TablePlugin {
 
         // 确认子项
         if ("key" in c) {
+          const formatColumn: TableColumnLeafConfigFormatted = {
+            ...c,
+            originalKey: c.key,
+            key: stringifyNamePath(c.key),
+          };
+
           if (opt.parent) {
-            ctx.mergeHeaderRelationMap[c.key] = true;
+            ctx.mergeHeaderRelationMap[formatColumn.key] = true;
           }
 
           // 若包含父级, 一律使用顶层fixed配置
           if (opt.parent && opt.parent?.fixed !== c.fixed) {
-            columns.push({
-              ...c,
-              fixed: opt.parent?.fixed,
-            });
-          } else {
-            columns.push(c);
+            formatColumn.fixed = opt.parent?.fixed;
           }
 
-          currentRow[c.key] = c.label;
+          columns.push(formatColumn);
 
-          currentDepthColumns.push(c);
+          currentRow[formatColumn.key] = c.label;
+
+          currentDepthColumns.push(formatColumn);
 
           opt.countCB?.();
 
           // 首项确认
           if (depth !== 0 && ind === 0) {
-            opt.firstKeyCB?.(c.key);
+            opt.firstKeyCB?.(formatColumn.key);
           }
           return;
         }
@@ -192,8 +189,9 @@ export class _TableHeaderPlugin extends TablePlugin {
     const key = this.getDefaultXKey();
 
     // 生成行头配置
-    const headerColumn: TableColumnLeafConfig = {
+    const headerColumn: TableColumnLeafConfigFormatted = {
       key,
+      originalKey: key,
       fixed: TableColumnFixed.left,
       width: 40,
       label: "序号",

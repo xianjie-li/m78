@@ -10,7 +10,7 @@ import {
   TableCell,
   TableColumn,
   TableColumnConfig,
-  TableColumnLeafConfig,
+  TableColumnLeafConfigFormatted,
   TableItems,
   TableRow,
   TableRowConfig,
@@ -46,7 +46,7 @@ export interface TablePluginContext {
   rows: NonNullable<TableConfig["rows"]>;
 
   /** 本地化后的列配置, 扁平化并处理了合并表头等 */
-  columns: TableColumnLeafConfig[];
+  columns: TableColumnLeafConfigFormatted[];
 
   /** 本地化后的cells配置, 注入了表头合并单元格相关的配置 */
   cells: NonNullable<TableConfig["cells"]>;
@@ -148,14 +148,6 @@ export interface TablePluginContext {
   cellCache: {
     /** key格式为: `${rowIndex}_${columnIndex}` */
     [key: string]: TableCell | undefined;
-  };
-  /** 缓存cell对应的dom, 保证相同cell对应的dom一致, 并防止重复创建造成的性能损耗 */
-  cellDomCaChe: {
-    [key: string]: HTMLDivElement;
-  };
-  /** 缓存cell对应的state */
-  cellStateCaChe: {
-    [key: string]: AnyObject;
   };
 
   /** 所有表头项的key */

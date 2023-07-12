@@ -85,7 +85,6 @@ export const _Scroll = (p: ScrollProps) => {
     pullDownEnabled: !!props.onPullDown && !props.dragScroll,
     xEnabled: directionStyle.overflowX === "scroll",
     yEnabled: directionStyle.overflowY === "scroll",
-    dragScrollEnable: !!props.dragScroll && !state.isMobile,
     innerWrapRef,
   };
 
@@ -130,8 +129,7 @@ export const _Scroll = (p: ScrollProps) => {
           ...bar.offsetStyle,
           y: pull.springStyle.y,
           userSelect:
-            ctx.pullDownEnabled || ctx.dragScrollEnable ? "none" : undefined,
-          touchAction: ctx.dragScrollEnable ? "none" : undefined,
+            ctx.pullDownEnabled || props.dragScroll ? "none" : undefined,
         }}
         ref={innerWrapRef}
       >

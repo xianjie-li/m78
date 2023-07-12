@@ -4,6 +4,7 @@ import {
   AutoScroll,
   AutoScrollTriggerConfig,
   createAutoScroll,
+  ensureArray,
   getCmdKeyStatus,
   getEventOffset,
   isBoolean,
@@ -78,8 +79,11 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
       "isSelectedCell",
       "getSelectedRows",
       "getSelectedCells",
+      "getSortedSelectedCells",
       "selectRows",
       "selectCells",
+      "isRowSelectable",
+      "isCellSelectable",
     ]);
   }
 
@@ -361,6 +365,36 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
   };
 
   getSelectedCells: TableInstance["getSelectedCells"] = () => {
+    const uniqCache: any = {}; // 保证行和单元格的选中不重复
+
+    const ls: TableCell[] = [];
+
+    const keyHandle = (key: string) => {
+      const [rowKey, columnKey] = _getCellKeysByStr(key);
+      const cell = this.table.getCell(rowKey, columnKey);
+
+      // 跳过行头
+      if (cell.column.isHeader) return;
+
+      // 跳过已经处理过的单元格
+      if (uniqCache[cell.key]) return;
+
+      uniqCache[cell.key] = 1;
+
+      ls.push(cell);
+    };
+
+    Object.keys(this.selectedRows).forEach((key) => {
+      this.context.allColumnKeys.forEach((columnKey) => {
+        keyHandle(_getCellKey(key, columnKey));
+      });
+    });
+    Object.keys(this.selectedCells).forEach(keyHandle);
+
+    return ls;
+  };
+
+  getSortedSelectedCells: TableInstance["getSortedSelectedCells"] = () => {
     const rows: { [key: string]: TableCell[] } = {};
     const uniqCache: any = {}; // 保证行和单元格的选中不重复
 
@@ -404,6 +438,8 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
   };
 
   selectRows: TableInstance["selectRows"] = (rows, merge) => {
+    rows = ensureArray(rows);
+
     if (this.config.rowSelectable === false) return;
 
     if (!merge) {
@@ -419,6 +455,8 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
   };
 
   selectCells: TableInstance["selectCells"] = (cells, merge) => {
+    cells = ensureArray(cells);
+
     if (this.config.cellSelectable === false) return;
 
     if (!merge) {
@@ -666,6 +704,22 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
     this.selectedTempCells = {};
   }
 
+  isCellSelectable(cell: TableCell): boolean {
+    if (this.config.cellSelectable === false) return false;
+
+    return (
+      isFunction(this.config.cellSelectable) && this.config.cellSelectable(cell)
+    );
+  }
+
+  isRowSelectable(row: TableRow): boolean {
+    if (this.config.rowSelectable === false) return false;
+
+    return (
+      isFunction(this.config.rowSelectable) && this.config.rowSelectable(row)
+    );
+  }
+
   /**
    * 专门用于框选的选区点转换
    * - 从固定区域拖选到非固定区域, 点非固定区开贴近固定区的位置开始计算点
@@ -711,11 +765,20 @@ export interface TableSelect {
   getSelectedRows(): TableRow[];
 
   /** 获取选中的单元格 */
-  getSelectedCells(): TableCell[][];
+  getSelectedCells(): TableCell[];
+
+  /** 获取包含顺序的选中单元格 */
+  getSortedSelectedCells(): TableCell[][];
 
   /** 设置选中的行, 传入merge可保留之前的行选中 */
-  selectRows(rowKeys: TableKey[], merge?: boolean): void;
+  selectRows(rowKeys: TableKey | TableKey[], merge?: boolean): void;
 
   /** 设置选中的单元格, 传入merge可保留之前的单元格选中 */
-  selectCells(cellKeys: TableKey[], merge?: boolean): void;
+  selectCells(cellKeys: TableKey | TableKey[], merge?: boolean): void;
+
+  /** 检测单元格是否可选中 */
+  isCellSelectable(cell: TableCell): boolean;
+
+  /** 检测行是否可选中 */
+  isRowSelectable(row: TableRow): boolean;
 }

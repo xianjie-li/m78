@@ -84,7 +84,7 @@ import { stopPropagation } from "../common/index.js";
         }
         xBar.refreshScrollPosition();
         yBar.refreshScrollPosition();
-        var wrap = scroller.ref.current;
+        var wrap = ctx.innerWrapRef.current;
         newState.barXSize = wrap.offsetWidth - wrap.clientWidth;
         newState.barYSize = wrap.offsetHeight - wrap.clientHeight;
         newState.barXSize = _RESERVE_BAR_SIZE + newState.barXSize;
@@ -119,7 +119,7 @@ import { stopPropagation } from "../common/index.js";
         var offsetRatio = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : 0;
         if (!props.scrollbar) return;
         offsetRatio = clamp(offsetRatio, 0, 1);
-        var wrapEl = ctx.scroller.ref.current;
+        var wrapEl = ctx.innerWrapRef.current;
         var barEl = barRef.current;
         if (!wrapEl) return;
         var sizeRatio = isY ? wrapEl.offsetHeight / wrapEl.scrollHeight : wrapEl.offsetWidth / wrapEl.scrollWidth;
@@ -140,6 +140,7 @@ import { stopPropagation } from "../common/index.js";
         refreshScrollPosition(offset2Ratio(offset));
     };
     var onDrag = /** 拖动thumb */ function onDrag(e) {
+        e.event.stopPropagation();
         /** 锁定自动关闭 防止干扰 */ if (e.first) {
             onActive();
             self.delayHiddenLock = true;
@@ -206,7 +207,8 @@ import { stopPropagation } from "../common/index.js";
                 right: !isY ? barEl.offsetWidth - thumbEl.offsetWidth : 0,
                 bottom: isY ? barEl.offsetHeight - thumbEl.offsetHeight : 0
             };
-        }
+        },
+        preventDefault: true
     });
     /** 滚动条处于活动状态, 禁止自动隐藏 */ var onActive = useFn(function() {
         if (self.delayHiddenLock) return;
@@ -216,6 +218,7 @@ import { stopPropagation } from "../common/index.js";
         delayHidden();
     });
     /** 轨道点击, 滚动位置到同比例位置 */ var onTrackClick = useFn(function(e) {
+        e.stopPropagation();
         var rect = barRef.current.getBoundingClientRect();
         var size = isY ? barRef.current.offsetHeight : barRef.current.offsetWidth;
         var offset = isY ? e.clientY - rect.top : e.clientX - rect.left;
@@ -234,7 +237,7 @@ import { stopPropagation } from "../common/index.js";
     var _obj;
     // 有代码依赖于scroll_bar.childNode[0] 获取thumb元素, 若要改变接口需同步更改对应代码
     var barNode = /*#__PURE__*/ _jsx(Toggle, {
-        when: state.enableStatus.y,
+        when: isY ? state.enableStatus.y : state.enableStatus.x,
         children: /*#__PURE__*/ _jsx("div", {
             className: clsx("m78-scroll_bar", "__".concat(isY ? "y" : "x"), isVisible && "__show"),
             ref: barRef,

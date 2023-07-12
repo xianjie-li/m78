@@ -4,6 +4,9 @@ import {
   getNamePathValue,
   isArray,
   isNumber,
+  isString,
+  isTruthyOrZero,
+  setNamePathValue,
   throwError,
   TupleNumber,
 } from "@m78/utils";
@@ -31,8 +34,12 @@ import {
   TableRow,
 } from "../types/items.js";
 import { TableMergeData } from "../types/context.js";
+import { _TableHidePlugin } from "./hide.js";
+import { Position } from "../../common/index.js";
 
 export class _TableGetterPlugin extends TablePlugin implements TableGetter {
+  hide: _TableHidePlugin;
+
   init() {
     // 映射实现方法
     this.methodMapper(this.table, [
@@ -46,6 +53,7 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
       "getCell",
       "getCellKey",
       "getCellByStrKey",
+      "getNearCell",
       "getKeyByRowIndex",
       "getKeyByColumnIndex",
       "getIndexByRowKey",
@@ -55,7 +63,13 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
       "isColumnExist",
       "getMergedData",
       "getMergeData",
+      "isRowLike",
+      "isColumnLike",
+      "isCellLike",
+      "isTableKey",
     ]);
+
+    this.hide = this.getPlugin(_TableHidePlugin);
   }
 
   transformViewportPoint(
@@ -471,12 +485,37 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
     };
   }
 
-  /** 获取指定行的TableRow */
-  getRow(key: TableKey): TableRow {
+  /** 获取指定行的实例, useCache为false时会跳过缓存重新计算关键属性, 并将最新内容写入缓存 */
+  getRow(key: TableKey, useCache = true): TableRow {
     const ctx = this.context;
-    const cache = ctx.rowCache[key];
+    let row = ctx.rowCache[key];
 
-    if (cache) return cache;
+    const lastKeyNotEqual =
+      !!row &&
+      getNamePathValue(row, _TablePrivateProperty.reloadKey) !==
+        ctx.lastReloadKey;
+
+    // 是否需要刷新缓存
+    const needFresh = !useCache || lastKeyNotEqual;
+
+    if (!row) {
+      // 新建
+      row = this.getFreshRow(key);
+      ctx.rowCache[key] = row;
+    } else if (needFresh) {
+      // 更新缓存
+      const fresh = this.getFreshRow(key);
+      Object.assign(row, fresh);
+    }
+
+    setNamePathValue(row, _TablePrivateProperty.reloadKey, ctx.lastReloadKey);
+
+    return row;
+  }
+
+  /** 跳过缓存获取最新的row */
+  private getFreshRow(key: TableKey): TableRow {
+    const ctx = this.context;
 
     const index = ctx.dataKeyIndexMap[key];
 
@@ -533,16 +572,44 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
       if (bf) row.fixedOffset = bf.viewPortOffset;
     }
 
-    ctx.rowCache[key] = row;
-
     return row;
   }
 
-  getColumn(key: TableKey): TableColumn {
+  /** 获取指定列的实例, useCache为false时会跳过缓存重新计算关键属性, 并将最新内容写入缓存 */
+  getColumn(key: TableKey, useCache = true): TableColumn {
     const ctx = this.context;
-    const cache = ctx.columnCache[key];
+    let column = ctx.columnCache[key];
 
-    if (cache) return cache;
+    const lastKeyNotEqual =
+      !!column &&
+      getNamePathValue(column, _TablePrivateProperty.reloadKey) !==
+        ctx.lastReloadKey;
+
+    // 是否需要刷新缓存
+    const needFresh = !useCache || lastKeyNotEqual;
+
+    if (!column) {
+      // 新建
+      column = this.getFreshColumn(key);
+      ctx.columnCache[key] = column;
+    } else if (needFresh) {
+      // 更新缓存
+      const fresh = this.getFreshColumn(key);
+      Object.assign(column, fresh);
+    }
+
+    setNamePathValue(
+      column,
+      _TablePrivateProperty.reloadKey,
+      ctx.lastReloadKey
+    );
+
+    return column;
+  }
+
+  /** 跳过缓存获取最新的column */
+  private getFreshColumn(key: TableKey): TableColumn {
+    const ctx = this.context;
 
     const index = ctx.columnKeyIndexMap[key];
 
@@ -599,8 +666,6 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
       if (rf) column.fixedOffset = rf.viewPortOffset;
     }
 
-    ctx.columnCache[key] = column;
-
     return column;
   }
 
@@ -619,33 +684,80 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
     return this.getCell(keys[0], keys[1]);
   }
 
-  /** 获取指定行, 列坐标对应的TableCell */
-  getCell(rowKey: TableKey, columnKey: TableKey): TableCell {
+  /** 根据单元格类型获取其文本 */
+  getText(cell: TableCell) {
+    const { row, column } = cell;
+
+    let text: string;
+
+    if (row.isHeader) {
+      // 表头数据根据普通key注入
+      text = row.data[column.key];
+    } else if (column.isHeader) {
+      text = String(cell.row.index - this.context.yHeaderKeys.length + 1);
+    } else {
+      text = getNamePathValue(row.data, column.config.originalKey);
+    }
+
+    if (isString(text)) return text;
+
+    return String(isTruthyOrZero(text) ? text : "");
+  }
+
+  getCell(rowKey: TableKey, columnKey: TableKey, useCache = true): TableCell {
+    const ctx = this.context;
     const key = _getCellKey(rowKey, columnKey);
 
-    const ctx = this.context;
-    const cache = ctx.cellCache[key];
+    let cell = ctx.cellCache[key];
 
-    if (cache) return cache;
+    const lastKeyNotEqual =
+      !!cell &&
+      getNamePathValue(cell, _TablePrivateProperty.reloadKey) !==
+        ctx.lastReloadKey;
+
+    // 是否需要刷新缓存
+    const needFresh = !useCache || lastKeyNotEqual;
+
+    if (!cell) {
+      // 新建
+      cell = this.getFreshCell(rowKey, columnKey, key) as TableCell;
+
+      cell.state = {};
+
+      ctx.cellCache[key] = cell;
+    } else if (needFresh) {
+      // 更新缓存
+      const fresh = this.getFreshCell(rowKey, columnKey, key);
+      Object.assign(cell, fresh);
+    }
+
+    setNamePathValue(cell, _TablePrivateProperty.reloadKey, ctx.lastReloadKey);
+
+    return cell;
+  }
+
+  private getFreshCell(
+    rowKey: TableKey,
+    columnKey: TableKey,
+    key: string
+  ): Omit<TableCell, "state"> {
+    const ctx = this.context;
 
     const row = this.getRow(rowKey);
     const column = this.getColumn(columnKey);
     const config = ctx.cells![key] || {};
 
-    let state = ctx.cellStateCaChe[key];
+    const mergeData = ctx.mergeMapMain[key];
 
-    if (!state) {
-      ctx.cellStateCaChe[key] = {};
-      state = ctx.cellStateCaChe[key];
-    }
+    const width = mergeData ? mergeData.width : column.width;
+    const height = mergeData ? mergeData.height : row.height;
 
-    const cell: TableCell = {
+    return {
       row,
       column,
       key,
       config,
       isMount: false,
-      text: "",
       isFixed: column.isFixed || row.isFixed,
       isCrossFixed: column.isFixed && row.isFixed,
       isLastX:
@@ -656,12 +768,119 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
         rowKey === ctx.lastRowKey ||
         rowKey === ctx.lastFixedRowKey ||
         !!ctx.lastMergeYMap[key],
-      state,
+      width,
+      height,
+      text: "",
     };
+  }
 
-    ctx.cellCache[key] = cell;
+  getNearCell(
+    arg: Parameters<TableGetter["getNearCell"]>[0]
+  ): TableCell | void {
+    const { cell, position = Position.right, filter } = arg;
 
-    return cell;
+    const { columns, data } = this.context;
+
+    // 是否垂直方向
+    const isVertical =
+      position === Position.top || position === Position.bottom;
+
+    // 区分获取前方还是后方单元格
+    const isPrev = position === Position.left || position === Position.top;
+
+    let { row, column } = cell;
+
+    let index = isVertical ? row.realIndex : column.realIndex;
+
+    if (!isNumber(index)) return;
+
+    const list = isVertical ? data : columns;
+
+    // 由于进入循环后立即回获取下一项, 所以需要把索引边界扩大或减小1
+    while (index <= list.length && index >= -1) {
+      index = isPrev ? index - 1 : index + 1;
+
+      const next = list[index];
+
+      // 超出最后/前项时, 获取下一行或下一列
+      if (!next) {
+        const offset = isPrev ? -1 : 1;
+
+        // 下一项相关信息
+        let nextListIndex = isVertical ? column.realIndex : row.realIndex;
+        let nextListKey: TableKey;
+        let nextItem: TableRow | TableColumn | undefined;
+
+        let isHideOrIgnore = false;
+
+        try {
+          // 处理隐藏项和忽略项
+          do {
+            nextListIndex = nextListIndex + offset;
+
+            nextListKey = isVertical
+              ? this.getKeyByColumnIndex(nextListIndex)
+              : this.getKeyByRowIndex(nextListIndex);
+
+            nextItem = isVertical
+              ? this.table.getColumn(nextListKey)
+              : this.table.getRow(nextListKey);
+
+            // 在data/column中的实际项
+            const cur = isVertical
+              ? columns[nextListIndex]
+              : data[nextListIndex];
+
+            isHideOrIgnore =
+              this.hide.isHideColumn(nextListKey) ||
+              getNamePathValue(cur, _TablePrivateProperty.ignore);
+
+            console.log(nextItem, 222);
+          } while (
+            // 隐藏或忽略项, 并且在有效索引内
+            isHideOrIgnore &&
+            nextListIndex < columns.length &&
+            nextListIndex > 0
+          );
+        } catch (e) {
+          // 忽略getKeyByColumnIndex/getRow等api的越界错误
+        }
+
+        // 包含下一行/列, 跳转都首个或末尾
+        if (nextItem) {
+          index = isPrev ? list.length : -1;
+
+          console.log(nextItem, index);
+
+          if (isVertical) {
+            column = nextItem as TableColumn;
+          } else {
+            row = nextItem as TableRow;
+          }
+
+          continue;
+        }
+
+        return;
+      }
+
+      if (getNamePathValue(next, _TablePrivateProperty.ignore)) continue;
+
+      const key = isVertical ? this.table.getKeyByRowData(next) : next.key;
+
+      const _cell = isVertical
+        ? this.getCell(key, column.key)
+        : this.getCell(row.key, key);
+
+      // 单元格是被合并项
+      if (this.context.mergeMapSub[_cell.key]) continue;
+
+      const skip = filter && !filter(_cell);
+
+      if (skip) continue;
+
+      return _cell;
+    }
   }
 
   /** 获取指定列左侧的距离 */
@@ -833,7 +1052,7 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
 
   getIndexByRowKey(key: TableKey): number {
     const ind = this.context.dataKeyIndexMap[key];
-    if (key === undefined) {
+    if (ind === undefined) {
       throwError(`row key ${key} does not have a corresponding index`, _prefix);
     }
     return ind;
@@ -841,7 +1060,7 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
 
   getIndexByColumnKey(key: TableKey): number {
     const ind = this.context.columnKeyIndexMap[key];
-    if (key === undefined) {
+    if (ind === undefined) {
       throwError(
         `column key ${key} does not have a corresponding index`,
         _prefix
@@ -923,6 +1142,32 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
   getBeforeIgnoreY(index: number): number[] {
     return this.context.ignoreYList.filter((i) => i < index);
   }
+
+  isRowLike(row: any): row is TableRow {
+    return (
+      row &&
+      typeof row.key === "string" &&
+      typeof row.height === "number" &&
+      typeof row.y === "number"
+    );
+  }
+
+  isColumnLike(column: any): column is TableColumn {
+    return (
+      column &&
+      typeof column.key === "string" &&
+      typeof column.height === "number" &&
+      typeof column.x === "number"
+    );
+  }
+
+  isCellLike(cell: any): cell is TableCell {
+    return cell && typeof cell.key === "string" && !!cell.row && !!cell.column;
+  }
+
+  isTableKey(key: any): key is TableKey {
+    return isString(key) || isNumber(key);
+  }
 }
 
 /** 选择器 */
@@ -974,6 +1219,16 @@ export interface TableGetter {
   /** 根据单元格key获取cell */
   getCellByStrKey(key: string): TableCell;
 
+  /** 获取临近的单元格 */
+  getNearCell(arg: {
+    /** 目标单元格 */
+    cell: TableCell;
+    /** Position.right | 要获取的方向 */
+    position?: Position;
+    /** 过滤调无效单元格(返回false) */
+    filter?: (cell: TableCell) => boolean;
+  }): TableCell | void;
+
   /** 获取指定索引记录的key. 注意, 此处的索引为经过内部数据重铸后的索引, 并不是config.data中项的索引 */
   getKeyByRowIndex(ind: number): TableKey;
 
@@ -991,6 +1246,18 @@ export interface TableGetter {
 
   /** 指定key的列是否存在 */
   isColumnExist(key: TableKey): boolean;
+
+  /** 是否是类似row的结构. 注意, 此方法为粗检测, 结果并不可靠 */
+  isRowLike(row: any): row is TableRow;
+
+  /** 是否是类似column的结构. 注意, 此方法为粗检测, 结果并不可靠 */
+  isColumnLike(column: any): column is TableColumn;
+
+  /** 是否是类似cell的结构. 注意, 此方法为粗检测, 结果并不可靠 */
+  isCellLike(cell: any): cell is TableCell;
+
+  /** 是否是合格的tableKey */
+  isTableKey(key: any): key is TableKey;
 
   /** 获取被合并信息, 若有返回则表示是一个被合并项 */
   getMergedData(cell: TableCell): [TableKey, TableKey] | undefined;

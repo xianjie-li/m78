@@ -79,7 +79,6 @@ export function _useMethods(ctx: _Context) {
     const {
       first,
       last,
-      down,
       xy: [x, y],
       event: e,
       cancel,

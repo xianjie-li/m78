@@ -10,7 +10,7 @@ import {
   TableKey,
 } from "../types/base-type.js";
 import { TableReloadLevel } from "./life.js";
-import { TableColumnLeafConfig } from "../types/items.js";
+import { TableColumnLeafConfigFormatted } from "../types/items.js";
 import { removeNode } from "../../common/index.js";
 import { _TableGetterPlugin } from "./getter.js";
 
@@ -19,7 +19,7 @@ import { _TableGetterPlugin } from "./getter.js";
 /** 表格列隐藏 */
 export class _TableHidePlugin extends TablePlugin {
   /** 前一次处理中设置的隐藏标记的列, 需要在新的设置中先还原 */
-  prevHideColumns: TableColumnLeafConfig[] = [];
+  prevHideColumns: TableColumnLeafConfigFormatted[] = [];
 
   /** 放置所有expandNodes的容器 */
   wrapNodes: HTMLDivElement;
@@ -72,7 +72,7 @@ export class _TableHidePlugin extends TablePlugin {
 
       if (!list.length) return;
 
-      let cur: TableColumnLeafConfig | undefined = list[0];
+      let cur: TableColumnLeafConfigFormatted | undefined = list[0];
 
       // 包含多项说明是固定项, 仅需要对虚拟项进行操作
       if (list.length > 1) {

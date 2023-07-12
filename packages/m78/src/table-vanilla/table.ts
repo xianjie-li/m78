@@ -25,6 +25,8 @@ import { _TableSortColumnPlugin } from "./plugins/sort-column.js";
 import { _TableDragSortPlugin } from "./plugins/drag-sort.js";
 import { _TableDisablePlugin } from "./plugins/disable.js";
 import { _TableTouchScrollPlugin } from "./plugins/touch-scroll.js";
+import { _TableKeyboardInteractionPlugin } from "./plugins/keyboard-interaction.js";
+import { _TableInteractiveCorePlugin } from "./plugins/interactive-core.js";
 
 export function createTable(config: TableConfig): TableInstance {
   const defaultConfig: Partial<TableConfig> = {
@@ -33,7 +35,7 @@ export function createTable(config: TableConfig): TableInstance {
     rows: {},
     cells: {},
     plugins: [],
-    rowHeight: 32,
+    rowHeight: 36,
     columnWidth: 100,
     emptySize: 100,
     autoSize: true,
@@ -92,6 +94,8 @@ export function createTable(config: TableConfig): TableInstance {
     _TableDisablePlugin,
     _TableAutoResizePlugin,
     _TableRowColumnResize,
+    _TableKeyboardInteractionPlugin,
+    _TableInteractiveCorePlugin,
     _TableHighlightPlugin,
   ].map((Plugin) => {
     return new Plugin(pluginConfig);

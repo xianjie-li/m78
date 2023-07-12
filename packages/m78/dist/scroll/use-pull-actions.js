@@ -69,7 +69,7 @@ export var _usePullActions = function(ctx) {
     }), 2), sp = ref[0], api = ref[1];
     var pullDownRef = useRef(null);
     useDrag(function(param) {
-        var direction = param.direction, _movement = _sliced_to_array(param.movement, 2), moveY = _movement[1], down = param.down;
+        var direction = param.direction, _movement = _sliced_to_array(param.movement, 2), moveY = _movement[1], last = param.last;
         if (state.pullDownRunning) return;
         var meta = scroller.get();
         var isPullDown = direction[1] === 1;
@@ -79,7 +79,7 @@ export var _usePullActions = function(ctx) {
         var maxY = maxOffset / _PULL_DOWN_SWIPE_RATIO;
         // 旋转比例
         var ratio = moveY / maxY;
-        if (!down) {
+        if (last) {
             if (self.pullDownFlag) {
                 self.pullDownFlag = false;
                 if (ratio >= _PULL_DOWN_TRIGGER_RATIO) {
@@ -93,7 +93,7 @@ export var _usePullActions = function(ctx) {
                 }
             }
         }
-        if (down && meta.touchTop) {
+        if (!last && meta.touchTop) {
             // 起始位置只能下拉
             if (!isPullDown && moveY <= 0) return;
             self.pullDownFlag = true;
@@ -107,7 +107,7 @@ export var _usePullActions = function(ctx) {
             });
         }
     }, {
-        target: scroller.ref,
+        target: ctx.innerWrapRef,
         enabled: pullDownEnabled,
         bounds: function() {
             return {
@@ -121,10 +121,10 @@ export var _usePullActions = function(ctx) {
         rubberband: true
     });
     /** 阻止部分浏览器的顶部下拉bounce效果(不完美) */ useEffect(function() {
-        if (!scroller.ref.current || !pullDownEnabled) return;
-        return preventTopPull(scroller.ref.current);
+        if (!ctx.innerWrapRef.current || !pullDownEnabled) return;
+        return preventTopPull(ctx.innerWrapRef.current);
     }, [
-        scroller.ref.current,
+        ctx.innerWrapRef.current,
         pullDownEnabled
     ]);
     // 清除上拉定时器
