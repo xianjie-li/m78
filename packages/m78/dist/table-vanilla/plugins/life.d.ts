@@ -6,6 +6,7 @@ export declare class _TableLifePlugin extends TablePlugin {
     rafCaller: RafFunction;
     /** 清理raf */
     rafClear?: EmptyFunction;
+    beforeInit(): void;
     init(): void;
     initialized(): void;
     /** 解除所有事件/引用类型占用 */

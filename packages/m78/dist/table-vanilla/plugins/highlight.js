@@ -15,8 +15,9 @@ import { _TablePrivateProperty } from "../types/base-type.js";
         return _super.apply(this, arguments);
     }
     var _proto = _TableHighlightPlugin.prototype;
-    _proto.init = function init() {
+    _proto.beforeInit = function beforeInit() {
         this.methodMapper(this.table, [
+            "locate",
             "highlight",
             "highlightColumn",
             "highlightRow", 
@@ -29,7 +30,7 @@ import { _TablePrivateProperty } from "../types/base-type.js";
         });
         var first = list[0];
         // 自动滚动到目标时的额外距离
-        var edgeOffset = 50;
+        var edgeOffset = 20;
         if (list.length > 1) {
             var minRowIndex;
             list.forEach(function(i) {
@@ -51,11 +52,11 @@ import { _TablePrivateProperty } from "../types/base-type.js";
                 }
             }
         }
-        var ref = _sliced_to_array(this.table.xy(), 2), x = ref[0], y = ref[1];
+        var ref = _sliced_to_array(this.table.getXY(), 2), x = ref[0], y = ref[1];
         var column = first.column;
         var row = first.row;
-        var leftContW = this.table.width() - this.context.rightFixedWidth;
-        var topContH = this.table.height() - this.context.bottomFixedHeight;
+        var leftContW = this.table.getWidth() - this.context.rightFixedWidth;
+        var topContH = this.table.getHeight() - this.context.bottomFixedHeight;
         var left = x + this.context.leftFixedWidth;
         var right = x + leftContW;
         var top = y + this.context.topFixedHeight;
@@ -63,9 +64,9 @@ import { _TablePrivateProperty } from "../types/base-type.js";
         var xHide = false;
         var yHide = false;
         var overLeft = column.x < left;
-        var overRight = column.x + column.width > right;
+        var overRight = column.x + first.width > right;
         var overTop = row.y < top;
-        var overBottom = row.y + row.height > bottom;
+        var overBottom = row.y + first.height > bottom;
         // 对应方向非固定项并且不在可见区域时, 对其标记
         if (!column.isFixed && (overLeft || overRight)) {
             xHide = true;
@@ -80,18 +81,18 @@ import { _TablePrivateProperty } from "../types/base-type.js";
                 if (overLeft) {
                     xOffset = column.x - this.context.leftFixedWidth - edgeOffset;
                 } else if (overRight) {
-                    xOffset = column.x - leftContW + column.width + edgeOffset;
+                    xOffset = column.x - leftContW + first.width + edgeOffset;
                 }
             }
             if (yHide) {
                 if (overTop) {
                     yOffset = row.y - this.context.topFixedHeight - edgeOffset;
                 } else if (overBottom) {
-                    yOffset = row.y - topContH + row.height + edgeOffset;
+                    yOffset = row.y - topContH + first.height + edgeOffset;
                 }
             }
             this.table.takeover(function() {
-                _this.table.xy(xOffset, yOffset);
+                _this.table.setXY(xOffset, yOffset);
             }, false);
             this.table.renderSync();
         }

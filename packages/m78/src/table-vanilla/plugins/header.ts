@@ -26,7 +26,7 @@ export class _TableHeaderPlugin extends TablePlugin {
     }
 
     if (ctx.isFirstRender && isCrossHeader) {
-      cell.dom.innerHTML = "<span>行号</span>"; // TODO: i18n
+      cell.dom.innerHTML = "<span class='m78-table_corner-btn'></span>";
       return;
     }
   }
@@ -55,7 +55,7 @@ export class _TableHeaderPlugin extends TablePlugin {
     /** 每一行的所有列, 用于最后计算mergeY */
     const depthColumns: TableColumnLeafConfigFormatted[][] = [];
 
-    const defHeight = conf.rowHeight! + 8;
+    const defHeight = conf.rowHeight! + 4;
 
     // 递归处理组合表头, cb用于底层向上层回传信息
     const recursionColumns = (
@@ -204,7 +204,6 @@ export class _TableHeaderPlugin extends TablePlugin {
       mergeY: this.context.yHeaderKeys.length,
     };
 
-    this.context.xHeaderWidth = 50; // TODO: 持久化时, 需要从配置中读取
     this.context.xHeaderKey = key;
     this.context.columns.unshift(headerColumn);
   }

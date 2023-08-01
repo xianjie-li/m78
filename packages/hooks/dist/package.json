@@ -9,6 +9,7 @@
   "license": "MIT",
   "type": "module",
   "main": "./index.js",
+  "exports": "./index.js",
   "typings": "./",
   "repository": "https://github.com/xianjie-li/m78",
   "files": [

@@ -10,22 +10,22 @@ import {
 export class _TableTouchScrollPlugin extends TablePlugin {
   ps: PhysicalScroll;
 
-  mount() {
+  mounted() {
     this.ps = new PhysicalScroll({
       el: this.config.el,
       type: [PhysicalScrollEventType.touch],
       onlyNotify: true,
       triggerFilter: this.triggerFilter,
-      positionGetter: () => this.table.xy(),
+      positionGetter: () => this.table.getXY(),
       onScroll: ([x, y], isAutoScroll) => {
         if (isAutoScroll) {
           // 这里需要同步更新滚动位置
           this.table.takeover(() => {
-            this.table.xy(x, y);
+            this.table.setXY(x, y);
             this.table.renderSync();
           });
         } else {
-          this.table.xy(x, y);
+          this.table.setXY(x, y);
         }
       },
     });

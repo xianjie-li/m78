@@ -1,7 +1,7 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect } from "react";
 import { usePrev } from "../../index.js";
 import _isEqualWith from "lodash/isEqualWith.js";
-import { IsEqualCustomizer } from "lodash";
+import type { IsEqualCustomizer } from "lodash";
 
 /**
  *  支持对deps进行深度对比的`useEffect`
@@ -16,16 +16,12 @@ export function useEffectEqual(
   customizer?: IsEqualCustomizer
 ) {
   const prev = usePrev(deps);
-  const dep = useRef(0);
 
-  const isEqual = useMemo(
-    () => _isEqualWith(deps, prev, customizer),
-    [deps] /* 这里不能直接传deps, 防止引用相当但实际值已经不相等的情况 */
-  );
+  useEffect(() => {
+    const equal = _isEqualWith(deps, prev, customizer);
 
-  if (!isEqual) {
-    dep.current++;
-  }
+    if (equal) return;
 
-  useEffect(effect, [dep.current]);
+    return effect();
+  });
 }

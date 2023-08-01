@@ -13,12 +13,12 @@ export var _TableScrollMarkPlugin = /*#__PURE__*/ function(TablePlugin) {
         _this = _super.apply(this, arguments);
         /** 可见性更新 */ _this.updateVisible = function() {
             var ctx = _this.context;
-            var x = _this.table.x();
-            var y = _this.table.y();
+            var x = _this.table.getX();
+            var y = _this.table.getY();
             var touchTop = y === 0;
-            var touchBottom = Math.ceil(y) >= _this.table.maxY(); // 为什么会出现小数?
+            var touchBottom = Math.ceil(y) >= _this.table.getMaxY(); // 为什么会出现小数?
             var touchLeft = x === 0;
-            var touchRight = Math.ceil(x) >= _this.table.maxX();
+            var touchRight = Math.ceil(x) >= _this.table.getMaxX();
             _this.tEl.style.opacity = touchTop || !ctx.topFixedHeight ? "0" : "1";
             _this.bEl.style.opacity = touchBottom || !ctx.bottomFixedHeight ? "0" : "1";
             _this.lEl.style.opacity = touchLeft || !ctx.leftFixedWidth ? "0" : "1";
@@ -27,7 +27,7 @@ export var _TableScrollMarkPlugin = /*#__PURE__*/ function(TablePlugin) {
         return _this;
     }
     var _proto = _TableScrollMarkPlugin.prototype;
-    _proto.mount = function mount() {
+    _proto.mounted = function mounted() {
         var wrapNode = document.createElement("div");
         wrapNode.className = "m78-table_scroll-mark-wrap";
         this.tEl = document.createElement("div");

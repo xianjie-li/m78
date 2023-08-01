@@ -3,6 +3,7 @@ import { TableReloadLevel, TableReloadOptions } from "./life.js";
 import { _TablePrivateProperty } from "../types/base-type.js";
 
 import { removeNode } from "../../common/index.js";
+import { _getSizeString } from "../common.js";
 
 /** 处理无数据 */
 export class _TablePluginEmpty extends TablePlugin {
@@ -18,7 +19,6 @@ export class _TablePluginEmpty extends TablePlugin {
     this.node = document.createElement("div");
 
     this.node.className = "m78-table_empty";
-    this.node.style.height = `${this.config.emptySize!}px`;
 
     const emptyNode = this.config.emptyNode;
 
@@ -77,8 +77,15 @@ export class _TablePluginEmpty extends TablePlugin {
     }
   }
 
+  rendered() {
+    const size = this.table.getHeight() - this.context.yHeaderHeight;
+    const emptyHeight = Math.max(size, this.config.emptySize!);
+
+    this.node.style.height = _getSizeString(emptyHeight);
+  }
+
   /** 更新empty节点状态, 并根据需要移除data中的占位数据 */
-  update(needClear = false) {
+  private update(needClear = false) {
     if (this.isEmpty) {
       this.node.style.visibility = "visible";
     } else {
@@ -108,6 +115,6 @@ export class _TablePluginEmpty extends TablePlugin {
 export interface TableEmptyConfig {
   /** 自定义空节点 */
   emptyNode?: HTMLElement;
-  /** 100 | 空节点占用的总高度 */
+  /** 100 | 空节点占用的高度, autoSize未开启时, 会以表格实际高度为准 */
   emptySize?: number;
 }

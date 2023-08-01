@@ -28,7 +28,7 @@ export function useKeyboardHandle(ctx: _MenuContext) {
   });
 
   useKeyboard({
-    onTrigger: ({ code, nativeEvent }) => {
+    handle: ({ code, nativeEvent }) => {
       nativeEvent.preventDefault();
 
       if (!state.current && !self.lastActive) {
@@ -92,7 +92,7 @@ export function useKeyboardHandle(ctx: _MenuContext) {
   });
 
   useKeyboard({
-    onTrigger: (e) => {
+    handle: (e) => {
       e.nativeEvent.preventDefault();
       if (state.current) {
         e.code !== "Escape" &&

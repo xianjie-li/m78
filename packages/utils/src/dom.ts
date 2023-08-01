@@ -8,6 +8,8 @@ export * from "./dom/auto-scroll.js";
 
 export * from "./dom/physical-scroll.js";
 
+export * from "./dom/keyboard-helper.js";
+
 const portalsID = "J__PORTALS__NODE__";
 
 /**

@@ -11,7 +11,7 @@ export var defaultConf = {
  * 在state每次变更时，将其缓存，并在下次初始化时还原
  * @param key - cache key
  * @param conf
- * */ export default function cache(key, conf) {
+ * */ export function cacheMiddleware(key, conf) {
     var config = _object_spread({}, defaultConf, conf);
     var expire = config.expire;
     var k = "".concat(PREFIX).concat(config.type, "_").concat(key).toUpperCase();

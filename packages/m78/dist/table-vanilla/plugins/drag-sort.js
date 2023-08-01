@@ -20,6 +20,10 @@ import { _TableSelectPlugin } from "./select.js";
         /** 正在拖动 */ _this.dragging = false;
         /** 将拖动事件派发到对应的行/列事件中 */ _this.dragDispatch = function(e) {
             if (e.tap) return;
+            if (!_this.config.dragSortRow && !_this.config.dragSortColumn) {
+                e.cancel();
+                return;
+            }
             // 如果与resize重叠, 则进行阻断
             if (e.first && (_this.rcResize.dragging || _this.rcResize.hovering)) {
                 e.cancel();
@@ -30,18 +34,22 @@ import { _TableSelectPlugin } from "./select.js";
             if (e.last) {
                 if (_this.lastColumns && _this.targetColumn) {
                     _this.triggerMoveColumn(_this.lastColumns, _this.targetColumn, _this.isTargetAfter);
+                }
+                if (_this.lastRows && _this.targetRow) {
+                    _this.triggerMoveRow(_this.lastRows, _this.targetRow, _this.isTargetAfter);
+                }
+                if (_this.lastColumns) {
+                    _this.updateColumnNode(e, contPoint, offset);
                     _this.table.setColumnDisable(_this.lastColumns.map(function(column) {
                         return column.key;
                     }), false);
                 }
-                if (_this.lastRows && _this.targetRow) {
-                    _this.triggerMoveRow(_this.lastRows, _this.targetRow, _this.isTargetAfter);
+                if (_this.lastRows) {
+                    _this.updateRowNode(e, contPoint, offset);
                     _this.table.setRowDisable(_this.lastRows.map(function(row) {
                         return row.key;
                     }), false);
                 }
-                _this.lastColumns && _this.updateColumnNode(e, contPoint, offset);
-                _this.lastRows && _this.updateRowNode(e, contPoint, offset);
                 _this.autoScroll.clear();
                 _this.firstData = undefined;
                 _this.lastColumns = undefined;
@@ -105,7 +113,7 @@ import { _TableSelectPlugin } from "./select.js";
         return _this;
     }
     var _proto = _TableDragSortPlugin.prototype;
-    _proto.mount = function mount() {
+    _proto.mounted = function mounted() {
         var _this = this;
         this.initNodes();
         this.drag = new DragGesture(this.config.el, this.dragDispatch, {
@@ -130,9 +138,9 @@ import { _TableSelectPlugin } from "./select.js";
                 // 这里需要通过 takeover 手动将x/y赋值调整为同步
                 _this.table.takeover(function() {
                     if (isX) {
-                        _this.table.x(_this.table.x() + offset);
+                        _this.table.setX(_this.table.getX() + offset);
                     } else {
-                        _this.table.y(_this.table.y() + offset);
+                        _this.table.setY(_this.table.getY() + offset);
                     }
                     _this.table.renderSync();
                 });
@@ -170,7 +178,7 @@ import { _TableSelectPlugin } from "./select.js";
         }
         var isRow = !!this.lastRows;
         var lastData = isRow ? this.lastRows : this.lastColumns;
-        var tablePos = isRow ? this.table.y() : this.table.x();
+        var tablePos = isRow ? this.table.getY() : this.table.getX();
         // area显示
         var pos;
         var size = 0;

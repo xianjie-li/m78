@@ -81,6 +81,13 @@ export interface FormInstance {
   /** 执行校验, 未通过时promise会reject包含VerifyError类型的错误 */
   verify: (name?: NamePath) => Promise<void>;
 
+  /**
+   * debounce版本的verify, 处理高频调用时可以使用, cb会在成功或失败时触发, 失败时包含错误信息
+   *
+   * 注意: 由于防抖机制, 连续调用时, 大部分验证都会被忽略, 所以cb不是必定触发的, 通常只有第一次和最后一次调用触发
+   * */
+  debounceVerify: (name?: NamePath, cb?: (error?: RejectMeta) => void) => void;
+
   /** 获取表单配置 */
   getConfig(): FormConfig;
 
@@ -206,8 +213,6 @@ export interface _Context {
   lockNotify: boolean;
   /** 暂时锁定更新notify, 锁定期间不触发更新 */
   lockListState: boolean;
-  /** debounce版本的verify */
-  debounceVerify: (name?: NamePath) => void;
   /** 用于帮助识别是否为setValue触发的 verify 调用 */
   isValueChangeTrigger: boolean;
 

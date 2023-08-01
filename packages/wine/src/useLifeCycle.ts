@@ -60,7 +60,7 @@ export function useLifeCycle(ctx: _WineContext, methods: _Methods) {
   useEffect(() => {
     let ignore = false;
 
-    if (state.show) {
+    if (state.open) {
       spApi.start({
         immediate: true,
         display: "block",
@@ -86,7 +86,7 @@ export function useLifeCycle(ctx: _WineContext, methods: _Methods) {
     return () => {
       ignore = true;
     };
-  }, [state.show]);
+  }, [state.open]);
 
   // 监听置顶还原
   updateZIndexEvent.useEvent((id) => {

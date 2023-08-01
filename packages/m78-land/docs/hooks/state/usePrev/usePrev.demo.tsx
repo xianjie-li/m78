@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { usePrev } from '@m78/hooks';
+import React, { useState } from "react";
+import { usePrev } from "@m78/hooks";
 
 const UsePrevDemo = () => {
   const [count, setCount] = useState(0);

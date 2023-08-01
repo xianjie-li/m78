@@ -13,6 +13,7 @@ import { TableReloadLevel } from "./life.js";
 import { TableColumnLeafConfigFormatted } from "../types/items.js";
 import { removeNode } from "../../common/index.js";
 import { _TableGetterPlugin } from "./getter.js";
+import { _syncListNode } from "../common.js";
 
 // vb改为统一实例, 在context存储
 
@@ -99,23 +100,15 @@ export class _TableHidePlugin extends TablePlugin {
   renderNodes() {
     const hideColumns = this.context.persistenceConfig.hideColumns || [];
 
-    if (hideColumns.length > this.expandNodes.length) {
-      // 节点不够则创建
-      const diff = hideColumns.length - this.expandNodes.length;
-
-      for (let i = 0; i < diff; i++) {
-        const node = document.createElement("div");
+    _syncListNode({
+      wrapNode: this.wrapNodes,
+      list: hideColumns,
+      nodeList: this.expandNodes,
+      createAction: (node) => {
         node.className = "m78-table_hide-expand __default";
         node.innerHTML = "⬌";
-        this.wrapNodes.appendChild(node);
-        this.expandNodes.push(node);
-      }
-    } else {
-      // 移除多余节点
-      const redundant = this.expandNodes.slice(hideColumns.length);
-      redundant.forEach((node) => removeNode(node));
-      this.expandNodes = this.expandNodes.slice(0, hideColumns.length);
-    }
+      },
+    });
 
     if (!hideColumns.length) return;
 
@@ -137,24 +130,20 @@ export class _TableHidePlugin extends TablePlugin {
 
       curNode.dataset.key = String(key);
 
-      const x = column.isFixed ? column.fixedOffset || 0 : column.x;
+      const attachPos = this.table.getColumnAttachPosition(column);
 
-      let left = x - width / 2 - 1; // width / 2: 居中  1: 为边框的修正位置
+      let left = attachPos.left - width / 2 - 1; // width / 2: 居中  1: 为边框的修正位置
 
-      // 固定项需要时刻显示
-      if (column.isFixed) {
-        left += this.table.x();
-
-        // 右固定项需要右移
-        if (column.config.fixed === TableColumnFixed.right) {
-          left += 2;
-        }
+      // 右固定项需要右移
+      if (column.config.fixed === TableColumnFixed.right) {
+        left += 2;
       }
 
       curNode.title = `show hide column ${column.config.label || column.key}`;
-      curNode.style.zIndex = column.isFixed ? "30" : "10";
-      curNode.style.top = `${lastRow.y + this.table.y() + 2}px`; // 2: 上边距
-      curNode.style.left = `${left}px`;
+      curNode.style.zIndex = column.isFixed ? attachPos.zIndex : "11";
+      curNode.style.transform = `translate(${left}px,${
+        lastRow.y + this.table.getY() + 2
+      }px)`; // 2: 上边距
     });
   }
 

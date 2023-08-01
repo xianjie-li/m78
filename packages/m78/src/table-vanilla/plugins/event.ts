@@ -1,7 +1,6 @@
 import { TablePlugin } from "../plugin.js";
 import {
   AnyFunction,
-  createEvent,
   CustomEvent,
   EmptyFunction,
   getEventOffset,
@@ -11,6 +10,7 @@ import { TableCell } from "../types/items.js";
 import debounce from "lodash/debounce.js";
 
 import { TableMutationEvent } from "./mutation.js";
+import { TableReloadOptions } from "./life.js";
 
 /**
  * 内部事件绑定, 外部事件派发
@@ -20,21 +20,6 @@ export class _TableEventPlugin extends TablePlugin {
   disableScrollListener = false;
 
   initialized() {
-    const eventCreator = this.config.eventCreator
-      ? this.config.eventCreator
-      : createEvent;
-
-    this.table.event = {
-      error: eventCreator(),
-      click: eventCreator(),
-      resize: eventCreator(),
-      select: eventCreator(),
-      selectStart: eventCreator(),
-      rowSelect: eventCreator(),
-      cellSelect: eventCreator(),
-      mutation: eventCreator(),
-    };
-
     this.config.el.addEventListener("click", this.onClick);
     this.config.el.addEventListener("contextmenu", this.onContext);
     this.context.viewEl.addEventListener("wheel", this.onWheel as any);
@@ -72,7 +57,14 @@ export class _TableEventPlugin extends TablePlugin {
       e.preventDefault();
     }
 
-    this.table.xy(this.table.x() + e.deltaX, this.table.y() + e.deltaY);
+    if (e.shiftKey) {
+      this.table.setX(this.table.getX() + e.deltaY);
+    } else {
+      this.table.setXY(
+        this.table.getX() + e.deltaX,
+        this.table.getY() + e.deltaY
+      );
+    }
   };
 
   /** 操作滚动条时同步滚动位置 */
@@ -82,7 +74,7 @@ export class _TableEventPlugin extends TablePlugin {
     const el = this.context.viewEl;
 
     this.context.xyShouldNotify = true;
-    this.table.xy(el.scrollLeft, el.scrollTop);
+    this.table.setXY(el.scrollLeft, el.scrollTop);
     this.context.xyShouldNotify = false;
   };
 
@@ -95,7 +87,7 @@ export class _TableEventPlugin extends TablePlugin {
     { leading: false, trailing: true }
   );
 
-  /** 用于手动设置滚动位置时, 在回调期间内放置触发内部onScroll事件 */
+  /** 用于手动设置滚动位置时, 在回调期间内防止触发内部onScroll事件 */
   scrollAction = (cb: AnyFunction) => {
     this.disableScrollListener = true;
     cb();
@@ -106,7 +98,7 @@ export class _TableEventPlugin extends TablePlugin {
 export interface TableEvents {
   /**
    * 内部抛出的一些提示性错误, 比如 "粘贴内容与选中单元格不匹配" 等
-   * - 注意: 不包含运行时错误, 比如未正确配置key等会直接crash而不是通过error提示
+   * - 注意: 某些运行时错误, 比如未正确配置key等会直接crash而不是通过error提示
    * */
   error: CustomEvent<(msg: string) => void>;
   /** 点击, event为原始事件对象, 可能是MouseEvent/PointerEvent */
@@ -121,8 +113,30 @@ export interface TableEvents {
   rowSelect: CustomEvent<EmptyFunction>;
   /** 单元格选中变更 */
   cellSelect: CustomEvent<EmptyFunction>;
-  /** 配置/数据等的变更事件 */
+  /** 配置/数据等变更, 通常意味需要持久化的一些信息发生了改变 */
   mutation: CustomEvent<(event: TableMutationEvent) => void>;
+  /** 单元格的挂载状态变更 (mount状态可以理解为单元格是否在表格视口内并被渲染, 可通过cell.isMount获取) */
+  mountChange: CustomEvent<(cell: TableCell) => void>;
+  /** 单元格交互状态发生变更, show - 显示还是关闭, isSubmit - 提交还是取消 */
+  interactiveChange: CustomEvent<
+    (cell: TableCell, show: boolean, isSubmit: boolean) => void
+  >;
+
+  //* # # # # # # # 以下为部分对外暴露的插件生命周期事件 # # # # # # # */
+  /** 初始化阶段触发 */
+  init: CustomEvent<EmptyFunction>;
+  /** 初始化完成触发 */
+  initialized: CustomEvent<EmptyFunction>;
+  /** 首次渲染完成 */
+  mounted: CustomEvent<EmptyFunction>;
+  /** 渲染中, 本阶段内部渲染基本上已完成, 可以再次附加自定义的渲染 */
+  rendering: CustomEvent<EmptyFunction>;
+  /** 每次渲染完成后触发 */
+  rendered: CustomEvent<EmptyFunction>;
+  /** 重载表格时触发 */
+  reload: CustomEvent<(opt: TableReloadOptions) => void>;
+  /** 卸载前触发 */
+  beforeDestroy: CustomEvent<EmptyFunction>;
 }
 
 export interface TableEvent {

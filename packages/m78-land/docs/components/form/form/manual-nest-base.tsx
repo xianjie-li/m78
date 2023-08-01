@@ -8,7 +8,7 @@ import {
   ButtonColor,
   Row,
 } from "m78";
-import { required, string } from "m78/form/validator.js";
+import { required, string } from "m78/form";
 
 const form = createForm({
   schemas: {

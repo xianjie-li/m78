@@ -3,6 +3,8 @@ import { AnyObject, NamePath } from "@m78/utils";
 import { TableReloadOptions } from "./life.js";
 import { TablePersistenceConfig } from "../types/config.js";
 import { TableKey } from "../types/base-type.js";
+import { TableCell, TableColumn, TableRow } from "../types/items.js";
+import { _TableSortColumnPlugin } from "./sort-column.js";
 /**
  * 所有config/data变更相关的操作, 变异操作应统一使用此处提供的api, 方便统一处理, 自动生成和处理历史等
  *
@@ -11,7 +13,9 @@ import { TableKey } from "../types/base-type.js";
 export declare class _TableMutationPlugin extends TablePlugin {
     /** 每一次配置变更将变更的key记录, 通过记录来判断是否有变更项 */
     private changedConfigKeys;
+    sortColumn: _TableSortColumnPlugin;
     init(): void;
+    beforeInit(): void;
     reload(opt?: TableReloadOptions): void;
     /**
      * 设置ctx.persistenceConfig中的项, 并自动生成历史记录, 设置后, 原有值会被备份(引用类型会深拷贝), 并在执行undo操作时还原
@@ -24,6 +28,10 @@ export declare class _TableMutationPlugin extends TablePlugin {
     addRow: TableMutation["addRow"];
     removeRow: TableMutation["removeRow"];
     moveRow: TableMutation["moveRow"];
+    getValue: TableMutation["getValue"];
+    setValue: TableMutation["setValue"];
+    /** 处理setValue/getValue的不同参数, 并返回cell和value */
+    private valueActionGetter;
     private moveColumn;
     /** move的通用逻辑, isRow控制是row还是column */
     private moveCommon;
@@ -41,16 +49,18 @@ export declare class _TableMutationPlugin extends TablePlugin {
 export declare enum TableMutationType {
     /** 持久化配置变更 */
     config = "config",
-    /** 记录变更 */
-    data = "data"
+    /** 记录变更, 通常表示新增/删除/排序 */
+    data = "data",
+    /** 单元格值变更 */
+    value = "value"
 }
-/** TableMutationType.row变更类型 */
+/** TableMutationType.data变更类型 */
 export declare enum TableMutationDataType {
     add = "add",
     remove = "remove",
     move = "move"
 }
-export declare type TableMutationEvent = TableMutationConfigEvent | TableMutationDataEvent;
+export declare type TableMutationEvent = TableMutationConfigEvent | TableMutationDataEvent | TableMutationValueEvent;
 /** 持久化配置变更事件 */
 export interface TableMutationConfigEvent {
     /** 事件类型 */
@@ -86,6 +96,17 @@ export interface TableMutationDataEvent {
         data: AnyObject;
     }>;
 }
+/** 单元格值变更事件 */
+export interface TableMutationValueEvent {
+    /** 事件类型 */
+    type: TableMutationType.value;
+    /** 变更的单元格 */
+    cell: TableCell;
+    /** 变更前的值 */
+    oldValue: any;
+    /** 变更后的值 */
+    value: any;
+}
 export interface TableMutation {
     /** 获取发生了变更的持久化配置 */
     getChangedConfigKeys(): (keyof TablePersistenceConfig)[];
@@ -119,5 +140,17 @@ export interface TableMutation {
      * @param to - 移动到key指定的位置, 并将该位置的原有项后移
      * @param insertAfter - 为true时数据将移动到指定key的后方 */
     moveColumn(from: TableKey | TableKey[], to: TableKey, insertAfter?: boolean): void;
+    /** 设置单元格值 */
+    setValue(cell: TableCell, value: any): void;
+    /** 根据row&column设置单元格值 */
+    setValue(row: TableRow, column: TableColumn, value: any): void;
+    /** 根据row&column key设置单元格值 */
+    setValue(rowKey: TableKey, columnKey: TableKey, value: any): void;
+    /** 获取单元格值 */
+    getValue(cell: TableCell): any;
+    /** 根据row&column获取单元格值 */
+    getValue(row: TableRow, column: TableColumn): any;
+    /** 根据row&column key获取单元格值 */
+    getValue(rowKey: TableKey, columnKey: TableKey): any;
 }
 //# sourceMappingURL=mutation.d.ts.map

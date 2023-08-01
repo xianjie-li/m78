@@ -16,6 +16,8 @@ import { addCls } from "../../common/index.js";
 import { _TablePrivateProperty, TableColumnFixed, TableRowFixed } from "../types/base-type.js";
 import { TableReloadLevel } from "./life.js";
 import { _TableHidePlugin } from "./hide.js";
+import { _TableIsPlugin } from "./is.js";
+import { _TableRenderPlugin } from "./render.js";
 /**
  * 进行配置整理/预计算等
  * */ export var _TableInitPlugin = /*#__PURE__*/ function(TablePlugin) {
@@ -28,20 +30,11 @@ import { _TableHidePlugin } from "./hide.js";
     }
     var _proto = _TableInitPlugin.prototype;
     _proto.init = function init() {
-        this.methodMapper(this.table, [
-            [
-                "conf",
-                "config"
-            ]
-        ]);
+        this.render = this.getPlugin(_TableRenderPlugin);
         addCls(this.config.el, "m78-table");
         this.createDomElement();
         this.mergeTexts();
         this.fullHandle();
-    };
-    _proto.conf = function conf(config) {
-        if (config === undefined) return this.config;
-        Object.assign(this.config, config);
     };
     _proto.fullHandle = function fullHandle() {
         this.plugins.forEach(function(plugin) {
@@ -78,9 +71,6 @@ import { _TableHidePlugin } from "./hide.js";
             return (ref = plugin.loadStage) === null || ref === void 0 ? void 0 : ref.call(plugin, TableReloadLevel.base, true);
         });
         var ctx = this.context;
-        ctx.rowCache = {};
-        ctx.columnCache = {};
-        ctx.cellCache = {};
         ctx.mergeMapMain = {};
         ctx.mergeMapSub = {};
         ctx.lastMergeXMap = {};
@@ -106,11 +96,12 @@ import { _TableHidePlugin } from "./hide.js";
     /** 拷贝data/columns/persistenceConfig等需要本地化的配置 */ _proto.initHandle = function initHandle() {
         var ctx = this.context;
         ctx.data = this.config.data.slice();
+        ctx.rowCache = {};
+        ctx.columnCache = {};
+        ctx.cellCache = {};
         ctx.columns = [];
         ctx.cells = {};
         ctx.rows = {};
-        ctx.cellDomCaChe = {};
-        ctx.cellStateCaChe = {};
         this.context.persistenceConfig = isObject(this.config.persistenceConfig) ? deepClone(this.config.persistenceConfig) : {};
         ctx.backupRows = {};
         ctx.backupCells = {};
@@ -119,7 +110,7 @@ import { _TableHidePlugin } from "./hide.js";
         ctx.backupFirstRows = {};
         ctx.backupFirstCells = {};
     };
-    /** 将data/columns进行预处理后拷贝到其对应的ctx.xxx, 并对固定项进行处理 */ _proto.fmtDataAndColumns = function fmtDataAndColumns() {
+    /** 将data/columns进行预处理, 并对固定项进行处理 */ _proto.fmtDataAndColumns = function fmtDataAndColumns() {
         var _listX, _listX1, _listY, // 推入表头
         _listY1, _listY2;
         var ctx = this.context;
@@ -317,7 +308,7 @@ import { _TableHidePlugin } from "./hide.js";
     /** 预处理尺寸/固定项相关信息 */ _proto.preHandleSize = function preHandleSize() {
         var _config = this.config, columnWidth = _config.columnWidth, rowHeight = _config.rowHeight;
         var ctx = this.context;
-        var getter = this.getPlugin(_TableGetterPlugin);
+        var is = this.getPlugin(_TableIsPlugin);
         var columns = ctx.columns, rows = ctx.rows, data = ctx.data;
         var ignoreDataLength = ctx.ignoreYList.length;
         var ignoreColumnLength = ctx.ignoreXList.length;
@@ -369,7 +360,7 @@ import { _TableHidePlugin } from "./hide.js";
         ctx.rightFixedWidth = rightFixedWidth;
         ctx.contentWidth = contentWidth;
         var rowKeys = Object.keys(rows).filter(function(key) {
-            return getter.isRowExist(key);
+            return is.isRowExist(key);
         }).sort(function(a, b) {
             var aIndex = ctx.dataKeyIndexMap[a];
             var bIndex = ctx.dataKeyIndexMap[b];
@@ -409,8 +400,10 @@ import { _TableHidePlugin } from "./hide.js";
         ctx.bottomFixedHeight = bottomFixedHeight;
         ctx.contentHeight = contentHeight;
         ctx.rowConfigNumberKeys = rowKeys;
-        var rightFixedStart = this.config.el.offsetWidth - rightFixedWidth;
-        var bottomFixedStart = this.config.el.offsetHeight - bottomFixedHeight;
+        // 此处固定项尺寸已确定, 需要立即更新容器尺寸, 否则后续的clientWidth等信息计算会不准确
+        this.render.updateWrapSize();
+        var rightFixedStart = this.config.el.clientWidth - rightFixedWidth;
+        var bottomFixedStart = this.config.el.clientHeight - bottomFixedHeight;
         // 计算右/下固定项偏移信息
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         Object.entries(ctx.bottomFixedMap).forEach(function(param) {
@@ -454,14 +447,14 @@ import { _TableHidePlugin } from "./hide.js";
         ctx.mergeMapSub = {};
         var cells = ctx.cells;
         if (isEmpty(cells)) return;
-        var getter = this.getPlugin(_TableGetterPlugin);
+        var is = this.getPlugin(_TableIsPlugin);
         Object.entries(cells).forEach(function(param) {
             var _param = _sliced_to_array(param, 2), k = _param[0], conf = _param[1];
             if (!conf.mergeX && !conf.mergeY) return;
             var keys = _getCellKeysByStr(k);
             if (keys.length !== 2) return;
             var _keys = _sliced_to_array(keys, 2), rowKey = _keys[0], columnKey = _keys[1];
-            if (!getter.isRowExist(rowKey) || !getter.isColumnExist(columnKey)) {
+            if (!is.isRowExist(rowKey) || !is.isColumnExist(columnKey)) {
                 return;
             }
             var mergeMap = {};
@@ -516,6 +509,7 @@ import { _TableHidePlugin } from "./hide.js";
         var _config = this.config, columnWidth = _config.columnWidth, rowHeight = _config.rowHeight;
         var columns = ctx.columns, rows = ctx.rows, data = ctx.data;
         var getter = this.getPlugin(_TableGetterPlugin);
+        var is = this.getPlugin(_TableIsPlugin);
         var sortHide = this.getPlugin(_TableHidePlugin);
         var key = start;
         var originalInd = isRow ? getter.getIndexByRowKey(key) : getter.getIndexByColumnKey(key);
@@ -525,15 +519,16 @@ import { _TableHidePlugin } from "./hide.js";
         var mergeList = [];
         var size = 0;
         var ind = originalInd;
-        var fixedList = [];
-        if (isMainFixed) {
-            if (fixed === TableRowFixed.top) fixedList = ctx.topFixedList;
-            if (fixed === TableRowFixed.bottom) fixedList = ctx.bottomFixeList;
-            if (fixed === TableColumnFixed.left) fixedList = ctx.leftFixedList;
-            if (fixed === TableColumnFixed.right) fixedList = ctx.rightFixedList;
-        }
+        // let fixedList: TableKey[] = [];
+        //
+        // if (isMainFixed) {
+        //   if (fixed === TableRowFixed.top) fixedList = ctx.topFixedList;
+        //   if (fixed === TableRowFixed.bottom) fixedList = ctx.bottomFixeList;
+        //   if (fixed === TableColumnFixed.left) fixedList = ctx.leftFixedList;
+        //   if (fixed === TableColumnFixed.right) fixedList = ctx.rightFixedList;
+        // }
         while(mergeNum > 0){
-            var exist = isRow ? getter.isRowExistByIndex(ind) : getter.isColumnExistByIndex(ind);
+            var exist = isRow ? is.isRowExistByIndex(ind) : is.isColumnExistByIndex(ind);
             if (!exist) break;
             var _key = isRow ? getter.getKeyByRowIndex(ind) : getter.getKeyByColumnIndex(ind);
             var originalInd1 = isRow ? getter.getIndexByRowKey(_key) : getter.getIndexByColumnKey(_key);

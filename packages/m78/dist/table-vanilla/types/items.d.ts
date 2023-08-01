@@ -1,4 +1,4 @@
-import { AnyObject } from "@m78/utils";
+import { AnyObject, NamePath } from "@m78/utils";
 import { TableColumnFixedUnion, TableRowFixedUnion } from "./base-type.js";
 /** 表示table中的一列 */
 export interface TableColumn {
@@ -15,7 +15,7 @@ export interface TableColumn {
     /** x轴位置 */
     x: number;
     /** 对应的列配置 */
-    config: TableColumnLeafConfig;
+    config: TableColumnLeafConfigFormatted;
     /** 是否是固定项 */
     isFixed: boolean;
     /** 如果是固定项, 表示其在视口的偏移位置 */
@@ -43,13 +43,20 @@ export interface TableColumnBranchConfig {
 /** 常规列配置项 */
 export interface TableColumnLeafConfig {
     /** 该列对应的唯一key, 用于获取value或显示的文本, 另外也作为表格变异操作的标识, 从key获取到的值类型必须为字符串或数字 */
-    key: string;
+    key: NamePath;
     /** 表头文本 */
     label: string;
     /** 列宽度 */
     width?: number;
     /** 控制列固定, 如果该列是被合并列, 会以最上层的列fixed配置为准 */
     fixed?: TableColumnFixedUnion;
+}
+/** 常规列配置项, key由namePath转换为了string */
+export interface TableColumnLeafConfigFormatted extends Omit<TableColumnLeafConfig, "key"> {
+    /** 字符串化后的TableColumnLeafConfig.key */
+    key: string;
+    /** 未字符串化前的key */
+    originalKey: NamePath;
 }
 /** 表示table中的一个行 */
 export interface TableRow {
@@ -113,6 +120,10 @@ export interface TableCell {
     isLastX: boolean;
     /** 是否是Y轴最后一项 */
     isLastY: boolean;
+    /** 宽度 */
+    width: number;
+    /** 高度 */
+    height: number;
     /** 用户可在此处挂载自定义状态 */
     state: AnyObject;
 }

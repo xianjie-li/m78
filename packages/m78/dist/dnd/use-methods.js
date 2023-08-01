@@ -73,7 +73,7 @@ export function _useMethods(ctx) {
         });
     });
     /** 拖动处理, 大部分功能的核心实现都在此处 */ var onDrag = useFn(function(ev) {
-        var first = ev.first, last = ev.last, down = ev.down, _xy = _sliced_to_array(ev.xy, 2), x = _xy[0], y = _xy[1], e = ev.event, cancel = ev.cancel, tap = ev.tap, forceBreakEvent = ev.memo;
+        var first = ev.first, last = ev.last, _xy = _sliced_to_array(ev.xy, 2), x = _xy[0], y = _xy[1], e = ev.event, cancel = ev.cancel, tap = ev.tap, forceBreakEvent = ev.memo;
         if (tap) return;
         // 防止重叠节点一起触发
         e.stopPropagation();

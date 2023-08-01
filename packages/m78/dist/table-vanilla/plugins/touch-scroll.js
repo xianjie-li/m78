@@ -25,7 +25,7 @@ import { PhysicalScroll, PhysicalScrollEventType } from "@m78/utils";
         return _this;
     }
     var _proto = _TableTouchScrollPlugin.prototype;
-    _proto.mount = function mount() {
+    _proto.mounted = function mounted() {
         var _this = this;
         this.ps = new PhysicalScroll({
             el: this.config.el,
@@ -35,18 +35,18 @@ import { PhysicalScroll, PhysicalScrollEventType } from "@m78/utils";
             onlyNotify: true,
             triggerFilter: this.triggerFilter,
             positionGetter: function() {
-                return _this.table.xy();
+                return _this.table.getXY();
             },
             onScroll: function(param, isAutoScroll) {
                 var _param = _sliced_to_array(param, 2), x = _param[0], y = _param[1];
                 if (isAutoScroll) {
                     // 这里需要同步更新滚动位置
                     _this.table.takeover(function() {
-                        _this.table.xy(x, y);
+                        _this.table.setXY(x, y);
                         _this.table.renderSync();
                     });
                 } else {
-                    _this.table.xy(x, y);
+                    _this.table.setXY(x, y);
                 }
             }
         });

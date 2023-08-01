@@ -3,7 +3,7 @@ import { AnyObject } from "@m78/utils";
 
 let count = 1;
 
-const devtool: Middleware = (bonus) => {
+export const devtoolMiddleware: Middleware = (bonus) => {
   if (
     typeof window === "undefined" ||
     !(window as any).__REDUX_DEVTOOLS_EXTENSION__ ||
@@ -52,5 +52,3 @@ const devtool: Middleware = (bonus) => {
     });
   }
 };
-
-export default devtool;

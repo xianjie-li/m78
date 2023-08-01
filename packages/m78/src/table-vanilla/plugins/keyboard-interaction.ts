@@ -1,10 +1,13 @@
 import { TablePlugin } from "../plugin.js";
 import { TableCell, TableColumn, TableRow } from "../types/items.js";
 import {
-  AnyFunction,
+  createKeyboardHelpersBatch,
   EmptyFunction,
-  getCmdKeyStatus,
   isString,
+  KeyboardHelperEvent,
+  KeyboardHelperModifier,
+  KeyboardHelperOption,
+  KeyboardMultipleHelper,
 } from "@m78/utils";
 import { _prefix } from "../common.js";
 import { _TableInteractiveCorePlugin } from "./interactive-core.js";
@@ -19,63 +22,57 @@ const maxSinglePaste = 50;
 export class _TableKeyboardInteractionPlugin extends TablePlugin {
   interactiveCore: _TableInteractiveCorePlugin;
 
+  multipleHelper: KeyboardMultipleHelper;
+
   init() {
     this.interactiveCore = this.getPlugin(_TableInteractiveCorePlugin);
   }
 
-  mount() {
+  mounted() {
     window.addEventListener("paste", this.onPaste);
     window.addEventListener("copy", this.onCopy);
-    window.addEventListener("keydown", this.onKeydown);
+    this.multipleHelper = createKeyboardHelpersBatch(this.getKeydownOptions());
   }
 
   beforeDestroy() {
     window.removeEventListener("paste", this.onPaste);
     window.removeEventListener("copy", this.onCopy);
-    window.removeEventListener("keydown", this.onKeydown);
+
+    this.multipleHelper.destroy();
   }
 
-  /** 事件派发 */
-  private onKeydown = (e: KeyboardEvent) => {
-    // 非表格焦点, 跳过
-    if (!this.table.isActive()) return;
-
-    // 有正在进行编辑等操作的单元格, 跳过
-    if (this.interactiveCore.items.length) return;
-
-    // 快捷键到方法的映射, 系统相关的三个按键顺序应为 sysCmd/alt/shift , 其中, sysCmd在mac下为command, windows下为ctrl
-    // 目前仅支持单个常规键
-    const methodMapper: { [key: string]: AnyFunction } = {
-      Backspace: this.onDelete,
-      "sysCmd+KeyZ": this.onUndo,
-      "sysCmd+shift+KeyZ": this.onRedo,
-      ArrowUp: this.onMove,
-      ArrowDown: this.onMove,
-      ArrowLeft: this.onMove,
-      ArrowRight: this.onMove,
-      Tab: this.onMove,
+  // 事件绑定配置
+  private getKeydownOptions(): KeyboardHelperOption[] {
+    const checker = () => {
+      // 非表格焦点 或 有正在进行编辑等操作的单元格, 跳过
+      return this.table.isActive() && !this.interactiveCore.items.length;
     };
 
-    let key = "";
-
-    if (getCmdKeyStatus(e)) {
-      key += "sysCmd+";
-    }
-
-    if (e.altKey) {
-      key += "alt+";
-    }
-
-    if (e.shiftKey) {
-      key += "shift+";
-    }
-
-    key += e.code;
-
-    const method = methodMapper[key];
-
-    if (method) method(e);
-  };
+    return [
+      {
+        code: "Backspace",
+        handle: this.onDelete,
+        enable: checker,
+      },
+      {
+        code: "KeyZ",
+        modifier: [KeyboardHelperModifier.sysCmd],
+        handle: this.onUndo,
+        enable: checker,
+      },
+      {
+        code: "KeyZ",
+        modifier: [KeyboardHelperModifier.sysCmd, KeyboardHelperModifier.shift],
+        handle: this.onRedo,
+        enable: checker,
+      },
+      {
+        code: ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Tab"],
+        handle: this.onMove,
+        enable: checker,
+      },
+    ];
+  }
 
   /** 粘贴 */
   private onPaste = (e: Event) => {
@@ -103,6 +100,8 @@ export class _TableKeyboardInteractionPlugin extends TablePlugin {
 
     e.preventDefault();
 
+    const actions: EmptyFunction[] = [];
+
     // case1: 只有单个粘贴值, 若是, 并且选中单元格数量小于一定值, 则设置到所有选中的单元格
     const isSingleValue = strCell.length === 1 && strCell[0].length === 1;
 
@@ -121,10 +120,21 @@ export class _TableKeyboardInteractionPlugin extends TablePlugin {
 
       const singleValue = strCell[0][0];
 
-      this.table.history.batch(() => {
-        allCell.forEach((cell) => {
+      for (let i = 0; i < allCell.length; i++) {
+        const cell = allCell[i];
+
+        if (!this.interactiveCore.isInteractive(cell)) {
+          this.table.event.error.emit(this.context.texts.paste);
+          return;
+        }
+
+        actions.push(() => {
           this.table.setValue(cell, singleValue);
         });
+      }
+
+      this.table.history.batch(() => {
+        actions.forEach((action) => action());
       });
 
       return;
@@ -138,8 +148,6 @@ export class _TableKeyboardInteractionPlugin extends TablePlugin {
       return;
     }
 
-    const actions: EmptyFunction[] = [];
-
     for (let i = 0; i < strCell.length; i++) {
       const curList = strCell[i];
 
@@ -149,6 +157,11 @@ export class _TableKeyboardInteractionPlugin extends TablePlugin {
 
         // 若任意一个cell未获取到则中断
         if (!cell) return;
+
+        if (!this.interactiveCore.isInteractive(cell)) {
+          this.table.event.error.emit(this.context.texts.paste);
+          return;
+        }
 
         actions.push(() => {
           this.table.setValue(cell, curCellStr);
@@ -210,12 +223,10 @@ export class _TableKeyboardInteractionPlugin extends TablePlugin {
   };
 
   /** 删除 */
-  private onDelete = (e: KeyboardEvent) => {
+  private onDelete = () => {
     const selected = this.table.getSelectedCells();
 
-    if (!selected.length) return;
-
-    e.preventDefault();
+    if (!selected.length) return false;
 
     this.table.history.batch(() => {
       selected.forEach((cell) => {
@@ -225,19 +236,19 @@ export class _TableKeyboardInteractionPlugin extends TablePlugin {
   };
 
   /** 撤销 */
-  private onUndo = (e: KeyboardEvent) => {
-    e.preventDefault();
+  private onUndo = () => {
+    console.log("undo");
     this.table.history.undo();
   };
 
   /** 重做 */
-  private onRedo = (e: KeyboardEvent) => {
-    e.preventDefault();
+  private onRedo = () => {
+    console.log("redo");
     this.table.history.redo();
   };
 
   /** 各方向移动 */
-  private onMove = (e: KeyboardEvent) => {
+  private onMove = (e: KeyboardHelperEvent) => {
     let position: Position | undefined;
 
     if (e.code === "ArrowUp") position = Position.top;
@@ -245,7 +256,7 @@ export class _TableKeyboardInteractionPlugin extends TablePlugin {
     if (e.code === "ArrowLeft") position = Position.left;
     if (e.code === "ArrowRight" || e.code === "Tab") position = Position.right;
 
-    if (!position) return;
+    if (!position) return false;
 
     const selected = this.table.getSelectedCells();
 
@@ -255,8 +266,6 @@ export class _TableKeyboardInteractionPlugin extends TablePlugin {
 
       if (!firstCell) return;
 
-      e.preventDefault();
-
       this.table.locate(firstCell.key);
 
       this.table.selectCells(firstCell.key);
@@ -265,8 +274,6 @@ export class _TableKeyboardInteractionPlugin extends TablePlugin {
     }
 
     if (selected.length !== 1) return;
-
-    e.preventDefault();
 
     const next = this.table.getNearCell({
       cell: selected[0],

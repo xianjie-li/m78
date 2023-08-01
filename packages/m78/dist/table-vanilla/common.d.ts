@@ -1,18 +1,22 @@
 import { BoundSize } from "@m78/utils";
 import { TableKey, TablePosition } from "./types/base-type.js";
-import { TableConfig } from "./types/config.js";
 export declare const _prefix = "m78-table";
 /** 用于在config.el上存储当前实例 */
 export declare const _privateInstanceKey = "__M78TableInstance";
 /** 用于在domEl上挂载是否为其是否为内部创建的信息 */
 export declare const _privateScrollerDomKey = "__M78PrivateScrollerDom";
+/** 可替换的文本 */
 export declare const _defaultTexts: {
-    readonly sortMergeColumn: "Can not sort column when has merge header";
+    readonly pasteUnalignedRow: "Pasted rows does not match the number of selected rows";
+    readonly pasteUnalignedColumn: "Pasted column does not match the number of selected column";
+    readonly pasteSingleValueLimit: "Paste single value can't exceed {num} cell";
+    readonly paste: "can not paste to non editable cell";
+    readonly addRow: "add row";
+    readonly removeRow: "remove row";
+    readonly setValue: "update value";
+    readonly moveRow: "move row";
+    readonly moveColumn: "move column";
 };
-/** 重置级别3的所有配置, 未在其中的所有配置默认为级别1 */
-export declare const _level2ConfigKeys: (keyof TableConfig)[];
-/** 不能通过table.config()变更的配置 */
-export declare const _configCanNotChange: readonly ["el", "primaryKey", "plugins", "viewEl", "viewContentEl", "eventCreator"];
 /** 解析rowKey##columnKey格式的字符串为[rowKey, columnKey], 数组长度为2表示解析正常 */
 export declare function _getCellKeysByStr(s?: string): string[];
 /** 根据行列索引获取其字符串形式的ind */

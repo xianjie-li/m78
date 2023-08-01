@@ -5,7 +5,7 @@ import _object_spread from "@swc/helpers/src/_object_spread.mjs";
 import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
 import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
 import _create_super from "@swc/helpers/src/_create_super.mjs";
-import { setNamePathValue } from "@m78/utils";
+import { setNamePathValue, stringifyNamePath } from "@m78/utils";
 import { _getCellKey } from "../common.js";
 import { TablePlugin } from "../plugin.js";
 import { _TablePrivateProperty, TableColumnFixed, TableRowFixed } from "../types/base-type.js";
@@ -18,19 +18,13 @@ export var _TableHeaderPlugin = /*#__PURE__*/ function(TablePlugin) {
         return _super.apply(this, arguments);
     }
     var _proto = _TableHeaderPlugin.prototype;
-    /** 渲染行头内容 */ _proto.cellRender = function cellRender(cell) {
-        if (!cell.column.isHeader) return;
-        if (!cell.row.isHeader) {
-            var ind = String(cell.row.index - this.context.yHeaderKeys.length + 1);
-            // innerText访问比较耗时
-            if (cell.state.text !== ind) {
-                cell.dom.innerText = ind;
-                cell.state.text = ind;
-                return;
-            }
+    /** 渲染行头内容 */ _proto.cellRender = function cellRender(cell, ctx) {
+        var isCrossHeader = cell.row.isHeader && cell.column.isHeader;
+        if (isCrossHeader) {
+            ctx.disableDefaultRender = true;
         }
-        if (cell.row.isHeader) {
-            cell.dom.innerText = "行号"; // TODO: i18n
+        if (ctx.isFirstRender && isCrossHeader) {
+            cell.dom.innerHTML = "<span class='m78-table_corner-btn'></span>";
             return;
         }
     };
@@ -44,12 +38,12 @@ export var _TableHeaderPlugin = /*#__PURE__*/ function(TablePlugin) {
         var ctx = this.context;
         var conf = this.config;
         ctx.mergeHeaderRelationMap = {};
-        /** 将columns扁平化 */ var columns = [];
+        /** 将columns扁平化并处理namePath类型的key */ var columns = [];
         /** 需要注入的行配置 */ var rows = {};
         /** 需要注入的单元格配置 */ var cells = {};
         /** 需要注入的记录 */ var injectRows = [];
         /** 每一行的所有列, 用于最后计算mergeY */ var depthColumns = [];
-        var defHeight = conf.rowHeight + 8;
+        var defHeight = conf.rowHeight + 4;
         // 递归处理组合表头, cb用于底层向上层回传信息
         var recursionColumns = function(list, depth, opt) {
             // 当前行
@@ -76,25 +70,26 @@ export var _TableHeaderPlugin = /*#__PURE__*/ function(TablePlugin) {
                 // 确认子项
                 if ("key" in c) {
                     var ref1, ref2;
+                    var formatColumn = _object_spread_props(_object_spread({}, c), {
+                        originalKey: c.key,
+                        key: stringifyNamePath(c.key)
+                    });
                     if (opt.parent) {
-                        ctx.mergeHeaderRelationMap[c.key] = true;
+                        ctx.mergeHeaderRelationMap[formatColumn.key] = true;
                     }
                     // 若包含父级, 一律使用顶层fixed配置
                     if (opt.parent && ((ref1 = opt.parent) === null || ref1 === void 0 ? void 0 : ref1.fixed) !== c.fixed) {
                         var ref3;
-                        columns.push(_object_spread_props(_object_spread({}, c), {
-                            fixed: (ref3 = opt.parent) === null || ref3 === void 0 ? void 0 : ref3.fixed
-                        }));
-                    } else {
-                        columns.push(c);
+                        formatColumn.fixed = (ref3 = opt.parent) === null || ref3 === void 0 ? void 0 : ref3.fixed;
                     }
-                    currentRow[c.key] = c.label;
-                    currentDepthColumns.push(c);
+                    columns.push(formatColumn);
+                    currentRow[formatColumn.key] = c.label;
+                    currentDepthColumns.push(formatColumn);
                     (ref2 = opt.countCB) === null || ref2 === void 0 ? void 0 : ref2.call(opt);
                     // 首项确认
                     if (depth !== 0 && ind === 0) {
                         var ref4;
-                        (ref4 = opt.firstKeyCB) === null || ref4 === void 0 ? void 0 : ref4.call(opt, c.key);
+                        (ref4 = opt.firstKeyCB) === null || ref4 === void 0 ? void 0 : ref4.call(opt, formatColumn.key);
                     }
                     return;
                 }
@@ -154,6 +149,7 @@ export var _TableHeaderPlugin = /*#__PURE__*/ function(TablePlugin) {
         // 生成行头配置
         var headerColumn = {
             key: key,
+            originalKey: key,
             fixed: TableColumnFixed.left,
             width: 40,
             label: "序号"
@@ -163,7 +159,6 @@ export var _TableHeaderPlugin = /*#__PURE__*/ function(TablePlugin) {
         this.context.cells[_getCellKey(this.getDefaultYKey(0), key)] = {
             mergeY: this.context.yHeaderKeys.length
         };
-        this.context.xHeaderWidth = 50; // TODO: 持久化时, 需要从配置中读取
         this.context.xHeaderKey = key;
         this.context.columns.unshift(headerColumn);
     };

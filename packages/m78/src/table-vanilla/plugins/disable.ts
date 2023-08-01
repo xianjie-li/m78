@@ -5,7 +5,7 @@ import { _getCellKey, _getCellKeysByStr } from "../common.js";
 import { addCls, removeCls } from "../../common/index.js";
 
 /** 在单元格/行/列上设置半透明遮挡物进行禁用 */
-export class _TableDisablePlugin extends TablePlugin {
+export class _TableDisablePlugin extends TablePlugin implements TableDisable {
   disabled = false;
 
   /** 禁用行 */
@@ -40,7 +40,7 @@ export class _TableDisablePlugin extends TablePlugin {
       : removeCls(cell.dom, "__disabled");
   }
 
-  isDisabled: TableDisable["isDisabledRow"] = () => {
+  isDisabled: TableDisable["isDisabled"] = () => {
     return this.disabled;
   };
 
@@ -191,11 +191,11 @@ export interface TableDisable {
   /** 指定行是否禁用 */
   isDisabledRow(key: TableKey): boolean;
 
-  /** 指定行是否禁用 */
+  /** 指定列是否禁用 */
   isDisabledColumn(key: TableKey): boolean;
 
   /** 指定单元格是否禁用 */
-  isDisabledCell(key: string): boolean;
+  isDisabledCell(key: TableKey): boolean;
 
   /** 获取禁用的行 */
   getDisabledRows(): TableRow[];

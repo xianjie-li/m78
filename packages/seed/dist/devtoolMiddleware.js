@@ -1,5 +1,5 @@
 var count = 1;
-var devtool = function(bonus) {
+export var devtoolMiddleware = function(bonus) {
     if (typeof window === "undefined" || !window.__REDUX_DEVTOOLS_EXTENSION__ || process.env.NODE_ENV !== "development") {
         return bonus.init ? bonus.config : undefined;
     }
@@ -32,4 +32,3 @@ var devtool = function(bonus) {
         });
     }
 };
-export default devtool;

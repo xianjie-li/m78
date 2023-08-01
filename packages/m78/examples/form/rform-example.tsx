@@ -6,12 +6,12 @@ import {
 } from "../../src/form/index.js";
 import { Input } from "../../src/input/index.js";
 import { Button } from "../../src/button/index.js";
-import { required } from "@m78/verify/index.js";
+import { required } from "@m78/verify";
 import { Divider, Row } from "../../src/layout/index.js";
 import { IconDeleteOutline } from "@m78/icons/icon-delete-outline.js";
 import { IconArrowUpward } from "@m78/icons/icon-arrow-upward.js";
 import { IconArrowDownward } from "@m78/icons/icon-arrow-downward.js";
-import { Size } from "../../src/common/index.js";
+import { Size } from "../../src/index.js";
 
 const schemas: FormSchemaWithoutName = {
   schema: [

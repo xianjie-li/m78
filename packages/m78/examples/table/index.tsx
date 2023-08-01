@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { createTable } from "../../src/table-vanilla/table.js";
+import { createTable } from "../../src/table-vanilla/index.js";
 import { Scroll } from "../../src/index.js";
 import { TableInstance } from "../../src/table-vanilla/types/instance.js";
 
@@ -9,7 +9,7 @@ import {
   TableColumnFixed,
   TableRowFixed,
 } from "../../src/table-vanilla/types/base-type.js";
-import { createRandString, delay } from "@m78/utils";
+import { createRandString } from "@m78/utils";
 
 const createRow = (key: any) => {
   const obj: any = {
@@ -202,6 +202,8 @@ const TableExample = () => {
   const scrollContRef = useRef<HTMLDivElement>(null!);
   const tableRef = useRef<TableInstance>(null!);
 
+  const ref2 = useRef<HTMLDivElement>(null!);
+
   useEffect(() => {
     console.time("1");
 
@@ -267,10 +269,11 @@ const TableExample = () => {
         return cell.column.key !== "field22";
       },
       interactive: (cell) => {
-        return cell.column.key !== "field22";
+        return cell.column.key !== "field22" && cell.row.key !== "id3";
       },
       interactiveRender: ({ cell, node, value, done }) => {
         const inp = document.createElement("input");
+        inp.innerHTML = value;
         inp.value = value;
         node.appendChild(inp);
         inp.style.width = "100%";
@@ -283,10 +286,6 @@ const TableExample = () => {
           if (e.key === "Enter") {
             done();
           }
-        });
-
-        inp.addEventListener("blur", () => {
-          done();
         });
 
         return (isSubmit) => {
@@ -358,7 +357,7 @@ const TableExample = () => {
 
       <button
         onClick={() => {
-          tableRef.current.y(tableRef.current.y() + 30);
+          tableRef.current.setY(tableRef.current.getY() + 30);
           tableRef.current.render();
         }}
       >
@@ -366,7 +365,10 @@ const TableExample = () => {
       </button>
       <button
         onClick={() => {
-          tableRef.current.xy(tableRef.current.x(), tableRef.current.y() - 30);
+          tableRef.current.setXY(
+            tableRef.current.getX(),
+            tableRef.current.getY() - 30
+          );
         }}
       >
         bottom
@@ -374,7 +376,7 @@ const TableExample = () => {
 
       <button
         onClick={() => {
-          tableRef.current.x(tableRef.current.x() + 30);
+          tableRef.current.setX(tableRef.current.getX() + 30);
           tableRef.current.render();
         }}
       >
@@ -382,7 +384,7 @@ const TableExample = () => {
       </button>
       <button
         onClick={() => {
-          tableRef.current.x(tableRef.current.x() - 30);
+          tableRef.current.setX(tableRef.current.getX() - 30);
           tableRef.current.render();
         }}
       >
@@ -433,14 +435,14 @@ const TableExample = () => {
         <strong>config: </strong>
         <button
           onClick={() => {
-            console.log(tableRef.current.config());
+            console.log(tableRef.current.getConfig());
           }}
         >
           get config
         </button>
         <button
           onClick={() => {
-            tableRef.current.config({
+            tableRef.current.setConfig({
               data: list,
               columns: mergeColumns,
             });
@@ -450,7 +452,7 @@ const TableExample = () => {
         </button>
         <button
           onClick={() => {
-            tableRef.current.config({
+            tableRef.current.setConfig({
               data: list2,
               columns: columns2,
             });
@@ -460,7 +462,7 @@ const TableExample = () => {
         </button>
         <button
           onClick={() => {
-            tableRef.current.config({
+            tableRef.current.setConfig({
               data: list3 as any,
               columns: columns2,
             });
@@ -470,7 +472,7 @@ const TableExample = () => {
         </button>
         <button
           onClick={() => {
-            tableRef.current.config({
+            tableRef.current.setConfig({
               rowHeight: 40,
               columnWidth: 200,
             });
@@ -480,10 +482,10 @@ const TableExample = () => {
         </button>
         <button
           onClick={() => {
-            tableRef.current.config(
+            tableRef.current.setConfig(
               {
                 cells: {
-                  ...tableRef.current.config().cells,
+                  ...tableRef.current.getConfig().cells,
                   "id19##field13": {
                     mergeY: 3,
                     mergeX: 2,

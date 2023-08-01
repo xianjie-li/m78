@@ -3,6 +3,7 @@ import _define_property from "@swc/helpers/src/_define_property.mjs";
 import _inherits from "@swc/helpers/src/_inherits.mjs";
 import _object_spread from "@swc/helpers/src/_object_spread.mjs";
 import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
+import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
 import _create_super from "@swc/helpers/src/_create_super.mjs";
 import { TablePlugin } from "../plugin.js";
@@ -10,6 +11,7 @@ import { createRandString, deepClone, deleteNamePathValue, ensureArray, getNameP
 import { TableReloadLevel } from "./life.js";
 import { _TablePrivateProperty, TableColumnFixed, TableRowFixed } from "../types/base-type.js";
 import { _getCellKeysByStr, _prefix } from "../common.js";
+import { _TableSortColumnPlugin } from "./sort-column.js";
 /**
  * 所有config/data变更相关的操作, 变异操作应统一使用此处提供的api, 方便统一处理, 自动生成和处理历史等
  *
@@ -145,7 +147,7 @@ import { _getCellKeysByStr, _prefix } from "../common.js";
                 return i;
             });
             _this.table.history.redo({
-                title: "add row",
+                title: _this.context.texts.addRow,
                 redo: function() {
                     var _data;
                     (_data = _this.context.data).splice.apply(_data, [
@@ -197,7 +199,7 @@ import { _getCellKeysByStr, _prefix } from "../common.js";
                 return i.ins;
             });
             _this.table.history.redo({
-                title: "remove row",
+                title: _this.context.texts.removeRow,
                 redo: function() {
                     for(var i = list.length - 1; i >= 0; i--){
                         var cur = list[i];
@@ -247,13 +249,51 @@ import { _getCellKeysByStr, _prefix } from "../common.js";
             }
             _this.moveCommon(key, to, true, insertAfter);
         };
+        _this.getValue = function(a, b) {
+            var ref = _sliced_to_array(_this.valueActionGetter(a, b), 1), cell = ref[0];
+            if (!cell) return;
+            return getNamePathValue(cell.row.data, cell.column.config.originalKey);
+        };
+        _this.setValue = function(a, b, c) {
+            var ref = _sliced_to_array(_this.valueActionGetter(a, b, c), 2), cell = ref[0], value = ref[1];
+            if (!cell) return;
+            var row = cell.row, column = cell.column;
+            var oldValue = deepClone(getNamePathValue(row.data, column.config.originalKey));
+            _this.table.history.redo({
+                redo: function() {
+                    setNamePathValue(row.data, column.config.originalKey, value);
+                    var event = {
+                        type: TableMutationType.value,
+                        cell: cell,
+                        value: value,
+                        oldValue: oldValue
+                    };
+                    _this.table.event.mutation.emit(event);
+                    _this.table.render();
+                    _this.table.highlight(event.cell.key, false);
+                },
+                undo: function() {
+                    setNamePathValue(row.data, column.config.originalKey, oldValue);
+                    var event = {
+                        type: TableMutationType.value,
+                        cell: cell,
+                        value: oldValue,
+                        oldValue: value
+                    };
+                    _this.table.event.mutation.emit(event);
+                    _this.table.render();
+                    _this.table.highlight(event.cell.key, false);
+                },
+                title: _this.context.texts.setValue
+            });
+        };
         _this.moveColumn = function(key, to, insertAfter) {
             if (_this.context.xHeaderKey === to) {
                 console.warn("[".concat(_prefix, "] moveColumn: can't move column to header"));
                 return;
             }
             if (_this.context.hasMergeHeader) {
-                _this.table.event.error.emit(_this.context.texts.sortMergeColumn);
+                console.warn("[".concat(_prefix, "] persistenceConfig.sortColumns: Can not sort column when has merge header"));
                 return;
             }
             _this.moveCommon(key, to, false, insertAfter);
@@ -283,6 +323,9 @@ import { _getCellKeysByStr, _prefix } from "../common.js";
     }
     var _proto = _TableMutationPlugin.prototype;
     _proto.init = function init() {
+        this.sortColumn = this.getPlugin(_TableSortColumnPlugin);
+    };
+    _proto.beforeInit = function beforeInit() {
         this.methodMapper(this.table, [
             "getChangedConfigKeys",
             "getPersistenceConfig",
@@ -290,7 +333,9 @@ import { _getCellKeysByStr, _prefix } from "../common.js";
             "addRow",
             "removeRow",
             "moveRow",
-            "moveColumn", 
+            "moveColumn",
+            "setValue",
+            "getValue", 
         ]);
     };
     _proto.reload = function reload() {
@@ -298,6 +343,32 @@ import { _getCellKeysByStr, _prefix } from "../common.js";
         if (opt.level === TableReloadLevel.full) {
             this.changedConfigKeys = [];
         }
+    };
+    /** 处理setValue/getValue的不同参数, 并返回cell和value */ _proto.valueActionGetter = function valueActionGetter(a, b, c) {
+        var cell = null;
+        var value;
+        if (this.table.isCellLike(a)) {
+            cell = a;
+            value = b;
+        } else if (this.table.isRowLike(a) && this.table.isColumnLike(b)) {
+            cell = this.table.getCell(a.key, b.key);
+            value = c;
+        } else if (this.table.isTableKey(a) && this.table.isTableKey(b)) {
+            cell = this.table.getCell(a, b);
+            value = c;
+        }
+        if (!cell) return [
+            cell,
+            value
+        ];
+        if (cell.row.isHeader || cell.column.isHeader) return [
+            null,
+            value
+        ];
+        return [
+            cell,
+            value
+        ];
     };
     /** move的通用逻辑, isRow控制是row还是column */ _proto.moveCommon = function moveCommon(key, to, isRow, insertAfter) {
         var _this = this;
@@ -344,7 +415,9 @@ import { _getCellKeysByStr, _prefix } from "../common.js";
                     });
                     // 同步sortColumns
                     if (!isRow) {
-                        _this.setPersistenceConfig("sortColumns", _this.table.getColumnSortKeys());
+                        _this.table.history.ignore(function() {
+                            _this.setPersistenceConfig("sortColumns", _this.sortColumn.getColumnSortKeys());
+                        });
                     }
                     _this.table.event.mutation.emit({
                         type: TableMutationType.data,
@@ -387,7 +460,9 @@ import { _getCellKeysByStr, _prefix } from "../common.js";
                     }
                     // 同步sortColumns
                     if (!isRow) {
-                        _this.setPersistenceConfig("sortColumns", _this.table.getColumnSortKeys());
+                        _this.table.history.ignore(function() {
+                            _this.setPersistenceConfig("sortColumns", _this.sortColumn.getColumnSortKeys());
+                        });
                     }
                     _this.table.event.mutation.emit({
                         type: TableMutationType.data,
@@ -417,7 +492,7 @@ import { _getCellKeysByStr, _prefix } from "../common.js";
                     }));
                 }
             },
-            title: "move rows"
+            title: isRow ? this.context.texts.moveRow : this.context.texts.moveColumn
         };
         this.table.history.redo(action);
     };
@@ -486,11 +561,13 @@ import { _getCellKeysByStr, _prefix } from "../common.js";
                     if (isNumber(i.refIndex)) return;
                     // 保持fixed一致
                     if (hasFixed && !fixedEqual) {
-                        _this.setPersistenceConfig([
-                            isRow ? "rows" : "columns",
-                            i.ins.key,
-                            "fixed"
-                        ], toConf.fixed);
+                        _this.table.history.ignore(function() {
+                            _this.setPersistenceConfig([
+                                isRow ? "rows" : "columns",
+                                i.ins.key,
+                                "fixed"
+                            ], toConf.fixed);
+                        });
                     }
                     // 转为fixed项或固定项到固定项
                     if (isToFixed || isFixedToFixed) {
@@ -530,11 +607,13 @@ import { _getCellKeysByStr, _prefix } from "../common.js";
                     }
                     // 还原fixed
                     if (hasFixed && !fixedEqual) {
-                        _this.setPersistenceConfig([
-                            isRow ? "rows" : "columns",
-                            i.ins.key,
-                            "fixed"
-                        ], conf.fixed);
+                        _this.table.history.ignore(function() {
+                            _this.setPersistenceConfig([
+                                isRow ? "rows" : "columns",
+                                i.ins.key,
+                                "fixed"
+                            ], conf.fixed);
+                        });
                     }
                     if (isToFixed || isFixedToFixed) {
                         // 清理添加的虚拟项
@@ -692,7 +771,8 @@ import { _getCellKeysByStr, _prefix } from "../common.js";
 export var TableMutationType;
 (function(TableMutationType) {
     TableMutationType[/** 持久化配置变更 */ "config"] = "config";
-    TableMutationType[/** 记录变更 */ "data"] = "data";
+    TableMutationType[/** 记录变更, 通常表示新增/删除/排序 */ "data"] = "data";
+    TableMutationType[/** 单元格值变更 */ "value"] = "value";
 })(TableMutationType || (TableMutationType = {}));
 export var TableMutationDataType;
 (function(TableMutationDataType) {

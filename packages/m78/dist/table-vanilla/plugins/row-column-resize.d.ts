@@ -1,13 +1,16 @@
 /// <reference types="lodash" />
 import { TablePlugin } from "../plugin.js";
 import { RafFunction } from "@m78/utils";
-import { VirtualBound, VirtualBoundDragListener, VirtualBoundHoverListener, VirtualBoundItem } from "../virtual-bound.js";
+import { VirtualBound, VirtualBoundDragListener, VirtualBoundHoverListener, VirtualBoundItem } from "../../virtual-bound/index.js";
 import { TableColumn, TableItems, TableRow } from "../types/items.js";
-/** 列重置大小 */
+/** 列/行重置大小 */
 export declare class _TableRowColumnResize extends TablePlugin {
     /** 提示线 */
     xLine: HTMLDivElement;
     yLine: HTMLDivElement;
+    /** 显示重置后大小 */
+    sizeBlock: HTMLDivElement;
+    wrap: HTMLDivElement;
     /** 标识resize把手的key */
     static VIRTUAL_COLUMN_HANDLE_KEY: string;
     static VIRTUAL_ROW_HANDLE_KEY: string;
@@ -43,9 +46,9 @@ export declare class _TableRowColumnResize extends TablePlugin {
     /** 更新row配置 */
     updateRowSize(row: TableRow, diff: number): void;
     /** 显示并更新xLine位置 */
-    updateXTipLine(x: number): void;
+    updateXTipLine(x: number, bound: VirtualBoundItem): void;
     /** 显示并更新yLine位置 */
-    updateYTipLine(y: number): void;
+    updateYTipLine(y: number, bound: VirtualBoundItem): void;
     /** 隐藏xLine */
     hideXTipLine(): void;
     /** 隐藏yLine */

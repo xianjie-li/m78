@@ -6,6 +6,7 @@ import { TablePlugin } from "../plugin.js";
 import { TableReloadLevel } from "./life.js";
 import { _TablePrivateProperty } from "../types/base-type.js";
 import { removeNode } from "../../common/index.js";
+import { _getSizeString } from "../common.js";
 /** 处理无数据 */ export var _TablePluginEmpty = /*#__PURE__*/ function(TablePlugin) {
     "use strict";
     _inherits(_TablePluginEmpty, TablePlugin);
@@ -21,7 +22,6 @@ import { removeNode } from "../../common/index.js";
     /** reloadStage是在init阶段触发的, 需要确保在其之前创建了node */ _proto.beforeInit = function beforeInit() {
         this.node = document.createElement("div");
         this.node.className = "m78-table_empty";
-        this.node.style.height = "".concat(this.config.emptySize, "px");
         var emptyNode = this.config.emptyNode;
         if (emptyNode) {
             this.node.appendChild(emptyNode);
@@ -64,6 +64,11 @@ import { removeNode } from "../../common/index.js";
                 this.update(needClear);
             }
         }
+    };
+    _proto.rendered = function rendered() {
+        var size = this.table.getHeight() - this.context.yHeaderHeight;
+        var emptyHeight = Math.max(size, this.config.emptySize);
+        this.node.style.height = _getSizeString(emptyHeight);
     };
     /** 更新empty节点状态, 并根据需要移除data中的占位数据 */ _proto.update = function update() {
         var needClear = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : false;

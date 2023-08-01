@@ -2,16 +2,13 @@
 title: Portal - 传送门
 ---
 
-便捷的通过 `React.createPortal` 将子节点渲染到指定的 `dom` 中
+便捷的通过 `React.createPortal` 将子节点渲染到 body 最外层
 
-```ts
+```tsx
 import { Portal } from "m78";
 
-function Portal({
-  children,
-  namespace,
-}: React.FC<{
-  namespace?: string;
-  children?: React.ReactNode;
-}>): ReactPortal;
+// 每个portal需要提供一个唯一的namespace
+<Portal namespace="portal-01">
+  <div>I am Groot!</div>
+</Portal>;
 ```

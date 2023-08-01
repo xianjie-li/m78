@@ -3,6 +3,7 @@
   "version": "1.5.2",
   "description": "render react components through api",
   "main": "./index.js",
+  "exports": "./index.js",
   "scripts": {
     "test": "jest",
     "lint:prettier": "prettier ./src ./test --write --no-error-on-unmatched-pattern",
@@ -22,8 +23,8 @@
     "@m78/hooks": "workspace:^",
     "@m78/utils": "workspace:^",
     "@swc/helpers": "^0.4.11",
-    "@types/react": "^18.0.24",
-    "@types/react-dom": "^18.0.8",
+    "@types/react": "^18.0.26",
+    "@types/react-dom": "^18.0.10",
     "clsx": "^1.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

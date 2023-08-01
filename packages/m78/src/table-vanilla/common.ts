@@ -1,6 +1,6 @@
-import { BoundSize, isNumber } from "@m78/utils";
+import { BoundSize, EmptyFunction, isNumber } from "@m78/utils";
 import { TableKey, TablePosition } from "./types/base-type.js";
-import { TableConfig } from "./types/config.js";
+import { removeNode } from "../common/index.js";
 
 export const _prefix = "m78-table";
 
@@ -10,30 +10,21 @@ export const _privateInstanceKey = "__M78TableInstance";
 /** 用于在domEl上挂载是否为其是否为内部创建的信息 */
 export const _privateScrollerDomKey = "__M78PrivateScrollerDom";
 
+/** 可替换的文本 */
 export const _defaultTexts = {
-  pasteUnalignedRow: "Pasted rows does not match the number of selected rows.",
+  pasteUnalignedRow: "Pasted rows does not match the number of selected rows",
   pasteUnalignedColumn:
-    "Pasted column does not match the number of selected column.",
-  pasteSingleValueLimit: "Paste single value can't exceed {num} cell.",
+    "Pasted column does not match the number of selected column",
+  pasteSingleValueLimit: "Paste single value can't exceed {num} cell",
+  paste: "can not paste to non editable cell",
+  addRow: "add row",
+  removeRow: "remove row",
+  setValue: "update value",
+  moveRow: "move row",
+  moveColumn: "move column",
+  editable: "editable",
+  editableAndRequired: "editable and required",
 } as const;
-
-/** 重置级别3的所有配置, 未在其中的所有配置默认为级别1 */
-export const _level2ConfigKeys: (keyof TableConfig)[] = [
-  "data",
-  "columns",
-  "rows",
-  "cells",
-];
-
-/** 不能通过table.config()变更的配置 */
-export const _configCanNotChange = [
-  "el",
-  "primaryKey",
-  "plugins",
-  "viewEl",
-  "viewContentEl",
-  "eventCreator",
-] as const;
 
 /** 解析rowKey##columnKey格式的字符串为[rowKey, columnKey], 数组长度为2表示解析正常 */
 export function _getCellKeysByStr(s?: string) {
@@ -137,6 +128,42 @@ export function _triggerFilterList(
   }
 
   return false;
+}
+
+/** 用于需要根据指定list同步增加或减少dom列表的场景 */
+export function _syncListNode(arg: {
+  // 容器节点
+  wrapNode: HTMLElement;
+  // 数据列表, nodeList长度会与其同步
+  list: any[];
+  // 存放dom的列表, 会被直接更改
+  nodeList: HTMLElement[];
+  // 对创建的dom进行一些操作
+  createAction?: (dom: HTMLElement) => void;
+}) {
+  const { wrapNode, list, nodeList, createAction } = arg;
+
+  if (list.length > nodeList.length) {
+    // 节点不够则创建
+    const diff = list.length - nodeList.length;
+
+    for (let i = 0; i < diff; i++) {
+      const node = document.createElement("div");
+
+      createAction?.(node);
+
+      wrapNode.appendChild(node);
+      nodeList.push(node);
+    }
+  } else {
+    // 移除多余节点
+    const redundant = nodeList.slice(list.length);
+    redundant.forEach((node) => removeNode(node));
+
+    const newNodes = nodeList.slice(0, list.length);
+    nodeList.length = 0;
+    nodeList.push(...newNodes);
+  }
 }
 
 /** 检测传入的事件是否是touch事件 */

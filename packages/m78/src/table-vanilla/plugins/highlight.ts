@@ -16,7 +16,7 @@ export class _TableHighlightPlugin
   extends TablePlugin
   implements TableHighlight
 {
-  init() {
+  beforeInit() {
     this.methodMapper(this.table, [
       "locate",
       "highlight",
@@ -25,14 +25,13 @@ export class _TableHighlightPlugin
     ]);
   }
 
-  locate(cell: string | string[]): TableCell {
+  locate(cell: TableKey | TableKey[]): TableCell {
     const list = ensureArray(cell).map((i) => this.table.getCellByStrKey(i));
 
     let first = list[0];
 
     // 自动滚动到目标时的额外距离
-    const edgeOffsetX = 80;
-    const edgeOffsetY = 60;
+    const edgeOffset = 20;
 
     if (list.length > 1) {
       let minRowIndex: number | undefined;
@@ -55,13 +54,13 @@ export class _TableHighlightPlugin
       }
     }
 
-    const [x, y] = this.table.xy();
+    const [x, y] = this.table.getXY();
 
     const column = first.column;
     const row = first.row;
 
-    const leftContW = this.table.width() - this.context.rightFixedWidth;
-    const topContH = this.table.height() - this.context.bottomFixedHeight;
+    const leftContW = this.table.getWidth() - this.context.rightFixedWidth;
+    const topContH = this.table.getHeight() - this.context.bottomFixedHeight;
 
     const left = x + this.context.leftFixedWidth;
     const right = x + leftContW;
@@ -92,22 +91,22 @@ export class _TableHighlightPlugin
 
       if (xHide) {
         if (overLeft) {
-          xOffset = column.x - this.context.leftFixedWidth - edgeOffsetX;
+          xOffset = column.x - this.context.leftFixedWidth - edgeOffset;
         } else if (overRight) {
-          xOffset = column.x - leftContW + first.width + edgeOffsetX;
+          xOffset = column.x - leftContW + first.width + edgeOffset;
         }
       }
 
       if (yHide) {
         if (overTop) {
-          yOffset = row.y - this.context.topFixedHeight - edgeOffsetY;
+          yOffset = row.y - this.context.topFixedHeight - edgeOffset;
         } else if (overBottom) {
-          yOffset = row.y - topContH + first.height + edgeOffsetY;
+          yOffset = row.y - topContH + first.height + edgeOffset;
         }
       }
 
       this.table.takeover(() => {
-        this.table.xy(xOffset, yOffset);
+        this.table.setXY(xOffset, yOffset);
       }, false);
       this.table.renderSync();
     }
@@ -115,7 +114,7 @@ export class _TableHighlightPlugin
     return first;
   }
 
-  highlight(cell: string | string[], autoScroll = true) {
+  highlight(cell: TableKey | TableKey[], autoScroll = true) {
     const list = ensureArray(cell).map((i) => this.table.getCellByStrKey(i));
 
     if (!list.length) return;
@@ -128,7 +127,7 @@ export class _TableHighlightPlugin
       const trigger = (item: TableCell) => {
         if (!item.dom) return;
 
-        removeCls(item.dom, "m78-table_highlight");
+        removeCls(item.dom, "m78-highlight-bg");
 
         raf(() => {
           if (item.dom) {
@@ -141,11 +140,11 @@ export class _TableHighlightPlugin
               clearTimeout(prevTimer);
             }
 
-            addCls(item.dom, "m78-table_highlight");
+            addCls(item.dom, "m78-highlight-bg");
 
             const timer = setTimeout(() => {
               if (item.dom) {
-                removeCls(item.dom, "m78-table_highlight");
+                removeCls(item.dom, "m78-highlight-bg");
                 setNamePathValue(item.dom, _TablePrivateProperty.timer, null);
               }
             }, 2000);

@@ -26,19 +26,22 @@ import {
   TableKey,
   TableRowFixed,
 } from "../types/base-type.js";
-import { TableConfig } from "../types/config.js";
 
 import { TableColumnLeafConfigFormatted } from "../types/items.js";
 
 import { TableReloadLevel } from "./life.js";
 import { _TableHidePlugin } from "./hide.js";
+import { _TableIsPlugin } from "./is.js";
+import { _TableRenderPlugin } from "./render.js";
 
 /**
  * 进行配置整理/预计算等
  * */
 export class _TableInitPlugin extends TablePlugin {
+  render: _TableRenderPlugin;
+
   init() {
-    this.methodMapper(this.table, [["conf", "config"]]);
+    this.render = this.getPlugin(_TableRenderPlugin);
 
     addCls(this.config.el, "m78-table");
 
@@ -47,11 +50,6 @@ export class _TableInitPlugin extends TablePlugin {
     this.mergeTexts();
 
     this.fullHandle();
-  }
-
-  conf(config?: Partial<TableConfig>) {
-    if (config === undefined) return this.config;
-    Object.assign(this.config, config);
   }
 
   fullHandle() {
@@ -463,7 +461,7 @@ export class _TableInitPlugin extends TablePlugin {
 
     const ctx = this.context;
 
-    const getter = this.getPlugin(_TableGetterPlugin);
+    const is = this.getPlugin(_TableIsPlugin);
 
     const { columns, rows, data } = ctx;
 
@@ -528,7 +526,7 @@ export class _TableInitPlugin extends TablePlugin {
     ctx.contentWidth = contentWidth;
 
     const rowKeys = Object.keys(rows!)
-      .filter((key) => getter.isRowExist(key))
+      .filter((key) => is.isRowExist(key))
       .sort((a, b) => {
         const aIndex = ctx.dataKeyIndexMap[a];
         const bIndex = ctx.dataKeyIndexMap[b];
@@ -576,6 +574,9 @@ export class _TableInitPlugin extends TablePlugin {
     ctx.bottomFixedHeight = bottomFixedHeight;
     ctx.contentHeight = contentHeight;
     ctx.rowConfigNumberKeys = rowKeys;
+
+    // 此处固定项尺寸已确定, 需要立即更新容器尺寸, 否则后续的clientWidth等信息计算会不准确
+    this.render.updateWrapSize();
 
     const rightFixedStart = this.config.el.clientWidth - rightFixedWidth;
     const bottomFixedStart = this.config.el.clientHeight - bottomFixedHeight;
@@ -633,7 +634,7 @@ export class _TableInitPlugin extends TablePlugin {
 
     if (isEmpty(cells)) return;
 
-    const getter = this.getPlugin(_TableGetterPlugin);
+    const is = this.getPlugin(_TableIsPlugin);
 
     Object.entries(cells!).forEach(([k, conf]) => {
       if (!conf.mergeX && !conf.mergeY) return;
@@ -644,7 +645,7 @@ export class _TableInitPlugin extends TablePlugin {
 
       const [rowKey, columnKey] = keys;
 
-      if (!getter.isRowExist(rowKey) || !getter.isColumnExist(columnKey)) {
+      if (!is.isRowExist(rowKey) || !is.isColumnExist(columnKey)) {
         return;
       }
 
@@ -702,6 +703,7 @@ export class _TableInitPlugin extends TablePlugin {
     const { columns, rows, data } = ctx;
 
     const getter = this.getPlugin(_TableGetterPlugin);
+    const is = this.getPlugin(_TableIsPlugin);
     const sortHide = this.getPlugin(_TableHidePlugin);
 
     const key = start;
@@ -717,19 +719,19 @@ export class _TableInitPlugin extends TablePlugin {
     const mergeList: TableKey[] = [];
     let size = 0;
     let ind = originalInd;
-    let fixedList: TableKey[] = [];
-
-    if (isMainFixed) {
-      if (fixed === TableRowFixed.top) fixedList = ctx.topFixedList;
-      if (fixed === TableRowFixed.bottom) fixedList = ctx.bottomFixeList;
-      if (fixed === TableColumnFixed.left) fixedList = ctx.leftFixedList;
-      if (fixed === TableColumnFixed.right) fixedList = ctx.rightFixedList;
-    }
+    // let fixedList: TableKey[] = [];
+    //
+    // if (isMainFixed) {
+    //   if (fixed === TableRowFixed.top) fixedList = ctx.topFixedList;
+    //   if (fixed === TableRowFixed.bottom) fixedList = ctx.bottomFixeList;
+    //   if (fixed === TableColumnFixed.left) fixedList = ctx.leftFixedList;
+    //   if (fixed === TableColumnFixed.right) fixedList = ctx.rightFixedList;
+    // }
 
     while (mergeNum > 0) {
       const exist = isRow
-        ? getter.isRowExistByIndex(ind)
-        : getter.isColumnExistByIndex(ind);
+        ? is.isRowExistByIndex(ind)
+        : is.isColumnExistByIndex(ind);
 
       if (!exist) break;
 

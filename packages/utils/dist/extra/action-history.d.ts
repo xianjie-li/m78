@@ -5,7 +5,7 @@ export declare class ActionHistory {
     maxLength: number;
     /** 操作历史 */
     private history;
-    /** 当前所在记录游标 */
+    /** 当前所在记录游标, -1表示初始状态 */
     private cursor;
     /** 正在执行redo(action)操作 */
     private isDoing;
@@ -34,11 +34,15 @@ export declare class ActionHistory {
      * */
     batch(action: EmptyFunction): void;
     /**
-     * 忽略action内执行的所有redo(action)操作, 使它们不计入history
+     * 使action期间的所有redo(action)操作不计入历史, 需要自行保证这些被忽略的操作不会影响历史还原或重做
      * */
     ignore(action: EmptyFunction): void;
     /** 重置历史 */
     reset(): void;
+    /** 获取下一条记录 */
+    getNext(): ActionHistoryItem | null;
+    /** 获取前一条记录 */
+    getPrev(): ActionHistoryItem | null;
 }
 export interface ActionHistoryItem {
     /** 操作名, 可用于提供更友好的提示, 比如撤销编辑, 重做编辑等 */

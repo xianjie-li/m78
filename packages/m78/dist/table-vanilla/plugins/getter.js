@@ -1,14 +1,13 @@
 import _class_call_check from "@swc/helpers/src/_class_call_check.mjs";
 import _inherits from "@swc/helpers/src/_inherits.mjs";
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
 import _create_super from "@swc/helpers/src/_create_super.mjs";
 import { TablePlugin } from "../plugin.js";
-import { getNamePathValue, isArray, isNumber, throwError } from "@m78/utils";
-import { _TableViewportPlugin } from "./viewport.js";
+import { getNamePathValue, isArray, isNumber, isString, isTruthyOrZero, setNamePathValue, throwError } from "@m78/utils";
 import { _getBoundByPoint, _getCellKey, _getCellKeysByStr, _prefix } from "../common.js";
-import clamp from "lodash/clamp.js";
 import { _TablePrivateProperty, TableRowFixed } from "../types/base-type.js";
+import { _TableHidePlugin } from "./hide.js";
+import { Position } from "../../common/index.js";
 export var _TableGetterPlugin = /*#__PURE__*/ function(TablePlugin) {
     "use strict";
     _inherits(_TableGetterPlugin, TablePlugin);
@@ -18,124 +17,83 @@ export var _TableGetterPlugin = /*#__PURE__*/ function(TablePlugin) {
         return _super.apply(this, arguments);
     }
     var _proto = _TableGetterPlugin.prototype;
-    _proto.init = function init() {
+    _proto.beforeInit = function beforeInit() {
         // 映射实现方法
         this.methodMapper(this.table, [
+            "getX",
+            "getY",
+            "getXY",
+            "getMaxX",
+            "getMaxY",
+            "getWidth",
+            "getHeight",
+            "getContentWidth",
+            "getContentHeight",
             "getBoundItems",
             "getViewportItems",
             "getAreaBound",
-            "transformViewportPoint",
-            "transformContentPoint",
             "getRow",
             "getColumn",
             "getCell",
             "getCellKey",
             "getCellByStrKey",
+            "getNearCell",
             "getKeyByRowIndex",
             "getKeyByColumnIndex",
             "getIndexByRowKey",
             "getIndexByColumnKey",
             "getKeyByRowData",
-            "isRowExist",
-            "isColumnExist",
             "getMergedData",
-            "getMergeData", 
+            "getMergeData",
+            "getAttachPosition",
+            "getColumnAttachPosition",
+            "getRowAttachPosition", 
         ]);
     };
-    _proto.transformViewportPoint = function transformViewportPoint(param) {
-        var _param = _sliced_to_array(param, 2), x = _param[0], y = _param[1], fixedOffset = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : 0;
-        var ctx = this.context;
-        var lStart = 0;
-        var lEnd = lStart + ctx.leftFixedWidth + fixedOffset;
-        var tStart = 0;
-        var tEnd = tStart + ctx.topFixedHeight + fixedOffset;
-        var bEnd = this.table.height();
-        var bStart = bEnd - ctx.bottomFixedHeight - fixedOffset;
-        var rEnd = this.table.width();
-        var rStart = rEnd - ctx.rightFixedWidth - fixedOffset;
-        var isFixedLeft = x >= lStart && x <= lEnd;
-        var isFixedTop = y >= tStart && y <= tEnd;
-        var isFixedBottom = y >= bStart && y <= bEnd;
-        var isFixedRight = x >= rStart && x <= rEnd;
-        var realX = x + this.table.x();
-        var realY = y + this.table.y();
-        if (isFixedLeft) {
-            realX = x;
-        }
-        if (isFixedRight) {
-            var diffW = rEnd - x;
-            realX = this.table.contentWidth() - diffW;
-        }
-        if (isFixedTop) {
-            realY = y;
-        }
-        if (isFixedBottom) {
-            var diffH = bEnd - y;
-            realY = this.table.contentHeight() - diffH;
-        }
-        return {
-            leftFixed: isFixedLeft,
-            topFixed: isFixedTop,
-            rightFixed: isFixedRight,
-            bottomFixed: isFixedBottom,
-            x: realX,
-            y: realY,
-            xy: [
-                realX,
-                realY
-            ],
-            originY: y,
-            originX: x
-        };
+    _proto.init = function init() {
+        this.hide = this.getPlugin(_TableHidePlugin);
     };
-    _proto.transformContentPoint = function transformContentPoint(pos) {
-        var contW = this.table.contentWidth();
-        var contH = this.table.contentHeight();
-        // 基础位置, 限制在可用区域内
-        var x = clamp(pos[0], 0, contW);
-        var y = clamp(pos[1], 0, contH);
-        var lStart = 0;
-        var lEnd = this.context.leftFixedWidth;
-        var tStart = 0;
-        var tEnd = this.context.topFixedHeight;
-        var rStart = contW - this.context.rightFixedWidth;
-        var rEnd = contW;
-        var bStart = contH - this.context.bottomFixedHeight;
-        var bEnd = contH;
-        var isFixedLeft = x >= lStart && x <= lEnd;
-        var isFixedTop = y >= tStart && y <= tEnd;
-        var isFixedRight = x >= rStart && x <= rEnd;
-        var isFixedBottom = y >= bStart && y <= bEnd;
-        var realX = x - this.table.x();
-        var realY = y - this.table.y();
-        if (isFixedLeft) {
-            realX = x;
+    _proto.getContentHeight = function getContentHeight() {
+        if (this.config.autoSize) {
+            return this.context.contentHeight;
+        } else {
+            // 见contentWidth()
+            return Math.max(this.context.contentHeight, this.table.getHeight());
         }
-        if (isFixedRight) {
-            var diffW = rEnd - x;
-            realX = this.table.width() - diffW;
+    };
+    _proto.getContentWidth = function getContentWidth() {
+        if (this.config.autoSize) {
+            return this.context.contentWidth;
+        } else {
+            // 无自动尺寸时, 内容尺寸不小于容器尺寸, 否则xy()等计算会出现问题
+            return Math.max(this.context.contentWidth, this.table.getWidth());
         }
-        if (isFixedTop) {
-            realY = y;
-        }
-        if (isFixedBottom) {
-            var diffH = bEnd - y;
-            realY = this.table.height() - diffH;
-        }
-        return {
-            leftFixed: isFixedLeft,
-            topFixed: isFixedTop,
-            rightFixed: isFixedRight,
-            bottomFixed: isFixedBottom,
-            x: realX,
-            y: realY,
-            xy: [
-                realX,
-                realY
-            ],
-            originY: pos[1],
-            originX: pos[0]
-        };
+    };
+    _proto.getMaxX = function getMaxX() {
+        return this.context.viewEl.scrollWidth - this.context.viewEl.clientWidth;
+    };
+    _proto.getMaxY = function getMaxY() {
+        return this.context.viewEl.scrollHeight - this.context.viewEl.clientHeight;
+    };
+    _proto.getHeight = function getHeight() {
+        return this.config.el.clientHeight;
+    };
+    _proto.getWidth = function getWidth() {
+        return this.config.el.clientWidth;
+    };
+    _proto.getX = function getX() {
+        return this.context.viewEl.scrollLeft;
+    };
+    _proto.getY = function getY() {
+        return this.context.viewEl.scrollTop;
+    };
+    _proto.getXY = function getXY() {
+        var ctx = this.context;
+        var viewEl = ctx.viewEl;
+        return [
+            viewEl.scrollLeft,
+            viewEl.scrollTop
+        ];
     };
     _proto.getAreaBound = function getAreaBound(p1, p2) {
         p2 = p2 || p1;
@@ -275,12 +233,11 @@ export var _TableGetterPlugin = /*#__PURE__*/ function(TablePlugin) {
         var _columns, _columns1, _rows, _rows1;
         var table = this.table;
         var ctx = this.context;
-        var viewport = this.getPlugin(_TableViewportPlugin);
         // 截取非fixed区域内容
-        var x = Math.min(table.x() + ctx.leftFixedWidth, viewport.contentWidth());
-        var y = Math.min(table.y() + ctx.topFixedHeight, viewport.contentHeight());
-        var width = Math.max(this.table.width() - ctx.rightFixedWidth - ctx.leftFixedWidth, 0);
-        var height = Math.max(this.table.height() - ctx.bottomFixedHeight - ctx.topFixedHeight, 0);
+        var x = Math.min(table.getX() + ctx.leftFixedWidth, this.table.getContentWidth());
+        var y = Math.min(table.getY() + ctx.topFixedHeight, this.table.getContentHeight());
+        var width = Math.max(this.table.getWidth() - ctx.rightFixedWidth - ctx.leftFixedWidth, 0);
+        var height = Math.max(this.table.getHeight() - ctx.bottomFixedHeight - ctx.topFixedHeight, 0);
         var items = this.getBoundItemsInner({
             left: x,
             top: y,
@@ -347,10 +304,27 @@ export var _TableGetterPlugin = /*#__PURE__*/ function(TablePlugin) {
             cells: cells
         };
     };
-    /** 获取指定行的TableRow */ _proto.getRow = function getRow(key) {
+    /** 获取指定行的实例, useCache为false时会跳过缓存重新计算关键属性, 并将最新内容写入缓存 */ _proto.getRow = function getRow(key) {
+        var useCache = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : true;
         var ctx = this.context;
-        var cache = ctx.rowCache[key];
-        if (cache) return cache;
+        var row = ctx.rowCache[key];
+        var lastKeyNotEqual = !!row && getNamePathValue(row, _TablePrivateProperty.reloadKey) !== ctx.lastReloadKey;
+        // 是否需要刷新缓存
+        var needFresh = !useCache || lastKeyNotEqual;
+        if (!row) {
+            // 新建
+            row = this.getFreshRow(key);
+            ctx.rowCache[key] = row;
+        } else if (needFresh) {
+            // 更新缓存
+            var fresh = this.getFreshRow(key);
+            Object.assign(row, fresh);
+        }
+        setNamePathValue(row, _TablePrivateProperty.reloadKey, ctx.lastReloadKey);
+        return row;
+    };
+    /** 跳过缓存获取最新的row */ _proto.getFreshRow = function getFreshRow(key) {
+        var ctx = this.context;
         var index = ctx.dataKeyIndexMap[key];
         if (!isNumber(index)) {
             throwError("row key ".concat(key, " is invalid"), _prefix);
@@ -392,13 +366,29 @@ export var _TableGetterPlugin = /*#__PURE__*/ function(TablePlugin) {
             var bf = ctx.bottomFixedMap[key];
             if (bf) row.fixedOffset = bf.viewPortOffset;
         }
-        ctx.rowCache[key] = row;
         return row;
     };
-    _proto.getColumn = function getColumn(key) {
+    /** 获取指定列的实例, useCache为false时会跳过缓存重新计算关键属性, 并将最新内容写入缓存 */ _proto.getColumn = function getColumn(key) {
+        var useCache = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : true;
         var ctx = this.context;
-        var cache = ctx.columnCache[key];
-        if (cache) return cache;
+        var column = ctx.columnCache[key];
+        var lastKeyNotEqual = !!column && getNamePathValue(column, _TablePrivateProperty.reloadKey) !== ctx.lastReloadKey;
+        // 是否需要刷新缓存
+        var needFresh = !useCache || lastKeyNotEqual;
+        if (!column) {
+            // 新建
+            column = this.getFreshColumn(key);
+            ctx.columnCache[key] = column;
+        } else if (needFresh) {
+            // 更新缓存
+            var fresh = this.getFreshColumn(key);
+            Object.assign(column, fresh);
+        }
+        setNamePathValue(column, _TablePrivateProperty.reloadKey, ctx.lastReloadKey);
+        return column;
+    };
+    /** 跳过缓存获取最新的column */ _proto.getFreshColumn = function getFreshColumn(key) {
+        var ctx = this.context;
         var index = ctx.columnKeyIndexMap[key];
         if (!isNumber(index)) {
             throwError("column key ".concat(key, " is invalid"), _prefix);
@@ -438,7 +428,6 @@ export var _TableGetterPlugin = /*#__PURE__*/ function(TablePlugin) {
             var rf = ctx.rightFixedMap[key];
             if (rf) column.fixedOffset = rf.viewPortOffset;
         }
-        ctx.columnCache[key] = column;
         return column;
     };
     _proto.getCellKey = function getCellKey(rowKey, columnKey) {
@@ -451,34 +440,122 @@ export var _TableGetterPlugin = /*#__PURE__*/ function(TablePlugin) {
         }
         return this.getCell(keys[0], keys[1]);
     };
-    /** 获取指定行, 列坐标对应的TableCell */ _proto.getCell = function getCell(rowKey, columnKey) {
-        var key = _getCellKey(rowKey, columnKey);
+    /** 根据单元格类型获取其文本 */ _proto.getText = function getText(cell) {
+        var row = cell.row, column = cell.column;
+        var text;
+        if (row.isHeader) {
+            // 表头数据根据普通key注入
+            text = row.data[column.key];
+        } else if (column.isHeader) {
+            text = String(cell.row.index - this.context.yHeaderKeys.length + 1);
+        } else {
+            text = getNamePathValue(row.data, column.config.originalKey);
+        }
+        if (isString(text)) return text;
+        return String(isTruthyOrZero(text) ? text : "");
+    };
+    _proto.getCell = function getCell(rowKey, columnKey) {
+        var useCache = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : true;
         var ctx = this.context;
-        var cache = ctx.cellCache[key];
-        if (cache) return cache;
+        var key = _getCellKey(rowKey, columnKey);
+        var cell = ctx.cellCache[key];
+        var lastKeyNotEqual = !!cell && getNamePathValue(cell, _TablePrivateProperty.reloadKey) !== ctx.lastReloadKey;
+        // 是否需要刷新缓存
+        var needFresh = !useCache || lastKeyNotEqual;
+        if (!cell) {
+            // 新建
+            cell = this.getFreshCell(rowKey, columnKey, key);
+            cell.state = {};
+            ctx.cellCache[key] = cell;
+        } else if (needFresh) {
+            // 更新缓存
+            var fresh = this.getFreshCell(rowKey, columnKey, key);
+            Object.assign(cell, fresh);
+        }
+        setNamePathValue(cell, _TablePrivateProperty.reloadKey, ctx.lastReloadKey);
+        return cell;
+    };
+    _proto.getFreshCell = function getFreshCell(rowKey, columnKey, key) {
+        var ctx = this.context;
         var row = this.getRow(rowKey);
         var column = this.getColumn(columnKey);
         var config = ctx.cells[key] || {};
-        var state = ctx.cellStateCaChe[key];
-        if (!state) {
-            ctx.cellStateCaChe[key] = {};
-            state = ctx.cellStateCaChe[key];
-        }
-        var cell = {
+        var mergeData = ctx.mergeMapMain[key];
+        var width = mergeData ? mergeData.width : column.width;
+        var height = mergeData ? mergeData.height : row.height;
+        return {
             row: row,
             column: column,
             key: key,
             config: config,
             isMount: false,
-            text: "",
             isFixed: column.isFixed || row.isFixed,
             isCrossFixed: column.isFixed && row.isFixed,
             isLastX: columnKey === ctx.lastColumnKey || columnKey === ctx.lastFixedColumnKey || !!ctx.lastMergeXMap[key],
             isLastY: rowKey === ctx.lastRowKey || rowKey === ctx.lastFixedRowKey || !!ctx.lastMergeYMap[key],
-            state: state
+            width: width,
+            height: height,
+            text: ""
         };
-        ctx.cellCache[key] = cell;
-        return cell;
+    };
+    _proto.getNearCell = function getNearCell(arg) {
+        var cell = arg.cell, _position = arg.position, position = _position === void 0 ? Position.right : _position, filter = arg.filter;
+        var _context = this.context, columns = _context.columns, data = _context.data;
+        // 是否垂直方向
+        var isVertical = position === Position.top || position === Position.bottom;
+        // 区分获取前方还是后方单元格
+        var isPrev = position === Position.left || position === Position.top;
+        var row = cell.row, column = cell.column;
+        var index = isVertical ? row.realIndex : column.realIndex;
+        if (!isNumber(index)) return;
+        var list = isVertical ? data : columns;
+        // 由于进入循环后立即回获取下一项, 所以需要把索引边界扩大或减小1
+        while(index <= list.length && index >= -1){
+            index = isPrev ? index - 1 : index + 1;
+            var next = list[index];
+            // 超出最后/前项时, 获取下一行或下一列
+            if (!next) {
+                var offset = isPrev ? -1 : 1;
+                // 下一项相关信息
+                var nextListIndex = isVertical ? column.realIndex : row.realIndex;
+                var nextListKey = void 0;
+                var nextItem = void 0;
+                var isHideOrIgnore = false;
+                try {
+                    // 处理隐藏项和忽略项
+                    do {
+                        nextListIndex = nextListIndex + offset;
+                        nextListKey = isVertical ? this.getKeyByColumnIndex(nextListIndex) : this.getKeyByRowIndex(nextListIndex);
+                        nextItem = isVertical ? this.table.getColumn(nextListKey) : this.table.getRow(nextListKey);
+                        // 在data/column中的实际项
+                        var cur = isVertical ? columns[nextListIndex] : data[nextListIndex];
+                        isHideOrIgnore = this.hide.isHideColumn(nextListKey) || getNamePathValue(cur, _TablePrivateProperty.ignore);
+                    }while (// 隐藏或忽略项, 并且在有效索引内
+                    isHideOrIgnore && nextListIndex < columns.length && nextListIndex > 0);
+                } catch (e) {
+                // 忽略getKeyByColumnIndex/getRow等api的越界错误
+                }
+                // 包含下一行/列, 跳转都首个或末尾
+                if (nextItem) {
+                    index = isPrev ? list.length : -1;
+                    if (isVertical) {
+                        column = nextItem;
+                    } else {
+                        row = nextItem;
+                    }
+                    continue;
+                }
+                return;
+            }
+            if (getNamePathValue(next, _TablePrivateProperty.ignore)) continue;
+            var key = isVertical ? this.table.getKeyByRowData(next) : next.key;
+            var _cell = isVertical ? this.getCell(key, column.key) : this.getCell(row.key, key);
+            // 单元格是被合并项
+            if (this.context.mergeMapSub[_cell.key]) continue;
+            var skip = filter && !filter(_cell);
+            if (skip) continue;
+            return _cell;
+        }
     };
     /** 获取指定列左侧的距离 */ _proto.getBeforeSizeX = function getBeforeSizeX(index) {
         var columns = this.context.columns;
@@ -601,14 +678,14 @@ export var _TableGetterPlugin = /*#__PURE__*/ function(TablePlugin) {
     };
     _proto.getIndexByRowKey = function getIndexByRowKey(key) {
         var ind = this.context.dataKeyIndexMap[key];
-        if (key === undefined) {
+        if (ind === undefined) {
             throwError("row key ".concat(key, " does not have a corresponding index"), _prefix);
         }
         return ind;
     };
     _proto.getIndexByColumnKey = function getIndexByColumnKey(key) {
         var ind = this.context.columnKeyIndexMap[key];
-        if (key === undefined) {
+        if (ind === undefined) {
             throwError("column key ".concat(key, " does not have a corresponding index"), _prefix);
         }
         return ind;
@@ -619,18 +696,6 @@ export var _TableGetterPlugin = /*#__PURE__*/ function(TablePlugin) {
             throwError("No key obtained. ".concat(JSON.stringify(cur, null, 4)), _prefix);
         }
         return key;
-    };
-    _proto.isColumnExist = function isColumnExist(key) {
-        return this.context.columnKeyIndexMap[key] !== undefined;
-    };
-    _proto.isRowExist = function isRowExist(key) {
-        return this.context.dataKeyIndexMap[key] !== undefined;
-    };
-    _proto.isColumnExistByIndex = function isColumnExistByIndex(ind) {
-        return this.context.columns[ind] !== undefined;
-    };
-    _proto.isRowExistByIndex = function isRowExistByIndex(ind) {
-        return this.context.data[ind] !== undefined;
     };
     /** 处理merge项, 防止cell列表重复推入相同项, 并在确保cell中包含被合并项的父项, 回调返回true时表示以处理, 需要跳过后续流程 */ _proto.cellMergeHelper = function cellMergeHelper(list) {
         var _this = this;
@@ -669,6 +734,47 @@ export var _TableGetterPlugin = /*#__PURE__*/ function(TablePlugin) {
         return this.context.ignoreYList.filter(function(i) {
             return i < index;
         });
+    };
+    _proto.getAttachPosition = function getAttachPosition(cell) {
+        var rPos = this.getRowAttachPosition(cell.row);
+        var cPos = this.getColumnAttachPosition(cell.column);
+        var zIndex;
+        if (!cell.isFixed) {
+            zIndex = "5"; // 高于其所在单元格对应层index.scss
+        } else if (cell.isCrossFixed) {
+            zIndex = "21";
+        } else {
+            zIndex = "11";
+        }
+        return {
+            left: cPos.left,
+            top: rPos.top,
+            width: cell.width,
+            height: cell.height,
+            zIndex: zIndex
+        };
+    };
+    _proto.getColumnAttachPosition = function getColumnAttachPosition(column) {
+        return {
+            left: column.isFixed ? this.table.getX() + column.fixedOffset : column.x,
+            width: column.width,
+            // 应高于交叉固定项的20或基础层的5
+            zIndex: column.isFixed ? "21" : "5",
+            // 以下均设为零值
+            top: 0,
+            height: 0
+        };
+    };
+    _proto.getRowAttachPosition = function getRowAttachPosition(row) {
+        return {
+            top: row.isFixed ? this.table.getY() + row.fixedOffset : row.y,
+            height: row.height,
+            // 应高于交叉固定项的20或基础层的5
+            zIndex: row.isFixed ? "21" : "5",
+            // 以下均设为零值
+            left: 0,
+            width: 0
+        };
     };
     return _TableGetterPlugin;
 }(TablePlugin);

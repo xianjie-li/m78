@@ -1,8 +1,9 @@
 import { TablePlugin } from "../plugin.js";
+import { TableRenderCtx } from "../types/base-type.js";
 import { TableCellWithDom } from "../types/items.js";
 export declare class _TableHeaderPlugin extends TablePlugin {
     /** 渲染行头内容 */
-    cellRender(cell: TableCellWithDom): boolean | void;
+    cellRender(cell: TableCellWithDom, ctx: TableRenderCtx): boolean | void;
     /** 处理行头/表头 */
     process(): void;
     /** 处理表头 */

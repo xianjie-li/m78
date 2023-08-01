@@ -51,12 +51,12 @@ export interface Options<Opt> {
      * @param response - 请求响应
      * */
     feedBack?(message: string, status: boolean, option: Opt, response?: Response): void;
-    /** 将response格式化为自己想要的格式后返回, 会在所有插件执行完毕后执行  */
+    /** 将response预格式化为自己想要的格式后返回, 会在所有插件执行完毕后执行  */
     format?(response: Response, option: Opt): any;
     /** 请求开始 */
-    start?(requestConfig: Opt): any;
+    start?(option: Opt): any;
     /** 请求结束, flag是start hook的返回值, 通常为从start中返回的loading等的关闭标识 */
-    finish?(requestConfig: Opt, flag?: any): void;
+    finish?(option: Opt, flag?: any): void;
     /** 请求失败 */
     error?(resError: ResponseError, option: Opt): void;
     /** 请求成功 */

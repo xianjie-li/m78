@@ -4,23 +4,17 @@ import { isNumber } from "@m78/utils";
 export var _prefix = "m78-table";
 /** 用于在config.el上存储当前实例 */ export var _privateInstanceKey = "__M78TableInstance";
 /** 用于在domEl上挂载是否为其是否为内部创建的信息 */ export var _privateScrollerDomKey = "__M78PrivateScrollerDom";
-export var _defaultTexts = {
-    sortMergeColumn: "Can not sort column when has merge header"
+/** 可替换的文本 */ export var _defaultTexts = {
+    pasteUnalignedRow: "Pasted rows does not match the number of selected rows",
+    pasteUnalignedColumn: "Pasted column does not match the number of selected column",
+    pasteSingleValueLimit: "Paste single value can't exceed {num} cell",
+    paste: "can not paste to non editable cell",
+    addRow: "add row",
+    removeRow: "remove row",
+    setValue: "update value",
+    moveRow: "move row",
+    moveColumn: "move column"
 };
-/** 重置级别3的所有配置, 未在其中的所有配置默认为级别1 */ export var _level2ConfigKeys = [
-    "data",
-    "columns",
-    "rows",
-    "cells", 
-];
-/** 不能通过table.config()变更的配置 */ export var _configCanNotChange = [
-    "el",
-    "primaryKey",
-    "plugins",
-    "viewEl",
-    "viewContentEl",
-    "eventCreator", 
-];
 /** 解析rowKey##columnKey格式的字符串为[rowKey, columnKey], 数组长度为2表示解析正常 */ export function _getCellKeysByStr(s) {
     if (!s) return [];
     return s.split("##");

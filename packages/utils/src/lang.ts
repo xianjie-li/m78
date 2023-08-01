@@ -1,4 +1,5 @@
 import { AnyFunction } from "./types";
+import { getNamePathValue, setNamePathValue } from "./object.js";
 
 /**
  * return the 'global' object according to different JS running environments
@@ -28,7 +29,12 @@ export const __GLOBAL__ = getGlobal();
  * */
 export interface CustomEvent<Listener extends AnyFunction> {
   /** register a listener */
-  on: (listener: Listener) => void;
+  on: (
+    /** event listener */
+    listener: Listener,
+    /** accept emit argument, and skip event if return false */
+    filter?: (...args: Parameters<Listener>) => boolean
+  ) => void;
   /** destroy a listener */
   off: (listener: Listener) => void;
   /** trigger listeners */
@@ -47,17 +53,26 @@ export function createEvent<
 >(): CustomEvent<Listener> {
   const listeners: Listener[] = [];
 
-  function on(listener) {
+  function on(listener, filter) {
+    setNamePathValue(listener, "__eventFilter", filter);
     listeners.push(listener);
   }
 
   function off(listener) {
     const ind = listeners.indexOf(listener);
-    if (ind !== -1) listeners.splice(ind, 1);
+    if (ind !== -1) {
+      const del = listeners.splice(ind, 1);
+
+      setNamePathValue(del[0], "__eventFilter", undefined);
+    }
   }
 
   function emit(...args) {
-    listeners.forEach((listener) => listener(...args));
+    listeners.forEach((listener) => {
+      const filter = getNamePathValue(listener, "__eventFilter");
+      if (filter && !filter(...args)) return;
+      listener(...args);
+    });
   }
 
   function empty() {

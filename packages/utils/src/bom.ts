@@ -86,14 +86,18 @@ export function isMobileDevice() {
   return platform.iphone || platform.ipad || platform.android;
 }
 
-/** Get command key by system, apple series: command,  other: control */
-export function getCmdKeyStatus(e: Event) {
+/** Get command key by system, apple series: metaKey,  other: ctrlKey */
+export function getCmdKey() {
   const platform = getPlatform();
 
-  const key =
-    platform.mac || platform.ipad || platform.iphone ? "metaKey" : "ctrlKey";
+  return platform.mac || platform.ipad || platform.iphone
+    ? "metaKey"
+    : "ctrlKey";
+}
 
-  return !!e[key];
+/** Get command key status by system, apple series: metaKey,  other: ctrlKey */
+export function getCmdKeyStatus(e: Event) {
+  return !!e[getCmdKey()];
 }
 
 /** A simple compatibility wrapper for requestAnimationFrame and returns a cleanup function instead of a cleanup tag */

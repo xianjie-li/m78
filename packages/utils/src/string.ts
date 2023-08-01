@@ -23,6 +23,21 @@ export function createRandString(number = 1): string {
   }, "") as string;
 }
 
+const uniqMap: any = {};
+
+/** generation a unique string */
+export function createUniqString() {
+  let str = createRandString();
+
+  while (uniqMap[str]) {
+    str = createRandString();
+  }
+
+  uniqMap[str] = true;
+
+  return str;
+}
+
 interface Byte2Text {
   (byte: number, conf?: { precision: number }): string;
 

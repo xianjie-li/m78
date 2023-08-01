@@ -20,7 +20,7 @@ import clsx from "clsx";
 import { _useFieldMethods } from "./use-field-methods.js";
 import { _useFieldLifeCircle } from "./use-field-life-circle.js";
 import { _listLayoutRenderImpl, _listRenderImpl } from "./list.js";
-import { requiredValidatorKey } from "@m78/verify/index.js";
+import { requiredValidatorKey } from "@m78/verify";
 
 export function _fieldImpl(ctx: _FormContext) {
   const { form } = ctx;

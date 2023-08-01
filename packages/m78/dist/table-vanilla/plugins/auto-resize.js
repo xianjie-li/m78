@@ -26,7 +26,7 @@ export var _TableAutoResizePlugin = /*#__PURE__*/ function(TablePlugin) {
         return _this;
     }
     var _proto = _TableAutoResizePlugin.prototype;
-    _proto.mount = function mount() {
+    _proto.mounted = function mounted() {
         this.ob = new ResizeObserver(this.handleResize);
         this.ob.observe(this.config.el);
     };

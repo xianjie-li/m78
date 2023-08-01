@@ -10,18 +10,15 @@ import {
   throwError,
   TupleNumber,
 } from "@m78/utils";
-import { _TableViewportPlugin } from "./viewport.js";
 import {
   _getBoundByPoint,
   _getCellKey,
   _getCellKeysByStr,
   _prefix,
 } from "../common.js";
-import clamp from "lodash/clamp.js";
 import {
   _TablePrivateProperty,
   TableKey,
-  TablePointInfo,
   TablePosition,
   TableRowFixed,
 } from "../types/base-type.js";
@@ -40,14 +37,21 @@ import { Position } from "../../common/index.js";
 export class _TableGetterPlugin extends TablePlugin implements TableGetter {
   hide: _TableHidePlugin;
 
-  init() {
+  beforeInit() {
     // 映射实现方法
     this.methodMapper(this.table, [
+      "getX",
+      "getY",
+      "getXY",
+      "getMaxX",
+      "getMaxY",
+      "getWidth",
+      "getHeight",
+      "getContentWidth",
+      "getContentHeight",
       "getBoundItems",
       "getViewportItems",
       "getAreaBound",
-      "transformViewportPoint",
-      "transformContentPoint",
       "getRow",
       "getColumn",
       "getCell",
@@ -59,130 +63,65 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
       "getIndexByRowKey",
       "getIndexByColumnKey",
       "getKeyByRowData",
-      "isRowExist",
-      "isColumnExist",
       "getMergedData",
       "getMergeData",
-      "isRowLike",
-      "isColumnLike",
-      "isCellLike",
-      "isTableKey",
+      "getAttachPosition",
+      "getColumnAttachPosition",
+      "getRowAttachPosition",
     ]);
+  }
 
+  init() {
     this.hide = this.getPlugin(_TableHidePlugin);
   }
 
-  transformViewportPoint(
-    [x, y]: TablePosition,
-    fixedOffset = 0
-  ): TablePointInfo {
-    const ctx = this.context;
-
-    const lStart = 0;
-    const lEnd = lStart + ctx.leftFixedWidth + fixedOffset;
-
-    const tStart = 0;
-    const tEnd = tStart + ctx.topFixedHeight + fixedOffset;
-
-    const bEnd = this.table.height();
-    const bStart = bEnd - ctx.bottomFixedHeight - fixedOffset;
-
-    const rEnd = this.table.width();
-    const rStart = rEnd - ctx.rightFixedWidth - fixedOffset;
-
-    const isFixedLeft = x >= lStart && x <= lEnd;
-    const isFixedTop = y >= tStart && y <= tEnd;
-    const isFixedBottom = y >= bStart && y <= bEnd;
-    const isFixedRight = x >= rStart && x <= rEnd;
-
-    let realX = x + this.table.x();
-    let realY = y + this.table.y();
-
-    if (isFixedLeft) {
-      realX = x;
+  getContentHeight(): number {
+    if (this.config.autoSize) {
+      return this.context.contentHeight;
+    } else {
+      // 见contentWidth()
+      return Math.max(this.context.contentHeight, this.table.getHeight());
     }
-
-    if (isFixedRight) {
-      const diffW = rEnd - x;
-      realX = this.table.contentWidth() - diffW;
-    }
-
-    if (isFixedTop) {
-      realY = y;
-    }
-
-    if (isFixedBottom) {
-      const diffH = bEnd - y;
-      realY = this.table.contentHeight() - diffH;
-    }
-
-    return {
-      leftFixed: isFixedLeft,
-      topFixed: isFixedTop,
-      rightFixed: isFixedRight,
-      bottomFixed: isFixedBottom,
-      x: realX,
-      y: realY,
-      xy: [realX, realY],
-      originY: y,
-      originX: x,
-    };
   }
 
-  transformContentPoint(pos: TablePosition): TablePointInfo {
-    const contW = this.table.contentWidth();
-    const contH = this.table.contentHeight();
-
-    // 基础位置, 限制在可用区域内
-    const x = clamp(pos[0], 0, contW);
-    const y = clamp(pos[1], 0, contH);
-
-    const lStart = 0;
-    const lEnd = this.context.leftFixedWidth;
-    const tStart = 0;
-    const tEnd = this.context.topFixedHeight;
-    const rStart = contW - this.context.rightFixedWidth;
-    const rEnd = contW;
-    const bStart = contH - this.context.bottomFixedHeight;
-    const bEnd = contH;
-
-    const isFixedLeft = x >= lStart && x <= lEnd;
-    const isFixedTop = y >= tStart && y <= tEnd;
-    const isFixedRight = x >= rStart && x <= rEnd;
-    const isFixedBottom = y >= bStart && y <= bEnd;
-
-    let realX = x - this.table.x();
-    let realY = y - this.table.y();
-
-    if (isFixedLeft) {
-      realX = x;
+  getContentWidth(): number {
+    if (this.config.autoSize) {
+      return this.context.contentWidth;
+    } else {
+      // 无自动尺寸时, 内容尺寸不小于容器尺寸, 否则xy()等计算会出现问题
+      return Math.max(this.context.contentWidth, this.table.getWidth());
     }
+  }
 
-    if (isFixedRight) {
-      const diffW = rEnd - x;
-      realX = this.table.width() - diffW;
-    }
+  getMaxX(): number {
+    return this.context.viewEl.scrollWidth - this.context.viewEl.clientWidth;
+  }
 
-    if (isFixedTop) {
-      realY = y;
-    }
+  getMaxY(): number {
+    return this.context.viewEl.scrollHeight - this.context.viewEl.clientHeight;
+  }
 
-    if (isFixedBottom) {
-      const diffH = bEnd - y;
-      realY = this.table.height() - diffH;
-    }
+  getHeight(): number {
+    return this.config.el.clientHeight;
+  }
 
-    return {
-      leftFixed: isFixedLeft,
-      topFixed: isFixedTop,
-      rightFixed: isFixedRight,
-      bottomFixed: isFixedBottom,
-      x: realX,
-      y: realY,
-      xy: [realX, realY],
-      originY: pos[1],
-      originX: pos[0],
-    };
+  getWidth(): number {
+    return this.config.el.clientWidth;
+  }
+
+  getX(): number {
+    return this.context.viewEl.scrollLeft;
+  }
+
+  getY(): number {
+    return this.context.viewEl.scrollTop;
+  }
+
+  getXY(): TablePosition {
+    const ctx = this.context;
+    const viewEl = ctx.viewEl;
+
+    return [viewEl.scrollLeft, viewEl.scrollTop];
   }
 
   getAreaBound(p1: TablePosition, p2?: TablePosition): TableItems {
@@ -207,7 +146,7 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
    * 内部使用的getBoundItems, 包含了startRowIndex等额外返回
    * - 注意, 返回的index均对应dataFixedSortList/columnsFixedSortList而不是配置中的data
    * */
-  getBoundItemsInner(
+  private getBoundItemsInner(
     target: BoundSize | TupleNumber,
     skipFixed = false
   ): TableItemsFull {
@@ -373,24 +312,25 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
     const table = this.table;
     const ctx = this.context;
 
-    const viewport = this.getPlugin(_TableViewportPlugin);
-
     // 截取非fixed区域内容
 
-    const x = Math.min(table.x() + ctx.leftFixedWidth, viewport.contentWidth());
+    const x = Math.min(
+      table.getX() + ctx.leftFixedWidth,
+      this.table.getContentWidth()
+    );
 
     const y = Math.min(
-      table.y() + ctx.topFixedHeight,
-      viewport.contentHeight()
+      table.getY() + ctx.topFixedHeight,
+      this.table.getContentHeight()
     );
 
     const width = Math.max(
-      this.table.width() - ctx.rightFixedWidth - ctx.leftFixedWidth,
+      this.table.getWidth() - ctx.rightFixedWidth - ctx.leftFixedWidth,
       0
     );
 
     const height = Math.max(
-      this.table.height() - ctx.bottomFixedHeight - ctx.topFixedHeight,
+      this.table.getHeight() - ctx.bottomFixedHeight - ctx.topFixedHeight,
       0
     );
 
@@ -834,8 +774,6 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
             isHideOrIgnore =
               this.hide.isHideColumn(nextListKey) ||
               getNamePathValue(cur, _TablePrivateProperty.ignore);
-
-            console.log(nextItem, 222);
           } while (
             // 隐藏或忽略项, 并且在有效索引内
             isHideOrIgnore &&
@@ -849,8 +787,6 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
         // 包含下一行/列, 跳转都首个或末尾
         if (nextItem) {
           index = isPrev ? list.length : -1;
-
-          console.log(nextItem, index);
 
           if (isVertical) {
             column = nextItem as TableColumn;
@@ -1079,24 +1015,8 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
     return key;
   }
 
-  isColumnExist(key: TableKey): boolean {
-    return this.context.columnKeyIndexMap[key] !== undefined;
-  }
-
-  isRowExist(key: TableKey): boolean {
-    return this.context.dataKeyIndexMap[key] !== undefined;
-  }
-
-  isColumnExistByIndex(ind: number): boolean {
-    return this.context.columns[ind] !== undefined;
-  }
-
-  isRowExistByIndex(ind: number): boolean {
-    return this.context.data[ind] !== undefined;
-  }
-
   /** 处理merge项, 防止cell列表重复推入相同项, 并在确保cell中包含被合并项的父项, 回调返回true时表示以处理, 需要跳过后续流程 */
-  cellMergeHelper(list: TableCell[]): (cell: TableCell) => boolean {
+  private cellMergeHelper(list: TableCell[]): (cell: TableCell) => boolean {
     const existCache: any = {};
 
     return (cell: TableCell) => {
@@ -1143,35 +1063,83 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
     return this.context.ignoreYList.filter((i) => i < index);
   }
 
-  isRowLike(row: any): row is TableRow {
-    return (
-      row &&
-      typeof row.key === "string" &&
-      typeof row.height === "number" &&
-      typeof row.y === "number"
-    );
+  getAttachPosition(cell: TableCell): TableAttachData {
+    const rPos = this.getRowAttachPosition(cell.row);
+    const cPos = this.getColumnAttachPosition(cell.column);
+
+    let zIndex: string;
+
+    if (!cell.isFixed) {
+      zIndex = "5"; // 高于其所在单元格对应层index.scss
+    } else if (cell.isCrossFixed) {
+      zIndex = "21";
+    } else {
+      zIndex = "11";
+    }
+
+    return {
+      left: cPos.left,
+      top: rPos.top,
+      width: cell.width,
+      height: cell.height,
+      zIndex,
+    };
   }
 
-  isColumnLike(column: any): column is TableColumn {
-    return (
-      column &&
-      typeof column.key === "string" &&
-      typeof column.height === "number" &&
-      typeof column.x === "number"
-    );
+  getColumnAttachPosition(column: TableColumn): TableAttachData {
+    return {
+      left: column.isFixed ? this.table.getX() + column.fixedOffset! : column.x,
+      width: column.width,
+      // 应高于交叉固定项的20或基础层的5
+      zIndex: column.isFixed ? "21" : "5",
+      // 以下均设为零值
+      top: 0,
+      height: 0,
+    };
   }
 
-  isCellLike(cell: any): cell is TableCell {
-    return cell && typeof cell.key === "string" && !!cell.row && !!cell.column;
-  }
-
-  isTableKey(key: any): key is TableKey {
-    return isString(key) || isNumber(key);
+  getRowAttachPosition(row: TableRow): TableAttachData {
+    return {
+      top: row.isFixed ? this.table.getY() + row.fixedOffset! : row.y,
+      height: row.height,
+      // 应高于交叉固定项的20或基础层的5
+      zIndex: row.isFixed ? "21" : "5",
+      // 以下均设为零值
+      left: 0,
+      width: 0,
+    };
   }
 }
 
 /** 选择器 */
 export interface TableGetter {
+  /** 获取x */
+  getX(): number;
+
+  /** 获取y */
+  getY(): number;
+
+  /** 获取y */
+  getXY(): TablePosition;
+
+  /** 获取x最大值 */
+  getMaxX(): number;
+
+  /** 获取y最大值 */
+  getMaxY(): number;
+
+  /** 获取宽度 */
+  getWidth(): number;
+
+  /** 获取高度 */
+  getHeight(): number;
+
+  /** 内容区域宽度 */
+  getContentWidth(): number;
+
+  /** 内容区域高度 */
+  getContentHeight(): number;
+
   /**
    * 获取指定区域的row/column/cell, 点的取值区间为[0, 内容总尺寸]
    * @param target - 可以是包含区域信息的bound对象, 也可以是表示[x, y]的位置元组
@@ -1189,21 +1157,6 @@ export interface TableGetter {
   /** 获取两个点区间内的元素, 点的区间为: [0, 内容总尺寸] */
   getAreaBound(p1: TablePosition, p2?: TablePosition): TableItems;
 
-  /**
-   * 根据表格视区内的点获取基于内容尺寸的点, 传入点的区间为: [0, 表格容器尺寸].
-   * - 可传入fixedOffset来对fixed项的判定区域增加或减少
-   * */
-  transformViewportPoint(
-    [x, y]: TablePosition,
-    fixedOffset?: number
-  ): TablePointInfo;
-
-  /**
-   * 转换内容区域的点为表格视区内的点, 传入点的区间为: [0, 表格内容尺寸].
-   * 包含了对缩放的处理
-   * */
-  transformContentPoint([x, y]: TablePosition): TablePointInfo;
-
   /** 获取指定行 */
   getRow(key: TableKey): TableRow;
 
@@ -1217,7 +1170,7 @@ export interface TableGetter {
   getCellKey(rowKey: TableKey, columnKey: TableKey): TableKey;
 
   /** 根据单元格key获取cell */
-  getCellByStrKey(key: string): TableCell;
+  getCellByStrKey(key: TableKey): TableCell;
 
   /** 获取临近的单元格 */
   getNearCell(arg: {
@@ -1241,24 +1194,6 @@ export interface TableGetter {
   /** 获取key的column索引.  注意, 此处的索引为经过内部数据重铸后的索引, 并不是config.columns中项的索引 */
   getIndexByColumnKey(key: TableKey): number;
 
-  /** 指定key的数据是否存在 */
-  isRowExist(key: TableKey): boolean;
-
-  /** 指定key的列是否存在 */
-  isColumnExist(key: TableKey): boolean;
-
-  /** 是否是类似row的结构. 注意, 此方法为粗检测, 结果并不可靠 */
-  isRowLike(row: any): row is TableRow;
-
-  /** 是否是类似column的结构. 注意, 此方法为粗检测, 结果并不可靠 */
-  isColumnLike(column: any): column is TableColumn;
-
-  /** 是否是类似cell的结构. 注意, 此方法为粗检测, 结果并不可靠 */
-  isCellLike(cell: any): cell is TableCell;
-
-  /** 是否是合格的tableKey */
-  isTableKey(key: any): key is TableKey;
-
   /** 获取被合并信息, 若有返回则表示是一个被合并项 */
   getMergedData(cell: TableCell): [TableKey, TableKey] | undefined;
 
@@ -1267,4 +1202,18 @@ export interface TableGetter {
 
   /** 从数据上获取key */
   getKeyByRowData(cur: any): TableKey;
+
+  /** 获取cell所处画布位置, 需要在单元格位置挂载其他内容而不是挂载到单元格dom内部时非常有用 */
+  getAttachPosition(cell: TableCell): TableAttachData;
+
+  /** 获取column所处画布位置, 需要在列位置挂载其他内容而不是挂载到单元格dom内部时非常有用 */
+  getColumnAttachPosition(column: TableColumn): TableAttachData;
+
+  /** 获取row所处画布位置, 需要在列位置挂载其他内容而不是挂载到单元格dom内部时非常有用 */
+  getRowAttachPosition(row: TableRow): TableAttachData;
+}
+
+export interface TableAttachData extends BoundSize {
+  /** 应该挂载的zIndex层 */
+  zIndex: string;
 }

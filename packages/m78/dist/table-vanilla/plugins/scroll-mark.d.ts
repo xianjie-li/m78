@@ -6,7 +6,7 @@ export declare class _TableScrollMarkPlugin extends TablePlugin {
     rEl: HTMLDivElement;
     bEl: HTMLDivElement;
     lEl: HTMLDivElement;
-    mount(): void;
+    mounted(): void;
     beforeDestroy(): void;
     rendering(): void;
     reload(): void;

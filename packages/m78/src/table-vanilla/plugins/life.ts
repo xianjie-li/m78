@@ -10,7 +10,7 @@ import {
   setNamePathValue,
 } from "@m78/utils";
 import { _privateInstanceKey, _privateScrollerDomKey } from "../common.js";
-import { _TableViewportPlugin } from "./viewport.js";
+import { _TableRenderPlugin } from "./render.js";
 import { removeNode } from "../../common/index.js";
 
 /** 表格生命周期相关控制 */
@@ -20,7 +20,7 @@ export class _TableLifePlugin extends TablePlugin {
   /** 清理raf */
   rafClear?: EmptyFunction;
 
-  init() {
+  beforeInit() {
     this.methodMapper(this.table, [
       ["reloadHandle", "reload"],
       ["destroyHandle", "destroy"],
@@ -28,7 +28,9 @@ export class _TableLifePlugin extends TablePlugin {
       "takeover",
       "isTaking",
     ]);
+  }
 
+  init() {
     this.context.lastReloadKey = createRandString();
 
     this.rafCaller = rafCaller();
@@ -45,7 +47,7 @@ export class _TableLifePlugin extends TablePlugin {
 
     const ctx = this.context;
 
-    this.getPlugin(_TableViewportPlugin).restoreWrapSize();
+    this.getPlugin(_TableRenderPlugin).restoreWrapSize();
 
     ctx.data = [];
     ctx.columns = [];
@@ -80,7 +82,7 @@ export class _TableLifePlugin extends TablePlugin {
     level = TableReloadLevel.base,
   }: TableReloadOptions = {}) {
     const ctx = this.context;
-    const viewport = this.getPlugin(_TableViewportPlugin);
+    const viewport = this.getPlugin(_TableRenderPlugin);
 
     ctx.lastReloadKey = createRandString();
 
@@ -133,10 +135,12 @@ export class _TableLifePlugin extends TablePlugin {
   }
 
   /** 触发插件reload */
-  reloadMain(opt?: TableReloadOptions) {
+  reloadMain(opt: TableReloadOptions = {}) {
     this.plugins.forEach((plugin) => {
       plugin.reload?.(opt);
     });
+
+    this.table.event.reload.emit(opt);
   }
 
   /** 实现table.destroy() */
@@ -150,6 +154,8 @@ export class _TableLifePlugin extends TablePlugin {
     });
 
     this.beforeDestroy();
+
+    this.table.event.beforeDestroy.emit();
   }
 
   takeover: TableLife["takeover"] = (cb) => {

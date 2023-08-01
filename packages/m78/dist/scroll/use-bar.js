@@ -10,7 +10,6 @@ import clamp from "lodash/clamp.js";
 import { Toggle } from "../fork/index.js";
 import { _BAR_MAX_SIZE_RATIO, _BAR_MIN_SIZE_RATIO, _RESERVE_BAR_SIZE } from "./common.js";
 import { useDrag } from "@use-gesture/react";
-import { stopPropagation } from "../common/index.js";
 /* # # # # # # # # # # # # # # # # #
  * ## 成员
  * - _useBarImpl 实现单个滚动条的逻辑
@@ -30,15 +29,15 @@ import { stopPropagation } from "../common/index.js";
         if (!props.scrollbar) return;
         meta.isScrollX && xBar.refreshScrollPosition(meta.x / meta.xMax);
         meta.isScrollY && yBar.refreshScrollPosition(meta.y / meta.yMax);
-        if (!self.delayHiddenLock) {
-            var key = "";
-            // isScroll不是完全可靠的, 所以这里严格鉴别
-            if (meta.isScrollX) key = "x";
-            if (meta.isScrollY) key = "y";
-            if (key) {
-                setState(_define_property({}, "".concat(key, "Visible"), true));
-            }
+        // if (!self.delayHiddenLock) {
+        var key = "";
+        // isScroll不是完全可靠的, 所以这里严格鉴别
+        if (meta.isScrollX) key = "x";
+        if (meta.isScrollY) key = "y";
+        if (key) {
+            setState(_define_property({}, "".concat(key, "Visible"), true));
         }
+        // }
         delayHidden();
     };
     var refresh = /** 刷新滚动条 */ function refresh() {
@@ -47,6 +46,7 @@ import { stopPropagation } from "../common/index.js";
         xBar.refresh();
     };
     var delayHidden = function delayHidden() {
+        var delay = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : 800;
         if (self.delayHiddenLock) return;
         clearTimeout(self.delayHiddenTimer);
         self.delayHiddenTimer = setTimeout(function() {
@@ -54,7 +54,7 @@ import { stopPropagation } from "../common/index.js";
                 xVisible: false,
                 yVisible: false
             });
-        }, 800);
+        }, delay);
     };
     var getEnableStatus = /** 检测各轴是否开启了滚动及是否可滚动 */ function getEnableStatus() {
         var meta = scroller.get();
@@ -145,7 +145,7 @@ import { stopPropagation } from "../common/index.js";
             onActive();
             self.delayHiddenLock = true;
         }
-        /** 触发自动关闭 */ if (!e.down) {
+        /** 触发自动关闭 */ if (e.last) {
             self.delayHiddenLock = false;
         }
         var offset = isY ? e.offset[1] : e.offset[0];
@@ -217,8 +217,29 @@ import { stopPropagation } from "../common/index.js";
     /** 通知滚动条失活 */ var onUnActive = useFn(function() {
         delayHidden();
     });
+    /** 显示滚动条, 并触发延迟自动关闭 */ var showBar = useFn(function() {
+        ctx.setState(_define_property({}, "".concat(isY ? "y" : "x", "Visible"), true));
+        delayHidden(1600);
+    });
+    /** 滚动条thumb点击 */ var onBarClick = useFn(function(e) {
+        e.stopPropagation();
+        var visible = isY ? state.yVisible : state.xVisible;
+        // 隐藏时改为显示滚动条
+        if (!visible) {
+            showBar();
+            refresh();
+            return;
+        }
+    });
     /** 轨道点击, 滚动位置到同比例位置 */ var onTrackClick = useFn(function(e) {
         e.stopPropagation();
+        var visible = isY ? state.yVisible : state.xVisible;
+        // 隐藏时改为线上滚动条
+        if (!visible) {
+            showBar();
+            refresh();
+            return;
+        }
         var rect = barRef.current.getBoundingClientRect();
         var size = isY ? barRef.current.offsetHeight : barRef.current.offsetWidth;
         var offset = isY ? e.clientY - rect.top : e.clientX - rect.left;
@@ -239,7 +260,10 @@ import { stopPropagation } from "../common/index.js";
     var barNode = /*#__PURE__*/ _jsx(Toggle, {
         when: isY ? state.enableStatus.y : state.enableStatus.x,
         children: /*#__PURE__*/ _jsx("div", {
-            className: clsx("m78-scroll_bar", "__".concat(isY ? "y" : "x"), isVisible && "__show"),
+            className: clsx("m78-scroll_bar", "__".concat(isY ? "y" : "x")),
+            style: {
+                opacity: isVisible ? 1 : 0
+            },
             ref: barRef,
             onTouchMove: onActive,
             onTouchEnd: onUnActive,
@@ -252,8 +276,9 @@ import { stopPropagation } from "../common/index.js";
                     return "".concat(o, "px");
                 })), _define_property(_obj, sizeKey, sp.size.to(function(o) {
                     return "".concat(o, "px");
-                })), _obj)
-            }, stopPropagation, bind()))
+                })), _obj),
+                onClick: onBarClick
+            }, bind()))
         })
     });
     return {

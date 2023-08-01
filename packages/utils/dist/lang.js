@@ -1,4 +1,5 @@
 import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
+import { getNamePathValue, setNamePathValue } from "./object.js";
 /**
  * return the 'global' object according to different JS running environments
  * */ export function getGlobal() {
@@ -21,19 +22,25 @@ export var __GLOBAL__ = getGlobal();
 /**
  * create a CustomEvent
  * */ export function createEvent() {
-    var on = function on(listener) {
+    var on = function on(listener, filter) {
+        setNamePathValue(listener, "__eventFilter", filter);
         listeners.push(listener);
     };
     var off = function off(listener) {
         var ind = listeners.indexOf(listener);
-        if (ind !== -1) listeners.splice(ind, 1);
+        if (ind !== -1) {
+            var del = listeners.splice(ind, 1);
+            setNamePathValue(del[0], "__eventFilter", undefined);
+        }
     };
     var emit = function emit() {
         for(var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++){
             args[_key] = arguments[_key];
         }
         listeners.forEach(function(listener) {
-            return listener.apply(void 0, _to_consumable_array(args));
+            var filter = getNamePathValue(listener, "__eventFilter");
+            if (filter && !filter.apply(void 0, _to_consumable_array(args))) return;
+            listener.apply(void 0, _to_consumable_array(args));
         });
     };
     var empty = function empty() {

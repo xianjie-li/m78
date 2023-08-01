@@ -2,7 +2,7 @@ import { TablePlugin } from "../plugin.js";
 import { TableKey } from "../types/base-type.js";
 import { TableCell, TableCellWithDom, TableRow } from "../types/items.js";
 /** 在单元格/行/列上设置半透明遮挡物进行禁用 */
-export declare class _TableDisablePlugin extends TablePlugin {
+export declare class _TableDisablePlugin extends TablePlugin implements TableDisable {
     disabled: boolean;
     /** 禁用行 */
     rows: DisabledMap;
@@ -12,7 +12,7 @@ export declare class _TableDisablePlugin extends TablePlugin {
     columns: DisabledMap;
     beforeInit(): void;
     cellRender(cell: TableCellWithDom): void;
-    isDisabled: TableDisable["isDisabledRow"];
+    isDisabled: TableDisable["isDisabled"];
     isDisabledRow: TableDisable["isDisabledRow"];
     isDisabledColumn: TableDisable["isDisabledColumn"];
     isDisabledCell: TableDisable["isDisabledCell"];
@@ -34,7 +34,7 @@ export interface TableDisable {
     isDisabled(): boolean;
     /** 指定行是否禁用 */
     isDisabledRow(key: TableKey): boolean;
-    /** 指定行是否禁用 */
+    /** 指定列是否禁用 */
     isDisabledColumn(key: TableKey): boolean;
     /** 指定单元格是否禁用 */
     isDisabledCell(key: string): boolean;

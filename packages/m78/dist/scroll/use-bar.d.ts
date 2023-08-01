@@ -14,7 +14,7 @@ export declare function _useBar(ctx: _ScrollContext): {
 interface _BarImplOption {
     isY: boolean;
     /** 触发滚动条延迟隐藏 */
-    delayHidden: () => void;
+    delayHidden: (delay?: number) => void;
 }
 /** 单个滚动条实现, isY用于 */
 export declare function _useBarImpl(ctx: _ScrollContext, { isY, delayHidden }: _BarImplOption): {

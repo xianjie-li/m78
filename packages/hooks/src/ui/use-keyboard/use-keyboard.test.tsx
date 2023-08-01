@@ -1,7 +1,7 @@
 import { render, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
-import { useKeyboard, UseKeyboardModifier } from "./use-keyboard.js";
+import { useKeyboard, KeyboardHelperModifier } from "./use-keyboard.js";
 
 test("use-keyboard", async () => {
   const user = userEvent.setup();
@@ -15,40 +15,40 @@ test("use-keyboard", async () => {
 
   function Demo() {
     useKeyboard({
-      onTrigger: cb1,
+      overwrite: true,
+      handle: cb1,
     });
 
     useKeyboard({
-      cover: false,
-      onTrigger: cb2,
+      handle: cb2,
     });
 
     useKeyboard({
       code: ["KeyV"],
-      onTrigger: cb3,
+      handle: cb3,
     });
 
     useKeyboard({
       code: ["KeyC", "KeyD"],
-      onTrigger: cb4,
+      handle: cb4,
     });
 
     useKeyboard({
       code: ["KeyC"],
-      modifier: [UseKeyboardModifier.meta],
-      onTrigger: cb5,
+      modifier: [KeyboardHelperModifier.meta],
+      handle: cb5,
     });
 
     useKeyboard({
       code: ["KeyC"],
-      modifier: [UseKeyboardModifier.sysCmd],
-      onTrigger: cb6,
+      modifier: [KeyboardHelperModifier.sysCmd],
+      handle: cb6,
     });
 
     useKeyboard({
       code: ["KeyC"],
-      modifier: [UseKeyboardModifier.sysCmd],
-      onTrigger: cb6,
+      modifier: [KeyboardHelperModifier.sysCmd],
+      handle: cb6,
     });
 
     return null;
@@ -68,6 +68,6 @@ test("use-keyboard", async () => {
   await user.keyboard("[MetaLeft>]c/");
   await user.keyboard("[ControlLeft>]c/");
 
-  expect(cb5.mock.calls.length).toBe(1);
-  expect(cb6.mock.calls.length).toBe(1);
+  expect(cb5.mock.calls.length).toBe(2);
+  expect(cb6.mock.calls.length).toBe(2);
 });

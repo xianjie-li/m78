@@ -205,3 +205,8 @@ export function isTruthyOrZero(arg: any): boolean {
 export function isPromiseLike(arg: any): arg is Promise<any> {
   return !!arg && isFunction(arg.then) && isFunction(arg.finally);
 }
+
+/** Check whether the value is a reference type*/
+export function isReferenceType(value) {
+  return typeof value === "object" || typeof value === "function";
+}

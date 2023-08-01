@@ -1,7 +1,12 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 
+/** record prev value */
 export function usePrev<T = any>(value: T) {
   const ref = useRef<T>();
-  useEffect(() => void (ref.current = value), [value]);
-  return ref.current;
+
+  const cur = ref.current;
+
+  ref.current = value;
+
+  return cur;
 }

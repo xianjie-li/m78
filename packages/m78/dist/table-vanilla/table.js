@@ -1,9 +1,8 @@
 import _object_spread from "@swc/helpers/src/_object_spread.mjs";
 import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
 import { _TableInitPlugin } from "./plugins/init.js";
-import { _TableViewportPlugin } from "./plugins/viewport.js";
-import "./index.scss";
-import { getNamePathValue, setNamePathValue } from "@m78/utils";
+import { _TableRenderPlugin } from "./plugins/render.js";
+import { createEvent, getNamePathValue, setNamePathValue } from "@m78/utils";
 import { _privateInstanceKey } from "./common.js";
 import { _TableLifePlugin } from "./plugins/life.js";
 import { _TableGetterPlugin } from "./plugins/getter.js";
@@ -23,7 +22,13 @@ import { _TableSortColumnPlugin } from "./plugins/sort-column.js";
 import { _TableDragSortPlugin } from "./plugins/drag-sort.js";
 import { _TableDisablePlugin } from "./plugins/disable.js";
 import { _TableTouchScrollPlugin } from "./plugins/touch-scroll.js";
-export function createTable(config) {
+import { _TableKeyboardInteractionPlugin } from "./plugins/keyboard-interaction.js";
+import { _TableInteractiveCorePlugin } from "./plugins/interactive-core.js";
+import { _TableIsPlugin } from "./plugins/is.js";
+import { _TableSetterPlugin } from "./plugins/setter.js";
+/**
+ * 核心功能, 在非框架环境下实现, 以便在日后进行移植
+ * */ export function _createTable(config) {
     var // 用户插件
     _plugins, _plugins1;
     var defaultConfig = {
@@ -32,11 +37,13 @@ export function createTable(config) {
         rows: {},
         cells: {},
         plugins: [],
-        rowHeight: 32,
+        rowHeight: 36,
         columnWidth: 100,
         emptySize: 100,
         autoSize: true,
-        stripe: true
+        stripe: true,
+        cellSelectable: true,
+        rowSelectable: true
     };
     // 根据dom上挂载的私有实例信息判断是否需要创建实例, 防止热重载等场景下反复创建
     var ins = getNamePathValue(config.el, _privateInstanceKey);
@@ -47,8 +54,29 @@ export function createTable(config) {
     }
     var conf = _object_spread({}, defaultConfig, config);
     var context = {};
+    var eventCreator = conf.eventCreator ? conf.eventCreator : createEvent;
+    var event = {
+        error: eventCreator(),
+        click: eventCreator(),
+        resize: eventCreator(),
+        select: eventCreator(),
+        selectStart: eventCreator(),
+        rowSelect: eventCreator(),
+        cellSelect: eventCreator(),
+        mutation: eventCreator(),
+        mountChange: eventCreator(),
+        init: eventCreator(),
+        initialized: eventCreator(),
+        mounted: eventCreator(),
+        rendering: eventCreator(),
+        rendered: eventCreator(),
+        reload: eventCreator(),
+        beforeDestroy: eventCreator()
+    };
     // 不完整的实例
-    var instance = {};
+    var instance = {
+        event: event
+    };
     // 插件创建配置
     var pluginConfig = {
         table: instance,
@@ -65,6 +93,8 @@ export function createTable(config) {
         _TablePluginEmpty,
         _TableLifePlugin,
         _TableGetterPlugin,
+        _TableSetterPlugin,
+        _TableIsPlugin,
         _TableHistoryPlugin,
         _TableMutationPlugin,
         _TableConfigPlugin,
@@ -73,13 +103,15 @@ export function createTable(config) {
         _TableHidePlugin,
         _TableSortColumnPlugin,
         _TableDragSortPlugin,
-        _TableViewportPlugin,
+        _TableRenderPlugin,
         _TableScrollMarkPlugin,
         _TableTouchScrollPlugin,
         _TableSelectPlugin,
         _TableDisablePlugin,
         _TableAutoResizePlugin,
         _TableRowColumnResize,
+        _TableKeyboardInteractionPlugin,
+        _TableInteractiveCorePlugin,
         _TableHighlightPlugin, 
     ].map(function(Plugin) {
         return new Plugin(pluginConfig);
@@ -101,15 +133,17 @@ export function createTable(config) {
         var ref;
         (ref = plugin.init) === null || ref === void 0 ? void 0 : ref.call(plugin);
     });
-    console.log(context);
-    /* # # # # # # # initialized # # # # # # # */ pluginConfig.plugins.forEach(function(plugin) {
+    event.init.emit();
+    pluginConfig.plugins.forEach(function(plugin) {
         var ref;
         (ref = plugin.initialized) === null || ref === void 0 ? void 0 : ref.call(plugin);
     });
+    event.initialized.emit();
     instance.render();
     /* # # # # # # # mount # # # # # # # */ pluginConfig.plugins.forEach(function(plugin) {
         var ref;
-        (ref = plugin.mount) === null || ref === void 0 ? void 0 : ref.call(plugin);
+        (ref = plugin.mounted) === null || ref === void 0 ? void 0 : ref.call(plugin);
     });
+    event.mounted.emit();
     return instance;
 }

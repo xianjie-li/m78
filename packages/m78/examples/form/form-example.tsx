@@ -1,4 +1,4 @@
-import { array, required } from "@m78/verify/index.js";
+import { array, required } from "@m78/verify";
 import React from "react";
 import { createForm } from "../../src/form-vanilla/index.js";
 

@@ -2,6 +2,7 @@ import { AnyObject, Bound, TupleNumber } from "./types.js";
 export * from "./dom/dom-adaption.js";
 export * from "./dom/auto-scroll.js";
 export * from "./dom/physical-scroll.js";
+export * from "./dom/keyboard-helper.js";
 /**
  * get a dom, multiple calls will return the same dom
  * @param namespace - create a uniq node by namespace
@@ -87,4 +88,6 @@ export declare function hasScroll(el: HTMLElement, checkOverflowAttr?: boolean):
 };
 /** Obtaining offsets from different events */
 export declare function getEventOffset(e: MouseEvent | TouchEvent | PointerEvent, target: HTMLElement): TupleNumber;
+/** checkChildren = false | check dom is focus, detected childrens focus when checkChildren is true */
+export declare function isFocus(dom: HTMLElement, checkChildren?: boolean): boolean;
 //# sourceMappingURL=dom.d.ts.map

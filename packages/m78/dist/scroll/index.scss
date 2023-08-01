@@ -29,10 +29,7 @@
     background: var(--m78-color-border);
     z-index: var(--m78-z-index);
     border-radius: var(--m78-border-radius-md);
-    cursor: pointer;
-    opacity: 0;
     transition: opacity var(--m78-animate-slow);
-    pointer-events: none;
 
     &.__x {
       height: 8px;
@@ -65,7 +62,7 @@
       }
 
       &:hover {
-        transform: scaleY(1.2);
+        transform: scaleY(1.4);
         transform-origin: bottom;
       }
     }
@@ -101,14 +98,9 @@
       }
 
       &:hover {
-        transform: scaleX(1.2);
+        transform: scaleX(1.4);
         transform-origin: right;
       }
-    }
-
-    &.__show {
-      opacity: 1;
-      pointer-events: auto;
     }
 
     // 扩大点击面积

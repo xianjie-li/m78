@@ -51,10 +51,12 @@ var cachePlatform = null;
     var platform = getPlatform();
     return platform.iphone || platform.ipad || platform.android;
 }
-/** Get command key by system, apple series: command,  other: control */ export function getCmdKeyStatus(e) {
+/** Get command key by system, apple series: metaKey,  other: ctrlKey */ export function getCmdKey() {
     var platform = getPlatform();
-    var key = platform.mac || platform.ipad || platform.iphone ? "metaKey" : "ctrlKey";
-    return !!e[key];
+    return platform.mac || platform.ipad || platform.iphone ? "metaKey" : "ctrlKey";
+}
+/** Get command key status by system, apple series: metaKey,  other: ctrlKey */ export function getCmdKeyStatus(e) {
+    return !!e[getCmdKey()];
 }
 /** A simple compatibility wrapper for requestAnimationFrame and returns a cleanup function instead of a cleanup tag */ export function raf(frameRequestCallback) {
     var _raf = __GLOBAL__.requestAnimationFrame || // @ts-ignore

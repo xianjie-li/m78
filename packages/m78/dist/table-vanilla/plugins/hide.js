@@ -111,20 +111,15 @@ import { _TableGetterPlugin } from "./getter.js";
             var curNode = _this.expandNodes[index];
             var width = curNode.offsetWidth;
             curNode.dataset.key = String(key);
-            var x = column.isFixed ? column.fixedOffset || 0 : column.x;
-            var left = x - width / 2 - 1; // width / 2: 居中  1: 为边框的修正位置
-            // 固定项需要时刻显示
-            if (column.isFixed) {
-                left += _this.table.x();
-                // 右固定项需要右移
-                if (column.config.fixed === TableColumnFixed.right) {
-                    left += 2;
-                }
+            var attachPos = _this.table.getColumnAttachPosition(column);
+            var left = attachPos.left - width / 2 - 1; // width / 2: 居中  1: 为边框的修正位置
+            // 右固定项需要右移
+            if (column.config.fixed === TableColumnFixed.right) {
+                left += 2;
             }
             curNode.title = "show hide column ".concat(column.config.label || column.key);
-            curNode.style.zIndex = column.isFixed ? "30" : "10";
-            curNode.style.top = "".concat(lastRow.y + _this.table.y() + 2, "px"); // 2: 上边距
-            curNode.style.left = "".concat(left, "px");
+            curNode.style.zIndex = column.isFixed ? attachPos.zIndex : "11";
+            curNode.style.transform = "translate(".concat(left, "px,").concat(lastRow.y + _this.table.getY() + 2, "px)"); // 2: 上边距
         });
     };
     _proto.showColumn = function showColumn(key) {

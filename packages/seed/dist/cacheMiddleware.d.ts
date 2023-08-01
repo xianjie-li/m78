@@ -40,5 +40,5 @@ export declare const defaultConf: {
  * @param key - cache key
  * @param conf
  * */
-export default function cache(key: string, conf?: CacheMiddlewareConf): Middleware | undefined;
+export declare function cacheMiddleware(key: string, conf?: CacheMiddlewareConf): Middleware | undefined;
 //# sourceMappingURL=cacheMiddleware.d.ts.map

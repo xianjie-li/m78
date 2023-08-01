@@ -1,12 +1,12 @@
 import { TablePlugin } from "../plugin.js";
 import { TableKey } from "../types/base-type.js";
 import { TableReloadLevel } from "./life.js";
-import { TableColumnLeafConfig } from "../types/items.js";
+import { TableColumnLeafConfigFormatted } from "../types/items.js";
 import { _TableGetterPlugin } from "./getter.js";
 /** 表格列隐藏 */
 export declare class _TableHidePlugin extends TablePlugin {
     /** 前一次处理中设置的隐藏标记的列, 需要在新的设置中先还原 */
-    prevHideColumns: TableColumnLeafConfig[];
+    prevHideColumns: TableColumnLeafConfigFormatted[];
     /** 放置所有expandNodes的容器 */
     wrapNodes: HTMLDivElement;
     /** 展开隐藏列的节点 */

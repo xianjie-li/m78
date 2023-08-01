@@ -10,6 +10,7 @@ import {
   isArray,
   isNumber,
   isObject,
+  isString,
   NamePath,
   recursionShakeEmpty,
   setNamePathValue,
@@ -31,6 +32,7 @@ import {
   TableRow,
 } from "../types/items.js";
 import { _getCellKeysByStr, _prefix } from "../common.js";
+import { _TableSortColumnPlugin } from "./sort-column.js";
 
 /**
  * 所有config/data变更相关的操作, 变异操作应统一使用此处提供的api, 方便统一处理, 自动生成和处理历史等
@@ -41,7 +43,13 @@ export class _TableMutationPlugin extends TablePlugin {
   /** 每一次配置变更将变更的key记录, 通过记录来判断是否有变更项 */
   private changedConfigKeys: (keyof TablePersistenceConfig)[] = [];
 
+  sortColumn: _TableSortColumnPlugin;
+
   init() {
+    this.sortColumn = this.getPlugin(_TableSortColumnPlugin);
+  }
+
+  beforeInit() {
     this.methodMapper(this.table, [
       "getChangedConfigKeys",
       "getPersistenceConfig",
@@ -237,7 +245,7 @@ export class _TableMutationPlugin extends TablePlugin {
     });
 
     this.table.history.redo({
-      title: "add row", // TODO: i18n
+      title: this.context.texts.addRow,
       redo: () => {
         this.context.data.splice(index!, 0, ...newData);
 
@@ -288,7 +296,7 @@ export class _TableMutationPlugin extends TablePlugin {
     const rows = list.map((i) => i.ins);
 
     this.table.history.redo({
-      title: "remove row",
+      title: this.context.texts.removeRow,
       redo: () => {
         for (let i = list.length - 1; i >= 0; i--) {
           const cur = list[i];
@@ -354,12 +362,25 @@ export class _TableMutationPlugin extends TablePlugin {
     return getNamePathValue(cell.row.data, cell.column.config.originalKey);
   };
 
+  // 记录变更过的行
+  private changedRows: Record<string, boolean> = {};
+
   setValue: TableMutation["setValue"] = (a, b, c?: any) => {
-    const [cell, value] = this.valueActionGetter(a, b, c);
+    // eslint-disable-next-line prefer-const
+    let [cell, value] = this.valueActionGetter(a, b, c);
 
     if (!cell) return;
 
+    if (isString(value)) {
+      value = value.trim();
+    }
+
     const { row, column } = cell;
+
+    // 行未变更过, 将其完全clone, 避免更改原数据
+    if (!this.changedRows[row.key]) {
+      this.cloneAndSetRowData(row);
+    }
 
     const oldValue = deepClone(
       getNamePathValue(row.data, column.config.originalKey)
@@ -398,8 +419,18 @@ export class _TableMutationPlugin extends TablePlugin {
 
         this.table.highlight(event.cell.key, false);
       },
+      title: this.context.texts.setValue,
     });
   };
+
+  /** 克隆并重新设置row的data, 防止变更原数据, 主要用于延迟clone, 可以在数据量较大时提供初始化速度  */
+  private cloneAndSetRowData(row: TableRow) {
+    const cloneData = deepClone(row.data);
+    const ind = this.context.dataKeyIndexMap[row.key];
+
+    row.data = cloneData;
+    this.context.data[ind] = cloneData;
+  }
 
   /** 处理setValue/getValue的不同参数, 并返回cell和value */
   private valueActionGetter(a: any, b: any, c?: any) {
@@ -500,7 +531,7 @@ export class _TableMutationPlugin extends TablePlugin {
             this.table.history.ignore(() => {
               this.setPersistenceConfig(
                 "sortColumns",
-                this.table.getColumnSortKeys()
+                this.sortColumn.getColumnSortKeys()
               );
             });
           }
@@ -557,7 +588,7 @@ export class _TableMutationPlugin extends TablePlugin {
             this.table.history.ignore(() => {
               this.setPersistenceConfig(
                 "sortColumns",
-                this.table.getColumnSortKeys()
+                this.sortColumn.getColumnSortKeys()
               );
             });
           }
@@ -588,7 +619,7 @@ export class _TableMutationPlugin extends TablePlugin {
             : this.table.highlightColumn(moveFilterIns.map((i) => i.key));
         }
       },
-      title: "move rows", // TODO: i18n
+      title: isRow ? this.context.texts.moveRow : this.context.texts.moveColumn,
     };
 
     this.table.history.redo(action);

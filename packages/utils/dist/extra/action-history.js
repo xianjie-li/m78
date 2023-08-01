@@ -6,7 +6,7 @@ var ACTION_IN_ACTION_WARNING = "can't call redo() when redo() or undo() is runni
         _class_call_check(this, ActionHistory);
         /** 最大记录长度 */ this.maxLength = 500;
         /** 操作历史 */ this.history = [];
-        /** 当前所在记录游标 */ this.cursor = -1;
+        /** 当前所在记录游标, -1表示初始状态 */ this.cursor = -1;
         /** 正在执行redo(action)操作 */ this.isDoing = false;
         /** 正在执行undo()操作 */ this.isUndoing = false;
         /** 为true期间不计入历史记录 */ this.ignoreFlag = false;
@@ -31,7 +31,10 @@ var ACTION_IN_ACTION_WARNING = "can't call redo() when redo() or undo() is runni
             this.cursor++;
             return;
         }
-        if (this.ignoreFlag) return;
+        if (this.ignoreFlag) {
+            arg.redo();
+            return;
+        }
         if (this.isDoing || this.isUndoing) {
             console.warn(ACTION_IN_ACTION_WARNING);
             return;
@@ -100,7 +103,7 @@ var ACTION_IN_ACTION_WARNING = "can't call redo() when redo() or undo() is runni
         });
     };
     /**
-   * 忽略action内执行的所有redo(action)操作, 使它们不计入history
+   * 使action期间的所有redo(action)操作不计入历史, 需要自行保证这些被忽略的操作不会影响历史还原或重做
    * */ _proto.ignore = function ignore(action) {
         this.ignoreFlag = true;
         action();
@@ -109,6 +112,17 @@ var ACTION_IN_ACTION_WARNING = "can't call redo() when redo() or undo() is runni
     /** 重置历史 */ _proto.reset = function reset() {
         this.history = [];
         this.cursor = -1;
+    };
+    /** 获取下一条记录 */ _proto.getNext = function getNext() {
+        return this.history[this.cursor + 1] || null;
+    };
+    /** 获取前一条记录 */ _proto.getPrev = function getPrev() {
+        // 游标为0时, 前一项为还原初始状态, 生产一个假的操作项
+        if (this.cursor === 0) return {
+            redo: function() {},
+            undo: function() {}
+        };
+        return this.history[this.cursor - 1] || null;
     };
     return ActionHistory;
 }();

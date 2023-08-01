@@ -41,7 +41,7 @@ export declare class _TableDragSortPlugin extends TablePlugin {
         offset: TablePosition;
         diffOffset: TablePosition;
     };
-    mount(): void;
+    mounted(): void;
     reload(): void;
     beforeDestroy(): void;
     triggerMoveRow(rows: TableRow[], target: TableRow, isTargetAfter?: boolean): void;
@@ -61,7 +61,7 @@ export declare class _TableDragSortPlugin extends TablePlugin {
     /** 更新自动滚动判定点 */
     private updateAutoScrollBound;
 }
-export interface TableDragSort {
+export interface TableDragSortConfig {
     /** 是否允许拖拽排序行 */
     dragSortRow?: boolean;
     /** 是否允许拖拽排序列 */

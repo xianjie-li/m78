@@ -46,7 +46,7 @@ export class TablePlugin {
     this.context = config.context;
   }
 
-  /** init前调用 */
+  /** 初始化前调用 */
   beforeInit?(): void;
 
   /**
@@ -63,7 +63,7 @@ export class TablePlugin {
   /**
    * init完成, 并完成首次渲染
    * */
-  mount?(): void;
+  mounted?(): void;
 
   /** 渲染中, 本阶段内部渲染基本上已完成, 可以再次附加自定义的渲染 */
   rendering?(): void;
@@ -72,7 +72,7 @@ export class TablePlugin {
   rendered?(): void;
 
   /** 重载表格时 */
-  reload?(opt?: TableReloadOptions): void;
+  reload?(opt: TableReloadOptions): void;
 
   /**
    * 在reload/初始化的不同级别操作(TableReloadLevel): 开始前/完成后 触发, isBefore可用于识别是在操作前还是操作后

@@ -5,6 +5,7 @@ import { TableKey, TablePointInfo, TablePosition } from "../types/base-type.js";
 import { TableInstance } from "../types/instance.js";
 import { TableCell, TableCellWithDom, TableItems, TableRow } from "../types/items.js";
 import { DragGesture, FullGestureState } from "@use-gesture/vanilla";
+import { TableReloadLevel } from "./life.js";
 /** 实现选区和选中功能 */
 export declare class _TableSelectPlugin extends TablePlugin implements TableSelect {
     /** 选中的行 */
@@ -33,9 +34,10 @@ export declare class _TableSelectPlugin extends TablePlugin implements TableSele
     static EDGE_SIZE: number;
     /** 拖动控制 */
     drag: DragGesture;
-    init(): void;
-    mount(): void;
+    beforeInit(): void;
+    mounted(): void;
     reload(): void;
+    loadStage(level: TableReloadLevel, isBefore: boolean): void;
     beforeDestroy(): void;
     cellRender(cell: TableCellWithDom): void;
     /** 派发drag到start/move/end */
@@ -54,6 +56,7 @@ export declare class _TableSelectPlugin extends TablePlugin implements TableSele
     isSelectedCell: TableInstance["isSelectedCell"];
     getSelectedRows: TableInstance["getSelectedRows"];
     getSelectedCells: TableInstance["getSelectedCells"];
+    getSortedSelectedCells: TableInstance["getSortedSelectedCells"];
     selectRows: TableInstance["selectRows"];
     selectCells: TableInstance["selectCells"];
     /**
@@ -85,6 +88,8 @@ export declare class _TableSelectPlugin extends TablePlugin implements TableSele
     updateAutoScrollBound: () => void;
     clearSelected(): void;
     clearTempSelected(): void;
+    isCellSelectable(cell: TableCell): boolean;
+    isRowSelectable(row: TableRow): boolean;
     /**
      * 专门用于框选的选区点转换
      * - 从固定区域拖选到非固定区域, 点非固定区开贴近固定区的位置开始计算点
@@ -98,11 +103,11 @@ interface SelectMap {
 /** 选中相关的配置 */
 export interface TableSelectConfig {
     /**
-     * 配置行选中, 可传boolean进行开关控制或传入函数根据行单独控制
+     * true | 配置行选中, 可传boolean进行开关控制或传入函数根据行单独控制
      * - 注意: 行选中与单元格选中是独立的, 禁用行并不会影响对应行单元格的选中, 因为复制粘贴等操作都是很有保留必要的
      * */
     rowSelectable?: boolean | ((row: TableRow) => boolean);
-    /** 配置单元格选中, 可传boolean进行开关控制或传入函数根据单元格单独控制 */
+    /** true | 配置单元格选中, 可传boolean进行开关控制或传入函数根据单元格单独控制 */
     cellSelectable?: boolean | ((cell: TableCell) => boolean);
 }
 /** 选中相关的api */
@@ -114,11 +119,17 @@ export interface TableSelect {
     /** 获取选中的行 */
     getSelectedRows(): TableRow[];
     /** 获取选中的单元格 */
-    getSelectedCells(): TableCell[][];
+    getSelectedCells(): TableCell[];
+    /** 获取包含顺序的选中单元格 */
+    getSortedSelectedCells(): TableCell[][];
     /** 设置选中的行, 传入merge可保留之前的行选中 */
-    selectRows(rowKeys: TableKey[], merge?: boolean): void;
+    selectRows(rowKeys: TableKey | TableKey[], merge?: boolean): void;
     /** 设置选中的单元格, 传入merge可保留之前的单元格选中 */
-    selectCells(cellKeys: TableKey[], merge?: boolean): void;
+    selectCells(cellKeys: TableKey | TableKey[], merge?: boolean): void;
+    /** 检测单元格是否可选中 */
+    isCellSelectable(cell: TableCell): boolean;
+    /** 检测行是否可选中 */
+    isRowSelectable(row: TableRow): boolean;
 }
 export {};
 //# sourceMappingURL=select.d.ts.map

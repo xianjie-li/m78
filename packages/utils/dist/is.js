@@ -144,3 +144,6 @@ export function isWeakNumber(arg) {
 /** 是否是promise like对象 */ export function isPromiseLike(arg) {
     return !!arg && isFunction(arg.then) && isFunction(arg.finally);
 }
+/** Check whether the value is a reference type*/ export function isReferenceType(value) {
+    return typeof value === "object" || typeof value === "function";
+}

@@ -1,10 +1,7 @@
-import { useEffect, useRef } from "react";
-export function usePrev(value) {
+import { useRef } from "react";
+/** record prev value */ export function usePrev(value) {
     var ref = useRef();
-    useEffect(function() {
-        return void (ref.current = value);
-    }, [
-        value
-    ]);
-    return ref.current;
+    var cur = ref.current;
+    ref.current = value;
+    return cur;
 }

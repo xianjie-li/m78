@@ -9,7 +9,11 @@ export declare const __GLOBAL__: any;
  * */
 export interface CustomEvent<Listener extends AnyFunction> {
     /** register a listener */
-    on: (listener: Listener) => void;
+    on: (
+    /** event listener */
+    listener: Listener, 
+    /** accept emit argument, and skip event if return false */
+    filter?: (...args: Parameters<Listener>) => boolean) => void;
     /** destroy a listener */
     off: (listener: Listener) => void;
     /** trigger listeners */

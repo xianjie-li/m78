@@ -33,6 +33,7 @@ import {
 } from "../types/items.js";
 import { _TableRowColumnResize } from "./row-column-resize.js";
 import { DragGesture, FullGestureState } from "@use-gesture/vanilla";
+import { TableReloadLevel } from "./life.js";
 
 /** 实现选区和选中功能 */
 export class _TableSelectPlugin extends TablePlugin implements TableSelect {
@@ -73,7 +74,7 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
   /** 拖动控制 */
   drag: DragGesture;
 
-  init() {
+  beforeInit() {
     this.methodMapper(this.table, [
       "isSelectedRow",
       "isSelectedCell",
@@ -87,7 +88,7 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
     ]);
   }
 
-  mount() {
+  mounted() {
     this.table.event.click.on(this.clickHandle);
 
     this.drag = new DragGesture(this.config.el, this.dragDispatch, {
@@ -109,9 +110,9 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
         // 这里需要通过 takeover 手动将x/y赋值调整为同步
         this.table.takeover(() => {
           if (isX) {
-            this.table.x(this.table.x() + offset);
+            this.table.setX(this.table.getX() + offset);
           } else {
-            this.table.y(this.table.y() + offset);
+            this.table.setY(this.table.getY() + offset);
           }
 
           this.table.renderSync();
@@ -122,6 +123,20 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
 
   reload() {
     this.updateAutoScrollBound();
+  }
+
+  loadStage(level: TableReloadLevel, isBefore: boolean) {
+    if (level === TableReloadLevel.full && isBefore) {
+      this.selectedCells = {};
+      this.selectedRows = {};
+      this.selectedTempRows = {};
+      this.selectedTempCells = {};
+      this.startPoint = null;
+      this.lastPoint = null;
+
+      this.table.event.rowSelect.emit();
+      this.table.event.select.emit();
+    }
   }
 
   beforeDestroy() {
@@ -242,7 +257,7 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
     if (valid) {
       this.startPoint = startPoint;
 
-      this.autoScrollBeforePosition = [this.table.x(), this.table.y()];
+      this.autoScrollBeforePosition = [this.table.getX(), this.table.getY()];
 
       if (!this.isShift) {
         this.lastPoint = [p1, p2];
@@ -272,8 +287,8 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
 
     if (this.autoScroll.scrolling) return;
 
-    const sX = this.table.x() - this.autoScrollBeforePosition![0];
-    const sY = this.table.y() - this.autoScrollBeforePosition![1];
+    const sX = this.table.getX() - this.autoScrollBeforePosition![0];
+    const sY = this.table.getY() - this.autoScrollBeforePosition![1];
 
     const patchOffset: TablePosition = [offset[0] + sX, offset[1] + sY];
 
@@ -623,9 +638,9 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
       const lE = lS + edgeSize;
 
       if (x > lS && x <= lE) {
-        const x = this.table.x();
+        const x = this.table.getX();
         if (x !== 0) {
-          this.table.x(0);
+          this.table.setX(0);
           this.autoScrollBeforePosition![0] = 0; // 主动变更了位置, 所以需要对其修正
         }
       }
@@ -636,41 +651,41 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
       const tE = tS + edgeSize;
 
       if (y > tS && y <= tE) {
-        const y = this.table.y();
+        const y = this.table.getY();
         if (y !== 0) {
-          this.table.y(0);
+          this.table.setY(0);
           this.autoScrollBeforePosition![1] = 0;
         }
       }
     }
 
     if (ctx.rightFixedWidth && this.conflictDisableConfig.right) {
-      const contW = this.table.contentWidth();
+      const contW = this.table.getContentWidth();
       const rE = contW - ctx.rightFixedWidth;
       const rS = rE - edgeSize;
 
-      const max = this.table.maxX();
+      const max = this.table.getMaxX();
 
       if (x > rS && x <= rE) {
-        const x = this.table.x();
+        const x = this.table.getX();
         if (x < max) {
-          this.table.x(max);
+          this.table.setX(max);
           this.autoScrollBeforePosition![0] = max;
         }
       }
     }
 
     if (ctx.bottomFixedHeight && this.conflictDisableConfig.bottom) {
-      const contH = this.table.contentHeight();
+      const contH = this.table.getContentHeight();
       const bE = contH - ctx.bottomFixedHeight;
       const bS = bE - edgeSize;
 
-      const max = this.table.maxY();
+      const max = this.table.getMaxY();
 
       if (y > bS && y <= bE) {
-        const y = this.table.y();
+        const y = this.table.getY();
         if (y < max) {
-          this.table.y(max);
+          this.table.setY(max);
           this.autoScrollBeforePosition![1] = max;
         }
       }
@@ -705,7 +720,8 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
   }
 
   isCellSelectable(cell: TableCell): boolean {
-    if (this.config.cellSelectable === false) return false;
+    if (isBoolean(this.config.cellSelectable))
+      return this.config.cellSelectable;
 
     return (
       isFunction(this.config.cellSelectable) && this.config.cellSelectable(cell)
@@ -713,7 +729,7 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
   }
 
   isRowSelectable(row: TableRow): boolean {
-    if (this.config.rowSelectable === false) return false;
+    if (isBoolean(this.config.rowSelectable)) return this.config.rowSelectable;
 
     return (
       isFunction(this.config.rowSelectable) && this.config.rowSelectable(row)
@@ -745,11 +761,11 @@ interface SelectMap {
 /** 选中相关的配置 */
 export interface TableSelectConfig {
   /**
-   * 配置行选中, 可传boolean进行开关控制或传入函数根据行单独控制
+   * true | 配置行选中, 可传boolean进行开关控制或传入函数根据行单独控制
    * - 注意: 行选中与单元格选中是独立的, 禁用行并不会影响对应行单元格的选中, 因为复制粘贴等操作都是很有保留必要的
    * */
   rowSelectable?: boolean | ((row: TableRow) => boolean);
-  /** 配置单元格选中, 可传boolean进行开关控制或传入函数根据单元格单独控制 */
+  /** true | 配置单元格选中, 可传boolean进行开关控制或传入函数根据单元格单独控制 */
   cellSelectable?: boolean | ((cell: TableCell) => boolean);
 }
 

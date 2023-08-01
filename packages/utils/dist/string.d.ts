@@ -12,6 +12,8 @@ export declare function replaceHtmlTags(str?: string, val?: string): string;
  *  @return string
  *  */
 export declare function createRandString(number?: number): string;
+/** generation a unique string */
+export declare function createUniqString(): string;
 interface Byte2Text {
     (byte: number, conf?: {
         precision: number;

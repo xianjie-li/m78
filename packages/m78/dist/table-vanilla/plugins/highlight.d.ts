@@ -4,7 +4,7 @@ import { TableCell } from "../types/items.js";
 import { TableKey } from "../types/base-type.js";
 /** 单元格, 行, 列高亮/自动滚动 */
 export declare class _TableHighlightPlugin extends TablePlugin implements TableHighlight {
-    init(): void;
+    beforeInit(): void;
     locate(cell: string | string[]): TableCell;
     highlight(cell: string | string[], autoScroll?: boolean): void;
     highlightColumn(column: TableKey | TableKey[], autoScroll?: boolean): void;

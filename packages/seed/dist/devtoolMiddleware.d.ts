@@ -1,4 +1,3 @@
 import { Middleware } from "./types.js";
-declare const devtool: Middleware;
-export default devtool;
+export declare const devtoolMiddleware: Middleware;
 //# sourceMappingURL=devtoolMiddleware.d.ts.map

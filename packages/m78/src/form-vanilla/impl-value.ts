@@ -75,7 +75,8 @@ export function _implValue(ctx: _Context) {
     }
 
     if (config.autoVerify) {
-      ctx.debounceVerify(name);
+      ctx.isValueChangeTrigger = true;
+      instance.debounceVerify(name);
     }
   };
 

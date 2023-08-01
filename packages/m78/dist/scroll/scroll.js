@@ -13,11 +13,7 @@ import { _useIndicator } from "./use-indicator.js";
 import { _usePullActions } from "./use-pull-actions.js";
 import { animated } from "react-spring";
 import { _useDragScroll } from "./use-drag-scroll.js";
-/**
- * 下拉卡主
- * 鼠标放到滚动条位置时显示滚动条
- * 滚动条偶尔不自动隐藏, 显示逻辑优化
- * */ export var _Scroll = function(p) {
+export var _Scroll = function(p) {
     var onScroll = function onScroll(meta) {
         lifeCycle.onScroll(meta);
     };

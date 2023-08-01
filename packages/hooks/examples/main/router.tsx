@@ -9,6 +9,8 @@ import UseTriggerExample from "../use-trigger-example/use-trigger-example.js";
 
 import css from "./style.module.css";
 import UseScrollExample from "../use-scroll/use-scroll-example.js";
+import { UseKeyboardExample } from "../use-keyboard/index.js";
+import Play from "../play.js";
 
 export const router = createHashRouter([
   {
@@ -18,7 +20,7 @@ export const router = createHashRouter([
       {
         path: "hello",
         index: true,
-        element: <span>hello</span>,
+        element: <Play />,
       },
       {
         path: "useTrigger",
@@ -29,6 +31,11 @@ export const router = createHashRouter([
         path: "useScroll",
         index: true,
         element: <UseScrollExample />,
+      },
+      {
+        path: "useKeyboard",
+        index: true,
+        element: <UseKeyboardExample />,
       },
     ],
   },

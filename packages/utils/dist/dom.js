@@ -5,6 +5,7 @@ import { clamp } from "./number.js";
 export * from "./dom/dom-adaption.js";
 export * from "./dom/auto-scroll.js";
 export * from "./dom/physical-scroll.js";
+export * from "./dom/keyboard-helper.js";
 var portalsID = "J__PORTALS__NODE__";
 /**
  * get a dom, multiple calls will return the same dom
@@ -370,4 +371,13 @@ export function getScrollParent(ele, getAll) {
         clientX - left,
         clientY - top
     ];
+}
+/** checkChildren = false | check dom is focus, detected childrens focus when checkChildren is true */ export function isFocus(dom) {
+    var checkChildren = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : false;
+    var activeElement = document.activeElement;
+    if (checkChildren) {
+        return dom.contains(activeElement);
+    } else {
+        return dom === activeElement;
+    }
 }

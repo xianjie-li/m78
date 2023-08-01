@@ -7,7 +7,7 @@ import {
   VirtualBoundDragListener,
   VirtualBoundHoverListener,
   VirtualBoundItem,
-} from "../virtual-bound.js";
+} from "../../virtual-bound/index.js";
 
 import { TableColumn, TableItems, TableRow } from "../types/items.js";
 import { _TableMutationPlugin } from "./mutation.js";
@@ -16,12 +16,14 @@ import { TableColumnFixed, TableRowFixed } from "../types/base-type.js";
 import { removeNode } from "../../common/index.js";
 import { _tableTriggerFilters, _triggerFilterList } from "../common.js";
 
-/** 列重置大小 */
+/** 列/行重置大小 */
 export class _TableRowColumnResize extends TablePlugin {
   /** 提示线 */
   xLine: HTMLDivElement;
   yLine: HTMLDivElement;
-  lineWrap: HTMLDivElement;
+  /** 显示重置后大小 */
+  sizeBlock: HTMLDivElement;
+  wrap: HTMLDivElement;
 
   /** 标识resize把手的key */
   static VIRTUAL_COLUMN_HANDLE_KEY = "__m78-table-virtual-column-handle__";
@@ -53,15 +55,18 @@ export class _TableRowColumnResize extends TablePlugin {
     // 创建line节点
     this.xLine = document.createElement("div");
     this.yLine = document.createElement("div");
-    this.lineWrap = document.createElement("div");
+    this.sizeBlock = document.createElement("div");
+    this.wrap = document.createElement("div");
 
     this.xLine.className = "m78-table_tip-line-x";
     this.yLine.className = "m78-table_tip-line-y";
-    this.lineWrap.className = "m78-table_rc-resize";
+    this.sizeBlock.className = "m78-table_drag-area-x";
+    this.wrap.className = "m78-table_rc-resize";
 
-    this.lineWrap.appendChild(this.xLine);
-    this.lineWrap.appendChild(this.yLine);
-    this.config.el.appendChild(this.lineWrap);
+    this.wrap.appendChild(this.xLine);
+    this.wrap.appendChild(this.yLine);
+    this.wrap.appendChild(this.sizeBlock);
+    this.config.el.appendChild(this.wrap);
 
     // 创建raf用于优化动画
     this.rafCaller = rafCaller();
@@ -117,7 +122,7 @@ export class _TableRowColumnResize extends TablePlugin {
     this.table.event.selectStart.empty();
     this.table.event.select.empty();
 
-    removeNode(this.lineWrap);
+    removeNode(this.wrap);
   }
 
   /** 每次render后根据ctx.lastViewportItems更新虚拟拖拽节点 */
@@ -144,18 +149,18 @@ export class _TableRowColumnResize extends TablePlugin {
   /** 生成虚拟节点 */
   createBound(wrapBound: DOMRect, last: TableItems, isRow: boolean) {
     const ctx = this.context;
-    const pos = isRow ? this.table.y() : this.table.x();
+    const pos = isRow ? this.table.getY() : this.table.getX();
 
     const startFixedSize = isRow ? ctx.topFixedHeight : ctx.leftFixedWidth;
     const endFixedSize = isRow ? ctx.bottomFixedHeight : ctx.rightFixedWidth;
 
-    const tableSize = isRow ? this.table.height() : this.table.width();
+    const tableSize = isRow ? this.table.getHeight() : this.table.getWidth();
 
     // 开始/结束边界
     const startLine = pos + startFixedSize;
     const endLine = pos + tableSize - endFixedSize;
 
-    const maxPos = isRow ? this.table.maxY() : this.table.maxX();
+    const maxPos = isRow ? this.table.getMaxY() : this.table.getMaxX();
 
     // 滚动到底
     const touchEnd = Math.ceil(pos) >= maxPos;
@@ -211,6 +216,8 @@ export class _TableRowColumnResize extends TablePlugin {
         data: {
           [isRow ? "row" : "column"]: i,
           [isRow ? "y" : "x"]: _pos - 2,
+          startPos: isEndFixed ? _pos : _pos - size,
+          endPos: isEndFixed ? _pos + size : _pos,
           // 计算方向相反
           reverse: isEndFixed,
         },
@@ -229,8 +236,8 @@ export class _TableRowColumnResize extends TablePlugin {
 
     if (hover) {
       isRow
-        ? this.updateYTipLine(bound.data.y)
-        : this.updateXTipLine(bound.data.x);
+        ? this.updateYTipLine(bound.data.y, bound)
+        : this.updateXTipLine(bound.data.x, bound);
     } else if (!this.dragging) {
       isRow ? this.hideYTipLine() : this.hideXTipLine();
     }
@@ -265,10 +272,10 @@ export class _TableRowColumnResize extends TablePlugin {
 
       if (isRow) {
         this.dragOffsetY = curOffset;
-        this.updateYTipLine(data.y + this.dragOffsetY);
+        this.updateYTipLine(data.y + this.dragOffsetY, bound);
       } else {
         this.dragOffsetX = curOffset;
-        this.updateXTipLine(data.x + this.dragOffsetX);
+        this.updateXTipLine(data.x + this.dragOffsetX, bound);
       }
     }
 
@@ -295,6 +302,7 @@ export class _TableRowColumnResize extends TablePlugin {
   updateColumnSize(column: TableColumn, diff: number) {
     if (Math.abs(diff) > 4) {
       const width = Math.round(column.width + diff);
+
       this.getPlugin(_TableMutationPlugin).setPersistenceConfig(
         ["columns", column.key, "width"],
         width,
@@ -316,32 +324,67 @@ export class _TableRowColumnResize extends TablePlugin {
   }
 
   /** 显示并更新xLine位置 */
-  updateXTipLine(x: number) {
+  updateXTipLine(x: number, bound: VirtualBoundItem) {
     this.rafClearFn = this.rafCaller(() => {
-      this.xLine.style.display = "block";
-      this.xLine.style.left = `${x}px`;
+      this.sizeBlock.style.visibility = "visible";
+      this.xLine.style.visibility = "visible";
+
+      let left: number;
+      let width: number;
+
+      if (bound.data.reverse) {
+        left = x;
+        width = bound.data.endPos - x;
+      } else {
+        left = bound.data.startPos;
+        width = x - bound.data.startPos;
+      }
+
+      this.sizeBlock.style.width = `${width}px`;
+      this.sizeBlock.style.transform = `translate(${left}px,0)`;
+      this.sizeBlock.style.height = `${this.table.getHeight()}px`;
+
+      this.xLine.style.transform = `translateX(${x}px)`;
     });
   }
 
   /** 显示并更新yLine位置 */
-  updateYTipLine(y: number) {
+  updateYTipLine(y: number, bound: VirtualBoundItem) {
     this.rafClearFn = this.rafCaller(() => {
-      this.yLine.style.display = "block";
-      this.yLine.style.top = `${y}px`;
+      this.sizeBlock.style.visibility = "visible";
+      this.yLine.style.visibility = "visible";
+
+      let top: number;
+      let height: number;
+
+      if (bound.data.reverse) {
+        top = y;
+        height = bound.data.endPos - y;
+      } else {
+        top = bound.data.startPos;
+        height = y - bound.data.startPos;
+      }
+      this.sizeBlock.style.transform = `translate(0,${top}px)`;
+      this.sizeBlock.style.height = `${height}px`;
+      this.sizeBlock.style.width = `${this.table.getWidth()}px`;
+
+      this.yLine.style.transform = `translateY(${y}px)`;
     });
   }
 
   /** 隐藏xLine */
   hideXTipLine() {
-    if (this.xLine.style.display === "none") return;
+    if (this.xLine.style.visibility === "hidden") return;
     this.virtualBound.cursor = null;
-    this.xLine.style.display = "none";
+    this.xLine.style.visibility = "hidden";
+    this.sizeBlock.style.visibility = "hidden";
   }
 
   /** 隐藏yLine */
   hideYTipLine() {
-    if (this.yLine.style.display === "none") return;
+    if (this.yLine.style.visibility === "hidden") return;
     this.virtualBound.cursor = null;
-    this.yLine.style.display = "none";
+    this.yLine.style.visibility = "hidden";
+    this.sizeBlock.style.visibility = "hidden";
   }
 }

@@ -4,9 +4,9 @@ title: usePrev
 
 # usePrev
 
-保存指定状态前一状态
+record prev value
 
-## 示例
+## Example
 
 <demo demo={require("./usePrev.demo.tsx")} code={require("!!raw-loader!./usePrev.demo.tsx")}></demo>
 

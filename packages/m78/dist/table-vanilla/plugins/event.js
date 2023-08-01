@@ -2,7 +2,7 @@ import _class_call_check from "@swc/helpers/src/_class_call_check.mjs";
 import _inherits from "@swc/helpers/src/_inherits.mjs";
 import _create_super from "@swc/helpers/src/_create_super.mjs";
 import { TablePlugin } from "../plugin.js";
-import { createEvent, getEventOffset } from "@m78/utils";
+import { getEventOffset } from "@m78/utils";
 import debounce from "lodash/debounce.js";
 /**
  * 内部事件绑定, 外部事件派发
@@ -30,13 +30,17 @@ import debounce from "lodash/debounce.js";
             if (e) {
                 e.preventDefault();
             }
-            _this.table.xy(_this.table.x() + e.deltaX, _this.table.y() + e.deltaY);
+            if (e.shiftKey) {
+                _this.table.setX(_this.table.getX() + e.deltaY);
+            } else {
+                _this.table.setXY(_this.table.getX() + e.deltaX, _this.table.getY() + e.deltaY);
+            }
         };
         /** 操作滚动条时同步滚动位置 */ _this.onScroll = function() {
             if (_this.disableScrollListener) return;
             var el = _this.context.viewEl;
             _this.context.xyShouldNotify = true;
-            _this.table.xy(el.scrollLeft, el.scrollTop);
+            _this.table.setXY(el.scrollLeft, el.scrollTop);
             _this.context.xyShouldNotify = false;
         };
         /** 延迟100毫秒后将disableScrollListener设置为false, 内置防抖逻辑, 可以多次调用 */ _this.scrollEndTrigger = debounce(function() {
@@ -45,7 +49,7 @@ import debounce from "lodash/debounce.js";
             leading: false,
             trailing: true
         });
-        /** 用于手动设置滚动位置时, 在回调期间内放置触发内部onScroll事件 */ _this.scrollAction = function(cb) {
+        /** 用于手动设置滚动位置时, 在回调期间内防止触发内部onScroll事件 */ _this.scrollAction = function(cb) {
             _this.disableScrollListener = true;
             cb();
             _this.scrollEndTrigger();
@@ -54,17 +58,6 @@ import debounce from "lodash/debounce.js";
     }
     var _proto = _TableEventPlugin.prototype;
     _proto.initialized = function initialized() {
-        var eventCreator = this.config.eventCreator ? this.config.eventCreator : createEvent;
-        this.table.event = {
-            error: eventCreator(),
-            click: eventCreator(),
-            resize: eventCreator(),
-            select: eventCreator(),
-            selectStart: eventCreator(),
-            rowSelect: eventCreator(),
-            cellSelect: eventCreator(),
-            mutation: eventCreator()
-        };
         this.config.el.addEventListener("click", this.onClick);
         this.config.el.addEventListener("contextmenu", this.onContext);
         this.context.viewEl.addEventListener("wheel", this.onWheel);

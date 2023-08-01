@@ -1,6 +1,14 @@
 import { TablePlugin } from "../plugin.js";
-import { TableCell } from "../types/items.js";
-import { isFunction, isPromiseLike, isTruthyOrZero } from "@m78/utils";
+import { TableCell, TableCellWithDom } from "../types/items.js";
+import {
+  createKeyboardHelpersBatch,
+  isFunction,
+  isPromiseLike,
+  isTruthyOrZero,
+  KeyboardHelperOption,
+  KeyboardMultipleHelper,
+  setNamePathValue,
+} from "@m78/utils";
 import { removeNode } from "../../common/index.js";
 
 // 表示一个交互项
@@ -18,12 +26,8 @@ interface TableInteractiveItem {
   done(isSubmit?: boolean): void;
 }
 
-// 表示交互完成后要执行的操作
-export type TableInteractiveDone = (isSubmit: boolean) => void | Promise<void>;
-
 /**
- * 表格的编辑/交互功能, 通常用于实现单元格编辑, 提供的功能仅能满足简单的编辑需求, 通常需要基于使用的框架如react加上本插件提供的核心功能
- * 来进行扩展实现, 添加诸如验证, 编辑反馈和更丰富的表单控件支持
+ * 提供最基础的单元格双击交互功能, 通常用于搭配form插件实现单元格编辑和验证
  *
  * interactive 并非一定表示单元格编辑, 也可以纯展示的其他交互组件
  * */
@@ -41,15 +45,20 @@ export class _TableInteractiveCorePlugin extends TablePlugin {
   // 最后触发交互关闭的时间, 用于防止关闭后马上出发Enter等操作
   lastDownTime = 0;
 
-  mount() {
+  multipleHelper: KeyboardMultipleHelper;
+
+  mounted() {
     this.initDom();
     this.table.event.click.on(this.onClick);
-    window.addEventListener("keydown", this.onKeydown);
+    this.multipleHelper = createKeyboardHelpersBatch(this.getKeydownOptions());
   }
 
   beforeDestroy() {
     this.table.event.click.off(this.onClick);
-    window.removeEventListener("keydown", this.onKeydown);
+
+    this.multipleHelper.destroy();
+
+    setNamePathValue(this, "multipleHelper", null);
 
     this.wrapNode.removeEventListener("click", this.onAttachClick);
 
@@ -62,39 +71,44 @@ export class _TableInteractiveCorePlugin extends TablePlugin {
     this.updateNode();
   }
 
-  private onKeydown = (e: KeyboardEvent) => {
-    if (!this.table.isActive()) return;
+  // 事件绑定配置
+  private getKeydownOptions(): KeyboardHelperOption[] {
+    const hasItemChecker = () => this.table.isActive() && !!this.items.length;
+    const hasNotItemChecker = () => this.table.isActive() && !this.items.length;
 
-    if (this.items.length) {
-      if (e.code === "Tab") {
-        e.preventDefault();
-        this.onTabDown();
-        return;
-      }
+    return [
+      {
+        code: "Tab",
+        handle: this.onTabDown,
+        enable: hasItemChecker,
+      },
+      {
+        code: "Escape",
+        handle: this.onEscDown,
+        enable: hasItemChecker,
+      },
+      {
+        code: ["Enter", "Space"],
+        handle: this.onEnterDown,
+        enable: hasNotItemChecker,
+      },
+      // 常规件输入时, 也能进入交互状态
+      {
+        handle: this.onEnterDown,
+        enable: (e) => {
+          if (!hasNotItemChecker()) return false;
 
-      if (e.code === "Escape") {
-        e.preventDefault();
-        this.onEscDown();
-        return;
-      }
-    } else {
-      if (e.code === "Enter") {
-        this.onEnterDown(e);
-        return;
-      }
-
-      const isRegularChar =
-        /^\w$/.test(e.key) &&
-        !e.ctrlKey &&
-        !e.metaKey &&
-        !e.altKey &&
-        !e.shiftKey;
-
-      if (isRegularChar) {
-        this.onRegularKeyDown(e);
-      }
-    }
-  };
+          return (
+            /^\w$/.test(e.key) &&
+            !e.ctrlKey &&
+            !e.metaKey &&
+            !e.altKey &&
+            !e.shiftKey
+          );
+        },
+      },
+    ];
+  }
 
   // 初始化必须的node
   private initDom() {
@@ -118,10 +132,14 @@ export class _TableInteractiveCorePlugin extends TablePlugin {
       return;
     }
 
+    this.closeAll();
+
+    this.doubleClickTimer && clearTimeout(this.doubleClickTimer);
+
     this.doubleClickLastCell = cell;
     this.doubleClickTimer = setTimeout(() => {
       this.doubleClickLastCell = null;
-    }, 400);
+    }, 800);
   };
 
   // 检测单元格能否进行交互
@@ -162,6 +180,8 @@ export class _TableInteractiveCorePlugin extends TablePlugin {
           this.items.splice(ind, 1);
         }
 
+        this.table.event.interactiveChange.emit(cell, false, isSubmit);
+
         removeNode(attachNode);
       };
 
@@ -178,8 +198,10 @@ export class _TableInteractiveCorePlugin extends TablePlugin {
       done: itemDone,
     };
 
+    this.closeAll();
+
     done = this.config.interactiveRender!({
-      ...item,
+      ...(item as any),
       value: isTruthyOrZero(defaultValue)
         ? defaultValue
         : this.table.getValue(cell),
@@ -192,6 +214,8 @@ export class _TableInteractiveCorePlugin extends TablePlugin {
     this.table.locate(cell.key);
 
     this.updateNode();
+
+    this.table.event.interactiveChange.emit(cell, true, false);
   };
 
   // 更新当前节点位置/尺寸
@@ -204,31 +228,22 @@ export class _TableInteractiveCorePlugin extends TablePlugin {
 
       const { cell, node } = item;
 
-      let x = cell.column.x;
-      let y = cell.row.y;
+      const attachPos = this.table.getAttachPosition(cell);
 
-      if (cell.column.isFixed) {
-        x = this.table.x() + cell.column.fixedOffset!;
-      }
-
-      if (cell.row.isFixed) {
-        y = this.table.y() + cell.row.fixedOffset!;
-      }
-
-      node.style.width = `${cell.width}px`;
-      node.style.height = `${cell.height}px`;
-      node.style.left = `${x}px`;
-      node.style.top = `${y}px`;
-
-      if (!cell.isFixed) {
-        node.style.zIndex = "5"; // 高于其所在单元格对应层index.scss
-      } else if (cell.isCrossFixed) {
-        node.style.zIndex = "21";
-      } else {
-        node.style.zIndex = "11";
-      }
+      node.style.width = `${attachPos.width}px`;
+      node.style.height = `${attachPos.height}px`;
+      node.style.transform = `translate(${attachPos.left}px,${attachPos.top}px)`;
+      node.style.zIndex = attachPos.zIndex;
 
       item.mounted = true;
+    });
+  }
+
+  private closeAll() {
+    // 关闭现有交互项
+    this.items.forEach((i) => {
+      if (i.unmounted) return;
+      i.done();
     });
   }
 
@@ -240,7 +255,7 @@ export class _TableInteractiveCorePlugin extends TablePlugin {
     return el;
   }
 
-  private onTabDown() {
+  private onTabDown = () => {
     const last = this.items[this.items.length - 1];
 
     if (!last) return;
@@ -256,29 +271,23 @@ export class _TableInteractiveCorePlugin extends TablePlugin {
     if (next) {
       this.interactive(next);
     }
-  }
+  };
 
-  private onEnterDown(e: KeyboardEvent) {
+  private onEnterDown = () => {
     const cell = this.table.getSelectedCells();
     if (cell.length === 1 && !this.isJustDoneExecuted()) {
-      e.preventDefault();
       this.interactive(cell[0]);
+      return;
     }
-  }
 
-  private onRegularKeyDown(e: KeyboardEvent) {
-    const cell = this.table.getSelectedCells();
-    if (cell.length === 1 && !this.isJustDoneExecuted()) {
-      e.preventDefault();
-      this.interactive(cell[0], e.key);
-    }
-  }
+    return false;
+  };
 
-  private onEscDown() {
+  private onEscDown = () => {
     this.items.forEach((item) => {
       item.done(false);
     });
-  }
+  };
 
   // 最近是否执行过done
   private isJustDoneExecuted() {
@@ -286,7 +295,24 @@ export class _TableInteractiveCorePlugin extends TablePlugin {
   }
 }
 
-export interface EditableCoreConfig {
+/** 表示交互完成后要执行的操作 */
+export type TableInteractiveDone = (isSubmit: boolean) => void | Promise<void>;
+
+/** 交互组件渲染参数 */
+export interface TableInteractiveRenderArg {
+  /** 触发交互的单元格 */
+  cell: TableCellWithDom;
+  /** 用于挂载交互组件 */
+  node: HTMLElement;
+  /** 表单控件应显示的默认值, 通常与单元格当前值一致, 若用户在选中单元格上直接键入, 则会替换为用户键入的第一个常规字符([A-Za-z0-9_]) */
+  value: any;
+  /** isSubmit = true | 手动结束交互, 比如在用户按下enter时
+   * isSubmit为true时表示应对单元格值进行更新, done应该在事件回调等位置调用, 不能在render流程中调用
+   * */
+  done: (isSubmit?: boolean) => void;
+}
+
+export interface TableInteractiveCoreConfig {
   /** 控制单元格是否可交互 */
   interactive?: boolean | ((cell: TableCell) => boolean);
   /**
@@ -297,16 +323,5 @@ export interface EditableCoreConfig {
    *
    * arg.done和TableInteractiveDone.done都接收isSubmit参数, 用于识别是更新值还是取消
    * */
-  interactiveRender?: (arg: {
-    /** 触发交互的单元格 */
-    cell: TableCell;
-    /** 用于挂载交互组件 */
-    node: HTMLElement;
-    /** 表单控件应显示的默认值, 通常与单元格当前值一致, 若用户在选中单元格上直接键入, 则会替换为用户键入的第一个常规字符([A-Za-z0-9_]) */
-    value: any;
-    /** isSubmit = true | 手动结束交互, 应在交互控件中执行回车/点击关闭按钮等行为时手动调用来关闭交互状态,
-     * isSubmit为true时表示应对单元格值进行更新, done应该在事件回调等位置调用, 不能在render流程中调用
-     * */
-    done: (isSubmit?: boolean) => void;
-  }) => TableInteractiveDone;
+  interactiveRender?: (arg: TableInteractiveRenderArg) => TableInteractiveDone;
 }

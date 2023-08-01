@@ -1,0 +1,1 @@
+{"version":3,"file":"useMethods.d.ts","sourceRoot":"","sources":["../../../src/useMethods.ts"],"names":[],"mappings":"AAGA,OAAO,EAAY,WAAW,EAAE,MAAM,YAAY,CAAC;AACnD,OAAO,EAAa,YAAY,EAAE,gBAAgB,EAAE,MAAM,SAAS,CAAC;AAapE,wBAAgB,UAAU,CAAC,OAAO,EAAE,YAAY;;eAkE5B,MAAM,KAAK,MAAM,UAAU,GAAG;;;;;6BA2FhB,gBAAgB;4CAgCtB,OAAO;EAuElC;AAED,oBAAY,QAAQ,GAAG,UAAU,CAAC,OAAO,UAAU,CAAC,CAAC"}

@@ -14,7 +14,7 @@ export function useKeyboardHandle(ctx) {
         openSelect.unSelectList(values);
     });
     useKeyboard({
-        onTrigger: function(param) {
+        handle: function(param) {
             var code = param.code, nativeEvent = param.nativeEvent;
             nativeEvent.preventDefault();
             if (!state.current && !self.lastActive) {
@@ -69,7 +69,7 @@ export function useKeyboardHandle(ctx) {
         enable: hasSelected
     });
     useKeyboard({
-        onTrigger: function(e) {
+        handle: function(e) {
             e.nativeEvent.preventDefault();
             if (state.current) {
                 var ref;

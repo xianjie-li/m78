@@ -20,11 +20,6 @@ import { _prefix } from "../common.js";
         return _super.apply(this, arguments);
     }
     var _proto = _TableSortColumnPlugin.prototype;
-    _proto.beforeInit = function beforeInit() {
-        this.methodMapper(this.table, [
-            "getColumnSortKeys"
-        ]);
-    };
     _proto.loadStage = function loadStage(level, isBefore) {
         if (level === TableReloadLevel.index && isBefore) {
             this.handle();
@@ -37,7 +32,7 @@ import { _prefix } from "../common.js";
         sortColumns = sortColumns.slice();
         if (!sortColumns.length) return;
         if (ctx.hasMergeHeader) {
-            console.warn("[".concat(_prefix, "] persistenceConfig.sortColumns: ").concat(this.context.texts.sortMergeColumn));
+            console.warn("[".concat(_prefix, "] persistenceConfig.sortColumns: Can not sort column when has merge header"));
             return;
         }
         var sortMap = {};

@@ -76,5 +76,7 @@ export declare function isEmpty(obj: any): boolean;
 export declare function isTruthyOrZero(arg: any): boolean;
 /** 是否是promise like对象 */
 export declare function isPromiseLike(arg: any): arg is Promise<any>;
+/** Check whether the value is a reference type*/
+export declare function isReferenceType(value: any): boolean;
 export {};
 //# sourceMappingURL=is.d.ts.map

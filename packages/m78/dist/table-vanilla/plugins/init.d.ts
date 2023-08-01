@@ -1,12 +1,12 @@
 import { TablePlugin } from "../plugin.js";
 import { TableKey } from "../types/base-type.js";
-import { TableConfig } from "../types/config.js";
+import { _TableRenderPlugin } from "./render.js";
 /**
  * 进行配置整理/预计算等
  * */
 export declare class _TableInitPlugin extends TablePlugin {
+    render: _TableRenderPlugin;
     init(): void;
-    conf(config?: Partial<TableConfig>): TableConfig | undefined;
     fullHandle(): void;
     /** 为当前ctx.data/columns创建索引, 并合并持久化配置 对应TableReloadLevel.index */
     indexHandle(): void;
@@ -14,7 +14,7 @@ export declare class _TableInitPlugin extends TablePlugin {
     baseHandle(): void;
     /** 拷贝data/columns/persistenceConfig等需要本地化的配置 */
     initHandle(): void;
-    /** 将data/columns进行预处理后拷贝到其对应的ctx.xxx, 并对固定项进行处理 */
+    /** 将data/columns进行预处理, 并对固定项进行处理 */
     fmtDataAndColumns(): void;
     mergePersistenceConfig(): void;
     mergePersistenceConfigAfter(): void;

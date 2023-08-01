@@ -459,9 +459,6 @@ interface FormInstance {
   /** 获取指定的schema */
   getSchema(name: NamePath): FormSchema | FormSchemaWithoutName | null;
 
-  /** 获取表单配置 */
-  getConfig(): FormConfig;
-
   /** 更改部分样式配置 */
   updateProps(props: FormProps): void;
 
@@ -544,6 +541,12 @@ interface FormInstance {
 
   /** 执行校验, 未通过时promise会reject包含VerifyError类型的错误 */
   verify: (name?: NamePath) => Promise<void>;
+
+  /** debounce版本的verify, 处理高频调用时可以使用 */
+  debounceVerify: (name?: NamePath) => void;
+
+  /** 获取表单配置 */
+  getConfig(): FormConfig;
 
   /**
    * 获取指定list的数据, 若未在schema中配置为list则返回null. 根schema设置为list时, 可传入`[]`来获取

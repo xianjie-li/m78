@@ -25,6 +25,7 @@ export * from "./state/use-first-mount-state/use-first-mount-state.js";
 export * from "./state/use-Is-unmount-state/use-Is-unmount-state.js";
 export * from "./state/use-select/index.js";
 export * from "./state/use-delay-toggle/use-delay-toggle.js";
+export * from "./state/use-props-change/use-props-change.js";
 /* UI */ export * from "./ui/use-lock-body-scroll/use-lock-body-scroll.js";
 export * from "./ui/use-scroll/use-scroll.js";
 export * from "./ui/use-measure/use-measure.js";

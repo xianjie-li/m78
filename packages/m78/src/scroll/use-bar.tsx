@@ -323,9 +323,10 @@ export function _useBarImpl(
 
     const visible = isY ? state.yVisible : state.xVisible;
 
-    // 隐藏时改为线上滚动条
+    // 隐藏时改为显示滚动条
     if (!visible) {
       showBar();
+      refresh();
       return;
     }
   });
@@ -339,6 +340,7 @@ export function _useBarImpl(
     // 隐藏时改为线上滚动条
     if (!visible) {
       showBar();
+      refresh();
       return;
     }
 

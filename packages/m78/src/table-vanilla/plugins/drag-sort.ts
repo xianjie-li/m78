@@ -67,7 +67,7 @@ export class _TableDragSortPlugin extends TablePlugin {
     diffOffset: TablePosition;
   };
 
-  mount() {
+  mounted() {
     this.initNodes();
 
     this.drag = new DragGesture(this.config.el, this.dragDispatch, {
@@ -95,9 +95,9 @@ export class _TableDragSortPlugin extends TablePlugin {
         // 这里需要通过 takeover 手动将x/y赋值调整为同步
         this.table.takeover(() => {
           if (isX) {
-            this.table.x(this.table.x() + offset);
+            this.table.setX(this.table.getX() + offset);
           } else {
-            this.table.y(this.table.y() + offset);
+            this.table.setY(this.table.getY() + offset);
           }
 
           this.table.renderSync();
@@ -140,6 +140,11 @@ export class _TableDragSortPlugin extends TablePlugin {
   /** 将拖动事件派发到对应的行/列事件中 */
   private dragDispatch = (e: FullGestureState<"drag">) => {
     if (e.tap) return;
+
+    if (!this.config.dragSortRow && !this.config.dragSortColumn) {
+      e.cancel();
+      return;
+    }
 
     // 如果与resize重叠, 则进行阻断
     if (e.first && (this.rcResize.dragging || this.rcResize.hovering)) {
@@ -274,7 +279,7 @@ export class _TableDragSortPlugin extends TablePlugin {
     const isRow = !!this.lastRows;
 
     const lastData = isRow ? this.lastRows! : this.lastColumns!;
-    const tablePos = isRow ? this.table.y() : this.table.x();
+    const tablePos = isRow ? this.table.getY() : this.table.getX();
 
     // area显示
     let pos: number;

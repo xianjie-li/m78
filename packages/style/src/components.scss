@@ -49,7 +49,7 @@
 }
 
 
-.m78-animate-steps {
+.m78-animate-spin-steps {
   animation: m78-spin 1s infinite steps(8);
 }
 
@@ -67,12 +67,26 @@
     box-shadow: 0 0 0 0 transparent;
   }
 
-  20% {
+  16% {
     box-shadow: 0 0 0 6px var(--m78-color-opacity-sm);
   }
 
   100% {
     box-shadow: 0 0 0 7px transparent;
+  }
+}
+
+.m78-highlight {
+  animation: m78-active-effect 1.6s ease-out;
+}
+
+.m78-highlight-bg {
+  animation: m78-table-highlight 2s ease-out;
+}
+
+@keyframes m78-table-highlight {
+  10% {
+    background-color: var(--m78-color-2);
   }
 }
 

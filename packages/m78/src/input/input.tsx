@@ -52,7 +52,7 @@ export function _Input(_props: InputProps) {
     onPressEnter = dumpFn,
     onSearch = dumpFn,
     status,
-    border,
+    border = true,
     maxLength,
     search = false,
     prefix,
@@ -384,7 +384,7 @@ export function _Input(_props: InputProps) {
         status && `__${status}`,
         size && `__${size}`,
         {
-          "__no-border": !textArea && border,
+          "__no-border": !textArea && !border,
           __focus: focus,
           __disabled: isDisabled,
           __textarea: textArea,

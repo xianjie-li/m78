@@ -1,9 +1,8 @@
 import { TablePlugin } from "./plugin.js";
 import { _TableInitPlugin } from "./plugins/init.js";
-import { _TableViewportPlugin } from "./plugins/viewport.js";
+import { _TableRenderPlugin } from "./plugins/render.js";
 
-import "./index.scss";
-import { getNamePathValue, setNamePathValue } from "@m78/utils";
+import { createEvent, getNamePathValue, setNamePathValue } from "@m78/utils";
 import { _privateInstanceKey } from "./common.js";
 import { _TableLifePlugin } from "./plugins/life.js";
 import { _TableGetterPlugin } from "./plugins/getter.js";
@@ -27,8 +26,14 @@ import { _TableDisablePlugin } from "./plugins/disable.js";
 import { _TableTouchScrollPlugin } from "./plugins/touch-scroll.js";
 import { _TableKeyboardInteractionPlugin } from "./plugins/keyboard-interaction.js";
 import { _TableInteractiveCorePlugin } from "./plugins/interactive-core.js";
+import { _TableIsPlugin } from "./plugins/is.js";
+import { _TableSetterPlugin } from "./plugins/setter.js";
+import { _TableFormPlugin } from "./plugins/form.js";
 
-export function createTable(config: TableConfig): TableInstance {
+/**
+ * 核心功能, 在非框架环境下实现, 以便在日后进行移植
+ * */
+export function _createTable(config: TableConfig): TableInstance {
   const defaultConfig: Partial<TableConfig> = {
     data: [],
     columns: [],
@@ -40,6 +45,8 @@ export function createTable(config: TableConfig): TableInstance {
     emptySize: 100,
     autoSize: true,
     stripe: true,
+    cellSelectable: true,
+    rowSelectable: true,
   };
 
   // 根据dom上挂载的私有实例信息判断是否需要创建实例, 防止热重载等场景下反复创建
@@ -58,8 +65,32 @@ export function createTable(config: TableConfig): TableInstance {
 
   const context: any = {};
 
+  const eventCreator = conf.eventCreator ? conf.eventCreator : createEvent;
+
+  const event: TableInstance["event"] = {
+    error: eventCreator(),
+    click: eventCreator(),
+    resize: eventCreator(),
+    select: eventCreator(),
+    selectStart: eventCreator(),
+    rowSelect: eventCreator(),
+    cellSelect: eventCreator(),
+    mutation: eventCreator(),
+    mountChange: eventCreator(),
+    init: eventCreator(),
+    initialized: eventCreator(),
+    mounted: eventCreator(),
+    rendering: eventCreator(),
+    rendered: eventCreator(),
+    reload: eventCreator(),
+    beforeDestroy: eventCreator(),
+    interactiveChange: eventCreator(),
+  };
+
   // 不完整的实例
-  const instance = {} as any as TableInstance;
+  const instance = {
+    event,
+  } as any as TableInstance;
 
   // 插件创建配置
   const pluginConfig = {
@@ -79,6 +110,8 @@ export function createTable(config: TableConfig): TableInstance {
     _TablePluginEmpty,
     _TableLifePlugin,
     _TableGetterPlugin,
+    _TableSetterPlugin,
+    _TableIsPlugin,
     _TableHistoryPlugin,
     _TableMutationPlugin,
     _TableConfigPlugin,
@@ -87,7 +120,7 @@ export function createTable(config: TableConfig): TableInstance {
     _TableHidePlugin,
     _TableSortColumnPlugin,
     _TableDragSortPlugin,
-    _TableViewportPlugin,
+    _TableRenderPlugin,
     _TableScrollMarkPlugin,
     _TableTouchScrollPlugin,
     _TableSelectPlugin,
@@ -96,6 +129,7 @@ export function createTable(config: TableConfig): TableInstance {
     _TableRowColumnResize,
     _TableKeyboardInteractionPlugin,
     _TableInteractiveCorePlugin,
+    _TableFormPlugin,
     _TableHighlightPlugin,
   ].map((Plugin) => {
     return new Plugin(pluginConfig);
@@ -123,20 +157,20 @@ export function createTable(config: TableConfig): TableInstance {
   pluginConfig.plugins.forEach((plugin) => {
     plugin.init?.();
   });
+  event.init.emit();
 
-  console.log(context);
-
-  /* # # # # # # # initialized # # # # # # # */
   pluginConfig.plugins.forEach((plugin) => {
     plugin.initialized?.();
   });
+  event.initialized.emit();
 
   instance.render();
 
   /* # # # # # # # mount # # # # # # # */
   pluginConfig.plugins.forEach((plugin) => {
-    plugin.mount?.();
+    plugin.mounted?.();
   });
+  event.mounted.emit();
 
   return instance;
 }

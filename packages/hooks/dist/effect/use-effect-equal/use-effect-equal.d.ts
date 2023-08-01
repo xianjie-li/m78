@@ -1,5 +1,5 @@
 import React from "react";
-import { IsEqualCustomizer } from "lodash";
+import type { IsEqualCustomizer } from "lodash";
 /**
  *  支持对deps进行深度对比的`useEffect`
  *  💡保持deps值结构相对简单能够减少对比深度，从而提高性能

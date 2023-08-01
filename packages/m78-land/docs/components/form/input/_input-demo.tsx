@@ -59,7 +59,7 @@ const InputDemo = () => (
       <Input placeholder="大输入框" size="large" />
     </div>
     <div className="mt-16">
-      <Input placeholder="无边框" border />
+      <Input placeholder="无边框" border={false} />
     </div>
     <div className="mt-16">
       <Input

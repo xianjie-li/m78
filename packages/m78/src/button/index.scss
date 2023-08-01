@@ -44,6 +44,11 @@
     cursor: not-allowed;
     background: var(--m78-color-divider);
     color: var(--m78-color-disable);
+
+    // 防止下方节点触发事件, 比如点击水波效果
+    * {
+      pointer-events: none;
+    }
   }
 
   .m78-icon {

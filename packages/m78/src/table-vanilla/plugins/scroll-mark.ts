@@ -11,7 +11,7 @@ export class _TableScrollMarkPlugin extends TablePlugin {
   bEl: HTMLDivElement;
   lEl: HTMLDivElement;
 
-  mount() {
+  mounted() {
     const wrapNode = document.createElement("div");
     wrapNode.className = "m78-table_scroll-mark-wrap";
 
@@ -51,12 +51,12 @@ export class _TableScrollMarkPlugin extends TablePlugin {
   /** 可见性更新 */
   updateVisible = () => {
     const ctx = this.context;
-    const x = this.table.x();
-    const y = this.table.y();
+    const x = this.table.getX();
+    const y = this.table.getY();
     const touchTop = y === 0;
-    const touchBottom = Math.ceil(y) >= this.table.maxY(); // 为什么会出现小数?
+    const touchBottom = Math.ceil(y) >= this.table.getMaxY(); // 为什么会出现小数?
     const touchLeft = x === 0;
-    const touchRight = Math.ceil(x) >= this.table.maxX();
+    const touchRight = Math.ceil(x) >= this.table.getMaxX();
 
     this.tEl.style.opacity = touchTop || !ctx.topFixedHeight ? "0" : "1";
     this.bEl.style.opacity = touchBottom || !ctx.bottomFixedHeight ? "0" : "1";

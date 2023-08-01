@@ -3,6 +3,11 @@
   "version": "1.4.1",
   "description": "Lightweight and fast js validator",
   "main": "./index.js",
+  "exports": {
+    ".": "./index.js",
+    "./validator": "./validator/index.js",
+    "./validator/index.js": "./validator/index.js"
+  },
   "scripts": {
     "test": "jest",
     "lint:prettier": "prettier ./src ./test --write --no-error-on-unmatched-pattern",

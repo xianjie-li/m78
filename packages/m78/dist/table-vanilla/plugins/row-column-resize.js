@@ -6,12 +6,12 @@ import { TablePlugin } from "../plugin.js";
 import debounce from "lodash/debounce.js";
 import clamp from "lodash/clamp.js";
 import { rafCaller } from "@m78/utils";
-import { VirtualBound } from "../virtual-bound.js";
+import { VirtualBound } from "../../virtual-bound/index.js";
 import { _TableMutationPlugin } from "./mutation.js";
 import { TableColumnFixed, TableRowFixed } from "../types/base-type.js";
 import { removeNode } from "../../common/index.js";
 import { _tableTriggerFilters, _triggerFilterList } from "../common.js";
-/** 列重置大小 */ export var _TableRowColumnResize = /*#__PURE__*/ function(TablePlugin) {
+/** 列/行重置大小 */ export var _TableRowColumnResize = /*#__PURE__*/ function(TablePlugin) {
     "use strict";
     _inherits(_TableRowColumnResize, TablePlugin);
     var _super = _create_super(_TableRowColumnResize);
@@ -39,7 +39,7 @@ import { _tableTriggerFilters, _triggerFilterList } from "../common.js";
             var isRow = bound.type === _TableRowColumnResize.VIRTUAL_ROW_HANDLE_KEY;
             _this.hovering = hover;
             if (hover) {
-                isRow ? _this.updateYTipLine(bound.data.y) : _this.updateXTipLine(bound.data.x);
+                isRow ? _this.updateYTipLine(bound.data.y, bound) : _this.updateXTipLine(bound.data.x, bound);
             } else if (!_this.dragging) {
                 isRow ? _this.hideYTipLine() : _this.hideXTipLine();
             }
@@ -60,10 +60,10 @@ import { _tableTriggerFilters, _triggerFilterList } from "../common.js";
                 var curOffset = data.reverse ? clamp(prevOffset + movePos, -max, min) : clamp(prevOffset + movePos, -min, max);
                 if (isRow) {
                     _this.dragOffsetY = curOffset;
-                    _this.updateYTipLine(data.y + _this.dragOffsetY);
+                    _this.updateYTipLine(data.y + _this.dragOffsetY, bound);
                 } else {
                     _this.dragOffsetX = curOffset;
-                    _this.updateXTipLine(data.x + _this.dragOffsetX);
+                    _this.updateXTipLine(data.x + _this.dragOffsetX, bound);
                 }
             }
             if (last) {
@@ -87,10 +87,16 @@ import { _tableTriggerFilters, _triggerFilterList } from "../common.js";
         // 创建line节点
         this.xLine = document.createElement("div");
         this.yLine = document.createElement("div");
+        this.sizeBlock = document.createElement("div");
+        this.wrap = document.createElement("div");
         this.xLine.className = "m78-table_tip-line-x";
         this.yLine.className = "m78-table_tip-line-y";
-        this.config.el.appendChild(this.xLine);
-        this.config.el.appendChild(this.yLine);
+        this.sizeBlock.className = "m78-table_drag-area-x";
+        this.wrap.className = "m78-table_rc-resize";
+        this.wrap.appendChild(this.xLine);
+        this.wrap.appendChild(this.yLine);
+        this.wrap.appendChild(this.sizeBlock);
+        this.config.el.appendChild(this.wrap);
         // 创建raf用于优化动画
         this.rafCaller = rafCaller();
         // 为virtualBound添加特定节点的过滤
@@ -128,19 +134,18 @@ import { _tableTriggerFilters, _triggerFilterList } from "../common.js";
         this.context.viewEl.removeEventListener("scroll", this.scrollHandle);
         this.table.event.selectStart.empty();
         this.table.event.select.empty();
-        removeNode(this.xLine);
-        removeNode(this.yLine);
+        removeNode(this.wrap);
     };
     /** 生成虚拟节点 */ _proto.createBound = function createBound(wrapBound, last, isRow) {
         var ctx = this.context;
-        var pos = isRow ? this.table.y() : this.table.x();
+        var pos = isRow ? this.table.getY() : this.table.getX();
         var startFixedSize = isRow ? ctx.topFixedHeight : ctx.leftFixedWidth;
         var endFixedSize = isRow ? ctx.bottomFixedHeight : ctx.rightFixedWidth;
-        var tableSize = isRow ? this.table.height() : this.table.width();
+        var tableSize = isRow ? this.table.getHeight() : this.table.getWidth();
         // 开始/结束边界
         var startLine = pos + startFixedSize;
         var endLine = pos + tableSize - endFixedSize;
-        var maxPos = isRow ? this.table.maxY() : this.table.maxX();
+        var maxPos = isRow ? this.table.getMaxY() : this.table.getMaxX();
         // 滚动到底
         var touchEnd = Math.ceil(pos) >= maxPos;
         var bounds = [];
@@ -173,7 +178,7 @@ import { _tableTriggerFilters, _triggerFilterList } from "../common.js";
                 type: isRow ? _TableRowColumnResize.VIRTUAL_ROW_HANDLE_KEY : _TableRowColumnResize.VIRTUAL_COLUMN_HANDLE_KEY,
                 cursor: "pointer",
                 hoverCursor: isRow ? "row-resize" : "col-resize",
-                data: (_obj = {}, _define_property(_obj, isRow ? "row" : "column", i), _define_property(_obj, isRow ? "y" : "x", _pos - 2), // 计算方向相反
+                data: (_obj = {}, _define_property(_obj, isRow ? "row" : "column", i), _define_property(_obj, isRow ? "y" : "x", _pos - 2), _define_property(_obj, "startPos", isEndFixed ? _pos : _pos - size), _define_property(_obj, "endPos", isEndFixed ? _pos + size : _pos), // 计算方向相反
                 _define_property(_obj, "reverse", isEndFixed), _obj)
             };
             bounds.push(b);
@@ -200,29 +205,57 @@ import { _tableTriggerFilters, _triggerFilterList } from "../common.js";
             ], height, "resize row");
         }
     };
-    /** 显示并更新xLine位置 */ _proto.updateXTipLine = function updateXTipLine(x) {
+    /** 显示并更新xLine位置 */ _proto.updateXTipLine = function updateXTipLine(x, bound) {
         var _this = this;
         this.rafClearFn = this.rafCaller(function() {
-            _this.xLine.style.display = "block";
-            _this.xLine.style.left = "".concat(x, "px");
+            _this.sizeBlock.style.visibility = "visible";
+            _this.xLine.style.visibility = "visible";
+            var left;
+            var width;
+            if (bound.data.reverse) {
+                left = x;
+                width = bound.data.endPos - x;
+            } else {
+                left = bound.data.startPos;
+                width = x - bound.data.startPos;
+            }
+            _this.sizeBlock.style.width = "".concat(width, "px");
+            _this.sizeBlock.style.transform = "translate(".concat(left, "px,0)");
+            _this.sizeBlock.style.height = "".concat(_this.table.getHeight(), "px");
+            _this.xLine.style.transform = "translateX(".concat(x, "px)");
         });
     };
-    /** 显示并更新yLine位置 */ _proto.updateYTipLine = function updateYTipLine(y) {
+    /** 显示并更新yLine位置 */ _proto.updateYTipLine = function updateYTipLine(y, bound) {
         var _this = this;
         this.rafClearFn = this.rafCaller(function() {
-            _this.yLine.style.display = "block";
-            _this.yLine.style.top = "".concat(y, "px");
+            _this.sizeBlock.style.visibility = "visible";
+            _this.yLine.style.visibility = "visible";
+            var top;
+            var height;
+            if (bound.data.reverse) {
+                top = y;
+                height = bound.data.endPos - y;
+            } else {
+                top = bound.data.startPos;
+                height = y - bound.data.startPos;
+            }
+            _this.sizeBlock.style.transform = "translate(0,".concat(top, "px)");
+            _this.sizeBlock.style.height = "".concat(height, "px");
+            _this.sizeBlock.style.width = "".concat(_this.table.getWidth(), "px");
+            _this.yLine.style.transform = "translateY(".concat(y, "px)");
         });
     };
     /** 隐藏xLine */ _proto.hideXTipLine = function hideXTipLine() {
-        if (this.xLine.style.display === "none") return;
+        if (this.xLine.style.visibility === "hidden") return;
         this.virtualBound.cursor = null;
-        this.xLine.style.display = "none";
+        this.xLine.style.visibility = "hidden";
+        this.sizeBlock.style.visibility = "hidden";
     };
     /** 隐藏yLine */ _proto.hideYTipLine = function hideYTipLine() {
-        if (this.yLine.style.display === "none") return;
+        if (this.yLine.style.visibility === "hidden") return;
         this.virtualBound.cursor = null;
-        this.yLine.style.display = "none";
+        this.yLine.style.visibility = "hidden";
+        this.sizeBlock.style.visibility = "hidden";
     };
     return _TableRowColumnResize;
 }(TablePlugin);

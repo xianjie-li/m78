@@ -10,7 +10,7 @@ export class ActionHistory {
 
   /** 操作历史 */
   private history: ActionHistoryItem[] = [];
-  /** 当前所在记录游标 */
+  /** 当前所在记录游标, -1表示初始状态 */
   private cursor = -1;
   /** 正在执行redo(action)操作 */
   private isDoing = false;
@@ -57,7 +57,10 @@ export class ActionHistory {
       return;
     }
 
-    if (this.ignoreFlag) return;
+    if (this.ignoreFlag) {
+      arg.redo();
+      return;
+    }
 
     if (this.isDoing || this.isUndoing) {
       console.warn(ACTION_IN_ACTION_WARNING);
@@ -150,7 +153,7 @@ export class ActionHistory {
   }
 
   /**
-   * 忽略action内执行的所有redo(action)操作, 使它们不计入history
+   * 使action期间的所有redo(action)操作不计入历史, 需要自行保证这些被忽略的操作不会影响历史还原或重做
    * */
   ignore(action: EmptyFunction) {
     this.ignoreFlag = true;
@@ -164,6 +167,22 @@ export class ActionHistory {
   reset() {
     this.history = [];
     this.cursor = -1;
+  }
+
+  /** 获取下一条记录 */
+  getNext(): ActionHistoryItem | null {
+    return this.history[this.cursor + 1] || null;
+  }
+
+  /** 获取前一条记录 */
+  getPrev(): ActionHistoryItem | null {
+    // 游标为0时, 前一项为还原初始状态, 生产一个假的操作项
+    if (this.cursor === 0)
+      return {
+        redo: () => {},
+        undo: () => {},
+      };
+    return this.history[this.cursor - 1] || null;
   }
 }
 

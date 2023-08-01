@@ -1,15 +1,41 @@
 import { TablePlugin } from "../plugin.js";
 import { isBoolean, isEmpty, omit } from "@m78/utils";
-import { _configCanNotChange, _level2ConfigKeys } from "../common.js";
-import { TableConfig, TableConfigCanNotChanges } from "../types/config.js";
+import { TableConfig } from "../types/config.js";
 import { TableReloadLevel } from "./life.js";
 
-export class _TableConfigPlugin extends TablePlugin {
-  init() {
-    this.methodMapper(this.table, [["configHandle", "config"]]);
+/** 重置级别2的所有配置, 未在其中的所有配置默认为级别1 */
+export const level2ConfigKeys: (keyof TableConfig)[] = [
+  "data",
+  "columns",
+  "rows",
+  "cells",
+];
+
+/** 不能通过table.config()变更的配置 */
+const configCanNotChange = [
+  "el",
+  "primaryKey",
+  "plugins",
+  "viewEl",
+  "viewContentEl",
+  "eventCreator",
+] as const;
+
+type TableConfigCanNotChanges = typeof configCanNotChange[number];
+
+export class _TableConfigPlugin
+  extends TablePlugin
+  implements TableConfigInstance
+{
+  beforeInit() {
+    this.methodMapper(this.table, ["setConfig", "getConfig"]);
   }
 
-  configHandle = (
+  getConfig = (): TableConfig => {
+    return this.config;
+  };
+
+  setConfig = (
     config?: Omit<Partial<TableConfig>, TableConfigCanNotChanges>,
     keepPosition?: boolean
   ): void | TableConfig => {
@@ -17,14 +43,14 @@ export class _TableConfigPlugin extends TablePlugin {
       return this.config;
     }
 
-    const nConf = omit(config, _configCanNotChange as any);
+    const nConf = omit(config, configCanNotChange as any);
 
     if (isEmpty(nConf)) return;
 
-    let level = TableReloadLevel.base;
+    let level = TableReloadLevel.index;
 
     const hasLevel2Conf = Object.keys(nConf).some((key) => {
-      return _level2ConfigKeys.includes(key as any);
+      return level2ConfigKeys.includes(key as any);
     });
 
     if (hasLevel2Conf) {
@@ -33,8 +59,6 @@ export class _TableConfigPlugin extends TablePlugin {
 
     Object.assign(this.config, nConf);
 
-    console.log(level, hasLevel2Conf, nConf);
-
     this.table.reload({
       keepPosition: isBoolean(keepPosition)
         ? keepPosition
@@ -42,4 +66,29 @@ export class _TableConfigPlugin extends TablePlugin {
       level,
     });
   };
+}
+
+export interface TableConfigInstance {
+  /** 获取当前配置 */
+  getConfig(): TableConfig;
+
+  /**
+   * 更改配置, 可单个或批量更改配置, 配置更新后会自动reload()
+   * - 可传入keepPosition保持当前滚动位置
+   * - 此外, 每调用只应传入发生变更的配置项, 因为不同的配置有不同的重置级别, 某些配置只需要部分更新, 而另一些则需要完全更新
+   *
+   * 会完全重置表格的配置: ["data", "columns", "rows", "cells"]
+   *
+   * 不能更新的配置: ["el", "primaryKey", "plugins", "viewEl", "viewContentEl", "eventCreator"]
+   *
+   * ## example
+   * ```ts
+   * table.config({ rowHeight: 40, columnWidth: 150 }); // 批量更改
+   * table.config({ rowHeight: 40 }); // 单个更改
+   * ```
+   * */
+  setConfig(
+    config: Omit<Partial<TableConfig>, TableConfigCanNotChanges>,
+    keepPosition?: boolean
+  ): void;
 }

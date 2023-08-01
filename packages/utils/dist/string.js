@@ -21,6 +21,15 @@ import _object_spread from "@swc/helpers/src/_object_spread.mjs";
         return prev + Math.random().toString(36).slice(2);
     }, "");
 }
+var uniqMap = {};
+/** generation a unique string */ export function createUniqString() {
+    var str = createRandString();
+    while(uniqMap[str]){
+        str = createRandString();
+    }
+    uniqMap[str] = true;
+    return str;
+}
 var KB = 1024;
 var MB = KB * 1024;
 var GB = MB * 1024;

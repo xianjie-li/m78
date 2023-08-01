@@ -48,7 +48,7 @@ type InnerConf = CacheMiddlewareConf & typeof defaultConf;
  * @param key - cache key
  * @param conf
  * */
-export default function cache(key: string, conf?: CacheMiddlewareConf) {
+export function cacheMiddleware(key: string, conf?: CacheMiddlewareConf) {
   const config = {
     ...defaultConf,
     ...conf,

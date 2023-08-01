@@ -1,25 +1,27 @@
-$border-color: var(--m78-gray-4);
-$border: 1px solid $border-color;
-$bg-highlight: var(--m78-gray-2); // 斑马纹等高亮格的背景色
-$scroll-flag: rgba(0, 0, 0, 0.12); // 可滚动标记
-$high1-z-index: 10;
-$high2-z-index: 20;
-$high3-z-index: 30;
+:root {
+  --m78-table-border-color: var(--m78-gray-4);
+  --m78-table-border: 1px solid var(--m78-table-border-color);
+  --m78-table-bg-stress: var(--m78-gray-2); // 斑马纹等高亮格的背景色
+  --m78-table-scroll-flag: rgba(0, 0, 0, 0.12); // 可滚动标记
+  --m78-table-high1-z-index: 10;
+  --m78-table-high2-z-index: 20;
+  --m78-table-high3-z-index: 30;
+}
 
 .m78-table {
   position: relative;
   user-select: none;
-  -webkit-user-select: none; // 2023年了, safari还要加前缀, 真有你的
+  -webkit-user-select: none;
   font-size: var(--m78-fs);
   line-height: 1.2;
   box-sizing: border-box;
-  border: $border;
+  border: var(--m78-table-border);
   touch-action: none;
   height: 100%;
-  outline-offset: 3px;
+  overflow: hidden;
 
   &:focus {
-    outline-color: transparent !important;
+    outline: none !important;
   }
 
   > * {
@@ -44,7 +46,7 @@ $high3-z-index: 30;
 
   &.__stripe {
     .m78-table_cell.__even-y {
-      background-color: $bg-highlight;
+      background-color: var(--m78-table-bg-stress);
     }
   }
 
@@ -53,8 +55,8 @@ $high3-z-index: 30;
     padding: 2px 4px;
     display: flex;
     align-items: flex-start;
-    border-right: $border;
-    border-bottom: $border;
+    border-right: var(--m78-table-border);
+    border-bottom: var(--m78-table-border);
     background-color: var(--m78-component-bg);
     overflow: hidden;
     word-break: break-all;
@@ -76,7 +78,7 @@ $high3-z-index: 30;
     // 表头标记
 
     &.__head-x, &.__head-y {
-      background: $bg-highlight; // 防止表头出现斑马纹
+      background: var(--m78-table-bg-stress); // 防止表头出现斑马纹
     }
 
     &.__head-y {
@@ -92,33 +94,29 @@ $high3-z-index: 30;
     // 固定项信息
 
     &.__fixed {
-      z-index: $high1-z-index;
+      z-index: var(--m78-table-high1-z-index);
     }
 
     &.__cross-fixed {
-      z-index: $high2-z-index;
+      z-index: var(--m78-table-high2-z-index);
     }
 
     // ## 在固定项中的特殊位置
 
     // 左固定末尾行
-    &.__lf-last {
-      //border-right: 2px solid $border-color;
-    }
+    &.__lf-last {}
 
     // 下固定末尾行
-    &.__tf-last {
-      //border-bottom: 2px solid $border-color;
-    }
+    &.__tf-last {}
 
     // 右固定首列
     &.__rf-first {
-      border-left: 1px solid $border-color;
+      border-left: var(--m78-table-border);
     }
 
     // 下固定首行
     &.__bf-first {
-      border-top: 1px solid $border-color;
+      border-top: var(--m78-table-border);
     }
 
     // 普通列和固定列右侧末尾列
@@ -176,7 +174,7 @@ $high3-z-index: 30;
       width: 8px;
       height: 100%;
       top: 0;
-      background: linear-gradient(90deg, $scroll-flag, rgba(0, 0, 0, 0));
+      background: linear-gradient(90deg, var(--m78-table-scroll-flag), rgba(0, 0, 0, 0));
       border-radius: 0 12px 12px 0;
     }
 
@@ -184,7 +182,7 @@ $high3-z-index: 30;
       width: 8px;
       height: 100%;
       top: 0;
-      background: linear-gradient(-90deg, $scroll-flag, rgba(0, 0, 0, 0));
+      background: linear-gradient(-90deg, var(--m78-table-scroll-flag), rgba(0, 0, 0, 0));
       border-radius: 12px 0 0 12px;
     }
 
@@ -192,7 +190,7 @@ $high3-z-index: 30;
       height: 8px;
       width: 100%;
       left: 0;
-      background: linear-gradient(180deg, $scroll-flag, rgba(0, 0, 0, 0));
+      background: linear-gradient(180deg, var(--m78-table-scroll-flag), rgba(0, 0, 0, 0));
       border-radius: 0 0 12px 12px;
     }
 
@@ -200,7 +198,7 @@ $high3-z-index: 30;
       height: 8px;
       width: 100%;
       left: 0;
-      background: linear-gradient(0, $scroll-flag, rgba(0, 0, 0, 0));
+      background: linear-gradient(0, var(--m78-table-scroll-flag), rgba(0, 0, 0, 0));
       border-radius: 12px 12px 0 0;
     }
   }
@@ -208,21 +206,24 @@ $high3-z-index: 30;
 
   // ## 提示线
 
-  &_tip-line-x {
-    display: none;
-    pointer-events: none;
+  &_tip-line-x, &_tip-line-y {
     position: absolute;
+    visibility: hidden;
+    pointer-events: none;
+    z-index: var(--m78-table-high3-z-index);
+  }
+
+  &_tip-line-x {
     top: 0;
+    left: 0;
     height: 100%;
     width: 0;
     border-left: 3px solid var(--m78-color);
   }
 
   &_tip-line-y {
-    display: none;
-    pointer-events: none;
-    position: absolute;
     left: 0;
+    top: 0;
     height: 0;
     width: 100%;
     border-top: 3px solid var(--m78-color);
@@ -242,13 +243,14 @@ $high3-z-index: 30;
     background: var(--m78-component-bg);
     pointer-events: none;
     visibility: hidden;
+    z-index: var(--m78-table-high3-z-index);
   }
 
   // ## 隐藏
   &_hide-expand {
     position: absolute;
     cursor: pointer;
-    z-index: $high1-z-index;
+    z-index: var(--m78-table-high1-z-index);
 
     &.__default {
       line-height: 0.6;
@@ -262,16 +264,11 @@ $high3-z-index: 30;
     }
   }
 
-  // ## 高亮
-  &_highlight {
-    animation: m78-table-highlight 2s;
-  }
-
   // ## 拖拽
   &_drag-area-x, &_drag-area-y {
     position: absolute;
     cursor: move;
-    z-index: $high3-z-index;
+    z-index: var(--m78-table-high3-z-index);
     background-color: var(--m78-color-divider);
     visibility: hidden;
     pointer-events: none;
@@ -295,34 +292,77 @@ $high3-z-index: 30;
     position: absolute;
     left: 0;
     top: 0;
-    z-index: $high3-z-index;
+    z-index: var(--m78-table-high3-z-index);
     visibility: hidden;
     pointer-events: none;
   }
 
   &_drag-line-x {
-    border-top: 3px double var(--m78-color);
+    border-top: 3px solid var(--m78-color);
     width: 100%;
     height: 0;
   }
 
   &_drag-line-y {
-    border-left: 3px double var(--m78-color);
+    border-left: 3px solid var(--m78-color);
     height: 100%;
     width: 0;
   }
 
-  // ## 编辑
+  // ## 编辑 & 表单
   &_edit-attach {
     position: absolute;
     background-color: var(--m78-component-bg);
     border: 2px solid var(--m78-color);;
   }
-}
 
+  &_form-error-feedback {
+    position: absolute;
+    border: 1px dashed var(--m78-color-error);
+    pointer-events: none;
 
-@keyframes m78-table-highlight {
-  10% {
-    background-color: var(--m78-color-2);
+    &::before {
+      content: "";
+      position: absolute;
+      top: 2px;
+      right: 1px;
+      border: 3px solid transparent;
+      border-top-color: var(--m78-color-error);
+      border-right-color: var(--m78-color-error);
+    }
+  }
+
+  &_form-changed-mark {
+    pointer-events: none;
+    position: absolute;
+    background-color: var(--m78-color);
+    width: 3px;
+  }
+
+  &_form-cell-changed-mark {
+    pointer-events: none;
+    position: absolute;
+    border: 3px solid transparent;
+    border-top-color: var(--m78-color);
+    border-right-color: var(--m78-color);
+  }
+
+  &_form-edit-status {
+    color: var(--m78-color-second);
+    position: absolute;
+    border: 3px solid transparent;
+    border-left-color: currentColor;
+    border-bottom-color: currentColor;
+  }
+
+    // ## 其他
+
+  &_corner-btn {
+    position: absolute;
+    border: 8px solid var(--m78-color-border);
+    border-left-color: transparent;
+    border-top-color: transparent;
+    right: 2px;
+    bottom: 2px;
   }
 }

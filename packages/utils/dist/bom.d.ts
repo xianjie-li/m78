@@ -14,7 +14,9 @@ export declare function getPlatform(): {
 };
 /** Detect if is mobile device */
 export declare function isMobileDevice(): boolean;
-/** Get command key by system, apple series: command,  other: control */
+/** Get command key by system, apple series: metaKey,  other: ctrlKey */
+export declare function getCmdKey(): "metaKey" | "ctrlKey";
+/** Get command key status by system, apple series: metaKey,  other: ctrlKey */
 export declare function getCmdKeyStatus(e: Event): boolean;
 /** A simple compatibility wrapper for requestAnimationFrame and returns a cleanup function instead of a cleanup tag */
 export declare function raf(frameRequestCallback: FrameRequestCallback): EmptyFunction;

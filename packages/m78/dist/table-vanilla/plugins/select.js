@@ -4,12 +4,13 @@ import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
 import _create_super from "@swc/helpers/src/_create_super.mjs";
 import { TablePlugin } from "../plugin.js";
-import { createAutoScroll, getCmdKeyStatus, getEventOffset, isBoolean, isEmpty, isFunction, isString } from "@m78/utils";
+import { createAutoScroll, ensureArray, getCmdKeyStatus, getEventOffset, isBoolean, isEmpty, isFunction, isString } from "@m78/utils";
 import throttle from "lodash/throttle.js";
 import { _getCellKey, _getCellKeysByStr, _getMaxPointByPoint, _tableTriggerFilters, _triggerFilterList, isTouch } from "../common.js";
 import { addCls, removeCls } from "../../common/index.js";
 import { _TableRowColumnResize } from "./row-column-resize.js";
 import { DragGesture } from "@use-gesture/vanilla";
+import { TableReloadLevel } from "./life.js";
 /** 实现选区和选中功能 */ export var _TableSelectPlugin = /*#__PURE__*/ function(TablePlugin) {
     "use strict";
     _inherits(_TableSelectPlugin, TablePlugin);
@@ -88,8 +89,8 @@ import { DragGesture } from "@use-gesture/vanilla";
             if (valid) {
                 _this.startPoint = startPoint;
                 _this.autoScrollBeforePosition = [
-                    _this.table.x(),
-                    _this.table.y()
+                    _this.table.getX(),
+                    _this.table.getY()
                 ];
                 if (!_this.isShift) {
                     _this.lastPoint = [
@@ -107,8 +108,8 @@ import { DragGesture } from "@use-gesture/vanilla";
             var isMoved = _this.moveDistance > 8;
             _this.autoScroll.trigger(e.xy, e.last, _this.autoScrollConflictDisabledConfigGenerate(offset));
             if (_this.autoScroll.scrolling) return;
-            var sX = _this.table.x() - _this.autoScrollBeforePosition[0];
-            var sY = _this.table.y() - _this.autoScrollBeforePosition[1];
+            var sX = _this.table.getX() - _this.autoScrollBeforePosition[0];
+            var sY = _this.table.getY() - _this.autoScrollBeforePosition[1];
             var patchOffset = [
                 offset[0] + sX,
                 offset[1] + sY
@@ -190,6 +191,27 @@ import { DragGesture } from "@use-gesture/vanilla";
             return ls;
         };
         _this.getSelectedCells = function() {
+            var uniqCache = {}; // 保证行和单元格的选中不重复
+            var ls = [];
+            var keyHandle = function(key) {
+                var ref = _sliced_to_array(_getCellKeysByStr(key), 2), rowKey = ref[0], columnKey = ref[1];
+                var cell = _this.table.getCell(rowKey, columnKey);
+                // 跳过行头
+                if (cell.column.isHeader) return;
+                // 跳过已经处理过的单元格
+                if (uniqCache[cell.key]) return;
+                uniqCache[cell.key] = 1;
+                ls.push(cell);
+            };
+            Object.keys(_this.selectedRows).forEach(function(key) {
+                _this.context.allColumnKeys.forEach(function(columnKey) {
+                    keyHandle(_getCellKey(key, columnKey));
+                });
+            });
+            Object.keys(_this.selectedCells).forEach(keyHandle);
+            return ls;
+        };
+        _this.getSortedSelectedCells = function() {
             var rows = {};
             var uniqCache = {}; // 保证行和单元格的选中不重复
             // 此处可能有潜在的性能问题
@@ -225,6 +247,7 @@ import { DragGesture } from "@use-gesture/vanilla";
             });
         };
         _this.selectRows = function(rows, merge) {
+            rows = ensureArray(rows);
             if (_this.config.rowSelectable === false) return;
             if (!merge) {
                 _this.clearSelected();
@@ -237,6 +260,7 @@ import { DragGesture } from "@use-gesture/vanilla";
             _this.table.event.select.emit();
         };
         _this.selectCells = function(cells, merge) {
+            cells = ensureArray(cells);
             if (_this.config.cellSelectable === false) return;
             if (!merge) {
                 _this.clearSelected();
@@ -287,17 +311,20 @@ import { DragGesture } from "@use-gesture/vanilla";
         return _this;
     }
     var _proto = _TableSelectPlugin.prototype;
-    _proto.init = function init() {
+    _proto.beforeInit = function beforeInit() {
         this.methodMapper(this.table, [
             "isSelectedRow",
             "isSelectedCell",
             "getSelectedRows",
             "getSelectedCells",
+            "getSortedSelectedCells",
             "selectRows",
-            "selectCells", 
+            "selectCells",
+            "isRowSelectable",
+            "isCellSelectable", 
         ]);
     };
-    _proto.mount = function mount() {
+    _proto.mounted = function mounted() {
         var _this = this;
         this.table.event.click.on(this.clickHandle);
         this.drag = new DragGesture(this.config.el, this.dragDispatch, {
@@ -318,9 +345,9 @@ import { DragGesture } from "@use-gesture/vanilla";
                 // 这里需要通过 takeover 手动将x/y赋值调整为同步
                 _this.table.takeover(function() {
                     if (isX) {
-                        _this.table.x(_this.table.x() + offset);
+                        _this.table.setX(_this.table.getX() + offset);
                     } else {
-                        _this.table.y(_this.table.y() + offset);
+                        _this.table.setY(_this.table.getY() + offset);
                     }
                     _this.table.renderSync();
                 });
@@ -329,6 +356,18 @@ import { DragGesture } from "@use-gesture/vanilla";
     };
     _proto.reload = function reload() {
         this.updateAutoScrollBound();
+    };
+    _proto.loadStage = function loadStage(level, isBefore) {
+        if (level === TableReloadLevel.full && isBefore) {
+            this.selectedCells = {};
+            this.selectedRows = {};
+            this.selectedTempRows = {};
+            this.selectedTempCells = {};
+            this.startPoint = null;
+            this.lastPoint = null;
+            this.table.event.rowSelect.emit();
+            this.table.event.select.emit();
+        }
     };
     _proto.beforeDestroy = function beforeDestroy() {
         this.table.event.click.off(this.clickHandle);
@@ -415,9 +454,9 @@ import { DragGesture } from "@use-gesture/vanilla";
             var lS = this.context.leftFixedWidth;
             var lE = lS + edgeSize;
             if (x > lS && x <= lE) {
-                var x1 = this.table.x();
+                var x1 = this.table.getX();
                 if (x1 !== 0) {
-                    this.table.x(0);
+                    this.table.setX(0);
                     this.autoScrollBeforePosition[0] = 0; // 主动变更了位置, 所以需要对其修正
                 }
             }
@@ -426,35 +465,35 @@ import { DragGesture } from "@use-gesture/vanilla";
             var tS = this.context.topFixedHeight;
             var tE = tS + edgeSize;
             if (y > tS && y <= tE) {
-                var y1 = this.table.y();
+                var y1 = this.table.getY();
                 if (y1 !== 0) {
-                    this.table.y(0);
+                    this.table.setY(0);
                     this.autoScrollBeforePosition[1] = 0;
                 }
             }
         }
         if (ctx.rightFixedWidth && this.conflictDisableConfig.right) {
-            var contW = this.table.contentWidth();
+            var contW = this.table.getContentWidth();
             var rE = contW - ctx.rightFixedWidth;
             var rS = rE - edgeSize;
-            var max = this.table.maxX();
+            var max = this.table.getMaxX();
             if (x > rS && x <= rE) {
-                var x2 = this.table.x();
+                var x2 = this.table.getX();
                 if (x2 < max) {
-                    this.table.x(max);
+                    this.table.setX(max);
                     this.autoScrollBeforePosition[0] = max;
                 }
             }
         }
         if (ctx.bottomFixedHeight && this.conflictDisableConfig.bottom) {
-            var contH = this.table.contentHeight();
+            var contH = this.table.getContentHeight();
             var bE = contH - ctx.bottomFixedHeight;
             var bS = bE - edgeSize;
-            var max1 = this.table.maxY();
+            var max1 = this.table.getMaxY();
             if (y > bS && y <= bE) {
-                var y2 = this.table.y();
+                var y2 = this.table.getY();
                 if (y2 < max1) {
-                    this.table.y(max1);
+                    this.table.setY(max1);
                     this.autoScrollBeforePosition[1] = max1;
                 }
             }
@@ -475,6 +514,14 @@ import { DragGesture } from "@use-gesture/vanilla";
     _proto.clearTempSelected = function clearTempSelected() {
         this.selectedTempRows = {};
         this.selectedTempCells = {};
+    };
+    _proto.isCellSelectable = function isCellSelectable(cell) {
+        if (isBoolean(this.config.cellSelectable)) return this.config.cellSelectable;
+        return isFunction(this.config.cellSelectable) && this.config.cellSelectable(cell);
+    };
+    _proto.isRowSelectable = function isRowSelectable(row) {
+        if (isBoolean(this.config.rowSelectable)) return this.config.rowSelectable;
+        return isFunction(this.config.rowSelectable) && this.config.rowSelectable(row);
     };
     /**
    * 专门用于框选的选区点转换

@@ -12,7 +12,7 @@ import clsx from "clsx";
 import { _useFieldMethods } from "./use-field-methods.js";
 import { _useFieldLifeCircle } from "./use-field-life-circle.js";
 import { _listLayoutRenderImpl, _listRenderImpl } from "./list.js";
-import { requiredValidatorKey } from "@m78/verify/index.js";
+import { requiredValidatorKey } from "@m78/verify";
 export function _fieldImpl(ctx) {
     var form = ctx.form;
     /** 实现Field组件 */ form.Field = function(props) {

@@ -1,4 +1,4 @@
-import { _Context, _State, FormInstance } from "./types.js";
+import { _Context, _State } from "./types.js";
 import { RejectMeta, VerifyError } from "@m78/verify";
 import { ensureArray, isArray, stringifyNamePath } from "@m78/utils";
 import clone from "lodash/cloneDeep.js";
@@ -97,12 +97,32 @@ export function _implAction(ctx: _Context) {
   // 存放debounceVerify计时器
   const debounceVerifyTimerMap: any = {};
 
-  ctx.debounceVerify = (name) => {
+  // 防止debounceVerify在单次触发时执行两次
+  let firstTriggerFlag = false;
+
+  instance.debounceVerify = (name, cb) => {
     const key = stringifyNamePath(name || []) || "default";
+
+    const isValueChangeTrigger = ctx.isValueChangeTrigger;
+
+    ctx.isValueChangeTrigger = false;
+
     // 立即执行一次
     if (!debounceVerifyTimerMap[key]) {
-      ctx.isValueChangeTrigger = true;
-      instance.verify(name).catch(() => {});
+      if (isValueChangeTrigger) {
+        ctx.isValueChangeTrigger = true;
+      }
+      firstTriggerFlag = true;
+      instance
+        .verify(name)
+        .then(() => {
+          cb?.();
+        })
+        .catch((err) => {
+          cb?.(err?.rejects);
+        });
+    } else {
+      firstTriggerFlag = false;
     }
 
     if (debounceVerifyTimerMap[key]) {
@@ -110,9 +130,22 @@ export function _implAction(ctx: _Context) {
     }
 
     debounceVerifyTimerMap[key] = setTimeout(() => {
-      ctx.isValueChangeTrigger = true;
+      if (isValueChangeTrigger) {
+        ctx.isValueChangeTrigger = true;
+      }
+
       delete debounceVerifyTimerMap[key];
-      instance.verify(name).catch(() => {});
+
+      if (!firstTriggerFlag) {
+        instance
+          .verify(name)
+          .then(() => {
+            cb?.();
+          })
+          .catch((err) => {
+            cb?.(err?.rejects);
+          });
+      }
     }, 200);
   };
 

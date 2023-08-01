@@ -3,6 +3,7 @@
   "version": "2.2.0",
   "description": "permission library",
   "main": "./index.js",
+  "exports": "./index.js",
   "scripts": {
     "test": "jest",
     "lint:prettier": "prettier ./src ./test --write --no-error-on-unmatched-pattern",

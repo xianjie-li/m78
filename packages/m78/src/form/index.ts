@@ -9,3 +9,4 @@ export type {
   RejectMeta as FormRejectMeta,
 } from "@m78/verify";
 export { _createForm as createForm } from "./form.js";
+export * from "@m78/verify/validator/index.js";

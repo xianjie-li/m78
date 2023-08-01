@@ -1,21 +1,25 @@
 import React from "react";
-import { render } from "../utils";
 import { useKeyboard } from "../../src";
+import { KeyboardHelperModifier } from "../../src/ui/use-keyboard/use-keyboard.js";
 
-function Demo() {
+export function UseKeyboardExample() {
   useKeyboard({
-    onTrigger(e) {
+    handle(e) {
       console.log(1, e);
     },
+    enable: (e) => {
+      return e.code === "KeyC";
+    },
+    // overwrite: true,
   });
 
   useKeyboard({
-    onTrigger(e) {
+    code: "KeyC",
+    modifier: KeyboardHelperModifier.sysCmd,
+    handle(e) {
       console.log(2, e);
     },
   });
 
   return <div>123213111</div>;
 }
-
-render(<Demo />);

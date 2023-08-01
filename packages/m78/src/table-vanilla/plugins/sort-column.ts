@@ -16,14 +16,7 @@ import { _prefix } from "../common.js";
  * */
 
 /** 表格列排序 */
-export class _TableSortColumnPlugin
-  extends TablePlugin
-  implements TableSortColumn
-{
-  beforeInit() {
-    this.methodMapper(this.table, ["getColumnSortKeys"]);
-  }
-
+export class _TableSortColumnPlugin extends TablePlugin {
   loadStage(level: TableReloadLevel, isBefore: boolean) {
     if (level === TableReloadLevel.index && isBefore) {
       this.handle();

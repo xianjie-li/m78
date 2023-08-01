@@ -1,4 +1,4 @@
-import { _configCanNotChange, _defaultTexts } from "../common.js";
+import { _defaultTexts } from "../common.js";
 import { AnyObject } from "@m78/utils";
 import { TablePlugin } from "../plugin.js";
 
@@ -13,10 +13,8 @@ import { TableSelectConfig } from "../plugins/select.js";
 import { TableKey, TableRenderCtx } from "./base-type.js";
 import { TableEmptyConfig } from "../plugins/empty.js";
 import { TableDragSortConfig } from "../plugins/drag-sort.js";
-import { EditableCoreConfig } from "../plugins/interactive-core.js";
-
-/** 不能通过table.config()变更的配置 */
-export type TableConfigCanNotChanges = typeof _configCanNotChange[number];
+import { TableInteractiveCoreConfig } from "../plugins/interactive-core.js";
+import { TableFormConfig } from "../plugins/form.js";
 
 /**
  * 对外暴露的变更配置, 用于持久化记录变更的表格配置
@@ -44,12 +42,8 @@ export interface TablePersistenceConfig {
   stripe?: TableConfig["stripe"];
 }
 
-/** 表格配置 */
-export interface TableConfig
-  extends TableSelectConfig,
-    TableEmptyConfig,
-    TableDragSortConfig,
-    EditableCoreConfig {
+/** 基础配置 */
+export interface TableBaseConfig {
   /** 用于挂载表格的div节点 */
   el: HTMLDivElement;
   /** 数据主键, 用于标识数据的唯一性, 对应的值类型必须为字符串或数字 */
@@ -72,7 +66,7 @@ export interface TableConfig
   width?: number | string;
   /** true | 当数据总高度/宽度不足容器尺寸时, 压缩容器尺寸使其与数据占用尺寸一致 */
   autoSize?: boolean;
-  /** 34 | 默认行高 */
+  /** 36 | 默认行高 */
   rowHeight?: number;
   /** 100 | 默认列宽 */
   columnWidth?: number;
@@ -96,16 +90,29 @@ export interface TableConfig
   /** 持久化配置, 用于还原之前用户手动变更过的表格配置 */
   persistenceConfig?: TablePersistenceConfig;
 
-  /* # # # # # # # 极少使用 # # # # # # # */
+  /** 定制提示/反馈文本 */
+  texts?: Partial<typeof _defaultTexts>;
+
   /** 插件 */
   plugins?: typeof TablePlugin[];
+}
+
+/** 会在内部实现间使用的配置 */
+export interface TableInternalConfig {
   /** 用于挂载放置dom层节点的容器, 仅在需要自定义滚动容器时使用 */
   viewEl?: HTMLDivElement;
   /** domEl的子级, 用于放置实际的dom内容, 仅在需要自定义滚动容器时使用 */
   viewContentEl?: HTMLDivElement;
   /** 传入定制的createEvent, 内部事件将使用此工厂函数创建 */
   eventCreator?: any;
-
-  /** 定制提示/反馈文本 */
-  texts?: Partial<typeof _defaultTexts>;
 }
+
+/** 表格配置 */
+export interface TableConfig
+  extends TableBaseConfig,
+    TableSelectConfig,
+    TableEmptyConfig,
+    TableDragSortConfig,
+    TableInteractiveCoreConfig,
+    TableInternalConfig,
+    TableFormConfig {}

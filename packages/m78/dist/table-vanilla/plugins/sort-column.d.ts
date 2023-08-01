@@ -7,8 +7,7 @@ import { TableKey } from "../types/base-type.js";
  * 需要知道某项是否为子项
  * */
 /** 表格列排序 */
-export declare class _TableSortColumnPlugin extends TablePlugin implements TableSortColumn {
-    beforeInit(): void;
+export declare class _TableSortColumnPlugin extends TablePlugin {
     loadStage(level: TableReloadLevel, isBefore: boolean): void;
     /** 处理sortColumns */
     handle(): void;

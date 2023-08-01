@@ -5,7 +5,7 @@ import { TablePlugin } from "../plugin.js";
 import { _TableInitPlugin } from "./init.js";
 import { createRandString, getNamePathValue, isNumber, rafCaller, setNamePathValue } from "@m78/utils";
 import { _privateInstanceKey, _privateScrollerDomKey } from "../common.js";
-import { _TableViewportPlugin } from "./viewport.js";
+import { _TableRenderPlugin } from "./render.js";
 import { removeNode } from "../../common/index.js";
 /** 表格生命周期相关控制 */ export var _TableLifePlugin = /*#__PURE__*/ function(TablePlugin) {
     "use strict";
@@ -46,7 +46,7 @@ import { removeNode } from "../../common/index.js";
         return _this;
     }
     var _proto = _TableLifePlugin.prototype;
-    _proto.init = function init() {
+    _proto.beforeInit = function beforeInit() {
         this.methodMapper(this.table, [
             [
                 "reloadHandle",
@@ -60,6 +60,8 @@ import { removeNode } from "../../common/index.js";
             "takeover",
             "isTaking", 
         ]);
+    };
+    _proto.init = function init() {
         this.context.lastReloadKey = createRandString();
         this.rafCaller = rafCaller();
     };
@@ -70,13 +72,14 @@ import { removeNode } from "../../common/index.js";
     /** 解除所有事件/引用类型占用 */ _proto.beforeDestroy = function beforeDestroy() {
         if (this.rafClear) this.rafClear();
         var ctx = this.context;
-        this.getPlugin(_TableViewportPlugin).restoreWrapSize();
+        this.getPlugin(_TableRenderPlugin).restoreWrapSize();
         ctx.data = [];
         ctx.columns = [];
         ctx.rows = {};
         ctx.cells = {};
-        ctx.cellDomCaChe = {};
-        ctx.cellStateCaChe = {};
+        ctx.rowCache = {};
+        ctx.columnCache = {};
+        ctx.cellCache = {};
         ctx.yHeaderKeys = [];
         ctx.ignoreXList = [];
         ctx.ignoreYList = [];
@@ -96,7 +99,7 @@ import { removeNode } from "../../common/index.js";
     /** 核心reload逻辑 */ _proto.reload = function reload() {
         var ref = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {}, keepPosition = ref.keepPosition, _level = ref.level, level = _level === void 0 ? TableReloadLevel.base : _level;
         var ctx = this.context;
-        var viewport = this.getPlugin(_TableViewportPlugin);
+        var viewport = this.getPlugin(_TableRenderPlugin);
         ctx.lastReloadKey = createRandString();
         this.commonAction();
         if (!keepPosition) {
@@ -137,11 +140,13 @@ import { removeNode } from "../../common/index.js";
         }
         this.reloadMain(opt);
     };
-    /** 触发插件reload */ _proto.reloadMain = function reloadMain(opt) {
+    /** 触发插件reload */ _proto.reloadMain = function reloadMain() {
+        var opt = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {};
         this.plugins.forEach(function(plugin) {
             var ref;
             (ref = plugin.reload) === null || ref === void 0 ? void 0 : ref.call(plugin, opt);
         });
+        this.table.event.reload.emit(opt);
     };
     /** 实现table.destroy() */ _proto.destroyHandle = function destroyHandle() {
         var _this = this;
@@ -152,6 +157,7 @@ import { removeNode } from "../../common/index.js";
             (ref = plugin.beforeDestroy) === null || ref === void 0 ? void 0 : ref.call(plugin);
         });
         this.beforeDestroy();
+        this.table.event.beforeDestroy.emit();
     };
     /** 是否正在执行takeover */ _proto.isTaking = function isTaking() {
         return !!this.context.takeKey;
@@ -178,9 +184,6 @@ import { removeNode } from "../../common/index.js";
     _proto.commonAction = function commonAction() {
         var ctx = this.context;
         ctx.lastViewportItems = undefined;
-        ctx.rowCache = {};
-        ctx.columnCache = {};
-        ctx.cellCache = {};
         ctx.topFixedMap = {};
         ctx.bottomFixedMap = {};
         ctx.leftFixedMap = {};

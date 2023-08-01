@@ -54,6 +54,8 @@ export * from "./state/use-select/index.js";
 
 export * from "./state/use-delay-toggle/use-delay-toggle.js";
 
+export * from "./state/use-props-change/use-props-change.js";
+
 /* UI */
 
 export * from "./ui/use-lock-body-scroll/use-lock-body-scroll.js";

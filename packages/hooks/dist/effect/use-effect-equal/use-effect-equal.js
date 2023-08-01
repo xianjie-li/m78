@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect } from "react";
 import { usePrev } from "../../index.js";
 import _isEqualWith from "lodash/isEqualWith.js";
 /**
@@ -9,16 +9,9 @@ import _isEqualWith from "lodash/isEqualWith.js";
  *  @param customizer - 可以通过此函数自定义对比方式, 如果相等返回 true，否则返回 false, 返回undefined时使用默认对比方式
  * */ export function useEffectEqual(effect, deps, customizer) {
     var prev = usePrev(deps);
-    var dep = useRef(0);
-    var isEqual = useMemo(function() {
-        return _isEqualWith(deps, prev, customizer);
-    }, [
-        deps
-    ]);
-    if (!isEqual) {
-        dep.current++;
-    }
-    useEffect(effect, [
-        dep.current
-    ]);
+    useEffect(function() {
+        var equal = _isEqualWith(deps, prev, customizer);
+        if (equal) return;
+        return effect();
+    });
 }
