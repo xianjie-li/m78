@@ -77,11 +77,20 @@
     &.__head-y {
       justify-content: space-between;
     }
+  }
 
-    &.__sort {
-      &:hover {
-        background: var(--m78-gray-3) !important;
-      }
+  .m78-table_cell.__sort { // 增加权重
+    &:hover {
+      background: var(--m78-gray-3);
     }
+  }
+
+  // 不使用& 增加样式权重
+  .m78-table_input {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-shadow: none;
+    padding: 0;
   }
 }

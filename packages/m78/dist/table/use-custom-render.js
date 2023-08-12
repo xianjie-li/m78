@@ -114,9 +114,7 @@ export function _CustomRender(param) {
     useEffect(function() {
         if (!state.instance) return;
         state.instance.event.rendered.on(update);
-        setTimeout(function() {
-            update();
-        });
+        update();
         return function() {
             state.instance.event.rendered.off(update);
         };
@@ -125,7 +123,7 @@ export function _CustomRender(param) {
     ]);
     return /*#__PURE__*/ _jsx(_Fragment, {
         children: list.map(function(i) {
-            return /*#__PURE__*/ ReactDom.createPortal(i.element, i.cell.dom, i.cell.key);
+            return /*#__PURE__*/ ReactDom.createPortal(i.element, i.cell.dom, String(i.cell.key));
         })
     });
 }

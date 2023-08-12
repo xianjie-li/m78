@@ -29,11 +29,11 @@ export declare class _TableIsPlugin extends TablePlugin implements TableIs {
 }
 export interface TableIs {
     /** 指定列是否可见, partial为true时, 元素部分可见也视为可见, 默认为true */
-    isColumnVisible(key: string, partial?: boolean): boolean;
+    isColumnVisible(key: TableKey, partial?: boolean): boolean;
     /** 指定行是否可见, partial为true时, 元素部分可见也视为可见, 默认为true */
-    isRowVisible(key: string, partial?: boolean): boolean;
+    isRowVisible(key: TableKey, partial?: boolean): boolean;
     /** 指定单元格是否可见, partial为true时, 元素部分可见也视为可见, 默认为true */
-    isCellVisible(rowKey: string, columnKey: string, partial?: boolean): boolean;
+    isCellVisible(rowKey: TableKey, columnKey: TableKey, partial?: boolean): boolean;
     /** 表格是否聚焦, checkChildren为true时会检测子级是否聚焦 */
     isFocus(checkChildren?: boolean): boolean;
     /** 表格是否处于活动状态, 即: 最近进行过点击, hover, 滚动等 */

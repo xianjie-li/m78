@@ -46,6 +46,8 @@ export interface TableEvents {
     mutation: CustomEvent<(event: TableMutationEvent) => void>;
     /** 单元格的挂载状态变更 (mount状态可以理解为单元格是否在表格视口内并被渲染, 可通过cell.isMount获取) */
     mountChange: CustomEvent<(cell: TableCell) => void>;
+    /** 单元格交互状态发生变更, show - 显示还是关闭, isSubmit - 提交还是取消 */
+    interactiveChange: CustomEvent<(cell: TableCell, show: boolean, isSubmit: boolean) => void>;
     /** 初始化阶段触发 */
     init: CustomEvent<EmptyFunction>;
     /** 初始化完成触发 */

@@ -1,9 +1,9 @@
 import { AnyObject, NamePath } from "@m78/utils";
-import { TableColumnFixedUnion, TableRowFixedUnion } from "./base-type.js";
+import { TableColumnFixedUnion, TableKey, TableRowFixedUnion } from "./base-type.js";
 /** 表示table中的一列 */
 export interface TableColumn {
     /** 该项的唯一key, 与 TableColumnConfig.key 相同 */
-    key: string;
+    key: TableKey;
     /** 最终宽度 */
     width: number;
     /** 列索引. 注意, 该索引对应列在表格中的实际显示位置, 可能与config.columns中的索引不同 */
@@ -61,7 +61,7 @@ export interface TableColumnLeafConfigFormatted extends Omit<TableColumnLeafConf
 /** 表示table中的一个行 */
 export interface TableRow {
     /** 该项的唯一key, 通过config.primaryKey 获取 */
-    key: string;
+    key: TableKey;
     /** 最终高度 */
     height: number;
     /** 行索引, 该索引对应行在表格中的实际显示位置, 根据表头/固定项等会根实际数据索引有出入 */
@@ -105,7 +105,7 @@ export interface TableCell {
     /** 单元格对应的dom节点 */
     dom?: HTMLDivElement;
     /** 单元格key, 格式为 rowIndex_columnIndex */
-    key: string;
+    key: TableKey;
     /** 根据columnConfig.key取到的单元格文本, 非实时, 仅在render时更新 */
     text: string;
     /** 单元格配置 */

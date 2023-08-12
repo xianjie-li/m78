@@ -23,6 +23,13 @@
   line-height: 1;
 }
 
+// 在某些节点需要阻止浏览器的滚动/上下文菜单等行为
+.m78-touch-prevent {
+  touch-action: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+}
+
 /*  ============= 所有组件共享的样式 ============= */
 @media (min-width: 576px) {
   .m78-scroll-bar {

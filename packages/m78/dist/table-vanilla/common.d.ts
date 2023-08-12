@@ -16,6 +16,8 @@ export declare const _defaultTexts: {
     readonly setValue: "update value";
     readonly moveRow: "move row";
     readonly moveColumn: "move column";
+    readonly editable: "editable";
+    readonly editableAndRequired: "editable and required";
 };
 /** 解析rowKey##columnKey格式的字符串为[rowKey, columnKey], 数组长度为2表示解析正常 */
 export declare function _getCellKeysByStr(s?: string): string[];
@@ -37,6 +39,13 @@ export declare const _tableInterruptTriggerTagName: RegExp;
 export declare const _tableTriggerFilters: ((target: HTMLElement) => true | undefined)[];
 /** 执行一组过滤器, 若该节点需要跳过则返回true, 内部会递归对target所有父级进行校验, 直到stopNode节点为止 */
 export declare function _triggerFilterList(target: HTMLElement, list: TableEventFilter[], stopNode: HTMLElement): boolean;
+/** 用于需要根据指定list同步增加或减少dom列表的场景 */
+export declare function _syncListNode(arg: {
+    wrapNode: HTMLElement;
+    list: any[];
+    nodeList: HTMLElement[];
+    createAction?: (dom: HTMLElement) => void;
+}): void;
 /** 检测传入的事件是否是touch事件 */
 export declare function isTouch(e: Event): boolean;
 export {};

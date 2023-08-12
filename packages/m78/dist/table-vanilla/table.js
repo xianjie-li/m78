@@ -26,6 +26,7 @@ import { _TableKeyboardInteractionPlugin } from "./plugins/keyboard-interaction.
 import { _TableInteractiveCorePlugin } from "./plugins/interactive-core.js";
 import { _TableIsPlugin } from "./plugins/is.js";
 import { _TableSetterPlugin } from "./plugins/setter.js";
+import { _TableFormPlugin } from "./plugins/form.js";
 /**
  * 核心功能, 在非框架环境下实现, 以便在日后进行移植
  * */ export function _createTable(config) {
@@ -71,7 +72,8 @@ import { _TableSetterPlugin } from "./plugins/setter.js";
         rendering: eventCreator(),
         rendered: eventCreator(),
         reload: eventCreator(),
-        beforeDestroy: eventCreator()
+        beforeDestroy: eventCreator(),
+        interactiveChange: eventCreator()
     };
     // 不完整的实例
     var instance = {
@@ -112,6 +114,7 @@ import { _TableSetterPlugin } from "./plugins/setter.js";
         _TableRowColumnResize,
         _TableKeyboardInteractionPlugin,
         _TableInteractiveCorePlugin,
+        _TableFormPlugin,
         _TableHighlightPlugin, 
     ].map(function(Plugin) {
         return new Plugin(pluginConfig);
@@ -145,5 +148,6 @@ import { _TableSetterPlugin } from "./plugins/setter.js";
         (ref = plugin.mounted) === null || ref === void 0 ? void 0 : ref.call(plugin);
     });
     event.mounted.emit();
+    console.log(context);
     return instance;
 }

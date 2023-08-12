@@ -1,8 +1,9 @@
 import React from "react";
-import { AnyFunction, BoundSize, TupleNumber } from "@m78/utils";
+import { BoundSize, TupleNumber } from "@m78/utils";
 import { TransitionType } from "../transition/index.js";
-import { useSame, UseTriggerEvent, UseTriggerType } from "@m78/hooks";
+import { useSame } from "@m78/hooks";
 import { _ArrowBasePosition, _ClampBound, _OverlayContext, _DirectionMeta, _DirectionMetaMap, _DragContext, OverlayDirectionKeys, OverlayDirectionUnion, OverlayProps, OverlayRenderOption } from "./types.js";
+import { TriggerEvent, TriggerType } from "../trigger/index.js";
 export declare const _defaultAlignment: TupleNumber;
 export declare const _defaultProps: {
     namespace: string;
@@ -13,7 +14,7 @@ export declare const _defaultProps: {
     lockScroll: boolean;
     arrowSize: number[];
     offset: number;
-    triggerType: UseTriggerType;
+    triggerType: TriggerType;
     autoFocus: boolean;
 };
 export declare const overlayTransitionConfig: {
@@ -55,7 +56,7 @@ export declare function useOverlaysClickAway(config?: SameConfig, namespace?: st
     isLast: boolean;
 };
 /** useTrigger回调 */
-export declare function _onTrigger(e: UseTriggerEvent, setOpen: AnyFunction, self: _OverlayContext["self"], props: OverlayProps): void;
+export declare function _onTrigger(e: TriggerEvent, ctx: _OverlayContext): void;
 /**
  * 根据t, c获取内容在OverlayDirection各个位置上的坐标信息_DirectionMeta
  * */

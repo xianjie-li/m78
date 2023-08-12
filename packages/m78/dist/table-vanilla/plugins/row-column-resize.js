@@ -6,11 +6,11 @@ import { TablePlugin } from "../plugin.js";
 import debounce from "lodash/debounce.js";
 import clamp from "lodash/clamp.js";
 import { rafCaller } from "@m78/utils";
-import { VirtualBound } from "../../virtual-bound/index.js";
 import { _TableMutationPlugin } from "./mutation.js";
 import { TableColumnFixed, TableRowFixed } from "../types/base-type.js";
 import { removeNode } from "../../common/index.js";
 import { _tableTriggerFilters, _triggerFilterList } from "../common.js";
+import { createTrigger, TriggerType } from "../../trigger/index.js";
 /** 列/行重置大小 */ export var _TableRowColumnResize = /*#__PURE__*/ function(TablePlugin) {
     "use strict";
     _inherits(_TableRowColumnResize, TablePlugin);
@@ -20,7 +20,7 @@ import { _tableTriggerFilters, _triggerFilterList } from "../common.js";
         var _this;
         _this = _super.apply(this, arguments);
         /** 拖动中 */ _this.dragging = false;
-        /** 是否触发了hover */ _this.hovering = false;
+        /** 是否触发了hover */ _this.activating = false;
         /** 轴偏移 */ _this.dragOffsetX = 0;
         _this.dragOffsetY = 0;
         /** 每次render后根据ctx.lastViewportItems更新虚拟拖拽节点 */ _this.renderedDebounce = debounce(function() {
@@ -29,41 +29,53 @@ import { _tableTriggerFilters, _triggerFilterList } from "../common.js";
             var wrapBound = _this.config.el.getBoundingClientRect();
             var cBounds = _this.createBound(wrapBound, last, false);
             var rBounds = _this.createBound(wrapBound, last, true);
-            _this.virtualBound.bounds = cBounds.concat(rBounds);
+            _this.trigger.clear();
+            _this.trigger.add(cBounds.concat(rBounds));
         }, 100, {
             leading: false,
             trailing: true
         });
+        _this.triggerDispatch = function(e) {
+            if (e.type === TriggerType.active) {
+                _this.hoverHandle(e);
+            }
+            if (e.type === TriggerType.drag) {
+                _this.dragHandle(e);
+            }
+        };
         _this.hoverHandle = function(param) {
-            var bound = param.bound, hover = param.hover;
-            var isRow = bound.type === _TableRowColumnResize.VIRTUAL_ROW_HANDLE_KEY;
-            _this.hovering = hover;
-            if (hover) {
-                isRow ? _this.updateYTipLine(bound.data.y, bound) : _this.updateXTipLine(bound.data.x, bound);
+            var target = param.target, active = param.active;
+            var meta = target;
+            var data = meta.data;
+            var isRow = data.type === _TableRowColumnResize.VIRTUAL_ROW_HANDLE_KEY;
+            _this.activating = active;
+            if (active) {
+                isRow ? _this.updateYTipLine(data.y, meta) : _this.updateXTipLine(data.x, meta);
             } else if (!_this.dragging) {
                 isRow ? _this.hideYTipLine() : _this.hideXTipLine();
             }
         };
         _this.dragHandle = function(param) {
-            var bound = param.bound, first = param.first, last = param.last, delta = param.delta;
-            var isRow = bound.type === _TableRowColumnResize.VIRTUAL_ROW_HANDLE_KEY;
+            var target = param.target, first = param.first, last = param.last, deltaX = param.deltaX, deltaY = param.deltaY;
+            var meta = target;
+            var data = meta.data;
+            var isRow = data.type === _TableRowColumnResize.VIRTUAL_ROW_HANDLE_KEY;
             if (first) {
                 _this.dragging = true;
             }
-            var data = bound.data;
             var prevOffset = isRow ? _this.dragOffsetY : _this.dragOffsetX;
             if (!last) {
                 var size = isRow ? data.row.height : data.column.width;
                 var min = isRow ? size - _TableRowColumnResize.MIN_ROW_HEIGHT : size - _TableRowColumnResize.MIN_COLUMN_WIDTH;
                 var max = isRow ? _TableRowColumnResize.MAX_ROW_HEIGHT - size : _TableRowColumnResize.MAX_COLUMN_WIDTH - size;
-                var movePos = isRow ? delta[1] : delta[0];
+                var movePos = isRow ? deltaY : deltaX;
                 var curOffset = data.reverse ? clamp(prevOffset + movePos, -max, min) : clamp(prevOffset + movePos, -min, max);
                 if (isRow) {
                     _this.dragOffsetY = curOffset;
-                    _this.updateYTipLine(data.y + _this.dragOffsetY, bound);
+                    _this.updateYTipLine(data.y + _this.dragOffsetY, meta);
                 } else {
                     _this.dragOffsetX = curOffset;
-                    _this.updateXTipLine(data.x + _this.dragOffsetX, bound);
+                    _this.updateXTipLine(data.x + _this.dragOffsetX, meta);
                 }
             }
             if (last) {
@@ -100,37 +112,38 @@ import { _tableTriggerFilters, _triggerFilterList } from "../common.js";
         // 创建raf用于优化动画
         this.rafCaller = rafCaller();
         // 为virtualBound添加特定节点的过滤
-        var vbPreCheck = function(e) {
-            return _triggerFilterList(e.target, _tableTriggerFilters, _this.config.el);
+        var vbPreCheck = function(type, e) {
+            if (type !== TriggerType.active && type !== TriggerType.drag) return false;
+            return !_triggerFilterList(e.target, _tableTriggerFilters, _this.config.el);
         };
-        // 虚拟节点&事件绑定
-        this.virtualBound = new VirtualBound({
-            el: this.config.el,
-            hoverPreCheck: vbPreCheck,
-            dragPreCheck: vbPreCheck
+        this.trigger = createTrigger({
+            target: [],
+            container: this.config.el,
+            type: [
+                TriggerType.drag,
+                TriggerType.active,
+                TriggerType.move
+            ],
+            preCheck: vbPreCheck
         });
-        this.virtualBound.hover.on(this.hoverHandle);
-        this.virtualBound.drag.on(this.dragHandle);
+        this.trigger.event.on(this.triggerDispatch);
         this.context.viewEl.addEventListener("scroll", this.scrollHandle);
         // 选取过程中禁用
         this.table.event.selectStart.on(function() {
-            _this.virtualBound.enable = false;
+            _this.trigger.enable = false;
         });
         this.table.event.select.on(function() {
-            _this.virtualBound.enable = true;
+            _this.trigger.enable = true;
         });
     };
     _proto.rendered = function rendered() {
-        this.virtualBound.bounds = [];
+        this.trigger.clear();
         this.renderedDebounce();
     };
     _proto.beforeDestroy = function beforeDestroy() {
         if (this.rafClearFn) this.rafClearFn();
-        this.virtualBound.hover.empty();
-        this.virtualBound.click.empty();
-        this.virtualBound.drag.empty();
-        this.virtualBound.destroy();
-        this.virtualBound = null;
+        this.trigger.destroy();
+        this.trigger = null;
         this.context.viewEl.removeEventListener("scroll", this.scrollHandle);
         this.table.event.selectStart.empty();
         this.table.event.select.empty();
@@ -170,15 +183,17 @@ import { _tableTriggerFilters, _triggerFilterList } from "../common.js";
             var top = isRow ? wrapBound.top + _pos - bSize / 2 : wrapBound.top;
             var _obj;
             var b = {
-                left: left,
-                top: top,
-                height: isRow ? bSize : ctx.yHeaderHeight,
-                width: isRow ? ctx.xHeaderWidth : bSize,
+                target: {
+                    left: left,
+                    top: top,
+                    height: isRow ? bSize : ctx.yHeaderHeight,
+                    width: isRow ? ctx.xHeaderWidth : bSize
+                },
                 zIndex: i.isFixed ? 1 : 0,
-                type: isRow ? _TableRowColumnResize.VIRTUAL_ROW_HANDLE_KEY : _TableRowColumnResize.VIRTUAL_COLUMN_HANDLE_KEY,
-                cursor: "pointer",
-                hoverCursor: isRow ? "row-resize" : "col-resize",
-                data: (_obj = {}, _define_property(_obj, isRow ? "row" : "column", i), _define_property(_obj, isRow ? "y" : "x", _pos - 2), _define_property(_obj, "startPos", isEndFixed ? _pos : _pos - size), _define_property(_obj, "endPos", isEndFixed ? _pos + size : _pos), // 计算方向相反
+                cursor: isRow ? "row-resize" : "col-resize",
+                data: (_obj = {
+                    type: isRow ? _TableRowColumnResize.VIRTUAL_ROW_HANDLE_KEY : _TableRowColumnResize.VIRTUAL_COLUMN_HANDLE_KEY
+                }, _define_property(_obj, isRow ? "row" : "column", i), _define_property(_obj, isRow ? "y" : "x", _pos - 2), _define_property(_obj, "startPos", isEndFixed ? _pos : _pos - size), _define_property(_obj, "endPos", isEndFixed ? _pos + size : _pos), // 计算方向相反
                 _define_property(_obj, "reverse", isEndFixed), _obj)
             };
             bounds.push(b);
@@ -247,13 +262,13 @@ import { _tableTriggerFilters, _triggerFilterList } from "../common.js";
     };
     /** 隐藏xLine */ _proto.hideXTipLine = function hideXTipLine() {
         if (this.xLine.style.visibility === "hidden") return;
-        this.virtualBound.cursor = null;
+        // this.trigger.cursor = "";
         this.xLine.style.visibility = "hidden";
         this.sizeBlock.style.visibility = "hidden";
     };
     /** 隐藏yLine */ _proto.hideYTipLine = function hideYTipLine() {
         if (this.yLine.style.visibility === "hidden") return;
-        this.virtualBound.cursor = null;
+        // this.trigger.cursor = "";
         this.yLine.style.visibility = "hidden";
         this.sizeBlock.style.visibility = "hidden";
     };

@@ -21,5 +21,5 @@ export * from "./seed/index.js";
 export * from "./spin/index.js";
 export * from "./transition/index.js";
 export * from "./transition/index.js";
-export * from "./virtual-bound/index.js";
 export * from "./table-vanilla/index.js";
+export * from "./trigger/index.js";

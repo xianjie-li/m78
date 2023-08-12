@@ -105,7 +105,7 @@ export interface TableGetter {
     /** 根据行和列的key生成cell key */
     getCellKey(rowKey: TableKey, columnKey: TableKey): TableKey;
     /** 根据单元格key获取cell */
-    getCellByStrKey(key: string): TableCell;
+    getCellByStrKey(key: TableKey): TableCell;
     /** 获取临近的单元格 */
     getNearCell(arg: {
         /** 目标单元格 */

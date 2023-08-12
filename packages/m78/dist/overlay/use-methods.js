@@ -2,11 +2,12 @@ import _object_spread from "@swc/helpers/src/_object_spread.mjs";
 import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
 import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import { getScrollParent, isBoolean, isDom } from "@m78/utils";
-import { getRefDomOrDom, useFn, UseTriggerType } from "@m78/hooks";
+import { getRefDomOrDom, useFn } from "@m78/hooks";
 import throttle from "lodash/throttle.js";
 import debounce from "lodash/debounce.js";
 import { _arrowSpace, _calcAlignment, _defaultAlignment, _defaultProps, _flip, _getDirections, _getMinClampBound, _preventOverflow, isBound } from "./common.js";
 import { OverlayUpdateType } from "./types.js";
+import { TriggerType } from "../trigger/index.js";
 export function _useMethods(ctx) {
     var getCurrentBoundType = /** 判断当前的bound类型, 返回null表示无任何可用配置 */ function getCurrentBoundType() {
         if (self.lastXY) return OverlayUpdateType.xy;
@@ -183,7 +184,7 @@ export function _useMethods(ctx) {
         self.lastTarget = target;
         update(isBoolean(immediate) ? immediate : notPrev);
     });
-    /** 从children获取的节点中同步state.childrenEl */ var updateChildrenEl = useFn(function() {
+    /** 从children获取的dom来更新target */ var updateChildrenEl = useFn(function() {
         if (props.childrenAsTarget && trigger.el) {
             updateTarget(trigger.el);
         }
@@ -218,28 +219,31 @@ export function _useMethods(ctx) {
     // 多触发点的特殊handle
     var onTriggerMultiple = useFn(function(e) {
         clearTimeout(self.triggerMultipleTimer);
+        if (e.type === TriggerType.move) {
+            ctx.triggerHandle(e);
+            return;
+        }
         var isOpen = true;
-        if (e.type === UseTriggerType.click) {
+        if (e.type === TriggerType.click) {
             isOpen = !open;
         }
-        if (e.type === UseTriggerType.focus || e.type === UseTriggerType.active) {
-            isOpen = e.type === UseTriggerType.focus ? e.focus : e.active;
+        if (e.type === TriggerType.focus || e.type === TriggerType.active) {
+            isOpen = e.type === TriggerType.focus ? e.focus : e.active;
         }
-        if (e.type === UseTriggerType.contextMenu) {
+        if (e.type === TriggerType.contextMenu) {
             isOpen = true;
         }
-        if (isOpen && !self.lastTriggerMultipleOpen) {
-            self.lastTriggerMultipleOpen = isOpen;
-        }
-        self.triggerMultipleTimer = setTimeout(function() {
-            var _isOpen = !!self.lastTriggerMultipleOpen;
-            if (_isOpen) {
+        if (isOpen) {
+            self.lastTriggerTarget = e.data;
+            // 需要在clickAway之后出发
+            self.triggerMultipleTimer = setTimeout(function() {
                 updateTarget(e.target, true);
                 ctx.triggerHandle(e);
-            } else if (self.lastTarget === e.target) {
-                ctx.triggerHandle(e);
-            }
-        }, 30);
+            }, 10);
+        } else if (self.lastTriggerTarget === e.data) {
+            self.lastTriggerTarget = undefined;
+            ctx.triggerHandle(e);
+        }
     });
     /** 拖动处理 */ var onDragHandle = useFn(function(e) {
         if (props.direction) {
@@ -255,7 +259,7 @@ export function _useMethods(ctx) {
         ];
         return self.lastPosition;
     });
-    /** 获取拖动的初始坐标 */ var getDragBound = useFn(function() {
+    /** 获取拖动的限制边界 */ var getDragBound = useFn(function() {
         var ref;
         // 拖动时containerRef必然已挂载
         var bound = (ref = containerRef.current) === null || ref === void 0 ? void 0 : ref.getBoundingClientRect();

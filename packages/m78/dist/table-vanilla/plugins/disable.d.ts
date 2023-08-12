@@ -37,7 +37,7 @@ export interface TableDisable {
     /** 指定列是否禁用 */
     isDisabledColumn(key: TableKey): boolean;
     /** 指定单元格是否禁用 */
-    isDisabledCell(key: string): boolean;
+    isDisabledCell(key: TableKey): boolean;
     /** 获取禁用的行 */
     getDisabledRows(): TableRow[];
     /** 获取禁用的列 */

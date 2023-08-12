@@ -14,7 +14,7 @@ export function _implSchema(ctx) {
             schema.validator = _to_consumable_array(ensureArray(schema.validator));
         }
     };
-    var instance = ctx.instance, config = ctx.config;
+    var instance = ctx.instance;
     ctx.getFormatterSchemas = function() {
         // 所有invalid项的name
         var invalidNames = [];

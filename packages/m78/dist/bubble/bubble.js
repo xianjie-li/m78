@@ -9,10 +9,10 @@ import { Size, statusIconMap, Z_INDEX_MESSAGE } from "../common/index.js";
 import clsx from "clsx";
 import { Button, ButtonColor } from "../button/index.js";
 import { Row } from "../layout/index.js";
-import { UseTriggerType } from "@m78/hooks";
 import { isBoolean, isFunction, omit } from "@m78/utils";
 import { BubbleType, omitBubbleOverlayProps } from "./types.js";
 import { COMMON_NS, Translation } from "../i18n/index.js";
+import { TriggerType } from "../trigger/index.js";
 var defaultProps = {
     type: BubbleType.tooltip,
     childrenAsTarget: true,
@@ -147,7 +147,7 @@ var _Bubble = function(props) {
     ]), 2), mount = ref[0], unmount = ref[1];
     // 在不同类型下使用不同的triggerType默认值
     var triggerType = useMemo(function() {
-        var t = type === BubbleType.tooltip ? UseTriggerType.active : UseTriggerType.click;
+        var t = type === BubbleType.tooltip ? TriggerType.active : TriggerType.click;
         if (props.triggerType !== undefined) t = props.triggerType;
         return t;
     }, [

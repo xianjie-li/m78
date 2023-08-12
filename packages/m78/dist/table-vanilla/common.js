@@ -1,6 +1,7 @@
 import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
 import { isNumber } from "@m78/utils";
+import { removeNode } from "../common/index.js";
 export var _prefix = "m78-table";
 /** 用于在config.el上存储当前实例 */ export var _privateInstanceKey = "__M78TableInstance";
 /** 用于在domEl上挂载是否为其是否为内部创建的信息 */ export var _privateScrollerDomKey = "__M78PrivateScrollerDom";
@@ -13,7 +14,9 @@ export var _prefix = "m78-table";
     removeRow: "remove row",
     setValue: "update value",
     moveRow: "move row",
-    moveColumn: "move column"
+    moveColumn: "move column",
+    editable: "editable",
+    editableAndRequired: "editable and required"
 };
 /** 解析rowKey##columnKey格式的字符串为[rowKey, columnKey], 数组长度为2表示解析正常 */ export function _getCellKeysByStr(s) {
     if (!s) return [];
@@ -91,6 +94,29 @@ export var _prefix = "m78-table";
         cur = parent;
     }
     return false;
+}
+/** 用于需要根据指定list同步增加或减少dom列表的场景 */ export function _syncListNode(arg) {
+    var wrapNode = arg.wrapNode, list = arg.list, nodeList = arg.nodeList, createAction = arg.createAction;
+    if (list.length > nodeList.length) {
+        // 节点不够则创建
+        var diff = list.length - nodeList.length;
+        for(var i = 0; i < diff; i++){
+            var node = document.createElement("div");
+            createAction === null || createAction === void 0 ? void 0 : createAction(node);
+            wrapNode.appendChild(node);
+            nodeList.push(node);
+        }
+    } else {
+        var _nodeList;
+        // 移除多余节点
+        var redundant = nodeList.slice(list.length);
+        redundant.forEach(function(node) {
+            return removeNode(node);
+        });
+        var newNodes = nodeList.slice(0, list.length);
+        nodeList.length = 0;
+        (_nodeList = nodeList).push.apply(_nodeList, _to_consumable_array(newNodes));
+    }
 }
 /** 检测传入的事件是否是touch事件 */ export function isTouch(e) {
     return e.type.startsWith("touch") || e.pointerType === "touch";

@@ -1,6 +1,7 @@
 import { TablePlugin } from "../plugin.js";
-import { TableCell } from "../types/items.js";
+import { TableCell, TableCellWithDom } from "../types/items.js";
 import { KeyboardMultipleHelper } from "@m78/utils";
+import { _TableFormPlugin } from "./form.js";
 interface TableInteractiveItem {
     cell: TableCell;
     node: HTMLElement;
@@ -9,8 +10,7 @@ interface TableInteractiveItem {
     done(isSubmit?: boolean): void;
 }
 /**
- * 表格的编辑/交互功能, 通常用于实现单元格编辑, 提供的功能仅能满足简单的编辑需求, 通常需要基于使用的框架如react加上本插件提供的核心功能
- * 来进行扩展实现, 添加诸如验证, 编辑反馈和更丰富的表单控件支持
+ * 提供最基础的单元格双击交互功能, 通常用于搭配form插件实现单元格编辑和验证
  *
  * interactive 并非一定表示单元格编辑, 也可以纯展示的其他交互组件
  * */
@@ -21,6 +21,7 @@ export declare class _TableInteractiveCorePlugin extends TablePlugin {
     doubleClickTimer: any;
     lastDownTime: number;
     multipleHelper: KeyboardMultipleHelper;
+    form: _TableFormPlugin;
     mounted(): void;
     beforeDestroy(): void;
     rendering(): void;
@@ -44,7 +45,7 @@ export declare type TableInteractiveDone = (isSubmit: boolean) => void | Promise
 /** 交互组件渲染参数 */
 export interface TableInteractiveRenderArg {
     /** 触发交互的单元格 */
-    cell: TableCell;
+    cell: TableCellWithDom;
     /** 用于挂载交互组件 */
     node: HTMLElement;
     /** 表单控件应显示的默认值, 通常与单元格当前值一致, 若用户在选中单元格上直接键入, 则会替换为用户键入的第一个常规字符([A-Za-z0-9_]) */

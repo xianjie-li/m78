@@ -5,6 +5,7 @@ import { TablePersistenceConfig } from "../types/config.js";
 import { TableKey } from "../types/base-type.js";
 import { TableCell, TableColumn, TableRow } from "../types/items.js";
 import { _TableSortColumnPlugin } from "./sort-column.js";
+import { _TableFormPlugin } from "./form.js";
 /**
  * 所有config/data变更相关的操作, 变异操作应统一使用此处提供的api, 方便统一处理, 自动生成和处理历史等
  *
@@ -14,6 +15,7 @@ export declare class _TableMutationPlugin extends TablePlugin {
     /** 每一次配置变更将变更的key记录, 通过记录来判断是否有变更项 */
     private changedConfigKeys;
     sortColumn: _TableSortColumnPlugin;
+    form: _TableFormPlugin;
     init(): void;
     beforeInit(): void;
     reload(opt?: TableReloadOptions): void;
@@ -29,7 +31,10 @@ export declare class _TableMutationPlugin extends TablePlugin {
     removeRow: TableMutation["removeRow"];
     moveRow: TableMutation["moveRow"];
     getValue: TableMutation["getValue"];
+    private changedRows;
     setValue: TableMutation["setValue"];
+    /** 克隆并重新设置row的data, 防止变更原数据, 主要用于延迟clone, 可以在数据量较大时提升初始化速度  */
+    private cloneAndSetRowData;
     /** 处理setValue/getValue的不同参数, 并返回cell和value */
     private valueActionGetter;
     private moveColumn;

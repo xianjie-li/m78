@@ -7,6 +7,7 @@ import { _TablePrivateProperty, TableColumnFixed } from "../types/base-type.js";
 import { TableReloadLevel } from "./life.js";
 import { removeNode } from "../../common/index.js";
 import { _TableGetterPlugin } from "./getter.js";
+import { _syncListNode } from "../common.js";
 // vb改为统一实例, 在context存储
 /** 表格列隐藏 */ export var _TableHidePlugin = /*#__PURE__*/ function(TablePlugin) {
     "use strict";
@@ -83,24 +84,15 @@ import { _TableGetterPlugin } from "./getter.js";
     /** 渲染标记 */ _proto.renderNodes = function renderNodes() {
         var _this = this;
         var hideColumns = this.context.persistenceConfig.hideColumns || [];
-        if (hideColumns.length > this.expandNodes.length) {
-            // 节点不够则创建
-            var diff = hideColumns.length - this.expandNodes.length;
-            for(var i = 0; i < diff; i++){
-                var node = document.createElement("div");
+        _syncListNode({
+            wrapNode: this.wrapNodes,
+            list: hideColumns,
+            nodeList: this.expandNodes,
+            createAction: function(node) {
                 node.className = "m78-table_hide-expand __default";
                 node.innerHTML = "⬌";
-                this.wrapNodes.appendChild(node);
-                this.expandNodes.push(node);
             }
-        } else {
-            // 移除多余节点
-            var redundant = this.expandNodes.slice(hideColumns.length);
-            redundant.forEach(function(node) {
-                return removeNode(node);
-            });
-            this.expandNodes = this.expandNodes.slice(0, hideColumns.length);
-        }
+        });
         if (!hideColumns.length) return;
         var lastRowKey = this.context.yHeaderKeys[this.context.yHeaderKeys.length - 1];
         if (!lastRowKey) return;

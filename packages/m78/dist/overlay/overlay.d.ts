@@ -14,7 +14,7 @@ export declare namespace _Overlay {
         lockScroll: boolean;
         arrowSize: number[];
         offset: number;
-        triggerType: import("@m78/hooks").UseTriggerType;
+        triggerType: import("../trigger/types.js").TriggerType;
         autoFocus: boolean;
     };
 }

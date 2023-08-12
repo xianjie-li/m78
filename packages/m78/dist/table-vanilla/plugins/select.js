@@ -46,7 +46,7 @@ import { TableReloadLevel } from "./life.js";
             if (interrupt) return;
             var resize = _this.getPlugin(_TableRowColumnResize);
             // 防止和拖拽行列冲突
-            if (resize.dragging || resize.virtualBound.hasBound(e.xy)) return;
+            if (resize.dragging || resize.trigger.hasTargetByXY(e.xy[0], e.xy[1])) return;
             // 包含前置点时处理shift按下
             _this.isShift = e.shiftKey && !!_this.lastPoint;
             // 合并还是覆盖, 控制键按下时为覆盖

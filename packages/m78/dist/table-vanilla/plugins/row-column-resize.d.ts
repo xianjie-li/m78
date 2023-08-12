@@ -1,8 +1,8 @@
 /// <reference types="lodash" />
 import { TablePlugin } from "../plugin.js";
 import { RafFunction } from "@m78/utils";
-import { VirtualBound, VirtualBoundDragListener, VirtualBoundHoverListener, VirtualBoundItem } from "../../virtual-bound/index.js";
 import { TableColumn, TableItems, TableRow } from "../types/items.js";
+import { TriggerInstance, TriggerEvent, TriggerTargetMeta } from "../../trigger/index.js";
 /** 列/行重置大小 */
 export declare class _TableRowColumnResize extends TablePlugin {
     /** 提示线 */
@@ -20,14 +20,14 @@ export declare class _TableRowColumnResize extends TablePlugin {
     /** 最小/大行尺寸 */
     static MIN_ROW_HEIGHT: number;
     static MAX_ROW_HEIGHT: number;
-    /** 虚拟节点 */
-    virtualBound: VirtualBound;
+    /** 虚拟节点触发事件 */
+    trigger: TriggerInstance;
     rafCaller: RafFunction;
     rafClearFn: () => void;
     /** 拖动中 */
     dragging: boolean;
     /** 是否触发了hover */
-    hovering: boolean;
+    activating: boolean;
     /** 轴偏移 */
     dragOffsetX: number;
     dragOffsetY: number;
@@ -37,18 +37,19 @@ export declare class _TableRowColumnResize extends TablePlugin {
     /** 每次render后根据ctx.lastViewportItems更新虚拟拖拽节点 */
     renderedDebounce: import("lodash").DebouncedFunc<() => void>;
     /** 生成虚拟节点 */
-    createBound(wrapBound: DOMRect, last: TableItems, isRow: boolean): VirtualBoundItem[];
-    hoverHandle: VirtualBoundHoverListener;
-    dragHandle: VirtualBoundDragListener;
+    createBound(wrapBound: DOMRect, last: TableItems, isRow: boolean): TriggerTargetMeta[];
+    triggerDispatch: (e: TriggerEvent) => void;
+    hoverHandle: ({ target, active }: TriggerEvent) => void;
+    dragHandle: ({ target, first, last, deltaX, deltaY }: TriggerEvent) => void;
     scrollHandle: () => void;
     /** 更新column配置 */
     updateColumnSize(column: TableColumn, diff: number): void;
     /** 更新row配置 */
     updateRowSize(row: TableRow, diff: number): void;
     /** 显示并更新xLine位置 */
-    updateXTipLine(x: number, bound: VirtualBoundItem): void;
+    updateXTipLine(x: number, bound: TriggerTargetMeta): void;
     /** 显示并更新yLine位置 */
-    updateYTipLine(y: number, bound: VirtualBoundItem): void;
+    updateYTipLine(y: number, bound: TriggerTargetMeta): void;
     /** 隐藏xLine */
     hideXTipLine(): void;
     /** 隐藏yLine */

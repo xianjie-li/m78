@@ -1,12 +1,13 @@
 import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import { useRef } from "react";
-import { useFn, useFormState, useIsUnmountState, useMeasure, useSelf, useSetState, useTrigger } from "@m78/hooks";
+import { useFn, useFormState, useIsUnmountState, useMeasure, useSelf, useSetState } from "@m78/hooks";
 import { useSpring } from "react-spring";
 import { _useMethods as useMethods } from "./use-methods.js";
 import { _useLifeCycle as useLifeCycle } from "./use-life-cycle.js";
 import { _useRender as useRender } from "./use-render.js";
 import { _defaultProps, _onTrigger, overlayTransitionConfig, useOverlaysClickAway, useOverlaysMask } from "./common.js";
 import { isFunction } from "@m78/utils";
+import { useTrigger } from "../trigger/index.js";
 /**
  * overlay抽象了所有弹层类组件(modal, drawer, popper等需要的基础能力), 使实现这些组件变得非常的简单
  * */ export function _Overlay(p) {
@@ -61,15 +62,6 @@ import { isFunction } from "@m78/utils";
     };
     var children = props.children;
     var element = isFunction(children) ? children(customRenderMeta) : children;
-    /** 触发器回调 */ var triggerHandle = useFn(function(e) {
-        return _onTrigger(e, setOpen, self, props);
-    });
-    /** 触发器 */ var trigger = useTrigger({
-        element: element,
-        type: props.triggerType,
-        onTrigger: triggerHandle,
-        innerRef: props.triggerNodeRef
-    });
     /** 尺寸变更时修复位置 */ var ref4 = _sliced_to_array(useMeasure(containerRef, 200), 1), measure = ref4[0];
     var ctx = {
         open: open && !props.disabled,
@@ -83,17 +75,27 @@ import { isFunction } from "@m78/utils";
         spApi: spApi,
         arrowSp: arrowSp,
         arrowSpApi: arrowSpApi,
-        trigger: trigger,
         overlaysClickAway: overlaysClickAway,
         overlaysMask: overlaysMask,
         measure: measure,
-        triggerHandle: triggerHandle,
         isUnmount: useIsUnmountState(),
-        customRenderMeta: customRenderMeta
+        customRenderMeta: customRenderMeta,
+        trigger: null,
+        triggerHandle: null,
+        methods: null
     };
-    var methods = useMethods(ctx);
-    var lifeCycle = useLifeCycle(ctx, methods);
-    return useRender(ctx, methods, lifeCycle);
+    /** 触发器回调 */ ctx.triggerHandle = useFn(function(e) {
+        return _onTrigger(e, ctx);
+    });
+    /** 触发器 */ ctx.trigger = useTrigger({
+        element: element,
+        type: props.triggerType,
+        onTrigger: ctx.triggerHandle,
+        innerRef: props.triggerNodeRef
+    });
+    ctx.methods = useMethods(ctx);
+    var lifeCycle = useLifeCycle(ctx);
+    return useRender(ctx, lifeCycle);
 }
 _Overlay.displayName = "Overlay";
 _Overlay.defaultProps = _defaultProps;

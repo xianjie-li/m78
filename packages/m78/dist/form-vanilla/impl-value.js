@@ -49,7 +49,8 @@ export function _implValue(ctx) {
             instance.events.update.emit(name, true);
         }
         if (config.autoVerify) {
-            ctx.debounceVerify(name);
+            ctx.isValueChangeTrigger = true;
+            instance.debounceVerify(name);
         }
     };
     instance.getDefaultValues = function() {

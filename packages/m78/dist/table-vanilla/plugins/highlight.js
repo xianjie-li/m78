@@ -111,17 +111,17 @@ import { _TablePrivateProperty } from "../types/base-type.js";
         list.forEach(function(it) {
             var trigger = function(item) {
                 if (!item.dom) return;
-                removeCls(item.dom, "m78-table_highlight");
+                removeCls(item.dom, "m78-highlight-bg");
                 raf(function() {
                     if (item.dom) {
                         var prevTimer = getNamePathValue(item.dom, _TablePrivateProperty.timer);
                         if (prevTimer !== undefined) {
                             clearTimeout(prevTimer);
                         }
-                        addCls(item.dom, "m78-table_highlight");
+                        addCls(item.dom, "m78-highlight-bg");
                         var timer = setTimeout(function() {
                             if (item.dom) {
-                                removeCls(item.dom, "m78-table_highlight");
+                                removeCls(item.dom, "m78-highlight-bg");
                                 setNamePathValue(item.dom, _TablePrivateProperty.timer, null);
                             }
                         }, 2000);

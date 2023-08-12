@@ -7,11 +7,12 @@ import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
 import _create_super from "@swc/helpers/src/_create_super.mjs";
 import { TablePlugin } from "../plugin.js";
-import { createRandString, deepClone, deleteNamePathValue, ensureArray, getNamePathValue, isArray, isNumber, isObject, recursionShakeEmpty, setNamePathValue, throwError, uniq } from "@m78/utils";
+import { createRandString, deepClone, deleteNamePathValue, ensureArray, getNamePathValue, isArray, isNumber, isObject, isString, recursionShakeEmpty, setNamePathValue, throwError, uniq } from "@m78/utils";
 import { TableReloadLevel } from "./life.js";
 import { _TablePrivateProperty, TableColumnFixed, TableRowFixed } from "../types/base-type.js";
 import { _getCellKeysByStr, _prefix } from "../common.js";
 import { _TableSortColumnPlugin } from "./sort-column.js";
+import { _TableFormPlugin } from "./form.js";
 /**
  * 所有config/data变更相关的操作, 变异操作应统一使用此处提供的api, 方便统一处理, 自动生成和处理历史等
  *
@@ -254,10 +255,21 @@ import { _TableSortColumnPlugin } from "./sort-column.js";
             if (!cell) return;
             return getNamePathValue(cell.row.data, cell.column.config.originalKey);
         };
+        // 记录变更过的行
+        _this.changedRows = {};
         _this.setValue = function(a, b, c) {
+            // eslint-disable-next-line prefer-const
             var ref = _sliced_to_array(_this.valueActionGetter(a, b, c), 2), cell = ref[0], value = ref[1];
             if (!cell) return;
+            if (!_this.form.validCheck(cell)) return;
+            if (isString(value)) {
+                value = value.trim();
+            }
             var row = cell.row, column = cell.column;
+            // 行未变更过, 将其完全clone, 避免更改原数据
+            if (!_this.changedRows[row.key]) {
+                _this.cloneAndSetRowData(row);
+            }
             var oldValue = deepClone(getNamePathValue(row.data, column.config.originalKey));
             _this.table.history.redo({
                 redo: function() {
@@ -323,6 +335,7 @@ import { _TableSortColumnPlugin } from "./sort-column.js";
     }
     var _proto = _TableMutationPlugin.prototype;
     _proto.init = function init() {
+        this.form = this.getPlugin(_TableFormPlugin);
         this.sortColumn = this.getPlugin(_TableSortColumnPlugin);
     };
     _proto.beforeInit = function beforeInit() {
@@ -343,6 +356,12 @@ import { _TableSortColumnPlugin } from "./sort-column.js";
         if (opt.level === TableReloadLevel.full) {
             this.changedConfigKeys = [];
         }
+    };
+    /** 克隆并重新设置row的data, 防止变更原数据, 主要用于延迟clone, 可以在数据量较大时提升初始化速度  */ _proto.cloneAndSetRowData = function cloneAndSetRowData(row) {
+        var cloneData = deepClone(row.data);
+        var ind = this.context.dataKeyIndexMap[row.key];
+        row.data = cloneData;
+        this.context.data[ind] = cloneData;
     };
     /** 处理setValue/getValue的不同参数, 并返回cell和value */ _proto.valueActionGetter = function valueActionGetter(a, b, c) {
         var cell = null;

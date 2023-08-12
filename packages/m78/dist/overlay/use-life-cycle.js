@@ -1,11 +1,12 @@
 import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
-import { useClickAway, useDestroy, useLockBodyScroll, UseTriggerType, useUpdateEffect } from "@m78/hooks";
+import { useClickAway, useDestroy, useLockBodyScroll, useUpdateEffect } from "@m78/hooks";
 import { useEffect, useImperativeHandle, useMemo } from "react";
 import { ensureArray, isDom } from "@m78/utils";
 import { isBound } from "./common.js";
 import { _useTypeProcess } from "./use-type-process.js";
-export function _useLifeCycle(ctx, methods) {
-    var props = ctx.props, setOpen = ctx.setOpen, open = ctx.open, self = ctx.self, trigger = ctx.trigger, containerRef = ctx.containerRef, overlaysClickAway = ctx.overlaysClickAway, state = ctx.state, measure = ctx.measure, isUnmount = ctx.isUnmount;
+import { TriggerType } from "../trigger/index.js";
+export function _useLifeCycle(ctx) {
+    var props = ctx.props, setOpen = ctx.setOpen, open = ctx.open, self = ctx.self, trigger = ctx.trigger, containerRef = ctx.containerRef, overlaysClickAway = ctx.overlaysClickAway, state = ctx.state, measure = ctx.measure, isUnmount = ctx.isUnmount, methods = ctx.methods;
     // 对外暴露的实例
     var instance = useMemo(function() {
         return {
@@ -65,7 +66,7 @@ export function _useLifeCycle(ctx, methods) {
         onTrigger: function() {
             if (!open || !props.clickAwayClosable) return;
             if (props.clickAwayQueue && !overlaysClickAway.isLast) return;
-            setTimeout(function() {
+            self.clickAwayCloseTimer = setTimeout(function() {
                 !isUnmount() && setOpen(false);
             });
         }
@@ -77,7 +78,7 @@ export function _useLifeCycle(ctx, methods) {
         // 每次出现时将焦点移入组件
         if (props.autoFocus && open && containerRef.current) {
             // 非focus模式时为容器设置focus
-            if (!ensureArray(props.triggerType).includes(UseTriggerType.focus)) {
+            if (!ensureArray(props.triggerType).includes(TriggerType.focus)) {
                 containerRef.current.focus();
             }
         }
@@ -132,6 +133,7 @@ export function _useLifeCycle(ctx, methods) {
     /** 清理 */ useDestroy(function() {
         clearTimeout(self.triggerMultipleTimer);
         clearTimeout(self.shouldCloseTimer);
+        clearTimeout(self.clickAwayCloseTimer);
     });
     return {
         onContentMount: onContentMount,

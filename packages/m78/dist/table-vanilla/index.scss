@@ -264,11 +264,6 @@
     }
   }
 
-  // ## 高亮
-  &_highlight {
-    animation: m78-table-highlight 2s;
-  }
-
   // ## 拖拽
   &_drag-area-x, &_drag-area-y {
     position: absolute;
@@ -314,14 +309,60 @@
     width: 0;
   }
 
-  // ## 编辑
+  // ## 编辑 & 表单
   &_edit-attach {
     position: absolute;
     background-color: var(--m78-component-bg);
     border: 2px solid var(--m78-color);;
   }
 
-  // ## 其他
+  &_form-error-feedback {
+    position: absolute;
+    border: 1px dashed var(--m78-color-error);
+    pointer-events: none;
+    border-radius: 2px;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 2px;
+      right: 1px;
+      border: 3px solid transparent;
+      border-top-color: var(--m78-color-error);
+      border-right-color: var(--m78-color-error);
+    }
+  }
+
+  &_form-changed-mark {
+    pointer-events: none;
+    position: absolute;
+    background-color: var(--m78-color);
+    width: 3px;
+  }
+
+  &_form-cell-changed-mark {
+    pointer-events: none;
+    position: absolute;
+    border: 3px solid transparent;
+    border-top-color: var(--m78-color);
+    border-right-color: var(--m78-color);
+  }
+
+  &_form-edit-status {
+    color: var(--m78-color-second);
+    position: absolute;
+    border: 3px solid transparent;
+    border-left-color: currentColor;
+    border-bottom-color: currentColor;
+  }
+
+  &_form-invalid {
+    position: absolute;
+    background: var(--m78-color-divider);
+    cursor: not-allowed;
+  }
+
+    // ## 其他
 
   &_corner-btn {
     position: absolute;
@@ -330,12 +371,5 @@
     border-top-color: transparent;
     right: 2px;
     bottom: 2px;
-  }
-}
-
-
-@keyframes m78-table-highlight {
-  10% {
-    background-color: var(--m78-color-2);
   }
 }

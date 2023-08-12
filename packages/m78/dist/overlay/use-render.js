@@ -14,7 +14,7 @@ import { _Arrow as Arrow } from "./arrow.js";
 import { _getArrowBasePosition, dragContext, overlayTransitionConfig } from "./common.js";
 import { _MountTrigger as MountTrigger } from "./mount-trigger.js";
 var AnimatedArrow = animated(Arrow);
-export function _useRender(ctx, methods, lifeCycle) {
+export function _useRender(ctx, lifeCycle) {
     var renderArrow = function renderArrow() {
         var ref;
         if (!methods.isArrowEnable()) return false;
@@ -112,6 +112,6 @@ export function _useRender(ctx, methods, lifeCycle) {
             ]
         });
     };
-    var props = ctx.props, state = ctx.state, arrowSp = ctx.arrowSp, open = ctx.open, containerRef = ctx.containerRef, overlaysMask = ctx.overlaysMask, trigger = ctx.trigger, sp = ctx.sp;
+    var props = ctx.props, state = ctx.state, arrowSp = ctx.arrowSp, open = ctx.open, containerRef = ctx.containerRef, overlaysMask = ctx.overlaysMask, trigger = ctx.trigger, sp = ctx.sp, methods = ctx.methods;
     return render();
 }

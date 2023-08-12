@@ -6,9 +6,9 @@ import _create_super from "@swc/helpers/src/_create_super.mjs";
 import { TablePlugin } from "../plugin.js";
 import { createKeyboardHelpersBatch, isFunction, isPromiseLike, isTruthyOrZero, setNamePathValue } from "@m78/utils";
 import { removeNode } from "../../common/index.js";
+import { _TableFormPlugin } from "./form.js";
 /**
- * 表格的编辑/交互功能, 通常用于实现单元格编辑, 提供的功能仅能满足简单的编辑需求, 通常需要基于使用的框架如react加上本插件提供的核心功能
- * 来进行扩展实现, 添加诸如验证, 编辑反馈和更丰富的表单控件支持
+ * 提供最基础的单元格双击交互功能, 通常用于搭配form插件实现单元格编辑和验证
  *
  * interactive 并非一定表示单元格编辑, 也可以纯展示的其他交互组件
  * */ export var _TableInteractiveCorePlugin = /*#__PURE__*/ function(TablePlugin) {
@@ -45,6 +45,7 @@ import { removeNode } from "../../common/index.js";
         };
         /** 使一个单元格进入交互状态, 可通过defaultValue设置交互后的起始默认值, 默认为当前单元格value */ _this.interactive = function(cell, defaultValue) {
             if (!_this.isInteractive(cell)) return;
+            if (!_this.form.validCheck(cell)) return;
             var attachNode = _this.createAttachNode();
             // eslint-disable-next-line prefer-const
             var done;
@@ -59,6 +60,7 @@ import { removeNode } from "../../common/index.js";
                     if (ind !== -1) {
                         _this.items.splice(ind, 1);
                     }
+                    _this.table.event.interactiveChange.emit(cell, false, isSubmit);
                     removeNode(attachNode);
                 };
                 if (isPromiseLike(ret)) {
@@ -82,6 +84,7 @@ import { removeNode } from "../../common/index.js";
             ]);
             _this.table.locate(cell.key);
             _this.updateNode();
+            _this.table.event.interactiveChange.emit(cell, true, false);
         };
         _this.onTabDown = function() {
             var last = _this.items[_this.items.length - 1];
@@ -90,7 +93,9 @@ import { removeNode } from "../../common/index.js";
                 cell: last.cell,
                 filter: function(cell) {
                     if (cell.column.isHeader || cell.row.isHeader) return false;
-                    return _this.isInteractive(cell);
+                    if (!_this.isInteractive(cell)) return false;
+                    if (!_this.form.validCheck(cell)) return false;
+                    return true;
                 }
             });
             if (next) {
@@ -117,6 +122,7 @@ import { removeNode } from "../../common/index.js";
         this.initDom();
         this.table.event.click.on(this.onClick);
         this.multipleHelper = createKeyboardHelpersBatch(this.getKeydownOptions());
+        this.form = this.getPlugin(_TableFormPlugin);
     };
     _proto.beforeDestroy = function beforeDestroy() {
         this.table.event.click.off(this.onClick);

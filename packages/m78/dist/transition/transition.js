@@ -4,6 +4,7 @@ import _object_without_properties from "@swc/helpers/src/_object_without_propert
 import { jsx as _jsx } from "react/jsx-runtime";
 import React from "react";
 import { config } from "react-spring";
+import { TransitionType } from "./types.js";
 import { _TransitionBase as TransitionBase } from "./transition-base.js";
 /* !这里的类型需要与./type.ts中的TransitionTypes同步 */ var transitionConfigs = {
     fade: {
@@ -74,6 +75,13 @@ import { _TransitionBase as TransitionBase } from "./transition-base.js";
             transform: "scale3d(1, 1, 1)"
         },
         config: _object_spread({}, config.wobbly)
+    },
+    none: {
+        from: {},
+        to: {},
+        config: {
+            skipFade: true
+        }
     }
 };
 export var _Transition = function(_param) {
@@ -92,7 +100,8 @@ export var _Transition = function(_param) {
     return /* 原样传入props，config与动画配置中的进行合并 */ /*#__PURE__*/ _jsx(TransitionBase, _object_spread_props(_object_spread({}, props), {
         // config={{ ...config, ...props.config }}
         springProps: _object_spread({
-            config: _config
+            config: _config,
+            immediate: type === TransitionType.none
         }, props.springProps),
         from: from,
         to: to,

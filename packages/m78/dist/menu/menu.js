@@ -6,12 +6,14 @@ import { jsx as _jsx } from "react/jsx-runtime";
 import React, { useEffect, useImperativeHandle, useRef } from "react";
 import { DEFAULT_CHILDREN_KEY, DEFAULT_LABEL_KEY, DEFAULT_VALUE_KEY, getChildrenByDataSource, getLabelByDataSource, getValueByDataSource, Size, Z_INDEX_MESSAGE } from "../common/index.js";
 import { Overlay, OverlayDirection } from "../overlay/index.js";
-import { Trigger, useClickAway, useFn, useSelect, useSelf, useSetState, UseTriggerType } from "@m78/hooks";
+import { useClickAway, useFn, useSelect, useSelf, useSetState } from "@m78/hooks";
 import { Lay } from "../lay/index.js";
 import { isArray, isFunction, isMobileDevice, isTruthyOrZero, omit } from "@m78/utils";
 import { _getOptionAllValues } from "./common.js";
 import { useKeyboardHandle } from "./use-keyboard-handle.js";
 import clsx from "clsx";
+import { Trigger, TriggerType } from "../trigger/index.js";
+import { TransitionType } from "../transition/index.js";
 var defaultProps = {
     direction: OverlayDirection.bottomStart
 };
@@ -36,7 +38,7 @@ export var _Menu = function(props) {
     var ref = _sliced_to_array(useSetState({
         xy: undefined,
         current: null,
-        subMenuTriggerType: UseTriggerType.active
+        subMenuTriggerType: TriggerType.active
     }), 2), state = ref[0], setState = ref[1];
     var overlayRef = useRef(null);
     useImperativeHandle(props.instanceRef, function() {
@@ -98,7 +100,7 @@ export var _Menu = function(props) {
     var onContextTrigger = useFn(function(e) {
         var ref;
         (ref = props.onTrigger) === null || ref === void 0 ? void 0 : ref.call(props, e);
-        if (e.type === UseTriggerType.contextMenu) {
+        if (e.type === TriggerType.contextMenu) {
             var ref1;
             (ref1 = overlayRef.current) === null || ref1 === void 0 ? void 0 : ref1.updateXY([
                 e.x,
@@ -120,7 +122,7 @@ export var _Menu = function(props) {
     /** 如果是移动设备(不精确检测), 子菜单触发方式改为click */ useEffect(function() {
         if (isMobileDevice()) {
             setState({
-                subMenuTriggerType: UseTriggerType.click
+                subMenuTriggerType: TriggerType.click
             });
         }
     }, []);
@@ -158,6 +160,7 @@ export var _Menu = function(props) {
                     }),
                     direction: OverlayDirection.rightStart,
                     triggerType: state.subMenuTriggerType,
+                    transitionType: TransitionType.none,
                     offset: 8,
                     onChange: function(open) {
                         return openChangeHandle(open, value, list);
@@ -173,7 +176,7 @@ export var _Menu = function(props) {
                 }), value);
             }
             return /*#__PURE__*/ _jsx(Trigger, {
-                type: UseTriggerType.active,
+                type: TriggerType.active,
                 onTrigger: function(e) {
                     return openChangeHandle(e.active, value, list);
                 },

@@ -25,7 +25,7 @@ import { _TableSelectPlugin } from "./select.js";
                 return;
             }
             // 如果与resize重叠, 则进行阻断
-            if (e.first && (_this.rcResize.dragging || _this.rcResize.hovering)) {
+            if (e.first && (_this.rcResize.dragging || _this.rcResize.activating)) {
                 e.cancel();
                 return;
             }
@@ -225,7 +225,7 @@ import { _TableSelectPlugin } from "./select.js";
         };
         if (e.last || !_lastData) {
             this.dragging = false;
-            this.rcResize.virtualBound.enable = true;
+            this.rcResize.trigger.enable = true;
             this.autoScroll.trigger(e.xy, e.last, {
                 left: isRow,
                 right: isRow,
@@ -243,7 +243,7 @@ import { _TableSelectPlugin } from "./select.js";
             return;
         }
         // 禁用_TableRowColumnResize,  处理快速拖动显示hover
-        this.rcResize.virtualBound.enable = false;
+        this.rcResize.trigger.enable = false;
         this.dragging = true;
         var lastData = _to_consumable_array(_lastData);
         // line显示

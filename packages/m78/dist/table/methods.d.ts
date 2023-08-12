@@ -1,6 +1,5 @@
 import { _RCTableContext, RCTableProps } from "./types.js";
-import { _UseCustomRender } from "./use-custom-render.js";
-export declare function _useMethods(ctx: _RCTableContext, customRender: _UseCustomRender): {
+export declare function _useMethods(ctx: _RCTableContext): {
     initEmptyNode: () => void;
     updateInstance: (propsConf: Partial<RCTableProps>, isFull: boolean) => void;
 };

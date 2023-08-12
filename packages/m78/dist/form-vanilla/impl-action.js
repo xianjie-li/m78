@@ -1,7 +1,7 @@
 import _async_to_generator from "@swc/helpers/src/_async_to_generator.mjs";
 import _ts_generator from "@swc/helpers/src/_ts_generator.mjs";
 import { VerifyError } from "@m78/verify";
-import { ensureArray, isArray, stringifyNamePath } from "@m78/utils";
+import { ensureArray, isArray, isEmpty, stringifyNamePath } from "@m78/utils";
 import clone from "lodash/cloneDeep.js";
 import { _eachState, _getState, _isRelationName } from "./common.js";
 export function _implAction(ctx) {
@@ -66,7 +66,7 @@ export function _implAction(ctx) {
                                 reject.forEach(function(meta) {
                                     var ref;
                                     var st = _getState(ctx, meta.namePath);
-                                    if (!st.errors) {
+                                    if (!isEmpty(st.errors)) {
                                         st.errors = [];
                                     }
                                     (ref = st.errors) === null || ref === void 0 ? void 0 : ref.push(meta);
@@ -107,20 +107,41 @@ export function _implAction(ctx) {
     }();
     // 存放debounceVerify计时器
     var debounceVerifyTimerMap = {};
-    ctx.debounceVerify = function(name) {
+    // 防止debounceVerify在单次触发时执行两次
+    var firstTriggerFlag = false;
+    instance.debounceVerify = function(name, cb) {
         var key = stringifyNamePath(name || []) || "default";
+        var isValueChangeTrigger = ctx.isValueChangeTrigger;
+        ctx.isValueChangeTrigger = false;
         // 立即执行一次
         if (!debounceVerifyTimerMap[key]) {
-            ctx.isValueChangeTrigger = true;
-            instance.verify(name).catch(function() {});
+            if (isValueChangeTrigger) {
+                ctx.isValueChangeTrigger = true;
+            }
+            firstTriggerFlag = true;
+            instance.verify(name).then(function() {
+                cb === null || cb === void 0 ? void 0 : cb();
+            }).catch(function(err) {
+                cb === null || cb === void 0 ? void 0 : cb(err === null || err === void 0 ? void 0 : err.rejects);
+            });
+        } else {
+            firstTriggerFlag = false;
         }
         if (debounceVerifyTimerMap[key]) {
             clearTimeout(debounceVerifyTimerMap[key]);
         }
         debounceVerifyTimerMap[key] = setTimeout(function() {
-            ctx.isValueChangeTrigger = true;
+            if (isValueChangeTrigger) {
+                ctx.isValueChangeTrigger = true;
+            }
             delete debounceVerifyTimerMap[key];
-            instance.verify(name).catch(function() {});
+            if (!firstTriggerFlag) {
+                instance.verify(name).then(function() {
+                    cb === null || cb === void 0 ? void 0 : cb();
+                }).catch(function(err) {
+                    cb === null || cb === void 0 ? void 0 : cb(err === null || err === void 0 ? void 0 : err.rejects);
+                });
+            }
         }, 200);
     };
     instance.submit = /*#__PURE__*/ _async_to_generator(function() {

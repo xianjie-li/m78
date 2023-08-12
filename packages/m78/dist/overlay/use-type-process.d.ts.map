@@ -1,1 +1,1 @@
-{"version":3,"file":"use-type-process.d.ts","sourceRoot":"","sources":["../../../../src/overlay/use-type-process.tsx"],"names":[],"mappings":"AAAA,OAAO,EAAE,eAAe,EAAE,MAAM,YAAY,CAAC;AAI7C;;;KAGK;AACL,wBAAgB,eAAe,CAAC,GAAG,EAAE,eAAe,QAsBnD"}
+{"version":3,"file":"use-type-process.d.ts","sourceRoot":"","sources":["../../../../src/overlay/use-type-process.tsx"],"names":[],"mappings":"AAAA,OAAO,EAAE,eAAe,EAAE,MAAM,YAAY,CAAC;AAK7C;;;;KAIK;AACL,wBAAgB,eAAe,CAAC,GAAG,EAAE,eAAe,QAsBnD"}

@@ -1,6 +1,7 @@
 /** 基础动画配置 */ import React from "react";
 export var TransitionType;
 (function(TransitionType) {
+    TransitionType["none"] = "none";
     TransitionType["fade"] = "fade";
     TransitionType["zoom"] = "zoom";
     TransitionType["punch"] = "punch";

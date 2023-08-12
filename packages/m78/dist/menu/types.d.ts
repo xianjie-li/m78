@@ -4,6 +4,7 @@ import { DomTarget, SelectManager, SetState, UseTriggerProps, UseTriggerType } f
 import { OverlayProps } from "../overlay/index.js";
 import React from "react";
 import { EmptyFunction, TupleNumber } from "@m78/utils";
+import { TriggerType } from "../trigger/index.js";
 /** 应从Overlay中移除的props */
 export declare const omitMenuOverlayProps: readonly ["xy", "alignment", "target", "childrenAsTarget", "content", "children", "triggerNodeRef", "open", "defaultOpen", "autoFocus"];
 /** 应从Overlay中移除的props */
@@ -64,7 +65,7 @@ export interface _MenuContext {
         /** 当前高亮的项, 用于键盘操作 */
         current: MenuOption | null;
         /** subMenuTriggerType */
-        subMenuTriggerType: UseTriggerType;
+        subMenuTriggerType: TriggerType;
     };
     setState: SetState<_MenuContext["state"]>;
     close: () => void;

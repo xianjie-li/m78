@@ -7,6 +7,7 @@ import { TableKey, TableRenderCtx } from "./base-type.js";
 import { TableEmptyConfig } from "../plugins/empty.js";
 import { TableDragSortConfig } from "../plugins/drag-sort.js";
 import { TableInteractiveCoreConfig } from "../plugins/interactive-core.js";
+import { TableFormConfig } from "../plugins/form.js";
 /**
  * 对外暴露的变更配置, 用于持久化记录变更的表格配置
  *
@@ -92,6 +93,6 @@ export interface TableInternalConfig {
     eventCreator?: any;
 }
 /** 表格配置 */
-export interface TableConfig extends TableBaseConfig, TableSelectConfig, TableEmptyConfig, TableDragSortConfig, TableInteractiveCoreConfig, TableInternalConfig {
+export interface TableConfig extends TableBaseConfig, TableSelectConfig, TableEmptyConfig, TableDragSortConfig, TableInteractiveCoreConfig, TableInternalConfig, TableFormConfig {
 }
 //# sourceMappingURL=config.d.ts.map

@@ -10,7 +10,8 @@ import { TableDisable } from "../plugins/disable.js";
 import { TableIs } from "../plugins/is.js";
 import { TableSetter } from "../plugins/setter.js";
 import { TableConfigInstance } from "../plugins/config.js";
+import { TableForm } from "../plugins/form.js";
 /** table实例 */
-export interface TableInstance extends TableSelect, TableDisable, TableLife, TableEvent, TableHistory, TableMutation, TableHighlight, TableRender, TableGetter, TableSetter, TableIs, TableConfigInstance {
+export interface TableInstance extends TableSelect, TableDisable, TableLife, TableEvent, TableHistory, TableMutation, TableHighlight, TableRender, TableGetter, TableSetter, TableIs, TableConfigInstance, TableForm {
 }
 //# sourceMappingURL=instance.d.ts.map

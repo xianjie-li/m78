@@ -6,6 +6,9 @@ import { ComponentBaseProps } from "../common/index.js";
 import { AnyObject, EmptyFunction } from "@m78/utils";
 import { CustomEventWithHook, SetState } from "@m78/hooks";
 import { ReactNode } from "react";
+import { _UseEditRender } from "./use-edit-render.js";
+import { _UseCustomRender } from "./use-custom-render.js";
+import { TableFormConfig } from "../table-vanilla/plugins/form.js";
 /** 忽略的配置 */
 declare type OmitConfig = typeof _tableOmitConfig[number];
 /** 重写TableColumnLeafConfig类型 */
@@ -16,7 +19,7 @@ declare module "../table-vanilla/index.js" {
         /** 渲染筛选表单 */
         filterRender?: RCTableFilterColumnRender;
         /** 渲染编辑组件 */
-        editRender?: RCTableEditRender;
+        editRender?: RCTableEditWidgetImpl;
         /** 控制排序启用或设置排序默认值 */
         sort?: true | TableSort;
     }
@@ -24,18 +27,26 @@ declare module "../table-vanilla/index.js" {
 export interface RCTableEditRenderArg extends RCTableRenderArg {
     /** 表单控件应使用此字段作为默认值 */
     value: any;
-    /** 录入完成, 提交值, 提交时会进行校验, 若失败则会中断提交 */
-    submit: (value: any) => void;
+    /** 在value变更时, 通过此方法通知, 变更后的值会临时存储, 并由submit()/cancel()决定提交还是取消 */
+    change: (value: any) => void;
+    /** 录入完成, 将变更值提交, 提交时会进行校验, 若失败则会中断提交 */
+    submit: EmptyFunction;
     /** 取消录入 */
     cancel: EmptyFunction;
+    /** 若编辑组件包含关闭动画或需要延迟关闭, 可以调用此方法设置延迟关闭的时间, 若未设置, 编辑组件所在dom会在关闭后被直接清理 */
+    delayClose: (time: number) => void;
     /** 当前使用的表单实例 */
     form: any;
 }
 /**
  * 桥接现有表单组件为表格行内编辑可用组件
  * */
-export interface RCTableEditRender {
+export interface RCTableEditWidgetImpl {
     (arg: RCTableEditRenderArg): ReactNode;
+}
+/** 一个返回RCTableEditWidgetImpl的函数, 用于为其提供可选的配置项 */
+export interface RCTableEditWidgetCreator<T = any> {
+    (conf?: T): RCTableEditWidgetImpl;
 }
 /**
  * 列筛选表单渲染器
@@ -55,7 +66,7 @@ export interface RCTableRenderArg {
     context: AnyObject;
 }
 /** 表格props */
-export interface RCTableProps extends ComponentBaseProps, Omit<TableBaseConfig, OmitConfig | "render">, TableSelectConfig, TableDragSortConfig, TableInteractiveCoreConfig {
+export interface RCTableProps extends ComponentBaseProps, Omit<TableBaseConfig, OmitConfig | "render">, TableSelectConfig, TableDragSortConfig, TableInteractiveCoreConfig, TableFormConfig {
     /** 自定义单元格渲染 */
     render?: (arg: RCTableRenderArg) => React.ReactNode | void;
     /** 自定义空节点 */
@@ -82,10 +93,10 @@ export interface RCTableProps extends ComponentBaseProps, Omit<TableBaseConfig, 
     onSelect?: EmptyFunction;
     /** 配置/数据等变更, 通常意味需要持久化的一些信息发生了改变 */
     onMutation?: (event: TableMutationEvent) => void;
-    /** 查询触发, 通常触发于 点击查询按钮/筛选/重置/排序 */
-    onQuery?: (params: any) => void;
+    /** 触发筛选, 通常触发于 点击查询按钮/筛选/重置/排序 */
+    onFilter?: (params: any) => void;
     /** true | 查询参数变更后是否自动触发onQuery */
-    autoQuery?: boolean;
+    autoFilter?: boolean;
     /** 不与特定字段绑定的filter, 渲染于工具栏的 filter icon */
     commonFilter?: (form: any) => ReactNode;
     /** 默认查询参数 */
@@ -98,10 +109,10 @@ export interface RCTableProps extends ComponentBaseProps, Omit<TableBaseConfig, 
     dataImport?: boolean;
     /** false | 启用导入功能, 需要编辑功能开启 */
     dataExport?: boolean;
-    /** 标记表单schema */
-    editSchema?: any;
     /** 查询表单schema */
-    querySchema?: any;
+    filterSchema?: any;
+    /** 获取内部table实例 */
+    instanceRef?: React.Ref<RCTableInstance>;
 }
 /** 表格实例 */
 export interface RCTableInstance extends Omit<TableInstance, "event"> {
@@ -128,6 +139,8 @@ export interface RCTableInstance extends Omit<TableInstance, "event"> {
         mutation: CustomEventWithHook<(event: TableMutationEvent) => void>;
         /** 单元格的挂载状态变更 (mount状态可以理解为单元格是否在表格视口内并被渲染) */
         mountChange: CustomEventWithHook<(cell: TableCell, mounted: boolean) => void>;
+        /** 单元格交互状态发生变更, show - 显示还是关闭, isSubmit - 提交还是取消 */
+        interactiveChange: CustomEventWithHook<(cell: TableCell, show: boolean, isSubmit: boolean) => void>;
         /** 初始化阶段触发 */
         init: CustomEventWithHook<EmptyFunction>;
         /** 初始化完成触发 */
@@ -143,19 +156,6 @@ export interface RCTableInstance extends Omit<TableInstance, "event"> {
         /** 卸载前触发 */
         beforeDestroy: CustomEventWithHook<EmptyFunction>;
     };
-}
-/** 组件状态 */
-export interface _RCTableState {
-    /** 定制空节点 */
-    emptyNode?: HTMLDivElement;
-    /** 表格实例 */
-    instance: RCTableInstance;
-    /** 总行数 */
-    rowCount: number;
-    /** 选中行 */
-    selectedRows: TableRow[];
-    /** 用于主动更新组件 */
-    renderID?: number;
 }
 /** 左侧预置节点 */
 export interface RCTableToolbarLeadingBuiltinNodes {
@@ -190,10 +190,31 @@ export interface _CustomRenderItem {
     cell: TableCellWithDom;
     element: React.ReactNode;
 }
+/** editMap的项, 代表一个渲染的表单项 */
+export interface _CustomEditItem {
+    cell: TableCellWithDom;
+    node: HTMLElement;
+    element: React.ReactNode;
+}
+/** 组件状态 */
+export interface _RCTableState {
+    /** 定制空节点 */
+    emptyNode?: HTMLDivElement;
+    /** 表格实例 */
+    instance: RCTableInstance;
+    /** 总行数 */
+    rowCount: number;
+    /** 选中行 */
+    selectedRows: TableRow[];
+    /** 用于主动更新组件 */
+    renderID?: number;
+}
 /** 实例状态 */
 export interface _RCTableSelf {
     /** 所有自定义渲染项的key map */
     renderMap: Record<string, _CustomRenderItem>;
+    /** 所有编辑项的key map */
+    editMap: Record<string, _CustomEditItem>;
 }
 /** 上下文状态 */
 export interface _RCTableContext {
@@ -204,6 +225,8 @@ export interface _RCTableContext {
     ref: React.MutableRefObject<HTMLDivElement>;
     scrollRef: React.MutableRefObject<HTMLDivElement>;
     scrollContRef: React.MutableRefObject<HTMLDivElement>;
+    editRender: _UseEditRender;
+    customRender: _UseCustomRender;
 }
 export {};
 //# sourceMappingURL=types.d.ts.map

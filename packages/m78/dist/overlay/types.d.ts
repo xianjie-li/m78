@@ -1,6 +1,6 @@
 import { AnyFunction, AnyObject, BoundSize, TupleNumber } from "@m78/utils";
 import React from "react";
-import { SetFormState, SetState, UseMeasureBound, UseMountStateConfig, useTrigger, UseTriggerConfig, UseTriggerEvent } from "@m78/hooks";
+import { SetFormState, SetState, UseMeasureBound, UseMountStateConfig } from "@m78/hooks";
 import { RenderApiComponentProps } from "@m78/render-api";
 import { SpringValues } from "@react-spring/core";
 import { SpringRef } from "react-spring";
@@ -8,6 +8,8 @@ import { _defaultProps, useOverlaysClickAway, useOverlaysMask } from "./common.j
 import { ComponentBaseProps } from "../common/index.js";
 import { TransitionBaseProps, TransitionTypeUnion } from "../transition/index.js";
 import { EventTypes, Handler } from "@use-gesture/core/types";
+import { TriggerEvent, TriggerInstance, useTrigger, UseTriggerProps } from "../trigger/index.js";
+import { _Methods } from "./use-methods.js";
 /** 在使用api调用时所有应该剔除的props */
 export declare const omitApiProps: readonly ["defaultOpen", "open", "onChange", "children", "childrenAsTarget", "triggerType", "onUpdate", "onDispose", "innerRef", "instanceRef"];
 /** 创建api时需要排除的所有props类型 */
@@ -47,7 +49,7 @@ export interface OverlayProps extends ComponentBaseProps, UseMountStateConfig, R
     /**
      * 传入children时, 将其作为控制开关, 在非受控时会直接代理open的值，受控时通过onChange回传最新状态
      * children包含以下限制:
-     * - children的渲染结果必须是一个正常的dom节点, 不能是文本等特殊节点
+     * - children的渲染结果必须是单个正常的dom节点, 不能是文本等特殊节点
      * - 渲染的dom必须位于组件声明的位置, 即不能使用 ReactDOM.createPortal() 这类会更改渲染位置的api
      *
      * 通过设置childrenAsTarget, 可以将children渲染结果作为target使用, 实现挂载overlay到children位置的效果
@@ -57,9 +59,12 @@ export interface OverlayProps extends ComponentBaseProps, UseMountStateConfig, R
     children?: React.ReactElement | ((meta: OverlayCustomMeta) => React.ReactElement);
     /**
      * 'click' | 设置了children来触发开关时, 配置触发方式
-     * - 明显互斥的触发方式不支持同时使用, 如: active和click
+     *
+     * 明显互斥的触发方式不建议同时使用, 如: active事件和click事件, move事件和其他事件. 另外, drag事件在Overlay中没有实际意义, 传入不会有任何作用
+     *
+     * contextMenu和move 通常需要结合 direction 使用, 在 move 模式下, 需要设置一个合适的 offset, 用于确保鼠标不会快速滑动到overlay内容上, 导致move事件中断
      * */
-    triggerType?: UseTriggerConfig["type"];
+    triggerType?: TriggerInstance["type"];
     /**
      * ########## 显示控制/性能 ##########
      * - 除了defaultOpen外, 还有继承至RenderApiComponentProps的open/onChange
@@ -125,10 +130,12 @@ export interface OverlayProps extends ComponentBaseProps, UseMountStateConfig, R
     autoFocus?: boolean;
     /** 传递给容器的额外props */
     extraProps?: AnyObject;
-    /** 内部trigger触发时调用 */
-    onTrigger?: UseTriggerConfig["onTrigger"];
-    /** 指向trigger node 的ref */
-    triggerNodeRef?: UseTriggerConfig["innerRef"];
+    /** 内部trigger触发事件时调用 */
+    onTrigger?: UseTriggerProps["onTrigger"];
+    /** 当触发了某个会使弹层打开的事件时, 进行回调 */
+    onOpenTrigger?: UseTriggerProps["onTrigger"];
+    /** 指向trigger dom 的ref */
+    triggerNodeRef?: UseTriggerProps["innerRef"];
     /** TransitionType.fade | 指定内置动画类型 */
     transitionType?: TransitionTypeUnion;
     /** 自定义进出场动画, 此项会覆盖transitionType配置 */
@@ -161,7 +168,7 @@ export interface OverlayInstance {
     /** 以最后的更新类型刷新overlay定位 */
     update(immediate?: boolean): void;
     /** 多实例trigger专用的处理函数, 搭配useTrigger或<Trigger />实现单个实例多个触发点 */
-    trigger: (e: UseTriggerEvent) => void;
+    trigger: (e: TriggerEvent) => void;
 }
 /**
  * 通过api调用时的配置, 移除了一些非必要参数
@@ -209,8 +216,14 @@ export interface _OverlayContext {
         lastFocusTime?: number;
         /** 多触发点触发计时器, 用于快速连续触发时过滤掉无效触发, 比如两个focus目标, 前者失焦到后者聚焦, 前者的失焦事件其实是无效的并且还会对后者显示造成干扰  */
         triggerMultipleTimer?: any;
+        /** 最后触发onTriggerMultiple启用的节点 */
+        lastTriggerTarget?: any;
         /** 多触发点事件中用于标记最终open状态 */
         lastTriggerMultipleOpen?: boolean;
+        /** clickAway出发延迟计时 */
+        clickAwayCloseTimer?: any;
+        /** 延迟关闭move */
+        lastMoveCloseTimer?: any;
     };
     /** 组件props */
     props: _MergeDefaultProps;
@@ -236,9 +249,10 @@ export interface _OverlayContext {
     overlaysClickAway: ReturnType<typeof useOverlaysClickAway>;
     overlaysMask: ReturnType<typeof useOverlaysMask>;
     measure: UseMeasureBound;
-    triggerHandle: OverlayInstance["trigger"];
+    triggerHandle: NonNullable<UseTriggerProps["onTrigger"]>;
     isUnmount: () => boolean;
     customRenderMeta: OverlayCustomMeta;
+    methods: _Methods;
 }
 /** 描述位置和该位置是否可用的对象 */
 export interface _DirectionMeta {

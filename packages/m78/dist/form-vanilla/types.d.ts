@@ -1,6 +1,8 @@
 import { Verify, Config, Schema, RejectMeta } from "@m78/verify";
 import { AnyFunction, EmptyFunction, NamePath, CustomEvent } from "@m78/utils";
 export interface FormConfig extends Config {
+    /** false | 当其中一项验证失败后，停止后续字段的验证 */
+    verifyFirst?: boolean;
     /** 描述表单值结构的对象 */
     schemas: FormSchemaWithoutName;
     /** {} | 默认值 */
@@ -42,20 +44,26 @@ export interface FormInstance {
      * - values是对象是, 会将defaultValue中存在但被删除的字段设置为初始值(字符串为"", 其他类型为null)
      * */
     getChangedValues(): any | null;
-    /** 获取对dynamic进行处理进行处理后的schema副本 */
+    /** 获取对dynamic进行处理进行处理后的schema副本, 会自动忽略掉无效项 */
     getSchemas(): FormSchemaWithoutName;
     /** 重新设置当前schemas */
     setSchemas(schema: FormSchemaWithoutName): void;
     /** 获取指定的schema */
     getSchema(name: NamePath): FormSchema | FormSchemaWithoutName | null;
-    /** 获取错误信息 */
-    getErrors(name: NamePath): RejectMeta;
+    /** 获取错误信息, 注意: 此方法不会自动执行验证, 仅用于获取最后一次验证后的结果 */
+    getErrors(name?: NamePath): RejectMeta;
     /** 重置表单状态 */
     reset(): void;
     /** 执行验证, 若验证通过则触发submit事件, 验证失败时与verify一样reject VerifyError类型 */
     submit(): Promise<void>;
     /** 执行校验, 未通过时promise会reject包含VerifyError类型的错误 */
     verify: (name?: NamePath) => Promise<void>;
+    /**
+     * debounce版本的verify, 处理高频调用时可以使用, cb会在成功或失败时触发, 失败时包含错误信息
+     *
+     * 注意: 由于防抖机制, 连续调用时, 大部分验证都会被忽略, 所以cb不是必定触发的, 通常只有第一次和最后一次调用触发
+     * */
+    debounceVerify: (name?: NamePath, cb?: (error?: RejectMeta) => void) => void;
     /** 获取表单配置 */
     getConfig(): FormConfig;
     /**
@@ -157,8 +165,6 @@ export interface _Context {
     lockNotify: boolean;
     /** 暂时锁定更新notify, 锁定期间不触发更新 */
     lockListState: boolean;
-    /** debounce版本的verify */
-    debounceVerify: (name?: NamePath) => void;
     /** 用于帮助识别是否为setValue触发的 verify 调用 */
     isValueChangeTrigger: boolean;
     /** 获取当前schema并处理dynamic, 更新invalid等 */

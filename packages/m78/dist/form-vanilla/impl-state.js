@@ -1,6 +1,7 @@
+import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
 import { getNamePathValue, isArray, isObject } from "@m78/utils";
 import isEqual from "lodash/isEqual.js";
-import { _getState } from "./common.js";
+import { _eachState, _getState } from "./common.js";
 export function _implState(ctx) {
     var instance = ctx.instance;
     instance.getChanged = function(name) {
@@ -82,7 +83,18 @@ export function _implState(ctx) {
         }
     };
     instance.getErrors = function(name) {
-        var st = _getState(ctx, name);
-        return st.errors || [];
+        if (name) {
+            var st = _getState(ctx, name);
+            return st.errors || [];
+        }
+        var errors = [];
+        _eachState(ctx, function(st) {
+            var ref;
+            if ((ref = st.errors) === null || ref === void 0 ? void 0 : ref.length) {
+                var _errors;
+                (_errors = errors).push.apply(_errors, _to_consumable_array(st.errors));
+            }
+        });
+        return errors;
     };
 }
