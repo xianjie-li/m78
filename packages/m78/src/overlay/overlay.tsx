@@ -6,8 +6,6 @@ import {
   useMeasure,
   useSelf,
   useSetState,
-  useTrigger,
-  UseTriggerEvent,
 } from "@m78/hooks";
 import { useSpring } from "react-spring";
 import { _useMethods as useMethods } from "./use-methods.js";
@@ -22,6 +20,7 @@ import {
   useOverlaysMask,
 } from "./common.js";
 import { isFunction } from "@m78/utils";
+import { TriggerEvent, useTrigger } from "../trigger/index.js";
 
 /**
  * overlay抽象了所有弹层类组件(modal, drawer, popper等需要的基础能力), 使实现这些组件变得非常的简单
@@ -97,19 +96,6 @@ export function _Overlay(p: OverlayProps) {
   const children = props.children;
   const element = isFunction(children) ? children(customRenderMeta) : children;
 
-  /** 触发器回调 */
-  const triggerHandle = useFn((e: UseTriggerEvent) =>
-    _onTrigger(e, setOpen, self, props)
-  );
-
-  /** 触发器 */
-  const trigger = useTrigger({
-    element,
-    type: props.triggerType,
-    onTrigger: triggerHandle,
-    innerRef: props.triggerNodeRef,
-  });
-
   /** 尺寸变更时修复位置 */
   const [measure] = useMeasure(containerRef, 200);
 
@@ -125,20 +111,32 @@ export function _Overlay(p: OverlayProps) {
     spApi,
     arrowSp,
     arrowSpApi,
-    trigger,
     overlaysClickAway,
     overlaysMask,
     measure,
-    triggerHandle,
     isUnmount: useIsUnmountState(),
     customRenderMeta,
+    trigger: null as any, // set later
+    triggerHandle: null as any,
+    methods: null as any,
   };
 
-  const methods = useMethods(ctx);
+  /** 触发器回调 */
+  ctx.triggerHandle = useFn((e: TriggerEvent) => _onTrigger(e, ctx));
 
-  const lifeCycle = useLifeCycle(ctx, methods);
+  /** 触发器 */
+  ctx.trigger = useTrigger({
+    element,
+    type: props.triggerType,
+    onTrigger: ctx.triggerHandle,
+    innerRef: props.triggerNodeRef,
+  });
 
-  return useRender(ctx, methods, lifeCycle);
+  ctx.methods = useMethods(ctx);
+
+  const lifeCycle = useLifeCycle(ctx);
+
+  return useRender(ctx, lifeCycle);
 }
 
 _Overlay.displayName = "Overlay";

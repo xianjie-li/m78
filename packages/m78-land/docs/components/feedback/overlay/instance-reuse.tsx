@@ -1,6 +1,15 @@
 import React, { useState } from "react";
-import { Trigger, UseTriggerType } from "@m78/hooks";
-import { Overlay, OverlayInstance, Button } from "m78";
+import {
+  Overlay,
+  OverlayInstance,
+  Button,
+  Trigger,
+  TriggerType,
+  Size,
+} from "m78";
+
+// 为所有trigger传入一个唯一的key, 可以是trigger也共用同一个实例
+const uniqTriggerKey = "__uniq_trigger_key__";
 
 const InstanceReuse = () => {
   const [overlay, setOverlay] = useState<OverlayInstance | null>(null);
@@ -12,6 +21,7 @@ const InstanceReuse = () => {
       {/* 用于提供实例 */}
       <Overlay
         instanceRef={setOverlay}
+        offset={8}
         content={
           <span style={{ display: "inline-block", padding: "8px 12px" }}>
             hello overlay
@@ -23,22 +33,46 @@ const InstanceReuse = () => {
       />
 
       <div>
-        <Trigger type={[UseTriggerType.active]} onTrigger={handle}>
+        <Trigger
+          type={[TriggerType.active]}
+          onTrigger={handle}
+          instanceKey={uniqTriggerKey}
+        >
           <Button>active</Button>
         </Trigger>
-        <Trigger type={[UseTriggerType.active]} onTrigger={handle}>
+        <Trigger
+          type={[TriggerType.active]}
+          onTrigger={handle}
+          instanceKey={uniqTriggerKey}
+        >
           <Button>active</Button>
         </Trigger>
-        <Trigger type={[UseTriggerType.active]} onTrigger={handle}>
+        <Trigger
+          type={[TriggerType.active]}
+          onTrigger={handle}
+          instanceKey={uniqTriggerKey}
+        >
           <Button>active</Button>
         </Trigger>
-        <Trigger type={[UseTriggerType.active]} onTrigger={handle}>
+        <Trigger
+          type={[TriggerType.active]}
+          onTrigger={handle}
+          instanceKey={uniqTriggerKey}
+        >
           <Button>active</Button>
         </Trigger>
-        <Trigger type={[UseTriggerType.active]} onTrigger={handle}>
+        <Trigger
+          type={[TriggerType.active]}
+          onTrigger={handle}
+          instanceKey={uniqTriggerKey}
+        >
           <Button>active</Button>
         </Trigger>
-        <Trigger type={[UseTriggerType.active]} onTrigger={handle}>
+        <Trigger
+          type={[TriggerType.active]}
+          onTrigger={handle}
+          instanceKey={uniqTriggerKey}
+        >
           <Button>active</Button>
         </Trigger>
       </div>
@@ -49,33 +83,84 @@ const InstanceReuse = () => {
           因为很多触发类型之间是彼此互斥的
         </p>
 
-        <Trigger type={[UseTriggerType.click]} onTrigger={handle}>
+        <Trigger
+          type={[TriggerType.click]}
+          onTrigger={handle}
+          instanceKey={uniqTriggerKey}
+        >
           <Button>click</Button>
         </Trigger>
-        <Trigger type={[UseTriggerType.click]} onTrigger={handle}>
+        <Trigger
+          type={[TriggerType.click]}
+          onTrigger={handle}
+          instanceKey={uniqTriggerKey}
+        >
           <Button>click</Button>
         </Trigger>
-        <Trigger type={[UseTriggerType.active]} onTrigger={handle}>
+        <Trigger
+          type={[TriggerType.active]}
+          onTrigger={handle}
+          instanceKey={uniqTriggerKey}
+        >
           <Button>active</Button>
         </Trigger>
-        <Trigger type={[UseTriggerType.active]} onTrigger={handle}>
+        <Trigger
+          type={[TriggerType.active]}
+          onTrigger={handle}
+          instanceKey={uniqTriggerKey}
+        >
           <Button>active</Button>
         </Trigger>
-        <Trigger type={[UseTriggerType.focus]} onTrigger={handle}>
+        <Trigger
+          type={[TriggerType.focus]}
+          onTrigger={handle}
+          instanceKey={uniqTriggerKey}
+        >
           <Button>focus</Button>
         </Trigger>
-        <Trigger type={[UseTriggerType.focus]} onTrigger={handle}>
+        <Trigger
+          type={[TriggerType.focus]}
+          onTrigger={handle}
+          instanceKey={uniqTriggerKey}
+        >
           <Button>focus</Button>
         </Trigger>
-        <Trigger type={[UseTriggerType.contextMenu]} onTrigger={handle}>
-          <Button>contextMenu</Button>
-        </Trigger>
-        <Trigger type={[UseTriggerType.contextMenu]} onTrigger={handle}>
+        <Trigger
+          type={[TriggerType.contextMenu]}
+          onTrigger={handle}
+          instanceKey={uniqTriggerKey}
+        >
           <Button>contextMenu</Button>
         </Trigger>
         <Trigger
-          type={[UseTriggerType.focus, UseTriggerType.click]}
+          type={[TriggerType.contextMenu]}
           onTrigger={handle}
+          instanceKey={uniqTriggerKey}
+        >
+          <Button>contextMenu</Button>
+        </Trigger>
+        <Trigger
+          type={[TriggerType.move]}
+          onTrigger={handle}
+          instanceKey={uniqTriggerKey}
+        >
+          <Button size={Size.large} style={{ width: 160 }}>
+            move
+          </Button>
+        </Trigger>
+        <Trigger
+          type={[TriggerType.move]}
+          onTrigger={handle}
+          instanceKey={uniqTriggerKey}
+        >
+          <Button size={Size.large} style={{ width: 160 }}>
+            move
+          </Button>
+        </Trigger>
+        <Trigger
+          type={[TriggerType.focus, TriggerType.click]}
+          onTrigger={handle}
+          instanceKey={uniqTriggerKey}
         >
           <Button>focus + click</Button>
         </Trigger>

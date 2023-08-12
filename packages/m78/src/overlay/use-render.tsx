@@ -22,11 +22,7 @@ import { _MountTrigger as MountTrigger } from "./mount-trigger.js";
 
 const AnimatedArrow = animated(Arrow);
 
-export function _useRender(
-  ctx: _OverlayContext,
-  methods: _Methods,
-  lifeCycle: _LifeCycle
-) {
+export function _useRender(ctx: _OverlayContext, lifeCycle: _LifeCycle) {
   const {
     props,
     state,
@@ -36,6 +32,7 @@ export function _useRender(
     overlaysMask,
     trigger,
     sp,
+    methods,
   } = ctx;
 
   function renderArrow() {

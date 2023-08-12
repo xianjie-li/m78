@@ -14,6 +14,7 @@ import {
 import { OverlayProps } from "../overlay/index.js";
 import React from "react";
 import { EmptyFunction, TupleNumber } from "@m78/utils";
+import { TriggerType } from "../trigger/index.js";
 
 /** 应从Overlay中移除的props */
 export const omitMenuOverlayProps = [
@@ -49,7 +50,7 @@ export interface MenuProps extends MenuOmitOverlayProps, DataSourceItemCustom {
   /** 点击选中某项后触发 */
   onConfirm?: (val: ValueType, option: MenuOption) => void;
   /**
-   * 子菜单的触发方式, 默认为active(鼠标悬浮), 设备为移动设备时(目前没有很理想的检测方式), 会自动切换为click
+   * 子菜单的触发方式, 默认为active(鼠标悬浮), 设备为移动设备时, 会自动切换为click
    * */
   subMenuTriggerType?: UseTriggerType.active | UseTriggerType.click;
 }
@@ -98,7 +99,7 @@ export interface _MenuContext {
     /** 当前高亮的项, 用于键盘操作 */
     current: MenuOption | null;
     /** subMenuTriggerType */
-    subMenuTriggerType: UseTriggerType;
+    subMenuTriggerType: TriggerType;
   };
   setState: SetState<_MenuContext["state"]>;
   close: () => void;

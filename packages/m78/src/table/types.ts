@@ -141,6 +141,8 @@ export interface RCTableProps
   dataExport?: boolean;
   /** 查询表单schema */
   filterSchema?: any;
+  /** 获取内部table实例 */
+  instanceRef?: React.Ref<RCTableInstance>;
 }
 
 /** 表格实例 */

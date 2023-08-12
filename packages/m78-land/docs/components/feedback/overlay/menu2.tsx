@@ -1,17 +1,17 @@
 import React from "react";
-import { Overlay, OverlayDirection, Button } from "m78";
+import { Overlay, OverlayDirection, Button, TriggerType } from "m78";
 import { IconArrowForwardIos } from "@m78/icons/icon-arrow-forward-ios";
 
 import css from "./style.module.scss";
 
 import { menuConfig } from "./menu-config";
-import { useSetState, UseTriggerType } from "@m78/hooks";
+import { useSetState } from "@m78/hooks";
 import clsx from "clsx";
 
 const Menu = () => {
   // 这里是故意使用useSetState的, 因为state.type可以帮助我们实时获取到最新的type
   const [state, setState] = useSetState({
-    type: UseTriggerType.click,
+    type: TriggerType.click,
   });
 
   function renderMenuList(list: any[]) {
@@ -24,7 +24,7 @@ const Menu = () => {
               <div className={css.menu}>{renderMenuList(item.children)}</div>
             }
             direction={OverlayDirection.rightStart}
-            triggerType={UseTriggerType.active}
+            triggerType={TriggerType.active}
             childrenAsTarget
           >
             {({ open }) => (
@@ -50,7 +50,7 @@ const Menu = () => {
       <Overlay
         triggerType={state.type}
         onChange={(open) => {
-          const next = open ? UseTriggerType.active : UseTriggerType.click;
+          const next = open ? TriggerType.active : TriggerType.click;
           if (next === state.type) return;
           setState({ type: next });
         }}

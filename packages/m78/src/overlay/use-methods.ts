@@ -5,12 +5,7 @@ import {
   isDom,
   TupleNumber,
 } from "@m78/utils";
-import {
-  getRefDomOrDom,
-  useFn,
-  UseTriggerEvent,
-  UseTriggerType,
-} from "@m78/hooks";
+import { getRefDomOrDom, useFn } from "@m78/hooks";
 import throttle from "lodash/throttle.js";
 import debounce from "lodash/debounce.js";
 import {
@@ -33,6 +28,7 @@ import {
   OverlayUpdateType,
 } from "./types.js";
 import { EventTypes, Handler } from "@use-gesture/core/types";
+import { TriggerEvent, TriggerType } from "../trigger/index.js";
 
 export function _useMethods(ctx: _OverlayContext) {
   const {
@@ -205,6 +201,7 @@ export function _useMethods(ctx: _OverlayContext) {
     // 1. 存在最后更新类型, 直接走该类型
     // 2. 不存在最后更新类型, 使用配置自动获取的类型
     // 3. 两种方式均未获取到值, 使用默认的alignment
+
     const [bound, type] = getBound(self.lastUpdateType);
 
     if (type) {
@@ -282,7 +279,7 @@ export function _useMethods(ctx: _OverlayContext) {
     }
   );
 
-  /** 从children获取的节点中同步state.childrenEl */
+  /** 从children获取的dom来更新target */
   const updateChildrenEl = useFn(() => {
     if (props.childrenAsTarget && trigger.el) {
       updateTarget(trigger.el);
@@ -326,37 +323,40 @@ export function _useMethods(ctx: _OverlayContext) {
   );
 
   // 多触发点的特殊handle
-  const onTriggerMultiple = useFn((e: UseTriggerEvent) => {
+  const onTriggerMultiple = useFn((e: TriggerEvent) => {
     clearTimeout(self.triggerMultipleTimer);
+
+    if (e.type === TriggerType.move) {
+      ctx.triggerHandle(e);
+      return;
+    }
 
     let isOpen = true;
 
-    if (e.type === UseTriggerType.click) {
+    if (e.type === TriggerType.click) {
       isOpen = !open;
     }
 
-    if (e.type === UseTriggerType.focus || e.type === UseTriggerType.active) {
-      isOpen = e.type === UseTriggerType.focus ? e.focus : e.active;
+    if (e.type === TriggerType.focus || e.type === TriggerType.active) {
+      isOpen = e.type === TriggerType.focus ? e.focus : e.active;
     }
 
-    if (e.type === UseTriggerType.contextMenu) {
+    if (e.type === TriggerType.contextMenu) {
       isOpen = true;
     }
 
-    if (isOpen && !self.lastTriggerMultipleOpen) {
-      self.lastTriggerMultipleOpen = isOpen;
-    }
+    if (isOpen) {
+      self.lastTriggerTarget = e.data;
 
-    self.triggerMultipleTimer = setTimeout(() => {
-      const _isOpen = !!self.lastTriggerMultipleOpen;
-
-      if (_isOpen) {
+      // 需要在clickAway之后出发
+      self.triggerMultipleTimer = setTimeout(() => {
         updateTarget(e.target as HTMLElement, true);
         ctx.triggerHandle(e);
-      } else if (self.lastTarget === e.target) {
-        ctx.triggerHandle(e);
-      }
-    }, 30);
+      }, 10);
+    } else if (self.lastTriggerTarget === e.data) {
+      self.lastTriggerTarget = undefined;
+      ctx.triggerHandle(e);
+    }
   });
 
   /** 拖动处理 */
@@ -377,7 +377,7 @@ export function _useMethods(ctx: _OverlayContext) {
     return self.lastPosition;
   });
 
-  /** 获取拖动的初始坐标 */
+  /** 获取拖动的限制边界 */
   const getDragBound = useFn(() => {
     // 拖动时containerRef必然已挂载
     const bound = containerRef.current?.getBoundingClientRect();

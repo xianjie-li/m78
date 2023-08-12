@@ -1,4 +1,4 @@
-import { AnyObject, Bound, TupleNumber } from "./types.js";
+import { AnyObject, Bound, BoundSize, TupleNumber } from "./types.js";
 import { isDom, isFunction, isNumber } from "./is.js";
 import { clamp } from "./number.js";
 
@@ -480,7 +480,7 @@ export function hasScroll(
 /** Obtaining offsets from different events */
 export function getEventOffset(
   e: MouseEvent | TouchEvent | PointerEvent,
-  target: HTMLElement
+  target: HTMLElement | BoundSize
 ): TupleNumber {
   const touch = (e as TouchEvent).changedTouches;
   let clientX = 0;
@@ -494,7 +494,12 @@ export function getEventOffset(
     clientY = (e as MouseEvent).clientY;
   }
 
-  const { left, top } = target.getBoundingClientRect();
+  const isBound =
+    isNumber((target as any).left) && isNumber((target as any).top);
+
+  const { left, top } = isBound
+    ? (target as BoundSize)
+    : (target as HTMLElement).getBoundingClientRect();
   return [clientX - left, clientY - top];
 }
 

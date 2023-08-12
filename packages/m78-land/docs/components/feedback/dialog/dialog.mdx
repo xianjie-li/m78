@@ -27,17 +27,19 @@ Dialog.warning("警告信息");
 Dialog.info("完整参数", "提示", true); // 三个参数分别为: 内容, 标题, 是否显示关闭按钮
 ```
 
-## render-api & overlay
+## overlay & render-api
 
+- 此组件基于 [overlay](/docs/components/feedback/overlay) 提供弹层定位和交互, 基本继承了其所有能力, 如果你需要更多进阶的用法, 请参阅其文档
 - 此组件基于 [render-api](/docs/components/ecology/render-api) 提供基础全局渲染逻辑, 你可以查看其文档了解更多用法
-- 此组件基于 [overlay](/docs/components/feedback/overlay) 提供弹层定位和交互, 你可以查看其文档了解更多用法
 
 ## API
 
-更多用法请查看 [overlay api](/docs/components/feedback/overlay/#api) / [render-api](/docs/components/ecology/render-api)
+### props
+
+更多配置项请参考 [overlay](/docs/components/feedback/overlay) 组件
 
 ```ts
-export interface DialogProps extends Omit<OverlayProps, "content"> {
+interface DialogProps extends OverlayProps {
   /** 360 | 内容区域的宽度 */
   width?: number | string;
   /** '提示' | 标题文本 */
@@ -77,5 +79,18 @@ export interface DialogProps extends Omit<OverlayProps, "content"> {
   headerProps?: JSX.IntrinsicElements["div"];
   /** 自定义脚部区域props */
   footerProps?: JSX.IntrinsicElements["div"];
+}
+```
+
+### quicker
+
+```ts
+/** 快捷询问, promise成功表示确认, 失败表示关闭或取消 */
+export interface DialogQuicker {
+  (
+    content: DialogProps["content"],
+    title?: DialogProps["title"],
+    cancel?: DialogProps["cancel"]
+  ): Promise<void>;
 }
 ```

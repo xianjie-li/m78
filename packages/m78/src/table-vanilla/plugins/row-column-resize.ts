@@ -2,12 +2,6 @@ import { TablePlugin } from "../plugin.js";
 import debounce from "lodash/debounce.js";
 import clamp from "lodash/clamp.js";
 import { rafCaller, RafFunction } from "@m78/utils";
-import {
-  VirtualBound,
-  VirtualBoundDragListener,
-  VirtualBoundHoverListener,
-  VirtualBoundItem,
-} from "../../virtual-bound/index.js";
 
 import { TableColumn, TableItems, TableRow } from "../types/items.js";
 import { _TableMutationPlugin } from "./mutation.js";
@@ -15,6 +9,14 @@ import { _TableMutationPlugin } from "./mutation.js";
 import { TableColumnFixed, TableRowFixed } from "../types/base-type.js";
 import { removeNode } from "../../common/index.js";
 import { _tableTriggerFilters, _triggerFilterList } from "../common.js";
+import {
+  createTrigger,
+  TriggerInstance,
+  TriggerConfig,
+  TriggerEvent,
+  TriggerTargetMeta,
+  TriggerType,
+} from "../../trigger/index.js";
 
 /** 列/行重置大小 */
 export class _TableRowColumnResize extends TablePlugin {
@@ -37,8 +39,8 @@ export class _TableRowColumnResize extends TablePlugin {
   static MIN_ROW_HEIGHT = 20;
   static MAX_ROW_HEIGHT = 300;
 
-  /** 虚拟节点 */
-  virtualBound: VirtualBound;
+  /** 虚拟节点触发事件 */
+  trigger: TriggerInstance;
 
   rafCaller: RafFunction;
   rafClearFn: () => void;
@@ -46,7 +48,7 @@ export class _TableRowColumnResize extends TablePlugin {
   /** 拖动中 */
   dragging = false;
   /** 是否触发了hover */
-  hovering = false;
+  activating = false;
   /** 轴偏移 */
   dragOffsetX = 0;
   dragOffsetY = 0;
@@ -72,50 +74,47 @@ export class _TableRowColumnResize extends TablePlugin {
     this.rafCaller = rafCaller();
 
     // 为virtualBound添加特定节点的过滤
-    const vbPreCheck = (e: any) => {
-      return _triggerFilterList(
+    const vbPreCheck: TriggerConfig["preCheck"] = (type, e) => {
+      if (type !== TriggerType.active && type !== TriggerType.drag)
+        return false;
+      return !_triggerFilterList(
         e.target as HTMLElement,
         _tableTriggerFilters,
         this.config.el
       );
     };
 
-    // 虚拟节点&事件绑定
-    this.virtualBound = new VirtualBound({
-      el: this.config.el,
-      hoverPreCheck: vbPreCheck,
-      dragPreCheck: vbPreCheck,
+    this.trigger = createTrigger({
+      target: [],
+      container: this.config.el,
+      type: [TriggerType.drag, TriggerType.active, TriggerType.move],
+      preCheck: vbPreCheck,
     });
 
-    this.virtualBound.hover.on(this.hoverHandle);
-    this.virtualBound.drag.on(this.dragHandle);
+    this.trigger.event.on(this.triggerDispatch);
 
     this.context.viewEl.addEventListener("scroll", this.scrollHandle);
 
     // 选取过程中禁用
     this.table.event.selectStart.on(() => {
-      this.virtualBound.enable = false;
+      this.trigger.enable = false;
     });
 
     this.table.event.select.on(() => {
-      this.virtualBound.enable = true;
+      this.trigger.enable = true;
     });
   }
 
   rendered() {
-    this.virtualBound.bounds = [];
+    this.trigger.clear();
     this.renderedDebounce();
   }
 
   beforeDestroy() {
     if (this.rafClearFn) this.rafClearFn();
 
-    this.virtualBound.hover.empty();
-    this.virtualBound.click.empty();
-    this.virtualBound.drag.empty();
-
-    this.virtualBound.destroy();
-    this.virtualBound = null!;
+    this.trigger.destroy();
+    this.trigger = null!;
 
     this.context.viewEl.removeEventListener("scroll", this.scrollHandle);
 
@@ -137,7 +136,8 @@ export class _TableRowColumnResize extends TablePlugin {
       const cBounds = this.createBound(wrapBound, last, false);
       const rBounds = this.createBound(wrapBound, last, true);
 
-      this.virtualBound.bounds = cBounds.concat(rBounds);
+      this.trigger.clear();
+      this.trigger.add(cBounds.concat(rBounds));
     },
     100,
     {
@@ -165,7 +165,7 @@ export class _TableRowColumnResize extends TablePlugin {
     // 滚动到底
     const touchEnd = Math.ceil(pos) >= maxPos;
 
-    const bounds: VirtualBoundItem[] = [];
+    const bounds: TriggerTargetMeta[] = [];
 
     // 虚拟节点大小
     const bSize = isRow ? 8 : 10;
@@ -202,18 +202,20 @@ export class _TableRowColumnResize extends TablePlugin {
       const left = isRow ? wrapBound.left : wrapBound.left + _pos - bSize / 2;
       const top = isRow ? wrapBound.top + _pos - bSize / 2 : wrapBound.top;
 
-      const b: VirtualBoundItem = {
-        left,
-        top,
-        height: isRow ? bSize : ctx.yHeaderHeight,
-        width: isRow ? ctx.xHeaderWidth : bSize,
+      const b: TriggerTargetMeta = {
+        target: {
+          left,
+          top,
+          height: isRow ? bSize : ctx.yHeaderHeight,
+          width: isRow ? ctx.xHeaderWidth : bSize,
+        },
         zIndex: i.isFixed ? 1 : 0,
-        type: isRow
-          ? _TableRowColumnResize.VIRTUAL_ROW_HANDLE_KEY
-          : _TableRowColumnResize.VIRTUAL_COLUMN_HANDLE_KEY,
-        cursor: "pointer",
-        hoverCursor: isRow ? "row-resize" : "col-resize",
+        cursor: isRow ? "row-resize" : "col-resize",
         data: {
+          type: isRow
+            ? _TableRowColumnResize.VIRTUAL_ROW_HANDLE_KEY
+            : _TableRowColumnResize.VIRTUAL_COLUMN_HANDLE_KEY,
+
           [isRow ? "row" : "column"]: i,
           [isRow ? "y" : "x"]: _pos - 2,
           startPos: isEndFixed ? _pos : _pos - size,
@@ -229,28 +231,42 @@ export class _TableRowColumnResize extends TablePlugin {
     return bounds;
   }
 
-  hoverHandle: VirtualBoundHoverListener = ({ bound, hover }) => {
-    const isRow = bound.type === _TableRowColumnResize.VIRTUAL_ROW_HANDLE_KEY;
+  triggerDispatch = (e: TriggerEvent) => {
+    if (e.type === TriggerType.active) {
+      this.hoverHandle(e);
+    }
 
-    this.hovering = hover;
+    if (e.type === TriggerType.drag) {
+      this.dragHandle(e);
+    }
+  };
 
-    if (hover) {
+  hoverHandle = ({ target, active }: TriggerEvent) => {
+    const meta = target as TriggerTargetMeta;
+    const data = meta.data;
+
+    const isRow = data.type === _TableRowColumnResize.VIRTUAL_ROW_HANDLE_KEY;
+
+    this.activating = active;
+
+    if (active) {
       isRow
-        ? this.updateYTipLine(bound.data.y, bound)
-        : this.updateXTipLine(bound.data.x, bound);
+        ? this.updateYTipLine(data.y, meta)
+        : this.updateXTipLine(data.x, meta);
     } else if (!this.dragging) {
       isRow ? this.hideYTipLine() : this.hideXTipLine();
     }
   };
 
-  dragHandle: VirtualBoundDragListener = ({ bound, first, last, delta }) => {
-    const isRow = bound.type === _TableRowColumnResize.VIRTUAL_ROW_HANDLE_KEY;
+  dragHandle = ({ target, first, last, deltaX, deltaY }: TriggerEvent) => {
+    const meta = target as TriggerTargetMeta;
+    const data = meta.data;
+
+    const isRow = data.type === _TableRowColumnResize.VIRTUAL_ROW_HANDLE_KEY;
 
     if (first) {
       this.dragging = true;
     }
-
-    const data = bound.data;
 
     const prevOffset = isRow ? this.dragOffsetY : this.dragOffsetX;
 
@@ -264,7 +280,7 @@ export class _TableRowColumnResize extends TablePlugin {
         ? _TableRowColumnResize.MAX_ROW_HEIGHT - size
         : _TableRowColumnResize.MAX_COLUMN_WIDTH - size;
 
-      const movePos = isRow ? delta[1] : delta[0];
+      const movePos = isRow ? deltaY : deltaX;
 
       const curOffset = data.reverse
         ? clamp(prevOffset + movePos, -max, min)
@@ -272,10 +288,10 @@ export class _TableRowColumnResize extends TablePlugin {
 
       if (isRow) {
         this.dragOffsetY = curOffset;
-        this.updateYTipLine(data.y + this.dragOffsetY, bound);
+        this.updateYTipLine(data.y + this.dragOffsetY, meta);
       } else {
         this.dragOffsetX = curOffset;
-        this.updateXTipLine(data.x + this.dragOffsetX, bound);
+        this.updateXTipLine(data.x + this.dragOffsetX, meta);
       }
     }
 
@@ -324,7 +340,7 @@ export class _TableRowColumnResize extends TablePlugin {
   }
 
   /** 显示并更新xLine位置 */
-  updateXTipLine(x: number, bound: VirtualBoundItem) {
+  updateXTipLine(x: number, bound: TriggerTargetMeta) {
     this.rafClearFn = this.rafCaller(() => {
       this.sizeBlock.style.visibility = "visible";
       this.xLine.style.visibility = "visible";
@@ -349,7 +365,7 @@ export class _TableRowColumnResize extends TablePlugin {
   }
 
   /** 显示并更新yLine位置 */
-  updateYTipLine(y: number, bound: VirtualBoundItem) {
+  updateYTipLine(y: number, bound: TriggerTargetMeta) {
     this.rafClearFn = this.rafCaller(() => {
       this.sizeBlock.style.visibility = "visible";
       this.yLine.style.visibility = "visible";
@@ -375,7 +391,7 @@ export class _TableRowColumnResize extends TablePlugin {
   /** 隐藏xLine */
   hideXTipLine() {
     if (this.xLine.style.visibility === "hidden") return;
-    this.virtualBound.cursor = null;
+    // this.trigger.cursor = "";
     this.xLine.style.visibility = "hidden";
     this.sizeBlock.style.visibility = "hidden";
   }
@@ -383,7 +399,7 @@ export class _TableRowColumnResize extends TablePlugin {
   /** 隐藏yLine */
   hideYTipLine() {
     if (this.yLine.style.visibility === "hidden") return;
-    this.virtualBound.cursor = null;
+    // this.trigger.cursor = "";
     this.yLine.style.visibility = "hidden";
     this.sizeBlock.style.visibility = "hidden";
   }

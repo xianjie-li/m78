@@ -192,7 +192,8 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
     const resize = this.getPlugin(_TableRowColumnResize);
 
     // 防止和拖拽行列冲突
-    if (resize.dragging || resize.virtualBound.hasBound(e.xy)) return;
+    if (resize.dragging || resize.trigger.hasTargetByXY(e.xy[0], e.xy[1]))
+      return;
 
     // 包含前置点时处理shift按下
     this.isShift = e.shiftKey && !!this.lastPoint;

@@ -46,11 +46,7 @@ export enum NotifyPosition {
   rightBottom = "rightBottom",
 }
 
-export interface NotifyProps
-  extends NotifyState,
-    Required<RenderApiComponentProps<NotifyState>> {}
-
-export interface NotifyState {
+interface NotifyState {
   /** 显示的内容 */
   content?: React.ReactNode;
   /** 'info' | 状态 */
@@ -75,33 +71,5 @@ export interface NotifyState {
   minDuration?: number;
   /** 完全自定义内容区域, 此项会覆盖掉大部分其他的ui配置, 如loading/cancel等, 渲染函数内可通过props.onChange(false)来主动关闭, props.onUpdate(newState)来更新状态 */
   customer?: (props: NotifyProps) => React.ReactNode;
-}
-
-/**
- * 实现组件的标准props, 实现组件可以选择继承此接口(如果未自定义open/onChange的key)或RenderApiComponentBaseProps
- * */
-export interface RenderApiComponentProps<S, I = null>
-  extends RenderApiComponentBaseProps<S, I> {
-  /** 是否显示 */
-  open?: boolean;
-  /** open状态变更时通知父组件 */
-  onChange?: (cur: boolean) => void;
-}
-
-/**
- * 实现组件会接受的基础props, 实现组件可以以此类型作为基础props
- *
- * 变更此类型时应注意是否需要同步setStateWhiteList和_OmitBuiltState
- * */
-export interface RenderApiComponentBaseProps<S, I = null> {
-  /** 通知上层组件销毁本组件的实例 */
-  onDispose?: () => void;
-  /**
-   * 更新state, 效果与RenderApiComponentInstance.setState相同, 区别是此回调由实现组件调用
-   * 使用此回调来通知外部组件更新传递给自身的state
-   * */
-  onUpdate?: RenderApiComponentInstance<S, I>["setState"];
-  /** 当需要对外暴露更多的api时使用, 将额外的api挂载到此ref */
-  instanceRef?: React.Ref<I>;
 }
 ```

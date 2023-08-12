@@ -1,4 +1,4 @@
-import { AnyObject, Bound, TupleNumber } from "./types.js";
+import { AnyObject, Bound, BoundSize, TupleNumber } from "./types.js";
 export * from "./dom/dom-adaption.js";
 export * from "./dom/auto-scroll.js";
 export * from "./dom/physical-scroll.js";
@@ -87,7 +87,7 @@ export declare function hasScroll(el: HTMLElement, checkOverflowAttr?: boolean):
     y: boolean;
 };
 /** Obtaining offsets from different events */
-export declare function getEventOffset(e: MouseEvent | TouchEvent | PointerEvent, target: HTMLElement): TupleNumber;
+export declare function getEventOffset(e: MouseEvent | TouchEvent | PointerEvent, target: HTMLElement | BoundSize): TupleNumber;
 /** checkChildren = false | check dom is focus, detected childrens focus when checkChildren is true */
 export declare function isFocus(dom: HTMLElement, checkChildren?: boolean): boolean;
 //# sourceMappingURL=dom.d.ts.map

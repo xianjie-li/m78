@@ -25,11 +25,13 @@ title: Bubble - 气泡框
 
 ## overlay
 
-你可以在 [Overlay](/docs/components/feedback/overlay/#气泡) 中找到其他气泡相关的用法, 如 方向/箭头/防遮挡/动画 等等, 以及其他弹层类组件共有的进阶用法.
+此组件基于 [overlay](/docs/components/feedback/overlay) 提供弹层定位和交互, 基本继承了其所有能力, 如果你需要更多进阶的用法, 请参阅其文档
 
 ## API
 
-继承 [overlay](/docs/components/feedback/overlay/) 除 "xy", "alignment" 之外的所有 prop.
+### props
+
+更多配置项请参考 [overlay](/docs/components/feedback/overlay) 组件, 部分配置不支持或有变动
 
 ```ts
 export interface BubbleProps extends BubbleOmitOverlayProps {
@@ -61,9 +63,10 @@ export enum BubbleType {
 }
 ```
 
-此外, 默认值也有一些变更:
+### 与 overlay 的差异配置
 
-- mountOnEnter/unmountOnExit
+- 这些配置不支持: ["xy", "alignment"]
+- mountOnEnter/unmountOnExit:
   - type 为 tooltip/confirm 时, 均为 true
   - 其他情况使用 overlay 的默认配置: mountOnEnter: true, unmountOnExit: false
 - type 为 tooltip 时, triggerType 为 active, 否则为 click

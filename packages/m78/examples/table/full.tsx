@@ -10,7 +10,10 @@ import {
   string,
   TableColumnLeafConfig,
 } from "../../src/index.js";
-import { RCTableEditWidgetImpl } from "../../src/table/types.js";
+import {
+  RCTableEditWidgetImpl,
+  RCTableInstance,
+} from "../../src/table/types.js";
 import { tableInput } from "../../src/table/form-widgets/table-input.js";
 import { TableFormSchema } from "../../src/table-vanilla/plugins/form.js";
 
@@ -61,7 +64,11 @@ const createRow = (key: any) => {
   };
 
   Array.from({ length: 40 }).forEach((_, j) => {
-    obj[`field${j}`] = `${key}-${j}`;
+    if (j === 4 || j === 3) {
+      obj[`field${j}`] = `${key}-${j} abcdefghi`;
+    } else {
+      obj[`field${j}`] = `${key}-${j}`;
+    }
 
     // if (j === 1) {
     //   obj[`field${j}`] = ["abc", `${key}-${j}`];
@@ -95,6 +102,14 @@ const schema: TableFormSchema[] = [
     name: "field4",
     validator: [required(), string({ min: 2, max: 5 })],
   },
+  {
+    name: "field5",
+    dynamic: (form) => {
+      return {
+        valid: form.getValue("field4") === "123",
+      };
+    },
+  },
 ];
 
 const rowConfig = {
@@ -108,6 +123,10 @@ const TableFullExample = () => {
   const [autoSize, setAutoSize] = useState(false);
 
   const update = useUpdate();
+
+  const [table, setTable] = useState<RCTableInstance | null>(null);
+
+  console.log(table);
 
   return (
     <div>
@@ -129,6 +148,7 @@ const TableFullExample = () => {
             );
           }
         }}
+        instanceRef={setTable}
       />
 
       <div className="mt-32">
@@ -140,6 +160,103 @@ const TableFullExample = () => {
         <button onClick={() => setData(data2)}>data2</button>
         <button onClick={() => setData([])}>data3</button>
       </div>
+
+      {table && (
+        <div className="mt-12">
+          <button
+            onClick={() => {
+              console.time("getData");
+              console.log(table.getData());
+              console.timeEnd("getData");
+            }}
+          >
+            getData
+          </button>
+          <button
+            onClick={() => {
+              console.time("getData");
+              console.log(table.getChangedData());
+              console.timeEnd("getData");
+            }}
+          >
+            getChangedData
+          </button>
+
+          <button
+            onClick={() => {
+              console.log(table.getFormChanged());
+            }}
+          >
+            getFormChanged
+          </button>
+          <button
+            onClick={() => {
+              console.log(table?.getChanged("id7"));
+            }}
+          >
+            getChanged row 7
+          </button>
+          <button
+            onClick={() => {
+              console.log(table?.getChanged("id7", "field6"));
+            }}
+          >
+            getChanged cell id7 field6
+          </button>
+          <button
+            onClick={() => {
+              console.log(table?.resetFormState());
+            }}
+          >
+            resetFormState
+          </button>
+
+          <button
+            onClick={() => {
+              table
+                ?.verify()
+                .then((res) => {
+                  console.log("success:", res);
+                })
+                .catch((err) => {
+                  console.log("fail:", err.rejects);
+                });
+            }}
+          >
+            verify
+          </button>
+
+          <button
+            onClick={() => {
+              table
+                ?.verify("id8")
+                .then((res) => {
+                  console.log("success:", res);
+                })
+                .catch((err) => {
+                  console.log("fail:", err.rejects);
+                });
+            }}
+          >
+            verify id8
+          </button>
+
+          <button
+            onClick={() => {
+              table
+                ?.verifyChanged()
+                .then((res) => {
+                  console.log("success:", res);
+                })
+                .catch((err) => {
+                  console.log("fail:", err.rejects);
+                });
+            }}
+          >
+            verify changed
+          </button>
+        </div>
+      )}
     </div>
   );
 };

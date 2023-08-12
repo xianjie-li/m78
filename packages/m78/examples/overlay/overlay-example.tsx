@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ReactElement, useState } from "react";
 import { Button } from "../../src/button";
 import {
   OverlayDragHandle,
@@ -6,8 +6,8 @@ import {
   OverlayDirection,
   OverlayInstance,
 } from "../../src/overlay/index.js";
-import { Trigger, UseTriggerType } from "@m78/hooks";
 import { getRandRange } from "@m78/utils";
+import { Divider, Trigger, TriggerType } from "../../src/index.js";
 
 const OverlayExample = () => {
   const [overlay, setOverlay] = useState<OverlayInstance | null>(null);
@@ -19,11 +19,13 @@ const OverlayExample = () => {
     height: 50,
   });
 
+  const [singleCont, setSingleCont] = useState<ReactElement | null>(null);
+
   return (
     <div>
       <div className="pb-24">
         <Overlay
-          triggerType={[UseTriggerType.click, UseTriggerType.focus]}
+          triggerType={[TriggerType.click, TriggerType.focus]}
           direction={OverlayDirection.top}
           content={
             <div style={{ padding: 8, fontSize: 14 }}>
@@ -36,16 +38,7 @@ const OverlayExample = () => {
         </Overlay>
 
         <Overlay
-          triggerType={UseTriggerType.click}
-          childrenAsTarget
-          direction="bottom"
-          content={<div className="p-24">内容内容</div>}
-        >
-          <Button>drag click</Button>
-        </Overlay>
-
-        <Overlay
-          triggerType={UseTriggerType.click}
+          triggerType={TriggerType.click}
           childrenAsTarget
           direction="bottom"
           content={<div className="p-24">内容内容</div>}
@@ -54,7 +47,7 @@ const OverlayExample = () => {
         </Overlay>
 
         <Overlay
-          triggerType={UseTriggerType.click}
+          triggerType={TriggerType.click}
           // childrenAsTarget
           // direction="bottom"
           content={
@@ -66,11 +59,11 @@ const OverlayExample = () => {
             </div>
           }
         >
-          <Button>drag click</Button>
+          <Button>drag</Button>
         </Overlay>
 
         <Overlay
-          triggerType={UseTriggerType.click}
+          triggerType={TriggerType.click}
           childrenAsTarget
           direction="bottom"
           content={
@@ -82,7 +75,7 @@ const OverlayExample = () => {
             </div>
           }
         >
-          <Button>drag click</Button>
+          <Button>drag + direction</Button>
         </Overlay>
 
         <Overlay
@@ -105,7 +98,27 @@ const OverlayExample = () => {
             </div>
           }
         >
-          <Button>click</Button>
+          <Button>随机位置</Button>
+        </Overlay>
+
+        <Overlay
+          triggerType={TriggerType.contextMenu}
+          childrenAsTarget
+          direction="rightStart"
+          content={<div className="p-24">内容内容</div>}
+        >
+          <Button>contextMenu</Button>
+        </Overlay>
+        <Overlay
+          triggerType={TriggerType.move}
+          childrenAsTarget
+          direction="topStart"
+          content={<div className="p-24">内容内容</div>}
+          offset={8}
+        >
+          <Button style={{ width: 160 }} size="large">
+            move
+          </Button>
         </Overlay>
       </div>
 
@@ -131,61 +144,96 @@ const OverlayExample = () => {
       </div>
 
       <Overlay
-        instanceRef={(ref) => {
-          setOverlay(ref);
-        }}
-        content={<span className="p-12">hello overlay</span>}
+        instanceRef={setOverlay}
+        content={<span className="plr-12 ptb-8">{singleCont}</span>}
         direction="top"
         autoFocus={false}
+        transitionType="fade"
+        offset={6}
+        onOpenTrigger={(e) => {
+          setSingleCont(e.context.content);
+        }}
       />
 
+      <Divider>单实例</Divider>
+
       <div className="mt-12">
-        <Trigger type={[UseTriggerType.click]} onTrigger={overlay?.trigger}>
-          <Button>click</Button>
+        <Trigger
+          type={[TriggerType.click]}
+          onTrigger={overlay?.trigger}
+          content={<span>这是内容1111</span>}
+        >
+          <Button>
+            <span>click</span>44
+          </Button>
         </Trigger>
-        <Trigger type={[UseTriggerType.active]} onTrigger={overlay?.trigger}>
+        <Trigger
+          type={[TriggerType.active]}
+          onTrigger={overlay?.trigger}
+          content={<span>这是内容22</span>}
+        >
           <Button>active</Button>
         </Trigger>
-        <Trigger type={[UseTriggerType.active]} onTrigger={overlay?.trigger}>
+        <Trigger
+          type={[TriggerType.active]}
+          onTrigger={overlay?.trigger}
+          content={<span>这是内容3333</span>}
+        >
           <Button>active</Button>
         </Trigger>
-        <Trigger type={[UseTriggerType.focus]} onTrigger={overlay?.trigger}>
+        <Trigger
+          type={[TriggerType.focus]}
+          onTrigger={overlay?.trigger}
+          content={<span>这是内容44</span>}
+        >
           <Button>focus</Button>
         </Trigger>
         <Trigger
-          type={[UseTriggerType.focus, UseTriggerType.click]}
+          type={[TriggerType.focus, TriggerType.click]}
           onTrigger={overlay?.trigger}
+          content={<span>这是内容5555</span>}
         >
           <Button>focus + click</Button>
         </Trigger>
 
-        {/*<Trigger*/}
-        {/*  type={[UseTriggerType.focus, UseTriggerType.click]}*/}
-        {/*  onTrigger={triggerHandle}*/}
-        {/*>*/}
-        {/*  <Button>focus + click</Button>*/}
-        {/*</Trigger>*/}
-
         <Trigger
-          type={[UseTriggerType.contextMenu]}
+          type={[TriggerType.contextMenu]}
           onTrigger={overlay?.trigger}
+          content={<span>这是内容66</span>}
         >
           <Button>contextMenu</Button>
         </Trigger>
 
-        {/*<Trigger*/}
-        {/*  type={[UseTriggerType.focus]}*/}
-        {/*  onTrigger={(e) => {*/}
-        {/*    console.log(e);*/}
-        {/*  }}*/}
-        {/*>*/}
-        {/*  <Button>test</Button>*/}
-        {/*</Trigger>*/}
+        <Trigger
+          type={[TriggerType.move]}
+          onTrigger={overlay?.trigger}
+          content={<span>这是内容7777</span>}
+        >
+          <Button size="large">move</Button>
+        </Trigger>
+
+        <Trigger
+          type={[TriggerType.move]}
+          onTrigger={overlay?.trigger}
+          content={<span>这是内容88</span>}
+        >
+          <Button size="large">move2</Button>
+        </Trigger>
+
+        <Trigger
+          type={[TriggerType.move]}
+          onTrigger={overlay?.trigger}
+          content={<span>这是内容9999</span>}
+        >
+          <Button size="large">move3</Button>
+        </Trigger>
       </div>
+
+      <Divider />
 
       <div className="mt-12">
         <Overlay
-          triggerType={UseTriggerType.focus}
+          triggerType={TriggerType.focus}
           childrenAsTarget
           direction="bottom"
           content={<div className="p-24">内容内容</div>}
@@ -193,7 +241,7 @@ const OverlayExample = () => {
           <Button>focus</Button>
         </Overlay>
         <Overlay
-          triggerType={UseTriggerType.click}
+          triggerType={TriggerType.click}
           childrenAsTarget
           direction="bottom"
           content={<div className="p-24">内容内容</div>}

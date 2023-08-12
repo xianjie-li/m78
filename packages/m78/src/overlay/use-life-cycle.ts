@@ -2,17 +2,16 @@ import {
   useClickAway,
   useDestroy,
   useLockBodyScroll,
-  UseTriggerType,
   useUpdateEffect,
 } from "@m78/hooks";
 import { useEffect, useImperativeHandle, useMemo } from "react";
 import { ensureArray, isDom } from "@m78/utils";
-import { _Methods } from "./use-methods.js";
 import { isBound } from "./common.js";
 import { _OverlayContext } from "./types.js";
 import { _useTypeProcess } from "./use-type-process.js";
+import { TriggerType } from "../trigger/index.js";
 
-export function _useLifeCycle(ctx: _OverlayContext, methods: _Methods) {
+export function _useLifeCycle(ctx: _OverlayContext) {
   const {
     props,
     setOpen,
@@ -24,6 +23,7 @@ export function _useLifeCycle(ctx: _OverlayContext, methods: _Methods) {
     state,
     measure,
     isUnmount,
+    methods,
   } = ctx;
 
   // 对外暴露的实例
@@ -90,7 +90,7 @@ export function _useLifeCycle(ctx: _OverlayContext, methods: _Methods) {
     onTrigger: () => {
       if (!open || !props.clickAwayClosable) return;
       if (props.clickAwayQueue && !overlaysClickAway.isLast) return;
-      setTimeout(() => {
+      self.clickAwayCloseTimer = setTimeout(() => {
         !isUnmount() && setOpen(false);
       });
     },
@@ -104,7 +104,7 @@ export function _useLifeCycle(ctx: _OverlayContext, methods: _Methods) {
     // 每次出现时将焦点移入组件
     if (props.autoFocus && open && containerRef.current) {
       // 非focus模式时为容器设置focus
-      if (!ensureArray(props.triggerType).includes(UseTriggerType.focus)) {
+      if (!ensureArray(props.triggerType).includes(TriggerType.focus)) {
         containerRef.current.focus();
       }
     }
@@ -164,6 +164,7 @@ export function _useLifeCycle(ctx: _OverlayContext, methods: _Methods) {
   useDestroy(() => {
     clearTimeout(self.triggerMultipleTimer);
     clearTimeout(self.shouldCloseTimer);
+    clearTimeout(self.clickAwayCloseTimer);
   });
 
   return {

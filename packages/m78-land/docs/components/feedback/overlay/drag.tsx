@@ -1,6 +1,5 @@
 import React from "react";
-import { UseTriggerType } from "@m78/hooks";
-import { OverlayDragHandle, Overlay, Button } from "m78";
+import { OverlayDragHandle, Overlay, Button, TriggerType } from "m78";
 
 import css from "./style.module.scss";
 
@@ -8,7 +7,7 @@ const Drag = () => {
   return (
     <div>
       <Overlay
-        triggerType={UseTriggerType.click}
+        triggerType={TriggerType.click}
         content={
           <div className={css.modal}>
             <div>

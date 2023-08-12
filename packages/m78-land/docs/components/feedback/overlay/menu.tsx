@@ -1,11 +1,10 @@
 import React from "react";
-import { Overlay, OverlayDirection, Button } from "m78";
+import { Overlay, OverlayDirection, Button, TriggerType } from "m78";
 import { IconArrowForwardIos } from "@m78/icons/icon-arrow-forward-ios";
 
 import css from "./style.module.scss";
 
 import { menuConfig } from "./menu-config";
-import { UseTriggerType } from "@m78/hooks";
 import clsx from "clsx";
 
 const Menu = () => {
@@ -19,7 +18,7 @@ const Menu = () => {
               <div className={css.menu}>{renderMenuList(item.children)}</div>
             }
             direction={OverlayDirection.rightStart}
-            triggerType={UseTriggerType.active}
+            triggerType={TriggerType.active}
             childrenAsTarget
           >
             {({ open }) => (
@@ -44,7 +43,7 @@ const Menu = () => {
     <div>
       <Overlay
         direction={OverlayDirection.rightStart}
-        triggerType={UseTriggerType.active}
+        triggerType={TriggerType.active}
         childrenAsTarget
         content={<div className={css.menu}>{renderMenuList(menuConfig)}</div>}
       >

@@ -172,5 +172,7 @@ export function _createTable(config: TableConfig): TableInstance {
   });
   event.mounted.emit();
 
+  console.log(context);
+
   return instance;
 }

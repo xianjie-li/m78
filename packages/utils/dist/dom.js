@@ -366,7 +366,8 @@ export function getScrollParent(ele, getAll) {
         clientX = e.clientX;
         clientY = e.clientY;
     }
-    var ref = target.getBoundingClientRect(), left = ref.left, top = ref.top;
+    var isBound = isNumber(target.left) && isNumber(target.top);
+    var ref = isBound ? target : target.getBoundingClientRect(), left = ref.left, top = ref.top;
     return [
         clientX - left,
         clientY - top

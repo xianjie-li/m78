@@ -320,6 +320,7 @@
     position: absolute;
     border: 1px dashed var(--m78-color-error);
     pointer-events: none;
+    border-radius: 2px;
 
     &::before {
       content: "";
@@ -353,6 +354,12 @@
     border: 3px solid transparent;
     border-left-color: currentColor;
     border-bottom-color: currentColor;
+  }
+
+  &_form-invalid {
+    position: absolute;
+    background: var(--m78-color-divider);
+    cursor: not-allowed;
   }
 
     // ## 其他

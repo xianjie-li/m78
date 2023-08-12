@@ -2,6 +2,8 @@ import { Verify, Config, Schema, RejectMeta } from "@m78/verify";
 import { AnyFunction, EmptyFunction, NamePath, CustomEvent } from "@m78/utils";
 
 export interface FormConfig extends Config {
+  /** false | 当其中一项验证失败后，停止后续字段的验证 */
+  verifyFirst?: boolean;
   /** 描述表单值结构的对象 */
   schemas: FormSchemaWithoutName;
   /** {} | 默认值 */
@@ -60,7 +62,7 @@ export interface FormInstance {
    * */
   getChangedValues(): any | null;
 
-  /** 获取对dynamic进行处理进行处理后的schema副本 */
+  /** 获取对dynamic进行处理进行处理后的schema副本, 会自动忽略掉无效项 */
   getSchemas(): FormSchemaWithoutName;
 
   /** 重新设置当前schemas */
@@ -69,8 +71,8 @@ export interface FormInstance {
   /** 获取指定的schema */
   getSchema(name: NamePath): FormSchema | FormSchemaWithoutName | null;
 
-  /** 获取错误信息 */
-  getErrors(name: NamePath): RejectMeta;
+  /** 获取错误信息, 注意: 此方法不会自动执行验证, 仅用于获取最后一次验证后的结果 */
+  getErrors(name?: NamePath): RejectMeta;
 
   /** 重置表单状态 */
   reset(): void;

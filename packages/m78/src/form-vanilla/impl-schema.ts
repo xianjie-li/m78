@@ -2,7 +2,6 @@ import { _Context, FormSchema, FormSchemaWithoutName } from "./types.js";
 import {
   ensureArray,
   isArray,
-  isBoolean,
   isFunction,
   isObject,
   NameItem,
@@ -11,7 +10,7 @@ import {
 import { _ANY_NAME_PLACE_HOLD } from "./common.js";
 
 export function _implSchema(ctx: _Context) {
-  const { instance, config } = ctx;
+  const { instance } = ctx;
 
   ctx.getFormatterSchemas = () => {
     // 所有invalid项的name

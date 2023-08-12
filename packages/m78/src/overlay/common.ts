@@ -11,7 +11,7 @@ import { config } from "react-spring";
 import { TransitionType } from "../transition/index.js";
 import { Z_INDEX_MODAL } from "../common/index.js";
 import clamp from "lodash/clamp.js";
-import { useSame, UseTriggerEvent, UseTriggerType } from "@m78/hooks";
+import { useSame } from "@m78/hooks";
 import {
   _ArrowBasePosition,
   _ClampBound,
@@ -26,6 +26,8 @@ import {
   OverlayProps,
   OverlayRenderOption,
 } from "./types.js";
+import { TriggerEvent, TriggerType } from "../trigger/index.js";
+import { _Methods } from "./use-methods.js";
 
 export const _defaultAlignment: TupleNumber = [0.5, 0.5];
 
@@ -38,7 +40,7 @@ export const _defaultProps = {
   lockScroll: true,
   arrowSize: [26, 8],
   offset: 0,
-  triggerType: UseTriggerType.click,
+  triggerType: TriggerType.click,
   autoFocus: true,
 };
 
@@ -123,44 +125,78 @@ export function useOverlaysClickAway(config?: SameConfig, namespace?: string) {
 }
 
 /** useTrigger回调 */
-export function _onTrigger(
-  e: UseTriggerEvent,
-  setOpen: AnyFunction,
-  self: _OverlayContext["self"],
-  props: OverlayProps
-) {
+export function _onTrigger(e: TriggerEvent, ctx: _OverlayContext) {
+  const { props, self, setOpen, methods } = ctx;
+
   props.onTrigger?.(e);
 
-  if (e.type === UseTriggerType.click) {
+  if (e.type === TriggerType.click) {
     if (self.lastFocusTime) {
       // focus和click前后间隔400ms才触发
       const diff = Date.now() - self.lastFocusTime;
       if (diff > 400) {
-        setOpen((prev: any) => !prev);
+        setOpen((prev: any) => {
+          const next = !prev;
+          if (next) {
+            props.onOpenTrigger?.(e);
+          }
+          return next;
+        });
       }
     } else {
-      setOpen((prev: any) => !prev);
+      setOpen((prev: any) => {
+        const next = !prev;
+        if (next) {
+          props.onOpenTrigger?.(e);
+        }
+        return next;
+      });
     }
   }
 
-  // 标记正常出发focus, 并在open改变时取消
-  if (e.type === UseTriggerType.focus && e.focus) {
+  // 标记正常触发focus, 并在open改变时取消
+  if (e.type === TriggerType.focus && e.focus) {
     self.lastFocusTime = Date.now();
   }
 
-  if (e.type === UseTriggerType.focus || e.type === UseTriggerType.active) {
+  if (e.type === TriggerType.focus || e.type === TriggerType.active) {
     self.currentActiveStatus =
-      e.type === UseTriggerType.focus ? e.focus : e.active;
+      e.type === TriggerType.focus ? e.focus : e.active;
 
     if (!self.activeContent || self.currentActiveStatus) {
+      if (self.currentActiveStatus) {
+        props.onOpenTrigger?.(e);
+      }
       setOpen(self.currentActiveStatus);
     } else {
       self.shouldCloseFlag = true;
     }
   }
 
-  if (e.type === UseTriggerType.contextMenu) {
+  if (e.type === TriggerType.contextMenu) {
+    methods.updateXY([e.x, e.y], true);
+    props.onOpenTrigger?.(e);
     setOpen(true);
+  }
+
+  if (e.type === TriggerType.move) {
+    if (!e.last) {
+      clearTimeout(self.lastMoveCloseTimer);
+
+      methods.updateXY([e.x, e.y], true);
+
+      if (e.first) {
+        props.onOpenTrigger?.(e);
+      }
+
+      if (!ctx.open) {
+        setOpen(true);
+      }
+    } else {
+      self.lastMoveCloseTimer = setTimeout(() => {
+        setOpen(false);
+      }, 80);
+    }
   }
 }
 

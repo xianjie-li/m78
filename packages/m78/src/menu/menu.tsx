@@ -17,14 +17,11 @@ import {
 } from "../overlay/index.js";
 import {
   DomTarget,
-  Trigger,
   useClickAway,
   useFn,
   useSelect,
   useSelf,
   useSetState,
-  UseTriggerEvent,
-  UseTriggerType,
 } from "@m78/hooks";
 import { _MenuContext, MenuOption, MenuProps } from "./types.js";
 import { Lay } from "../lay/index.js";
@@ -38,6 +35,8 @@ import {
 import { _getOptionAllValues } from "./common.js";
 import { useKeyboardHandle } from "./use-keyboard-handle.js";
 import clsx from "clsx";
+import { Trigger, TriggerEvent, TriggerType } from "../trigger/index.js";
+import { TransitionType } from "../transition/index.js";
 
 const defaultProps: Partial<MenuProps> = {
   direction: OverlayDirection.bottomStart,
@@ -68,7 +67,7 @@ export const _Menu = (props: MenuProps) => {
   const [state, setState] = useSetState<_MenuContext["state"]>({
     xy: undefined,
     current: null,
-    subMenuTriggerType: UseTriggerType.active,
+    subMenuTriggerType: TriggerType.active,
   });
 
   const overlayRef = useRef<OverlayInstance | null>(null);
@@ -145,9 +144,9 @@ export const _Menu = (props: MenuProps) => {
     self.targets.splice(0, self.targets.length, ...next);
   });
 
-  const onContextTrigger = useFn((e: UseTriggerEvent) => {
+  const onContextTrigger = useFn((e: TriggerEvent) => {
     props.onTrigger?.(e);
-    if (e.type === UseTriggerType.contextMenu) {
+    if (e.type === TriggerType.contextMenu) {
       overlayRef.current?.updateXY([e.x, e.y], true);
     }
   });
@@ -169,7 +168,7 @@ export const _Menu = (props: MenuProps) => {
   useEffect(() => {
     if (isMobileDevice()) {
       setState({
-        subMenuTriggerType: UseTriggerType.click,
+        subMenuTriggerType: TriggerType.click,
       });
     }
   }, []);
@@ -222,6 +221,7 @@ export const _Menu = (props: MenuProps) => {
             }
             direction={OverlayDirection.rightStart}
             triggerType={state.subMenuTriggerType}
+            transitionType={TransitionType.none}
             offset={8}
             onChange={(open) => openChangeHandle(open, value, list)}
           >
@@ -241,7 +241,7 @@ export const _Menu = (props: MenuProps) => {
       return (
         <Trigger
           key={value}
-          type={UseTriggerType.active}
+          type={TriggerType.active}
           onTrigger={(e) => openChangeHandle(e.active, value, list)}
         >
           <Lay

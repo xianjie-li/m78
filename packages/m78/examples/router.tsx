@@ -35,6 +35,7 @@ import en from "../src/i18n/locales/en.js";
 import { i18n } from "../src/i18n/index.js";
 import TableExample from "./table/index.js";
 import TableFullExample from "./table/full.js";
+import TriggerExample from "./trigger/trigger-example.js";
 
 export const router = createHashRouter([
   {
@@ -133,6 +134,10 @@ export const router = createHashRouter([
       {
         path: "rtable",
         element: <TableFullExample />,
+      },
+      {
+        path: "trigger",
+        element: <TriggerExample />,
       },
     ],
   },

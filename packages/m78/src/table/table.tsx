@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useImperativeHandle, useRef } from "react";
 import {
   _RCTableContext,
   _RCTableSelf,
@@ -17,7 +17,7 @@ import { IconDrafts } from "@m78/icons/icon-drafts.js";
 import { Size } from "../common/index.js";
 import { _CustomRender, _useCustomRender } from "./use-custom-render.js";
 import { _useEvent } from "./use-event.js";
-import { _Toolbar } from "./toolbar/Toolbar.js";
+import { _Toolbar } from "./toolbar/toolbar.js";
 import { _CustomEditRender, _useEditRender } from "./use-edit-render.js";
 import { Divider, Row } from "../layout/index.js";
 
@@ -71,6 +71,10 @@ export function _Table(props: RCTableProps) {
   _usePropsEffect(props, methods.updateInstance);
 
   _useEvent(ctx);
+
+  useImperativeHandle(props.instanceRef, () => state.instance, [
+    state.instance,
+  ]);
 
   return (
     <div

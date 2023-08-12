@@ -1,6 +1,5 @@
 import React from "react";
-import { Overlay, OverlayDirection, Button } from "m78";
-import { UseTriggerType } from "@m78/hooks";
+import { Overlay, OverlayDirection, Button, TriggerType } from "m78";
 
 const Direction = () => {
   return (
@@ -24,7 +23,7 @@ const Direction = () => {
           <Overlay
             arrow
             direction={OverlayDirection.topStart}
-            triggerType={UseTriggerType.active}
+            triggerType={TriggerType.active}
             content={
               <div style={{ padding: "8px 12px", fontSize: 16 }}>topStart</div>
             }
@@ -35,7 +34,7 @@ const Direction = () => {
           <Overlay
             arrow
             direction={OverlayDirection.top}
-            triggerType={UseTriggerType.active}
+            triggerType={TriggerType.active}
             content={
               <div style={{ padding: "8px 12px", fontSize: 16 }}>top</div>
             }
@@ -46,7 +45,7 @@ const Direction = () => {
           <Overlay
             arrow
             direction={OverlayDirection.topEnd}
-            triggerType={UseTriggerType.active}
+            triggerType={TriggerType.active}
             content={
               <div style={{ padding: "8px 12px", fontSize: 16 }}>topEnd</div>
             }
@@ -69,7 +68,7 @@ const Direction = () => {
           <Overlay
             arrow
             direction={OverlayDirection.rightStart}
-            triggerType={UseTriggerType.active}
+            triggerType={TriggerType.active}
             content={
               <div style={{ padding: "8px 12px", fontSize: 16 }}>
                 rightStart
@@ -82,7 +81,7 @@ const Direction = () => {
           <Overlay
             arrow
             direction={OverlayDirection.right}
-            triggerType={UseTriggerType.active}
+            triggerType={TriggerType.active}
             content={
               <div style={{ padding: "8px 12px", fontSize: 16 }}>right</div>
             }
@@ -93,7 +92,7 @@ const Direction = () => {
           <Overlay
             arrow
             direction={OverlayDirection.rightEnd}
-            triggerType={UseTriggerType.active}
+            triggerType={TriggerType.active}
             content={
               <div style={{ padding: "8px 12px", fontSize: 16 }}>rightEnd</div>
             }
@@ -115,7 +114,7 @@ const Direction = () => {
           <Overlay
             arrow
             direction={OverlayDirection.bottomStart}
-            triggerType={UseTriggerType.active}
+            triggerType={TriggerType.active}
             content={
               <div style={{ padding: "8px 12px", fontSize: 16 }}>
                 bottomStart
@@ -128,7 +127,7 @@ const Direction = () => {
           <Overlay
             arrow
             direction={OverlayDirection.bottom}
-            triggerType={UseTriggerType.active}
+            triggerType={TriggerType.active}
             content={
               <div style={{ padding: "8px 12px", fontSize: 16 }}>bottom</div>
             }
@@ -139,7 +138,7 @@ const Direction = () => {
           <Overlay
             arrow
             direction={OverlayDirection.bottomEnd}
-            triggerType={UseTriggerType.active}
+            triggerType={TriggerType.active}
             content={
               <div style={{ padding: "8px 12px", fontSize: 16 }}>bottomEnd</div>
             }
@@ -162,7 +161,7 @@ const Direction = () => {
           <Overlay
             arrow
             direction={OverlayDirection.leftStart}
-            triggerType={UseTriggerType.active}
+            triggerType={TriggerType.active}
             content={
               <div style={{ padding: "8px 12px", fontSize: 16 }}>leftStart</div>
             }
@@ -173,7 +172,7 @@ const Direction = () => {
           <Overlay
             arrow
             direction={OverlayDirection.left}
-            triggerType={UseTriggerType.active}
+            triggerType={TriggerType.active}
             content={
               <div style={{ padding: "8px 12px", fontSize: 16 }}>left</div>
             }
@@ -184,7 +183,7 @@ const Direction = () => {
           <Overlay
             arrow
             direction={OverlayDirection.leftEnd}
-            triggerType={UseTriggerType.active}
+            triggerType={TriggerType.active}
             content={
               <div style={{ padding: "8px 12px", fontSize: 16 }}>leftEnd</div>
             }

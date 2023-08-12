@@ -1,6 +1,6 @@
 import { _Context, _State } from "./types.js";
 import { RejectMeta, VerifyError } from "@m78/verify";
-import { ensureArray, isArray, stringifyNamePath } from "@m78/utils";
+import { ensureArray, isArray, isEmpty, stringifyNamePath } from "@m78/utils";
 import clone from "lodash/cloneDeep.js";
 import { _eachState, _getState, _isRelationName } from "./common.js";
 
@@ -60,7 +60,7 @@ export function _implAction(ctx: _Context) {
           reject.forEach((meta) => {
             const st = _getState(ctx, meta.namePath);
 
-            if (!st.errors) {
+            if (!isEmpty(st.errors)) {
               st.errors = [];
             }
 

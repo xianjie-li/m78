@@ -27,4 +27,47 @@ UI:
 verifyErrorTip(cell, message) // 包含错误信息的单元格被单独选中时, 需要适当的地方对错误信息进行展示
 coverTip(cell, message) // 未能完整展示内容的单元格被单独选中时, 需要使用适当的方式对其内容进行展示
 
+tip({
+cell?,
+node,
+type: cellTip | validate | hoverTip | disableTip
+})
+
+或
+
+改造 useTrigger 为可以 api 使用, 然后 config 接收 dialog 或 onTrigger 实例
+
+接收一个额外回调来控制渲染内容, 参数为
+
+{
+cell?,
+node,
+messages,
+type: validateTip | tip
+}
+
 滚动或点击时隐藏上述提示
+
+显示类型:
+
+- 点击
+- hover
+
+```ts
+function tipChange({
+  targer: el | bound, // 对应的dom节点
+  show, // 是否显示
+  text: string,
+  type: "cell" | "verify" | "regular",
+  cell,
+}) {}
+```
+
+遮挡单元格/错误单元格/禁用单元格/编辑提示
+
+单元格提示, select 且只有单个单元格时
+编辑提示, hover 时出发
+
+- form 的语言包对外暴露
+- disable 系列 api 隐藏
+- 排序

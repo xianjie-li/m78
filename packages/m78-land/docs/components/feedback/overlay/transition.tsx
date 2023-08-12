@@ -1,7 +1,12 @@
 import React from "react";
-import { Overlay, OverlayDirection, Button, TransitionType } from "m78";
+import {
+  Overlay,
+  OverlayDirection,
+  Button,
+  TransitionType,
+  TriggerType,
+} from "m78";
 import { config } from "react-spring";
-import { UseTriggerType } from "@m78/hooks";
 
 const Transition = () => {
   return (
@@ -10,7 +15,7 @@ const Transition = () => {
         <Overlay
           transitionType={TransitionType.fade}
           direction={OverlayDirection.top}
-          triggerType={UseTriggerType.active}
+          triggerType={TriggerType.active}
           childrenAsTarget
           content={<div style={{ padding: 32, fontSize: 32 }}>气泡内容</div>}
         >
@@ -20,7 +25,7 @@ const Transition = () => {
         <Overlay
           transitionType={TransitionType.zoom}
           direction={OverlayDirection.top}
-          triggerType={UseTriggerType.active}
+          triggerType={TriggerType.active}
           childrenAsTarget
           content={<div style={{ padding: 32, fontSize: 32 }}>气泡内容</div>}
         >
@@ -30,7 +35,7 @@ const Transition = () => {
         <Overlay
           transitionType={TransitionType.punch}
           direction={OverlayDirection.top}
-          triggerType={UseTriggerType.active}
+          triggerType={TriggerType.active}
           childrenAsTarget
           content={<div style={{ padding: 32, fontSize: 32 }}>气泡内容</div>}
         >
@@ -40,7 +45,7 @@ const Transition = () => {
         <Overlay
           transitionType={TransitionType.slideLeft}
           direction={OverlayDirection.top}
-          triggerType={UseTriggerType.active}
+          triggerType={TriggerType.active}
           childrenAsTarget
           content={<div style={{ padding: 32, fontSize: 32 }}>气泡内容</div>}
         >
@@ -50,7 +55,7 @@ const Transition = () => {
         <Overlay
           transitionType={TransitionType.slideRight}
           direction={OverlayDirection.top}
-          triggerType={UseTriggerType.active}
+          triggerType={TriggerType.active}
           childrenAsTarget
           content={<div style={{ padding: 32, fontSize: 32 }}>气泡内容</div>}
         >
@@ -60,7 +65,7 @@ const Transition = () => {
         <Overlay
           transitionType={TransitionType.slideTop}
           direction={OverlayDirection.top}
-          triggerType={UseTriggerType.active}
+          triggerType={TriggerType.active}
           childrenAsTarget
           content={<div style={{ padding: 32, fontSize: 32 }}>气泡内容</div>}
         >
@@ -70,7 +75,7 @@ const Transition = () => {
         <Overlay
           transitionType={TransitionType.slideBottom}
           direction={OverlayDirection.top}
-          triggerType={UseTriggerType.active}
+          triggerType={TriggerType.active}
           childrenAsTarget
           content={<div style={{ padding: 32, fontSize: 32 }}>气泡内容</div>}
         >
@@ -80,11 +85,21 @@ const Transition = () => {
         <Overlay
           transitionType={TransitionType.bounce}
           direction={OverlayDirection.top}
-          triggerType={UseTriggerType.active}
+          triggerType={TriggerType.active}
           childrenAsTarget
           content={<div style={{ padding: 32, fontSize: 32 }}>气泡内容</div>}
         >
           <Button>bounce</Button>
+        </Overlay>
+
+        <Overlay
+          transitionType={TransitionType.none}
+          direction={OverlayDirection.top}
+          triggerType={TriggerType.active}
+          childrenAsTarget
+          content={<div style={{ padding: 32, fontSize: 32 }}>气泡内容</div>}
+        >
+          <Button>无动画</Button>
         </Overlay>
       </div>
 
@@ -95,7 +110,7 @@ const Transition = () => {
           }}
           transitionType={TransitionType.bounce}
           direction={OverlayDirection.top}
-          triggerType={UseTriggerType.active}
+          triggerType={TriggerType.active}
           childrenAsTarget
           content={<div style={{ padding: 32, fontSize: 32 }}>气泡内容</div>}
         >
@@ -112,7 +127,7 @@ const Transition = () => {
             },
           }}
           direction={OverlayDirection.top}
-          triggerType={UseTriggerType.active}
+          triggerType={TriggerType.active}
           childrenAsTarget
           content={<div style={{ padding: 32, fontSize: 32 }}>气泡内容</div>}
         >

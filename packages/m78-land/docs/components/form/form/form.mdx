@@ -530,8 +530,8 @@ interface FormInstance {
    * */
   getChangedValues(): any | null;
 
-  /** 获取错误信息 */
-  getErrors(name: NamePath): RejectMeta;
+  /** 获取错误信息, 注意: 此方法不会自动执行验证, 仅用于获取最后一次验证后的结果 */
+  getErrors(name?: NamePath): RejectMeta;
 
   /** 重置表单状态 */
   reset(): void;

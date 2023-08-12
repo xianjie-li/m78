@@ -9,10 +9,10 @@ import { Size, statusIconMap, Z_INDEX_MESSAGE } from "../common/index.js";
 import clsx from "clsx";
 import { Button, ButtonColor } from "../button/index.js";
 import { Row } from "../layout/index.js";
-import { UseTriggerType } from "@m78/hooks";
 import { isBoolean, isFunction, omit } from "@m78/utils";
 import { BubbleProps, BubbleType, omitBubbleOverlayProps } from "./types.js";
 import { COMMON_NS, Translation } from "../i18n/index.js";
+import { TriggerType } from "../trigger/index.js";
 
 const defaultProps: Partial<BubbleProps> = {
   type: BubbleType.tooltip,
@@ -62,9 +62,7 @@ const _Bubble = (props: BubbleProps) => {
   // 在不同类型下使用不同的triggerType默认值
   const triggerType = useMemo(() => {
     let t: OverlayProps["triggerType"] =
-      type === BubbleType.tooltip
-        ? UseTriggerType.active
-        : UseTriggerType.click;
+      type === BubbleType.tooltip ? TriggerType.active : TriggerType.click;
 
     if (props.triggerType !== undefined) t = props.triggerType;
 

@@ -33,6 +33,7 @@ import {
 } from "../types/items.js";
 import { _getCellKeysByStr, _prefix } from "../common.js";
 import { _TableSortColumnPlugin } from "./sort-column.js";
+import { _TableFormPlugin } from "./form.js";
 
 /**
  * 所有config/data变更相关的操作, 变异操作应统一使用此处提供的api, 方便统一处理, 自动生成和处理历史等
@@ -45,7 +46,11 @@ export class _TableMutationPlugin extends TablePlugin {
 
   sortColumn: _TableSortColumnPlugin;
 
+  form: _TableFormPlugin;
+
   init() {
+    this.form = this.getPlugin(_TableFormPlugin);
+
     this.sortColumn = this.getPlugin(_TableSortColumnPlugin);
   }
 
@@ -371,6 +376,8 @@ export class _TableMutationPlugin extends TablePlugin {
 
     if (!cell) return;
 
+    if (!this.form.validCheck(cell)) return;
+
     if (isString(value)) {
       value = value.trim();
     }
@@ -423,7 +430,7 @@ export class _TableMutationPlugin extends TablePlugin {
     });
   };
 
-  /** 克隆并重新设置row的data, 防止变更原数据, 主要用于延迟clone, 可以在数据量较大时提供初始化速度  */
+  /** 克隆并重新设置row的data, 防止变更原数据, 主要用于延迟clone, 可以在数据量较大时提升初始化速度  */
   private cloneAndSetRowData(row: TableRow) {
     const cloneData = deepClone(row.data);
     const ind = this.context.dataKeyIndexMap[row.key];

@@ -8,6 +8,7 @@ import { ComponentBasePropsWithAny } from "../common";
  * 内置动画类型
  * */
 export enum TransitionType {
+  none = "none",
   fade = "fade",
   zoom = "zoom",
   punch = "punch",

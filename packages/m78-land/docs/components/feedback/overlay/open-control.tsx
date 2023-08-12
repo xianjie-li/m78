@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Button, Overlay, OverlayDirection } from "m78";
-import { UseTriggerType } from "@m78/hooks";
+import { Button, Overlay, OverlayDirection, TriggerType } from "m78";
 
 const OpenControl = () => {
   const [open, setOpen] = useState(false);
@@ -38,67 +37,6 @@ const OpenControl = () => {
       >
         <Button>children代理</Button>
       </Overlay>
-
-      <div className="mt-32">
-        <p>触发类型:</p>
-        <Overlay
-          direction={OverlayDirection.top}
-          content={<div style={{ padding: 8, fontSize: 14 }}>通过点击触发</div>}
-          childrenAsTarget
-        >
-          <Button>click</Button>
-        </Overlay>
-
-        <Overlay
-          triggerType={UseTriggerType.active}
-          direction={OverlayDirection.top}
-          content={
-            <div style={{ padding: 8, fontSize: 14 }}>
-              hover触发, 移动端按住触发
-            </div>
-          }
-          childrenAsTarget
-        >
-          <Button>active</Button>
-        </Overlay>
-
-        <Overlay
-          triggerType={UseTriggerType.focus}
-          direction={OverlayDirection.top}
-          content={
-            <div style={{ padding: 8, fontSize: 14 }}>
-              聚焦时出现, 失焦时关闭
-            </div>
-          }
-          childrenAsTarget
-        >
-          <Button>focus</Button>
-        </Overlay>
-
-        <Overlay
-          triggerType={UseTriggerType.contextMenu}
-          direction={OverlayDirection.top}
-          content={
-            <div style={{ padding: 8, fontSize: 14 }}>右键触发, 移动端长按</div>
-          }
-          childrenAsTarget
-        >
-          <Button>contextMenu(右键)</Button>
-        </Overlay>
-
-        <Overlay
-          triggerType={[UseTriggerType.click, UseTriggerType.focus]}
-          direction={OverlayDirection.top}
-          content={
-            <div style={{ padding: 8, fontSize: 14 }}>
-              点击或聚焦, 表单控件最常用的方式
-            </div>
-          }
-          childrenAsTarget
-        >
-          <Button>click + focus</Button>
-        </Overlay>
-      </div>
     </div>
   );
 };

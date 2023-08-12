@@ -1,7 +1,8 @@
 import { getNamePathValue, isArray, isObject } from "@m78/utils";
 import isEqual from "lodash/isEqual.js";
 import { _Context } from "./types";
-import { _getState } from "./common.js";
+import { _eachState, _getState } from "./common.js";
+import { RejectMeta } from "@m78/verify";
 
 export function _implState(ctx: _Context) {
   const { instance } = ctx;
@@ -66,7 +67,19 @@ export function _implState(ctx: _Context) {
   };
 
   instance.getErrors = (name) => {
-    const st = _getState(ctx, name);
-    return st.errors || [];
+    if (name) {
+      const st = _getState(ctx, name);
+      return st.errors || [];
+    }
+
+    const errors: RejectMeta = [];
+
+    _eachState(ctx, (st) => {
+      if (st.errors?.length) {
+        errors.push(...st.errors);
+      }
+    });
+
+    return errors;
   };
 }

@@ -37,8 +37,6 @@ export function _createForm(config: FormConfig): FormInstance {
     isValueChangeTrigger: false,
   } as any as _Context;
 
-  console.log(ctx);
-
   _implEvent(ctx);
 
   _implState(ctx);

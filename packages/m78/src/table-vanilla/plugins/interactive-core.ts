@@ -10,6 +10,7 @@ import {
   setNamePathValue,
 } from "@m78/utils";
 import { removeNode } from "../../common/index.js";
+import { _TableFormPlugin } from "./form.js";
 
 // 表示一个交互项
 interface TableInteractiveItem {
@@ -47,10 +48,13 @@ export class _TableInteractiveCorePlugin extends TablePlugin {
 
   multipleHelper: KeyboardMultipleHelper;
 
+  form: _TableFormPlugin;
+
   mounted() {
     this.initDom();
     this.table.event.click.on(this.onClick);
     this.multipleHelper = createKeyboardHelpersBatch(this.getKeydownOptions());
+    this.form = this.getPlugin(_TableFormPlugin);
   }
 
   beforeDestroy() {
@@ -159,6 +163,7 @@ export class _TableInteractiveCorePlugin extends TablePlugin {
   /** 使一个单元格进入交互状态, 可通过defaultValue设置交互后的起始默认值, 默认为当前单元格value */
   private interactive = (cell: TableCell, defaultValue?: any) => {
     if (!this.isInteractive(cell)) return;
+    if (!this.form.validCheck(cell)) return;
 
     const attachNode = this.createAttachNode();
 
@@ -264,7 +269,9 @@ export class _TableInteractiveCorePlugin extends TablePlugin {
       cell: last.cell,
       filter: (cell) => {
         if (cell.column.isHeader || cell.row.isHeader) return false;
-        return this.isInteractive(cell);
+        if (!this.isInteractive(cell)) return false;
+        if (!this.form.validCheck(cell)) return false;
+        return true;
       },
     });
 

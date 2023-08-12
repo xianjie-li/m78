@@ -174,7 +174,7 @@
   }
 
   &_cont {
-    //min-width: 100%;
+    min-width: 100%;
   }
 
   &_pull-down {
@@ -217,19 +217,3 @@
   }
 }
 
-.item-item2 {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  background-color: red;
-  z-index: 99999;
-}
-
-.temp-item {
-  //background-color: pink;
-  //border: 1px solid #eee;
-
-  & + & {
-    margin-top: 8px;
-  }
-}
