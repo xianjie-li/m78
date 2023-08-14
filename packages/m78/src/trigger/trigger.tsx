@@ -99,7 +99,6 @@ export function _useTrigger(props: UseTriggerProps & AnyObject) {
     const ins =
       instances[instanceKey] ||
       createTrigger({
-        target: [],
         type: allType,
       });
 

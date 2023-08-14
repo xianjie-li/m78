@@ -5,7 +5,7 @@ import {
   TriggerType,
 } from "../types.js";
 import { _buildEvent } from "../methods.js";
-import { getEventOffset, isTruthyOrZero } from "@m78/utils";
+import { getEventOffset, isNumber, isTruthyOrZero } from "@m78/utils";
 import { _eventXyGetter, triggerClearEvent } from "../common.js";
 
 // 实现move & active
@@ -79,6 +79,7 @@ export function _moveActiveImpl(ctx: _TriggerContext) {
             nativeEvent: e,
             active: true,
             last: false,
+            data: i.meta.data,
           });
 
           activeRecord!.isActivating = true;
@@ -138,6 +139,7 @@ export function _moveActiveImpl(ctx: _TriggerContext) {
           last: false,
           deltaX: moveDeltaX,
           deltaY: moveDeltaY,
+          data: i.meta.data,
         });
 
         trigger.event.emit(moveEvent);
@@ -197,11 +199,11 @@ export function _moveActiveImpl(ctx: _TriggerContext) {
     const configActive = ctx.config.active || {};
     const itemActive = record.meta.active || {};
 
-    if (configActive.firstDelay) firstDelay = configActive.firstDelay;
-    if (configActive.lastDelay) lastDelay = configActive.lastDelay;
+    if (isNumber(configActive.firstDelay)) firstDelay = configActive.firstDelay;
+    if (isNumber(configActive.lastDelay)) lastDelay = configActive.lastDelay;
 
-    if (itemActive.firstDelay) firstDelay = itemActive.firstDelay;
-    if (itemActive.lastDelay) lastDelay = itemActive.lastDelay;
+    if (isNumber(itemActive.firstDelay)) firstDelay = itemActive.firstDelay;
+    if (isNumber(itemActive.lastDelay)) lastDelay = itemActive.lastDelay;
 
     return {
       firstDelay,
@@ -232,6 +234,7 @@ export function _moveActiveImpl(ctx: _TriggerContext) {
         active: false,
         first: false,
         last: true,
+        data: record.meta.data,
       });
 
       const triggerInactive = () => {
@@ -263,6 +266,7 @@ export function _moveActiveImpl(ctx: _TriggerContext) {
         active: false,
         first: false,
         last: true,
+        data: record.meta.data,
       });
 
       trigger.event.emit(moveEvent);

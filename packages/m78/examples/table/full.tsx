@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Table } from "../../src/table/index.js";
 import { useUpdate } from "@m78/hooks";
 import {
@@ -33,7 +33,7 @@ const columns: TableColumnLeafConfig[] = Array.from({ length: 40 }).map(
     }
 
     if (j === 22) {
-      c.width = 80;
+      // c.width = 80;
     }
 
     if (j === 21) {
@@ -127,6 +127,16 @@ const TableFullExample = () => {
   const [table, setTable] = useState<RCTableInstance | null>(null);
 
   console.log(table);
+
+  useEffect(() => {
+    if (!table) return;
+
+    // table.event.feedback.on((e) => {
+    //   e.forEach((ev) => {
+    //     console.log(ev.cell?.key, ev.type, ev.text);
+    //   });
+    // });
+  }, [table]);
 
   return (
     <div>

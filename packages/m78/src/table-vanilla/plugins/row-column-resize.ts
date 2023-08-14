@@ -77,15 +77,15 @@ export class _TableRowColumnResize extends TablePlugin {
     const vbPreCheck: TriggerConfig["preCheck"] = (type, e) => {
       if (type !== TriggerType.active && type !== TriggerType.drag)
         return false;
-      return !_triggerFilterList(
-        e.target as HTMLElement,
-        _tableTriggerFilters,
-        this.config.el
-      );
+      // return !_triggerFilterList(
+      //   e.target as HTMLElement,
+      //   _tableTriggerFilters,
+      //   this.config.el
+      // );
+      return true;
     };
 
     this.trigger = createTrigger({
-      target: [],
       container: this.config.el,
       type: [TriggerType.drag, TriggerType.active, TriggerType.move],
       preCheck: vbPreCheck,
@@ -168,7 +168,7 @@ export class _TableRowColumnResize extends TablePlugin {
     const bounds: TriggerTargetMeta[] = [];
 
     // 虚拟节点大小
-    const bSize = isRow ? 8 : 10;
+    const bSize = 6;
 
     const list = isRow ? last.rows : last.columns;
 
@@ -200,7 +200,7 @@ export class _TableRowColumnResize extends TablePlugin {
       }
 
       const left = isRow ? wrapBound.left : wrapBound.left + _pos - bSize / 2;
-      const top = isRow ? wrapBound.top + _pos - bSize / 2 : wrapBound.top;
+      let top = isRow ? wrapBound.top + _pos - bSize / 2 : wrapBound.top;
 
       const b: TriggerTargetMeta = {
         target: {

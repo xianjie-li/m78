@@ -16,14 +16,15 @@ export const _defaultTexts = {
   pasteUnalignedColumn:
     "Pasted column does not match the number of selected column",
   pasteSingleValueLimit: "Paste single value can't exceed {num} cell",
-  paste: "can not paste to non editable cell",
-  addRow: "add row",
-  removeRow: "remove row",
-  setValue: "update value",
-  moveRow: "move row",
-  moveColumn: "move column",
-  editable: "editable",
-  editableAndRequired: "editable and required",
+  paste: "Can not paste to non editable cell",
+  addRow: "Add row",
+  removeRow: "Remove row",
+  setValue: "Update value",
+  moveRow: "Move row",
+  moveColumn: "Move column",
+  editable: "Editable",
+  editableAndRequired: "Editable (required)",
+  currentlyNotEditable: "Currently not editable",
 } as const;
 
 /** 解析rowKey##columnKey格式的字符串为[rowKey, columnKey], 数组长度为2表示解析正常 */

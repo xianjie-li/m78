@@ -31,7 +31,7 @@ export interface TriggerTargetMeta {
 /** 创建配置 */
 export interface TriggerConfig {
   /** 触发目标 */
-  target: TriggerTarget | TriggerTarget[];
+  target?: TriggerTarget | TriggerTarget[];
   /** 需要绑定的事件类型 */
   type: TriggerType | TriggerType[];
   /** 事件绑定的代理节点, 在执行向上查找的操作是, 也作为查找的终止点, 若未传入, 则使用document节点 */

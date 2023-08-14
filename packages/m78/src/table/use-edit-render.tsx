@@ -4,8 +4,8 @@ import {
   RCTableEditRenderArg,
 } from "./types.js";
 import { TableCell } from "../table-vanilla/index.js";
-import { createEvent, useFn } from "@m78/hooks";
-import React, { useMemo } from "react";
+import { useFn } from "@m78/hooks";
+import React from "react";
 import ReactDom, { flushSync } from "react-dom";
 import {
   TableInteractiveDone,

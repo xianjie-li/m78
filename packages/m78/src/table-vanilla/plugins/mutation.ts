@@ -1086,7 +1086,6 @@ export interface TableMutationValueEvent {
   value: any;
 }
 
-// 全部改为使用key作为参照
 export interface TableMutation {
   /** 获取发生了变更的持久化配置 */
   getChangedConfigKeys(): (keyof TablePersistenceConfig)[];

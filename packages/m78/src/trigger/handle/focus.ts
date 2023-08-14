@@ -31,6 +31,7 @@ export function _focusImpl(ctx: _TriggerContext) {
         nativeEvent: e,
         focus: true,
         isInteractiveFocus: _isInteractiveFocus,
+        data: i.meta.data,
       });
 
       trigger.event.emit(event);
@@ -67,6 +68,7 @@ export function _focusImpl(ctx: _TriggerContext) {
         first: false,
         last: true,
         isInteractiveFocus: _isInteractiveFocus,
+        data: i.meta.data,
       });
 
       trigger.event.emit(event);
@@ -96,6 +98,7 @@ export function _focusImpl(ctx: _TriggerContext) {
         first: false,
         last: true,
         isInteractiveFocus: _isInteractiveFocus,
+        data: i.meta.data,
       });
 
       trigger.event.emit(event);

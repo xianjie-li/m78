@@ -38,7 +38,7 @@ export function _useLifeCycle(ctx: _OverlayContext) {
   }, []);
 
   /** 暴露实例 */
-  useImperativeHandle(props.instanceRef, () => instance);
+  useImperativeHandle(props.instanceRef, () => instance, []);
 
   /** 对triggerType从其他类型变更为active的情况进行特殊处理 */
   _useTypeProcess(ctx);
@@ -118,6 +118,7 @@ export function _useLifeCycle(ctx: _OverlayContext) {
   useUpdateEffect(() => {
     if (!measure.width || !measure.height) return;
     methods.update(true);
+    // methods.update();
   }, [measure.width, measure.height, measure.top, measure.left]);
 
   /** 根据props的位置配置同步 */

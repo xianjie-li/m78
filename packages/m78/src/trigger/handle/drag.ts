@@ -41,6 +41,7 @@ export function _dragImpl(ctx: _TriggerContext) {
         y: clientY,
         offsetX,
         offsetY,
+        data: i.meta.data,
       });
 
       ctx.dragRecord.set(i.origin, record);
@@ -113,6 +114,7 @@ export function _dragImpl(ctx: _TriggerContext) {
         deltaY,
         movementX: i.movementX,
         movementY: i.movementY,
+        data: data.meta.data,
       });
 
       isEnd && ctx.dragRecord.delete(i.target);

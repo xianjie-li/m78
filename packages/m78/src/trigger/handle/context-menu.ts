@@ -37,6 +37,7 @@ export function _contextMenuImpl(ctx: _TriggerContext) {
         offsetY,
         active: true,
         last: true,
+        data: i.meta.data,
       });
 
       trigger.event.emit(event);
@@ -82,6 +83,7 @@ export function _contextMenuImpl(ctx: _TriggerContext) {
           offsetY,
           active: true,
           last: true,
+          data: i.meta.data,
         });
 
         trigger.event.emit(event);

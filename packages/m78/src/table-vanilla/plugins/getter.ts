@@ -689,8 +689,13 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
 
     const mergeData = ctx.mergeMapMain[key];
 
-    const width = mergeData ? mergeData.width : column.width;
-    const height = mergeData ? mergeData.height : row.height;
+    let width = column.width;
+    let height = row.height;
+
+    if (mergeData) {
+      if (isNumber(mergeData.width)) width = mergeData.width;
+      if (isNumber(mergeData.height)) height = mergeData.height;
+    }
 
     return {
       row,

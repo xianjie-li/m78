@@ -60,7 +60,9 @@ export function _create(config: TriggerConfig) {
 
   _updateTypeEnableMap(ctx);
 
-  ctx.trigger.add(config.target);
+  if (config.target) {
+    ctx.trigger.add(config.target);
+  }
 
   ctx.event.bind();
 

@@ -12,12 +12,13 @@ import { _tableOmitConfig } from "./common.js";
 import { TableSelectConfig } from "../table-vanilla/plugins/select.js";
 import { TableDragSortConfig } from "../table-vanilla/plugins/drag-sort.js";
 import { ComponentBaseProps } from "../common/index.js";
-import { AnyObject, CustomEvent, EmptyFunction } from "@m78/utils";
+import { AnyObject, EmptyFunction } from "@m78/utils";
 import { CustomEventWithHook, SetState } from "@m78/hooks";
 import { ReactNode } from "react";
 import { _UseEditRender } from "./use-edit-render.js";
 import { _UseCustomRender } from "./use-custom-render.js";
 import { TableFormConfig } from "../table-vanilla/plugins/form.js";
+import { TableFeedbackEvent } from "../table-vanilla/plugins/event.js";
 
 /** 忽略的配置 */
 type OmitConfig = typeof _tableOmitConfig[number];
@@ -149,15 +150,8 @@ export interface RCTableProps
 export interface RCTableInstance extends Omit<TableInstance, "event"> {
   /** 所有可用事件 */
   event: {
-    /**
-     * 内部抛出的一些提示性错误, 比如 "粘贴内容与选中单元格不匹配" 等
-     * - 注意: 某些运行时错误, 比如未正确配置key等会直接crash而不是通过error提示
-     * */
-    error: CustomEventWithHook<(msg: string) => void>;
     /** 点击, event为原始事件对象, 可能是MouseEvent/PointerEvent */
     click: CustomEventWithHook<(cell: TableCell, event: Event) => void>;
-    /** 表格容器尺寸/所在窗口位置变更时, 这对插件作者应该会有用 */
-    resize: CustomEventWithHook<ResizeObserverCallback>;
     /** 任意选中项变更 */
     select: CustomEventWithHook<EmptyFunction>;
     /** 开始选取 */
@@ -166,18 +160,10 @@ export interface RCTableInstance extends Omit<TableInstance, "event"> {
     rowSelect: CustomEventWithHook<EmptyFunction>;
     /** 单元格选中变更 */
     cellSelect: CustomEventWithHook<EmptyFunction>;
-    /** 配置/数据等的变更事件 */
+    /** 配置/数据等变更, 通常意味需要持久化的一些信息发生了改变 */
     mutation: CustomEventWithHook<(event: TableMutationEvent) => void>;
-    /** 单元格的挂载状态变更 (mount状态可以理解为单元格是否在表格视口内并被渲染) */
-    mountChange: CustomEventWithHook<
-      (cell: TableCell, mounted: boolean) => void
-    >;
-    /** 单元格交互状态发生变更, show - 显示还是关闭, isSubmit - 提交还是取消 */
-    interactiveChange: CustomEventWithHook<
-      (cell: TableCell, show: boolean, isSubmit: boolean) => void
-    >;
 
-    //* # # # # # # # 以下为部分对外暴露的插件生命周期事件 # # # # # # # */
+    //* # # # # # # # 以下为部分对外暴露的插件生命周期事件或仅对库开发者有用的事件 # # # # # # # */
     /** 初始化阶段触发 */
     init: CustomEventWithHook<EmptyFunction>;
     /** 初始化完成触发 */
@@ -192,6 +178,22 @@ export interface RCTableInstance extends Omit<TableInstance, "event"> {
     reload: CustomEventWithHook<(opt: TableReloadOptions) => void>;
     /** 卸载前触发 */
     beforeDestroy: CustomEventWithHook<EmptyFunction>;
+
+    /** 单元格的挂载状态变更 (mount状态可以理解为单元格是否在表格视口内并被渲染, 可通过cell.isMount获取) */
+    mountChange: CustomEventWithHook<(cell: TableCell) => void>;
+    /** 单元格交互状态发生变更, show - 显示还是关闭, isSubmit - 提交还是取消 */
+    interactiveChange: CustomEventWithHook<
+      (cell: TableCell, show: boolean, isSubmit: boolean) => void
+    >;
+    /** 表格容器尺寸/所在窗口位置变更时, 这对插件作者应该会有用 */
+    resize: CustomEventWithHook<ResizeObserverCallback>;
+    /**
+     * 内部抛出的一些提示性错误, 比如 "粘贴内容与选中单元格不匹配" 等
+     * - 注意: 某些运行时错误, 比如未正确配置key等会直接crash而不是通过error提示
+     * */
+    error: CustomEventWithHook<(msg: string) => void>;
+    /** 需要进行一些反馈操作时触发, 比如点击了包含验证错误/禁用/内容不能完整显示的行, 如果项包含多个反馈, 则event包含多个事件项 */
+    feedback: CustomEventWithHook<(event: TableFeedbackEvent[]) => void>;
   };
 }
 

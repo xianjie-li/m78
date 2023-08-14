@@ -68,6 +68,20 @@ function tipChange({
 单元格提示, select 且只有单个单元格时
 编辑提示, hover 时出发
 
-- form 的语言包对外暴露
+- 语言包对外暴露
 - disable 系列 api 隐藏
 - 排序
+- 固定列最后一列/行无法 resize
+
+- 遮挡单元格 & 错误单元格 & 禁用单元格: 单个聚焦后显示
+- 可编辑提示: active
+
+```ts
+function feedback(arg: {
+  type: "overflow" | "error" | "disable" | "regular" | "close";
+  text: "";
+  cell?: Cell;
+  dom?: HTMLElement;
+  bound?;
+}) {}
+```

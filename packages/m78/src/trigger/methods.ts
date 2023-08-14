@@ -119,8 +119,8 @@ export function _buildEvent(
     movementY: 0,
     deltaX: 0,
     deltaY: 0,
-    data: {},
     ...initProp,
+    data: initProp.data || {},
   };
 }
 

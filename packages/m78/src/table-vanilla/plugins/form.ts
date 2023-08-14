@@ -14,7 +14,7 @@ import {
 } from "@m78/utils";
 import { _TablePrivateProperty, TableKey } from "../types/base-type.js";
 import { TablePlugin } from "../plugin.js";
-import { TableCell, TableRow } from "../types/items.js";
+import { TableCell, TableColumn, TableRow } from "../types/items.js";
 import {
   TableMutationEvent,
   TableMutationType,
@@ -26,6 +26,11 @@ import { TableAttachData } from "./getter.js";
 import { removeNode } from "../../common/index.js";
 import { _getCellKey, _syncListNode } from "../common.js";
 import { _TableInteractiveCorePlugin } from "./interactive-core.js";
+import {
+  createTrigger,
+  TriggerInstance,
+  TriggerType,
+} from "../../trigger/index.js";
 
 export class _TableFormPlugin extends TablePlugin implements TableForm {
   wrapNode: HTMLElement;
@@ -35,6 +40,9 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
 
   // 以key存储行表单错误信息
   errors: Record<string, RejectMeta | void> = {};
+
+  // 以行为单位存储单元格错误信息 { rowKey: { cellKey: "err msg" } }
+  cellErrors: Record<string, Record<string, string | void> | void> = {};
 
   // 记录行是否变动
   rowChanged: Record<string, boolean> = {};
@@ -54,8 +62,19 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
   // 记录编辑/必填状态
   editStatus: {
     required: boolean;
+    // 表头单元格
     cell: TableCell;
   }[] = [];
+
+  // 用于开始查找editStatus
+  editStatusMap: Record<
+    string,
+    {
+      required: boolean;
+      // 表头单元格
+      cell: TableCell;
+    } | void
+  > = {};
 
   editStatusNodes: HTMLElement[] = [];
 
@@ -90,6 +109,10 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
 
   beforeDestroy() {
     this.table.event.mutation.off(this.mutation);
+
+    this.editStatus = [];
+    this.editStatusMap = {};
+
     this.reset();
     removeNode(this.wrapNode);
   }
@@ -136,10 +159,19 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
       const errors = form.getErrors();
 
       const newError: RejectMeta = [];
+      const cellError: Record<string, string | void> = {};
+
+      let hasCellError = false;
 
       errors.forEach((e) => {
         if (form.getTouched(e.namePath)) {
           newError.push(e);
+
+          // 只取第一条错误
+          if (!cellError[e.name]) {
+            cellError[e.name] = e.message;
+            hasCellError = true;
+          }
         }
       });
 
@@ -147,6 +179,12 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
         this.errors[cell.row.key] = newError;
       } else {
         delete this.errors[cell.row.key];
+      }
+
+      if (hasCellError) {
+        this.cellErrors[cell.row.key] = cellError;
+      } else {
+        delete this.cellErrors[cell.row.key];
       }
 
       this.table.render();
@@ -289,6 +327,20 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
     return this.verifyCommon(true);
   }
 
+  /** 获取指定单元格最后一次参与验证后的错误 */
+  getCellError(cell: TableCell) {
+    const rec = this.cellErrors[cell.row.key];
+
+    if (!rec) return "";
+
+    return rec[cell.column.config.key] || "";
+  }
+
+  /** 获取指定列的可编辑信息, 不可编辑时返回null */
+  getEditStatus(col: TableColumn) {
+    return this.editStatusMap[col.key] || null;
+  }
+
   // 验证通用逻辑, 传入rowKey时仅验证指定的行
   private async verifyCommon(
     onlyChanged: boolean,
@@ -346,10 +398,33 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
       .verify()
       .then(() => {
         delete this.errors[row.key];
+        delete this.cellErrors[row.key];
       })
       .catch((errors) => {
         if (errors?.rejects) {
-          this.errors[row.key] = errors.rejects;
+          const rejList: RejectMeta = errors.rejects;
+
+          this.errors[row.key] = rejList;
+
+          const cellError: Record<string, string | void> = {};
+
+          let hasCellError = false;
+
+          rejList.forEach((e) => {
+            if (form.getTouched(e.namePath)) {
+              // 只取第一条错误
+              if (!cellError[e.name]) {
+                cellError[e.name] = e.message;
+                hasCellError = true;
+              }
+            }
+          });
+
+          if (hasCellError) {
+            this.cellErrors[row.key] = cellError;
+          } else {
+            delete this.cellErrors[row.key];
+          }
         }
       })
       .finally(() => {
@@ -368,6 +443,7 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
     this.cellChanged = {};
     this.rowChanged = {};
     this.errors = {};
+    this.cellErrors = {};
     this.formInstances = {};
     this.invalidCellMap = {};
     this.updateValidRelate();
@@ -379,6 +455,7 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
     const firstRowKey = this.context.allRowKeys[0];
 
     this.editStatus = [];
+    this.editStatusMap = {};
 
     if (!firstRowKey) return;
 
@@ -404,10 +481,14 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
       const firstRowCell = this.table.getCell(firstRowKey, col.key);
 
       if (this.interactive.isInteractive(firstRowCell)) {
-        this.editStatus.push({
+        const item = {
           required: requireKeys.includes(col.key),
           cell,
-        });
+        };
+
+        this.editStatusMap[col.key] = item;
+
+        this.editStatus.push(item);
       }
     });
 

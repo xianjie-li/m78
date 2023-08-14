@@ -29,6 +29,7 @@ import { _TableInteractiveCorePlugin } from "./plugins/interactive-core.js";
 import { _TableIsPlugin } from "./plugins/is.js";
 import { _TableSetterPlugin } from "./plugins/setter.js";
 import { _TableFormPlugin } from "./plugins/form.js";
+import { _TableFeedbackPlugin } from "./plugins/feedback.js";
 
 /**
  * 核心功能, 在非框架环境下实现, 以便在日后进行移植
@@ -85,6 +86,7 @@ export function _createTable(config: TableConfig): TableInstance {
     reload: eventCreator(),
     beforeDestroy: eventCreator(),
     interactiveChange: eventCreator(),
+    feedback: eventCreator(),
   };
 
   // 不完整的实例
@@ -129,6 +131,7 @@ export function _createTable(config: TableConfig): TableInstance {
     _TableRowColumnResize,
     _TableKeyboardInteractionPlugin,
     _TableInteractiveCorePlugin,
+    _TableFeedbackPlugin,
     _TableFormPlugin,
     _TableHighlightPlugin,
   ].map((Plugin) => {

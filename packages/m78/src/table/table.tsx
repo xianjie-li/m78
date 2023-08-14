@@ -19,7 +19,7 @@ import { _CustomRender, _useCustomRender } from "./use-custom-render.js";
 import { _useEvent } from "./use-event.js";
 import { _Toolbar } from "./toolbar/toolbar.js";
 import { _CustomEditRender, _useEditRender } from "./use-edit-render.js";
-import { Divider, Row } from "../layout/index.js";
+import { _Feedback } from "./feedback.js";
 
 // - render改写, column改写,
 // 编辑集成  editSchema  editRender
@@ -99,6 +99,7 @@ export function _Table(props: RCTableProps) {
 
           <_CustomRender ctx={ctx} />
           <_CustomEditRender ctx={ctx} />
+          <_Feedback ctx={ctx} />
         </>
       )}
 
