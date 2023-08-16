@@ -25,13 +25,19 @@ import { m78Config } from "m78/config";
 import zhHans from "m78/i18n/locales/zh-Hans";
 
 // 方式1: 添加语言包并设置语言
-m78Config.set(["zh-CN", zhHans]);
+m78Config.set({
+  i18n: ["zh-CN", zhHans],
+});
 
 // 方式2: 语言包已存在时, 可以直接设置语言
-m78Config.set("zh-CN");
+m78Config.set({
+  i18n: "zh-Hans",
+});
 
 // 方式3: 异步加载语言包
 import("m78/i18n/locales/zh-Hans.js").then((zhCN) => {
-  m78Config.set(["zh-CN", zhHans]);
+  m78Config.set({
+    i18n: ["zh-CN", zhHans],
+  });
 });
 ```

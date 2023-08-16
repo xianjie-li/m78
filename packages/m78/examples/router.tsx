@@ -17,7 +17,7 @@ import OverlayExample from "./overlay/overlay-example.js";
 import OverlayExample2 from "./overlay/overlay-example2.js";
 import Play from "./play/play.js";
 import BubbleExample from "./bubble/bubble-example.js";
-import { m78Config } from "../src/config/index.js";
+import { m78Config } from "../src/index.js";
 import { Button } from "../src/button/index.js";
 import DialogExample from "./dialog/dialog-example.js";
 import LayExample from "./lay/lay-example.js";
@@ -32,10 +32,14 @@ import RformExample from "./form/rform-example.js";
 
 import zhHans from "../src/i18n/locales/zh-Hans.js";
 import en from "../src/i18n/locales/en.js";
-import { i18n } from "../src/i18n/index.js";
+import { i18n } from "../src/index.js";
 import TableExample from "./table/index.js";
 import TableFullExample from "./table/full.js";
 import TriggerExample from "./trigger/trigger-example.js";
+
+// m78Config.set({
+//   i18n: ["zh-Hans", zhHans],
+// });
 
 export const router = createHashRouter([
   {

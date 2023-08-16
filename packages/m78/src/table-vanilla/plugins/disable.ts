@@ -4,7 +4,7 @@ import { TableCell, TableCellWithDom, TableRow } from "../types/items.js";
 import { _getCellKey, _getCellKeysByStr } from "../common.js";
 import { addCls, removeCls } from "../../common/index.js";
 
-/** 在单元格/行/列上设置半透明遮挡物进行禁用 */
+/** 在单元格/行/列上设置半透明遮挡物, 目前仅用于组件内部api设置临时禁用状态, 如拖动排序时, 为拖动列显示禁用样式 */
 export class _TableDisablePlugin extends TablePlugin implements TableDisable {
   disabled = false;
 
@@ -14,23 +14,6 @@ export class _TableDisablePlugin extends TablePlugin implements TableDisable {
   cells: DisabledMap = {};
   /** 禁用列 */
   columns: DisabledMap = {};
-
-  beforeInit() {
-    this.methodMapper(this.table, [
-      "disable",
-      "isDisabled",
-      "isDisabledRow",
-      "isDisabledColumn",
-      "isDisabledCell",
-      "getDisabledRows",
-      "getDisabledColumns",
-      "getDisabledCells",
-      "setRowDisable",
-      "setColumnDisable",
-      "setCellDisable",
-      "clearDisable",
-    ]);
-  }
 
   cellRender(cell: TableCellWithDom) {
     const disabled = this.isDisabledCell(cell.key);

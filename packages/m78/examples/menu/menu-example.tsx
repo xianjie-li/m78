@@ -1,14 +1,13 @@
 import React from "react";
-import { Button } from "../../src/index.js";
+import { Button, TriggerType } from "../../src/index.js";
 import { Menu } from "../../src/menu/index.js";
-import { UseTriggerType } from "@m78/hooks";
 import { menuData } from "./menu-data.js";
 
 const ContextMenuExample = () => {
   return (
     <div>
       <Menu
-        triggerType={UseTriggerType.click}
+        triggerType={TriggerType.click}
         options={menuData}
         onConfirm={(val, option) => {
           console.log(val, option);
@@ -17,7 +16,7 @@ const ContextMenuExample = () => {
         <Button>click</Button>
       </Menu>
       <Menu
-        triggerType={UseTriggerType.active}
+        triggerType={TriggerType.active}
         options={menuData}
         onConfirm={(val, option) => {
           console.log(val, option);
@@ -26,7 +25,7 @@ const ContextMenuExample = () => {
         <Button>active</Button>
       </Menu>
       <Menu
-        triggerType={UseTriggerType.contextMenu}
+        triggerType={TriggerType.contextMenu}
         options={menuData}
         onConfirm={(val, option) => {
           console.log(val, option);
@@ -35,7 +34,7 @@ const ContextMenuExample = () => {
         <Button>contextMenu</Button>
       </Menu>
       <Menu
-        triggerType={UseTriggerType.focus}
+        triggerType={TriggerType.focus}
         options={menuData}
         onConfirm={(val, option) => {
           console.log(val, option);

@@ -108,7 +108,7 @@ export class _TableFeedbackPlugin extends TablePlugin {
     if (!this.form.validCheck(cell)) {
       const e: TableFeedbackEvent = {
         type: TableFeedback.disable,
-        text: this.context.texts.currentlyNotEditable,
+        text: this.context.texts["currently not editable"],
         cell,
         dom: cell.dom,
       };
@@ -181,7 +181,7 @@ export class _TableFeedbackPlugin extends TablePlugin {
       const event: TableFeedbackEvent = {
         type: TableFeedback.regular,
         text: editStatus.required
-          ? this.context.texts.editableAndRequired
+          ? this.context.texts["editable and required"]
           : this.context.texts.editable,
         cell,
         bound,

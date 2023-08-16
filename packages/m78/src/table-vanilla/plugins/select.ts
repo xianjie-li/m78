@@ -34,6 +34,7 @@ import {
 import { _TableRowColumnResize } from "./row-column-resize.js";
 import { DragGesture, FullGestureState } from "@use-gesture/vanilla";
 import { TableReloadLevel } from "./life.js";
+import { _TableDisablePlugin } from "./disable.js";
 
 /** 实现选区和选中功能 */
 export class _TableSelectPlugin extends TablePlugin implements TableSelect {
@@ -74,6 +75,9 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
   /** 拖动控制 */
   drag: DragGesture;
 
+  /** 设置禁用样式 */
+  disablePlugin: _TableDisablePlugin;
+
   beforeInit() {
     this.methodMapper(this.table, [
       "isSelectedRow",
@@ -86,6 +90,10 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
       "isRowSelectable",
       "isCellSelectable",
     ]);
+  }
+
+  init() {
+    this.disablePlugin = this.getPlugin(_TableDisablePlugin);
   }
 
   mounted() {
@@ -235,7 +243,7 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
         return false;
       }
 
-      if (this.table.isDisabledCell(first.key)) return false;
+      if (this.disablePlugin.isDisabledCell(first.key)) return false;
 
       // 启用了dragSortRow时, 需要禁止在已选中行上重新触发选中
       if (
@@ -557,7 +565,7 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
         const pass = rowSelectable(row);
         if (!pass) return false;
       }
-      if (this.table.isDisabledRow(key)) return false;
+      if (this.disablePlugin.isDisabledRow(key)) return false;
     }
 
     if (isCell) {
@@ -573,7 +581,7 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
         const pass = cellSelectable(cell);
         if (!pass) return false;
       }
-      if (this.table.isDisabledCell(key)) return false;
+      if (this.disablePlugin.isDisabledCell(key)) return false;
     }
 
     map[key] = 1;

@@ -1,6 +1,7 @@
 import { _RCTableContext, RCTableInstance, RCTableProps } from "./types.js";
 import { createTable, TableConfig } from "../table-vanilla/index.js";
 import { createEvent } from "@m78/hooks";
+import { i18n, TABLE_NS } from "../i18n/index.js";
 
 export function _useMethods(ctx: _RCTableContext) {
   const {
@@ -25,6 +26,10 @@ export function _useMethods(ctx: _RCTableContext) {
       return;
     }
 
+    const texts = i18n.getResourceBundle(i18n.language, TABLE_NS);
+
+    console.log(texts);
+
     setState({
       instance: createTable({
         ...(propsConf as TableConfig),
@@ -37,6 +42,7 @@ export function _useMethods(ctx: _RCTableContext) {
         render: customRender.render,
         interactive: editRender.interactiveEnableChecker,
         interactiveRender: editRender.interactiveRender,
+        texts,
       }) as any as RCTableInstance,
     });
   }

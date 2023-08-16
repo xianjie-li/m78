@@ -14,6 +14,7 @@ export const DIALOG_NS = "dialog";
 export const FORK_NS = "fork";
 export const FORM_LANG_PACK_NS = "formLangPack";
 export const FORM_NS = "form";
+export const TABLE_NS = "table";
 
 const i18n = i18next.use(initReactI18next).createInstance(
   {
@@ -28,6 +29,7 @@ const i18n = i18next.use(initReactI18next).createInstance(
       FORK_NS,
       FORM_LANG_PACK_NS,
       FORM_NS,
+      TABLE_NS,
     ],
     debug: process.env.NODE_ENV === "development",
     interpolation: {

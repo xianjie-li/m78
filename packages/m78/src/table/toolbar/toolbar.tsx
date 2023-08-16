@@ -16,15 +16,15 @@ import { IconFileUpload } from "@m78/icons/icon-file-upload.js";
 import { IconDeleteForever } from "@m78/icons/icon-delete-forever.js";
 import { IconAddToPhotos } from "@m78/icons/icon-add-to-photos.js";
 import { IconSave } from "@m78/icons/icon-save.js";
-import { IconModeEdit } from "@m78/icons/icon-mode-edit.js";
 import { _getTableCtx } from "../common.js";
 import { _getHistoryButtons } from "./get-history-buttons.js";
+import { TABLE_NS, Trans, Translation } from "../../i18n/index.js";
 
 export function _Toolbar({ ctx }: { ctx: _RCTableContext }) {
   const { props, state } = ctx;
 
   const selectedCount = state.selectedRows.length;
-  const rowCount = _getTableCtx(state.instance)?.allRowKeys.length || 0;
+  const count = _getTableCtx(state.instance)?.allRowKeys.length || 0;
 
   function renderLeading() {
     if (!state.instance) return null;
@@ -32,31 +32,52 @@ export function _Toolbar({ ctx }: { ctx: _RCTableContext }) {
     const searchBtn = (
       <Button text>
         <IconManageSearch className="color-second fs-16" />
-        查询
+        <Translation ns={TABLE_NS}>{(t) => t("query")}</Translation>
       </Button>
     );
 
     const resetFilterBtn = (
-      <Bubble content="重置筛选条件">
-        <Button squareIcon>
-          <IconSync className="color-second" />
-        </Button>
-      </Bubble>
+      <Translation ns={TABLE_NS}>
+        {(t) => (
+          <Bubble content={t("reset filter")}>
+            <Button squareIcon>
+              <IconSync className="color-second" />
+            </Button>
+          </Bubble>
+        )}
+      </Translation>
     );
 
     const filterBtn = (
-      <Bubble content="通用筛选条件">
-        <Button squareIcon>
-          <IconFilterAlt className="color-second" />
-        </Button>
-      </Bubble>
+      <Translation ns={TABLE_NS}>
+        {(t) => (
+          <Bubble content={t("common filter")}>
+            <Button squareIcon>
+              <IconFilterAlt className="color-second" />
+            </Button>
+          </Bubble>
+        )}
+      </Translation>
     );
 
     const { redoBtn, undoBtn } = _getHistoryButtons(state.instance.history);
 
     const countText = (
       <div className="color-second fs-12">
-        共{rowCount}行{rowCount ? ` / 选中${selectedCount}行` : ""}
+        <Translation ns={TABLE_NS}>
+          {(t) => {
+            return (
+              <Trans
+                i18nKey="count"
+                t={t}
+                count={count}
+                selectedCount={selectedCount}
+              >
+                {{ count }} rows / {{ selectedCount }} selected
+              </Trans>
+            );
+          }}
+        </Translation>
       </div>
     );
 
@@ -95,84 +116,103 @@ export function _Toolbar({ ctx }: { ctx: _RCTableContext }) {
     if (!state.instance) return null;
 
     const exportBtn = (
-      <Bubble
-        content={
-          <div>
-            <div>导出为xlsx文件</div>
-            <div className="fs-12 color-second">
-              你也可以 <a>导出指定列</a>
-            </div>
-          </div>
-        }
-      >
-        <Button className="color-second" squareIcon>
-          <IconFileDownload />
-        </Button>
-      </Bubble>
+      <Translation ns={TABLE_NS}>
+        {(t) => (
+          <Bubble
+            content={
+              <div>
+                <div>{t("export xlsx")}</div>
+                <div className="fs-12 color-second">
+                  {t("u can also")} <a>{t("export specific")}</a>
+                </div>
+              </div>
+            }
+          >
+            <Button className="color-second" squareIcon>
+              <IconFileDownload />
+            </Button>
+          </Bubble>
+        )}
+      </Translation>
     );
 
     const importBtn = (
-      <Bubble
-        content={
-          <div>
-            从xlsx文件导入数据
-            <div className="fs-12 color-second">
-              <a>下载导入模板</a>
-            </div>
-          </div>
-        }
-      >
-        <Button className="color-second" squareIcon>
-          <IconFileUpload />
-        </Button>
-      </Bubble>
+      <Translation ns={TABLE_NS}>
+        {(t) => (
+          <Bubble
+            content={
+              <div>
+                {t("import")}
+                <div className="fs-12 color-second">
+                  <a>{t("download import tpl")}</a>
+                </div>
+              </div>
+            }
+          >
+            <Button className="color-second" squareIcon>
+              <IconFileUpload />
+            </Button>
+          </Bubble>
+        )}
+      </Translation>
     );
 
     const deleteBtn = (
-      <Bubble content="删除选中项">
-        <Button
-          className="color-second"
-          squareIcon
-          disabled={selectedCount === 0}
-        >
-          <IconDeleteForever />
-        </Button>
-      </Bubble>
-    );
-
-    const editBtn = (
-      <Bubble content={<div>在独立窗口中编辑选中行</div>}>
-        <Button
-          className="color-second"
-          squareIcon
-          disabled={selectedCount === 0}
-        >
-          <IconModeEdit />
-        </Button>
-      </Bubble>
+      <Translation ns={TABLE_NS}>
+        {(t) => (
+          <Bubble content={t("delete selected rows")}>
+            <Button
+              className="color-second"
+              squareIcon
+              disabled={selectedCount === 0}
+            >
+              <IconDeleteForever />
+            </Button>
+          </Bubble>
+        )}
+      </Translation>
     );
 
     const addBtn = (
-      <Bubble
-        content={
-          <div>
-            新增一条记录
-            <div className="fs-12 color-second">选中行时, 在选中行上方插入</div>
-          </div>
-        }
-      >
-        <Button size={Size.small} disabled>
-          <IconAddToPhotos />
-          新建
-        </Button>
-      </Bubble>
+      <Translation ns={TABLE_NS}>
+        {(t) => (
+          <Bubble
+            content={
+              <div>
+                {t("add row tip1")}
+                <div className="fs-12 color-second">{t("add row tip2")}</div>
+              </div>
+            }
+          >
+            <Button size={Size.small}>
+              <IconAddToPhotos />
+              {t("add row btn")}
+            </Button>
+          </Bubble>
+        )}
+      </Translation>
     );
 
     const saveBtn = (
-      <Button size={Size.small} color={ButtonColor.primary} disabled>
-        <IconSave />
-        保存
-      </Button>
+      <Translation ns={TABLE_NS}>
+        {(t) => (
+          <Bubble
+            content={
+              <div>
+                {t("new tip")}: <span className="color-green bold mr-8">3</span>
+                {t("delete tip")}:{" "}
+                <span className="color-red bold mr-8">2</span>
+                {t("update tip")}: <span className="color-blue bold">7</span>
+              </div>
+            }
+          >
+            <Button size={Size.small} color={ButtonColor.primary}>
+              <IconSave />
+              {t("save btn")}
+            </Button>
+          </Bubble>
+        )}
+      </Translation>
     );
 
     const nodes = (
@@ -180,7 +220,6 @@ export function _Toolbar({ ctx }: { ctx: _RCTableContext }) {
         {exportBtn}
         {importBtn}
         {deleteBtn}
-        {editBtn}
         <Divider vertical />
         {addBtn}
         {saveBtn}
@@ -192,7 +231,6 @@ export function _Toolbar({ ctx }: { ctx: _RCTableContext }) {
       exportBtn,
       importBtn,
       deleteBtn,
-      editBtn,
       addBtn,
       saveBtn,
     };

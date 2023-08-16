@@ -250,7 +250,7 @@ export class _TableMutationPlugin extends TablePlugin {
     });
 
     this.table.history.redo({
-      title: this.context.texts.addRow,
+      title: this.context.texts["add row"],
       redo: () => {
         this.context.data.splice(index!, 0, ...newData);
 
@@ -301,7 +301,7 @@ export class _TableMutationPlugin extends TablePlugin {
     const rows = list.map((i) => i.ins);
 
     this.table.history.redo({
-      title: this.context.texts.removeRow,
+      title: this.context.texts["remove row"],
       redo: () => {
         for (let i = list.length - 1; i >= 0; i--) {
           const cur = list[i];
@@ -426,7 +426,7 @@ export class _TableMutationPlugin extends TablePlugin {
 
         this.table.highlight(event.cell.key, false);
       },
-      title: this.context.texts.setValue,
+      title: this.context.texts["set value"],
     });
   };
 
@@ -626,7 +626,9 @@ export class _TableMutationPlugin extends TablePlugin {
             : this.table.highlightColumn(moveFilterIns.map((i) => i.key));
         }
       },
-      title: isRow ? this.context.texts.moveRow : this.context.texts.moveColumn,
+      title: isRow
+        ? this.context.texts["move row"]
+        : this.context.texts["move column"],
     };
 
     this.table.history.redo(action);

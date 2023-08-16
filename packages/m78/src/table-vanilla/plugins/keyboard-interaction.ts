@@ -110,7 +110,7 @@ export class _TableKeyboardInteractionPlugin extends TablePlugin {
 
       if (allCell.length > maxSinglePaste) {
         this.table.event.error.emit(
-          this.context.texts.pasteSingleValueLimit.replace(
+          this.context.texts["paste single value limit"].replace(
             "{num}",
             String(maxSinglePaste)
           )
@@ -317,7 +317,7 @@ export class _TableKeyboardInteractionPlugin extends TablePlugin {
   /** 检测传入的str cell 和 cell 的二维数组是否行列数完全一致, 如果不一致, 返回错误文本 */
   checkAlign(strCell: string[][], cells: TableCell[][]) {
     if (strCell.length !== cells.length) {
-      return `${this.context.texts.pasteUnalignedRow} [${strCell.length} -> ${cells.length}]`;
+      return `${this.context.texts["paste unaligned row"]} [${strCell.length} -> ${cells.length}]`;
     }
 
     for (let i = 0; i < strCell.length; i++) {
@@ -325,7 +325,7 @@ export class _TableKeyboardInteractionPlugin extends TablePlugin {
       const cellsRow = cells[i];
 
       if (row.length !== cellsRow.length) {
-        return `${this.context.texts.pasteUnalignedColumn} [${row.length} -> ${cellsRow.length}]`;
+        return `${this.context.texts["paste unaligned column"]} [${row.length} -> ${cellsRow.length}]`;
       }
     }
 

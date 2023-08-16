@@ -1,11 +1,10 @@
-import { _RCTableContext, RCTableProps } from "./types.js";
-import { createTable, TableConfig } from "../table-vanilla/index.js";
+import { _RCTableContext } from "./types.js";
 import { useEffect } from "react";
 import { useDestroy } from "@m78/hooks";
 import { _Methods } from "./methods.js";
 
 export function _useLife(ctx: _RCTableContext, methods: _Methods) {
-  const { self, state, ref, scrollRef, scrollContRef } = ctx;
+  const { state } = ctx;
 
   useEffect(init, []);
 

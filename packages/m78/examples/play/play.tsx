@@ -1,14 +1,14 @@
 import React from "react";
 import { Overlay } from "../../src/overlay/index.js";
-import { UseTriggerType } from "@m78/hooks";
 
 import { Button } from "../../src/button/index.js";
+import { TriggerType } from "../../src/index.js";
 
 const Play = () => {
   return (
     <div>
       <Overlay
-        triggerType={UseTriggerType.click}
+        triggerType={TriggerType.click}
         childrenAsTarget
         direction="bottom"
         content={<div className="p-24">内容内容</div>}
@@ -17,7 +17,7 @@ const Play = () => {
       </Overlay>
       <Overlay
         defaultOpen
-        triggerType={UseTriggerType.active}
+        triggerType={TriggerType.active}
         childrenAsTarget
         direction="bottom"
         content={<div className="p-24">内容内容</div>}
@@ -26,7 +26,7 @@ const Play = () => {
       </Overlay>
 
       <Overlay
-        triggerType={UseTriggerType.click}
+        triggerType={TriggerType.click}
         childrenAsTarget
         open
         direction="bottom"

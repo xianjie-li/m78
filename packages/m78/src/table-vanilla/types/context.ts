@@ -16,7 +16,7 @@ import {
   TableRowConfig,
 } from "./items.js";
 import { TableReloadOptions } from "../plugins/life.js";
-import { _defaultTexts } from "../common.js";
+import { tableDefaultTexts } from "../common.js";
 
 /** 固定项信息 */
 type FixedMap<T> = {
@@ -52,7 +52,7 @@ export interface TablePluginContext {
   cells: NonNullable<TableConfig["cells"]>;
 
   /** 合并默认值后的提示文本 */
-  texts: typeof _defaultTexts;
+  texts: typeof tableDefaultTexts;
 
   /** 本地化后的persistenceConfig */
   persistenceConfig: TablePersistenceConfig;

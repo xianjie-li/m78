@@ -216,7 +216,6 @@ export interface RCTableToolbarTrailingBuiltinNodes {
   exportBtn: ReactNode;
   importBtn: ReactNode;
   deleteBtn: ReactNode;
-  editBtn: ReactNode;
   addBtn: ReactNode;
   saveBtn: ReactNode;
 }

@@ -70,8 +70,6 @@ export * from "./ui/use-click-away/use-click-away.js";
 
 export * from "./ui/use-keyboard/use-keyboard.js";
 
-export * from "./ui/use-trigger/use-trigger.js";
-
 /* UTILS */
 export * from "./utils/utils.js";
 

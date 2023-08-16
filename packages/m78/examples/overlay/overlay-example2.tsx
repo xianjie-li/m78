@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Button } from "../../src/button";
 import { Overlay } from "../../src/overlay/index.js";
-import { UseTriggerType } from "@m78/hooks";
+import { TriggerType } from "../../src/index.js";
 
 const OverlayExample = () => {
-  const [type, setType] = useState<UseTriggerType>(UseTriggerType.click);
+  const [type, setType] = useState<TriggerType>(TriggerType.click);
 
   return (
     <div>
@@ -21,7 +21,7 @@ const OverlayExample = () => {
             内容
             <div>
               <Overlay
-                triggerType="active"
+                triggerType={TriggerType.active}
                 transitionType="fade"
                 content={
                   <div
@@ -39,7 +39,7 @@ const OverlayExample = () => {
             </div>
             <div>
               <Overlay
-                triggerType="active"
+                triggerType={TriggerType.active}
                 transitionType="fade"
                 content={
                   <div
@@ -49,7 +49,7 @@ const OverlayExample = () => {
                     内容2
                     <div>
                       <Overlay
-                        triggerType="active"
+                        triggerType={TriggerType.active}
                         transitionType="fade"
                         content={
                           <div
@@ -71,7 +71,7 @@ const OverlayExample = () => {
                     </div>
                     <div>
                       <Overlay
-                        triggerType="active"
+                        triggerType={TriggerType.active}
                         transitionType="fade"
                         content={
                           <div

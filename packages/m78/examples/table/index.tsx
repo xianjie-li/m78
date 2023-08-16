@@ -861,45 +861,6 @@ const TableExample = () => {
         </button>
       </div>
 
-      <div>
-        <strong>disabled:</strong>
-        <button
-          onClick={() => {
-            tableRef.current.setCellDisable([
-              tableRef.current.getCellKey("id2", "field1"),
-              tableRef.current.getCellKey("id6", "field3"),
-              tableRef.current.getCellKey("id4", "field1"),
-              tableRef.current.getCellKey("id6", "field1"),
-            ]);
-          }}
-        >
-          disabled cell
-        </button>
-        <button
-          onClick={() => {
-            tableRef.current.setCellDisable([
-              tableRef.current.getCellKey("id25", "field14"),
-            ]);
-          }}
-        >
-          disabled cell25/14
-        </button>
-        <button
-          onClick={() => {
-            tableRef.current.setColumnDisable(["field14"]);
-          }}
-        >
-          disabled field14
-        </button>
-        <button
-          onClick={() => {
-            tableRef.current.setRowDisable(["id99"]);
-          }}
-        >
-          disabled id99
-        </button>
-      </div>
-
       <div id="output"></div>
 
       <input />

@@ -26,11 +26,7 @@ import { TableAttachData } from "./getter.js";
 import { removeNode } from "../../common/index.js";
 import { _getCellKey, _syncListNode } from "../common.js";
 import { _TableInteractiveCorePlugin } from "./interactive-core.js";
-import {
-  createTrigger,
-  TriggerInstance,
-  TriggerType,
-} from "../../trigger/index.js";
+import { FORM_LANG_PACK_NS, i18n } from "../../i18n/index.js";
 
 export class _TableFormPlugin extends TablePlugin implements TableForm {
   wrapNode: HTMLElement;
@@ -362,6 +358,7 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
       },
       autoVerify: false,
       verifyFirst: true,
+      languagePack: i18n.getResourceBundle(i18n.language, FORM_LANG_PACK_NS),
     });
 
     form.setValues(data);
@@ -713,6 +710,7 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
         schema: this.config.schema,
       },
       autoVerify: false,
+      languagePack: i18n.getResourceBundle(i18n.language, FORM_LANG_PACK_NS),
     });
 
     this.formInstances[row.key] = form;

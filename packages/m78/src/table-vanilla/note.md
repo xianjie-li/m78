@@ -384,6 +384,7 @@ PC:
 
 - 光标聚焦显示隐藏的完整内容
 - 内容查找, 高亮匹配内容
+- 筛选
 - 导出: 导出选中/导出所有/勾选要导出的列
 
 ## virtualBound -
@@ -414,3 +415,13 @@ v.click;
 v.hover(bound);
 v.drag(bound);
 ```
+
+## TODO
+
+- 排序
+- 筛选
+
+**完成**
+
+- 语言包对外暴露 + rtable 国际化
+- disable 系列 api 隐藏 xx

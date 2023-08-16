@@ -20,6 +20,7 @@ import {
   TableRowFixed,
 } from "../types/base-type.js";
 import { _TableSelectPlugin } from "./select.js";
+import { _TableDisablePlugin } from "./disable.js";
 
 /** 表格行/列排序 */
 export class _TableDragSortPlugin extends TablePlugin {
@@ -33,6 +34,8 @@ export class _TableDragSortPlugin extends TablePlugin {
   rcResize: _TableRowColumnResize;
   /** 获取当前的选区插件信息 */
   select: _TableSelectPlugin;
+  /** 设置禁用样式 */
+  disablePlugin: _TableDisablePlugin;
 
   /** 正在拖动 */
   dragging = false;
@@ -81,6 +84,7 @@ export class _TableDragSortPlugin extends TablePlugin {
 
     this.rcResize = this.getPlugin(_TableRowColumnResize);
     this.select = this.getPlugin(_TableSelectPlugin);
+    this.disablePlugin = this.getPlugin(_TableDisablePlugin);
 
     this.rafCaller = rafCaller();
 
@@ -172,7 +176,7 @@ export class _TableDragSortPlugin extends TablePlugin {
       if (this.lastColumns) {
         this.updateColumnNode(e, contPoint, offset);
 
-        this.table.setColumnDisable(
+        this.disablePlugin.setColumnDisable(
           this.lastColumns.map((column) => column.key),
           false
         );
@@ -181,7 +185,7 @@ export class _TableDragSortPlugin extends TablePlugin {
       if (this.lastRows) {
         this.updateRowNode(e, contPoint, offset);
 
-        this.table.setRowDisable(
+        this.disablePlugin.setRowDisable(
           this.lastRows.map((row) => row.key),
           false
         );
@@ -227,7 +231,7 @@ export class _TableDragSortPlugin extends TablePlugin {
     }
 
     // 禁用项
-    if (this.table.isDisabledCell(first.key)) {
+    if (this.disablePlugin.isDisabledCell(first.key)) {
       e.cancel();
       return;
     }
@@ -236,18 +240,20 @@ export class _TableDragSortPlugin extends TablePlugin {
       if (this.table.isSelectedRow(first.row.key)) {
         this.lastRows = this.table
           .getSelectedRows()
-          .filter((row) => !this.table.isDisabledRow(row.key));
+          .filter((row) => !this.disablePlugin.isDisabledRow(row.key));
 
-        this.table.setRowDisable(this.lastRows.map((row) => row.key));
+        this.disablePlugin.setRowDisable(this.lastRows.map((row) => row.key));
         this.memoFirstData(offset);
       }
     }
 
     if (first.row.isHeader) {
       this.lastColumns = items.columns.filter(
-        (column) => !this.table.isDisabledColumn(column.key)
+        (column) => !this.disablePlugin.isDisabledColumn(column.key)
       );
-      this.table.setColumnDisable(this.lastColumns.map((column) => column.key));
+      this.disablePlugin.setColumnDisable(
+        this.lastColumns.map((column) => column.key)
+      );
       this.memoFirstData(offset);
     }
   };

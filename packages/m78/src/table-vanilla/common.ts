@@ -1,4 +1,4 @@
-import { BoundSize, EmptyFunction, isNumber } from "@m78/utils";
+import { BoundSize, isNumber } from "@m78/utils";
 import { TableKey, TablePosition } from "./types/base-type.js";
 import { removeNode } from "../common/index.js";
 
@@ -11,20 +11,21 @@ export const _privateInstanceKey = "__M78TableInstance";
 export const _privateScrollerDomKey = "__M78PrivateScrollerDom";
 
 /** 可替换的文本 */
-export const _defaultTexts = {
-  pasteUnalignedRow: "Pasted rows does not match the number of selected rows",
-  pasteUnalignedColumn:
+export const tableDefaultTexts = {
+  "paste unaligned row":
+    "Pasted rows does not match the number of selected rows",
+  "paste unaligned column":
     "Pasted column does not match the number of selected column",
-  pasteSingleValueLimit: "Paste single value can't exceed {num} cell",
+  "paste single value limit": "Paste single value can't exceed {num} cell",
   paste: "Can not paste to non editable cell",
-  addRow: "Add row",
-  removeRow: "Remove row",
-  setValue: "Update value",
-  moveRow: "Move row",
-  moveColumn: "Move column",
+  "add row": "Add row",
+  "remove row": "Remove row",
+  "set value": "Update value",
+  "move row": "Move row",
+  "move column": "Move column",
   editable: "Editable",
-  editableAndRequired: "Editable (required)",
-  currentlyNotEditable: "Currently not editable",
+  "editable and required": "Editable (required)",
+  "currently not editable": "Currently not editable",
 } as const;
 
 /** 解析rowKey##columnKey格式的字符串为[rowKey, columnKey], 数组长度为2表示解析正常 */

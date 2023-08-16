@@ -11,7 +11,7 @@ import {
 } from "@m78/utils";
 import clsx from "clsx";
 import {
-  _defaultTexts,
+  tableDefaultTexts,
   _getCellKey,
   _getCellKeysByStr,
   _prefix,
@@ -866,7 +866,7 @@ export class _TableInitPlugin extends TablePlugin {
   /** 合并消息文本 */
   mergeTexts() {
     this.context.texts = {
-      ..._defaultTexts,
+      ...tableDefaultTexts,
       ...this.config.texts,
     };
   }
