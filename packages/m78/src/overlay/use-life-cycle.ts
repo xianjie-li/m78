@@ -1,6 +1,7 @@
 import {
   useClickAway,
   useDestroy,
+  useKeyboard,
   useLockBodyScroll,
   useUpdateEffect,
 } from "@m78/hooks";
@@ -93,6 +94,17 @@ export function _useLifeCycle(ctx: _OverlayContext) {
       self.clickAwayCloseTimer = setTimeout(() => {
         !isUnmount() && setOpen(false);
       });
+    },
+  });
+
+  /** 键盘监听 */
+  useKeyboard({
+    code: "Escape",
+    enable: props.escapeClosable && open,
+    handle() {
+      if (!ctx.escapeCloseable.isLast) return;
+
+      setOpen(false);
     },
   });
 

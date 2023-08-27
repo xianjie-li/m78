@@ -14,6 +14,7 @@ export var _TableIsPlugin = /*#__PURE__*/ function(TablePlugin) {
         var _this;
         _this = _super.apply(this, arguments);
         /** 内部isActive状态 */ _this._isActive = false;
+        /** 可由用户控制的active状态, 和_isActive一起构成active状态  */ _this._isControllableActive = true;
         // 开始滚动时更新isActive
         _this.onActive = debounce(function() {
             if (_this._isActive) return;
@@ -105,8 +106,11 @@ export var _TableIsPlugin = /*#__PURE__*/ function(TablePlugin) {
     _proto.isFocus = function isFocus1(checkChildren) {
         return isFocus(this.config.el, checkChildren);
     };
-    _proto.isActive = function isActive() {
-        return this._isActive;
+    _proto.isActive = function isActive(is) {
+        if (is !== undefined) {
+            this._isControllableActive = is;
+        }
+        return this._isActive && this._isControllableActive;
     };
     _proto.isColumnExist = function isColumnExist(key) {
         return this.context.columnKeyIndexMap[key] !== undefined;

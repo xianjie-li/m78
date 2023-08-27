@@ -71,3 +71,11 @@ import debounce from "lodash/debounce.js";
     };
     return _TableEventPlugin;
 }(TablePlugin);
+export var TableFeedback;
+(function(TableFeedback) {
+    TableFeedback[/** 内容移除的单元格 */ "overflow"] = "overflow";
+    TableFeedback[/** 错误 */ "error"] = "error";
+    TableFeedback[/** 禁用项 */ "disable"] = "disable";
+    TableFeedback[/** 常规提醒 */ "regular"] = "regular";
+    TableFeedback[/** 关闭 */ "close"] = "close";
+})(TableFeedback || (TableFeedback = {}));

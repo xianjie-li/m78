@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { _Row, _Column } from "./flex.js";
+import { _Row } from "./flex.js";
 import cls from "clsx";
 import { TileProps } from "./types.js";
 import { isTruthyOrZero } from "@m78/utils";

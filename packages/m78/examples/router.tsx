@@ -36,6 +36,7 @@ import { i18n } from "../src/index.js";
 import TableExample from "./table/index.js";
 import TableFullExample from "./table/full.js";
 import TriggerExample from "./trigger/trigger-example.js";
+import InjectorExample from "./injector/injector-example.js";
 
 // m78Config.set({
 //   i18n: ["zh-Hans", zhHans],
@@ -142,6 +143,10 @@ export const router = createHashRouter([
       {
         path: "trigger",
         element: <TriggerExample />,
+      },
+      {
+        path: "injector",
+        element: <InjectorExample />,
       },
     ],
   },

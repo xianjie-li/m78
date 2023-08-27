@@ -3,7 +3,7 @@ import { TableKey } from "./base-type.js";
 import { TableConfig, TablePersistenceConfig } from "./config.js";
 import { TableCell, TableColumn, TableColumnConfig, TableColumnLeafConfigFormatted, TableItems, TableRow, TableRowConfig } from "./items.js";
 import { TableReloadOptions } from "../plugins/life.js";
-import { _defaultTexts } from "../common.js";
+import { tableDefaultTexts } from "../common.js";
 /** 固定项信息 */
 declare type FixedMap<T> = {
     [index: string]: {
@@ -32,7 +32,7 @@ export interface TablePluginContext {
     /** 本地化后的cells配置, 注入了表头合并单元格相关的配置 */
     cells: NonNullable<TableConfig["cells"]>;
     /** 合并默认值后的提示文本 */
-    texts: typeof _defaultTexts;
+    texts: typeof tableDefaultTexts;
     /** 本地化后的persistenceConfig */
     persistenceConfig: TablePersistenceConfig;
     /** 上一帧中在视口中显示的row/cell/column */

@@ -5,7 +5,7 @@ import { useSpring } from "react-spring";
 import { _useMethods as useMethods } from "./use-methods.js";
 import { _useLifeCycle as useLifeCycle } from "./use-life-cycle.js";
 import { _useRender as useRender } from "./use-render.js";
-import { _defaultProps, _onTrigger, overlayTransitionConfig, useOverlaysClickAway, useOverlaysMask } from "./common.js";
+import { _defaultProps, _onTrigger, overlayTransitionConfig, useEscapeCloseable, useOverlaysClickAway, useOverlaysMask } from "./common.js";
 import { isFunction } from "@m78/utils";
 import { useTrigger } from "../trigger/index.js";
 /**
@@ -55,6 +55,9 @@ import { useTrigger } from "../trigger/index.js";
     /** 所有启用了clickAwayClosable的overlay */ var overlaysClickAway = useOverlaysClickAway({
         enable: open && props.clickAwayQueue && props.clickAwayClosable
     }, props.clickAwayQueueNameSpace);
+    /** 所有启用的escapeClosable */ var escapeCloseable = useEscapeCloseable({
+        enable: open && props.escapeClosable
+    });
     /** 给content render和children render的参数 */ var customRenderMeta = {
         props: props,
         open: open,
@@ -77,6 +80,7 @@ import { useTrigger } from "../trigger/index.js";
         arrowSpApi: arrowSpApi,
         overlaysClickAway: overlaysClickAway,
         overlaysMask: overlaysMask,
+        escapeCloseable: escapeCloseable,
         measure: measure,
         isUnmount: useIsUnmountState(),
         customRenderMeta: customRenderMeta,

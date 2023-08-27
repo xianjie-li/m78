@@ -28,7 +28,8 @@ export function _dragImpl(ctx) {
                 x: clientX,
                 y: clientY,
                 offsetX: offsetX,
-                offsetY: offsetY
+                offsetY: offsetY,
+                data: i.meta.data
             });
             ctx.dragRecord.set(i.origin, record);
             trigger.event.emit(event);
@@ -82,7 +83,8 @@ export function _dragImpl(ctx) {
                 deltaX: deltaX,
                 deltaY: deltaY,
                 movementX: i.movementX,
-                movementY: i.movementY
+                movementY: i.movementY,
+                data: data.meta.data
             });
             isEnd && ctx.dragRecord.delete(i.target);
             trigger.event.emit(event);

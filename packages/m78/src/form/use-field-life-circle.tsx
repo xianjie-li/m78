@@ -2,6 +2,7 @@ import { _FormContext, _FieldContext } from "./types.js";
 import { _UseFieldMethods } from "./use-field-methods.js";
 import { isFunction, stringifyNamePath, triggerHighlight } from "@m78/utils";
 import { _useUpdatePropsChange } from "./use-update-props-change.js";
+import { _useDetector } from "./field-detector.js";
 
 export function _useFieldLifeCircle(
   ctx: _FormContext,
@@ -34,6 +35,9 @@ export function _useFieldLifeCircle(
       renderKey: Math.random(),
     });
   });
+
+  // 通知Detector组件注册/注销
+  _useDetector(name);
 
   // 错误时, 高亮并 focus 第一个错误项对应的表单
   form.events.fail.useEvent((errors, isValueChangeTrigger) => {

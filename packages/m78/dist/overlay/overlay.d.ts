@@ -16,6 +16,7 @@ export declare namespace _Overlay {
         offset: number;
         triggerType: import("../trigger/types.js").TriggerType;
         autoFocus: boolean;
+        escapeClosable: boolean;
     };
 }
 //# sourceMappingURL=overlay.d.ts.map

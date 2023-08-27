@@ -1,6 +1,7 @@
 @import '../common/style/sass';
 
 .m78-bubble {
+  word-break: break-word;
 
   &.__tooltip {
     padding: var(--m78-space-2) var(--m78-space-3);

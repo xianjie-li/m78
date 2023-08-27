@@ -1,10 +1,10 @@
 import { DataSourceItem, DataSourceItemCustom, ValueType } from "../common/index.js";
 import { LayProps } from "../lay/index.js";
-import { DomTarget, SelectManager, SetState, UseTriggerProps, UseTriggerType } from "@m78/hooks";
+import { DomTarget, SelectManager, SetState } from "@m78/hooks";
 import { OverlayProps } from "../overlay/index.js";
 import React from "react";
 import { EmptyFunction, TupleNumber } from "@m78/utils";
-import { TriggerType } from "../trigger/index.js";
+import { TriggerProps, TriggerType } from "../trigger/index.js";
 /** 应从Overlay中移除的props */
 export declare const omitMenuOverlayProps: readonly ["xy", "alignment", "target", "childrenAsTarget", "content", "children", "triggerNodeRef", "open", "defaultOpen", "autoFocus"];
 /** 应从Overlay中移除的props */
@@ -18,13 +18,13 @@ export interface MenuProps extends MenuOmitOverlayProps, DataSourceItemCustom {
     /** 菜单选项, 所有选项必须有一个唯一的value */
     options: MenuOption[];
     /** 子级, 需遵循useTrigger子级规则 */
-    children: UseTriggerProps["children"];
+    children: TriggerProps["children"];
     /** 点击选中某项后触发 */
     onConfirm?: (val: ValueType, option: MenuOption) => void;
     /**
-     * 子菜单的触发方式, 默认为active(鼠标悬浮), 设备为移动设备时(目前没有很理想的检测方式), 会自动切换为click
+     * 子菜单的触发方式, 默认为active(鼠标悬浮), 设备为移动设备时, 会自动切换为click
      * */
-    subMenuTriggerType?: UseTriggerType.active | UseTriggerType.click;
+    subMenuTriggerType?: TriggerType.active | TriggerType.click;
 }
 /** 用于快速获取树中各项直接关系的结构 */
 export interface _FlatOption extends MenuOption {

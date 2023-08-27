@@ -481,8 +481,12 @@ export var _TableGetterPlugin = /*#__PURE__*/ function(TablePlugin) {
         var column = this.getColumn(columnKey);
         var config = ctx.cells[key] || {};
         var mergeData = ctx.mergeMapMain[key];
-        var width = mergeData ? mergeData.width : column.width;
-        var height = mergeData ? mergeData.height : row.height;
+        var width = column.width;
+        var height = row.height;
+        if (mergeData) {
+            if (isNumber(mergeData.width)) width = mergeData.width;
+            if (isNumber(mergeData.height)) height = mergeData.height;
+        }
         return {
             row: row,
             column: column,

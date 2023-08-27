@@ -39,6 +39,7 @@ export default {
     // react version
     count: "{{count}} rows / {{selectedCount}} selected",
     query: "query",
+    reset: "reset",
     "reset filter": "reset filter condition",
     "common filter": "common filter",
     redo: "redo",

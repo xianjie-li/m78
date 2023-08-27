@@ -62,7 +62,6 @@ var allType = [
     // 关联或创建trigger实例
     useEffect(function() {
         var ins = instances[instanceKey] || createTrigger({
-            target: [],
             type: allType
         });
         ins.event.on(handle);

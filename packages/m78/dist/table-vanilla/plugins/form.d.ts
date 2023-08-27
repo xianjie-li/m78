@@ -2,7 +2,7 @@ import { FormInstance, FormSchema } from "../../form-vanilla/index.js";
 import { NamePath } from "@m78/utils";
 import { TableKey } from "../types/base-type.js";
 import { TablePlugin } from "../plugin.js";
-import { TableCell } from "../types/items.js";
+import { TableCell, TableColumn } from "../types/items.js";
 import { TableMutationEvent } from "./mutation.js";
 import { RejectMeta } from "@m78/verify";
 import { TableReloadLevel } from "./life.js";
@@ -11,6 +11,7 @@ export declare class _TableFormPlugin extends TablePlugin implements TableForm {
     wrapNode: HTMLElement;
     formInstances: Record<string, FormInstance | void>;
     errors: Record<string, RejectMeta | void>;
+    cellErrors: Record<string, Record<string, string | void> | void>;
     rowChanged: Record<string, boolean>;
     errorNodes: HTMLElement[];
     rowChangedNodes: HTMLElement[];
@@ -20,6 +21,10 @@ export declare class _TableFormPlugin extends TablePlugin implements TableForm {
         required: boolean;
         cell: TableCell;
     }[];
+    editStatusMap: Record<string, {
+        required: boolean;
+        cell: TableCell;
+    } | void>;
     editStatusNodes: HTMLElement[];
     invalidCellMap: Record<string, TableCell[] | undefined>;
     invalidStatusMap: Record<string, boolean>;
@@ -40,6 +45,13 @@ export declare class _TableFormPlugin extends TablePlugin implements TableForm {
     resetFormState(): void;
     verify(rowKey?: TableKey): Promise<any[]>;
     verifyChanged(): Promise<any[]>;
+    /** 获取指定单元格最后一次参与验证后的错误 */
+    getCellError(cell: TableCell): string;
+    /** 获取指定列的可编辑信息, 不可编辑时返回null */
+    getEditStatus(col: TableColumn): {
+        required: boolean;
+        cell: TableCell;
+    } | null;
     private verifyCommon;
     private verifySpecifiedRow;
     private reset;

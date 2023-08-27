@@ -1,6 +1,6 @@
 import { RCTableProps } from "./types.js";
 import { usePropsChange } from "@m78/hooks";
-import { _tableOmitChangeChecker, _tableOmitConfig } from "./common.js";
+import { _tableChangedIncludeChecker, _tableOmitConfig } from "./common.js";
 import { useEffect } from "react";
 import { omit } from "@m78/utils";
 import { level2ConfigKeys } from "../table-vanilla/index.js";
@@ -13,7 +13,7 @@ export function _usePropsEffect(
   const omitProps = omit(props, _tableOmitConfig as any);
 
   const changedProps = usePropsChange(omitProps, {
-    omit: _tableOmitChangeChecker,
+    include: _tableChangedIncludeChecker,
   });
 
   useEffect(() => {

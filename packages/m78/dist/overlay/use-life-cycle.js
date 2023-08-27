@@ -1,5 +1,5 @@
 import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
-import { useClickAway, useDestroy, useLockBodyScroll, useUpdateEffect } from "@m78/hooks";
+import { useClickAway, useDestroy, useKeyboard, useLockBodyScroll, useUpdateEffect } from "@m78/hooks";
 import { useEffect, useImperativeHandle, useMemo } from "react";
 import { ensureArray, isDom } from "@m78/utils";
 import { isBound } from "./common.js";
@@ -19,7 +19,7 @@ export function _useLifeCycle(ctx) {
     }, []);
     /** 暴露实例 */ useImperativeHandle(props.instanceRef, function() {
         return instance;
-    });
+    }, []);
     /** 对triggerType从其他类型变更为active的情况进行特殊处理 */ _useTypeProcess(ctx);
     /** 根据xy, alignment, target合成useEffect的更新deps, 减少不必要的更新 */ var updateTargetDeps = useMemo(function() {
         var deps = _to_consumable_array(props.xy || [
@@ -71,6 +71,14 @@ export function _useLifeCycle(ctx) {
             });
         }
     });
+    /** 键盘监听 */ useKeyboard({
+        code: "Escape",
+        enable: props.escapeClosable && open,
+        handle: function() {
+            if (!ctx.escapeCloseable.isLast) return;
+            setOpen(false);
+        }
+    });
     /** children变更时, 更新 */ useUpdateEffect(methods.updateChildrenEl, [
         trigger.el
     ]);
@@ -91,6 +99,7 @@ export function _useLifeCycle(ctx) {
     /** 内容尺寸变更时重新定位 */ useUpdateEffect(function() {
         if (!measure.width || !measure.height) return;
         methods.update(true);
+    // methods.update();
     }, [
         measure.width,
         measure.height,

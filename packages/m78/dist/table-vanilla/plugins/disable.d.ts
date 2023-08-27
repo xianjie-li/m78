@@ -1,7 +1,7 @@
 import { TablePlugin } from "../plugin.js";
 import { TableKey } from "../types/base-type.js";
 import { TableCell, TableCellWithDom, TableRow } from "../types/items.js";
-/** 在单元格/行/列上设置半透明遮挡物进行禁用 */
+/** 在单元格/行/列上设置半透明遮挡物, 目前仅用于组件内部api设置临时禁用状态, 如拖动排序时, 为拖动列显示禁用样式 */
 export declare class _TableDisablePlugin extends TablePlugin implements TableDisable {
     disabled: boolean;
     /** 禁用行 */
@@ -10,7 +10,6 @@ export declare class _TableDisablePlugin extends TablePlugin implements TableDis
     cells: DisabledMap;
     /** 禁用列 */
     columns: DisabledMap;
-    beforeInit(): void;
     cellRender(cell: TableCellWithDom): void;
     isDisabled: TableDisable["isDisabled"];
     isDisabledRow: TableDisable["isDisabledRow"];

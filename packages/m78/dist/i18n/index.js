@@ -12,6 +12,7 @@ export var DIALOG_NS = "dialog";
 export var FORK_NS = "fork";
 export var FORM_LANG_PACK_NS = "formLangPack";
 export var FORM_NS = "form";
+export var TABLE_NS = "table";
 var i18n = i18next.use(initReactI18next).createInstance({
     fallbackLng: "en",
     fallbackNS: "common",
@@ -23,7 +24,8 @@ var i18n = i18next.use(initReactI18next).createInstance({
         DIALOG_NS,
         FORK_NS,
         FORM_LANG_PACK_NS,
-        FORM_NS, 
+        FORM_NS,
+        TABLE_NS, 
     ],
     debug: process.env.NODE_ENV === "development",
     interpolation: {

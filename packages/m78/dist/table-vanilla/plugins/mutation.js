@@ -148,7 +148,7 @@ import { _TableFormPlugin } from "./form.js";
                 return i;
             });
             _this.table.history.redo({
-                title: _this.context.texts.addRow,
+                title: _this.context.texts["add row"],
                 redo: function() {
                     var _data;
                     (_data = _this.context.data).splice.apply(_data, [
@@ -200,7 +200,7 @@ import { _TableFormPlugin } from "./form.js";
                 return i.ins;
             });
             _this.table.history.redo({
-                title: _this.context.texts.removeRow,
+                title: _this.context.texts["remove row"],
                 redo: function() {
                     for(var i = list.length - 1; i >= 0; i--){
                         var cur = list[i];
@@ -296,7 +296,7 @@ import { _TableFormPlugin } from "./form.js";
                     _this.table.render();
                     _this.table.highlight(event.cell.key, false);
                 },
-                title: _this.context.texts.setValue
+                title: _this.context.texts["set value"]
             });
         };
         _this.moveColumn = function(key, to, insertAfter) {
@@ -511,7 +511,7 @@ import { _TableFormPlugin } from "./form.js";
                     }));
                 }
             },
-            title: isRow ? this.context.texts.moveRow : this.context.texts.moveColumn
+            title: isRow ? this.context.texts["move row"] : this.context.texts["move column"]
         };
         this.table.history.redo(action);
     };

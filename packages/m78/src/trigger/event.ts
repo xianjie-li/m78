@@ -63,7 +63,8 @@ export function _eventImpl(ctx: _TriggerContext) {
     if (hasRecentlyTouch()) return;
     if (!trigger.enable) return;
 
-    moveActiveHandle.moveActive(e);
+    moveActiveHandle.clearMove(e);
+    moveActiveHandle.clearActive(e);
   }
 
   function touchStart(e: TouchEvent) {

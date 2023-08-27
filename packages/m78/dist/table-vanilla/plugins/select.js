@@ -11,6 +11,7 @@ import { addCls, removeCls } from "../../common/index.js";
 import { _TableRowColumnResize } from "./row-column-resize.js";
 import { DragGesture } from "@use-gesture/vanilla";
 import { TableReloadLevel } from "./life.js";
+import { _TableDisablePlugin } from "./disable.js";
 /** 实现选区和选中功能 */ export var _TableSelectPlugin = /*#__PURE__*/ function(TablePlugin) {
     "use strict";
     _inherits(_TableSelectPlugin, TablePlugin);
@@ -74,7 +75,7 @@ import { TableReloadLevel } from "./life.js";
                 if (isTouchEvent && !(first.row.isHeader || first.column.isHeader)) {
                     return false;
                 }
-                if (_this.table.isDisabledCell(first.key)) return false;
+                if (_this.disablePlugin.isDisabledCell(first.key)) return false;
                 // 启用了dragSortRow时, 需要禁止在已选中行上重新触发选中
                 if (first.column.isHeader && _this.config.dragSortRow && _this.isSelectedRow(first.row.key)) {
                     return false;
@@ -324,6 +325,9 @@ import { TableReloadLevel } from "./life.js";
             "isCellSelectable", 
         ]);
     };
+    _proto.init = function init() {
+        this.disablePlugin = this.getPlugin(_TableDisablePlugin);
+    };
     _proto.mounted = function mounted() {
         var _this = this;
         this.table.event.click.on(this.clickHandle);
@@ -396,7 +400,7 @@ import { TableReloadLevel } from "./life.js";
                 var pass = rowSelectable(row);
                 if (!pass) return false;
             }
-            if (this.table.isDisabledRow(key)) return false;
+            if (this.disablePlugin.isDisabledRow(key)) return false;
         }
         if (isCell) {
             if (isBoolean(cellSelectable) && !cellSelectable) return false;
@@ -409,7 +413,7 @@ import { TableReloadLevel } from "./life.js";
                 var pass1 = cellSelectable(cell);
                 if (!pass1) return false;
             }
-            if (this.table.isDisabledCell(key)) return false;
+            if (this.disablePlugin.isDisabledCell(key)) return false;
         }
         map[key] = 1;
         return true;

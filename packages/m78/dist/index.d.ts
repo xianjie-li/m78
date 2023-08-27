@@ -23,4 +23,5 @@ export * from "./transition/index.js";
 export * from "./transition/index.js";
 export * from "./table-vanilla/index.js";
 export * from "./trigger/index.js";
+export * from "./injector/index.js";
 //# sourceMappingURL=index.d.ts.map

@@ -24,7 +24,8 @@ export function _contextMenuImpl(ctx) {
                 offsetX: offsetX,
                 offsetY: offsetY,
                 active: true,
-                last: true
+                last: true,
+                data: i.meta.data
             });
             trigger.event.emit(event);
         });
@@ -50,7 +51,8 @@ export function _contextMenuImpl(ctx) {
                     offsetX: offsetX,
                     offsetY: offsetY,
                     active: true,
-                    last: true
+                    last: true,
+                    data: i.meta.data
                 });
                 trigger.event.emit(event);
             });

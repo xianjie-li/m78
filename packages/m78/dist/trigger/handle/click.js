@@ -18,7 +18,8 @@ export function _clickImpl(ctx) {
                 offsetX: offsetX,
                 offsetY: offsetY,
                 active: true,
-                last: true
+                last: true,
+                data: i.meta.data
             });
             trigger.event.emit(event);
         });

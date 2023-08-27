@@ -16,6 +16,7 @@ import { TableReloadLevel } from "./life.js";
 import { removeNode } from "../../common/index.js";
 import { _getCellKey, _syncListNode } from "../common.js";
 import { _TableInteractiveCorePlugin } from "./interactive-core.js";
+import { FORM_LANG_PACK_NS, i18n } from "../../i18n/index.js";
 export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
     "use strict";
     _inherits(_TableFormPlugin, TablePlugin);
@@ -28,6 +29,8 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
         _this.formInstances = {};
         // 以key存储行表单错误信息
         _this.errors = {};
+        // 以行为单位存储单元格错误信息 { rowKey: { cellKey: "err msg" } }
+        _this.cellErrors = {};
         // 记录行是否变动
         _this.rowChanged = {};
         // 用于显示错误反馈的节点
@@ -40,6 +43,8 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
         _this.cellChangedNodes = [];
         // 记录编辑/必填状态
         _this.editStatus = [];
+        // 用于开始查找editStatus
+        _this.editStatusMap = {};
         _this.editStatusNodes = [];
         // 无效状态
         _this.invalidCellMap = {};
@@ -68,15 +73,27 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
             form.debounceVerify(name, function() {
                 var errors = form.getErrors();
                 var newError = [];
+                var cellError = {};
+                var hasCellError = false;
                 errors.forEach(function(e) {
                     if (form.getTouched(e.namePath)) {
                         newError.push(e);
+                        // 只取第一条错误
+                        if (!cellError[e.name]) {
+                            cellError[e.name] = e.message;
+                            hasCellError = true;
+                        }
                     }
                 });
                 if (newError.length) {
                     _this.errors[cell.row.key] = newError;
                 } else {
                     delete _this.errors[cell.row.key];
+                }
+                if (hasCellError) {
+                    _this.cellErrors[cell.row.key] = cellError;
+                } else {
+                    delete _this.cellErrors[cell.row.key];
                 }
                 _this.table.render();
             });
@@ -104,6 +121,8 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
     };
     _proto.beforeDestroy = function beforeDestroy() {
         this.table.event.mutation.off(this.mutation);
+        this.editStatus = [];
+        this.editStatusMap = {};
         this.reset();
         removeNode(this.wrapNode);
     };
@@ -215,6 +234,14 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
     _proto.verifyChanged = function verifyChanged() {
         return this.verifyCommon(true);
     };
+    /** 获取指定单元格最后一次参与验证后的错误 */ _proto.getCellError = function getCellError(cell) {
+        var rec = this.cellErrors[cell.row.key];
+        if (!rec) return "";
+        return rec[cell.column.config.key] || "";
+    };
+    /** 获取指定列的可编辑信息, 不可编辑时返回null */ _proto.getEditStatus = function getEditStatus(col) {
+        return this.editStatusMap[col.key] || null;
+    };
     // 验证通用逻辑, 传入rowKey时仅验证指定的行
     _proto.verifyCommon = function verifyCommon(onlyChanged, rowKey) {
         var _this = this;
@@ -233,7 +260,7 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
                     eachSchema: {
                         schema: _this.config.schema
                     }
-                }, _tmp.autoVerify = false, _tmp.verifyFirst = true, _tmp));
+                }, _tmp.autoVerify = false, _tmp.verifyFirst = true, _tmp.languagePack = i18n.getResourceBundle(i18n.language, FORM_LANG_PACK_NS), _tmp));
                 form.setValues(data);
                 return [
                     2,
@@ -263,9 +290,27 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
         var form = this.initForm(row);
         form.verify().then(function() {
             delete _this.errors[row.key];
+            delete _this.cellErrors[row.key];
         }).catch(function(errors) {
             if (errors === null || errors === void 0 ? void 0 : errors.rejects) {
-                _this.errors[row.key] = errors.rejects;
+                var rejList = errors.rejects;
+                _this.errors[row.key] = rejList;
+                var cellError = {};
+                var hasCellError = false;
+                rejList.forEach(function(e) {
+                    if (form.getTouched(e.namePath)) {
+                        // 只取第一条错误
+                        if (!cellError[e.name]) {
+                            cellError[e.name] = e.message;
+                            hasCellError = true;
+                        }
+                    }
+                });
+                if (hasCellError) {
+                    _this.cellErrors[row.key] = cellError;
+                } else {
+                    delete _this.cellErrors[row.key];
+                }
             }
         }).finally(function() {
             _this.table.render();
@@ -280,6 +325,7 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
         this.cellChanged = {};
         this.rowChanged = {};
         this.errors = {};
+        this.cellErrors = {};
         this.formInstances = {};
         this.invalidCellMap = {};
         this.updateValidRelate();
@@ -290,6 +336,7 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
         var hKey = this.context.yHeaderKeys[this.context.yHeaderKeys.length - 1];
         var firstRowKey = this.context.allRowKeys[0];
         this.editStatus = [];
+        this.editStatusMap = {};
         if (!firstRowKey) return;
         var requireKeys = [];
         // 是否包含必填验证器
@@ -310,10 +357,12 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
             // header cell 不能检测是否可编辑, 这里以第一行数据的可编译配置作为参照 (忽略单元格逐个配置的情况, 表单都是以列为单位启用)
             var firstRowCell = _this.table.getCell(firstRowKey, col.key);
             if (_this.interactive.isInteractive(firstRowCell)) {
-                _this.editStatus.push({
+                var item = {
                     required: requireKeys.includes(col.key),
                     cell: cell
-                });
+                };
+                _this.editStatusMap[col.key] = item;
+                _this.editStatus.push(item);
             }
         });
         _syncListNode({
@@ -484,7 +533,8 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
             schemas: {
                 schema: this.config.schema
             },
-            autoVerify: false
+            autoVerify: false,
+            languagePack: i18n.getResourceBundle(i18n.language, FORM_LANG_PACK_NS)
         });
         this.formInstances[row.key] = form;
         return form;

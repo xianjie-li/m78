@@ -2,10 +2,6 @@
 
 .m78-table {
 
-  &_wrap {
-
-  }
-
   &_empty-wrap {
     width: 100%;
     height: 100%;
@@ -41,47 +37,9 @@
     }
   }
 
-  &_sort-icon {
-    position: relative;
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-  }
-
-  &_sort-icon_t, &_sort-icon_b {
-    position: absolute;
-    display: inline-block;
-    border: 4px solid transparent;
-    left: 4px;
-  }
-
-  &_sort-icon_t {
-    border-bottom-color: var(--m78-color-disable);
-    top: -2px;
-
-    &.__active {
-      border-bottom-color: var(--m78-color);
-    }
-  }
-
-  &_sort-icon_b {
-    border-top-color: var(--m78-color-disable);
-    top: 9px;
-
-    &.__active {
-      border-top-color: var(--m78-color);
-    }
-  }
-
   &_cell {
     &.__head-y {
       justify-content: space-between;
-    }
-  }
-
-  .m78-table_cell.__sort { // 增加权重
-    &:hover {
-      background: var(--m78-gray-3);
     }
   }
 

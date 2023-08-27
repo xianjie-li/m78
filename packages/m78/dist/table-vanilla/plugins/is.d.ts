@@ -4,6 +4,8 @@ import { TableKey } from "../types/base-type.js";
 export declare class _TableIsPlugin extends TablePlugin implements TableIs {
     /** 内部isActive状态 */
     _isActive: boolean;
+    /** 可由用户控制的active状态, 和_isActive一起构成active状态  */
+    _isControllableActive: boolean;
     beforeInit(): void;
     mounted(): void;
     beforeDestroy(): void;
@@ -11,7 +13,7 @@ export declare class _TableIsPlugin extends TablePlugin implements TableIs {
     isRowVisible(key: string, partial?: boolean): boolean;
     isCellVisible(rowKey: string, columnKey: string, partial?: boolean): boolean;
     isFocus(checkChildren?: boolean): boolean;
-    isActive(): boolean;
+    isActive(is?: boolean): boolean;
     isColumnExist(key: TableKey): boolean;
     isRowExist(key: TableKey): boolean;
     isColumnExistByIndex(ind: number): boolean;
@@ -36,8 +38,8 @@ export interface TableIs {
     isCellVisible(rowKey: TableKey, columnKey: TableKey, partial?: boolean): boolean;
     /** 表格是否聚焦, checkChildren为true时会检测子级是否聚焦 */
     isFocus(checkChildren?: boolean): boolean;
-    /** 表格是否处于活动状态, 即: 最近进行过点击, hover, 滚动等 */
-    isActive(): boolean;
+    /** 表格是否处于活动状态, 即: 最近进行过点击, hover, 滚动等, 在某些弹出层打开时, 可以手动设置false来禁用表格的一些快捷键操作, 但务必在其关闭后重新设为true */
+    isActive(is?: boolean): boolean;
     /** 指定key的数据是否存在 */
     isRowExist(key: TableKey): boolean;
     /** 指定key的列是否存在 */

@@ -1,6 +1,7 @@
 import { _Context } from "./types.js";
 import clone from "lodash/cloneDeep.js";
 import {
+  deleteNamePathValue,
   ensureArray,
   getNamePathValue,
   isArray,
@@ -59,7 +60,11 @@ export function _implValue(ctx: _Context) {
   };
 
   instance.setValue = (name, val) => {
-    setNamePathValue(ctx.values, name, val);
+    if (val === undefined) {
+      deleteNamePathValue(ctx.values, name);
+    } else {
+      setNamePathValue(ctx.values, name, val);
+    }
 
     if (!ctx.lockListState) {
       _clearChildAndSelf(ctx, name);

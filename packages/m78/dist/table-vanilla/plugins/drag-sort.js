@@ -9,6 +9,7 @@ import { removeNode } from "../../common/index.js";
 import { createAutoScroll, getEventOffset, isNumber, rafCaller, throwError } from "@m78/utils";
 import { TableColumnFixed, TableRowFixed } from "../types/base-type.js";
 import { _TableSelectPlugin } from "./select.js";
+import { _TableDisablePlugin } from "./disable.js";
 /** 表格行/列排序 */ export var _TableDragSortPlugin = /*#__PURE__*/ function(TablePlugin) {
     "use strict";
     _inherits(_TableDragSortPlugin, TablePlugin);
@@ -40,13 +41,13 @@ import { _TableSelectPlugin } from "./select.js";
                 }
                 if (_this.lastColumns) {
                     _this.updateColumnNode(e, contPoint, offset);
-                    _this.table.setColumnDisable(_this.lastColumns.map(function(column) {
+                    _this.disablePlugin.setColumnDisable(_this.lastColumns.map(function(column) {
                         return column.key;
                     }), false);
                 }
                 if (_this.lastRows) {
                     _this.updateRowNode(e, contPoint, offset);
-                    _this.table.setRowDisable(_this.lastRows.map(function(row) {
+                    _this.disablePlugin.setRowDisable(_this.lastRows.map(function(row) {
                         return row.key;
                     }), false);
                 }
@@ -80,16 +81,16 @@ import { _TableSelectPlugin } from "./select.js";
                 return;
             }
             // 禁用项
-            if (_this.table.isDisabledCell(first.key)) {
+            if (_this.disablePlugin.isDisabledCell(first.key)) {
                 e.cancel();
                 return;
             }
             if (first.column.isHeader) {
                 if (_this.table.isSelectedRow(first.row.key)) {
                     _this.lastRows = _this.table.getSelectedRows().filter(function(row) {
-                        return !_this.table.isDisabledRow(row.key);
+                        return !_this.disablePlugin.isDisabledRow(row.key);
                     });
-                    _this.table.setRowDisable(_this.lastRows.map(function(row) {
+                    _this.disablePlugin.setRowDisable(_this.lastRows.map(function(row) {
                         return row.key;
                     }));
                     _this.memoFirstData(offset);
@@ -97,9 +98,9 @@ import { _TableSelectPlugin } from "./select.js";
             }
             if (first.row.isHeader) {
                 _this.lastColumns = items.columns.filter(function(column) {
-                    return !_this.table.isDisabledColumn(column.key);
+                    return !_this.disablePlugin.isDisabledColumn(column.key);
                 });
-                _this.table.setColumnDisable(_this.lastColumns.map(function(column) {
+                _this.disablePlugin.setColumnDisable(_this.lastColumns.map(function(column) {
                     return column.key;
                 }));
                 _this.memoFirstData(offset);
@@ -126,6 +127,7 @@ import { _TableSelectPlugin } from "./select.js";
         });
         this.rcResize = this.getPlugin(_TableRowColumnResize);
         this.select = this.getPlugin(_TableSelectPlugin);
+        this.disablePlugin = this.getPlugin(_TableDisablePlugin);
         this.rafCaller = rafCaller();
         this.autoScroll = createAutoScroll({
             el: this.context.viewEl,

@@ -14,7 +14,7 @@ export function _moveActiveImpl(ctx: _TriggerContext) {
 
   // 处理move
   function moveActive(e: MouseEvent | TouchEvent) {
-    const [clientX, clientY, isTouch] = _eventXyGetter(e);
+    const [clientX, clientY] = _eventXyGetter(e);
 
     const items = ctx.getTargetDataByXY(
       clientX,
@@ -92,14 +92,8 @@ export function _moveActiveImpl(ctx: _TriggerContext) {
         // 清理延迟关闭计时器
         clearInactiveTimer(activeRecord.target);
 
-        // 非touch延迟触发
-        if (!isTouch && !activeRecord!.isActivating) {
-          ctx.activeRecord.set(i.origin, activeRecord!);
-          delayTriggerActive(activeRecord!, triggerActive);
-        }
-
-        // touch延迟触发
-        if (isTouch && !activeRecord!.isActivating) {
+        // 延迟触发
+        if (!activeRecord!.isActivating) {
           ctx.activeRecord.set(i.origin, activeRecord!);
           delayTriggerActive(activeRecord!, triggerActive);
         }

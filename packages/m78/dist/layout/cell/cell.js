@@ -2,7 +2,7 @@ import _object_spread from "@swc/helpers/src/_object_spread.mjs";
 import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
 import _object_without_properties from "@swc/helpers/src/_object_without_properties.mjs";
 import { jsx as _jsx } from "react/jsx-runtime";
-import React, { useContext } from "react";
+import React, { useContext, createContext } from "react";
 import { _useMediaQuery } from "../media-query/hooks.js";
 import { isArray, isNumber } from "@m78/utils";
 import cls from "clsx";
@@ -10,7 +10,7 @@ import { _getCurrentMqProps } from "./common.js";
 import { dumpFn } from "@m78/utils";
 var MAX_COLUMN = 12;
 /** 每列宽度 */ var ONE_COLUMN = 100 / MAX_COLUMN;
-var context = /*#__PURE__*/ React.createContext({});
+var context = /*#__PURE__*/ createContext({});
 /** 根据列数获取宽度 */ var getStyleValue = function(n) {
     if (isNumber(n)) return "".concat(n * ONE_COLUMN, "%");
 };

@@ -16,6 +16,7 @@ import {
   _defaultProps,
   _onTrigger,
   overlayTransitionConfig,
+  useEscapeCloseable,
   useOverlaysClickAway,
   useOverlaysMask,
 } from "./common.js";
@@ -86,6 +87,11 @@ export function _Overlay(p: OverlayProps) {
     props.clickAwayQueueNameSpace
   );
 
+  /** 所有启用的escapeClosable */
+  const escapeCloseable = useEscapeCloseable({
+    enable: open && props.escapeClosable,
+  });
+
   /** 给content render和children render的参数 */
   const customRenderMeta = {
     props,
@@ -113,6 +119,7 @@ export function _Overlay(p: OverlayProps) {
     arrowSpApi,
     overlaysClickAway,
     overlaysMask,
+    escapeCloseable,
     measure,
     isUnmount: useIsUnmountState(),
     customRenderMeta,

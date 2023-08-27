@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useRef } from "react";
-import { _RCTableContext, RCTableInstance } from "./types.js";
+import { RCTableInstance } from "./types.js";
 import { OverlayDirection, OverlayInstance } from "../overlay/index.js";
 import { useSelf, useSetState } from "@m78/hooks";
 import {
@@ -11,9 +11,12 @@ import clsx from "clsx";
 import { Divider } from "../layout/index.js";
 import { TableCellWithDom } from "../table-vanilla/index.js";
 import { isTruthyOrZero } from "@m78/utils";
+import { _injector } from "./table.js";
+import { _useStateAct } from "./state.act.js";
 
-export function _Feedback({ ctx }: { ctx: _RCTableContext }) {
-  const { state, props } = ctx;
+export function _Feedback() {
+  const props = _injector.useProps();
+  const { state } = _injector.useDeps(_useStateAct);
 
   const bubbleRef = useRef<OverlayInstance>(null!);
 
@@ -115,6 +118,7 @@ export function _Feedback({ ctx }: { ctx: _RCTableContext }) {
       open={fbState.open}
       content={fbState.content}
       instanceRef={bubbleRef}
+      escapeClosable={false}
     />
   );
 }

@@ -1,4 +1,4 @@
-import { _defaultTexts } from "../common.js";
+import { tableDefaultTexts } from "../common.js";
 import { AnyObject } from "@m78/utils";
 import { TablePlugin } from "../plugin.js";
 import { TableCellConfig, TableCellWithDom, TableColumnConfig, TableColumnLeafConfigFormatted, TableRowConfig } from "./items.js";
@@ -79,7 +79,7 @@ export interface TableBaseConfig {
     /** 持久化配置, 用于还原之前用户手动变更过的表格配置 */
     persistenceConfig?: TablePersistenceConfig;
     /** 定制提示/反馈文本 */
-    texts?: Partial<typeof _defaultTexts>;
+    texts?: Partial<typeof tableDefaultTexts>;
     /** 插件 */
     plugins?: typeof TablePlugin[];
 }

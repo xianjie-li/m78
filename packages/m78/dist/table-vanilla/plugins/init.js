@@ -9,7 +9,7 @@ import _create_super from "@swc/helpers/src/_create_super.mjs";
 import { TablePlugin } from "../plugin.js";
 import { deepClone, getNamePathValue, isEmpty, isNumber, isObject, isString, setNamePathValue, throwError } from "@m78/utils";
 import clsx from "clsx";
-import { _defaultTexts, _getCellKey, _getCellKeysByStr, _prefix, _privateScrollerDomKey } from "../common.js";
+import { tableDefaultTexts, _getCellKey, _getCellKeysByStr, _prefix, _privateScrollerDomKey } from "../common.js";
 import { _TableGetterPlugin } from "./getter.js";
 import { _TableHeaderPlugin } from "./header.js";
 import { addCls } from "../../common/index.js";
@@ -616,7 +616,7 @@ import { _TableRenderPlugin } from "./render.js";
         this.context.viewContentEl.appendChild(stage);
     };
     /** 合并消息文本 */ _proto.mergeTexts = function mergeTexts() {
-        this.context.texts = _object_spread({}, _defaultTexts, this.config.texts);
+        this.context.texts = _object_spread({}, tableDefaultTexts, this.config.texts);
     };
     return _TableInitPlugin;
 }(TablePlugin);

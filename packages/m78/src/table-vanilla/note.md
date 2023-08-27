@@ -418,10 +418,23 @@ v.drag(bound);
 
 ## TODO
 
-- 排序
-- 筛选
-
 **完成**
 
 - 语言包对外暴露 + rtable 国际化
 - disable 系列 api 隐藏 xx
+- 排序
+- 筛选
+
+// - render 改写, column 改写,
+// 编辑集成 editSchema editRender
+// - 剔除部分配置 interactive 等
+// - dom 接口转为 reactElement 接口, empty
+// - 实例 api 改写, event
+// - 事件代理到 onXXX
+// - 在表头右侧渲染额外节点
+// 筛选 包含筛选条件时显示为蓝色
+// 排序 支持单列/多列
+// toolbar
+
+// form 添加组件, 获取下方所有 field
+// resize 移动到 bubule 上不会消失

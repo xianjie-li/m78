@@ -3,13 +3,13 @@ import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
 import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import { TriggerType } from "../types.js";
 import { _buildEvent } from "../methods.js";
-import { getEventOffset, isTruthyOrZero } from "@m78/utils";
+import { getEventOffset, isNumber, isTruthyOrZero } from "@m78/utils";
 import { _eventXyGetter, triggerClearEvent } from "../common.js";
 // 实现move & active
 export function _moveActiveImpl(ctx) {
     var moveActive = // 处理move
     function moveActive(e) {
-        var ref = _sliced_to_array(_eventXyGetter(e), 3), clientX = ref[0], clientY = ref[1], isTouch = ref[2];
+        var ref = _sliced_to_array(_eventXyGetter(e), 2), clientX = ref[0], clientY = ref[1];
         var items = ctx.getTargetDataByXY(clientX, clientY, true, e.target);
         // 对不在move/active状态中的项进行清理和通知
         if (ctx.typeEnableMap[TriggerType.move]) {
@@ -59,7 +59,8 @@ export function _moveActiveImpl(ctx) {
                         target: i.origin,
                         nativeEvent: e,
                         active: true,
-                        last: false
+                        last: false,
+                        data: i.meta.data
                     });
                     activeRecord.isActivating = true;
                     ctx.activating = true;
@@ -67,13 +68,8 @@ export function _moveActiveImpl(ctx) {
                 };
                 // 清理延迟关闭计时器
                 clearInactiveTimer(activeRecord.target);
-                // 非touch延迟触发
-                if (!isTouch && !activeRecord.isActivating) {
-                    ctx.activeRecord.set(i.origin, activeRecord);
-                    delayTriggerActive(activeRecord, triggerActive);
-                }
-                // touch延迟触发
-                if (isTouch && !activeRecord.isActivating) {
+                // 延迟触发
+                if (!activeRecord.isActivating) {
                     ctx.activeRecord.set(i.origin, activeRecord);
                     delayTriggerActive(activeRecord, triggerActive);
                 }
@@ -106,7 +102,8 @@ export function _moveActiveImpl(ctx) {
                     first: moveFirst,
                     last: false,
                     deltaX: moveDeltaX,
-                    deltaY: moveDeltaY
+                    deltaY: moveDeltaY,
+                    data: i.meta.data
                 });
                 trigger.event.emit(moveEvent);
             }
@@ -153,10 +150,10 @@ export function _moveActiveImpl(ctx) {
         var lastDelay = 140;
         var configActive = ctx.config.active || {};
         var itemActive = record.meta.active || {};
-        if (configActive.firstDelay) firstDelay = configActive.firstDelay;
-        if (configActive.lastDelay) lastDelay = configActive.lastDelay;
-        if (itemActive.firstDelay) firstDelay = itemActive.firstDelay;
-        if (itemActive.lastDelay) lastDelay = itemActive.lastDelay;
+        if (isNumber(configActive.firstDelay)) firstDelay = configActive.firstDelay;
+        if (isNumber(configActive.lastDelay)) lastDelay = configActive.lastDelay;
+        if (isNumber(itemActive.firstDelay)) firstDelay = itemActive.firstDelay;
+        if (isNumber(itemActive.lastDelay)) lastDelay = itemActive.lastDelay;
         return {
             firstDelay: firstDelay,
             lastDelay: lastDelay
@@ -180,7 +177,8 @@ export function _moveActiveImpl(ctx) {
                 nativeEvent: e || triggerClearEvent,
                 active: false,
                 first: false,
-                last: true
+                last: true,
+                data: record.meta.data
             });
             var triggerInactive = function() {
                 ctx.activeRecord.delete(record.target);
@@ -204,7 +202,8 @@ export function _moveActiveImpl(ctx) {
                 nativeEvent: e || triggerClearEvent,
                 active: false,
                 first: false,
-                last: true
+                last: true,
+                data: record.meta.data
             });
             trigger.event.emit(moveEvent);
         });

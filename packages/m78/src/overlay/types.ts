@@ -12,6 +12,7 @@ import { SpringValues } from "@react-spring/core";
 import { SpringRef } from "react-spring";
 import {
   _defaultProps,
+  useEscapeCloseable,
   useOverlaysClickAway,
   useOverlaysMask,
 } from "./common.js";
@@ -165,6 +166,8 @@ export interface OverlayProps
   clickAwayQueue?: boolean;
   /** 如果你需要定制自己的弹层组件并且不想和默认的弹层共用clickAwayQueue, 可以通过此项单独配置 */
   clickAwayQueueNameSpace?: string;
+  /** true | 能否通过escape键关闭 */
+  escapeClosable?: boolean;
   /** true | 出现时是否锁定滚动条 */
   lockScroll?: boolean;
   /** 获取内部wrap dom的ref */
@@ -299,6 +302,7 @@ export interface _OverlayContext {
   trigger: ReturnType<typeof useTrigger>;
   overlaysClickAway: ReturnType<typeof useOverlaysClickAway>;
   overlaysMask: ReturnType<typeof useOverlaysMask>;
+  escapeCloseable: ReturnType<typeof useEscapeCloseable>;
   measure: UseMeasureBound;
   triggerHandle: NonNullable<UseTriggerProps["onTrigger"]>;
   isUnmount: () => boolean;

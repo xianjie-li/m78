@@ -1,12 +1,14 @@
-import { _RCTableContext } from "./types.js";
 import { useFn } from "@m78/hooks";
 import { useEffect } from "react";
 import { TableCell, TableMutationEvent } from "../table-vanilla/index.js";
 import { notify } from "../notify/index.js";
+import { _useStateAct } from "./state.act.js";
+import { _injector } from "./table.js";
 
 // 将部分table实例事件直接暴露为props, 并对某些事件进行处理
-export function _useEvent(ctx: _RCTableContext) {
-  const { state, setState, props } = ctx;
+export function _useEvent() {
+  const { state, setState } = _injector.useDeps(_useStateAct);
+  const props = _injector.useProps();
 
   const error = useFn((msg: string) => {
     props.onError?.(msg);

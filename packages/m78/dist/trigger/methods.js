@@ -1,4 +1,5 @@
 import _object_spread from "@swc/helpers/src/_object_spread.mjs";
+import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
 import { isNumber } from "@m78/utils";
 import throttle from "lodash/throttle.js";
 import { addCls, removeCls } from "../common/index.js";
@@ -74,7 +75,7 @@ export function _updateTargetList(ctx) {
     };
 }
 /** 构建一个所有项均为初始值的TriggerEvent */ export function _buildEvent(initProp) {
-    return _object_spread({
+    return _object_spread_props(_object_spread({
         first: true,
         last: false,
         x: 0,
@@ -87,9 +88,10 @@ export function _updateTargetList(ctx) {
         movementX: 0,
         movementY: 0,
         deltaX: 0,
-        deltaY: 0,
-        data: {}
-    }, initProp);
+        deltaY: 0
+    }, initProp), {
+        data: initProp.data || {}
+    });
 }
 /** 检测节点是否为boundSize对象 */ export function _isBound(target) {
     return isNumber(target.left) && isNumber(target.top) && isNumber(target.width) && isNumber(target.height);

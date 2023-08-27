@@ -9,6 +9,8 @@ import { TableKey } from "../types/base-type.js";
 export class _TableIsPlugin extends TablePlugin implements TableIs {
   /** 内部isActive状态 */
   _isActive = false;
+  /** 可由用户控制的active状态, 和_isActive一起构成active状态  */
+  _isControllableActive = true;
 
   beforeInit() {
     this.methodMapper(this.table, [
@@ -61,8 +63,12 @@ export class _TableIsPlugin extends TablePlugin implements TableIs {
     return isFocus(this.config.el, checkChildren);
   }
 
-  isActive() {
-    return this._isActive;
+  isActive(is?: boolean) {
+    if (is !== undefined) {
+      this._isControllableActive = is;
+    }
+
+    return this._isActive && this._isControllableActive;
   }
 
   isColumnExist(key: TableKey): boolean {
@@ -271,8 +277,8 @@ export interface TableIs {
   /** 表格是否聚焦, checkChildren为true时会检测子级是否聚焦 */
   isFocus(checkChildren?: boolean): boolean;
 
-  /** 表格是否处于活动状态, 即: 最近进行过点击, hover, 滚动等 */
-  isActive(): boolean;
+  /** 表格是否处于活动状态, 即: 最近进行过点击, hover, 滚动等, 在某些弹出层打开时, 可以手动设置false来禁用表格的一些快捷键操作, 但务必在其关闭后重新设为true */
+  isActive(is?: boolean): boolean;
 
   /** 指定key的数据是否存在 */
   isRowExist(key: TableKey): boolean;

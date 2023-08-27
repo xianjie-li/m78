@@ -1,10 +1,10 @@
 import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
-import React, { useImperativeHandle, useRef } from "react";
+import React, { useImperativeHandle, useMemo, useRef } from "react";
 import { _usePropsEffect } from "./use-props.js";
 import clsx from "clsx";
 import { Scroll } from "../scroll/index.js";
-import { useSelf, useSetState } from "@m78/hooks";
+import { createEvent, useSelf, useSetState } from "@m78/hooks";
 import { _useMethods } from "./methods.js";
 import { _useLife } from "./life.js";
 import ReactDom from "react-dom";
@@ -15,16 +15,8 @@ import { _CustomRender, _useCustomRender } from "./use-custom-render.js";
 import { _useEvent } from "./use-event.js";
 import { _Toolbar } from "./toolbar/toolbar.js";
 import { _CustomEditRender, _useEditRender } from "./use-edit-render.js";
-// - render改写, column改写,
-// 编辑集成  editSchema  editRender
-// - 剔除部分配置 interactive等
-// - dom接口转为reactElement接口, empty
-// - 实例api改写, event
-// - 事件代理到onXXX
-// - 在表头右侧渲染额外节点
-// 筛选 包含筛选条件时显示为蓝色
-// 排序 支持单列/多列
-// toolbar
+import { _Feedback } from "./feedback.js";
+import { _useFilterForm } from "./filter/use-filter-form.js";
 export function _Table(props) {
     /** 实例容器 */ var ref = useRef(null);
     /** 滚动容器 */ var scrollRef = useRef(null);
@@ -45,7 +37,11 @@ export function _Table(props) {
         setState: setState,
         ref: ref,
         scrollRef: scrollRef,
-        scrollContRef: scrollContRef
+        scrollContRef: scrollContRef,
+        filterForm: _useFilterForm(props),
+        scrollEvent: useMemo(function() {
+            return createEvent();
+        }, [])
     };
     ctx.editRender = _useEditRender(ctx);
     ctx.customRender = _useCustomRender(ctx);
@@ -79,6 +75,9 @@ export function _Table(props) {
                     }),
                     /*#__PURE__*/ _jsx(_CustomEditRender, {
                         ctx: ctx
+                    }),
+                    /*#__PURE__*/ _jsx(_Feedback, {
+                        ctx: ctx
                     })
                 ]
             }),
@@ -93,6 +92,7 @@ export function _Table(props) {
                     innerWrapRef: scrollRef,
                     miniBar: true,
                     scrollIndicator: false,
+                    onScroll: ctx.scrollEvent.emit,
                     children: /*#__PURE__*/ _jsx("div", {
                         ref: scrollContRef
                     })

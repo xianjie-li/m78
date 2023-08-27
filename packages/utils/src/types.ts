@@ -59,3 +59,37 @@ export interface IdProps {
 export interface DataProps {
   data: number;
 }
+
+type Compute<T> = { [K in keyof T]: T[K] } | never;
+type ComputeTrimNull<T> = { [K in keyof T]-?: T[K] } | never;
+
+type AllKeys<T> = T extends any ? keyof T : never;
+
+/** combine object based union type to new type */
+export type MergeUnion<T, Keys extends keyof T = keyof T> = Compute<
+  {
+    [K in Keys]: T[Keys];
+  } & {
+    [K in AllKeys<T>]?: T extends any
+      ? K extends keyof T
+        ? T[K]
+        : never
+      : never;
+  }
+>;
+
+/** combine object based union type to new type, and trim all null or undefined */
+export type MergeUnionWithoutNull<
+  T,
+  Keys extends keyof T = keyof T
+> = ComputeTrimNull<
+  {
+    [K in Keys]: T[Keys];
+  } & {
+    [K in AllKeys<T>]?: T extends any
+      ? K extends keyof T
+        ? T[K]
+        : never
+      : never;
+  }
+>;

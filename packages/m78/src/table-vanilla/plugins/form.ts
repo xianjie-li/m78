@@ -454,7 +454,15 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
     this.editStatus = [];
     this.editStatusMap = {};
 
-    if (!firstRowKey) return;
+    if (!firstRowKey) {
+      // 清空
+      _syncListNode({
+        wrapNode: this.wrapNode,
+        list: [],
+        nodeList: this.editStatusNodes,
+      });
+      return;
+    }
 
     let requireKeys: string[] = [];
 

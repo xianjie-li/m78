@@ -6,6 +6,7 @@ import { TableInstance } from "../types/instance.js";
 import { TableCell, TableCellWithDom, TableItems, TableRow } from "../types/items.js";
 import { DragGesture, FullGestureState } from "@use-gesture/vanilla";
 import { TableReloadLevel } from "./life.js";
+import { _TableDisablePlugin } from "./disable.js";
 /** 实现选区和选中功能 */
 export declare class _TableSelectPlugin extends TablePlugin implements TableSelect {
     /** 选中的行 */
@@ -34,7 +35,10 @@ export declare class _TableSelectPlugin extends TablePlugin implements TableSele
     static EDGE_SIZE: number;
     /** 拖动控制 */
     drag: DragGesture;
+    /** 设置禁用样式 */
+    disablePlugin: _TableDisablePlugin;
     beforeInit(): void;
+    init(): void;
     mounted(): void;
     reload(): void;
     loadStage(level: TableReloadLevel, isBefore: boolean): void;

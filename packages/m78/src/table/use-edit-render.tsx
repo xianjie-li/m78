@@ -1,8 +1,4 @@
-import {
-  _CustomEditItem,
-  _RCTableContext,
-  RCTableEditRenderArg,
-} from "./types.js";
+import { _CustomEditItem, RCTableEditRenderArg } from "./types.js";
 import { TableCell } from "../table-vanilla/index.js";
 import { useFn } from "@m78/hooks";
 import React from "react";
@@ -12,10 +8,13 @@ import {
   TableInteractiveRenderArg,
 } from "../table-vanilla/plugins/interactive-core.js";
 import { delay } from "@m78/utils";
+import { _useStateAct } from "./state.act.js";
+import { _injector } from "./table.js";
 
 // 自定义编辑逻辑
-export function _useEditRender(ctx: _RCTableContext) {
-  const { state, self, props } = ctx;
+export function _useEditRender() {
+  const { state, self } = _injector.useDeps(_useStateAct);
+  const props = _injector.useProps();
 
   // 检测单元格是否可编辑
   const interactiveEnableChecker = useFn((cell: TableCell) => {
@@ -92,8 +91,9 @@ export function _useEditRender(ctx: _RCTableContext) {
 export type _UseEditRender = ReturnType<typeof _useEditRender>;
 
 // 自定义编辑渲染, 组件部分, 用于避免频繁render影响外部作用域
-export function _CustomEditRender({ ctx }: { ctx: _RCTableContext }) {
-  const { self, state } = ctx;
+export function _CustomEditRender() {
+  const props = _injector.useProps();
+  const { self, state } = _injector.useDeps(_useStateAct);
 
   const [list, setList] = React.useState<_CustomEditItem[]>([]);
 
@@ -103,7 +103,7 @@ export function _CustomEditRender({ ctx }: { ctx: _RCTableContext }) {
       return self.editMap[key];
     });
 
-    if (ctx.props.syncRender) {
+    if (props.syncRender) {
       flushSync(() => {
         setList(ls);
       });

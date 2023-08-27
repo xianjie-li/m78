@@ -5,6 +5,7 @@ import { _TableRowColumnResize } from "./row-column-resize.js";
 import { AutoScroll, RafFunction } from "@m78/utils";
 import { TablePosition } from "../types/base-type.js";
 import { _TableSelectPlugin } from "./select.js";
+import { _TableDisablePlugin } from "./disable.js";
 /** 表格行/列排序 */
 export declare class _TableDragSortPlugin extends TablePlugin {
     /** 拖动控制 */
@@ -15,6 +16,8 @@ export declare class _TableDragSortPlugin extends TablePlugin {
     rcResize: _TableRowColumnResize;
     /** 获取当前的选区插件信息 */
     select: _TableSelectPlugin;
+    /** 设置禁用样式 */
+    disablePlugin: _TableDisablePlugin;
     /** 正在拖动 */
     dragging: boolean;
     /** 提示节点的容器 */

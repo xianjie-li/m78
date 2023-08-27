@@ -42,6 +42,7 @@ export const _defaultProps = {
   offset: 0,
   triggerType: TriggerType.click,
   autoFocus: true,
+  escapeClosable: true,
 };
 
 export const overlayTransitionConfig = config.stiff;
@@ -114,6 +115,21 @@ export function useOverlaysClickAway(config?: SameConfig, namespace?: string) {
     namespace || defaultClickAwaySameNameSpace,
     config
   );
+
+  return {
+    index,
+    list,
+    id,
+    isFirst: index === 0,
+    isLast: index === list.length - 1,
+  };
+}
+
+/**
+ * 所有弹层类组件共享的useSame包装, 用于统一escapeClosable
+ * */
+export function useEscapeCloseable(config?: SameConfig) {
+  const [index, list, id] = useSame("m78-overlay-escape-closeable", config);
 
   return {
     index,

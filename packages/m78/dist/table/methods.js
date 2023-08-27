@@ -2,6 +2,7 @@ import _object_spread from "@swc/helpers/src/_object_spread.mjs";
 import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
 import { createTable } from "../table-vanilla/index.js";
 import { createEvent } from "@m78/hooks";
+import { i18n, TABLE_NS } from "../i18n/index.js";
 export function _useMethods(ctx) {
     var updateInstance = /** 创建/更新表格实例 */ function updateInstance(propsConf, isFull) {
         console.log("reload", isFull ? "full" : "index");
@@ -12,6 +13,7 @@ export function _useMethods(ctx) {
             });
             return;
         }
+        var texts = i18n.getResourceBundle(i18n.language, TABLE_NS);
         setState({
             instance: createTable(_object_spread_props(_object_spread({}, propsConf), {
                 el: ref.current,
@@ -22,7 +24,8 @@ export function _useMethods(ctx) {
                 eventCreator: createEvent,
                 render: customRender.render,
                 interactive: editRender.interactiveEnableChecker,
-                interactiveRender: editRender.interactiveRender
+                interactiveRender: editRender.interactiveRender,
+                texts: texts
             }))
         });
     };

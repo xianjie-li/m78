@@ -1,6 +1,6 @@
 import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import clone from "lodash/cloneDeep.js";
-import { ensureArray, getNamePathValue, isArray, isEmpty, isObject, isString, setNamePathValue } from "@m78/utils";
+import { deleteNamePathValue, ensureArray, getNamePathValue, isArray, isEmpty, isObject, isString, setNamePathValue } from "@m78/utils";
 import { _clearChildAndSelf, _recursionDeleteNamePath } from "./common.js";
 import isEqual from "lodash/isEqual.js";
 export function _implValue(ctx) {
@@ -37,7 +37,11 @@ export function _implValue(ctx) {
         }
     };
     instance.setValue = function(name, val) {
-        setNamePathValue(ctx.values, name, val);
+        if (val === undefined) {
+            deleteNamePathValue(ctx.values, name);
+        } else {
+            setNamePathValue(ctx.values, name, val);
+        }
         if (!ctx.lockListState) {
             _clearChildAndSelf(ctx, name);
         }

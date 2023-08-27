@@ -19,6 +19,7 @@ import { _useTextAreaCalc } from "./use-text-area-calc.js";
 import { _integer, _number, _numberRange, _positive } from "./interceptor.js";
 import { _useStepper } from "./use-stepper.js";
 import { i18n, INPUT_NS } from "../i18n/index.js";
+import { Size } from "../common/index.js";
 export function _Input(_props) {
     var manualChange = /** 手动设置值并通过change()触发更新 */ function manualChange(val) {
         inputRef.current.value = val;
@@ -147,7 +148,7 @@ export function _Input(_props) {
         if (nodes.length && !textArea) {
             nodes.unshift(/*#__PURE__*/ _jsx(Divider, {
                 vertical: true,
-                margin: 4
+                margin: size === Size.small ? 2 : 4
             }));
         }
         return (_React = React).createElement.apply(_React, [

@@ -152,6 +152,7 @@ importers:
       react-spring: ^9.6.1
       resize-observer-polyfill: ^1.5.1
       stats.js: ^0.17.0
+      type-fest: ^4.2.0
       use-sync-external-store: ^1.2.0
     dependencies:
       '@lxjx/click-effect': 1.0.1
@@ -176,6 +177,7 @@ importers:
       react-i18next: 12.0.0_e52s5leb62x5eudkmfoztpifde
       react-spring: 9.6.1_tbagvnph2utfj5xyzoveciwt3a
       resize-observer-polyfill: 1.5.1
+      type-fest: 4.2.0
       use-sync-external-store: 1.2.0_react@18.2.0
     devDependencies:
       '@types/use-sync-external-store': 0.0.3
@@ -12601,6 +12603,11 @@ packages:
     resolution: {integrity: sha512-RAH822pAdBgcNMAfWnCBU3CFZcfZ/i1eZjwFU/dsLKumyuuP3niueg2UAukXYF0E2AAoc82ZSSf9J0WQBinzHA==}
     engines: {node: '>=12.20'}
     dev: true
+
+  /type-fest/4.2.0:
+    resolution: {integrity: sha512-5zknd7Dss75pMSED270A1RQS3KloqRJA9XbXLe0eCxyw7xXFb3rd+9B0UQ/0E+LQT6lnrLviEolYORlRWamn4w==}
+    engines: {node: '>=16'}
+    dev: false
 
   /type-is/1.6.18:
     resolution: {integrity: sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g==}

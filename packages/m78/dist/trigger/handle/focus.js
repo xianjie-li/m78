@@ -19,7 +19,8 @@ export function _focusImpl(ctx) {
                 target: i.origin,
                 nativeEvent: e,
                 focus: true,
-                isInteractiveFocus: _isInteractiveFocus
+                isInteractiveFocus: _isInteractiveFocus,
+                data: i.meta.data
             });
             trigger.event.emit(event);
         });
@@ -47,7 +48,8 @@ export function _focusImpl(ctx) {
                 focus: false,
                 first: false,
                 last: true,
-                isInteractiveFocus: _isInteractiveFocus
+                isInteractiveFocus: _isInteractiveFocus,
+                data: i.meta.data
             });
             trigger.event.emit(event);
         });
@@ -71,7 +73,8 @@ export function _focusImpl(ctx) {
                 focus: false,
                 first: false,
                 last: true,
-                isInteractiveFocus: _isInteractiveFocus
+                isInteractiveFocus: _isInteractiveFocus,
+                data: i.meta.data
             });
             trigger.event.emit(event);
         });

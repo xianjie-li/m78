@@ -16,6 +16,7 @@ export declare const _defaultProps: {
     offset: number;
     triggerType: TriggerType;
     autoFocus: boolean;
+    escapeClosable: boolean;
 };
 export declare const overlayTransitionConfig: {
     readonly tension: 210;
@@ -49,6 +50,16 @@ export declare function useOverlaysMask(config?: SameConfig): {
  * 所有弹层类组件共享的useSame包装, 用于统一clickAway
  * */
 export declare function useOverlaysClickAway(config?: SameConfig, namespace?: string): {
+    index: number;
+    list: import("@m78/hooks").SameItem<unknown>[];
+    id: string;
+    isFirst: boolean;
+    isLast: boolean;
+};
+/**
+ * 所有弹层类组件共享的useSame包装, 用于统一escapeClosable
+ * */
+export declare function useEscapeCloseable(config?: SameConfig): {
     index: number;
     list: import("@m78/hooks").SameItem<unknown>[];
     id: string;

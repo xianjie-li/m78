@@ -77,19 +77,23 @@
   }
 
   &.__info {
-    border: 2px dashed var(--m78-color);
+    background: var(--m78-blue-1);
+    border: 1px solid var(--m78-blue-6);
   }
 
   &.__success {
-    border: 2px dashed var(--m78-color-success);
+    background: var(--m78-green-1);
+    border: 1px solid var(--m78-green-6);
   }
 
   &.__error {
-    border: 2px dashed var(--m78-color-error);
+    background: var(--m78-red-1);
+    border: 1px solid var(--m78-red-6);
   }
 
   &.__warning {
-    border: 2px dashed var(--m78-color-warning);
+    background: var(--m78-orange-1);
+    border: 1px solid var(--m78-orange-6);;
   }
 
   // 带状态和高亮的项添加间距

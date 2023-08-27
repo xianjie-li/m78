@@ -1,5 +1,18 @@
 import React from "react";
-import { Lay, LayStyle, Button, Cell, Cells, Size, Status } from "m78";
+import {
+  Lay,
+  LayStyle,
+  Button,
+  Cell,
+  Cells,
+  Size,
+  Status,
+  ButtonColor,
+} from "m78";
+import { IconInfo } from "@m78/icons/icon-info.js";
+import { IconPlaylistAddCheckCircle } from "@m78/icons/icon-playlist-add-check-circle.js";
+import { IconWarning } from "@m78/icons/icon-warning.js";
+import { IconError } from "@m78/icons/icon-error.js";
 
 const LayExample = () => {
   return (
@@ -193,52 +206,62 @@ const LayExample = () => {
           <p className="fs-md mt-32">状态</p>
 
           <div>
-            <Lay leading="🍊" title="橘子" itemStyle={LayStyle.border} />
             <Lay
               leading="🍌"
-              title="香蕉"
+              title="highlight状态"
               arrow
               itemStyle={LayStyle.border}
               highlight
             />
             <Lay
               leading="🍉"
-              title="西瓜"
-              desc="夏天的水果"
-              arrow
+              title="active状态"
+              desc="高亮显示的项"
               itemStyle={LayStyle.border}
+              arrow
               active
             />
             <Lay
-              leading="🥝"
-              title="猕猴桃"
-              trailing="桃凉凉"
-              arrow
-              itemStyle={LayStyle.border}
+              leading={<IconInfo className="color-blue" />}
+              title="提示"
+              desc="Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                  Alias atque beatae ducimus."
+              effect={false}
+              crossAlign="start"
               status={Status.info}
             />
             <Lay
-              leading="🍇"
-              title="葡萄"
-              trailing="没货了"
-              arrow
-              itemStyle={LayStyle.border}
+              leading={<IconPlaylistAddCheckCircle className="color-success" />}
+              title="成功"
+              desc="Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                  Alias atque beatae ducimus."
+              effect={false}
+              crossAlign="start"
               status={Status.success}
             />
             <Lay
-              leading="🍋"
-              title="柠檬"
-              trailing={<input type="checkbox" />}
-              desc="一年一度的“我吃柠檬”挑战又要开始啦~，请记住我们的活动代号“#WCNM#”"
+              leading={<IconWarning className="color-warning" />}
+              title="警告"
               effect={false}
-              itemStyle={LayStyle.border}
-              status={Status.error}
+              crossAlign="start"
+              status={Status.warning}
             />
             <Lay
-              leading="🍓"
-              title="草莓"
+              leading={<IconError className="color-error" />}
+              title="失败"
+              desc="Lorem ipsum dolor sit amet, consectetur adipisicing elit."
+              effect={false}
+              crossAlign="start"
               itemStyle={LayStyle.border}
-              status={Status.warning}
+              status={Status.error}
+              foot={
+                <div className="tr">
+                  <Button size={Size.small}>操作1</Button>
+                  <Button size={Size.small} color={ButtonColor.red}>
+                    操作2
+                  </Button>
+                </div>
+              }
             />
           </div>
         </div>

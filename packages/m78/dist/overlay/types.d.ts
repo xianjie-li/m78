@@ -4,7 +4,7 @@ import { SetFormState, SetState, UseMeasureBound, UseMountStateConfig } from "@m
 import { RenderApiComponentProps } from "@m78/render-api";
 import { SpringValues } from "@react-spring/core";
 import { SpringRef } from "react-spring";
-import { _defaultProps, useOverlaysClickAway, useOverlaysMask } from "./common.js";
+import { _defaultProps, useEscapeCloseable, useOverlaysClickAway, useOverlaysMask } from "./common.js";
 import { ComponentBaseProps } from "../common/index.js";
 import { TransitionBaseProps, TransitionTypeUnion } from "../transition/index.js";
 import { EventTypes, Handler } from "@use-gesture/core/types";
@@ -60,7 +60,7 @@ export interface OverlayProps extends ComponentBaseProps, UseMountStateConfig, R
     /**
      * 'click' | 设置了children来触发开关时, 配置触发方式
      *
-     * 明显互斥的触发方式不建议同时使用, 如: active事件和click事件, move事件和其他事件. 另外, drag事件在Overlay中没有实际意义, 传入不会有任何作用
+     * 尽管可以同时设置多个触发类型, 但是并不是所有的事件类型都能良好的结合, 比如将 `active` 和 `click` 结合通常没有意义. 另外, drag事件在Overlay中没有实际意义, 传入不会有任何作用
      *
      * contextMenu和move 通常需要结合 direction 使用, 在 move 模式下, 需要设置一个合适的 offset, 用于确保鼠标不会快速滑动到overlay内容上, 导致move事件中断
      * */
@@ -114,6 +114,8 @@ export interface OverlayProps extends ComponentBaseProps, UseMountStateConfig, R
     clickAwayQueue?: boolean;
     /** 如果你需要定制自己的弹层组件并且不想和默认的弹层共用clickAwayQueue, 可以通过此项单独配置 */
     clickAwayQueueNameSpace?: string;
+    /** true | 能否通过escape键关闭 */
+    escapeClosable?: boolean;
     /** true | 出现时是否锁定滚动条 */
     lockScroll?: boolean;
     /** 获取内部wrap dom的ref */
@@ -157,7 +159,7 @@ export interface OverlayProps extends ComponentBaseProps, UseMountStateConfig, R
      * */
     arrowProps?: any;
 }
-/** overlay实例, 通过instanceRef或api用法使用 */
+/** overlay实例, 通过instanceRef访问并使用 */
 export interface OverlayInstance {
     /** 更新xy */
     updateXY(xy: TupleNumber, immediate?: boolean): void;
@@ -248,6 +250,7 @@ export interface _OverlayContext {
     trigger: ReturnType<typeof useTrigger>;
     overlaysClickAway: ReturnType<typeof useOverlaysClickAway>;
     overlaysMask: ReturnType<typeof useOverlaysMask>;
+    escapeCloseable: ReturnType<typeof useEscapeCloseable>;
     measure: UseMeasureBound;
     triggerHandle: NonNullable<UseTriggerProps["onTrigger"]>;
     isUnmount: () => boolean;

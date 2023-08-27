@@ -33,6 +33,7 @@ import { _integer, _number, _numberRange, _positive } from "./interceptor.js";
 
 import { _useStepper } from "./use-stepper.js";
 import { i18n, INPUT_NS } from "../i18n/index.js";
+import { Size } from "../common/index.js";
 
 export function _Input(_props: InputProps) {
   const {
@@ -370,7 +371,7 @@ export function _Input(_props: InputProps) {
     }
 
     if (nodes.length && !textArea) {
-      nodes.unshift(<Divider vertical margin={4} />);
+      nodes.unshift(<Divider vertical margin={size === Size.small ? 2 : 4} />);
     }
 
     return React.createElement(React.Fragment, null, ...nodes);

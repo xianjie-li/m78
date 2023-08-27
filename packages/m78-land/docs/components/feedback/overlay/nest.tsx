@@ -10,6 +10,7 @@ const Nest = () => {
         content={
           <div className={css.modal}>
             {zIndex === 3 ? "It's at end." : renderSingleOverlay(zIndex + 1)}
+            <div className="mt-16">click outside or press ESC to close</div>
           </div>
         }
         alignment={[0.4 + zIndex * 0.05, 0.4 + zIndex * 0.05]}

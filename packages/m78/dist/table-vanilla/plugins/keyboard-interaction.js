@@ -79,7 +79,7 @@ var clipboardDataWarning = "[".concat(_prefix, "] can't get clipboardData, bowse
                     return a.concat(b);
                 }, []);
                 if (allCell.length > maxSinglePaste) {
-                    _this.table.event.error.emit(_this.context.texts.pasteSingleValueLimit.replace("{num}", String(maxSinglePaste)));
+                    _this.table.event.error.emit(_this.context.texts["paste single value limit"].replace("{num}", String(maxSinglePaste)));
                     return;
                 }
                 var singleValue = strCell[0][0];
@@ -262,13 +262,13 @@ var clipboardDataWarning = "[".concat(_prefix, "] can't get clipboardData, bowse
     };
     /** 检测传入的str cell 和 cell 的二维数组是否行列数完全一致, 如果不一致, 返回错误文本 */ _proto.checkAlign = function checkAlign(strCell, cells) {
         if (strCell.length !== cells.length) {
-            return "".concat(this.context.texts.pasteUnalignedRow, " [").concat(strCell.length, " -> ").concat(cells.length, "]");
+            return "".concat(this.context.texts["paste unaligned row"], " [").concat(strCell.length, " -> ").concat(cells.length, "]");
         }
         for(var i = 0; i < strCell.length; i++){
             var row = strCell[i];
             var cellsRow = cells[i];
             if (row.length !== cellsRow.length) {
-                return "".concat(this.context.texts.pasteUnalignedColumn, " [").concat(row.length, " -> ").concat(cellsRow.length, "]");
+                return "".concat(this.context.texts["paste unaligned column"], " [").concat(row.length, " -> ").concat(cellsRow.length, "]");
             }
         }
         return "";

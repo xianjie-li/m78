@@ -2,59 +2,52 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import React from "react";
 import { Button, ButtonColor } from "../../button/index.js";
 import { Size } from "../../common/index.js";
-import { IconManageSearch } from "@m78/icons/icon-manage-search.js";
 import { Bubble } from "../../bubble/index.js";
-import { IconSync } from "@m78/icons/icon-sync.js";
-import { IconFilterAlt } from "@m78/icons/icon-filter-alt.js";
 import { Divider, Row } from "../../layout/index.js";
 import { IconFileDownload } from "@m78/icons/icon-file-download.js";
 import { IconFileUpload } from "@m78/icons/icon-file-upload.js";
 import { IconDeleteForever } from "@m78/icons/icon-delete-forever.js";
 import { IconAddToPhotos } from "@m78/icons/icon-add-to-photos.js";
 import { IconSave } from "@m78/icons/icon-save.js";
-import { IconModeEdit } from "@m78/icons/icon-mode-edit.js";
 import { _getTableCtx } from "../common.js";
 import { _getHistoryButtons } from "./get-history-buttons.js";
+import { TABLE_NS, Trans, Translation } from "../../i18n/index.js";
+import { _renderToolBarQueryBtn, _ToolBarFilterBtn, _ToolbarCommonFilter } from "../filter/filter-btn.js";
 export function _Toolbar(param) {
     var ctx = param.ctx;
     var renderLeading = function renderLeading() {
         if (!state.instance) return null;
-        var searchBtn = /*#__PURE__*/ _jsxs(Button, {
-            text: true,
-            children: [
-                /*#__PURE__*/ _jsx(IconManageSearch, {
-                    className: "color-second fs-16"
-                }),
-                "查询"
-            ]
+        var searchBtn = _renderToolBarQueryBtn(ctx);
+        var resetFilterBtn = /*#__PURE__*/ _jsx(_ToolBarFilterBtn, {
+            ctx: ctx
         });
-        var resetFilterBtn = /*#__PURE__*/ _jsx(Bubble, {
-            content: "重置筛选条件",
-            children: /*#__PURE__*/ _jsx(Button, {
-                squareIcon: true,
-                children: /*#__PURE__*/ _jsx(IconSync, {
-                    className: "color-second"
-                })
-            })
-        });
-        var filterBtn = /*#__PURE__*/ _jsx(Bubble, {
-            content: "通用筛选条件",
-            children: /*#__PURE__*/ _jsx(Button, {
-                squareIcon: true,
-                children: /*#__PURE__*/ _jsx(IconFilterAlt, {
-                    className: "color-second"
-                })
-            })
+        var filterBtn = /*#__PURE__*/ _jsx(_ToolbarCommonFilter, {
+            ctx: ctx
         });
         var ref = _getHistoryButtons(state.instance.history), redoBtn = ref.redoBtn, undoBtn = ref.undoBtn;
-        var countText = /*#__PURE__*/ _jsxs("div", {
+        var countText = /*#__PURE__*/ _jsx("div", {
             className: "color-second fs-12",
-            children: [
-                "共",
-                rowCount,
-                "行",
-                rowCount ? " / 选中".concat(selectedCount, "行") : ""
-            ]
+            children: /*#__PURE__*/ _jsx(Translation, {
+                ns: TABLE_NS,
+                children: function(t) {
+                    return /*#__PURE__*/ _jsxs(Trans, {
+                        i18nKey: "count",
+                        t: t,
+                        count: count,
+                        selectedCount: selectedCount,
+                        children: [
+                            {
+                                count: count
+                            },
+                            " rows / ",
+                            {
+                                selectedCount: selectedCount
+                            },
+                            " selected"
+                        ]
+                    });
+                }
+            })
         });
         var nodes = /*#__PURE__*/ _jsxs(_Fragment, {
             children: [
@@ -91,101 +84,138 @@ export function _Toolbar(param) {
     };
     var renderTrailing = function renderTrailing() {
         if (!state.instance) return null;
-        var exportBtn = /*#__PURE__*/ _jsx(Bubble, {
-            content: /*#__PURE__*/ _jsxs("div", {
-                children: [
-                    /*#__PURE__*/ _jsx("div", {
-                        children: "导出为xlsx文件"
-                    }),
-                    /*#__PURE__*/ _jsxs("div", {
-                        className: "fs-12 color-second",
+        var exportBtn = /*#__PURE__*/ _jsx(Translation, {
+            ns: TABLE_NS,
+            children: function(t) {
+                return /*#__PURE__*/ _jsx(Bubble, {
+                    content: /*#__PURE__*/ _jsxs("div", {
                         children: [
-                            "你也可以 ",
-                            /*#__PURE__*/ _jsx("a", {
-                                children: "导出指定列"
+                            /*#__PURE__*/ _jsx("div", {
+                                children: t("export xlsx")
+                            }),
+                            /*#__PURE__*/ _jsxs("div", {
+                                className: "fs-12 color-second",
+                                children: [
+                                    t("u can also"),
+                                    " ",
+                                    /*#__PURE__*/ _jsx("a", {
+                                        children: t("export specific")
+                                    })
+                                ]
                             })
                         ]
+                    }),
+                    children: /*#__PURE__*/ _jsx(Button, {
+                        className: "color-second",
+                        squareIcon: true,
+                        children: /*#__PURE__*/ _jsx(IconFileDownload, {})
                     })
-                ]
-            }),
-            children: /*#__PURE__*/ _jsx(Button, {
-                className: "color-second",
-                squareIcon: true,
-                children: /*#__PURE__*/ _jsx(IconFileDownload, {})
-            })
+                });
+            }
         });
-        var importBtn = /*#__PURE__*/ _jsx(Bubble, {
-            content: /*#__PURE__*/ _jsxs("div", {
-                children: [
-                    "从xlsx文件导入数据",
-                    /*#__PURE__*/ _jsx("div", {
-                        className: "fs-12 color-second",
-                        children: /*#__PURE__*/ _jsx("a", {
-                            children: "下载导入模板"
-                        })
+        var importBtn = /*#__PURE__*/ _jsx(Translation, {
+            ns: TABLE_NS,
+            children: function(t) {
+                return /*#__PURE__*/ _jsx(Bubble, {
+                    content: /*#__PURE__*/ _jsxs("div", {
+                        children: [
+                            t("import"),
+                            /*#__PURE__*/ _jsx("div", {
+                                className: "fs-12 color-second",
+                                children: /*#__PURE__*/ _jsx("a", {
+                                    children: t("download import tpl")
+                                })
+                            })
+                        ]
+                    }),
+                    children: /*#__PURE__*/ _jsx(Button, {
+                        className: "color-second",
+                        squareIcon: true,
+                        children: /*#__PURE__*/ _jsx(IconFileUpload, {})
                     })
-                ]
-            }),
-            children: /*#__PURE__*/ _jsx(Button, {
-                className: "color-second",
-                squareIcon: true,
-                children: /*#__PURE__*/ _jsx(IconFileUpload, {})
-            })
+                });
+            }
         });
-        var deleteBtn = /*#__PURE__*/ _jsx(Bubble, {
-            content: "删除选中项",
-            children: /*#__PURE__*/ _jsx(Button, {
-                className: "color-second",
-                squareIcon: true,
-                disabled: selectedCount === 0,
-                children: /*#__PURE__*/ _jsx(IconDeleteForever, {})
-            })
-        });
-        var editBtn = /*#__PURE__*/ _jsx(Bubble, {
-            content: /*#__PURE__*/ _jsx("div", {
-                children: "在独立窗口中编辑选中行"
-            }),
-            children: /*#__PURE__*/ _jsx(Button, {
-                className: "color-second",
-                squareIcon: true,
-                disabled: selectedCount === 0,
-                children: /*#__PURE__*/ _jsx(IconModeEdit, {})
-            })
-        });
-        var addBtn = /*#__PURE__*/ _jsx(Bubble, {
-            content: /*#__PURE__*/ _jsxs("div", {
-                children: [
-                    "新增一条记录",
-                    /*#__PURE__*/ _jsx("div", {
-                        className: "fs-12 color-second",
-                        children: "选中行时, 在选中行上方插入"
+        var deleteBtn = /*#__PURE__*/ _jsx(Translation, {
+            ns: TABLE_NS,
+            children: function(t) {
+                return /*#__PURE__*/ _jsx(Bubble, {
+                    content: t("delete selected rows"),
+                    children: /*#__PURE__*/ _jsx(Button, {
+                        className: "color-second",
+                        squareIcon: true,
+                        disabled: selectedCount === 0,
+                        children: /*#__PURE__*/ _jsx(IconDeleteForever, {})
                     })
-                ]
-            }),
-            children: /*#__PURE__*/ _jsxs(Button, {
-                size: Size.small,
-                disabled: true,
-                children: [
-                    /*#__PURE__*/ _jsx(IconAddToPhotos, {}),
-                    "新建"
-                ]
-            })
+                });
+            }
         });
-        var saveBtn = /*#__PURE__*/ _jsxs(Button, {
-            size: Size.small,
-            color: ButtonColor.primary,
-            disabled: true,
-            children: [
-                /*#__PURE__*/ _jsx(IconSave, {}),
-                "保存"
-            ]
+        var addBtn = /*#__PURE__*/ _jsx(Translation, {
+            ns: TABLE_NS,
+            children: function(t) {
+                return /*#__PURE__*/ _jsx(Bubble, {
+                    content: /*#__PURE__*/ _jsxs("div", {
+                        children: [
+                            t("add row tip1"),
+                            /*#__PURE__*/ _jsx("div", {
+                                className: "fs-12 color-second",
+                                children: t("add row tip2")
+                            })
+                        ]
+                    }),
+                    children: /*#__PURE__*/ _jsxs(Button, {
+                        size: Size.small,
+                        children: [
+                            /*#__PURE__*/ _jsx(IconAddToPhotos, {}),
+                            t("add row btn")
+                        ]
+                    })
+                });
+            }
+        });
+        var saveBtn = /*#__PURE__*/ _jsx(Translation, {
+            ns: TABLE_NS,
+            children: function(t) {
+                return /*#__PURE__*/ _jsx(Bubble, {
+                    content: /*#__PURE__*/ _jsxs("div", {
+                        children: [
+                            t("new tip"),
+                            ": ",
+                            /*#__PURE__*/ _jsx("span", {
+                                className: "color-green bold mr-8",
+                                children: "3"
+                            }),
+                            t("delete tip"),
+                            ":",
+                            " ",
+                            /*#__PURE__*/ _jsx("span", {
+                                className: "color-red bold mr-8",
+                                children: "2"
+                            }),
+                            t("update tip"),
+                            ": ",
+                            /*#__PURE__*/ _jsx("span", {
+                                className: "color-blue bold",
+                                children: "7"
+                            })
+                        ]
+                    }),
+                    children: /*#__PURE__*/ _jsxs(Button, {
+                        size: Size.small,
+                        color: ButtonColor.primary,
+                        children: [
+                            /*#__PURE__*/ _jsx(IconSave, {}),
+                            t("save btn")
+                        ]
+                    })
+                });
+            }
         });
         var nodes = /*#__PURE__*/ _jsxs(_Fragment, {
             children: [
                 exportBtn,
                 importBtn,
                 deleteBtn,
-                editBtn,
                 /*#__PURE__*/ _jsx(Divider, {
                     vertical: true
                 }),
@@ -198,7 +228,6 @@ export function _Toolbar(param) {
             exportBtn: exportBtn,
             importBtn: importBtn,
             deleteBtn: deleteBtn,
-            editBtn: editBtn,
             addBtn: addBtn,
             saveBtn: saveBtn
         };
@@ -210,7 +239,7 @@ export function _Toolbar(param) {
     var ref;
     var props = ctx.props, state = ctx.state;
     var selectedCount = state.selectedRows.length;
-    var rowCount = ((ref = _getTableCtx(state.instance)) === null || ref === void 0 ? void 0 : ref.allRowKeys.length) || 0;
+    var count = ((ref = _getTableCtx(state.instance)) === null || ref === void 0 ? void 0 : ref.allRowKeys.length) || 0;
     return /*#__PURE__*/ _jsxs(Row, {
         className: "m78-table_toolbar",
         mainAlign: "between",

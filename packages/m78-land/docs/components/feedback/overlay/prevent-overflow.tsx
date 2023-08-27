@@ -26,6 +26,7 @@ const PreventOverflow = () => {
         childrenAsTarget
         lockScroll={false}
         clickAwayClosable={false}
+        escapeClosable={false}
         content={<div style={{ padding: "12px 24px" }}>气泡内容</div>}
       >
         <Button style={{ margin: 3000 }}>target</Button>

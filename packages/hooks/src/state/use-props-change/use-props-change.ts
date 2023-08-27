@@ -12,13 +12,17 @@ import { usePrev } from "../use-prev/use-prev.js";
 export function usePropsChange<T extends Object = AnyObject>(
   props: T,
   options: {
-    /** keys will skip */
-    omit?: string[] | ((key: string, value: any) => boolean);
-    /** keys will use deep equal */
+    /** only verify specified keys, not affected by exclude and skipReferenceType */
+    include?: string[] | ((key: string, value: any) => boolean);
+    /** skip specified keys check */
+    exclude?: string[] | ((key: string, value: any) => boolean);
+    /** use deep equal for specified keys */
     deepEqual?: string[] | ((key: string, value: any) => boolean);
+    /** skip reference type check */
+    skipReferenceType?: boolean;
   } = {}
 ): null | T {
-  const { omit, deepEqual } = options;
+  const { include, exclude, deepEqual, skipReferenceType } = options;
 
   const prev = usePrev(props);
 
@@ -44,10 +48,36 @@ export function usePropsChange<T extends Object = AnyObject>(
   allKeys.forEach((key) => {
     const nextValue = (props as any)[key];
 
-    if (isArray(omit) && omit.includes(key)) return;
-    if (isFunction(omit) && omit(key, nextValue)) return;
+    let hasInclude = false;
+
+    if (isArray(include)) {
+      if (include.includes(key)) {
+        hasInclude = true;
+      } else {
+        return;
+      }
+    } else if (isFunction(include)) {
+      if (include(key, nextValue)) {
+        hasInclude = true;
+      } else {
+        return;
+      }
+    }
 
     const prevValue = (prev as any)[key];
+
+    if (!hasInclude) {
+      if (isArray(include) && !include.includes(key)) return;
+      if (isFunction(include) && !include(key, nextValue)) return;
+
+      if (isArray(exclude) && exclude.includes(key)) return;
+      if (isFunction(exclude) && exclude(key, nextValue)) return;
+
+      if (skipReferenceType) {
+        if (typeof prevValue === "object" && typeof nextValue === "object")
+          return;
+      }
+    }
 
     if (
       (isArray(deepEqual) && deepEqual.includes(key)) ||

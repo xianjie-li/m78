@@ -6,18 +6,19 @@ export declare const _privateInstanceKey = "__M78TableInstance";
 /** 用于在domEl上挂载是否为其是否为内部创建的信息 */
 export declare const _privateScrollerDomKey = "__M78PrivateScrollerDom";
 /** 可替换的文本 */
-export declare const _defaultTexts: {
-    readonly pasteUnalignedRow: "Pasted rows does not match the number of selected rows";
-    readonly pasteUnalignedColumn: "Pasted column does not match the number of selected column";
-    readonly pasteSingleValueLimit: "Paste single value can't exceed {num} cell";
-    readonly paste: "can not paste to non editable cell";
-    readonly addRow: "add row";
-    readonly removeRow: "remove row";
-    readonly setValue: "update value";
-    readonly moveRow: "move row";
-    readonly moveColumn: "move column";
-    readonly editable: "editable";
-    readonly editableAndRequired: "editable and required";
+export declare const tableDefaultTexts: {
+    readonly "paste unaligned row": "Pasted rows does not match the number of selected rows";
+    readonly "paste unaligned column": "Pasted column does not match the number of selected column";
+    readonly "paste single value limit": "Paste single value can't exceed {num} cell";
+    readonly paste: "Can not paste to non editable cell";
+    readonly "add row": "Add row";
+    readonly "remove row": "Remove row";
+    readonly "set value": "Update value";
+    readonly "move row": "Move row";
+    readonly "move column": "Move column";
+    readonly editable: "Editable";
+    readonly "editable and required": "Editable (required)";
+    readonly "currently not editable": "Currently not editable";
 };
 /** 解析rowKey##columnKey格式的字符串为[rowKey, columnKey], 数组长度为2表示解析正常 */
 export declare function _getCellKeysByStr(s?: string): string[];

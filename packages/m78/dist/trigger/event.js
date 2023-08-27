@@ -37,7 +37,8 @@ export function _eventImpl(ctx) {
     var mouseLeave = function mouseLeave(e) {
         if (hasRecentlyTouch()) return;
         if (!trigger.enable) return;
-        moveActiveHandle.moveActive(e);
+        moveActiveHandle.clearMove(e);
+        moveActiveHandle.clearActive(e);
     };
     var touchStart = function touchStart(e) {
         if (hasRecentlyMouse()) return;

@@ -9,7 +9,6 @@ import { rafCaller } from "@m78/utils";
 import { _TableMutationPlugin } from "./mutation.js";
 import { TableColumnFixed, TableRowFixed } from "../types/base-type.js";
 import { removeNode } from "../../common/index.js";
-import { _tableTriggerFilters, _triggerFilterList } from "../common.js";
 import { createTrigger, TriggerType } from "../../trigger/index.js";
 /** 列/行重置大小 */ export var _TableRowColumnResize = /*#__PURE__*/ function(TablePlugin) {
     "use strict";
@@ -114,10 +113,14 @@ import { createTrigger, TriggerType } from "../../trigger/index.js";
         // 为virtualBound添加特定节点的过滤
         var vbPreCheck = function(type, e) {
             if (type !== TriggerType.active && type !== TriggerType.drag) return false;
-            return !_triggerFilterList(e.target, _tableTriggerFilters, _this.config.el);
+            // return !_triggerFilterList(
+            //   e.target as HTMLElement,
+            //   _tableTriggerFilters,
+            //   this.config.el
+            // );
+            return true;
         };
         this.trigger = createTrigger({
-            target: [],
             container: this.config.el,
             type: [
                 TriggerType.drag,
@@ -163,7 +166,7 @@ import { createTrigger, TriggerType } from "../../trigger/index.js";
         var touchEnd = Math.ceil(pos) >= maxPos;
         var bounds = [];
         // 虚拟节点大小
-        var bSize = isRow ? 8 : 10;
+        var bSize = 6;
         var list = isRow ? last.rows : last.columns;
         list.forEach(function(i) {
             var rowI = i;

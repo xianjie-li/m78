@@ -1,10 +1,7 @@
 import React from "react";
 import { Button, ButtonColor } from "../../button/index.js";
 import { Size } from "../../common/index.js";
-import { IconManageSearch } from "@m78/icons/icon-manage-search.js";
 import { Bubble } from "../../bubble/index.js";
-import { IconSync } from "@m78/icons/icon-sync.js";
-import { IconFilterAlt } from "@m78/icons/icon-filter-alt.js";
 import { Divider, Row } from "../../layout/index.js";
 import {
   _RCTableContext,
@@ -19,9 +16,20 @@ import { IconSave } from "@m78/icons/icon-save.js";
 import { _getTableCtx } from "../common.js";
 import { _getHistoryButtons } from "./get-history-buttons.js";
 import { TABLE_NS, Trans, Translation } from "../../i18n/index.js";
+import {
+  _renderToolBarQueryBtn,
+  _ToolBarFilterBtn,
+  _ToolbarCommonFilter,
+} from "../filter/filter-btn.js";
+import { _injector } from "../table.js";
+import { _useStateAct } from "../state.act.js";
 
-export function _Toolbar({ ctx }: { ctx: _RCTableContext }) {
-  const { props, state } = ctx;
+export function _Toolbar() {
+  const props = _injector.useProps();
+
+  const stateDep = _injector.useDeps(_useStateAct);
+
+  const { state } = stateDep;
 
   const selectedCount = state.selectedRows.length;
   const count = _getTableCtx(state.instance)?.allRowKeys.length || 0;
@@ -29,36 +37,11 @@ export function _Toolbar({ ctx }: { ctx: _RCTableContext }) {
   function renderLeading() {
     if (!state.instance) return null;
 
-    const searchBtn = (
-      <Button text>
-        <IconManageSearch className="color-second fs-16" />
-        <Translation ns={TABLE_NS}>{(t) => t("query")}</Translation>
-      </Button>
-    );
+    const searchBtn = _renderToolBarQueryBtn(stateDep);
 
-    const resetFilterBtn = (
-      <Translation ns={TABLE_NS}>
-        {(t) => (
-          <Bubble content={t("reset filter")}>
-            <Button squareIcon>
-              <IconSync className="color-second" />
-            </Button>
-          </Bubble>
-        )}
-      </Translation>
-    );
+    const resetFilterBtn = <_ToolBarFilterBtn />;
 
-    const filterBtn = (
-      <Translation ns={TABLE_NS}>
-        {(t) => (
-          <Bubble content={t("common filter")}>
-            <Button squareIcon>
-              <IconFilterAlt className="color-second" />
-            </Button>
-          </Bubble>
-        )}
-      </Translation>
-    );
+    const filterBtn = <_ToolbarCommonFilter />;
 
     const { redoBtn, undoBtn } = _getHistoryButtons(state.instance.history);
 

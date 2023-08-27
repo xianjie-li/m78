@@ -3,11 +3,8 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import React, { useEffect } from "react";
 import { isTruthyOrZero } from "@m78/utils";
 import { useFn } from "@m78/hooks";
-import { IconFilterAlt } from "@m78/icons/icon-filter-alt.js";
-import { Button } from "../button/index.js";
-import { addCls, removeCls, Size } from "../common/index.js";
-import SortBtn from "./simple-widgets/sort-btn.js";
 import ReactDom, { flushSync } from "react-dom";
+import { _FilterBtn } from "./filter/filter-btn.js";
 // 自定义渲染
 export function _useCustomRender(ctx) {
     var props = ctx.props, self = ctx.self, state = ctx.state;
@@ -31,30 +28,17 @@ export function _useCustomRender(ctx) {
         var cell = param.cell;
         var column = cell.column;
         if (cell.row.isHeader && !column.isHeader) {
-            var sort = column.config.sort;
-            if (sort) {
-                addCls(cell.dom, "__sort");
-            } else {
-                removeCls(cell.dom, "__sort");
-            }
             return /*#__PURE__*/ _jsxs(_Fragment, {
                 children: [
                     /*#__PURE__*/ _jsx("span", {
                         children: cell.text
                     }),
-                    /*#__PURE__*/ _jsxs("span", {
+                    /*#__PURE__*/ _jsx("span", {
                         className: "m78-table_header-icons",
-                        children: [
-                            sort && /*#__PURE__*/ _jsx(SortBtn, {}),
-                            column.config.filterRender && /*#__PURE__*/ _jsx(Button, {
-                                className: "color-disabled",
-                                size: Size.small,
-                                squareIcon: true,
-                                children: /*#__PURE__*/ _jsx(IconFilterAlt, {
-                                    className: "fs-12"
-                                })
-                            })
-                        ]
+                        children: /*#__PURE__*/ _jsx(_FilterBtn, {
+                            ctx: ctx,
+                            cell: cell
+                        })
                     })
                 ]
             });
@@ -123,7 +107,7 @@ export function _CustomRender(param) {
     ]);
     return /*#__PURE__*/ _jsx(_Fragment, {
         children: list.map(function(i) {
-            return /*#__PURE__*/ ReactDom.createPortal(i.element, i.cell.dom, String(i.cell.key));
+            return /*#__PURE__*/ ReactDom.createPortal(i.element, i.cell.dom, i.cell.key);
         })
     });
 }

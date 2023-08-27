@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, createContext } from "react";
 import { CellColProps, CellRowProps } from "./types.js";
 import { _useMediaQuery } from "../media-query/hooks.js";
 import { isArray, isNumber } from "@m78/utils";
@@ -10,7 +10,7 @@ const MAX_COLUMN = 12;
 /** 每列宽度 */
 const ONE_COLUMN = 100 / MAX_COLUMN;
 
-const context = React.createContext<Omit<CellRowProps, "children">>({});
+const context = createContext<Omit<CellRowProps, "children">>({});
 
 /** 根据列数获取宽度 */
 const getStyleValue = (n?: number) => {

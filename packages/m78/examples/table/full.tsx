@@ -3,17 +3,15 @@ import { Table } from "../../src/table/index.js";
 import { useUpdate } from "@m78/hooks";
 import {
   Button,
+  FormInstance,
   Input,
-  number,
   required,
   Size,
+  Spacer,
   string,
   TableColumnLeafConfig,
 } from "../../src/index.js";
-import {
-  RCTableEditWidgetImpl,
-  RCTableInstance,
-} from "../../src/table/types.js";
+import { RCTableInstance } from "../../src/table/types.js";
 import { tableInput } from "../../src/table/form-widgets/table-input.js";
 import { TableFormSchema } from "../../src/table-vanilla/plugins/form.js";
 
@@ -47,7 +45,36 @@ const columns: TableColumnLeafConfig[] = Array.from({ length: 40 }).map(
     }
 
     if (j > 9 && j < 13) {
-      c.filterRender = () => null;
+      c.filterRender = (form: FormInstance) => {
+        return (
+          <div>
+            <Spacer height={10}>
+              <form.Field label="查询1" name={`field${j}-1-r`}>
+                {() => (
+                  <div
+                    onChange={(e) => {
+                      console.log(e);
+                    }}
+                  >
+                    <input type="radio" name="11" />
+                    升序
+                    <input type="radio" name="11" className="ml-12" />
+                    降序
+                  </div>
+                )}
+              </form.Field>
+
+              <form.Field label="查询1" name={[`field${j}-1`]}>
+                <Input />
+              </form.Field>
+
+              <form.Field label="查询2" name={[`field${j}-2`]}>
+                <Input />
+              </form.Field>
+            </Spacer>
+          </div>
+        );
+      };
     }
 
     if (j > 2 && j < 12) {
@@ -126,8 +153,6 @@ const TableFullExample = () => {
 
   const [table, setTable] = useState<RCTableInstance | null>(null);
 
-  console.log(table);
-
   useEffect(() => {
     if (!table) return;
 
@@ -159,7 +184,34 @@ const TableFullExample = () => {
           }
         }}
         instanceRef={setTable}
-      />
+        defaultFilter={{
+          "field11-1": "12312",
+        }}
+        filterSchema={[
+          {
+            name: "field11-1",
+            validator: required(),
+          },
+        ]}
+        onFilter={(filterData) => {
+          console.log(filterData);
+        }}
+        commonFilter={(form) => {
+          return (
+            <Spacer height={12} style={{ width: 400 }}>
+              <form.Field label="查询1" name="filter1">
+                <Input />
+              </form.Field>
+              <form.Field label="查询2" name="filter2">
+                <Input />
+              </form.Field>
+              <form.Field label="查询3" name="filter3">
+                <Input />
+              </form.Field>
+            </Spacer>
+          );
+        }}
+      ></Table>
 
       <div className="mt-32">
         <button onClick={update}>render</button>

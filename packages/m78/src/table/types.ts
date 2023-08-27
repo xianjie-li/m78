@@ -13,12 +13,13 @@ import { TableSelectConfig } from "../table-vanilla/plugins/select.js";
 import { TableDragSortConfig } from "../table-vanilla/plugins/drag-sort.js";
 import { ComponentBaseProps } from "../common/index.js";
 import { AnyObject, EmptyFunction } from "@m78/utils";
-import { CustomEventWithHook, SetState } from "@m78/hooks";
+import { CustomEventWithHook, SetState, UseScrollMeta } from "@m78/hooks";
 import { ReactNode } from "react";
 import { _UseEditRender } from "./use-edit-render.js";
 import { _UseCustomRender } from "./use-custom-render.js";
 import { TableFormConfig } from "../table-vanilla/plugins/form.js";
 import { TableFeedbackEvent } from "../table-vanilla/plugins/event.js";
+import { FormInstance, FormSchema } from "../form/index.js";
 
 /** 忽略的配置 */
 type OmitConfig = typeof _tableOmitConfig[number];
@@ -28,12 +29,14 @@ declare module "../table-vanilla/index.js" {
   interface TableColumnLeafConfig {
     /** 自定义该列单元格渲染 */
     render?: (arg: RCTableRenderArg) => React.ReactNode;
-    /** 渲染筛选表单 */
-    filterRender?: RCTableFilterColumnRender;
     /** 渲染编辑组件 */
     editRender?: RCTableEditWidgetImpl;
-    /** 控制排序启用或设置排序默认值 */
-    sort?: true | TableSort;
+    /** 渲染筛选表单*/
+    filterRender?: RCTableFilterColumnRender;
+    /** 在表头后方渲染的额外节点 */
+    headerExtra?: ReactNode;
+    /** 自定义表头渲染, 设置后会覆盖默认节点, 若要保留, 可根据参数按需渲染 */
+    headerRender?: () => ReactNode;
   }
 }
 
@@ -68,7 +71,7 @@ export interface RCTableEditWidgetCreator<T = any> {
  * 列筛选表单渲染器
  * */
 export interface RCTableFilterColumnRender {
-  (form: any): ReactNode;
+  (form: FormInstance): ReactNode;
 }
 
 /**
@@ -107,25 +110,35 @@ export interface RCTableProps
   /** 可在此传入表格上下文的状态, 并在column.render和config.render等函数中访问 */
   context?: AnyObject;
 
-  /**
-   * 内部抛出的一些提示性错误, 比如 "粘贴内容与选中单元格不匹配" 等
-   * - 注意: 某些运行时错误, 比如未正确配置key等会直接crash而不是通过error提示
-   * */
-  onError?: (msg: string) => void;
   /** 点击, event为原始事件对象, 可能是MouseEvent/PointerEvent */
   onClick?: (cell: TableCell, event: Event) => void;
   /** 任意选中项变更 */
   onSelect?: EmptyFunction;
   /** 配置/数据等变更, 通常意味需要持久化的一些信息发生了改变 */
   onMutation?: (event: TableMutationEvent) => void;
-  /** 触发筛选, 通常触发于 点击查询按钮/筛选/重置/排序 */
-  onFilter?: (params: any) => void;
-  /** true | 查询参数变更后是否自动触发onQuery */
-  autoFilter?: boolean;
-  /** 不与特定字段绑定的filter, 渲染于工具栏的 filter icon */
-  commonFilter?: (form: any) => ReactNode;
-  /** 默认查询参数 */
-  defaultParams?: AnyObject;
+  /**
+   * 内部抛出的一些提示性错误, 比如 "粘贴内容与选中单元格不匹配" 等
+   * - 注意: 某些运行时错误, 比如未正确配置key等会直接crash而不是通过error提示
+   * */
+  onError?: (msg: string) => void;
+
+  /* # # # # # # # 筛选 # # # # # # # */
+
+  /** 默认查询条件 */
+  defaultFilter?: AnyObject;
+  /** 用于校验的筛选项schema, 具体用法请参考Form组件 */
+  filterSchema?: FormSchema[];
+  /** 不与特定字段绑定的filter, 渲染于工具栏的通用 filter 下 */
+  commonFilter?: (form: FormInstance) => ReactNode;
+  /** 触发筛选 */
+  onFilter?: (filterData?: AnyObject) => void;
+  /**
+   * filter使用的表单实例, 不传时会使用内部创建的默认实例
+   *
+   * 通过此项可以更深入的控制筛选项, 使用自定义form实例时,  defaultFilter 和 filterSchema 会被忽略, 请使用form对应的配置(defaultValue/schemas)
+   * */
+  filterForm?: FormInstance;
+
   /** 定制toolbar左侧, 应使用React.Fragment避免内容被渲染到嵌套的容器中, 避免排版混乱 */
   toolBarLeadingCustomer?: (
     nodes: RCTableToolbarLeadingBuiltinNodes,
@@ -136,12 +149,12 @@ export interface RCTableProps
     nodes: RCTableToolbarTrailingBuiltinNodes,
     table: RCTableInstance
   ) => ReactNode;
+
   /** true | 启用导出功能 */
   dataImport?: boolean;
   /** false | 启用导入功能, 需要编辑功能开启 */
   dataExport?: boolean;
-  /** 查询表单schema */
-  filterSchema?: any;
+
   /** 获取内部table实例 */
   instanceRef?: React.Ref<RCTableInstance>;
 }
@@ -275,4 +288,6 @@ export interface _RCTableContext {
   scrollContRef: React.MutableRefObject<HTMLDivElement>;
   editRender: _UseEditRender;
   customRender: _UseCustomRender;
+  filterForm: FormInstance;
+  scrollEvent: CustomEventWithHook<(meta: UseScrollMeta) => void>;
 }

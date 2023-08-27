@@ -42,7 +42,9 @@ import { _lifeImpl } from "./life.js";
     _actionImpl(ctx);
     _lifeImpl(ctx);
     /* # # # # # # # 初始化调用 # # # # # # # */ _updateTypeEnableMap(ctx);
-    ctx.trigger.add(config.target);
+    if (config.target) {
+        ctx.trigger.add(config.target);
+    }
     ctx.event.bind();
     ctx.trigger.event.on(function(e) {
         if (e.type === TriggerType.active) {

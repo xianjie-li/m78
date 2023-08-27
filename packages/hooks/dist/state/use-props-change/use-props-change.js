@@ -9,7 +9,7 @@ import { usePrev } from "../use-prev/use-prev.js";
  * return null if equal or first render
  * */ export function usePropsChange(props) {
     var options = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
-    var omit = options.omit, deepEqual = options.deepEqual;
+    var include = options.include, exclude = options.exclude, deepEqual = options.deepEqual, skipReferenceType = options.skipReferenceType;
     var prev = usePrev(props);
     // first render return all props directly
     if (!prev) return props;
@@ -26,9 +26,30 @@ import { usePrev } from "../use-prev/use-prev.js";
     var hasChanged = false;
     allKeys.forEach(function(key) {
         var nextValue = props[key];
-        if (isArray(omit) && omit.includes(key)) return;
-        if (isFunction(omit) && omit(key, nextValue)) return;
+        var hasInclude = false;
+        if (isArray(include)) {
+            if (include.includes(key)) {
+                hasInclude = true;
+            } else {
+                return;
+            }
+        } else if (isFunction(include)) {
+            if (include(key, nextValue)) {
+                hasInclude = true;
+            } else {
+                return;
+            }
+        }
         var prevValue = prev[key];
+        if (!hasInclude) {
+            if (isArray(include) && !include.includes(key)) return;
+            if (isFunction(include) && !include(key, nextValue)) return;
+            if (isArray(exclude) && exclude.includes(key)) return;
+            if (isFunction(exclude) && exclude(key, nextValue)) return;
+            if (skipReferenceType) {
+                if (typeof prevValue === "object" && typeof nextValue === "object") return;
+            }
+        }
         if (isArray(deepEqual) && deepEqual.includes(key) || isFunction(deepEqual) && deepEqual(key, nextValue)) {
             if (isEqual(prevValue, nextValue)) return;
         } else {

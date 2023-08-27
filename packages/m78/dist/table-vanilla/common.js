@@ -5,18 +5,19 @@ import { removeNode } from "../common/index.js";
 export var _prefix = "m78-table";
 /** 用于在config.el上存储当前实例 */ export var _privateInstanceKey = "__M78TableInstance";
 /** 用于在domEl上挂载是否为其是否为内部创建的信息 */ export var _privateScrollerDomKey = "__M78PrivateScrollerDom";
-/** 可替换的文本 */ export var _defaultTexts = {
-    pasteUnalignedRow: "Pasted rows does not match the number of selected rows",
-    pasteUnalignedColumn: "Pasted column does not match the number of selected column",
-    pasteSingleValueLimit: "Paste single value can't exceed {num} cell",
-    paste: "can not paste to non editable cell",
-    addRow: "add row",
-    removeRow: "remove row",
-    setValue: "update value",
-    moveRow: "move row",
-    moveColumn: "move column",
-    editable: "editable",
-    editableAndRequired: "editable and required"
+/** 可替换的文本 */ export var tableDefaultTexts = {
+    "paste unaligned row": "Pasted rows does not match the number of selected rows",
+    "paste unaligned column": "Pasted column does not match the number of selected column",
+    "paste single value limit": "Paste single value can't exceed {num} cell",
+    paste: "Can not paste to non editable cell",
+    "add row": "Add row",
+    "remove row": "Remove row",
+    "set value": "Update value",
+    "move row": "Move row",
+    "move column": "Move column",
+    editable: "Editable",
+    "editable and required": "Editable (required)",
+    "currently not editable": "Currently not editable"
 };
 /** 解析rowKey##columnKey格式的字符串为[rowKey, columnKey], 数组长度为2表示解析正常 */ export function _getCellKeysByStr(s) {
     if (!s) return [];

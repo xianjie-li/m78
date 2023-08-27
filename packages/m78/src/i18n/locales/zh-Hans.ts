@@ -50,6 +50,7 @@ export default {
     // react version
     count: "共{{count}}行 / 选中{{selectedCount}}行",
     query: "查询",
+    reset: "重置",
     "reset filter": "重置筛选条件",
     "common filter": "通用筛选条件",
     redo: "重做",

@@ -28,7 +28,8 @@ export var _defaultProps = {
     ],
     offset: 0,
     triggerType: TriggerType.click,
-    autoFocus: true
+    autoFocus: true,
+    escapeClosable: true
 };
 export var overlayTransitionConfig = config.stiff;
 /** 箭头和目标之间的补白 */ export var _arrowSpace = 4;
@@ -76,6 +77,18 @@ var defaultClickAwaySameNameSpace = "m78-overlay-clickAway";
  * 所有弹层类组件共享的useSame包装, 用于统一clickAway
  * */ export function useOverlaysClickAway(config, namespace) {
     var ref = _sliced_to_array(useSame(namespace || defaultClickAwaySameNameSpace, config), 3), index = ref[0], list = ref[1], id = ref[2];
+    return {
+        index: index,
+        list: list,
+        id: id,
+        isFirst: index === 0,
+        isLast: index === list.length - 1
+    };
+}
+/**
+ * 所有弹层类组件共享的useSame包装, 用于统一escapeClosable
+ * */ export function useEscapeCloseable(config) {
+    var ref = _sliced_to_array(useSame("m78-overlay-escape-closeable", config), 3), index = ref[0], list = ref[1], id = ref[2];
     return {
         index: index,
         list: list,

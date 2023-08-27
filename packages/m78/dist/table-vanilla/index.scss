@@ -18,7 +18,7 @@
   border: var(--m78-table-border);
   touch-action: none;
   height: 100%;
-  overflow: hidden;
+  //overflow: hidden;
 
   &:focus {
     outline: none !important;
@@ -29,7 +29,7 @@
   }
 
   &_expand-size {
-    position: absolute;
+    position: absolute !important;
     left: 0;
     right: 0;
     bottom: 0;
@@ -143,6 +143,7 @@
 
     &.__selected {
       &::after {
+        pointer-events: none;
         background-color: var(--m78-color-opacity-sm);
       }
     }
