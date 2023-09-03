@@ -11,6 +11,7 @@ import {
 } from "../../trigger/index.js";
 import { TableCell } from "../types/items.js";
 import { BoundSize } from "@m78/utils";
+import { TableMutationEvent, TableMutationType } from "./mutation.js";
 
 /** 提供对某些表格元素的交互反馈, 比如单元格包含错误信息或内容超出时, 在选中后为其提供反馈 */
 export class _TableFeedbackPlugin extends TablePlugin {
@@ -21,9 +22,13 @@ export class _TableFeedbackPlugin extends TablePlugin {
   // 表头交互提醒
   headerTrigger: TriggerInstance;
 
+  /** mutation value change 提交延迟计时器 */
+  valueChangeTimer: any;
+
   initialized() {
     this.form = this.getPlugin(_TableFormPlugin);
     this.table.event.cellSelect.on(this.cellChange);
+    this.table.event.mutation.on(this.mutationHandle);
 
     this.headerTrigger = createTrigger({
       type: TriggerType.active,
@@ -43,7 +48,9 @@ export class _TableFeedbackPlugin extends TablePlugin {
     this.headerTrigger.destroy();
 
     this.table.event.cellSelect.off(this.cellChange);
+    this.table.event.mutation.off(this.mutationHandle);
     this.context.viewEl.removeEventListener("scroll", this.scroll);
+    clearTimeout(this.valueChangeTimer);
   }
 
   rendered() {
@@ -79,9 +86,11 @@ export class _TableFeedbackPlugin extends TablePlugin {
     this.emitClose();
   };
 
-  // 单元格选中变更
-  cellChange = () => {
-    const cells = this.table.getSelectedCells();
+  // 触发单元格feedback, 默认为选中单元格触发
+  cellChange = (cells?: TableCell[]) => {
+    if (!cells?.length) {
+      cells = this.table.getSelectedCells();
+    }
 
     // 只在选中单条时触发
     if (cells.length !== 1) {
@@ -135,6 +144,16 @@ export class _TableFeedbackPlugin extends TablePlugin {
       this.table.event.feedback.emit(events);
     } else {
       this.emitClose();
+    }
+  };
+
+  // 单元格提交时, 触发feedback
+  mutationHandle = (event: TableMutationEvent) => {
+    if (event.type === TableMutationType.value) {
+      // 确保在变更并校验完成后触发
+      this.valueChangeTimer = setTimeout(() => {
+        this.cellChange([event.cell]);
+      }, 50);
     }
   };
 

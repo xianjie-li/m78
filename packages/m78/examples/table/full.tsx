@@ -193,6 +193,13 @@ const TableFullExample = () => {
             validator: required(),
           },
         ]}
+        dragSortColumn
+        dragSortRow
+        defaultNewData={{
+          field3: "123",
+          field4: "345",
+          field5: "567",
+        }}
         onFilter={(filterData) => {
           console.log(filterData);
         }}
@@ -234,22 +241,13 @@ const TableFullExample = () => {
           >
             getData
           </button>
-          <button
-            onClick={() => {
-              console.time("getData");
-              console.log(table.getChangedData());
-              console.timeEnd("getData");
-            }}
-          >
-            getChangedData
-          </button>
 
           <button
             onClick={() => {
-              console.log(table.getFormChanged());
+              console.log(table?.getTableChanged());
             }}
           >
-            getFormChanged
+            getTableChanged
           </button>
           <button
             onClick={() => {
@@ -291,7 +289,7 @@ const TableFullExample = () => {
           <button
             onClick={() => {
               table
-                ?.verify("id8")
+                ?.verifyRow("id8")
                 .then((res) => {
                   console.log("success:", res);
                 })

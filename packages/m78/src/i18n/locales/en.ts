@@ -8,6 +8,7 @@ export default {
     cancel: "cancel",
     loading: "loading",
     empty: "no data",
+    "confirm delete": "are you sure to delete?",
   },
   input: {
     "word count": " chars",
@@ -51,7 +52,6 @@ export default {
     "download import tpl": "download import template",
     "delete selected rows": "delete selected rows",
     "add row tip1": "add a new row",
-    "add row tip2": "when a row is selected, insert above the selected row",
     "new tip": "new",
     "delete tip": "delete",
     "update tip": "update",

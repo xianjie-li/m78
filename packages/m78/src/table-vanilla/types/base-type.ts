@@ -22,6 +22,8 @@ export enum _TablePrivateProperty {
   reloadKey = "__M78TableReloadKey",
   /** 挂载渲染标记 */
   renderFlag = "__M78TableRenderFlag",
+  /** 表示该数据为新增数据 */
+  newFlag = "__M78TableNew",
 }
 
 /** 表格内指定点和其相关属性 */

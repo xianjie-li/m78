@@ -8,7 +8,7 @@ import { _useCustomRender } from "./use-custom-render.js";
 import { _injector } from "./table.js";
 
 export function _useMethodsAct() {
-  const { ref, scrollRef, scrollContRef, state, setState } =
+  const { ref, scrollRef, scrollContRef, wrapRef, state, setState } =
     _injector.useDeps(_useStateAct);
 
   const editRender = _useEditRender();
@@ -42,6 +42,7 @@ export function _useMethodsAct() {
         interactive: editRender.interactiveEnableChecker,
         interactiveRender: editRender.interactiveRender,
         texts,
+        extraActiveCheckEl: wrapRef.current,
       }) as any as RCTableInstance,
     });
   }

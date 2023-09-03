@@ -7,6 +7,7 @@ export default {
     cancel: "取消",
     loading: "加载中",
     empty: "暂无数据",
+    "confirm delete": "是否确认删除?",
   },
   input: {
     "word count": "字",
@@ -62,7 +63,6 @@ export default {
     "download import tpl": "下载导入模板",
     "delete selected rows": "删除选中行",
     "add row tip1": "新增一行",
-    "add row tip2": "当有行被选中时, 在选中行上方插入",
     "new tip": "新增",
     "delete tip": "删除",
     "update tip": "更新",

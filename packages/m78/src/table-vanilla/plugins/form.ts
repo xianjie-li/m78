@@ -4,6 +4,7 @@ import {
   FormSchema,
 } from "../../form-vanilla/index.js";
 import {
+  AnyObject,
   deleteNamePathValue,
   ensureArray,
   getNamePathValue,
@@ -16,6 +17,8 @@ import { _TablePrivateProperty, TableKey } from "../types/base-type.js";
 import { TablePlugin } from "../plugin.js";
 import { TableCell, TableColumn, TableRow } from "../types/items.js";
 import {
+  TableMutationDataEvent,
+  TableMutationDataType,
   TableMutationEvent,
   TableMutationType,
   TableMutationValueEvent,
@@ -80,6 +83,23 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
   invalidStatus: TableCell[] = [];
   invalidNodes: HTMLElement[] = [];
 
+  // 记录新增的数据
+  addRecordMap = new Map<TableKey, boolean>();
+
+  // 记录移除的数据
+  removeRecordMap = new Map<TableKey, AnyObject>();
+
+  // 记录发生或排序变更的项信息
+  sortRecordMap = new Map<
+    TableKey,
+    {
+      /** 原索引 */
+      originIndex: number;
+      /** 当前索引 */
+      currentIndex: number;
+    }
+  >();
+
   interactive: _TableInteractiveCorePlugin;
 
   beforeInit() {
@@ -89,11 +109,11 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
 
     this.methodMapper(this.table, [
       "verify",
+      "verifyRow",
       "verifyChanged",
-      "getChangedData",
       "getData",
       "getChanged",
-      "getFormChanged",
+      "getTableChanged",
       "resetFormState",
     ]);
   }
@@ -108,14 +128,19 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
 
     this.editStatus = [];
     this.editStatusMap = {};
+    this.addRecordMap = new Map();
+    this.removeRecordMap = new Map();
 
     this.reset();
+    this.resetDataRecords();
+
     removeNode(this.wrapNode);
   }
 
   loadStage(level: TableReloadLevel, isBefore: boolean) {
     if (level === TableReloadLevel.full && isBefore) {
       this.reset();
+      this.resetDataRecords();
     }
 
     if (level === TableReloadLevel.base && !isBefore) {
@@ -124,67 +149,13 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
   }
 
   mutation = (e: TableMutationEvent) => {
-    if (e.type !== TableMutationType.value) return;
-
-    const { cell, value } = e;
-
-    const form = this.initForm(e);
-
-    const name = cell.column.config.originalKey;
-
-    form.setValue(name, value);
-
-    const changed = form.getFormChanged();
-
-    if (changed) {
-      this.rowChanged[cell.row.key] = true;
-    } else {
-      delete this.rowChanged[cell.row.key];
+    if (e.type === TableMutationType.value) {
+      this.valueMutation(e);
     }
 
-    if (form.getChanged(name)) {
-      this.cellChanged[cell.key] = cell;
-    } else {
-      delete this.cellChanged[cell.key];
+    if (e.type === TableMutationType.data) {
+      this.dataMutation(e);
     }
-
-    this.updateValidStatus(cell.row);
-    this.updateValidRelate();
-
-    form.debounceVerify(name, () => {
-      const errors = form.getErrors();
-
-      const newError: RejectMeta = [];
-      const cellError: Record<string, string | void> = {};
-
-      let hasCellError = false;
-
-      errors.forEach((e) => {
-        if (form.getTouched(e.namePath)) {
-          newError.push(e);
-
-          // 只取第一条错误
-          if (!cellError[e.name]) {
-            cellError[e.name] = e.message;
-            hasCellError = true;
-          }
-        }
-      });
-
-      if (newError.length) {
-        this.errors[cell.row.key] = newError;
-      } else {
-        delete this.errors[cell.row.key];
-      }
-
-      if (hasCellError) {
-        this.cellErrors[cell.row.key] = cellError;
-      } else {
-        delete this.cellErrors[cell.row.key];
-      }
-
-      this.table.render();
-    });
   };
 
   rendering() {
@@ -213,12 +184,11 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
         const node = this.editStatusNodes[ind];
         const position = this.table.getAttachPosition(cell);
 
-        node.style.color = required
+        node.style.backgroundColor = required
           ? "var(--m78-color-warning)"
           : "var(--m78-color-opacity-lg)";
-        node.style.transform = `translate(${position.left + 2}px, ${
-          position.top + position.height - 8
-        }px)`;
+        node.style.transform = `translate(${position.left}px, ${position.top}px)`;
+        node.style.width = `${position.width}px`;
         node.style.zIndex = position.zIndex;
       });
     }
@@ -280,12 +250,135 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
     });
   }
 
+  // 值变更, 创建或获取form实例, 并同步值和校验状态
+  valueMutation = (e: TableMutationValueEvent) => {
+    const { cell, value } = e;
+
+    const form = this.initForm(e);
+
+    const name = cell.column.config.originalKey;
+
+    form.setValue(name, value);
+
+    const changed = form.getFormChanged();
+
+    if (changed) {
+      this.rowChanged[cell.row.key] = true;
+    } else {
+      delete this.rowChanged[cell.row.key];
+    }
+
+    if (form.getChanged(name)) {
+      this.cellChanged[cell.key] = cell;
+    } else {
+      delete this.cellChanged[cell.key];
+    }
+
+    this.updateValidStatus(cell.row);
+    this.updateValidRelate();
+
+    form.debounceVerify(name, () => {
+      const errors = form.getErrors();
+
+      const newError: RejectMeta = [];
+      const cellError: Record<string, string | void> = {};
+
+      let hasCellError = false;
+
+      errors.forEach((e) => {
+        if (form.getTouched(e.namePath)) {
+          newError.push(e);
+
+          // 只取第一条错误
+          if (!cellError[e.name]) {
+            cellError[e.name] = e.message;
+            hasCellError = true;
+          }
+        }
+      });
+
+      if (newError.length) {
+        this.errors[cell.row.key] = newError;
+      } else {
+        delete this.errors[cell.row.key];
+      }
+
+      if (hasCellError) {
+        this.cellErrors[cell.row.key] = cellError;
+      } else {
+        delete this.cellErrors[cell.row.key];
+      }
+
+      this.table.render();
+    });
+  };
+
+  // data变更, 记录新增, 删除数据, 并且也将其计入getFormChanged变更状态
+  dataMutation = (e: TableMutationDataEvent) => {
+    if (e.changeType === TableMutationDataType.add) {
+      e.add.forEach((d) => {
+        const k = this.table.getKeyByRowData(d);
+        if (!k) return;
+
+        // 已经存在于删除列表中, 则不再计入新增列表
+        if (this.removeRecordMap.has(k)) {
+          this.removeRecordMap.delete(k);
+          return;
+        }
+
+        this.addRecordMap.set(k, true);
+      });
+    }
+
+    if (e.changeType === TableMutationDataType.remove) {
+      e.remove.forEach((d) => {
+        const k = this.table.getKeyByRowData(d);
+        if (!k) return;
+
+        // 已经存在于新增列表中, 则不再计入删除列表
+        if (this.addRecordMap.has(k)) {
+          this.addRecordMap.delete(k);
+          return;
+        }
+
+        this.removeRecordMap.set(k, d);
+      });
+    }
+
+    if (e.changeType === TableMutationDataType.move) {
+      e.move.forEach((meta) => {
+        const k = this.table.getKeyByRowData(meta.data);
+
+        if (!k) return;
+
+        let rec = this.sortRecordMap.get(k);
+
+        if (!rec) {
+          rec = {
+            originIndex: meta.from, // 原索引, 应仅记录第一次时的值, 后续不再变更
+            currentIndex: meta.to,
+          };
+
+          this.sortRecordMap.set(k, rec);
+        }
+
+        rec.currentIndex = meta.to;
+      });
+    }
+  };
+
   // 是否允许编辑
   validCheck(cell: TableCell) {
     return !this.invalidStatusMap[cell.key];
   }
 
   getChanged(rowKey: TableKey, columnKey?: NamePath): boolean {
+    // 新增行的检测均视为变更
+    if (this.addRecordMap.has(rowKey)) return true;
+
+    // 删除行的检测均视为变更
+    if (this.removeRecordMap.has(rowKey)) return true;
+
     if (!columnKey) {
       return !!this.rowChanged[rowKey];
     }
@@ -295,19 +388,61 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
     ];
   }
 
-  getFormChanged(): boolean {
+  getTableChanged(): boolean {
+    // 包含新增或删除的行
+    if (this.addRecordMap.size || this.removeRecordMap.size) return true;
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const hasSorted = Array.from(this.sortRecordMap.entries()).some(
+      ([_, rec]) => {
+        return rec.currentIndex !== rec.originIndex;
+      }
+    );
+
+    // 包含排序过的行
+    if (hasSorted) return true;
+
+    // 包含变更数据
     return Object.keys(this.rowChanged).some((key) => this.rowChanged[key]);
   }
 
-  getData(): any[] {
-    return this.getDataCommon();
-  }
+  getData() {
+    const add: any[] = [];
+    const change: any[] = [];
+    const update: any[] = [];
+    let remove: any[] = [];
 
-  getChangedData(): any[] {
-    return this.getDataCommon((i) => {
-      const key = this.table.getKeyByRowData(i);
-      return this.rowChanged[key];
+    const all = this.eachData((data, key) => {
+      const isAdd = this.addRecordMap.has(key);
+      // 数据变更并且不是新增的数据
+      const isChange = this.rowChanged[key] && !isAdd;
+
+      if (isAdd) {
+        add.push(data);
+      }
+
+      if (isChange) {
+        change.push(data);
+      }
+
+      if (isAdd || isChange) {
+        update.push(data);
+      }
     });
+
+    const rList = Array.from(this.removeRecordMap.values());
+
+    if (rList) {
+      remove = rList;
+    }
+
+    return {
+      change,
+      add,
+      remove,
+      update,
+      all,
+    } as TableDataLists;
   }
 
   resetFormState() {
@@ -315,12 +450,16 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
     this.table.render();
   }
 
-  verify(rowKey?: TableKey): Promise<any[]> {
-    return this.verifyCommon(false, rowKey);
+  verify(): Promise<TableDataLists> {
+    return this.verifyCommon(false) as Promise<TableDataLists>;
   }
 
-  verifyChanged(): Promise<any[]> {
-    return this.verifyCommon(true);
+  verifyRow(rowKey?: TableKey): Promise<AnyObject> {
+    return this.verifyCommon(false, rowKey) as Promise<AnyObject>;
+  }
+
+  verifyChanged(): Promise<TableDataLists> {
+    return this.verifyCommon(true) as Promise<TableDataLists>;
   }
 
   /** 获取指定单元格最后一次参与验证后的错误 */
@@ -337,17 +476,20 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
     return this.editStatusMap[col.key] || null;
   }
 
-  // 验证通用逻辑, 传入rowKey时仅验证指定的行
+  // 验证通用逻辑, 传入rowKey时仅验证指定的行, 单行验证时仅返回指定行
   private async verifyCommon(
     onlyChanged: boolean,
     rowKey?: TableKey
-  ): Promise<any[]> {
-    let data: any[];
+  ): Promise<AnyObject | TableDataLists> {
+    let data: AnyObject[] = [];
+    let dataLists: TableDataLists | null = null;
 
     if (rowKey) {
       data = [this.table.getRow(rowKey).data];
     } else {
-      data = onlyChanged ? this.getChangedData() : this.getData();
+      dataLists = this.getData();
+
+      data = onlyChanged ? dataLists.update : dataLists.all;
     }
 
     const form = createForm({
@@ -366,7 +508,7 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
     return form
       .verify()
       .then(() => {
-        return data;
+        return rowKey ? data[0] : dataLists!;
       })
       .catch((err) => {
         const namePath = err.rejects?.[0]?.namePath;
@@ -376,6 +518,7 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
           const ind = namePath[0];
           const name = namePath[1];
           const curData = data[ind];
+
           const key = this.table.getKeyByRowData(curData);
 
           const cell = this.table.getCell(key, name);
@@ -387,7 +530,7 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
       });
   }
 
-  // 验证指定行兵更新对应ui, 传入cell时, 高亮指定cell
+  // 验证指定行并更新对应ui, 传入cell时, 高亮指定cell
   private verifySpecifiedRow(row: TableRow, cell?: TableCell) {
     const form = this.initForm(row);
 
@@ -436,6 +579,14 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
       });
   }
 
+  // 重置行数据的记录状态
+  private resetDataRecords() {
+    this.addRecordMap = new Map();
+    this.removeRecordMap = new Map();
+    this.sortRecordMap = new Map();
+  }
+
+  // 重置状态
   private reset() {
     this.cellChanged = {};
     this.rowChanged = {};
@@ -581,6 +732,8 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
     const rowErrorMap: Record<string, boolean | void> = {};
 
     Object.keys(this.errors).forEach((key) => {
+      if (this.removeRecordMap.has(key)) return false; // 删除行不显示
+
       const rowErrors = this.errors[key];
 
       if (rowErrors) {
@@ -627,6 +780,7 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
     const list = keyList
       .filter((i) => {
         if (checkedMap[i]) return false;
+        if (this.removeRecordMap.has(i)) return false; // 删除行不显示
         checkedMap[i] = true;
         return showRowsMap[i] && (errorMap[i] || this.rowChanged[i]);
       })
@@ -726,15 +880,14 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
     return form;
   }
 
-  private getDataCommon(filter?: (i: any) => boolean): any[] {
+  /** 遍历数据, 返回所有数据 */
+  private eachData(cd: (i: any, k: TableKey) => void) {
     const list: any[] = [];
 
     this.context.data.forEach((i) => {
       const isFake = getNamePathValue(i, _TablePrivateProperty.fake);
 
       if (isFake) return;
-
-      if (filter && !filter(i)) return;
 
       const key = this.table.getKeyByRowData(i);
 
@@ -768,6 +921,8 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
         });
       }
 
+      cd(data, key);
+
       list.push(data);
     });
 
@@ -787,23 +942,42 @@ export interface TableFormConfig {
 /** 对外暴露的form相关方法 */
 export interface TableForm {
   /** 执行校验, 未通过时会抛出VerifyError类型的错误, 这是使用者唯一需要处理的错误类型 */
-  verify: (rowKey?: TableKey) => Promise<any[]>;
+  verify: () => Promise<TableDataLists>;
+
+  /** 验证指定行 */
+  verifyRow: (rowKey?: TableKey) => Promise<AnyObject>;
 
   /** 对变更行执行校验, 未通过时会抛出VerifyError类型的错误, 这是使用者唯一需要处理的错误类型 */
-  verifyChanged: () => Promise<any[]>;
+  verifyChanged: () => Promise<TableDataLists>;
 
-  /** 获取发生过变更的行 */
-  getChangedData(): any[];
+  /**
+   * 获取当前数据, 返回内容包含: 所有数据/新增/变更/删除数据
+   *
+   * 关于排序数据:
+   * 除了手动的排序操作, 新增/删除数据也会导致数据排序变动, 预先记录的排序状态随着后续操作都会变得不准确, 如果要保存排序状态,
+   * 通常由两种方式: 一是统一提交并通过TableDataLists.all获取最终的完整顺序. 二是在mutation事件中根据排序的变更实时进行保存.
+   * */
+  getData(): TableDataLists;
 
-  /** 获取当前数据 */
-  getData(): any[];
-
-  /** 获取指定行或单元格的变更状态 */
+  /** 获取指定行或单元格的变更状态, 数据变更, 被新增/删除均视为变更, 数据排序变更不视为变更 */
   getChanged(rowKey: TableKey, columnKey?: NamePath): boolean;
 
-  /** 整个表格的表单是否发生或变更 */
-  getFormChanged(): boolean;
+  /** 表格是否发生过数据变更, 排序, 增删数据 */
+  getTableChanged(): boolean;
 
   /** 重置当前的错误信息/变更状态等 */
   resetFormState(): void;
+}
+
+export interface TableDataLists<D = AnyObject> {
+  /** 所有数据 */
+  all: D[];
+  /** 新增的行 */
+  add: D[];
+  /** 发生过变更的行(不含新增行) */
+  change: D[];
+  /** 新增和变更的行 */
+  update: D[];
+  /** 移除的行 */
+  remove: D[];
 }

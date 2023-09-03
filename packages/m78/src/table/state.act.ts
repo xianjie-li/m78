@@ -13,6 +13,8 @@ export function _useStateAct() {
   const scrollRef = useRef<HTMLDivElement>(null!);
   /** 滚动内容 */
   const scrollContRef = useRef<HTMLDivElement>(null!);
+  /** 最外层包裹容器 */
+  const wrapRef = useRef<HTMLDivElement>(null!);
 
   const self = useSelf<_RCTableSelf>({
     renderMap: {},
@@ -36,6 +38,7 @@ export function _useStateAct() {
     ref,
     scrollRef,
     scrollContRef,
+    wrapRef,
     filterForm,
     scrollEvent,
   };

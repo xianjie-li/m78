@@ -89,6 +89,8 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
       "selectCells",
       "isRowSelectable",
       "isCellSelectable",
+      "unselectRows",
+      "unselectCells",
     ]);
   }
 
@@ -100,7 +102,7 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
     this.table.event.click.on(this.clickHandle);
 
     this.drag = new DragGesture(this.config.el, this.dragDispatch, {
-      // filterTaps: true,
+      filterTaps: true,
       pointer: {
         // https://github.com/pmndrs/use-gesture/issues/611
         capture: false,
@@ -168,7 +170,7 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
 
   /** 派发drag到start/move/end */
   dragDispatch = (e: FullGestureState<"drag">) => {
-    if (e.first) {
+    if (e.first || e.tap) {
       this.selectStart(e);
       return;
     }
@@ -223,7 +225,7 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
 
     const isTouchEvent = isTouch(e.event);
 
-    const valid = this.selectByPoint(p1, p2, (items) => {
+    const [valid] = this.selectByPoint(p1, p2, (items) => {
       const first = items.cells[0];
 
       if (!first) return false;
@@ -245,8 +247,8 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
 
       if (this.disablePlugin.isDisabledCell(first.key)) return false;
 
-      // 启用了dragSortRow时, 需要禁止在已选中行上重新触发选中
       if (
+        !e.tap &&
         first.column.isHeader &&
         this.config.dragSortRow &&
         this.isSelectedRow(first.row.key)
@@ -264,15 +266,19 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
 
     // 没有有效选中项时不进行后续操作
     if (valid) {
-      this.startPoint = startPoint;
-
-      this.autoScrollBeforePosition = [this.table.getX(), this.table.getY()];
-
       if (!this.isShift) {
         this.lastPoint = [p1, p2];
       }
 
-      this.table.event.selectStart.emit();
+      this.startPoint = startPoint;
+
+      this.autoScrollBeforePosition = [this.table.getX(), this.table.getY()];
+
+      if (e.tap) {
+        this.selectEnd();
+      } else {
+        this.table.event.selectStart.emit();
+      }
     }
   };
 
@@ -469,6 +475,7 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
     if (!merge) {
       this.clearSelected();
     }
+
     rows.forEach((key) => {
       this.setSelected(key, this.selectedRows);
     });
@@ -477,6 +484,19 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
     this.table.event.rowSelect.emit();
     this.table.event.select.emit();
   };
+
+  unselectRows(rowKeys: TableKey | TableKey[]) {
+    rowKeys = ensureArray(rowKeys);
+
+    rowKeys.forEach((key) => {
+      delete this.selectedRows[key];
+      delete this.selectedTempRows[key];
+    });
+
+    this.table.render();
+    this.table.event.rowSelect.emit();
+    this.table.event.select.emit();
+  }
 
   selectCells: TableInstance["selectCells"] = (cells, merge) => {
     cells = ensureArray(cells);
@@ -494,6 +514,19 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
     this.table.event.select.emit();
   };
 
+  unselectCells(cellKeys: TableKey | TableKey[]) {
+    cellKeys = ensureArray(cellKeys);
+
+    cellKeys.forEach((key) => {
+      delete this.selectedCells[key];
+      delete this.selectedTempCells[key];
+    });
+
+    this.table.render();
+    this.table.event.cellSelect.emit();
+    this.table.event.select.emit();
+  }
+
   /**
    * 根据传入的两个点更新临时选中状态
    * - 可传入interceptor来根据命中内容决定是否阻止后续操作
@@ -503,14 +536,14 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
     p1: TablePosition,
     p2?: TablePosition,
     interceptor?: (items: TableItems) => boolean
-  ): boolean => {
+  ): [boolean, TableItems] => {
     p2 = p2 || p1;
 
     const items = this.table.getAreaBound(p1, p2);
 
     if (interceptor) {
       const res = interceptor(items);
-      if (!res) return false;
+      if (!res) return [false, items];
     }
 
     this.clearTempSelected();
@@ -541,7 +574,7 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
 
     hasSelected && this.table.render();
 
-    return hasSelected;
+    return [hasSelected, items];
   };
 
   /**
@@ -800,6 +833,12 @@ export interface TableSelect {
 
   /** 设置选中的单元格, 传入merge可保留之前的单元格选中 */
   selectCells(cellKeys: TableKey | TableKey[], merge?: boolean): void;
+
+  /** 取消选中行 */
+  unselectRows(rowKeys: TableKey | TableKey[]): void;
+
+  /** 取消选中单元格 */
+  unselectCells(cellKeys: TableKey | TableKey[]): void;
 
   /** 检测单元格是否可选中 */
   isCellSelectable(cell: TableCell): boolean;

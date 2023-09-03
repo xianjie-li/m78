@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { _RCTableContext } from "../types.js";
 import { TableCell } from "../../table-vanilla/index.js";
 import { Button, ButtonColor } from "../../button/index.js";
 import { Size } from "../../common/index.js";

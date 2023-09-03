@@ -162,9 +162,18 @@ export class _TableIsPlugin extends TablePlugin implements TableIs {
 
     this.config.el.addEventListener("mouseenter", this.onIsActiveCheck);
 
-    this.context.viewEl.addEventListener("scroll", this.onActive);
-
     this.config.el.addEventListener("focus", this.onActive);
+
+    if (this.config.extraActiveCheckEl) {
+      this.config.extraActiveCheckEl.addEventListener(
+        "mouseenter",
+        this.onIsActiveCheck
+      );
+
+      this.config.extraActiveCheckEl.addEventListener("focus", this.onActive);
+    }
+
+    this.context.viewEl.addEventListener("scroll", this.onActive);
 
     window.addEventListener("blur", this.onWindowBlur);
   }
@@ -181,9 +190,21 @@ export class _TableIsPlugin extends TablePlugin implements TableIs {
 
     this.config.el.removeEventListener("mouseenter", this.onIsActiveCheck);
 
-    this.context.viewEl.removeEventListener("scroll", this.onActive);
-
     this.config.el.removeEventListener("focus", this.onActive);
+
+    if (this.config.extraActiveCheckEl) {
+      this.config.extraActiveCheckEl.removeEventListener(
+        "mouseenter",
+        this.onIsActiveCheck
+      );
+
+      this.config.extraActiveCheckEl.removeEventListener(
+        "focus",
+        this.onActive
+      );
+    }
+
+    this.context.viewEl.removeEventListener("scroll", this.onActive);
 
     window.removeEventListener("blur", this.onWindowBlur);
   }
@@ -228,7 +249,19 @@ export class _TableIsPlugin extends TablePlugin implements TableIs {
           y = touchEvent.touches[0].clientY;
         }
 
-        const rect = el.getBoundingClientRect();
+        let rect = el.getBoundingClientRect();
+
+        if (this.config.extraActiveCheckEl) {
+          const _rect = this.config.extraActiveCheckEl.getBoundingClientRect();
+
+          rect = {
+            ...rect,
+            left: Math.min(rect.left, _rect.left),
+            top: Math.min(rect.top, _rect.top),
+            right: Math.max(rect.right, _rect.right),
+            bottom: Math.max(rect.bottom, _rect.bottom),
+          };
+        }
 
         active =
           x >= rect.left &&
@@ -303,4 +336,9 @@ export interface TableIs {
 
   /** 是否是合格的tableKey */
   isTableKey(key: any): key is TableKey;
+}
+
+export interface TableIsConfig {
+  /** 额外的用于判断table active状态的组件, 用于自定义了外层包裹容器这类的场景 */
+  extraActiveCheckEl?: HTMLElement;
 }

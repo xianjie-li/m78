@@ -4,7 +4,6 @@ import { Size } from "../../common/index.js";
 import { Bubble } from "../../bubble/index.js";
 import { Divider, Row } from "../../layout/index.js";
 import {
-  _RCTableContext,
   RCTableToolbarLeadingBuiltinNodes,
   RCTableToolbarTrailingBuiltinNodes,
 } from "../types.js";
@@ -23,6 +22,7 @@ import {
 } from "../filter/filter-btn.js";
 import { _injector } from "../table.js";
 import { _useStateAct } from "../state.act.js";
+import { _AddBtn, _DeleteBtn, _SaveBtn } from "./data-actions.js";
 
 export function _Toolbar() {
   const props = _injector.useProps();
@@ -32,7 +32,7 @@ export function _Toolbar() {
   const { state } = stateDep;
 
   const selectedCount = state.selectedRows.length;
-  const count = _getTableCtx(state.instance)?.allRowKeys.length || 0;
+  const count = state.rowCount;
 
   function renderLeading() {
     if (!state.instance) return null;
@@ -140,63 +140,11 @@ export function _Toolbar() {
       </Translation>
     );
 
-    const deleteBtn = (
-      <Translation ns={TABLE_NS}>
-        {(t) => (
-          <Bubble content={t("delete selected rows")}>
-            <Button
-              className="color-second"
-              squareIcon
-              disabled={selectedCount === 0}
-            >
-              <IconDeleteForever />
-            </Button>
-          </Bubble>
-        )}
-      </Translation>
-    );
+    const deleteBtn = <_DeleteBtn />;
 
-    const addBtn = (
-      <Translation ns={TABLE_NS}>
-        {(t) => (
-          <Bubble
-            content={
-              <div>
-                {t("add row tip1")}
-                <div className="fs-12 color-second">{t("add row tip2")}</div>
-              </div>
-            }
-          >
-            <Button size={Size.small}>
-              <IconAddToPhotos />
-              {t("add row btn")}
-            </Button>
-          </Bubble>
-        )}
-      </Translation>
-    );
+    const addBtn = <_AddBtn />;
 
-    const saveBtn = (
-      <Translation ns={TABLE_NS}>
-        {(t) => (
-          <Bubble
-            content={
-              <div>
-                {t("new tip")}: <span className="color-green bold mr-8">3</span>
-                {t("delete tip")}:{" "}
-                <span className="color-red bold mr-8">2</span>
-                {t("update tip")}: <span className="color-blue bold">7</span>
-              </div>
-            }
-          >
-            <Button size={Size.small} color={ButtonColor.primary}>
-              <IconSave />
-              {t("save btn")}
-            </Button>
-          </Bubble>
-        )}
-      </Translation>
-    );
+    const saveBtn = <_SaveBtn />;
 
     const nodes = (
       <>

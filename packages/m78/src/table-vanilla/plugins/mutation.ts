@@ -31,7 +31,7 @@ import {
   TableItems,
   TableRow,
 } from "../types/items.js";
-import { _getCellKeysByStr, _prefix } from "../common.js";
+import { _getCellKey, _getCellKeysByStr, _prefix } from "../common.js";
 import { _TableSortColumnPlugin } from "./sort-column.js";
 import { _TableFormPlugin } from "./form.js";
 
@@ -243,6 +243,7 @@ export class _TableMutationPlugin extends TablePlugin {
       if (!key) {
         return {
           ...i,
+          [_TablePrivateProperty.newFlag]: true,
           [this.config.primaryKey]: createRandString(),
         };
       }
@@ -300,9 +301,22 @@ export class _TableMutationPlugin extends TablePlugin {
     const remove = list.filter((i) => !i.ignore).map((i) => i.data);
     const rows = list.map((i) => i.ins);
 
+    const rowKeys = rows.map((i) => i.key);
+    const cellKeys = rows
+      .map((i) => {
+        return this.context.allColumnKeys.map((cKey) =>
+          _getCellKey(i.key, cKey)
+        );
+      })
+      .flat();
+
     this.table.history.redo({
       title: this.context.texts["remove row"],
       redo: () => {
+        // 移除删除项的选中状态
+        this.table.unselectRows(rowKeys);
+        this.table.unselectCells(cellKeys);
+
         for (let i = list.length - 1; i >= 0; i--) {
           const cur = list[i];
 
@@ -389,9 +403,9 @@ export class _TableMutationPlugin extends TablePlugin {
       this.cloneAndSetRowData(row);
     }
 
-    const oldValue = deepClone(
-      getNamePathValue(row.data, column.config.originalKey)
-    );
+    const ov = getNamePathValue(row.data, column.config.originalKey);
+
+    const oldValue = typeof ov === "object" ? deepClone(ov) : ov;
 
     this.table.history.redo({
       redo: () => {
@@ -411,7 +425,11 @@ export class _TableMutationPlugin extends TablePlugin {
         this.table.highlight(event.cell.key, false);
       },
       undo: () => {
-        setNamePathValue(row.data, column.config.originalKey, oldValue);
+        if (oldValue === undefined) {
+          deleteNamePathValue(row.data, column.config.originalKey);
+        } else {
+          setNamePathValue(row.data, column.config.originalKey, oldValue);
+        }
 
         const event: TableMutationValueEvent = {
           type: TableMutationType.value,
@@ -534,7 +552,15 @@ export class _TableMutationPlugin extends TablePlugin {
           moveList.forEach((i) => i.redo());
 
           // 同步sortColumns
-          if (!isRow) {
+          if (isRow) {
+            this.table.event.mutation.emit({
+              type: TableMutationType.data,
+              changeType: TableMutationDataType.move,
+              add: [],
+              remove: [],
+              move: [...moveEventData],
+            });
+          } else {
             this.table.history.ignore(() => {
               this.setPersistenceConfig(
                 "sortColumns",
@@ -542,14 +568,6 @@ export class _TableMutationPlugin extends TablePlugin {
               );
             });
           }
-
-          this.table.event.mutation.emit({
-            type: TableMutationType.data,
-            changeType: TableMutationDataType.move,
-            add: [],
-            remove: [],
-            move: [...moveEventData],
-          });
 
           this.table.reloadSync({
             keepPosition: true,
@@ -591,7 +609,21 @@ export class _TableMutationPlugin extends TablePlugin {
           }
 
           // 同步sortColumns
-          if (!isRow) {
+          if (isRow) {
+            this.table.event.mutation.emit({
+              type: TableMutationType.data,
+              changeType: TableMutationDataType.move,
+              add: [],
+              remove: [],
+              move: [...moveEventData].map((i) => ({
+                from: i.to,
+                to: i.from,
+                data: i.data,
+                dataFrom: i.dataTo,
+                dataTo: i.dataFrom,
+              })),
+            });
+          } else {
             this.table.history.ignore(() => {
               this.setPersistenceConfig(
                 "sortColumns",
@@ -599,20 +631,6 @@ export class _TableMutationPlugin extends TablePlugin {
               );
             });
           }
-
-          this.table.event.mutation.emit({
-            type: TableMutationType.data,
-            changeType: TableMutationDataType.move,
-            add: [],
-            remove: [],
-            move: [...moveEventData].map((i) => ({
-              from: i.to,
-              to: i.from,
-              data: i.data,
-              dataFrom: i.dataTo,
-              dataTo: i.dataFrom,
-            })),
-          });
 
           this.table.reloadSync({
             keepPosition: true,

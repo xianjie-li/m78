@@ -13,10 +13,8 @@ import { TableSelectConfig } from "../table-vanilla/plugins/select.js";
 import { TableDragSortConfig } from "../table-vanilla/plugins/drag-sort.js";
 import { ComponentBaseProps } from "../common/index.js";
 import { AnyObject, EmptyFunction } from "@m78/utils";
-import { CustomEventWithHook, SetState, UseScrollMeta } from "@m78/hooks";
+import { CustomEventWithHook } from "@m78/hooks";
 import { ReactNode } from "react";
-import { _UseEditRender } from "./use-edit-render.js";
-import { _UseCustomRender } from "./use-custom-render.js";
 import { TableFormConfig } from "../table-vanilla/plugins/form.js";
 import { TableFeedbackEvent } from "../table-vanilla/plugins/event.js";
 import { FormInstance, FormSchema } from "../form/index.js";
@@ -155,6 +153,9 @@ export interface RCTableProps
   /** false | 启用导入功能, 需要编辑功能开启 */
   dataExport?: boolean;
 
+  /** 新增数据时, 使用此对象作为默认值, 可以是一个对象或返回对象的函数 */
+  defaultNewData?: AnyObject | (() => AnyObject);
+
   /** 获取内部table实例 */
   instanceRef?: React.Ref<RCTableInstance>;
 }
@@ -275,19 +276,4 @@ export interface _RCTableSelf {
   renderMap: Record<string, _CustomRenderItem>;
   /** 所有编辑项的key map */
   editMap: Record<string, _CustomEditItem>;
-}
-
-/** 上下文状态 */
-export interface _RCTableContext {
-  props: RCTableProps;
-  state: _RCTableState;
-  setState: SetState<_RCTableState>;
-  self: _RCTableSelf;
-  ref: React.MutableRefObject<HTMLDivElement>;
-  scrollRef: React.MutableRefObject<HTMLDivElement>;
-  scrollContRef: React.MutableRefObject<HTMLDivElement>;
-  editRender: _UseEditRender;
-  customRender: _UseCustomRender;
-  filterForm: FormInstance;
-  scrollEvent: CustomEventWithHook<(meta: UseScrollMeta) => void>;
 }

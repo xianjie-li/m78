@@ -8,7 +8,6 @@ import { _TableMutationPlugin } from "./mutation.js";
 
 import { TableColumnFixed, TableRowFixed } from "../types/base-type.js";
 import { removeNode } from "../../common/index.js";
-import { _tableTriggerFilters, _triggerFilterList } from "../common.js";
 import {
   createTrigger,
   TriggerInstance,
@@ -74,7 +73,7 @@ export class _TableRowColumnResize extends TablePlugin {
     this.rafCaller = rafCaller();
 
     // 为virtualBound添加特定节点的过滤
-    const vbPreCheck: TriggerConfig["preCheck"] = (type, e) => {
+    const vbPreCheck: TriggerConfig["preCheck"] = (type) => {
       if (type !== TriggerType.active && type !== TriggerType.drag)
         return false;
       // return !_triggerFilterList(
@@ -200,7 +199,7 @@ export class _TableRowColumnResize extends TablePlugin {
       }
 
       const left = isRow ? wrapBound.left : wrapBound.left + _pos - bSize / 2;
-      let top = isRow ? wrapBound.top + _pos - bSize / 2 : wrapBound.top;
+      const top = isRow ? wrapBound.top + _pos - bSize / 2 : wrapBound.top;
 
       const b: TriggerTargetMeta = {
         target: {

@@ -15,13 +15,15 @@ import { COMMON_NS, Translation } from "../i18n/index.js";
 
 export function _useRender() {
   const props = _injector.useProps();
-  const { state, ref, scrollRef, scrollEvent, scrollContRef } =
+  const { state, ref, scrollRef, scrollEvent, scrollContRef, wrapRef } =
     _injector.useDeps(_useStateAct);
 
   return (
     <div
       className={clsx("m78-table_wrap", props.wrapClassName)}
       style={props.wrapStyle}
+      tabIndex={0}
+      ref={wrapRef}
     >
       {state.instance && (
         <>
