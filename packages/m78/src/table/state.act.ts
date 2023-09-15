@@ -19,6 +19,7 @@ export function _useStateAct() {
   const self = useSelf<_RCTableSelf>({
     renderMap: {},
     editMap: {},
+    overlayStackCount: 0,
   });
 
   const [state, setState] = useSetState<_RCTableState>({

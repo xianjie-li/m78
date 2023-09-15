@@ -19,6 +19,7 @@ import { IconDragIndicator } from "@m78/icons/icon-drag-indicator.js";
 import { IconAddCircleOutline } from "@m78/icons/icon-add-circle-outline.js";
 import { _UseFieldMethods } from "./use-field-methods.js";
 import { FORM_NS, Translation } from "../i18n/index.js";
+import { EMPTY_LIST_NAME } from "./common.js";
 
 export function _listImpl(ctx: _FormContext) {
   const { form } = ctx;
@@ -42,7 +43,7 @@ export function _listRenderImpl(
   props: FormFieldProps
 ): FormListCustomRenderArgs["render"] {
   const { form } = ctx;
-  const { name } = props;
+  const { name = EMPTY_LIST_NAME } = props;
 
   return (renderCB) => {
     if (!isFunction(renderCB)) {
@@ -79,7 +80,6 @@ export function _listRenderImpl(
 
 /** 实现内置list布局 */
 export function _listLayoutRenderImpl(
-  ctx: _FormContext,
   filedCtx: _FieldContext,
   methods: _UseFieldMethods,
   schema: FormSchema | FormSchemaWithoutName | null
@@ -101,6 +101,7 @@ export function _listLayoutRenderImpl(
               data={meta.index}
               enableDrag
               enableDrop={{ top: true, bottom: true }}
+              draggingListen
               onSourceAccept={({ source, target, status }) => {
                 const sIndex = source.data;
                 const tIndex = target.data;
@@ -127,6 +128,7 @@ export function _listLayoutRenderImpl(
                       ["__d-top"]: status.top,
                       ["__d-bottom"]: status.bottom,
                       __dragging: status.dragging,
+                      ["__has-dragging"]: status.hasDragging,
                     })}
                   >
                     {node}
@@ -167,7 +169,7 @@ export function _listLayoutRenderImpl(
           );
         })}
 
-        <div>
+        <div className="m78-form_list-actions">
           <Button
             disabled={args.getProps("disabled")}
             onClick={() =>

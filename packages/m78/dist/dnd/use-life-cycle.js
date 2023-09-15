@@ -1,8 +1,10 @@
 import _object_spread from "@swc/helpers/src/_object_spread.mjs";
+import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
 import { useDrag } from "@use-gesture/react";
-import { _defaultDNDEnableInfos, _defaultDNDStatus, _resetEvent, _updateEvent } from "./common.js";
+import { _defaultDNDEnableInfos, _defaultDNDStatus, _draggingEvent, _resetEvent, _updateEvent } from "./common.js";
 import { useEffect } from "react";
 import { useDestroy } from "@m78/hooks";
+import { isTruthyOrZero } from "@m78/utils";
 export function _useLifeCycle(ctx, methods) {
     var state = ctx.state, setState = ctx.setState, dragNodeRef = ctx.dragNodeRef, handleRef = ctx.handleRef;
     /** 绑定drag事件 */ useDrag(methods.onDrag, {
@@ -30,14 +32,26 @@ export function _useLifeCycle(ctx, methods) {
         if (ignoreIds.includes(ctx.id)) return;
         // 状态有变时进行更新
         if (!state.status.regular || !skipEnableReset && !state.enables.enable) {
-            var state1 = {
-                status: _object_spread({}, _defaultDNDStatus)
+            var st = {
+                status: _object_spread_props(_object_spread({}, _defaultDNDStatus), {
+                    hasDragging: state.status.hasDragging
+                })
             };
             if (!skipEnableReset) {
-                state1.enables = _object_spread({}, _defaultDNDEnableInfos);
+                st.enables = _object_spread({}, _defaultDNDEnableInfos);
             }
-            setState(state1);
+            setState(st);
         }
+    });
+    /** 处理draggingListen */ _draggingEvent.useEvent(function(id, dragging, groupId) {
+        if (!ctx.props.draggingListen) return;
+        if (isTruthyOrZero(groupId) && groupId !== ctx.props.group) return;
+        if (id === ctx.id) return;
+        setState({
+            status: _object_spread_props(_object_spread({}, state.status), {
+                hasDragging: dragging
+            })
+        });
     });
     useDestroy(function() {
         delete ctx.group.dndMap[ctx.id];

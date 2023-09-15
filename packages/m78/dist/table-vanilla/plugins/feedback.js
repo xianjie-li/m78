@@ -7,6 +7,7 @@ import { _TableFormPlugin } from "./form.js";
 import { TableFeedback } from "./event.js";
 import debounce from "lodash/debounce.js";
 import { createTrigger, TriggerType } from "../../trigger/index.js";
+import { TableMutationType } from "./mutation.js";
 /** 提供对某些表格元素的交互反馈, 比如单元格包含错误信息或内容超出时, 在选中后为其提供反馈 */ export var _TableFeedbackPlugin = /*#__PURE__*/ function(TablePlugin) {
     "use strict";
     _inherits(_TableFeedbackPlugin, TablePlugin);
@@ -27,9 +28,11 @@ import { createTrigger, TriggerType } from "../../trigger/index.js";
         _this.scroll = function() {
             _this.emitClose();
         };
-        // 单元格选中变更
-        _this.cellChange = function() {
-            var cells = _this.table.getSelectedCells();
+        // 触发单元格feedback, 默认为选中单元格触发
+        _this.cellChange = function(cells) {
+            if (!(cells === null || cells === void 0 ? void 0 : cells.length)) {
+                cells = _this.table.getSelectedCells();
+            }
             // 只在选中单条时触发
             if (cells.length !== 1) {
                 _this.emitClose();
@@ -72,6 +75,17 @@ import { createTrigger, TriggerType } from "../../trigger/index.js";
                 _this.table.event.feedback.emit(events);
             } else {
                 _this.emitClose();
+            }
+        };
+        // 单元格提交时, 触发feedback
+        _this.mutationHandle = function(event) {
+            if (event.type === TableMutationType.value) {
+                // 确保在变更并校验完成后触发
+                _this.valueChangeTimer = setTimeout(function() {
+                    _this.cellChange([
+                        event.cell
+                    ]);
+                }, 50);
             }
         };
         // 表头交互
@@ -126,6 +140,7 @@ import { createTrigger, TriggerType } from "../../trigger/index.js";
     _proto.initialized = function initialized() {
         this.form = this.getPlugin(_TableFormPlugin);
         this.table.event.cellSelect.on(this.cellChange);
+        this.table.event.mutation.on(this.mutationHandle);
         this.headerTrigger = createTrigger({
             type: TriggerType.active,
             container: this.config.el,
@@ -140,7 +155,9 @@ import { createTrigger, TriggerType } from "../../trigger/index.js";
     _proto.beforeDestroy = function beforeDestroy() {
         this.headerTrigger.destroy();
         this.table.event.cellSelect.off(this.cellChange);
+        this.table.event.mutation.off(this.mutationHandle);
         this.context.viewEl.removeEventListener("scroll", this.scroll);
+        clearTimeout(this.valueChangeTimer);
     };
     _proto.rendered = function rendered() {
         this.renderedDebounce();

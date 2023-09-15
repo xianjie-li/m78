@@ -171,6 +171,10 @@ export interface OverlayInstance {
     update(immediate?: boolean): void;
     /** 多实例trigger专用的处理函数, 搭配useTrigger或<Trigger />实现单个实例多个触发点 */
     trigger: (e: TriggerEvent) => void;
+    /** 当前是否开启 */
+    open: boolean;
+    /** 设置开启状态 */
+    setOpen: SetFormState<boolean>;
 }
 /**
  * 通过api调用时的配置, 移除了一些非必要参数

@@ -19,6 +19,7 @@ import {
   DomTarget,
   useClickAway,
   useFn,
+  useFormState,
   useSelect,
   useSelf,
   useSetState,
@@ -70,6 +71,13 @@ export const _Menu = (props: MenuProps) => {
     subMenuTriggerType: TriggerType.active,
   });
 
+  /** 代理defaultOpen/open/onChange, 实现对应接口 */
+  const [open, setOpen] = useFormState<boolean>(props, false, {
+    defaultValueKey: "defaultOpen",
+    triggerKey: "onChange",
+    valueKey: "open",
+  });
+
   const overlayRef = useRef<OverlayInstance | null>(null);
 
   useImperativeHandle<OverlayInstance | undefined, any>(
@@ -79,7 +87,16 @@ export const _Menu = (props: MenuProps) => {
   );
 
   /** 管理所有展开的项, 值为项的value */
-  const openSelect = useSelect<ValueType>();
+  const openSelect = useSelect<ValueType>({
+    autoUpdate: false,
+    onChange: (select) => {
+      const next = select.isSelected(MAIN_MENU);
+
+      if (next !== open) {
+        setOpen(next);
+      }
+    },
+  });
 
   const hasSelected = openSelect.state.selected.length > 0;
 
@@ -92,6 +109,13 @@ export const _Menu = (props: MenuProps) => {
     });
     openSelect.unSelectAll();
   });
+
+  // props.open主动传入true时, 对其同步
+  useEffect(() => {
+    if (props.open) {
+      openSelect.select(MAIN_MENU);
+    }
+  }, [props.open]);
 
   /** 点击区域外关闭 */
   useClickAway({
@@ -107,18 +131,20 @@ export const _Menu = (props: MenuProps) => {
       sibling?: MenuOption[],
       skipSetActive = false
     ) => {
-      props.onChange?.(open);
+      const isMain = val === MAIN_MENU;
+
       if (open) {
         if (isArray(sibling)) {
           const values = _getOptionAllValues(sibling, props);
           openSelect.unSelectList(values);
         }
 
-        if (val !== MAIN_MENU && !skipSetActive) {
+        if (!isMain && !skipSetActive) {
           self.lastActive = val;
         }
+
         openSelect.select(val);
-      } else if (val === MAIN_MENU) {
+      } else if (isMain) {
         // 主窗口关闭时关闭全部
         close();
       }
@@ -188,13 +214,14 @@ export const _Menu = (props: MenuProps) => {
         props.labelKey || DEFAULT_LABEL_KEY,
         props.valueKey || DEFAULT_VALUE_KEY,
         props.childrenKey || DEFAULT_CHILDREN_KEY,
+        "context",
       ]);
 
       const value = getValueByDataSource(item, props);
       const label = getLabelByDataSource(item, props);
       const children = getChildrenByDataSource(item, props);
 
-      if (!value) return null;
+      if (value === null) return null;
 
       const open = openSelect.isSelected(value);
 
@@ -264,7 +291,7 @@ export const _Menu = (props: MenuProps) => {
       className={clsx("m78-menu_wrap", props.className)}
       autoFocus
       instanceRef={overlayRef}
-      open={openSelect.isSelected(MAIN_MENU)}
+      open={open}
       content={
         <div
           role="menu"

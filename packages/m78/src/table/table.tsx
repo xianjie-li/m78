@@ -14,6 +14,10 @@ export const _injector = createInjector<RCTableProps>(
   },
   {
     displayName: "Table",
+    defaultProps: {
+      dataImport: true,
+      dataExport: true,
+    },
   }
 );
 

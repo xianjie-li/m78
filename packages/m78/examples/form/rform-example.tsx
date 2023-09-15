@@ -11,7 +11,11 @@ import { Divider, Row } from "../../src/layout/index.js";
 import { IconDeleteOutline } from "@m78/icons/icon-delete-outline.js";
 import { IconArrowUpward } from "@m78/icons/icon-arrow-upward.js";
 import { IconArrowDownward } from "@m78/icons/icon-arrow-downward.js";
-import { Size } from "../../src/index.js";
+import { m78Config, Size } from "../../src/index.js";
+
+m78Config.set({
+  formAdaptors: [],
+});
 
 const schemas: FormSchemaWithoutName = {
   schema: [
@@ -31,6 +35,10 @@ const schemas: FormSchemaWithoutName = {
       label: "描述",
       validator: required(),
     },
+    // {
+    //   name: ["camera", "title"],
+    //   component: <Input placeholder="abcd" />,
+    // },
     {
       name: "list",
       list: true,
@@ -80,6 +88,7 @@ const schemas2: FormSchemaWithoutName = {
       name: "obj",
       label: "对象",
       validator: required(),
+      maxWidth: 800,
       schema: [
         {
           name: "title",
@@ -88,6 +97,16 @@ const schemas2: FormSchemaWithoutName = {
         },
         {
           name: "desc",
+          validator: required(),
+          component: <Input placeholder="描述" />,
+        },
+        {
+          name: "test",
+          validator: required(),
+          component: <Input placeholder="描述" />,
+        },
+        {
+          name: "test",
           validator: required(),
           component: <Input placeholder="描述" />,
         },
@@ -152,15 +171,13 @@ const RformExample = () => {
       schemas,
       // size: Size.small,
       layoutType: FormLayoutType.vertical,
-      bubbleFeedback: true,
-      components: {
-        input: {
+      adaptors: [
+        {
+          name: "input",
           component: <Input />,
+          // formAdaptor: _defaultAdaptor,
         },
-        abc: {
-          component: <Input />,
-        },
-      },
+      ],
     });
   }, []);
 
@@ -173,6 +190,14 @@ const RformExample = () => {
       },
       schemas,
       layoutType: FormLayoutType.vertical,
+      customer: (args) => {
+        return (
+          <div>
+            <div>222</div>
+            <div>{args.element}</div>
+          </div>
+        );
+      },
     });
   }, []);
 
@@ -184,14 +209,15 @@ const RformExample = () => {
       },
       schemas: schemas2,
       layoutType: FormLayoutType.horizontal,
-      modifyMarker: true,
-      // requireMarker: true,
+      // spacePadding: false,
     });
   }, []);
 
   return (
     <div style={{ padding: 32 }}>
       <div>
+        <Divider>schema render</Divider>
+
         <Form4.SchemaRender />
 
         <Button
@@ -250,17 +276,19 @@ const RformExample = () => {
         </Button>
       </div>
 
+      <Divider>Manual render</Divider>
+
       <div>
         <Form.Field name="name" component="input" />
-        <Form.Field name="topic" label="标签">
-          <Input />
-        </Form.Field>
-        <Form.Field name="desc">
-          <Input textArea />
-        </Form.Field>
+        <Form.Field label="cTitle" name={["camera", "title"]} />
+        <Form.Field label="cDesc" name={["camera", "desc"]} component="input" />
+        <Form.Field name="topic" label="标签" component={<Input />} />
+        <Form.Field name="desc" component={<Input textArea />} />
 
-        <Form.List name="list" label="物品">
-          {(args) => {
+        <Form.List
+          name="list"
+          label="物品"
+          render={(args) => {
             return (
               <div>
                 {args.render(({ getName, index, length }) => {
@@ -274,23 +302,20 @@ const RformExample = () => {
                       <Form.Field
                         name={getName("title")}
                         layoutType={FormLayoutType.vertical}
-                      >
-                        <Input placeholder="名称" />
-                      </Form.Field>
+                        component={<Input placeholder="名称" />}
+                      />
                       <Form.Field
                         style={{ marginLeft: 8 }}
                         name={getName("desc")}
                         layoutType={FormLayoutType.vertical}
-                      >
-                        <Input placeholder="描述" />
-                      </Form.Field>
+                        component={<Input placeholder="描述" />}
+                      />
                       <Form.Field
                         style={{ marginLeft: 8 }}
                         name={getName("bbb")}
                         layoutType={FormLayoutType.vertical}
-                      >
-                        <Input placeholder="bbb" />
-                      </Form.Field>
+                        component={<Input placeholder="bbb" />}
+                      />
 
                       <Button
                         style={{ marginLeft: 8 }}
@@ -326,7 +351,7 @@ const RformExample = () => {
               </div>
             );
           }}
-        </Form.List>
+        ></Form.List>
       </div>
 
       <div className="mt-32">
@@ -349,23 +374,32 @@ const RformExample = () => {
       <Divider />
 
       <div>
-        <Form2.Field name="name">
-          <Input />
-        </Form2.Field>
+        <Form2.Field
+          name="name"
+          component={<Input />}
+          customer={(args) => {
+            return (
+              <div>
+                <div>111</div>
+                <div>{args.element}</div>
+              </div>
+            );
+          }}
+        />
         <Row style={{ width: 348 }}>
-          <Form2.Field name="name">
-            <Input />
-          </Form2.Field>
-          <Form2.Field name="desc" style={{ marginLeft: 12 }}>
-            <Input />
-          </Form2.Field>
+          <Form2.Field name="name" component={<Input />} />
+          <Form2.Field
+            name="desc"
+            style={{ marginLeft: 12 }}
+            component={<Input />}
+          />
         </Row>
-        <Form2.Field name="topic" label="topic">
-          <Input />
-        </Form2.Field>
-        <Form2.Field name="desc">
-          <Input textArea />
-        </Form2.Field>
+        <Form2.Field name="topic" label="topic" component={<Input />} />
+        <Form2.Field name="desc" component={<Input textArea />} />
+        <Form2.Field
+          name="desc"
+          component={(args) => <span>{args.bind.value}</span>}
+        />
       </div>
     </div>
   );

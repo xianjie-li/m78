@@ -14,9 +14,8 @@ export function _useFilterForm(props: RCTableProps) {
     } else {
       f = createForm({
         size: Size.small,
-        bubbleFeedback: true,
         layoutType: FormLayoutType.vertical,
-        spacePad: false,
+        spacePadding: false,
         defaultValue: props.defaultFilter,
         schemas: {
           schema: props.filterSchema,

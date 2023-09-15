@@ -1,10 +1,10 @@
-import { RCTableEditWidgetCreator } from "../types.js";
+import { RCTableEditWidgetAdapter } from "../types.js";
 import { Input, InputProps } from "../../input/index.js";
 import { Size } from "../../common/index.js";
 import React from "react";
 
 /** Input的table绑定 */
-export const tableInput: RCTableEditWidgetCreator<InputProps> =
+export const tableInput: RCTableEditWidgetAdapter<InputProps> =
   (conf?: InputProps) => (arg) => {
     return (
       <Input

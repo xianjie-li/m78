@@ -1,5 +1,5 @@
 import { getNamePathValue, isReferenceType } from "@m78/utils";
-/** 需要忽略的配置 */ export var _tableOmitConfig = [
+/** 需要忽略的table-vanilla配置 */ export var _tableOmitConfig = [
     "el",
     "emptyNode",
     "emptySize",
@@ -8,47 +8,33 @@ import { getNamePathValue, isReferenceType } from "@m78/utils";
     "viewContentEl",
     "eventCreator", 
 ];
-/** 不需要响应变更的配置 */ export var _tableOmitChangeConfig = [
-    "primaryKey",
-    // "data",
-    // "columns",
-    // "rows",
-    // "cells",
-    // "persistenceConfig",
-    "render",
-    "texts",
-    "plugins",
+/** 需要在变更时更新到table实例的props key */ export var _tableChangedListenKeys = [
+    "data",
+    "columns",
+    "rows",
+    "cells",
+    "height",
+    "width",
+    "autoSize",
+    "rowHeight",
+    "columnWidth",
+    "stripe",
+    "persistenceConfig",
+    "rowSelectable",
+    "cellSelectable",
+    "dragSortRow",
+    "dragSortColumn",
     "interactive",
-    "style",
-    "render",
-    "emptyNode",
-    "wrapClassName",
-    "wrapStyle",
-    "syncRender",
-    "context",
-    "onError",
-    "onClick",
-    "onSelect",
-    "onMutation",
-    "filterForm",
-    "commonFilter",
-    "defaultFilter",
-    "onFilter",
-    "filterSchema",
-    "toolBarLeadingCustomer",
-    "toolBarTrailingCustomer",
-    "dataImport",
-    "dataExport",
-    "instanceRef", 
+    "schema", 
 ];
-/** 同tableOmitChangeConfig, 可能是基础类型, 也可能是引用类型的字段, 若是基础类型则校验, 否则跳过 */ export var _tableOmitChangeMixTypeConfig = [
+/** 同_tableChangedListenKeys, 可能是基础类型, 也可能是引用类型的字段, 若是基础类型则校验, 否则跳过 */ export var _tableChangedMixTypeConfig = [
     "rowSelectable",
     "cellSelectable",
     "interactive", 
 ];
-/** 合并处理tableOmitChangeConfig & tableOmitChangeMixTypeConfig */ export var _tableOmitChangeChecker = function(key, value) {
-    if (_tableOmitChangeConfig.includes(key)) return true;
-    return _tableOmitChangeMixTypeConfig.includes(key) && isReferenceType(value);
+/** 合并处理_tableChangedListenKeys & _tableChangedMixTypeConfig */ export var _tableChangedIncludeChecker = function(key, value) {
+    if (_tableChangedListenKeys.includes(key)) return true;
+    return _tableChangedMixTypeConfig.includes(key) && !isReferenceType(value);
 };
 /** 从table实例中获取tableContext */ export var _getTableCtx = function(instance) {
     return getNamePathValue(instance, "__ctx");

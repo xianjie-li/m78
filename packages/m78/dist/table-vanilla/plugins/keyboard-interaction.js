@@ -1,13 +1,12 @@
+import _async_to_generator from "@swc/helpers/src/_async_to_generator.mjs";
 import _class_call_check from "@swc/helpers/src/_class_call_check.mjs";
 import _inherits from "@swc/helpers/src/_inherits.mjs";
-import _type_of from "@swc/helpers/src/_type_of.mjs";
 import _create_super from "@swc/helpers/src/_create_super.mjs";
+import _ts_generator from "@swc/helpers/src/_ts_generator.mjs";
 import { TablePlugin } from "../plugin.js";
 import { createKeyboardHelpersBatch, isString, KeyboardHelperModifier } from "@m78/utils";
-import { _prefix } from "../common.js";
 import { _TableInteractiveCorePlugin } from "./interactive-core.js";
 import { Position } from "../../common/index.js";
-var clipboardDataWarning = "[".concat(_prefix, "] can't get clipboardData, bowser not support.");
 /** 单个值粘贴时, 最大的可粘贴单元格数 */ var maxSinglePaste = 50;
 /** 键盘交互操作, 比如单元格复制/粘贴/delete等 */ export var _TableKeyboardInteractionPlugin = /*#__PURE__*/ function(TablePlugin) {
     "use strict";
@@ -18,129 +17,10 @@ var clipboardDataWarning = "[".concat(_prefix, "] can't get clipboardData, bowse
         var _this;
         _this = _super.apply(this, arguments);
         /** 粘贴 */ _this.onPaste = function(e) {
-            var _loop = function(i1) {
-                var _loop = function(j) {
-                    var curCellStr = curList[j];
-                    var cell = selected[i1][j];
-                    // 若任意一个cell未获取到则中断
-                    if (!cell) return {
-                        v: void void 0
-                    };
-                    if (!_this.interactiveCore.isInteractive(cell)) {
-                        _this.table.event.error.emit(_this.context.texts.paste);
-                        return {
-                            v: void void 0
-                        };
-                    }
-                    actions.push(function() {
-                        _this.table.setValue(cell, curCellStr);
-                    });
-                };
-                var curList = strCell[i1];
-                for(var j = 0; j < curList.length; j++){
-                    var _ret = _loop(j);
-                    if (_type_of(_ret) === "object") return {
-                        v: _ret.v
-                    };
-                }
-            };
-            if (!_this.table.isActive()) return;
-            // 有正在进行编辑等操作的单元格, 跳过
-            if (_this.interactiveCore.items.length) return;
-            var data = e.clipboardData;
-            if (!data) {
-                console.warn(clipboardDataWarning);
-                return;
-            }
-            var str = data.getData("text/plain");
-            if (!isString(str)) return;
-            var strCell = _this.parse(str);
-            if (!strCell.length) return;
-            var selected = _this.table.getSortedSelectedCells();
-            if (!selected.length) return;
-            e.preventDefault();
-            var actions = [];
-            // case1: 只有单个粘贴值, 若是, 并且选中单元格数量小于一定值, 则设置到所有选中的单元格
-            var isSingleValue = strCell.length === 1 && strCell[0].length === 1;
-            if (isSingleValue) {
-                var _loop1 = function(i) {
-                    var cell = allCell[i];
-                    if (!_this.interactiveCore.isInteractive(cell)) {
-                        _this.table.event.error.emit(_this.context.texts.paste);
-                        return {
-                            v: void void 0
-                        };
-                    }
-                    actions.push(function() {
-                        _this.table.setValue(cell, singleValue);
-                    });
-                };
-                var allCell = selected.reduce(function(a, b) {
-                    return a.concat(b);
-                }, []);
-                if (allCell.length > maxSinglePaste) {
-                    _this.table.event.error.emit(_this.context.texts["paste single value limit"].replace("{num}", String(maxSinglePaste)));
-                    return;
-                }
-                var singleValue = strCell[0][0];
-                for(var i = 0; i < allCell.length; i++){
-                    var _ret = _loop1(i);
-                    if (_type_of(_ret) === "object") return _ret.v;
-                }
-                _this.table.history.batch(function() {
-                    actions.forEach(function(action) {
-                        return action();
-                    });
-                });
-                return;
-            }
-            // case2: 非isSingleValue时, 检测行列数是否一致并进行设值
-            var errorStr = _this.checkAlign(strCell, selected);
-            if (errorStr) {
-                _this.table.event.error.emit(errorStr);
-                return;
-            }
-            for(var i1 = 0; i1 < strCell.length; i1++){
-                var _ret1 = _loop(i1);
-                if (_type_of(_ret1) === "object") return _ret1.v;
-            }
-            if (!actions.length) return;
-            _this.table.history.batch(function() {
-                actions.forEach(function(action) {
-                    return action();
-                });
-            });
+            _this.pasteImpl(e);
         };
         /** 复制 */ _this.onCopy = function(e) {
-            if (!_this.table.isActive()) return;
-            // 有正在进行编辑等操作的单元格, 跳过
-            if (_this.interactiveCore.items.length) return;
-            var selected = _this.table.getSortedSelectedCells();
-            if (!selected.length) return;
-            var data = e.clipboardData;
-            if (!data) {
-                console.warn(clipboardDataWarning);
-                return;
-            }
-            e.preventDefault();
-            var str = "";
-            for(var i = 0; i < selected.length; i++){
-                var curList = selected[i];
-                for(var j = 0; j < curList.length; j++){
-                    var cell = curList[j];
-                    var value = _this.table.getValue(cell);
-                    if (j === curList.length - 1) {
-                        str += value;
-                    } else {
-                        str += "".concat(value, "	");
-                    }
-                }
-                if (i !== selected.length - 1) {
-                    str += "\r\n";
-                }
-            }
-            data.clearData();
-            data.setData("text/plain", str);
+            _this.copyImpl(e);
         };
         /** 删除 */ _this.onDelete = function() {
             var selected = _this.table.getSelectedCells();
@@ -152,11 +32,9 @@ var clipboardDataWarning = "[".concat(_prefix, "] can't get clipboardData, bowse
             });
         };
         /** 撤销 */ _this.onUndo = function() {
-            console.log("undo");
             _this.table.history.undo();
         };
         /** 重做 */ _this.onRedo = function() {
-            console.log("redo");
             _this.table.history.redo();
         };
         /** 各方向移动 */ _this.onMove = function(e) {
@@ -192,6 +70,12 @@ var clipboardDataWarning = "[".concat(_prefix, "] can't get clipboardData, bowse
         return _this;
     }
     var _proto = _TableKeyboardInteractionPlugin.prototype;
+    _proto.beforeInit = function beforeInit() {
+        this.methodMapper(this.table, [
+            "copy",
+            "paste"
+        ]);
+    };
     _proto.init = function init() {
         this.interactiveCore = this.getPlugin(_TableInteractiveCorePlugin);
     };
@@ -204,6 +88,245 @@ var clipboardDataWarning = "[".concat(_prefix, "] can't get clipboardData, bowse
         window.removeEventListener("paste", this.onPaste);
         window.removeEventListener("copy", this.onCopy);
         this.multipleHelper.destroy();
+    };
+    _proto.paste = function paste() {
+        this.pasteImpl();
+    };
+    _proto.copy = function copy() {
+        this.copyImpl();
+    };
+    // 粘贴的核心实现, 传入ClipboardEvent时, 使用事件对象操作剪切板, 否则使用 Clipboard API
+    _proto.pasteImpl = function pasteImpl(e) {
+        var _this = this;
+        return _async_to_generator(function() {
+            var str, data, e1, strCell, selected, actions, isSingleValue, allCell, singleValue, i, cell, errorStr, i1, curList, j, curCellStr, cell1;
+            return _ts_generator(this, function(_state) {
+                switch(_state.label){
+                    case 0:
+                        if (!_this.table.isActive()) return [
+                            2
+                        ];
+                        // 有正在进行编辑等操作的单元格, 跳过
+                        if (_this.interactiveCore.items.length) return [
+                            2
+                        ];
+                        str = "";
+                        if (!e) return [
+                            3,
+                            1
+                        ];
+                        data = e.clipboardData;
+                        if (!data) {
+                            _this.table.event.error.emit(_this.context.texts.clipboardWarning);
+                            return [
+                                2
+                            ];
+                        }
+                        str = data.getData("text/plain");
+                        return [
+                            3,
+                            4
+                        ];
+                    case 1:
+                        _state.trys.push([
+                            1,
+                            3,
+                            ,
+                            4
+                        ]);
+                        return [
+                            4,
+                            navigator.clipboard.readText()
+                        ];
+                    case 2:
+                        str = _state.sent();
+                        return [
+                            3,
+                            4
+                        ];
+                    case 3:
+                        e1 = _state.sent();
+                        _this.table.event.error.emit(_this.context.texts.clipboardWarning);
+                        return [
+                            2
+                        ];
+                    case 4:
+                        if (!isString(str)) return [
+                            2
+                        ];
+                        strCell = _this.parse(str);
+                        if (!strCell.length) return [
+                            2
+                        ];
+                        selected = _this.table.getSortedSelectedCells();
+                        if (!selected.length) return [
+                            2
+                        ];
+                        // 事件对象时, 阻止默认行为
+                        if (e) {
+                            e.preventDefault();
+                        }
+                        actions = [];
+                        isSingleValue = strCell.length === 1 && strCell[0].length === 1;
+                        if (isSingleValue) {
+                            allCell = selected.reduce(function(a, b) {
+                                return a.concat(b);
+                            }, []);
+                            if (allCell.length > maxSinglePaste) {
+                                _this.table.event.error.emit(_this.context.texts["paste single value limit"].replace("{num}", String(maxSinglePaste)));
+                                return [
+                                    2
+                                ];
+                            }
+                            singleValue = strCell[0][0];
+                            for(i = 0; i < allCell.length; i++){
+                                cell = allCell[i];
+                                if (!_this.interactiveCore.isInteractive(cell)) {
+                                    _this.table.event.error.emit(_this.context.texts.paste);
+                                    return [
+                                        2
+                                    ];
+                                }
+                                actions.push(function() {
+                                    _this.table.setValue(cell, singleValue);
+                                });
+                            }
+                            _this.table.history.batch(function() {
+                                actions.forEach(function(action) {
+                                    return action();
+                                });
+                            });
+                            return [
+                                2
+                            ];
+                        }
+                        errorStr = _this.checkAlign(strCell, selected);
+                        if (errorStr) {
+                            _this.table.event.error.emit(errorStr);
+                            return [
+                                2
+                            ];
+                        }
+                        for(i1 = 0; i1 < strCell.length; i1++){
+                            curList = strCell[i1];
+                            for(j = 0; j < curList.length; j++){
+                                curCellStr = curList[j];
+                                cell1 = selected[i1][j];
+                                // 若任意一个cell未获取到则中断
+                                if (!cell1) return [
+                                    2
+                                ];
+                                if (!_this.interactiveCore.isInteractive(cell1)) {
+                                    _this.table.event.error.emit(_this.context.texts.paste);
+                                    return [
+                                        2
+                                    ];
+                                }
+                                actions.push(function() {
+                                    _this.table.setValue(cell1, curCellStr);
+                                });
+                            }
+                        }
+                        if (!actions.length) return [
+                            2
+                        ];
+                        _this.table.history.batch(function() {
+                            actions.forEach(function(action) {
+                                return action();
+                            });
+                        });
+                        return [
+                            2
+                        ];
+                }
+            });
+        })();
+    };
+    // 复制的核心实现, 传入ClipboardEvent时, 使用事件对象操作剪切板, 否则使用 Clipboard API
+    _proto.copyImpl = function copyImpl(e) {
+        var _this = this;
+        return _async_to_generator(function() {
+            var selected, data, str, i, curList, j, cell, value, e1;
+            return _ts_generator(this, function(_state) {
+                switch(_state.label){
+                    case 0:
+                        if (!_this.table.isActive()) return [
+                            2
+                        ];
+                        // 有正在进行编辑等操作的单元格, 跳过
+                        if (_this.interactiveCore.items.length) return [
+                            2
+                        ];
+                        selected = _this.table.getSortedSelectedCells();
+                        if (!selected.length) return [
+                            2
+                        ];
+                        if (e) {
+                            data = e.clipboardData;
+                            if (!data) {
+                                _this.table.event.error.emit(_this.context.texts.clipboardWarning);
+                                return [
+                                    2
+                                ];
+                            }
+                            e.preventDefault();
+                        }
+                        str = "";
+                        for(i = 0; i < selected.length; i++){
+                            curList = selected[i];
+                            for(j = 0; j < curList.length; j++){
+                                cell = curList[j];
+                                value = _this.table.getValue(cell) || "";
+                                if (j === curList.length - 1) {
+                                    str += value;
+                                } else {
+                                    str += "".concat(value, "	");
+                                }
+                            }
+                            if (i !== selected.length - 1) {
+                                str += "\r\n";
+                            }
+                        }
+                        if (!e) return [
+                            3,
+                            1
+                        ];
+                        e.clipboardData.clearData();
+                        e.clipboardData.setData("text/plain", str);
+                        return [
+                            3,
+                            4
+                        ];
+                    case 1:
+                        _state.trys.push([
+                            1,
+                            3,
+                            ,
+                            4
+                        ]);
+                        return [
+                            4,
+                            navigator.clipboard.writeText(str)
+                        ];
+                    case 2:
+                        _state.sent();
+                        return [
+                            3,
+                            4
+                        ];
+                    case 3:
+                        e1 = _state.sent();
+                        _this.table.event.error.emit(_this.context.texts.clipboardWarning);
+                        return [
+                            2
+                        ];
+                    case 4:
+                        return [
+                            2
+                        ];
+                }
+            });
+        })();
     };
     // 事件绑定配置
     _proto.getKeydownOptions = function getKeydownOptions() {

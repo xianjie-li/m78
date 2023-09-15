@@ -26,6 +26,8 @@ export const tableDefaultTexts = {
   editable: "Editable",
   "editable and required": "Editable (required)",
   "currently not editable": "Currently not editable",
+  clipboardWarning:
+    "Can't get clipboard data, bowser not support or does not have permissions.",
 } as const;
 
 /** 解析rowKey##columnKey格式的字符串为[rowKey, columnKey], 数组长度为2表示解析正常 */

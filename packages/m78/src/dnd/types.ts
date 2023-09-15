@@ -18,6 +18,8 @@ export interface DNDStatus extends DNDPosition {
   over: boolean;
   /** 未处于拖动或放置状态 */
   regular: boolean;
+  /** 有节点正在拖动, 为了避免不必要的更新, 仅开启了props.draggingListen的DND节点会更新此状态 */
+  hasDragging: boolean;
 }
 
 /** DND组件的render children接收对象 */
@@ -131,6 +133,8 @@ export interface DNDProps<Data = any> {
    * - 默认情况下，会禁止tagName为INPUT|TEXTAREA|BUTTON|SELECT|AUDIO|VIDEO的元素或设置了contenteditable的元素
    * */
   ignore?: (el: HTMLElement) => boolean;
+  /** 启用后, 该DND节点会触发 DNDStatus.hasDragging 变更 */
+  draggingListen?: boolean;
 }
 
 /** 内部共享的状态 */

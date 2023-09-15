@@ -7,6 +7,7 @@ export var _TablePrivateProperty;
     _TablePrivateProperty[/** 与对象有关的某个timer */ "timer"] = "__M78TableTimer";
     _TablePrivateProperty[/** 记录当前reloadKey */ "reloadKey"] = "__M78TableReloadKey";
     _TablePrivateProperty[/** 挂载渲染标记 */ "renderFlag"] = "__M78TableRenderFlag";
+    _TablePrivateProperty[/** 表示该数据为新增数据 */ "newFlag"] = "__M78TableNew";
 })(_TablePrivateProperty || (_TablePrivateProperty = {}));
 export var TableRowFixed;
 (function(TableRowFixed) {

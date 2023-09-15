@@ -5,7 +5,7 @@ import { autoScrollTrigger, checkElementVisible, getScrollParent, isDom, isFunct
 import { useFn } from "@m78/hooks";
 import throttle from "lodash/throttle.js";
 import isEqual from "lodash/isEqual.js";
-import { _defaultDNDEnableInfos, _defaultDNDStatus, _resetEvent, _updateEvent, _checkIfAcceptable, _filterInBoundDNDs, _getCurrentTriggerByMultipleTrigger, _isIgnoreEl, _getObjectByNewValues } from "./common.js";
+import { _defaultDNDEnableInfos, _defaultDNDStatus, _resetEvent, _updateEvent, _checkIfAcceptable, _filterInBoundDNDs, _getCurrentTriggerByMultipleTrigger, _isIgnoreEl, _getObjectByNewValues, _draggingEvent } from "./common.js";
 import clsx from "clsx";
 export function _useMethods(ctx) {
     var initFeedbackEl = /** 开始拖动时使用, 初始化self.feedbackEl以便使用 */ function initFeedbackEl() {
@@ -90,6 +90,7 @@ export function _useMethods(ctx) {
         // 开始拖动时更新所有节点位置信息, 拖动中间歇更新(大部分情况节点位置不会改变, 这样可以节省性能)
         if (first) {
             _updateEvent.emit(false, ctx.props.group);
+            _draggingEvent.emit(ctx.id, true, ctx.props.group);
         } else {
             _updateEvent.emit(true, ctx.props.group);
         }
@@ -175,6 +176,7 @@ export function _useMethods(ctx) {
                 (ref1 = props.onDrop) === null || ref1 === void 0 ? void 0 : ref1.call(props, event);
                 // 通知所有组件
                 _resetEvent.emit();
+                _draggingEvent.emit(ctx.id, false, ctx.props.group);
                 self.lastEntryDND = undefined;
             } else {
                 var ref2;
@@ -226,6 +228,8 @@ export function _useMethods(ctx) {
             var ref9;
             (ref9 = props.onMove) === null || ref9 === void 0 ? void 0 : ref9.call(props, event);
         }
+        // hasDragging不需要对比
+        status.hasDragging = dndState.status.hasDragging;
         // 状态有变时进行更新
         if (!isEqual(dndState.enables, enables) || !isEqual(dndState.status, status)) {
             dnd.ctx.setState({
@@ -235,6 +239,7 @@ export function _useMethods(ctx) {
         }
         if (last) {
             _resetEvent.emit([]);
+            _draggingEvent.emit(ctx.id, false, ctx.props.group);
             self.lastEntryDND = undefined;
         } else {
             // 通知重置

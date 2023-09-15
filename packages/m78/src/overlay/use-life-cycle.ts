@@ -8,7 +8,7 @@ import {
 import { useEffect, useImperativeHandle, useMemo } from "react";
 import { ensureArray, isDom } from "@m78/utils";
 import { isBound } from "./common.js";
-import { _OverlayContext } from "./types.js";
+import { _OverlayContext, OverlayInstance } from "./types.js";
 import { _useTypeProcess } from "./use-type-process.js";
 import { TriggerType } from "../trigger/index.js";
 
@@ -35,8 +35,11 @@ export function _useLifeCycle(ctx: _OverlayContext) {
       updateTarget: methods.updateTarget,
       update: methods.update,
       trigger: methods.onTriggerMultiple,
-    };
+      setOpen,
+    } as OverlayInstance;
   }, []);
+
+  instance.open = open;
 
   /** 暴露实例 */
   useImperativeHandle(props.instanceRef, () => instance, []);

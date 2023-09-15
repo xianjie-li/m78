@@ -57,4 +57,8 @@ export interface TableIs {
     /** 是否是合格的tableKey */
     isTableKey(key: any): key is TableKey;
 }
+export interface TableIsConfig {
+    /** 额外的用于判断table active状态的组件, 用于自定义了外层包裹容器这类的场景 */
+    extraActiveCheckEl?: HTMLElement;
+}
 //# sourceMappingURL=is.d.ts.map

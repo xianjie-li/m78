@@ -1,1 +1,1 @@
-{"version":3,"file":"use-life-cycle.d.ts","sourceRoot":"","sources":["../../../../src/overlay/use-life-cycle.ts"],"names":[],"mappings":"AAUA,OAAO,EAAE,eAAe,EAAE,MAAM,YAAY,CAAC;AAI7C,wBAAgB,aAAa,CAAC,GAAG,EAAE,eAAe;;;EA4KjD;AAED,oBAAY,UAAU,GAAG,UAAU,CAAC,OAAO,aAAa,CAAC,CAAC"}
+{"version":3,"file":"use-life-cycle.d.ts","sourceRoot":"","sources":["../../../../src/overlay/use-life-cycle.ts"],"names":[],"mappings":"AAUA,OAAO,EAAE,eAAe,EAAmB,MAAM,YAAY,CAAC;AAI9D,wBAAgB,aAAa,CAAC,GAAG,EAAE,eAAe;;;EA+KjD;AAED,oBAAY,UAAU,GAAG,UAAU,CAAC,OAAO,aAAa,CAAC,CAAC"}

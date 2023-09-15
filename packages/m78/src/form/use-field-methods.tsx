@@ -1,83 +1,60 @@
 import {
   _FormContext,
   _FieldContext,
-  _formKeyCustomerKeys,
   _formPropsKeys,
   _lisIgnoreKeys,
   FormCommonPropsGetter,
   FormCustomRender,
-  FormCustomRenderArgs,
+  FormCustomRenderBasicArgs,
   FormLayoutType,
   FormListCustomRenderArgs,
+  FormAdaptorsItem,
+  FormAdaptor,
 } from "./types.js";
 import { useFn } from "@m78/hooks";
-import {
-  ensureArray,
-  isArray,
-  isBoolean,
-  isFunction,
-  isString,
-  NamePath,
-} from "@m78/utils";
+import { isBoolean, isFunction, isString, NamePath } from "@m78/utils";
+import React, { cloneElement, isValidElement } from "react";
 import { _defaultValueGetter } from "./common.js";
-import React, { isValidElement } from "react";
 
 export function _useFieldMethods(ctx: _FormContext, fieldCtx: _FieldContext) {
-  const { form, config } = ctx;
+  const { form, config, adaptorsMap, adaptorsNameMap } = ctx;
 
-  const { state, isList, props, name } = fieldCtx;
+  const { state, isList, props, name, strName } = fieldCtx;
 
   const schema = state.schema;
 
-  const [component, componentData] = getComponent();
-
   // 依次从props, schema, config中获取通用属性
-  const getProps: FormCommonPropsGetter = (key) => {
+  const getProps: FormCommonPropsGetter = useFn((key) => {
     // 排序需要从 list 中去除的属性
     if (isList && _lisIgnoreKeys.includes(key)) return;
 
     if (props[key] !== undefined) return props[key];
     if (schema?.[key] !== undefined) return schema?.[key];
 
-    if (componentData && _formKeyCustomerKeys.includes(key)) {
-      const cur = (componentData as any)[key];
-      if (cur !== undefined) return cur;
-      return;
-    }
-
     if (_formPropsKeys.includes(key)) {
       return (config as any)?.[key];
     }
-  };
+  });
 
-  const valueGetter = getProps("valueGetter");
-  const valueKey = getProps("valueKey") || "value";
-  const changeKey = getProps("changeKey") || "onChange";
-  const disabledKey = getProps("disabledKey") || "disabled";
-  const sizeKey = getProps("sizeKey") || "size";
   const disabled = getProps("disabled");
   const size = getProps("size");
 
   // change handle
-  const onChange = useFn((...args) => {
-    const value = valueGetter
-      ? valueGetter(...args)
-      : _defaultValueGetter(args[0]);
-
-    form.setValue(name, value);
+  const onChange = useFn((value: any) => {
+    form.setValue(name, _defaultValueGetter(value));
   });
 
   // 是否应该渲染实际内容
-  function shouldRender() {
-    if (!name) return false;
-    if (isArray(name) && !name.length) return false;
+  const shouldRender = useFn(() => {
+    // if (!name) return false;
+    // if (isArray(name) && !name.length) return false;
     if (schema?.valid === false || getProps("hidden")) return false;
     //.
     return true;
-  }
+  });
 
   // 根据layoutType/props获取宽度
-  function getWidth() {
+  const getWidth = useFn(() => {
     const maxWidth = getProps("maxWidth");
     const layoutType = getProps("layoutType")!;
 
@@ -85,42 +62,35 @@ export function _useFieldMethods(ctx: _FormContext, fieldCtx: _FieldContext) {
     if (layoutType === FormLayoutType.vertical) return 348;
     if (layoutType === FormLayoutType.horizontal) return 440;
     return undefined;
-  }
+  });
 
   // 获取绑定到表单控件的属性
-  function getBind() {
-    const bindProps: any = {
-      [valueKey]: form.getValue(name),
-      [changeKey]: onChange,
+  const getBind = useFn(() => {
+    const bindProps: FormCustomRenderBasicArgs["bind"] = {
+      value: form.getValue(name),
+      onChange,
     };
 
     if (isBoolean(disabled)) {
-      bindProps[disabledKey] = disabled;
+      bindProps.disabled = disabled;
     }
 
     if (size) {
-      bindProps[sizeKey] = size;
+      bindProps.size = size;
     }
 
-    const ignoreBindKeys = ensureArray(getProps("ignoreBindKeys"));
-
-    if (ignoreBindKeys.length) {
-      ignoreBindKeys.forEach((key) => {
-        delete bindProps[key];
-      });
-    }
     return bindProps;
-  }
+  });
 
   /** 获取第一条错误 */
-  const getError = (name: NamePath) => {
+  const getError = useFn((name: NamePath) => {
     const err = form.getErrors(name);
     if (!err.length) return "";
     return err[0].message;
-  };
+  });
 
-  /** 根据传入 name 缩短 form list 系列 api 签名 */
-  const listApiSimplify = (name: NamePath) => {
+  /** 根据传入 name 缩短 list api 签名 */
+  const listApiSimplify = useFn((name: NamePath) => {
     const add: FormListCustomRenderArgs["add"] = (items, index) => {
       return form.listAdd(name, items, index);
     };
@@ -148,76 +118,98 @@ export function _useFieldMethods(ctx: _FormContext, fieldCtx: _FieldContext) {
       move,
       swap,
     };
-  };
+  });
 
-  /** 获取注册的组件及其信息 */
-  function getComponent() {
-    const nil = [null, null] as const;
+  /** 获取组件适配器配置信息 */
+  const getAdaptor = useFn(
+    (): {
+      adaptorConf?: FormAdaptorsItem;
+      /** 用户在schema或field传入了函数类型的component时, 此项为该函数 */
+      componentRender?: FormAdaptor;
+    } => {
+      const componentKey = props.component || schema?.component;
+      const adaptor = props.adaptor || schema?.adaptor;
 
-    const componentKey = props.component || schema?.component;
+      let aConf: FormAdaptorsItem;
 
-    if (isValidElement<any>(componentKey)) return [componentKey, null] as const;
+      if (isFunction(componentKey)) {
+        return {
+          componentRender: componentKey,
+        };
+      }
 
-    if (!isString(componentKey)) return nil;
+      if (isValidElement<any>(componentKey)) {
+        const conf = adaptorsMap.get(componentKey.type);
 
-    const componentConfig = ctx.components!;
+        aConf = {
+          ...conf,
+          component: componentKey,
+        };
 
-    const cur = componentConfig[componentKey];
+        if (adaptor) aConf.formAdaptor = adaptor;
 
-    if (!cur) {
-      console.warn(
-        `component ${componentKey} is not registered. Please register it in the components attribute in the Form.config`
-      );
-      return nil;
+        return {
+          adaptorConf: aConf,
+        };
+      } else if (isString(componentKey)) {
+        const aConf = adaptorsNameMap.get(componentKey);
+
+        if (!aConf) {
+          console.warn(
+            `form widget ${componentKey} is not config. Please config it in the adaptors attribute in the Form.config or m78Config`
+          );
+          return {};
+        }
+
+        if (adaptor) aConf.formAdaptor = adaptor;
+
+        return {
+          adaptorConf: aConf,
+        };
+      }
+
+      return {};
     }
+  );
 
-    if (isValidElement<any>(cur)) return [cur, null] as const;
-
-    if (!isValidElement<any>(cur.component)) return nil;
-
-    return [cur.component, cur] as const;
-  }
-
-  /** 获取注册的组件 */
-  function getRegisterComponent() {
-    return component;
-  }
-
-  /** 渲染 node | (arg) => node 定制节点 */
-  function extraNodeRenderHelper(node: React.ReactNode | FormCustomRender) {
-    if (isFunction(node)) {
-      return node({
-        config,
-        form,
-        bind: getBind(),
-        props,
-        getProps,
-      });
-    }
-
-    return node;
-  }
+  const { adaptorConf } = getAdaptor();
 
   /** 获取render arg */
-  function getRenderArgs(): FormCustomRenderArgs {
+  const getRenderArgs = useFn((): FormCustomRenderBasicArgs => {
     return {
-      config,
-      form,
       bind: getBind(),
+      binder: (element, pp) => {
+        if (!isValidElement<any>(element)) return null;
+        return cloneElement(element, pp);
+      },
+      form,
+      config,
       props,
       getProps,
+      element: adaptorConf?.component || null,
     };
-  }
+  });
+
+  /** 渲染 node | (arg) => node 定制节点 */
+  const extraNodeRenderHelper = useFn(
+    (node: React.ReactNode | FormCustomRender) => {
+      if (isFunction(node)) {
+        return node(getRenderArgs());
+      }
+
+      return node;
+    }
+  );
 
   return {
     getProps,
+    getAdaptor,
     onChange,
     shouldRender,
     getWidth,
     getBind,
     getError,
     listApiSimplify,
-    getRegisterComponent,
     extraNodeRenderHelper,
     getRenderArgs,
   };

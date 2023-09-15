@@ -9,7 +9,7 @@ const form = createForm({
         label: "姓名",
         name: "name",
         validator: [required(), string({ min: 2, max: 5 })],
-        component: <Input placeholder="请输入姓名" />,
+        component: <Input placeholder="输入姓名" />,
       },
       {
         label: "简介",
@@ -34,19 +34,25 @@ const ManualBase = () => {
       <form.Field name="name" />
       <form.Field name="describe" />
 
-      <div style={{ paddingLeft: "5em", marginLeft: 8 }}>
-        <Button onClick={form.reset}>重置</Button>
-        <Button
-          color={ButtonColor.primary}
-          onClick={() => {
-            form.submit().catch((err) => {
-              console.log(err?.rejects);
-            });
-          }}
-        >
-          提交
-        </Button>
-      </div>
+      {/* 这里使用Field作为布局组件排版按钮 */}
+      <form.Field
+        label=" "
+        component={() => (
+          <>
+            <Button onClick={form.reset}>重置</Button>
+            <Button
+              color={ButtonColor.primary}
+              onClick={() => {
+                form.submit().catch((err) => {
+                  console.log(err?.rejects);
+                });
+              }}
+            >
+              提交
+            </Button>
+          </>
+        )}
+      />
     </div>
   );
 };

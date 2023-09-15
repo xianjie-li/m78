@@ -6,7 +6,7 @@ import { jsx as _jsx } from "react/jsx-runtime";
 import React, { useEffect, useImperativeHandle, useRef } from "react";
 import { DEFAULT_CHILDREN_KEY, DEFAULT_LABEL_KEY, DEFAULT_VALUE_KEY, getChildrenByDataSource, getLabelByDataSource, getValueByDataSource, Size, Z_INDEX_MESSAGE } from "../common/index.js";
 import { Overlay, OverlayDirection } from "../overlay/index.js";
-import { useClickAway, useFn, useSelect, useSelf, useSetState } from "@m78/hooks";
+import { useClickAway, useFn, useFormState, useSelect, useSelf, useSetState } from "@m78/hooks";
 import { Lay } from "../lay/index.js";
 import { isArray, isFunction, isMobileDevice, isTruthyOrZero, omit } from "@m78/utils";
 import { _getOptionAllValues } from "./common.js";
@@ -40,13 +40,26 @@ export var _Menu = function(props) {
         current: null,
         subMenuTriggerType: TriggerType.active
     }), 2), state = ref[0], setState = ref[1];
+    /** 代理defaultOpen/open/onChange, 实现对应接口 */ var ref1 = _sliced_to_array(useFormState(props, false, {
+        defaultValueKey: "defaultOpen",
+        triggerKey: "onChange",
+        valueKey: "open"
+    }), 2), open = ref1[0], setOpen = ref1[1];
     var overlayRef = useRef(null);
     useImperativeHandle(props.instanceRef, function() {
         return overlayRef.current;
     }, [
         overlayRef.current
     ]);
-    /** 管理所有展开的项, 值为项的value */ var openSelect = useSelect();
+    /** 管理所有展开的项, 值为项的value */ var openSelect = useSelect({
+        autoUpdate: false,
+        onChange: function(select) {
+            var next = select.isSelected(MAIN_MENU);
+            if (next !== open) {
+                setOpen(next);
+            }
+        }
+    });
     var hasSelected = openSelect.state.selected.length > 0;
     /** 关闭所有 */ var close = useFn(function() {
         if (openSelect.state.selected.length === 0) return;
@@ -56,24 +69,31 @@ export var _Menu = function(props) {
         });
         openSelect.unSelectAll();
     });
+    // props.open主动传入true时, 对其同步
+    useEffect(function() {
+        if (props.open) {
+            openSelect.select(MAIN_MENU);
+        }
+    }, [
+        props.open
+    ]);
     /** 点击区域外关闭 */ useClickAway({
         target: self.targets,
         onTrigger: close
     });
     /** 处理overlay open, sibling用于处理所有兄弟节点的关闭 */ var openChangeHandle = useFn(function(open, val, sibling) {
         var skipSetActive = arguments.length > 3 && arguments[3] !== void 0 ? arguments[3] : false;
-        var ref;
-        (ref = props.onChange) === null || ref === void 0 ? void 0 : ref.call(props, open);
+        var isMain = val === MAIN_MENU;
         if (open) {
             if (isArray(sibling)) {
                 var values = _getOptionAllValues(sibling, props);
                 openSelect.unSelectList(values);
             }
-            if (val !== MAIN_MENU && !skipSetActive) {
+            if (!isMain && !skipSetActive) {
                 self.lastActive = val;
             }
             openSelect.select(val);
-        } else if (val === MAIN_MENU) {
+        } else if (isMain) {
             // 主窗口关闭时关闭全部
             close();
         }
@@ -137,12 +157,13 @@ export var _Menu = function(props) {
             var other = omit(item, [
                 props.labelKey || DEFAULT_LABEL_KEY,
                 props.valueKey || DEFAULT_VALUE_KEY,
-                props.childrenKey || DEFAULT_CHILDREN_KEY, 
+                props.childrenKey || DEFAULT_CHILDREN_KEY,
+                "context", 
             ]);
             var value = getValueByDataSource(item, props);
             var label = getLabelByDataSource(item, props);
             var children = getChildrenByDataSource(item, props);
-            if (!value) return null;
+            if (value === null) return null;
             var open = openSelect.isSelected(value);
             var currentValue = state.current ? getValueByDataSource(state.current, props) : null;
             var isCurrent = currentValue === value;
@@ -196,7 +217,7 @@ export var _Menu = function(props) {
         className: clsx("m78-menu_wrap", props.className),
         autoFocus: true,
         instanceRef: overlayRef,
-        open: openSelect.isSelected(MAIN_MENU),
+        open: open,
         content: /*#__PURE__*/ _jsx("div", {
             role: "menu",
             className: "m78-menu",

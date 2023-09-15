@@ -45,7 +45,8 @@ export var DEFAULT_CHILDREN_KEY = "children";
 /** 从DataSourceItem中获取value, 如果未获取到并且label是字符串时, 使用label作为value, 支持自定义取值的key */ export function getValueByDataSource(item, cus) {
     var valueKey = (cus === null || cus === void 0 ? void 0 : cus.valueKey) || DEFAULT_VALUE_KEY;
     var labelKey = (cus === null || cus === void 0 ? void 0 : cus.labelKey) || DEFAULT_LABEL_KEY;
-    if (isTruthyOrZero(item[valueKey])) return item[valueKey];
+    var v = item[valueKey];
+    if (isTruthyOrZero(v)) return v;
     if (isString(item[labelKey]) || isNumber(item[labelKey])) {
         return item[labelKey];
     }

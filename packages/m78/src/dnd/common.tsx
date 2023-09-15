@@ -50,6 +50,7 @@ export const _defaultDNDStatus: DNDStatus = {
   top: false,
   bottom: false,
   center: false,
+  hasDragging: false,
 };
 
 export const _defaultDNDEnableInfos: DNDEnableInfos = {
@@ -96,6 +97,10 @@ export const _resetEvent =
 /** 通知所有dnd同步位置尺寸信息 */
 export const _updateEvent =
   createEvent<(useThrottle: boolean, groupId?: string) => void>();
+
+/** 用于处理draggingListen, 通知所有dnd更新 */
+export const _draggingEvent =
+  createEvent<(id: string, dragging: boolean, groupId?: string) => void>();
 
 export const _allValueIsTrue = (obj: AnyObject) => {
   return Object.values(obj).every((v) => v === true);
@@ -173,6 +178,7 @@ export const _statusProcess = (
     left: posEnableInfo.left && enables.left,
     right: posEnableInfo.right && enables.right,
     center: posEnableInfo.center && enables.center,
+    hasDragging: false,
   };
 
   status.over =
@@ -249,7 +255,7 @@ export function _filterInBoundDNDs(
   first: boolean,
   xy: TupleNumber
 ) {
-  // 所有被光标命中且进过启用检测的节点
+  // 所有被光标命中经过启用检测的节点
   const inBoundList: _PendingItem[] = [];
 
   for (const [id, dnd] of Object.entries(ctx.group.dndMap)) {

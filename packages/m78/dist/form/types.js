@@ -1,5 +1,5 @@
 import React from "react";
-/** 要剔除的原Config属性 */ export var _omitConfigs = [
+/** 要剔除的form-vanilla配置 */ export var _omitConfigs = [
     "eventCreator",
     "languagePack",
     "extendLanguagePack",
@@ -13,34 +13,18 @@ export var FormLayoutType;
 })(FormLayoutType || (FormLayoutType = {}));
 /** FormProps中的所有key, 用于在分别根据Field/schema/config获取配置时检测是否可安全获取 */ export var _formPropsKeys = [
     "layoutType",
-    "fieldCustomer",
-    "bubbleFeedback",
+    "bubbleDescribe",
     "maxWidth",
     "size",
     "disabled",
     "className",
     "style",
-    "spacePad",
-    "wrapCustomer",
+    "customer",
     "requireMarker",
-    "modifyMarker", 
+    "spacePadding", 
 ];
-/** FormKeyCustomer的所有 key */ export var _formKeyCustomerKeys = [
-    "valueKey",
-    "changeKey",
-    "disabledKey",
-    "sizeKey",
-    "valueGetter",
-    "ignoreBindKeys", 
-];
-/** 作为 list 时, 应从 Filed 或 schema 等剔除的配置 */ export var _lisIgnoreKeys = [
+/** 作为 list 时, 应从 Filed 或 schema 剔除的配置 */ export var _lisIgnoreKeys = [
     "component",
     "componentProps",
-    "fieldCustomer",
-    "valueKey",
-    "changeKey",
-    "disabledKey",
-    "sizeKey",
-    "valueGetter",
-    "ignoreBindKeys", 
+    "adaptor"
 ];

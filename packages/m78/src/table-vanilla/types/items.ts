@@ -51,7 +51,7 @@ export interface TableColumnBranchConfig {
 
 /** 常规列配置项 */
 export interface TableColumnLeafConfig {
-  /** 该列对应的唯一key, 用于获取value或显示的文本, 另外也作为表格变异操作的标识, 从key获取到的值类型必须为字符串或数字 */
+  /** 该列对应的唯一key, 用于获取value或显示的文本 */
   key: NamePath;
   /** 表头文本 */
   label: string;

@@ -58,7 +58,7 @@ export interface TableEvents {
     /** 表格容器尺寸/所在窗口位置变更时, 这对插件作者应该会有用 */
     resize: CustomEvent<ResizeObserverCallback>;
     /**
-     * 内部抛出的一些提示性错误, 比如 "粘贴内容与选中单元格不匹配" 等
+     * 内部抛出的一些提示性错误, 比如 "粘贴内容与选中单元格不匹配" / "不支持粘贴板api" 等
      * - 注意: 某些运行时错误, 比如未正确配置key等会直接crash而不是通过error提示
      * */
     error: CustomEvent<(msg: string) => void>;

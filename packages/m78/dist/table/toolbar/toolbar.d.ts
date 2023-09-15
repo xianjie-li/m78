@@ -1,5 +1,2 @@
-import { _RCTableContext } from "../types.js";
-export declare function _Toolbar({ ctx }: {
-    ctx: _RCTableContext;
-}): JSX.Element;
+export declare function _Toolbar(): JSX.Element;
 //# sourceMappingURL=toolbar.d.ts.map

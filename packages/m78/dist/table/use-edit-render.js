@@ -4,9 +4,12 @@ import { useFn } from "@m78/hooks";
 import React from "react";
 import ReactDom, { flushSync } from "react-dom";
 import { delay } from "@m78/utils";
+import { _useStateAct } from "./state.act.js";
+import { _injector } from "./table.js";
 // 自定义编辑逻辑
-export function _useEditRender(ctx) {
-    var state = ctx.state, self = ctx.self, props = ctx.props;
+export function _useEditRender() {
+    var ref = _injector.useDeps(_useStateAct), state = ref.state, self = ref.self;
+    var props = _injector.useProps();
     // 检测单元格是否可编辑
     var interactiveEnableChecker = useFn(function(cell) {
         if (cell.column.isFake || cell.row.isFake) return false;
@@ -67,16 +70,16 @@ export function _useEditRender(ctx) {
     };
 }
 // 自定义编辑渲染, 组件部分, 用于避免频繁render影响外部作用域
-export function _CustomEditRender(param) {
-    var ctx = param.ctx;
-    var self = ctx.self, state = ctx.state;
-    var ref = _sliced_to_array(React.useState([]), 2), list = ref[0], setList = ref[1];
+export function _CustomEditRender() {
+    var props = _injector.useProps();
+    var ref = _injector.useDeps(_useStateAct), self = ref.self, state = ref.state;
+    var ref1 = _sliced_to_array(React.useState([]), 2), list = ref1[0], setList = ref1[1];
     // 更新渲染列表
     var update = useFn(function() {
         var ls = Object.keys(self.editMap).map(function(key) {
             return self.editMap[key];
         });
-        if (ctx.props.syncRender) {
+        if (props.syncRender) {
             flushSync(function() {
                 setList(ls);
             });

@@ -18,7 +18,6 @@
   border: var(--m78-table-border);
   touch-action: none;
   height: 100%;
-  //overflow: hidden;
 
   &:focus {
     outline: none !important;
@@ -338,7 +337,7 @@
     pointer-events: none;
     position: absolute;
     background-color: var(--m78-color);
-    width: 3px;
+    width: 1.5px;
   }
 
   &_form-cell-changed-mark {
@@ -350,11 +349,8 @@
   }
 
   &_form-edit-status {
-    color: var(--m78-color-second);
     position: absolute;
-    border: 3px solid transparent;
-    border-left-color: currentColor;
-    border-bottom-color: currentColor;
+    height: 1.5px;
   }
 
   &_form-invalid {

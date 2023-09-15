@@ -79,7 +79,9 @@ export function getValueByDataSource(
   const valueKey = cus?.valueKey || DEFAULT_VALUE_KEY;
   const labelKey = cus?.labelKey || DEFAULT_LABEL_KEY;
 
-  if (isTruthyOrZero(item[valueKey])) return item[valueKey];
+  const v = item[valueKey];
+
+  if (isTruthyOrZero(v)) return v;
   if (isString(item[labelKey]) || isNumber(item[labelKey])) {
     return item[labelKey] as ValueType;
   }

@@ -1,6 +1,5 @@
+/// <reference types="react" />
 import { RCTableProps } from "./types.js";
-export declare function _Table(props: RCTableProps): JSX.Element;
-export declare namespace _Table {
-    var displayName: string;
-}
+export declare const _injector: import("../injector/index.js").Injector<RCTableProps>;
+export declare const _Table: import("react").FC<RCTableProps>;
 //# sourceMappingURL=table.d.ts.map

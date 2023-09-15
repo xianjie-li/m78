@@ -14,6 +14,7 @@ import { IconDeleteSweep } from "@m78/icons/icon-delete-sweep.js";
 import { IconDragIndicator } from "@m78/icons/icon-drag-indicator.js";
 import { IconAddCircleOutline } from "@m78/icons/icon-add-circle-outline.js";
 import { FORM_NS, Translation } from "../i18n/index.js";
+import { EMPTY_LIST_NAME } from "./common.js";
 export function _listImpl(ctx) {
     var form = ctx.form;
     form.List = function(props) {
@@ -26,7 +27,7 @@ export function _listImpl(ctx) {
 }
 /** FormListCustomRenderArgs.render核心逻辑实现 */ export function _listRenderImpl(ctx, props) {
     var form = ctx.form;
-    var name = props.name;
+    var _name = props.name, name = _name === void 0 ? EMPTY_LIST_NAME : _name;
     return function(renderCB) {
         if (!isFunction(renderCB)) {
             throwError("Form: List args.render must passed a function as argument.");
@@ -55,7 +56,7 @@ export function _listImpl(ctx) {
         });
     };
 }
-/** 实现内置list布局 */ export function _listLayoutRenderImpl(ctx, filedCtx, methods, schema) {
+/** 实现内置list布局 */ export function _listLayoutRenderImpl(filedCtx, methods, schema) {
     var group = "".concat(filedCtx.id, "-").concat(filedCtx.strName);
     return function(args, render) {
         return /*#__PURE__*/ _jsxs("div", {
@@ -71,6 +72,7 @@ export function _listImpl(ctx) {
                             top: true,
                             bottom: true
                         },
+                        draggingListen: true,
                         onSourceAccept: function(param) {
                             var source = param.source, target = param.target, status = param.status;
                             var sIndex = source.data;
@@ -88,7 +90,7 @@ export function _listImpl(ctx) {
                             var _obj;
                             return /*#__PURE__*/ _jsxs(Row, {
                                 innerRef: ref,
-                                className: clsx("m78-form_list-item", (_obj = {}, _define_property(_obj, "__d-top", status.top), _define_property(_obj, "__d-bottom", status.bottom), _define_property(_obj, "__dragging", status.dragging), _obj)),
+                                className: clsx("m78-form_list-item", (_obj = {}, _define_property(_obj, "__d-top", status.top), _define_property(_obj, "__d-bottom", status.bottom), _define_property(_obj, "__dragging", status.dragging), _define_property(_obj, "__has-dragging", status.hasDragging), _obj)),
                                 children: [
                                     node,
                                     /*#__PURE__*/ _jsxs("div", {
@@ -134,6 +136,7 @@ export function _listImpl(ctx) {
                     });
                 }),
                 /*#__PURE__*/ _jsx("div", {
+                    className: "m78-form_list-actions",
                     children: /*#__PURE__*/ _jsxs(Button, {
                         disabled: args.getProps("disabled"),
                         onClick: function() {

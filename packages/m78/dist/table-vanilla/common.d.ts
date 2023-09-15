@@ -19,6 +19,7 @@ export declare const tableDefaultTexts: {
     readonly editable: "Editable";
     readonly "editable and required": "Editable (required)";
     readonly "currently not editable": "Currently not editable";
+    readonly clipboardWarning: "Can't get clipboard data, bowser not support or does not have permissions.";
 };
 /** 解析rowKey##columnKey格式的字符串为[rowKey, columnKey], 数组长度为2表示解析正常 */
 export declare function _getCellKeysByStr(s?: string): string[];

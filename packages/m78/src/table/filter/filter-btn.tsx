@@ -17,6 +17,7 @@ import { Trigger, TriggerEvent, TriggerType } from "../../trigger/index.js";
 import { _useStateAct } from "../state.act.js";
 import { _injector } from "../table.js";
 import { InjectType } from "../../injector/index.js";
+import { _useMethodsAct } from "../methods.act.js";
 
 /** 工具栏查询按钮 */
 export function _renderToolBarQueryBtn(
@@ -118,6 +119,8 @@ export function _ToolbarCommonFilter() {
     }
   });
 
+  if (!props.commonFilter) return null;
+
   return (
     <_FilterBtnCommon render={props.commonFilter} isToolbar={true}>
       {({ state, setState, renderContent }) => (
@@ -170,6 +173,7 @@ export const _FilterBtnCommon = ({
   }) => React.ReactElement;
 }) => {
   const actState = _injector.useDeps(_useStateAct);
+  const methods = _injector.useDeps(_useMethodsAct);
 
   const self = useSelf({
     // 检测子级field
@@ -183,7 +187,7 @@ export const _FilterBtnCommon = ({
   });
 
   useEffect(() => {
-    actState.state.instance.isActive(!state.open);
+    methods.overlayStackChange(state.open);
   }, [state.open]);
 
   if (!render) return null;

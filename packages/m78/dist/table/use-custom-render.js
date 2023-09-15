@@ -5,9 +5,12 @@ import { isTruthyOrZero } from "@m78/utils";
 import { useFn } from "@m78/hooks";
 import ReactDom, { flushSync } from "react-dom";
 import { _FilterBtn } from "./filter/filter-btn.js";
+import { _useStateAct } from "./state.act.js";
+import { _injector } from "./table.js";
 // 自定义渲染
-export function _useCustomRender(ctx) {
-    var props = ctx.props, self = ctx.self, state = ctx.state;
+export function _useCustomRender() {
+    var ref = _injector.useDeps(_useStateAct), state = ref.state, self = ref.self;
+    var props = _injector.useProps();
     // mountChange触发时, 清理renderMap中已卸载的单元格
     useEffect(function() {
         if (!state.instance) return;
@@ -36,7 +39,6 @@ export function _useCustomRender(ctx) {
                     /*#__PURE__*/ _jsx("span", {
                         className: "m78-table_header-icons",
                         children: /*#__PURE__*/ _jsx(_FilterBtn, {
-                            ctx: ctx,
                             cell: cell
                         })
                     })
@@ -78,16 +80,16 @@ export function _useCustomRender(ctx) {
     };
 }
 // 自定义渲染, 组件部分, 用于避免频繁render影响外部作用域
-export function _CustomRender(param) {
-    var ctx = param.ctx;
-    var state = ctx.state, self = ctx.self;
-    var ref = _sliced_to_array(React.useState([]), 2), list = ref[0], setList = ref[1];
+export function _CustomRender() {
+    var props = _injector.useProps();
+    var ref = _injector.useDeps(_useStateAct), state = ref.state, self = ref.self;
+    var ref1 = _sliced_to_array(React.useState([]), 2), list = ref1[0], setList = ref1[1];
     // 更新渲染列表
     var update = useFn(function() {
         var ls = Object.keys(self.renderMap).map(function(key) {
             return self.renderMap[key];
         });
-        if (ctx.props.syncRender) {
+        if (props.syncRender) {
             flushSync(function() {
                 setList(ls);
             });

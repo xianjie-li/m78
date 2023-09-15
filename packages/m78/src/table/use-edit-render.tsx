@@ -16,6 +16,8 @@ export function _useEditRender() {
   const { state, self } = _injector.useDeps(_useStateAct);
   const props = _injector.useProps();
 
+  // 先根据schema配置生成一个enableMap, 用于检测单元格是否可编辑, 对于嵌套项, 递归生成字符串
+
   // 检测单元格是否可编辑
   const interactiveEnableChecker = useFn((cell: TableCell) => {
     if (cell.column.isFake || cell.row.isFake) return false;
@@ -29,21 +31,24 @@ export function _useEditRender() {
       value,
       done,
       node,
+      form,
     }: TableInteractiveRenderArg): TableInteractiveDone => {
       const editRender = cell.column.config.editRender!;
 
       let time = 0;
       let val = value;
 
+      console.log(form.getSchema(cell.column.config.originalKey));
+
       const arg: RCTableEditRenderArg = {
         cell,
         table: state.instance,
         context: props.context || {},
         value,
-        form: {} as any,
         change: (_val) => {
           val = _val;
         },
+        form,
         submit: () => done(),
         cancel: () => done(false),
         delayClose: (t) => {
@@ -87,8 +92,6 @@ export function _useEditRender() {
     interactiveRender,
   };
 }
-
-export type _UseEditRender = ReturnType<typeof _useEditRender>;
 
 // 自定义编辑渲染, 组件部分, 用于避免频繁render影响外部作用域
 export function _CustomEditRender() {

@@ -4,57 +4,72 @@ import { english } from "@m78/verify";
 import { tableDefaultTexts } from "../../table-vanilla/index.js";
 export default {
     common: {
-        submit: "submit",
-        confirm: "confirm",
-        cancel: "cancel",
-        loading: "loading",
-        empty: "no data"
+        submit: "Submit",
+        confirm: "Confirm",
+        cancel: "Cancel",
+        loading: "Loading",
+        empty: "No data",
+        alert: "Alert",
+        yes: "yes",
+        no: "no",
+        "confirm operation": "Confirm to do the operation?",
+        "confirm delete": "Are you sure to delete?"
     },
     input: {
         "word count": " chars"
     },
     button: {
-        test: "test something"
+        test: "Test something"
     },
     dialog: {
-        "default title": "note"
+        "default title": "Note"
     },
     fork: {
-        error: "request exception",
-        timeout: "request timeout",
-        reload: "reload",
-        "retry tip": "please try again later",
-        "retry tip with button": "please try again later or "
+        error: "Request exception",
+        timeout: "Request timeout",
+        reload: "Reload",
+        "retry tip": "Please try again later",
+        "retry tip with button": "Please try again later or "
     },
     formLangPack: english,
     form: {
-        "delete current item": "delete current item",
-        "drag sort": "drag sort",
-        "add item": "add item",
-        submit: "submit",
-        reset: "reset"
+        "delete current item": "Delete current item",
+        "drag sort": "Drag sort",
+        "add item": "Add item",
+        submit: "Submit",
+        reset: "Reset"
     },
     table: _object_spread_props(_object_spread({}, tableDefaultTexts), {
         // react version
         count: "{{count}} rows / {{selectedCount}} selected",
-        query: "query",
-        reset: "reset",
-        "reset filter": "reset filter condition",
-        "common filter": "common filter",
-        redo: "redo",
-        undo: "undo",
-        "export xlsx": "export as xlsx file",
-        "u can also": "you can also",
+        query: "Query",
+        reset: "Reset",
+        "reset filter": "Reset filter condition",
+        "common filter": "Common filter",
+        redo: "Redo",
+        undo: "Undo",
+        "export xlsx": "Export as xlsx file",
+        "u can also": "You can also",
         "export specific": "export specific columns",
-        import: "import data from xlsx file",
+        import: "Import data from xlsx file",
         "download import tpl": "download import template",
-        "delete selected rows": "delete selected rows",
-        "add row tip1": "add a new row",
-        "add row tip2": "when a row is selected, insert above the selected row",
-        "new tip": "new",
-        "delete tip": "delete",
-        "update tip": "update",
-        "add row btn": "new",
-        "save btn": "save"
+        "delete selected rows": "Delete selected rows",
+        "add row tip1": "Add a new row",
+        "new tip": "New",
+        "delete tip": "Delete",
+        "update tip": "Update",
+        "conf tip": "Config changed",
+        "sorted tip": "Sorted",
+        "add row btn": "New",
+        "save btn": "Save",
+        "copy cell": "Copy",
+        "paste cell": "Paste",
+        "copy cells": "Copy selected cells",
+        "paste cells": "Paste to selected cells",
+        "insert top": "Insert row to top",
+        "insert bottom": "Insert row to bottom",
+        "delete row": "Delete row",
+        "delete rows": "Delete selected rows",
+        "edit by dialog": "Edit row in dialog"
     })
 };

@@ -127,8 +127,8 @@ export interface TableMutation {
     setPersistenceConfig(key: NamePath, newValue: any, actionName?: string): void;
     /**
      * 新增记录
-     * @param data - 新增的数据
-     * @param to - 新增到的位置, 该位置的原有项后移; 不传时, 新增到表格顶部; key不能为固定项, 若传入固定项, 会根据固定位置添加到常规项的开头/结尾
+     * @param data - 新增的数据, 若数据不包含primaryKey, 会为其分配一个随机的key
+     * @param to - 新增到的位置, 该位置的原有项后移; 不传时, 新增到表格顶部; to不能为固定行或表头
      * @param insertAfter - 为true时数据将移动到指定key的后方 */
     addRow(data: any | any[], to?: TableKey, insertAfter?: boolean): void;
     /** 移除指定的记录 */

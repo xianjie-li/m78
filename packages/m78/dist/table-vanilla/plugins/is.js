@@ -1,5 +1,7 @@
 import _class_call_check from "@swc/helpers/src/_class_call_check.mjs";
 import _inherits from "@swc/helpers/src/_inherits.mjs";
+import _object_spread from "@swc/helpers/src/_object_spread.mjs";
+import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
 import _create_super from "@swc/helpers/src/_create_super.mjs";
 import { TablePlugin } from "../plugin.js";
 import debounce from "lodash/debounce.js";
@@ -43,6 +45,15 @@ export var _TableIsPlugin = /*#__PURE__*/ function(TablePlugin) {
                     y = touchEvent.touches[0].clientY;
                 }
                 var rect = el.getBoundingClientRect();
+                if (_this.config.extraActiveCheckEl) {
+                    var _rect = _this.config.extraActiveCheckEl.getBoundingClientRect();
+                    rect = _object_spread_props(_object_spread({}, rect), {
+                        left: Math.min(rect.left, _rect.left),
+                        top: Math.min(rect.top, _rect.top),
+                        right: Math.max(rect.right, _rect.right),
+                        bottom: Math.max(rect.bottom, _rect.bottom)
+                    });
+                }
                 active = x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
             }
             if (active === _this._isActive) return;
@@ -166,16 +177,24 @@ export var _TableIsPlugin = /*#__PURE__*/ function(TablePlugin) {
         document.documentElement.addEventListener("mousedown", this.onIsActiveCheck);
         document.documentElement.addEventListener("touchstart", this.onIsActiveCheck);
         this.config.el.addEventListener("mouseenter", this.onIsActiveCheck);
-        this.context.viewEl.addEventListener("scroll", this.onActive);
         this.config.el.addEventListener("focus", this.onActive);
+        if (this.config.extraActiveCheckEl) {
+            this.config.extraActiveCheckEl.addEventListener("mouseenter", this.onIsActiveCheck);
+            this.config.extraActiveCheckEl.addEventListener("focus", this.onActive);
+        }
+        this.context.viewEl.addEventListener("scroll", this.onActive);
         window.addEventListener("blur", this.onWindowBlur);
     };
     _proto.activeEventUnBind = function activeEventUnBind() {
         document.documentElement.removeEventListener("mousedown", this.onIsActiveCheck);
         document.documentElement.removeEventListener("touchstart", this.onIsActiveCheck);
         this.config.el.removeEventListener("mouseenter", this.onIsActiveCheck);
-        this.context.viewEl.removeEventListener("scroll", this.onActive);
         this.config.el.removeEventListener("focus", this.onActive);
+        if (this.config.extraActiveCheckEl) {
+            this.config.extraActiveCheckEl.removeEventListener("mouseenter", this.onIsActiveCheck);
+            this.config.extraActiveCheckEl.removeEventListener("focus", this.onActive);
+        }
+        this.context.viewEl.removeEventListener("scroll", this.onActive);
         window.removeEventListener("blur", this.onWindowBlur);
     };
     return _TableIsPlugin;

@@ -6,19 +6,21 @@ import React from "react";
 import { EmptyFunction, TupleNumber } from "@m78/utils";
 import { TriggerProps, TriggerType } from "../trigger/index.js";
 /** 应从Overlay中移除的props */
-export declare const omitMenuOverlayProps: readonly ["xy", "alignment", "target", "childrenAsTarget", "content", "children", "triggerNodeRef", "open", "defaultOpen", "autoFocus"];
+export declare const omitMenuOverlayProps: readonly ["xy", "alignment", "target", "childrenAsTarget", "content", "children", "triggerNodeRef", "autoFocus"];
 /** 应从Overlay中移除的props */
 export declare type MenuOmitOverlayKeys = typeof omitMenuOverlayProps[number];
 export declare type MenuOmitOverlayProps = Omit<OverlayProps, MenuOmitOverlayKeys>;
 export interface MenuOption extends DataSourceItem<MenuOption>, Omit<LayProps, "children" | "title" | "size" | "onClick" | "innerRef"> {
-    /** 完全自定义项的渲染内容, 节点需要声明唯一key */
+    /** 完全自定义项的渲染内容, 需要为渲染内容传入一个唯一key */
     customer?: React.ReactNode | ((close: EmptyFunction) => React.ReactElement);
+    /** 可在此传递与该选项关联的额外信息, 并在事件回调中访问 */
+    context?: any;
 }
 export interface MenuProps extends MenuOmitOverlayProps, DataSourceItemCustom {
     /** 菜单选项, 所有选项必须有一个唯一的value */
     options: MenuOption[];
-    /** 子级, 需遵循useTrigger子级规则 */
-    children: TriggerProps["children"];
+    /** 子级, 需遵循Overlay子级规则 */
+    children?: TriggerProps["children"];
     /** 点击选中某项后触发 */
     onConfirm?: (val: ValueType, option: MenuOption) => void;
     /**

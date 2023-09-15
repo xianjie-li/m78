@@ -10,6 +10,7 @@ import { TableIs } from "../plugins/is.js";
 import { TableSetter } from "../plugins/setter.js";
 import { TableConfigInstance } from "../plugins/config.js";
 import { TableForm } from "../plugins/form.js";
+import { TableKeyboardInteraction } from "../plugins/keyboard-interaction.js";
 
 /** table实例 */
 export interface TableInstance
@@ -24,4 +25,5 @@ export interface TableInstance
     TableSetter,
     TableIs,
     TableConfigInstance,
-    TableForm {}
+    TableForm,
+    TableKeyboardInteraction {}

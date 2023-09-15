@@ -12,7 +12,6 @@ title: useSelect
 
 <demo demo={require("./use-select.demo.tsx")} code={require("!!raw-loader!./use-select.demo.tsx")}></demo>
 
-
 ## API
 
 **概览:**
@@ -31,8 +30,7 @@ title: useSelect
 
 <br/>
 
-
-**关联API**
+**关联 API**
 
 ```ts
 /** 可用的选中值类型 */
@@ -48,6 +46,14 @@ export interface SelectManagerOption<Item = SelectManagerValue> {
    * - 必须是字符串或数值
    * */
   valueMapper?: string | ((i: Item) => SelectManagerValue);
+}
+
+/** useSelect 特有的配置 */
+export interface UseSelectOption {
+  /** true | 选中状态变更时, 自动重绘 */
+  autoUpdate?: boolean;
+  /** 选中状态变更时触发 */
+  onChange?: (select: SelectManager) => void;
 }
 
 /** 选中状态 */

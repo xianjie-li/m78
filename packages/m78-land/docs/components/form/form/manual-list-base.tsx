@@ -68,19 +68,25 @@ const ManualBase = () => {
         )}
       />
 
-      <div style={{ paddingLeft: "5em", marginLeft: 8 }}>
-        <Button onClick={form.reset}>重置</Button>
-        <Button
-          color={ButtonColor.primary}
-          onClick={() => {
-            form.submit().catch((err) => {
-              console.log(err?.rejects);
-            });
-          }}
-        >
-          提交
-        </Button>
-      </div>
+      {/* 这里使用Field作为布局组件排版按钮 */}
+      <form.Field
+        label=" "
+        component={() => (
+          <>
+            <Button onClick={form.reset}>重置</Button>
+            <Button
+              color={ButtonColor.primary}
+              onClick={() => {
+                form.submit().catch((err) => {
+                  console.log(err?.rejects);
+                });
+              }}
+            >
+              提交
+            </Button>
+          </>
+        )}
+      />
     </div>
   );
 };

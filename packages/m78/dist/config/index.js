@@ -10,7 +10,8 @@ var m78Config = createSeed({
     state: {
         darkMode: false,
         empty: {},
-        picture: {}
+        picture: {},
+        formAdaptors: []
     }
 });
 /**

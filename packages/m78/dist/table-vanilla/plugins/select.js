@@ -30,7 +30,7 @@ import { _TableDisablePlugin } from "./disable.js";
         /** 记录最后一次的非shift down点 */ _this.lastPoint = null;
         /** 开始拖动之前的滚动位置, 用于自动滚动后修正框选区域 */ _this.autoScrollBeforePosition = null;
         /** 派发drag到start/move/end */ _this.dragDispatch = function(e) {
-            if (e.first) {
+            if (e.first || e.tap) {
                 _this.selectStart(e);
                 return;
             }
@@ -63,7 +63,7 @@ import { _TableDisablePlugin } from "./disable.js";
                 ].concat(_to_consumable_array(_this.lastPoint))), 2), p1 = ref[0], p2 = ref[1], ref;
             }
             var isTouchEvent = isTouch(e.event);
-            var valid = _this.selectByPoint(p1, p2, function(items) {
+            var ref1 = _sliced_to_array(_this.selectByPoint(p1, p2, function(items) {
                 var first = items.cells[0];
                 if (!first) return false;
                 // 行头&列头格用于实现行全选行, 跳过框选
@@ -76,8 +76,7 @@ import { _TableDisablePlugin } from "./disable.js";
                     return false;
                 }
                 if (_this.disablePlugin.isDisabledCell(first.key)) return false;
-                // 启用了dragSortRow时, 需要禁止在已选中行上重新触发选中
-                if (first.column.isHeader && _this.config.dragSortRow && _this.isSelectedRow(first.row.key)) {
+                if (!e.tap && first.column.isHeader && _this.config.dragSortRow && _this.isSelectedRow(first.row.key)) {
                     return false;
                 }
                 // 未按下控制键则清空已选中项
@@ -85,21 +84,25 @@ import { _TableDisablePlugin } from "./disable.js";
                     _this.clearSelected();
                 }
                 return true;
-            });
+            }), 1), valid = ref1[0];
             // 没有有效选中项时不进行后续操作
             if (valid) {
-                _this.startPoint = startPoint;
-                _this.autoScrollBeforePosition = [
-                    _this.table.getX(),
-                    _this.table.getY()
-                ];
                 if (!_this.isShift) {
                     _this.lastPoint = [
                         p1,
                         p2
                     ];
                 }
-                _this.table.event.selectStart.emit();
+                _this.startPoint = startPoint;
+                _this.autoScrollBeforePosition = [
+                    _this.table.getX(),
+                    _this.table.getY()
+                ];
+                if (e.tap) {
+                    _this.selectEnd();
+                } else {
+                    _this.table.event.selectStart.emit();
+                }
             }
         };
         /** 选取已开始, 并开始移动 */ _this.selectMove = throttle(function(e) {
@@ -282,7 +285,10 @@ import { _TableDisablePlugin } from "./disable.js";
             var items = _this.table.getAreaBound(p1, p2);
             if (interceptor) {
                 var res = interceptor(items);
-                if (!res) return false;
+                if (!res) return [
+                    false,
+                    items
+                ];
             }
             _this.clearTempSelected();
             // 框选中不能重置大小
@@ -302,7 +308,10 @@ import { _TableDisablePlugin } from "./disable.js";
                 _this.setSelected(i, _this.selectedTempCells);
             });
             hasSelected && _this.table.render();
-            return hasSelected;
+            return [
+                hasSelected,
+                items
+            ];
         };
         /** 更新自动滚动判定点 */ _this.updateAutoScrollBound = function() {
             _this.autoScroll.updateConfig({
@@ -322,7 +331,9 @@ import { _TableDisablePlugin } from "./disable.js";
             "selectRows",
             "selectCells",
             "isRowSelectable",
-            "isCellSelectable", 
+            "isCellSelectable",
+            "unselectRows",
+            "unselectCells", 
         ]);
     };
     _proto.init = function init() {
@@ -332,7 +343,7 @@ import { _TableDisablePlugin } from "./disable.js";
         var _this = this;
         this.table.event.click.on(this.clickHandle);
         this.drag = new DragGesture(this.config.el, this.dragDispatch, {
-            // filterTaps: true,
+            filterTaps: true,
             pointer: {
                 // https://github.com/pmndrs/use-gesture/issues/611
                 capture: false
@@ -382,6 +393,28 @@ import { _TableDisablePlugin } from "./disable.js";
     _proto.cellRender = function cellRender(cell) {
         var selected = this.isSelectedCell(cell.key) || this.isSelectedTempCell(cell.key) || this.isSelectedRow(cell.row.key) || this.isSelectedTempRow(cell.row.key);
         selected ? addCls(cell.dom, "__selected") : removeCls(cell.dom, "__selected");
+    };
+    _proto.unselectRows = function unselectRows(rowKeys) {
+        var _this = this;
+        rowKeys = ensureArray(rowKeys);
+        rowKeys.forEach(function(key) {
+            delete _this.selectedRows[key];
+            delete _this.selectedTempRows[key];
+        });
+        this.table.render();
+        this.table.event.rowSelect.emit();
+        this.table.event.select.emit();
+    };
+    _proto.unselectCells = function unselectCells(cellKeys) {
+        var _this = this;
+        cellKeys = ensureArray(cellKeys);
+        cellKeys.forEach(function(key) {
+            delete _this.selectedCells[key];
+            delete _this.selectedTempCells[key];
+        });
+        this.table.render();
+        this.table.event.cellSelect.emit();
+        this.table.event.select.emit();
     };
     /**
    * 向selected map中设置行选中, item可以是cell/row的key或实例, 所有设置操作统一在此进行, 方便进行禁用等行为的拦截

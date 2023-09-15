@@ -14,9 +14,11 @@ export function _useLifeCycle(ctx) {
             updateAlignment: methods.updateAlignment,
             updateTarget: methods.updateTarget,
             update: methods.update,
-            trigger: methods.onTriggerMultiple
+            trigger: methods.onTriggerMultiple,
+            setOpen: setOpen
         };
     }, []);
+    instance.open = open;
     /** 暴露实例 */ useImperativeHandle(props.instanceRef, function() {
         return instance;
     }, []);

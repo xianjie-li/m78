@@ -38,16 +38,16 @@ const form = createForm({
 });
 
 const SchemaNestBase = () => {
-  form.events.submit.useEvent(() => {
-    Dialog.render({
-      title: "表单数据",
-      content: <pre>{JSON.stringify(form.getValues(), null, 2)}</pre>,
-    });
-  });
-
   return (
     <div className="ptb-32">
-      <form.SchemaRender />
+      <form.SchemaRender
+        onSubmit={(values) => {
+          Dialog.render({
+            title: "表单数据",
+            content: <pre>{JSON.stringify(values, null, 2)}</pre>,
+          });
+        }}
+      />
     </div>
   );
 };

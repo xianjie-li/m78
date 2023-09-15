@@ -4,11 +4,13 @@ import { _UseMethodReturns } from "./use-methods.js";
 import {
   _defaultDNDEnableInfos,
   _defaultDNDStatus,
+  _draggingEvent,
   _resetEvent,
   _updateEvent,
 } from "./common.js";
 import { useEffect } from "react";
 import { useDestroy } from "@m78/hooks";
+import { isTruthyOrZero } from "@m78/utils";
 
 export function _useLifeCycle(ctx: _Context, methods: _UseMethodReturns) {
   const { state, setState, dragNodeRef, handleRef } = ctx;
@@ -44,16 +46,30 @@ export function _useLifeCycle(ctx: _Context, methods: _UseMethodReturns) {
 
     // 状态有变时进行更新
     if (!state.status.regular || (!skipEnableReset && !state.enables.enable)) {
-      const state: any = {
-        status: { ..._defaultDNDStatus },
+      const st: any = {
+        status: { ..._defaultDNDStatus, hasDragging: state.status.hasDragging }, // hasDragging不需要重置, drag结束后会独立清理
       };
 
       if (!skipEnableReset) {
-        state.enables = { ..._defaultDNDEnableInfos };
+        st.enables = { ..._defaultDNDEnableInfos };
       }
 
-      setState(state);
+      setState(st);
     }
+  });
+
+  /** 处理draggingListen */
+  _draggingEvent.useEvent((id, dragging, groupId) => {
+    if (!ctx.props.draggingListen) return;
+    if (isTruthyOrZero(groupId) && groupId !== ctx.props.group) return;
+    if (id === ctx.id) return;
+
+    setState({
+      status: {
+        ...state.status,
+        hasDragging: dragging,
+      },
+    });
   });
 
   useDestroy(() => {

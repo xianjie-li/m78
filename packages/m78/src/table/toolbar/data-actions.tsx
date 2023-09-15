@@ -1,4 +1,4 @@
-import { TABLE_NS, Translation } from "../../i18n/index.js";
+import { COMMON_NS, TABLE_NS, Translation } from "../../i18n/index.js";
 import { Bubble, BubbleType } from "../../bubble/index.js";
 import { Button, ButtonColor } from "../../button/index.js";
 import { Size } from "../../common/index.js";
@@ -9,27 +9,19 @@ import { _injector } from "../table.js";
 import { _useStateAct } from "../state.act.js";
 import { TableMutationType } from "../../table-vanilla/plugins/mutation.js";
 import { IconAddToPhotos } from "@m78/icons/icon-add-to-photos.js";
-import { createRandString, isFunction } from "@m78/utils";
 import { IconDeleteForever } from "@m78/icons/icon-delete-forever.js";
 import { Trigger, TriggerEvent, TriggerType } from "../../trigger/index.js";
 import { OverlayInstance } from "../../overlay/index.js";
+import { _useMethodsAct } from "../methods.act.js";
+import { isEmpty } from "@m78/utils";
 
 export function _AddBtn() {
-  const props = _injector.useProps();
   const { state } = _injector.useDeps(_useStateAct);
+  const methods = _injector.useDeps(_useMethodsAct);
   const { instance } = state;
 
   const add = useFn(() => {
-    let def = props.defaultNewData;
-
-    if (isFunction(def)) {
-      def = def();
-    }
-
-    instance.addRow({
-      ...def,
-      [props.primaryKey]: createRandString(),
-    });
+    instance.addRow(methods.getDefaultNewData());
   });
 
   return (
@@ -46,17 +38,31 @@ export function _AddBtn() {
 
 export function _SaveBtn() {
   const stateDep = _injector.useDeps(_useStateAct);
+  const props = _injector.useProps();
   const { instance } = stateDep.state;
 
   const [state, setState] = useSetState({
     newCount: 0,
     removeCount: 0,
     updateCount: 0,
+    configChanged: false,
+    sorted: false,
     changed: false,
   });
 
   instance.event.mutation.useEvent((e) => {
-    if (e.type === TableMutationType.data) {
+    if (
+      e.type === TableMutationType.config ||
+      e.type === TableMutationType.data
+    ) {
+      setState({
+        changed: instance.getTableChanged(),
+      });
+    }
+  });
+
+  instance.event.interactiveChange.useEvent((cell, show, isSubmit) => {
+    if (isSubmit) {
       setState({
         changed: instance.getTableChanged(),
       });
@@ -70,8 +76,36 @@ export function _SaveBtn() {
       newCount: data.add.length,
       removeCount: data.remove.length,
       updateCount: data.change.length,
+      sorted: data.sorted,
+      configChanged: instance.getChangedConfigKeys().length > 0,
     });
   }
+
+  const commonNSOpt = {
+    ns: COMMON_NS,
+  };
+
+  const submit = useFn(() => {
+    if (!state.changed || !props.onSubmit) return;
+
+    const d: any = {};
+
+    const data = instance.getData();
+    const changedKeys = instance.getChangedConfigKeys();
+
+    if (data.update.length || data.sorted || data.remove.length) {
+      d.data = data;
+    }
+
+    if (changedKeys.length) {
+      d.config = instance.getPersistenceConfig();
+      d.changedConfigKeys = changedKeys;
+    }
+
+    if (isEmpty(d)) return;
+
+    props.onSubmit(d);
+  });
 
   return (
     <Translation ns={TABLE_NS}>
@@ -86,13 +120,38 @@ export function _SaveBtn() {
               <span className="color-red bold mr-8">{state.removeCount}</span>
               {t("update tip")}:{" "}
               <span className="color-blue bold">{state.updateCount}</span>
+              {(state.configChanged || state.sorted) && (
+                <div className="mt-4">
+                  {state.configChanged && (
+                    <span className="mr-8">
+                      {t("conf tip")}:{" "}
+                      <span className="color-blue bold">
+                        {t("yes", commonNSOpt)}
+                      </span>
+                    </span>
+                  )}
+                  {state.sorted && (
+                    <span>
+                      {t("sorted tip")}:{" "}
+                      <span className="color-blue bold">
+                        {t("yes", commonNSOpt)}
+                      </span>
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
           }
           onChange={(open) => {
             if (open) updateCount();
           }}
         >
-          <Button size={Size.small} color={ButtonColor.primary}>
+          <Button
+            size={Size.small}
+            color={ButtonColor.primary}
+            disabled={!state.changed}
+            onClick={submit}
+          >
             <IconSave />
             {t("save btn")}
           </Button>

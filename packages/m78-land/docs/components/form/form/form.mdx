@@ -2,16 +2,21 @@
 title: Form - 表单
 ---
 
-- `Form` 包用于实现表单功能, 注重于简化表单中难以处理的部分, 如: 值收集/验证/联动/动态表单等
-- 表单构建围绕一个`schema`配置进行, 可以手动渲染也可以通过`schema`配置自动生成表单, 此外, `schema` 模式的另一个好处是, 你可以在 `node` 服务端复用你的校验代码!
-- 允许最大程度的对表单的布局和排版进行定制, 因为实际场景中的表单布局往往是复杂多样的, 比如查询条/多列/表格内编辑等
+实现表单功能, 注重于简化表单中难以处理的部分, 如: 值收集/验证/联动/动态表单等
+
+<br />
+
+核心:
+
+- `Form` 构建围绕一个`schema`配置进行, 可以手动渲染也可以通过`schema`配置按预设样式渲染表单, 使用 `schema` 配置的另一个好处是, 你可以在 `node` 服务端复用你的代码进行校验.
+- 允许高度的布局和排版定制, 因为实际场景中的表单布局往往是复杂多样的, 比如查询条/多列/表格单元格编辑等.
 
 ## 基本使用
 
-`Form` 包含了两种不同的使用方式:
+`Form` 有两种不同的使用方式:
 
-- 一种是手动渲染 `Field` 组件，类似于其他表单库的使用方式。
-- 另一种是通过 `schema` 配置直接生成表单布局。
+- 如果你对样式有较强的定制医院, 可以手动渲染 `Field` 组件.
+- 另一种是通过 `schema` 配置直接生成表单布局.
 
 前者更灵活可控，后者更方便，可以根据实际场景决定选用哪种方式。
 
@@ -31,72 +36,135 @@ title: Form - 表单
   code={require("!!raw-loader!./manual-base.tsx")}
 ></demo>
 
-### "表单控件"
+## 表单控件
 
-在 `Form` 中, 实现了 `value/onChange(newValue)` 的组件被称为表单控件, `m78`中的所有表单控件均符合此接口, 社区中的大部分表单控件也采用这种格式:
+### 通用表单控件接口
+
+实现了 `value/onChange(newValue)` 的组件被称为通用表单控件, m78 中的所有表单控件均符合此接口, react 生态中的大部分表单控件也采用这种接口:
 
 ```tsx
 <Input value={value} onChange={(newValue) => {}} />
 ```
 
-对于这样的标准控件, 我们可以直接在`schema`配置中使用, 或是传递给 `Field` 组件
+对于这样的标准控件, 我们可以直接在 `schema` 或 `Field` 中使用:
 
 ```tsx
 // schema
-import {Input} from "./index.js"; {
+const schemasItem = {
   name: "name",
   component: <Input />,
 }
 
 // 手动渲染时, 作为子级传递给Filed
-<Field name="name">
-  <Input />
-</Field>
+<Field name="name" component={<Input />} />
 ```
 
-对于非标准控件, 可以通过 `valueKey/changeKey/valueGetter` 等配置来适配.
+### 控件适配器
+
+当现有表单控件不能满足默认的接口要求时, 就需要我们编写适配器对其进行适配了, 适配器是一个接收 `FormCustomRenderBasicArgs` 并对表单控件 props 进行绑定的函数.
+
+例如, 我们要为原生的 `input` 节点编写一个适配器:
 
 ```tsx
-{
-  /** value |  用于受控绑定表单的props */
-  valueKey?: string;
-  /** onChange | 值变更的回调 */
-  changeKey?: string;
-  /** 默认取值方式为onChange(value), 可通过此项进行定制 */
-  valueGetter?: (...value: any) => any;
-}
+// bind提供了一些列需要绑定到表单控件上的prop, binder用于给指定react节点绑定props, element为component中配置的组件
+const inputAdapter: FormAdaptor = ({ bind, binder, element }) =>
+  binder(element, {
+    ...element.props,
+    value: bind.value,
+    onChange: (e) => bind.onChange(e.target.value),
+    disabled: bind.disabled, // disabled绑定是可选的, 在表单控件支持时可进行绑定, 另一个类似的是bind.size
+  });
 ```
 
-另外, schema 配置还可通过`fieldCustomer`来进行自定义绑定, 这个配置也用于对布局进行定制
+编写好适配器后, 我们可以有多种方式使用它:
+
+- `schema/Field` 级别的临时适配
+- 在创建 `Form` 实例时通过`adaptors`进行表单级别的适配器注册.
+- 通过 `m78Config` 全局注册适配器.
+
+<br />
+
+**局部**
+
+在 schema 配置中临时使用适配器
 
 ```tsx
-// schema
-{
-  name: "name",
-  fieldCustomer: ({ bind }) => (
-    <div className="custom-wrap">
-      {/* value是符合标准的, 所以不需要定制 */}
-      <input {...bind} onChange={e => bind.onChange(e.target.value)} />
-    </div>
-  )
-}
-
-// Filed组件也可以使用render children实现完全相同的功能
-<Field name="name">
-  {({ bind }) => (
-    <div className="custom-wrap">
-      {/* value是符合标准的, 所以不需要定制 */}
-      <input {...bind} onChange={e => bind.onChange(e.target.value)} />
-    </div>
-  )}
-</Field>
+const schemaItem = {
+  component: <input />,
+  adaptor: inputAdapter,
+};
 ```
 
-你还可以在创建`form`实例时预先注册表单组件, 并在这个时候对表单控件进行标准化配置, 具体可参考下方的 [预注册组件](/docs/components/form/form/#预注册组件)
+或是在 Field 中临时使用适配器
+
+```tsx
+<Field component={<input />} adaptor={inputAdapter} />
+```
+
+<br />
+
+**Form 级注册/全局注册**
+
+全局适配器是由以下配置组成的数组:
+
+```ts
+type FormAdaptorsItem = {
+  /** 待适配的表单控件 */
+  component: React.ReactElement;
+  /** 控制用于From组件时的适配器 */
+  formAdaptor?: FormAdaptor;
+  /** 控制用于Table组件时的适配器, 如果表单控件需要在表格行内编辑, 需要传入 */
+  tableAdaptor?: TableAdaptor;
+  /** 表单的字符串表示, 配置后, 在后续可以通过字符串key来声明该组件. 注意: 不建议使用字符串进行组件声明, 除非你的场景需要将配置以json形式存储和传输. */
+  name?: string;
+};
+```
+
+在创建 form 实例时配置:
+
+```tsx
+const form = createForm({
+  schemas: {...},
+  adaptors: [
+    {
+      component: <MyInput />
+      formAdaptor: ...,
+      name: 'MyInput',
+    }
+  ]
+});
+```
+
+或是通过全局配置注册, 这是比较推荐的方式:
+
+```tsx
+m78Config.set({
+  formAdaptors: [
+    {
+      component: <MyInput />
+      formAdaptor: ...,
+      name: 'MyInput',
+    }
+  ]
+})
+```
+
+通过上述两种方式中的一种注册后, 就可以在 Field 或 schema 中直接使用对应组件了:
+
+```tsx
+<Field component={<MyInput placeholder="请输入" />} />
+
+// 如果设置了字符串name, 还可以通过字符串直接使用组件
+<Field component="MyInput" componentProps={{ placeholder: "请输入" }} />
+```
+
+### 内置表单控件
+
+`m78` 的所有内置表单控件均无需编写适配器, 可以直接在 `Form` 或 `Table` 中使用, 此外, 在没有提供适配器时, 会使用默认适配器, 像 `<input />` 这样的简单的原生表单控件通常不需要编写适配器.
 
 ## 嵌套结构
 
-如果表单值嵌套在另一个对象中, 可通过 `name` 指定嵌套的路径 (schema render 会自动处理, manual render 需要手动处理)
+如果表单值嵌套在另一个对象中, 可通过 `name` 指定嵌套的路径.
 
 ### schema render
 
@@ -130,9 +198,11 @@ import {Input} from "./index.js"; {
   code={require("!!raw-loader!./manual-list-base.tsx")}
 ></demo>
 
-`layoutRender`包含了默认的 list 交互控件, 如新增/删除/排序等, 如果你需要完全定制交互, 可以改用`children`进行渲染, 它提供了所有 list 相关的渲染`api`
+`layoutRender`包含了默认的 list 交互控件, 如新增/删除/排序等, 如果你需要完全定制交互, 可以改用`render`进行渲染, 它提供了所有 list 相关的渲染`api`且不预设任何样式
 
 ## 表单联动/动态 schema
+
+通过 `dynamic` 搭配其他配置可以非常简单的完成表单控件之间的联动, 比如隐藏/禁用/更改验证器等
 
 <demo
   demo={require("./dynamic-base.tsx")}
@@ -155,17 +225,19 @@ import {Input} from "./index.js"; {
 ```ts
 {
   name: "user",
-  validator: required(),  // 多个验证器可以传递数组
+  validator: required(),  // 单个验证器
 },
 {
   name: "describe",
-  validator: [required(), string({ min: 4 })],  // 单个验证器可以直接传递
+  validator: [required(), string({ min: 4 })],  // 多个验证器通过数组传入
 },
 ```
 
 你可以在[这里](https://github.com/xianjie-li/m78/tree/master/packages/verify/src/validator)找到所有内置验证器.
 
-此外, 只有空验证器(比如`required()`)才会对空值进行校验, 其他验证器都会忽略空值, 类似于一些编程语言中, null 是其他类型的子集一样.
+此外, 只有空验证器(比如`required()`)才会对空值进行校验, 其他验证器都会忽略空值.
+
+<br />
 
 验证器对空值的定义不仅仅是 null, 具体来说, 是以下值:
 
@@ -173,7 +245,7 @@ import {Input} from "./index.js"; {
 undefined, null, "", NaN, [], {}, 空白字符
 ```
 
-> 使用函数验证器而不是以往的字符串验证的原因是: 更好的类型检测, 清晰的来源, 几乎为 0 的学习成本.
+> 使用函数验证器而不是以往的字符串验证的原因是: 更好的类型检测, 清晰的来源, 无 DSL 和几乎为 0 的学习成本.
 
 ### 自定义验证器
 
@@ -190,19 +262,19 @@ function string({ value }) {
 }
 ```
 
-异步验证器的唯一区别是他返回一个 Promise, Promise resolve 的字符串或内部抛出的错误会被视为验证错误.
+异步验证器的唯一区别是他返回一个 Promise, Promise 的结果字符串或内部抛出的错误会被视为验证错误.
 
 ### @m78/verify
 
-核心的验证逻辑抽象在 [@m78/verify](https://github.com/xianjie-li/m78/tree/master/packages/verify) 包中, 如果你需要对验证细节的进一步掌控, 或者了解更多验证器的使用方式, 可以参考这个包的文档
+核心的验证逻辑抽象在 [@m78/verify](https://github.com/xianjie-li/m78/tree/master/packages/verify) 包中, 如果你需要对验证细节的更进一步掌控, 或者了解更多验证器的使用方式, 可以参考这个包的文档
 
 此外, 你也可以单独使用这个包进行 object/array/函数参数等的验证.
 
 ## 布局/样式
 
-在手动渲染模式下, Form 仅会提供极少预置布局, 你可以随意搭配 [layout](/docs/components/base/layout/) 中的 Cells/Flexible/MediaQuery 等组件来实现你想要的布局.
+在手动渲染模式下, Form 仅会提供极少预置布局, 你可以自行编写样式或使用 [layout](/docs/components/base/layout/) 中的 Cells/Flexible/MediaQuery 等组件来实现你想要的布局.
 
-而在 schema render 模式下, 可定制的空间就比较有限了, 但你仍可通过 config/schema/field 上的一些列配置来进行样式微调.
+而在 schema render 模式下, 可定制的空间就比较有限了, 但你仍可通过 config/schema/field 上的一些列配置来进行受限的样式调整.
 
 ### 布局方向
 
@@ -211,20 +283,13 @@ function string({ value }) {
   code={require("!!raw-loader!./schema-layout.tsx")}
 ></demo>
 
-### 气泡型提示
-
-布局空间较紧凑时, 可以使用 `bubbleFeedback` 来使错误和描述等显示在气泡框中, 节省布局空间
-
-<demo
-  demo={require("./bubble-feedback.tsx")}
-  code={require("!!raw-loader!./bubble-feedback.tsx")}
-></demo>
-
 ### 样式定制
 
-对于较大的样式调整, 可以使用 `fieldCustomer` / `wrapCustomer` / `Filed.children` 等进行自定义渲染, 并使用 `noLayout` 禁用默认的布局.
+- 在 form/field/schema 中支持传入 `customer` 来定制表单控件的包裹容器, `customer`接收与适配器几乎一样的参数
+- 还可以使用 `noLayout` 禁用默认的 Field 样式, 比如 label 等, 然后再搭配 customer 进行自定义渲染
+- Filed.component 可接收一个函数, 其与适配器签名完全一致, 可以用来临时进行局部的定制
 
-另外, 也可以在 schema 和 Field 中提供了很多用于样式微调的配置, 具体可查看对应文档.
+另外, 在 form config / schema / Field 中提供了很多用于样式微调的配置, 具体可查看对应文档.
 
 ## 综合示例 ✨ TODO
 
@@ -236,34 +301,9 @@ function string({ value }) {
 
 ## 杂项
 
-### 预注册组件
-
-可通过 `config.components` 在创建 `form` 实例时提前注册组件, 以便在 `schema` 中使用, 但是直接传入 `component` 的形式对类型支持更好
-
-```tsx
-createForm({
-  components: {
-    input: {
-      component: <Input />,
-    },
-    checkbox: {
-      component: <Checkbox />,
-    },
-  },
-  // ... 其他配置
-});
-```
-
-注册后, 就可以在 schema 中直接只用字符串作为组件名了
-
-```tsx
-{
-  name: "name",
-  component: "input",
-}
-```
-
 ### 配置优先级
+
+有很多配置支持在 `config/schema/Field` 中传入, 若传入相同配置, 优先级从右到左.
 
 ### name 取值示例
 
@@ -291,9 +331,82 @@ Form 的核心逻辑与前端框架无关，它是在 [@m78/form](https://github
 
 > 为了便于阅读, 以下均为经过简化后的伪代码, 请以实际代码为准
 
-### FormConfig
+### 通用选项
 
-创建 form 实例时传入的配置, [通用配置](/docs/components/form/form/#通用配置) 中的所有配置也可在创建时使用
+这些配置支持在 `config/schema/Field` 中传入, 作用优先级为 Field > schema > config
+
+```ts
+interface FormProps {
+  /** 布局类型 */
+  layoutType?: "horizontal" | "vertical";
+  /** 使用气泡显示表单项描述 */
+  bubbleDescribe?: boolean;
+  /** 表单项的最大宽度, 用于防止宽度过大造成表单控件变形或不易操作 */
+  maxWidth?: number | string;
+  /** 尺寸 (决定布局紧凑程度, 会同时向表单控件传递props.size, 需要表单控件支持才能正常启用) */
+  size?: "large" | "small";
+  /** 禁用表单, 与标准disabled的区别是, disabled不会影响值的提交. 此外, 需要表单组件支持接收disabled并显示对应样式 */
+  disabled?: boolean;
+  /** 为 filed 根节点添加类名 */
+  className?: string;
+  /** 为 field 根节点添加样式 */
+  style?: React.CSSProperties;
+  /** 用于为 Field 添加自定义外层容器, 作用优先级为 Field > schema > config */
+  customer?: (args: FormCustomRenderWrapperArgs) => React.ReactElement | null;
+  /** true | 是否显示根据validator生成的必输标记 */
+  requireMarker?: boolean;
+  /** 是否在Field周围填充空白 */
+  spacePadding?: boolean;
+}
+```
+
+### Field/schema 通用选项
+
+这些配置支持在 `schema/Field` 中传入, 作用优先级为 Field > schema > config
+
+```ts
+interface FormCommonProps {
+  /** 表单项标题 */
+  label?: React.ReactNode;
+  /**
+   * 表单控件, 需要满足以下条件之一:
+   * - 支持value/onChange接口
+   * - 通过全局或Form级adaptors适配过的表单控件, 传入string时表示其在适配器配置中的name
+   * - 直接传入一个FormAdaptor, 可用于临时快速绑定新的表单控件或是渲染一个非表单的视图控件
+   * */
+  component?: React.ReactElement | string | FormAdaptor;
+  /** 传递给 component 组件的 props, 通常在 component 传入 string 时使用 */
+  componentProps?: Record<string, any>;
+  /** 表单控件适配器 */
+  adaptor?: FormAdaptor;
+  /** 额外显示的字段描述 */
+  describe?: React.ReactNode;
+  /** 隐藏表单 */
+  hidden?: boolean;
+  /**
+   * 依赖的值, 若通过dynamic依赖了其他值, 需要在此处声明依赖的其他字段
+   *
+   * - 此配置是为了减少Field不必要的re-render, 使字段能够在关联字段变更时才更为精确的更新
+   * */
+  deps?: NamePath[];
+  /** 跳过除表单控件外的其他内容渲染, 如label, describe等, 用于高度定制场景 */
+  preventDefaultRenders?: boolean;
+  /** 渲染在field左侧的额外节点 */
+  leftNode?: React.ReactNode | FormCustomRender;
+  /** 渲染在field右侧的额外节点 */
+  rightNode?: React.ReactNode | FormCustomRender;
+  /** 渲染在field下方的额外节点 */
+  bottomNode?: React.ReactNode | FormCustomRender;
+  /** 渲染在field上方的额外节点 */
+  topNode?: React.ReactNode | FormCustomRender;
+  /** start | 控制元素(label/表单控件/leftNode等...)在交叉轴上的对齐方式 */
+  crossAlign?: TileProps["crossAlign"];
+}
+```
+
+### Config
+
+创建 form 实例时特有的配置, [通用选项](/docs/components/form/form/#通用选项) 中的所有配置也可在创建时使用
 
 ```ts
 interface FormConfig {
@@ -308,31 +421,16 @@ interface FormConfig {
 }
 ```
 
-### FormSchema
+### Schema
 
-描述 schema 的单个项, [通用配置](/docs/components/form/form/#通用配置) 和 [Field/schema 共享配置](/docs/components/form/form/#fieldschema-共享配置) 中的所有配置也可在 schema 中使用
+描述 schema 的单个项, [通用选项](/docs/components/form/form/#通用选项) 和 [Field/schema 共享配置](/docs/components/form/form/#fieldschema-共享配置) 中的所有配置也可在 schema 中使用
 
 ```ts
 interface FormSchema {
   /** 用来在source中取值的key */
   name: NameItem;
-  /** 动态设置其他参数 */
-  dynamic?: (
-    form: FormInstance
-  ) => Omit<FormSchemaWithoutName, "dynamic" | "name" | "list" | "deps"> | void;
-  /** 类型为数组、对象时, 对其结构进行验证 */
-  schema?: FormSchema[];
-  /** 验证值为array或object时, 子级的所有 数组项/对象值 必须与此Schema匹配, 如果该值的类型不为array或object，此配置会被忽略 */
-  eachSchema?: FormSchemaPartial;
-  /** {} | list新增项时使用的默认值, 用于schema render, 且仅在项的值类型不为对象时需要配置 */
-  listDefaultValue?: any;
-  /** valid为false时, 该schema不会参与验证, 并且提交时会排除掉schema指向的值, 不可用于list项的第一级子项(应使用list相关api操作) */
-  valid?: boolean;
-  /**
-   * 设置该项为list项, 设置后可使用list系列的api对其子项进行新增/删除/排序等操作,
-   * 若用于root项, 通过getList([])可获取根schema
-   * */
-  list?: boolean;
+  /** 用于验证显示的字段名, 不传时取name转换为string的值 */
+  label?: string;
   /**
    * 验证器或验证器数组
    * - 如果待校验的值是empty值, 验证器执行会被直接跳过, 这类似其他库中的`可选字段`, 字段存在值才校验, 不存在则跳过, 可以通过`[required(), ...]`可以将字段标记为必传
@@ -344,112 +442,33 @@ interface FormSchema {
     | Validator
     | AsyncValidator
     | (Validator | AsyncValidator | null | undefined)[];
-  /** 如果对象为嵌套结构(数组、对象)，对其执行嵌套验证 */
-  schema?: Schema[];
-  /** 验证值为array或object时, 所有 数组项/对象值 必须与此Schema匹配 */
-  eachSchema?: SchemaWithoutName;
   /** 在对值进行操作、验证前将其转换, 对于引用类型的值，应避免对其操作, 因为它是当前验证data的局部直接引用 */
   transform?: (value: any) => any;
+  /** valid为false时, 该schema不会参与验证, 并且提交时会排除掉schema指向的值, 不可用于list项的第一级子项(应使用list相关api操作) */
+  valid?: boolean;
+  /**
+   * 设置该项为list项, 设置后可使用list系列的api对其子项进行新增/删除/排序等操作,
+   * 若用于root项, 通过getList([])可获取根schema
+   * */
+  list?: boolean;
+  /** 动态设置其他参数 */
+  dynamic?: (
+    form: FormInstance
+  ) => Omit<FormSchemaWithoutName, "dynamic" | "name" | "list" | "deps"> | void;
+  /** 类型为数组、对象时, 对其结构进行验证 */
+  schema?: FormSchema[];
+  /** 验证值为array或object时, 子级的所有 数组项/对象值 必须与此Schema匹配, 如果该值的类型不为array或object，此配置会被忽略 */
+  eachSchema?: FormSchemaPartial;
+  /** {} | list新增项时使用的默认值, 用于schema render, 且仅在项的值类型不为对象时需要配置 */
+  listDefaultValue?: any;
 }
 ```
 
-### 通用配置
-
-这些配置支持在 `config/schema/Field` 中传入, 优先级从右到左
-
-```ts
-interface FormProps {
-  /** 布局类型 */
-  layoutType?: "horizontal" | "vertical";
-  /** 自定义字段渲染, 常用于定制样式/自定义value/onChange绑定等 */
-  fieldCustomer?: FormCustomRender;
-  /** 使用气泡显示提示和错误文本 */
-  bubbleFeedback?: boolean;
-  /** 表单项的最大宽度, 用于防止宽度过大造成表单控件变形或不易操作 */
-  maxWidth?: number | string;
-  /** 尺寸(布局紧凑程度, 会同时向表单组件传递props.size, 需要表单控件支持才能正常启用) */
-  size?: "large" | "small";
-  /** 禁用表单, 与标准disabled的区别是, disabled不会影响值的提交. 此外, 需要表单组件支持接收disabled并显示对应样式 */
-  disabled?: boolean;
-  /** 为 filed 根节点添加类名 */
-  className?: string;
-  /** 为 field 根节点添加样式 */
-  style?: React.CSSProperties;
-  /** 是否在表单项底部显示固定的空白区域, 以保持表单项之间的间距 */
-  spacePad?: boolean;
-  /**
-   * 为组件添加包裹节点, 通常在schema render时才会使用, 与fieldCustomer/children/组件注册的区别是它更适合用来进行容器节点
-   * 定制, 因为后面这些配置会有一定的作用优先级, 并且会相互覆盖.
-   * node为原始节点, 需要在合适的位置渲染.
-   * */
-  wrapCustomer?: (
-    args: FormCustomRenderArgs,
-    node: React.ReactElement
-  ) => React.ReactElement;
-  /** true | 是否显示根据validator生成的必输标记 */
-  requireMarker?: boolean;
-  /** 是否显示修改标记 */
-  modifyMarker?: boolean;
-}
-```
-
-### Field/schema 共享配置
-
-这些配置支持在 `schema/Field` 中传入, 优先级从右到左
-
-```ts
-interface FormCommonProps {
-  /**
-   * 表单项标题 */
-  label?: React.ReactNode;
-  /**
-   * 需要渲染的表单控件
-   * - 传入 ReactElement 时, 作为表单控件, 规则与FormFieldProps.children 相同
-   * - 若为 string 类型, 则表示创建时注册的组件 key
-   * */
-  component?: React.ReactElement | string;
-  /** component配置为string 时, 传递给 component 组件的 props */
-  componentProps?: Record<string, any>;
-  /** 额外显示的字段描述 */
-  describe?: React.ReactNode;
-  /** 隐藏表单 */
-  hidden?: boolean;
-  /**
-   * 依赖的值, 若通过dynamic依赖了其他值, 需要在此处声明使字段能响应其他字段的变更
-   * - 此配置是为了减少Field不必要的re-render, 使字段能够在关联字段变更时才更为精确的更新
-   * */
-  deps?: NamePath[];
-  /** 跳过布局容器, 直接渲染表单组件, 配置此项后, 其他样式相关的配置不再有效 */
-  noLayout?: boolean;
-  /** 渲染在field左侧的额外节点 */
-  leftNode?: React.ReactNode | FormCustomRender;
-  /** 渲染在field右侧的额外节点 */
-  rightNode?: React.ReactNode | FormCustomRender;
-  /** 渲染在field下方的额外节点 */
-  bottomNode?: React.ReactNode | FormCustomRender;
-  /** 渲染在field上方的额外节点 */
-  topNode?: React.ReactNode | FormCustomRender;
-  /** start | 控制元素(label/表单控件/leftNode等...)在交叉轴上的对齐方式 */
-  crossAlign?: TileProps["crossAlign"];
-  /** value |  用于受控绑定表单的props */
-  valueKey?: string;
-  /** onChange | 值变更的回调 */
-  changeKey?: string;
-  /** disabled | 配置通过什么key来禁用表单 */
-  disabledKey?: string;
-  /** size | 配置通过什么key来设置表单的尺寸 */
-  sizeKey?: string;
-  /** 默认取值方式为onChange(value), 可通过此项进行定制 */
-  valueGetter?: (...value: any) => any;
-  /** 如果某个表单控件不支持 size/disabled 等 key, 可以单独为字段配置此项来避免传入导致 react 产生警告 */
-  ignoreBindKeys?: string | string[];
-}
-```
-
-### FormInstance
+### Instance
 
 ```ts
 interface FormInstance {
+  /* # # # # # # # 重写 # # # # # # # */
   /** 获取对dynamic进行处理进行处理后的schema副本 */
   getSchemas(): FormSchemaWithoutName;
 
@@ -458,6 +477,9 @@ interface FormInstance {
 
   /** 获取指定的schema */
   getSchema(name: NamePath): FormSchema | FormSchemaWithoutName | null;
+
+  /** 获取表单配置 */
+  getConfig(): FormConfig;
 
   /** 更改部分样式配置 */
   updateProps(props: FormProps): void;
@@ -486,6 +508,7 @@ interface FormInstance {
   /** 根据当前的schema配置直接渲染表单 */
   SchemaRender: React.FunctionComponent<FormSchemaRenderProps>;
 
+  /* # # # # # # # 继承 # # # # # # # */
   /** 指定值是否与默认值相同 */
   getChanged(name: NamePath): boolean;
 
@@ -542,11 +565,12 @@ interface FormInstance {
   /** 执行校验, 未通过时promise会reject包含VerifyError类型的错误 */
   verify: (name?: NamePath) => Promise<void>;
 
-  /** debounce版本的verify, 处理高频调用时可以使用 */
-  debounceVerify: (name?: NamePath) => void;
-
-  /** 获取表单配置 */
-  getConfig(): FormConfig;
+  /**
+   * debounce版本的verify, 处理高频调用时可以使用, cb会在成功或失败时触发, 失败时包含错误信息
+   *
+   * 注意: 由于防抖机制, 连续调用时, 大部分验证都会被忽略, 所以cb不是必定触发的, 通常只有第一次和最后一次调用触发
+   * */
+  debounceVerify: (name?: NamePath, cb?: (error?: RejectMeta) => void) => void;
 
   /**
    * 获取指定list的数据, 若未在schema中配置为list则返回null. 根schema设置为list时, 可传入`[]`来获取
@@ -582,26 +606,21 @@ interface FormInstance {
 
 ### Field
 
-[通用配置](/docs/components/form/form/#通用配置) 和 [Field/schema 共享配置](/docs/components/form/form/#fieldschema-共享配置) 中的所有配置也可在 Field 中使用
+[通用配置](/docs/components/form/form/#通用选项) 和 [Field/schema 共享选项](/docs/components/form/form/#fieldschema-共享配置) 中的所有配置也可在 Field 中使用
 
 ```ts
 /** Filed Props */
 export interface FormFieldProps {
   /** 表单name */
-  name: NamePath;
-  /**
-   * 挂载表单组件, 默认情况下需要表单组件支持value/onChange(value)接口, 可通过 valueKey/changeKey 等进行配置
-   * 传入render 函数时, 与fieldCustomer等效
-   * */
-  children?: React.ReactElement | FormCustomRender;
+  name?: NamePath;
 }
 ```
 
 ### List
 
-支持 FormFieldProps 中除了以下列出项的所有配置
+支持 Field 中除了以下列出项的所有配置
 
-children / component / componentProps / fieldCustomer / valueKey / changeKey / disabledKey / sizeKey / valueGetter / ignoreBindKeys
+"component" | "componentProps" | "adaptor"
 
 ```ts
 /**
@@ -609,58 +628,111 @@ children / component / componentProps / fieldCustomer / valueKey / changeKey / d
  * */
 export interface FormListProps {
   /** 渲染list子级, 相比layoutRender不包含预设的布局 */
-  children?: FormListRenderChildren<Item>;
+  render?: FormListRenderChildren<Item>;
   /** 使用预设list布局进行渲染, 包含了新增/排序/删除等布局控件 */
   layoutRender?: FormListCustomRenderCallback;
 }
 ```
 
-### FormCustomRender
+### Adaptors
 
 ```ts
-/**
- * Filed自定义渲染函数
- * */
-export interface FormCustomRender {
-  (args: FormCustomRenderArgs): React.ReactNode;
-}
+/** 表单控件适配器, 优先级: 全局 < Form < Field */
+type FormAdaptor = (
+  args: FormCustomRenderBasicArgs
+) => React.ReactElement | null;
 ```
 
-### FormCustomRenderArgs
-
 ```ts
-/**
- * FormRenderChildren 入参
- * */
-export interface FormCustomRenderArgs {
-  /** 用于展开绑定到表单组件的props, 默认情况可能包含value/onChange/disabled等 */
-  bind: any;
+/** 用于Adaptors的参数 */
+interface FormCustomRenderBasicArgs {
+  /** 用于展开绑定到表单组件的props. 根据配置, 可能包含size/disabled, 可根据表单控件支持度按需传入 */
+  bind: {
+    /** 受控绑定的值 */
+    value: any;
+    /** 值变更回调 */
+    onChange: (value: any) => void;
+    /** 是否禁用 */
+    disabled?: boolean;
+    /** 组件尺寸 */
+    size?: string;
+  };
+  /** 绑定器, 用于将传入的props绑定到element的助手函数 */
+  binder: (
+    element: React.ReactElement | null,
+    props: AnyObject
+  ) => React.ReactElement | null;
   /** Form实例 */
   form: FormInstance;
   /** 创建配置 */
   config: FormConfig;
-  /** 传递给field的参数 */
+  /** 传递给field的props */
   props: FormFieldProps;
   /** 用于获取通用配置FormCommonProps */
   getProps: FormCommonPropsGetter;
+  /** 表单控件节点 */
+  element: React.ReactElement | null;
 }
 ```
 
-### FormListCustomRenderArgs
+```ts
+/** 全局或表单级适配器的一项 */
+export type FormAdaptorsItem = {
+  /** 待适配的表单控件 */
+  component: React.ReactElement;
+  /** 控制用于From组件时的适配器 */
+  formAdaptor?: FormAdaptor;
+  /** 控制用于Table组件时的适配器 */
+  tableAdaptor?: any;
+  /** 表单的字符串表示, 配置后, 在后续可以通过字符串key来声明该组件. 注意: 不建议使用字符串进行组件声明, 除非你的场景需要将配置以json形式存储和传输. */
+  name?: string;
+};
+```
+
+### Customer
 
 ```ts
-/**
- * Filed自定义渲染函数
- * */
-export interface FormListRenderChildren<Item = any> {
+type Customer = (
+  args: FormCustomRenderWrapperArgs
+) => React.ReactElement | null;
+```
+
+参数与适配器接收的参数基本上一致
+
+```ts
+/** 用于Customer的参数 */
+interface FormCustomRenderWrapperArgs extends FormCustomRenderBasicArgs {
+  /** 原节点, 通常需要挂载到定制的包裹节点中 */
+  element: React.ReactElement | null;
+
+  /** 在config/schema/props配置了复数的customer时, 可以在执行后阻止后续customer的运行, 执行顺序为props -> schema -> config */
+  preventNext(): void;
+}
+```
+
+### ListRenders
+
+list 有两种渲染类型
+
+```ts
+type Renders = {
+  /** 渲染list子级, 相比layoutRender不包含预设的布局 */
+  render?: FormListRenderChildren<Item>;
+  /** 使用预设list布局进行渲染, 包含了新增/排序/删除等布局控件 */
+  layoutRender?: FormListCustomRenderCallback;
+};
+```
+
+以下为它们各自的详细签名
+
+```ts
+/** Filed自定义渲染函数 */
+interface FormListRenderChildren<Item = any> {
   (args: FormListCustomRenderArgs<Item>): React.ReactElement;
 }
 
-/**
- * FormListRenderChildren 入参
- * */
-export interface FormListCustomRenderArgs<Item = any>
-  extends Omit<FormCustomRenderArgs, "bind"> {
+interface FormListCustomRenderArgs<Item = any>
+  extends FormCustomRenderBasicArgsPartial {
   /** 用于渲染列表 */
   render(renderCB: FormListCustomRenderCallback): React.ReactElement;
 
@@ -676,6 +748,20 @@ export interface FormListCustomRenderArgs<Item = any>
   /** 交换list的两个元素 */
   swap(from: number, to: number): boolean;
 }
+```
+
+```ts
+type FormListCustomRenderCallback<Item = any> = (meta: {
+  /** 该项的值 */
+  item: Item;
+  /** 该项索引 */
+  index: number;
+  /** 总长度 */
+  length: number;
+
+  /** 将指定 name 前拼接上 List 父级的 name 后返回 */
+  getName(name?: NamePath): NamePath;
+}) => React.ReactElement;
 ```
 
 ### FormLayoutType

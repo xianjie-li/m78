@@ -4,6 +4,7 @@ import { useUpdate } from "@m78/hooks";
 import {
   Button,
   FormInstance,
+  FormSchema,
   Input,
   required,
   Size,
@@ -13,7 +14,6 @@ import {
 } from "../../src/index.js";
 import { RCTableInstance } from "../../src/table/types.js";
 import { tableInput } from "../../src/table/form-widgets/table-input.js";
-import { TableFormSchema } from "../../src/table-vanilla/plugins/form.js";
 
 const columns: TableColumnLeafConfig[] = Array.from({ length: 40 }).map(
   (_, j) => {
@@ -49,8 +49,10 @@ const columns: TableColumnLeafConfig[] = Array.from({ length: 40 }).map(
         return (
           <div>
             <Spacer height={10}>
-              <form.Field label="查询1" name={`field${j}-1-r`}>
-                {() => (
+              <form.Field
+                label="查询1"
+                name={`field${j}-1-r`}
+                component={() => (
                   <div
                     onChange={(e) => {
                       console.log(e);
@@ -62,15 +64,19 @@ const columns: TableColumnLeafConfig[] = Array.from({ length: 40 }).map(
                     降序
                   </div>
                 )}
-              </form.Field>
+              />
 
-              <form.Field label="查询1" name={[`field${j}-1`]}>
-                <Input />
-              </form.Field>
+              <form.Field
+                label="查询1"
+                name={[`field${j}-1`]}
+                component={<Input />}
+              />
 
-              <form.Field label="查询2" name={[`field${j}-2`]}>
-                <Input />
-              </form.Field>
+              <form.Field
+                label="查询2"
+                name={[`field${j}-2`]}
+                component={<Input />}
+              />
             </Spacer>
           </div>
         );
@@ -120,14 +126,16 @@ const data2 = Array.from({ length: 6 }).map((_, i) => {
   return createRow(i);
 });
 
-const schema: TableFormSchema[] = [
+const schema: FormSchema[] = [
   {
     name: "field3",
     validator: [required(), string({ min: 2, max: 5 })],
+    component: <Input />,
   },
   {
     name: "field4",
     validator: [required(), string({ min: 2, max: 5 })],
+    component: <Input />,
   },
   {
     name: "field5",
@@ -206,15 +214,9 @@ const TableFullExample = () => {
         commonFilter={(form) => {
           return (
             <Spacer height={12} style={{ width: 400 }}>
-              <form.Field label="查询1" name="filter1">
-                <Input />
-              </form.Field>
-              <form.Field label="查询2" name="filter2">
-                <Input />
-              </form.Field>
-              <form.Field label="查询3" name="filter3">
-                <Input />
-              </form.Field>
+              <form.Field label="查询1" name="filter1" component={<Input />} />
+              <form.Field label="查询2" name="filter2" component={<Input />} />
+              <form.Field label="查询3" name="filter3" component={<Input />} />
             </Spacer>
           );
         }}
@@ -317,6 +319,17 @@ const TableFullExample = () => {
           </button>
         </div>
       )}
+
+      <div className="mt-12">
+        <button
+          onClick={() => {
+            // @ts-ignore
+            console.log(table.__ctx);
+          }}
+        >
+          log ctx
+        </button>
+      </div>
     </div>
   );
 };

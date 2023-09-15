@@ -1,14 +1,12 @@
-import { TableBaseConfig, TableCell, TableCellWithDom, TableInstance, TableInteractiveCoreConfig, TableMutationEvent, TableReloadOptions, TableRow } from "../table-vanilla/index.js";
+import { TableBaseConfig, TableCell, TableCellWithDom, TableInstance, TableInteractiveCoreConfig, TableMutationEvent, TablePersistenceConfig, TableReloadOptions, TableRow } from "../table-vanilla/index.js";
 import { _tableOmitConfig } from "./common.js";
 import { TableSelectConfig } from "../table-vanilla/plugins/select.js";
 import { TableDragSortConfig } from "../table-vanilla/plugins/drag-sort.js";
 import { ComponentBaseProps } from "../common/index.js";
 import { AnyObject, EmptyFunction } from "@m78/utils";
-import { CustomEventWithHook, SetState, UseScrollMeta } from "@m78/hooks";
+import { CustomEventWithHook } from "@m78/hooks";
 import { ReactNode } from "react";
-import { _UseEditRender } from "./use-edit-render.js";
-import { _UseCustomRender } from "./use-custom-render.js";
-import { TableFormConfig } from "../table-vanilla/plugins/form.js";
+import { TableDataLists, TableFormConfig } from "../table-vanilla/plugins/form.js";
 import { TableFeedbackEvent } from "../table-vanilla/plugins/event.js";
 import { FormInstance, FormSchema } from "../form/index.js";
 /** 忽略的配置 */
@@ -48,8 +46,8 @@ export interface RCTableEditRenderArg extends RCTableRenderArg {
 export interface RCTableEditWidgetImpl {
     (arg: RCTableEditRenderArg): ReactNode;
 }
-/** 一个返回RCTableEditWidgetImpl的函数, 用于为其提供可选的配置项 */
-export interface RCTableEditWidgetCreator<T = any> {
+/** 用于将表单控件适配到可用于单元格内编辑的适配器 */
+export interface RCTableEditWidgetAdapter<T = any> {
     (conf?: T): RCTableEditWidgetImpl;
 }
 /**
@@ -115,10 +113,34 @@ export interface RCTableProps extends ComponentBaseProps, Omit<TableBaseConfig, 
     toolBarLeadingCustomer?: (nodes: RCTableToolbarLeadingBuiltinNodes, table: RCTableInstance) => ReactNode;
     /** 定制toolbar右侧, 应使用React.Fragment避免内容被渲染到嵌套的容器中, 避免排版混乱 */
     toolBarTrailingCustomer?: (nodes: RCTableToolbarTrailingBuiltinNodes, table: RCTableInstance) => ReactNode;
+    /** 编辑功能是否启用, 传入true时全部启用, 可传入一个配置对象来按需启用所需功能 */
+    dataOperations?: boolean | {
+        /** 允许编辑数据 */
+        edit?: boolean;
+        /** 允许新增数据 */
+        new?: boolean;
+        /** 允许删除数据 */
+        delete?: boolean;
+        /** 允许在独立窗口编辑行 */
+        ediByDialog?: boolean;
+    };
+    /** 提交时触发, 接收当前数据和当前配置 */
+    onSubmit?: (submitData: {
+        /** 若数据发生了改变, 此项为当前数据信息 */
+        data?: TableDataLists;
+        /** 若配置发生了改变, 此项为完整的配置信息 */
+        config?: TablePersistenceConfig;
+        /** 发生了变更的配置key */
+        changedConfigKeys?: string[];
+    }) => void;
+    /** 新增数据时, 使用此对象作为默认值, 可以是一个对象或返回对象的函数 */
+    defaultNewData?: AnyObject | (() => AnyObject);
     /** true | 启用导出功能 */
     dataImport?: boolean;
-    /** false | 启用导入功能, 需要编辑功能开启 */
+    /** false | 启用导入功能, 需要dataOperation.new启用 */
     dataExport?: boolean;
+    /** 传入后, 配置变更将存储到本地, 并在下次加载时读取 */
+    localConfigStorageKey?: string;
     /** 获取内部table实例 */
     instanceRef?: React.Ref<RCTableInstance>;
 }
@@ -187,6 +209,7 @@ export interface RCTableToolbarTrailingBuiltinNodes {
     deleteBtn: ReactNode;
     addBtn: ReactNode;
     saveBtn: ReactNode;
+    editByDialogBtn: ReactNode;
 }
 export declare enum TableSort {
     asc = "asc",
@@ -224,20 +247,8 @@ export interface _RCTableSelf {
     renderMap: Record<string, _CustomRenderItem>;
     /** 所有编辑项的key map */
     editMap: Record<string, _CustomEditItem>;
-}
-/** 上下文状态 */
-export interface _RCTableContext {
-    props: RCTableProps;
-    state: _RCTableState;
-    setState: SetState<_RCTableState>;
-    self: _RCTableSelf;
-    ref: React.MutableRefObject<HTMLDivElement>;
-    scrollRef: React.MutableRefObject<HTMLDivElement>;
-    scrollContRef: React.MutableRefObject<HTMLDivElement>;
-    editRender: _UseEditRender;
-    customRender: _UseCustomRender;
-    filterForm: FormInstance;
-    scrollEvent: CustomEventWithHook<(meta: UseScrollMeta) => void>;
+    /** 记录活动的overlayStack, 用于methods.overlayStackChange */
+    overlayStackCount: number;
 }
 export {};
 //# sourceMappingURL=types.d.ts.map

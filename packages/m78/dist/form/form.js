@@ -8,8 +8,9 @@ import { omit, pick } from "@m78/utils";
 import { _listImpl } from "./list.js";
 import { FORM_LANG_PACK_NS, i18n } from "../i18n/index.js";
 import { _schemaRenderImpl } from "./schema-render.js";
+import { m78Config } from "../config/index.js";
 export var _createForm = function(config) {
-    // 目前以创建时语言为准, 不考虑做动态切换, 场景应该十分有限
+    // 目前以创建时语言为准, 不考虑做动态切换
     var languagePack = i18n.getResourceBundle(i18n.language, FORM_LANG_PACK_NS);
     var conf = _object_spread({
         layoutType: FormLayoutType.horizontal,
@@ -20,10 +21,24 @@ export var _createForm = function(config) {
         eventCreator: createEvent
     }));
     var form = vForm;
+    // 合并全局适配器/局部适配器
+    var adaptorsMap = new Map();
+    var adaptorsNameMap = new Map();
+    m78Config.get().formAdaptors.forEach(function(item) {
+        adaptorsMap.set(item.component.type, item);
+        if (item.name) adaptorsNameMap.set(item.name, item);
+    });
+    if (conf.adaptors) {
+        conf.adaptors.forEach(function(item) {
+            adaptorsMap.set(item.component.type, item);
+            if (item.name) adaptorsNameMap.set(item.name, item);
+        });
+    }
     var ctx = {
         config: conf,
         form: vForm,
-        components: _object_spread({}, config.components),
+        adaptorsMap: adaptorsMap,
+        adaptorsNameMap: adaptorsNameMap,
         updatePropsEvent: createEvent()
     };
     form.getConfig = function() {

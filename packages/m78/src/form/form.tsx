@@ -7,6 +7,7 @@ import {
   _FormContext,
   _formPropsKeys,
   _omitConfigs,
+  FormAdaptorsItem,
   FormConfig,
   FormInstance,
   FormLayoutType,
@@ -17,9 +18,10 @@ import { omit, pick } from "@m78/utils";
 import { _listImpl } from "./list.js";
 import { FORM_LANG_PACK_NS, i18n } from "../i18n/index.js";
 import { _schemaRenderImpl } from "./schema-render.js";
+import { m78Config } from "../config/index.js";
 
 export const _createForm = (config: FormConfig) => {
-  // 目前以创建时语言为准, 不考虑做动态切换, 场景应该十分有限
+  // 目前以创建时语言为准, 不考虑做动态切换
   const languagePack = i18n.getResourceBundle(i18n.language, FORM_LANG_PACK_NS);
 
   const conf: FormConfig = {
@@ -36,12 +38,27 @@ export const _createForm = (config: FormConfig) => {
 
   const form = vForm as FormInstance;
 
+  // 合并全局适配器/局部适配器
+  const adaptorsMap = new Map<any, FormAdaptorsItem>();
+  const adaptorsNameMap = new Map<string, FormAdaptorsItem>();
+
+  m78Config.get().formAdaptors.forEach((item) => {
+    adaptorsMap.set(item.component.type, item);
+    if (item.name) adaptorsNameMap.set(item.name, item);
+  });
+
+  if (conf.adaptors) {
+    conf.adaptors.forEach((item) => {
+      adaptorsMap.set(item.component.type, item);
+      if (item.name) adaptorsNameMap.set(item.name, item);
+    });
+  }
+
   const ctx: _FormContext = {
     config: conf,
     form: vForm as FormInstance,
-    components: {
-      ...config.components,
-    },
+    adaptorsMap,
+    adaptorsNameMap,
     updatePropsEvent: createEvent(),
   };
 

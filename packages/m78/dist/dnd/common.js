@@ -24,7 +24,8 @@ export var _defaultDNDStatus = {
     right: false,
     top: false,
     bottom: false,
-    center: false
+    center: false,
+    hasDragging: false
 };
 export var _defaultDNDEnableInfos = {
     enable: true,
@@ -60,6 +61,7 @@ export function _useGroup(groupId) {
  * 传入skipEnableReset时, 跳过enables状态的重置
  * */ export var _resetEvent = createEvent();
 /** 通知所有dnd同步位置尺寸信息 */ export var _updateEvent = createEvent();
+/** 用于处理draggingListen, 通知所有dnd更新 */ export var _draggingEvent = createEvent();
 export var _allValueIsTrue = function(obj) {
     return Object.values(obj).every(function(v) {
         return v === true;
@@ -115,7 +117,8 @@ export var _getObjectByNewValues = function(obj, value) {
         bottom: posEnableInfo.bottom && enables.bottom,
         left: posEnableInfo.left && enables.left,
         right: posEnableInfo.right && enables.right,
-        center: posEnableInfo.center && enables.center
+        center: posEnableInfo.center && enables.center,
+        hasDragging: false
     };
     status.over = status.top || status.bottom || status.left || status.right || status.center;
     if (!status.over) {
@@ -163,7 +166,7 @@ export var _getObjectByNewValues = function(obj, value) {
  * - 在初次点击时, 更新所有可见dnd的enable状态
  * - 为满足条件的dnd生成各位置的status
  * */ export function _filterInBoundDNDs(ctx, first, xy) {
-    // 所有被光标命中且进过启用检测的节点
+    // 所有被光标命中经过启用检测的节点
     var inBoundList = [];
     var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = undefined;
     try {

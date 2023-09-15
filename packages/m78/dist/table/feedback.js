@@ -9,9 +9,11 @@ import { Bubble } from "../bubble/index.js";
 import clsx from "clsx";
 import { Divider } from "../layout/index.js";
 import { isTruthyOrZero } from "@m78/utils";
-export function _Feedback(param) {
-    var ctx = param.ctx;
-    var state = ctx.state, props = ctx.props;
+import { _injector } from "./table.js";
+import { _useStateAct } from "./state.act.js";
+export function _Feedback() {
+    var props = _injector.useProps();
+    var state = _injector.useDeps(_useStateAct).state;
     var bubbleRef = useRef(null);
     var fbSelf = useSelf({
         delayNode: null,

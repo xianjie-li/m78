@@ -11,6 +11,7 @@ import {
   isNumber,
   isObject,
   isString,
+  isTruthyOrZero,
   NamePath,
   recursionShakeEmpty,
   setNamePathValue,
@@ -185,6 +186,7 @@ export class _TableMutationPlugin extends TablePlugin {
     let index = -1;
 
     if (!to) {
+      // 常规项第一项
       index = this.context.topFixedList.length;
     } else {
       if (this.context.yHeaderKeys.includes(to)) {
@@ -194,11 +196,12 @@ export class _TableMutationPlugin extends TablePlugin {
 
       const toRow: TableRow = { ...this.table.getRow(to) };
 
-      index = toRow.isFixed
-        ? this.context.dataKeyIndexMap[
-            `${toRow.key}${_TablePrivateProperty.ref}`
-          ]
-        : toRow.realIndex;
+      if (toRow.isFixed) {
+        console.warn(`[${_prefix}] addRow: can't add row to fixed row`);
+        return;
+      }
+
+      index = toRow.realIndex;
 
       if (insertAfter) {
         index = index + 1;
@@ -215,39 +218,17 @@ export class _TableMutationPlugin extends TablePlugin {
 
     const list = ensureArray(data);
 
-    const beforeItem = this.context.data[index];
-
-    if (beforeItem) {
-      const beforeKey = beforeItem[this.config.primaryKey];
-
-      const row = this.table.getRow(beforeKey);
-
-      // 目标索引为fixed时,
-      if (row && row.isFixed) {
-        const isFixedTop = this.context.topFixedMap[beforeKey];
-        const isFixedBottom = this.context.bottomFixedMap[beforeKey];
-
-        if (isFixedTop) {
-          index = this.context.topFixedList.length;
-        }
-
-        if (isFixedBottom) {
-          index = this.context.data.length - this.context.bottomFixeList.length;
-        }
-      }
-    }
-
     const newData = list.map((i) => {
       if (!isObject(i)) i = {};
       const key = i[this.config.primaryKey];
-      if (!key) {
-        return {
-          ...i,
-          [_TablePrivateProperty.newFlag]: true,
-          [this.config.primaryKey]: createRandString(),
-        };
-      }
-      return i;
+      return {
+        ...i,
+        [_TablePrivateProperty.newFlag]: true,
+        // 使用传入的key或随机分配一个
+        [this.config.primaryKey]: isTruthyOrZero(key)
+          ? key
+          : createRandString(),
+      };
     });
 
     this.table.history.redo({
@@ -1124,8 +1105,8 @@ export interface TableMutation {
 
   /**
    * 新增记录
-   * @param data - 新增的数据
-   * @param to - 新增到的位置, 该位置的原有项后移; 不传时, 新增到表格顶部; key不能为固定项, 若传入固定项, 会根据固定位置添加到常规项的开头/结尾
+   * @param data - 新增的数据, 若数据不包含primaryKey, 会为其分配一个随机的key
+   * @param to - 新增到的位置, 该位置的原有项后移; 不传时, 新增到表格顶部; to不能为固定行或表头
    * @param insertAfter - 为true时数据将移动到指定key的后方 */
   addRow(data: any | any[], to?: TableKey, insertAfter?: boolean): void;
 

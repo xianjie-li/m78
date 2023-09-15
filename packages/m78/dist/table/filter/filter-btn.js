@@ -17,11 +17,14 @@ import { TABLE_NS, Translation } from "../../i18n/index.js";
 import { IconSync } from "@m78/icons/icon-sync.js";
 import { IconManageSearch } from "@m78/icons/icon-manage-search.js";
 import { Trigger, TriggerType } from "../../trigger/index.js";
-/** 工具栏查询按钮 */ export function _renderToolBarQueryBtn(ctx) {
+import { _useStateAct } from "../state.act.js";
+import { _injector } from "../table.js";
+import { _useMethodsAct } from "../methods.act.js";
+/** 工具栏查询按钮 */ export function _renderToolBarQueryBtn(stateDep) {
     return /*#__PURE__*/ _jsxs(Button, {
         text: true,
         onClick: function() {
-            return ctx.filterForm.submit();
+            return stateDep.filterForm.submit();
         },
         children: [
             /*#__PURE__*/ _jsx(IconManageSearch, {
@@ -36,11 +39,11 @@ import { Trigger, TriggerType } from "../../trigger/index.js";
         ]
     });
 }
-/** 工具栏重置按钮 */ export function _ToolBarFilterBtn(param) {
-    var ctx = param.ctx;
+/** 工具栏重置按钮 */ export function _ToolBarFilterBtn() {
+    var stateDep = _injector.useDeps(_useStateAct);
     var ref = _sliced_to_array(useState(false), 2), changed = ref[0], setChanged = ref[1];
-    ctx.filterForm.events.change.useEvent(function() {
-        var c = ctx.filterForm.getFormChanged();
+    stateDep.filterForm.events.change.useEvent(function() {
+        var c = stateDep.filterForm.getFormChanged();
         if (changed !== c) {
             setChanged(c);
         }
@@ -54,7 +57,7 @@ import { Trigger, TriggerType } from "../../trigger/index.js";
                     disabled: !changed,
                     squareIcon: true,
                     onClick: function() {
-                        ctx.filterForm.reset();
+                        stateDep.filterForm.reset();
                     },
                     children: /*#__PURE__*/ _jsx(IconSync, {
                         className: "color-second"
@@ -65,10 +68,9 @@ import { Trigger, TriggerType } from "../../trigger/index.js";
     });
 }
 /** 表头右侧的字段筛选按钮 */ export var _FilterBtn = /*#__PURE__*/ React.memo(function(param) {
-    var ctx = param.ctx, cell = param.cell;
+    var cell = param.cell;
     var column = cell.column;
     return /*#__PURE__*/ _jsx(_FilterBtnCommon, {
-        ctx: ctx,
         render: column.config.filterRender,
         isToolbar: false,
         children: function(param) {
@@ -96,8 +98,8 @@ import { Trigger, TriggerType } from "../../trigger/index.js";
         }
     });
 });
-/** 工具类公共筛选按钮 */ export function _ToolbarCommonFilter(param) {
-    var ctx = param.ctx;
+/** 工具栏公共筛选按钮 */ export function _ToolbarCommonFilter() {
+    var props = _injector.useProps();
     var bubble1 = useRef(null);
     var bubble2 = useRef(null);
     // bubble触发器
@@ -109,9 +111,9 @@ import { Trigger, TriggerType } from "../../trigger/index.js";
             bubble2.current.trigger(e);
         }
     });
+    if (!props.commonFilter) return null;
     return /*#__PURE__*/ _jsx(_FilterBtnCommon, {
-        ctx: ctx,
-        render: ctx.props.commonFilter,
+        render: props.commonFilter,
         isToolbar: true,
         children: function(param) {
             var state = param.state, setState = param.setState, renderContent = param.renderContent;
@@ -158,7 +160,7 @@ import { Trigger, TriggerType } from "../../trigger/index.js";
     });
 }
 /** 通用筛选弹层渲染逻辑 */ export var _FilterBtnCommon = function(param) {
-    var ctx = param.ctx, render = param.render, isToolbar = param.isToolbar, children = param.children;
+    var render = param.render, isToolbar = param.isToolbar, children = param.children;
     var renderContent = function renderContent() {
         return /*#__PURE__*/ _jsxs("div", {
             onKeyDown: enterDown,
@@ -194,6 +196,8 @@ import { Trigger, TriggerType } from "../../trigger/index.js";
             ]
         });
     };
+    var actState = _injector.useDeps(_useStateAct);
+    var methods = _injector.useDeps(_useMethodsAct);
     var self = useSelf({
         // 检测子级field
         names: []
@@ -204,23 +208,23 @@ import { Trigger, TriggerType } from "../../trigger/index.js";
         changed: false
     }), 2), state = ref[0], setState = ref[1];
     useEffect(function() {
-        ctx.state.instance.isActive(!state.open);
+        methods.overlayStackChange(state.open);
     }, [
         state.open
     ]);
     if (!render) return null;
-    var formNodes = render(ctx.filterForm);
+    var formNodes = render(actState.filterForm);
     if (!formNodes) return null;
     // 滚动时关闭
-    ctx.scrollEvent.useEvent(function() {
+    actState.scrollEvent.useEvent(function() {
         if (state.open && !isToolbar) setState({
             open: false
         });
     });
     // 检测变更
-    ctx.filterForm.events.change.useEvent(function() {
+    actState.filterForm.events.change.useEvent(function() {
         var changed = self.names.some(function(n) {
-            return ctx.filterForm.getChanged(n);
+            return actState.filterForm.getChanged(n);
         });
         if (changed !== state.changed) {
             setState({
@@ -233,9 +237,9 @@ import { Trigger, TriggerType } from "../../trigger/index.js";
         return _ts_generator(this, function(_state) {
             switch(_state.label){
                 case 0:
-                    defValue = ctx.filterForm.getDefaultValues();
+                    defValue = actState.filterForm.getDefaultValues();
                     self.names.forEach(function(name) {
-                        ctx.filterForm.setValue(name, getNamePathValue(defValue, name));
+                        actState.filterForm.setValue(name, getNamePathValue(defValue, name));
                     });
                     _state.label = 1;
                 case 1:
@@ -247,7 +251,7 @@ import { Trigger, TriggerType } from "../../trigger/index.js";
                     ]);
                     return [
                         4,
-                        ctx.filterForm.submit()
+                        actState.filterForm.submit()
                     ];
                 case 2:
                     _state.sent();
@@ -283,7 +287,7 @@ import { Trigger, TriggerType } from "../../trigger/index.js";
                     ]);
                     return [
                         4,
-                        ctx.filterForm.submit()
+                        actState.filterForm.submit()
                     ];
                 case 1:
                     _state.sent();

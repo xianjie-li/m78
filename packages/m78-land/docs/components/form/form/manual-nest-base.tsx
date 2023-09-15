@@ -58,28 +58,35 @@ const ManualBase = () => {
       <form.Field name="name" />
       <form.Field name="describe" />
 
-      <form.Field name="base">
-        {() => (
+      <form.Field
+        name="base"
+        component={() => (
           <Row>
             <form.Field name={["base", "age"]} />
             <form.Field name={["base", "sex"]} style={{ marginLeft: 12 }} />
           </Row>
         )}
-      </form.Field>
+      />
 
-      <div style={{ paddingLeft: "5em", marginLeft: 8 }}>
-        <Button onClick={form.reset}>重置</Button>
-        <Button
-          color={ButtonColor.primary}
-          onClick={() => {
-            form.submit().catch((err) => {
-              console.log(err?.rejects);
-            });
-          }}
-        >
-          提交
-        </Button>
-      </div>
+      {/* 这里使用Field作为布局组件排版按钮 */}
+      <form.Field
+        label=" "
+        component={() => (
+          <>
+            <Button onClick={form.reset}>重置</Button>
+            <Button
+              color={ButtonColor.primary}
+              onClick={() => {
+                form.submit().catch((err) => {
+                  console.log(err?.rejects);
+                });
+              }}
+            >
+              提交
+            </Button>
+          </>
+        )}
+      />
     </div>
   );
 };

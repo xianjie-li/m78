@@ -4,6 +4,7 @@ import {
   FormSchema,
 } from "../../form-vanilla/index.js";
 import {
+  AnyFunction,
   AnyObject,
   deleteNamePathValue,
   ensureArray,
@@ -392,18 +393,24 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
     // 包含新增或删除的行
     if (this.addRecordMap.size || this.removeRecordMap.size) return true;
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const hasSorted = Array.from(this.sortRecordMap.entries()).some(
-      ([_, rec]) => {
-        return rec.currentIndex !== rec.originIndex;
-      }
-    );
+    const hasSorted = this.getSortedStatus();
 
     // 包含排序过的行
     if (hasSorted) return true;
 
+    // 配置变更
+    if (this.table.getChangedConfigKeys().length > 0) return true;
+
     // 包含变更数据
     return Object.keys(this.rowChanged).some((key) => this.rowChanged[key]);
+  }
+
+  /** 检测是否发生了数据排序 */
+  getSortedStatus() {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    return Array.from(this.sortRecordMap.entries()).some(([_, rec]) => {
+      return rec.currentIndex !== rec.originIndex;
+    });
   }
 
   getData() {
@@ -418,6 +425,11 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
       const isChange = this.rowChanged[key] && !isAdd;
 
       if (isAdd) {
+        // 删除虚拟组件, 防止数据传输到服务端时出错
+        if (isAdd) {
+          deleteNamePathValue(data, this.config.primaryKey);
+        }
+
         add.push(data);
       }
 
@@ -442,6 +454,7 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
       remove,
       update,
       all,
+      sorted: this.getSortedStatus(),
     } as TableDataLists;
   }
 
@@ -834,7 +847,7 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
   }
 
   // 若行form不存在则对其进行初始化
-  private initForm(arg: TableMutationValueEvent | TableCell | TableRow) {
+  initForm(arg: TableMutationValueEvent | TableCell | TableRow) {
     const isCellArg = this.table.isCellLike(arg);
     const isRowArg = this.table.isRowLike(arg);
 
@@ -866,14 +879,16 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
       );
     }
 
-    form = createForm({
+    const formCreator = this.config.formCreator || createForm;
+
+    form = formCreator({
       defaultValue,
       schemas: {
         schema: this.config.schema,
       },
       autoVerify: false,
       languagePack: i18n.getResourceBundle(i18n.language, FORM_LANG_PACK_NS),
-    });
+    }) as FormInstance;
 
     this.formInstances[row.key] = form;
 
@@ -903,17 +918,12 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
 
         deleteNamePathValue(data, _TablePrivateProperty.fake);
       } else {
-        data = i;
+        data = Object.assign({}, i);
       }
 
       const invalid = this.invalidCellMap[key];
 
       if (invalid?.length) {
-        // 数据未clone时, 需要clone数据, 防止污染原始数据
-        if (!isIgnore) {
-          data = { ...data };
-        }
-
         invalid.forEach((cell) => {
           const name = cell.column.config.originalKey;
 
@@ -937,6 +947,8 @@ export interface TableFormSchema extends Omit<FormSchema, "list"> {}
 export interface TableFormConfig {
   /** 用于校验字段的schema */
   schema?: TableFormSchema[];
+  /** 自定义form实例创建器 */
+  formCreator?: AnyFunction;
 }
 
 /** 对外暴露的form相关方法 */
@@ -980,4 +992,6 @@ export interface TableDataLists<D = AnyObject> {
   update: D[];
   /** 移除的行 */
   remove: D[];
+  /** 是否发生了数据排序 */
+  sorted: boolean;
 }

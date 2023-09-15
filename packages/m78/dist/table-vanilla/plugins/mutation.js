@@ -7,10 +7,10 @@ import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
 import _create_super from "@swc/helpers/src/_create_super.mjs";
 import { TablePlugin } from "../plugin.js";
-import { createRandString, deepClone, deleteNamePathValue, ensureArray, getNamePathValue, isArray, isNumber, isObject, isString, recursionShakeEmpty, setNamePathValue, throwError, uniq } from "@m78/utils";
+import { createRandString, deepClone, deleteNamePathValue, ensureArray, getNamePathValue, isArray, isNumber, isObject, isString, isTruthyOrZero, recursionShakeEmpty, setNamePathValue, throwError, uniq } from "@m78/utils";
 import { TableReloadLevel } from "./life.js";
 import { _TablePrivateProperty, TableColumnFixed, TableRowFixed } from "../types/base-type.js";
-import { _getCellKeysByStr, _prefix } from "../common.js";
+import { _getCellKey, _getCellKeysByStr, _prefix } from "../common.js";
 import { _TableSortColumnPlugin } from "./sort-column.js";
 import { _TableFormPlugin } from "./form.js";
 /**
@@ -105,6 +105,7 @@ import { _TableFormPlugin } from "./form.js";
         _this.addRow = function(data, to, insertAfter) {
             var index = -1;
             if (!to) {
+                // 常规项第一项
                 index = _this.context.topFixedList.length;
             } else {
                 if (_this.context.yHeaderKeys.includes(to)) {
@@ -112,7 +113,11 @@ import { _TableFormPlugin } from "./form.js";
                     return;
                 }
                 var toRow = _object_spread({}, _this.table.getRow(to));
-                index = toRow.isFixed ? _this.context.dataKeyIndexMap["".concat(toRow.key).concat(_TablePrivateProperty.ref)] : toRow.realIndex;
+                if (toRow.isFixed) {
+                    console.warn("[".concat(_prefix, "] addRow: can't add row to fixed row"));
+                    return;
+                }
+                index = toRow.realIndex;
                 if (insertAfter) {
                     index = index + 1;
                 }
@@ -123,29 +128,12 @@ import { _TableFormPlugin } from "./form.js";
             if (index === -1) return;
             // 需要移动到的索引位置
             var list = ensureArray(data);
-            var beforeItem = _this.context.data[index];
-            if (beforeItem) {
-                var beforeKey = beforeItem[_this.config.primaryKey];
-                var row = _this.table.getRow(beforeKey);
-                // 目标索引为fixed时,
-                if (row && row.isFixed) {
-                    var isFixedTop = _this.context.topFixedMap[beforeKey];
-                    var isFixedBottom = _this.context.bottomFixedMap[beforeKey];
-                    if (isFixedTop) {
-                        index = _this.context.topFixedList.length;
-                    }
-                    if (isFixedBottom) {
-                        index = _this.context.data.length - _this.context.bottomFixeList.length;
-                    }
-                }
-            }
             var newData = list.map(function(i) {
                 if (!isObject(i)) i = {};
                 var key = i[_this.config.primaryKey];
-                if (!key) {
-                    return _object_spread_props(_object_spread({}, i), _define_property({}, _this.config.primaryKey, createRandString()));
-                }
-                return i;
+                var _obj;
+                return _object_spread_props(_object_spread({}, i), (_obj = {}, _define_property(_obj, _TablePrivateProperty.newFlag, true), // 使用传入的key或随机分配一个
+                _define_property(_obj, _this.config.primaryKey, isTruthyOrZero(key) ? key : createRandString()), _obj));
             });
             _this.table.history.redo({
                 title: _this.context.texts["add row"],
@@ -199,9 +187,20 @@ import { _TableFormPlugin } from "./form.js";
             var rows = list.map(function(i) {
                 return i.ins;
             });
+            var rowKeys = rows.map(function(i) {
+                return i.key;
+            });
+            var cellKeys = rows.map(function(i) {
+                return _this.context.allColumnKeys.map(function(cKey) {
+                    return _getCellKey(i.key, cKey);
+                });
+            }).flat();
             _this.table.history.redo({
                 title: _this.context.texts["remove row"],
                 redo: function() {
+                    // 移除删除项的选中状态
+                    _this.table.unselectRows(rowKeys);
+                    _this.table.unselectCells(cellKeys);
                     for(var i = list.length - 1; i >= 0; i--){
                         var cur = list[i];
                         _this.context.data.splice(cur.index, 1);
@@ -270,7 +269,8 @@ import { _TableFormPlugin } from "./form.js";
             if (!_this.changedRows[row.key]) {
                 _this.cloneAndSetRowData(row);
             }
-            var oldValue = deepClone(getNamePathValue(row.data, column.config.originalKey));
+            var ov = getNamePathValue(row.data, column.config.originalKey);
+            var oldValue = typeof ov === "object" ? deepClone(ov) : ov;
             _this.table.history.redo({
                 redo: function() {
                     setNamePathValue(row.data, column.config.originalKey, value);
@@ -285,7 +285,11 @@ import { _TableFormPlugin } from "./form.js";
                     _this.table.highlight(event.cell.key, false);
                 },
                 undo: function() {
-                    setNamePathValue(row.data, column.config.originalKey, oldValue);
+                    if (oldValue === undefined) {
+                        deleteNamePathValue(row.data, column.config.originalKey);
+                    } else {
+                        setNamePathValue(row.data, column.config.originalKey, oldValue);
+                    }
                     var event = {
                         type: TableMutationType.value,
                         cell: cell,
@@ -433,18 +437,19 @@ import { _TableFormPlugin } from "./form.js";
                         return i.redo();
                     });
                     // 同步sortColumns
-                    if (!isRow) {
+                    if (isRow) {
+                        _this.table.event.mutation.emit({
+                            type: TableMutationType.data,
+                            changeType: TableMutationDataType.move,
+                            add: [],
+                            remove: [],
+                            move: _to_consumable_array(moveEventData)
+                        });
+                    } else {
                         _this.table.history.ignore(function() {
                             _this.setPersistenceConfig("sortColumns", _this.sortColumn.getColumnSortKeys());
                         });
                     }
-                    _this.table.event.mutation.emit({
-                        type: TableMutationType.data,
-                        changeType: TableMutationDataType.move,
-                        add: [],
-                        remove: [],
-                        move: _to_consumable_array(moveEventData)
-                    });
                     _this.table.reloadSync({
                         keepPosition: true,
                         level: TableReloadLevel.index
@@ -478,26 +483,27 @@ import { _TableFormPlugin } from "./form.js";
                         data.splice(cur1.from, 0, cur1.data);
                     }
                     // 同步sortColumns
-                    if (!isRow) {
+                    if (isRow) {
+                        _this.table.event.mutation.emit({
+                            type: TableMutationType.data,
+                            changeType: TableMutationDataType.move,
+                            add: [],
+                            remove: [],
+                            move: _to_consumable_array(moveEventData).map(function(i) {
+                                return {
+                                    from: i.to,
+                                    to: i.from,
+                                    data: i.data,
+                                    dataFrom: i.dataTo,
+                                    dataTo: i.dataFrom
+                                };
+                            })
+                        });
+                    } else {
                         _this.table.history.ignore(function() {
                             _this.setPersistenceConfig("sortColumns", _this.sortColumn.getColumnSortKeys());
                         });
                     }
-                    _this.table.event.mutation.emit({
-                        type: TableMutationType.data,
-                        changeType: TableMutationDataType.move,
-                        add: [],
-                        remove: [],
-                        move: _to_consumable_array(moveEventData).map(function(i) {
-                            return {
-                                from: i.to,
-                                to: i.from,
-                                data: i.data,
-                                dataFrom: i.dataTo,
-                                dataTo: i.dataFrom
-                            };
-                        })
-                    });
                     _this.table.reloadSync({
                         keepPosition: true,
                         level: TableReloadLevel.index

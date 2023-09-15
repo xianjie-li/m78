@@ -111,7 +111,7 @@ import { createTrigger, TriggerType } from "../../trigger/index.js";
         // 创建raf用于优化动画
         this.rafCaller = rafCaller();
         // 为virtualBound添加特定节点的过滤
-        var vbPreCheck = function(type, e) {
+        var vbPreCheck = function(type) {
             if (type !== TriggerType.active && type !== TriggerType.drag) return false;
             // return !_triggerFilterList(
             //   e.target as HTMLElement,

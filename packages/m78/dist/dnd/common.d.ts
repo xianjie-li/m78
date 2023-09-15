@@ -22,6 +22,8 @@ export declare function _isBetweenBound({ left, top, right, bottom }: Bound, x: 
 export declare const _resetEvent: import("@m78/hooks").CustomEventWithHook<(ignoreIds?: string[], skipEnableReset?: boolean) => void>;
 /** 通知所有dnd同步位置尺寸信息 */
 export declare const _updateEvent: import("@m78/hooks").CustomEventWithHook<(useThrottle: boolean, groupId?: string) => void>;
+/** 用于处理draggingListen, 通知所有dnd更新 */
+export declare const _draggingEvent: import("@m78/hooks").CustomEventWithHook<(id: string, dragging: boolean, groupId?: string) => void>;
 export declare const _allValueIsTrue: (obj: AnyObject) => boolean;
 export declare const _someValueIsTrue: (obj: AnyObject) => boolean;
 export declare const _getObjectByNewValues: (obj: AnyObject, value: boolean) => AnyObject;

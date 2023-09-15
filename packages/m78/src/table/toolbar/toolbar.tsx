@@ -1,18 +1,12 @@
 import React from "react";
-import { Button, ButtonColor } from "../../button/index.js";
-import { Size } from "../../common/index.js";
+import { Button } from "../../button/index.js";
 import { Bubble } from "../../bubble/index.js";
 import { Divider, Row } from "../../layout/index.js";
 import {
   RCTableToolbarLeadingBuiltinNodes,
   RCTableToolbarTrailingBuiltinNodes,
 } from "../types.js";
-import { IconFileDownload } from "@m78/icons/icon-file-download.js";
-import { IconFileUpload } from "@m78/icons/icon-file-upload.js";
-import { IconDeleteForever } from "@m78/icons/icon-delete-forever.js";
-import { IconAddToPhotos } from "@m78/icons/icon-add-to-photos.js";
-import { IconSave } from "@m78/icons/icon-save.js";
-import { _getTableCtx } from "../common.js";
+
 import { _getHistoryButtons } from "./get-history-buttons.js";
 import { TABLE_NS, Trans, Translation } from "../../i18n/index.js";
 import {
@@ -23,6 +17,8 @@ import {
 import { _injector } from "../table.js";
 import { _useStateAct } from "../state.act.js";
 import { _AddBtn, _DeleteBtn, _SaveBtn } from "./data-actions.js";
+import { IconModeEdit } from "@m78/icons/icon-mode-edit.js";
+import { _ExportFileBtn, _ImportFileBtn } from "./xls.js";
 
 export function _Toolbar() {
   const props = _injector.useProps();
@@ -98,42 +94,20 @@ export function _Toolbar() {
   function renderTrailing() {
     if (!state.instance) return null;
 
-    const exportBtn = (
-      <Translation ns={TABLE_NS}>
-        {(t) => (
-          <Bubble
-            content={
-              <div>
-                <div>{t("export xlsx")}</div>
-                <div className="fs-12 color-second">
-                  {t("u can also")} <a>{t("export specific")}</a>
-                </div>
-              </div>
-            }
-          >
-            <Button className="color-second" squareIcon>
-              <IconFileDownload />
-            </Button>
-          </Bubble>
-        )}
-      </Translation>
-    );
+    const exportBtn = props.dataExport && <_ExportFileBtn />;
 
-    const importBtn = (
+    const importBtn = props.dataImport && <_ImportFileBtn />;
+
+    const editByDialogBtn = (
       <Translation ns={TABLE_NS}>
         {(t) => (
-          <Bubble
-            content={
-              <div>
-                {t("import")}
-                <div className="fs-12 color-second">
-                  <a>{t("download import tpl")}</a>
-                </div>
-              </div>
-            }
-          >
-            <Button className="color-second" squareIcon>
-              <IconFileUpload />
+          <Bubble content={t("edit by dialog")}>
+            <Button
+              className="color-second"
+              squareIcon
+              disabled={state.selectedRows.length !== 1}
+            >
+              <IconModeEdit />
             </Button>
           </Bubble>
         )}
@@ -150,6 +124,7 @@ export function _Toolbar() {
       <>
         {exportBtn}
         {importBtn}
+        {editByDialogBtn}
         {deleteBtn}
         <Divider vertical />
         {addBtn}
@@ -164,6 +139,7 @@ export function _Toolbar() {
       deleteBtn,
       addBtn,
       saveBtn,
+      editByDialogBtn,
     };
 
     if (props.toolBarTrailingCustomer) {

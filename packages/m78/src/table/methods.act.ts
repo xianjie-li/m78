@@ -6,10 +6,13 @@ import { _useStateAct } from "./state.act.js";
 import { _useEditRender } from "./use-edit-render.js";
 import { _useCustomRender } from "./use-custom-render.js";
 import { _injector } from "./table.js";
+import { createRandString, isFunction } from "@m78/utils";
+import { createForm } from "../form/index.js";
 
 export function _useMethodsAct() {
-  const { ref, scrollRef, scrollContRef, wrapRef, state, setState } =
+  const { ref, scrollRef, scrollContRef, wrapRef, state, setState, self } =
     _injector.useDeps(_useStateAct);
+  const props = _injector.useProps();
 
   const editRender = _useEditRender();
 
@@ -43,6 +46,7 @@ export function _useMethodsAct() {
         interactiveRender: editRender.interactiveRender,
         texts,
         extraActiveCheckEl: wrapRef.current,
+        formCreator: createForm,
       }) as any as RCTableInstance,
     });
   }
@@ -58,9 +62,40 @@ export function _useMethodsAct() {
     });
   }
 
+  /** 获取新的新的默认数据 */
+  function getDefaultNewData() {
+    let def = props.defaultNewData;
+
+    if (isFunction(def)) {
+      def = def();
+    }
+
+    return {
+      ...def,
+      [props.primaryKey]: createRandString(),
+    };
+  }
+
+  /** 记录每一个需要阻止默认键盘等操作行为的弹层启用/关闭, 在包含弹层时, 阻止table的交互 */
+  function overlayStackChange(open: boolean) {
+    if (open) {
+      self.overlayStackCount++;
+    } else {
+      self.overlayStackCount--;
+
+      if (self.overlayStackCount < 0) {
+        self.overlayStackCount = 0;
+      }
+    }
+
+    state.instance?.isActive(!self.overlayStackCount);
+  }
+
   return {
     initEmptyNode,
     updateInstance,
+    getDefaultNewData,
+    overlayStackChange,
   };
 }
 

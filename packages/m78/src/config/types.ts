@@ -1,5 +1,6 @@
 import React from "react";
 import { Resource } from "i18next";
+import { FormAdaptors } from "../form/index.js";
 
 export interface M78SeedConfig {
   /** 黑暗模式 */
@@ -19,4 +20,6 @@ export interface M78SeedConfig {
     /** Picture组件加载图片错误时的默认占位图 */
     errorImg?: string;
   };
+  /** 全局注册的 Form/Table 的表单控件适配器, 此配置不响应变更, 应该仅在应用入口设置一次 */
+  formAdaptors: FormAdaptors;
 }

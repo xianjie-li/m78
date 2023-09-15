@@ -10,7 +10,7 @@ import { createForm } from "../../form-vanilla/index.js";
 import { deleteNamePathValue, ensureArray, getNamePathValue, isEmpty, setNamePathValue, stringifyNamePath } from "@m78/utils";
 import { _TablePrivateProperty } from "../types/base-type.js";
 import { TablePlugin } from "../plugin.js";
-import { TableMutationType } from "./mutation.js";
+import { TableMutationDataType, TableMutationType } from "./mutation.js";
 import { requiredValidatorKey } from "@m78/verify";
 import { TableReloadLevel } from "./life.js";
 import { removeNode } from "../../common/index.js";
@@ -51,8 +51,22 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
         _this.invalidStatusMap = {};
         _this.invalidStatus = [];
         _this.invalidNodes = [];
+        // 记录新增的数据
+        _this.addRecordMap = new Map();
+        // 记录移除的数据
+        _this.removeRecordMap = new Map();
+        // 记录发生或排序变更的项信息
+        _this.sortRecordMap = new Map();
         _this.mutation = function(e) {
-            if (e.type !== TableMutationType.value) return;
+            if (e.type === TableMutationType.value) {
+                _this.valueMutation(e);
+            }
+            if (e.type === TableMutationType.data) {
+                _this.dataMutation(e);
+            }
+        };
+        // 值变更, 创建或获取form实例, 并同步值和校验状态
+        _this.valueMutation = function(e) {
             var cell = e.cell, value = e.value;
             var form = _this.initForm(e);
             var name = cell.column.config.originalKey;
@@ -98,6 +112,48 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
                 _this.table.render();
             });
         };
+        // data变更, 记录新增, 删除数据, 并且也将其计入getFormChanged变更状态
+        _this.dataMutation = function(e) {
+            if (e.changeType === TableMutationDataType.add) {
+                e.add.forEach(function(d) {
+                    var k = _this.table.getKeyByRowData(d);
+                    if (!k) return;
+                    // 已经存在于删除列表中, 则不再计入新增列表
+                    if (_this.removeRecordMap.has(k)) {
+                        _this.removeRecordMap.delete(k);
+                        return;
+                    }
+                    _this.addRecordMap.set(k, true);
+                });
+            }
+            if (e.changeType === TableMutationDataType.remove) {
+                e.remove.forEach(function(d) {
+                    var k = _this.table.getKeyByRowData(d);
+                    if (!k) return;
+                    // 已经存在于新增列表中, 则不再计入删除列表
+                    if (_this.addRecordMap.has(k)) {
+                        _this.addRecordMap.delete(k);
+                        return;
+                    }
+                    _this.removeRecordMap.set(k, d);
+                });
+            }
+            if (e.changeType === TableMutationDataType.move) {
+                e.move.forEach(function(meta) {
+                    var k = _this.table.getKeyByRowData(meta.data);
+                    if (!k) return;
+                    var rec = _this.sortRecordMap.get(k);
+                    if (!rec) {
+                        rec = {
+                            originIndex: meta.from,
+                            currentIndex: meta.to
+                        };
+                        _this.sortRecordMap.set(k, rec);
+                    }
+                    rec.currentIndex = meta.to;
+                });
+            }
+        };
         return _this;
     }
     var _proto = _TableFormPlugin.prototype;
@@ -107,11 +163,11 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
         this.wrapNode.className = "m78-table_form-wrap";
         this.methodMapper(this.table, [
             "verify",
+            "verifyRow",
             "verifyChanged",
-            "getChangedData",
             "getData",
             "getChanged",
-            "getFormChanged",
+            "getTableChanged",
             "resetFormState", 
         ]);
     };
@@ -123,12 +179,16 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
         this.table.event.mutation.off(this.mutation);
         this.editStatus = [];
         this.editStatusMap = {};
+        this.addRecordMap = new Map();
+        this.removeRecordMap = new Map();
         this.reset();
+        this.resetDataRecords();
         removeNode(this.wrapNode);
     };
     _proto.loadStage = function loadStage(level, isBefore) {
         if (level === TableReloadLevel.full && isBefore) {
             this.reset();
+            this.resetDataRecords();
         }
         if (level === TableReloadLevel.base && !isBefore) {
             this.updateEditStatus();
@@ -155,8 +215,9 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
                 // if (!cell.isMount) return;
                 var node = _this.editStatusNodes[ind];
                 var position = _this.table.getAttachPosition(cell);
-                node.style.color = required ? "var(--m78-color-warning)" : "var(--m78-color-opacity-lg)";
-                node.style.transform = "translate(".concat(position.left + 2, "px, ").concat(position.top + position.height - 8, "px)");
+                node.style.backgroundColor = required ? "var(--m78-color-warning)" : "var(--m78-color-opacity-lg)";
+                node.style.transform = "translate(".concat(position.left, "px, ").concat(position.top, "px)");
+                node.style.width = "".concat(position.width, "px");
                 node.style.zIndex = position.zIndex;
             });
         }
@@ -203,32 +264,81 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
         return !this.invalidStatusMap[cell.key];
     };
     _proto.getChanged = function getChanged(rowKey, columnKey) {
+        // 新增行的检测均视为变更
+        if (this.addRecordMap.has(rowKey)) return true;
+        // 删除行的检测均视为变更
+        if (this.removeRecordMap.has(rowKey)) return true;
         if (!columnKey) {
             return !!this.rowChanged[rowKey];
         }
         return !!this.cellChanged[_getCellKey(rowKey, stringifyNamePath(columnKey))];
     };
-    _proto.getFormChanged = function getFormChanged() {
+    _proto.getTableChanged = function getTableChanged() {
         var _this = this;
+        // 包含新增或删除的行
+        if (this.addRecordMap.size || this.removeRecordMap.size) return true;
+        var hasSorted = this.getSortedStatus();
+        // 包含排序过的行
+        if (hasSorted) return true;
+        // 配置变更
+        if (this.table.getChangedConfigKeys().length > 0) return true;
+        // 包含变更数据
         return Object.keys(this.rowChanged).some(function(key) {
             return _this.rowChanged[key];
         });
     };
-    _proto.getData = function getData() {
-        return this.getDataCommon();
-    };
-    _proto.getChangedData = function getChangedData() {
-        var _this = this;
-        return this.getDataCommon(function(i) {
-            var key = _this.table.getKeyByRowData(i);
-            return _this.rowChanged[key];
+    /** 检测是否发生了数据排序 */ _proto.getSortedStatus = function getSortedStatus() {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        return Array.from(this.sortRecordMap.entries()).some(function(param) {
+            var _param = _sliced_to_array(param, 2), _ = _param[0], rec = _param[1];
+            return rec.currentIndex !== rec.originIndex;
         });
+    };
+    _proto.getData = function getData() {
+        var _this = this;
+        var add = [];
+        var change = [];
+        var update = [];
+        var remove = [];
+        var all = this.eachData(function(data, key) {
+            var isAdd = _this.addRecordMap.has(key);
+            // 数据变更并且不是新增的数据
+            var isChange = _this.rowChanged[key] && !isAdd;
+            if (isAdd) {
+                // 删除虚拟组件, 防止数据传输到服务端时出错
+                if (isAdd) {
+                    deleteNamePathValue(data, _this.config.primaryKey);
+                }
+                add.push(data);
+            }
+            if (isChange) {
+                change.push(data);
+            }
+            if (isAdd || isChange) {
+                update.push(data);
+            }
+        });
+        var rList = Array.from(this.removeRecordMap.values());
+        if (rList) {
+            remove = rList;
+        }
+        return {
+            change: change,
+            add: add,
+            remove: remove,
+            update: update,
+            all: all,
+            sorted: this.getSortedStatus()
+        };
     };
     _proto.resetFormState = function resetFormState() {
         this.reset();
         this.table.render();
     };
-    _proto.verify = function verify(rowKey) {
+    _proto.verify = function verify() {
+        return this.verifyCommon(false);
+    };
+    _proto.verifyRow = function verifyRow(rowKey) {
         return this.verifyCommon(false, rowKey);
     };
     _proto.verifyChanged = function verifyChanged() {
@@ -242,18 +352,21 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
     /** 获取指定列的可编辑信息, 不可编辑时返回null */ _proto.getEditStatus = function getEditStatus(col) {
         return this.editStatusMap[col.key] || null;
     };
-    // 验证通用逻辑, 传入rowKey时仅验证指定的行
+    // 验证通用逻辑, 传入rowKey时仅验证指定的行, 单行验证时仅返回指定行
     _proto.verifyCommon = function verifyCommon(onlyChanged, rowKey) {
         var _this = this;
         return _async_to_generator(function() {
-            var data, form, _tmp;
+            var data, dataLists, form, _tmp;
             return _ts_generator(this, function(_state) {
+                data = [];
+                dataLists = null;
                 if (rowKey) {
                     data = [
                         _this.table.getRow(rowKey).data
                     ];
                 } else {
-                    data = onlyChanged ? _this.getChangedData() : _this.getData();
+                    dataLists = _this.getData();
+                    data = onlyChanged ? dataLists.update : dataLists.all;
                 }
                 _tmp = {};
                 form = createForm((_tmp.schemas = {
@@ -265,7 +378,7 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
                 return [
                     2,
                     form.verify().then(function() {
-                        return data;
+                        return rowKey ? data[0] : dataLists;
                     }).catch(function(err) {
                         var ref, ref1;
                         var namePath = (ref = err.rejects) === null || ref === void 0 ? void 0 : (ref1 = ref[0]) === null || ref1 === void 0 ? void 0 : ref1.namePath;
@@ -284,7 +397,7 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
             });
         })();
     };
-    // 验证指定行兵更新对应ui, 传入cell时, 高亮指定cell
+    // 验证指定行并更新对应ui, 传入cell时, 高亮指定cell
     _proto.verifySpecifiedRow = function verifySpecifiedRow(row, cell) {
         var _this = this;
         var form = this.initForm(row);
@@ -321,6 +434,13 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
             }
         });
     };
+    // 重置行数据的记录状态
+    _proto.resetDataRecords = function resetDataRecords() {
+        this.addRecordMap = new Map();
+        this.removeRecordMap = new Map();
+        this.sortRecordMap = new Map();
+    };
+    // 重置状态
     _proto.reset = function reset() {
         this.cellChanged = {};
         this.rowChanged = {};
@@ -337,7 +457,15 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
         var firstRowKey = this.context.allRowKeys[0];
         this.editStatus = [];
         this.editStatusMap = {};
-        if (!firstRowKey) return;
+        if (!firstRowKey) {
+            // 清空
+            _syncListNode({
+                wrapNode: this.wrapNode,
+                list: [],
+                nodeList: this.editStatusNodes
+            });
+            return;
+        }
         var requireKeys = [];
         // 是否包含必填验证器
         if (!isEmpty(this.config.schema)) {
@@ -428,6 +556,7 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
         var list = [];
         var rowErrorMap = {};
         Object.keys(this.errors).forEach(function(key) {
+            if (_this.removeRecordMap.has(key)) return false; // 删除行不显示
             var rowErrors = _this.errors[key];
             if (rowErrors) {
                 if (rowErrors.length) {
@@ -465,6 +594,7 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
         var checkedMap = {};
         var list = keyList.filter(function(i) {
             if (checkedMap[i]) return false;
+            if (_this.removeRecordMap.has(i)) return false; // 删除行不显示
             checkedMap[i] = true;
             return showRowsMap[i] && (errorMap[i] || _this.rowChanged[i]);
         }).map(function(key) {
@@ -539,13 +669,12 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
         this.formInstances[row.key] = form;
         return form;
     };
-    _proto.getDataCommon = function getDataCommon(filter) {
+    /** 遍历数据, 返回所有数据 */ _proto.eachData = function eachData(cd) {
         var _this = this;
         var list = [];
         this.context.data.forEach(function(i) {
             var isFake = getNamePathValue(i, _TablePrivateProperty.fake);
             if (isFake) return;
-            if (filter && !filter(i)) return;
             var key = _this.table.getKeyByRowData(i);
             var data;
             var isIgnore = getNamePathValue(i, _TablePrivateProperty.ignore);
@@ -555,19 +684,16 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
                 data = Object.assign({}, _this.context.data[ind]);
                 deleteNamePathValue(data, _TablePrivateProperty.fake);
             } else {
-                data = i;
+                data = Object.assign({}, i);
             }
             var invalid = _this.invalidCellMap[key];
             if (invalid === null || invalid === void 0 ? void 0 : invalid.length) {
-                // 数据未clone时, 需要clone数据, 防止污染原始数据
-                if (!isIgnore) {
-                    data = _object_spread({}, data);
-                }
                 invalid.forEach(function(cell) {
                     var name = cell.column.config.originalKey;
                     deleteNamePathValue(data, name);
                 });
             }
+            cd(data, key);
             list.push(data);
         });
         return list;

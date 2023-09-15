@@ -22,7 +22,7 @@ const form = createForm({
         name: "psw2",
         // 声明对字段psw的依赖, 使对应字段发生变更时自身也会同步变更, 此配置主要用于提升性能, 避免不必要的渲染
         deps: ["psw"],
-        // dynamic使我们可以根据当前form的状态动态调整schema配置
+        // dynamic使我们可以根据当前表单的状态动态调整schema配置
         dynamic: (formIns) => ({
           // valid为true时, 字段才会显示并参与验证和提交
           valid: !!formIns.getValue("psw"),
@@ -43,16 +43,16 @@ const form = createForm({
 });
 
 const DynamicBase = () => {
-  form.events.submit.useEvent(() => {
-    Dialog.render({
-      title: "表单数据",
-      content: <pre>{JSON.stringify(form.getValues(), null, 2)}</pre>,
-    });
-  });
-
   return (
     <div className="ptb-32">
-      <form.SchemaRender />
+      <form.SchemaRender
+        onSubmit={(values) => {
+          Dialog.render({
+            title: "表单数据",
+            content: <pre>{JSON.stringify(values, null, 2)}</pre>,
+          });
+        }}
+      />
     </div>
   );
 };

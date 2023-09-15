@@ -7,7 +7,5 @@ import React from "react";
     "content",
     "children",
     "triggerNodeRef",
-    "open",
-    "defaultOpen",
     "autoFocus", 
 ];

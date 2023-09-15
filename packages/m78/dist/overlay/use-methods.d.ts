@@ -18,7 +18,7 @@ export declare function _useMethods(ctx: _OverlayContext): {
     throttleUpdate: () => void;
     debounceUpdate: () => void;
     onTriggerMultiple: (e: TriggerEvent) => void;
-    onDragHandle: Handler<"drag", MouseEvent | PointerEvent | KeyboardEvent | TouchEvent>;
+    onDragHandle: Handler<"drag", MouseEvent | TouchEvent | PointerEvent | KeyboardEvent>;
     getDragInitXY: () => TupleNumber;
     getDragBound: () => _ClampBound;
 };

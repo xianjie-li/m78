@@ -65,7 +65,8 @@ ins.renderList.map((cell, n: React.ReactElement | null) => {
 
 ## 滚动 -
 
-为了防止滚动空白闪烁, 需要代理所有的滚动行为, 包括 wheel 事件监听和自定义滚动条, 这样才能实现对滚动结果位置的掌控, 从而提前进行渲染
+为了防止滚动空白闪烁, 需要代理所有的滚动行为, 包括 wheel 事件监听和自定义滚动条, 这样才能实现对滚动结果位置的掌控,
+从而提前进行渲染
 
 固定项滚动抖动/虚拟滚动快速滚动短暂空白: 使用 wheel 代替 scroll 事件, 后者是滚动后触发, 进行渲染时已经处于滚动后了,
 所以会有明显的延迟感
@@ -259,6 +260,7 @@ interactiveRender({ cell, attachNode }): clearFn?;
 
 ```tsx
 let current = null;
+
 // 一个假想的在react中进行集成的方式
 function interactiveRender({ attachNode }) {
   current = createPortal(<input />, attachNode);
@@ -382,13 +384,92 @@ PC:
 
 ## 杂
 
-- 光标聚焦显示隐藏的完整内容
 - 内容查找, 高亮匹配内容
-- 筛选
 - 导出: 导出选中/导出所有/勾选要导出的列, 配置列字符串, 用于搜索/导出
 
-编辑后显示校验反馈
-上下文菜单增删数据
+form 支持 react 版本, 用于更简单的渲染 form, 通过一个 editComponentBridge
+大部分 schema 配置都只在表单渲染模式有意义
+
+table 直接接收 form 实例?
+
+form 和 table 的 components 改为全局注册
+
+各个表单组件分别导出其对应的配置
+
+修复 filter 问题, 更改图标, 支持根据 name 直接生成
+提供 filter 样式
+
+```tsx
+config({
+  formAdaptors: [
+    {
+      name: "input",
+      component: <Input />, // 注册后, 如果后续使用此组件, 也会应用对应的配置
+      formAdaptor: fn,
+      tableAdaptor: fn,
+    },
+  ],
+});
+```
+
+form 改动
+
+分为 Adaptor 和 Customer, 前者主要用于绑定 prop, 后者主要用于自定义样式
+
+全部使用气泡提示, 描述可配置为固定节点或气泡
+改为默认添加四个编剧, 添加 noPad 消除边距
+
+- Adaptor 支持全局/field/schema 级别, 用于映射 prop 到表单控件
+- Customer 支持 form/field/schema, 用于为 Field 添加自定义容器
+  - 支持保留之前的容器, 传入一个 wrapper 函数暴露前一个 customer
+- preventDefaultRenders 禁用默认渲染内容, 仅渲染表单控件
+- component 表单控件, 支持表单控件/预定义的控件/适配器
+
+```ts
+interface FormCustomRenderArgs {
+  bind;
+  // size/disabled等, 并非所有控件都支持
+  extraBind;
+  form;
+  config;
+  props;
+  getProps;
+  element;
+}
+
+React.cloneElement(element, {
+  ...extraBind,
+  ...bind,
+});
+```
+
+Customer
+
+```tsx
+const customer = (args, node) => {
+  return (
+    <div>
+      <div>{node}</div>
+      <div>...</div>
+    </div>
+  );
+};
+```
+
+变动的配置
+
+FormConfig.adaptors
+FormConfig.components
+
+FormProps.fieldCustomer
+FormProps.spacePad
+FormProps.bubbleDescribe
+FormProps.spacePad
+FormProps.wrapCustomer
+
+FormCommonProps.noLayout -> preventDefaultRenders
+
+customer/adaptor/嵌套处理和重复声明处理
 
 ## virtualBound -
 

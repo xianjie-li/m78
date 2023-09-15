@@ -5,6 +5,11 @@ declare const _default: {
         cancel: string;
         loading: string;
         empty: string;
+        alert: string;
+        yes: string;
+        no: string;
+        "confirm operation": string;
+        "confirm delete": string;
     };
     input: {
         "word count": string;
@@ -92,6 +97,7 @@ declare const _default: {
         editable: string;
         "editable and required": string;
         "currently not editable": string;
+        clipboardWarning: string;
         count: string;
         query: string;
         reset: string;
@@ -106,12 +112,23 @@ declare const _default: {
         "download import tpl": string;
         "delete selected rows": string;
         "add row tip1": string;
-        "add row tip2": string;
         "new tip": string;
         "delete tip": string;
         "update tip": string;
+        "conf tip": string;
+        "sorted tip": string;
         "add row btn": string;
         "save btn": string;
+        "copy cell": string;
+        "paste cell": string;
+        "copy cells": string;
+        "paste cells": string;
+        "insert top": string;
+        "insert bottom": string;
+        "delete row": string;
+        "delete rows": string;
+        "edit by dialog": string;
+        "conf changed": string;
     };
 };
 export default _default;

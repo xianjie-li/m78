@@ -9,7 +9,7 @@ const form = createForm({
         label: "姓名",
         name: "name",
         validator: [required(), string({ min: 2, max: 5 })],
-        component: <Input placeholder="请输入姓名" />,
+        component: <Input placeholder="输入姓名" />,
       },
       {
         label: "简介",
@@ -22,16 +22,16 @@ const form = createForm({
 });
 
 const SchemaBase = () => {
-  form.events.submit.useEvent(() => {
-    Dialog.render({
-      title: "表单数据",
-      content: <pre>{JSON.stringify(form.getValues(), null, 2)}</pre>,
-    });
-  });
-
   return (
     <div className="ptb-32">
-      <form.SchemaRender />
+      <form.SchemaRender
+        onSubmit={(values) => {
+          Dialog.render({
+            title: "表单数据",
+            content: <pre>{JSON.stringify(values, null, 2)}</pre>,
+          });
+        }}
+      />
     </div>
   );
 };

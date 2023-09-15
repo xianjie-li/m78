@@ -9,11 +9,8 @@ import {
   KeyboardHelperOption,
   KeyboardMultipleHelper,
 } from "@m78/utils";
-import { _prefix } from "../common.js";
 import { _TableInteractiveCorePlugin } from "./interactive-core.js";
 import { Position } from "../../common/index.js";
-
-const clipboardDataWarning = `[${_prefix}] can't get clipboardData, bowser not support.`;
 
 /** 单个值粘贴时, 最大的可粘贴单元格数 */
 const maxSinglePaste = 50;
@@ -23,6 +20,10 @@ export class _TableKeyboardInteractionPlugin extends TablePlugin {
   interactiveCore: _TableInteractiveCorePlugin;
 
   multipleHelper: KeyboardMultipleHelper;
+
+  beforeInit() {
+    this.methodMapper(this.table, ["copy", "paste"]);
+  }
 
   init() {
     this.interactiveCore = this.getPlugin(_TableInteractiveCorePlugin);
@@ -41,54 +42,41 @@ export class _TableKeyboardInteractionPlugin extends TablePlugin {
     this.multipleHelper.destroy();
   }
 
-  // 事件绑定配置
-  private getKeydownOptions(): KeyboardHelperOption[] {
-    const checker = () => {
-      // 非表格焦点 或 有正在进行编辑等操作的单元格, 跳过
-      return this.table.isActive() && !this.interactiveCore.items.length;
-    };
-
-    return [
-      {
-        code: "Backspace",
-        handle: this.onDelete,
-        enable: checker,
-      },
-      {
-        code: "KeyZ",
-        modifier: [KeyboardHelperModifier.sysCmd],
-        handle: this.onUndo,
-        enable: checker,
-      },
-      {
-        code: "KeyZ",
-        modifier: [KeyboardHelperModifier.sysCmd, KeyboardHelperModifier.shift],
-        handle: this.onRedo,
-        enable: checker,
-      },
-      {
-        code: ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Tab"],
-        handle: this.onMove,
-        enable: checker,
-      },
-    ];
+  paste() {
+    this.pasteImpl();
   }
 
-  /** 粘贴 */
-  private onPaste = (e: Event) => {
+  copy() {
+    this.copyImpl();
+  }
+
+  // 粘贴的核心实现, 传入ClipboardEvent时, 使用事件对象操作剪切板, 否则使用 Clipboard API
+  private async pasteImpl(e?: ClipboardEvent) {
     if (!this.table.isActive()) return;
 
     // 有正在进行编辑等操作的单元格, 跳过
     if (this.interactiveCore.items.length) return;
 
-    const data: DataTransfer | null = (e as ClipboardEvent).clipboardData;
+    let str = "";
 
-    if (!data) {
-      console.warn(clipboardDataWarning);
-      return;
+    if (e) {
+      const data: DataTransfer | null = (e as ClipboardEvent).clipboardData;
+
+      if (!data) {
+        this.table.event.error.emit(this.context.texts.clipboardWarning);
+        return;
+      }
+
+      str = data.getData("text/plain");
+    } else {
+      try {
+        str = await navigator.clipboard.readText();
+      } catch (e) {
+        this.table.event.error.emit(this.context.texts.clipboardWarning);
+        return;
+      }
     }
 
-    const str = data.getData("text/plain");
     if (!isString(str)) return;
 
     const strCell = this.parse(str);
@@ -98,7 +86,10 @@ export class _TableKeyboardInteractionPlugin extends TablePlugin {
     const selected = this.table.getSortedSelectedCells();
     if (!selected.length) return;
 
-    e.preventDefault();
+    // 事件对象时, 阻止默认行为
+    if (e) {
+      e.preventDefault();
+    }
 
     const actions: EmptyFunction[] = [];
 
@@ -174,10 +165,10 @@ export class _TableKeyboardInteractionPlugin extends TablePlugin {
     this.table.history.batch(() => {
       actions.forEach((action) => action());
     });
-  };
+  }
 
-  /** 复制 */
-  private onCopy = (e: Event) => {
+  // 复制的核心实现, 传入ClipboardEvent时, 使用事件对象操作剪切板, 否则使用 Clipboard API
+  private async copyImpl(e?: ClipboardEvent) {
     if (!this.table.isActive()) return;
 
     // 有正在进行编辑等操作的单元格, 跳过
@@ -187,14 +178,16 @@ export class _TableKeyboardInteractionPlugin extends TablePlugin {
 
     if (!selected.length) return;
 
-    const data: DataTransfer | null = (e as ClipboardEvent).clipboardData;
+    if (e) {
+      const data: DataTransfer | null = (e as ClipboardEvent).clipboardData;
 
-    if (!data) {
-      console.warn(clipboardDataWarning);
-      return;
+      if (!data) {
+        this.table.event.error.emit(this.context.texts.clipboardWarning);
+        return;
+      }
+
+      e.preventDefault();
     }
-
-    e.preventDefault();
 
     let str = "";
 
@@ -204,7 +197,7 @@ export class _TableKeyboardInteractionPlugin extends TablePlugin {
       for (let j = 0; j < curList.length; j++) {
         const cell = curList[j];
 
-        const value = this.table.getValue(cell);
+        const value = this.table.getValue(cell) || "";
 
         if (j === curList.length - 1) {
           str += value;
@@ -218,8 +211,60 @@ export class _TableKeyboardInteractionPlugin extends TablePlugin {
       }
     }
 
-    data.clearData();
-    data.setData("text/plain", str);
+    if (e) {
+      e.clipboardData!.clearData();
+      e.clipboardData!.setData("text/plain", str);
+    } else {
+      try {
+        await navigator.clipboard.writeText(str);
+      } catch (e) {
+        this.table.event.error.emit(this.context.texts.clipboardWarning);
+        return;
+      }
+    }
+  }
+
+  // 事件绑定配置
+  private getKeydownOptions(): KeyboardHelperOption[] {
+    const checker = () => {
+      // 非表格焦点 或 有正在进行编辑等操作的单元格, 跳过
+      return this.table.isActive() && !this.interactiveCore.items.length;
+    };
+
+    return [
+      {
+        code: "Backspace",
+        handle: this.onDelete,
+        enable: checker,
+      },
+      {
+        code: "KeyZ",
+        modifier: [KeyboardHelperModifier.sysCmd],
+        handle: this.onUndo,
+        enable: checker,
+      },
+      {
+        code: "KeyZ",
+        modifier: [KeyboardHelperModifier.sysCmd, KeyboardHelperModifier.shift],
+        handle: this.onRedo,
+        enable: checker,
+      },
+      {
+        code: ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Tab"],
+        handle: this.onMove,
+        enable: checker,
+      },
+    ];
+  }
+
+  /** 粘贴 */
+  private onPaste = (e: Event) => {
+    this.pasteImpl(e as ClipboardEvent);
+  };
+
+  /** 复制 */
+  private onCopy = (e: Event) => {
+    this.copyImpl(e as ClipboardEvent);
   };
 
   /** 删除 */
@@ -237,13 +282,11 @@ export class _TableKeyboardInteractionPlugin extends TablePlugin {
 
   /** 撤销 */
   private onUndo = () => {
-    console.log("undo");
     this.table.history.undo();
   };
 
   /** 重做 */
   private onRedo = () => {
-    console.log("redo");
     this.table.history.redo();
   };
 
@@ -368,4 +411,11 @@ export class _TableKeyboardInteractionPlugin extends TablePlugin {
 
     return this.table.getCell(firstRow.key, firstColumn.key);
   }
+}
+
+export interface TableKeyboardInteraction {
+  /** 复制当前选中单元格到粘贴板 */
+  copy: EmptyFunction;
+  /** 粘贴当前粘贴板内容到选中单元格 */
+  paste: EmptyFunction;
 }

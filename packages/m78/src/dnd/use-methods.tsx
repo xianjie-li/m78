@@ -27,6 +27,7 @@ import {
   _getCurrentTriggerByMultipleTrigger,
   _isIgnoreEl,
   _getObjectByNewValues,
+  _draggingEvent,
 } from "./common.js";
 import clsx from "clsx";
 
@@ -108,6 +109,7 @@ export function _useMethods(ctx: _Context) {
     // 开始拖动时更新所有节点位置信息, 拖动中间歇更新(大部分情况节点位置不会改变, 这样可以节省性能)
     if (first) {
       _updateEvent.emit(false, ctx.props.group);
+      _draggingEvent.emit(ctx.id, true, ctx.props.group);
     } else {
       _updateEvent.emit(true, ctx.props.group);
     }
@@ -206,6 +208,7 @@ export function _useMethods(ctx: _Context) {
         props.onDrop?.(event);
         // 通知所有组件
         _resetEvent.emit();
+        _draggingEvent.emit(ctx.id, false, ctx.props.group);
         self.lastEntryDND = undefined;
       } else {
         props.onMove?.(event);
@@ -259,6 +262,9 @@ export function _useMethods(ctx: _Context) {
       props.onMove?.(event);
     }
 
+    // hasDragging不需要对比
+    status.hasDragging = dndState.status.hasDragging;
+
     // 状态有变时进行更新
     if (
       !isEqual(dndState.enables, enables) ||
@@ -272,6 +278,7 @@ export function _useMethods(ctx: _Context) {
 
     if (last) {
       _resetEvent.emit([]);
+      _draggingEvent.emit(ctx.id, false, ctx.props.group);
       self.lastEntryDND = undefined;
     } else {
       // 通知重置

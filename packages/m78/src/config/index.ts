@@ -15,6 +15,7 @@ const m78Config = createSeed<M78SeedConfig>({
     darkMode: false,
     empty: {},
     picture: {},
+    formAdaptors: [],
   },
 });
 

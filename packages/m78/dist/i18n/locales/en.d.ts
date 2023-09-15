@@ -5,6 +5,11 @@ declare const _default: {
         cancel: string;
         loading: string;
         empty: string;
+        alert: string;
+        yes: string;
+        no: string;
+        "confirm operation": string;
+        "confirm delete": string;
     };
     input: {
         "word count": string;
@@ -94,12 +99,22 @@ declare const _default: {
         "download import tpl": string;
         "delete selected rows": string;
         "add row tip1": string;
-        "add row tip2": string;
         "new tip": string;
         "delete tip": string;
         "update tip": string;
+        "conf tip": string;
+        "sorted tip": string;
         "add row btn": string;
         "save btn": string;
+        "copy cell": string;
+        "paste cell": string;
+        "copy cells": string;
+        "paste cells": string;
+        "insert top": string;
+        "insert bottom": string;
+        "delete row": string;
+        "delete rows": string;
+        "edit by dialog": string;
         "paste unaligned row": "Pasted rows does not match the number of selected rows";
         "paste unaligned column": "Pasted column does not match the number of selected column";
         "paste single value limit": "Paste single value can't exceed {num} cell";
@@ -112,6 +127,7 @@ declare const _default: {
         editable: "Editable";
         "editable and required": "Editable (required)";
         "currently not editable": "Currently not editable";
+        clipboardWarning: "Can't get clipboard data, bowser not support or does not have permissions.";
     };
 };
 export default _default;

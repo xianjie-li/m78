@@ -12,11 +12,18 @@ import React from "react";
 import { _useStateAct } from "./state.act.js";
 import { _injector } from "./table.js";
 import { COMMON_NS, Translation } from "../i18n/index.js";
+import { _useContextMenuAct } from "./context-menu/use-context-menu.act.js";
+import { AnyFunction } from "@m78/utils";
 
 export function _useRender() {
   const props = _injector.useProps();
   const { state, ref, scrollRef, scrollEvent, scrollContRef, wrapRef } =
     _injector.useDeps(_useStateAct);
+
+  const ctxMenu = _injector.useDeps(_useContextMenuAct);
+
+  // 内部引用了ctxMenu.node, 避免递归引用导致类型丢失
+  const renderTrigger = ctxMenu.renderTrigger as AnyFunction;
 
   return (
     <div
@@ -48,26 +55,29 @@ export function _useRender() {
           <_CustomRender />
           <_CustomEditRender />
           <_Feedback />
+          {ctxMenu.node}
         </>
       )}
 
-      <div
-        style={props.style}
-        className={clsx("m78-table", props.className)}
-        ref={ref}
-      >
-        <Scroll
-          className="m78-table_view m78-table_expand-size"
-          direction="xy"
-          disabledScroll
-          innerWrapRef={scrollRef}
-          miniBar
-          scrollIndicator={false}
-          onScroll={scrollEvent.emit}
+      {renderTrigger(
+        <div
+          style={props.style}
+          className={clsx("m78-table", props.className)}
+          ref={ref}
         >
-          <div ref={scrollContRef} />
-        </Scroll>
-      </div>
+          <Scroll
+            className="m78-table_view m78-table_expand-size"
+            direction="xy"
+            disabledScroll
+            innerWrapRef={scrollRef}
+            miniBar
+            scrollIndicator={false}
+            onScroll={scrollEvent.emit}
+          >
+            <div ref={scrollContRef} />
+          </Scroll>
+        </div>
+      )}
     </div>
   );
 }

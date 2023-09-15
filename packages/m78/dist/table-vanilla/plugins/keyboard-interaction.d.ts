@@ -1,14 +1,19 @@
 import { TablePlugin } from "../plugin.js";
 import { TableCell } from "../types/items.js";
-import { KeyboardMultipleHelper } from "@m78/utils";
+import { EmptyFunction, KeyboardMultipleHelper } from "@m78/utils";
 import { _TableInteractiveCorePlugin } from "./interactive-core.js";
 /** 键盘交互操作, 比如单元格复制/粘贴/delete等 */
 export declare class _TableKeyboardInteractionPlugin extends TablePlugin {
     interactiveCore: _TableInteractiveCorePlugin;
     multipleHelper: KeyboardMultipleHelper;
+    beforeInit(): void;
     init(): void;
     mounted(): void;
     beforeDestroy(): void;
+    paste(): void;
+    copy(): void;
+    private pasteImpl;
+    private copyImpl;
     private getKeydownOptions;
     /** 粘贴 */
     private onPaste;
@@ -28,5 +33,11 @@ export declare class _TableKeyboardInteractionPlugin extends TablePlugin {
     checkAlign(strCell: string[][], cells: TableCell[][]): string;
     /** 获取首个常规单元格 */
     getFirstCell(): TableCell | undefined;
+}
+export interface TableKeyboardInteraction {
+    /** 复制当前选中单元格到粘贴板 */
+    copy: EmptyFunction;
+    /** 粘贴当前粘贴板内容到选中单元格 */
+    paste: EmptyFunction;
 }
 //# sourceMappingURL=keyboard-interaction.d.ts.map

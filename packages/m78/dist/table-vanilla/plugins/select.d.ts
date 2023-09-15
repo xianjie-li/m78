@@ -62,13 +62,15 @@ export declare class _TableSelectPlugin extends TablePlugin implements TableSele
     getSelectedCells: TableInstance["getSelectedCells"];
     getSortedSelectedCells: TableInstance["getSortedSelectedCells"];
     selectRows: TableInstance["selectRows"];
+    unselectRows(rowKeys: TableKey | TableKey[]): void;
     selectCells: TableInstance["selectCells"];
+    unselectCells(cellKeys: TableKey | TableKey[]): void;
     /**
      * 根据传入的两个点更新临时选中状态
      * - 可传入interceptor来根据命中内容决定是否阻止后续操作
      * - 若没有选中项或interceptor()验证失败, 返回false
      * */
-    selectByPoint: (p1: import("@m78/utils").TupleNumber, p2?: TablePosition, interceptor?: ((items: TableItems) => boolean) | undefined) => boolean;
+    selectByPoint: (p1: import("@m78/utils").TupleNumber, p2?: TablePosition, interceptor?: ((items: TableItems) => boolean) | undefined) => [boolean, TableItems];
     /**
      * 向selected map中设置行选中, item可以是cell/row的key或实例, 所有设置操作统一在此进行, 方便进行禁用等行为的拦截
      * - 返回false表示该次设置被拦截
@@ -130,6 +132,10 @@ export interface TableSelect {
     selectRows(rowKeys: TableKey | TableKey[], merge?: boolean): void;
     /** 设置选中的单元格, 传入merge可保留之前的单元格选中 */
     selectCells(cellKeys: TableKey | TableKey[], merge?: boolean): void;
+    /** 取消选中行 */
+    unselectRows(rowKeys: TableKey | TableKey[]): void;
+    /** 取消选中单元格 */
+    unselectCells(cellKeys: TableKey | TableKey[]): void;
     /** 检测单元格是否可选中 */
     isCellSelectable(cell: TableCell): boolean;
     /** 检测行是否可选中 */
