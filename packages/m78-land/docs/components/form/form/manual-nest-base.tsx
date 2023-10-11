@@ -17,13 +17,13 @@ const form = createForm({
         label: "姓名",
         name: "name",
         validator: [required(), string({ min: 2, max: 5 })],
-        component: <Input placeholder="请输入姓名" />,
+        element: <Input placeholder="请输入姓名" />,
       },
       {
         label: "简介",
         name: "describe",
         validator: string({ max: 20 }),
-        component: <Input placeholder="简要介绍一下自己" textArea />,
+        element: <Input placeholder="简要介绍一下自己" textArea />,
       },
       {
         label: "基础信息",
@@ -31,13 +31,11 @@ const form = createForm({
         schema: [
           {
             name: "age",
-            component: (
-              <Input placeholder="填写年龄" type={InputType.integer} />
-            ),
+            element: <Input placeholder="填写年龄" type={InputType.integer} />,
           },
           {
             name: "sex",
-            component: <Input placeholder="输入性别" />,
+            element: <Input placeholder="输入性别" />,
           },
         ],
       },
@@ -60,7 +58,7 @@ const ManualBase = () => {
 
       <form.Field
         name="base"
-        component={() => (
+        element={() => (
           <Row>
             <form.Field name={["base", "age"]} />
             <form.Field name={["base", "sex"]} style={{ marginLeft: 12 }} />
@@ -71,7 +69,7 @@ const ManualBase = () => {
       {/* 这里使用Field作为布局组件排版按钮 */}
       <form.Field
         label=" "
-        component={() => (
+        element={() => (
           <>
             <Button onClick={form.reset}>重置</Button>
             <Button

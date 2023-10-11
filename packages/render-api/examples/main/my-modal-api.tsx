@@ -1,14 +1,14 @@
 import React, { useEffect, useImperativeHandle, useState } from "react";
 import clsx from "clsx";
-import create from "../dist";
+import create from "../../dist";
 
 import sty from "./my-modal.module.css";
-import { RenderApiComponentProps } from "../dist";
+import { RenderApiComponentProps } from "../../dist";
 
 // 过滤几个关键api
 
 /* 组件接收状态，同时也是api调用时的参数 */
-interface MyModalState
+export interface MyModalState
   extends RenderApiComponentProps<
     MyModalState,
     {
@@ -24,7 +24,7 @@ interface MyModalState
 
 /* 实现api组件, api会向其传入RenderApiComponentBaseProps格式的prop */
 const MyModal = ({
-  show = false,
+  open = false,
   title,
   content,
   onChange,
@@ -33,7 +33,7 @@ const MyModal = ({
   const [show1, setShow] = useState(false);
 
   // 故意通过useEffect制造延迟
-  useEffect(() => setShow(show), [show]);
+  useEffect(() => setShow(open), [open]);
 
   useImperativeHandle(
     instanceRef,
@@ -60,7 +60,10 @@ const MyModal = ({
 };
 
 /* 使用组实现件创建api */
-const MyModalApi = create<MyModalState, { name: string }>({
+const MyModalApi = create<
+  MyModalState,
+  { name: string; doSomething: () => string }
+>({
   component: MyModal,
 });
 

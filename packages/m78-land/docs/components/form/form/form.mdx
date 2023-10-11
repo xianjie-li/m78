@@ -52,11 +52,11 @@ title: Form - 表单
 // schema
 const schemasItem = {
   name: "name",
-  component: <Input />,
+  element: <Input />,
 }
 
 // 手动渲染时, 作为子级传递给Filed
-<Field name="name" component={<Input />} />
+<Field name="name" element={<Input />} />
 ```
 
 ### 控件适配器
@@ -66,7 +66,7 @@ const schemasItem = {
 例如, 我们要为原生的 `input` 节点编写一个适配器:
 
 ```tsx
-// bind提供了一些列需要绑定到表单控件上的prop, binder用于给指定react节点绑定props, element为component中配置的组件
+// bind提供了一些列需要绑定到表单控件上的prop, binder用于给指定react节点绑定props, element为schema或Filed中传入的element
 const inputAdapter: FormAdaptor = ({ bind, binder, element }) =>
   binder(element, {
     ...element.props,
@@ -90,7 +90,7 @@ const inputAdapter: FormAdaptor = ({ bind, binder, element }) =>
 
 ```tsx
 const schemaItem = {
-  component: <input />,
+  element: <input />,
   adaptor: inputAdapter,
 };
 ```
@@ -98,7 +98,7 @@ const schemaItem = {
 或是在 Field 中临时使用适配器
 
 ```tsx
-<Field component={<input />} adaptor={inputAdapter} />
+<Field element={<input />} adaptor={inputAdapter} />
 ```
 
 <br />
@@ -110,7 +110,7 @@ const schemaItem = {
 ```ts
 type FormAdaptorsItem = {
   /** 待适配的表单控件 */
-  component: React.ReactElement;
+  element: React.ReactElement;
   /** 控制用于From组件时的适配器 */
   formAdaptor?: FormAdaptor;
   /** 控制用于Table组件时的适配器, 如果表单控件需要在表格行内编辑, 需要传入 */
@@ -127,7 +127,7 @@ const form = createForm({
   schemas: {...},
   adaptors: [
     {
-      component: <MyInput />
+      element: <MyInput />
       formAdaptor: ...,
       name: 'MyInput',
     }
@@ -141,7 +141,7 @@ const form = createForm({
 m78Config.set({
   formAdaptors: [
     {
-      component: <MyInput />
+      element: <MyInput />
       formAdaptor: ...,
       name: 'MyInput',
     }
@@ -152,10 +152,10 @@ m78Config.set({
 通过上述两种方式中的一种注册后, 就可以在 Field 或 schema 中直接使用对应组件了:
 
 ```tsx
-<Field component={<MyInput placeholder="请输入" />} />
+<Field element={<MyInput placeholder="请输入" />} />
 
 // 如果设置了字符串name, 还可以通过字符串直接使用组件
-<Field component="MyInput" componentProps={{ placeholder: "请输入" }} />
+<Field element="MyInput" elementProps={{ placeholder: "请输入" }} />
 ```
 
 ### 内置表单控件
@@ -287,7 +287,7 @@ function string({ value }) {
 
 - 在 form/field/schema 中支持传入 `customer` 来定制表单控件的包裹容器, `customer`接收与适配器几乎一样的参数
 - 还可以使用 `noLayout` 禁用默认的 Field 样式, 比如 label 等, 然后再搭配 customer 进行自定义渲染
-- Filed.component 可接收一个函数, 其与适配器签名完全一致, 可以用来临时进行局部的定制
+- Filed.element 可接收一个函数, 其与适配器签名完全一致, 可以用来临时进行局部的定制
 
 另外, 在 form config / schema / Field 中提供了很多用于样式微调的配置, 具体可查看对应文档.
 
@@ -374,9 +374,9 @@ interface FormCommonProps {
    * - 通过全局或Form级adaptors适配过的表单控件, 传入string时表示其在适配器配置中的name
    * - 直接传入一个FormAdaptor, 可用于临时快速绑定新的表单控件或是渲染一个非表单的视图控件
    * */
-  component?: React.ReactElement | string | FormAdaptor;
-  /** 传递给 component 组件的 props, 通常在 component 传入 string 时使用 */
-  componentProps?: Record<string, any>;
+  element?: React.ReactElement | string | FormAdaptor;
+  /** 传递给 element props, 通常在 element 传入 string 时使用 */
+  elementProps?: Record<string, any>;
   /** 表单控件适配器 */
   adaptor?: FormAdaptor;
   /** 额外显示的字段描述 */
@@ -412,8 +412,8 @@ interface FormCommonProps {
 interface FormConfig {
   /** 描述表单值结构的对象 */
   schemas?: FormSchemaWithoutName;
-  /** 需要注册的组件, 可以直接是一个组件或包含配置项的对象 */
-  components?: Record<string, FormRegisterConfig | React.ReactElement>;
+  /** 表单控件适配器, 优先级高于全局适配器 */
+  adaptors?: FormAdaptors;
   /** {} | 默认值 */
   defaultValue?: any;
   /** true | 值变更时是否自动触发verify */
@@ -620,7 +620,7 @@ export interface FormFieldProps {
 
 支持 Field 中除了以下列出项的所有配置
 
-"component" | "componentProps" | "adaptor"
+"element" | "elementProps" | "adaptor"
 
 ```ts
 /**
@@ -676,10 +676,12 @@ interface FormCustomRenderBasicArgs {
 ```
 
 ```ts
+type FormAdaptors = FormAdaptorsItem[];
+
 /** 全局或表单级适配器的一项 */
-export type FormAdaptorsItem = {
+type FormAdaptorsItem = {
   /** 待适配的表单控件 */
-  component: React.ReactElement;
+  element: React.ReactElement;
   /** 控制用于From组件时的适配器 */
   formAdaptor?: FormAdaptor;
   /** 控制用于Table组件时的适配器 */

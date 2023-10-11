@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import MyModalApi from "./my-modal-api";
 
 const Demo1 = () => {
+  const [list, setList] = useState<any[]>([]);
+
   function renderHandle() {
     // 每次render执行会返回一个RenderApiComponentInstance实例对象, 可以管理该实例的各种状态和行为
     const instance = MyModalApi.render({
@@ -17,14 +19,10 @@ const Demo1 = () => {
     // render实例
     console.log(1, instance);
 
-    // render所渲染组件对外暴露的示例, 调用后马上使用会为null
-    // 如果组件未对外暴露任何东西则一直为null
-    console.log(2, instance.current);
+    console.log(2, instance.name);
+    console.log(2, instance.doSomething());
 
-    // 如果要调用后马上访问组件实例, 使用safe方法
-    instance.safe(() => {
-      console.log(3, instance.current);
-    });
+    setList((p) => [...p, instance]);
   }
 
   return (
@@ -36,6 +34,23 @@ const Demo1 = () => {
         <button onClick={renderHandle}>show modal 11</button>
         <button onClick={MyModalApi.disposeAll}>hide all</button>
       </div>
+
+      {list.map((i) => (
+        <div>
+          <div>{i.name} </div>
+          <button onClick={() => i.open()}>open</button>
+          <button onClick={() => i.close()}>close</button>
+          <button
+            onClick={() => {
+              i.dispose();
+              const ls = list.filter((item) => item !== i);
+              setList(ls);
+            }}
+          >
+            dispose
+          </button>
+        </div>
+      ))}
     </div>
   );
 };

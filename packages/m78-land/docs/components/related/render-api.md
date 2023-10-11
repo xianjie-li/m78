@@ -1,12 +1,14 @@
-import { createEvent } from "@m78/hooks";
-import React from "react";
-import { AnyFunction } from "@m78/utils";
+---
+title: RenderApi - 渲染api
+---
 
-/**
- * 一个更包容的组件接收器类型
- * */
-export type ComponentType<P = any> = React.ComponentType<P> | AnyFunction;
+## 接口说明
 
+### 实现组件基础接口
+
+实现组件根据是否自定义了 open/onChange 的 key 来决定集成以下哪个接口
+
+```ts
 /**
  * 实现组件的标准props, 实现组件可以选择继承此接口
  *
@@ -19,7 +21,9 @@ export interface RenderApiComponentProps<S, I = null>
   /** open状态变更时通知父组件 */
   onChange?: (cur: boolean) => void;
 }
+```
 
+```ts
 /**
  * 实现组件会接受的基础props, 实现组件可以以此类型作为基础props
  * */
@@ -31,8 +35,11 @@ export interface RenderApiComponentBaseProps<S, I = null> {
   /** 当需要对外暴露更多的api时使用, 将额外的api挂载到此ref, 挂载内容会展开到组件实例上, 如果与现有api重名, 现有api将被覆盖 */
   instanceRef?: React.Ref<I>;
 }
-// !! 变更此类型时应注意是否需要同步setStateWhiteList和_OmitBuiltState
+```
 
+### 创建配置
+
+```ts
 /** create() 方法接收的配置对象 */
 export interface RenderApiOption<S> {
   /** 交由api渲染的组件 */
@@ -54,8 +61,11 @@ export interface RenderApiOption<S> {
     state: Partial<RenderApiOmitBuiltState<S>>
   ) => Partial<RenderApiOmitBuiltState<S>>;
 }
-// !! 变更此类型时应注意是否需要更新updateOptionWhiteList
+```
 
+### api 实例
+
+```ts
 /** api实例，通过create()方法创建 */
 export interface RenderApiInstance<S, I> {
   /** 渲染一个组件实例, 返回创建的实例 */
@@ -94,43 +104,6 @@ export interface RenderApiInstance<S, I> {
    * */
   getOption: () => RenderApiOption<S>;
 }
+```
 
-/** render组件基础实例, 调用render()后生成 */
-export interface RenderApiComponentInstanceBase<S> {
-  /** 隐藏 */
-  close: () => void;
-  /** 显示 */
-  open: () => void;
-  /** 销毁 */
-  dispose: () => void;
-  /** 渲染组件的state */
-  state: S;
-  /** 更新渲染组件的state */
-  setState: (nState: Partial<RenderApiOmitBuiltState<S>>) => void;
-}
-
-/**
- * render组件实例, 调用render()后生成
- *
- * I 为实例组件对外暴露的属性和方法
- * */
-export type RenderApiComponentInstance<S, I> =
-  RenderApiComponentInstanceBase<S> & I;
-
-/** 内部使用的实例的元信息 */
-export interface _ComponentItem {
-  /** 组件/实例的唯一id */
-  id: string;
-  state: any;
-  instance: RenderApiComponentInstance<any, any>;
-  /** 更新标记, 用于最大程度的避免不需要的re-render */
-  updateFlag: number;
-}
-
-/**
- * 过滤掉内部属性的state
- * */
-export type RenderApiOmitBuiltState<S> = Omit<
-  S,
-  "open" | "onChange" | "onDispose" | "onUpdate" | "instanceRef"
->;
+### 组件实例, 调用 api.render() 后生成

@@ -1,14 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { createEvent } from "@m78/hooks";
-import {
-  AnyFunction,
-  createRandString,
-  defer,
-  getPortalsNode,
-  isFunction,
-  omit,
-} from "@m78/utils";
-import ReactDom from "react-dom";
+import { createRandString, getPortalsNode, isFunction, omit } from "@m78/utils";
+import ReactDom, { flushSync } from "react-dom";
 import { createRoot } from "react-dom/client";
 import {
   RenderApiComponentInstance,
@@ -19,10 +12,19 @@ import {
   RenderApiOmitBuiltState,
 } from "./types.js";
 
+// 改动
+// - 去掉延迟相关的内容
+// - 初次render时使用flushSync进行同步渲染, 未设置挂载点时默认挂载点也需要使用flushSync同步渲染
+//
+// 概念
+// react root render是同步的
+// 17/18兼容性处理
+
 // RenderApiInstance.setOption()的有效值
 const updateOptionWhiteList = ["defaultState", "wrap", "maxInstance"];
-// RenderApiComponentProps.setState()的有效值onChange应动态从changeKey获取
-const setStateWhiteList = ["onDispose", "onUpdate", "instanceRef"];
+
+// RenderApiComponentProps.setState()调用中应排除的值, open/onChange应动态从changeKey获取
+const setStateBlackList = ["onDispose", "onUpdate", "instanceRef"];
 
 /**
  * 接收配置并创建一个api实例
@@ -35,7 +37,6 @@ function create<S extends object, I = null>(
 ): RenderApiInstance<S, I> {
   const option = { ...opt };
 
-  // updateOptionWhiteList类的配置是可更改的, 必须在使用时实时获取
   const {
     component: Component,
     namespace = "RENDER__BOX",
@@ -54,6 +55,7 @@ function create<S extends object, I = null>(
 
   /** 在内部共享的状态对象 */
   const ctx = {
+    /** 实例列表 */
     list: [] as _ComponentItem[],
     /** target是否已渲染, 未渲染时调用render会渲染默认Target */
     targetIsRender: false,
@@ -115,9 +117,9 @@ function create<S extends object, I = null>(
     id: string,
     nState: Partial<RenderApiOmitBuiltState<S>>
   ) {
-    const ind = getIndexById(id);
-    if (ind === -1) return;
-    setStateByCurrent(ctx.list[ind], nState);
+    const it = getItemById(id);
+    if (!it) return;
+    setStateByCurrent(it, nState);
   }
 
   /**
@@ -129,7 +131,7 @@ function create<S extends object, I = null>(
     nState: Partial<RenderApiOmitBuiltState<S>>,
     autoUpdate = true
   ) {
-    const omitKeys = [...setStateWhiteList, changeKey].join(",");
+    const omitKeys = [...setStateBlackList, changeKey].join(",");
 
     Object.assign(current.state, omit(nState, omitKeys));
 
@@ -152,13 +154,11 @@ function create<S extends object, I = null>(
   function render(state: Partial<RenderApiOmitBuiltState<S>>) {
     const id = createRandString();
 
-    let innerInstance: any = null;
-    /** 存储所有safe操作, 并在RenderApiComponentInstance.current存在时调用 */
-    const unsafeCallQueue: AnyFunction[] = [];
-
     if (isFunction(option.omitState)) {
       state = option.omitState(state);
     }
+
+    const instance: RenderApiComponentInstance<S, any> = {};
 
     /** 创建组件state */
     const _state: RenderApiComponentBaseProps<S, I> = {
@@ -176,40 +176,27 @@ function create<S extends object, I = null>(
       // below RenderApiComponentBaseProps
       onDispose: dispose.bind(null, id),
       onUpdate: setStateById.bind(null, id),
-      instanceRef: (instance: I | null) => {
-        innerInstance = instance;
-        // 在实例可用后, 如果unsafeCallQueue存在内容, 则全部进行处理
-        if (innerInstance && unsafeCallQueue.length) {
-          unsafeCallQueue
-            .splice(0, unsafeCallQueue.length)
-            .forEach((cb) => cb());
+      instanceRef: (extIns: I | null) => {
+        if (extIns === null) {
+          // 清空占用
+          for (const instanceKey in instance) {
+            delete instance[instanceKey];
+          }
+        } else {
+          Object.assign(instance, extIns);
         }
       },
     };
 
-    const instance: RenderApiComponentInstance<S, any> = {
+    const instanceBase: RenderApiComponentInstance<S, any> = {
       close: close.bind(null, id),
       open: open.bind(null, id),
       dispose: dispose.bind(null, id),
       state: _state as any,
       setState: _state.onUpdate!,
-      current: null,
-      safe: (cb) => {
-        if (!cb) return;
-        if (innerInstance) {
-          cb();
-          return;
-        }
-        unsafeCallQueue.push(cb);
-      },
     };
 
-    // 实例被设置时接收通知
-    Object.defineProperty(instance, "current", {
-      get() {
-        return innerInstance;
-      },
-    });
+    Object.assign(instance, instanceBase);
 
     ctx.list.push({
       id,
@@ -222,11 +209,13 @@ function create<S extends object, I = null>(
 
     if (!ctx.targetIsRender) {
       ctx.targetIsRender = true;
-      // 可能会在瞬间接收到多个render请求, 延迟渲染target以同时处理初始化的多个render
-      defer(mountDefaultTarget);
+      mountDefaultTarget();
     }
 
-    changeEvent.emit();
+    // 同步渲染, 否则在扩展了实例时不能马上获取到
+    flushSync(() => {
+      changeEvent.emit();
+    });
 
     return instance as RenderApiComponentInstance<S, I>;
   }
