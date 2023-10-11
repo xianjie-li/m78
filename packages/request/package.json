@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@m78/utils": "workspace:^",
-    "axios": "^0.19.2",
+    "axios": "^0.21.2",
     "lodash": "^4.17.21",
     "query-string": "^7.1.1"
   },
