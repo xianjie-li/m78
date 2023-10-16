@@ -658,7 +658,8 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
         if (!isCellArg && !isRowArg) {
             setNamePathValue(defaultValue, cell.column.config.originalKey, arg.oldValue);
         }
-        form = createForm({
+        var formCreator = this.config.formCreator || createForm;
+        form = formCreator({
             defaultValue: defaultValue,
             schemas: {
                 schema: this.config.schema

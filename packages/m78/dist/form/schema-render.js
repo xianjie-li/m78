@@ -70,7 +70,7 @@ export function _schemaRenderImpl(ctx) {
                     if (isRoot) return nodeWrap;
                     return renderCellCond(isSchemaRoot, /*#__PURE__*/ _jsx(form.Field, _object_spread_props(_object_spread({}, commonFiledProps), {
                         name: name,
-                        component: function() {
+                        element: function() {
                             return /*#__PURE__*/ _jsx(Row, {
                                 children: nodeWrap
                             });
@@ -126,7 +126,7 @@ export function _schemaRenderImpl(ctx) {
                 showActionButtons && renderCellCond(true, /*#__PURE__*/ _jsx(form.Field, {
                     name: EMPTY_NAME,
                     label: " ",
-                    component: function() {
+                    element: function() {
                         return /*#__PURE__*/ _jsxs("div", {
                             children: [
                                 /*#__PURE__*/ _jsx(Translation, {

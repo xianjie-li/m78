@@ -10,6 +10,7 @@ import { CustomEventWithHook, SetState } from "@m78/hooks";
 import { RejectMeta } from "@m78/verify";
 import { SizeUnion } from "../common/index.js";
 import { CellColProps, CellRowProps, TileProps } from "../layout/index.js";
+import type { RCTableEditAdaptor } from "../table/index.js";
 
 /** 要剔除的form-vanilla配置 */
 export const _omitConfigs = [
@@ -41,11 +42,11 @@ export type FormAdaptors = FormAdaptorsItem[];
 /** 全局或表单级适配器的一项 */
 export type FormAdaptorsItem = {
   /** 待适配的表单控件 */
-  component: React.ReactElement;
+  element: React.ReactElement;
   /** 控制用于From组件时的适配器 */
   formAdaptor?: FormAdaptor;
   /** 控制用于Table组件时的适配器 */
-  tableAdaptor?: any;
+  tableAdaptor?: RCTableEditAdaptor;
   /** 表单的字符串表示, 配置后, 在后续可以通过字符串key来声明该组件. 注意: 不建议使用字符串进行组件声明, 除非你的场景需要将配置以json形式存储和传输. */
   name?: string;
 };
@@ -191,9 +192,9 @@ export interface FormCommonProps extends FormProps {
    * - 通过全局或Form级adaptors适配过的表单控件, 传入string时表示其在适配器配置中的name
    * - 直接传入一个FormAdaptor, 可用于临时快速绑定新的表单控件或是渲染一个非表单的视图控件
    * */
-  component?: React.ReactElement | string | FormAdaptor;
-  /** 传递给 component 组件的 props, 通常在 component 传入 string 时使用 */
-  componentProps?: Record<string, any>;
+  element?: React.ReactElement | string | FormAdaptor;
+  /** 传递给 element 的 props, 通常在 element 传入 string 时使用 */
+  elementProps?: Record<string, any>;
   /** 表单控件适配器 */
   adaptor?: FormAdaptor;
   /** 额外显示的字段描述 */
@@ -234,7 +235,7 @@ export interface FormFieldProps extends FormCommonProps {
 /** 去除了部分配置的FormFieldProps */
 type FormFieldPropsPartial = Omit<
   FormFieldProps,
-  "component" | "componentProps" | "adaptor"
+  "element" | "elementProps" | "adaptor"
 >;
 
 /** List Props 相比 Field 少了一些配置项 */
@@ -257,7 +258,7 @@ export interface FormSchemaRenderProps {
 }
 
 /** 作为 list 时, 应从 Filed 或 schema 剔除的配置 */
-export const _lisIgnoreKeys = ["component", "componentProps", "adaptor"];
+export const _lisIgnoreKeys = ["element", "elementProps", "adaptor"];
 
 /** 用于Adaptors的参数 */
 export interface FormCustomRenderBasicArgs {
@@ -272,10 +273,10 @@ export interface FormCustomRenderBasicArgs {
     /** 组件尺寸 */
     size?: string;
   };
-  /** 绑定器, 用于将传入的props绑定到element的助手函数 */
-  binder: (
+  /** 用于将传入的props绑定到element的助手函数 */
+  binder: <Props = AnyObject>(
     element: React.ReactElement | null,
-    props: AnyObject
+    props: Props
   ) => React.ReactElement | null;
   /** Form实例 */
   form: FormInstance;

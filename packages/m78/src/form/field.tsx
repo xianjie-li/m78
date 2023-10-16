@@ -82,7 +82,7 @@ export function _fieldImpl(ctx: _FormContext) {
     const crossAlign = getProps("crossAlign") || "start";
     let spacePadding = getProps("spacePadding");
 
-    const { adaptorConf, componentRender } = methods.getAdaptor();
+    const { adaptorConf, elementRender } = methods.getAdaptor();
 
     if (spacePadding === undefined) spacePadding = true;
 
@@ -126,13 +126,13 @@ export function _fieldImpl(ctx: _FormContext) {
       // 列表渲染
       if (isList) return renderList();
 
-      if (componentRender) {
-        return componentRender(methods.getRenderArgs());
+      if (elementRender) {
+        return elementRender(methods.getRenderArgs());
       }
 
       if (!adaptorConf) return null;
 
-      let ele: React.ReactElement | null = adaptorConf.component;
+      let ele: React.ReactElement | null = adaptorConf.element;
 
       const { formAdaptor = _defaultAdaptor } = adaptorConf;
 
@@ -142,13 +142,13 @@ export function _fieldImpl(ctx: _FormContext) {
 
       if (!isValidElement<any>(ele)) return null;
 
-      const componentProps = getProps("componentProps");
+      const elementProps = getProps("elementProps");
 
-      if (isEmpty(componentProps)) return ele;
+      if (isEmpty(elementProps)) return ele;
 
       return React.cloneElement(ele, {
         ...ele.props,
-        ...componentProps,
+        ...elementProps,
       });
     }
 

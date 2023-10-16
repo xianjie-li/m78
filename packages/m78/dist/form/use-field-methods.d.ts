@@ -5,8 +5,8 @@ export declare function _useFieldMethods(ctx: _FormContext, fieldCtx: _FieldCont
     getProps: FormCommonPropsGetter;
     getAdaptor: () => {
         adaptorConf?: FormAdaptorsItem | undefined;
-        /** 用户在schema或field传入了函数类型的component时, 此项为该函数 */
-        componentRender?: FormAdaptor | undefined;
+        /** 用户在schema或field传入了函数类型的element时, 此项为该函数 */
+        elementRender?: FormAdaptor | undefined;
     };
     onChange: (value: any) => void;
     shouldRender: () => boolean;

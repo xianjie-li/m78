@@ -14,7 +14,13 @@ export function _useLifeCycleAct() {
 
   useDestroy(destroy);
 
-  _usePropsEffect(props, methods.updateInstance);
+  _usePropsEffect(props, (changedProps, needFullReload) => {
+    if (changedProps.schema) {
+      methods.updateCheckForm();
+    }
+
+    methods.updateInstance(changedProps, needFullReload);
+  });
 
   useImperativeHandle(props.instanceRef, () => state.instance, [
     state.instance,

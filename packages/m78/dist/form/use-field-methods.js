@@ -82,27 +82,27 @@ export function _useFieldMethods(ctx, fieldCtx) {
         };
     });
     /** 获取组件适配器配置信息 */ var getAdaptor = useFn(function() {
-        var componentKey = props.component || (schema === null || schema === void 0 ? void 0 : schema.component);
+        var element = props.element || (schema === null || schema === void 0 ? void 0 : schema.element);
         var adaptor = props.adaptor || (schema === null || schema === void 0 ? void 0 : schema.adaptor);
         var aConf;
-        if (isFunction(componentKey)) {
+        if (isFunction(element)) {
             return {
-                componentRender: componentKey
+                elementRender: element
             };
         }
-        if (/*#__PURE__*/ isValidElement(componentKey)) {
-            var conf = adaptorsMap.get(componentKey.type);
+        if (/*#__PURE__*/ isValidElement(element)) {
+            var conf = adaptorsMap.get(element.type);
             aConf = _object_spread_props(_object_spread({}, conf), {
-                component: componentKey
+                element: element
             });
             if (adaptor) aConf.formAdaptor = adaptor;
             return {
                 adaptorConf: aConf
             };
-        } else if (isString(componentKey)) {
-            var aConf1 = adaptorsNameMap.get(componentKey);
+        } else if (isString(element)) {
+            var aConf1 = adaptorsNameMap.get(element);
             if (!aConf1) {
-                console.warn("form widget ".concat(componentKey, " is not config. Please config it in the adaptors attribute in the Form.config or m78Config"));
+                console.warn("form widget ".concat(element, " is not config. Please config it in the adaptors attribute in the Form.config or m78Config"));
                 return {};
             }
             if (adaptor) aConf1.formAdaptor = adaptor;
@@ -124,7 +124,7 @@ export function _useFieldMethods(ctx, fieldCtx) {
             config: config,
             props: props,
             getProps: getProps,
-            element: (adaptorConf === null || adaptorConf === void 0 ? void 0 : adaptorConf.component) || null
+            element: (adaptorConf === null || adaptorConf === void 0 ? void 0 : adaptorConf.element) || null
         };
     });
     /** 渲染 node | (arg) => node 定制节点 */ var extraNodeRenderHelper = useFn(function(node) {

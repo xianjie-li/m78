@@ -19,6 +19,8 @@ export function _useStateAct() {
   const self = useSelf<_RCTableSelf>({
     renderMap: {},
     editMap: {},
+    editStatusMap: {},
+    editCheckForm: null as any,
     overlayStackCount: 0,
   });
 

@@ -6,8 +6,14 @@ import { _useStateAct } from "./state.act.js";
 import { _useEditRender } from "./use-edit-render.js";
 import { _useCustomRender } from "./use-custom-render.js";
 import { _injector } from "./table.js";
-import { createRandString, isFunction } from "@m78/utils";
-import { createForm } from "../form/index.js";
+import {
+  createRandString,
+  isBoolean,
+  isFunction,
+  NamePath,
+  stringifyNamePath,
+} from "@m78/utils";
+import { createForm, FormSchema } from "../form/index.js";
 
 export function _useMethodsAct() {
   const { ref, scrollRef, scrollContRef, wrapRef, state, setState, self } =
@@ -91,9 +97,31 @@ export function _useMethodsAct() {
     state.instance?.isActive(!self.overlayStackCount);
   }
 
+  /** 更新editCheckForm, 应在schema变更时触发 */
+  function updateCheckForm() {
+    self.editStatusMap = {};
+
+    const ls = props.schema || [];
+
+    if (self.editCheckForm) {
+      self.editCheckForm.setSchemas({
+        schema: ls,
+      });
+      return;
+    }
+
+    self.editCheckForm = createForm({
+      schemas: {
+        schema: ls,
+      },
+      autoVerify: false,
+    });
+  }
+
   return {
     initEmptyNode,
     updateInstance,
+    updateCheckForm,
     getDefaultNewData,
     overlayStackChange,
   };

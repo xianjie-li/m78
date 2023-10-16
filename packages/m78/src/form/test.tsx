@@ -23,13 +23,13 @@ describe("form", () => {
             deps: ["desc"],
             describe:
               "填入你的姓名, 填入你的姓名填入你的姓名填入你的姓名填入你的姓名填入你的姓名, 填入你的姓名.",
-            component: <Input />,
+            element: <Input />,
           },
           {
             name: "desc",
             label: "描述",
             validator: required(),
-            component: <Input textArea />,
+            element: <Input textArea />,
           },
           {
             name: "obj",
@@ -39,12 +39,12 @@ describe("form", () => {
               {
                 name: "title",
                 validator: required(),
-                component: <Input placeholder="名称" />,
+                element: <Input placeholder="名称" />,
               },
               {
                 name: "desc",
                 validator: required(),
-                component: <Input placeholder="描述" />,
+                element: <Input placeholder="描述" />,
               },
             ],
           },
@@ -62,12 +62,12 @@ describe("form", () => {
                 {
                   name: "title",
                   validator: required(),
-                  component: <Input placeholder="名称" />,
+                  element: <Input placeholder="名称" />,
                 },
                 {
                   name: "desc",
                   validator: required(),
-                  component: <Input placeholder="描述" />,
+                  element: <Input placeholder="描述" />,
                 },
               ],
             },
@@ -84,7 +84,7 @@ describe("form", () => {
             validator: required(),
             eachSchema: {
               validator: required(),
-              component: <Input />,
+              element: <Input />,
             },
           },
         ],

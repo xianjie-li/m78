@@ -2,6 +2,7 @@ import { TablePlugin } from "../plugin.js";
 import { TableCell, TableCellWithDom } from "../types/items.js";
 import { KeyboardMultipleHelper } from "@m78/utils";
 import { _TableFormPlugin } from "./form.js";
+import { FormInstance } from "../../form/index.js";
 interface TableInteractiveItem {
     cell: TableCell;
     node: HTMLElement;
@@ -48,12 +49,14 @@ export interface TableInteractiveRenderArg {
     cell: TableCellWithDom;
     /** 用于挂载交互组件 */
     node: HTMLElement;
-    /** 表单控件应显示的默认值, 通常与单元格当前值一致, 若用户在选中单元格上直接键入, 则会替换为用户键入的第一个常规字符([A-Za-z0-9_]) */
+    /** 表单控件应显示的默认值 */
     value: any;
     /** isSubmit = true | 手动结束交互, 比如在用户按下enter时
      * isSubmit为true时表示应对单元格值进行更新, done应该在事件回调等位置调用, 不能在render流程中调用
      * */
     done: (isSubmit?: boolean) => void;
+    /** 当前行的form实例 */
+    form: FormInstance;
 }
 export interface TableInteractiveCoreConfig {
     /** 控制单元格是否可交互 */

@@ -25,12 +25,12 @@ export var _createForm = function(config) {
     var adaptorsMap = new Map();
     var adaptorsNameMap = new Map();
     m78Config.get().formAdaptors.forEach(function(item) {
-        adaptorsMap.set(item.component.type, item);
+        adaptorsMap.set(item.element.type, item);
         if (item.name) adaptorsNameMap.set(item.name, item);
     });
     if (conf.adaptors) {
         conf.adaptors.forEach(function(item) {
-            adaptorsMap.set(item.component.type, item);
+            adaptorsMap.set(item.element.type, item);
             if (item.name) adaptorsNameMap.set(item.name, item);
         });
     }

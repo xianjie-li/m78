@@ -5,6 +5,7 @@ import { CustomEventWithHook, SetState } from "@m78/hooks";
 import { RejectMeta } from "@m78/verify";
 import { SizeUnion } from "../common/index.js";
 import { CellColProps, CellRowProps, TileProps } from "../layout/index.js";
+import { RCTableEditAdaptor } from "../table/index.js";
 /** 要剔除的form-vanilla配置 */
 export declare const _omitConfigs: readonly ["eventCreator", "languagePack", "extendLanguagePack", "verifyFirst", "ignoreStrangeValue"];
 /** 要剔除的form-vanilla配置 */
@@ -20,14 +21,14 @@ export declare type FormLayoutTypeKeys = keyof typeof FormLayoutType;
 export declare type FormLayoutTypeUnion = FormLayoutTypeKeys | FormLayoutType;
 /** 表单控件适配器配置 */
 export declare type FormAdaptors = FormAdaptorsItem[];
-/** FormAdaptors的一项 */
+/** 全局或表单级适配器的一项 */
 export declare type FormAdaptorsItem = {
     /** 待适配的表单控件 */
-    component: React.ReactElement;
+    element: React.ReactElement;
     /** 控制用于From组件时的适配器 */
     formAdaptor?: FormAdaptor;
     /** 控制用于Table组件时的适配器 */
-    tableAdaptor?: any;
+    tableAdaptor?: RCTableEditAdaptor;
     /** 表单的字符串表示, 配置后, 在后续可以通过字符串key来声明该组件. 注意: 不建议使用字符串进行组件声明, 除非你的场景需要将配置以json形式存储和传输. */
     name?: string;
 };
@@ -95,7 +96,7 @@ export interface FormInstance extends VanillaFormInstancePartial {
 }
 /** FormProps中的所有key, 用于在分别根据Field/schema/config获取配置时检测是否可安全获取 */
 export declare const _formPropsKeys: string[];
-/** 这些配置支持在 config/schema/Field 中传入, 优先级从右到左 */
+/** 这些配置支持在 config/schema/Field 中传入, 作用优先级为 Field > schema > config */
 export interface FormProps {
     /** 布局类型 */
     layoutType?: FormLayoutTypeUnion;
@@ -111,7 +112,7 @@ export interface FormProps {
     className?: string;
     /** 为 field 根节点添加样式 */
     style?: React.CSSProperties;
-    /** 支持在 form/field/schema 中配置, 用于为 Field 添加自定义外层容器, 作用优先级为 Field > schema > config */
+    /** 用于为 Field 添加自定义外层容器 */
     customer?: (args: FormCustomRenderWrapperArgs) => React.ReactElement | null;
     /** true | 是否显示根据validator生成的必输标记 */
     requireMarker?: boolean;
@@ -128,9 +129,9 @@ export interface FormCommonProps extends FormProps {
      * - 通过全局或Form级adaptors适配过的表单控件, 传入string时表示其在适配器配置中的name
      * - 直接传入一个FormAdaptor, 可用于临时快速绑定新的表单控件或是渲染一个非表单的视图控件
      * */
-    component?: React.ReactElement | string | FormAdaptor;
-    /** 传递给 component 组件的 props, 通常在 component 传入 string 时使用 */
-    componentProps?: Record<string, any>;
+    element?: React.ReactElement | string | FormAdaptor;
+    /** 传递给 element 的 props, 通常在 element 传入 string 时使用 */
+    elementProps?: Record<string, any>;
     /** 表单控件适配器 */
     adaptor?: FormAdaptor;
     /** 额外显示的字段描述 */
@@ -166,7 +167,7 @@ export interface FormFieldProps extends FormCommonProps {
     name?: NamePath;
 }
 /** 去除了部分配置的FormFieldProps */
-declare type FormFieldPropsPartial = Omit<FormFieldProps, "component" | "componentProps" | "adaptor">;
+declare type FormFieldPropsPartial = Omit<FormFieldProps, "element" | "elementProps" | "adaptor">;
 /** List Props 相比 Field 少了一些配置项 */
 export interface FormListProps<Item = any> extends FormFieldPropsPartial {
     /** 渲染list子级, 相比layoutRender不包含预设的布局 */
@@ -199,8 +200,8 @@ export interface FormCustomRenderBasicArgs {
         /** 组件尺寸 */
         size?: string;
     };
-    /** 绑定器, 用于将传入的props绑定到element的助手函数 */
-    binder: (element: React.ReactElement | null, props: AnyObject) => React.ReactElement | null;
+    /** 用于将传入的props绑定到element的助手函数 */
+    binder: <Props = AnyObject>(element: React.ReactElement | null, props: Props) => React.ReactElement | null;
     /** Form实例 */
     form: FormInstance;
     /** 创建配置 */
@@ -248,7 +249,7 @@ export interface FormListCustomRenderArgs<Item = any> extends FormCustomRenderBa
 export interface FormCustomRender {
     (args: FormCustomRenderBasicArgs): React.ReactNode;
 }
-/** Filed自定义渲染函数 */
+/** List自定义渲染函数 */
 export interface FormListRenderChildren<Item = any> {
     (args: FormListCustomRenderArgs<Item>): React.ReactElement;
 }

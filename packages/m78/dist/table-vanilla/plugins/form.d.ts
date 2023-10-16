@@ -1,8 +1,8 @@
 import { FormInstance, FormSchema } from "../../form-vanilla/index.js";
-import { AnyObject, NamePath } from "@m78/utils";
+import { AnyFunction, AnyObject, NamePath } from "@m78/utils";
 import { TableKey } from "../types/base-type.js";
 import { TablePlugin } from "../plugin.js";
-import { TableCell, TableColumn } from "../types/items.js";
+import { TableCell, TableColumn, TableRow } from "../types/items.js";
 import { TableMutationDataEvent, TableMutationEvent, TableMutationValueEvent } from "./mutation.js";
 import { RejectMeta } from "@m78/verify";
 import { TableReloadLevel } from "./life.js";
@@ -74,7 +74,7 @@ export declare class _TableFormPlugin extends TablePlugin implements TableForm {
     private getErrorList;
     private getRowMarkList;
     private getChangedList;
-    private initForm;
+    initForm(arg: TableMutationValueEvent | TableCell | TableRow): FormInstance;
     /** 遍历数据, 返回所有数据 */
     private eachData;
 }
@@ -85,6 +85,8 @@ export interface TableFormSchema extends Omit<FormSchema, "list"> {
 export interface TableFormConfig {
     /** 用于校验字段的schema */
     schema?: TableFormSchema[];
+    /** 自定义form实例创建器 */
+    formCreator?: AnyFunction;
 }
 /** 对外暴露的form相关方法 */
 export interface TableForm {

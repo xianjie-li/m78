@@ -43,13 +43,13 @@ export const _createForm = (config: FormConfig) => {
   const adaptorsNameMap = new Map<string, FormAdaptorsItem>();
 
   m78Config.get().formAdaptors.forEach((item) => {
-    adaptorsMap.set(item.component.type, item);
+    adaptorsMap.set(item.element.type, item);
     if (item.name) adaptorsNameMap.set(item.name, item);
   });
 
   if (conf.adaptors) {
     conf.adaptors.forEach((item) => {
-      adaptorsMap.set(item.component.type, item);
+      adaptorsMap.set(item.element.type, item);
       if (item.name) adaptorsNameMap.set(item.name, item);
     });
   }
@@ -73,10 +73,12 @@ export const _createForm = (config: FormConfig) => {
   };
 
   // 重写setSchemas, 确保内部能在更新后获取到最新的
-  form.setSchemas = (schema) => {
-    conf.schemas = schema;
-    vForm.setSchemas(schema as VanillaFormSchema);
-  };
+  if (!form.setSchemas) {
+    form.setSchemas = (schema) => {
+      conf.schemas = schema;
+      vForm.setSchemas(schema as VanillaFormSchema);
+    };
+  }
 
   _fieldImpl(ctx);
 

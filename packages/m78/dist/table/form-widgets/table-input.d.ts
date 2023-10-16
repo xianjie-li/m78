@@ -1,5 +1,4 @@
-import { RCTableEditWidgetAdapter } from "../types.js";
-import { InputProps } from "../../input/index.js";
+import { RCTableEditAdaptor } from "../types.js";
 /** Input的table绑定 */
-export declare const tableInput: RCTableEditWidgetAdapter<InputProps>;
+export declare const tableInputAdaptor: RCTableEditAdaptor;
 //# sourceMappingURL=table-input.d.ts.map

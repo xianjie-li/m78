@@ -23,6 +23,8 @@ export function _usePropsEffect(
       level2ConfigKeys.includes(key as any)
     );
 
+    console.log(changedProps);
+
     cb(changedProps, needFullReload);
   }, [changedProps]);
 

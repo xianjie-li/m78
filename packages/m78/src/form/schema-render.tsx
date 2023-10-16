@@ -77,7 +77,7 @@ export function _schemaRenderImpl(ctx: _FormContext) {
             <form.Field
               {...commonFiledProps}
               name={name}
-              component={() => <Row>{nodeWrap}</Row>}
+              element={() => <Row>{nodeWrap}</Row>}
             />
           );
         }
@@ -154,7 +154,7 @@ export function _schemaRenderImpl(ctx: _FormContext) {
             <form.Field
               name={EMPTY_NAME}
               label=" "
-              component={() => (
+              element={() => (
                 <div>
                   <Translation ns={[FORM_NS, COMMON_NS]}>
                     {(t) => (

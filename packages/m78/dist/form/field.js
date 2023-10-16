@@ -22,19 +22,19 @@ export function _fieldImpl(ctx) {
         function renderWidget() {
             // 列表渲染
             if (isList) return renderList();
-            if (componentRender) {
-                return componentRender(methods.getRenderArgs());
+            if (elementRender) {
+                return elementRender(methods.getRenderArgs());
             }
             if (!adaptorConf) return null;
-            var ele = adaptorConf.component;
+            var ele = adaptorConf.element;
             var _formAdaptor = adaptorConf.formAdaptor, formAdaptor = _formAdaptor === void 0 ? _defaultAdaptor : _formAdaptor;
             if (formAdaptor) {
                 ele = formAdaptor(methods.getRenderArgs());
             }
             if (!/*#__PURE__*/ isValidElement(ele)) return null;
-            var componentProps = getProps("componentProps");
-            if (isEmpty(componentProps)) return ele;
-            return /*#__PURE__*/ React.cloneElement(ele, _object_spread({}, ele.props, componentProps));
+            var elementProps = getProps("elementProps");
+            if (isEmpty(elementProps)) return ele;
+            return /*#__PURE__*/ React.cloneElement(ele, _object_spread({}, ele.props, elementProps));
         };
         var renderList = // list渲染逻辑
         function renderList() {
@@ -220,7 +220,7 @@ export function _fieldImpl(ctx) {
         var topNode = getProps("topNode");
         var crossAlign = getProps("crossAlign") || "start";
         var spacePadding = getProps("spacePadding");
-        var ref1 = methods.getAdaptor(), adaptorConf = ref1.adaptorConf, componentRender = ref1.componentRender;
+        var ref1 = methods.getAdaptor(), adaptorConf = ref1.adaptorConf, elementRender = ref1.elementRender;
         if (spacePadding === undefined) spacePadding = true;
         var touched = form.getTouched(name);
         var changed = form.getChanged(name);

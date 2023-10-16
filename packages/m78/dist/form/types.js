@@ -24,7 +24,7 @@ export var FormLayoutType;
     "spacePadding", 
 ];
 /** 作为 list 时, 应从 Filed 或 schema 剔除的配置 */ export var _lisIgnoreKeys = [
-    "component",
-    "componentProps",
+    "element",
+    "elementProps",
     "adaptor"
 ];

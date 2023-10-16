@@ -16,7 +16,12 @@ export function _useLifeCycleAct() {
     var props = _injector.useProps();
     useEffect(init, []);
     useDestroy(destroy);
-    _usePropsEffect(props, methods.updateInstance);
+    _usePropsEffect(props, function(changedProps, needFullReload) {
+        if (changedProps.schema) {
+            methods.updateCheckForm();
+        }
+        methods.updateInstance(changedProps, needFullReload);
+    });
     useImperativeHandle(props.instanceRef, function() {
         return state.instance;
     }, [

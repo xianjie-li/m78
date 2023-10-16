@@ -76,6 +76,7 @@ import { _TableFormPlugin } from "./form.js";
             };
             _this.closeAll();
             done = _this.config.interactiveRender(_object_spread_props(_object_spread({}, item), {
+                form: _this.form.initForm(cell),
                 value: isTruthyOrZero(defaultValue) ? defaultValue : _this.table.getValue(cell)
             }));
             _this.items.push(item);

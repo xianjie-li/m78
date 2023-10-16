@@ -5,10 +5,10 @@ import { TableDragSortConfig } from "../table-vanilla/plugins/drag-sort.js";
 import { ComponentBaseProps } from "../common/index.js";
 import { AnyObject, EmptyFunction } from "@m78/utils";
 import { CustomEventWithHook } from "@m78/hooks";
-import { ReactNode } from "react";
-import { TableDataLists, TableFormConfig } from "../table-vanilla/plugins/form.js";
+import { ReactElement, ReactNode } from "react";
+import { TableDataLists } from "../table-vanilla/plugins/form.js";
 import { TableFeedbackEvent } from "../table-vanilla/plugins/event.js";
-import { FormInstance, FormSchema } from "../form/index.js";
+import { FormAdaptors, FormInstance, FormSchema } from "../form/index.js";
 /** 忽略的配置 */
 declare type OmitConfig = typeof _tableOmitConfig[number];
 /** 重写TableColumnLeafConfig类型 */
@@ -16,8 +16,6 @@ declare module "../table-vanilla/index.js" {
     interface TableColumnLeafConfig {
         /** 自定义该列单元格渲染 */
         render?: (arg: RCTableRenderArg) => React.ReactNode;
-        /** 渲染编辑组件 */
-        editRender?: RCTableEditWidgetImpl;
         /** 渲染筛选表单*/
         filterRender?: RCTableFilterColumnRender;
         /** 在表头后方渲染的额外节点 */
@@ -37,18 +35,18 @@ export interface RCTableEditRenderArg extends RCTableRenderArg {
     cancel: EmptyFunction;
     /** 若编辑组件包含关闭动画或需要延迟关闭, 可以调用此方法设置延迟关闭的时间, 若未设置, 编辑组件所在dom会在关闭后被直接清理 */
     delayClose: (time: number) => void;
-    /** 当前使用的表单实例 */
-    form: any;
+    /** 当前行的form实例 */
+    form: FormInstance;
+    /** 当前表单控件 */
+    element: ReactElement;
+    /** 用于将传入的props绑定到element的助手函数 */
+    binder: <Props = AnyObject>(el: ReactElement, props: Props) => ReactElement;
 }
 /**
  * 桥接现有表单组件为表格行内编辑可用组件
  * */
-export interface RCTableEditWidgetImpl {
+export interface RCTableEditAdaptor {
     (arg: RCTableEditRenderArg): ReactNode;
-}
-/** 用于将表单控件适配到可用于单元格内编辑的适配器 */
-export interface RCTableEditWidgetAdapter<T = any> {
-    (conf?: T): RCTableEditWidgetImpl;
 }
 /**
  * 列筛选表单渲染器
@@ -68,7 +66,7 @@ export interface RCTableRenderArg {
     context: AnyObject;
 }
 /** 表格props */
-export interface RCTableProps extends ComponentBaseProps, Omit<TableBaseConfig, OmitConfig | "render">, TableSelectConfig, TableDragSortConfig, TableInteractiveCoreConfig, TableFormConfig {
+export interface RCTableProps extends ComponentBaseProps, Omit<TableBaseConfig, OmitConfig | "render">, TableSelectConfig, TableDragSortConfig, TableInteractiveCoreConfig {
     /** 自定义单元格渲染 */
     render?: (arg: RCTableRenderArg) => React.ReactNode | void;
     /** 自定义空节点 */
@@ -113,6 +111,17 @@ export interface RCTableProps extends ComponentBaseProps, Omit<TableBaseConfig, 
     toolBarLeadingCustomer?: (nodes: RCTableToolbarLeadingBuiltinNodes, table: RCTableInstance) => ReactNode;
     /** 定制toolbar右侧, 应使用React.Fragment避免内容被渲染到嵌套的容器中, 避免排版混乱 */
     toolBarTrailingCustomer?: (nodes: RCTableToolbarTrailingBuiltinNodes, table: RCTableInstance) => ReactNode;
+    /**
+     * 用于启用单元格编辑和校验字段的schema, 需要注意以下几点:
+     *
+     * - 在单元格编辑中, element是必须的, 并且对应的组件必须在table或全局注册过
+     * - 大部分schema配置都只对Form组件渲染有意义, 在单元格渲染中是无效的, 比如 label/list 等
+     * */
+    schema?: FormSchema[];
+    /** 表单控件适配器, 优先级高于全局适配器 */
+    adaptors?: FormAdaptors;
+    /** 启用ediByDialog时, 可通过此项来手动进行Form渲染, 默认会使用根据schema生成的预设样式 */
+    dialogFormRender?: (form: FormInstance) => ReactNode;
     /** 编辑功能是否启用, 传入true时全部启用, 可传入一个配置对象来按需启用所需功能 */
     dataOperations?: boolean | {
         /** 允许编辑数据 */
@@ -245,8 +254,12 @@ export interface _RCTableState {
 export interface _RCTableSelf {
     /** 所有自定义渲染项的key map */
     renderMap: Record<string, _CustomRenderItem>;
-    /** 所有编辑项的key map */
+    /** 所有正在编辑项的key map */
     editMap: Record<string, _CustomEditItem>;
+    /** 根据schema生成的form, 用于检测可编辑状态 */
+    editCheckForm: FormInstance;
+    /** 在进行editCheckForm后将结果缓存到此处, 避免多余的计算 */
+    editStatusMap: Record<string, boolean>;
     /** 记录活动的overlayStack, 用于methods.overlayStackChange */
     overlayStackCount: number;
 }

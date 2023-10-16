@@ -1,1 +1,1 @@
-{"version":3,"file":"table-input.d.ts","sourceRoot":"","sources":["../../../../../src/table/form-widgets/table-input.tsx"],"names":[],"mappings":"AAAA,OAAO,EAAE,wBAAwB,EAAE,MAAM,aAAa,CAAC;AACvD,OAAO,EAAS,UAAU,EAAE,MAAM,sBAAsB,CAAC;AAIzD,oBAAoB;AACpB,eAAO,MAAM,UAAU,EAAE,wBAAwB,CAAC,UAAU,CAiBzD,CAAC"}
+{"version":3,"file":"table-input.d.ts","sourceRoot":"","sources":["../../../../../src/table/form-widgets/table-input.tsx"],"names":[],"mappings":"AAEA,OAAO,EAAE,kBAAkB,EAAE,MAAM,aAAa,CAAC;AAGjD,oBAAoB;AACpB,eAAO,MAAM,iBAAiB,EAAE,kBAa/B,CAAC"}

@@ -12,6 +12,8 @@ export function _useStateAct() {
     var self = useSelf({
         renderMap: {},
         editMap: {},
+        editStatusMap: {},
+        editCheckForm: null,
         overlayStackCount: 0
     });
     var ref1 = _sliced_to_array(useSetState({

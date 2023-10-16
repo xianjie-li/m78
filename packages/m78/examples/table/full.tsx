@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Table } from "../../src/table/index.js";
-import { useUpdate } from "@m78/hooks";
+import { useFirstMountState, useUpdate } from "@m78/hooks";
 import {
   Button,
   FormInstance,
@@ -10,86 +10,79 @@ import {
   Size,
   Spacer,
   string,
-  TableColumnLeafConfig,
 } from "../../src/index.js";
 import { RCTableInstance } from "../../src/table/types.js";
-import { tableInput } from "../../src/table/form-widgets/table-input.js";
+import { tableInputAdaptor } from "../../src/table/form-widgets/table-input.js";
 
-const columns: TableColumnLeafConfig[] = Array.from({ length: 40 }).map(
-  (_, j) => {
-    const c: any = {
-      key: `field${j}`,
-      label: `field${j}`,
-    };
+const columns = Array.from({ length: 40 }).map((_, j) => {
+  const c: any = {
+    key: `field${j}`,
+    label: `field${j}`,
+  };
 
-    if (j === 7) {
-      c.fixed = "left";
-    }
-
-    if (j > 20 && j < 23) {
-      c.fixed = "right";
-    }
-
-    if (j === 22) {
-      // c.width = 80;
-    }
-
-    if (j === 21) {
-      c.render = () => {
-        return <span>⭐️⭐️⭐️</span>;
-      };
-    }
-
-    if (j > 2 && j < 7) {
-      c.sort = true;
-    }
-
-    if (j > 9 && j < 13) {
-      c.filterRender = (form: FormInstance) => {
-        return (
-          <div>
-            <Spacer height={10}>
-              <form.Field
-                label="查询1"
-                name={`field${j}-1-r`}
-                component={() => (
-                  <div
-                    onChange={(e) => {
-                      console.log(e);
-                    }}
-                  >
-                    <input type="radio" name="11" />
-                    升序
-                    <input type="radio" name="11" className="ml-12" />
-                    降序
-                  </div>
-                )}
-              />
-
-              <form.Field
-                label="查询1"
-                name={[`field${j}-1`]}
-                component={<Input />}
-              />
-
-              <form.Field
-                label="查询2"
-                name={[`field${j}-2`]}
-                component={<Input />}
-              />
-            </Spacer>
-          </div>
-        );
-      };
-    }
-
-    if (j > 2 && j < 12) {
-      c.editRender = tableInput();
-    }
-
-    return c;
+  if (j === 7) {
+    c.fixed = "left";
   }
-);
+
+  if (j > 20 && j < 23) {
+    c.fixed = "right";
+  }
+
+  if (j === 22) {
+    // c.width = 80;
+  }
+
+  if (j === 21) {
+    c.render = () => {
+      return <span>⭐️⭐️⭐️</span>;
+    };
+  }
+
+  if (j > 2 && j < 7) {
+    c.sort = true;
+  }
+
+  if (j > 9 && j < 13) {
+    c.filterRender = (form: FormInstance) => {
+      return (
+        <div>
+          <Spacer height={10}>
+            <form.Field
+              label="查询1"
+              name={`field${j}-1-r`}
+              element={() => (
+                <div
+                  onChange={(e) => {
+                    console.log(e);
+                  }}
+                >
+                  <input type="radio" name="11" />
+                  升序
+                  <input type="radio" name="11" className="ml-12" />
+                  降序
+                </div>
+              )}
+            />
+
+            <form.Field
+              label="查询1"
+              name={[`field${j}-1`]}
+              element={<Input />}
+            />
+
+            <form.Field
+              label="查询2"
+              name={[`field${j}-2`]}
+              element={<Input />}
+            />
+          </Spacer>
+        </div>
+      );
+    };
+  }
+
+  return c;
+});
 
 const createRow = (key: any) => {
   const obj: any = {
@@ -130,12 +123,12 @@ const schema: FormSchema[] = [
   {
     name: "field3",
     validator: [required(), string({ min: 2, max: 5 })],
-    component: <Input />,
+    element: <Input />,
   },
   {
     name: "field4",
     validator: [required(), string({ min: 2, max: 5 })],
-    component: <Input />,
+    element: <Input />,
   },
   {
     name: "field5",
@@ -144,6 +137,32 @@ const schema: FormSchema[] = [
         valid: form.getValue("field4") === "123",
       };
     },
+    element: <Input />,
+  },
+  {
+    name: "field6",
+    validator: [required(), string({ min: 2, max: 5 })],
+    element: <Input />,
+  },
+  {
+    name: "field7",
+    validator: [required(), string({ min: 2, max: 5 })],
+    element: <Input />,
+  },
+  {
+    name: "field8",
+    validator: [string({ min: 2, max: 5 })],
+    element: <Input />,
+  },
+  {
+    name: "field9",
+    validator: [string({ min: 2, max: 5 })],
+    element: <Input />,
+  },
+  {
+    name: "field10",
+    validator: [string({ min: 2, max: 5 })],
+    element: <Input />,
   },
 ];
 
@@ -153,9 +172,25 @@ const rowConfig = {
   },
 } as const;
 
+const adaptors = [
+  {
+    element: <Input />,
+    tableAdaptor: tableInputAdaptor,
+  },
+];
+
+const filterSchema = [
+  {
+    name: "field11-1",
+    validator: required(),
+  },
+];
+
 const TableFullExample = () => {
   const [data, setData] = useState(data1);
   const [autoSize, setAutoSize] = useState(false);
+
+  const [count, setCount] = useState(8);
 
   const update = useUpdate();
 
@@ -173,7 +208,9 @@ const TableFullExample = () => {
 
   return (
     <div>
+      <button onClick={() => setCount((p) => p + 1)}>click {count}</button>
       <Table
+        adaptors={adaptors}
         data={data}
         primaryKey="id"
         columns={columns}
@@ -195,12 +232,7 @@ const TableFullExample = () => {
         defaultFilter={{
           "field11-1": "12312",
         }}
-        filterSchema={[
-          {
-            name: "field11-1",
-            validator: required(),
-          },
-        ]}
+        filterSchema={filterSchema}
         dragSortColumn
         dragSortRow
         defaultNewData={{
@@ -214,9 +246,9 @@ const TableFullExample = () => {
         commonFilter={(form) => {
           return (
             <Spacer height={12} style={{ width: 400 }}>
-              <form.Field label="查询1" name="filter1" component={<Input />} />
-              <form.Field label="查询2" name="filter2" component={<Input />} />
-              <form.Field label="查询3" name="filter3" component={<Input />} />
+              <form.Field label="查询1" name="filter1" element={<Input />} />
+              <form.Field label="查询2" name="filter2" element={<Input />} />
+              <form.Field label="查询3" name="filter3" element={<Input />} />
             </Spacer>
           );
         }}

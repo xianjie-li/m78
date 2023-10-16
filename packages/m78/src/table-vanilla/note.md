@@ -390,11 +390,11 @@ PC:
 form 支持 react 版本, 用于更简单的渲染 form, 通过一个 editComponentBridge
 大部分 schema 配置都只在表单渲染模式有意义
 
-table 直接接收 form 实例?
-
 form 和 table 的 components 改为全局注册
 
 各个表单组件分别导出其对应的配置
+
+vTable 可编辑通过 inter 检测
 
 修复 filter 问题, 更改图标, 支持根据 name 直接生成
 提供 filter 样式
@@ -418,6 +418,8 @@ form 改动
 
 全部使用气泡提示, 描述可配置为固定节点或气泡
 改为默认添加四个编剧, 添加 noPad 消除边距
+
+全选删除报错
 
 - Adaptor 支持全局/field/schema 级别, 用于映射 prop 到表单控件
 - Customer 支持 form/field/schema, 用于为 Field 添加自定义容器

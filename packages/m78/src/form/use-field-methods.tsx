@@ -12,7 +12,13 @@ import {
   FormAdaptor,
 } from "./types.js";
 import { useFn } from "@m78/hooks";
-import { isBoolean, isFunction, isString, NamePath } from "@m78/utils";
+import {
+  AnyObject,
+  isBoolean,
+  isFunction,
+  isString,
+  NamePath,
+} from "@m78/utils";
 import React, { cloneElement, isValidElement } from "react";
 import { _defaultValueGetter } from "./common.js";
 
@@ -124,26 +130,26 @@ export function _useFieldMethods(ctx: _FormContext, fieldCtx: _FieldContext) {
   const getAdaptor = useFn(
     (): {
       adaptorConf?: FormAdaptorsItem;
-      /** 用户在schema或field传入了函数类型的component时, 此项为该函数 */
-      componentRender?: FormAdaptor;
+      /** 用户在schema或field传入了函数类型的element时, 此项为该函数 */
+      elementRender?: FormAdaptor;
     } => {
-      const componentKey = props.component || schema?.component;
+      const element = props.element || schema?.element;
       const adaptor = props.adaptor || schema?.adaptor;
 
       let aConf: FormAdaptorsItem;
 
-      if (isFunction(componentKey)) {
+      if (isFunction(element)) {
         return {
-          componentRender: componentKey,
+          elementRender: element,
         };
       }
 
-      if (isValidElement<any>(componentKey)) {
-        const conf = adaptorsMap.get(componentKey.type);
+      if (isValidElement<any>(element)) {
+        const conf = adaptorsMap.get(element.type);
 
         aConf = {
           ...conf,
-          component: componentKey,
+          element: element,
         };
 
         if (adaptor) aConf.formAdaptor = adaptor;
@@ -151,12 +157,12 @@ export function _useFieldMethods(ctx: _FormContext, fieldCtx: _FieldContext) {
         return {
           adaptorConf: aConf,
         };
-      } else if (isString(componentKey)) {
-        const aConf = adaptorsNameMap.get(componentKey);
+      } else if (isString(element)) {
+        const aConf = adaptorsNameMap.get(element);
 
         if (!aConf) {
           console.warn(
-            `form widget ${componentKey} is not config. Please config it in the adaptors attribute in the Form.config or m78Config`
+            `form widget ${element} is not config. Please config it in the adaptors attribute in the Form.config or m78Config`
           );
           return {};
         }
@@ -180,13 +186,13 @@ export function _useFieldMethods(ctx: _FormContext, fieldCtx: _FieldContext) {
       bind: getBind(),
       binder: (element, pp) => {
         if (!isValidElement<any>(element)) return null;
-        return cloneElement(element, pp);
+        return cloneElement(element, pp as AnyObject);
       },
       form,
       config,
       props,
       getProps,
-      element: adaptorConf?.component || null,
+      element: adaptorConf?.element || null,
     };
   });
 

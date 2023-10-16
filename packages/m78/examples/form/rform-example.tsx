@@ -76,13 +76,13 @@ const schemas2: FormSchemaWithoutName = {
       deps: ["desc"],
       describe:
         "填入你的姓名, 填入你的姓名填入你的姓名填入你的姓名填入你的姓名填入你的姓名, 填入你的姓名.",
-      component: <Input />,
+      element: <Input />,
     },
     {
       name: "desc",
       label: "描述",
       validator: required(),
-      component: <Input textArea />,
+      element: <Input textArea />,
     },
     {
       name: "obj",
@@ -93,22 +93,22 @@ const schemas2: FormSchemaWithoutName = {
         {
           name: "title",
           validator: required(),
-          component: <Input placeholder="名称" />,
+          element: <Input placeholder="名称" />,
         },
         {
           name: "desc",
           validator: required(),
-          component: <Input placeholder="描述" />,
+          element: <Input placeholder="描述" />,
         },
         {
           name: "test",
           validator: required(),
-          component: <Input placeholder="描述" />,
+          element: <Input placeholder="描述" />,
         },
         {
           name: "test",
           validator: required(),
-          component: <Input placeholder="描述" />,
+          element: <Input placeholder="描述" />,
         },
       ],
     },
@@ -126,12 +126,12 @@ const schemas2: FormSchemaWithoutName = {
           {
             name: "title",
             validator: required(),
-            component: <Input placeholder="名称" />,
+            element: <Input placeholder="名称" />,
           },
           {
             name: "desc",
             validator: required(),
-            component: <Input placeholder="描述" />,
+            element: <Input placeholder="描述" />,
           },
         ],
       },
@@ -148,7 +148,7 @@ const schemas2: FormSchemaWithoutName = {
       validator: required(),
       eachSchema: {
         validator: required(),
-        component: <Input />,
+        element: <Input />,
       },
     },
   ],
@@ -174,7 +174,7 @@ const RformExample = () => {
       adaptors: [
         {
           name: "input",
-          component: <Input />,
+          element: <Input />,
           // formAdaptor: _defaultAdaptor,
         },
       ],
@@ -279,11 +279,11 @@ const RformExample = () => {
       <Divider>Manual render</Divider>
 
       <div>
-        <Form.Field name="name" component="input" />
+        <Form.Field name="name" element="input" />
         <Form.Field label="cTitle" name={["camera", "title"]} />
-        <Form.Field label="cDesc" name={["camera", "desc"]} component="input" />
-        <Form.Field name="topic" label="标签" component={<Input />} />
-        <Form.Field name="desc" component={<Input textArea />} />
+        <Form.Field label="cDesc" name={["camera", "desc"]} element="input" />
+        <Form.Field name="topic" label="标签" element={<Input />} />
+        <Form.Field name="desc" element={<Input textArea />} />
 
         <Form.List
           name="list"
@@ -302,19 +302,19 @@ const RformExample = () => {
                       <Form.Field
                         name={getName("title")}
                         layoutType={FormLayoutType.vertical}
-                        component={<Input placeholder="名称" />}
+                        element={<Input placeholder="名称" />}
                       />
                       <Form.Field
                         style={{ marginLeft: 8 }}
                         name={getName("desc")}
                         layoutType={FormLayoutType.vertical}
-                        component={<Input placeholder="描述" />}
+                        element={<Input placeholder="描述" />}
                       />
                       <Form.Field
                         style={{ marginLeft: 8 }}
                         name={getName("bbb")}
                         layoutType={FormLayoutType.vertical}
-                        component={<Input placeholder="bbb" />}
+                        element={<Input placeholder="bbb" />}
                       />
 
                       <Button
@@ -376,7 +376,7 @@ const RformExample = () => {
       <div>
         <Form2.Field
           name="name"
-          component={<Input />}
+          element={<Input />}
           customer={(args) => {
             return (
               <div>
@@ -387,18 +387,18 @@ const RformExample = () => {
           }}
         />
         <Row style={{ width: 348 }}>
-          <Form2.Field name="name" component={<Input />} />
+          <Form2.Field name="name" element={<Input />} />
           <Form2.Field
             name="desc"
             style={{ marginLeft: 12 }}
-            component={<Input />}
+            element={<Input />}
           />
         </Row>
-        <Form2.Field name="topic" label="topic" component={<Input />} />
-        <Form2.Field name="desc" component={<Input textArea />} />
+        <Form2.Field name="topic" label="topic" element={<Input />} />
+        <Form2.Field name="desc" element={<Input textArea />} />
         <Form2.Field
           name="desc"
-          component={(args) => <span>{args.bind.value}</span>}
+          element={(args) => <span>{args.bind.value}</span>}
         />
       </div>
     </div>

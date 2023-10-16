@@ -9,6 +9,7 @@ import { _useEditRender } from "./use-edit-render.js";
 import { _useCustomRender } from "./use-custom-render.js";
 import { _injector } from "./table.js";
 import { createRandString, isFunction } from "@m78/utils";
+import { createForm } from "../form/index.js";
 export function _useMethodsAct() {
     var updateInstance = /** 创建/更新表格实例 */ function updateInstance(propsConf, isFull) {
         console.log("reload", isFull ? "full" : "index");
@@ -32,7 +33,8 @@ export function _useMethodsAct() {
                 interactive: editRender.interactiveEnableChecker,
                 interactiveRender: editRender.interactiveRender,
                 texts: texts,
-                extraActiveCheckEl: wrapRef.current
+                extraActiveCheckEl: wrapRef.current,
+                formCreator: createForm
             }))
         });
     };
@@ -62,6 +64,22 @@ export function _useMethodsAct() {
         }
         (ref = state.instance) === null || ref === void 0 ? void 0 : ref.isActive(!self.overlayStackCount);
     };
+    var updateCheckForm = /** 更新editCheckForm, 应在schema变更时触发 */ function updateCheckForm() {
+        self.editStatusMap = {};
+        var ls = props.schema || [];
+        if (self.editCheckForm) {
+            self.editCheckForm.setSchemas({
+                schema: ls
+            });
+            return;
+        }
+        self.editCheckForm = createForm({
+            schemas: {
+                schema: ls
+            },
+            autoVerify: false
+        });
+    };
     var ref = _injector.useDeps(_useStateAct), ref1 = ref.ref, scrollRef = ref.scrollRef, scrollContRef = ref.scrollContRef, wrapRef = ref.wrapRef, state = ref.state, setState = ref.setState, self = ref.self;
     var props = _injector.useProps();
     var editRender = _useEditRender();
@@ -69,6 +87,7 @@ export function _useMethodsAct() {
     return {
         initEmptyNode: initEmptyNode,
         updateInstance: updateInstance,
+        updateCheckForm: updateCheckForm,
         getDefaultNewData: getDefaultNewData,
         overlayStackChange: overlayStackChange
     };
