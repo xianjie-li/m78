@@ -71,6 +71,5 @@ export default {
     "insert bottom": "Insert row to bottom",
     "delete row": "Delete row",
     "delete rows": "Delete selected rows",
-    "edit by dialog": "Edit row in dialog",
   },
 };

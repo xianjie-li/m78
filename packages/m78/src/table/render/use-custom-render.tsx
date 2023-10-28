@@ -1,25 +1,27 @@
 import React, { useEffect } from "react";
 import {
   _CustomRenderItem,
+  _RCTableState,
   RCTableInstance,
+  RCTableProps,
   RCTableRenderArg,
-} from "./types.js";
+} from "../types.js";
 import {
   TableCell,
   TableCellWithDom,
   TableRenderCtx,
-} from "../table-vanilla/index.js";
+} from "../../table-vanilla/index.js";
 import { isTruthyOrZero } from "@m78/utils";
 import { useFn } from "@m78/hooks";
 
-import ReactDom, { flushSync } from "react-dom";
-import { _FilterBtn } from "./filter/filter-btn.js";
-import { _useStateAct } from "./state.act.js";
-import { _injector } from "./table.js";
+import ReactDom from "react-dom";
+import { _useStateAct } from "../injector/state.act.js";
+import { _injector } from "../table.js";
+import { RCTablePlugin } from "../plugin.js";
 
-// 自定义渲染
+// 自定义渲染单元格
 export function _useCustomRender() {
-  const { state, self } = _injector.useDeps(_useStateAct);
+  const { state, self, rcPlugins } = _injector.useDeps(_useStateAct);
   const props = _injector.useProps();
 
   // mountChange触发时, 清理renderMap中已卸载的单元格
@@ -39,52 +41,21 @@ export function _useCustomRender() {
     };
   }, [state.instance]);
 
-  // 表头绘制控制, 添加过滤/排序按钮
-  const headerRender = useFn(({ cell }: RCTableRenderArg) => {
-    const column = cell.column;
-
-    if (cell.row.isHeader && !column.isHeader) {
-      return (
-        <>
-          <span>{cell.text}</span>
-          <span className="m78-table_header-icons">
-            <_FilterBtn cell={cell} />
-          </span>
-        </>
-      );
-    }
-  });
-
   // 覆盖并扩展table.config.render
   const render = useFn((cell: TableCellWithDom, _ctx: TableRenderCtx) => {
-    const arg = {
+    const arg = renderCommonHandle({
+      props,
+      state,
       cell,
-      context: props.context || {},
-      table: state.instance as any as RCTableInstance,
-    };
+      rcPlugins,
+    });
 
-    if (cell.column.config.render && !cell.row.isFake) {
+    if (isTruthyOrZero(arg.prevElement)) {
       _ctx.disableDefaultRender = true;
 
       self.renderMap[cell.key] = {
         cell,
-        element: cell.column.config.render(arg),
-      };
-      return;
-    }
-
-    let ret = props.render?.(arg);
-
-    if (!isTruthyOrZero(ret)) {
-      ret = headerRender(arg);
-    }
-
-    if (isTruthyOrZero(ret)) {
-      _ctx.disableDefaultRender = true;
-
-      self.renderMap[cell.key] = {
-        cell,
-        element: ret!,
+        element: arg.prevElement,
       };
       return;
     }
@@ -95,11 +66,57 @@ export function _useCustomRender() {
   };
 }
 
+/** 自定义render处理 插件render/config render/column render */
+export function renderCommonHandle(args: {
+  props: RCTableProps;
+  state: _RCTableState;
+  cell: TableCellWithDom;
+  rcPlugins: RCTablePlugin[];
+}) {
+  const { props, state, cell, rcPlugins } = args;
+
+  const arg: RCTableRenderArg = {
+    cell,
+    context: props.context || {},
+    table: state.instance as any as RCTableInstance,
+    prevElement: null,
+  };
+
+  // 处理插件render
+  rcPlugins.forEach((p) => {
+    const el = p.rcCellRender?.({
+      cell,
+      prevElement: arg.prevElement,
+    });
+
+    if (isTruthyOrZero(el)) {
+      arg.prevElement = el!;
+    }
+  });
+
+  // props.render
+  const el = props.render?.(arg);
+
+  if (isTruthyOrZero(el)) {
+    arg.prevElement = el!;
+  }
+
+  // 处理column.render
+  if (cell.column.config.render && !cell.row.isFake) {
+    const el = cell.column.config.render(arg);
+
+    if (isTruthyOrZero(el)) {
+      arg.prevElement = el!;
+    }
+  }
+
+  return arg;
+}
+
 export type _UseCustomRender = ReturnType<typeof _useCustomRender>;
 
 // 自定义渲染, 组件部分, 用于避免频繁render影响外部作用域
 export function _CustomRender() {
-  const props = _injector.useProps();
   const { state, self } = _injector.useDeps(_useStateAct);
 
   const [list, setList] = React.useState<_CustomRenderItem[]>([]);
@@ -110,13 +127,7 @@ export function _CustomRender() {
       return self.renderMap[key];
     });
 
-    if (props.syncRender) {
-      flushSync(() => {
-        setList(ls);
-      });
-    } else {
-      setList(ls);
-    }
+    setList(ls);
   });
 
   useEffect(() => {

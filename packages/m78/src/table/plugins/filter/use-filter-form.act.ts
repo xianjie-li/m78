@@ -1,11 +1,18 @@
-import { RCTableProps } from "../types.js";
+import { RCTableProps } from "../../types.js";
 import { useMemo } from "react";
-import { createForm, FormInstance, FormLayoutType } from "../../form/index.js";
-import { Size } from "../../common/index.js";
+import {
+  createForm,
+  FormInstance,
+  FormLayoutType,
+} from "../../../form/index.js";
+import { Size } from "../../../common/index.js";
 import { useFn } from "@m78/hooks";
+import { _injector } from "../../table.js";
 
 /** 根据props.filterForm / defaultFilter 等配置决定是否需要创建form实例, 并包含filter表单的通用逻辑 */
-export function _useFilterForm(props: RCTableProps) {
+export function _useFilterFormAct() {
+  const props = _injector.useProps();
+
   const form = useMemo(() => {
     let f: FormInstance;
 
@@ -39,5 +46,5 @@ export function _useFilterForm(props: RCTableProps) {
     query();
   });
 
-  return form;
+  return { form };
 }

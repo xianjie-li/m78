@@ -1,8 +1,10 @@
 import { useMemo, useRef } from "react";
 import { createEvent, useSelf, useSetState } from "@m78/hooks";
-import { _RCTableSelf, _RCTableState } from "./types.js";
-import { _useFilterForm } from "./filter/use-filter-form.js";
-import { _injector } from "./table.js";
+import { _RCTableSelf, _RCTableState } from "../types.js";
+import { _injector } from "../table.js";
+import { preInstantiationRCPlugin } from "../common.js";
+import { _builtinPlugins } from "../plugins/index.js";
+import { RCTablePlugin } from "../plugin.js";
 
 export function _useStateAct() {
   const props = _injector.useProps();
@@ -24,13 +26,22 @@ export function _useStateAct() {
     overlayStackCount: 0,
   });
 
+  const plugins = useMemo(
+    () =>
+      preInstantiationRCPlugin([..._builtinPlugins, ...(props.plugins || [])!]),
+    []
+  );
+
+  // 所有RCTablePlugin实例
+  const rcPlugins = useMemo(() => {
+    return plugins.filter((p) => p instanceof RCTablePlugin) as RCTablePlugin[];
+  }, []);
+
   const [state, setState] = useSetState<_RCTableState>({
     selectedRows: [],
     rowCount: 0,
     instance: null as any,
   });
-
-  const filterForm = _useFilterForm(props);
 
   const scrollEvent = useMemo(() => createEvent(), []);
 
@@ -42,7 +53,8 @@ export function _useStateAct() {
     scrollRef,
     scrollContRef,
     wrapRef,
-    filterForm,
     scrollEvent,
+    plugins,
+    rcPlugins,
   };
 }

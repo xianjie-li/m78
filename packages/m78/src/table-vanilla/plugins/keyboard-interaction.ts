@@ -52,8 +52,6 @@ export class _TableKeyboardInteractionPlugin extends TablePlugin {
 
   // 粘贴的核心实现, 传入ClipboardEvent时, 使用事件对象操作剪切板, 否则使用 Clipboard API
   private async pasteImpl(e?: ClipboardEvent) {
-    if (!this.table.isActive()) return;
-
     // 有正在进行编辑等操作的单元格, 跳过
     if (this.interactiveCore.items.length) return;
 
@@ -169,8 +167,6 @@ export class _TableKeyboardInteractionPlugin extends TablePlugin {
 
   // 复制的核心实现, 传入ClipboardEvent时, 使用事件对象操作剪切板, 否则使用 Clipboard API
   private async copyImpl(e?: ClipboardEvent) {
-    if (!this.table.isActive()) return;
-
     // 有正在进行编辑等操作的单元格, 跳过
     if (this.interactiveCore.items.length) return;
 
@@ -259,11 +255,15 @@ export class _TableKeyboardInteractionPlugin extends TablePlugin {
 
   /** 粘贴 */
   private onPaste = (e: Event) => {
+    if (!this.table.isActive()) return;
+
     this.pasteImpl(e as ClipboardEvent);
   };
 
   /** 复制 */
   private onCopy = (e: Event) => {
+    if (!this.table.isActive()) return;
+
     this.copyImpl(e as ClipboardEvent);
   };
 

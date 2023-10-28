@@ -95,7 +95,7 @@ export interface TableBaseConfig {
   texts?: Partial<typeof tableDefaultTexts>;
 
   /** 插件 */
-  plugins?: typeof TablePlugin[];
+  plugins?: Array<typeof TablePlugin | TablePlugin>;
 }
 
 /** 会在内部实现间使用的配置 */

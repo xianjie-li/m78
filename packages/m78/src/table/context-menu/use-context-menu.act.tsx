@@ -6,8 +6,7 @@ import { TupleNumber } from "@m78/utils";
 import { Trigger, TriggerType, UseTriggerProps } from "../../trigger/index.js";
 import { _useCellMenu } from "./use-cell-menu.js";
 import { _injector } from "../table.js";
-import { _useStateAct } from "../state.act.js";
-import { _useMethodsAct } from "../methods.act.js";
+import { _useMethodsAct } from "../injector/methods.act.js";
 
 export type _TableContextMenuOpenOpt = {
   /** 菜单位置 */
@@ -19,8 +18,6 @@ export type _TableContextMenuOpenOpt = {
 };
 
 export const _useContextMenuAct = () => {
-  const { state } = _injector.useDeps(_useStateAct);
-  const instance = state.instance;
   const methods = _injector.useDeps(_useMethodsAct);
 
   const ref = useRef<OverlayInstance>(null!);

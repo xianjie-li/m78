@@ -1,12 +1,13 @@
 import { useEffect, useImperativeHandle } from "react";
 import { useDestroy } from "@m78/hooks";
-import { _useMethodsAct } from "./methods.act.js";
-import { _useStateAct } from "./state.act.js";
-import { _usePropsEffect } from "./use-props.js";
-import { _injector } from "./table.js";
+import { _useMethodsAct } from "../injector/methods.act.js";
+import { _useStateAct } from "../injector/state.act.js";
+import { _usePropsEffect } from "./use-props-effect.js";
+import { _injector } from "../table.js";
+import { _useEvent } from "./use-event.js";
 
-export function _useLifeCycleAct() {
-  const { state } = _injector.useDeps(_useStateAct);
+export function _useLifeCycle() {
+  const { state, rcPlugins } = _injector.useDeps(_useStateAct);
   const methods = _injector.useDeps(_useMethodsAct);
   const props = _injector.useProps();
 
@@ -25,6 +26,10 @@ export function _useLifeCycleAct() {
   useImperativeHandle(props.instanceRef, () => state.instance, [
     state.instance,
   ]);
+
+  _useEvent();
+
+  rcPlugins.forEach((p) => p.rcRuntime?.());
 
   /** 初始化 */
   function init() {

@@ -19,6 +19,8 @@ import { ReactElement, ReactNode } from "react";
 import { TableDataLists } from "../table-vanilla/plugins/form.js";
 import { TableFeedbackEvent } from "../table-vanilla/plugins/event.js";
 import { FormAdaptors, FormInstance, FormSchema } from "../form/index.js";
+import { TablePlugin } from "../table-vanilla/plugin.js";
+import { RCTablePlugin } from "./plugin.js";
 
 /** 忽略的配置 */
 type OmitConfig = typeof _tableOmitConfig[number];
@@ -27,7 +29,7 @@ type OmitConfig = typeof _tableOmitConfig[number];
 declare module "../table-vanilla/index.js" {
   interface TableColumnLeafConfig {
     /** 自定义该列单元格渲染 */
-    render?: (arg: RCTableRenderArg) => React.ReactNode;
+    render?: (arg: RCTableRenderArg) => ReactNode | void;
     /** 渲染筛选表单*/
     filterRender?: RCTableFilterColumnRender;
     /** 在表头后方渲染的额外节点 */
@@ -80,6 +82,8 @@ export interface RCTableRenderArg {
   table: RCTableInstance;
   /** 传入给props.context的上下文信息 */
   context: AnyObject;
+  /** 如果在其他定制render之后执行, 如插件/config.render/column.render, 接收经过它们处理后的element, 可以选择忽略之前的定制或对其进行合并处理后返回 */
+  prevElement: ReactNode | null;
 }
 
 /** 表格props */
@@ -90,18 +94,13 @@ export interface RCTableProps
     TableDragSortConfig,
     TableInteractiveCoreConfig {
   /** 自定义单元格渲染 */
-  render?: (arg: RCTableRenderArg) => React.ReactNode | void;
+  render?: (arg: RCTableRenderArg) => ReactNode | void;
   /** 自定义空节点 */
   emptyNode?: React.ReactElement;
   /** 最外层容器className */
   wrapClassName?: string;
   /** 最外层容器style */
   wrapStyle?: React.CSSProperties;
-  /**
-   * 表格内的自定义内容会通过react进行渲染, 由于渲染不是同步的, 在快速滚动时, 自定义渲染内容可能会有短暂的空白, 可以启用此项来强制react同步渲染这些内容
-   * - 注意: 延迟渲染大部分情况下是可接受的, 而开启同步渲染回造成一定的性能影响
-   * */
-  syncRender?: boolean;
   /** 可在此传入表格上下文的状态, 并在column.render和config.render等函数中访问 */
   context?: AnyObject;
 
@@ -136,16 +135,13 @@ export interface RCTableProps
 
   /* # # # # # # # 工具栏 # # # # # # # */
 
-  /** 定制toolbar左侧, 应使用React.Fragment避免内容被渲染到嵌套的容器中, 避免排版混乱 */
-  toolBarLeadingCustomer?: (
-    nodes: RCTableToolbarLeadingBuiltinNodes,
-    table: RCTableInstance
-  ) => ReactNode;
-  /** 定制toolbar右侧, 应使用React.Fragment避免内容被渲染到嵌套的容器中, 避免排版混乱 */
+  /** 定制toolbar左侧, 可直接更改nodes, 向其中新增或删除节点 */
+  toolBarLeadingCustomer?: (nodes: ReactNode[], table: RCTableInstance) => void;
+  /** 定制toolbar右侧, 可直接更改nodes, 向其中新增或删除节点 */
   toolBarTrailingCustomer?: (
-    nodes: RCTableToolbarTrailingBuiltinNodes,
+    nodes: ReactNode[],
     table: RCTableInstance
-  ) => ReactNode;
+  ) => void;
 
   /* # # # # # # # 数据操作 # # # # # # # */
 
@@ -158,8 +154,6 @@ export interface RCTableProps
   schema?: FormSchema[];
   /** 表单控件适配器, 优先级高于全局适配器 */
   adaptors?: FormAdaptors;
-  /** 启用ediByDialog时, 可通过此项来手动进行Form渲染, 默认会使用根据schema生成的预设样式 */
-  dialogFormRender?: (form: FormInstance) => ReactNode;
   /** 编辑功能是否启用, 传入true时全部启用, 可传入一个配置对象来按需启用所需功能 */
   dataOperations?:
     | boolean
@@ -195,6 +189,9 @@ export interface RCTableProps
 
   /** 获取内部table实例 */
   instanceRef?: React.Ref<RCTableInstance>;
+
+  /** 插件 */
+  plugins?: Array<typeof TablePlugin | typeof RCTablePlugin>;
 }
 
 /** 表格实例 */
@@ -246,30 +243,6 @@ export interface RCTableInstance extends Omit<TableInstance, "event"> {
     /** 需要进行一些反馈操作时触发, 比如点击了包含验证错误/禁用/内容不能完整显示的行, 如果项包含多个反馈, 则event包含多个事件项 */
     feedback: CustomEventWithHook<(event: TableFeedbackEvent[]) => void>;
   };
-}
-
-/** 左侧预置节点 */
-export interface RCTableToolbarLeadingBuiltinNodes {
-  /** 所有节点的组合 */
-  nodes: ReactNode;
-  searchBtn: ReactNode;
-  resetFilterBtn: ReactNode;
-  filterBtn: ReactNode;
-  redoBtn: ReactNode;
-  undoBtn: ReactNode;
-  countText: ReactNode;
-}
-
-/** 右侧预置节点 */
-export interface RCTableToolbarTrailingBuiltinNodes {
-  /** 所有节点的组合 */
-  nodes: ReactNode;
-  exportBtn: ReactNode;
-  importBtn: ReactNode;
-  deleteBtn: ReactNode;
-  addBtn: ReactNode;
-  saveBtn: ReactNode;
-  editByDialogBtn: ReactNode;
 }
 
 export enum TableSort {

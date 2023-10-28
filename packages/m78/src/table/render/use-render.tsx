@@ -1,24 +1,30 @@
 import clsx from "clsx";
-import { _Toolbar } from "./toolbar/toolbar.js";
+import { _Toolbar } from "../toolbar/toolbar.js";
 import ReactDom from "react-dom";
-import { Result } from "../result/index.js";
-import { Size } from "../common/index.js";
+import { Result } from "../../result/index.js";
+import { Size } from "../../common/index.js";
 import { IconDrafts } from "@m78/icons/icon-drafts.js";
 import { _CustomRender } from "./use-custom-render.js";
 import { _CustomEditRender } from "./use-edit-render.js";
-import { _Feedback } from "./feedback.js";
-import { Scroll } from "../scroll/index.js";
+import { Scroll } from "../../scroll/index.js";
 import React from "react";
-import { _useStateAct } from "./state.act.js";
-import { _injector } from "./table.js";
-import { COMMON_NS, Translation } from "../i18n/index.js";
-import { _useContextMenuAct } from "./context-menu/use-context-menu.act.js";
+import { _useStateAct } from "../injector/state.act.js";
+import { _injector } from "../table.js";
+import { COMMON_NS, Translation } from "../../i18n/index.js";
+import { _useContextMenuAct } from "../context-menu/use-context-menu.act.js";
 import { AnyFunction } from "@m78/utils";
 
 export function _useRender() {
   const props = _injector.useProps();
-  const { state, ref, scrollRef, scrollEvent, scrollContRef, wrapRef } =
-    _injector.useDeps(_useStateAct);
+  const {
+    state,
+    ref,
+    scrollRef,
+    scrollEvent,
+    scrollContRef,
+    wrapRef,
+    rcPlugins,
+  } = _injector.useDeps(_useStateAct);
 
   const ctxMenu = _injector.useDeps(_useContextMenuAct);
 
@@ -54,7 +60,14 @@ export function _useRender() {
 
           <_CustomRender />
           <_CustomEditRender />
-          <_Feedback />
+
+          {/* 插件额外节点渲染 */}
+          {React.createElement(
+            React.Fragment,
+            null,
+            ...rcPlugins.map((p) => p.rcExtraRender?.())
+          )}
+
           {ctxMenu.node}
         </>
       )}

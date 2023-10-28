@@ -17,6 +17,7 @@ import {
 } from "./items.js";
 import { TableReloadOptions } from "../plugins/life.js";
 import { tableDefaultTexts } from "../common.js";
+import { TablePlugin } from "../plugin.js";
 
 /** 固定项信息 */
 type FixedMap<T> = {
@@ -189,6 +190,9 @@ export interface TablePluginContext {
 
   /** 执行xy(xy)时, 是否应该触发内部的onScroll */
   xyShouldNotify?: boolean;
+
+  /** 所有插件实例 */
+  plugins: TablePlugin[];
 
   /** 用户插件自定义的属性, 自定义插件应该集中属性名到额外的命名空间下, 防止和内部冲突,比如context.myPlugin.xxx */
   // [key: string]: any;

@@ -1,12 +1,12 @@
-import { _CustomEditItem, RCTableEditRenderArg } from "./types.js";
-import { TableCell } from "../table-vanilla/index.js";
+import { _CustomEditItem, RCTableEditRenderArg } from "../types.js";
+import { TableCell } from "../../table-vanilla/index.js";
 import { useFn } from "@m78/hooks";
 import React, { cloneElement, isValidElement, ReactElement } from "react";
-import ReactDom, { flushSync } from "react-dom";
+import ReactDom from "react-dom";
 import {
   TableInteractiveDone,
   TableInteractiveRenderArg,
-} from "../table-vanilla/plugins/interactive-core.js";
+} from "../../table-vanilla/plugins/interactive-core.js";
 import {
   AnyObject,
   delay,
@@ -16,18 +16,65 @@ import {
   NamePath,
   stringifyNamePath,
 } from "@m78/utils";
-import { _useStateAct } from "./state.act.js";
-import { _injector } from "./table.js";
-import { throwError } from "../common/index.js";
-import { FormAdaptorsItem } from "../form/index.js";
-import { m78Config } from "../config/index.js";
+import { _useStateAct } from "../injector/state.act.js";
+import { _injector } from "../table.js";
+import { throwError } from "../../common/index.js";
+import { FormAdaptorsItem } from "../../form/index.js";
+import { m78Config } from "../../config/index.js";
 
 // 自定义编辑逻辑
 export function _useEditRender() {
   const { state, self } = _injector.useDeps(_useStateAct);
   const props = _injector.useProps();
 
-  // 先根据schema配置生成一个enableMap, 用于检测单元格是否可编辑, 对于嵌套项, 递归生成字符串
+  // 从表格配置/全局配置中获取指定节点的适配器
+  const getAdaptors = useFn(
+    (ele: ReactElement | string): FormAdaptorsItem | null => {
+      let item: FormAdaptorsItem | null = null;
+
+      const globalAdaptors = m78Config.get().formAdaptors;
+
+      const ls = [...(props.adaptors || []), ...globalAdaptors];
+
+      if (ls.length) {
+        for (let i = 0; i < ls.length; i++) {
+          const adaptor = ls[i];
+
+          if (
+            isValidElement(ele) &&
+            isValidElement(adaptor.element) &&
+            adaptor.element.type === ele.type
+          ) {
+            item = adaptor;
+            break;
+          }
+
+          if (isString(ele) && adaptor.name === ele) {
+            item = adaptor;
+            break;
+          }
+        }
+      }
+
+      return item;
+    }
+  );
+
+  /** 检测是否可编辑 */
+  const checkEditable = useFn((name: NamePath) => {
+    const sName = stringifyNamePath(name);
+
+    const cache = self.editStatusMap[sName];
+
+    if (isBoolean(cache)) return cache;
+
+    const sh = self.editCheckForm.getSchema(name);
+    const editable = !!sh?.element;
+
+    self.editStatusMap[sName] = editable;
+
+    return editable;
+  });
 
   // 检测单元格是否可编辑
   const interactiveEnableChecker = useFn((cell: TableCell) => {
@@ -89,6 +136,7 @@ export function _useEditRender() {
         binder: (element, pp) => {
           return cloneElement(element, pp as AnyObject);
         },
+        prevElement: null,
       };
 
       const ret = adaptor.tableAdaptor(arg);
@@ -122,53 +170,6 @@ export function _useEditRender() {
     }
   );
 
-  /** 从表格配置/全局配置中获取指定节点的适配器  */
-  function getAdaptors(ele: ReactElement | string): FormAdaptorsItem | null {
-    let item: FormAdaptorsItem | null = null;
-
-    const globalAdaptors = m78Config.get().formAdaptors;
-
-    const ls = [...(props.adaptors || []), ...globalAdaptors];
-
-    if (ls.length) {
-      for (let i = 0; i < ls.length; i++) {
-        const adaptor = ls[i];
-
-        if (
-          isValidElement(ele) &&
-          isValidElement(adaptor.element) &&
-          adaptor.element.type === ele.type
-        ) {
-          item = adaptor;
-          break;
-        }
-
-        if (isString(ele) && adaptor.name === ele) {
-          item = adaptor;
-          break;
-        }
-      }
-    }
-
-    return item;
-  }
-
-  /** 检测是否可编辑 */
-  function checkEditable(name: NamePath) {
-    const sName = stringifyNamePath(name);
-
-    const cache = self.editStatusMap[sName];
-
-    if (isBoolean(cache)) return cache;
-
-    const sh = self.editCheckForm.getSchema(name);
-    const editable = !!sh?.element;
-
-    self.editStatusMap[sName] = editable;
-
-    return editable;
-  }
-
   return {
     interactiveEnableChecker,
     interactiveRender,
@@ -188,13 +189,7 @@ export function _CustomEditRender() {
       return self.editMap[key];
     });
 
-    if (props.syncRender) {
-      flushSync(() => {
-        setList(ls);
-      });
-    } else {
-      setList(ls);
-    }
+    setList(ls);
   });
 
   state.instance.event.interactiveChange.useEvent(update);

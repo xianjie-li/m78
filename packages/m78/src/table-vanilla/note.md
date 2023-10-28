@@ -1,8 +1,7 @@
-## 杂
+## 备注
 
 - 平衡初始化阶段和渲染阶段的计算量, 保证既能快速根据新配置初始化, 又能快速执行渲染
   - why? 需要频繁变更(单元格编辑/排序/拖拽/筛选)的情况下提供高性能, 不能假设配置是不变的
-  - 每秒帧数为 60 或以上时, 画面看起来才会流畅, 这意味着你可以有至多 1000 / 60 = 16ms 的时间用于计算/渲染
 - 事件通过通过 wrap 节点单次绑定, 配合 getBoundXX()这类的 api 确定操作的单元格, 不要在每个单元格上绑定事件
 - chrome 节点最大尺寸为 +/-16777216 https://bugs.chromium.org/p/chromium/issues/detail?id=401762, 这对最大数据承载量造成了一定限制
 
@@ -20,48 +19,7 @@ cell 判断 index 变更背景色
 
 提供自定义渲染的入口
 
-```tsx
-// 自定义渲染, 若返回true则阻止默认的innerText渲染
-function render(cell): boolean | void {}
-
-// react版本, 返回React.ReactElement | null时阻止默认渲染, 并使用返回作为渲染结果
-function render(cell): React.ReactElement | null | void {}
-```
-
-react 等框架中单元格节点通过 portal 渲染:
-
-```tsx
-<CustomRender />; // 逻辑抽象到单独组件, 放置频繁render
-
-ins.event.rendered.on(() => {
-  update();
-});
-
-const config = this.table.config();
-
-// render在react中需要包裹一层
-
-cusRender = (cell) => {
-  const r = config.render(cell);
-  if (isReactElement(r) || r === null) {
-    return true; // 阻止默认渲染
-  }
-};
-
-// 暴露此列表给用户
-renderList = ins.currentCells.map((cell) => {
-  const r = cusRender(cell);
-  if (isReactElement(r) || r === null) {
-    return true;
-  }
-  return false;
-});
-
-ins.renderList.map((cell, n: React.ReactElement | null) => {
-  // declare重写类型: 使columnConfig.render返回ReactNode
-  return React.createPortal(n, cell.dom, cell.key);
-});
-```
+react 等框架中单元格节点通过 portal 渲染
 
 ## 滚动 -
 
@@ -368,12 +326,6 @@ PC:
 - 滚动: 滑轮
 - 框选: 拖拽
 
-## 可访问性 =
-
-交互中时, 点击 tab 切换到下个相邻单元格
-
-缺失: 无障碍
-
 ## 文档
 
 说明 render/reload 的区别
@@ -384,122 +336,34 @@ PC:
 
 ## 杂
 
-- 内容查找, 高亮匹配内容
-- 导出: 导出选中/导出所有/勾选要导出的列, 配置列字符串, 用于搜索/导出
-
-form 支持 react 版本, 用于更简单的渲染 form, 通过一个 editComponentBridge
-大部分 schema 配置都只在表单渲染模式有意义
-
-form 和 table 的 components 改为全局注册
-
-各个表单组件分别导出其对应的配置
-
-vTable 可编辑通过 inter 检测
-
-修复 filter 问题, 更改图标, 支持根据 name 直接生成
-提供 filter 样式
-
-```tsx
-config({
-  formAdaptors: [
-    {
-      name: "input",
-      component: <Input />, // 注册后, 如果后续使用此组件, 也会应用对应的配置
-      formAdaptor: fn,
-      tableAdaptor: fn,
-    },
-  ],
-});
-```
-
-form 改动
-
-分为 Adaptor 和 Customer, 前者主要用于绑定 prop, 后者主要用于自定义样式
-
-全部使用气泡提示, 描述可配置为固定节点或气泡
-改为默认添加四个编剧, 添加 noPad 消除边距
-
-全选删除报错
-
-- Adaptor 支持全局/field/schema 级别, 用于映射 prop 到表单控件
-- Customer 支持 form/field/schema, 用于为 Field 添加自定义容器
-  - 支持保留之前的容器, 传入一个 wrapper 函数暴露前一个 customer
-- preventDefaultRenders 禁用默认渲染内容, 仅渲染表单控件
-- component 表单控件, 支持表单控件/预定义的控件/适配器
-
-```ts
-interface FormCustomRenderArgs {
-  bind;
-  // size/disabled等, 并非所有控件都支持
-  extraBind;
-  form;
-  config;
-  props;
-  getProps;
-  element;
-}
-
-React.cloneElement(element, {
-  ...extraBind,
-  ...bind,
-});
-```
-
-Customer
-
-```tsx
-const customer = (args, node) => {
-  return (
-    <div>
-      <div>{node}</div>
-      <div>...</div>
-    </div>
-  );
-};
-```
-
-变动的配置
-
-FormConfig.adaptors
-FormConfig.components
-
-FormProps.fieldCustomer
-FormProps.spacePad
-FormProps.bubbleDescribe
-FormProps.spacePad
-FormProps.wrapCustomer
-
-FormCommonProps.noLayout -> preventDefaultRenders
-
-customer/adaptor/嵌套处理和重复声明处理
-
-## virtualBound -
-
-// 框选添加最小距离限制
-
-事件冲突解决
-
-```ts
-interface Bound {
-  zIndex: number; // 0
-  type: any; // 对应的块类型
-  cursor: string; // 鼠标样式, 未在任何bound时使用默认样式er;
-  data: any;
-}
-
-getBound(xy)
-:
-bound[];
-如果在区域内
-可以阻止其他事件
-hasBound(xy);  // 该点包含其他点
-
-v.bounds = [bound];
-v.cursor;
-
-v.click;
-v.hover(bound);
-v.drag(bound);
-```
-
 ## TODO
+
+- (可选)内容查找, 高亮匹配内容
+- 导出: 导出选中/导出所有/勾选要导出的列, 配置列字符串, 用于搜索/导出
+- 可访问性
+- 新增行包含错误时进行历史操作添加或移除会报错
+
+打开窗口, 使用新的 form 实例渲染表单
+
+初始化即进行一次验证
+
+录入完成后, 点击确定, 将变更值写入到行上
+
+对行进行一次整体验证
+
+```ts
+function propsIntercept(props) {
+  return newProps;
+}
+
+// nodesData.nodes改为数组t, toolBarTrailingCustomer 若未返回node, 则对其进行默认渲染
+function toolbarCustom(nodes: RCTableToolbarLeadingBuiltinNodes) {
+  return nodes;
+}
+
+function extraRender() {}
+
+function cellRender(data: { cell: TableCellWithDom; _ctx: TableRenderCtx }) {}
+
+function createConfig() {}
+```

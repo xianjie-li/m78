@@ -102,6 +102,8 @@ export function _createTable(config: TableConfig): TableInstance {
     config: conf,
   };
 
+  context.plugins = pluginConfig.plugins;
+
   setNamePathValue(instance, "__ctx", context);
 
   // 内置插件
@@ -138,16 +140,21 @@ export function _createTable(config: TableConfig): TableInstance {
     return new Plugin(pluginConfig);
   });
 
-  const cusPlugins = conf.plugins!.map((Plugin) => {
-    return new Plugin(pluginConfig);
-  });
-
   // 用户插件
-  pluginConfig.plugins.push(...plugins, ...cusPlugins);
+  pluginConfig.plugins.push(...plugins);
 
   // 用户插件
   const customPlugins = conf.plugins!.map((Plugin) => {
-    return new Plugin(pluginConfig);
+    // 传入的是插件实例时, 直接使用, 用于上层react组件扩展插件系统
+    if (typeof Plugin === "object") {
+      Plugin.table = pluginConfig.table;
+      Plugin.plugins = pluginConfig.plugins;
+      Plugin.context = pluginConfig.context;
+      Plugin.config = pluginConfig.config;
+      return Plugin;
+    } else {
+      return new Plugin(pluginConfig);
+    }
   });
 
   pluginConfig.plugins.push(...customPlugins);

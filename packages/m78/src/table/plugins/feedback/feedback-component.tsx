@@ -1,22 +1,22 @@
 import React, { ReactElement, useEffect, useRef } from "react";
-import { RCTableInstance } from "./types.js";
-import { OverlayDirection, OverlayInstance } from "../overlay/index.js";
+import { OverlayDirection, OverlayInstance } from "../../../overlay/index.js";
 import { useSelf, useSetState } from "@m78/hooks";
 import {
   TableFeedback,
   TableFeedbackEvent,
-} from "../table-vanilla/plugins/event.js";
-import { Bubble } from "../bubble/index.js";
+} from "../../../table-vanilla/plugins/event.js";
+import { Bubble } from "../../../bubble/index.js";
 import clsx from "clsx";
-import { Divider } from "../layout/index.js";
-import { TableCellWithDom } from "../table-vanilla/index.js";
+import { Divider } from "../../../layout/index.js";
+import { TableCellWithDom } from "../../../table-vanilla/index.js";
 import { isTruthyOrZero } from "@m78/utils";
-import { _injector } from "./table.js";
-import { _useStateAct } from "./state.act.js";
+import { _injector } from "../../table.js";
+import { _useStateAct } from "../../injector/state.act.js";
+import { renderCommonHandle } from "../../render/use-custom-render.js";
 
 export function _Feedback() {
   const props = _injector.useProps();
-  const { state } = _injector.useDeps(_useStateAct);
+  const { state, rcPlugins } = _injector.useDeps(_useStateAct);
 
   const bubbleRef = useRef<OverlayInstance>(null!);
 
@@ -51,20 +51,15 @@ export function _Feedback() {
       if (item.cell) {
         const render = item.cell.column.config.render;
 
-        const arg = {
+        const arg = renderCommonHandle({
+          props,
+          state,
           cell: item.cell as TableCellWithDom,
-          context: props.context || {},
-          table: state.instance as any as RCTableInstance,
-        };
+          rcPlugins,
+        });
 
-        if (render) {
-          node = render(arg);
-        } else if (props.render) {
-          const _node = props.render(arg);
-
-          if (isTruthyOrZero(_node)) {
-            node = _node!;
-          }
+        if (isTruthyOrZero(arg.prevElement)) {
+          node = arg.prevElement;
         }
       }
 

@@ -1,5 +1,9 @@
 import { getNamePathValue, isReferenceType } from "@m78/utils";
 import { TablePluginContext } from "../table-vanilla/types/context.js";
+import { RCTableProps } from "./types.js";
+import { TablePlugin } from "../table-vanilla/plugin.js";
+import { TableInstance } from "../table-vanilla/index.js";
+import { RCTablePlugin } from "./plugin.js";
 
 /** 需要忽略的table-vanilla配置 */
 export const _tableOmitConfig = [
@@ -52,4 +56,24 @@ export const _tableChangedIncludeChecker = (key: string, value: any) => {
 /** 从table实例中获取tableContext */
 export const _getTableCtx = (instance: any): TablePluginContext => {
   return getNamePathValue(instance, "__ctx");
+};
+
+/** 由于plugin.rcRuntime等api必须与组件同步运行(包含hooks), 在初始化时将RCTablePlugin插件进行预先实例化 */
+export const preInstantiationRCPlugin = (
+  plugins: NonNullable<RCTableProps["plugins"]>
+) => {
+  const fakeConf: any = {
+    table: {},
+    plugins: [],
+    context: {},
+    config: {},
+  };
+
+  return plugins.map((p) => {
+    // 若是RCTablePlugin的子类, 预先对其实例化
+    if (Object.getPrototypeOf(p.prototype) === RCTablePlugin.prototype) {
+      return new p(fakeConf);
+    }
+    return p;
+  });
 };

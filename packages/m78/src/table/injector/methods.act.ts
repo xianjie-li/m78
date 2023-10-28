@@ -1,23 +1,25 @@
-import { RCTableInstance, RCTableProps } from "./types.js";
-import { createTable, TableConfig } from "../table-vanilla/index.js";
+import { RCTableInstance, RCTableProps } from "../types.js";
+import { createTable, TableConfig } from "../../table-vanilla/index.js";
 import { createEvent } from "@m78/hooks";
-import { i18n, TABLE_NS } from "../i18n/index.js";
+import { i18n, TABLE_NS } from "../../i18n/index.js";
 import { _useStateAct } from "./state.act.js";
-import { _useEditRender } from "./use-edit-render.js";
-import { _useCustomRender } from "./use-custom-render.js";
-import { _injector } from "./table.js";
-import {
-  createRandString,
-  isBoolean,
-  isFunction,
-  NamePath,
-  stringifyNamePath,
-} from "@m78/utils";
-import { createForm, FormSchema } from "../form/index.js";
+import { _useEditRender } from "../render/use-edit-render.js";
+import { _useCustomRender } from "../render/use-custom-render.js";
+import { _injector } from "../table.js";
+import { createRandString, isFunction } from "@m78/utils";
+import { createForm } from "../../form/index.js";
 
 export function _useMethodsAct() {
-  const { ref, scrollRef, scrollContRef, wrapRef, state, setState, self } =
-    _injector.useDeps(_useStateAct);
+  const {
+    ref,
+    scrollRef,
+    scrollContRef,
+    wrapRef,
+    state,
+    setState,
+    self,
+    plugins,
+  } = _injector.useDeps(_useStateAct);
   const props = _injector.useProps();
 
   const editRender = _useEditRender();
@@ -38,22 +40,25 @@ export function _useMethodsAct() {
 
     const texts = i18n.getResourceBundle(i18n.language, TABLE_NS);
 
+    const ins = createTable({
+      ...(propsConf as TableConfig),
+      el: ref.current,
+      viewEl: scrollRef.current,
+      viewContentEl: scrollContRef.current,
+      emptyNode: state.emptyNode,
+      emptySize: 120,
+      eventCreator: createEvent,
+      render: customRender.render,
+      interactive: editRender.interactiveEnableChecker,
+      interactiveRender: editRender.interactiveRender,
+      texts,
+      extraActiveCheckEl: wrapRef.current,
+      formCreator: createForm,
+      plugins,
+    }) as any as RCTableInstance;
+
     setState({
-      instance: createTable({
-        ...(propsConf as TableConfig),
-        el: ref.current,
-        viewEl: scrollRef.current,
-        viewContentEl: scrollContRef.current,
-        emptyNode: state.emptyNode,
-        emptySize: 120,
-        eventCreator: createEvent,
-        render: customRender.render,
-        interactive: editRender.interactiveEnableChecker,
-        interactiveRender: editRender.interactiveRender,
-        texts,
-        extraActiveCheckEl: wrapRef.current,
-        formCreator: createForm,
-      }) as any as RCTableInstance,
+      instance: ins,
     });
   }
 

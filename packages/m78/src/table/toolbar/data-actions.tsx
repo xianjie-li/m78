@@ -6,13 +6,13 @@ import { IconSave } from "@m78/icons/icon-save.js";
 import React, { useRef } from "react";
 import { useFn, useSetState } from "@m78/hooks";
 import { _injector } from "../table.js";
-import { _useStateAct } from "../state.act.js";
+import { _useStateAct } from "../injector/state.act.js";
 import { TableMutationType } from "../../table-vanilla/plugins/mutation.js";
 import { IconAddToPhotos } from "@m78/icons/icon-add-to-photos.js";
 import { IconDeleteForever } from "@m78/icons/icon-delete-forever.js";
 import { Trigger, TriggerEvent, TriggerType } from "../../trigger/index.js";
 import { OverlayInstance } from "../../overlay/index.js";
-import { _useMethodsAct } from "../methods.act.js";
+import { _useMethodsAct } from "../injector/methods.act.js";
 import { isEmpty } from "@m78/utils";
 
 export function _AddBtn() {

@@ -2,7 +2,7 @@ import React from "react";
 import { useFn } from "@m78/hooks";
 import { TriggerEvent, TriggerType } from "../../trigger/index.js";
 import { _injector } from "../table.js";
-import { _useStateAct } from "../state.act.js";
+import { _useStateAct } from "../injector/state.act.js";
 import { _TableContextMenuOpenOpt } from "./use-context-menu.act.js";
 import { MenuProps } from "../../menu/index.js";
 import { IconContentPaste } from "@m78/icons/icon-content-paste.js";
@@ -12,10 +12,9 @@ import { IconVerticalAlignBottom } from "@m78/icons/icon-vertical-align-bottom.j
 import { IconDeleteForever } from "@m78/icons/icon-delete-forever.js";
 import { COMMON_NS, TABLE_NS, useTranslation } from "../../i18n/index.js";
 import { isTruthyOrZero } from "@m78/utils";
-import { _useMethodsAct } from "../methods.act.js";
+import { _useMethodsAct } from "../injector/methods.act.js";
 import { Dialog } from "../../dialog/index.js";
 import { TableRow } from "../../table-vanilla/index.js";
-import { IconModeEdit } from "@m78/icons/icon-mode-edit.js";
 
 enum MenuValues {
   copy,
@@ -23,7 +22,6 @@ enum MenuValues {
   insertTop,
   insertBottom,
   delete,
-  editByDialog,
 }
 
 export function _useCellMenu() {
@@ -135,15 +133,6 @@ export function _useCellMenu() {
       menu: [
         ...cellOnlyMenu,
         ...insertMenus,
-        // dialog编辑
-        {
-          label: t("edit by dialog"),
-          leading: <IconModeEdit />,
-          value: MenuValues.editByDialog,
-          context() {
-            console.log("edit");
-          },
-        },
         // 删除行
         {
           label: (

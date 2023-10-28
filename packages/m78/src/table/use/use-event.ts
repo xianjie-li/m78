@@ -5,11 +5,11 @@ import {
   TableMutationEvent,
   TableReloadLevel,
   TableReloadOptions,
-} from "../table-vanilla/index.js";
-import { notify } from "../notify/index.js";
-import { _useStateAct } from "./state.act.js";
-import { _injector } from "./table.js";
-import { _getTableCtx } from "./common.js";
+} from "../../table-vanilla/index.js";
+import { notify } from "../../notify/index.js";
+import { _useStateAct } from "../injector/state.act.js";
+import { _injector } from "../table.js";
+import { _getTableCtx } from "../common.js";
 
 // 将部分table实例事件直接暴露为props, 并对某些事件进行处理
 export function _useEvent() {
