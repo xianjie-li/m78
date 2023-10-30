@@ -81,29 +81,32 @@ export function createInjector<Props = any>(
 function implInjectors<Props = any>(
   ctx: React.Context<Context>
 ): Injectors<Props> {
-  const useDeps: Injectors["useDeps"] = (...args: InjectorActuator[]) => {
-    const curCtx = React.useContext(ctx);
+  /** 实现 useDeps 和 getDeps */
+  const implDepsApi = (c?: Context): Injectors["useDeps"] => {
+    return (...args: InjectorActuator[]) => {
+      const curCtx = c || React.useContext(ctx);
 
-    if (curCtx.isDefault) {
-      throwError(getRuleMsg("useDeps/useAction()"));
-    }
+      if (curCtx.isDefault) {
+        throwError(getRuleMsg("useDeps/useAction()"));
+      }
 
-    // 处理并获取指定索引项
-    const get = (actuator: InjectorActuator) => {
-      let item = curCtx.store.get(actuator);
+      // 处理并获取指定索引项
+      const get = (actuator: InjectorActuator) => {
+        if (!c) {
+          runActuator(actuator, curCtx);
+        }
 
-      runActuator(actuator, curCtx);
+        const item = curCtx.store.get(actuator);
 
-      item = curCtx.store.get(actuator);
+        return item!;
+      };
 
-      return item!;
+      if (args.length === 1) {
+        return get(args[0]);
+      }
+
+      return args.map((ac) => get(ac)) as any;
     };
-
-    if (args.length === 1) {
-      return get(args[0]);
-    }
-
-    return args.map((ac) => get(ac)) as any;
   };
 
   const useProps: Injectors["useProps"] = () => {
@@ -141,21 +144,40 @@ function implInjectors<Props = any>(
       throwError(getRuleMsg("useProvider()"));
     }
 
-    return useCallback(({ children }: { children: React.ReactElement }) => {
-      return <ctx.Provider value={curCtx}>{children}</ctx.Provider>;
-    }, []);
+    return useCallback(
+      ({ children }: { children: React.ReactElement }) => {
+        return <ctx.Provider value={curCtx}>{children}</ctx.Provider>;
+      },
+      [curCtx]
+    );
   };
 
   const useStatic: Injectors["useStatic"] = (cb) => {
     return useMemo(cb, []) as any;
   };
 
+  const useGetter: Injectors["useGetter"] = () => {
+    const curCtx = React.useContext(ctx);
+
+    if (curCtx.isDefault) {
+      throwError(getRuleMsg("useGetter()"));
+    }
+
+    return useMemo(() => {
+      return {
+        getProps: () => curCtx.props,
+        getDeps: implDepsApi(curCtx),
+      };
+    }, [curCtx]);
+  };
+
   return {
-    useDeps,
+    useDeps: implDepsApi(),
     useProps,
     useSettle,
     useProvider,
     useStatic,
+    useGetter,
   };
 }
 
@@ -362,6 +384,14 @@ export interface Injectors<Props = any> {
   useStatic<T extends InjectorActuator = InjectorActuator>(
     cb: T
   ): InjectType<T>;
+
+  /** 可以通过此api获取的getter, 在组件上下文之外访问deps或props */
+  useGetter: () => {
+    /** 与useDeps完全相同, 但是可以在任意位置使用, 你可以将其传递给外部功能代码或在异步代码中使用 */
+    getDeps: InjectorInject;
+    /** 与useProps完全相同, 但是可以在任意位置使用, 你可以将其传递给外部功能代码或在异步代码中使用 */
+    getProps: () => Props;
+  };
 }
 
 /** 一个injector实例 */

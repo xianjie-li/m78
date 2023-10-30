@@ -8,6 +8,7 @@ import { RCTablePlugin } from "../plugin.js";
 
 export function _useStateAct() {
   const props = _injector.useProps();
+  const getters = _injector.useGetter();
 
   /** 实例容器 */
   const ref = useRef<HTMLDivElement>(null!);
@@ -44,6 +45,14 @@ export function _useStateAct() {
   });
 
   const scrollEvent = useMemo(() => createEvent(), []);
+
+  // 同步getter到插件实例
+  useMemo(() => {
+    rcPlugins.forEach((p) => {
+      p.getDeps = getters.getDeps;
+      p.getProps = getters.getProps;
+    });
+  }, [getters]);
 
   return {
     self,

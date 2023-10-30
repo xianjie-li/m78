@@ -191,6 +191,22 @@ function useRenderAct() {
 }
 ```
 
+### useGetter
+
+可以通过此 api 获取的 getter, 在组件上下文之外访问 deps 或 props
+
+```tsx
+function useXxxAct() {
+  const getter = injector.useGetter();
+
+  // 与useDeps/useProps完全相同, 但是可以在任意位置使用, 你可以将其传递给外部功能代码或在异步代码中使用
+  const deps = getter.getDeps(xxxAct);
+  const props = getter.getProps();
+
+  return <span />;
+}
+```
+
 ## 代码组织
 
 > 此处所有内容内容仅作为参考, 具体请根据实际代码调整:

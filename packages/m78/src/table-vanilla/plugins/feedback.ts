@@ -183,7 +183,9 @@ export class _TableFeedbackPlugin extends TablePlugin {
       events.push(event);
     }
 
-    if (this.isCellOverflow(cell)) {
+    const isOverflow = this.isCellOverflow(cell);
+
+    if (isOverflow) {
       const event: TableFeedbackEvent = {
         type: TableFeedback.overflow,
         text: cell.text,

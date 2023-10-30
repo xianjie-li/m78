@@ -4,8 +4,23 @@ import { Button } from "../../button/index.js";
 import { IconFileDownload } from "@m78/icons/icon-file-download.js";
 import React from "react";
 import { IconFileUpload } from "@m78/icons/icon-file-upload.js";
+import { RCTablePlugin } from "../plugin.js";
 
-export function _ExportFileBtn() {
+export class _XLSHandlePlugin extends RCTablePlugin {
+  toolbarTrailingCustomer(nodes: React.ReactNode[]) {
+    const props = this.getProps();
+
+    if (props.dataExport) {
+      nodes.push(<ExportFileBtn />);
+    }
+
+    if (props.dataImport) {
+      nodes.push(<ImportFileBtn />);
+    }
+  }
+}
+
+function ExportFileBtn() {
   return (
     <Translation ns={TABLE_NS}>
       {(t) => (
@@ -28,7 +43,7 @@ export function _ExportFileBtn() {
   );
 }
 
-export function _ImportFileBtn() {
+function ImportFileBtn() {
   return (
     <Translation ns={TABLE_NS}>
       {(t) => (

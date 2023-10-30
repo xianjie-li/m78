@@ -9,7 +9,7 @@ import { Bubble } from "../../../bubble/index.js";
 import clsx from "clsx";
 import { Divider } from "../../../layout/index.js";
 import { TableCellWithDom } from "../../../table-vanilla/index.js";
-import { isTruthyOrZero } from "@m78/utils";
+import { createRandString, isTruthyOrZero } from "@m78/utils";
 import { _injector } from "../../table.js";
 import { _useStateAct } from "../../injector/state.act.js";
 import { renderCommonHandle } from "../../render/use-custom-render.js";
@@ -48,9 +48,7 @@ export function _Feedback() {
 
       let node: React.ReactNode = item.text;
 
-      if (item.cell) {
-        const render = item.cell.column.config.render;
-
+      if (item.type === TableFeedback.overflow && item.cell) {
         const arg = renderCommonHandle({
           props,
           state,
@@ -74,7 +72,13 @@ export function _Feedback() {
       );
     });
 
-    const node = React.createElement("div", null, ...content);
+    const node = React.createElement(
+      "div",
+      {
+        key: createRandString(), // 反正被判断为相同节点
+      },
+      ...content
+    );
 
     const lastUpdate = () => {
       if (first.bound) {

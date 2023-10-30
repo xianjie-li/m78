@@ -150,7 +150,7 @@ export interface TableEvent {
 
 /** event.feedback的触发类型 */
 export enum TableFeedback {
-  /** 内容移除的单元格 */
+  /** 内容溢出 */
   overflow = "overflow",
   /** 错误 */
   error = "error",

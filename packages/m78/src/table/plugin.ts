@@ -3,6 +3,12 @@ import { throwError } from "@m78/utils";
 import { _prefix } from "../table-vanilla/common.js";
 import { ReactNode } from "react";
 import { TableCellWithDom } from "../table-vanilla/index.js";
+import { _RCTableState, RCTableProps } from "./types.js";
+import { InjectType } from "../injector/index.js";
+import { _useStateAct } from "./injector/state.act.js";
+import { _injector } from "./table.js";
+
+type InjectGetters = ReturnType<typeof _injector["useGetter"]>;
 
 /** 扩展后的 TablePlugin, 提供了react相关的渲染api */
 export class RCTablePlugin extends TablePlugin {
@@ -29,6 +35,10 @@ export class RCTablePlugin extends TablePlugin {
 
   /** Table组件的运行时, 可使用hook和injector */
   rcRuntime?(): void;
+
+  getProps: InjectGetters["getProps"];
+
+  getDeps: InjectGetters["getDeps"];
 
   /** 获取已注册的 RCTablePlugin 实例, 不存在对应类型的插件时, 抛出异常 */
   getRCPlugin<T extends TablePlugin = any>(

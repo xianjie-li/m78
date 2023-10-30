@@ -14,8 +14,16 @@ import { Trigger, TriggerEvent, TriggerType } from "../../trigger/index.js";
 import { OverlayInstance } from "../../overlay/index.js";
 import { _useMethodsAct } from "../injector/methods.act.js";
 import { isEmpty } from "@m78/utils";
+import { RCTablePlugin } from "../plugin.js";
+import { Divider } from "../../layout/index.js";
 
-export function _AddBtn() {
+export class _DataActionPlugin extends RCTablePlugin {
+  toolbarTrailingCustomer(nodes: React.ReactNode[]) {
+    nodes.push(<DeleteBtn />, <Divider vertical />, <AddBtn />, <SaveBtn />);
+  }
+}
+
+function AddBtn() {
   const { state } = _injector.useDeps(_useStateAct);
   const methods = _injector.useDeps(_useMethodsAct);
   const { instance } = state;
@@ -36,7 +44,7 @@ export function _AddBtn() {
   );
 }
 
-export function _SaveBtn() {
+function SaveBtn() {
   const stateDep = _injector.useDeps(_useStateAct);
   const props = _injector.useProps();
   const { instance } = stateDep.state;
@@ -161,7 +169,7 @@ export function _SaveBtn() {
   );
 }
 
-export function _DeleteBtn() {
+function DeleteBtn() {
   const { state } = _injector.useDeps(_useStateAct);
   const { instance } = state;
 

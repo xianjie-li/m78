@@ -101,7 +101,7 @@ export interface RCTableProps
   wrapClassName?: string;
   /** 最外层容器style */
   wrapStyle?: React.CSSProperties;
-  /** 可在此传入表格上下文的状态, 并在column.render和config.render等函数中访问 */
+  /** 可在此传入表格上下文的状态, 并在column.render和config.render等位置中访问 */
   context?: AnyObject;
 
   /** 点击, event为原始事件对象, 可能是MouseEvent/PointerEvent */
@@ -120,16 +120,18 @@ export interface RCTableProps
 
   /** 默认查询条件 */
   defaultFilter?: AnyObject;
+  /** 触发筛选 */
+  onFilter?: (filterData?: AnyObject) => void;
   /** 用于校验的筛选项schema, 具体用法请参考Form组件 */
   filterSchema?: FormSchema[];
   /** 不与特定字段绑定的filter, 渲染于工具栏的通用 filter 下 */
   commonFilter?: (form: FormInstance) => ReactNode;
-  /** 触发筛选 */
-  onFilter?: (filterData?: AnyObject) => void;
   /**
    * filter使用的表单实例, 不传时会使用内部创建的默认实例
    *
    * 通过此项可以更深入的控制筛选项, 使用自定义form实例时,  defaultFilter 和 filterSchema 会被忽略, 请使用form对应的配置(defaultValue/schemas)
+   *
+   * 此外, 还会覆盖默认的 size / layoutType / spacePadding 配置, 若有需要需要特别指定
    * */
   filterForm?: FormInstance;
 
@@ -149,12 +151,12 @@ export interface RCTableProps
    * 用于启用单元格编辑和校验字段的schema, 需要注意以下几点:
    *
    * - 在单元格编辑中, element是必须的, 并且对应的组件必须在table或全局注册过
-   * - 大部分schema配置都只对Form组件渲染有意义, 在单元格渲染中是无效的, 比如 label/list 等
+   * - 一些针对Form组件的schema在在单元格编辑中是无效的, 比如 label/list 等
    * */
   schema?: FormSchema[];
   /** 表单控件适配器, 优先级高于全局适配器 */
   adaptors?: FormAdaptors;
-  /** 编辑功能是否启用, 传入true时全部启用, 可传入一个配置对象来按需启用所需功能 */
+  /** TODO: 编辑功能是否启用, 传入true时全部启用, 可传入一个配置对象来按需启用所需功能 */
   dataOperations?:
     | boolean
     | {
@@ -167,7 +169,7 @@ export interface RCTableProps
         /** 允许在独立窗口编辑行 */
         ediByDialog?: boolean;
       };
-  /** 提交时触发, 接收当前数据和当前配置 */
+  /** TODO: 提交时触发, 接收当前数据和当前配置 */
   onSubmit?: (submitData: {
     /** 若数据发生了改变, 此项为当前数据信息 */
     data?: TableDataLists;
@@ -178,11 +180,11 @@ export interface RCTableProps
   }) => void;
   /** 新增数据时, 使用此对象作为默认值, 可以是一个对象或返回对象的函数 */
   defaultNewData?: AnyObject | (() => AnyObject);
-  /** true | 启用导出功能 */
+  /** false | 启用导出功能 */
   dataImport?: boolean;
-  /** false | 启用导入功能, 需要dataOperation.new启用 */
+  /** true | 启用导入功能, 需要dataOperation.new启用 */
   dataExport?: boolean;
-  /** 传入后, 配置变更将存储到本地, 并在下次加载时读取 */
+  /** TODO: 传入后, 配置变更将以指定key为键存储到本地, 并在下次加载时读取 */
   localConfigStorageKey?: string;
 
   /* # # # # # # # 其他 # # # # # # # */
