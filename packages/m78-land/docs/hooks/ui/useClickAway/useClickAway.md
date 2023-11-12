@@ -10,9 +10,9 @@ group:
 
 ## 示例
 
-<demo demo={require("./useClickAway.demo.tsx")} code={require("!!raw-loader!./useClickAway.demo.tsx")}></demo>
+<Demo demo={require("./useClickAway.demo.tsx")} code={require("!!raw-loader!./useClickAway.demo.tsx")}></Demo>
 
-## API 
+## API
 
 ```tsx | pure
 function useClickAway(config: UseClickAwayConfig): React.MutableRefObject;

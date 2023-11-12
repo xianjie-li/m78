@@ -10,7 +10,7 @@ group:
 
 ## 示例
 
-<demo demo={require("./useScroll.demo.tsx")} code={require("!!raw-loader!./useScroll.demo.tsx")}></demo>
+<Demo demo={require("./useScroll.demo.tsx")} code={require("!!raw-loader!./useScroll.demo.tsx")}></Demo>
 
 ## API
 

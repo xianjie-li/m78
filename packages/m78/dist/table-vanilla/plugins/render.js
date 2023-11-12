@@ -120,7 +120,7 @@ import clamp from "lodash/clamp.js";
                 var cellY = row.isFixed ? row.fixedOffset + y : row.y;
                 dom.style.transform = "translate(".concat(cellX, "px,").concat(cellY, "px)");
             }
-            var renderFlag = getNamePathValue(cell.state, _TablePrivateProperty.renderFlag);
+            var renderFlag = getNamePathValue(cell.state, _TablePrivateProperty.rendered);
             var renderCtx = {
                 isFirstRender: !renderFlag,
                 disableLaterRender: false,
@@ -130,7 +130,7 @@ import clamp from "lodash/clamp.js";
             cell.text = _this.getter.getText(cell);
             _this.cellRenderImpl(cell, renderCtx);
             if (!renderFlag) {
-                setNamePathValue(cell.state, _TablePrivateProperty.renderFlag, true);
+                setNamePathValue(cell.state, _TablePrivateProperty.rendered, true);
             }
             var disableDefaultRender = renderCtx.disableDefaultRender || renderCtx.disableLaterRender;
             // 处理text, 因为.innerText读写都比较慢, 所以额外做一层判断

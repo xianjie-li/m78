@@ -5,7 +5,7 @@ import {
   Status,
   statusIconMap,
 } from "../common/index.js";
-import { IconClose } from "@m78/icons/icon-close.js";
+import { IconClose } from "@m78/icons/close.js";
 import { Spin } from "../spin/index.js";
 import { isArray, isFunction, pick } from "@m78/utils";
 import createRenderApi from "@m78/render-api";
@@ -129,14 +129,16 @@ export function notify(props: NotifyProps) {
       );
     }
 
-    const statusIcon = statusIconMap[status!];
+    const StatusIcon = statusIconMap[status!];
 
     return (
       <div ref={ref} className="m78-notify_item-main m78-notify_normal">
         <Spin open={loading} full inline size={Size.small} />
 
-        {statusIcon && (
-          <div className="m78-notify_normal_leading">{statusIcon}</div>
+        {StatusIcon && (
+          <div className="m78-notify_normal_leading">
+            <StatusIcon />
+          </div>
         )}
 
         <div className="m78-notify_normal_cont">

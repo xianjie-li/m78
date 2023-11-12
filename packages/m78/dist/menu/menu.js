@@ -6,7 +6,7 @@ import { jsx as _jsx } from "react/jsx-runtime";
 import React, { useEffect, useImperativeHandle, useRef } from "react";
 import { DEFAULT_CHILDREN_KEY, DEFAULT_LABEL_KEY, DEFAULT_VALUE_KEY, getChildrenByDataSource, getLabelByDataSource, getValueByDataSource, Size, Z_INDEX_MESSAGE } from "../common/index.js";
 import { Overlay, OverlayDirection } from "../overlay/index.js";
-import { useClickAway, useFn, useFormState, useSelect, useSelf, useSetState } from "@m78/hooks";
+import { useClickAway, useFn, useFormState, useSelect, useSelf, useSetState, useUpdate } from "@m78/hooks";
 import { Lay } from "../lay/index.js";
 import { isArray, isFunction, isMobileDevice, isTruthyOrZero, omit } from "@m78/utils";
 import { _getOptionAllValues } from "./common.js";
@@ -14,6 +14,7 @@ import { useKeyboardHandle } from "./use-keyboard-handle.js";
 import clsx from "clsx";
 import { Trigger, TriggerType } from "../trigger/index.js";
 import { TransitionType } from "../transition/index.js";
+import debounce from "lodash/debounce.js";
 var defaultProps = {
     direction: OverlayDirection.bottomStart
 };
@@ -32,7 +33,8 @@ export var _Menu = function(props) {
         menuTargets: {},
         targets: [],
         lastActive: null,
-        flatMap: {}
+        flatMap: {},
+        updateTimer: null
     });
     // 使用useSetState确保能实时获取到最新的type
     var ref = _sliced_to_array(useSetState({
@@ -51,12 +53,21 @@ export var _Menu = function(props) {
     }, [
         overlayRef.current
     ]);
+    var update = useUpdate();
+    /** 延迟debounce更新组件 */ var delayUpdate = useFn(function() {
+        update();
+    }, function(fn) {
+        return debounce(fn, 20);
+    });
     /** 管理所有展开的项, 值为项的value */ var openSelect = useSelect({
         autoUpdate: false,
         onChange: function(select) {
             var next = select.isSelected(MAIN_MENU);
+            // 总菜单开关变更时, 直接更新组件, 否则延迟更新
             if (next !== open) {
                 setOpen(next);
+            } else {
+                delayUpdate();
             }
         }
     });
@@ -69,6 +80,7 @@ export var _Menu = function(props) {
         });
         openSelect.unSelectAll();
     });
+    "";
     // props.open主动传入true时, 对其同步
     useEffect(function() {
         if (props.open) {

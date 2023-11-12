@@ -30,7 +30,7 @@ export interface RcSeedUseState<S> {
 /**
  * 泛型组件不能根据selector的返回进行类型推导, 这里该为any类型, 用户通过泛型组件手动声明或在children入参处声明类型
  * */
-export declare type RCSeedState<S> = {
+export type RCSeedState<S> = {
     <ScopeS = S>(props: {
         /** 同 UseState 的 selector 参数 */
         selector?: (state: S) => ScopeS;

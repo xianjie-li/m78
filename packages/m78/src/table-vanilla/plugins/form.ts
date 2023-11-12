@@ -90,6 +90,9 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
   // 记录移除的数据
   removeRecordMap = new Map<TableKey, AnyObject>();
 
+  // 记录移除的数据, 不进行 addRecordMap 的检测, 即 removeRecordMap 不会记录新增行的删除
+  allRemoveRecordMap = new Map<TableKey, AnyObject>();
+
   // 记录发生或排序变更的项信息
   sortRecordMap = new Map<
     TableKey,
@@ -129,8 +132,6 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
 
     this.editStatus = [];
     this.editStatusMap = {};
-    this.addRecordMap = new Map();
-    this.removeRecordMap = new Map();
 
     this.reset();
     this.resetDataRecords();
@@ -321,11 +322,10 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
         const k = this.table.getKeyByRowData(d);
         if (!k) return;
 
+        this.allRemoveRecordMap.delete(k);
+
         // 已经存在于删除列表中, 则不再计入新增列表
-        if (this.removeRecordMap.has(k)) {
-          this.removeRecordMap.delete(k);
-          return;
-        }
+        if (this.removeRecordMap.delete(k)) return;
 
         this.addRecordMap.set(k, true);
       });
@@ -336,11 +336,10 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
         const k = this.table.getKeyByRowData(d);
         if (!k) return;
 
+        this.allRemoveRecordMap.set(k, d);
+
         // 已经存在于新增列表中, 则不再计入删除列表
-        if (this.addRecordMap.has(k)) {
-          this.addRecordMap.delete(k);
-          return;
-        }
+        if (this.addRecordMap.delete(k)) return;
 
         this.removeRecordMap.set(k, d);
       });
@@ -596,6 +595,7 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
   private resetDataRecords() {
     this.addRecordMap = new Map();
     this.removeRecordMap = new Map();
+    this.allRemoveRecordMap = new Map();
     this.sortRecordMap = new Map();
   }
 
@@ -745,7 +745,7 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
     const rowErrorMap: Record<string, boolean | void> = {};
 
     Object.keys(this.errors).forEach((key) => {
-      if (this.removeRecordMap.has(key)) return false; // 删除行不显示
+      if (this.allRemoveRecordMap.has(key)) return false; // 删除行不显示
 
       const rowErrors = this.errors[key];
 
@@ -793,7 +793,7 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
     const list = keyList
       .filter((i) => {
         if (checkedMap[i]) return false;
-        if (this.removeRecordMap.has(i)) return false; // 删除行不显示
+        if (this.allRemoveRecordMap.has(i)) return false; // 删除行不显示
         checkedMap[i] = true;
         return showRowsMap[i] && (errorMap[i] || this.rowChanged[i]);
       })
@@ -828,6 +828,7 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
       const cell = this.cellChanged[key];
 
       if (!cell || !cell.isMount) return;
+      if (this.allRemoveRecordMap.has(cell.row.key)) return;
 
       const pos = this.table.getAttachPosition(cell);
 

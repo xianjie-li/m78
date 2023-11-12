@@ -27,5 +27,5 @@ export declare function _useFieldMethods(ctx: _FormContext, fieldCtx: _FieldCont
     extraNodeRenderHelper: (node: React.ReactNode | FormCustomRender) => React.ReactNode;
     getRenderArgs: () => FormCustomRenderBasicArgs;
 };
-export declare type _UseFieldMethods = ReturnType<typeof _useFieldMethods>;
+export type _UseFieldMethods = ReturnType<typeof _useFieldMethods>;
 //# sourceMappingURL=use-field-methods.d.ts.map

@@ -86,6 +86,8 @@ export interface _MenuContext {
     lastActive: ValueType | null;
     /** 用于快速查找树节点和其相关节点 */
     flatMap: _FlatMap;
+    /** 选中变更后的组件更新计时器 */
+    updateTimer: any;
   };
   state: {
     /** 用于contextMenu, 显示位置 */

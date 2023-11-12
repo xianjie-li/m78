@@ -17,9 +17,11 @@ import { Position } from "../../common/index.js";
         var _this;
         _this = _super.apply(this, arguments);
         /** 粘贴 */ _this.onPaste = function(e) {
+            if (!_this.table.isActive()) return;
             _this.pasteImpl(e);
         };
         /** 复制 */ _this.onCopy = function(e) {
+            if (!_this.table.isActive()) return;
             _this.copyImpl(e);
         };
         /** 删除 */ _this.onDelete = function() {
@@ -103,9 +105,6 @@ import { Position } from "../../common/index.js";
             return _ts_generator(this, function(_state) {
                 switch(_state.label){
                     case 0:
-                        if (!_this.table.isActive()) return [
-                            2
-                        ];
                         // 有正在进行编辑等操作的单元格, 跳过
                         if (_this.interactiveCore.items.length) return [
                             2
@@ -250,9 +249,6 @@ import { Position } from "../../common/index.js";
             return _ts_generator(this, function(_state) {
                 switch(_state.label){
                     case 0:
-                        if (!_this.table.isActive()) return [
-                            2
-                        ];
                         // 有正在进行编辑等操作的单元格, 跳过
                         if (_this.interactiveCore.items.length) return [
                             2

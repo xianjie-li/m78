@@ -115,7 +115,6 @@ export declare const resources: {
             "insert bottom": string;
             "delete row": string;
             "delete rows": string;
-            "edit by dialog": string;
             "paste unaligned row": "Pasted rows does not match the number of selected rows";
             "paste unaligned column": "Pasted column does not match the number of selected column";
             "paste single value limit": "Paste single value can't exceed {num} cell";

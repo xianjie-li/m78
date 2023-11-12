@@ -107,7 +107,8 @@ import { TableMutationType } from "./mutation.js";
                 };
                 events.push(event);
             }
-            if (_this.isCellOverflow(cell)) {
+            var isOverflow = _this.isCellOverflow(cell);
+            if (isOverflow) {
                 var event1 = {
                     type: TableFeedback.overflow,
                     text: cell.text,

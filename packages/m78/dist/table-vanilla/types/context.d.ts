@@ -4,8 +4,9 @@ import { TableConfig, TablePersistenceConfig } from "./config.js";
 import { TableCell, TableColumn, TableColumnConfig, TableColumnLeafConfigFormatted, TableItems, TableRow, TableRowConfig } from "./items.js";
 import { TableReloadOptions } from "../plugins/life.js";
 import { tableDefaultTexts } from "../common.js";
+import { TablePlugin } from "../plugin.js";
 /** 固定项信息 */
-declare type FixedMap<T> = {
+type FixedMap<T> = {
     [index: string]: {
         /** 固定项偏移位置 */
         offset: number;
@@ -150,6 +151,8 @@ export interface TablePluginContext {
     lastReloadKey?: string;
     /** 执行xy(xy)时, 是否应该触发内部的onScroll */
     xyShouldNotify?: boolean;
+    /** 所有插件实例 */
+    plugins: TablePlugin[];
 }
 export interface TableMergeData {
     /** 合并后占用的宽度 */

@@ -13,8 +13,8 @@ export declare enum NotifyPosition {
     rightTop = "rightTop",
     rightBottom = "rightBottom"
 }
-export declare type NotifyPositionKeys = keyof typeof NotifyPosition;
-export declare type NotifyPositionUnion = NotifyPosition | NotifyPositionKeys;
+export type NotifyPositionKeys = keyof typeof NotifyPosition;
+export type NotifyPositionUnion = NotifyPosition | NotifyPositionKeys;
 export interface NotifyState {
     /** 显示的内容 */
     content?: React.ReactNode;

@@ -8,8 +8,8 @@ import { TriggerProps, TriggerType } from "../trigger/index.js";
 /** 应从Overlay中移除的props */
 export declare const omitMenuOverlayProps: readonly ["xy", "alignment", "target", "childrenAsTarget", "content", "children", "triggerNodeRef", "autoFocus"];
 /** 应从Overlay中移除的props */
-export declare type MenuOmitOverlayKeys = typeof omitMenuOverlayProps[number];
-export declare type MenuOmitOverlayProps = Omit<OverlayProps, MenuOmitOverlayKeys>;
+export type MenuOmitOverlayKeys = typeof omitMenuOverlayProps[number];
+export type MenuOmitOverlayProps = Omit<OverlayProps, MenuOmitOverlayKeys>;
 export interface MenuOption extends DataSourceItem<MenuOption>, Omit<LayProps, "children" | "title" | "size" | "onClick" | "innerRef"> {
     /** 完全自定义项的渲染内容, 需要为渲染内容传入一个唯一key */
     customer?: React.ReactNode | ((close: EmptyFunction) => React.ReactElement);
@@ -60,6 +60,8 @@ export interface _MenuContext {
         lastActive: ValueType | null;
         /** 用于快速查找树节点和其相关节点 */
         flatMap: _FlatMap;
+        /** 选中变更后的组件更新计时器 */
+        updateTimer: any;
     };
     state: {
         /** 用于contextMenu, 显示位置 */

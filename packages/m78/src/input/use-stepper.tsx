@@ -1,8 +1,7 @@
 import { _InputContext } from "./types.js";
 import { Button } from "../button/index.js";
-import { Size } from "../common/index.js";
-import { IconRemove } from "@m78/icons/icon-remove.js";
-import { IconAdd } from "@m78/icons/icon-add.js";
+import { IconMinus } from "@m78/icons/minus.js";
+import { IconPlus } from "@m78/icons/plus.js";
 import React from "react";
 import { useDrag, Handler } from "@use-gesture/react";
 import { isBoolean } from "@m78/utils";
@@ -78,7 +77,7 @@ export function _useStepper(ctx: _InputContext) {
         onClick={() => stepHandle(false)}
         {...incBind()}
       >
-        <IconRemove></IconRemove>
+        <IconMinus size="1em" />
       </Button>
       <Button
         squareIcon
@@ -87,7 +86,7 @@ export function _useStepper(ctx: _InputContext) {
         onClick={() => stepHandle(true)}
         {...subBind()}
       >
-        <IconAdd></IconAdd>
+        <IconPlus size="1em" />
       </Button>
     </div>
   );

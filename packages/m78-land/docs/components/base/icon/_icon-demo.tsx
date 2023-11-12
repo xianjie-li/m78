@@ -29,31 +29,31 @@ const IconDemo = () => {
 
   useEffect(() => {
     // @ts-ignore
-    import("@m78/icons/_bundle.js")
-      .then((bundle) => {
-        const l1: any = [];
-        const l2: any = [];
-        Object.entries(bundle).forEach(([key, Icon]) => {
-          const data = {
-            key,
-            Icon,
-          };
-          if (key.startsWith("IconTow")) {
-            l2.push(data);
-          } else {
-            l1.push(data);
-          }
-        });
-        setList(l1);
-        setList2(l2);
-      })
-      .finally(() => {
-        setLoading(false);
-      })
-      .catch((e) => {
-        setError(e.message);
-        console.log(e);
-      });
+    // import("@m78/icons/_bundle.js")
+    //   .then((bundle) => {
+    //     const l1: any = [];
+    //     const l2: any = [];
+    //     Object.entries(bundle).forEach(([key, Icon]) => {
+    //       const data = {
+    //         key,
+    //         Icon,
+    //       };
+    //       if (key.startsWith("IconTow")) {
+    //         l2.push(data);
+    //       } else {
+    //         l1.push(data);
+    //       }
+    //     });
+    //     setList(l1);
+    //     setList2(l2);
+    //   })
+    //   .finally(() => {
+    //     setLoading(false);
+    //   })
+    //   .catch((e) => {
+    //     setError(e.message);
+    //     console.log(e);
+    //   });
   }, []);
 
   const kwChange = useFn(

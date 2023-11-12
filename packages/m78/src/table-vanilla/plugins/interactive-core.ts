@@ -151,8 +151,6 @@ export class _TableInteractiveCorePlugin extends TablePlugin {
   isInteractive(cell: TableCell) {
     if (cell.row.isHeader || cell.column.isHeader) return false;
 
-    if (this.config.interactive === false) return false;
-
     if (!this.config.interactive) return false;
 
     if (isFunction(this.config.interactive) && !this.config.interactive(cell))

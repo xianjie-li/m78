@@ -9,13 +9,13 @@ export declare enum BubbleType {
     /** 进行快捷询问 */
     confirm = "confirm"
 }
-export declare type BubbleTypeKeys = keyof typeof BubbleType;
-export declare type BubbleTypeUnion = BubbleTypeKeys | BubbleType;
+export type BubbleTypeKeys = keyof typeof BubbleType;
+export type BubbleTypeUnion = BubbleTypeKeys | BubbleType;
 /** 应从Overlay中移除的props */
 export declare const omitBubbleOverlayProps: readonly ["xy", "alignment"];
 /** 应从Overlay中移除的props */
-export declare type BubbleOmitOverlayKeys = typeof omitBubbleOverlayProps[number];
-export declare type BubbleOmitOverlayProps = Omit<OverlayProps, BubbleOmitOverlayKeys>;
+export type BubbleOmitOverlayKeys = typeof omitBubbleOverlayProps[number];
+export type BubbleOmitOverlayProps = Omit<OverlayProps, BubbleOmitOverlayKeys>;
 export interface BubbleProps extends BubbleOmitOverlayProps {
     /** BubbleType.tooltip | 气泡类型 */
     type?: BubbleTypeUnion;

@@ -1,5 +1,5 @@
 import { _CustomEditItem, RCTableEditRenderArg } from "../types.js";
-import { TableCell } from "../../table-vanilla/index.js";
+import { _TablePrivateProperty, TableCell } from "../../table-vanilla/index.js";
 import { useFn } from "@m78/hooks";
 import React, { cloneElement, isValidElement, ReactElement } from "react";
 import ReactDom from "react-dom";
@@ -10,6 +10,7 @@ import {
 import {
   AnyObject,
   delay,
+  getNamePathValue,
   isBoolean,
   isFunction,
   isString,
@@ -24,7 +25,7 @@ import { m78Config } from "../../config/index.js";
 
 // 自定义编辑逻辑
 export function _useEditRender() {
-  const { state, self } = _injector.useDeps(_useStateAct);
+  const { state, self, dataOperations } = _injector.useDeps(_useStateAct);
   const props = _injector.useProps();
 
   // 从表格配置/全局配置中获取指定节点的适配器
@@ -79,6 +80,16 @@ export function _useEditRender() {
   // 检测单元格是否可编辑
   const interactiveEnableChecker = useFn((cell: TableCell) => {
     if (cell.column.isFake || cell.row.isFake) return false;
+
+    const isNew = getNamePathValue(cell.row.data, _TablePrivateProperty.new);
+
+    if (!isNew) {
+      if (dataOperations.edit === false) return false;
+
+      if (isFunction(dataOperations.edit) && !dataOperations.edit(cell))
+        return false;
+    }
+
     return checkEditable(cell.column.config.originalKey);
   });
 

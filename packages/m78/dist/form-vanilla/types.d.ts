@@ -104,7 +104,7 @@ export interface FormInstance {
  * @param name 触发变更的name, 不传时表示更新所有字段
  * @param relation 为true时表示应该更新与当前name关联的值(父级/子级)
  * */
-export declare type FormNamesNotify = (name?: NamePath, relation?: boolean) => void;
+export type FormNamesNotify = (name?: NamePath, relation?: boolean) => void;
 /** 描述schema的单个项 */
 export interface FormSchema extends Schema {
     /** valid为false时, 该schema不会参与验证, 并且提交时会排除掉schema指向的值, 不可用于list项的第一级子项(应使用list相关api操作) */
@@ -128,9 +128,9 @@ export interface FormListItem<Item = any> {
     item: Item;
 }
 /** 不包含name的schema */
-export declare type FormSchemaWithoutName = Omit<FormSchema, "name">;
+export type FormSchemaWithoutName = Omit<FormSchema, "name">;
 /** 去除了部分配置的schema */
-export declare type FormSchemaPartial = Omit<FormSchema, "name" | "list">;
+export type FormSchemaPartial = Omit<FormSchema, "name" | "list">;
 /** 需要存储的一些内部值状态 */
 export interface _State {
     name: NamePath;

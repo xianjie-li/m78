@@ -27,19 +27,19 @@ title: Layout - 布局
 
 使用`Cells`和`Cell`来进行栅格布局, 传入`col`来控制栅格数
 
-<demo
+<Demo
   demo={require("././_demos/cells/base.tsx")}
   code={require("!!raw-loader!././_demos/cells/base.tsx")}
-></demo>
+></Demo>
 
 ### 排列行为
 
 通过`mainAlign`和`crossAlign`来分别控制子项在主轴和交叉轴上的布局方式
 
-<demo
+<Demo
   demo={require("././_demos/cells/layouts.tsx")}
   code={require("!!raw-loader!././_demos/cells/layouts.tsx")}
-></demo>
+></Demo>
 
 ### 排序
 
@@ -47,28 +47,28 @@ title: Layout - 布局
 - 通过`move`来在不影响格布局流的情况下移动子项
 - 通过`order`来进行排序
 
-<demo
+<Demo
   demo={require("././_demos/cells/sort.tsx")}
   code={require("!!raw-loader!././_demos/cells/sort.tsx")}
-></demo>
+></Demo>
 
 ### flex
 
 `Cell`支持传入`flex`设置弹性系数
 
-<demo
+<Demo
   demo={require("././_demos/cells/flex.tsx")}
   code={require("!!raw-loader!././_demos/cells/flex.tsx")}
-></demo>
+></Demo>
 
 ### 响应式栅格
 
 基于后文中的`MediaQuery`组件, 提供了 6 种响应尺寸 `xs` `sm` `md` `lg` `xl` `xxl`
 
-<demo
+<Demo
   demo={require("./_demos/cells/media-query.tsx")}
   code={require("!!raw-loader!./_demos/cells/media-query.tsx")}
-></demo>
+></Demo>
 
 这里有一些关于`MediaQuery`断点的注意事项:
 
@@ -138,10 +138,10 @@ console.log(555);
 
 最常用的是断点组件`MediaQuery`，它通过 `render children` 接收断点信息来根据断点渲染不同的内容
 
-<demo
+<Demo
   demo={require("./_demos/media-query/base.tsx")}
   code={require("!!raw-loader!./_demos/media-query/base.tsx")}
-></demo>
+></Demo>
 
 你也可以使用`MediaQuery`的内部实现 hook`useMediaQuery`, 用法几乎一致，但是 `hook` 的用法会在尺寸类型变更时更新整个消费组件
 
@@ -274,10 +274,10 @@ interface MediaQueryListenerProps {
 
 基于 `flex` 的一组布局组件
 
-<demo
+<Demo
   demo={require("./_demos/flex.tsx")}
   code={require("!!raw-loader!./_demos/flex.tsx")}
-></demo>
+></Demo>
 
 <br />
 
@@ -313,10 +313,10 @@ interface FlexProps extends DIVProps {
 
 一个非常常用的布局组件，包含左侧、右侧、内容区、描述区四个位置
 
-<demo
+<Demo
   demo={require("./_demos/tile.tsx")}
   code={require("!!raw-loader!./_demos/tile.tsx")}
-></demo>
+></Demo>
 
 ```ts
 interface TileProps extends Omit<DIVProps, "title"> {
@@ -343,10 +343,10 @@ interface TileProps extends Omit<DIVProps, "title"> {
 
 在 [Tile](/docs/components/base/layout/#tile) 的基础上提供了预设样式, 可用于很多布局场景, 比如列表, 表单, 卡片等.
 
-<demo
+<Demo
   demo={require("./_demos/lay.tsx")}
   code={require("!!raw-loader!./_demos/lay.tsx")}
-></demo>
+></Demo>
 
 ```ts
 export enum LayStyle {
@@ -406,10 +406,10 @@ export interface TileProps extends Omit<DIVProps, "title"> {
 
 一个永远保持固定宽高比的容器
 
-<demo
+<Demo
   demo={require("./_demos/aspect-ratio.tsx")}
   code={require("!!raw-loader!./_demos/aspect-ratio.tsx")}
-></demo>
+></Demo>
 
 ```ts | pure
 interface AspectRatioProps {
@@ -428,10 +428,10 @@ interface AspectRatioProps {
 
 在横向或纵向元素间添加分割线
 
-<demo
+<Demo
   demo={require("./_demos/divider.tsx")}
   code={require("!!raw-loader!./_demos/divider.tsx")}
-></demo>
+></Demo>
 
 ```ts
 interface DividerProps extends ComponentBaseProps {
@@ -454,10 +454,10 @@ interface DividerProps extends ComponentBaseProps {
 
 横向或纵向元素间填充空白
 
-<demo
+<Demo
   demo={require("./_demos/spacer.tsx")}
   code={require("!!raw-loader!./_demos/spacer.tsx")}
-></demo>
+></Demo>
 
 ```ts | pure
 interface SpacerProps {
@@ -478,10 +478,10 @@ interface SpacerProps {
 
 将子组件居中放置
 
-<demo
+<Demo
   demo={require("./_demos/center.tsx")}
   code={require("!!raw-loader!./_demos/center.tsx")}
-></demo>
+></Demo>
 
 ```ts | pure
 interface CenterProps {
@@ -500,7 +500,7 @@ interface CenterProps {
 
 `Cells` + `AspectRatio` 可以轻松的创建一个网格, 并且支持自适应 😁
 
-<demo
+<Demo
   demo={require("./_demos/grid.tsx")}
   code={[
     {
@@ -513,4 +513,4 @@ interface CenterProps {
       language: "sass",
     },
   ]}
-></demo>
+></Demo>

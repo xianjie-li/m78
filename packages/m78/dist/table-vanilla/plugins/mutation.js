@@ -132,7 +132,7 @@ import { _TableFormPlugin } from "./form.js";
                 if (!isObject(i)) i = {};
                 var key = i[_this.config.primaryKey];
                 var _obj;
-                return _object_spread_props(_object_spread({}, i), (_obj = {}, _define_property(_obj, _TablePrivateProperty.newFlag, true), // 使用传入的key或随机分配一个
+                return _object_spread_props(_object_spread({}, i), (_obj = {}, _define_property(_obj, _TablePrivateProperty.new, true), // 使用传入的key或随机分配一个
                 _define_property(_obj, _this.config.primaryKey, isTruthyOrZero(key) ? key : createRandString()), _obj));
             });
             _this.table.history.redo({
@@ -169,7 +169,7 @@ import { _TableFormPlugin } from "./form.js";
                         remove: _to_consumable_array(newData),
                         move: []
                     });
-                    _this.table.reload({
+                    _this.table.reloadSync({
                         keepPosition: true,
                         level: TableReloadLevel.index
                     });
@@ -265,8 +265,9 @@ import { _TableFormPlugin } from "./form.js";
                 value = value.trim();
             }
             var row = cell.row, column = cell.column;
-            // 行未变更过, 将其完全clone, 避免更改原数据
-            if (!_this.changedRows[row.key]) {
+            // 行未变更过, 将其完全clone, 避免更改原数据, 此外, 避免了在初始化阶段克隆所有数据导致性能损耗
+            if (!_this.changedRows[row.key] && !getNamePathValue(row.data, _TablePrivateProperty.new) // 新增行不clone
+            ) {
                 _this.cloneAndSetRowData(row);
             }
             var ov = getNamePathValue(row.data, column.config.originalKey);
@@ -678,7 +679,7 @@ import { _TableFormPlugin } from "./form.js";
         // 查找出所有相关的项
         list.forEach(function(i) {
             var ins = isRow ? _this.table.getRow(i) : _this.table.getColumn(i);
-            var _ins = _object_spread({}, ins);
+            // const _ins = { ...ins };
             var refInd;
             // 固定项需要查找其关联的原始项
             if (ins.isFixed) {
@@ -691,8 +692,8 @@ import { _TableFormPlugin } from "./form.js";
                         refInd = refIndex;
                         dataList.push({
                             index: refIndex,
-                            data: _object_spread({}, cur),
-                            ins: _ins,
+                            data: cur,
+                            ins: ins,
                             ignore: true
                         });
                     }
@@ -702,8 +703,8 @@ import { _TableFormPlugin } from "./form.js";
             existMap[ins.realIndex] = true;
             dataList.push({
                 index: ins.realIndex,
-                data: isRow ? _object_spread({}, ins.data) : ins.config,
-                ins: _ins,
+                data: isRow ? ins.data : ins.config,
+                ins: ins,
                 refIndex: refInd
             });
         });

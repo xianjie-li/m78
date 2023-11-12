@@ -17,8 +17,8 @@ export declare enum TransitionType {
     slideBottom = "slideBottom",
     bounce = "bounce"
 }
-export declare type TransitionTypeKeys = keyof typeof TransitionType;
-export declare type TransitionTypeUnion = TransitionType | TransitionTypeKeys;
+export type TransitionTypeKeys = keyof typeof TransitionType;
+export type TransitionTypeUnion = TransitionType | TransitionTypeKeys;
 /**
  * 基础配置
  * */
@@ -70,7 +70,7 @@ interface TransitionConfigItem {
     skipFade?: boolean;
     interpolater?: TransitionBaseProps["interpolater"];
 }
-export declare type _TransitionConfigsType = {
+export type _TransitionConfigsType = {
     [key in TransitionTypeKeys]: TransitionConfigItem;
 };
 export {};

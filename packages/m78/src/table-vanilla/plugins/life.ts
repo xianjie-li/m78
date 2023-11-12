@@ -259,7 +259,7 @@ export interface TableReloadOptions {
   /** 为true时, 保持当前滚动位置 */
   keepPosition?: boolean;
   /** TableReloadLevel.base | 重置级别 */
-  level?: TableReloadLevelUnion;
+  level?: TableReloadLevel;
 }
 
 export interface TableLife {

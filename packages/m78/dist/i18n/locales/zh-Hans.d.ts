@@ -127,8 +127,6 @@ declare const _default: {
         "insert bottom": string;
         "delete row": string;
         "delete rows": string;
-        "edit by dialog": string;
-        "conf changed": string;
     };
 };
 export default _default;

@@ -11,7 +11,7 @@ group:
 
 ## 示例
 
-<demo demo={require("./useToggle.demo.tsx")} code={require("!!raw-loader!./useToggle.demo.tsx")}></demo>
+<Demo demo={require("./useToggle.demo.tsx")} code={require("!!raw-loader!./useToggle.demo.tsx")}></Demo>
 
 ## API
 

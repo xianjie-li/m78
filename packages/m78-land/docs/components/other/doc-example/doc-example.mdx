@@ -63,7 +63,7 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi deleniti fuga id
 
 :::
 
-:::caution 标题
+:::warning 标题
 
 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi deleniti fuga id nisi? Aperiam autem, blanditiis, cum et in, laboriosam magnam minus natus necessitatibus neque quasi repellendus saepe sed voluptatum!
 
@@ -106,7 +106,7 @@ md 语法为推荐的方式, 其目录自动指向 static, 你也可以使用 im
 - props.demo 可以传入一个 react element 也可以传入一个组件
 - code 可以直接传入代码字符串/一项代码的配置/多项代码的配置数组
 
-<demo
+<Demo
   demo={require("./exam-code.jsx")}
   code={[
     {
@@ -122,7 +122,7 @@ md 语法为推荐的方式, 其目录自动指向 static, 你也可以使用 im
 />
 
 ```js
-<demo
+<Demo
   demo={require("./exam-code.jsx")}
   code={[
     {
@@ -137,5 +137,33 @@ md 语法为推荐的方式, 其目录自动指向 static, 你也可以使用 im
   ]}
 />
 
-<demo demo={require("./exam-code.jsx")} code={require("!!raw-loader!./exam-code.jsx")}></demo>
+<Demo demo={require("./exam-code.jsx")} code={require("!!raw-loader!./exam-code.jsx")} />
+```
+
+## LiveDemo
+
+自定义组件需要添加到 `packages/m78-land/src/theme/ReactLiveScope/index.js` 才可在试试实时代码块中使用, 但这会导致组件在初始阶段就完全被加载, 可能会影响加载性能, 不建议使用
+
+```jsx live
+function Clock(props) {
+  const [date, setDate] = useState(new Date());
+  useEffect(() => {
+    const timerID = setInterval(() => tick(), 1000);
+
+    return function cleanup() {
+      clearInterval(timerID);
+    };
+  });
+
+  function tick() {
+    setDate(new Date());
+  }
+
+  return (
+    <div>
+      <h2>It is {date.toLocaleTimeString()}.</h2>
+      <Button color="primary">test</Button>
+    </div>
+  );
+}
 ```

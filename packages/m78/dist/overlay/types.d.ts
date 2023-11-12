@@ -13,9 +13,9 @@ import { _Methods } from "./use-methods.js";
 /** 在使用api调用时所有应该剔除的props */
 export declare const omitApiProps: readonly ["defaultOpen", "open", "onChange", "children", "childrenAsTarget", "triggerType", "onUpdate", "onDispose", "innerRef", "instanceRef"];
 /** 创建api时需要排除的所有props类型 */
-export declare type OverlayApiOmitKeys = typeof omitApiProps[number];
+export type OverlayApiOmitKeys = typeof omitApiProps[number];
 /** 可用的目标类型 */
-export declare type OverlayTarget = BoundSize | React.RefObject<HTMLElement> | HTMLElement;
+export type OverlayTarget = BoundSize | React.RefObject<HTMLElement> | HTMLElement;
 export declare enum OverlayDirection {
     topStart = "topStart",
     top = "top",
@@ -30,9 +30,9 @@ export declare enum OverlayDirection {
     right = "right",
     rightEnd = "rightEnd"
 }
-export declare type OverlayDirectionKeys = keyof typeof OverlayDirection;
+export type OverlayDirectionKeys = keyof typeof OverlayDirection;
 /** 方向 */
-export declare type OverlayDirectionUnion = OverlayDirection | OverlayDirectionKeys;
+export type OverlayDirectionUnion = OverlayDirection | OverlayDirectionKeys;
 /** 自定义渲染器的参数 */
 export interface OverlayCustomMeta {
     /** 组件原始props */
@@ -179,7 +179,7 @@ export interface OverlayInstance {
 /**
  * 通过api调用时的配置, 移除了一些非必要参数
  * */
-export declare type OverlayRenderOption = Omit<OverlayProps, OverlayApiOmitKeys>;
+export type OverlayRenderOption = Omit<OverlayProps, OverlayApiOmitKeys>;
 /** 更新类型 */
 export declare enum OverlayUpdateType {
     xy = 0,
@@ -269,11 +269,11 @@ export interface _DirectionMeta {
     valid: boolean;
     direction: OverlayDirectionUnion;
 }
-export declare type _DirectionMetaMap = {
+export type _DirectionMetaMap = {
     [key in OverlayDirection]: _DirectionMeta;
 };
 /** 合并默认props的props, 避免确定已存在的属性访问出现类型错误 */
-export declare type _MergeDefaultProps = OverlayProps & typeof _defaultProps;
+export type _MergeDefaultProps = OverlayProps & typeof _defaultProps;
 /** 箭头的基本位置信息 */
 export interface _ArrowBasePosition {
     top?: number;

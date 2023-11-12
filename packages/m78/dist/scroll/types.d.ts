@@ -10,9 +10,9 @@ export declare enum ScrollDirection {
     xy = "xy",
     none = "none"
 }
-export declare type ScrollDirectionKeys = keyof typeof ScrollDirection;
-export declare type ScrollDirectionUnion = ScrollDirection | ScrollDirectionKeys;
-export declare type ScrollPullDownAnimateValues = {
+export type ScrollDirectionKeys = keyof typeof ScrollDirection;
+export type ScrollDirectionUnion = ScrollDirection | ScrollDirectionKeys;
+export type ScrollPullDownAnimateValues = {
     /** Y轴移动距离 */
     y: SpringValue<number>;
     /** 控制指示器图标旋转 */
@@ -22,7 +22,7 @@ export declare type ScrollPullDownAnimateValues = {
     /** 下拉正处于运行状态 */
     running: boolean;
 };
-export declare type ScrollPullDownCustomer = React.ReactNode
+export type ScrollPullDownCustomer = React.ReactNode
 /** offset - 当前下拉偏移值, ratio - 下拉比例 */
  | ((springValues: ScrollPullDownAnimateValues) => React.ReactNode);
 /** Scroll组件Props */

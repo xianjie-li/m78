@@ -1,20 +1,22 @@
 import { TABLE_NS, Translation } from "../../i18n/index.js";
 import { Bubble } from "../../bubble/index.js";
 import { Button } from "../../button/index.js";
-import { IconFileDownload } from "@m78/icons/icon-file-download.js";
+import { IconDownloadTwo } from "@m78/icons/download-two.js";
 import React from "react";
-import { IconFileUpload } from "@m78/icons/icon-file-upload.js";
+import { IconUploadTwo } from "@m78/icons/upload-two.js";
 import { RCTablePlugin } from "../plugin.js";
+import { _useStateAct } from "../injector/state.act.js";
 
 export class _XLSHandlePlugin extends RCTablePlugin {
   toolbarTrailingCustomer(nodes: React.ReactNode[]) {
     const props = this.getProps();
+    const { dataOperations: conf } = this.getDeps(_useStateAct);
 
     if (props.dataExport) {
       nodes.push(<ExportFileBtn />);
     }
 
-    if (props.dataImport) {
+    if (props.dataImport && conf.add) {
       nodes.push(<ImportFileBtn />);
     }
   }
@@ -34,8 +36,8 @@ function ExportFileBtn() {
             </div>
           }
         >
-          <Button className="color-second" squareIcon>
-            <IconFileDownload />
+          <Button squareIcon>
+            <IconUploadTwo />
           </Button>
         </Bubble>
       )}
@@ -57,8 +59,8 @@ function ImportFileBtn() {
             </div>
           }
         >
-          <Button className="color-second" squareIcon>
-            <IconFileUpload />
+          <Button squareIcon>
+            <IconDownloadTwo />
           </Button>
         </Bubble>
       )}

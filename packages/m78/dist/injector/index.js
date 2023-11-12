@@ -62,27 +62,30 @@ import { throwError } from "../common/index.js";
     });
 }
 function implInjectors(ctx) {
-    var useDeps = function() {
-        for(var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++){
-            args[_key] = arguments[_key];
-        }
-        var curCtx = React.useContext(ctx);
-        if (curCtx.isDefault) {
-            throwError(getRuleMsg("useDeps/useAction()"));
-        }
-        // 处理并获取指定索引项
-        var get = function(actuator) {
-            var item = curCtx.store.get(actuator);
-            runActuator(actuator, curCtx);
-            item = curCtx.store.get(actuator);
-            return item;
+    /** 实现 useDeps 和 getDeps */ var implDepsApi = function(c) {
+        return function() {
+            for(var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++){
+                args[_key] = arguments[_key];
+            }
+            var curCtx = c || React.useContext(ctx);
+            if (curCtx.isDefault) {
+                throwError(getRuleMsg("useDeps/useAction()"));
+            }
+            // 处理并获取指定索引项
+            var get = function(actuator) {
+                if (!c) {
+                    runActuator(actuator, curCtx);
+                }
+                var item = curCtx.store.get(actuator);
+                return item;
+            };
+            if (args.length === 1) {
+                return get(args[0]);
+            }
+            return args.map(function(ac) {
+                return get(ac);
+            });
         };
-        if (args.length === 1) {
-            return get(args[0]);
-        }
-        return args.map(function(ac) {
-            return get(ac);
-        });
     };
     var useProps = function() {
         var curCtx = React.useContext(ctx);
@@ -117,17 +120,36 @@ function implInjectors(ctx) {
                 value: curCtx,
                 children: children
             });
-        }, []);
+        }, [
+            curCtx
+        ]);
     };
     var useStatic = function(cb) {
         return useMemo(cb, []);
     };
+    var useGetter = function() {
+        var curCtx = React.useContext(ctx);
+        if (curCtx.isDefault) {
+            throwError(getRuleMsg("useGetter()"));
+        }
+        return useMemo(function() {
+            return {
+                getProps: function() {
+                    return curCtx.props;
+                },
+                getDeps: implDepsApi(curCtx)
+            };
+        }, [
+            curCtx
+        ]);
+    };
     return {
-        useDeps: useDeps,
+        useDeps: implDepsApi(),
         useProps: useProps,
         useSettle: useSettle,
         useProvider: useProvider,
-        useStatic: useStatic
+        useStatic: useStatic,
+        useGetter: useGetter
     };
 }
 /* # # # # # # # util # # # # # # # */ // 运行单个Actuator

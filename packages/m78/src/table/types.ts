@@ -91,8 +91,7 @@ export interface RCTableProps
   extends ComponentBaseProps,
     Omit<TableBaseConfig, OmitConfig | "render">,
     TableSelectConfig,
-    TableDragSortConfig,
-    TableInteractiveCoreConfig {
+    TableDragSortConfig {
   /** 自定义单元格渲染 */
   render?: (arg: RCTableRenderArg) => ReactNode | void;
   /** 自定义空节点 */
@@ -156,19 +155,8 @@ export interface RCTableProps
   schema?: FormSchema[];
   /** 表单控件适配器, 优先级高于全局适配器 */
   adaptors?: FormAdaptors;
-  /** TODO: 编辑功能是否启用, 传入true时全部启用, 可传入一个配置对象来按需启用所需功能 */
-  dataOperations?:
-    | boolean
-    | {
-        /** 允许编辑数据 */
-        edit?: boolean;
-        /** 允许新增数据 */
-        new?: boolean;
-        /** 允许删除数据 */
-        delete?: boolean;
-        /** 允许在独立窗口编辑行 */
-        ediByDialog?: boolean;
-      };
+  /** 数据编辑/新增等功能是否启用, 传入true时全部启用, 可传入一个配置对象来按需启用所需功能 */
+  dataOperations?: boolean | TableDataOperationsConfig;
   /** TODO: 提交时触发, 接收当前数据和当前配置 */
   onSubmit?: (submitData: {
     /** 若数据发生了改变, 此项为当前数据信息 */
@@ -180,12 +168,18 @@ export interface RCTableProps
   }) => void;
   /** 新增数据时, 使用此对象作为默认值, 可以是一个对象或返回对象的函数 */
   defaultNewData?: AnyObject | (() => AnyObject);
-  /** false | 启用导出功能 */
+  /** true | 启用导入功能, 需要dataOperation.add启用才可生效 */
   dataImport?: boolean;
-  /** true | 启用导入功能, 需要dataOperation.new启用 */
+  /** true | 启用导出功能 */
   dataExport?: boolean;
   /** TODO: 传入后, 配置变更将以指定key为键存储到本地, 并在下次加载时读取 */
   localConfigStorageKey?: string;
+  /**
+   * TODO: 配置持久化
+   * - 为string时使用localStorage存储变更配置, 并以该字符串作为存储的key, key必须在全局唯一
+   * - 传入持久化适配函数, 自定义存储逻辑
+   * */
+  configPersistence?: string | Function;
 
   /* # # # # # # # 其他 # # # # # # # */
 
@@ -255,6 +249,15 @@ export enum TableSort {
 export type TableSortKeys = keyof typeof TableSort;
 
 export type TableSortUnion = TableSort | TableSortKeys;
+
+export interface TableDataOperationsConfig {
+  /** 允许编辑数据, 请注意, 单元格是否可编辑还与对应列的schema配置有关 */
+  edit?: boolean | ((cell: TableCell) => boolean);
+  /** 允许新增数据, 新增数据始终可编辑 */
+  add?: boolean;
+  /** 允许删除数据 */
+  delete?: boolean;
+}
 
 /** renderMap的项, 代表一个渲染项 */
 export interface _CustomRenderItem {

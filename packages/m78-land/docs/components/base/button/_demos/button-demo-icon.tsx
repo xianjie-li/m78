@@ -1,31 +1,31 @@
 import React from "react";
 import { Button } from "m78";
 
-import { IconTag } from "@m78/icons/icon-tag";
-import { IconBeachAccess } from "@m78/icons/icon-beach-access";
-import { IconBrightness7 } from "@m78/icons/icon-brightness-7";
-import { IconCatchingPokemon } from "@m78/icons/icon-catching-pokemon";
-import { IconAcUnit } from "@m78/icons/icon-ac-unit";
-import { IconFaceRetouchingNatural } from "@m78/icons/icon-face-retouching-natural";
+import { IconTagOne } from "@m78/icons/tag-one.js";
+import { IconBear } from "@m78/icons/bear.js";
+import { IconBrightness } from "@m78/icons/brightness.js";
+import { IconPoker } from "@m78/icons/poker.js";
+import { IconSettingTwo } from "@m78/icons/setting-two.js";
+import { IconPureNatural } from "@m78/icons/pure-natural.js";
 
 const ButtonDemoColor = () => (
   <div>
     <div className="mb-16">纯图标</div>
 
     <Button icon>
-      <IconTag />
+      <IconTagOne />
     </Button>
     <Button color="red" icon>
-      <IconBeachAccess />
+      <IconBear />
     </Button>
     <Button color="green" icon disabled>
-      <IconBrightness7 />
+      <IconBrightness />
     </Button>
     <Button color="primary" icon>
-      <IconCatchingPokemon />
+      <IconPoker />
     </Button>
     <Button color="orange" icon>
-      <IconAcUnit />
+      <IconSettingTwo />
     </Button>
     <Button color="red" icon>
       李
@@ -33,13 +33,13 @@ const ButtonDemoColor = () => (
 
     <div className="mt-16">
       <Button color="green" icon size="small">
-        <IconBeachAccess />
+        <IconBear />
       </Button>
       <Button color="primary" icon>
-        <IconCatchingPokemon />
+        <IconPoker />
       </Button>
       <Button color="red" icon size="large">
-        <IconFaceRetouchingNatural />
+        <IconPureNatural />
       </Button>
     </div>
 
@@ -47,44 +47,44 @@ const ButtonDemoColor = () => (
 
     <div className="mt-16">
       <Button color="green" squareIcon size="small">
-        <IconBeachAccess />
+        <IconBear />
       </Button>
       <Button color="primary" squareIcon>
-        <IconCatchingPokemon />
+        <IconPoker />
       </Button>
       <Button color="red" squareIcon size="large">
-        <IconFaceRetouchingNatural />
+        <IconPureNatural />
       </Button>
     </div>
 
     <div className="mt-16">
       <div className="mb-16">文字图标混排</div>
       <Button>
-        <IconBeachAccess />
+        <IconBear />
         按钮
       </Button>
       <Button color="red">
-        <IconAcUnit />
+        <IconSettingTwo />
         按钮
       </Button>
       <Button color="green">
-        <IconBeachAccess />
+        <IconBear />
         按钮
       </Button>
       <Button color="primary">
-        <IconFaceRetouchingNatural />
+        <IconPureNatural />
         按钮
       </Button>
       <Button color="orange">
-        <IconAcUnit />
+        <IconSettingTwo />
         按钮
       </Button>
       <Button color="primary">
-        <IconBrightness7 />
+        <IconBrightness />
         文本
-        <IconTag />
+        <IconTagOne />
         文本
-        <IconBrightness7 />
+        <IconBrightness />
       </Button>
     </div>
   </div>

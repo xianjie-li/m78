@@ -15,7 +15,7 @@ title: Overlay - 覆盖层
 - `alignment`: 通过窗口相对坐标定位, 比如 `[0.5, 0.5]`表示窗口中间, `[1, 1]`表示窗口右下角, 常用于`modal`类组件
 - `target`: 通过 `dom` 或一个描述位置的`bound`对象定位, 常用于气泡类组件
 
-<demo
+<Demo
   demo={require("./positioning.tsx")}
   code={require("!!raw-loader!./positioning.tsx")}
 />
@@ -34,7 +34,7 @@ title: Overlay - 覆盖层
 - 第一种是类似表单控件, 通过`open`/`onChange(open)`/`defaultOpen`来进行受控、非受控显示.
 - 第二种用法是最简单和常用的, 通过 `Overlay` 的 `children` 自动管理显示, 这种方式可以通过 triggerType 来设置触发方式
 
-<demo
+<Demo
   demo={require("./open-control.tsx")}
   code={require("!!raw-loader!./open-control.tsx")}
 />
@@ -49,7 +49,7 @@ title: Overlay - 覆盖层
 
 `Overlay`提供了一系列的触发类型, 你可以通过 `triggerType` 来设置触发方式, 以下是支持的触发类型:
 
-<demo demo={require("./type.tsx")} code={require("!!raw-loader!./type.tsx")} />
+<Demo demo={require("./type.tsx")} code={require("!!raw-loader!./type.tsx")} />
 
 尽管可以同时设置多个触发类型, 但是并不是所有的事件类型都能良好的结合, 比如将 `active` 和 `click` 结合通常没有意义.
 
@@ -61,7 +61,7 @@ title: Overlay - 覆盖层
 
 将内容区域显示在目标的指定方向
 
-<demo
+<Demo
   demo={require("./direction.tsx")}
   code={require("!!raw-loader!./direction.tsx")}
 />
@@ -70,7 +70,7 @@ title: Overlay - 覆盖层
 
 在目标和内容的连接处显示箭头
 
-<demo
+<Demo
   demo={require("./arrow.tsx")}
   code={[
     {
@@ -95,7 +95,7 @@ title: Overlay - 覆盖层
 
 在横轴和纵轴滚动以下内容查看效果:
 
-<demo
+<Demo
   demo={require("./prevent-overflow.tsx")}
   code={require("!!raw-loader!./prevent-overflow.tsx")}
 />
@@ -108,7 +108,7 @@ title: Overlay - 覆盖层
 
 下面例子中, 所有按钮都使用一个`Overlay`实例!
 
-<demo
+<Demo
   demo={require("./instance-reuse.tsx")}
   code={require("!!raw-loader!./instance-reuse.tsx")}
 />
@@ -131,7 +131,7 @@ title: Overlay - 覆盖层
 如果同时开启了多个启用了`clickAwayClosable`的弹层(默认启用), 点击弹窗内容区域以外时, 只有最后开启的弹层会被关闭, 此特性用于
 防止开启了多个弹层时`clickAway`同时关闭掉所有弹层.
 
-<demo demo={require("./nest.tsx")} code={require("!!raw-loader!./nest.tsx")} />
+<Demo demo={require("./nest.tsx")} code={require("!!raw-loader!./nest.tsx")} />
 
 > 另一个类似的配置是 `escapeCloseable` 用于在点击 `esc` 键时关闭弹层, 其维护自己的关闭栈
 
@@ -146,11 +146,11 @@ title: Overlay - 覆盖层
 
 第一种实现方式:
 
-<demo demo={require("./menu.tsx")} code={require("!!raw-loader!./menu.tsx")} />
+<Demo demo={require("./menu.tsx")} code={require("!!raw-loader!./menu.tsx")} />
 
 第二种实现方式:
 
-<demo
+<Demo
   demo={require("./menu2.tsx")}
   code={require("!!raw-loader!./menu2.tsx")}
 />
@@ -161,7 +161,7 @@ title: Overlay - 覆盖层
 
 可以内容区任意位置使用 `<DragHandle/>` 组件来挂载一个拖动节点, 通过拖动节点可以拖动整个弹层.
 
-<demo demo={require("./drag.tsx")} code={require("!!raw-loader!./drag.tsx")} />
+<Demo demo={require("./drag.tsx")} code={require("!!raw-loader!./drag.tsx")} />
 
 :::info
 
@@ -176,7 +176,7 @@ title: Overlay - 覆盖层
 - 滚动条锁定(默认开启)
 - 定位偏移(用于带方向的 overlay)等
 
-<demo
+<Demo
   demo={require("./features.tsx")}
   code={require("!!raw-loader!./features.tsx")}
 />
@@ -188,7 +188,7 @@ title: Overlay - 覆盖层
 - 最简单的, 你可以通过`transitionType`来使用内置动画类型
 - 也可以通过 `transition` 来设置自定义的动画
 
-<demo
+<Demo
   demo={require("./transition.tsx")}
   code={require("!!raw-loader!./transition.tsx")}
 />

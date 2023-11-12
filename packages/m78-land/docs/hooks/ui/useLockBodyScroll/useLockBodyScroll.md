@@ -8,7 +8,7 @@ group:
 
 ## 示例
 
-<demo demo={require("./useLockBodyScroll.demo.tsx")} code={require("!!raw-loader!./useLockBodyScroll.demo.tsx")}></demo>
+<Demo demo={require("./useLockBodyScroll.demo.tsx")} code={require("!!raw-loader!./useLockBodyScroll.demo.tsx")}></Demo>
 
 ## API
 

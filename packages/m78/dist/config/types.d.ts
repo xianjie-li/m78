@@ -1,6 +1,6 @@
 import React from "react";
 import { Resource } from "i18next";
-import { FormAdaptors } from "../form/index.js";
+import type { FormAdaptors } from "../form/index.js";
 export interface M78SeedConfig {
     /** 黑暗模式 */
     darkMode?: boolean;

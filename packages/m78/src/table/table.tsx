@@ -12,7 +12,7 @@ export const _injector = createInjector<RCTableProps>(
   {
     displayName: "Table",
     defaultProps: {
-      dataImport: false,
+      dataImport: true,
       dataExport: true,
     },
   }

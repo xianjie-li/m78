@@ -23,6 +23,7 @@ import {
   useSelect,
   useSelf,
   useSetState,
+  useUpdate,
 } from "@m78/hooks";
 import { _MenuContext, MenuOption, MenuProps } from "./types.js";
 import { Lay } from "../lay/index.js";
@@ -38,6 +39,7 @@ import { useKeyboardHandle } from "./use-keyboard-handle.js";
 import clsx from "clsx";
 import { Trigger, TriggerEvent, TriggerType } from "../trigger/index.js";
 import { TransitionType } from "../transition/index.js";
+import debounce from "lodash/debounce.js";
 
 const defaultProps: Partial<MenuProps> = {
   direction: OverlayDirection.bottomStart,
@@ -62,6 +64,7 @@ export const _Menu = (props: MenuProps) => {
     targets: [],
     lastActive: null as null,
     flatMap: {},
+    updateTimer: null as any,
   });
 
   // 使用useSetState确保能实时获取到最新的type
@@ -86,14 +89,27 @@ export const _Menu = (props: MenuProps) => {
     [overlayRef.current]
   );
 
+  const update = useUpdate();
+
+  /** 延迟debounce更新组件 */
+  const delayUpdate = useFn(
+    () => {
+      update();
+    },
+    (fn) => debounce(fn, 20)
+  );
+
   /** 管理所有展开的项, 值为项的value */
   const openSelect = useSelect<ValueType>({
     autoUpdate: false,
     onChange: (select) => {
       const next = select.isSelected(MAIN_MENU);
 
+      // 总菜单开关变更时, 直接更新组件, 否则延迟更新
       if (next !== open) {
         setOpen(next);
+      } else {
+        delayUpdate();
       }
     },
   });
@@ -109,7 +125,7 @@ export const _Menu = (props: MenuProps) => {
     });
     openSelect.unSelectAll();
   });
-
+  ``;
   // props.open主动传入true时, 对其同步
   useEffect(() => {
     if (props.open) {

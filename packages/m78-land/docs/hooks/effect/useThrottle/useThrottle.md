@@ -8,7 +8,7 @@ title: useThrottle
 
 ## 示例
 
-<demo demo={require("./useThrottle.demo.tsx")} code={require("!!raw-loader!./useThrottle.demo.tsx")}></demo>
+<Demo demo={require("./useThrottle.demo.tsx")} code={require("!!raw-loader!./useThrottle.demo.tsx")}></Demo>
 
 ## API
 

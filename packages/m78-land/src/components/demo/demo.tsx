@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
 import CodeBlock from "@theme/CodeBlock";
 import { Button, ButtonColor } from "m78/button";
-import { IconCode } from "@m78/icons/icon-code";
-import { IconCheck } from "@m78/icons/icon-check";
-import { IconClose } from "@m78/icons/icon-close";
-import { IconContentCopy } from "@m78/icons/icon-content-copy";
+import { IconCode } from "@m78/icons/code.js";
+import { IconCheckSmall } from "@m78/icons/check-small.js";
+import { IconClose } from "@m78/icons/close.js";
+import { IconCopy } from "@m78/icons/copy.js";
 import { ComponentBasePropsWithAny, Size } from "m78/common";
 
 import css from "./style.module.scss";
@@ -37,7 +37,7 @@ interface DemoProps extends ComponentBasePropsWithAny {
     | string /* 允许直接传入代码 */;
 }
 
-const copySuccessIcon = <IconCheck className="color-success" />;
+const copySuccessIcon = <IconCheckSmall className="color-success" />;
 const copyFailIcon = <IconClose className="color-error" />;
 
 const Demo = ({ demo, code, ...other }: DemoProps) => {
@@ -69,7 +69,7 @@ const Demo = ({ demo, code, ...other }: DemoProps) => {
 
   const [cur, setCur] = useState(first);
 
-  const [copyIcon, setCopyIcon] = useState(() => <IconContentCopy />);
+  const [copyIcon, setCopyIcon] = useState(() => <IconCopy />);
 
   const self = useSelf({
     t: null as any,
@@ -98,7 +98,7 @@ const Demo = ({ demo, code, ...other }: DemoProps) => {
   function clearCopyTimer() {
     clearTimeout(self.t);
     if (self.isUnmount) return;
-    setCopyIcon(<IconContentCopy />);
+    setCopyIcon(<IconCopy />);
   }
 
   function renderDemo() {

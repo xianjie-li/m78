@@ -13,7 +13,7 @@ group:
 
 ## 示例
 
-<demo demo={require("./useDerivedStateFromProps.demo.tsx")} code={require("!!raw-loader!./useDerivedStateFromProps.demo.tsx")}></demo>
+<Demo demo={require("./useDerivedStateFromProps.demo.tsx")} code={require("!!raw-loader!./useDerivedStateFromProps.demo.tsx")}></Demo>
 
 ## API
 

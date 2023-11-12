@@ -1,4 +1,4 @@
 import "./index.scss";
-export { _Table as Table } from "./table.js";
+export { _Table as Table, _injector as tableInjector } from "./table.js";
 export * from "./types.js";
 //# sourceMappingURL=index.d.ts.map

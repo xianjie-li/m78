@@ -8,7 +8,7 @@ title: useDebounce
 
 ## 示例
 
-<demo demo={require("./useDebounce.demo.tsx")} code={require("!!raw-loader!./useDebounce.demo.tsx")}></demo>
+<Demo demo={require("./useDebounce.demo.tsx")} code={require("!!raw-loader!./useDebounce.demo.tsx")}></Demo>
 
 ## API
 

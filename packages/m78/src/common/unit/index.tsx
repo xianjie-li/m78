@@ -1,29 +1,14 @@
-import React from "react";
+export * from "./status-icons.js";
 
-import { IconInfo } from "@m78/icons/icon-info.js";
-import { IconCheckCircle } from "@m78/icons/icon-check-circle.js";
-import { IconError } from "@m78/icons/icon-error.js";
-import { Status } from "../types/index.js";
-
-export function StatusIconInfo() {
-  return <IconInfo className="color" />;
-}
-
-export function StatusIconSuccess() {
-  return <IconCheckCircle className="color-success" />;
-}
-
-export function StatusIconWarning() {
-  return <IconError className="color-warning" />;
-}
-
-export function StatusIconError() {
-  return <IconError className="color-error" />;
-}
-
-export const statusIconMap = {
-  [Status.info]: <StatusIconInfo />,
-  [Status.success]: <StatusIconSuccess />,
-  [Status.warning]: <StatusIconWarning />,
-  [Status.error]: <StatusIconError />,
-};
+export { Illustration404 } from "./illustrations/illustration-404.js";
+export { Illustration502 } from "./illustrations/illustration-502.js";
+export { IllustrationEmpty1 } from "./illustrations/illustration-empty-1.js";
+export { IllustrationEmpty2 } from "./illustrations/illustration-empty-2.js";
+export { IllustrationEmpty3 } from "./illustrations/illustration-empty-3.js";
+export { IllustrationEmpty4 } from "./illustrations/illustration-empty-4.js";
+export { IllustrationGeneral1 } from "./illustrations/illustration-general-1.js";
+export { IllustrationGeneral2 } from "./illustrations/illustration-general-2.js";
+export { IllustrationOffline } from "./illustrations/illustration-offline.js";
+export { IllustrationProgress } from "./illustrations/illustration-progress.js";
+export { IllustrationSuccess1 } from "./illustrations/illustration-success-1.js";
+export { IllustrationSuccess2 } from "./illustrations/illustration-success-2.js";

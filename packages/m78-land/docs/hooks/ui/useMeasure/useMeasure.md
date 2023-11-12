@@ -10,7 +10,7 @@ group:
 
 ## 示例
 
-<demo demo={require("./useMeasure.demo.tsx")} code={require("!!raw-loader!./useMeasure.demo.tsx")}></demo>
+<Demo demo={require("./useMeasure.demo.tsx")} code={require("!!raw-loader!./useMeasure.demo.tsx")}></Demo>
 
 ## API
 

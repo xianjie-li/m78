@@ -10,9 +10,9 @@ import { DND } from "../dnd/index.js";
 import { Row } from "../layout/index.js";
 import clsx from "clsx";
 import { Button } from "../button/index.js";
-import { IconDeleteSweep } from "@m78/icons/icon-delete-sweep.js";
-import { IconDragIndicator } from "@m78/icons/icon-drag-indicator.js";
-import { IconAddCircleOutline } from "@m78/icons/icon-add-circle-outline.js";
+import { IconDeleteOne } from "@m78/icons/delete-one.js";
+import { IconDrag } from "@m78/icons/drag.js";
+import { IconAddOne } from "@m78/icons/add-one.js";
 import { FORM_NS, Translation } from "../i18n/index.js";
 import { EMPTY_LIST_NAME } from "./common.js";
 export function _listImpl(ctx) {
@@ -109,7 +109,7 @@ export function _listImpl(ctx) {
                                                         onClick: function() {
                                                             args.remove(meta.index);
                                                         },
-                                                        children: /*#__PURE__*/ _jsx(IconDeleteSweep, {})
+                                                        children: /*#__PURE__*/ _jsx(IconDeleteOne, {})
                                                     });
                                                 }
                                             }),
@@ -124,7 +124,7 @@ export function _listImpl(ctx) {
                                                         squareIcon: true,
                                                         title: t("drag sort"),
                                                         innerRef: handleRef,
-                                                        children: /*#__PURE__*/ _jsx(IconDragIndicator, {})
+                                                        children: /*#__PURE__*/ _jsx(IconDrag, {})
                                                     });
                                                 }
                                             })
@@ -152,7 +152,7 @@ export function _listImpl(ctx) {
                                     return t("add item");
                                 }
                             }),
-                            /*#__PURE__*/ _jsx(IconAddCircleOutline, {})
+                            /*#__PURE__*/ _jsx(IconAddOne, {})
                         ]
                     })
                 })

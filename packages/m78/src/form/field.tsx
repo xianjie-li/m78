@@ -18,7 +18,7 @@ import {
 } from "@m78/utils";
 import { Lay } from "../lay/index.js";
 import { Bubble } from "../bubble/index.js";
-import { IconErrorOutline } from "@m78/icons/icon-error-outline.js";
+import { IconAttention } from "@m78/icons/attention.js";
 import clsx from "clsx";
 import { _useFieldMethods } from "./use-field-methods.js";
 import { _useFieldLifeCircle } from "./use-field-life-circle.js";
@@ -211,7 +211,7 @@ export function _fieldImpl(ctx: _FormContext) {
       if (!describe || !bubbleDescribe) return null;
       return (
         <Bubble content={describe}>
-          <IconErrorOutline className="m78-form_describe-icon" />
+          <IconAttention className="m78-form_describe-icon" />
         </Bubble>
       );
     }

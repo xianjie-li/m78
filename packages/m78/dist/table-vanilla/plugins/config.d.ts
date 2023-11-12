@@ -4,7 +4,7 @@ import { TableConfig } from "../types/config.js";
 export declare const level2ConfigKeys: (keyof TableConfig)[];
 /** 不能通过table.config()变更的配置 */
 declare const configCanNotChange: readonly ["el", "primaryKey", "plugins", "viewEl", "viewContentEl", "eventCreator"];
-declare type TableConfigCanNotChanges = typeof configCanNotChange[number];
+type TableConfigCanNotChanges = typeof configCanNotChange[number];
 export declare class _TableConfigPlugin extends TablePlugin implements TableConfigInstance {
     beforeInit(): void;
     getConfig: () => TableConfig;

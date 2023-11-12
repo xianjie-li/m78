@@ -22,6 +22,6 @@ export declare function _useBarImpl(ctx: _ScrollContext, { isY, delayHidden }: _
     refreshScrollPosition: (offsetRatio?: number) => void;
     refresh: () => void;
 };
-export declare type _UseBarReturns = ReturnType<typeof _useBar>;
+export type _UseBarReturns = ReturnType<typeof _useBar>;
 export {};
 //# sourceMappingURL=use-bar.d.ts.map

@@ -10,8 +10,8 @@ export declare enum LayStyle {
     /** 无分割样式 */
     none = "none"
 }
-export declare type LayStyleKeys = keyof typeof LayStyle;
-export declare type LayStyleUnion = LayStyle | LayStyleKeys;
+export type LayStyleKeys = keyof typeof LayStyle;
+export type LayStyleUnion = LayStyle | LayStyleKeys;
 export interface LayProps extends TileProps {
     /** 显示右侧箭头 */
     arrow?: boolean;

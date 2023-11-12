@@ -1,7 +1,7 @@
 import React from "react";
 import { OverlayProps } from "../overlay/index.js";
 import { StatusUnion } from "../common/index.js";
-export declare type DialogCloseHandle = (isConfirm?: boolean) => Promise<void>;
+export type DialogCloseHandle = (isConfirm?: boolean) => Promise<void>;
 /** 快捷询问, promise成功表示确认, 失败表示关闭或取消 */
 export interface DialogQuicker {
     (content: DialogProps["content"], title?: DialogProps["title"], cancel?: DialogProps["cancel"]): Promise<void>;

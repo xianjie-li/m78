@@ -10,7 +10,7 @@ title: useQueue
 
 ## 示例
 
-<demo demo={require("./useQueue.demo.tsx")} code={require("!!raw-loader!./useQueue.demo.tsx")}></demo>
+<Demo demo={require("./useQueue.demo.tsx")} code={require("!!raw-loader!./useQueue.demo.tsx")}></Demo>
 
 ## API
 

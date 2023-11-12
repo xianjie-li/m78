@@ -5,9 +5,9 @@ import { TABLE_NS, Translation } from "../../i18n/index.js";
 import { Bubble } from "../../bubble/index.js";
 import { Button } from "../../button/index.js";
 import { Size } from "../../common/index.js";
-import { IconUndo } from "@m78/icons/icon-undo.js";
 import React from "react";
-import { IconRedo } from "@m78/icons/icon-redo.js";
+import { IconBackOne as IconUndo } from "@m78/icons/back-one.js";
+import { IconGoAhead as IconRedo } from "@m78/icons/go-ahead.js";
 import { Divider } from "../../layout/index.js";
 
 export class _RedoAndUndoPlugin extends RCTablePlugin {
@@ -36,7 +36,7 @@ function RedoBtn() {
               squareIcon
               onClick={() => history.undo()}
             >
-              <IconUndo className="color-second" />
+              <IconUndo />
             </Button>
           </span>
         </Bubble>
@@ -65,7 +65,7 @@ function UndoBtn() {
               squareIcon
               onClick={() => history.redo()}
             >
-              <IconRedo className="color-second" />
+              <IconRedo />
             </Button>
           </span>
         </Bubble>

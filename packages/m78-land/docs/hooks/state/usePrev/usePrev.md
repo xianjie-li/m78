@@ -8,7 +8,7 @@ record prev value
 
 ## Example
 
-<demo demo={require("./usePrev.demo.tsx")} code={require("!!raw-loader!./usePrev.demo.tsx")}></demo>
+<Demo demo={require("./usePrev.demo.tsx")} code={require("!!raw-loader!./usePrev.demo.tsx")}></Demo>
 
 ## API
 

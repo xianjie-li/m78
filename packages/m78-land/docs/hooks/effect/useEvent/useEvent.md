@@ -8,7 +8,7 @@ title: useEvent
 
 ## 示例
 
-<demo demo={require("./useEvent.demo.tsx")} code={require("!!raw-loader!./useEvent.demo.tsx")}></demo>
+<Demo demo={require("./useEvent.demo.tsx")} code={require("!!raw-loader!./useEvent.demo.tsx")}></Demo>
 
 ## API
 

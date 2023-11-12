@@ -2,7 +2,7 @@ import React from "react";
 import { FormLike } from "@m78/hooks";
 import { StatusKeys, SizeUnion } from "../common";
 import { TupleNumber, ArrayOrItem } from "@m78/utils";
-export declare type InputPropsBase = Omit<React.PropsWithoutRef<JSX.IntrinsicElements["input"]>, "size" | "value" | "defaultValue" | "onChange" | "prefix" | "type" | "readOnly">;
+export type InputPropsBase = Omit<React.PropsWithoutRef<JSX.IntrinsicElements["input"]>, "size" | "value" | "defaultValue" | "onChange" | "prefix" | "type" | "readOnly">;
 export declare enum InputType {
     /** 普通文本框 */
     text = "text",
@@ -17,8 +17,8 @@ export declare enum InputType {
     /** 只能输入常规字符`A-Za-z0-9_` */
     general = "general"
 }
-export declare type InputTypeKeys = keyof typeof InputType;
-export declare type InputTypeUnion = InputType | InputTypeKeys;
+export type InputTypeKeys = keyof typeof InputType;
+export type InputTypeUnion = InputType | InputTypeKeys;
 /**
  * 值拦截器, 用于在字符值发生改变之前对其进行阻断或变更
  *
@@ -33,7 +33,7 @@ export declare type InputTypeUnion = InputType | InputTypeKeys;
  * - 字面量false 阻止本次更新
  * - 元组[string, TupleNumber] 第一项为变更后的字符串, 第二项为字符变更后的光标位置, 如果对字符值的长度进行了变更, 需要手动修正光标位置, 通常, 修正后的位置为起始位置前增加或减少的字符数
  * */
-export declare type Interceptor = (meta: {
+export type Interceptor = (meta: {
     str: string;
     cursor: TupleNumber;
     prevCursor: TupleNumber;

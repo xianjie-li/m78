@@ -32,6 +32,7 @@ export declare class _TableFormPlugin extends TablePlugin implements TableForm {
     invalidNodes: HTMLElement[];
     addRecordMap: Map<TableKey, boolean>;
     removeRecordMap: Map<TableKey, AnyObject>;
+    allRemoveRecordMap: Map<TableKey, AnyObject>;
     sortRecordMap: Map<TableKey, {
         /** 原索引 */
         originIndex: number;

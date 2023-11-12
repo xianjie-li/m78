@@ -15,12 +15,34 @@
 
 .m78-icon {
   display: inline-block;
-  // 实际使用中发现, 因为图标普遍小于文本, 并且细节比文本更多, 将其放大一定比例会更好, 否则基本每次使用都会单独再将其通过样式放大
-  width: 1.3em;
-  height: 1.3em;
-  fill: currentColor;
+  color: inherit;
+  font-style: normal;
+  line-height: 0;
+  text-align: center;
+  text-transform: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
   vertical-align: middle;
-  line-height: 1;
+
+  &.__spin svg {
+    animation: m78-icon-spin 1s infinite linear;
+  }
+}
+
+@keyframes m78-icon-spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg)
+  }
+}
+
+@-webkit-keyframes m78-icon-spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg)
+  }
 }
 
 // 在某些节点需要阻止浏览器的滚动/上下文菜单等行为

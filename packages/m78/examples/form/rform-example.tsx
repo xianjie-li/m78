@@ -8,10 +8,12 @@ import { Input } from "../../src/input/index.js";
 import { Button } from "../../src/button/index.js";
 import { required } from "@m78/verify";
 import { Divider, Row } from "../../src/layout/index.js";
-import { IconDeleteOutline } from "@m78/icons/icon-delete-outline.js";
-import { IconArrowUpward } from "@m78/icons/icon-arrow-upward.js";
-import { IconArrowDownward } from "@m78/icons/icon-arrow-downward.js";
+import { IconLike } from "@m78/icons/like";
 import { m78Config, Size } from "../../src/index.js";
+
+const IconDeleteOutline = IconLike;
+const IconArrowUpward = IconLike;
+const IconArrowDownward = IconLike;
 
 m78Config.set({
   formAdaptors: [],
@@ -279,7 +281,12 @@ const RformExample = () => {
       <Divider>Manual render</Divider>
 
       <div>
-        <Form.Field name="name" element="input" />
+        <Form.Field
+          name="name"
+          element="input"
+          describe="abedqwfwq"
+          bubbleDescribe
+        />
         <Form.Field label="cTitle" name={["camera", "title"]} />
         <Form.Field label="cDesc" name={["camera", "desc"]} element="input" />
         <Form.Field name="topic" label="标签" element={<Input />} />

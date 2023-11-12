@@ -26,6 +26,7 @@ import {
 } from "../types/base-type.js";
 import { _TableEventPlugin } from "./event.js";
 import clamp from "lodash/clamp.js";
+import { TableMutationEvent, TableMutationType } from "./mutation.js";
 
 /**
  * 渲染核心逻辑
@@ -149,7 +150,7 @@ export class _TableRenderPlugin extends TablePlugin implements TableRender {
 
       const renderFlag = getNamePathValue(
         cell.state,
-        _TablePrivateProperty.renderFlag
+        _TablePrivateProperty.rendered
       );
 
       const renderCtx: TableRenderCtx = {
@@ -165,7 +166,7 @@ export class _TableRenderPlugin extends TablePlugin implements TableRender {
       this.cellRenderImpl(cell as TableCellWithDom, renderCtx);
 
       if (!renderFlag) {
-        setNamePathValue(cell.state, _TablePrivateProperty.renderFlag, true);
+        setNamePathValue(cell.state, _TablePrivateProperty.rendered, true);
       }
 
       const disableDefaultRender =

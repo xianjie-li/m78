@@ -8,7 +8,7 @@ title: useUpdate
 
 ## 示例
 
-<demo demo={require("./useUpdate.demo.tsx")} code={require("!!raw-loader!./useUpdate.demo.tsx")}></demo>
+<Demo demo={require("./useUpdate.demo.tsx")} code={require("!!raw-loader!./useUpdate.demo.tsx")}></Demo>
 
 ## API
 

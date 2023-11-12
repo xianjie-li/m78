@@ -8,7 +8,7 @@ import {
   StatusIconSuccess,
   StatusIconWarning,
 } from "../../src/common/index.js";
-import { IconDrafts } from "@m78/icons/icon-drafts";
+import { IconLike as IconDrafts } from "@m78/icons/like";
 
 const ResultExample = () => {
   return (

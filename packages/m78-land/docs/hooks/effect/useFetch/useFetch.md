@@ -34,17 +34,17 @@ const fh = useFetch(queryUserInfo);
 
 ## 综合示例
 
-<demo demo={require("./base.demo.tsx")} code={require("!!raw-loader!./base.demo.tsx")}></demo>
+<Demo demo={require("./base.demo.tsx")} code={require("!!raw-loader!./base.demo.tsx")}></Demo>
 
 ## 节流/防抖
 
-<demo demo={require("./throttleDebounce.demo.tsx")} code={require("!!raw-loader!./throttleDebounce.demo.tsx")}></demo>
+<Demo demo={require("./throttleDebounce.demo.tsx")} code={require("!!raw-loader!./throttleDebounce.demo.tsx")}></Demo>
 
 ## param
 
 调用`send`很麻烦，大部分业务中，理想的请求时机是某个依赖的值发生改变时，通过`param`，可以轻松的实现这一点
 
-<demo demo={require("./param.demo.tsx")} code={require("!!raw-loader!./param.demo.tsx")}></demo>
+<Demo demo={require("./param.demo.tsx")} code={require("!!raw-loader!./param.demo.tsx")}></Demo>
 
 > 💡 内部通过\_.isEqual 来对比 param 相等性，保持 param 结构相对简单能够减少对比深度，从而提高性能
 

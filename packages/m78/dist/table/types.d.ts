@@ -1,4 +1,4 @@
-import { TableBaseConfig, TableCell, TableCellWithDom, TableInstance, TableInteractiveCoreConfig, TableMutationEvent, TablePersistenceConfig, TableReloadOptions, TableRow } from "../table-vanilla/index.js";
+import { TableBaseConfig, TableCell, TableCellWithDom, TableInstance, TableMutationEvent, TablePersistenceConfig, TableReloadOptions, TableRow } from "../table-vanilla/index.js";
 import { _tableOmitConfig } from "./common.js";
 import { TableSelectConfig } from "../table-vanilla/plugins/select.js";
 import { TableDragSortConfig } from "../table-vanilla/plugins/drag-sort.js";
@@ -9,13 +9,15 @@ import { ReactElement, ReactNode } from "react";
 import { TableDataLists } from "../table-vanilla/plugins/form.js";
 import { TableFeedbackEvent } from "../table-vanilla/plugins/event.js";
 import { FormAdaptors, FormInstance, FormSchema } from "../form/index.js";
+import { TablePlugin } from "../table-vanilla/plugin.js";
+import { RCTablePlugin } from "./plugin.js";
 /** 忽略的配置 */
-declare type OmitConfig = typeof _tableOmitConfig[number];
+type OmitConfig = typeof _tableOmitConfig[number];
 /** 重写TableColumnLeafConfig类型 */
 declare module "../table-vanilla/index.js" {
     interface TableColumnLeafConfig {
         /** 自定义该列单元格渲染 */
-        render?: (arg: RCTableRenderArg) => React.ReactNode;
+        render?: (arg: RCTableRenderArg) => ReactNode | void;
         /** 渲染筛选表单*/
         filterRender?: RCTableFilterColumnRender;
         /** 在表头后方渲染的额外节点 */
@@ -64,23 +66,20 @@ export interface RCTableRenderArg {
     table: RCTableInstance;
     /** 传入给props.context的上下文信息 */
     context: AnyObject;
+    /** 如果在其他定制render之后执行, 如插件/config.render/column.render, 接收经过它们处理后的element, 可以选择忽略之前的定制或对其进行合并处理后返回 */
+    prevElement: ReactNode | null;
 }
 /** 表格props */
-export interface RCTableProps extends ComponentBaseProps, Omit<TableBaseConfig, OmitConfig | "render">, TableSelectConfig, TableDragSortConfig, TableInteractiveCoreConfig {
+export interface RCTableProps extends ComponentBaseProps, Omit<TableBaseConfig, OmitConfig | "render">, TableSelectConfig, TableDragSortConfig {
     /** 自定义单元格渲染 */
-    render?: (arg: RCTableRenderArg) => React.ReactNode | void;
+    render?: (arg: RCTableRenderArg) => ReactNode | void;
     /** 自定义空节点 */
     emptyNode?: React.ReactElement;
     /** 最外层容器className */
     wrapClassName?: string;
     /** 最外层容器style */
     wrapStyle?: React.CSSProperties;
-    /**
-     * 表格内的自定义内容会通过react进行渲染, 由于渲染不是同步的, 在快速滚动时, 自定义渲染内容可能会有短暂的空白, 可以启用此项来强制react同步渲染这些内容
-     * - 注意: 延迟渲染大部分情况下是可接受的, 而开启同步渲染回造成一定的性能影响
-     * */
-    syncRender?: boolean;
-    /** 可在此传入表格上下文的状态, 并在column.render和config.render等函数中访问 */
+    /** 可在此传入表格上下文的状态, 并在column.render和config.render等位置中访问 */
     context?: AnyObject;
     /** 点击, event为原始事件对象, 可能是MouseEvent/PointerEvent */
     onClick?: (cell: TableCell, event: Event) => void;
@@ -95,45 +94,36 @@ export interface RCTableProps extends ComponentBaseProps, Omit<TableBaseConfig, 
     onError?: (msg: string) => void;
     /** 默认查询条件 */
     defaultFilter?: AnyObject;
+    /** 触发筛选 */
+    onFilter?: (filterData?: AnyObject) => void;
     /** 用于校验的筛选项schema, 具体用法请参考Form组件 */
     filterSchema?: FormSchema[];
     /** 不与特定字段绑定的filter, 渲染于工具栏的通用 filter 下 */
     commonFilter?: (form: FormInstance) => ReactNode;
-    /** 触发筛选 */
-    onFilter?: (filterData?: AnyObject) => void;
     /**
      * filter使用的表单实例, 不传时会使用内部创建的默认实例
      *
      * 通过此项可以更深入的控制筛选项, 使用自定义form实例时,  defaultFilter 和 filterSchema 会被忽略, 请使用form对应的配置(defaultValue/schemas)
+     *
+     * 此外, 还会覆盖默认的 size / layoutType / spacePadding 配置, 若有需要需要特别指定
      * */
     filterForm?: FormInstance;
-    /** 定制toolbar左侧, 应使用React.Fragment避免内容被渲染到嵌套的容器中, 避免排版混乱 */
-    toolBarLeadingCustomer?: (nodes: RCTableToolbarLeadingBuiltinNodes, table: RCTableInstance) => ReactNode;
-    /** 定制toolbar右侧, 应使用React.Fragment避免内容被渲染到嵌套的容器中, 避免排版混乱 */
-    toolBarTrailingCustomer?: (nodes: RCTableToolbarTrailingBuiltinNodes, table: RCTableInstance) => ReactNode;
+    /** 定制toolbar左侧, 可直接更改nodes, 向其中新增或删除节点 */
+    toolBarLeadingCustomer?: (nodes: ReactNode[], table: RCTableInstance) => void;
+    /** 定制toolbar右侧, 可直接更改nodes, 向其中新增或删除节点 */
+    toolBarTrailingCustomer?: (nodes: ReactNode[], table: RCTableInstance) => void;
     /**
      * 用于启用单元格编辑和校验字段的schema, 需要注意以下几点:
      *
      * - 在单元格编辑中, element是必须的, 并且对应的组件必须在table或全局注册过
-     * - 大部分schema配置都只对Form组件渲染有意义, 在单元格渲染中是无效的, 比如 label/list 等
+     * - 一些针对Form组件的schema在在单元格编辑中是无效的, 比如 label/list 等
      * */
     schema?: FormSchema[];
     /** 表单控件适配器, 优先级高于全局适配器 */
     adaptors?: FormAdaptors;
-    /** 启用ediByDialog时, 可通过此项来手动进行Form渲染, 默认会使用根据schema生成的预设样式 */
-    dialogFormRender?: (form: FormInstance) => ReactNode;
-    /** 编辑功能是否启用, 传入true时全部启用, 可传入一个配置对象来按需启用所需功能 */
-    dataOperations?: boolean | {
-        /** 允许编辑数据 */
-        edit?: boolean;
-        /** 允许新增数据 */
-        new?: boolean;
-        /** 允许删除数据 */
-        delete?: boolean;
-        /** 允许在独立窗口编辑行 */
-        ediByDialog?: boolean;
-    };
-    /** 提交时触发, 接收当前数据和当前配置 */
+    /** 数据编辑/新增等功能是否启用, 传入true时全部启用, 可传入一个配置对象来按需启用所需功能 */
+    dataOperations?: boolean | TableDataOperationsConfig;
+    /** TODO: 提交时触发, 接收当前数据和当前配置 */
     onSubmit?: (submitData: {
         /** 若数据发生了改变, 此项为当前数据信息 */
         data?: TableDataLists;
@@ -144,14 +134,22 @@ export interface RCTableProps extends ComponentBaseProps, Omit<TableBaseConfig, 
     }) => void;
     /** 新增数据时, 使用此对象作为默认值, 可以是一个对象或返回对象的函数 */
     defaultNewData?: AnyObject | (() => AnyObject);
-    /** true | 启用导出功能 */
+    /** true | 启用导入功能, 需要dataOperation.add启用才可生效 */
     dataImport?: boolean;
-    /** false | 启用导入功能, 需要dataOperation.new启用 */
+    /** true | 启用导出功能 */
     dataExport?: boolean;
-    /** 传入后, 配置变更将存储到本地, 并在下次加载时读取 */
+    /** TODO: 传入后, 配置变更将以指定key为键存储到本地, 并在下次加载时读取 */
     localConfigStorageKey?: string;
+    /**
+     * TODO: 配置持久化
+     * - 为string时使用localStorage存储变更配置, 并以该字符串作为存储的key, key必须在全局唯一
+     * - 传入持久化适配函数, 自定义存储逻辑
+     * */
+    configPersistence?: string | Function;
     /** 获取内部table实例 */
     instanceRef?: React.Ref<RCTableInstance>;
+    /** 插件 */
+    plugins?: Array<typeof TablePlugin | typeof RCTablePlugin>;
 }
 /** 表格实例 */
 export interface RCTableInstance extends Omit<TableInstance, "event"> {
@@ -198,34 +196,20 @@ export interface RCTableInstance extends Omit<TableInstance, "event"> {
         feedback: CustomEventWithHook<(event: TableFeedbackEvent[]) => void>;
     };
 }
-/** 左侧预置节点 */
-export interface RCTableToolbarLeadingBuiltinNodes {
-    /** 所有节点的组合 */
-    nodes: ReactNode;
-    searchBtn: ReactNode;
-    resetFilterBtn: ReactNode;
-    filterBtn: ReactNode;
-    redoBtn: ReactNode;
-    undoBtn: ReactNode;
-    countText: ReactNode;
-}
-/** 右侧预置节点 */
-export interface RCTableToolbarTrailingBuiltinNodes {
-    /** 所有节点的组合 */
-    nodes: ReactNode;
-    exportBtn: ReactNode;
-    importBtn: ReactNode;
-    deleteBtn: ReactNode;
-    addBtn: ReactNode;
-    saveBtn: ReactNode;
-    editByDialogBtn: ReactNode;
-}
 export declare enum TableSort {
     asc = "asc",
     desc = "desc"
 }
-export declare type TableSortKeys = keyof typeof TableSort;
-export declare type TableSortUnion = TableSort | TableSortKeys;
+export type TableSortKeys = keyof typeof TableSort;
+export type TableSortUnion = TableSort | TableSortKeys;
+export interface TableDataOperationsConfig {
+    /** 允许编辑数据, 请注意, 单元格是否可编辑还与对应列的schema配置有关 */
+    edit?: boolean | ((cell: TableCell) => boolean);
+    /** 允许新增数据, 新增数据始终可编辑 */
+    add?: boolean;
+    /** 允许删除数据 */
+    delete?: boolean;
+}
 /** renderMap的项, 代表一个渲染项 */
 export interface _CustomRenderItem {
     cell: TableCellWithDom;

@@ -38,6 +38,7 @@ export var _TableGetterPlugin = /*#__PURE__*/ function(TablePlugin) {
             "getCellKey",
             "getCellByStrKey",
             "getNearCell",
+            "getRowCells",
             "getKeyByRowIndex",
             "getKeyByColumnIndex",
             "getIndexByRowKey",
@@ -560,6 +561,12 @@ export var _TableGetterPlugin = /*#__PURE__*/ function(TablePlugin) {
             if (skip) continue;
             return _cell;
         }
+    };
+    _proto.getRowCells = function getRowCells(rowKey) {
+        var _this = this;
+        return this.context.allColumnKeys.map(function(columnKey) {
+            return _this.getCell(rowKey, columnKey);
+        });
     };
     /** 获取指定列左侧的距离 */ _proto.getBeforeSizeX = function getBeforeSizeX(index) {
         var columns = this.context.columns;

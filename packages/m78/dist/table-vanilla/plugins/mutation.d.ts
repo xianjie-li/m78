@@ -65,7 +65,7 @@ export declare enum TableMutationDataType {
     remove = "remove",
     move = "move"
 }
-export declare type TableMutationEvent = TableMutationConfigEvent | TableMutationDataEvent | TableMutationValueEvent;
+export type TableMutationEvent = TableMutationConfigEvent | TableMutationDataEvent | TableMutationValueEvent;
 /** 持久化配置变更事件 */
 export interface TableMutationConfigEvent {
     /** 事件类型 */
@@ -131,8 +131,12 @@ export interface TableMutation {
      * @param to - 新增到的位置, 该位置的原有项后移; 不传时, 新增到表格顶部; to不能为固定行或表头
      * @param insertAfter - 为true时数据将移动到指定key的后方 */
     addRow(data: any | any[], to?: TableKey, insertAfter?: boolean): void;
-    /** 移除指定的记录 */
+    /** 删除指定的记录 */
     removeRow(key: TableKey | TableKey[]): void;
+    /** 软删除指定的行, 删除数据不会从表格中消失, 而是仍然存在并显示删除标记, 后续可在提交时对这些数据进行处理, 用户也可以对删除的行对其进行恢复  */
+    softRemoveRow(key: TableKey | TableKey[]): void;
+    /** 恢复被软移除的行 */
+    restoreSoftRemove(key: TableKey | TableKey[]): void;
     /**
      * 将项移动到指定项的位置
      * @param from - 移动项的key

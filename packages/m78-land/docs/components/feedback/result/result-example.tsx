@@ -9,8 +9,8 @@ import {
   Button,
   Result,
   Divider,
+  IllustrationEmpty1,
 } from "m78";
-import { IconDrafts } from "@m78/icons/icon-drafts";
 
 const ResultExample = () => {
   return (
@@ -88,8 +88,9 @@ const ResultExample = () => {
 
       <Result
         size={Size.small}
-        icon={<IconDrafts className="color-disabled" />}
-        title="No data"
+        icon={<IllustrationEmpty1 height={160} />}
+        title="没有数据"
+        desc="数据上传中, 请过段时间再来查看"
         actions={<Button size={Size.small}>refresh</Button>}
       />
 

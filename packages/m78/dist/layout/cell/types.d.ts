@@ -23,7 +23,7 @@ export interface CellColMediaQueryProps extends ComponentBaseProps {
     hidden?: boolean;
 }
 /** 表示列数或一个CellColMediaQueryProps配置 */
-export declare type CellColNumberOrMediaQueryProps = number | CellColMediaQueryProps;
+export type CellColNumberOrMediaQueryProps = number | CellColMediaQueryProps;
 export interface CellRowProps extends FlexWrapProps {
     /** 间隔, 为数字时控制4个方向, 两个时分别控制纵横 */
     gutter?: number | TupleNumber;

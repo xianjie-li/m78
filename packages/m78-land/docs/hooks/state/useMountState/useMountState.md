@@ -19,7 +19,7 @@ interface UseMountStateConfig {
 
 ## 示例
 
-<demo demo={require("./useMountState.demo.tsx")} code={require("!!raw-loader!./useMountState.demo.tsx")}></demo>
+<Demo demo={require("./useMountState.demo.tsx")} code={require("!!raw-loader!./useMountState.demo.tsx")}></Demo>
 
 卸载的准确时机 hook 内是不能感知的，因为可能中间会存在动画或其他延迟行为，所以需要用户在正确时机调用 unmount()通知卸载
 

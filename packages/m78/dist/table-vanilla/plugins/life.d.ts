@@ -37,14 +37,14 @@ export declare enum TableReloadLevel {
     /** 重要配置发生了变更, 比如data/column完全改变, 会执行初始化阶段的大部分操作 */
     full = 2
 }
-export declare type TableReloadLevelKeys = keyof typeof TableReloadLevel;
-export declare type TableReloadLevelUnion = TableReloadLevel | TableReloadLevelKeys;
+export type TableReloadLevelKeys = keyof typeof TableReloadLevel;
+export type TableReloadLevelUnion = TableReloadLevel | TableReloadLevelKeys;
 /** 重置配置 */
 export interface TableReloadOptions {
     /** 为true时, 保持当前滚动位置 */
     keepPosition?: boolean;
     /** TableReloadLevel.base | 重置级别 */
-    level?: TableReloadLevelUnion;
+    level?: TableReloadLevel;
 }
 export interface TableLife {
     /**

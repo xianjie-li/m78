@@ -6,15 +6,15 @@ export declare enum Status {
     warning = "warning",
     error = "error"
 }
-export declare type StatusKeys = keyof typeof Status;
-export declare type StatusUnion = Status | StatusKeys;
+export type StatusKeys = keyof typeof Status;
+export type StatusUnion = Status | StatusKeys;
 /** 通用尺寸类型 40 | 32 | 24 */
 export declare enum Size {
     large = "large",
     small = "small"
 }
-export declare type SizeKeys = keyof typeof Size;
-export declare type SizeUnion = Size | SizeKeys;
+export type SizeKeys = keyof typeof Size;
+export type SizeUnion = Size | SizeKeys;
 /** 通用完整尺寸类型  */
 export declare enum FullSize {
     large = "large",
@@ -22,8 +22,8 @@ export declare enum FullSize {
     big = "big"
 }
 /** 通用完整尺寸类型 */
-export declare type FullSizeKeys = keyof typeof FullSize;
-export declare type FullSizeUnion = FullSize | FullSizeKeys;
+export type FullSizeKeys = keyof typeof FullSize;
+export type FullSizeUnion = FullSize | FullSizeKeys;
 /** 通用方向类型 */
 export declare enum Position {
     left = "left",
@@ -31,17 +31,17 @@ export declare enum Position {
     right = "right",
     bottom = "bottom"
 }
-export declare type PositionKeys = keyof typeof Position;
-export declare type PositionUnion = Position | PositionKeys;
+export type PositionKeys = keyof typeof Position;
+export type PositionUnion = Position | PositionKeys;
 /** 通用轴类型 */
 export declare enum Direction {
     horizontal = "horizontal",
     vertical = "vertical"
 }
-export declare type DirectionKeys = keyof typeof Direction;
-export declare type DirectionUnion = Direction | DirectionKeys;
+export type DirectionKeys = keyof typeof Direction;
+export type DirectionUnion = Direction | DirectionKeys;
 /** 通用的value类型 */
-export declare type ValueType = string | number;
+export type ValueType = string | number;
 /** 通用数据源类型 */
 export interface DataSourceItem<T = any> {
     /** 选项名 */
@@ -62,7 +62,7 @@ export interface DataSourceItemCustom {
     /** 自定义获取children的key */
     childrenKey?: string;
 }
-export declare type DIVProps = React.PropsWithoutRef<JSX.IntrinsicElements["div"]>;
+export type DIVProps = React.PropsWithoutRef<JSX.IntrinsicElements["div"]>;
 /** Component common props */
 export interface ComponentBaseProps {
     /** 包裹元素的类名 */

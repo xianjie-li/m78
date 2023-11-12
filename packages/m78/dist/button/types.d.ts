@@ -8,8 +8,8 @@ export declare enum ButtonColor {
     second = "second",
     primary = "primary"
 }
-export declare type ButtonColorKeys = keyof typeof ButtonColor;
-export declare type ButtonColorUnion = ButtonColor | ButtonColorKeys;
+export type ButtonColorKeys = keyof typeof ButtonColor;
+export type ButtonColorUnion = ButtonColor | ButtonColorKeys;
 export interface ButtonProps {
     /** 按钮颜色 */
     color?: ButtonColorUnion;
@@ -36,9 +36,9 @@ export interface ButtonProps {
     onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => any;
 }
 /** 剔除内部占用属性的原生按钮props */
-declare type HTMLBtnOmit = Omit<React.PropsWithoutRef<JSX.IntrinsicElements["button"]>, "color" | "onClick">;
+type HTMLBtnOmit = Omit<React.PropsWithoutRef<JSX.IntrinsicElements["button"]>, "color" | "onClick">;
 /** 剔除内部占用属性的原生html link props */
-declare type HTMLLinkOmit = Omit<React.PropsWithoutRef<JSX.IntrinsicElements["a"]>, "color" | "type" | "onClick">;
+type HTMLLinkOmit = Omit<React.PropsWithoutRef<JSX.IntrinsicElements["a"]>, "color" | "type" | "onClick">;
 export interface ButtonPropsWithHTMLButton extends HTMLBtnOmit, ButtonProps {
 }
 export interface ButtonPropsWithHTMLLink extends HTMLLinkOmit, ButtonProps {

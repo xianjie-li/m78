@@ -14,10 +14,10 @@ title: Fork - 条件渲染
 
 本组件的 api 设计为可以和[useFetch](/docs/hooks/effect/useFetch/)无缝集成, 具体见以下示例:
 
-<demo
+<Demo
   demo={require("./async-render-demo.tsx")}
   code={require("!!raw-loader!./async-render-demo.tsx")}
-></demo>
+></Demo>
 
 ```ts
 interface AsyncRenderProps extends ComponentBaseProps {
@@ -72,10 +72,10 @@ export interface ComponentBaseProps {
 
 条件渲染节点, 两者的区别是 `If` 直接卸载/挂载节点, `Toggle` 通过 `display` 控制节点显示和隐藏
 
-<demo
+<Demo
   demo={require("./if-toggle-demo.tsx")}
   code={require("!!raw-loader!./if-toggle-demo.tsx")}
-></demo>
+></Demo>
 
 ```ts
 interface IfProps {
@@ -97,10 +97,10 @@ export interface ToggleProps {
 
 搭配 If 或 Toggle 使用, 只渲染内部的第一个 when 为 true 的 If/Toggle, 所有项的 when 都未命中时,匹配第一个非 If/Toggle 的元素
 
-<demo
+<Demo
   demo={require("./switch.tsx")}
   code={require("!!raw-loader!./switch.tsx")}
-></demo>
+></Demo>
 
 ```ts
 export interface SwitchProps {

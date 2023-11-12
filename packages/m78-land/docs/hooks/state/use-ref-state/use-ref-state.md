@@ -8,8 +8,7 @@ title: useRefState
 
 ## 示例
 
-<demo demo={require("./use-ref-state.demo.tsx")} code={require("!!raw-loader!./use-ref-state.demo.tsx")}></demo>
-
+<Demo demo={require("./use-ref-state.demo.tsx")} code={require("!!raw-loader!./use-ref-state.demo.tsx")}></Demo>
 
 ## API
 

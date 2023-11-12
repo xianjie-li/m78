@@ -1,8 +1,8 @@
 import { Point } from "@m78/utils";
 /** 表示单元格位置的元组, 分别表示 x轴索引, y轴索引 */
-export declare type TablePosition = Point;
+export type TablePosition = Point;
 /** 表示列或行的key */
-export declare type TableKey = string | number;
+export type TableKey = string | number;
 /** 内部会向data/column或其他对象中注入的一些私有标记 */
 export declare enum _TablePrivateProperty {
     /** 表示是由table注入的数据 */
@@ -18,9 +18,9 @@ export declare enum _TablePrivateProperty {
     /** 记录当前reloadKey */
     reloadKey = "__M78TableReloadKey",
     /** 挂载渲染标记 */
-    renderFlag = "__M78TableRenderFlag",
+    rendered = "__M78TableRenderFlag",
     /** 表示该数据为新增数据 */
-    newFlag = "__M78TableNew"
+    new = "__M78TableNew"
 }
 /** 表格内指定点和其相关属性 */
 export interface TablePointInfo {
@@ -47,13 +47,13 @@ export declare enum TableRowFixed {
     top = "top",
     bottom = "bottom"
 }
-export declare type TableRowFixedKeys = keyof typeof TableRowFixed;
-export declare type TableRowFixedUnion = TableRowFixed | TableRowFixedKeys;
+export type TableRowFixedKeys = keyof typeof TableRowFixed;
+export type TableRowFixedUnion = TableRowFixed | TableRowFixedKeys;
 /** 支持的列固定位置 */
 export declare enum TableColumnFixed {
     left = "left",
     right = "right"
 }
-export declare type TableColumnFixedKeys = keyof typeof TableColumnFixed;
-export declare type TableColumnFixedUnion = TableColumnFixed | TableColumnFixedKeys;
+export type TableColumnFixedKeys = keyof typeof TableColumnFixed;
+export type TableColumnFixedUnion = TableColumnFixed | TableColumnFixedKeys;
 //# sourceMappingURL=base-type.d.ts.map

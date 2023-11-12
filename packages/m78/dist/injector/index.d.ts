@@ -108,13 +108,20 @@ export interface Injectors<Props = any> {
      * ```
      * */
     useStatic<T extends InjectorActuator = InjectorActuator>(cb: T): InjectType<T>;
+    /** 可以通过此api获取的getter, 在组件上下文之外访问deps或props */
+    useGetter: () => {
+        /** 与useDeps完全相同, 但是可以在任意位置使用, 你可以将其传递给外部功能代码或在异步代码中使用 */
+        getDeps: InjectorInject;
+        /** 与useProps完全相同, 但是可以在任意位置使用, 你可以将其传递给外部功能代码或在异步代码中使用 */
+        getProps: () => Props;
+    };
 }
 /** 一个injector实例 */
 export interface Injector<Props = any> extends Injectors<Props> {
     Component: React.FC<Props>;
 }
 /** 用于根据单个actuator获取其返回的deps类型 */
-export declare type InjectType<T extends InjectorActuator = InjectorActuator, T2 = ReturnType<T>> = T2;
+export type InjectType<T extends InjectorActuator = InjectorActuator, T2 = ReturnType<T>> = T2;
 /**
  * inject函数类型声明
  * */

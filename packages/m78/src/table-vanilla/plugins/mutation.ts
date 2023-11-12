@@ -223,7 +223,7 @@ export class _TableMutationPlugin extends TablePlugin {
       const key = i[this.config.primaryKey];
       return {
         ...i,
-        [_TablePrivateProperty.newFlag]: true,
+        [_TablePrivateProperty.new]: true,
         // 使用传入的key或随机分配一个
         [this.config.primaryKey]: isTruthyOrZero(key)
           ? key
@@ -266,7 +266,7 @@ export class _TableMutationPlugin extends TablePlugin {
           move: [],
         });
 
-        this.table.reload({
+        this.table.reloadSync({
           keepPosition: true,
           level: TableReloadLevel.index,
         });
@@ -379,8 +379,11 @@ export class _TableMutationPlugin extends TablePlugin {
 
     const { row, column } = cell;
 
-    // 行未变更过, 将其完全clone, 避免更改原数据
-    if (!this.changedRows[row.key]) {
+    // 行未变更过, 将其完全clone, 避免更改原数据, 此外, 避免了在初始化阶段克隆所有数据导致性能损耗
+    if (
+      !this.changedRows[row.key] &&
+      !getNamePathValue(row.data, _TablePrivateProperty.new) // 新增行不clone
+    ) {
       this.cloneAndSetRowData(row);
     }
 
@@ -855,7 +858,7 @@ export class _TableMutationPlugin extends TablePlugin {
     list.forEach((i) => {
       const ins = isRow ? this.table.getRow(i) : this.table.getColumn(i);
 
-      const _ins = { ...ins };
+      // const _ins = { ...ins };
 
       let refInd: number | undefined;
 
@@ -875,8 +878,8 @@ export class _TableMutationPlugin extends TablePlugin {
 
             dataList.push({
               index: refIndex,
-              data: { ...cur },
-              ins: _ins,
+              data: cur,
+              ins,
               ignore: true,
             });
           }
@@ -889,8 +892,8 @@ export class _TableMutationPlugin extends TablePlugin {
 
       dataList.push({
         index: ins.realIndex,
-        data: isRow ? { ...(ins as any).data } : ins.config,
-        ins: _ins,
+        data: isRow ? (ins as any).data : ins.config,
+        ins,
         refIndex: refInd,
       });
     });
@@ -1110,8 +1113,16 @@ export interface TableMutation {
    * @param insertAfter - 为true时数据将移动到指定key的后方 */
   addRow(data: any | any[], to?: TableKey, insertAfter?: boolean): void;
 
-  /** 移除指定的记录 */
+  /** 删除指定的记录 */
   removeRow(key: TableKey | TableKey[]): void;
+
+  // 在form中进行移除行的标记, 参考禁用样式
+  // 禁用掉移除行的交互
+  /** 软删除指定的行, 删除数据不会从表格中消失, 而是仍然存在并显示删除标记, 后续可在提交时对这些数据进行处理, 用户也可以对删除的行对其进行恢复  */
+  softRemoveRow(key: TableKey | TableKey[]): void;
+
+  /** 恢复被软移除的行 */
+  restoreSoftRemove(key: TableKey | TableKey[]): void;
 
   /**
    * 将项移动到指定项的位置

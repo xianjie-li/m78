@@ -8,7 +8,7 @@ subscribe keyboard event
 
 ## 示例
 
-<demo demo={require("./use-keyborad.demo.tsx")} code={require("!!raw-loader!./use-keyborad.demo.tsx")}></demo>
+<Demo demo={require("./use-keyborad.demo.tsx")} code={require("!!raw-loader!./use-keyborad.demo.tsx")}></Demo>
 
 ## API
 

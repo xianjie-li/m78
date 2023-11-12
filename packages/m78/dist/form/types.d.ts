@@ -5,24 +5,24 @@ import { CustomEventWithHook, SetState } from "@m78/hooks";
 import { RejectMeta } from "@m78/verify";
 import { SizeUnion } from "../common/index.js";
 import { CellColProps, CellRowProps, TileProps } from "../layout/index.js";
-import { RCTableEditAdaptor } from "../table/index.js";
+import type { RCTableEditAdaptor } from "../table/index.js";
 /** 要剔除的form-vanilla配置 */
 export declare const _omitConfigs: readonly ["eventCreator", "languagePack", "extendLanguagePack", "verifyFirst", "ignoreStrangeValue"];
 /** 要剔除的form-vanilla配置 */
-declare type OmitType = typeof _omitConfigs[number];
+type OmitType = typeof _omitConfigs[number];
 /** 支持的布局类型 */
 export declare enum FormLayoutType {
     horizontal = "horizontal",
     vertical = "vertical"
 }
 /** 支持的布局类型 */
-export declare type FormLayoutTypeKeys = keyof typeof FormLayoutType;
+export type FormLayoutTypeKeys = keyof typeof FormLayoutType;
 /** 支持的布局类型, 可传入枚举或字面量 */
-export declare type FormLayoutTypeUnion = FormLayoutTypeKeys | FormLayoutType;
+export type FormLayoutTypeUnion = FormLayoutTypeKeys | FormLayoutType;
 /** 表单控件适配器配置 */
-export declare type FormAdaptors = FormAdaptorsItem[];
+export type FormAdaptors = FormAdaptorsItem[];
 /** 全局或表单级适配器的一项 */
-export declare type FormAdaptorsItem = {
+export type FormAdaptorsItem = {
     /** 待适配的表单控件 */
     element: React.ReactElement;
     /** 控制用于From组件时的适配器 */
@@ -33,9 +33,9 @@ export declare type FormAdaptorsItem = {
     name?: string;
 };
 /** 表单控件适配器, 优先级: 全局 < Form < Field */
-export declare type FormAdaptor = (args: FormCustomRenderBasicArgs) => React.ReactElement | null;
+export type FormAdaptor = (args: FormCustomRenderBasicArgs) => React.ReactElement | null;
 /** 部分能够支持React版本的VanillaFormConfig配置 */
-declare type VanillaFormConfigPartial = Omit<VanillaFormConfig, OmitType | "schemas">;
+type VanillaFormConfigPartial = Omit<VanillaFormConfig, OmitType | "schemas">;
 /** 创建form实例时传入的配置 */
 export interface FormConfig extends VanillaFormConfigPartial, FormProps {
     /** 描述表单值结构的对象 */
@@ -44,7 +44,7 @@ export interface FormConfig extends VanillaFormConfigPartial, FormProps {
     adaptors?: FormAdaptors;
 }
 /** 部分能够支持React版本的VanillaFormSchema配置 */
-declare type VanillaFormSchemaPartial = Omit<VanillaFormSchema, "label" | "dynamic" | "schema" | "eachSchema">;
+type VanillaFormSchemaPartial = Omit<VanillaFormSchema, "label" | "dynamic" | "schema" | "eachSchema">;
 /** 单个schema项 */
 export interface FormSchema extends VanillaFormSchemaPartial, FormCommonProps {
     /** 动态设置其他参数 */
@@ -57,11 +57,11 @@ export interface FormSchema extends VanillaFormSchemaPartial, FormCommonProps {
     listDefaultValue?: any;
 }
 /** 不包含name的schema */
-export declare type FormSchemaWithoutName = Omit<FormSchema, "name">;
+export type FormSchemaWithoutName = Omit<FormSchema, "name">;
 /** 去除了部分配置的FormSchema */
-export declare type FormSchemaPartial = Omit<FormSchema, "name" | "list">;
+export type FormSchemaPartial = Omit<FormSchema, "name" | "list">;
 /** 去除了部分配置的VanillaFormInstance */
-declare type VanillaFormInstancePartial = Omit<VanillaFormInstance, "getSchemas" | "setSchemas" | "getSchema" | "events" | "getConfig">;
+type VanillaFormInstancePartial = Omit<VanillaFormInstance, "getSchemas" | "setSchemas" | "getSchema" | "events" | "getConfig">;
 /** Form实例 */
 export interface FormInstance extends VanillaFormInstancePartial {
     /** 获取对dynamic进行处理进行处理后的schema副本 */
@@ -167,7 +167,7 @@ export interface FormFieldProps extends FormCommonProps {
     name?: NamePath;
 }
 /** 去除了部分配置的FormFieldProps */
-declare type FormFieldPropsPartial = Omit<FormFieldProps, "element" | "elementProps" | "adaptor">;
+type FormFieldPropsPartial = Omit<FormFieldProps, "element" | "elementProps" | "adaptor">;
 /** List Props 相比 Field 少了一些配置项 */
 export interface FormListProps<Item = any> extends FormFieldPropsPartial {
     /** 渲染list子级, 相比layoutRender不包含预设的布局 */
@@ -221,7 +221,7 @@ export interface FormCustomRenderWrapperArgs extends FormCustomRenderBasicArgs {
     preventNext(): void;
 }
 /** List渲染 */
-export declare type FormListCustomRenderCallback<Item = any> = (meta: {
+export type FormListCustomRenderCallback<Item = any> = (meta: {
     /** 该项的值 */
     item: Item;
     /** 该项索引 */
@@ -231,7 +231,7 @@ export declare type FormListCustomRenderCallback<Item = any> = (meta: {
     /** 将指定 name 前拼接上 List 父级的 name 后返回 */
     getName(name?: NamePath): NamePath;
 }) => React.ReactElement;
-declare type FormCustomRenderBasicArgsPartial = Omit<FormCustomRenderBasicArgs, "bind" | "element" | "binder">;
+type FormCustomRenderBasicArgsPartial = Omit<FormCustomRenderBasicArgs, "bind" | "element" | "binder">;
 /** FormListRenderChildren 入参 */
 export interface FormListCustomRenderArgs<Item = any> extends FormCustomRenderBasicArgsPartial {
     /** 用于渲染列表 */

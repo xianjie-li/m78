@@ -1,6 +1,6 @@
 import React from "react";
 import { Overlay, OverlayDirection, Button, TriggerType } from "m78";
-import { IconArrowForwardIos } from "@m78/icons/icon-arrow-forward-ios";
+import { IconArrowRight } from "@m78/icons/arrow-right.js";
 
 import css from "./style.module.scss";
 
@@ -24,7 +24,7 @@ const Menu = () => {
             {({ open }) => (
               <div className={clsx(css.listItem, open && css.listItemActive)}>
                 {item.label}
-                <IconArrowForwardIos className="color-second fs-12" />
+                <IconArrowRight className="color-second fs-12" />
               </div>
             )}
           </Overlay>

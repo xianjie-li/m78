@@ -1,8 +1,9 @@
 import React from "react";
 import { Row, Tile } from "../layout/index.js";
-import { IconKeyboardArrowRight } from "@m78/icons/icon-keyboard-arrow-right.js";
+import { IconRight } from "@m78/icons/right.js";
 import classNames from "clsx";
 import { LayProps, LayStyle } from "./types.js";
+import { statusIconMap } from "../common/index.js";
 
 function _Lay({
   arrow,
@@ -19,9 +20,20 @@ function _Lay({
   highlight,
   ...ppp
 }: LayProps) {
+  let leading = ppp.leading;
+
+  if (leading === undefined) {
+    const StatusIcon = statusIconMap[status!];
+
+    if (StatusIcon) {
+      leading = <StatusIcon />;
+    }
+  }
+
   return (
     <Tile
       {...ppp}
+      leading={leading}
       style={style}
       className={classNames(
         "m78-lay",
@@ -39,7 +51,7 @@ function _Lay({
         (trailing || arrow) && (
           <Row crossAlign="center">
             {trailing}
-            {arrow && <IconKeyboardArrowRight className="m78-lay_arrow" />}
+            {arrow && <IconRight className="m78-lay_arrow" />}
           </Row>
         )
       }

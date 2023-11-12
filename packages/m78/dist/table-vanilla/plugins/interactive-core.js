@@ -184,7 +184,6 @@ import { _TableFormPlugin } from "./form.js";
     // 检测单元格能否进行交互
     _proto.isInteractive = function isInteractive(cell) {
         if (cell.row.isHeader || cell.column.isHeader) return false;
-        if (this.config.interactive === false) return false;
         if (!this.config.interactive) return false;
         if (isFunction(this.config.interactive) && !this.config.interactive(cell)) return false;
         return isFunction(this.config.interactiveRender);

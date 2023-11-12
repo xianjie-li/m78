@@ -1,5 +1,5 @@
 import { useEffect, useImperativeHandle } from "react";
-import { useDestroy, useFn } from "@m78/hooks";
+import { useDestroy } from "@m78/hooks";
 import { _useMethodsAct } from "../injector/methods.act.js";
 import { _useStateAct } from "../injector/state.act.js";
 import { _usePropsEffect } from "./use-props-effect.js";

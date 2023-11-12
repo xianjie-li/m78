@@ -6,17 +6,16 @@ import React from "react";
 import { useFn } from "@m78/hooks";
 import { TriggerType } from "../../trigger/index.js";
 import { _injector } from "../table.js";
-import { _useStateAct } from "../state.act.js";
-import { IconContentPaste } from "@m78/icons/icon-content-paste.js";
-import { IconCopyAll } from "@m78/icons/icon-copy-all.js";
-import { IconVerticalAlignTop } from "@m78/icons/icon-vertical-align-top.js";
-import { IconVerticalAlignBottom } from "@m78/icons/icon-vertical-align-bottom.js";
-import { IconDeleteForever } from "@m78/icons/icon-delete-forever.js";
+import { _useStateAct } from "../injector/state.act.js";
+import { IconClipboard } from "@m78/icons/clipboard.js";
+import { IconCopy } from "@m78/icons/copy.js";
+import { IconToTop } from "@m78/icons/to-top.js";
+import { IconToBottom } from "@m78/icons/to-bottom.js";
+import { IconDeleteOne } from "@m78/icons/delete-one.js";
 import { COMMON_NS, TABLE_NS, useTranslation } from "../../i18n/index.js";
 import { isTruthyOrZero } from "@m78/utils";
-import { _useMethodsAct } from "../methods.act.js";
+import { _useMethodsAct } from "../injector/methods.act.js";
 import { Dialog } from "../../dialog/index.js";
-import { IconModeEdit } from "@m78/icons/icon-mode-edit.js";
 var MenuValues;
 (function(MenuValues) {
     MenuValues[MenuValues["copy"] = 0] = "copy";
@@ -24,7 +23,6 @@ var MenuValues;
     MenuValues[MenuValues["insertTop"] = 2] = "insertTop";
     MenuValues[MenuValues["insertBottom"] = 3] = "insertBottom";
     MenuValues[MenuValues["delete"] = 4] = "delete";
-    MenuValues[MenuValues["editByDialog"] = 5] = "editByDialog";
 })(MenuValues || (MenuValues = {}));
 export function _useCellMenu() {
     var state = _injector.useDeps(_useStateAct).state;
@@ -68,7 +66,7 @@ export function _useCellMenu() {
         var cellOnlyMenu = item.column.isHeader ? [] : [
             {
                 label: hasMultipleSelected ? t("copy cells") : t("copy cell"),
-                leading: /*#__PURE__*/ _jsx(IconCopyAll, {}),
+                leading: /*#__PURE__*/ _jsx(IconCopy, {}),
                 value: MenuValues.copy,
                 context: function() {
                     if (!hasMultipleSelected) {
@@ -80,7 +78,7 @@ export function _useCellMenu() {
             },
             {
                 label: hasMultipleSelected ? t("paste cells") : t("paste cell"),
-                leading: /*#__PURE__*/ _jsx(IconContentPaste, {}),
+                leading: /*#__PURE__*/ _jsx(IconClipboard, {}),
                 value: MenuValues.paste,
                 context: function() {
                     if (!hasMultipleSelected) {
@@ -95,7 +93,7 @@ export function _useCellMenu() {
         var insertMenus = item.row.isFixed ? [] : [
             {
                 label: t("insert top"),
-                leading: /*#__PURE__*/ _jsx(IconVerticalAlignTop, {}),
+                leading: /*#__PURE__*/ _jsx(IconToTop, {}),
                 value: MenuValues.insertTop,
                 context: function() {
                     instance.addRow(methods.getDefaultNewData(), item.row.key, false);
@@ -103,7 +101,7 @@ export function _useCellMenu() {
             },
             {
                 label: t("insert bottom"),
-                leading: /*#__PURE__*/ _jsx(IconVerticalAlignBottom, {}),
+                leading: /*#__PURE__*/ _jsx(IconToBottom, {}),
                 value: MenuValues.insertBottom,
                 context: function() {
                     instance.addRow(methods.getDefaultNewData(), item.row.key, true);
@@ -117,15 +115,6 @@ export function _useCellMenu() {
             ],
             cb: confirm,
             menu: _to_consumable_array(cellOnlyMenu).concat(_to_consumable_array(insertMenus), [
-                // dialog编辑
-                {
-                    label: t("edit by dialog"),
-                    leading: /*#__PURE__*/ _jsx(IconModeEdit, {}),
-                    value: MenuValues.editByDialog,
-                    context: function() {
-                        console.log("edit");
-                    }
-                },
                 // 删除行
                 {
                     label: /*#__PURE__*/ _jsxs("span", {
@@ -141,7 +130,7 @@ export function _useCellMenu() {
                         ]
                     }),
                     value: MenuValues.delete,
-                    leading: /*#__PURE__*/ _jsx(IconDeleteForever, {
+                    leading: /*#__PURE__*/ _jsx(IconDeleteOne, {
                         className: "color-error"
                     }),
                     className: "color-error",

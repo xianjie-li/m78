@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { Button } from "../button/index.js";
-import { IconClose } from "@m78/icons/icon-close.js";
+import { IconClose } from "@m78/icons/close.js";
 import { Spin } from "../spin/index.js";
 import { useFormState } from "@m78/hooks";
 
@@ -125,7 +125,7 @@ const _DialogBase = (props: DialogProps) => {
     const cont = isFunction(content) ? content(closeHandle) : content;
     const _footer = isFunction(footer) ? footer(closeHandle) : footer;
     const _header = isFunction(header) ? header(closeHandle) : header;
-    const statusIcon = statusIconMap[status!];
+    const StatusIcon = statusIconMap[status!];
 
     return (
       <>
@@ -142,7 +142,11 @@ const _DialogBase = (props: DialogProps) => {
         >
           {_header || (
             <span>
-              {statusIcon && <span className="mr-4 vm">{statusIcon}</span>}
+              {StatusIcon && (
+                <span className="mr-4 vm fs-md">
+                  {<StatusIcon size="1.8em" />}
+                </span>
+              )}
               <span className="vm">
                 {title || (
                   <Translation ns={[DIALOG_NS]}>

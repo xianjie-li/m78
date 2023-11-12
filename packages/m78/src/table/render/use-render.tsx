@@ -2,8 +2,8 @@ import clsx from "clsx";
 import { _Toolbar } from "../toolbar/toolbar.js";
 import ReactDom from "react-dom";
 import { Result } from "../../result/index.js";
-import { Size } from "../../common/index.js";
-import { IconDrafts } from "@m78/icons/icon-drafts.js";
+import { IllustrationEmpty1, Size } from "../../common/index.js";
+import { IconFolderOpen } from "@m78/icons/folder-open.js";
 import { _CustomRender } from "./use-custom-render.js";
 import { _CustomEditRender } from "./use-edit-render.js";
 import { Scroll } from "../../scroll/index.js";
@@ -49,7 +49,7 @@ export function _useRender() {
                   {(t) => (
                     <Result
                       size={Size.small}
-                      icon={<IconDrafts className="color-disabled" />}
+                      icon={<IllustrationEmpty1 height={120} />}
                       title={t("empty")}
                     />
                   )}

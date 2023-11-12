@@ -3,7 +3,7 @@ import { _ScrollContext, ScrollPullDownAnimateValues } from "./types.js";
 import { preventTopPull } from "./prevent-top-pull.js";
 import { useDrag } from "@use-gesture/react";
 import { animated, useSpring } from "react-spring";
-import { IconAutorenew } from "@m78/icons/icon-autorenew.js";
+import { IconRefresh } from "@m78/icons/refresh.js";
 import { _PULL_DOWN_SWIPE_RATIO, _PULL_DOWN_TRIGGER_RATIO } from "./common.js";
 import { Column } from "../layout/index.js";
 import clsx from "clsx";
@@ -177,7 +177,7 @@ export const _usePullActions = (ctx: _ScrollContext) => {
 
   /** 渲染下拉图标 */
   function renderPullDownIndicator() {
-    if (!props.pullDownIndicator) return <IconAutorenew />;
+    if (!props.pullDownIndicator) return <IconRefresh />;
 
     return isFunction(props.pullDownIndicator)
       ? props.pullDownIndicator(customerValues)

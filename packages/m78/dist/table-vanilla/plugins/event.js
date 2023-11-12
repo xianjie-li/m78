@@ -73,7 +73,7 @@ import debounce from "lodash/debounce.js";
 }(TablePlugin);
 export var TableFeedback;
 (function(TableFeedback) {
-    TableFeedback[/** 内容移除的单元格 */ "overflow"] = "overflow";
+    TableFeedback[/** 内容溢出 */ "overflow"] = "overflow";
     TableFeedback[/** 错误 */ "error"] = "error";
     TableFeedback[/** 禁用项 */ "disable"] = "disable";
     TableFeedback[/** 常规提醒 */ "regular"] = "regular";

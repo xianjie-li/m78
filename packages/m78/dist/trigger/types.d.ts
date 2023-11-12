@@ -5,7 +5,7 @@ import { _eventImpl } from "./event.js";
  *
  * 相同的目标只能存在一个, BoundSize类型的target, 即使所有属性完全相同也会被视为不同的target
  * */
-export declare type TriggerTarget = TriggerTargetMeta | HTMLElement | BoundSize;
+export type TriggerTarget = TriggerTargetMeta | HTMLElement | BoundSize;
 /**
  * 包含额外信息的触发目标
  * */
@@ -67,8 +67,8 @@ export declare enum TriggerType {
     /** 目标拖动 */
     drag = "drag"
 }
-export declare type TriggerTypeKeys = keyof typeof TriggerType;
-export declare type TriggerTypeUnion = TriggerTypeKeys | TriggerType;
+export type TriggerTypeKeys = keyof typeof TriggerType;
+export type TriggerTypeUnion = TriggerTypeKeys | TriggerType;
 export interface TriggerInstance {
     /** (可写) | 事件类型 */
     type: TriggerType | TriggerType[];
@@ -105,7 +105,7 @@ export interface TriggerInstance {
     /** 事件订阅*/
     event: CustomEvent<TriggerListener>;
 }
-export declare type TriggerListener = (e: TriggerEvent) => void;
+export type TriggerListener = (e: TriggerEvent) => void;
 /** 事件对象, 特定属性仅在其指定的事件类型中生效, 其他时候会是它们的初始值 */
 export interface TriggerEvent {
     /** 事件类型 */

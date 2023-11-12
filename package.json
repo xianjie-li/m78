@@ -11,6 +11,6 @@
   "devDependencies": {
     "@m78/build-tools": "workspace:^",
     "@parcel/transformer-sass": "2.7.0",
-    "typescript": "^4.8.3"
+    "typescript": "^5.2.2"
   }
 }

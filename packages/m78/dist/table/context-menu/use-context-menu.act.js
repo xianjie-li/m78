@@ -6,8 +6,7 @@ import { useFn, useSelf } from "@m78/hooks";
 import { Trigger, TriggerType } from "../../trigger/index.js";
 import { _useCellMenu } from "./use-cell-menu.js";
 import { _injector } from "../table.js";
-import { _useStateAct } from "../state.act.js";
-import { _useMethodsAct } from "../methods.act.js";
+import { _useMethodsAct } from "../injector/methods.act.js";
 export var _useContextMenuAct = function() {
     var renderTrigger = function renderTrigger(child) {
         return /*#__PURE__*/ _jsx(Trigger, {
@@ -16,8 +15,6 @@ export var _useContextMenuAct = function() {
             children: child
         });
     };
-    var state = _injector.useDeps(_useStateAct).state;
-    var instance = state.instance;
     var methods = _injector.useDeps(_useMethodsAct);
     var ref = useRef(null);
     var self = useSelf({

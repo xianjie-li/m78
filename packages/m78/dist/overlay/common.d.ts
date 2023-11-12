@@ -35,7 +35,7 @@ export declare function isBound(a: any): a is BoundSize;
 export declare function _calcAlignment(alignment: TupleNumber, size: TupleNumber): number[];
 /** 当要为其他上层组件创建api时, 通过此函数来剔除不必要的props */
 export declare function getOverlayApiProps(props: OverlayProps): OverlayRenderOption;
-declare type SameConfig = Parameters<typeof useSame>[1];
+type SameConfig = Parameters<typeof useSame>[1];
 /**
  * 所有弹层类组件共享的useSame包装, 用于统一mask显示
  * */

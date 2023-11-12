@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { isValidElement, useMemo } from "react";
 import {
   Overlay,
   OverlayCustomMeta,
@@ -70,7 +70,7 @@ const _Bubble = (props: BubbleProps) => {
   }, [type, props.triggerType]);
 
   function render(meta: OverlayCustomMeta) {
-    const _icon = statusIconMap[status!] || icon;
+    const StatusIcon = statusIconMap[status!] || icon;
 
     const cont = isFunction(props.content)
       ? props.content(meta)
@@ -79,7 +79,11 @@ const _Bubble = (props: BubbleProps) => {
     if (type === BubbleType.tooltip)
       return (
         <>
-          {_icon && <span className="mr-4 vm">{_icon}</span>}
+          {StatusIcon && (
+            <span className="mr-4 vm">
+              {isValidElement(StatusIcon) ? StatusIcon : <StatusIcon />}
+            </span>
+          )}
           <span className="vm">{cont}</span>
         </>
       );
@@ -88,7 +92,11 @@ const _Bubble = (props: BubbleProps) => {
       return (
         <div>
           <Row crossAlign="start">
-            {_icon && <span className="mr-8 fs-20">{_icon}</span>}
+            {StatusIcon && (
+              <span className="mr-8 fs-20">
+                {isValidElement(StatusIcon) ? StatusIcon : <StatusIcon />}
+              </span>
+            )}
             {cont}
           </Row>
           <Row className="m78-bubble_confirm-btn" mainAlign="end">
@@ -120,7 +128,11 @@ const _Bubble = (props: BubbleProps) => {
       <>
         {title && (
           <div className="m78-bubble_title">
-            {_icon && <span className="mr-4">{_icon}</span>}
+            {StatusIcon && (
+              <span className="mr-4 fs-md">
+                {isValidElement(StatusIcon) ? StatusIcon : <StatusIcon />}
+              </span>
+            )}
             {title}
           </div>
         )}

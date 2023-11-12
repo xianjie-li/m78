@@ -10,7 +10,7 @@ title: useEffectEqual
 
 ## 示例
 
-<demo demo={require("./useEffectEqual.demo.tsx")} code={require("!!raw-loader!./useEffectEqual.demo.tsx")}></demo>
+<Demo demo={require("./useEffectEqual.demo.tsx")} code={require("!!raw-loader!./useEffectEqual.demo.tsx")}></Demo>
 
 ## API
 

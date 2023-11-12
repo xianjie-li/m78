@@ -13,6 +13,7 @@ import {
 } from "../../src/index.js";
 import { RCTableInstance } from "../../src/table/types.js";
 import { tableInputAdaptor } from "../../src/table/form-widgets/table-input.js";
+import { updateDefaultConfig } from "@m78/icons/runtime";
 
 const columns = Array.from({ length: 40 }).map((_, j) => {
   const c: any = {
@@ -251,6 +252,11 @@ const TableFullExample = () => {
               <form.Field label="查询3" name="filter3" element={<Input />} />
             </Spacer>
           );
+        }}
+        dataOperations={{
+          add: true,
+          delete: true,
+          edit: true,
         }}
       ></Table>
 

@@ -8,7 +8,7 @@ title: useUpdateEffect
 
 ## 示例
 
-<demo demo={require("./useUpdateEffect.demo.tsx")} code={require("!!raw-loader!./useUpdateEffect.demo.tsx")}></demo>
+<Demo demo={require("./useUpdateEffect.demo.tsx")} code={require("!!raw-loader!./useUpdateEffect.demo.tsx")}></Demo>
 
 ## API
 

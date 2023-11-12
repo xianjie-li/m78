@@ -16,7 +16,7 @@ group:
 
 最简单的使用方式，绑定`containerRef`和`wrapRef`并正确设置容器高度
 
-<demo demo={require("./useVirtualList.demo.tsx")} code={require("!!raw-loader!./useVirtualList.demo.tsx")}></demo>
+<Demo demo={require("./useVirtualList.demo.tsx")} code={require("!!raw-loader!./useVirtualList.demo.tsx")}></Demo>
 
 > 可以为`containerRef`设置`maxHeight`，并明确为 useHook 传入 height 来实现最大高度效果
 
@@ -24,13 +24,13 @@ group:
 
 动态获取项高度(出于性能考虑，尺寸只在 list 变更时统一获取一次)
 
-<demo demo={require("./useVirtualList.dynamic.demo.tsx")} code={require("!!raw-loader!./useVirtualList.dynamic.demo.tsx")}></demo>
+<Demo demo={require("./useVirtualList.dynamic.demo.tsx")} code={require("!!raw-loader!./useVirtualList.dynamic.demo.tsx")}></Demo>
 
 ## 滚动占位节点
 
 使用滚动占位节点来延迟加载列表项，建议在列表项渲染非常耗费性能时使用
 
-<demo demo={require("./useVirtualList.scrolling.demo.tsx")} code={require("!!raw-loader!./useVirtualList.scrolling.demo.tsx")}></demo>
+<Demo demo={require("./useVirtualList.scrolling.demo.tsx")} code={require("!!raw-loader!./useVirtualList.scrolling.demo.tsx")}></Demo>
 
 ## keepAlive
 
@@ -40,20 +40,20 @@ group:
 
 第 2、6、299999 项不会被卸载
 
-<demo demo={require("./useVirtualList.keepAlive.demo.tsx")} code={require("!!raw-loader!./useVirtualList.keepAlive.demo.tsx")}></demo>
+<Demo demo={require("./useVirtualList.keepAlive.demo.tsx")} code={require("!!raw-loader!./useVirtualList.keepAlive.demo.tsx")}></Demo>
 
 ## 动画
 
 仅作为动画实现可能的演示
 
-<demo demo={require("./useVirtualList.anime.demo.tsx")} code={require("!!raw-loader!./useVirtualList.anime.demo.tsx")}></demo>
+<Demo demo={require("./useVirtualList.anime.demo.tsx")} code={require("!!raw-loader!./useVirtualList.anime.demo.tsx")}></Demo>
 
 ## 放置额外节点
 
 当需要在列表上下方放置额外节点时使用
 
 <code src="./useVirtualList.plh.demo.tsx"></code>
-<demo demo={require("./useVirtualList.plh.demo.tsx")} code={require("!!raw-loader!./useVirtualList.plh.demo.tsx")}></demo>
+<Demo demo={require("./useVirtualList.plh.demo.tsx")} code={require("!!raw-loader!./useVirtualList.plh.demo.tsx")}></Demo>
 
 ## API
 

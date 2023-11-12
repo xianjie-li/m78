@@ -1,7 +1,7 @@
 import React from "react";
 import { Spacer, Tile, Button } from "m78";
-import { IconMapsHomeWork } from "@m78/icons/icon-maps-home-work";
-import { IconKeyboardArrowRight } from "@m78/icons/icon-keyboard-arrow-right";
+import { IconHome } from "@m78/icons/home";
+import { IconArrowRight } from "@m78/icons/arrow-right.js";
 
 const labelSty: React.CSSProperties = {
   minWidth: "3em",
@@ -136,10 +136,10 @@ const TileDemo = () => {
             />
           </div>
         }
-        leading={<IconMapsHomeWork className="fs-lg" />}
+        leading={<IconHome className="fs-lg" />}
         trailing={
           <Button icon size="small">
-            <IconKeyboardArrowRight />
+            <IconArrowRight />
           </Button>
         }
       />

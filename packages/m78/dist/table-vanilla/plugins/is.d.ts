@@ -38,7 +38,10 @@ export interface TableIs {
     isCellVisible(rowKey: TableKey, columnKey: TableKey, partial?: boolean): boolean;
     /** 表格是否聚焦, checkChildren为true时会检测子级是否聚焦 */
     isFocus(checkChildren?: boolean): boolean;
-    /** 表格是否处于活动状态, 即: 最近进行过点击, hover, 滚动等, 在某些弹出层打开时, 可以手动设置false来禁用表格的一些快捷键操作, 但务必在其关闭后重新设为true */
+    /**
+     * 表格是否处于活动状态, 即: 最近进行过点击, hover, 滚动等, 在某些弹出层打开时
+     * - 在某些场景下, 比如开启了自定义弹出层, 可以手动设置false来禁用表格的一些快捷键操作, 但务必在其关闭后重新设为true
+     * */
     isActive(is?: boolean): boolean;
     /** 指定key的数据是否存在 */
     isRowExist(key: TableKey): boolean;

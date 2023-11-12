@@ -3,7 +3,7 @@ import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
 import _object_without_properties from "@swc/helpers/src/_object_without_properties.mjs";
 import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
-import React, { useMemo } from "react";
+import React, { isValidElement, useMemo } from "react";
 import { Overlay, OverlayDirection } from "../overlay/index.js";
 import { Size, statusIconMap, Z_INDEX_MESSAGE } from "../common/index.js";
 import clsx from "clsx";
@@ -25,13 +25,13 @@ var defaultProps = {
 };
 var _Bubble = function(props) {
     var render = function render(meta) {
-        var _icon = statusIconMap[status] || icon;
+        var StatusIcon = statusIconMap[status] || icon;
         var cont = isFunction(props.content) ? props.content(meta) : props.content;
         if (type === BubbleType.tooltip) return /*#__PURE__*/ _jsxs(_Fragment, {
             children: [
-                _icon && /*#__PURE__*/ _jsx("span", {
+                StatusIcon && /*#__PURE__*/ _jsx("span", {
                     className: "mr-4 vm",
-                    children: _icon
+                    children: /*#__PURE__*/ isValidElement(StatusIcon) ? StatusIcon : /*#__PURE__*/ _jsx(StatusIcon, {})
                 }),
                 /*#__PURE__*/ _jsx("span", {
                     className: "vm",
@@ -45,9 +45,9 @@ var _Bubble = function(props) {
                     /*#__PURE__*/ _jsxs(Row, {
                         crossAlign: "start",
                         children: [
-                            _icon && /*#__PURE__*/ _jsx("span", {
+                            StatusIcon && /*#__PURE__*/ _jsx("span", {
                                 className: "mr-8 fs-20",
-                                children: _icon
+                                children: /*#__PURE__*/ isValidElement(StatusIcon) ? StatusIcon : /*#__PURE__*/ _jsx(StatusIcon, {})
                             }),
                             cont
                         ]
@@ -96,9 +96,9 @@ var _Bubble = function(props) {
                 title && /*#__PURE__*/ _jsxs("div", {
                     className: "m78-bubble_title",
                     children: [
-                        _icon && /*#__PURE__*/ _jsx("span", {
-                            className: "mr-4",
-                            children: _icon
+                        StatusIcon && /*#__PURE__*/ _jsx("span", {
+                            className: "mr-4 fs-md",
+                            children: /*#__PURE__*/ isValidElement(StatusIcon) ? StatusIcon : /*#__PURE__*/ _jsx(StatusIcon, {})
                         }),
                         title
                     ]

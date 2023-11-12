@@ -80,8 +80,6 @@ export default {
         "insert top": "在上方插入行",
         "insert bottom": "在下方插入行",
         "delete row": "删除行",
-        "delete rows": "删除选中行",
-        "edit by dialog": "在独立窗口中编辑行",
-        "conf changed": "配置已变更"
+        "delete rows": "删除选中行"
     }
 };

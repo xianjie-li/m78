@@ -14,9 +14,9 @@ import { DND } from "../dnd/index.js";
 import { Row } from "../layout/index.js";
 import clsx from "clsx";
 import { Button } from "../button/index.js";
-import { IconDeleteSweep } from "@m78/icons/icon-delete-sweep.js";
-import { IconDragIndicator } from "@m78/icons/icon-drag-indicator.js";
-import { IconAddCircleOutline } from "@m78/icons/icon-add-circle-outline.js";
+import { IconDeleteOne } from "@m78/icons/delete-one.js";
+import { IconDrag } from "@m78/icons/drag.js";
+import { IconAddOne } from "@m78/icons/add-one.js";
 import { _UseFieldMethods } from "./use-field-methods.js";
 import { FORM_NS, Translation } from "../i18n/index.js";
 import { EMPTY_LIST_NAME } from "./common.js";
@@ -144,7 +144,7 @@ export function _listLayoutRenderImpl(
                               args.remove(meta.index);
                             }}
                           >
-                            <IconDeleteSweep />
+                            <IconDeleteOne />
                           </Button>
                         )}
                       </Translation>
@@ -157,7 +157,7 @@ export function _listLayoutRenderImpl(
                             title={t("drag sort") as string}
                             innerRef={handleRef}
                           >
-                            <IconDragIndicator />
+                            <IconDrag />
                           </Button>
                         )}
                       </Translation>
@@ -182,7 +182,7 @@ export function _listLayoutRenderImpl(
             size={methods.getProps("size")}
           >
             <Translation ns={[FORM_NS]}>{(t) => t("add item")}</Translation>
-            <IconAddCircleOutline />
+            <IconAddOne />
           </Button>
         </div>
       </div>

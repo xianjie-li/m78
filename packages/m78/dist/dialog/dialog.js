@@ -7,7 +7,7 @@ import _ts_generator from "@swc/helpers/src/_ts_generator.mjs";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import React, { useState } from "react";
 import { Button } from "../button/index.js";
-import { IconClose } from "@m78/icons/icon-close.js";
+import { IconClose } from "@m78/icons/close.js";
 import { Spin } from "../spin/index.js";
 import { useFormState } from "@m78/hooks";
 import cls from "clsx";
@@ -63,7 +63,7 @@ var _DialogBase = function(props) {
         var cont = isFunction(content) ? content(closeHandle) : content;
         var _footer = isFunction(footer) ? footer(closeHandle) : footer;
         var _header = isFunction(header) ? header(closeHandle) : header;
-        var statusIcon = statusIconMap[status];
+        var StatusIcon = statusIconMap[status];
         return /*#__PURE__*/ _jsxs(_Fragment, {
             children: [
                 draggable && /*#__PURE__*/ _jsx(OverlayDragHandle, {
@@ -77,9 +77,11 @@ var _DialogBase = function(props) {
                     className: cls("m78-dialog_title", headerProps === null || headerProps === void 0 ? void 0 : headerProps.className),
                     children: _header || /*#__PURE__*/ _jsxs("span", {
                         children: [
-                            statusIcon && /*#__PURE__*/ _jsx("span", {
-                                className: "mr-4 vm",
-                                children: statusIcon
+                            StatusIcon && /*#__PURE__*/ _jsx("span", {
+                                className: "mr-4 vm fs-md",
+                                children: /*#__PURE__*/ _jsx(StatusIcon, {
+                                    size: "1.8em"
+                                })
                             }),
                             /*#__PURE__*/ _jsx("span", {
                                 className: "vm",

@@ -30,7 +30,7 @@ export interface TableColumn {
 /**
  * 列配置
  */
-export declare type TableColumnConfig = TableColumnLeafConfig | TableColumnBranchConfig;
+export type TableColumnConfig = TableColumnLeafConfig | TableColumnBranchConfig;
 /** 包含子项的列配置, 用于生成合并表头 */
 export interface TableColumnBranchConfig {
     /** 表头文本 */

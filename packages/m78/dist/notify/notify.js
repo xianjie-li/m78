@@ -5,7 +5,7 @@ import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import React, { useMemo } from "react";
 import { MASK_NAMESPACE, Size, Status, statusIconMap } from "../common/index.js";
-import { IconClose } from "@m78/icons/icon-close.js";
+import { IconClose } from "@m78/icons/close.js";
 import { Spin } from "../spin/index.js";
 import { isArray, isFunction, pick } from "@m78/utils";
 import createRenderApi from "@m78/render-api";
@@ -55,7 +55,7 @@ var keys = Object.keys(NotifyPosition);
                 children: customer(props)
             });
         }
-        var statusIcon = statusIconMap[status];
+        var StatusIcon = statusIconMap[status];
         return /*#__PURE__*/ _jsxs("div", {
             ref: ref1,
             className: "m78-notify_item-main m78-notify_normal",
@@ -66,9 +66,9 @@ var keys = Object.keys(NotifyPosition);
                     inline: true,
                     size: Size.small
                 }),
-                statusIcon && /*#__PURE__*/ _jsx("div", {
+                StatusIcon && /*#__PURE__*/ _jsx("div", {
                     className: "m78-notify_normal_leading",
-                    children: statusIcon
+                    children: /*#__PURE__*/ _jsx(StatusIcon, {})
                 }),
                 /*#__PURE__*/ _jsxs("div", {
                     className: "m78-notify_normal_cont",

@@ -2,8 +2,8 @@ import _object_spread from "@swc/helpers/src/_object_spread.mjs";
 import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Button } from "../button/index.js";
-import { IconRemove } from "@m78/icons/icon-remove.js";
-import { IconAdd } from "@m78/icons/icon-add.js";
+import { IconMinus } from "@m78/icons/minus.js";
+import { IconPlus } from "@m78/icons/plus.js";
 import React from "react";
 import { useDrag } from "@use-gesture/react";
 import { isBoolean } from "@m78/utils";
@@ -63,7 +63,9 @@ export function _useStepper(ctx) {
                     return stepHandle(false);
                 }
             }, incBind()), {
-                children: /*#__PURE__*/ _jsx(IconRemove, {})
+                children: /*#__PURE__*/ _jsx(IconMinus, {
+                    size: "1em"
+                })
             })),
             /*#__PURE__*/ _jsx(Button, _object_spread_props(_object_spread({
                 squareIcon: true,
@@ -73,7 +75,9 @@ export function _useStepper(ctx) {
                     return stepHandle(true);
                 }
             }, subBind()), {
-                children: /*#__PURE__*/ _jsx(IconAdd, {})
+                children: /*#__PURE__*/ _jsx(IconPlus, {
+                    size: "1em"
+                })
             }))
         ]
     });

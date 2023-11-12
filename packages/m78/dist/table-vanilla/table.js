@@ -88,6 +88,7 @@ import { _TableFeedbackPlugin } from "./plugins/feedback.js";
         context: context,
         config: conf
     };
+    context.plugins = pluginConfig.plugins;
     setNamePathValue(instance, "__ctx", context);
     // 内置插件
     // 注意: 在实现上, 鉴于完整功能的复杂度, 内部插件之间并不是完全解耦的, 插件之间会互相访问状态/方法
@@ -122,13 +123,19 @@ import { _TableFeedbackPlugin } from "./plugins/feedback.js";
     ].map(function(Plugin) {
         return new Plugin(pluginConfig);
     });
-    var cusPlugins = conf.plugins.map(function(Plugin) {
-        return new Plugin(pluginConfig);
-    });
-    (_plugins = pluginConfig.plugins).push.apply(_plugins, _to_consumable_array(plugins).concat(_to_consumable_array(cusPlugins)));
+    (_plugins = pluginConfig.plugins).push.apply(_plugins, _to_consumable_array(plugins));
     // 用户插件
     var customPlugins = conf.plugins.map(function(Plugin) {
-        return new Plugin(pluginConfig);
+        // 传入的是插件实例时, 直接使用, 用于上层react组件扩展插件系统
+        if (typeof Plugin === "object") {
+            Plugin.table = pluginConfig.table;
+            Plugin.plugins = pluginConfig.plugins;
+            Plugin.context = pluginConfig.context;
+            Plugin.config = pluginConfig.config;
+            return Plugin;
+        } else {
+            return new Plugin(pluginConfig);
+        }
     });
     (_plugins1 = pluginConfig.plugins).push.apply(_plugins1, _to_consumable_array(customPlugins));
     /* # # # # # # # init # # # # # # # */ pluginConfig.plugins.forEach(function(plugin) {

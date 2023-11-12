@@ -45,7 +45,7 @@ export interface DNDPartialEvent<Data = any> {
     status?: DNDStatus;
 }
 /** 包含了放置点相关信息的完整事件对象 */
-export declare type DNDFullEvent<Data = any> = Required<DNDPartialEvent<Data>>;
+export type DNDFullEvent<Data = any> = Required<DNDPartialEvent<Data>>;
 /**
  * 放置的位置是否可用
  * */
@@ -66,7 +66,7 @@ export interface DNDEnableInfos extends DNDPosition {
     all: boolean;
 }
 /** 放置目标允许放置的位置 */
-declare type DNDMixAllowDrop = boolean | Partial<DNDPosition>;
+type DNDMixAllowDrop = boolean | Partial<DNDPosition>;
 export interface DNDProps<Data = any> {
     /** 绑定到该拖动/放置目标的数据，会在目标拖动、放置等操作中传递，通常是能表示该DND实例的唯一值(索引、id、数据对象等) */
     data: Data;
@@ -181,7 +181,7 @@ export interface _LevelContext {
     isDefault: boolean;
 }
 /** 表示已经过启用和触发检测, 待下一步处理的dnd放置节点 */
-export declare type _PendingItem = Omit<DNDRenderProps, "ref" | "handleRef"> & {
+export type _PendingItem = Omit<DNDRenderProps, "ref" | "handleRef"> & {
     dnd: _DNDMapEntry;
 };
 /** 在多个滚动帮助函数间共享 */

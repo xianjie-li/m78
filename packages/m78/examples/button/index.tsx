@@ -1,13 +1,14 @@
 import React from "react";
 import { Button } from "../../src/button";
-
-import { IconTag } from "@m78/icons/icon-tag";
-import { IconBeachAccess } from "@m78/icons/icon-beach-access";
-import { IconBrightness7 } from "@m78/icons/icon-brightness-7";
-import { IconCatchingPokemon } from "@m78/icons/icon-catching-pokemon";
-import { IconAcUnit } from "@m78/icons/icon-ac-unit";
-import { IconFaceRetouchingNatural } from "@m78/icons/icon-face-retouching-natural";
+import { IconLike } from "@m78/icons/like";
 import { delay } from "@m78/utils";
+
+const IconTag = IconLike;
+const IconBeachAccess = IconLike;
+const IconBrightness7 = IconLike;
+const IconCatchingPokemon = IconLike;
+const IconAcUnit = IconLike;
+const IconFaceRetouchingNatural = IconLike;
 
 export function ButtonExample() {
   return (

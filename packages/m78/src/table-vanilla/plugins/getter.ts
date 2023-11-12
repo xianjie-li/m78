@@ -33,6 +33,7 @@ import {
 import { TableMergeData } from "../types/context.js";
 import { _TableHidePlugin } from "./hide.js";
 import { Position } from "../../common/index.js";
+import { TableMutationEvent, TableMutationType } from "./mutation.js";
 
 export class _TableGetterPlugin extends TablePlugin implements TableGetter {
   hide: _TableHidePlugin;
@@ -58,6 +59,7 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
       "getCellKey",
       "getCellByStrKey",
       "getNearCell",
+      "getRowCells",
       "getKeyByRowIndex",
       "getKeyByColumnIndex",
       "getIndexByRowKey",
@@ -824,6 +826,12 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
     }
   }
 
+  getRowCells(rowKey: TableKey): TableCell[] {
+    return this.context.allColumnKeys.map((columnKey) => {
+      return this.getCell(rowKey, columnKey);
+    });
+  }
+
   /** 获取指定列左侧的距离 */
   getBeforeSizeX(index: number) {
     const { columns } = this.context;
@@ -1186,6 +1194,9 @@ export interface TableGetter {
     /** 过滤调无效单元格(返回false) */
     filter?: (cell: TableCell) => boolean;
   }): TableCell | void;
+
+  /** 获取指定行的所有单元格 */
+  getRowCells(rowKey: TableKey): TableCell[];
 
   /** 获取指定索引记录的key. 注意, 此处的索引为经过内部数据重铸后的索引, 并不是config.data中项的索引 */
   getKeyByRowIndex(ind: number): TableKey;

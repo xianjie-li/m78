@@ -1,7 +1,9 @@
 import React from "react";
 import { Button } from "../../src/index.js";
 import { Bubble, BubbleType } from "../../src/bubble/index.js";
-import { IconAlbum } from "@m78/icons/icon-album.js";
+import { IconLike } from "@m78/icons/like";
+
+const IconAlbum = IconLike;
 
 const BubbleExample = () => {
   return (

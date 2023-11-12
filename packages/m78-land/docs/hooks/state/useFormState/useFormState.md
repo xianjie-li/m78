@@ -11,7 +11,7 @@ group:
 
 ## 示例
 
-<demo demo={require("./useFormState.demo.tsx")} code={require("!!raw-loader!./useFormState.demo.tsx")}></demo>
+<Demo demo={require("./useFormState.demo.tsx")} code={require("!!raw-loader!./useFormState.demo.tsx")}></Demo>
 
 ## API
 

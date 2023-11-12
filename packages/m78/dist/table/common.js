@@ -1,4 +1,5 @@
 import { getNamePathValue, isReferenceType } from "@m78/utils";
+import { RCTablePlugin } from "./plugin.js";
 /** 需要忽略的table-vanilla配置 */ export var _tableOmitConfig = [
     "el",
     "emptyNode",
@@ -38,4 +39,19 @@ import { getNamePathValue, isReferenceType } from "@m78/utils";
 };
 /** 从table实例中获取tableContext */ export var _getTableCtx = function(instance) {
     return getNamePathValue(instance, "__ctx");
+};
+/** 由于plugin.rcRuntime等api必须与组件同步运行(包含hooks), 在初始化时将RCTablePlugin插件进行预先实例化 */ export var preInstantiationRCPlugin = function(plugins) {
+    var fakeConf = {
+        table: {},
+        plugins: [],
+        context: {},
+        config: {}
+    };
+    return plugins.map(function(p) {
+        // 若是RCTablePlugin的子类, 预先对其实例化
+        if (Object.getPrototypeOf(p.prototype) === RCTablePlugin.prototype) {
+            return new p(fakeConf);
+        }
+        return p;
+    });
 };

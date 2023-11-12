@@ -2,14 +2,14 @@ import React, { useRef, useState } from "react";
 import { TableCell } from "../../../table-vanilla/index.js";
 import { Button } from "../../../button/index.js";
 import { Size } from "../../../common/index.js";
-import { IconFilterAlt } from "@m78/icons/icon-filter-alt.js";
+import { IconFilter } from "@m78/icons/filter.js";
 import { Bubble, BubbleType } from "../../../bubble/index.js";
 import { OverlayDirection, OverlayInstance } from "../../../overlay/index.js";
 import { useFn } from "@m78/hooks";
 import clsx from "clsx";
 import { TABLE_NS, Translation } from "../../../i18n/index.js";
-import { IconSync } from "@m78/icons/icon-sync.js";
-import { IconManageSearch } from "@m78/icons/icon-manage-search.js";
+import { IconRefresh } from "@m78/icons/refresh.js";
+import { IconFind } from "@m78/icons/find.js";
 import { Trigger, TriggerEvent, TriggerType } from "../../../trigger/index.js";
 import { _injector } from "../../table.js";
 import { _FilterBtnCommon } from "./filter-render.js";
@@ -26,7 +26,7 @@ export function _ToolBarQueryBtn() {
         return form.submit();
       }}
     >
-      <IconManageSearch className="color-second fs-16" />
+      <IconFind className="fs-16" />
       <Translation ns={TABLE_NS}>{(t) => t("query")}</Translation>
     </Button>
   );
@@ -56,7 +56,7 @@ export function _ToolBarFilterBtn() {
               form.reset();
             }}
           >
-            <IconSync className="color-second" />
+            <IconRefresh />
           </Button>
         </Bubble>
       )}
@@ -85,8 +85,9 @@ export const _FilterBtn = React.memo(
             content={renderContent()}
             autoFocus
           >
-            <Button className="color-second" size={Size.small} squareIcon>
-              <IconFilterAlt
+            <Button size={Size.small} squareIcon>
+              <IconFilter
+                theme={state.changed ? "filled" : "outline"}
                 className={clsx("fs-12", state.changed && "color")}
               />
             </Button>
@@ -138,8 +139,9 @@ export function _ToolbarCommonFilterBtn() {
                 onTrigger={trigger}
               >
                 <Button squareIcon>
-                  <IconFilterAlt
-                    className={clsx("color-second", state.changed && "color")}
+                  <IconFilter
+                    theme={state.changed ? "filled" : "outline"}
+                    className={clsx(state.changed && "color")}
                   />
                 </Button>
               </Trigger>

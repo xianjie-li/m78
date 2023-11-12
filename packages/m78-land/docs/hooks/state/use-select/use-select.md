@@ -10,7 +10,7 @@ title: useSelect
 
 `useSelect(option)`会根据选项创建一个`SelectManager`实例并返回, 通过实例可以便捷的进行选中管理, 如: 选中值, 取消选中, 反选, 选中多个值, 获取选中状态等
 
-<demo demo={require("./use-select.demo.tsx")} code={require("!!raw-loader!./use-select.demo.tsx")}></demo>
+<Demo demo={require("./use-select.demo.tsx")} code={require("!!raw-loader!./use-select.demo.tsx")}></Demo>
 
 ## API
 

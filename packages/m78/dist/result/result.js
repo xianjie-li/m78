@@ -15,7 +15,7 @@ export var _Result = function(_param) {
         "size"
     ]);
     return /*#__PURE__*/ _jsxs("div", _object_spread_props(_object_spread({}, pp), {
-        className: clsx("m78-result", size && "__".concat(size), className),
+        className: clsx("m78 m78-result", size && "__".concat(size), className),
         children: [
             icon && /*#__PURE__*/ _jsx("div", {
                 className: "m78-result_icon",

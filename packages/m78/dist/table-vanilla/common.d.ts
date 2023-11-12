@@ -32,7 +32,7 @@ export declare function _getBoundByPoint(...pointers: TablePosition[]): BoundSiz
 /** 根据n个点获取可以组成最大矩形的两个点 */
 export declare function _getMaxPointByPoint(...pointers: TablePosition[]): TablePosition[];
 /** 用于在正在交互的节点符合条件时跳过table内部的选取/聚焦等事件, 返回true表示需要跳过内部事件 */
-declare type TableEventFilter = (target: HTMLElement) => void | boolean;
+type TableEventFilter = (target: HTMLElement) => void | boolean;
 /** 节点树包含这些className时应跳过事件 */
 export declare const _tableInterruptTriggerClassName: RegExp;
 /** 节点树包含这些类型的节点时应跳过事件 */

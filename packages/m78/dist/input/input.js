@@ -9,10 +9,10 @@ import { useDerivedStateFromProps, useFn, useFormState, useSelf, useUpdate } fro
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { dumpFn, ensureArray, isFunction, isString, keypressAndClick } from "@m78/utils";
 import clsx from "clsx";
-import { IconSearch } from "@m78/icons/icon-search.js";
-import { IconClear } from "@m78/icons/icon-clear.js";
-import { IconVisibility } from "@m78/icons/icon-visibility.js";
-import { IconVisibilityOff } from "@m78/icons/icon-visibility-off.js";
+import { IconSearch } from "@m78/icons/search.js";
+import { IconCloseSmall as IconClear } from "@m78/icons/close-small.js";
+import { IconPreviewOpen as IconVisibility } from "@m78/icons/preview-open.js";
+import { IconPreviewClose as IconVisibilityOff } from "@m78/icons/preview-close.js";
 import { Spin } from "../spin/index.js";
 import { Divider } from "../layout/index.js";
 import { _useTextAreaCalc } from "./use-text-area-calc.js";

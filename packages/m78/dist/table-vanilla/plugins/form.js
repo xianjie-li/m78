@@ -55,6 +55,8 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
         _this.addRecordMap = new Map();
         // 记录移除的数据
         _this.removeRecordMap = new Map();
+        // 记录移除的数据, 不进行 addRecordMap 的检测, 即 removeRecordMap 不会记录新增行的删除
+        _this.allRemoveRecordMap = new Map();
         // 记录发生或排序变更的项信息
         _this.sortRecordMap = new Map();
         _this.mutation = function(e) {
@@ -118,11 +120,9 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
                 e.add.forEach(function(d) {
                     var k = _this.table.getKeyByRowData(d);
                     if (!k) return;
+                    _this.allRemoveRecordMap.delete(k);
                     // 已经存在于删除列表中, 则不再计入新增列表
-                    if (_this.removeRecordMap.has(k)) {
-                        _this.removeRecordMap.delete(k);
-                        return;
-                    }
+                    if (_this.removeRecordMap.delete(k)) return;
                     _this.addRecordMap.set(k, true);
                 });
             }
@@ -130,11 +130,9 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
                 e.remove.forEach(function(d) {
                     var k = _this.table.getKeyByRowData(d);
                     if (!k) return;
+                    _this.allRemoveRecordMap.set(k, d);
                     // 已经存在于新增列表中, 则不再计入删除列表
-                    if (_this.addRecordMap.has(k)) {
-                        _this.addRecordMap.delete(k);
-                        return;
-                    }
+                    if (_this.addRecordMap.delete(k)) return;
                     _this.removeRecordMap.set(k, d);
                 });
             }
@@ -179,8 +177,6 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
         this.table.event.mutation.off(this.mutation);
         this.editStatus = [];
         this.editStatusMap = {};
-        this.addRecordMap = new Map();
-        this.removeRecordMap = new Map();
         this.reset();
         this.resetDataRecords();
         removeNode(this.wrapNode);
@@ -438,6 +434,7 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
     _proto.resetDataRecords = function resetDataRecords() {
         this.addRecordMap = new Map();
         this.removeRecordMap = new Map();
+        this.allRemoveRecordMap = new Map();
         this.sortRecordMap = new Map();
     };
     // 重置状态
@@ -556,7 +553,7 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
         var list = [];
         var rowErrorMap = {};
         Object.keys(this.errors).forEach(function(key) {
-            if (_this.removeRecordMap.has(key)) return false; // 删除行不显示
+            if (_this.allRemoveRecordMap.has(key)) return false; // 删除行不显示
             var rowErrors = _this.errors[key];
             if (rowErrors) {
                 if (rowErrors.length) {
@@ -594,7 +591,7 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
         var checkedMap = {};
         var list = keyList.filter(function(i) {
             if (checkedMap[i]) return false;
-            if (_this.removeRecordMap.has(i)) return false; // 删除行不显示
+            if (_this.allRemoveRecordMap.has(i)) return false; // 删除行不显示
             checkedMap[i] = true;
             return showRowsMap[i] && (errorMap[i] || _this.rowChanged[i]);
         }).map(function(key) {
@@ -623,6 +620,7 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
         Object.keys(this.cellChanged).forEach(function(key) {
             var cell = _this.cellChanged[key];
             if (!cell || !cell.isMount) return;
+            if (_this.allRemoveRecordMap.has(cell.row.key)) return;
             var pos = _this.table.getAttachPosition(cell);
             list.push(pos);
         });

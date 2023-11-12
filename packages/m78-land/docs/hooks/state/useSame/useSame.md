@@ -17,7 +17,7 @@ group:
 
 ## 示例
 
-<demo demo={require("./useSame.demo.tsx")} code={require("!!raw-loader!./useSame.demo.tsx")}></demo>
+<Demo demo={require("./useSame.demo.tsx")} code={require("!!raw-loader!./useSame.demo.tsx")}></Demo>
 
 ## API
 

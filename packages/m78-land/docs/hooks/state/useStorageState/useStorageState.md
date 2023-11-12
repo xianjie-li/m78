@@ -11,14 +11,13 @@ group:
 
 ## 示例
 
-<demo demo={require("./useStorageState.demo.tsx")} code={require("!!raw-loader!./useStorageState.demo.tsx")}></demo>
-
+<Demo demo={require("./useStorageState.demo.tsx")} code={require("!!raw-loader!./useStorageState.demo.tsx")}></Demo>
 
 ## useStorageSetState
 
 [useSetState](/hooks/state/use-set-state) 版本的 useStorageState, 除了包含缓存功能，其他完全一致
 
-<demo demo={require("./useStorageSetState.demo.tsx")} code={require("!!raw-loader!./useStorageSetState.demo.tsx")}></demo>
+<Demo demo={require("./useStorageSetState.demo.tsx")} code={require("!!raw-loader!./useStorageSetState.demo.tsx")}></Demo>
 
 > ⛔ 由于`Storage` API 的机制，基础类型之外的值无法进行存储(也不应该存储)
 
@@ -29,7 +28,7 @@ function useStorageState<T = undefined>(
   key: string,
   initState?: StateInitState<T>,
   options?: UseStorageStateOptions
-): [T, SetStateBase<T>]
+): [T, SetStateBase<T>];
 ```
 
 **相关接口**

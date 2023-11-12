@@ -22,5 +22,5 @@ export declare function _useMethods(ctx: _OverlayContext): {
     getDragInitXY: () => TupleNumber;
     getDragBound: () => _ClampBound;
 };
-export declare type _Methods = ReturnType<typeof _useMethods>;
+export type _Methods = ReturnType<typeof _useMethods>;
 //# sourceMappingURL=use-methods.d.ts.map

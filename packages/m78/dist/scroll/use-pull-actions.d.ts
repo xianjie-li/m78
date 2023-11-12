@@ -11,5 +11,5 @@ export declare const _usePullActions: (ctx: _ScrollContext) => {
     onPullDown: () => Promise<void>;
     onScroll: (meta: UseScrollMeta) => Promise<void>;
 };
-export declare type _UsePullActionsReturns = ReturnType<typeof _usePullActions>;
+export type _UsePullActionsReturns = ReturnType<typeof _usePullActions>;
 //# sourceMappingURL=use-pull-actions.d.ts.map

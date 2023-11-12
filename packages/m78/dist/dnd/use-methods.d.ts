@@ -5,5 +5,5 @@ export declare function _useMethods(ctx: _Context): {
     updateDNDMeta: () => void;
     throttleUpdateDNDMeta: () => void;
 };
-export declare type _UseMethodReturns = ReturnType<typeof _useMethods>;
+export type _UseMethodReturns = ReturnType<typeof _useMethods>;
 //# sourceMappingURL=use-methods.d.ts.map

@@ -22,19 +22,19 @@ title: Form - 表单
 
 ### schema 渲染
 
-<demo
+<Demo
   demo={require("./schema-base.tsx")}
   code={require("!!raw-loader!./schema-base.tsx")}
-></demo>
+></Demo>
 
 ### 手动渲染
 
 相比 schema 渲染, 手动渲染的优势是对布局/排版的绝对掌控, 可参考下方[布局/样式](/docs/components/form/form/#布局样式)部分深入了解一些定制配置
 
-<demo
+<Demo
   demo={require("./manual-base.tsx")}
   code={require("!!raw-loader!./manual-base.tsx")}
-></demo>
+></Demo>
 
 ## 表单控件
 
@@ -168,17 +168,17 @@ m78Config.set({
 
 ### schema render
 
-<demo
+<Demo
   demo={require("./schema-nest-base.tsx")}
   code={require("!!raw-loader!./schema-nest-base.tsx")}
-></demo>
+></Demo>
 
 ### 手动渲染
 
-<demo
+<Demo
   demo={require("./manual-nest-base.tsx")}
   code={require("!!raw-loader!./manual-nest-base.tsx")}
-></demo>
+></Demo>
 
 ## List
 
@@ -186,17 +186,17 @@ m78Config.set({
 
 ### schema render
 
-<demo
+<Demo
   demo={require("./schema-list-base.tsx")}
   code={require("!!raw-loader!./schema-list-base.tsx")}
-></demo>
+></Demo>
 
 ### 手动渲染
 
-<demo
+<Demo
   demo={require("./manual-list-base.tsx")}
   code={require("!!raw-loader!./manual-list-base.tsx")}
-></demo>
+></Demo>
 
 `layoutRender`包含了默认的 list 交互控件, 如新增/删除/排序等, 如果你需要完全定制交互, 可以改用`render`进行渲染, 它提供了所有 list 相关的渲染`api`且不预设任何样式
 
@@ -204,10 +204,10 @@ m78Config.set({
 
 通过 `dynamic` 搭配其他配置可以非常简单的完成表单控件之间的联动, 比如隐藏/禁用/更改验证器等
 
-<demo
+<Demo
   demo={require("./dynamic-base.tsx")}
   code={require("!!raw-loader!./dynamic-base.tsx")}
-></demo>
+></Demo>
 
 除了上面示例中的 `valid` 和 `validator` 外, 还有一些在动态 `schema` 中很有用的选项, 如:
 
@@ -278,10 +278,10 @@ function string({ value }) {
 
 ### 布局方向
 
-<demo
+<Demo
   demo={require("./schema-layout.tsx")}
   code={require("!!raw-loader!./schema-layout.tsx")}
-></demo>
+></Demo>
 
 ### 样式定制
 

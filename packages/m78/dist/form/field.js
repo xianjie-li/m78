@@ -8,7 +8,7 @@ import React, { isValidElement, useMemo, useRef } from "react";
 import { createRandString, ensureArray, getNamePathValue, isEmpty, isFunction, stringifyNamePath } from "@m78/utils";
 import { Lay } from "../lay/index.js";
 import { Bubble } from "../bubble/index.js";
-import { IconErrorOutline } from "@m78/icons/icon-error-outline.js";
+import { IconAttention } from "@m78/icons/attention.js";
 import clsx from "clsx";
 import { _useFieldMethods } from "./use-field-methods.js";
 import { _useFieldLifeCircle } from "./use-field-life-circle.js";
@@ -77,7 +77,7 @@ export function _fieldImpl(ctx) {
             if (!describe || !bubbleDescribe) return null;
             return /*#__PURE__*/ _jsx(Bubble, {
                 content: describe,
-                children: /*#__PURE__*/ _jsx(IconErrorOutline, {
+                children: /*#__PURE__*/ _jsx(IconAttention, {
                     className: "m78-form_describe-icon"
                 })
             });

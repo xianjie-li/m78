@@ -1,26 +1,26 @@
-import { IconLightbulb } from "@m78/icons/icon-lightbulb.js";
-import { IconContentPaste } from "@m78/icons/icon-content-paste.js";
-import { IconCopyAll } from "@m78/icons/icon-copy-all.js";
-import { IconTravelExplore } from "@m78/icons/icon-travel-explore.js";
-import { IconComputer } from "@m78/icons/icon-computer.js";
-import { IconInsertDriveFile } from "@m78/icons/icon-insert-drive-file.js";
-import { IconHistory } from "@m78/icons/icon-history.js";
-import { IconExitToApp } from "@m78/icons/icon-exit-to-app.js";
+import { IconTips } from "@m78/icons/tips.js";
+import { IconClipboard } from "@m78/icons/clipboard.js";
+import { IconCopy } from "@m78/icons/copy.js";
+import { IconFind } from "@m78/icons/find.js";
+import { IconTerminal } from "@m78/icons/terminal.js";
+import { IconHistoryQuery } from "@m78/icons/history-query.js";
+import { IconHistory } from "@m78/icons/history.js";
+import { IconLogout } from "@m78/icons/logout.js";
 import React from "react";
 import { Divider, MenuOption } from "m78";
 
 export const menuData: MenuOption[] = [
   {
     label: "显示上下文操作",
-    leading: <IconLightbulb />,
+    leading: <IconTips />,
   },
   {
     label: "粘贴",
-    leading: <IconContentPaste />,
+    leading: <IconClipboard />,
   },
   {
     label: "复制",
-    leading: <IconCopyAll />,
+    leading: <IconCopy />,
   },
   {
     customer: <Divider key="divider1" margin={8} />,
@@ -33,11 +33,11 @@ export const menuData: MenuOption[] = [
     children: [
       {
         label: "文件浏览器",
-        leading: <IconTravelExplore />,
+        leading: <IconFind />,
       },
       {
         label: "终端",
-        leading: <IconComputer />,
+        leading: <IconTerminal />,
       },
     ],
   },
@@ -46,7 +46,7 @@ export const menuData: MenuOption[] = [
   },
   {
     label: "本地历史",
-    leading: <IconInsertDriveFile />,
+    leading: <IconHistoryQuery />,
     children: [
       {
         label: "查看",
@@ -73,6 +73,6 @@ export const menuData: MenuOption[] = [
   },
   {
     label: "退出",
-    leading: <IconExitToApp />,
+    leading: <IconLogout />,
   },
 ];

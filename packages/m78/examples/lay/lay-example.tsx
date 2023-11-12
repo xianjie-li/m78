@@ -2,10 +2,12 @@ import React from "react";
 import { Lay, LayStyle } from "../../src/lay/index.js";
 import { Button, ButtonColor, Size, Status } from "../../src/index.js";
 import { Cell, Cells } from "../../src/layout/index.js";
-import { IconInfo } from "@m78/icons/icon-info.js";
-import { IconWarning } from "@m78/icons/icon-warning.js";
-import { IconError } from "@m78/icons/icon-error.js";
-import { IconPlaylistAddCheckCircle } from "@m78/icons/icon-playlist-add-check-circle.js";
+import { IconLike } from "@m78/icons/like";
+
+const IconInfo = IconLike;
+const IconWarning = IconLike;
+const IconError = IconLike;
+const IconPlaylistAddCheckCircle = IconLike;
 
 const LayExample = () => {
   return (

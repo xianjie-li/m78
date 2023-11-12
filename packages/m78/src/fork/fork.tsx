@@ -11,8 +11,12 @@ import { Button } from "../button/index.js";
 import { Spin } from "../spin/index.js";
 import { Result } from "../result/index.js";
 import { Lay } from "../lay/index.js";
-import { Size, Status, StatusIconError } from "../common/index.js";
-import { IconDrafts } from "@m78/icons/icon-drafts.js";
+import {
+  IllustrationEmpty1,
+  Size,
+  Status,
+  StatusIconError,
+} from "../common/index.js";
 import clsx from "clsx";
 import { COMMON_NS, FORK_NS, Translation } from "../i18n/index.js";
 
@@ -117,7 +121,7 @@ const _AsyncRender: React.FC<AsyncRenderProps> = ({
         customEmpty || (
           <Result
             size={Size.small}
-            icon={<IconDrafts className="color-disabled" />}
+            icon={<IllustrationEmpty1 height={120} />}
             desc={
               emptyText || (
                 <Translation ns={COMMON_NS}>{(t) => t("empty")}</Translation>

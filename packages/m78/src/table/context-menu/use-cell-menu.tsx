@@ -5,11 +5,11 @@ import { _injector } from "../table.js";
 import { _useStateAct } from "../injector/state.act.js";
 import { _TableContextMenuOpenOpt } from "./use-context-menu.act.js";
 import { MenuProps } from "../../menu/index.js";
-import { IconContentPaste } from "@m78/icons/icon-content-paste.js";
-import { IconCopyAll } from "@m78/icons/icon-copy-all.js";
-import { IconVerticalAlignTop } from "@m78/icons/icon-vertical-align-top.js";
-import { IconVerticalAlignBottom } from "@m78/icons/icon-vertical-align-bottom.js";
-import { IconDeleteForever } from "@m78/icons/icon-delete-forever.js";
+import { IconClipboard } from "@m78/icons/clipboard.js";
+import { IconCopy } from "@m78/icons/copy.js";
+import { IconToTop } from "@m78/icons/to-top.js";
+import { IconToBottom } from "@m78/icons/to-bottom.js";
+import { IconDeleteOne } from "@m78/icons/delete-one.js";
 import { COMMON_NS, TABLE_NS, useTranslation } from "../../i18n/index.js";
 import { isTruthyOrZero } from "@m78/utils";
 import { _useMethodsAct } from "../injector/methods.act.js";
@@ -79,7 +79,7 @@ export function _useCellMenu() {
       : [
           {
             label: hasMultipleSelected ? t("copy cells") : t("copy cell"),
-            leading: <IconCopyAll />,
+            leading: <IconCopy />,
             value: MenuValues.copy,
             context() {
               if (!hasMultipleSelected) {
@@ -92,7 +92,7 @@ export function _useCellMenu() {
           },
           {
             label: hasMultipleSelected ? t("paste cells") : t("paste cell"),
-            leading: <IconContentPaste />,
+            leading: <IconClipboard />,
             value: MenuValues.paste,
             context() {
               if (!hasMultipleSelected) {
@@ -111,7 +111,7 @@ export function _useCellMenu() {
       : [
           {
             label: t("insert top"),
-            leading: <IconVerticalAlignTop />,
+            leading: <IconToTop />,
             value: MenuValues.insertTop,
             context() {
               instance.addRow(methods.getDefaultNewData(), item.row.key, false);
@@ -119,7 +119,7 @@ export function _useCellMenu() {
           },
           {
             label: t("insert bottom"),
-            leading: <IconVerticalAlignBottom />,
+            leading: <IconToBottom />,
             value: MenuValues.insertBottom,
             context() {
               instance.addRow(methods.getDefaultNewData(), item.row.key, true);
@@ -144,7 +144,7 @@ export function _useCellMenu() {
             </span>
           ),
           value: MenuValues.delete,
-          leading: <IconDeleteForever className="color-error" />,
+          leading: <IconDeleteOne className="color-error" />,
           className: "color-error",
           async context() {
             try {

@@ -1,12 +1,7 @@
 import renderer from "react-test-renderer";
 import React from "react";
 import { Button } from "../button/index.js";
-import { IconTag } from "@m78/icons/icon-tag.js";
-import { IconBeachAccess } from "@m78/icons/icon-beach-access.js";
-import { IconBrightness7 } from "@m78/icons/icon-brightness-7.js";
-import { IconCatchingPokemon } from "@m78/icons/icon-catching-pokemon.js";
-import { IconAcUnit } from "@m78/icons/icon-ac-unit.js";
-import { IconFaceRetouchingNatural } from "@m78/icons/icon-face-retouching-natural.js";
+import { IconSaveOne as IconTag } from "@m78/icons/save-one.js";
 
 describe("Button", () => {
   test("base", () => {
@@ -207,16 +202,16 @@ describe("Button", () => {
             <IconTag />
           </Button>
           <Button color="red" icon>
-            <IconBeachAccess />
+            <IconTag />
           </Button>
           <Button color="green" icon disabled>
-            <IconBrightness7 />
+            <IconTag />
           </Button>
           <Button color="primary" icon>
-            <IconCatchingPokemon />
+            <IconTag />
           </Button>
           <Button color="orange" icon>
-            <IconAcUnit />
+            <IconTag />
           </Button>
           <Button color="red" icon>
             李
@@ -224,25 +219,25 @@ describe("Button", () => {
 
           <div className="mt-16">
             <Button color="green" icon size="small">
-              <IconBeachAccess />
+              <IconTag />
             </Button>
             <Button color="primary" icon>
-              <IconCatchingPokemon />
+              <IconTag />
             </Button>
             <Button color="red" icon size="large">
-              <IconFaceRetouchingNatural />
+              <IconTag />
             </Button>
           </div>
 
           <div className="mt-16">
             <Button color="green" icon outline size="small">
-              <IconBeachAccess />
+              <IconTag />
             </Button>
             <Button color="primary" outline icon>
-              <IconCatchingPokemon />
+              <IconTag />
             </Button>
             <Button color="red" icon outline size="large">
-              <IconFaceRetouchingNatural />
+              <IconTag />
             </Button>
           </div>
 
@@ -250,62 +245,62 @@ describe("Button", () => {
 
           <div className="mt-16">
             <Button color="green" squareIcon size="small">
-              <IconBeachAccess />
+              <IconTag />
             </Button>
             <Button squareIcon>
-              <IconBrightness7 />
+              <IconTag />
             </Button>
             <Button color="primary" squareIcon>
-              <IconCatchingPokemon />
+              <IconTag />
             </Button>
             <Button color="red" squareIcon size="large">
-              <IconFaceRetouchingNatural />
+              <IconTag />
             </Button>
           </div>
 
           <div className="mt-16">
             <Button color="green" squareIcon outline size="small">
-              <IconBeachAccess />
+              <IconTag />
             </Button>
             <Button squareIcon outline>
-              <IconBrightness7 />
+              <IconTag />
             </Button>
             <Button color="primary" squareIcon outline>
-              <IconCatchingPokemon />
+              <IconTag />
             </Button>
             <Button color="red" squareIcon outline size="large">
-              <IconFaceRetouchingNatural />
+              <IconTag />
             </Button>
           </div>
 
           <div className="mt-16">
             <div className="mb-16">文字图标混排</div>
             <Button>
-              <IconBeachAccess />
+              <IconTag />
               按钮
             </Button>
             <Button color="red">
-              <IconAcUnit />
+              <IconTag />
               按钮
             </Button>
             <Button color="green">
-              <IconBeachAccess />
+              <IconTag />
               按钮
             </Button>
             <Button color="primary">
-              <IconFaceRetouchingNatural />
+              <IconTag />
               按钮
             </Button>
             <Button color="orange">
-              <IconAcUnit />
+              <IconTag />
               按钮
             </Button>
             <Button color="primary">
-              <IconBrightness7 />
+              <IconTag />
               文本
               <IconTag />
               文本
-              <IconBrightness7 />
+              <IconTag />
             </Button>
           </div>
         </div>

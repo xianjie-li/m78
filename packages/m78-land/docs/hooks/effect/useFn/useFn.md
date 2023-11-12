@@ -10,7 +10,7 @@ title: useFn
 
 ## 示例
 
-<demo demo={require("./useFn.demo.tsx")} code={require("!!raw-loader!./useFn.demo.tsx")}></demo>
+<Demo demo={require("./useFn.demo.tsx")} code={require("!!raw-loader!./useFn.demo.tsx")}></Demo>
 
 ## API
 

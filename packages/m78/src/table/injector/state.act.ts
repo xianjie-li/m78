@@ -1,10 +1,20 @@
 import { useMemo, useRef } from "react";
 import { createEvent, useSelf, useSetState } from "@m78/hooks";
-import { _RCTableSelf, _RCTableState } from "../types.js";
+import {
+  _RCTableSelf,
+  _RCTableState,
+  TableDataOperationsConfig,
+} from "../types.js";
 import { _injector } from "../table.js";
 import { preInstantiationRCPlugin } from "../common.js";
-import { _builtinPlugins } from "../plugins/index.js";
 import { RCTablePlugin } from "../plugin.js";
+import { isBoolean, isFunction } from "@m78/utils";
+import { _FilterPlugin } from "../plugins/filter/filter.js";
+import { _FeedBackPlugin } from "../plugins/feedback/feedback.js";
+import { _RedoAndUndoPlugin } from "../plugins/redo-and-undo.js";
+import { _CountTextPlugin } from "../plugins/count-text.js";
+import { _XLSHandlePlugin } from "../plugins/xls-handle.js";
+import { _DataActionPlugin } from "../plugins/data-actions.js";
 
 export function _useStateAct() {
   const props = _injector.useProps();
@@ -27,11 +37,17 @@ export function _useStateAct() {
     overlayStackCount: 0,
   });
 
-  const plugins = useMemo(
-    () =>
-      preInstantiationRCPlugin([..._builtinPlugins, ...(props.plugins || [])!]),
-    []
-  );
+  const plugins = useMemo(() => {
+    return preInstantiationRCPlugin([
+      _FilterPlugin,
+      _FeedBackPlugin,
+      _RedoAndUndoPlugin,
+      _CountTextPlugin,
+      _XLSHandlePlugin,
+      _DataActionPlugin,
+      ...(props.plugins || [])!,
+    ]);
+  }, []);
 
   // 所有RCTablePlugin实例
   const rcPlugins = useMemo(() => {
@@ -54,6 +70,31 @@ export function _useStateAct() {
     });
   }, [getters]);
 
+  const dataOperations = useMemo(() => {
+    const conf: TableDataOperationsConfig = {
+      edit: false,
+      add: false,
+      delete: false,
+    };
+
+    const pConf = props.dataOperations;
+
+    if (!pConf) return conf;
+
+    if (isBoolean(pConf) && pConf) {
+      conf.edit = true;
+      conf.add = true;
+      conf.delete = true;
+      return conf;
+    }
+
+    conf.edit = isFunction(pConf.edit) ? pConf.edit : pConf.edit || false;
+    conf.add = pConf.add || false;
+    conf.delete = pConf.delete || false;
+
+    return conf;
+  }, [props.dataOperations]);
+
   return {
     self,
     state,
@@ -65,5 +106,6 @@ export function _useStateAct() {
     scrollEvent,
     plugins,
     rcPlugins,
+    dataOperations,
   };
 }

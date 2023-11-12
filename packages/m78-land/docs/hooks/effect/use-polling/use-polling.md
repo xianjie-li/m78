@@ -10,7 +10,7 @@ title: usePolling
 
 每 0.5s 触发一次, 每次触发间隔比上次多 1.1 倍, 最多触发 10 次
 
-<demo demo={require("./use-polling.demo.tsx")} code={require("!!raw-loader!./use-polling.demo.tsx")}></demo>
+<Demo demo={require("./use-polling.demo.tsx")} code={require("!!raw-loader!./use-polling.demo.tsx")}></Demo>
 
 ## API
 

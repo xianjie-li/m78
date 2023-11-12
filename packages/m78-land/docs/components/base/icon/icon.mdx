@@ -2,11 +2,15 @@
 title: Icon - 图标
 ---
 
-import IconDemo from "./_icon-demo.tsx";
+一套丰富的 svg 图标和插图, 可作为 react 组件使用, 并且完全按需导入!
 
-使用 [material-design-icons](https://github.com/google/material-design-icons) 作为底层图标库, 并且所有图标均已由`svg`转换为了`react`组件, 方便按需导入和使用.
+> 所有资源素材均来自开源项目 [iconpark](https://github.com/bytedance/iconpark), 完全开源且可商用 😻, 感谢开源团队的付出!
+
+> 如果你更偏好 [material icons](https://github.com/google/material-design-icons), 可以尝试下载 1.x 版本的 `@m78/icons`, 它提供了所有 material icons 的 react 组件版本
 
 ## 使用
+
+### 按需导入
 
 1. 图标库维护在单独的包中, 使用前请确保已安装
 
@@ -21,60 +25,78 @@ npm install @m78/icons
 2. 按需导入并使用
 
 ```tsx
-import { Icon4k } from "@m78/icons/icon-4k";
-import { Icon5k } from "@m78/icons/icon-5k";
-import { IconFace2 } from "@m78/icons/icon-face-2";
+import { IconConfig } from "@m78/icons/config.js";
+import { IconPic } from "@m78/icons/pic.js";
+import { IconSleep } from "@m78/icons/sleep.js";
 
 // jsx
-<Icon4k />
-<Icon5k />
-<IconFace2 />
+<IconConfig />
+<IconPic />
+<IconSleep />
+
+// 样式调整, 未配置颜色时, 颜色受当前组件上下文的字体颜色影响
+<IconSleep theme="multi-color" fill={["red", "blue", "pink", "orange"]} size="1.4em" />
 ```
 
-> 没有提供统一的出口, 因为图标总数约 2k+, 即使你的打包器支持 tree shake, 导入分析也会对你的智能编辑器造成巨大的负担, 严重影响开发体验.
+### 全量导入
 
-## 图标列表
+在某些特定场景, 比如本页面的图标选择器中, 需要一次性导入并使用所有图标, 可以使用以下导入项之一:
 
-<IconDemo />
-
-## 调整样式
-
-`icon`没有提供任何特别的配置项, 你可以通过[layout](/component/base/layout)中提供的原子类像对待一个常规 dom 节点一样对其进行定制
-
-```tsx | pure
-<Icon4k className="fs-24" />  // 控制大小
-<Icon4k className="color-red" />  // 控制颜色
+```tsx
+import AllIcon from "@m78/icons/runtime/all.js"; // 集成的Icon组件, 可通过名称访问所有icon <AllIcon type="config" />
+import * as icons from "@m78/icons/runtime/map.js"; // 一次性导入所有图标
+import iconsConfig from "@m78/icons/runtime/icons-config.json"; // 所有图标的配置信息, 包括分类, 关键词等
 ```
 
-另外, `icon` 包含了一段非常基础的控制样式, 如果你的项目中未依赖其他组件, 这段样式可能不会被自动注入, 需要手动添加到您的项目中.
+:::danger 标题
 
-```css
-.m78-icon {
-  display: inline-block;
-  // 实际使用中发现, 因为图标普遍小于文本, 并且细节比文本更多, 将其放大一定比例会更好, 否则基本每次使用都会单独再将其通过样式放大
-  width: 1.5em;
-  height: 1.5em;
-  fill: currentColor;
-  vertical-align: middle;
-  line-height: 1;
-}
+请注意, 因为图标总数约 2k+, 即使你的打包器支持 tree shake, 导入类型分析也会对你的编辑器/ide 造成巨大的负担, 并且在 vite 等基于 http 的开发工具中, 每个图标都会占用一个 http 模块请求, 严重影响开发体验.
+
+对于类型, 可以尝试使用 any 来主动跳过类型, 避免检查器负担过大.
+
+导入时, 建议使用异步组件或`import()`进行异步导入:
+
+组件用法:
+
+```tsx
+// 异步组件形式使用, 图标会被切分到单独的chunk, 并且仅在第一次使用到时加载资源.
+import React, { lazy } from "react";
+
+const AllIcon = lazy(
+  () => import("@m78/icons/runtime/all.js")
+) as any as React.Component;
+
+<AllIcon type="config" />;
 ```
 
-## 扩充图标
+资源导入方法:
 
-如果内置图标中缺少你想要的, 你可以随意添加任意来源的图标, 比如字体图标, svg 图标, 图片等, 但是为了和内置图标样式保持统一, 可以选择为它们添加`m78-icon`类名
-
-```js
-<span className="fr-xx-icon m78-icon" />
-<SvgIcon className="m78-icon" />
+```ts
+// 导入资源时, 使用import()
+import("@m78/icons/runtime/map.js").then((iconMap: any) => {
+  console.log(iconMap);
+});
 ```
 
-## 关于可访问性
+:::
+
+## 图标
+
+开发中, 目前请访问 [https://iconpark.oceanengine.com/official](https://iconpark.oceanengine.com/official) 查看所有图标, 后续会与 IconPicker 组件一同提供
+
+## 插图
+
+<Demo
+  demo={require("./illustration-list")}
+  code={require("!!raw-loader!./illustration-list.tsx")}
+/>
+
+## 可访问性
 
 通常图标用于装饰目的, 如果你要渲染一个具有语义的图标, 可以搭配`Button`组件使用
 
 ```tsx
 <Button aria-label="delete" icon>
-  <FilledDelete />
+  <IconDelete />
 </Button>
 ```

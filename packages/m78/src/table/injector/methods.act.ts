@@ -46,7 +46,7 @@ export function _useMethodsAct() {
       viewEl: scrollRef.current,
       viewContentEl: scrollContRef.current,
       emptyNode: state.emptyNode,
-      emptySize: 120,
+      emptySize: 180,
       eventCreator: createEvent,
       render: customRender.render,
       interactive: editRender.interactiveEnableChecker,

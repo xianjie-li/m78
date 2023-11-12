@@ -1,14 +1,16 @@
 import { MenuOption } from "../../src/menu/types.js";
 import { Divider } from "../../src/layout/index.js";
-import { IconLightbulb } from "@m78/icons/icon-lightbulb.js";
-import { IconContentPaste } from "@m78/icons/icon-content-paste.js";
-import { IconCopyAll } from "@m78/icons/icon-copy-all.js";
-import { IconTravelExplore } from "@m78/icons/icon-travel-explore.js";
-import { IconComputer } from "@m78/icons/icon-computer.js";
-import { IconInsertDriveFile } from "@m78/icons/icon-insert-drive-file.js";
-import { IconHistory } from "@m78/icons/icon-history.js";
-import { IconExitToApp } from "@m78/icons/icon-exit-to-app.js";
+import { IconLike } from "@m78/icons/like";
 import React from "react";
+
+const IconLightbulb = IconLike;
+const IconContentPaste = IconLike;
+const IconCopyAll = IconLike;
+const IconTravelExplore = IconLike;
+const IconComputer = IconLike;
+const IconInsertDriveFile = IconLike;
+const IconHistory = IconLike;
+const IconExitToApp = IconLike;
 
 export const menuData: MenuOption[] = [
   {

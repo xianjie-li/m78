@@ -11,7 +11,7 @@ group:
 
 ## 示例
 
-<demo demo={require("./useSetState.demo.tsx")} code={require("!!raw-loader!./useSetState.demo.tsx")}></demo>
+<Demo demo={require("./useSetState.demo.tsx")} code={require("!!raw-loader!./useSetState.demo.tsx")}></Demo>
 
 ## API
 

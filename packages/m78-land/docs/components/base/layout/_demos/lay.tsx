@@ -9,10 +9,10 @@ import {
   Status,
   ButtonColor,
 } from "m78";
-import { IconInfo } from "@m78/icons/icon-info.js";
-import { IconPlaylistAddCheckCircle } from "@m78/icons/icon-playlist-add-check-circle.js";
-import { IconWarning } from "@m78/icons/icon-warning.js";
-import { IconError } from "@m78/icons/icon-error.js";
+import { IconInfo } from "@m78/icons/info.js";
+import { IconChecklist } from "@m78/icons/checklist.js";
+import { IconAttention } from "@m78/icons/attention.js";
+import { IconError } from "@m78/icons/error.js";
 
 const LayExample = () => {
   return (
@@ -222,7 +222,6 @@ const LayExample = () => {
               active
             />
             <Lay
-              leading={<IconInfo className="color-blue" />}
               title="提示"
               desc="Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                   Alias atque beatae ducimus."
@@ -231,7 +230,6 @@ const LayExample = () => {
               status={Status.info}
             />
             <Lay
-              leading={<IconPlaylistAddCheckCircle className="color-success" />}
               title="成功"
               desc="Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                   Alias atque beatae ducimus."
@@ -240,14 +238,12 @@ const LayExample = () => {
               status={Status.success}
             />
             <Lay
-              leading={<IconWarning className="color-warning" />}
               title="警告"
               effect={false}
               crossAlign="start"
               status={Status.warning}
             />
             <Lay
-              leading={<IconError className="color-error" />}
               title="失败"
               desc="Lorem ipsum dolor sit amet, consectetur adipisicing elit."
               effect={false}

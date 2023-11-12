@@ -13,7 +13,10 @@ export const _Result = ({
   ...pp
 }: ResultProps) => {
   return (
-    <div {...pp} className={clsx("m78-result", size && `__${size}`, className)}>
+    <div
+      {...pp}
+      className={clsx("m78 m78-result", size && `__${size}`, className)}
+    >
       {icon && <div className="m78-result_icon">{icon}</div>}
       {title && <div className="m78-result_title">{title}</div>}
       {desc && <div className="m78-result_desc">{desc}</div>}

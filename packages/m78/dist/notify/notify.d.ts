@@ -13,7 +13,7 @@ export declare function notify(props: NotifyProps): JSX.Element;
 /** 创建api */
 export declare const _notify: import("@m78/render-api").RenderApiInstance<NotifyState, null>;
 /** 简单的loading实现 */
-export declare function _loading(content: React.ReactNode, opt?: LoadingOption): import("@m78/render-api").RenderApiComponentInstance<NotifyState, null>;
+export declare function _loading(content: React.ReactNode, opt?: LoadingOption): never;
 export declare const _quickers: {
     quicker: import("./types.js").NotifyQuicker;
     info: import("./types.js").NotifyQuicker;

@@ -2,14 +2,14 @@ import { COMMON_NS, TABLE_NS, Translation } from "../../i18n/index.js";
 import { Bubble, BubbleType } from "../../bubble/index.js";
 import { Button, ButtonColor } from "../../button/index.js";
 import { Size } from "../../common/index.js";
-import { IconSave } from "@m78/icons/icon-save.js";
+import { IconSaveOne } from "@m78/icons/save-one.js";
 import React, { useRef } from "react";
 import { useFn, useSetState } from "@m78/hooks";
 import { _injector } from "../table.js";
 import { _useStateAct } from "../injector/state.act.js";
 import { TableMutationType } from "../../table-vanilla/plugins/mutation.js";
-import { IconAddToPhotos } from "@m78/icons/icon-add-to-photos.js";
-import { IconDeleteForever } from "@m78/icons/icon-delete-forever.js";
+import { IconAdd } from "@m78/icons/add.js";
+import { IconDeleteOne } from "@m78/icons/delete-one.js";
 import { Trigger, TriggerEvent, TriggerType } from "../../trigger/index.js";
 import { OverlayInstance } from "../../overlay/index.js";
 import { _useMethodsAct } from "../injector/methods.act.js";
@@ -19,7 +19,17 @@ import { Divider } from "../../layout/index.js";
 
 export class _DataActionPlugin extends RCTablePlugin {
   toolbarTrailingCustomer(nodes: React.ReactNode[]) {
-    nodes.push(<DeleteBtn />, <Divider vertical />, <AddBtn />, <SaveBtn />);
+    const { dataOperations: conf } = this.getDeps(_useStateAct);
+
+    const newNodes: React.ReactNode[] = [];
+
+    if (conf.delete) newNodes.push(<DeleteBtn />);
+
+    if (conf.add) newNodes.push(<AddBtn />);
+
+    if (conf.delete || conf.add) newNodes.push(<SaveBtn />);
+
+    if (newNodes.length) nodes.push(<Divider vertical />, ...newNodes);
   }
 }
 
@@ -36,7 +46,7 @@ function AddBtn() {
     <Translation ns={TABLE_NS}>
       {(t) => (
         <Button size={Size.small} onClick={add}>
-          <IconAddToPhotos />
+          <IconAdd />
           {t("add row btn")}
         </Button>
       )}
@@ -160,7 +170,7 @@ function SaveBtn() {
             disabled={!state.changed}
             onClick={submit}
           >
-            <IconSave />
+            <IconSaveOne />
             {t("save btn")}
           </Button>
         </Bubble>
@@ -206,12 +216,8 @@ function DeleteBtn() {
             type={[TriggerType.active, TriggerType.click]}
             onTrigger={trigger}
           >
-            <Button
-              className="color-second"
-              squareIcon
-              disabled={state.selectedRows.length === 0}
-            >
-              <IconDeleteForever />
+            <Button squareIcon disabled={state.selectedRows.length === 0}>
+              <IconDeleteOne />
             </Button>
           </Trigger>
         </>

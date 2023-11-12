@@ -50,10 +50,12 @@ export var _createForm = function(config) {
         ctx.updatePropsEvent.emit();
     };
     // 重写setSchemas, 确保内部能在更新后获取到最新的
-    form.setSchemas = function(schema) {
-        conf.schemas = schema;
-        vForm.setSchemas(schema);
-    };
+    if (!form.setSchemas) {
+        form.setSchemas = function(schema) {
+            conf.schemas = schema;
+            vForm.setSchemas(schema);
+        };
+    }
     _fieldImpl(ctx);
     _listImpl(ctx);
     _schemaRenderImpl(ctx);

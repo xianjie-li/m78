@@ -42,7 +42,7 @@ export declare class _TableInteractiveCorePlugin extends TablePlugin {
     private isJustDoneExecuted;
 }
 /** 表示交互完成后要执行的操作 */
-export declare type TableInteractiveDone = (isSubmit: boolean) => void | Promise<void>;
+export type TableInteractiveDone = (isSubmit: boolean) => void | Promise<void>;
 /** 交互组件渲染参数 */
 export interface TableInteractiveRenderArg {
     /** 触发交互的单元格 */
