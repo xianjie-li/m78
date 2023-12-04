@@ -1,6 +1,6 @@
 import { Response } from "./response";
 
-/** 标准错误格式, 当收到请求但请求失败时，会包含response */
+/** Standard error format, which includes a response when a request is received but has error */
 export class ResponseError extends Error {
   constructor(message: string, public response?: Response) {
     super(message);

@@ -5,11 +5,11 @@ import qs from "query-string";
 
 export interface FetchOptions<Ext = {}>
   extends Omit<RequestInit, "body" | "headers">,
-    BaseRequestOptions<Ext> {}
+    Omit<BaseRequestOptions<Ext>, "method"> {}
 
-/** fetch适配 */
+/** Fetch adapter */
 export function fetchAdapter(opt: FetchOptions) {
-  return fetch(`${opt.url}${qs.stringify(opt.query)}`, opt)
+  return fetch(`${opt.url}${qs.stringify(opt?.query || {})}`, opt)
     .then(async (res) => {
       const response = new Response();
 

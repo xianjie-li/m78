@@ -15,7 +15,12 @@ const request = createRequest<AxiosOptions>({
 
 export const Play = () => {
   function fetch1() {
-    request("http://127.0.0.1:3000/users")
+    request("http://127.0.0.1:3456/user", {
+      extraOption: {
+        format: (res) => res.data.data,
+      },
+      timeout: 8000,
+    })
       .then((res) => {
         console.log(res);
       })
@@ -26,8 +31,9 @@ export const Play = () => {
   }
 
   function fetch2() {
-    request("http://127.0.0.1:3000/timeout", {
+    request("http://127.0.0.1:3456/timeout", {
       extraOption: {},
+      // timeout: 200,
     })
       .then((res) => {
         console.log(res);

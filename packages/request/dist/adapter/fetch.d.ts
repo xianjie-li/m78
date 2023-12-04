@@ -1,7 +1,7 @@
 import { BaseRequestOptions } from "../interfaces";
 import { Response } from "../response";
-export interface FetchOptions<Ext = {}> extends Omit<RequestInit, "body" | "headers">, BaseRequestOptions<Ext> {
+export interface FetchOptions<Ext = {}> extends Omit<RequestInit, "body" | "headers">, Omit<BaseRequestOptions<Ext>, "method"> {
 }
-/** fetch适配 */
+/** Fetch adapter */
 export declare function fetchAdapter(opt: FetchOptions): Promise<Response<any>>;
 //# sourceMappingURL=fetch.d.ts.map

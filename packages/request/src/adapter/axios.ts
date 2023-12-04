@@ -7,7 +7,7 @@ import { omit } from "@m78/utils";
 
 export interface AxiosOptions<Ext = {}>
   extends Omit<AxiosRequestConfig, "url" | "data" | "headers">,
-    BaseRequestOptions<Options<AxiosOptions<Ext>> & Ext> {}
+    Omit<BaseRequestOptions<Options<AxiosOptions<Ext>> & Ext>, "method"> {}
 
 const responseProcess = (res: any) => {
   const response = new Response();
@@ -21,14 +21,14 @@ const responseProcess = (res: any) => {
   return response;
 };
 
-/** axios适配 */
+/** Axios adapter */
 export function axiosAdapter(opt: AxiosOptions) {
   return axios(opt.url, {
     ...omit(opt, ["body", "query"]),
     data: opt.body,
     params: opt.query,
   })
-    .then((res) => responseProcess(res))
+    .then(responseProcess)
     .catch((err) => {
       return Promise.reject(
         new ResponseError(

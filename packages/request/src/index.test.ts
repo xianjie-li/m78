@@ -1,7 +1,8 @@
 // @ts-ignore
 import { appRun } from "../mock/app-run";
 import { createRequest } from "./index";
-import { AxiosOptions, axiosAdapter } from "./adapter/axios";
+import { axiosAdapter, AxiosOptions } from "./adapter/axios";
+import { FeedbackMode } from "./interfaces.js";
 
 let server: any;
 
@@ -161,7 +162,7 @@ describe("axios", () => {
 
     await request(`${HOST}/echo`, {
       extraOption: {
-        useServeFeedBack: true,
+        feedbackMode: FeedbackMode.all,
       },
     });
 
@@ -175,8 +176,7 @@ describe("axios", () => {
 
     await request(`${HOST}/error`, {
       extraOption: {
-        useServeFeedBack: true,
-        quiet: true,
+        feedbackMode: FeedbackMode.none,
       },
     }).catch(() => {});
 
@@ -188,7 +188,7 @@ describe("axios", () => {
         name: "lxj",
       },
       extraOption: {
-        plain: true,
+        format: (response) => response,
       },
     });
 
@@ -203,6 +203,40 @@ describe("axios", () => {
     });
 
     expect(feedbackFn.mock.calls[2][0]).toBe("OKK");
+  });
+
+  test("batch", async () => {
+    const request = createRequest<AxiosOptions>({
+      adapter: axiosAdapter,
+      checkStatus: (data) => data.code === 0,
+      messageField: "message",
+      format: (res) => res.data.data,
+    });
+
+    const tasks = Array.from({ length: 20 }).map(() => {
+      return request(`${HOST}/user`, {
+        extraOption: {
+          checkStatus: (data) => data.code === 0, // 取反
+          messageField: "message",
+          format: (response) => response.data.data,
+        },
+      });
+    });
+
+    const startTime = Date.now();
+
+    const res = await Promise.all(tasks);
+
+    const elapse = Date.now() - startTime;
+
+    res.forEach((i) => {
+      expect(i).toEqual({
+        name: "lxj",
+      });
+    });
+
+    // 耗时正常
+    expect(elapse).toBeLessThan(3000);
   });
 
   // 理论上, 只要上面测试通过, 插件功能绝对没问题

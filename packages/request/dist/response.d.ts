@@ -1,17 +1,19 @@
 import { AnyObject } from "@m78/utils";
 /**
- * 响应类, 用于抹平不同客户端返回之间的差异
+ * Response class, used to smooth out differences between returns from different clients
  * */
 export declare class Response<D = any> {
-    /** 响应消息, 通常是请求响应中与code对应的提示文本 */
+    /** Response message, which is usually the prompt text corresponding to code in the request response */
     message: string;
-    /** http状态码, 若为0, 通常意味着未与服务器正常建立连接, 错误是由于本地环境导致, 如网络/cors等 */
+    /** Http status code. If 0, it usually means that the connection with the server has not been established normally. The error is caused by the local environment, such as network / cors, etc. */
     code: number;
-    /** 响应数据 */
+    /** Response data */
     data: D | null;
-    /** 响应头 */
+    /** Response header */
     headers: AnyObject;
-    /** 原始响应对象 */
+    /** Original response object */
     original?: any;
+    /** Shallow cloning in current state */
+    clone(): Response<D>;
 }
 //# sourceMappingURL=response.d.ts.map

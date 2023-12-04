@@ -4,8 +4,8 @@ import _ts_generator from "@swc/helpers/src/_ts_generator.mjs";
 import { Response } from "../response";
 import { ResponseError } from "../response-error";
 import qs from "query-string";
-/** fetch适配 */ export function fetchAdapter(opt) {
-    return fetch("".concat(opt.url).concat(qs.stringify(opt.query)), opt).then(function() {
+/** Fetch adapter */ export function fetchAdapter(opt) {
+    return fetch("".concat(opt.url).concat(qs.stringify((opt === null || opt === void 0 ? void 0 : opt.query) || {})), opt).then(function() {
         var _ref = _async_to_generator(function(res) {
             var response, h, _tmp, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, _value, k, v, type;
             return _ts_generator(this, function(_state) {

@@ -1,9 +1,9 @@
-import { BaseRequestOptions, CreateOptions, Request } from "./interfaces";
+import { BaseRequestOptions, CreateOptions, Request } from "./interfaces.js";
 /**
- * 创建Request实例
- * <Opt> - 创建的request函数的配置参数类型
- * @param options - 配置
- * @return - Request实例
+ * Create request instance
+ * <Opt> - Request config type
+ * @param options - create options
+ * @return - request instance
  * */
 export declare const createRequest: <Opt extends BaseRequestOptions<{}>>(options: CreateOptions<Opt>) => Request<Opt>;
 export * from "./plugin";

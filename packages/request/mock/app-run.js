@@ -33,13 +33,15 @@ export function appRun() {
     app.get("/user", (req, res) => {
       const code = 0;
 
-      res.json({
-        code,
-        message: ERRORS[code],
-        data: {
-          name: "lxj",
-        },
-      });
+      setTimeout(() => {
+        res.json({
+          code,
+          message: ERRORS[code],
+          data: {
+            name: "lxj",
+          },
+        });
+      }, 2000);
     });
 
     app.get("/echo", (req, res) => {
@@ -96,6 +98,7 @@ export function appRun() {
 
     const server = app.listen(3456, () => {
       res(server);
+      console.log("server running on port 3456.");
     });
   });
 }

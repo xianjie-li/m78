@@ -1,59 +1,69 @@
 import { Plugin } from "./plugin";
 import { Response } from "./response";
 import { ResponseError } from "./response-error";
+import { AnyObject } from "@lxjx/utils";
+
+/** Feedback mode */
+export enum FeedbackMode {
+  /** Feedback on error */
+  error = "error",
+  /** No feedback */
+  all = "all",
+  /** Feedback on success/error */
+  none = "none",
+}
 
 /**
- * request配置必须遵循的一些字段名, 如果使用请求库与此接口不匹配, 需要在`fetchAdapter`中进行手动桥接
- * - <Ext> 如果指定，会用于扩展extraOption的类型, 当你想要自定义额外的配置时使用(比如你可以扩展extraOption.loading然后在start和finish中进行对应处理)
+ * Request configuration must follow the basic configuration, if it does not match, manual bridging is required in `fetchAdapter`
+ * - <Ext> If specified，which will be used to extend extraOption, use when you want to customize extra config
  * */
 export interface BaseRequestOptions<Ext = {}> {
-  /** 请求地址 */
+  /** Request address */
   url: string;
-  /** 请求体 */
+  /** Request body */
   body?: any;
-  /** 请求参数  */
-  query?: any;
-  /** 请求头, 默认请求类型为 application/json */
-  headers?: any;
-  /** 额外扩展配置 */
+  /** Convert to request search string   */
+  query?: AnyObject;
+  /** Request Headers, default `Content-Type` is application/json */
+  headers?: AnyObject;
+  /** Default: GET | Request method, like GET/POST/PUT */
+  method?: string;
+  /** Extra options */
   extraOption?: {
-    /** 为true时即使返回服务器状态码正确依然会以服务器返回的消息(根据messageField配置项确定)作为反馈提示 */
-    useServeFeedBack?: boolean;
-    /** 静默模式，无论正确与否不会有任何提示 */
-    quiet?: boolean;
-    /** 默认会返回经过format处理的结果，为true时返回原始的response */
-    plain?: boolean;
-    /** 自定义请求成功的提示, 会覆盖其他根据配置生成的提示消息 */
+    /** Default: error | Request Feedback Mode: error - feedback on error, none - no feedback, all - feedback on success/error */
+    feedbackMode?: FeedbackMode;
+    /** Custom success feedback message, default obtained through `opt.messageField` */
     successMessage?: string;
-    /** 传递其他自定义配置, 并在各种钩子和插件中访问 */
+    /** Pass other custom option and access them in hooks and plugins */
     [key: string]: any;
   } & Ext;
 }
 
 /**
- * 请求方法, 根据成功/失败来设置promise的状态
- * 错误分为两种:
- *  1. 常规错误。跨域，网络错误、请求链接等错误，根据配置的fetchAdapter会有所不同
- *  2. 服务器错误。状态码异常、checkStatus未通过等，此时Error对象会包含一个response字段，为服务器返回数据
+ * Request instance.
+ *
+ * There are tow types error:
+ *  1. Client error. like cross domain，network error etc. it will be different according fetchAdapter.
+ *  2. Server error. status code exception, checkStatus not pass etc. at this point, the Error object will contain a response field to return data to the server
  * */
 export interface Request<Opt> {
   <Data = any>(url: string, options?: Omit<Opt, "url">): Promise<Data>;
 }
 
-/** 基础配置，支持在createInstance和request(opt.extraOption)时配置，后者配置会覆盖前者 */
+/** base options，support createInstance and request(opt) both，request option has a higher priority */
 export interface Options<Opt> {
-  /** 接收服务器response，返回一个boolean值用于判定该次请求是否成功(状态码等在内部已处理，只需要关心服务器实际返回的data) */
+  /** Receives server response，return a boolean to determine whether the request was successful or not. (data has been processed by `option.format`) */
   checkStatus?(data: any): boolean;
 
-  /** 用来从服务端请求中提取提示文本的字段 */
+  /** Field to get server message */
   messageField?: string;
 
   /**
-   * 用于向用户提供反馈
-   * @param message - 反馈消息
-   * @param status - 反馈状态: true成功, false失败
-   * @param option - 请求配置
-   * @param response - 请求响应
+   * Used to provide feedback to user
+   * @param message - feedback message
+   * @param status - true: success, false: error
+   * @param option
+   * @param response
    * */
   feedBack?(
     message: string,
@@ -62,33 +72,45 @@ export interface Options<Opt> {
     response?: Response
   ): void;
 
-  /** 将response预格式化为自己想要的格式后返回, 会在所有插件执行完毕后执行  */
+  /** Convert response to actual need data, invoke after all plugin is called.  */
   format?(response: Response, option: Opt): any;
 
-  /** 请求开始 */
+  /** Request start */
   start?(option: Opt): any;
 
-  /** 请求结束, flag是start hook的返回值, 通常为从start中返回的loading等的关闭标识 */
+  /** Request finish, flag is returned by start hook, usually, it is the identifier for loading/close modal */
   finish?(option: Opt, flag?: any): void;
 
-  /** 请求失败 */
+  /** Request error */
   error?(resError: ResponseError, option: Opt): void;
 
-  /** 请求成功 */
+  /** Request success */
   success?(data: any, response: Response, option: Opt): void;
+
+  /**
+   * How to generate unique key by request options, use to batch and cache.
+   *
+   * By default, when `option.method` is GET/get, use `method + url + JSON.stringify(query) + JSON.stringify(headers)` as key.
+   *
+   * If return nothing, request will never be cached and batch.
+   * */
+  keyBuilder?(option: Opt): string | void;
+
+  /** Default: 200 | Batch process interval (ms), if multiple requests with the same key are issued within this time interval, these requests will be merged into a single request.  */
+  batchInterval?: number;
 }
 
-/** 创建request实例时的配置 */
+/** Request instance create options */
 export interface CreateOptions<Opt> extends Options<Opt> {
   /**
-   * 请求适配器, 收配置并返回promise的函数, 默认使用fetch进行请求
-   * - 配置包含BaseRequestOptions中的几个必要字段, 如果使用的请求库不符合这些字段名配置，需要手动抹平
-   * - 如果请求成功, 解析Response对象
-   * - 如果请求失败, 需要抛出ResponseError类型的错误
+   * Request adapter, receive request options and return a promise.
+   * - The configuration includes several necessary fields in BaseRequestOptions. If the request library used does not match the configuration of these field names, manual smoothing is required
+   * - If the request is successful, resolve the response object
+   * - If the request fails, an error of type ResponseError needs to be thrown
    * */
   adapter: (options: Opt) => Promise<Response>;
-  /** 传递给Request的默认配置，会在请求时深合并到请求配置中 */
+  /** Default configuration passed to request，will deep merge into request config */
   baseOptions?: Partial<Opt>;
-  /** 插件 */
+  /** plugins */
   plugins?: Array<typeof Plugin>;
 }

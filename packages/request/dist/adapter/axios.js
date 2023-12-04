@@ -13,16 +13,14 @@ var responseProcess = function(res) {
     response.original = res;
     return response;
 };
-/** axios适配 */ export function axiosAdapter(opt) {
+/** Axios adapter */ export function axiosAdapter(opt) {
     return axios(opt.url, _object_spread_props(_object_spread({}, omit(opt, [
         "body",
         "query"
     ])), {
         data: opt.body,
         params: opt.query
-    })).then(function(res) {
-        return responseProcess(res);
-    }).catch(function(err) {
+    })).then(responseProcess).catch(function(err) {
         return Promise.reject(new ResponseError("".concat(err.name, ": ").concat(err.message) || "", (err === null || err === void 0 ? void 0 : err.response) ? responseProcess(err.response) : undefined));
     });
 }
