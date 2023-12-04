@@ -192,9 +192,6 @@
   --m78-animate-fast: 0.1s;
 }
 
-//  切换内置样式的主题色, 需要搭配css-var.scss模块使用
-//  当使用react等的state库管理主题时，可以同时在html上设置data-theme-dark使其生效
-
 :root[data-mode=dark].m78, :root[data-mode=dark] .m78 {
   --m78-gray-1: #000000;
   --m78-gray-2: #1f1f1f;
