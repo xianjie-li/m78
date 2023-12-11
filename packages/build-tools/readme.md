@@ -2,14 +2,18 @@
 
 ## usage
 
-First, add `m78-build-tools` to your project, use your favorite package manager
+create a new project
 
-### auto inject config
+```shell
+mkdir my-app && cd my-app
+npx m78-build-tools init
+```
+
+### inject config to exist project
 
 generate config via cli, ⚠️ this operation will be overwritten same name file and change package.json
 
 ```shell
-npm init -y
 npx m78-build-tools init
 ```
 

@@ -5,14 +5,38 @@ import fse from "fs-extra";
 import { fileURLToPath } from "url";
 import commentJSON from "comment-json";
 import { setNamePathValue } from "@lxjx/utils";
+import { spawnSync } from "node:child_process";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export async function init() {
+  const curPkg = await fse.readJson(path.resolve(__dirname, "./package.json"));
+
   const usrPkgPath = path.resolve(process.cwd(), "./package.json");
 
-  let pkg = await readFile(usrPkgPath, "utf8");
+  let pkg;
+
+  try {
+    pkg = await readFile(usrPkgPath, "utf8");
+  } catch (e) {
+    if (e.code === "ENOENT") {
+      console.log("create package.json ...");
+
+      spawnSync("npm", ["init", "-y"], {
+        cwd: process.cwd(),
+      });
+
+      return init();
+    }
+
+    return;
+  }
+
+  if (!pkg) {
+    console.error(`${usrPkgPath} has invalid content.`);
+    return;
+  }
 
   pkg = JSON.parse(pkg);
 
@@ -44,6 +68,10 @@ export async function init() {
     directory: "dist",
     // pnpm特有, 用于将monorepo包定向到dist目录
     linkDirectory: true,
+  };
+
+  pkg.dependencies = {
+    [curPkg.name]: `^${curPkg.version}`,
   };
 
   await writeFile(usrPkgPath, JSON.stringify(pkg, null, 2));
