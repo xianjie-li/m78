@@ -31,6 +31,24 @@ const form = createForm({
           },
         ],
       },
+      {
+        label: "地址",
+        name: "address",
+        schema: [
+          {
+            name: 0,
+            element: <Input placeholder="省" />,
+          },
+          {
+            name: 1,
+            element: <Input placeholder="市" />,
+          },
+          {
+            name: 2,
+            element: <Input placeholder="区" />,
+          },
+        ],
+      },
     ],
   },
 });

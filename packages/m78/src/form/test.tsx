@@ -1,5 +1,5 @@
 import { createForm } from "./index.js";
-import { required } from "@m78/verify";
+import { required } from "@m78/form/validator/index.js";
 import { Input } from "../input/index.js";
 import React from "react";
 import { render } from "@testing-library/react";
@@ -7,7 +7,7 @@ import { render } from "@testing-library/react";
 describe("form", () => {
   test("schema", async () => {
     const form = createForm({
-      defaultValue: {
+      values: {
         name: "m78",
         desc: "",
       },

@@ -1,1 +1,1 @@
-{"version":3,"file":"dnd.d.ts","sourceRoot":"","sources":["../../../../src/dnd/dnd.tsx"],"names":[],"mappings":"AACA,OAAO,EAAqB,QAAQ,EAAE,MAAM,YAAY,CAAC;AAazD,wBAAgB,IAAI,CAAC,IAAI,GAAG,GAAG,EAAE,KAAK,EAAE,QAAQ,CAAC,IAAI,CAAC,eAgFrD;yBAhFe,IAAI"}
+{"version":3,"file":"dnd.d.ts","sourceRoot":"","sources":["../../../../src/dnd/dnd.tsx"],"names":[],"mappings":"AAAA,OAAO,KAAsC,MAAM,OAAO,CAAC;AAC3D,OAAO,EAAqB,QAAQ,EAAE,MAAM,YAAY,CAAC;AAazD,wBAAgB,IAAI,CAAC,IAAI,GAAG,GAAG,EAAE,KAAK,EAAE,QAAQ,CAAC,IAAI,CAAC,qBAgFrD;yBAhFe,IAAI"}

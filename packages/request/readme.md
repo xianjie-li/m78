@@ -236,7 +236,7 @@ export function axiosAdapter(opt: AxiosOptions) {
     .catch((err) => {
       return Promise.reject(
         new ResponseError(
-          `${err.name}: ${err.message}` || "",
+          `${err.name}: ${err.message}`,
           err?.response ? responseProcess(err.response) : undefined
         )
       );

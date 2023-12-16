@@ -339,10 +339,26 @@ PC:
 ## TODO
 
 - 添加临时删除
+
+form 中添加删除标记, 添加对应事件, 添加临时删除 api
+
+```ts
+// 在form中进行移除行的标记, 参考禁用样式
+// 禁用掉移除行的交互
+/** 软删除指定的行, 删除数据不会从表格中消失, 而是仍然存在并显示删除标记, 后续可在提交时对这些数据进行处理, 用户也可以对删除的行对其进行恢复  */
+softRemoveRow(key: TableKey | TableKey[]): void;
+/** 恢复被软移除的行 */
+restoreSoftRemove(key: TableKey | TableKey[]): void;
+```
+
+ui: 显示临时删除样式
+
 - 导出: 导出选中/导出所有/勾选要导出的列, 配置列字符串, 用于搜索/导出
 - 可访问性
 - 配置保存和数据保存分开, toolbar 添加配置同步
 - 动画
+- 复盘/整理
+- 切换数据后高度显示问题
 
 ```ts
 function propsIntercept(props) {

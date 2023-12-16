@@ -1,6 +1,7 @@
+import React from "react";
 import { MenuProps } from "./types.js";
 export declare const _Menu: {
-    (props: MenuProps): JSX.Element;
+    (props: MenuProps): React.JSX.Element;
     displayName: string;
     defaultProps: Partial<MenuProps>;
 };

@@ -1,6 +1,6 @@
 import _object_spread from "@swc/helpers/src/_object_spread.mjs";
 import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
-import { createForm as createVanillaForm } from "../form-vanilla/index.js";
+import { createForm as createVanillaForm } from "@m78/form";
 import { _formPropsKeys, _omitConfigs, FormLayoutType } from "./types.js";
 import { createEvent } from "@m78/hooks";
 import { _fieldImpl } from "./field.js";
@@ -21,8 +21,9 @@ export var _createForm = function(config) {
         eventCreator: createEvent
     }));
     var form = vForm;
-    // 合并全局适配器/局部适配器
+    /* # # # # # # #  合并全局适配器/局部适配器 # # # # # # # */ // 以控件本身作为key
     var adaptorsMap = new Map();
+    // 以字符串name作为索引
     var adaptorsNameMap = new Map();
     m78Config.get().formAdaptors.forEach(function(item) {
         adaptorsMap.set(item.element.type, item);
@@ -34,14 +35,14 @@ export var _createForm = function(config) {
             if (item.name) adaptorsNameMap.set(item.name, item);
         });
     }
-    var ctx = {
+    /* # # # # # # #  共享的上下文对象 # # # # # # # */ var ctx = {
         config: conf,
         form: vForm,
         adaptorsMap: adaptorsMap,
         adaptorsNameMap: adaptorsNameMap,
         updatePropsEvent: createEvent()
     };
-    form.getConfig = function() {
+    /* # # # # # # #  功能实现 # # # # # # # */ form.getConfig = function() {
         return _object_spread({}, conf);
     };
     form.updateProps = function(props) {
@@ -49,7 +50,7 @@ export var _createForm = function(config) {
         Object.assign(conf, pickProps);
         ctx.updatePropsEvent.emit();
     };
-    // 重写setSchemas, 确保内部能在更新后获取到最新的
+    // 重写setSchemas, 确保内部能在schema更新后能立即获取到最新的
     if (!form.setSchemas) {
         form.setSchemas = function(schema) {
             conf.schemas = schema;

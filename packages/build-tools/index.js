@@ -7,8 +7,6 @@ import { example } from "./example.js";
 async function main() {
   const cmd = process.argv[2];
 
-  console.log(process.cwd(), 22);
-
   // 构建
   if (cmd === "build") {
     await build();

@@ -27,7 +27,6 @@ import ResultExample from "./result/result-example.js";
 import ForkExample from "./fork/fork-example.js";
 import ScrollExample from "./scroll/scroll-example.js";
 import DndExample from "./dnd/dnd-example.js";
-import FormExample from "./form/form-example.js";
 import RformExample from "./form/rform-example.js";
 
 import zhHans from "../src/i18n/locales/zh-Hans.js";
@@ -123,10 +122,6 @@ export const router = createHashRouter([
       {
         path: "dnd",
         element: <DndExample />,
-      },
-      {
-        path: "form",
-        element: <FormExample />,
       },
       {
         path: "rform",

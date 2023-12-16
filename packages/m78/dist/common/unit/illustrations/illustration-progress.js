@@ -2,8 +2,10 @@ import _object_spread from "@swc/helpers/src/_object_spread.mjs";
 import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from "react";
+import clsx from "clsx";
 export function IllustrationProgress(props) {
     return /*#__PURE__*/ _jsxs("svg", _object_spread_props(_object_spread({}, props), {
+        className: clsx(props.className, "m78-illustration"),
         version: "1.1",
         viewBox: "46.228 27.5032 307.544 235.893",
         xmlns: "http://www.w3.org/2000/svg",

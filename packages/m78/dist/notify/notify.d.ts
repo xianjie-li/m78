@@ -5,11 +5,11 @@ import { LoadingOption, NotifyProps, NotifyState } from "./types.js";
  * */
 export declare function _NotifyWrap({ children }: {
     children: JSX.Element[];
-}): (0 | JSX.Element)[];
+}): (0 | React.JSX.Element)[];
 /**
  * 实现组件
  * */
-export declare function notify(props: NotifyProps): JSX.Element;
+export declare function notify(props: NotifyProps): React.JSX.Element;
 /** 创建api */
 export declare const _notify: import("@m78/render-api").RenderApiInstance<NotifyState, null>;
 /** 简单的loading实现 */

@@ -1,5 +1,7 @@
 /* # # # # # # # # # # # # # # # # #
  * 此模块可用来检测指定节点子级注册了哪些Field/List
+ *
+ * TODO: 支持根据form实例区分
  * # # # # # # # # # # # # # # # # # */ import { jsx as _jsx } from "react/jsx-runtime";
 import { dumpFn, stringifyNamePath } from "@m78/utils";
 import React, { useMemo } from "react";
@@ -9,6 +11,7 @@ var ctx = /*#__PURE__*/ React.createContext({
     register: dumpFn,
     unregister: dumpFn
 });
+ctx.Provider;
 export function _useDetector(name) {
     var ctxValue = React.useContext(ctx);
     React.useEffect(function() {

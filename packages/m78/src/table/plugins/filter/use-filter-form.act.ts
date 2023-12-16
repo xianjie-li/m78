@@ -23,7 +23,7 @@ export function _useFilterFormAct() {
         size: Size.small,
         layoutType: FormLayoutType.vertical,
         spacePadding: false,
-        defaultValue: props.defaultFilter,
+        values: props.defaultFilter,
         schemas: {
           schema: props.filterSchema,
         },

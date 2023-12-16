@@ -15,7 +15,7 @@ interface DividerProps extends ComponentBaseProps {
     align?: "start" | "center" | "end";
 }
 export declare const _Divider: {
-    ({ vertical, color, margin, children, style, className, align, size, }: DividerProps): JSX.Element;
+    ({ vertical, color, margin, children, style, className, align, size, }: DividerProps): React.JSX.Element;
     displayName: string;
 };
 export {};

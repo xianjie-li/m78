@@ -1,16 +1,15 @@
-import { FormInstance, FormSchema } from "../../form-vanilla/index.js";
+import { FormInstance, FormSchema, FormRejectMeta } from "@m78/form";
 import { AnyFunction, AnyObject, NamePath } from "@m78/utils";
 import { TableKey } from "../types/base-type.js";
 import { TablePlugin } from "../plugin.js";
 import { TableCell, TableColumn, TableRow } from "../types/items.js";
 import { TableMutationDataEvent, TableMutationEvent, TableMutationValueEvent } from "./mutation.js";
-import { RejectMeta } from "@m78/verify";
 import { TableReloadLevel } from "./life.js";
 import { _TableInteractiveCorePlugin } from "./interactive-core.js";
 export declare class _TableFormPlugin extends TablePlugin implements TableForm {
     wrapNode: HTMLElement;
     formInstances: Record<string, FormInstance | void>;
-    errors: Record<string, RejectMeta | void>;
+    errors: Record<string, FormRejectMeta | void>;
     cellErrors: Record<string, Record<string, string | void> | void>;
     rowChanged: Record<string, boolean>;
     errorNodes: HTMLElement[];

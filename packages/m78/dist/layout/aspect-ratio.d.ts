@@ -7,7 +7,7 @@ interface AspectRatioProps extends ComponentBasePropsWithAny {
     children?: React.ReactNode;
 }
 export declare const _AspectRatio: {
-    ({ ratio, children, className, style, ...props }: AspectRatioProps): JSX.Element;
+    ({ ratio, children, className, style, ...props }: AspectRatioProps): React.JSX.Element;
     displayName: string;
 };
 export {};

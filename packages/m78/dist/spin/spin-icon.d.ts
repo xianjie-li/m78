@@ -1,4 +1,5 @@
-export declare function _SpinIcon(props: any): JSX.Element;
+import React from "react";
+export declare function _SpinIcon(props: any): React.JSX.Element;
 export declare namespace _SpinIcon {
     var displayName: string;
 }

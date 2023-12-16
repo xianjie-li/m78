@@ -1,1 +1,1 @@
-{"version":3,"file":"transition.d.ts","sourceRoot":"","sources":["../../../../src/transition/transition.tsx"],"names":[],"mappings":"AAEA,OAAO,EACL,eAAe,EAGhB,MAAM,YAAY,CAAC;AAiDpB,eAAO,MAAM,WAAW;gCAIrB,eAAe;;CAiCjB,CAAC"}
+{"version":3,"file":"transition.d.ts","sourceRoot":"","sources":["../../../../src/transition/transition.tsx"],"names":[],"mappings":"AAAA,OAAO,KAAK,MAAM,OAAO,CAAC;AAE1B,OAAO,EACL,eAAe,EAGhB,MAAM,YAAY,CAAC;AAiDpB,eAAO,MAAM,WAAW;gCAIrB,eAAe;;CAiCjB,CAAC"}

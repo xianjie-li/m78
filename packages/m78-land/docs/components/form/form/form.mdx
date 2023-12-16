@@ -2,7 +2,7 @@
 title: Form - 表单
 ---
 
-实现表单功能, 注重于简化表单中难以处理的部分, 如: 值收集/验证/联动/动态表单等
+实现表单功能, 用于简化表单中难以处理的部分, 如: 值收集 / 验证 / 联动 / 动态表单 / list 表单等, 同时还提供了基于 schema 配置进行表单渲染的方式.
 
 <br />
 
@@ -15,7 +15,7 @@ title: Form - 表单
 
 `Form` 有两种不同的使用方式:
 
-- 如果你对样式有较强的定制医院, 可以手动渲染 `Field` 组件.
+- 如果你对样式有较强的定制意愿, 可以手动渲染 `Field` 组件.
 - 另一种是通过 `schema` 配置直接生成表单布局.
 
 前者更灵活可控，后者更方便，可以根据实际场景决定选用哪种方式。
@@ -55,7 +55,7 @@ const schemasItem = {
   element: <Input />,
 }
 
-// 手动渲染时, 作为子级传递给Filed
+// 手动渲染时, 作为渲染传递给Filed
 <Field name="name" element={<Input />} />
 ```
 
@@ -66,7 +66,7 @@ const schemasItem = {
 例如, 我们要为原生的 `input` 节点编写一个适配器:
 
 ```tsx
-// bind提供了一些列需要绑定到表单控件上的prop, binder用于给指定react节点绑定props, element为schema或Filed中传入的element
+// bind提供了一些需要绑定到表单控件上的prop, binder用于给指定react节点绑定props, element为schema或Filed中传入的element
 const inputAdapter: FormAdaptor = ({ bind, binder, element }) =>
   binder(element, {
     ...element.props,
@@ -160,11 +160,11 @@ m78Config.set({
 
 ### 内置表单控件
 
-`m78` 的所有内置表单控件均无需编写适配器, 可以直接在 `Form` 或 `Table` 中使用, 此外, 在没有提供适配器时, 会使用默认适配器, 像 `<input />` 这样的简单的原生表单控件通常不需要编写适配器.
+`m78` 的所有内置表单控件均无需编写适配器, 可以直接在 `Form` 或 `Table` 中使用, 此外, 在没有提供适配器时, 会使用默认适配器, 像 `<input />` 这样的原生表单控件通常包含了内置适配器处理.
 
 ## 嵌套结构
 
-如果表单值嵌套在另一个对象中, 可通过 `name` 指定嵌套的路径.
+对于复杂的表单结构, 可以使用 schema 子级来实现
 
 ### schema render
 
@@ -213,8 +213,9 @@ m78Config.set({
 
 - `hidden` 可用来根据条件隐藏字段
 - `disabled` 可用来根据条件禁用字段
+- `element` 动态决定需要使用的表单控件
 - `label/describe/style/className` 动态 label/描述/样式等
-- 其实, 除了`name`等关键配置, 大部分配置都可以动态化, 只是某些字段动态化可能没有意义, 可在开发中根据实际场景进行尝试
+- 除了`name`等关键配置, 大部分配置都可以动态化, 只是某些字段动态化可能没有意义, 可在开发中根据实际场景进行尝试
 
 ## 验证
 
@@ -345,7 +346,7 @@ interface FormProps {
   maxWidth?: number | string;
   /** 尺寸 (决定布局紧凑程度, 会同时向表单控件传递props.size, 需要表单控件支持才能正常启用) */
   size?: "large" | "small";
-  /** 禁用表单, 与标准disabled的区别是, disabled不会影响值的提交. 此外, 需要表单组件支持接收disabled并显示对应样式 */
+  /** 禁用表单, 与标准disabled的区别是, disabled不会影响值的提交. 此外, 需要表单组件支持接收props.disabled */
   disabled?: boolean;
   /** 为 filed 根节点添加类名 */
   className?: string;
@@ -453,7 +454,7 @@ interface FormSchema {
   list?: boolean;
   /** 动态设置其他参数 */
   dynamic?: (
-    form: FormInstance
+    form: FormVerifyInstance
   ) => Omit<FormSchemaWithoutName, "dynamic" | "name" | "list" | "deps"> | void;
   /** 类型为数组、对象时, 对其结构进行验证 */
   schema?: FormSchema[];
@@ -488,7 +489,7 @@ interface FormInstance {
   events: {
     /** 字段值或状态变更时, 这里是更新ui状态的理想位置 */
     update: CustomEventWithHook<VanillaFormNamesNotify>;
-    /** 字段值改变事件. 此外, update也会包含了change的触发时机 */
+    /** 字段值改变事件. update事件包含了change的触发场景 */
     change: CustomEventWithHook<VanillaFormNamesNotify>;
     /** 提交事件 */
     submit: CustomEventWithHook<EmptyFunction>;
@@ -668,7 +669,7 @@ interface FormCustomRenderBasicArgs {
   config: FormConfig;
   /** 传递给field的props */
   props: FormFieldProps;
-  /** 用于获取通用配置FormCommonProps */
+  /** 用于根据默认优先级获取通用配置(FormCommonProps) */
   getProps: FormCommonPropsGetter;
   /** 表单控件节点 */
   element: React.ReactElement | null;
@@ -678,7 +679,7 @@ interface FormCustomRenderBasicArgs {
 ```ts
 type FormAdaptors = FormAdaptorsItem[];
 
-/** 全局或表单级适配器的一项 */
+/** 全局或表单级适配器的一项, 用于使自定义或预置表单控件支持Form或Table */
 type FormAdaptorsItem = {
   /** 待适配的表单控件 */
   element: React.ReactElement;

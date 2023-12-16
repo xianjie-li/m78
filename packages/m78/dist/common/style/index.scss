@@ -13,6 +13,14 @@
   --m78-unit-hor-size-lg: 400px;
 }
 
+// 在某些节点需要阻止浏览器的滚动/上下文菜单等行为
+.m78-touch-prevent {
+  touch-action: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+}
+
+// 图标
 .m78-icon {
   display: inline-block;
   color: inherit;
@@ -31,6 +39,11 @@
   }
 }
 
+// 插图
+:root[data-mode=dark] .m78-illustration {
+  filter: drop-shadow(0px 0px 1px #fff);
+}
+
 @keyframes m78-icon-spin {
   100% {
     -webkit-transform: rotate(360deg);
@@ -45,12 +58,7 @@
   }
 }
 
-// 在某些节点需要阻止浏览器的滚动/上下文菜单等行为
-.m78-touch-prevent {
-  touch-action: none;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-}
+
 
 /*  ============= 所有组件共享的样式 ============= */
 @media (min-width: 576px) {
@@ -79,43 +87,43 @@
 }
 
 /* 滚动条尺寸大于10时启用 */
-.m78-scrollbar {
-  &::-webkit-scrollbar {
-    position: relative;
-    width: 7px;
-    height: 7px;
-    background-color: rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    border-radius: 4px;
-    background: var(--m78-color-disable);
-    min-height: 70px;
-    min-width: 70px;
-  }
-
-  &::-webkit-scrollbar-corner {
-    background-color: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background: var(--m78-color-second);
-  }
-
-  &::-webkit-scrollbar-thumb:active {
-    background: var(--m78-color-primary);
-  }
-
-  &.__hover {
-    &::-webkit-scrollbar {
-      display: none;
-    }
-
-    &:hover {
-      &::-webkit-scrollbar {
-        display: block;
-      }
-    }
-  }
-}
+//.m78-scrollbar {
+//  &::-webkit-scrollbar {
+//    position: relative;
+//    width: 7px;
+//    height: 7px;
+//    background-color: rgba(0, 0, 0, 0.1);
+//    border-radius: 4px;
+//  }
+//
+//  &::-webkit-scrollbar-thumb {
+//    border-radius: 4px;
+//    background: var(--m78-color-disable);
+//    min-height: 70px;
+//    min-width: 70px;
+//  }
+//
+//  &::-webkit-scrollbar-corner {
+//    background-color: transparent;
+//  }
+//
+//  &::-webkit-scrollbar-thumb:hover {
+//    background: var(--m78-color-second);
+//  }
+//
+//  &::-webkit-scrollbar-thumb:active {
+//    background: var(--m78-color-primary);
+//  }
+//
+//  &.__hover {
+//    &::-webkit-scrollbar {
+//      display: none;
+//    }
+//
+//    &:hover {
+//      &::-webkit-scrollbar {
+//        display: block;
+//      }
+//    }
+//  }
+//}

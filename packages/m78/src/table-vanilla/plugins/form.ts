@@ -2,7 +2,9 @@ import {
   createForm,
   FormInstance,
   FormSchema,
-} from "../../form-vanilla/index.js";
+  FormRejectMeta,
+} from "@m78/form";
+import { requiredValidatorKey } from "@m78/form/validator/required.js";
 import {
   AnyFunction,
   AnyObject,
@@ -24,7 +26,6 @@ import {
   TableMutationType,
   TableMutationValueEvent,
 } from "./mutation.js";
-import { RejectMeta, requiredValidatorKey } from "@m78/verify";
 import { TableReloadLevel } from "./life.js";
 import { TableAttachData } from "./getter.js";
 import { removeNode } from "../../common/index.js";
@@ -39,7 +40,7 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
   formInstances: Record<string, FormInstance | void> = {};
 
   // 以key存储行表单错误信息
-  errors: Record<string, RejectMeta | void> = {};
+  errors: Record<string, FormRejectMeta | void> = {};
 
   // 以行为单位存储单元格错误信息 { rowKey: { cellKey: "err msg" } }
   cellErrors: Record<string, Record<string, string | void> | void> = {};
@@ -282,7 +283,7 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
     form.debounceVerify(name, () => {
       const errors = form.getErrors();
 
-      const newError: RejectMeta = [];
+      const newError: FormRejectMeta = [];
       const cellError: Record<string, string | void> = {};
 
       let hasCellError = false;
@@ -554,7 +555,7 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
       })
       .catch((errors) => {
         if (errors?.rejects) {
-          const rejList: RejectMeta = errors.rejects;
+          const rejList: FormRejectMeta = errors.rejects;
 
           this.errors[row.key] = rejList;
 

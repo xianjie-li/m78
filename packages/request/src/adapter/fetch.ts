@@ -38,8 +38,12 @@ export function fetchAdapter(opt: FetchOptions) {
       return response;
     })
     .catch((err) => {
-      return Promise.reject(
-        new ResponseError(`${err.name}: ${err.message}` || "")
-      );
+      let msg = "";
+
+      if (err.name || err.message) {
+        msg = `${err.name || ""}: ${err.message || ""}`;
+      }
+
+      return Promise.reject(new ResponseError(msg));
     });
 }

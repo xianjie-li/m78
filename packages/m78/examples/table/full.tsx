@@ -13,7 +13,10 @@ import {
 } from "../../src/index.js";
 import { RCTableInstance } from "../../src/table/types.js";
 import { tableInputAdaptor } from "../../src/table/form-widgets/table-input.js";
-import { updateDefaultConfig } from "@m78/icons/runtime";
+
+import vars from "./xx.module.scss";
+
+console.log(vars);
 
 const columns = Array.from({ length: 40 }).map((_, j) => {
   const c: any = {

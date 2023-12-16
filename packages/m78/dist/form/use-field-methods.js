@@ -7,7 +7,7 @@ import React, { cloneElement, isValidElement } from "react";
 import { _defaultValueGetter } from "./common.js";
 export function _useFieldMethods(ctx, fieldCtx) {
     var form = ctx.form, config = ctx.config, adaptorsMap = ctx.adaptorsMap, adaptorsNameMap = ctx.adaptorsNameMap;
-    var state = fieldCtx.state, isList = fieldCtx.isList, props = fieldCtx.props, name = fieldCtx.name, strName = fieldCtx.strName;
+    var state = fieldCtx.state, isList = fieldCtx.isList, props = fieldCtx.props, name = fieldCtx.name;
     var schema = state.schema;
     // 依次从props, schema, config中获取通用属性
     var getProps = useFn(function(key) {
@@ -27,10 +27,7 @@ export function _useFieldMethods(ctx, fieldCtx) {
     });
     // 是否应该渲染实际内容
     var shouldRender = useFn(function() {
-        // if (!name) return false;
-        // if (isArray(name) && !name.length) return false;
         if ((schema === null || schema === void 0 ? void 0 : schema.valid) === false || getProps("hidden")) return false;
-        //.
         return true;
     });
     // 根据layoutType/props获取宽度

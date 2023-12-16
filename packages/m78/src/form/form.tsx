@@ -2,7 +2,7 @@ import {
   createForm as createVanillaForm,
   FormConfig as VanillaFormConfig,
   FormSchema as VanillaFormSchema,
-} from "../form-vanilla/index.js";
+} from "@m78/form";
 import {
   _FormContext,
   _formPropsKeys,
@@ -38,8 +38,11 @@ export const _createForm = (config: FormConfig) => {
 
   const form = vForm as FormInstance;
 
-  // 合并全局适配器/局部适配器
+  /* # # # # # # #  合并全局适配器/局部适配器 # # # # # # # */
+
+  // 以控件本身作为key
   const adaptorsMap = new Map<any, FormAdaptorsItem>();
+  // 以字符串name作为索引
   const adaptorsNameMap = new Map<string, FormAdaptorsItem>();
 
   m78Config.get().formAdaptors.forEach((item) => {
@@ -54,6 +57,8 @@ export const _createForm = (config: FormConfig) => {
     });
   }
 
+  /* # # # # # # #  共享的上下文对象 # # # # # # # */
+
   const ctx: _FormContext = {
     config: conf,
     form: vForm as FormInstance,
@@ -61,6 +66,8 @@ export const _createForm = (config: FormConfig) => {
     adaptorsNameMap,
     updatePropsEvent: createEvent(),
   };
+
+  /* # # # # # # #  功能实现 # # # # # # # */
 
   form.getConfig = () => ({ ...conf });
 
@@ -72,7 +79,7 @@ export const _createForm = (config: FormConfig) => {
     ctx.updatePropsEvent.emit();
   };
 
-  // 重写setSchemas, 确保内部能在更新后获取到最新的
+  // 重写setSchemas, 确保内部能在schema更新后能立即获取到最新的
   if (!form.setSchemas) {
     form.setSchemas = (schema) => {
       conf.schemas = schema;

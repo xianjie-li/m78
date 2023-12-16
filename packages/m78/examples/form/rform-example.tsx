@@ -6,7 +6,7 @@ import {
 } from "../../src/form/index.js";
 import { Input } from "../../src/input/index.js";
 import { Button } from "../../src/button/index.js";
-import { required } from "@m78/verify";
+import { required } from "@m78/form/validator/index.js";
 import { Divider, Row } from "../../src/layout/index.js";
 import { IconLike } from "@m78/icons/like";
 import { m78Config, Size } from "../../src/index.js";

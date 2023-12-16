@@ -3,11 +3,13 @@ import {
   FormInstance as VanillaFormInstance,
   FormNamesNotify as VanillaFormNamesNotify,
   FormSchema as VanillaFormSchema,
-} from "../form-vanilla/index.js";
+  FormRejectMeta,
+  NamePath,
+  FormVerifyInstance,
+} from "@m78/form";
 import React from "react";
-import { AnyObject, EmptyFunction, NamePath } from "@m78/utils";
+import { AnyObject, EmptyFunction } from "@m78/utils";
 import { CustomEventWithHook, SetState } from "@m78/hooks";
-import { RejectMeta } from "@m78/verify";
 import { SizeUnion } from "../common/index.js";
 import { CellColProps, CellRowProps, TileProps } from "../layout/index.js";
 import type { RCTableEditAdaptor } from "../table/index.js";
@@ -16,7 +18,6 @@ import type { RCTableEditAdaptor } from "../table/index.js";
 export const _omitConfigs = [
   "eventCreator",
   "languagePack",
-  "extendLanguagePack",
   "verifyFirst",
   "ignoreStrangeValue",
 ] as const;
@@ -39,7 +40,7 @@ export type FormLayoutTypeUnion = FormLayoutTypeKeys | FormLayoutType;
 /** 表单控件适配器配置 */
 export type FormAdaptors = FormAdaptorsItem[];
 
-/** 全局或表单级适配器的一项 */
+/** 全局或表单级适配器的一项, 用于使自定义或预置表单控件支持Form或Table */
 export type FormAdaptorsItem = {
   /** 待适配的表单控件 */
   element: React.ReactElement;
@@ -79,7 +80,7 @@ export interface FormSchema extends VanillaFormSchemaPartial, FormCommonProps {
   /* # # # # # # # 重写 # # # # # # # */
   /** 动态设置其他参数 */
   dynamic?: (
-    form: FormInstance
+    form: FormVerifyInstance
   ) => Omit<FormSchemaWithoutName, "dynamic" | "name" | "list" | "deps"> | void;
   /** 类型为数组、对象时, 对其结构进行验证 */
   schema?: FormSchema[];
@@ -123,13 +124,13 @@ export interface FormInstance extends VanillaFormInstancePartial {
   events: {
     /** 字段值或状态变更时, 这里是更新ui状态的理想位置 */
     update: CustomEventWithHook<VanillaFormNamesNotify>;
-    /** 字段值改变事件. 此外, update也会包含了change的触发时机 */
+    /** 字段值改变事件. update事件包含了change的触发场景 */
     change: CustomEventWithHook<VanillaFormNamesNotify>;
     /** 提交事件 */
     submit: CustomEventWithHook<EmptyFunction>;
     /** 验证失败的回调, 由 setValue 触发自动校验时, isValueChangeTrigger 为 true */
     fail: CustomEventWithHook<
-      (errors: RejectMeta, isValueChangeTrigger?: boolean) => void
+      (errors: FormRejectMeta, isValueChangeTrigger?: boolean) => void
     >;
     /** 重置事件 */
     reset: CustomEventWithHook<EmptyFunction>;
@@ -168,7 +169,7 @@ export interface FormProps {
   maxWidth?: number | string;
   /** 尺寸 (决定布局紧凑程度, 会同时向表单控件传递props.size, 需要表单控件支持才能正常启用) */
   size?: SizeUnion;
-  /** 禁用表单, 与标准disabled的区别是, disabled不会影响值的提交. 此外, 需要表单组件支持接收disabled并显示对应样式 */
+  /** 禁用表单, 与标准disabled的区别是, disabled不会影响值的提交. 此外, 需要表单组件支持接收props.disabled */
   disabled?: boolean;
   /** 为 filed 根节点添加类名 */
   className?: string;
@@ -238,6 +239,9 @@ type FormFieldPropsPartial = Omit<
   "element" | "elementProps" | "adaptor"
 >;
 
+/** 作为 list 时, 应从 Filed 或 schema 剔除的配置 */
+export const _lisIgnoreKeys = ["element", "elementProps", "adaptor"];
+
 /** List Props 相比 Field 少了一些配置项 */
 export interface FormListProps<Item = any> extends FormFieldPropsPartial {
   /** 渲染list子级, 相比layoutRender不包含预设的布局 */
@@ -256,9 +260,6 @@ export interface FormSchemaRenderProps {
   /** 每个根field/List均由<Cell/>组件包裹, 可通过此项配置其props, 用于多列表单渲染 */
   cellProps?: Omit<CellColProps, "children">;
 }
-
-/** 作为 list 时, 应从 Filed 或 schema 剔除的配置 */
-export const _lisIgnoreKeys = ["element", "elementProps", "adaptor"];
 
 /** 用于Adaptors的参数 */
 export interface FormCustomRenderBasicArgs {
@@ -284,7 +285,7 @@ export interface FormCustomRenderBasicArgs {
   config: FormConfig;
   /** 传递给field的props */
   props: FormFieldProps;
-  /** 用于获取通用配置FormCommonProps */
+  /** 用于根据默认优先级获取通用配置(FormCommonProps) */
   getProps: FormCommonPropsGetter;
   /** 表单控件节点 */
   element: React.ReactElement | null;

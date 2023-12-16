@@ -1,9 +1,11 @@
 import React from "react";
+import clsx from "clsx";
 
 export function IllustrationOffline(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
+      className={clsx(props.className, "m78-illustration")}
       version="1.1"
       viewBox="48.9376 22.2915 302.223 256.824"
       xmlns="http://www.w3.org/2000/svg"

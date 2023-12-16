@@ -1,4 +1,4 @@
-import { english } from "@m78/verify";
+import formLangPack from "@m78/form/language-pack/en.js";
 import { tableDefaultTexts } from "../../table-vanilla/index.js";
 
 export default {
@@ -11,7 +11,7 @@ export default {
     alert: "Alert",
     yes: "yes",
     no: "no",
-    "confirm operation": "Confirm to do the operation?",
+    "confirm operation": "Do you want to continue with this?",
     "confirm delete": "Are you sure to delete?",
   },
   input: {
@@ -30,7 +30,7 @@ export default {
     "retry tip": "Please try again later",
     "retry tip with button": "Please try again later or ",
   },
-  formLangPack: english,
+  formLangPack,
   form: {
     "delete current item": "Delete current item",
     "drag sort": "Drag sort",

@@ -11,7 +11,7 @@ export type _TableContextMenuOpenOpt = {
 };
 export declare const _useContextMenuAct: () => {
     open: (opt: _TableContextMenuOpenOpt) => void;
-    node: JSX.Element;
-    renderTrigger: (child: React.ReactElement) => JSX.Element;
+    node: React.JSX.Element;
+    renderTrigger: (child: React.ReactElement) => React.JSX.Element;
 };
 //# sourceMappingURL=use-context-menu.act.d.ts.map

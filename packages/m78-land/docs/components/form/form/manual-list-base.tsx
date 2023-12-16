@@ -68,7 +68,7 @@ const ManualBase = () => {
         )}
       />
 
-      {/* 这里使用Field作为布局组件排版按钮 */}
+      {/* 这里使用Field作为布局组件排版按钮, 使按钮能刚好与表单控件对齐 */}
       <form.Field
         label=" "
         element={() => (

@@ -2,7 +2,6 @@ import React from "react";
 /** 要剔除的form-vanilla配置 */ export var _omitConfigs = [
     "eventCreator",
     "languagePack",
-    "extendLanguagePack",
     "verifyFirst",
     "ignoreStrangeValue", 
 ];

@@ -14,7 +14,7 @@ export function replaceHtmlTags(str = "", val = "") {
 
 /**
  *  生成一段随机字符
- *  @param number - 随机串的长度倍数，默认1倍，随机字符长度为10为
+ *  @param number - 随机串的长度倍数，默认1倍，随机字符长度为10位
  *  @return string
  *  */
 export function createRandString(number = 1): string {

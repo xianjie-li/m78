@@ -24,9 +24,9 @@
   "type": "module",
   "typings": "./",
   "dependencies": {
-    "@m78/utils": "workspace:^",
     "@m78/seed": "workspace:^",
-    "@types/lodash": "^4.14.170",
+    "@m78/utils": "workspace:^",
+    "@types/lodash": "^4.14.202",
     "lodash": "^4.17.21"
   },
   "publishConfig": {

@@ -2,8 +2,10 @@ import _object_spread from "@swc/helpers/src/_object_spread.mjs";
 import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from "react";
+import clsx from "clsx";
 export function IllustrationEmpty1(props) {
     return /*#__PURE__*/ _jsxs("svg", _object_spread_props(_object_spread({}, props), {
+        className: clsx(props.className, "m78-illustration"),
         strokeMiterlimit: "10",
         version: "1.1",
         viewBox: "49.9376 46.0373 302.027 209.041",

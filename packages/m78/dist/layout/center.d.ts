@@ -7,7 +7,7 @@ interface CenterProps extends ComponentBasePropsWithAny {
     children?: React.ReactElement | string;
 }
 export declare const _Center: {
-    ({ children, attach, className, style, ...props }: CenterProps): JSX.Element;
+    ({ children, attach, className, style, ...props }: CenterProps): React.JSX.Element;
     displayName: string;
 };
 export {};

@@ -3,7 +3,6 @@ import {
   TableCell,
   TableCellWithDom,
   TableInstance,
-  TableInteractiveCoreConfig,
   TableMutationEvent,
   TablePersistenceConfig,
   TableReloadOptions,

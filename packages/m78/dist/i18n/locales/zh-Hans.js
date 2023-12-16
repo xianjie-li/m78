@@ -1,4 +1,4 @@
-import { simplifiedChinese } from "@m78/verify";
+import formLangPack from "@m78/form/language-pack/zh.js";
 export default {
     common: {
         submit: "提交",
@@ -29,7 +29,7 @@ export default {
         "retry tip with button": "请稍后重试或 "
     },
     // form语言包
-    formLangPack: simplifiedChinese,
+    formLangPack: formLangPack,
     form: {
         "delete current item": "删除当前项",
         "drag sort": "拖拽排序",

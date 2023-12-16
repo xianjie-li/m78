@@ -1,6 +1,7 @@
+import React from "react";
 import { TileProps } from "./types.js";
 declare const _Tile: {
-    ({ className, title, desc, leading, trailing, crossAlign, innerRef, overflowVisible, children, foot, ...ppp }: TileProps): JSX.Element;
+    ({ className, title, desc, leading, trailing, crossAlign, innerRef, overflowVisible, children, foot, ...ppp }: TileProps): React.JSX.Element;
     displayName: string;
 };
 export { _Tile };

@@ -30,9 +30,15 @@ export function axiosAdapter(opt: AxiosOptions) {
   })
     .then(responseProcess)
     .catch((err) => {
+      let msg = "";
+
+      if (err.name || err.message) {
+        msg = `${err.name || ""}: ${err.message || ""}`;
+      }
+
       return Promise.reject(
         new ResponseError(
-          `${err.name}: ${err.message}` || "",
+          msg,
           err?.response ? responseProcess(err.response) : undefined
         )
       );

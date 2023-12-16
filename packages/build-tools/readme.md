@@ -2,7 +2,7 @@
 
 ## usage
 
-create a new project
+### create a new project
 
 ```shell
 mkdir my-app && cd my-app
@@ -88,6 +88,8 @@ export { default } from "@m78/lib-build/jest.config.js";
 ```shell
 npx jest
 ```
+
+> note: By now, jest need provide --experimental-vm-modules flag to enable ESM support.
 
 ### example
 

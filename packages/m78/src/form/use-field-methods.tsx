@@ -25,7 +25,7 @@ import { _defaultValueGetter } from "./common.js";
 export function _useFieldMethods(ctx: _FormContext, fieldCtx: _FieldContext) {
   const { form, config, adaptorsMap, adaptorsNameMap } = ctx;
 
-  const { state, isList, props, name, strName } = fieldCtx;
+  const { state, isList, props, name } = fieldCtx;
 
   const schema = state.schema;
 
@@ -52,10 +52,7 @@ export function _useFieldMethods(ctx: _FormContext, fieldCtx: _FieldContext) {
 
   // 是否应该渲染实际内容
   const shouldRender = useFn(() => {
-    // if (!name) return false;
-    // if (isArray(name) && !name.length) return false;
     if (schema?.valid === false || getProps("hidden")) return false;
-    //.
     return true;
   });
 

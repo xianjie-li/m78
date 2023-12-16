@@ -1,9 +1,11 @@
 import React from "react";
+import clsx from "clsx";
 
 export function IllustrationEmpty3(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
+      className={clsx(props.className, "m78-illustration")}
       version="1.1"
       viewBox="46.707 24.7176 307.368 245.021"
       width="100%"

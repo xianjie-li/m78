@@ -21,11 +21,11 @@ export interface TriggerProps extends Omit<UseTriggerProps, "element"> {
 }
 /** 通过hooks便捷的绑定trigger实例, 未识别的props会传递到事件对象的context属性 */
 export declare function _useTrigger(props: UseTriggerProps & AnyObject): {
-    node: JSX.Element;
+    node: React.JSX.Element;
     el: HTMLElement;
 };
 /** 通过组件便捷的绑定trigger实例, 未识别的props会传递到事件对象的context属性 */
-export declare function _Trigger(props: TriggerProps & AnyObject): JSX.Element;
+export declare function _Trigger(props: TriggerProps & AnyObject): React.JSX.Element;
 export declare namespace _Trigger {
     var displayName: string;
 }

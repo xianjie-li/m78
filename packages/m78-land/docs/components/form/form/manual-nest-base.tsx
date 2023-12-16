@@ -39,6 +39,24 @@ const form = createForm({
           },
         ],
       },
+      {
+        label: "地址",
+        name: "address",
+        schema: [
+          {
+            name: 0,
+            element: <Input placeholder="省" />,
+          },
+          {
+            name: 1,
+            element: <Input placeholder="市" />,
+          },
+          {
+            name: 2,
+            element: <Input placeholder="区" />,
+          },
+        ],
+      },
     ],
   },
 });
@@ -66,7 +84,18 @@ const ManualBase = () => {
         )}
       />
 
-      {/* 这里使用Field作为布局组件排版按钮 */}
+      <form.Field
+        name="address"
+        element={() => (
+          <Row>
+            <form.Field name={["address", 0]} />
+            <form.Field name={["address", 1]} style={{ marginLeft: 12 }} />
+            <form.Field name={["address", 2]} style={{ marginLeft: 12 }} />
+          </Row>
+        )}
+      />
+
+      {/* 这里使用Field作为布局组件排版按钮, 使按钮能刚好与表单控件对齐 */}
       <form.Field
         label=" "
         element={() => (

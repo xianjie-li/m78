@@ -1,3 +1,4 @@
+import React from "react";
 import { _RCTableState, RCTableProps, RCTableRenderArg } from "../types.js";
 import { TableCellWithDom, TableRenderCtx } from "../../table-vanilla/index.js";
 import { RCTablePlugin } from "../plugin.js";
@@ -12,5 +13,5 @@ export declare function renderCommonHandle(args: {
     rcPlugins: RCTablePlugin[];
 }): RCTableRenderArg;
 export type _UseCustomRender = ReturnType<typeof _useCustomRender>;
-export declare function _CustomRender(): JSX.Element;
+export declare function _CustomRender(): React.JSX.Element;
 //# sourceMappingURL=use-custom-render.d.ts.map

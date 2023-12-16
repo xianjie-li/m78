@@ -133,10 +133,6 @@ export interface TableMutation {
     addRow(data: any | any[], to?: TableKey, insertAfter?: boolean): void;
     /** 删除指定的记录 */
     removeRow(key: TableKey | TableKey[]): void;
-    /** 软删除指定的行, 删除数据不会从表格中消失, 而是仍然存在并显示删除标记, 后续可在提交时对这些数据进行处理, 用户也可以对删除的行对其进行恢复  */
-    softRemoveRow(key: TableKey | TableKey[]): void;
-    /** 恢复被软移除的行 */
-    restoreSoftRemove(key: TableKey | TableKey[]): void;
     /**
      * 将项移动到指定项的位置
      * @param from - 移动项的key

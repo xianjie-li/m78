@@ -1,6 +1,13 @@
 import React from "react";
-import { createForm, Input, Dialog, Button, ButtonColor } from "m78";
-import { required, string } from "m78/form";
+import {
+  createForm,
+  Input,
+  Dialog,
+  Button,
+  ButtonColor,
+  required,
+  string,
+} from "m78";
 
 const form = createForm({
   schemas: {
@@ -34,7 +41,7 @@ const ManualBase = () => {
       <form.Field name="name" />
       <form.Field name="describe" />
 
-      {/* 这里使用Field作为布局组件排版按钮 */}
+      {/* 这里使用Field作为布局组件排版按钮, 使按钮能刚好与表单控件对齐 */}
       <form.Field
         label=" "
         element={() => (

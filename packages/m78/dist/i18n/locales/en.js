@@ -1,6 +1,6 @@
 import _object_spread from "@swc/helpers/src/_object_spread.mjs";
 import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
-import { english } from "@m78/verify";
+import formLangPack from "@m78/form/language-pack/en.js";
 import { tableDefaultTexts } from "../../table-vanilla/index.js";
 export default {
     common: {
@@ -31,7 +31,7 @@ export default {
         "retry tip": "Please try again later",
         "retry tip with button": "Please try again later or "
     },
-    formLangPack: english,
+    formLangPack: formLangPack,
     form: {
         "delete current item": "Delete current item",
         "drag sort": "Drag sort",

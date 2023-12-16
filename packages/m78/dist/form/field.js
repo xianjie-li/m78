@@ -13,7 +13,7 @@ import clsx from "clsx";
 import { _useFieldMethods } from "./use-field-methods.js";
 import { _useFieldLifeCircle } from "./use-field-life-circle.js";
 import { _listLayoutRenderImpl, _listRenderImpl } from "./list.js";
-import { requiredValidatorKey } from "@m78/verify";
+import { requiredValidatorKey } from "@m78/form/validator/index.js";
 import { _defaultAdaptor, EMPTY_NAME } from "./common.js";
 export function _fieldImpl(ctx) {
     var form = ctx.form;
@@ -193,6 +193,7 @@ export function _fieldImpl(ctx) {
         // 由于 list 和 field 逻辑基本一致, 所以通过私有 props 来区分, 并在内部做特殊处理
         var isList = getNamePathValue(props, "__isList");
         var wrapRef = useRef(null);
+        // 在组件内共享的上下文对象
         var filedCtx = {
             state: state,
             setState: setState,
@@ -227,6 +228,7 @@ export function _fieldImpl(ctx) {
         var error = methods.getError(name);
         // 是否应显示error / 显示何种类型的错误
         var showError = error && touched;
+        // 是否显示必填标记
         var hasRequired = useMemo(function() {
             var marker = getProps("requireMarker");
             if (marker === false) return false;
@@ -236,11 +238,10 @@ export function _fieldImpl(ctx) {
         }, [
             validator
         ]);
+        // 阻止渲染 valid/hidden 等
         if (!methods.shouldRender()) return null;
         // 无样式渲染
-        if (preventDefaultRenders) {
-            return renderWidget();
-        }
+        if (preventDefaultRenders) return renderWidget();
         // 布局渲染
         var bubbleDescribeNode = renderBubbleDescribe();
         // 是否应该显示label容器, 有label或者有气泡描述时显示

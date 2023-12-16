@@ -1,6 +1,5 @@
 import React from "react";
-import { createForm, Input, Dialog } from "m78";
-import { required, string } from "m78/form";
+import { createForm, Input, Dialog, required, string } from "m78";
 
 const form = createForm({
   schemas: {

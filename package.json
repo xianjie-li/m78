@@ -11,6 +11,12 @@
   "devDependencies": {
     "@m78/build-tools": "workspace:^",
     "@parcel/transformer-sass": "2.7.0",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.17",
     "typescript": "^5.2.2"
+  },
+  "overrides": {
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11"
   }
 }

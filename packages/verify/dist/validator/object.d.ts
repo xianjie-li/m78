@@ -1,7 +1,0 @@
-import { Validator } from "../types";
-export declare const objectValidatorKey = "verifyObject";
-/**
- * 必须是严格的对象类型 [Object objcet], 如果是[Object regexp]等特殊内置对象则不会通过检测
- * */
-export declare const object: () => Validator;
-//# sourceMappingURL=object.d.ts.map

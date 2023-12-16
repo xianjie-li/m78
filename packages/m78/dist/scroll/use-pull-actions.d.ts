@@ -1,3 +1,4 @@
+import React from "react";
 import { _ScrollContext } from "./types.js";
 import { UseScrollMeta } from "@m78/hooks";
 export declare const _usePullActions: (ctx: _ScrollContext) => {
@@ -7,7 +8,7 @@ export declare const _usePullActions: (ctx: _ScrollContext) => {
         running: import("@react-spring/core/dist/declarations/src/SpringValue.js").SpringValue<boolean>;
         ratio: import("@react-spring/core/dist/declarations/src/SpringValue.js").SpringValue<number>;
     };
-    pullDownNode: JSX.Element | null;
+    pullDownNode: React.JSX.Element | null;
     onPullDown: () => Promise<void>;
     onScroll: (meta: UseScrollMeta) => Promise<void>;
 };
