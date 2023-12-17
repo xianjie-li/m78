@@ -233,7 +233,7 @@ export interface FormInstance extends FormVerifyInstance {
   ) => FormNamesNotify;
 }
 
-/** 仅包含验证必须功能的实例, FormInstance 的子集 */
+/** 仅包含验证必须功能的实例, FormInstance 的子集, 不直接对外暴露, 会在内部以及部分schema api中作为参数传入 */
 export interface FormVerifyInstance {
   /** 获取Form创建配置 */
   getConfig(): FormConfig;
@@ -304,6 +304,7 @@ export interface FormSchema {
   transform?: (value: any) => any;
 }
 
+/** 表示List的一项 */
 export interface FormListItem<Item = any> {
   /** 列表项的唯一key */
   key: string;

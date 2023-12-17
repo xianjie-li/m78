@@ -17,7 +17,8 @@
     "lint": "npm run lint:script && npm run lint:prettier",
     "build": "mbt build",
     "pub": "pnpm build && pnpm publish --access public --registry https://registry.npmjs.org --no-git-checks",
-    "example-hello": "mbt example hello"
+    "example-hello": "mbt example hello",
+    "example-basic-native-dom-bind": "mbt example basic-native-dom-bind"
   },
   "keywords": [],
   "author": {

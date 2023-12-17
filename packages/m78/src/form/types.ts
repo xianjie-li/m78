@@ -105,16 +105,16 @@ type VanillaFormInstancePartial = Omit<
 /** Form实例 */
 export interface FormInstance extends VanillaFormInstancePartial {
   /* # # # # # # # 重写 # # # # # # # */
-  /** 获取对dynamic进行处理进行处理后的schema副本 */
+  /** 获取对dynamic/valid/list等特殊项进行处理进行处理后的完整schema副本 */
   getSchemas(): FormSchemaWithoutName;
 
-  /** 重新设置当前schemas */
+  /** 重新设置当前schemas, 通常需要在重新设置schema后手动自动执行一次verify()来清理之前的校验状态 */
   setSchemas(schema: FormSchemaWithoutName): void;
 
-  /** 获取指定的schema */
+  /** 获取对dynamic/valid/list等特殊项进行处理进行处理后的指定schema副本 */
   getSchema(name: NamePath): FormSchema | FormSchemaWithoutName | null;
 
-  /** 获取表单配置 */
+  /** 获取Form创建配置 */
   getConfig(): FormConfig;
 
   /** 更改部分样式配置 */
@@ -139,8 +139,10 @@ export interface FormInstance extends VanillaFormInstancePartial {
   /* # # # # # # # 新增 # # # # # # # */
   /** 用于表示并绑定到表单字段 */
   Field: React.FunctionComponent<FormFieldProps>;
+
   /** 渲染列表 */
   List: <Item = any>(props: FormListProps<Item>) => React.ReactElement;
+
   /** 根据当前的schema配置直接渲染表单 */
   SchemaRender: React.FunctionComponent<FormSchemaRenderProps>;
 }

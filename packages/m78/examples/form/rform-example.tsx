@@ -24,7 +24,7 @@ const schemas: FormSchemaWithoutName = {
     {
       name: "name",
       validator: required(),
-      label: "姓名",
+      label: "姓名122",
       dynamic: (form) => ({
         hidden: form.getValue("desc") === "abc",
       }),
@@ -81,8 +81,28 @@ const schemas2: FormSchemaWithoutName = {
       element: <Input />,
     },
     {
+      name: "xxx",
+      label: "xxx",
+      deps: ["name"],
+      dynamic: (form) => {
+        if (form.getValue("name") !== "lxj")
+          return {
+            element: <Input textArea />,
+          };
+        return {
+          element: () => <span>{form.getValue("xxx")}</span>,
+        };
+      },
+    },
+    {
       name: "desc",
       label: "描述",
+      validator: required(),
+      element: <Input textArea />,
+    },
+    {
+      name: "desc2",
+      label: "描述2",
       validator: required(),
       element: <Input textArea />,
     },
@@ -159,7 +179,7 @@ const schemas2: FormSchemaWithoutName = {
 const RformExample = () => {
   const Form = useMemo(() => {
     return createForm({
-      defaultValue: {
+      values: {
         name: "m78",
         desc: "",
         abc: "1",
@@ -172,7 +192,7 @@ const RformExample = () => {
       },
       schemas,
       // size: Size.small,
-      layoutType: FormLayoutType.vertical,
+      // layoutType: FormLayoutType.vertical,
       adaptors: [
         {
           name: "input",
@@ -185,7 +205,7 @@ const RformExample = () => {
 
   const Form2 = useMemo(() => {
     return createForm({
-      defaultValue: {
+      values: {
         name: "m78",
         desc: "",
         abc: "1",
@@ -205,7 +225,7 @@ const RformExample = () => {
 
   const Form4 = useMemo(() => {
     return createForm({
-      defaultValue: {
+      values: {
         name: "m78",
         desc: "",
       },
@@ -361,21 +381,28 @@ const RformExample = () => {
         ></Form.List>
       </div>
 
-      <div className="mt-32">
-        <Button onClick={Form.reset}>reset</Button>
-        <Button
-          onClick={async () => {
-            try {
-              await Form.submit();
-              console.log(Form.getValues());
-            } catch (e) {
-              console.log(22, e);
-              console.log(22, (e as any).rejects);
-            }
-          }}
-        >
-          submit
-        </Button>
+      <div>
+        <Form.Field
+          label=" "
+          element={() => (
+            <>
+              <Button onClick={Form.reset}>reset</Button>
+              <Button
+                onClick={async () => {
+                  try {
+                    await Form.submit();
+                    console.log(Form.getValues());
+                  } catch (e) {
+                    console.log(22, e);
+                    console.log(22, (e as any).rejects);
+                  }
+                }}
+              >
+                submit
+              </Button>
+            </>
+          )}
+        />
       </div>
 
       <Divider />
