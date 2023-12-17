@@ -42,7 +42,7 @@ npm install @m78/form
 
 如果仅需要验证功能或是在服务端等场景下, 则可以使用 createForm(formConfig) 代替, 它有更快的执行速度和更少的api.
 
-
+<br>
 
 ## createForm
 
@@ -90,7 +90,7 @@ form.events.submit.on(cb);
 form.events.fail.on(cb);
 ```
 
-
+<br>
 
 ## createVerify
 
@@ -111,7 +111,7 @@ verify.check({
 })
 ```
 
-
+<br>
 
 ## Schema
 
@@ -139,7 +139,7 @@ const schema: FormSchema = {
 }
 ```
 
-
+<br>
 
 ### 复杂结构的Schema
 
@@ -204,7 +204,7 @@ const schema: FormSchema = {
 }
 ```
 
-
+<br>
 
 ### 动态Schema
 
@@ -247,7 +247,7 @@ const schema: FormSchema = {
 }
 ```
 
-
+<br>
 
 ### List
 
@@ -289,9 +289,7 @@ const schema: FormSchema = {
 }
 ```
 
-
-
-
+<br>
 
 ## 验证器
 
@@ -324,13 +322,13 @@ undefined, null, "", NaN, [], {}, 空白字符
 
 > 使用函数验证器而不是常见的的字符串验证的原因是: 更好的类型检测, 清晰的来源, 更易定制和扩展, 无 DSL 和几乎为 0 的学习成本.
 
-
+<br>
 
 ### 内置验证器
 
 你可以在[这里](https://github.com/xianjie-li/m78/tree/master/packages/form/src/validator)找到所有内置验证器.
 
-
+<br>
 
 ### 自定义验证器
 
@@ -360,7 +358,7 @@ async function verifyUser({ value }) {
 }
 ```
 
-
+<br>
 
 ## name 取值示例
 
@@ -376,8 +374,6 @@ Schema 的 name 支持嵌套取值, 并遵循以下规则
 }
 ```
 
-
-
 <br>
 
 ## APIs
@@ -389,7 +385,7 @@ Schema 的 name 支持嵌套取值, 并遵循以下规则
 function createForm(config: FormConfig): FormInstance
 ```
 
-
+<br>
 
 ### createVerify
 
@@ -402,7 +398,7 @@ function createForm(config: FormConfig): FormInstance
 function createVerify(config: FormConfig): FormVerify
 ```
 
-
+<br>
 
 ### Config
 
@@ -439,9 +435,7 @@ export interface FormConfig {
 }
 ```
 
-
-
-
+<br>
 
 ### Instance
 
@@ -581,9 +575,7 @@ export interface FormInstance {
 }
 ```
 
-
-
-
+<br>
 
 ### VerifyInstance
 
@@ -607,7 +599,7 @@ export interface FormVerifyInstance {
 }
 ```
 
-
+<br>
 
 ### Verify
 
@@ -626,7 +618,7 @@ export interface FormVerify {
 }
 ```
 
-
+<br>
 
 ### Schema
 
@@ -671,9 +663,7 @@ export type FormSchemaWithoutName = Omit<FormSchema, "name">;
 export type FormSchemaPartial = Omit<FormSchema, "name" | "list">;
 ```
 
-
-
-
+<br>
 
 ### Validator
 
@@ -714,7 +704,7 @@ export interface FormErrorTemplateInterpolate {
 }
 ```
 
-
+<br>
 
 ### Meta
 
@@ -753,9 +743,7 @@ export interface FormVerifyMeta {
 }
 ```
 
-
-
-
+<br>
 
 ### RejectMeta
 
@@ -772,7 +760,7 @@ export interface FormRejectMetaItem extends FormVerifyMeta {
 export type FormRejectMeta = FormRejectMetaItem[];
 ```
 
-
+<br>
 
 ### ListItem
 
@@ -786,7 +774,7 @@ export interface FormListItem<Item = any> {
 }
 ```
 
-
+<br>
 
 ### FormNamesNotify
 
