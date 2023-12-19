@@ -359,6 +359,8 @@ ui: 显示临时删除样式
 - 动画
 - 复盘/整理
 - 切换数据后高度显示问题
+- 适配器如何注册? config 提供局部注册器, 在每个表单组件内单独注册, 把适配器类型提升到 common
+-
 
 ```ts
 function propsIntercept(props) {

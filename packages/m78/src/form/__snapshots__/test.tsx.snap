@@ -1,5 +1,959 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`form render 1`] = `
+<div>
+  <div
+    class="m78 m78-cell"
+  >
+    <div
+      class="m78-cell_cont m78-flex-wrap"
+      style="margin: 0px;"
+    >
+      <div
+        class="m78 m78-cell_col"
+        style="width: 100%; padding: 0px;"
+      >
+        <div
+          class="m78 m78-row m78-tile m78-lay m78-form_field __horizontal __none m78-cross-start"
+          style="max-width: 440px;"
+        >
+          <div
+            class="m78-tile_leading"
+          >
+            <div
+              class="m78-form_label m78-form_horizontal-label"
+            >
+              <span
+                class="color-red fs-md vm mr"
+              >
+                *
+              </span>
+              姓名
+            </div>
+          </div>
+          <div
+            class="m78-tile_main"
+          >
+            <div
+              class="m78-tile_cont"
+            >
+              <div
+                class="m78-form_unit"
+              >
+                <span
+                  class="m78 m78-init m78-input"
+                >
+                  <input
+                    class="m78-input_inner"
+                    type="text"
+                    value="m78"
+                  />
+                </span>
+                <div
+                  class="m78-form_bubble-error"
+                  role="alert"
+                  style="opacity: 0; visibility: hidden;"
+                />
+              </div>
+              <div
+                class="m78-form_describe"
+              >
+                填入你的姓名, 填入你的姓名填入你的姓名填入你的姓名填入你的姓名填入你的姓名, 填入你的姓名.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="m78 m78-cell_col"
+        style="width: 100%; padding: 0px;"
+      >
+        <div
+          class="m78 m78-row m78-tile m78-lay m78-form_field __horizontal __none m78-cross-start"
+          style="max-width: 440px;"
+        >
+          <div
+            class="m78-tile_leading"
+          >
+            <div
+              class="m78-form_label m78-form_horizontal-label"
+            >
+              <span
+                class="color-red fs-md vm mr"
+              >
+                *
+              </span>
+              描述
+            </div>
+          </div>
+          <div
+            class="m78-tile_main"
+          >
+            <div
+              class="m78-tile_cont"
+            >
+              <div
+                class="m78-form_unit"
+              >
+                <span
+                  class="m78 m78-init m78-input __textarea"
+                >
+                  <textarea
+                    class="m78-input_inner"
+                    style="height: 0px; overflow: hidden; resize: none;"
+                    type="text"
+                  />
+                  <textarea
+                    class="m78-input_inner"
+                    style="height: 0px; overflow: hidden; resize: none; position: absolute; visibility: hidden;"
+                    type="text"
+                  />
+                </span>
+                <div
+                  class="m78-form_bubble-error"
+                  role="alert"
+                  style="opacity: 0; visibility: hidden;"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="m78 m78-cell_col"
+        style="width: 100%; padding: 0px;"
+      >
+        <div
+          class="m78 m78-row m78-tile m78-lay m78-form_field __horizontal __none m78-cross-start"
+          style="max-width: 440px;"
+        >
+          <div
+            class="m78-tile_leading"
+          >
+            <div
+              class="m78-form_label m78-form_horizontal-label"
+            >
+              <span
+                class="color-red fs-md vm mr"
+              >
+                *
+              </span>
+              对象
+            </div>
+          </div>
+          <div
+            class="m78-tile_main"
+          >
+            <div
+              class="m78-tile_cont"
+            >
+              <div
+                class="m78-form_unit"
+              >
+                <div
+                  class="m78 m78-row m78-cross-start"
+                >
+                  <div
+                    class="m78-form_multi-column"
+                  >
+                    <div
+                      class="m78 m78-row m78-tile m78-lay m78-form_field __horizontal __none m78-cross-start"
+                      style="max-width: 440px;"
+                    >
+                      <div
+                        class="m78-tile_main"
+                      >
+                        <div
+                          class="m78-tile_cont"
+                        >
+                          <div
+                            class="m78-form_unit"
+                          >
+                            <span
+                              class="m78 m78-init m78-input"
+                            >
+                              <input
+                                class="m78-input_inner"
+                                placeholder="名称"
+                                type="text"
+                                value=""
+                              />
+                            </span>
+                            <div
+                              class="m78-form_bubble-error"
+                              role="alert"
+                              style="opacity: 0; visibility: hidden;"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="m78-form_multi-column"
+                  >
+                    <div
+                      class="m78 m78-row m78-tile m78-lay m78-form_field __horizontal __none m78-cross-start"
+                      style="max-width: 440px;"
+                    >
+                      <div
+                        class="m78-tile_main"
+                      >
+                        <div
+                          class="m78-tile_cont"
+                        >
+                          <div
+                            class="m78-form_unit"
+                          >
+                            <span
+                              class="m78 m78-init m78-input"
+                            >
+                              <input
+                                class="m78-input_inner"
+                                placeholder="描述"
+                                type="text"
+                                value=""
+                              />
+                            </span>
+                            <div
+                              class="m78-form_bubble-error"
+                              role="alert"
+                              style="opacity: 0; visibility: hidden;"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="m78-form_bubble-error"
+                  role="alert"
+                  style="opacity: 0; visibility: hidden;"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="m78 m78-cell_col"
+        style="width: 100%; padding: 0px;"
+      >
+        <div
+          class="m78 m78-row m78-tile m78-lay m78-form_field __horizontal __none m78-cross-start"
+          style="max-width: 440px;"
+        >
+          <div
+            class="m78-tile_leading"
+          >
+            <div
+              class="m78-form_label m78-form_horizontal-label"
+            >
+              <span
+                class="color-red fs-md vm mr"
+              >
+                *
+              </span>
+              列表
+            </div>
+          </div>
+          <div
+            class="m78-tile_main"
+          >
+            <div
+              class="m78-tile_cont"
+            >
+              <div
+                class="m78-form_unit"
+              >
+                <div
+                  class="m78-form_list-wrap"
+                >
+                  <div
+                    class="m78-form_list-actions"
+                  >
+                    <button
+                      class="m78 m78-init m78-btn m78-effect __md"
+                      type="button"
+                    >
+                      Add item
+                      <span
+                        class="m78-icon m78-icon_add-one"
+                        style="margin-left: 4px;"
+                      >
+                        <svg
+                          fill="none"
+                          height="1.2em"
+                          viewBox="0 0 48 48"
+                          width="1.2em"
+                        >
+                          <path
+                            d="M24 44C35.0457 44 44 35.0457 44 24C44 12.9543 35.0457 4 24 4C12.9543 4 4 12.9543 4 24C4 35.0457 12.9543 44 24 44Z"
+                            fill="transparent"
+                            stroke="currentColor"
+                            stroke-linejoin="round"
+                            stroke-width="4"
+                          />
+                          <path
+                            d="M24 16V32"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="4"
+                          />
+                          <path
+                            d="M16 24L32 24"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="4"
+                          />
+                        </svg>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+                <div
+                  class="m78-form_bubble-error"
+                  role="alert"
+                  style="opacity: 0; visibility: hidden;"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="m78 m78-cell_col"
+        style="width: 100%; padding: 0px;"
+      >
+        <div
+          class="m78 m78-row m78-tile m78-lay m78-form_field __horizontal __none m78-cross-start"
+          style="max-width: 440px;"
+        >
+          <div
+            class="m78-tile_leading"
+          >
+            <div
+              class="m78-form_label m78-form_horizontal-label"
+            >
+              <span
+                class="color-red fs-md vm mr"
+              >
+                *
+              </span>
+              列表3
+            </div>
+          </div>
+          <div
+            class="m78-tile_main"
+          >
+            <div
+              class="m78-tile_cont"
+            >
+              <div
+                class="m78-form_unit"
+              >
+                <div
+                  class="m78-form_list-wrap"
+                >
+                  <div
+                    class="m78-form_list-actions"
+                  >
+                    <button
+                      class="m78 m78-init m78-btn m78-effect __md"
+                      type="button"
+                    >
+                      Add item
+                      <span
+                        class="m78-icon m78-icon_add-one"
+                        style="margin-left: 4px;"
+                      >
+                        <svg
+                          fill="none"
+                          height="1.2em"
+                          viewBox="0 0 48 48"
+                          width="1.2em"
+                        >
+                          <path
+                            d="M24 44C35.0457 44 44 35.0457 44 24C44 12.9543 35.0457 4 24 4C12.9543 4 4 12.9543 4 24C4 35.0457 12.9543 44 24 44Z"
+                            fill="transparent"
+                            stroke="currentColor"
+                            stroke-linejoin="round"
+                            stroke-width="4"
+                          />
+                          <path
+                            d="M24 16V32"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="4"
+                          />
+                          <path
+                            d="M16 24L32 24"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="4"
+                          />
+                        </svg>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+                <div
+                  class="m78-form_bubble-error"
+                  role="alert"
+                  style="opacity: 0; visibility: hidden;"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="m78 m78-cell_col"
+        style="width: 100%; padding: 0px;"
+      >
+        <div
+          class="m78 m78-row m78-tile m78-lay m78-form_field __horizontal __none m78-cross-start"
+          style="max-width: 440px;"
+        >
+          <div
+            class="m78-tile_leading"
+          >
+            <div
+              class="m78-form_label m78-form_horizontal-label"
+            >
+               
+            </div>
+          </div>
+          <div
+            class="m78-tile_main"
+          >
+            <div
+              class="m78-tile_cont"
+            >
+              <div
+                class="m78-form_unit"
+              >
+                <div>
+                  <div
+                    class="m78 m78-overlay_wrap"
+                    style="visibility: hidden; z-index: 2200; opacity: 0; pointer-events: none; transform: none;"
+                    tabindex="-1"
+                  />
+                  <button
+                    class="m78 m78-init m78-btn m78-effect __md"
+                    type="button"
+                  >
+                    Reset
+                  </button>
+                  <button
+                    class="m78 m78-init m78-btn m78-effect __md __primary __light"
+                    style="min-width: 80px;"
+                    type="button"
+                  >
+                    Submit
+                  </button>
+                </div>
+                <div
+                  class="m78-form_bubble-error"
+                  role="alert"
+                  style="opacity: 0; visibility: hidden;"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`form render 2`] = `
+<div>
+  <div
+    class="m78 m78-cell"
+  >
+    <div
+      class="m78-cell_cont m78-flex-wrap"
+      style="margin: 0px;"
+    >
+      <div
+        class="m78 m78-cell_col"
+        style="width: 100%; padding: 0px;"
+      >
+        <div
+          class="m78 m78-row m78-tile m78-lay m78-form_field __horizontal __none m78-cross-start"
+          style="max-width: 440px;"
+        >
+          <div
+            class="m78-tile_leading"
+          >
+            <div
+              class="m78-form_label m78-form_horizontal-label"
+            >
+              <span
+                class="color-red fs-md vm mr"
+              >
+                *
+              </span>
+              姓名
+            </div>
+          </div>
+          <div
+            class="m78-tile_main"
+          >
+            <div
+              class="m78-tile_cont"
+            >
+              <div
+                class="m78-form_unit"
+              >
+                <span
+                  class="m78 m78-init m78-input"
+                >
+                  <input
+                    class="m78-input_inner"
+                    type="text"
+                    value="m78"
+                  />
+                </span>
+                <div
+                  class="m78-form_bubble-error"
+                  role="alert"
+                  style="opacity: 0; visibility: hidden;"
+                />
+              </div>
+              <div
+                class="m78-form_describe"
+              >
+                填入你的姓名, 填入你的姓名填入你的姓名填入你的姓名填入你的姓名填入你的姓名, 填入你的姓名.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="m78 m78-cell_col"
+        style="width: 100%; padding: 0px;"
+      >
+        <div
+          class="m78 m78-row m78-tile m78-lay m78-form_field __horizontal __none m78-cross-start"
+          style="max-width: 440px;"
+        >
+          <div
+            class="m78-tile_leading"
+          >
+            <div
+              class="m78-form_label m78-form_horizontal-label"
+            >
+              <span
+                class="color-red fs-md vm mr"
+              >
+                *
+              </span>
+              描述
+            </div>
+          </div>
+          <div
+            class="m78-tile_main"
+          >
+            <div
+              class="m78-tile_cont"
+            >
+              <div
+                class="m78-form_unit"
+              >
+                <span
+                  class="m78 m78-init m78-input __textarea"
+                >
+                  <textarea
+                    class="m78-input_inner"
+                    style="height: 0px; overflow: hidden; resize: none;"
+                    type="text"
+                  />
+                  <textarea
+                    class="m78-input_inner"
+                    style="height: 0px; overflow: hidden; resize: none; position: absolute; visibility: hidden;"
+                    type="text"
+                  />
+                </span>
+                <div
+                  class="m78-form_bubble-error"
+                  role="alert"
+                  style="opacity: 1; visibility: visible;"
+                >
+                  Required
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="m78 m78-cell_col"
+        style="width: 100%; padding: 0px;"
+      >
+        <div
+          class="m78 m78-row m78-tile m78-lay m78-form_field __horizontal __none m78-cross-start"
+          style="max-width: 440px;"
+        >
+          <div
+            class="m78-tile_leading"
+          >
+            <div
+              class="m78-form_label m78-form_horizontal-label"
+            >
+              <span
+                class="color-red fs-md vm mr"
+              >
+                *
+              </span>
+              对象
+            </div>
+          </div>
+          <div
+            class="m78-tile_main"
+          >
+            <div
+              class="m78-tile_cont"
+            >
+              <div
+                class="m78-form_unit"
+              >
+                <div
+                  class="m78 m78-row m78-cross-start"
+                >
+                  <div
+                    class="m78-form_multi-column"
+                  >
+                    <div
+                      class="m78 m78-row m78-tile m78-lay m78-form_field __horizontal __none m78-cross-start"
+                      style="max-width: 440px;"
+                    >
+                      <div
+                        class="m78-tile_main"
+                      >
+                        <div
+                          class="m78-tile_cont"
+                        >
+                          <div
+                            class="m78-form_unit"
+                          >
+                            <span
+                              class="m78 m78-init m78-input"
+                            >
+                              <input
+                                class="m78-input_inner"
+                                placeholder="名称"
+                                type="text"
+                                value=""
+                              />
+                            </span>
+                            <div
+                              class="m78-form_bubble-error"
+                              role="alert"
+                              style="opacity: 0; visibility: hidden;"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="m78-form_multi-column"
+                  >
+                    <div
+                      class="m78 m78-row m78-tile m78-lay m78-form_field __horizontal __none m78-cross-start"
+                      style="max-width: 440px;"
+                    >
+                      <div
+                        class="m78-tile_main"
+                      >
+                        <div
+                          class="m78-tile_cont"
+                        >
+                          <div
+                            class="m78-form_unit"
+                          >
+                            <span
+                              class="m78 m78-init m78-input"
+                            >
+                              <input
+                                class="m78-input_inner"
+                                placeholder="描述"
+                                type="text"
+                                value=""
+                              />
+                            </span>
+                            <div
+                              class="m78-form_bubble-error"
+                              role="alert"
+                              style="opacity: 0; visibility: hidden;"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="m78-form_bubble-error"
+                  role="alert"
+                  style="opacity: 1; visibility: visible;"
+                >
+                  Required
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="m78 m78-cell_col"
+        style="width: 100%; padding: 0px;"
+      >
+        <div
+          class="m78 m78-row m78-tile m78-lay m78-form_field __horizontal __none m78-cross-start"
+          style="max-width: 440px;"
+        >
+          <div
+            class="m78-tile_leading"
+          >
+            <div
+              class="m78-form_label m78-form_horizontal-label"
+            >
+              <span
+                class="color-red fs-md vm mr"
+              >
+                *
+              </span>
+              列表
+            </div>
+          </div>
+          <div
+            class="m78-tile_main"
+          >
+            <div
+              class="m78-tile_cont"
+            >
+              <div
+                class="m78-form_unit"
+              >
+                <div
+                  class="m78-form_list-wrap"
+                >
+                  <div
+                    class="m78-form_list-actions"
+                  >
+                    <button
+                      class="m78 m78-init m78-btn m78-effect __md"
+                      type="button"
+                    >
+                      Add item
+                      <span
+                        class="m78-icon m78-icon_add-one"
+                        style="margin-left: 4px;"
+                      >
+                        <svg
+                          fill="none"
+                          height="1.2em"
+                          viewBox="0 0 48 48"
+                          width="1.2em"
+                        >
+                          <path
+                            d="M24 44C35.0457 44 44 35.0457 44 24C44 12.9543 35.0457 4 24 4C12.9543 4 4 12.9543 4 24C4 35.0457 12.9543 44 24 44Z"
+                            fill="transparent"
+                            stroke="currentColor"
+                            stroke-linejoin="round"
+                            stroke-width="4"
+                          />
+                          <path
+                            d="M24 16V32"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="4"
+                          />
+                          <path
+                            d="M16 24L32 24"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="4"
+                          />
+                        </svg>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+                <div
+                  class="m78-form_bubble-error"
+                  role="alert"
+                  style="opacity: 1; visibility: visible;"
+                >
+                  Required
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="m78 m78-cell_col"
+        style="width: 100%; padding: 0px;"
+      >
+        <div
+          class="m78 m78-row m78-tile m78-lay m78-form_field __horizontal __none m78-cross-start"
+          style="max-width: 440px;"
+        >
+          <div
+            class="m78-tile_leading"
+          >
+            <div
+              class="m78-form_label m78-form_horizontal-label"
+            >
+              <span
+                class="color-red fs-md vm mr"
+              >
+                *
+              </span>
+              列表3
+            </div>
+          </div>
+          <div
+            class="m78-tile_main"
+          >
+            <div
+              class="m78-tile_cont"
+            >
+              <div
+                class="m78-form_unit"
+              >
+                <div
+                  class="m78-form_list-wrap"
+                >
+                  <div
+                    class="m78-form_list-actions"
+                  >
+                    <button
+                      class="m78 m78-init m78-btn m78-effect __md"
+                      type="button"
+                    >
+                      Add item
+                      <span
+                        class="m78-icon m78-icon_add-one"
+                        style="margin-left: 4px;"
+                      >
+                        <svg
+                          fill="none"
+                          height="1.2em"
+                          viewBox="0 0 48 48"
+                          width="1.2em"
+                        >
+                          <path
+                            d="M24 44C35.0457 44 44 35.0457 44 24C44 12.9543 35.0457 4 24 4C12.9543 4 4 12.9543 4 24C4 35.0457 12.9543 44 24 44Z"
+                            fill="transparent"
+                            stroke="currentColor"
+                            stroke-linejoin="round"
+                            stroke-width="4"
+                          />
+                          <path
+                            d="M24 16V32"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="4"
+                          />
+                          <path
+                            d="M16 24L32 24"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="4"
+                          />
+                        </svg>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+                <div
+                  class="m78-form_bubble-error"
+                  role="alert"
+                  style="opacity: 1; visibility: visible;"
+                >
+                  Required
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="m78 m78-cell_col"
+        style="width: 100%; padding: 0px;"
+      >
+        <div
+          class="m78 m78-row m78-tile m78-lay m78-form_field __horizontal __none m78-cross-start"
+          style="max-width: 440px;"
+        >
+          <div
+            class="m78-tile_leading"
+          >
+            <div
+              class="m78-form_label m78-form_horizontal-label"
+            >
+               
+            </div>
+          </div>
+          <div
+            class="m78-tile_main"
+          >
+            <div
+              class="m78-tile_cont"
+            >
+              <div
+                class="m78-form_unit"
+              >
+                <div>
+                  <div
+                    class="m78 m78-overlay_wrap"
+                    style="visibility: hidden; z-index: 2200; opacity: 0; pointer-events: none; transform: none;"
+                    tabindex="-1"
+                  />
+                  <button
+                    class="m78 m78-init m78-btn m78-effect __md"
+                    type="button"
+                  >
+                    Reset
+                  </button>
+                  <button
+                    class="m78 m78-init m78-btn m78-effect __md __primary __light"
+                    style="min-width: 80px;"
+                    type="button"
+                  >
+                    Submit
+                  </button>
+                </div>
+                <div
+                  class="m78-form_bubble-error"
+                  role="alert"
+                  style="opacity: 0; visibility: hidden;"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`form schema 1`] = `
 <div>
   <div
