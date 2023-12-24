@@ -1,6 +1,5 @@
 import { TablePlugin } from "../plugin.js";
 import { _TableFormPlugin } from "./form.js";
-import { TableFeedback, TableFeedbackEvent } from "./event.js";
 import debounce from "lodash/debounce.js";
 import {
   createTrigger,
@@ -18,6 +17,9 @@ export class _TableFeedbackPlugin extends TablePlugin {
   form: _TableFormPlugin;
 
   lastEvent: TableFeedbackEvent[] | null = null;
+
+  // 防止键盘交互导致自动滚动时, feedback触发完马上滚动导致关闭
+  lastTime = 0;
 
   // 表头交互提醒
   headerTrigger: TriggerInstance;
@@ -57,18 +59,6 @@ export class _TableFeedbackPlugin extends TablePlugin {
     this.renderedDebounce();
   }
 
-  // 如果有lastEvent, 发出关闭通知
-  emitClose() {
-    if (this.lastEvent) {
-      const e: TableFeedbackEvent = {
-        type: TableFeedback.close,
-        text: "",
-      };
-      this.lastEvent = null;
-      this.table.event.feedback.emit([e]);
-    }
-  }
-
   // 渲染完成后, 重新计算表头的触发区域
   renderedDebounce = debounce(
     () => {
@@ -80,6 +70,22 @@ export class _TableFeedbackPlugin extends TablePlugin {
       trailing: true,
     }
   );
+
+  // 如果有lastEvent, 发出关闭通知
+  emitClose() {
+    if (this.lastEvent) {
+      const diffTime = Date.now() - this.lastTime;
+
+      if (diffTime < 60) return;
+
+      const e: TableFeedbackEvent = {
+        type: TableFeedback.close,
+        text: "",
+      };
+      this.lastEvent = null;
+      this.table.event.feedback.emit([e]);
+    }
+  }
 
   // 滚动时关闭已触发反馈
   scroll = () => {
@@ -102,6 +108,7 @@ export class _TableFeedbackPlugin extends TablePlugin {
 
     const events: TableFeedbackEvent[] = [];
 
+    // 内容溢出
     if (this.isCellOverflow(cell)) {
       const e: TableFeedbackEvent = {
         type: TableFeedback.overflow,
@@ -113,7 +120,7 @@ export class _TableFeedbackPlugin extends TablePlugin {
       events.push(e);
     }
 
-    // 禁用检测
+    // form invalid
     if (!this.form.validCheck(cell)) {
       const e: TableFeedbackEvent = {
         type: TableFeedback.disable,
@@ -127,7 +134,7 @@ export class _TableFeedbackPlugin extends TablePlugin {
 
     const errMsg = this.form.getCellError(cell);
 
-    // 错误检测
+    // form error
     if (errMsg) {
       const e: TableFeedbackEvent = {
         type: TableFeedback.error,
@@ -139,8 +146,21 @@ export class _TableFeedbackPlugin extends TablePlugin {
       events.push(e);
     }
 
+    // soft remove
+    if (this.table.isSoftRemove(cell.row.key)) {
+      const e: TableFeedbackEvent = {
+        type: TableFeedback.regular,
+        text: this.context.texts["soft remove tip"],
+        cell,
+        dom: cell.dom,
+      };
+
+      events.push(e);
+    }
+
     if (events.length) {
       this.lastEvent = [...events];
+      this.lastTime = Date.now();
       this.table.event.feedback.emit(events);
     } else {
       this.emitClose();
@@ -275,4 +295,31 @@ export class _TableFeedbackPlugin extends TablePlugin {
 
     return diffX > threshold || diffY > threshold;
   }
+}
+
+/** event.feedback的触发类型 */
+export enum TableFeedback {
+  /** 内容溢出 */
+  overflow = "overflow",
+  /** 错误 */
+  error = "error",
+  /** 禁用项 */
+  disable = "disable",
+  /** 常规提醒 */
+  regular = "regular",
+  /** 关闭 */
+  close = "close",
+}
+
+export interface TableFeedbackEvent {
+  /** 触发反馈的类型 */
+  type: TableFeedback;
+  /** 反馈的内容 */
+  text: string;
+  /** 触发反馈的单元格 */
+  cell?: TableCell;
+  /** 触发反馈的目标dom */
+  dom?: HTMLElement;
+  /** 触发反馈的虚拟位置 */
+  bound?: BoundSize;
 }

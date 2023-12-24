@@ -134,7 +134,7 @@ function SaveBtn() {
             <div>
               {t("new tip")}:{" "}
               <span className="color-green bold mr-8">{state.newCount}</span>
-              {t("delete tip")}:{" "}
+              {t("remove tip")}:{" "}
               <span className="color-red bold mr-8">{state.removeCount}</span>
               {t("update tip")}:{" "}
               <span className="color-blue bold">{state.updateCount}</span>
@@ -184,39 +184,29 @@ function DeleteBtn() {
   const { instance } = state;
 
   const bubble1 = useRef<OverlayInstance>(null!);
-  const bubble2 = useRef<OverlayInstance>(null!);
 
   // bubble触发器
   const trigger = useFn((e: TriggerEvent) => {
     if (e.type === TriggerType.active) {
       bubble1.current.trigger(e);
     }
-
-    if (e.type === TriggerType.click) {
-      bubble2.current.trigger(e);
-    }
   });
 
   const onDelete = useFn(() => {
-    instance.removeRow(state.selectedRows.map((row) => row.key));
+    instance.softRemove(state.selectedRows.map((row) => row.key));
   });
 
   return (
     <Translation ns={TABLE_NS}>
       {(t) => (
         <>
-          <Bubble instanceRef={bubble1} content={t("delete selected rows")} />
-          <Bubble
-            instanceRef={bubble2}
-            content={t("confirm delete")}
-            type={BubbleType.confirm}
-            onConfirm={onDelete}
-          />
-          <Trigger
-            type={[TriggerType.active, TriggerType.click]}
-            onTrigger={trigger}
-          >
-            <Button squareIcon disabled={state.selectedRows.length === 0}>
+          <Bubble instanceRef={bubble1} content={t("remove rows")} />
+          <Trigger type={[TriggerType.active]} onTrigger={trigger}>
+            <Button
+              squareIcon
+              disabled={state.selectedRows.length === 0}
+              onClick={onDelete}
+            >
               <IconDeleteOne />
             </Button>
           </Trigger>

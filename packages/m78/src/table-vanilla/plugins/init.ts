@@ -266,6 +266,7 @@ export class _TableInitPlugin extends TablePlugin {
     }
   }
 
+  /** 其他持久化配置合并 */
   mergePersistenceConfigAfter() {
     const ctx = this.context;
 
@@ -306,7 +307,7 @@ export class _TableInitPlugin extends TablePlugin {
 
       const ignore = getNamePathValue(cur, _TablePrivateProperty.ignore);
 
-      // 存在持久化配置时, 对齐进行合并等操作
+      // 存在持久化配置时, 对其进行合并等操作
       const persistenceConf = getNamePathValue(ctx.persistenceConfig, [
         "columns",
         cur.key,
@@ -843,6 +844,7 @@ export class _TableInitPlugin extends TablePlugin {
         );
 
         el.appendChild(contEl);
+
         this.config.el.appendChild(el);
       }
 

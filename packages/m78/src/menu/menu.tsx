@@ -114,11 +114,11 @@ export const _Menu = (props: MenuProps) => {
     },
   });
 
-  const hasSelected = openSelect.state.selected.length > 0;
+  const hasSelected = openSelect.getState().selected.length > 0;
 
   /** 关闭所有 */
   const close = useFn(() => {
-    if (openSelect.state.selected.length === 0) return;
+    if (openSelect.getState().selected.length === 0) return;
     self.lastActive = null;
     setState({
       current: null,

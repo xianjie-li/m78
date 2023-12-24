@@ -42,7 +42,7 @@ export interface AutoScrollConfig {
     onlyNotify?: boolean;
 }
 /** trigger配置 */
-export declare type AutoScrollTriggerConfig = {
+export type AutoScrollTriggerConfig = {
     /** 对应方向是否禁用 */
     left?: boolean;
     right?: boolean;
@@ -50,7 +50,7 @@ export declare type AutoScrollTriggerConfig = {
     top?: boolean;
 };
 /** 实例 */
-export declare type AutoScroll = ReturnType<typeof createAutoScroll>;
+export type AutoScroll = ReturnType<typeof createAutoScroll>;
 /** 一个光标在目标边缘时自动滚动节点的工具 */
 export declare function createAutoScroll(config: AutoScrollConfig): {
     /** 清理计时器, 如果当前正在滚动则停止 */

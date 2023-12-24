@@ -21,7 +21,14 @@ export declare function formatDate(date?: any, format?: string): string;
  * @param date - any time that can be parsed by parseDate()
  * @return count data
  */
-export declare function getDateCountDown(date?: any): any;
+export declare function getDateCountDown(date?: any): {
+    ms: string;
+    s: string;
+    m: string;
+    h: string;
+    d: string;
+    timeOut: boolean;
+};
 /**
  * return true if date is between targetDate
  * */

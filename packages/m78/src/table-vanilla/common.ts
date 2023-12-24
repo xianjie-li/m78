@@ -1,6 +1,7 @@
 import { BoundSize, isNumber } from "@m78/utils";
 import { TableKey, TablePosition } from "./types/base-type.js";
 import { removeNode } from "../common/index.js";
+import { TableRow } from "./types/items.js";
 
 export const _prefix = "m78-table";
 
@@ -20,6 +21,9 @@ export const tableDefaultTexts = {
   paste: "Can not paste to non editable cell",
   "add row": "Add row",
   "remove row": "Remove row",
+  "restore row": "Restore remove row",
+  "soft remove tip":
+    "The row has been removed and will take effect after submission",
   "set value": "Update value",
   "move row": "Move row",
   "move column": "Move column",
@@ -173,4 +177,18 @@ export function _syncListNode(arg: {
 /** 检测传入的事件是否是touch事件 */
 export function isTouch(e: Event) {
   return e.type.startsWith("touch") || (e as any).pointerType === "touch";
+}
+
+/** 用于便捷的根据当前 lastViewportItems 生成用于高效检测row mount状态的检测方法 */
+export function _rowMountChecker(visibleRows: TableRow[] = []) {
+  // 用于快速获取行的挂载状态
+  const showMap: Record<string, boolean | undefined> = {};
+
+  visibleRows.forEach((row) => {
+    showMap[row.key] = true;
+  });
+
+  return (key: TableKey) => {
+    return !!showMap[key];
+  };
 }

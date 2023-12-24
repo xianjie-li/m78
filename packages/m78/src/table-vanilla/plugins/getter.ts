@@ -1085,6 +1085,8 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
     if (!cell.isFixed) {
       zIndex = "5"; // 高于其所在单元格对应层index.scss
     } else if (cell.isCrossFixed) {
+      zIndex = "31";
+    } else if (cell.row.isFixed) {
       zIndex = "21";
     } else {
       zIndex = "11";
@@ -1103,8 +1105,8 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
     return {
       left: column.isFixed ? this.table.getX() + column.fixedOffset! : column.x,
       width: column.width,
-      // 应高于交叉固定项的20或基础层的5
-      zIndex: column.isFixed ? "21" : "5",
+      // 固定列应高于交叉固定列,
+      zIndex: column.isFixed ? "31" : "21", // column附加层目前无法做到完美的zIndex显示, 因为既要大于固定行的20又要小于固定列的10是不可能的,
       // 以下均设为零值
       top: 0,
       height: 0,
@@ -1115,8 +1117,8 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
     return {
       top: row.isFixed ? this.table.getY() + row.fixedOffset! : row.y,
       height: row.height,
-      // 应高于交叉固定项的20或基础层的5
-      zIndex: row.isFixed ? "21" : "5",
+      // 固定行应高于交叉固定行, 非固定化应高于固定列
+      zIndex: row.isFixed ? "31" : "11",
       // 以下均设为零值
       left: 0,
       width: 0,

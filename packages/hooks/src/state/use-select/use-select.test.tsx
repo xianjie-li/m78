@@ -18,7 +18,7 @@ test("useSelect", async () => {
 
     fn();
 
-    return <div>{select.state.selected.join("-")}</div>;
+    return <div>{select.getState().selected.join("-")}</div>;
   }
 
   render(<Test />);

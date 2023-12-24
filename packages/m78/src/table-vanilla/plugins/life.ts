@@ -267,7 +267,7 @@ export interface TableLife {
    * 重载表格
    * - 大部分情况下, 仅需要使用 render() 方法即可, 它有更好的性能
    * - 另外, 在必要配置变更后, 会自动调用 reload() 方法, 你只在极少情况下会使用它
-   * - reload包含一个level概念, 不同的配置项变更会对应不同的级别, 在渲染十万以上级别的数据时尤其值得关注, 然而, 通过table.config()修改配置时会自动根据修改内容选择重置级别
+   * - reload包含一个level概念, 不同的配置项变更会对应不同的级别, 在渲染十万以上级别的数据时尤其值得关注, 通过table.config()修改配置时会自动根据修改内容选择重置级别
    * */
   reload(opt?: TableReloadOptions): void;
 

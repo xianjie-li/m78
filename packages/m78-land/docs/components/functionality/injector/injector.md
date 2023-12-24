@@ -42,6 +42,8 @@ export interface InjectorConfig<Props = any> {
 }
 ```
 
+###
+
 ## Actuator
 
 执行器是一个 react 自定义 hook
@@ -256,4 +258,31 @@ export const MyComponent = createInjector<Props>((injector) => {
     </div>
   );
 });
+```
+
+## 处理默认 props 的类型
+
+```tsx
+interface Props {
+  name: string;
+  sex: number;
+  optionalKey?: string;
+}
+
+// 存在默认props时, 可参考如下写完提供完整的类型支持
+const defaultProps = {
+  optionalKey: 'hello',
+} satisfies Partial<Props>
+
+// 创建injector实例
+export const injector = createInjector<Props, typeof defaultProps>((props) => {
+  const state = injector.useDeps(useStateAct);
+
+  return <div>{state.count}</div>;
+}, {
+  displayName: "MyComponet",
+  defaultProps,
+});
+
+injector.useProps().optionalKey // 类型安全!
 ```

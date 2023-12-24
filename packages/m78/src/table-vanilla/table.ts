@@ -30,6 +30,7 @@ import { _TableIsPlugin } from "./plugins/is.js";
 import { _TableSetterPlugin } from "./plugins/setter.js";
 import { _TableFormPlugin } from "./plugins/form.js";
 import { _TableFeedbackPlugin } from "./plugins/feedback.js";
+import { _TableSoftRemovePlugin } from "./plugins/soft-remove.js";
 
 /**
  * 核心功能, 在非框架环境下实现, 以便在日后进行移植
@@ -129,6 +130,7 @@ export function _createTable(config: TableConfig): TableInstance {
     _TableTouchScrollPlugin,
     _TableSelectPlugin,
     _TableDisablePlugin,
+    _TableSoftRemovePlugin,
     _TableAutoResizePlugin,
     _TableRowColumnResize,
     _TableKeyboardInteractionPlugin,

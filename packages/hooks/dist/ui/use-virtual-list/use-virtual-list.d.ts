@@ -25,7 +25,7 @@ export interface VirtualListOption<Item> {
     /** 当有一个已存在的ref或html时，用来代替用来代替returns.wrapRef获取包裹容器 */
     wrapRef?: HTMLElement | RefObject<HTMLElement>;
 }
-export declare type VirtualList<Item> = {
+export type VirtualList<Item> = {
     /** 该项索引 */
     index: number;
     /** 该项的key, 如果未配置key(), 则等于index */

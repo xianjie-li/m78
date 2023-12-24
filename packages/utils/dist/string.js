@@ -11,7 +11,7 @@ import _object_spread from "@swc/helpers/src/_object_spread.mjs";
 }
 /**
  *  生成一段随机字符
- *  @param number - 随机串的长度倍数，默认1倍，随机字符长度为10为
+ *  @param number - 随机串的长度倍数，默认1倍，随机字符长度为10位
  *  @return string
  *  */ export function createRandString() {
     var number = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : 1;

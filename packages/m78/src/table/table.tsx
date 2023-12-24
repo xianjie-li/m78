@@ -3,7 +3,13 @@ import { RCTableProps } from "./types.js";
 import { _useLifeCycle } from "./use/life-cycle.js";
 import { _useRender } from "./render/use-render.js";
 
-export const _injector = createInjector<RCTableProps>(
+const defaultProps = {
+  dataImport: true,
+  dataExport: true,
+  softRemove: true,
+} satisfies Partial<RCTableProps>;
+
+export const _injector = createInjector<RCTableProps, typeof defaultProps>(
   () => {
     _useLifeCycle();
 
@@ -11,10 +17,7 @@ export const _injector = createInjector<RCTableProps>(
   },
   {
     displayName: "Table",
-    defaultProps: {
-      dataImport: true,
-      dataExport: true,
-    },
+    defaultProps,
   }
 );
 

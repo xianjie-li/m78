@@ -3,8 +3,8 @@ export declare enum KeyboardHelperTriggerType {
     down = "down",
     up = "up"
 }
-export declare type KeyboardHelperTriggerTypeKeys = keyof typeof KeyboardHelperTriggerType;
-export declare type KeyboardHelperTriggerTypeUnion = KeyboardHelperTriggerType | KeyboardHelperTriggerTypeKeys;
+export type KeyboardHelperTriggerTypeKeys = keyof typeof KeyboardHelperTriggerType;
+export type KeyboardHelperTriggerTypeUnion = KeyboardHelperTriggerType | KeyboardHelperTriggerTypeKeys;
 /** supported modifier keys */
 export declare enum KeyboardHelperModifier {
     alt = "alt",
@@ -14,10 +14,10 @@ export declare enum KeyboardHelperModifier {
     /** system key, determined by system, command on Mac and ctrl on Windows */
     sysCmd = "sysCmd"
 }
-export declare type KeyboardHelperModifierKeys = keyof typeof KeyboardHelperModifier;
-export declare type KeyboardHelperModifierUnion = KeyboardHelperModifier | KeyboardHelperModifierKeys;
+export type KeyboardHelperModifierKeys = keyof typeof KeyboardHelperModifier;
+export type KeyboardHelperModifierUnion = KeyboardHelperModifier | KeyboardHelperModifierKeys;
 /** event callback, return false represent event is interrupted, behavior like enable = false  */
-export declare type KeyboardHelperCallback = (e: KeyboardHelperEvent) => void | false;
+export type KeyboardHelperCallback = (e: KeyboardHelperEvent) => void | false;
 /** options */
 export interface KeyboardHelperOption {
     /** event callback */
@@ -61,14 +61,14 @@ export interface KeyboardHelperEvent {
     /** browser native event */
     nativeEvent: KeyboardEvent;
 }
-export declare type KeyboardHelper = ReturnType<typeof createKeyboardHelper>;
+export type KeyboardHelper = ReturnType<typeof createKeyboardHelper>;
 /** create helper */
 export declare function createKeyboardHelper(option: KeyboardHelperOption): {
     destroy: () => void;
     update: (option: Partial<KeyboardHelperOption>) => void;
     readonly option: KeyboardHelperOption | undefined;
 };
-export declare type KeyboardMultipleHelper = ReturnType<typeof createKeyboardHelpersBatch>;
+export type KeyboardMultipleHelper = ReturnType<typeof createKeyboardHelpersBatch>;
 /** create helper by multiple option */
 export declare function createKeyboardHelpersBatch(options: KeyboardHelperOption[]): {
     /** all helper instance */

@@ -1,5 +1,5 @@
 import { AnyObject } from "@m78/utils";
-declare type IDType = string | number;
+type IDType = string | number;
 interface UseQueueConfig<ItemOption> {
     /** 初始列表 */
     list?: (ItemOption & UseQueueItem)[];

@@ -3,7 +3,8 @@
   "compilerOptions": {
     "baseUrl": "./",
     // 逐步迁移
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "target": "es2015"
   },
   "include": ["src/**/*", "examples/**/*", "test/**/*"],
 }

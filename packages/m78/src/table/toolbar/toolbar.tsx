@@ -18,8 +18,6 @@ export function _Toolbar() {
 
     stateDep.rcPlugins.forEach((p) => p.toolbarLeadingCustomer?.(nodes));
 
-    let node: React.ReactNode | void;
-
     if (props.toolBarLeadingCustomer) {
       props.toolBarLeadingCustomer(nodes, state.instance);
     }

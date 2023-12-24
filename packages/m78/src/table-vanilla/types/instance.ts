@@ -11,6 +11,7 @@ import { TableSetter } from "../plugins/setter.js";
 import { TableConfigInstance } from "../plugins/config.js";
 import { TableForm } from "../plugins/form.js";
 import { TableKeyboardInteraction } from "../plugins/keyboard-interaction.js";
+import { TableSoftRemove } from "../plugins/soft-remove.js";
 
 /** table实例 */
 export interface TableInstance
@@ -26,4 +27,5 @@ export interface TableInstance
     TableIs,
     TableConfigInstance,
     TableForm,
-    TableKeyboardInteraction {}
+    TableKeyboardInteraction,
+    TableSoftRemove {}

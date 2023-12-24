@@ -1,20 +1,15 @@
-import {
-  SelectManager,
-  SelectManagerOption,
-  SelectManagerValue,
-} from "./select-manager.js";
+import { SelectManager, SelectManagerOption, isArray } from "@m78/utils";
 import { useEffect, useMemo } from "react";
 import { useUpdate } from "../../effect/use-update/use-update.js";
 import { useUpdateEffect } from "../../effect/use-update-effect/use-update-effect.js";
-import { isArray } from "@m78/utils";
 import { useFn } from "../../effect/use-fn/use-fn.js";
 
-export interface UseSelectOption<Item = SelectManagerValue>
-  extends Partial<SelectManagerOption<Item>> {
+export interface UseSelectOption<Item = any, Opt = any>
+  extends Partial<SelectManagerOption<Item, Opt>> {
   /** true | 选中状态变更时, 自动重绘 */
   autoUpdate?: boolean;
   /** 选中状态变更时触发 */
-  onChange?: (select: SelectManager<Item>) => void;
+  onChange?: (select: SelectManager<Item, Opt>) => void;
 }
 
 /**
@@ -22,8 +17,8 @@ export interface UseSelectOption<Item = SelectManagerValue>
  * - 具体api见SelectManager
  * - 注意, 由于会实时读取list并更新选中状态, option.list不能传入字面量, 否则会导致递归渲染
  * */
-export function useSelect<Item = SelectManagerValue>(
-  option?: UseSelectOption<Item>
+export function useSelect<Item = any, Opt = any>(
+  option?: UseSelectOption<Item, Opt>
 ) {
   const { autoUpdate = true, onChange, ...opts } = option || {};
   const list = option?.list;

@@ -11,13 +11,13 @@ export interface EmptyFunction {
     (): void;
 }
 /** tuple type */
-export declare type Tuple<T> = [T, T];
+export type Tuple<T> = [T, T];
 /** a number tuple */
-export declare type TupleNumber = Tuple<number>;
+export type TupleNumber = Tuple<number>;
 /** a string tuple */
-export declare type TupleString = Tuple<string>;
+export type TupleString = Tuple<string>;
 /** T or T[] */
-export declare type ArrayOrItem<T> = T | T[];
+export type ArrayOrItem<T> = T | T[];
 /** size */
 export interface Size {
     width: number;
@@ -38,7 +38,7 @@ export interface BoundSize {
     height: number;
 }
 /** point describing location */
-export declare type Point = TupleNumber;
+export type Point = TupleNumber;
 /** object containing id field */
 export interface IdProps {
     id: number;
@@ -47,21 +47,21 @@ export interface IdProps {
 export interface DataProps {
     data: number;
 }
-declare type Compute<T> = {
+type Compute<T> = {
     [K in keyof T]: T[K];
 } | never;
-declare type ComputeTrimNull<T> = {
+type ComputeTrimNull<T> = {
     [K in keyof T]-?: T[K];
 } | never;
-declare type AllKeys<T> = T extends any ? keyof T : never;
+type AllKeys<T> = T extends any ? keyof T : never;
 /** combine object based union type to new type */
-export declare type MergeUnion<T, Keys extends keyof T = keyof T> = Compute<{
+export type MergeUnion<T, Keys extends keyof T = keyof T> = Compute<{
     [K in Keys]: T[Keys];
 } & {
     [K in AllKeys<T>]?: T extends any ? K extends keyof T ? T[K] : never : never;
 }>;
 /** combine object based union type to new type, and trim all null or undefined */
-export declare type MergeUnionWithoutNull<T, Keys extends keyof T = keyof T> = ComputeTrimNull<{
+export type MergeUnionWithoutNull<T, Keys extends keyof T = keyof T> = ComputeTrimNull<{
     [K in Keys]: T[Keys];
 } & {
     [K in AllKeys<T>]?: T extends any ? K extends keyof T ? T[K] : never : never;

@@ -1,19 +1,34 @@
 import { TablePlugin } from "../plugin.js";
 import { TableKey } from "../types/base-type.js";
-import { TableCell, TableCellWithDom, TableRow } from "../types/items.js";
+import {
+  TableCell,
+  TableCellWithDom,
+  TableColumn,
+  TableRow,
+} from "../types/items.js";
 import { _getCellKey, _getCellKeysByStr } from "../common.js";
 import { addCls, removeCls } from "../../common/index.js";
+import { SelectManager } from "@m78/utils";
+import { TableReloadLevel, TableReloadOptions } from "./life.js";
 
 /** 在单元格/行/列上设置半透明遮挡物, 目前仅用于组件内部api设置临时禁用状态, 如拖动排序时, 为拖动列显示禁用样式 */
 export class _TableDisablePlugin extends TablePlugin implements TableDisable {
+  // 表格本身的禁用状态, 状态本身并无约束力, 可能某些api会需要读取其并禁用行为
   disabled = false;
 
+  // 用于检测禁用状态的select状态, 可以在其他插件向其中推入新的实例, 来实现插件自行管理禁用状态, 避免被通用禁用状态干扰
+  rowChecker: SelectManager<TableKey>[] = [new SelectManager()];
+  // 同rowChecker, 但检测列
+  columnChecker: SelectManager<TableKey>[] = [new SelectManager()];
+  // 同rowChecker, 但检测单元格
+  cellChecker: SelectManager<TableKey>[] = [new SelectManager()];
+
   /** 禁用行 */
-  rows: DisabledMap = {};
+  rows: SelectManager = this.rowChecker[0];
   /** 禁用单元格 */
-  cells: DisabledMap = {};
+  cells: SelectManager = this.cellChecker[0];
   /** 禁用列 */
-  columns: DisabledMap = {};
+  columns: SelectManager = this.columnChecker[0];
 
   cellRender(cell: TableCellWithDom) {
     const disabled = this.isDisabledCell(cell.key);
@@ -23,17 +38,44 @@ export class _TableDisablePlugin extends TablePlugin implements TableDisable {
       : removeCls(cell.dom, "__disabled");
   }
 
+  private clear() {
+    this.rows.unSelectAll();
+    this.cells.unSelectAll();
+    this.columns.unSelectAll();
+  }
+
+  reload(opt: TableReloadOptions) {
+    if (opt.level === TableReloadLevel.full) {
+      this.clear();
+    }
+  }
+
+  beforeDestroy() {
+    this.clear();
+  }
+
   isDisabled: TableDisable["isDisabled"] = () => {
     return this.disabled;
   };
 
-  isDisabledRow: TableDisable["isDisabledRow"] = (key) => !!this.rows[key];
+  isDisabledRow: TableDisable["isDisabledRow"] = (key) => {
+    for (const checker of this.rowChecker) {
+      if (checker.isSelected(key)) return true;
+    }
+    return false;
+  };
 
-  isDisabledColumn: TableDisable["isDisabledColumn"] = (key) =>
-    !!this.columns[key];
+  isDisabledColumn: TableDisable["isDisabledColumn"] = (key) => {
+    for (const checker of this.columnChecker) {
+      if (checker.isSelected(key)) return true;
+    }
+    return false;
+  };
 
   isDisabledCell: TableDisable["isDisabledCell"] = (key) => {
-    if (this.cells[key]) return true;
+    for (const checker of this.cellChecker) {
+      if (checker.isSelected(key)) return true;
+    }
 
     const cell = this.table.getCellByStrKey(key);
 
@@ -45,20 +87,24 @@ export class _TableDisablePlugin extends TablePlugin implements TableDisable {
   getDisabledRows: TableDisable["getDisabledRows"] = () => {
     const ls: TableRow[] = [];
 
-    Object.keys(this.rows).forEach((key) => {
-      const row = this.table.getRow(key);
-      ls.push(row);
+    this.rowChecker.forEach((c) => {
+      c.getState().selected.forEach((key) => {
+        const row = this.table.getRow(key);
+        ls.push(row);
+      });
     });
 
     return ls;
   };
 
   getDisabledColumns: TableDisable["getDisabledColumns"] = () => {
-    const ls: TableRow[] = [];
+    const ls: TableColumn[] = [];
 
-    Object.keys(this.columns).forEach((key) => {
-      const row = this.table.getRow(key);
-      ls.push(row);
+    this.columnChecker.forEach((c) => {
+      c.getState().selected.forEach((key) => {
+        const column = this.table.getColumn(key);
+        ls.push(column);
+      });
     });
 
     return ls;
@@ -82,19 +128,25 @@ export class _TableDisablePlugin extends TablePlugin implements TableDisable {
       list.push(cell);
     };
 
-    Object.keys(this.rows).forEach((key) => {
-      this.context.allColumnKeys.forEach((columnKey) => {
-        keyHandle(_getCellKey(key, columnKey));
+    this.rowChecker.forEach((c) => {
+      c.getState().selected.forEach((key) => {
+        this.context.allColumnKeys.forEach((columnKey) => {
+          keyHandle(_getCellKey(key, columnKey));
+        });
       });
     });
 
-    Object.keys(this.columns).forEach((key) => {
-      this.context.allRowKeys.forEach((rowKey) => {
-        keyHandle(_getCellKey(rowKey, key));
+    this.columnChecker.forEach((c) => {
+      c.getState().selected.forEach((key) => {
+        this.context.allRowKeys.forEach((rowKey) => {
+          keyHandle(_getCellKey(rowKey, key));
+        });
       });
     });
 
-    Object.keys(this.cells).forEach(keyHandle);
+    this.cellChecker.forEach((c) => {
+      c.getState().selected.forEach((k) => keyHandle(k as string));
+    });
 
     return list;
   };
@@ -105,12 +157,10 @@ export class _TableDisablePlugin extends TablePlugin implements TableDisable {
     merge = true
   ) => {
     if (!merge) {
-      this.rows = {};
+      this.rows.unSelectAll();
     }
 
-    rows.forEach((key) => {
-      this.rows[key] = disable ? 1 : 0;
-    });
+    disable ? this.rows.selectList(rows) : this.rows.unSelectList(rows);
 
     this.table.render();
   };
@@ -121,12 +171,12 @@ export class _TableDisablePlugin extends TablePlugin implements TableDisable {
     merge = true
   ) => {
     if (!merge) {
-      this.columns = {};
+      this.columns.unSelectAll();
     }
 
-    columns.forEach((key) => {
-      this.columns[key] = disable ? 1 : 0;
-    });
+    disable
+      ? this.columns.selectList(columns)
+      : this.columns.unSelectList(columns);
 
     this.table.render();
   };
@@ -137,12 +187,10 @@ export class _TableDisablePlugin extends TablePlugin implements TableDisable {
     merge = true
   ) => {
     if (!merge) {
-      this.cells = {};
+      this.cells.unSelectAll();
     }
 
-    cells.forEach((key) => {
-      this.cells[key] = disable ? 1 : 0;
-    });
+    disable ? this.cells.selectList(cells) : this.cells.unSelectList(cells);
 
     this.table.render();
   };
@@ -153,17 +201,13 @@ export class _TableDisablePlugin extends TablePlugin implements TableDisable {
   };
 
   clearDisable() {
-    this.rows = {};
-    this.columns = {};
-    this.cells = {};
+    this.rows.unSelectAll();
+    this.columns.unSelectAll();
+    this.cells.unSelectAll();
     this.disabled = false;
 
     this.table.render();
   }
-}
-
-interface DisabledMap {
-  [key: string]: 1 | 0;
 }
 
 /** 禁用相关的api */
@@ -184,7 +228,7 @@ export interface TableDisable {
   getDisabledRows(): TableRow[];
 
   /** 获取禁用的列 */
-  getDisabledColumns(): TableRow[];
+  getDisabledColumns(): TableColumn[];
 
   /** 获取禁用的单元格 */
   getDisabledCells(): TableCell[];

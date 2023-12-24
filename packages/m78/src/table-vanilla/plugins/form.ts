@@ -3,6 +3,7 @@ import {
   FormInstance,
   FormSchema,
   FormRejectMeta,
+  FormValidator,
 } from "@m78/form";
 import { requiredValidatorKey } from "@m78/form/validator/required.js";
 import {
@@ -32,6 +33,7 @@ import { removeNode } from "../../common/index.js";
 import { _getCellKey, _syncListNode } from "../common.js";
 import { _TableInteractiveCorePlugin } from "./interactive-core.js";
 import { FORM_LANG_PACK_NS, i18n } from "../../i18n/index.js";
+import { _TableSoftRemovePlugin } from "./soft-remove.js";
 
 export class _TableFormPlugin extends TablePlugin implements TableForm {
   wrapNode: HTMLElement;
@@ -106,9 +108,11 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
   >();
 
   interactive: _TableInteractiveCorePlugin;
+  softRemove: _TableSoftRemovePlugin;
 
   beforeInit() {
     this.interactive = this.getPlugin(_TableInteractiveCorePlugin);
+    this.softRemove = this.getPlugin(_TableSoftRemovePlugin);
     this.wrapNode = document.createElement("div");
     this.wrapNode.className = "m78-table_form-wrap";
 
@@ -380,6 +384,8 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
     // 删除行的检测均视为变更
     if (this.removeRecordMap.has(rowKey)) return true;
 
+    if (this.softRemove.isSoftRemove(rowKey)) return true;
+
     if (!columnKey) {
       return !!this.rowChanged[rowKey];
     }
@@ -398,8 +404,8 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
     // 包含排序过的行
     if (hasSorted) return true;
 
-    // 配置变更
-    if (this.table.getChangedConfigKeys().length > 0) return true;
+    // 包含软删除数据
+    if (this.softRemove.remove.hasSelected()) return true;
 
     // 包含变更数据
     return Object.keys(this.rowChanged).some((key) => this.rowChanged[key]);
@@ -420,12 +426,15 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
     let remove: any[] = [];
 
     const all = this.eachData((data, key) => {
+      // 跳过软删除项
+      if (this.softRemove.isSoftRemove(key)) return false;
+
       const isAdd = this.addRecordMap.has(key);
       // 数据变更并且不是新增的数据
       const isChange = this.rowChanged[key] && !isAdd;
 
       if (isAdd) {
-        // 删除虚拟组件, 防止数据传输到服务端时出错
+        // 删除虚拟主键, 防止数据传输到服务端时出错
         if (isAdd) {
           deleteNamePathValue(data, this.config.primaryKey);
         }
@@ -448,6 +457,15 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
       remove = rList;
     }
 
+    // 合并软删除项到remove
+    if (this.softRemove.remove.hasSelected()) {
+      this.softRemove.remove.getState().selected.forEach((k) => {
+        if (this.removeRecordMap.has(k)) return; // 跳过已直接删除的项
+        const rmRow = this.table.getRow(k);
+        remove.push(rmRow.data);
+      });
+    }
+
     return {
       change,
       add,
@@ -460,6 +478,7 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
 
   resetFormState() {
     this.reset();
+    this.softRemove.restoreSoftRemove();
     this.table.render();
   }
 
@@ -608,6 +627,7 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
     this.cellErrors = {};
     this.formInstances = {};
     this.invalidCellMap = {};
+
     this.updateValidRelate();
   }
 
@@ -635,9 +655,9 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
     if (!isEmpty(this.config.schema)) {
       requireKeys = this.config
         .schema!.filter((i) => {
-          const validator = ensureArray(i.validator);
+          const validator: FormValidator[] = ensureArray(i.validator);
 
-          return validator.some((i) => i.key === requiredValidatorKey);
+          return validator.some((i) => i?.key === requiredValidatorKey);
         })
         .map((i) => stringifyNamePath(i.name));
     }
@@ -881,10 +901,11 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
       );
     }
 
-    const formCreator = this.config.formCreator || createForm;
+    const formCreator: typeof createForm =
+      this.config.formCreator || createForm;
 
     form = formCreator({
-      defaultValue,
+      values: defaultValue,
       schemas: {
         schema: this.config.schema,
       },
@@ -897,8 +918,8 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
     return form;
   }
 
-  /** 遍历数据, 返回所有数据 */
-  private eachData(cd: (i: any, k: TableKey) => void) {
+  /** 遍历数据, 返回所有数据, 若cb返回false则将从返回list中过滤 */
+  private eachData(cd: (i: any, k: TableKey) => void | false) {
     const list: any[] = [];
 
     this.context.data.forEach((i) => {
@@ -933,9 +954,9 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
         });
       }
 
-      cd(data, key);
+      const res = cd(data, key);
 
-      list.push(data);
+      if (res !== false) list.push(data);
     });
 
     return list;
@@ -979,7 +1000,7 @@ export interface TableForm {
   /** 表格是否发生过数据变更, 排序, 增删数据 */
   getTableChanged(): boolean;
 
-  /** 重置当前的错误信息/变更状态等 */
+  /** 重置当前的错误信息/变更状态等 (仅清理状态, 不会还原变更值, 否则会和history api有冲突) */
   resetFormState(): void;
 }
 
@@ -994,6 +1015,6 @@ export interface TableDataLists<D = AnyObject> {
   update: D[];
   /** 移除的行 */
   remove: D[];
-  /** 是否发生了数据排序 */
+  /** 是否发生了数据排序(不包含增删数据导致的索引变更) */
   sorted: boolean;
 }

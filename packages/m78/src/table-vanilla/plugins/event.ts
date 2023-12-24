@@ -1,7 +1,6 @@
 import { TablePlugin } from "../plugin.js";
 import {
   AnyFunction,
-  BoundSize,
   CustomEvent,
   EmptyFunction,
   getEventOffset,
@@ -12,6 +11,7 @@ import debounce from "lodash/debounce.js";
 
 import { TableMutationEvent } from "./mutation.js";
 import { TableReloadOptions } from "./life.js";
+import { TableFeedbackEvent } from "./feedback.js";
 
 /**
  * 内部事件绑定, 外部事件派发
@@ -146,31 +146,4 @@ export interface TableEvents {
 export interface TableEvent {
   /** 所有可用事件 */
   event: TableEvents;
-}
-
-/** event.feedback的触发类型 */
-export enum TableFeedback {
-  /** 内容溢出 */
-  overflow = "overflow",
-  /** 错误 */
-  error = "error",
-  /** 禁用项 */
-  disable = "disable",
-  /** 常规提醒 */
-  regular = "regular",
-  /** 关闭 */
-  close = "close",
-}
-
-export interface TableFeedbackEvent {
-  /** 触发反馈的类型 */
-  type: TableFeedback;
-  /** 反馈的内容 */
-  text: string;
-  /** 触发反馈的单元格 */
-  cell?: TableCell;
-  /** 触发反馈的目标dom */
-  dom?: HTMLElement;
-  /** 触发反馈的虚拟位置 */
-  bound?: BoundSize;
 }

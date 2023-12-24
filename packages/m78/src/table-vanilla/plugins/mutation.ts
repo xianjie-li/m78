@@ -37,9 +37,11 @@ import { _TableSortColumnPlugin } from "./sort-column.js";
 import { _TableFormPlugin } from "./form.js";
 
 /**
- * 所有config/data变更相关的操作, 变异操作应统一使用此处提供的api, 方便统一处理, 自动生成和处理历史等
+ * config/data变更相关的操作, 变异操作尽量集中在此处并需要新增和触发 TableMutationDataType 事件/处理操作历史等
  *
  * 配置变更/单元格值编辑/增删行列/行列排序/隐藏列
+ *
+ * 其他: soft-remove.ts 由于并不会直接操作数据, 在单独插件维护, 但仍触发mutation事件
  * */
 export class _TableMutationPlugin extends TablePlugin {
   /** 每一次配置变更将变更的key记录, 通过记录来判断是否有变更项 */
@@ -236,13 +238,12 @@ export class _TableMutationPlugin extends TablePlugin {
       redo: () => {
         this.context.data.splice(index!, 0, ...newData);
 
-        this.table.event.mutation.emit({
-          type: TableMutationType.data,
-          changeType: TableMutationDataType.add,
-          add: [...newData],
-          remove: [],
-          move: [],
-        });
+        this.table.event.mutation.emit(
+          _getBlankMutationDataEvent({
+            changeType: TableMutationDataType.add,
+            add: [...newData],
+          })
+        );
 
         this.table.reloadSync({
           keepPosition: true,
@@ -258,13 +259,12 @@ export class _TableMutationPlugin extends TablePlugin {
       undo: () => {
         this.context.data.splice(index!, newData.length);
 
-        this.table.event.mutation.emit({
-          type: TableMutationType.data,
-          changeType: TableMutationDataType.remove,
-          add: [],
-          remove: [...newData],
-          move: [],
-        });
+        this.table.event.mutation.emit(
+          _getBlankMutationDataEvent({
+            changeType: TableMutationDataType.remove,
+            remove: [...newData],
+          })
+        );
 
         this.table.reloadSync({
           keepPosition: true,
@@ -304,13 +304,12 @@ export class _TableMutationPlugin extends TablePlugin {
           this.context.data.splice(cur.index, 1);
         }
 
-        this.table.event.mutation.emit({
-          type: TableMutationType.data,
-          changeType: TableMutationDataType.remove,
-          add: [],
-          remove,
-          move: [],
-        });
+        this.table.event.mutation.emit(
+          _getBlankMutationDataEvent({
+            changeType: TableMutationDataType.remove,
+            remove,
+          })
+        );
 
         this.table.reloadSync({
           keepPosition: true,
@@ -324,13 +323,12 @@ export class _TableMutationPlugin extends TablePlugin {
           this.context.data.splice(cur.index, 0, cur.data);
         }
 
-        this.table.event.mutation.emit({
-          type: TableMutationType.data,
-          changeType: TableMutationDataType.add,
-          add: remove,
-          remove: [],
-          move: [],
-        });
+        this.table.event.mutation.emit(
+          _getBlankMutationDataEvent({
+            changeType: TableMutationDataType.add,
+            add: remove,
+          })
+        );
 
         this.table.reloadSync({
           keepPosition: true,
@@ -537,13 +535,12 @@ export class _TableMutationPlugin extends TablePlugin {
 
           // 同步sortColumns
           if (isRow) {
-            this.table.event.mutation.emit({
-              type: TableMutationType.data,
-              changeType: TableMutationDataType.move,
-              add: [],
-              remove: [],
-              move: [...moveEventData],
-            });
+            this.table.event.mutation.emit(
+              _getBlankMutationDataEvent({
+                changeType: TableMutationDataType.move,
+                move: [...moveEventData],
+              })
+            );
           } else {
             this.table.history.ignore(() => {
               this.setPersistenceConfig(
@@ -594,19 +591,18 @@ export class _TableMutationPlugin extends TablePlugin {
 
           // 同步sortColumns
           if (isRow) {
-            this.table.event.mutation.emit({
-              type: TableMutationType.data,
-              changeType: TableMutationDataType.move,
-              add: [],
-              remove: [],
-              move: [...moveEventData].map((i) => ({
-                from: i.to,
-                to: i.from,
-                data: i.data,
-                dataFrom: i.dataTo,
-                dataTo: i.dataFrom,
-              })),
-            });
+            this.table.event.mutation.emit(
+              _getBlankMutationDataEvent({
+                changeType: TableMutationDataType.move,
+                move: [...moveEventData].map((i) => ({
+                  from: i.to,
+                  to: i.from,
+                  data: i.data,
+                  dataFrom: i.dataTo,
+                  dataTo: i.dataFrom,
+                })),
+              })
+            );
           } else {
             this.table.history.ignore(() => {
               this.setPersistenceConfig(
@@ -1031,9 +1027,16 @@ export enum TableMutationType {
 
 /** TableMutationType.data变更类型 */
 export enum TableMutationDataType {
+  /** 新增行 */
   add = "add",
+  /** 删除行 */
   remove = "remove",
+  /** 移动行 */
   move = "move",
+  /** 软删除行 */
+  softRemove = "softRemove",
+  /** 恢复软删除 */
+  restoreSoftRemove = "restoreSoftRemove",
 }
 
 export type TableMutationEvent =
@@ -1076,6 +1079,8 @@ export interface TableMutationDataEvent {
     /** 移动的行数据 */
     data: AnyObject;
   }>;
+  /** 软删除的行或从软删除恢复的行 */
+  soft: AnyObject[];
 }
 
 /** 单元格值变更事件 */
@@ -1155,4 +1160,17 @@ export interface TableMutation {
 
   /** 根据row&column key获取单元格值 */
   getValue(rowKey: TableKey, columnKey: TableKey): any;
+}
+
+export function _getBlankMutationDataEvent(
+  opt: Partial<TableMutationDataEvent>
+) {
+  return {
+    type: TableMutationType.data,
+    add: [],
+    remove: [],
+    soft: [],
+    move: [],
+    ...opt,
+  } as TableMutationDataEvent;
 }

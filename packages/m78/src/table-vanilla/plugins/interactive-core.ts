@@ -12,6 +12,7 @@ import {
 import { removeNode } from "../../common/index.js";
 import { _TableFormPlugin } from "./form.js";
 import { FormInstance } from "../../form/index.js";
+import { _TableDisablePlugin } from "./disable.js";
 
 // 表示一个交互项
 interface TableInteractiveItem {
@@ -51,11 +52,17 @@ export class _TableInteractiveCorePlugin extends TablePlugin {
 
   form: _TableFormPlugin;
 
+  disable: _TableDisablePlugin;
+
+  init() {
+    this.form = this.getPlugin(_TableFormPlugin);
+    this.disable = this.getPlugin(_TableDisablePlugin);
+  }
+
   mounted() {
     this.initDom();
     this.table.event.click.on(this.onClick);
     this.multipleHelper = createKeyboardHelpersBatch(this.getKeydownOptions());
-    this.form = this.getPlugin(_TableFormPlugin);
   }
 
   beforeDestroy() {
@@ -155,6 +162,9 @@ export class _TableInteractiveCorePlugin extends TablePlugin {
 
     if (isFunction(this.config.interactive) && !this.config.interactive(cell))
       return false;
+
+    // 禁用项阻止交互
+    if (this.disable && this.disable.isDisabledCell(cell.key)) return;
 
     return isFunction(this.config.interactiveRender);
   }

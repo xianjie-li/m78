@@ -9,7 +9,7 @@ export interface SameItem<Meta = any> {
     /** 是否启用 */
     enable: boolean;
 }
-declare type Returns<Meta> = readonly [number, Array<SameItem<Meta>>, string];
+type Returns<Meta> = readonly [number, Array<SameItem<Meta>>, string];
 /**
  * 用于对同组件的不同实例进行管理，获取其他已渲染组件的共享数据以及当前处在启用实例中的顺序
  *

@@ -1,5 +1,5 @@
 import { AnyFunction } from "./types";
-declare type Primitive = null | undefined | boolean | number | string | symbol;
+type Primitive = null | undefined | boolean | number | string | symbol;
 /**
  * 获取表示对象原始类型的字符串
  * @param {*} o - 需要查询的字符

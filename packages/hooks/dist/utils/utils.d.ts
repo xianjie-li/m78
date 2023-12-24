@@ -1,6 +1,6 @@
 import { RefObject } from "react";
 /** 用于获取dom的target */
-export declare type DomTarget = HTMLElement | RefObject<HTMLElement>;
+export type DomTarget = HTMLElement | RefObject<HTMLElement>;
 /**
  * 依次从target、target.current、ref.current取值，只要有任意一个为dom元素则返回
  * 传入dom时原样返回，传入包含dom对象的ref时返回current，否则返回undefined

@@ -89,7 +89,7 @@ export { default } from "@m78/lib-build/jest.config.js";
 npx jest
 ```
 
-> note: By now, jest need provide --experimental-vm-modules flag to enable ESM support.
+> note: By now, jest need provide **--experimental-vm-modules** flag to enable ESM support.
 
 ### example
 

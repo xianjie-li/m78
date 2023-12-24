@@ -41,7 +41,7 @@
     "docusaurus-plugin-sass": "^0.2.2",
     "prism-react-renderer": "^2.1.0",
     "sass": "^1.56.1",
-    "typescript": "^5.2.2"
+    "typescript": "^5.3.3"
   },
   "browserslist": {
     "production": [

@@ -1,11 +1,10 @@
 import _object_spread from "@swc/helpers/src/_object_spread.mjs";
 import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
 import _object_without_properties from "@swc/helpers/src/_object_without_properties.mjs";
-import { SelectManager } from "./select-manager.js";
+import { SelectManager, isArray } from "@m78/utils";
 import { useEffect, useMemo } from "react";
 import { useUpdate } from "../../effect/use-update/use-update.js";
 import { useUpdateEffect } from "../../effect/use-update-effect/use-update-effect.js";
-import { isArray } from "@m78/utils";
 import { useFn } from "../../effect/use-fn/use-fn.js";
 /**
  * 用于列表的选中项管理, 内置了对于超大数据量的优化(用于m78组件的tree等组件高性能管理选中/展开等)

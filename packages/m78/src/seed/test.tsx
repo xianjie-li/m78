@@ -12,7 +12,7 @@ test("rc seed", async () => {
     },
   });
 
-  const rChild = jest.fn((state) => <span>{state}</span>);
+  const rChild = jest.fn((state: any) => <span>{state}</span>);
 
   const res = render(
     <seed.State selector={(state) => state.count}>{rChild}</seed.State>

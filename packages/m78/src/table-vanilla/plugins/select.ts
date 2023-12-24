@@ -245,7 +245,8 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
         return false;
       }
 
-      if (this.disablePlugin.isDisabledCell(first.key)) return false;
+      // 禁用项应该也需要选中
+      // if (this.disablePlugin.isDisabledCell(first.key)) return false;
 
       if (
         !e.tap &&
@@ -598,7 +599,7 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
         const pass = rowSelectable(row);
         if (!pass) return false;
       }
-      if (this.disablePlugin.isDisabledRow(key)) return false;
+      // if (this.disablePlugin.isDisabledRow(key)) return false;
     }
 
     if (isCell) {
@@ -614,7 +615,7 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
         const pass = cellSelectable(cell);
         if (!pass) return false;
       }
-      if (this.disablePlugin.isDisabledCell(key)) return false;
+      // if (this.disablePlugin.isDisabledCell(key)) return false;
     }
 
     map[key] = 1;

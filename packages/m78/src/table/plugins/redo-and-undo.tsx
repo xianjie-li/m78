@@ -6,8 +6,8 @@ import { Bubble } from "../../bubble/index.js";
 import { Button } from "../../button/index.js";
 import { Size } from "../../common/index.js";
 import React from "react";
-import { IconBackOne as IconUndo } from "@m78/icons/back-one.js";
-import { IconGoAhead as IconRedo } from "@m78/icons/go-ahead.js";
+import { IconBack as IconUndo } from "@m78/icons/back.js";
+import { IconNext as IconRedo } from "@m78/icons/next.js";
 import { Divider } from "../../layout/index.js";
 
 export class _RedoAndUndoPlugin extends RCTablePlugin {

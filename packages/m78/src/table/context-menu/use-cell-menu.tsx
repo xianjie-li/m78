@@ -4,16 +4,16 @@ import { TriggerEvent, TriggerType } from "../../trigger/index.js";
 import { _injector } from "../table.js";
 import { _useStateAct } from "../injector/state.act.js";
 import { _TableContextMenuOpenOpt } from "./use-context-menu.act.js";
-import { MenuProps } from "../../menu/index.js";
+import { MenuOption, MenuProps } from "../../menu/index.js";
 import { IconClipboard } from "@m78/icons/clipboard.js";
 import { IconCopy } from "@m78/icons/copy.js";
 import { IconToTop } from "@m78/icons/to-top.js";
 import { IconToBottom } from "@m78/icons/to-bottom.js";
 import { IconDeleteOne } from "@m78/icons/delete-one.js";
-import { COMMON_NS, TABLE_NS, useTranslation } from "../../i18n/index.js";
+import { IconBack } from "@m78/icons/back.js";
+import { TABLE_NS, useTranslation } from "../../i18n/index.js";
 import { isTruthyOrZero } from "@m78/utils";
 import { _useMethodsAct } from "../injector/methods.act.js";
-import { Dialog } from "../../dialog/index.js";
 import { TableRow } from "../../table-vanilla/index.js";
 
 enum MenuValues {
@@ -21,16 +21,18 @@ enum MenuValues {
   paste,
   insertTop,
   insertBottom,
-  delete,
+  remove,
+  restoreRemove,
 }
 
 export function _useCellMenu() {
   const { state } = _injector.useDeps(_useStateAct);
   const methods = _injector.useDeps(_useMethodsAct);
+  const props = _injector.useProps();
 
   const instance = state.instance;
 
-  const confirm: NonNullable<MenuProps["onConfirm"]> = useFn((val, option) => {
+  const confirm: NonNullable<MenuProps["onConfirm"]> = useFn((_, option) => {
     if (option.context) option.context();
   });
 
@@ -127,48 +129,49 @@ export function _useCellMenu() {
           },
         ];
 
+    const removeMenus: MenuOption[] = [];
+
+    if (instance.isSoftRemove(item.row.key)) {
+      removeMenus.push({
+        label: (
+          <span>
+            {t("restore row")}
+            {selectedRows.length > 1 ? (
+              <span> ({selectedRows.length})</span>
+            ) : null}
+          </span>
+        ),
+        value: MenuValues.restoreRemove,
+        leading: <IconBack />,
+        context() {
+          instance.restoreSoftRemove(selectedRows.map((i) => i.key));
+        },
+      });
+    } else {
+      removeMenus.push({
+        label: (
+          <span>
+            {hasMultipleSelectedRow ? t("remove rows") : t("remove row")}
+            {selectedRows.length > 1 ? (
+              <span> ({selectedRows.length})</span>
+            ) : null}
+          </span>
+        ),
+        value: MenuValues.remove,
+        leading: <IconDeleteOne className="color-error" />,
+        className: "color-error",
+        context() {
+          props.softRemove
+            ? instance.softRemove(selectedRows.map((i) => i.key))
+            : instance.removeRow(selectedRows.map((i) => i.key));
+        },
+      });
+    }
+
     return {
       xy: [e.x, e.y],
       cb: confirm,
-      menu: [
-        ...cellOnlyMenu,
-        ...insertMenus,
-        // 删除行
-        {
-          label: (
-            <span>
-              {hasMultipleSelectedRow ? t("delete rows") : t("delete row")}
-              {selectedRows.length > 1 ? (
-                <span> ({selectedRows.length})</span>
-              ) : null}
-            </span>
-          ),
-          value: MenuValues.delete,
-          leading: <IconDeleteOne className="color-error" />,
-          className: "color-error",
-          async context() {
-            try {
-              const conf = {
-                ns: [COMMON_NS],
-              };
-
-              methods.overlayStackChange(true);
-
-              await Dialog.quicker(
-                t("confirm delete", conf),
-                t("alert", conf)!,
-                true
-              );
-
-              instance.removeRow(selectedRows.map((i) => i.key));
-            } catch (e) {
-              //
-            } finally {
-              methods.overlayStackChange(false);
-            }
-          },
-        },
-      ],
+      menu: [...cellOnlyMenu, ...insertMenus, ...removeMenus],
     };
   });
 }

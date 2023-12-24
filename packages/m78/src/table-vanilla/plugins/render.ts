@@ -26,7 +26,6 @@ import {
 } from "../types/base-type.js";
 import { _TableEventPlugin } from "./event.js";
 import clamp from "lodash/clamp.js";
-import { TableMutationEvent, TableMutationType } from "./mutation.js";
 
 /**
  * 渲染核心逻辑
@@ -262,6 +261,8 @@ export class _TableRenderPlugin extends TablePlugin implements TableRender {
       Object.assign(styleObj, {
         // 固定项标识
         __fixed: true,
+        "__x-fixed": cell.column.isFixed,
+        "__y-fixed": cell.row.isFixed,
         "__cross-fixed": cell.isCrossFixed,
         // 边缘项标识, 通常用于去掉末尾边框
         "__rf-first":

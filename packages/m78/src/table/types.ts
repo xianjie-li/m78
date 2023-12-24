@@ -14,12 +14,12 @@ import { TableDragSortConfig } from "../table-vanilla/plugins/drag-sort.js";
 import { ComponentBaseProps } from "../common/index.js";
 import { AnyObject, EmptyFunction } from "@m78/utils";
 import { CustomEventWithHook } from "@m78/hooks";
-import { ReactElement, ReactNode } from "react";
+import React, { ReactElement, ReactNode } from "react";
 import { TableDataLists } from "../table-vanilla/plugins/form.js";
-import { TableFeedbackEvent } from "../table-vanilla/plugins/event.js";
 import { FormAdaptors, FormInstance, FormSchema } from "../form/index.js";
 import { TablePlugin } from "../table-vanilla/plugin.js";
 import { RCTablePlugin } from "./plugin.js";
+import { TableFeedbackEvent } from "../table-vanilla/plugins/feedback.js";
 
 /** 忽略的配置 */
 type OmitConfig = typeof _tableOmitConfig[number];
@@ -127,9 +127,9 @@ export interface RCTableProps
   /**
    * filter使用的表单实例, 不传时会使用内部创建的默认实例
    *
-   * 通过此项可以更深入的控制筛选项, 使用自定义form实例时,  defaultFilter 和 filterSchema 会被忽略, 请使用form对应的配置(defaultValue/schemas)
+   * 通过此项可以更深入的控制筛选项, 使用自定义form实例时,  defaultFilter 和 filterSchema 会被忽略, 请使用form对应的配置(values/schemas)
    *
-   * 此外, 还会覆盖默认的 size / layoutType / spacePadding 配置, 若有需要需要特别指定
+   * 此外, 还会覆盖默认的 size / layoutType / spacePadding 配置, 若有需求需要重新指定
    * */
   filterForm?: FormInstance;
 
@@ -179,6 +179,8 @@ export interface RCTableProps
    * - 传入持久化适配函数, 自定义存储逻辑
    * */
   configPersistence?: string | Function;
+  /** true | 软删除数据, 删除数据不会从表格消失, 而是显示为禁用, 用户可以在保存前随时对其进行恢复 */
+  softRemove?: boolean;
 
   /* # # # # # # # 其他 # # # # # # # */
 
@@ -239,15 +241,6 @@ export interface RCTableInstance extends Omit<TableInstance, "event"> {
     feedback: CustomEventWithHook<(event: TableFeedbackEvent[]) => void>;
   };
 }
-
-export enum TableSort {
-  asc = "asc",
-  desc = "desc",
-}
-
-export type TableSortKeys = keyof typeof TableSort;
-
-export type TableSortUnion = TableSort | TableSortKeys;
 
 export interface TableDataOperationsConfig {
   /** 允许编辑数据, 请注意, 单元格是否可编辑还与对应列的schema配置有关 */

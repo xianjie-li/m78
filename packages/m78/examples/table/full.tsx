@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Table } from "../../src/table/index.js";
-import { useFirstMountState, useUpdate } from "@m78/hooks";
+import { useUpdate } from "@m78/hooks";
 import {
   Button,
   FormInstance,
@@ -15,8 +15,6 @@ import { RCTableInstance } from "../../src/table/types.js";
 import { tableInputAdaptor } from "../../src/table/form-widgets/table-input.js";
 
 import vars from "./xx.module.scss";
-
-console.log(vars);
 
 const columns = Array.from({ length: 40 }).map((_, j) => {
   const c: any = {
@@ -369,6 +367,31 @@ const TableFullExample = () => {
           }}
         >
           log ctx
+        </button>
+      </div>
+
+      <div className="mt-12">
+        soft remove:
+        <button
+          onClick={() => {
+            table?.softRemove(["id4", "id7", "id8"]);
+          }}
+        >
+          remove id4/7/8
+        </button>
+        <button
+          onClick={() => {
+            table?.restoreSoftRemove(["id4", "id8"]);
+          }}
+        >
+          restoreSoftRemove id4/8
+        </button>
+        <button
+          onClick={() => {
+            console.log(table?.isSoftRemove("id4"));
+          }}
+        >
+          isSoftRemove id4
         </button>
       </div>
     </div>
