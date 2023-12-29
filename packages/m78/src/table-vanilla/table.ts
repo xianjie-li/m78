@@ -31,6 +31,7 @@ import { _TableSetterPlugin } from "./plugins/setter.js";
 import { _TableFormPlugin } from "./plugins/form.js";
 import { _TableFeedbackPlugin } from "./plugins/feedback.js";
 import { _TableSoftRemovePlugin } from "./plugins/soft-remove.js";
+import { _TableMetaDataPlugin } from "./plugins/meta-data.js";
 
 /**
  * 核心功能, 在非框架环境下实现, 以便在日后进行移植
@@ -111,6 +112,7 @@ export function _createTable(config: TableConfig): TableInstance {
   // 注意: 在实现上, 鉴于完整功能的复杂度, 内部插件之间并不是完全解耦的, 插件之间会互相访问状态/方法
   // 比如初始化阶段, 不同插件可能都需要对配置和数据进行遍历, 预计算等, 这些操作应该在单次完成, 避免重复计算.
   const plugins = [
+    _TableMetaDataPlugin,
     _TableInitPlugin,
     _TablePluginEmpty,
     _TableLifePlugin,

@@ -1,4 +1,4 @@
-import { BoundSize, isNumber } from "@m78/utils";
+import { BoundSize, createRandString, isNumber } from "@m78/utils";
 import { TableKey, TablePosition } from "./types/base-type.js";
 import { removeNode } from "../common/index.js";
 import { TableRow } from "./types/items.js";
@@ -191,4 +191,9 @@ export function _rowMountChecker(visibleRows: TableRow[] = []) {
   return (key: TableKey) => {
     return !!showMap[key];
   };
+}
+
+/** 根据指定的key生成key */
+export function _generateKeyByKey(key: TableKey) {
+  return `__${key}_M78_RELATION_KEY__`;
 }

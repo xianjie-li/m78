@@ -18,5 +18,9 @@
   "overrides": {
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11"
+  },
+  "volta": {
+    "node": "20.10.0",
+    "pnpm": "8.13.1"
   }
 }

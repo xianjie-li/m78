@@ -16,12 +16,7 @@ import {
   _getCellKeysByStr,
   _prefix,
 } from "../common.js";
-import {
-  _TablePrivateProperty,
-  TableKey,
-  TablePosition,
-  TableRowFixed,
-} from "../types/base-type.js";
+import { TableKey, TablePosition, TableRowFixed } from "../types/base-type.js";
 
 import {
   TableCell,
@@ -33,7 +28,7 @@ import {
 import { TableMergeData } from "../types/context.js";
 import { _TableHidePlugin } from "./hide.js";
 import { Position } from "../../common/index.js";
-import { TableMutationEvent, TableMutationType } from "./mutation.js";
+import { _TableMetaDataPlugin } from "./meta-data.js";
 
 export class _TableGetterPlugin extends TablePlugin implements TableGetter {
   hide: _TableHidePlugin;
@@ -188,7 +183,11 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
       return (item: any, index: number) => {
         const key = isRow ? item[this.config.primaryKey] : item.key;
 
-        if (getNamePathValue(item, _TablePrivateProperty.ignore)) return null;
+        const ignore = isRow
+          ? this.context.isIgnoreRow(key)
+          : this.context.isIgnoreColumn(key);
+
+        if (ignore) return null;
 
         const cur: any = isRow ? this.getRow(key) : this.getColumn(key);
 
@@ -243,7 +242,7 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
       for (let i = startRowIndex; i < data.length; i++) {
         const key = this.getKeyByRowIndex(i);
 
-        if (getNamePathValue(data[i], _TablePrivateProperty.ignore)) continue;
+        if (this.context.isIgnoreRow(key)) continue;
 
         const row = this.getRow(key);
 
@@ -260,8 +259,7 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
       for (let i = startColumnIndex; i < columns.length; i++) {
         const key = this.getKeyByColumnIndex(i);
 
-        if (getNamePathValue(columns[i], _TablePrivateProperty.ignore))
-          continue;
+        if (this.context.isIgnoreColumn(key)) continue;
 
         const column = this.getColumn(key);
 
@@ -281,14 +279,14 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
       const slice: TableCell[] = [];
 
       for (let i = startColumnIndex; i <= endColumnIndex; i++) {
-        if (getNamePathValue(columns[i], _TablePrivateProperty.ignore))
-          continue;
+        const col = columns[i];
+
+        if (this.context.isIgnoreColumn(col.key)) continue;
         slice.push(this.getCell(row.key, this.getKeyByColumnIndex(i)));
       }
 
       slice.forEach((cell) => {
-        if (getNamePathValue(cell.row.data, _TablePrivateProperty.ignore))
-          return;
+        if (this.context.isIgnoreRow(cell.row.key)) return;
 
         // 固定项单独处理
         if (skipFixed && (cell.row.isFixed || cell.column.isFixed)) return;
@@ -366,20 +364,16 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
 
     const lf = ctx.leftFixedList
       .map((key) => this.getColumn(key))
-      .filter((i) => !getNamePathValue(i.config, _TablePrivateProperty.ignore));
+      .filter((i) => !ctx.isIgnoreColumn(i.key));
     const rf = ctx.rightFixedList
       .map((key) => this.getColumn(key))
-      .filter((i) => !getNamePathValue(i.config, _TablePrivateProperty.ignore));
+      .filter((i) => !ctx.isIgnoreColumn(i.key));
 
     [...lf, ...rf].forEach((column) => {
       // 截取固定列中可见单元格
       for (let i = startRowIndex; i <= endRowIndex; i++) {
         const cell = this.getCell(this.getKeyByRowIndex(i), column.key);
-        if (
-          cell.row.isFixed ||
-          getNamePathValue(cell.row.data, _TablePrivateProperty.ignore)
-        )
-          continue;
+        if (cell.row.isFixed || ctx.isIgnoreRow(cell.row.key)) continue;
         if (push(cell)) continue;
         cells.push(cell);
       }
@@ -395,7 +389,7 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
       // 截取固定行中可用单元格
       for (let i = startColumnIndex!; i <= endColumnIndex!; i++) {
         const curConf = this.context.columns[i];
-        if (getNamePathValue(curConf, _TablePrivateProperty.ignore)) continue;
+        if (ctx.isIgnoreColumn(curConf.key)) continue;
 
         const cell = this.getCell(row.key, this.getKeyByColumnIndex(i));
 
@@ -408,10 +402,8 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
       // 添加四个角的固定项
       [...ctx.leftFixedList, ...ctx.rightFixedList].forEach((key) => {
         const cell = this.getCell(row.key, key);
-        if (getNamePathValue(cell.column.config, _TablePrivateProperty.ignore))
-          return;
-        if (getNamePathValue(cell.row.data, _TablePrivateProperty.ignore))
-          return;
+        if (ctx.isIgnoreColumn(cell.column.key)) return;
+        if (ctx.isIgnoreRow(cell.row.key)) return;
         if (push(cell)) return;
         cells.push(cell);
       });
@@ -432,10 +424,9 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
     const ctx = this.context;
     let row = ctx.rowCache[key];
 
-    const lastKeyNotEqual =
-      !!row &&
-      getNamePathValue(row, _TablePrivateProperty.reloadKey) !==
-        ctx.lastReloadKey;
+    const meta = ctx.getRowMeta(key);
+
+    const lastKeyNotEqual = !!row && meta.reloadKey !== ctx.lastReloadKey;
 
     // 是否需要刷新缓存
     const needFresh = !useCache || lastKeyNotEqual;
@@ -450,7 +441,7 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
       Object.assign(row, fresh);
     }
 
-    setNamePathValue(row, _TablePrivateProperty.reloadKey, ctx.lastReloadKey);
+    meta.reloadKey = ctx.lastReloadKey;
 
     return row;
   }
@@ -469,6 +460,8 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
     const height = isNumber(conf.height) ? conf.height : this.config.rowHeight!;
     const data = ctx.data[index];
 
+    const meta = ctx.getRowMeta(key);
+
     const isFixed = !!conf.fixed;
     const isHeader = ctx.yHeaderKeys.includes(key);
 
@@ -478,7 +471,7 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
 
     let dataIndex = index - ctx.topFixedList.length;
 
-    const fIndex = ctx.dataKeyIndexMap[`${key}${_TablePrivateProperty.ref}`];
+    const fIndex = ctx.dataKeyIndexMap[meta.ref!];
 
     if (isFixed) {
       if (isNumber(fIndex)) {
@@ -486,14 +479,8 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
       }
     }
 
-    const hasRef = isNumber(fIndex);
-
-    // 数据被标记为fake, 并且没有ref才视为fake数据, 因为对于用户来说, 包含ref数据指向一个有效数据
-    const isFake =
-      !!getNamePathValue(data, _TablePrivateProperty.fake) && !hasRef;
-
     const row: TableRow = {
-      key: data[this.config.primaryKey],
+      key,
       height,
       index: realIndex,
       dataIndex: isHeader ? -1 : dataIndex,
@@ -504,7 +491,7 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
       isFixed,
       isEven: realIndex % 2 === 0,
       isHeader,
-      isFake,
+      isFake: !!meta.fake,
     };
 
     if (row.isFixed) {
@@ -522,10 +509,9 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
     const ctx = this.context;
     let column = ctx.columnCache[key];
 
-    const lastKeyNotEqual =
-      !!column &&
-      getNamePathValue(column, _TablePrivateProperty.reloadKey) !==
-        ctx.lastReloadKey;
+    const meta = ctx.getColumnMeta(key);
+
+    const lastKeyNotEqual = !!column && meta.reloadKey !== ctx.lastReloadKey;
 
     // 是否需要刷新缓存
     const needFresh = !useCache || lastKeyNotEqual;
@@ -540,11 +526,7 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
       Object.assign(column, fresh);
     }
 
-    setNamePathValue(
-      column,
-      _TablePrivateProperty.reloadKey,
-      ctx.lastReloadKey
-    );
+    meta.reloadKey = ctx.lastReloadKey;
 
     return column;
   }
@@ -558,6 +540,8 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
     if (!isNumber(index)) {
       throwError(`column key ${key} is invalid`, _prefix);
     }
+
+    const meta = ctx.getColumnMeta(key);
 
     const conf = ctx.columns[index];
 
@@ -573,7 +557,7 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
 
     let dataIndex = index - ctx.leftFixedList.length;
 
-    const fIndex = ctx.columnKeyIndexMap[`${key}${_TablePrivateProperty.ref}`];
+    const fIndex = ctx.columnKeyIndexMap[meta.ref!];
 
     if (isFixed) {
       if (isNumber(fIndex)) {
@@ -581,14 +565,14 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
       }
     }
 
-    const hasRef = isNumber(fIndex);
+    // const hasRef = isNumber(fIndex);
 
     // 数据被标记为fake, 并且没有ref才视为fake数据, 因为对于用户来说, 包含ref数据指向一个有效数据
-    const isFake =
-      !!getNamePathValue(conf, _TablePrivateProperty.fake) && !hasRef;
+    // const isFake =
+    //   !!getNamePathValue(conf, _TablePrivateProperty.fake) && !hasRef;
 
     const column: TableColumn = {
-      key: conf.key,
+      key,
       width,
       index: realIndex,
       dataIndex: isHeader ? -1 : dataIndex,
@@ -598,7 +582,7 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
       isFixed,
       isEven: realIndex % 2 === 0,
       isHeader: isHeader,
-      isFake,
+      isFake: !!meta.fake,
     };
 
     if (column.isFixed) {
@@ -654,7 +638,7 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
 
     const lastKeyNotEqual =
       !!cell &&
-      getNamePathValue(cell, _TablePrivateProperty.reloadKey) !==
+      getNamePathValue(cell, _TableMetaDataPlugin.RELOAD_KEY) !==
         ctx.lastReloadKey;
 
     // 是否需要刷新缓存
@@ -673,7 +657,7 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
       Object.assign(cell, fresh);
     }
 
-    setNamePathValue(cell, _TablePrivateProperty.reloadKey, ctx.lastReloadKey);
+    setNamePathValue(cell, _TableMetaDataPlugin.RELOAD_KEY, ctx.lastReloadKey);
 
     return cell;
   }
@@ -773,14 +757,11 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
               ? this.table.getColumn(nextListKey)
               : this.table.getRow(nextListKey);
 
-            // 在data/column中的实际项
-            const cur = isVertical
-              ? columns[nextListIndex]
-              : data[nextListIndex];
+            const ignore = isVertical
+              ? this.context.isIgnoreColumn(nextListKey)
+              : this.context.isIgnoreRow(nextListKey);
 
-            isHideOrIgnore =
-              this.hide.isHideColumn(nextListKey) ||
-              getNamePathValue(cur, _TablePrivateProperty.ignore);
+            isHideOrIgnore = this.hide.isHideColumn(nextListKey) || ignore;
           } while (
             // 隐藏或忽略项, 并且在有效索引内
             isHideOrIgnore &&
@@ -807,9 +788,13 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
         return;
       }
 
-      if (getNamePathValue(next, _TablePrivateProperty.ignore)) continue;
-
       const key = isVertical ? this.table.getKeyByRowData(next) : next.key;
+
+      const ignore = isVertical
+        ? this.context.isIgnoreRow(key)
+        : this.context.isIgnoreColumn(key);
+
+      if (ignore) continue;
 
       const _cell = isVertical
         ? this.getCell(key, column.key)
@@ -864,7 +849,7 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
     for (let i = 0; i < max; i++) {
       const cur = columns[i];
 
-      if (getNamePathValue(cur, _TablePrivateProperty.ignore)) continue;
+      if (this.context.isIgnoreColumn(cur.key)) continue;
 
       if (cur.width) {
         x = x + cur.width - columnWidth!;
@@ -903,7 +888,7 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
     this.context.rowConfigNumberKeys.forEach((k) => {
       const cur = rows![k];
 
-      if (getNamePathValue(cur, _TablePrivateProperty.ignore)) return;
+      if (this.context.isIgnoreRow(k)) return;
 
       const ind = this.getIndexByRowKey(k);
 

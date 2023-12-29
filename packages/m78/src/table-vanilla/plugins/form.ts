@@ -11,13 +11,13 @@ import {
   AnyObject,
   deleteNamePathValue,
   ensureArray,
-  getNamePathValue,
   isEmpty,
+  isTruthyOrZero,
   NamePath,
   setNamePathValue,
   stringifyNamePath,
 } from "@m78/utils";
-import { _TablePrivateProperty, TableKey } from "../types/base-type.js";
+import { TableKey } from "../types/base-type.js";
 import { TablePlugin } from "../plugin.js";
 import { TableCell, TableColumn, TableRow } from "../types/items.js";
 import {
@@ -664,11 +664,15 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
 
     // 是否可编辑
     this.context.columns.forEach((col) => {
-      if (getNamePathValue(col, _TablePrivateProperty.ignore)) return;
+      const meta = this.context.getColumnMeta(col.key);
+
+      if (meta.ignore) return;
 
       const cell = this.table.getCell(hKey, col.key);
       // header cell 不能检测是否可编辑, 这里以第一行数据的可编译配置作为参照 (忽略单元格逐个配置的情况, 表单都是以列为单位启用)
       const firstRowCell = this.table.getCell(firstRowKey, col.key);
+
+      const is = this.interactive.isInteractive(firstRowCell);
 
       if (this.interactive.isInteractive(firstRowCell)) {
         const item = {
@@ -696,7 +700,9 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
   private updateValidStatus(row: TableRow) {
     if (row.isHeader) return;
 
-    if (getNamePathValue(row.data, _TablePrivateProperty.ignore)) return;
+    const meta = this.context.getRowMeta(row.key);
+
+    if (meta.ignore) return;
 
     const form = this.formInstances[row.key];
 
@@ -923,23 +929,19 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
     const list: any[] = [];
 
     this.context.data.forEach((i) => {
-      const isFake = getNamePathValue(i, _TablePrivateProperty.fake);
-
-      if (isFake) return;
-
       const key = this.table.getKeyByRowData(i);
+
+      const meta = this.context.getRowMeta(key);
+
+      if (meta.fake || meta.substitute) return;
 
       let data: any;
 
-      const isIgnore = getNamePathValue(i, _TablePrivateProperty.ignore);
-
       // 是忽略项时, 获取其原始数据 (通常是其fixed项clone, 执行setValue时值保存在clone位置而不是原始备份记录)
-      if (isIgnore) {
-        const ind = this.table.getIndexByRowKey(key);
+      if (meta.ignore && isTruthyOrZero(meta.ref)) {
+        const ind = this.table.getIndexByRowKey(meta.ref!);
 
         data = Object.assign({}, this.context.data[ind]);
-
-        deleteNamePathValue(data, _TablePrivateProperty.fake);
       } else {
         data = Object.assign({}, i);
       }

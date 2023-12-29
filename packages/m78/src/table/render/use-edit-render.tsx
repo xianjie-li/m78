@@ -1,5 +1,5 @@
 import { _CustomEditItem, RCTableEditRenderArg } from "../types.js";
-import { _TablePrivateProperty, TableCell } from "../../table-vanilla/index.js";
+import { TableCell } from "../../table-vanilla/index.js";
 import { useFn } from "@m78/hooks";
 import React, { cloneElement, isValidElement, ReactElement } from "react";
 import ReactDom from "react-dom";
@@ -10,7 +10,6 @@ import {
 import {
   AnyObject,
   delay,
-  getNamePathValue,
   isBoolean,
   isFunction,
   isString,
@@ -22,6 +21,7 @@ import { _injector } from "../table.js";
 import { throwError } from "../../common/index.js";
 import { FormAdaptorsItem } from "../../form/index.js";
 import { m78Config } from "../../config/index.js";
+import { _getTableCtx } from "../common.js";
 
 // 自定义编辑逻辑
 export function _useEditRender() {
@@ -81,13 +81,18 @@ export function _useEditRender() {
   const interactiveEnableChecker = useFn((cell: TableCell) => {
     if (cell.column.isFake || cell.row.isFake) return false;
 
-    const isNew = getNamePathValue(cell.row.data, _TablePrivateProperty.new);
+    if (state.instance) {
+      const ctx = _getTableCtx(state.instance);
+      const meta = ctx.getRowMeta(cell.row.key);
 
-    if (!isNew) {
-      if (dataOperations.edit === false) return false;
+      const isNew = meta.new;
 
-      if (isFunction(dataOperations.edit) && !dataOperations.edit(cell))
-        return false;
+      if (!isNew) {
+        if (dataOperations.edit === false) return false;
+
+        if (isFunction(dataOperations.edit) && !dataOperations.edit(cell))
+          return false;
+      }
     }
 
     return checkEditable(cell.column.config.originalKey);

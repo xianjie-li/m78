@@ -19,13 +19,13 @@ import { addCls, removeCls, removeNode } from "../../common/index.js";
 
 import { TableCell, TableCellWithDom } from "../types/items.js";
 import {
-  _TablePrivateProperty,
   TablePointInfo,
   TablePosition,
   TableRenderCtx,
 } from "../types/base-type.js";
 import { _TableEventPlugin } from "./event.js";
 import clamp from "lodash/clamp.js";
+import { _TableMetaDataPlugin } from "./meta-data.js";
 
 /**
  * 渲染核心逻辑
@@ -149,7 +149,7 @@ export class _TableRenderPlugin extends TablePlugin implements TableRender {
 
       const renderFlag = getNamePathValue(
         cell.state,
-        _TablePrivateProperty.rendered
+        _TableMetaDataPlugin.RENDERED_KEY
       );
 
       const renderCtx: TableRenderCtx = {
@@ -165,7 +165,7 @@ export class _TableRenderPlugin extends TablePlugin implements TableRender {
       this.cellRenderImpl(cell as TableCellWithDom, renderCtx);
 
       if (!renderFlag) {
-        setNamePathValue(cell.state, _TablePrivateProperty.rendered, true);
+        setNamePathValue(cell.state, _TableMetaDataPlugin.RENDERED_KEY, true);
       }
 
       const disableDefaultRender =
@@ -201,7 +201,7 @@ export class _TableRenderPlugin extends TablePlugin implements TableRender {
 
     const lastReloadKey = getNamePathValue(
       dom,
-      _TablePrivateProperty.reloadKey
+      _TableMetaDataPlugin.RENDERED_KEY
     );
 
     // 同一次reload中只进行一直更新
@@ -209,7 +209,7 @@ export class _TableRenderPlugin extends TablePlugin implements TableRender {
       return;
     }
 
-    setNamePathValue(dom, _TablePrivateProperty.reloadKey, ctx.lastReloadKey);
+    setNamePathValue(dom, _TableMetaDataPlugin.RENDERED_KEY, ctx.lastReloadKey);
 
     const column = cell.column;
     const row = cell.row;

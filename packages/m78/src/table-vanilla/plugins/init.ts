@@ -16,12 +16,12 @@ import {
   _getCellKeysByStr,
   _prefix,
   _privateScrollerDomKey,
+  _generateKeyByKey,
 } from "../common.js";
 import { _TableGetterPlugin } from "./getter.js";
 import { _TableHeaderPlugin } from "./header.js";
 import { addCls } from "../../common/index.js";
 import {
-  _TablePrivateProperty,
   TableColumnFixed,
   TableKey,
   TableRowFixed,
@@ -170,22 +170,30 @@ export class _TableInitPlugin extends TablePlugin {
       const cur = columns[i];
 
       if (cur.fixed) {
-        // 由于要注入私有属性, 这里需要将其克隆
-        const clone = { ...cur };
+        const substituteKey = _generateKeyByKey(cur.key);
+        const clone = {
+          key: substituteKey,
+          originalKey: substituteKey,
+          label: substituteKey,
+        };
+
+        const meta = ctx.getColumnMeta(substituteKey);
+
+        meta.ignore = true;
+        meta.ref = cur.key;
 
         listX.push(clone);
 
-        const nCur = {
-          ...cur,
-          [_TablePrivateProperty.fake]: true,
-        };
+        const originalMeta = ctx.getColumnMeta(cur.key);
 
-        setNamePathValue(clone, _TablePrivateProperty.ignore, true);
+        // 替身数据 记录原数据位置
+        originalMeta.substitute = true;
+        originalMeta.ref = clone.key;
 
         if (cur.fixed === TableColumnFixed.left) {
-          lf.push(nCur);
+          lf.push(cur);
         } else {
-          rf.push(nCur);
+          rf.push(cur);
         }
       } else {
         listX.push(cur);
@@ -198,22 +206,27 @@ export class _TableInitPlugin extends TablePlugin {
       const conf = rows[key];
 
       if (conf && conf.fixed) {
-        // 由于要注入私有属性, 这里需要将其克隆
-        const clone = { ...cur };
+        const substituteKey = _generateKeyByKey(key);
+        const clone = {
+          [this.config.primaryKey]: substituteKey,
+        };
+
+        const meta = ctx.getRowMeta(substituteKey);
+
+        meta.ignore = true;
+        meta.ref = key;
 
         listY.push(clone);
 
-        const nCur = {
-          ...cur,
-          [_TablePrivateProperty.fake]: true,
-        };
+        const originalMeta = ctx.getRowMeta(key);
 
-        setNamePathValue(clone, _TablePrivateProperty.ignore, true);
+        originalMeta.substitute = true;
+        originalMeta.ref = substituteKey;
 
         if (conf.fixed === TableRowFixed.top) {
-          tf.push(nCur);
+          tf.push(cur);
         } else {
-          bf.push(nCur);
+          bf.push(cur);
         }
       } else {
         listY.push(cur);
@@ -305,8 +318,6 @@ export class _TableInitPlugin extends TablePlugin {
         );
       }
 
-      const ignore = getNamePathValue(cur, _TablePrivateProperty.ignore);
-
       // 存在持久化配置时, 对其进行合并等操作
       const persistenceConf = getNamePathValue(ctx.persistenceConfig, [
         "columns",
@@ -324,21 +335,17 @@ export class _TableInitPlugin extends TablePlugin {
         );
       }
 
-      const isFake = getNamePathValue(cur, _TablePrivateProperty.fake);
+      const meta = ctx.getColumnMeta(cur.key);
 
-      if (!isFake) {
+      const ignore = meta.ignore;
+      const fake = meta.fake;
+
+      if (!fake && !ignore) {
         ctx.allColumnKeys.push(cur.key);
       }
 
       if (ignore) {
         ctx.ignoreXList.push(i);
-
-        // 固定项已拷贝并移动到列表前/后位置, 跳过后续设置
-        // 对fixed的ignore项进行标记
-        if (!isFake && (cur.fixed || persistenceConf?.fixed)) {
-          columnMap[`${cur.key}${_TablePrivateProperty.ref}`] = i;
-          return;
-        }
       }
 
       columnMap[cur.key] = i;
@@ -346,7 +353,7 @@ export class _TableInitPlugin extends TablePlugin {
 
     // 行索引
     ctx.data.forEach((cur, i) => {
-      const k = cur[this.config.primaryKey];
+      const k = this.table.getKeyByRowData(cur);
 
       // 在此处确保所有key都是可用的, 后续代码中就可以直接安全取用了
       if (!isString(k) && !isNumber(k)) {
@@ -356,24 +363,17 @@ export class _TableInitPlugin extends TablePlugin {
         );
       }
 
-      const isFake = getNamePathValue(cur, _TablePrivateProperty.fake);
+      const meta = ctx.getRowMeta(k);
 
-      if (!isFake) {
+      const fake = meta.fake;
+      const ignore = meta.ignore;
+
+      if (!fake && !ignore) {
         ctx.allRowKeys.push(k);
       }
 
-      const ignore = getNamePathValue(cur, _TablePrivateProperty.ignore);
-
       if (ignore) {
         ctx.ignoreYList.push(i);
-
-        const conf = ctx.rows[k];
-
-        // 固定项已拷贝并移动到列表前/后位置, 跳过后续设置
-        if (!isFake && conf?.fixed) {
-          dataMap[`${k}${_TablePrivateProperty.ref}`] = i;
-          return;
-        }
       }
 
       dataMap[k] = i;
@@ -404,11 +404,10 @@ export class _TableInitPlugin extends TablePlugin {
     const indOrKey = isNumber(index) ? index : key;
 
     const backup = backupMap[key];
-    const item = map[indOrKey];
 
-    const ignore = getNamePathValue(item, _TablePrivateProperty.ignore);
-
-    if (ignore) return;
+    if (map === this.context.columns) {
+      if (this.context.isIgnoreColumn(key)) return;
+    }
 
     if (!map[indOrKey]) {
       map[indOrKey] = {};
@@ -476,8 +475,9 @@ export class _TableInitPlugin extends TablePlugin {
 
     // x轴
     columns.forEach((c) => {
-      const ignore = getNamePathValue(c, _TablePrivateProperty.ignore);
-      const hide = getNamePathValue(c, _TablePrivateProperty.hide);
+      const meta = ctx.getColumnMeta(c.key);
+      const ignore = meta.ignore;
+      const hide = meta.hide;
 
       const w = isNumber(c.width) ? c.width : columnWidth!;
 
@@ -606,7 +606,7 @@ export class _TableInitPlugin extends TablePlugin {
 
     for (let i = ctx.columns.length - 1; i >= 0; i--) {
       const cur = ctx.columns[i];
-      if (getNamePathValue(cur, _TablePrivateProperty.ignore)) continue;
+      if (ctx.isIgnoreColumn(cur.key)) continue;
       if (!ctx.rightFixedMap[cur.key]) {
         ctx.lastColumnKey = cur.key;
         break;
@@ -615,8 +615,8 @@ export class _TableInitPlugin extends TablePlugin {
 
     for (let i = ctx.data.length - 1; i >= 0; i--) {
       const cur = ctx.data[i];
-      if (getNamePathValue(cur, _TablePrivateProperty.ignore)) continue;
       const key = cur[this.config.primaryKey];
+      if (ctx.isIgnoreRow(key)) continue;
       if (!ctx.bottomFixedMap[key]) {
         ctx.lastRowKey = key;
         break;
@@ -744,8 +744,6 @@ export class _TableInitPlugin extends TablePlugin {
         ? getter.getIndexByRowKey(_key)
         : getter.getIndexByColumnKey(_key);
 
-      const cur = isRow ? data![originalInd] : columns![originalInd];
-
       const conf = isRow ? rows![_key] : columns![originalInd];
 
       const isFixed = !!conf?.fixed;
@@ -769,12 +767,14 @@ export class _TableInitPlugin extends TablePlugin {
 
       const isHideColumn = sortHide.isHideColumn(_key);
 
+      const isIgnore = isRow ? ctx.isIgnoreRow(_key) : ctx.isIgnoreColumn(_key);
+
       if (isHideColumn) {
         // 跳过隐藏列, 不计入尺寸
 
         mergeNum--;
         mergeList.push(_key);
-      } else if (getNamePathValue(cur, _TablePrivateProperty.ignore)) {
+      } else if (isIgnore) {
         // 忽略ignore列
 
         ind++;

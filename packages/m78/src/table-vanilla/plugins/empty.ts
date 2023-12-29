@@ -1,6 +1,5 @@
 import { TablePlugin } from "../plugin.js";
 import { TableReloadLevel, TableReloadOptions } from "./life.js";
-import { _TablePrivateProperty } from "../types/base-type.js";
 
 import { removeNode } from "../../common/index.js";
 import { _getSizeString } from "../common.js";
@@ -59,8 +58,9 @@ export class _TablePluginEmpty extends TablePlugin {
           // 添加一条假数据用于empty占位, 另外也能保证getBoundItems正确运行
           ctx.data.push({
             [this.config.primaryKey]: _TablePluginEmpty.EMPTY_ROW_KEY,
-            [_TablePrivateProperty.fake]: true,
           });
+
+          ctx.getRowMeta(_TablePluginEmpty.EMPTY_ROW_KEY).fake = true;
 
           ctx.rows[_TablePluginEmpty.EMPTY_ROW_KEY] = {
             height: this.config.emptySize!,

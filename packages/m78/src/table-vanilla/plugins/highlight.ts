@@ -9,7 +9,8 @@ import {
   setNamePathValue,
 } from "@m78/utils";
 import { addCls, removeCls } from "../../common/index.js";
-import { _TablePrivateProperty, TableKey } from "../types/base-type.js";
+import { TableKey } from "../types/base-type.js";
+import { _TableMetaDataPlugin } from "./meta-data.js";
 
 /** 单元格, 行, 列高亮/自动滚动 */
 export class _TableHighlightPlugin
@@ -133,7 +134,7 @@ export class _TableHighlightPlugin
           if (item.dom) {
             const prevTimer = getNamePathValue(
               item.dom,
-              _TablePrivateProperty.timer
+              _TableMetaDataPlugin.TIMER_KEY
             );
 
             if (prevTimer !== undefined) {
@@ -145,11 +146,15 @@ export class _TableHighlightPlugin
             const timer = setTimeout(() => {
               if (item.dom) {
                 removeCls(item.dom, "m78-highlight-bg");
-                setNamePathValue(item.dom, _TablePrivateProperty.timer, null);
+                setNamePathValue(
+                  item.dom,
+                  _TableMetaDataPlugin.TIMER_KEY,
+                  null
+                );
               }
             }, 2000);
 
-            setNamePathValue(item.dom, _TablePrivateProperty.timer, timer);
+            setNamePathValue(item.dom, _TableMetaDataPlugin.TIMER_KEY, timer);
           }
         });
       };

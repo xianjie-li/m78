@@ -1,19 +1,8 @@
 import { TablePlugin } from "../plugin.js";
 import { TableReloadLevel } from "./life.js";
 import { TableColumnLeafConfigFormatted } from "../types/items.js";
-import {
-  _TablePrivateProperty,
-  TableColumnFixed,
-  TableKey,
-} from "../types/base-type.js";
-import { getNamePathValue } from "@m78/utils";
+import { TableColumnFixed, TableKey } from "../types/base-type.js";
 import { _prefix } from "../common.js";
-
-/**
- * note:
- * sortColumns 和拖拽排序都不支持合并头的场景
- * 需要知道某项是否为子项
- * */
 
 /** 表格列排序 */
 export class _TableSortColumnPlugin extends TablePlugin {
@@ -48,7 +37,8 @@ export class _TableSortColumnPlugin extends TablePlugin {
     const regularFixedRight: TableColumnLeafConfigFormatted[] = [];
 
     ctx.columns.forEach((i) => {
-      const fake = getNamePathValue(i, _TablePrivateProperty.fake);
+      const meta = ctx.getColumnMeta(i.key);
+      const fake = meta.fake;
 
       const isChild = ctx.mergeHeaderRelationMap[i.key];
 
@@ -93,8 +83,12 @@ export class _TableSortColumnPlugin extends TablePlugin {
     const column = this.context.columns;
 
     const list = column.filter((i) => {
+      const meta = this.context.getColumnMeta(i.key);
+
+      // TODO: META
       // 虚拟项
-      if (getNamePathValue(i, _TablePrivateProperty.fake)) return false;
+      if (meta.fake || meta.ignore) return false;
+
       // 子项
       return !this.context.mergeHeaderRelationMap[i.key];
     });

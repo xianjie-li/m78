@@ -1,21 +1,10 @@
 import { TablePlugin } from "../plugin.js";
-import {
-  deleteNamePathValue,
-  getNamePathValue,
-  setNamePathValue,
-} from "@m78/utils";
-import {
-  _TablePrivateProperty,
-  TableColumnFixed,
-  TableKey,
-} from "../types/base-type.js";
+import { TableColumnFixed, TableKey } from "../types/base-type.js";
 import { TableReloadLevel } from "./life.js";
 import { TableColumnLeafConfigFormatted } from "../types/items.js";
 import { removeNode } from "../../common/index.js";
 import { _TableGetterPlugin } from "./getter.js";
 import { _syncListNode } from "../common.js";
-
-// vb改为统一实例, 在context存储
 
 /** 表格列隐藏 */
 export class _TableHidePlugin extends TablePlugin {
@@ -62,8 +51,10 @@ export class _TableHidePlugin extends TablePlugin {
     const hideColumns = this.context.persistenceConfig.hideColumns || [];
 
     this.prevHideColumns.forEach((cur) => {
-      deleteNamePathValue(cur, _TablePrivateProperty.ignore);
-      deleteNamePathValue(cur, _TablePrivateProperty.hide);
+      const meta = ctx.getColumnMeta(cur.key);
+
+      meta.ignore = false;
+      meta.hide = false;
     });
 
     this.prevHideColumns = [];
@@ -73,17 +64,14 @@ export class _TableHidePlugin extends TablePlugin {
 
       if (!list.length) return;
 
-      let cur: TableColumnLeafConfigFormatted | undefined = list[0];
-
-      // 包含多项说明是固定项, 仅需要对虚拟项进行操作
-      if (list.length > 1) {
-        cur = list.find((i) => getNamePathValue(i, _TablePrivateProperty.fake));
-      }
+      const cur: TableColumnLeafConfigFormatted | undefined = list[0];
 
       if (!cur) return;
 
-      setNamePathValue(cur, _TablePrivateProperty.ignore, true);
-      setNamePathValue(cur, _TablePrivateProperty.hide, true);
+      const meta = ctx.getColumnMeta(cur.key);
+
+      meta.ignore = true;
+      meta.hide = true;
 
       this.prevHideColumns.push(cur);
     });

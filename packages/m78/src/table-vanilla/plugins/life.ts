@@ -241,6 +241,9 @@ export class _TableLifePlugin extends TablePlugin {
   }
 }
 
+// 添加一个重置级别,  FullIndex,  介于full与index之间, 根据ctx.data等数据重新出来大部分缓存, 比如合并配置, 计算fixed项,
+// 但保留history/缓存等信息
+
 /** 重载级别, 更高的级别会包含低级别的重载内容 */
 export enum TableReloadLevel {
   /** 基础信息计算, 比如固定/合并/尺寸等信息, 计算比较快速 */

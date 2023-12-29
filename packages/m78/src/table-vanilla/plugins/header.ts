@@ -1,8 +1,7 @@
-import { AnyObject, setNamePathValue, stringifyNamePath } from "@m78/utils";
+import { AnyObject, stringifyNamePath } from "@m78/utils";
 import { _getCellKey } from "../common.js";
 import { TablePlugin } from "../plugin.js";
 import {
-  _TablePrivateProperty,
   TableColumnFixed,
   TableRenderCtx,
   TableRowFixed,
@@ -79,8 +78,10 @@ export class _TableHeaderPlugin extends TablePlugin {
         const key = this.getDefaultYKey(depth);
         currentRow = injectRows[depth] = {
           [conf.primaryKey]: key,
-          [_TablePrivateProperty.fake]: true,
         };
+
+        ctx.getRowMeta(key).fake = true;
+
         rows[key] = { fixed: TableRowFixed.top, height: defHeight };
         injectRows[depth] = currentRow;
       }
@@ -197,7 +198,7 @@ export class _TableHeaderPlugin extends TablePlugin {
       label: "序号",
     };
 
-    setNamePathValue(headerColumn, _TablePrivateProperty.fake, true);
+    this.context.getColumnMeta(key).fake = true;
 
     // 表头向下合并
     this.context.cells[_getCellKey(this.getDefaultYKey(0), key)] = {

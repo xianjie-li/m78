@@ -81,6 +81,7 @@ export function _useRender() {
           <Scroll
             className="m78-table_view m78-table_expand-size"
             direction="xy"
+            // 手动控制
             disabledScroll
             innerWrapRef={scrollRef}
             miniBar

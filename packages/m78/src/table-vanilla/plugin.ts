@@ -76,7 +76,7 @@ export class TablePlugin {
 
   /**
    * 在reload/初始化的不同级别操作(TableReloadLevel): 开始前/完成后 触发, isBefore可用于识别是在操作前还是操作后
-   * - 注意, isBefore = false 触发的时机是每个阶段对应的代码完成后, full是在其对应的操作完成后, index开始前, 而不是整个full完成后
+   * - 注意, isBefore = false 触发的时机是每个阶段对应的代码完成后, 例如full是在其对应的操作完成后, index开始前, 而不是整个full完成后
    * */
   loadStage?(level: TableReloadLevel, isBefore: boolean): void;
 

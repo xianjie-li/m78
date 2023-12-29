@@ -234,6 +234,9 @@ const TableFullExample = () => {
         defaultFilter={{
           "field11-1": "12312",
         }}
+        onMutation={(e) => {
+          console.log("mutation", e);
+        }}
         filterSchema={filterSchema}
         dragSortColumn
         dragSortRow

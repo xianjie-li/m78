@@ -18,6 +18,7 @@ import {
 import { TableReloadOptions } from "../plugins/life.js";
 import { tableDefaultTexts } from "../common.js";
 import { TablePlugin } from "../plugin.js";
+import { _MetaMethods } from "../plugins/meta-data.js";
 
 /** 固定项信息 */
 type FixedMap<T> = {
@@ -32,7 +33,7 @@ type FixedMap<T> = {
 };
 
 /** 在插件和实例内共享的一组状态 */
-export interface TablePluginContext {
+export interface TablePluginContext extends _MetaMethods {
   /** 挂载dom的节点, 也是滚动容器节点 */
   viewEl: HTMLDivElement;
   /** domElement的子级, 用于实际挂载滚动区的dom节点 */
@@ -40,7 +41,7 @@ export interface TablePluginContext {
   /** viewContentEl子级, 用于集中挂载内容, 便于做一些统一控制(比如缩放) */
   stageEL: HTMLDivElement;
 
-  /** 浅拷贝后的数据, 在数据项第一次需要改写时需对对应的项进行浅拷贝, 从而实现超大数据量的按需高速复制 */
+  /** 浅拷贝后的数据, 在数据项第一次需要改写时再对应的项进行拷贝, 从而实现超大数据量的按需高速复制 */
   data: AnyObject[];
 
   /** 本地化后的行配置, 注入了表头相关的行/列配置 */
@@ -71,13 +72,13 @@ export interface TablePluginContext {
   ignoreYList: number[];
 
   /**
-   * data的key映射, 用于快速查找key的索引, 另外, fixed项可以通过 key__M78TableRef 获取其原始数据的索引
+   * data的key映射, 用于快速查找key的索引
    * */
   dataKeyIndexMap: {
     [key: string]: number;
   };
   /**
-   * columns的key映射, 用于快速查找key的索引, 另外, fixed项可以通过 key__M78TableRef 获取其原始数据的索引
+   * columns的key映射, 用于快速查找key的索引
    * */
   columnKeyIndexMap: {
     [key: string]: number;

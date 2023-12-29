@@ -1,6 +1,5 @@
 import { TablePlugin } from "../plugin.js";
 import {
-  ActionHistoryItem,
   AnyObject,
   createRandString,
   deepClone,
@@ -21,10 +20,11 @@ import {
 import { TableReloadLevel, TableReloadOptions } from "./life.js";
 import { TablePersistenceConfig } from "../types/config.js";
 import {
-  _TablePrivateProperty,
   TableColumnFixed,
+  TableColumnFixedUnion,
   TableKey,
   TableRowFixed,
+  TableRowFixedUnion,
 } from "../types/base-type.js";
 import {
   TableCell,
@@ -32,7 +32,12 @@ import {
   TableItems,
   TableRow,
 } from "../types/items.js";
-import { _getCellKey, _getCellKeysByStr, _prefix } from "../common.js";
+import {
+  _generateKeyByKey,
+  _getCellKey,
+  _getCellKeysByStr,
+  _prefix,
+} from "../common.js";
 import { _TableSortColumnPlugin } from "./sort-column.js";
 import { _TableFormPlugin } from "./form.js";
 
@@ -50,6 +55,9 @@ export class _TableMutationPlugin extends TablePlugin {
   sortColumn: _TableSortColumnPlugin;
 
   form: _TableFormPlugin;
+
+  // 记录变更过的行
+  private changedRows: Record<string, boolean> = {};
 
   init() {
     this.form = this.getPlugin(_TableFormPlugin);
@@ -223,13 +231,15 @@ export class _TableMutationPlugin extends TablePlugin {
     const newData = list.map((i) => {
       if (!isObject(i)) i = {};
       const key = i[this.config.primaryKey];
+
+      // 使用传入的key或随机分配一个
+      const pKey = isTruthyOrZero(key) ? key : createRandString();
+
+      this.context.getRowMeta(pKey).new = true;
+
       return {
         ...i,
-        [_TablePrivateProperty.new]: true,
-        // 使用传入的key或随机分配一个
-        [this.config.primaryKey]: isTruthyOrZero(key)
-          ? key
-          : createRandString(),
+        [this.config.primaryKey]: pKey,
       };
     });
 
@@ -360,9 +370,6 @@ export class _TableMutationPlugin extends TablePlugin {
     return getNamePathValue(cell.row.data, cell.column.config.originalKey);
   };
 
-  // 记录变更过的行
-  private changedRows: Record<string, boolean> = {};
-
   setValue: TableMutation["setValue"] = (a, b, c?: any) => {
     // eslint-disable-next-line prefer-const
     let [cell, value] = this.valueActionGetter(a, b, c);
@@ -380,7 +387,7 @@ export class _TableMutationPlugin extends TablePlugin {
     // 行未变更过, 将其完全clone, 避免更改原数据, 此外, 避免了在初始化阶段克隆所有数据导致性能损耗
     if (
       !this.changedRows[row.key] &&
-      !getNamePathValue(row.data, _TablePrivateProperty.new) // 新增行不clone
+      !this.context.getRowMeta(row.key).new // 新增行不clone
     ) {
       this.cloneAndSetRowData(row);
     }
@@ -486,330 +493,344 @@ export class _TableMutationPlugin extends TablePlugin {
     isRow: boolean,
     insertAfter?: boolean
   ) {
-    const indexData = this.getIndexData(key, isRow);
+    const { list } = this.getIndexData(key, isRow);
 
-    if (!indexData.list.length) return;
+    if (!list.length) return;
 
-    const moveList = this.getMoveData(indexData, to, isRow, insertAfter);
-
-    if (!moveList) return;
-
-    // 过滤掉ignore项
-    const moveFilterData = moveList.filter((i) => !i.cur.ignore);
-
-    const moveFilterIns = moveFilterData.map((i) => i.cur.ins);
-
-    // 事件对象的move数据
-    const moveEventData = moveFilterData.map((i) => ({
-      from: i.from,
-      to: i.to,
-      data: i.data,
-      dataFrom: i.dataFrom,
-      dataTo: i.dataTo,
-    }));
-
-    const action: ActionHistoryItem = {
-      redo: () => {
-        const data = isRow ? this.context.data : this.context.columns;
-
-        this.table.takeover(() => {
-          // 删除
-          for (let i = moveList.length - 1; i >= 0; i--) {
-            const cur = moveList[i];
-
-            data.splice(cur.from, 1);
-          }
-
-          // 添加
-          for (let i = 0; i < moveList.length; i++) {
-            const cur = moveList[i];
-
-            // 虚拟项不操作
-            if (isNumber(cur.cur.refIndex)) continue;
-
-            data.splice(cur.to, 0, cur.data);
-          }
-
-          // 执行每个项的redo操作
-          moveList.forEach((i) => i.redo());
-
-          // 同步sortColumns
-          if (isRow) {
-            this.table.event.mutation.emit(
-              _getBlankMutationDataEvent({
-                changeType: TableMutationDataType.move,
-                move: [...moveEventData],
-              })
-            );
-          } else {
-            this.table.history.ignore(() => {
-              this.setPersistenceConfig(
-                "sortColumns",
-                this.sortColumn.getColumnSortKeys()
-              );
-            });
-          }
-
-          this.table.reloadSync({
-            keepPosition: true,
-            level: TableReloadLevel.index,
-          });
-        });
-
-        if (!this.table.isTaking()) {
-          isRow
-            ? this.table.highlightRow(moveFilterIns.map((i) => i.key))
-            : this.table.highlightColumn(moveFilterIns.map((i) => i.key));
-        }
-      },
-      undo: () => {
-        const data = isRow ? this.context.data : this.context.columns;
-
-        this.table.takeover(() => {
-          // 执行每个项的undo操作
-          moveList
-            .slice()
-            .reverse()
-            .forEach((i) => i.undo());
-
-          // 删除添加的项
-          for (let i = moveList.length - 1; i >= 0; i--) {
-            const cur = moveList[i];
-
-            // 虚拟项不操作
-            if (isNumber(cur.cur.refIndex)) continue;
-
-            data.splice(cur.to, 1);
-          }
-
-          // 恢复删除的项
-          for (let i = 0; i < moveList.length; i++) {
-            const cur = moveList[i];
-
-            data.splice(cur.from, 0, cur.data);
-          }
-
-          // 同步sortColumns
-          if (isRow) {
-            this.table.event.mutation.emit(
-              _getBlankMutationDataEvent({
-                changeType: TableMutationDataType.move,
-                move: [...moveEventData].map((i) => ({
-                  from: i.to,
-                  to: i.from,
-                  data: i.data,
-                  dataFrom: i.dataTo,
-                  dataTo: i.dataFrom,
-                })),
-              })
-            );
-          } else {
-            this.table.history.ignore(() => {
-              this.setPersistenceConfig(
-                "sortColumns",
-                this.sortColumn.getColumnSortKeys()
-              );
-            });
-          }
-
-          this.table.reloadSync({
-            keepPosition: true,
-            level: TableReloadLevel.index,
-          });
-        });
-
-        if (!this.table.isTaking()) {
-          isRow
-            ? this.table.highlightRow(moveFilterIns.map((i) => i.key))
-            : this.table.highlightColumn(moveFilterIns.map((i) => i.key));
-        }
-      },
-      title: isRow
-        ? this.context.texts["move row"]
-        : this.context.texts["move column"],
-    };
-
-    this.table.history.redo(action);
-  }
-
-  /** 获取便于move操作的结构 */
-  private getMoveData(
-    { list }: ReturnType<typeof this.getIndexData>,
-    to: TableKey,
-    isRow = true,
-    insertAfter?: boolean
-  ) {
     const toIns = isRow
       ? { ...this.table.getRow(to) }
       : { ...this.table.getColumn(to) };
 
-    const indexMap = isRow
-      ? this.context.dataKeyIndexMap
-      : this.context.columnKeyIndexMap;
+    const toFixedConf = toIns.config.fixed;
 
-    const data = isRow ? this.context.data : this.context.columns;
+    // 是否是固定项
+    const isToFixed = toIns.isFixed;
 
-    // 需要移动到的索引位置
-    let index = toIns.isFixed
-      ? indexMap[`${toIns.key}${_TablePrivateProperty.ref}`]
-      : toIns.realIndex;
+    // 插入到数据中的目标索引
+    let toIndex = toIns.realIndex + (insertAfter ? 1 : 0);
 
-    if (!isNumber(index)) {
-      console.warn(
-        `[${_prefix}] move${isRow ? "Row" : "Columns"}: Key ${to} is not found`
-      );
-      return;
+    // 小于目标位置的项总数, 用来修正最终的目标位置
+    let lessCount = 0;
+
+    // to目标为固定项时, 其占位项的位置
+    let toPlaceholderIndex = 0;
+
+    // 小于固定项替身数据索引的总数
+    let lessPlaceholderCount = 0;
+
+    // 目标项在实际数据中的位置
+    let toDataIndex = toIns.dataIndex + (insertAfter ? 1 : 0);
+
+    // 小于目标在数据中实际位置的总数
+    let lessToDataCount = 0;
+
+    // 移动到固定项时, 获取toPlaceholderIndex的位置
+    if (isToFixed) {
+      const meta = isRow
+        ? this.context.getRowMeta(toIns.key)
+        : this.context.getColumnMeta(toIns.key);
+
+      toPlaceholderIndex = isRow
+        ? this.table.getIndexByRowKey(meta.ref!)
+        : this.table.getIndexByColumnKey(meta.ref!);
+
+      if (insertAfter) toPlaceholderIndex++;
     }
 
-    if (insertAfter) {
-      index += 1;
+    // 需要移除的项 (倒序)
+    const removeList: _DataIndexInfo[] = [];
+
+    // 所有待移动的项
+    const moveList: _DataIndexInfo[] = [];
+
+    for (let i = 0; i < list.length; i++) {
+      const cur = list[i];
+
+      // 每一个在前方的删除项都使目标索引修正减一
+      if (cur.index < toIndex) {
+        lessCount++;
+      }
+
+      if (cur.index < toPlaceholderIndex) {
+        lessPlaceholderCount++;
+      }
+
+      // dataIndex可以排除非数据的改动
+      if (!isNumber(cur.refIndex) && cur.ins.dataIndex < toDataIndex) {
+        lessToDataCount++;
+      }
+
+      // 需要从大到小排序,方便删除时不打乱索引
+      removeList.unshift(cur);
+
+      // 非固定项添加到移动列表
+      if (!isNumber(cur.refIndex)) {
+        moveList.push(cur);
+      }
     }
 
-    // 小于to的所有项
-    const less = list.filter((i) => i.index < index);
+    // 修正目标索引
+    toIndex -= lessCount;
+    toPlaceholderIndex -= lessPlaceholderCount;
+    toDataIndex -= lessToDataCount;
 
-    const toConf = { ...toIns.config };
+    // 参与操作的数据源
+    const dataList = isRow ? this.context.data : this.context.columns;
 
-    const toIndex = index - less.length;
-    let toDataIndex = toIns.dataIndex - less.length;
+    // 所有新增项
+    const addList: _MoveItem[] = [];
 
-    if (insertAfter) {
-      toDataIndex += 1;
+    // 用于事件通知的列表
+    const eventList: _MoveItem[] = [];
+
+    // 将目标位置和目标占位项位置间较少的一个加上移动数据的总数, 因为在较小的一方移动后较大一方的目标索引会跟着变动
+    if (isToFixed) {
+      if (toIndex < toPlaceholderIndex) {
+        toPlaceholderIndex += moveList.length;
+      } else {
+        toIndex += moveList.length;
+      }
     }
 
-    // 处理isToFixed时, 添加的虚拟项索引
-    let toFixedIndex = -1;
-
-    // 小于目标索引的所有虚拟项
-    const lessRemove = less.filter((i) => isNumber(i.refIndex));
-
-    return list.map((i, ind) => {
-      const conf = { ...i.ins.config };
-
-      const hasFixed = !!toConf.fixed || !!conf.fixed;
-      const fixedEqual = toConf.fixed === conf.fixed;
-
-      // 由常规项转换为fixed项
-      const isToFixed = hasFixed && !conf.fixed;
+    // 生成addList列表, 处理toFixed项的占位项
+    moveList.forEach((i, ind) => {
       // 由fixed项转换为常规项
-      const isToNormal = hasFixed && !toConf.fixed;
+      const itemIsToFixed = !i.ins.isFixed && toIns.isFixed;
+
+      // 由fixed项转换为常规项
+      const isToNormal = i.ins.isFixed && !toIns.isFixed;
+
       // 固定项到固定项
-      const isFixedToFixed = !!conf.fixed && !!toConf.fixed;
+      const isFixedToFixed = i.ins.isFixed && toIns.isFixed;
 
-      // 保留之前的ignore状态
-      const prevIgnore = getNamePathValue(i.data, _TablePrivateProperty.ignore);
-
-      // 备份添加的虚拟项索引, 在undo时删除
-      let toFixedIndexBackup = -1;
-
-      return {
-        // 索引数据
-        cur: i,
-        // 源索引
-        from: i.index,
-        // 在源数据中的from
+      const oData: _MoveItem = {
+        data: i.originalData,
+        formIndex: i.index,
+        index: toIndex + ind,
+        isPlaceholder: false,
+        key: i.ins.key,
+        isToNormal,
+        isFixedToFixed,
+        isToFixed: itemIsToFixed,
         dataFrom: i.ins.dataIndex,
-        // 目标索引
-        to: toIndex + ind - lessRemove.length,
-        // 在源数据中的to
         dataTo: toDataIndex + ind,
-        // 数据/列配置
-        data: i.data,
-        // 保持fixed配置与目标项一致, 并在常规项和fixed项间移动时生成和清理fixed ref项
-        // 需要在执行完move操作后执行
-        redo: () => {
-          // 虚拟项不操作
-          if (isNumber(i.refIndex)) return;
-
-          // 保持fixed一致
-          if (hasFixed && !fixedEqual) {
-            this.table.history.ignore(() => {
-              this.setPersistenceConfig(
-                [isRow ? "rows" : "columns", i.ins.key, "fixed"],
-                toConf.fixed
-              );
-            });
-          }
-
-          // 转为fixed项或固定项到固定项
-          if (isToFixed || isFixedToFixed) {
-            // 添加虚拟fixed项, 确定需要添加到的索引位置
-            if (toFixedIndex === -1) {
-              toFixedIndex = this.getFixedIndex(
-                toIns.key,
-                toConf.fixed as TableRowFixed
-              );
-
-              if (insertAfter) {
-                toFixedIndex += 1;
-              }
-            }
-
-            const cloneData = { ...i.data };
-
-            // 防止之前为ignore
-            deleteNamePathValue(cloneData, _TablePrivateProperty.ignore);
-
-            data.splice(toFixedIndex, 0, {
-              ...cloneData,
-              fixed: toConf.fixed,
-              [_TablePrivateProperty.fake]: true,
-            });
-
-            toFixedIndexBackup = toFixedIndex;
-
-            // 确保当前为ignore
-            setNamePathValue(i.data, _TablePrivateProperty.ignore, true);
-
-            toFixedIndex++;
-          }
-
-          // 转为常规项
-          if (isToNormal) {
-            deleteNamePathValue(i.data, _TablePrivateProperty.ignore);
-          }
-        },
-        // 还原配置
-        // 需要在move操作撤销前倒序执行
-        undo: () => {
-          toFixedIndex = -1;
-
-          // 虚拟项在转换fixed为常规项时将其还原为fake
-          if (isNumber(i.refIndex)) {
-            if (isToNormal) {
-              setNamePathValue(i.data, _TablePrivateProperty.fake, true);
-            }
-
-            return;
-          }
-
-          // 还原fixed
-          if (hasFixed && !fixedEqual) {
-            this.table.history.ignore(() => {
-              this.setPersistenceConfig(
-                [isRow ? "rows" : "columns", i.ins.key, "fixed"],
-                conf.fixed
-              );
-            });
-          }
-
-          if (isToFixed || isFixedToFixed) {
-            // 清理添加的虚拟项
-            data.splice(toFixedIndexBackup, 1);
-
-            // 还原ignore
-            if (prevIgnore) {
-              setNamePathValue(i.data, _TablePrivateProperty.ignore, true);
-            } else {
-              deleteNamePathValue(i.data, _TablePrivateProperty.ignore);
-            }
-          }
-
-          if (isToNormal) {
-            setNamePathValue(i.data, _TablePrivateProperty.ignore, true);
-          }
-        },
+        fixedConf: i.ins.config.fixed,
       };
+
+      addList.push(oData);
+
+      eventList.push(oData);
+
+      // 转换为固定项时, 生成其占位项
+      if (isToFixed) {
+        const substituteKey = _generateKeyByKey(i.ins.key);
+
+        oData.refKey = substituteKey;
+
+        addList.push({
+          key: substituteKey,
+          data: isRow
+            ? { id: substituteKey }
+            : {
+                key: substituteKey,
+                originalKey: substituteKey,
+                label: substituteKey,
+              },
+          index: toPlaceholderIndex + ind,
+          isPlaceholder: true,
+          refKey: i.key,
+          isToNormal,
+          isFixedToFixed,
+          isToFixed: itemIsToFixed,
+          dataFrom: 0,
+          dataTo: 0,
+          formIndex: 0,
+          fixedConf: i.ins.config.fixed,
+        });
+      }
+    });
+
+    // 按索引顺序排序
+    addList.sort((a, b) => a.index - b.index);
+
+    const redo = () => {
+      this.table.takeover(() => {
+        // 移除项
+        for (let i = 0; i < removeList.length; i++) {
+          const cur = removeList[i];
+          dataList.splice(cur.index, 1);
+        }
+
+        for (let ind = 0; ind < addList.length; ind++) {
+          const i = addList[ind];
+
+          // 添加到list
+          dataList.splice(i.index, 0, i.data);
+
+          // 非占位项且fixed有变更, 更新fixed为目标配置
+          if (!i.isPlaceholder && (isToFixed || i.isToNormal)) {
+            // 同步固定项配置
+            this.table.history.ignore(() => {
+              this.setPersistenceConfig(
+                [isRow ? "rows" : "columns", i.key, "fixed"],
+                toFixedConf
+              );
+            });
+          }
+
+          const meta = isRow
+            ? this.context.getRowMeta(i.key)
+            : this.context.getColumnMeta(i.key);
+
+          // 更新meta信息
+
+          // 转换为fixed项
+          if (isToFixed) {
+            if (i.isPlaceholder) {
+              meta.ignore = true;
+              meta.ref = i.refKey;
+            } else {
+              meta.ref = i.refKey;
+              meta.substitute = true;
+            }
+          }
+
+          // fixed项转换为常规项
+          if (i.isToNormal) {
+            if (!i.isPlaceholder) {
+              meta.substitute = false;
+              meta.ref = undefined;
+            }
+          }
+        }
+
+        // 行变更进行事件通知, 列变更同步sortColumns
+        if (isRow) {
+          this.table.event.mutation.emit(
+            _getBlankMutationDataEvent({
+              changeType: TableMutationDataType.move,
+              move: eventList.map((mi) => ({
+                from: mi.formIndex,
+                to: mi.index,
+                dataFrom: mi.dataFrom,
+                dataTo: mi.dataTo,
+                data: mi.data,
+              })),
+            })
+          );
+        } else {
+          this.table.history.ignore(() => {
+            this.setPersistenceConfig(
+              "sortColumns",
+              this.sortColumn.getColumnSortKeys()
+            );
+          });
+        }
+
+        this.table.reloadSync({
+          keepPosition: true,
+          level: TableReloadLevel.index,
+        });
+      });
+
+      if (!this.table.isTaking()) {
+        isRow
+          ? this.table.highlightRow(eventList.map((i) => i.key))
+          : this.table.highlightColumn(eventList.map((i) => i.key));
+      }
+    };
+
+    const undo = () => {
+      this.table.takeover(() => {
+        // 移除添加项
+        for (let ind = addList.length - 1; ind >= 0; ind--) {
+          const i = addList[ind];
+
+          // 从list移除
+          dataList.splice(i.index, 1);
+
+          // 非占位项且fixed有变更, 还原fixed配置
+          if (!i.isPlaceholder && (isToFixed || i.isToNormal)) {
+            // 同步固定项配置
+            this.table.history.ignore(() => {
+              this.setPersistenceConfig(
+                [isRow ? "rows" : "columns", i.key, "fixed"],
+                i.fixedConf
+              );
+            });
+          }
+
+          const meta = isRow
+            ? this.context.getRowMeta(i.key)
+            : this.context.getColumnMeta(i.key);
+
+          // 更新meta信息
+
+          // 从fixed项还原为普通项
+          if (isToFixed) {
+            if (!i.isPlaceholder) {
+              meta.ref = undefined;
+              meta.substitute = false;
+            }
+          }
+
+          // 常规项还原为固定项
+          if (i.isToNormal) {
+            if (!i.isPlaceholder) {
+              meta.substitute = true;
+              meta.ref = _generateKeyByKey(i.key);
+            }
+          }
+        }
+
+        // 恢复移除
+        for (let i = removeList.length - 1; i >= 0; i--) {
+          const cur = removeList[i];
+          dataList.splice(cur.index, 0, cur.data);
+        }
+
+        // 行变更进行事件通知, 列变更同步sortColumns
+        if (isRow) {
+          this.table.event.mutation.emit(
+            _getBlankMutationDataEvent({
+              changeType: TableMutationDataType.move,
+              move: eventList.map((mi) => ({
+                from: mi.index,
+                to: mi.formIndex,
+                dataFrom: mi.dataTo,
+                dataTo: mi.dataFrom,
+                data: mi.data,
+              })),
+            })
+          );
+        } else {
+          this.table.history.ignore(() => {
+            this.setPersistenceConfig(
+              "sortColumns",
+              this.sortColumn.getColumnSortKeys()
+            );
+          });
+        }
+
+        this.table.reloadSync({
+          keepPosition: true,
+          level: TableReloadLevel.index,
+        });
+      });
+
+      if (!this.table.isTaking()) {
+        isRow
+          ? this.table.highlightRow(eventList.map((i) => i.key))
+          : this.table.highlightColumn(eventList.map((i) => i.key));
+      }
+    };
+
+    this.table.history.redo({
+      redo,
+      undo,
+      title: isRow
+        ? this.context.texts["move row"]
+        : this.context.texts["move column"],
     });
   }
 
@@ -828,18 +849,7 @@ export class _TableMutationPlugin extends TablePlugin {
     });
 
     // 相关项信息, 用于简化后续的增删操作
-    const dataList: {
-      // 索引
-      index: number;
-      // 如果是固定项, 此项为其ref项的索引
-      refIndex?: number;
-      // 数据, 如果是column则为列配置本身
-      data: any;
-      // 对应行/列实例
-      ins: TableRow | TableColumn;
-      // 在进行事件通知时是否应忽略, 通常表示fixed项的ref项
-      ignore?: boolean;
-    }[] = [];
+    const dataList: _DataIndexInfo[] = [];
 
     // 防止重复
     const existMap: any = {};
@@ -854,13 +864,17 @@ export class _TableMutationPlugin extends TablePlugin {
     list.forEach((i) => {
       const ins = isRow ? this.table.getRow(i) : this.table.getColumn(i);
 
-      // const _ins = { ...ins };
-
       let refInd: number | undefined;
+
+      const meta = isRow
+        ? this.context.getRowMeta(i)
+        : this.context.getColumnMeta(i);
+
+      const realData = isRow ? (ins as any).data : ins.config;
 
       // 固定项需要查找其关联的原始项
       if (ins.isFixed) {
-        const refIndex = indexMap[`${ins.key}${_TablePrivateProperty.ref}`];
+        const refIndex = indexMap[meta.ref!];
 
         if (isNumber(refIndex)) {
           const cur = data[refIndex];
@@ -875,8 +889,10 @@ export class _TableMutationPlugin extends TablePlugin {
             dataList.push({
               index: refIndex,
               data: cur,
+              originalData: realData,
               ins,
               ignore: true,
+              key: isRow ? this.table.getKeyByRowData(cur) : ins.key,
             });
           }
         }
@@ -888,9 +904,11 @@ export class _TableMutationPlugin extends TablePlugin {
 
       dataList.push({
         index: ins.realIndex,
-        data: isRow ? (ins as any).data : ins.config,
+        data: realData,
+        originalData: realData,
         ins,
         refIndex: refInd,
+        key: ins.key,
       });
     });
 
@@ -903,32 +921,22 @@ export class _TableMutationPlugin extends TablePlugin {
     };
   }
 
-  /** 快速获取fixed虚拟项的index */
+  /** 快速获取fixed虚拟项的index, 由于修改后的数据尚未同步缓存和索引, 所以需要此方法 */
   private getFixedIndex(
     key: TableKey,
     fixed: TableRowFixed | TableColumnFixed
   ) {
-    const ctx = this.context;
-
     const isRow = fixed === TableRowFixed.top || fixed === TableRowFixed.bottom;
 
-    const list = isRow ? ctx.data : ctx.columns;
+    const list = isRow ? this.context.data : this.context.columns;
 
-    if (fixed === TableRowFixed.top || fixed === TableColumnFixed.left) {
-      for (let i = 0; i < list.length; i++) {
-        const cur = list[i];
-        if (!getNamePathValue(cur, _TablePrivateProperty.fake)) return -1;
-        if (isRow && this.table.getKeyByRowData(cur) === key) return i;
-        if (!isRow && cur.key === key) return i;
-      }
-    }
+    for (let i = 0; i < list.length; i++) {
+      const cur = list[i];
 
-    if (fixed === TableRowFixed.bottom || fixed === TableColumnFixed.right) {
-      for (let i = list.length - 1; i >= 0; i--) {
-        const cur = list[i];
-        if (!getNamePathValue(cur, _TablePrivateProperty.fake)) return -1;
-        if (isRow && this.table.getKeyByRowData(cur) === key) return i;
-        if (!isRow && cur.key === key) return i;
+      const k = isRow ? this.table.getKeyByRowData(cur) : cur.key;
+
+      if (key === k) {
+        return i;
       }
     }
 
@@ -1174,3 +1182,48 @@ export function _getBlankMutationDataEvent(
     ...opt,
   } as TableMutationDataEvent;
 }
+
+// 进行索引相关操作时, 包含一些必要信息的对象
+export interface _DataIndexInfo {
+  // 索引
+  index: number;
+  // 如果是固定项, 此项为其ref项的索引
+  refIndex?: number;
+  // 数据, 如果是column则为列配置本身
+  data: any;
+  // 数据, 如果是column则为列配置本身, 替身项为其指向的真实数据
+  originalData: any;
+  // 对应行/列实例, 替身项为其真实项的对应实例
+  ins: TableRow | TableColumn;
+  /** 该项的key, 替身项的key为替身key */
+  key: TableKey;
+  // 在进行事件通知时是否应忽略, 通常表示fixed项的ref项
+  ignore?: boolean;
+}
+
+// 包含移动项信息的对象
+type _MoveItem = {
+  key: TableKey;
+  // 数据源
+  data: any;
+  /** ctx.data移动前的索引 */
+  formIndex: number;
+  // 索引
+  index: number;
+  // 是否是替身项
+  isPlaceholder: boolean;
+  // 若包含替身项/占位项, 则此为其对立项的key
+  refKey?: TableKey;
+  /** 是否是fixed项转换为固定项 */
+  isToNormal: boolean;
+  /** 是否是fixed项移动倒固定项 */
+  isFixedToFixed: boolean;
+  /** 该项是否是由常规项转换为fixed项 */
+  isToFixed: boolean;
+  /** 从元数据中移动的位置 */
+  dataFrom: number;
+  /** 移动到的元数据指定位置 */
+  dataTo: number;
+  /** 改项的fixed配置 */
+  fixedConf: TableColumnFixedUnion | TableRowFixedUnion | undefined;
+};

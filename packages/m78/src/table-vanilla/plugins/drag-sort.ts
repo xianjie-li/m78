@@ -161,18 +161,6 @@ export class _TableDragSortPlugin extends TablePlugin {
     const contPoint = this.table.transformViewportPoint(offset);
 
     if (e.last) {
-      if (this.lastColumns && this.targetColumn) {
-        this.triggerMoveColumn(
-          this.lastColumns,
-          this.targetColumn,
-          this.isTargetAfter
-        );
-      }
-
-      if (this.lastRows && this.targetRow) {
-        this.triggerMoveRow(this.lastRows, this.targetRow, this.isTargetAfter);
-      }
-
       if (this.lastColumns) {
         this.updateColumnNode(e, contPoint, offset);
 
@@ -189,6 +177,18 @@ export class _TableDragSortPlugin extends TablePlugin {
           this.lastRows.map((row) => row.key),
           false
         );
+      }
+
+      if (this.lastColumns && this.targetColumn) {
+        this.triggerMoveColumn(
+          this.lastColumns,
+          this.targetColumn,
+          this.isTargetAfter
+        );
+      }
+
+      if (this.lastRows && this.targetRow) {
+        this.triggerMoveRow(this.lastRows, this.targetRow, this.isTargetAfter);
       }
 
       this.autoScroll.clear();
