@@ -1,4 +1,5 @@
 import { isArray, isEmpty, isNumber, isObject, isString } from "./is.js";
+import { ensureArray } from "./array.js";
 
 /**
  * Delete all empty values (except 0) of the object/array
@@ -94,7 +95,11 @@ export type NameItem = string | number;
  * */
 export type NamePath = NameItem | NameItem[];
 
-/** Get value on obj through NamePath */
+/**
+ * Get value on obj through NamePath
+ *
+ * When name pass `[]`, will return obj directly
+ * */
 export function getNamePathValue(obj: any, name: NamePath) {
   if (!(obj instanceof Object)) return undefined; // 过滤掉数字/字符串等
 
@@ -102,10 +107,14 @@ export function getNamePathValue(obj: any, name: NamePath) {
     return obj?.[name];
   }
 
-  if (isArray(name) && name.length) {
-    return name.reduce((p, i) => {
-      return p?.[i];
-    }, obj);
+  if (isArray(name)) {
+    if (name.length) {
+      return name.reduce((p, i) => {
+        return p?.[i];
+      }, obj);
+    } else {
+      return obj;
+    }
   }
 }
 
@@ -129,7 +138,7 @@ export function stringifyNamePath(name: NamePath) {
 /**
  * Set value on obj through NamePath, if skipExist is passed in, the value will be skipped if it already exists
  *
- * 通过NamePath在obj上设置值, 如果传入skipExist, 在值已存在时会跳过
+ * If val is undefined, will delete the value specified by name like deleteNamePathValue() do
  * */
 export function setNamePathValue(
   obj: any,
@@ -137,6 +146,11 @@ export function setNamePathValue(
   val: any,
   skipExist?: boolean
 ) {
+  if (val === undefined) {
+    deleteNamePathValue(obj, name);
+    return;
+  }
+
   if (isString(name) || isNumber(name)) {
     obj[name] = val;
     return;
@@ -152,27 +166,99 @@ export function setNamePathValue(
 
 /**
  * Delete value on obj through NamePath
- *
- * 通过NamePath在obj上删除值
  * */
 export function deleteNamePathValue(obj: any, name: NamePath) {
-  if (isString(name)) {
-    delete obj[name];
+  let prevObj: any;
+  let lastName: NameItem;
+
+  const arrName = ensureArray(name).slice();
+
+  if (arrName.length > 1) {
+    lastName = arrName.pop()!;
+    prevObj = getNamePathValue(obj, arrName);
+  } else {
+    lastName = arrName[0];
+    prevObj = obj;
+  }
+
+  if (isObject(prevObj) && isString(lastName)) {
+    delete prevObj[lastName];
     return;
   }
 
-  if (isNumber(name)) {
-    obj.splice(name, 1);
+  if (isArray(prevObj) && isNumber(lastName)) {
+    prevObj.splice(lastName, 1);
     return;
-  }
-
-  if (isArray(name) && name.length) {
-    const [lastObj, n] = getLastObj(obj, name);
-    isNumber(n) ? lastObj.splice(n, 1) : delete lastObj[n];
   }
 }
 
-/** 从对象中获取用于设置值的对象, 和最后一个name */
+const ROOT_KEY = "__DeleteNamePathValuesRootKey";
+
+/** Delete multiple value on obj, through nameList, ensures no index misalignment when deleting the same array content multiple times */
+export function deleteNamePathValues(obj: any, nameList: NamePath[]) {
+  // 数组为了保证索引一致, 需要特殊处理
+  const arrMap: {
+    [key: string]: {
+      /** 数组所在位置的name */
+      name: NameItem[];
+      /** 待删除索引 */
+      indexes: number[];
+    };
+  } = {};
+
+  nameList.forEach((name) => {
+    const namePath = ensureArray(name).slice();
+    const last = namePath.pop();
+
+    if (last === undefined) return;
+
+    // 记录数组
+    if (isNumber(last)) {
+      const k = namePath.length ? stringifyNamePath(namePath) : ROOT_KEY;
+
+      let map = arrMap[k];
+
+      if (!map) {
+        map = {
+          name: namePath,
+          indexes: [],
+        };
+        arrMap[k] = map;
+      }
+
+      map.indexes.push(last);
+    } else {
+      deleteNamePathValue(obj, name);
+    }
+  });
+
+  Object.entries(arrMap).map(([_, val]) => {
+    let curObj: any;
+
+    if (val.name.length === 0) {
+      // 根对象
+      curObj = obj;
+    } else {
+      curObj = getNamePathValue(obj, val.name);
+    }
+
+    if (!isArray(curObj) || curObj.length === 0) return;
+
+    // 从大到小排序索引
+    const sortIndexes = val.indexes.sort((c, d) => d - c);
+
+    // 过滤重复索引
+    const removeMark: any = {};
+
+    sortIndexes.forEach((ind) => {
+      if (removeMark[ind]) return;
+      removeMark[ind] = true;
+      curObj.splice(ind, 1);
+    });
+  });
+}
+
+/** 从对象中获取用于设置值的对象, 和最后一个name, 获取期间, 不存在的路径会自动创建 */
 function getLastObj(obj: any, names: NameItem[]): [any, NameItem] {
   let lastObj = obj;
 
@@ -190,7 +276,7 @@ function getLastObj(obj: any, names: NameItem[]): [any, NameItem] {
       if (!isArray(lastObj[n])) {
         lastObj[n] = [];
       }
-      // 不是数字的话则为对象
+      // 不是则为对象
     } else if (!isObject(lastObj[n])) {
       lastObj[n] = {};
     }

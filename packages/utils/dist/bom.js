@@ -1,11 +1,13 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
 import { __GLOBAL__ } from "./lang.js";
-var storagePrefix = "UTIL_STORAGE_";
-/** shortcut to the localStorage api, including automatic JSON.stringify and a spliced unique prefix */ export function setStorage(key, val) {
-    localStorage.setItem("".concat(storagePrefix).concat(key).toUpperCase(), JSON.stringify(val));
+var currentStorage;
+/** Simple wrap of storage.setItem api */ export function setStorage(key, val) {
+    var storage = currentStorage || localStorage;
+    storage.setItem(key, JSON.stringify(val));
 }
-/** shortcut of localStorage api, automatic JSON.parse, can only take the value set by setStorage */ export function getStorage(key) {
-    var s = localStorage.getItem("".concat(storagePrefix).concat(key).toUpperCase());
+/** Simple wrap of storage.getItem api */ export function getStorage(key) {
+    var storage = currentStorage || localStorage;
+    var s = storage.getItem(key);
     if (s === null) return null;
     try {
         return JSON.parse(s);
@@ -13,8 +15,17 @@ var storagePrefix = "UTIL_STORAGE_";
         return null;
     }
 }
+/** Simple wrap of storage.removeItem api */ export function removeStorage(key) {
+    var storage = currentStorage || localStorage;
+    storage.removeItem(key);
+}
+/** Run setStorage / getStorage / removeStorage with specified storage object */ export function withStorage(storage, cb) {
+    currentStorage = storage;
+    cb();
+    currentStorage = localStorage;
+}
 var cachePlatform = null;
-/** get os platform */ export function getPlatform() {
+/** Get os platform */ export function getPlatform() {
     if (cachePlatform) return _object_spread({}, cachePlatform);
     var getPlatform = function() {
         // 2022 way of detecting. Note : this userAgentData feature is available only in secure contexts (HTTPS)

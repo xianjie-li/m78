@@ -10,11 +10,11 @@ import {
   Size,
   Spacer,
   string,
+  TableInstance,
 } from "../../src/index.js";
 import { RCTableInstance } from "../../src/table/types.js";
-import { tableInputAdaptor } from "../../src/table/form-widgets/table-input.js";
 
-import vars from "./xx.module.scss";
+import { delay, getStorage, setStorage } from "@m78/utils";
 
 const columns = Array.from({ length: 40 }).map((_, j) => {
   const c: any = {
@@ -113,7 +113,7 @@ const createRow = (key: any) => {
   return obj;
 };
 
-const data1 = Array.from({ length: 2000 }).map((_, i) => {
+const data1 = Array.from({ length: 100000 }).map((_, i) => {
   return createRow(i);
 });
 
@@ -134,7 +134,7 @@ const schema: FormSchema[] = [
   },
   {
     name: "field5",
-    dynamic: (form) => {
+    dynamic: ({ form }) => {
       return {
         valid: form.getValue("field4") === "123",
       };
@@ -172,14 +172,13 @@ const rowConfig = {
   id4: {
     fixed: "top",
   },
-} as const;
-
-const adaptors = [
-  {
-    element: <Input />,
-    tableAdaptor: tableInputAdaptor,
+  id22: {
+    fixed: "bottom",
   },
-];
+  id28: {
+    fixed: "bottom",
+  },
+} as const;
 
 const filterSchema = [
   {
@@ -187,6 +186,35 @@ const filterSchema = [
     validator: required(),
   },
 ];
+
+async function configPersister(key: string, table: TableInstance) {
+  const curConf = table.getPersistenceConfig();
+
+  await delay(2000);
+
+  console.log(222);
+
+  throw Error("error");
+}
+
+async function configReader(key: string): Promise<any> {
+  await delay(2000);
+
+  if (Math.random() > 0.3) {
+    throw Error("qqq");
+  }
+
+  return {
+    columns: {
+      field3: {
+        width: 150,
+      },
+      field4: {
+        width: 200,
+      },
+    },
+  };
+}
 
 const TableFullExample = () => {
   const [data, setData] = useState(data1);
@@ -212,7 +240,7 @@ const TableFullExample = () => {
     <div>
       <button onClick={() => setCount((p) => p + 1)}>click {count}</button>
       <Table
-        adaptors={adaptors}
+        configCacheKey="local-test"
         data={data}
         primaryKey="id"
         columns={columns}
@@ -222,7 +250,7 @@ const TableFullExample = () => {
         schema={schema}
         rows={rowConfig}
         render={({ cell }) => {
-          if (cell.column.key === "field22" && !cell.row.isHeader) {
+          if (cell.column.key === "field22" && !cell.row.isFake) {
             return (
               <>
                 <Button size={Size.small}>详情</Button>
@@ -395,6 +423,16 @@ const TableFullExample = () => {
           }}
         >
           isSoftRemove id4
+        </button>
+      </div>
+
+      <div className="mt-12">
+        <button
+          onClick={() => {
+            table?.setXY(100, 100);
+          }}
+        >
+          setXY
         </button>
       </div>
     </div>

@@ -1,5 +1,5 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
 import { _TableInitPlugin } from "./plugins/init.js";
 import { _TableRenderPlugin } from "./plugins/render.js";
 import { createEvent, getNamePathValue, setNamePathValue } from "@m78/utils";
@@ -21,18 +21,21 @@ import { _TableHighlightPlugin } from "./plugins/highlight.js";
 import { _TableSortColumnPlugin } from "./plugins/sort-column.js";
 import { _TableDragSortPlugin } from "./plugins/drag-sort.js";
 import { _TableDisablePlugin } from "./plugins/disable.js";
-import { _TableTouchScrollPlugin } from "./plugins/touch-scroll.js";
+import { _TableDragMovePlugin } from "./plugins/drag-move.js";
 import { _TableKeyboardInteractionPlugin } from "./plugins/keyboard-interaction.js";
 import { _TableInteractiveCorePlugin } from "./plugins/interactive-core.js";
 import { _TableIsPlugin } from "./plugins/is.js";
 import { _TableSetterPlugin } from "./plugins/setter.js";
 import { _TableFormPlugin } from "./plugins/form.js";
 import { _TableFeedbackPlugin } from "./plugins/feedback.js";
+import { _TableSoftRemovePlugin } from "./plugins/soft-remove.js";
+import { _TableMetaDataPlugin } from "./plugins/meta-data.js";
+import { CacheTick } from "./plugins/frame-cache.js";
 /**
  * 核心功能, 在非框架环境下实现, 以便在日后进行移植
  * */ export function _createTable(config) {
     var // 用户插件
-    _plugins, _plugins1;
+    _pluginConfig_plugins, _pluginConfig_plugins1;
     var defaultConfig = {
         data: [],
         columns: [],
@@ -44,6 +47,7 @@ import { _TableFeedbackPlugin } from "./plugins/feedback.js";
         emptySize: 100,
         autoSize: true,
         stripe: true,
+        border: true,
         cellSelectable: true,
         rowSelectable: true
     };
@@ -55,7 +59,11 @@ import { _TableFeedbackPlugin } from "./plugins/feedback.js";
         return ins;
     }
     var conf = _object_spread({}, defaultConfig, config);
-    var context = {};
+    var initContext = {
+        getterCache: new CacheTick()
+    };
+    // fill props by late
+    var context = initContext;
     var eventCreator = conf.eventCreator ? conf.eventCreator : createEvent;
     var event = {
         error: eventCreator(),
@@ -75,7 +83,8 @@ import { _TableFeedbackPlugin } from "./plugins/feedback.js";
         reload: eventCreator(),
         beforeDestroy: eventCreator(),
         interactiveChange: eventCreator(),
-        feedback: eventCreator()
+        feedback: eventCreator(),
+        dragMoveChange: eventCreator()
     };
     // 不完整的实例
     var instance = {
@@ -94,6 +103,7 @@ import { _TableFeedbackPlugin } from "./plugins/feedback.js";
     // 注意: 在实现上, 鉴于完整功能的复杂度, 内部插件之间并不是完全解耦的, 插件之间会互相访问状态/方法
     // 比如初始化阶段, 不同插件可能都需要对配置和数据进行遍历, 预计算等, 这些操作应该在单次完成, 避免重复计算.
     var plugins = [
+        _TableMetaDataPlugin,
         _TableInitPlugin,
         _TablePluginEmpty,
         _TableLifePlugin,
@@ -110,20 +120,21 @@ import { _TableFeedbackPlugin } from "./plugins/feedback.js";
         _TableDragSortPlugin,
         _TableRenderPlugin,
         _TableScrollMarkPlugin,
-        _TableTouchScrollPlugin,
+        _TableDragMovePlugin,
         _TableSelectPlugin,
         _TableDisablePlugin,
+        _TableSoftRemovePlugin,
         _TableAutoResizePlugin,
         _TableRowColumnResize,
         _TableKeyboardInteractionPlugin,
         _TableInteractiveCorePlugin,
         _TableFeedbackPlugin,
         _TableFormPlugin,
-        _TableHighlightPlugin, 
+        _TableHighlightPlugin
     ].map(function(Plugin) {
         return new Plugin(pluginConfig);
     });
-    (_plugins = pluginConfig.plugins).push.apply(_plugins, _to_consumable_array(plugins));
+    (_pluginConfig_plugins = pluginConfig.plugins).push.apply(_pluginConfig_plugins, _to_consumable_array(plugins));
     // 用户插件
     var customPlugins = conf.plugins.map(function(Plugin) {
         // 传入的是插件实例时, 直接使用, 用于上层react组件扩展插件系统
@@ -137,25 +148,25 @@ import { _TableFeedbackPlugin } from "./plugins/feedback.js";
             return new Plugin(pluginConfig);
         }
     });
-    (_plugins1 = pluginConfig.plugins).push.apply(_plugins1, _to_consumable_array(customPlugins));
+    (_pluginConfig_plugins1 = pluginConfig.plugins).push.apply(_pluginConfig_plugins1, _to_consumable_array(customPlugins));
     /* # # # # # # # init # # # # # # # */ pluginConfig.plugins.forEach(function(plugin) {
-        var ref;
-        (ref = plugin.beforeInit) === null || ref === void 0 ? void 0 : ref.call(plugin);
+        var _plugin_beforeInit;
+        (_plugin_beforeInit = plugin.beforeInit) === null || _plugin_beforeInit === void 0 ? void 0 : _plugin_beforeInit.call(plugin);
     });
     pluginConfig.plugins.forEach(function(plugin) {
-        var ref;
-        (ref = plugin.init) === null || ref === void 0 ? void 0 : ref.call(plugin);
+        var _plugin_init;
+        (_plugin_init = plugin.init) === null || _plugin_init === void 0 ? void 0 : _plugin_init.call(plugin);
     });
     event.init.emit();
     pluginConfig.plugins.forEach(function(plugin) {
-        var ref;
-        (ref = plugin.initialized) === null || ref === void 0 ? void 0 : ref.call(plugin);
+        var _plugin_initialized;
+        (_plugin_initialized = plugin.initialized) === null || _plugin_initialized === void 0 ? void 0 : _plugin_initialized.call(plugin);
     });
     event.initialized.emit();
     instance.render();
     /* # # # # # # # mount # # # # # # # */ pluginConfig.plugins.forEach(function(plugin) {
-        var ref;
-        (ref = plugin.mounted) === null || ref === void 0 ? void 0 : ref.call(plugin);
+        var _plugin_mounted;
+        (_plugin_mounted = plugin.mounted) === null || _plugin_mounted === void 0 ? void 0 : _plugin_mounted.call(plugin);
     });
     event.mounted.emit();
     console.log(context);

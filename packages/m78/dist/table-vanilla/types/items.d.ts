@@ -6,7 +6,7 @@ export interface TableColumn {
     key: TableKey;
     /** 最终宽度 */
     width: number;
-    /** 列索引. 注意, 该索引对应列在表格中的实际显示位置, 可能与config.columns中的索引不同 */
+    /** 列索引. 注意, 该索引对应列在表格中的实际显示位置, 可能与config.columns中的索引不同, 排除了ignore项 */
     index: number;
     /** 在数据中的实际索引, 若为表头, 值为固定的-1 */
     dataIndex: number;

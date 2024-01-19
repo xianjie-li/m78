@@ -1,7 +1,7 @@
-import _async_to_generator from "@swc/helpers/src/_async_to_generator.mjs";
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
-import _ts_generator from "@swc/helpers/src/_ts_generator.mjs";
+import { _ as _async_to_generator } from "@swc/helpers/_/_async_to_generator";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
+import { _ as _ts_generator } from "@swc/helpers/_/_ts_generator";
 import { _implEvent } from "./impl-event.js";
 import { _implState } from "./impl-state.js";
 import { _notifyFilter } from "./common.js";
@@ -9,18 +9,11 @@ import { _implValue } from "./impl-value.js";
 import { _implSchema } from "./impl-schema.js";
 import { _implAction } from "./impl-action.js";
 import { _implList } from "./impl-list.js";
-import deepClone from "lodash/cloneDeep.js";
+import { simplyDeepClone as clone } from "@m78/utils";
 import _defaultsDeep from "lodash/defaultsDeep.js";
 import en from "./language-pack/en.js";
 import { _implSchemaCheck } from "./schema-check/impl-schema-check.js";
-/**
- * defaultValue -> value
- * verify移除
- * Verify类型更名 添加Form前缀
- * meta修改
- * 错误处理方式修改
- * 验证器key 私有化
- * */ /** 创建form实例 */ export function _createForm(config) {
+/** 创建form实例 */ export function _createForm(config) {
     return createMain(config, false)[0];
 }
 /**
@@ -28,24 +21,25 @@ import { _implSchemaCheck } from "./schema-check/impl-schema-check.js";
  *
  * > 用于创建verify实例时, 部分 FormConfig 会被忽略, 如 autoVerify
  * */ export function _createVerify(config) {
-    var ref = _sliced_to_array(createMain(config, true), 2), instance = ref[0], ctx = ref[1];
+    var _createMain = _sliced_to_array(createMain(config, true), 2), instance = _createMain[0], ctx = _createMain[1];
     var check = function() {
         var _ref = _async_to_generator(function(values, extraMeta) {
-            var pm;
+            var _ctx_getFormatterValuesAndSchema, schemas, fmbValues, rt;
             return _ts_generator(this, function(_state) {
                 switch(_state.label){
                     case 0:
                         ctx.values = values;
+                        _ctx_getFormatterValuesAndSchema = _sliced_to_array(ctx.getFormatterValuesAndSchema(values), 2), schemas = _ctx_getFormatterValuesAndSchema[0], fmbValues = _ctx_getFormatterValuesAndSchema[1];
                         return [
                             4,
-                            ctx.schemaCheck(values, extraMeta)
+                            ctx.schemaCheck(fmbValues, schemas, extraMeta)
                         ];
                     case 1:
-                        pm = _state.sent();
+                        rt = _state.sent();
                         ctx.values = null;
                         return [
                             2,
-                            pm
+                            rt
                         ];
                 }
             });
@@ -74,8 +68,8 @@ function createMain(config, verifyOnly) {
     };
     var defaultValue = config.values || {};
     var ctx = {
-        defaultValue: verifyOnly ? defaultValue : deepClone(defaultValue),
-        values: verifyOnly ? defaultValue : deepClone(defaultValue),
+        defaultValue: verifyOnly ? defaultValue : clone(defaultValue),
+        values: verifyOnly ? defaultValue : clone(defaultValue),
         state: {},
         listState: {},
         instance: instance,

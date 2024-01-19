@@ -1,6 +1,7 @@
-import _class_call_check from "@swc/helpers/src/_class_call_check.mjs";
-import _inherits from "@swc/helpers/src/_inherits.mjs";
-import _create_super from "@swc/helpers/src/_create_super.mjs";
+import { _ as _class_call_check } from "@swc/helpers/_/_class_call_check";
+import { _ as _create_class } from "@swc/helpers/_/_create_class";
+import { _ as _inherits } from "@swc/helpers/_/_inherits";
+import { _ as _create_super } from "@swc/helpers/_/_create_super";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { TABLE_NS, Translation } from "../../i18n/index.js";
 import { Bubble } from "../../bubble/index.js";
@@ -18,17 +19,21 @@ export var _XLSHandlePlugin = /*#__PURE__*/ function(RCTablePlugin) {
         _class_call_check(this, _XLSHandlePlugin);
         return _super.apply(this, arguments);
     }
-    var _proto = _XLSHandlePlugin.prototype;
-    _proto.toolbarTrailingCustomer = function toolbarTrailingCustomer(nodes) {
-        var props = this.getProps();
-        var ref = this.getDeps(_useStateAct), conf = ref.dataOperations;
-        if (props.dataExport) {
-            nodes.push(/*#__PURE__*/ _jsx(ExportFileBtn, {}));
+    _create_class(_XLSHandlePlugin, [
+        {
+            key: "toolbarTrailingCustomer",
+            value: function toolbarTrailingCustomer(nodes) {
+                var props = this.getProps();
+                var _this_getDeps = this.getDeps(_useStateAct), conf = _this_getDeps.dataOperations;
+                if (props.dataExport) {
+                    nodes.push(/*#__PURE__*/ _jsx(ExportFileBtn, {}));
+                }
+                if (props.dataImport && conf.add) {
+                    nodes.push(/*#__PURE__*/ _jsx(ImportFileBtn, {}));
+                }
+            }
         }
-        if (props.dataImport && conf.add) {
-            nodes.push(/*#__PURE__*/ _jsx(ImportFileBtn, {}));
-        }
-    };
+    ]);
     return _XLSHandlePlugin;
 }(RCTablePlugin);
 function ExportFileBtn() {

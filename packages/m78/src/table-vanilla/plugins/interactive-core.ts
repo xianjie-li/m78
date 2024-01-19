@@ -7,6 +7,7 @@ import {
   isTruthyOrZero,
   KeyboardHelperOption,
   KeyboardMultipleHelper,
+  setCacheValue,
   setNamePathValue,
 } from "@m78/utils";
 import { removeNode } from "../../common/index.js";
@@ -26,13 +27,11 @@ interface TableInteractiveItem {
   unmounted?: boolean;
 
   // 清理该交互项
-  done(isSubmit?: boolean): void;
+  done(isConfirm?: boolean): void;
 }
 
 /**
- * 提供最基础的单元格双击交互功能, 通常用于搭配form插件实现单元格编辑和验证
- *
- * interactive 并非一定表示单元格编辑, 也可以纯展示的其他交互组件
+ * 提供最基础的单元格双击交互功能, 用于实现交互期间展示表单控件或其他交互组件, 是form的上一层抽象, 并非一定用于form
  * */
 export class _TableInteractiveCorePlugin extends TablePlugin {
   // 所有活动的交互项
@@ -57,10 +56,11 @@ export class _TableInteractiveCorePlugin extends TablePlugin {
   init() {
     this.form = this.getPlugin(_TableFormPlugin);
     this.disable = this.getPlugin(_TableDisablePlugin);
+
+    this.initDom();
   }
 
   mounted() {
-    this.initDom();
     this.table.event.click.on(this.onClick);
     this.multipleHelper = createKeyboardHelpersBatch(this.getKeydownOptions());
   }
@@ -83,6 +83,10 @@ export class _TableInteractiveCorePlugin extends TablePlugin {
     this.updateNode();
   }
 
+  rendered() {
+    this.hideInvisibleInteractive();
+  }
+
   // 事件绑定配置
   private getKeydownOptions(): KeyboardHelperOption[] {
     const hasItemChecker = () => this.table.isActive() && !!this.items.length;
@@ -100,7 +104,7 @@ export class _TableInteractiveCorePlugin extends TablePlugin {
         enable: hasItemChecker,
       },
       {
-        code: ["Enter", "Space"],
+        code: ["Enter"],
         handle: this.onEnterDown,
         enable: hasNotItemChecker,
       },
@@ -179,14 +183,14 @@ export class _TableInteractiveCorePlugin extends TablePlugin {
     // eslint-disable-next-line prefer-const
     let done: TableInteractiveDone;
 
-    const itemDone = (isSubmit = true) => {
+    const itemDone = (isConfirm = true) => {
       this.lastDownTime = Date.now();
 
       if (item.unmounted) return;
 
       item.unmounted = true;
 
-      const ret = done(isSubmit);
+      const ret = done(isConfirm);
 
       const clear = () => {
         const ind = this.items.indexOf(item);
@@ -194,7 +198,7 @@ export class _TableInteractiveCorePlugin extends TablePlugin {
           this.items.splice(ind, 1);
         }
 
-        this.table.event.interactiveChange.emit(cell, false, isSubmit);
+        this.table.event.interactiveChange.emit(cell, false, isConfirm);
 
         removeNode(attachNode);
       };
@@ -234,7 +238,7 @@ export class _TableInteractiveCorePlugin extends TablePlugin {
   };
 
   // 更新当前节点位置/尺寸
-  updateNode() {
+  private updateNode() {
     if (!this.items.length) return;
 
     this.items.forEach((item) => {
@@ -245,12 +249,27 @@ export class _TableInteractiveCorePlugin extends TablePlugin {
 
       const attachPos = this.table.getAttachPosition(cell);
 
-      node.style.width = `${attachPos.width}px`;
-      node.style.height = `${attachPos.height}px`;
-      node.style.transform = `translate(${attachPos.left}px,${attachPos.top}px)`;
-      node.style.zIndex = attachPos.zIndex;
+      setCacheValue(node.style, "width", `${attachPos.width - 1}px`);
+      setCacheValue(node.style, "height", `${attachPos.height - 1}px`);
+      setCacheValue(
+        node.style,
+        "transform",
+        `translate(${attachPos.left}px,${attachPos.top}px)`
+      );
+      setCacheValue(node.style, "zIndex", String(Number(attachPos.zIndex) + 2)); // 高于错误反馈等提示节点
 
       item.mounted = true;
+    });
+  }
+
+  // 隐藏不可见的正在交互单元格, 并触发其提交
+  private hideInvisibleInteractive() {
+    if (!this.items.length) return;
+
+    this.items.forEach((i) => {
+      if (!i.cell.isMount) {
+        i.done(true);
+      }
     });
   }
 
@@ -313,7 +332,7 @@ export class _TableInteractiveCorePlugin extends TablePlugin {
 }
 
 /** 表示交互完成后要执行的操作 */
-export type TableInteractiveDone = (isSubmit: boolean) => void | Promise<void>;
+export type TableInteractiveDone = (isConfirm: boolean) => void | Promise<void>;
 
 /** 交互组件渲染参数 */
 export interface TableInteractiveRenderArg {
@@ -323,10 +342,10 @@ export interface TableInteractiveRenderArg {
   node: HTMLElement;
   /** 表单控件应显示的默认值 */
   value: any;
-  /** isSubmit = true | 手动结束交互, 比如在用户按下enter时
-   * isSubmit为true时表示应对单元格值进行更新, done应该在事件回调等位置调用, 不能在render流程中调用
+  /** isConfirm = true | 手动结束交互, 比如在用户按下enter时
+   * isConfirm为true时表示该操作被确认, done应该在事件回调等位置调用, 不能在render流程中调用
    * */
-  done: (isSubmit?: boolean) => void;
+  done: (isConfirm?: boolean) => void;
   /** 当前行的form实例 */
   form: FormInstance;
 }
@@ -335,12 +354,12 @@ export interface TableInteractiveCoreConfig {
   /** 控制单元格是否可交互 */
   interactive?: boolean | ((cell: TableCell) => boolean);
   /**
-   * 渲染交互组件, 交互组件挂载于attachNode上, 并且应在交互完成或关闭时调用done来结束交互状态
+   * 渲染交互组件, 交互组件挂载于attachNode上, 并且应在交互完成或关闭时调用arg.done()来结束交互状态
    *
    * 返回的TableInteractiveDone会在交互结束清理attachNode前执行, 可用于实际更新值或者执行清理操作, 如果清理需要异步完成, 或者
    * 包含关闭动画, 可以返回一个Promise, 内部将等待Promise完成后再清理attachNode
    *
-   * arg.done和TableInteractiveDone.done都接收isSubmit参数, 用于识别是更新值还是取消
+   * arg.done()和TableInteractiveDone()都接收isConfirm参数, 用于识别是确认操作还是取消操作
    * */
   interactiveRender?: (arg: TableInteractiveRenderArg) => TableInteractiveDone;
 }

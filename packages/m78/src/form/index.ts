@@ -10,7 +10,6 @@ export type {
   FormErrorTemplateType,
   FormErrorTemplateInterpolate,
   FormRejectMetaItem,
-  FormVerify,
   FormNamesNotify,
   FormListItem,
 } from "@m78/form/index.js";

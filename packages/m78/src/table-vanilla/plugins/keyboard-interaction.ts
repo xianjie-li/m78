@@ -7,6 +7,7 @@ import {
   KeyboardHelperEvent,
   KeyboardHelperModifier,
   KeyboardHelperOption,
+  KeyboardHelperTriggerType,
   KeyboardMultipleHelper,
 } from "@m78/utils";
 import { _TableInteractiveCorePlugin } from "./interactive-core.js";
@@ -15,7 +16,7 @@ import { Position } from "../../common/index.js";
 /** 单个值粘贴时, 最大的可粘贴单元格数 */
 const maxSinglePaste = 50;
 
-/** 键盘交互操作, 比如单元格复制/粘贴/delete等 */
+/** 集中处理不分键盘交互操作, 比如单元格复制/粘贴/delete等 */
 export class _TableKeyboardInteractionPlugin extends TablePlugin {
   interactiveCore: _TableInteractiveCorePlugin;
 
@@ -250,6 +251,18 @@ export class _TableKeyboardInteractionPlugin extends TablePlugin {
         handle: this.onMove,
         enable: checker,
       },
+      {
+        code: "Space",
+        type: KeyboardHelperTriggerType.down,
+        handle: this.onSpace,
+        enable: checker,
+      },
+      {
+        code: "Space",
+        type: KeyboardHelperTriggerType.up,
+        handle: this.onSpace,
+        enable: checker,
+      },
     ];
   }
 
@@ -336,6 +349,19 @@ export class _TableKeyboardInteractionPlugin extends TablePlugin {
     this.table.locate(next.key);
 
     this.table.selectCells(next.key);
+  };
+
+  /** 空格按下/放开 */
+  private onSpace = (e: KeyboardHelperEvent) => {
+    if (e.type === KeyboardHelperTriggerType.down) {
+      if (!this.table.isDragMoveEnable()) {
+        this.table.setDragMoveEnable(true);
+      }
+    }
+
+    if (e.type === KeyboardHelperTriggerType.up) {
+      this.table.setDragMoveEnable(false);
+    }
   };
 
   /** 将指定字符串根据\t和\n解析为一个二维数组 */

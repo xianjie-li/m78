@@ -1,4 +1,4 @@
-import { TablePlugin } from "../plugin.js";
+import { TableLoadStage, TablePlugin } from "../plugin.js";
 import { TableKey } from "../types/base-type.js";
 import { _TableRenderPlugin } from "./render.js";
 /**
@@ -13,11 +13,12 @@ export declare class _TableInitPlugin extends TablePlugin {
     /** 基础预处理, 减少后续渲染的计算工作, , 对应TableReloadLevel.base */
     baseHandle(): void;
     /** 拷贝data/columns/persistenceConfig等需要本地化的配置 */
-    initHandle(): void;
-    /** 将data/columns进行预处理, 并对固定项进行处理 */
-    fmtDataAndColumns(): void;
+    initBaseInfo(): void;
+    /** 将data/columns进行预处理, 移动固定项到固定后位置, 并在原位置添加占位项 */
+    formatBaseInfo(): void;
     mergePersistenceConfig(): void;
-    mergePersistenceConfigAfter(): void;
+    /** 一些需要在updateIndexAndMerge完成之后进行的操作 */
+    indexEndHandle(): void;
     /** 处理dataKeyIndexMap/columnKeyIndexMap, 合并persistenceConfig.columns/rows/cells 至ctx上同名配置 */
     updateIndexAndMerge(): void;
     /**
@@ -47,8 +48,12 @@ export declare class _TableInitPlugin extends TablePlugin {
         mergeList: TableKey[];
     };
     /** 基础容器创建&初始化 */
-    createDomElement(): void;
+    createDom(): void;
     /** 合并消息文本 */
     mergeTexts(): void;
+    /** 克隆 config.persistenceConfig 到 context.persistenceConfig */
+    clonePersistenceConfigToCtx(): void;
+    /** 触发插件loadStage不同阶段 */
+    stageEmit(stage: TableLoadStage, isBefore: boolean): void;
 }
 //# sourceMappingURL=init.d.ts.map

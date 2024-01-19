@@ -1,5 +1,5 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
 import { _formPropsKeys, _lisIgnoreKeys, FormLayoutType } from "./types.js";
 import { useFn } from "@m78/hooks";
 import { isBoolean, isFunction, isString } from "@m78/utils";

@@ -1,16 +1,17 @@
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { TriggerType } from "../types.js";
 import { _eventXyGetter, triggerClearEvent } from "../common.js";
 import { getEventOffset } from "@m78/utils";
 import { _buildEvent } from "../methods.js";
 export function _dragImpl(ctx) {
-    var start = function start(e) {
+    var trigger = ctx.trigger, config = ctx.config;
+    function start(e) {
         if (!ctx.typeEnableMap[TriggerType.drag]) return;
         if (config.preCheck && !config.preCheck(TriggerType.drag, e)) return;
-        var ref = _sliced_to_array(_eventXyGetter(e), 2), clientX = ref[0], clientY = ref[1];
+        var _$_eventXyGetter = _sliced_to_array(_eventXyGetter(e), 2), clientX = _$_eventXyGetter[0], clientY = _$_eventXyGetter[1];
         var items = ctx.getTargetDataByXY(clientX, clientY, true, e.target);
         items.forEach(function(i) {
-            var ref = _sliced_to_array(getEventOffset(e, i.bound), 2), offsetX = ref[0], offsetY = ref[1];
+            var _getEventOffset = _sliced_to_array(getEventOffset(e, i.bound), 2), offsetX = _getEventOffset[0], offsetY = _getEventOffset[1];
             var record = {
                 clientX: clientX,
                 clientY: clientY,
@@ -37,14 +38,14 @@ export function _dragImpl(ctx) {
         var dragging = ctx.dragRecord.size !== 0;
         ctx.dragging = dragging;
         return dragging;
-    };
-    var move = function move(e) {
+    }
+    function move(e) {
         moveAndEnd(e, false);
-    };
-    var end = function end(e) {
+    }
+    function end(e) {
         moveAndEnd(e, true);
-    };
-    var moveAndEnd = function moveAndEnd(e, isEnd) {
+    }
+    function moveAndEnd(e, isEnd) {
         var isCancel = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : false;
         var list = Array.from(ctx.dragRecord.values());
         var clientX = 0;
@@ -90,11 +91,10 @@ export function _dragImpl(ctx) {
             trigger.event.emit(event);
         });
         ctx.dragging = ctx.dragRecord.size !== 0;
-    };
-    var clear = function clear() {
+    }
+    function clear() {
         moveAndEnd(triggerClearEvent, true, true);
-    };
-    var trigger = ctx.trigger, config = ctx.config;
+    }
     return {
         start: start,
         move: move,

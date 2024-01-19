@@ -1,27 +1,19 @@
-import { TablePlugin } from "../plugin.js";
+import { TableLoadStage, TablePlugin } from "../plugin.js";
 import { TableKey } from "../types/base-type.js";
-import { TableReloadLevel } from "./life.js";
-import { TableColumnLeafConfigFormatted } from "../types/items.js";
-import { _TableGetterPlugin } from "./getter.js";
-/** 表格列隐藏 */
+import { _TableMetaDataPlugin } from "./meta-data.js";
+import { SelectManager } from "@m78/utils";
+/**
+ * 表格列隐藏
+ *
+ * 通过为隐藏项添加meta.ignore实现, ignore状态为额外维护的, 放置与默认的产生冲突
+ * */
 export declare class _TableHidePlugin extends TablePlugin {
-    /** 前一次处理中设置的隐藏标记的列, 需要在新的设置中先还原 */
-    prevHideColumns: TableColumnLeafConfigFormatted[];
-    /** 放置所有expandNodes的容器 */
-    wrapNodes: HTMLDivElement;
-    /** 展开隐藏列的节点 */
-    expandNodes: HTMLDivElement[];
-    getter: _TableGetterPlugin;
-    initialized(): void;
-    beforeDestroy(): void;
-    rendering(): void;
-    loadStage(level: TableReloadLevel, isBefore: boolean): void;
+    metaData: _TableMetaDataPlugin;
+    hideChecker: SelectManager<any, any>;
+    beforeInit(): void;
+    loadStage(stage: TableLoadStage, isBefore: boolean): void;
     handle(): void;
     /** 是否为隐藏列 */
     isHideColumn(key: TableKey): boolean;
-    /** 渲染标记 */
-    renderNodes(): void;
-    handleClick: (e: MouseEvent) => void;
-    showColumn(key: TableKey): void;
 }
 //# sourceMappingURL=hide.d.ts.map

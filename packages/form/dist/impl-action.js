@@ -1,13 +1,13 @@
-import _async_to_generator from "@swc/helpers/src/_async_to_generator.mjs";
-import _ts_generator from "@swc/helpers/src/_ts_generator.mjs";
-import { ensureArray, isEmpty, stringifyNamePath } from "@m78/utils";
-import clone from "lodash/cloneDeep.js";
+import { _ as _async_to_generator } from "@swc/helpers/_/_async_to_generator";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
+import { _ as _ts_generator } from "@swc/helpers/_/_ts_generator";
+import { ensureArray, isEmpty, stringifyNamePath, simplyDeepClone as clone } from "@m78/utils";
 import { _eachState, _getState, _isRelationName } from "./common.js";
 export function _implAction(ctx) {
     var instance = ctx.instance;
     instance.verify = function() {
         var _ref = _async_to_generator(function(name, extraMeta) {
-            var isValueChangeTrigger, resetState, resetErrorAndTouch, rejects, errors;
+            var isValueChangeTrigger, resetState, resetErrorAndTouch, _ctx_getFormatterValuesAndSchema, schemas, values, _ref, rejects, _values, errors;
             return _ts_generator(this, function(_state) {
                 switch(_state.label){
                     case 0:
@@ -25,6 +25,7 @@ export function _implAction(ctx) {
                                 st.touched = true;
                             }
                         };
+                        // 需要在成功或失败后马上重置, 然后再执行后续处理, 防止多个verify产生的竞态问题
                         resetErrorAndTouch = function() {
                             // 重置所有错误并在未指定name时设置touched状态
                             _eachState(ctx, resetState);
@@ -34,23 +35,27 @@ export function _implAction(ctx) {
                                 resetState(st);
                             }
                         };
+                        _ctx_getFormatterValuesAndSchema = _sliced_to_array(ctx.getFormatterValuesAndSchema(), 2), schemas = _ctx_getFormatterValuesAndSchema[0], values = _ctx_getFormatterValuesAndSchema[1];
                         return [
                             4,
-                            ctx.schemaCheck(instance.getValues(), extraMeta)
+                            ctx.schemaCheck(values, schemas, extraMeta)
                         ];
                     case 1:
-                        rejects = _state.sent();
+                        _ref = _sliced_to_array.apply(void 0, [
+                            _state.sent(),
+                            2
+                        ]), rejects = _ref[0], _values = _ref[1];
                         resetErrorAndTouch();
                         if (rejects) {
                             errors = [];
                             // 将所有错误信息存储到state中, 并且根据是否传入name更新指定的touched
                             rejects.forEach(function(meta) {
-                                var ref;
+                                var _st_errors;
                                 var st = ctx.verifyOnly ? {} : _getState(ctx, meta.namePath);
                                 if (!isEmpty(st.errors)) {
                                     st.errors = [];
                                 }
-                                (ref = st.errors) === null || ref === void 0 ? void 0 : ref.push(meta);
+                                (_st_errors = st.errors) === null || _st_errors === void 0 ? void 0 : _st_errors.push(meta);
                                 if (name) {
                                     if (stringifyNamePath(name) === stringifyNamePath(meta.namePath)) {
                                         st.touched = true;
@@ -69,7 +74,10 @@ export function _implAction(ctx) {
                             }
                             return [
                                 2,
-                                errors.length ? errors : null
+                                [
+                                    errors.length ? errors : null,
+                                    name ? instance.getValue(name) : _values
+                                ]
                             ];
                         } else {
                             if (!ctx.lockNotify) {
@@ -77,7 +85,10 @@ export function _implAction(ctx) {
                             }
                             return [
                                 2,
-                                null
+                                [
+                                    null,
+                                    _values
+                                ]
                             ];
                         }
                         return [
@@ -130,7 +141,7 @@ export function _implAction(ctx) {
         }, 200);
     };
     instance.submit = /*#__PURE__*/ _async_to_generator(function() {
-        var reject;
+        var _ref, reject, values;
         return _ts_generator(this, function(_state) {
             switch(_state.label){
                 case 0:
@@ -139,13 +150,19 @@ export function _implAction(ctx) {
                         instance.verify()
                     ];
                 case 1:
-                    reject = _state.sent();
+                    _ref = _sliced_to_array.apply(void 0, [
+                        _state.sent(),
+                        2
+                    ]), reject = _ref[0], values = _ref[1];
                     if (!reject) {
-                        instance.events.submit.emit();
+                        instance.events.submit.emit(values);
                     }
                     return [
                         2,
-                        reject
+                        [
+                            reject,
+                            values
+                        ]
                     ];
             }
         });

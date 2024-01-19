@@ -1,11 +1,11 @@
 import { FormInstance, FormSchema, FormRejectMeta } from "@m78/form";
 import { AnyFunction, AnyObject, NamePath } from "@m78/utils";
 import { TableKey } from "../types/base-type.js";
-import { TablePlugin } from "../plugin.js";
+import { TableLoadStage, TablePlugin } from "../plugin.js";
 import { TableCell, TableColumn, TableRow } from "../types/items.js";
 import { TableMutationDataEvent, TableMutationEvent, TableMutationValueEvent } from "./mutation.js";
-import { TableReloadLevel } from "./life.js";
 import { _TableInteractiveCorePlugin } from "./interactive-core.js";
+import { _TableSoftRemovePlugin } from "./soft-remove.js";
 export declare class _TableFormPlugin extends TablePlugin implements TableForm {
     wrapNode: HTMLElement;
     formInstances: Record<string, FormInstance | void>;
@@ -39,10 +39,11 @@ export declare class _TableFormPlugin extends TablePlugin implements TableForm {
         currentIndex: number;
     }>;
     interactive: _TableInteractiveCorePlugin;
+    softRemove: _TableSoftRemovePlugin;
     beforeInit(): void;
     mounted(): void;
     beforeDestroy(): void;
-    loadStage(level: TableReloadLevel, isBefore: boolean): void;
+    loadStage(stage: TableLoadStage, isBefore: boolean): void;
     mutation: (e: TableMutationEvent) => void;
     rendering(): void;
     valueMutation: (e: TableMutationValueEvent) => void;
@@ -75,7 +76,7 @@ export declare class _TableFormPlugin extends TablePlugin implements TableForm {
     private getRowMarkList;
     private getChangedList;
     initForm(arg: TableMutationValueEvent | TableCell | TableRow): FormInstance;
-    /** 遍历数据, 返回所有数据 */
+    /** 遍历数据, 返回所有数据, 若cb返回false则将从返回list中过滤 */
     private eachData;
 }
 /** table定制版的FormSchema */
@@ -108,7 +109,7 @@ export interface TableForm {
     getChanged(rowKey: TableKey, columnKey?: NamePath): boolean;
     /** 表格是否发生过数据变更, 排序, 增删数据 */
     getTableChanged(): boolean;
-    /** 重置当前的错误信息/变更状态等 */
+    /** 清理当前的错误信息/变更状态等, 不影响已经改变的值 */
     resetFormState(): void;
 }
 export interface TableDataLists<D = AnyObject> {
@@ -116,13 +117,13 @@ export interface TableDataLists<D = AnyObject> {
     all: D[];
     /** 新增的行 */
     add: D[];
-    /** 发生过变更的行(不含新增行) */
+    /** 发生过变更的行, 不含新增行 */
     change: D[];
     /** 新增和变更的行 */
     update: D[];
     /** 移除的行 */
     remove: D[];
-    /** 是否发生了数据排序 */
+    /** 是否发生了数据排序, 不包含增删数据导致的索引变更 */
     sorted: boolean;
 }
 //# sourceMappingURL=form.d.ts.map

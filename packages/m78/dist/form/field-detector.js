@@ -38,12 +38,12 @@ export function _FieldDetector(param) {
     var value = useMemo(function() {
         return {
             map: {},
-            register: function(name) {
+            register: function register(name) {
                 var sName = stringifyNamePath(name);
                 this.map[sName] = name;
                 notify();
             },
-            unregister: function(name) {
+            unregister: function unregister(name) {
                 var sName = stringifyNamePath(name);
                 delete this.map[sName];
                 notify();

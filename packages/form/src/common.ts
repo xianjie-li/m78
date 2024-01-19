@@ -1,9 +1,6 @@
 import {
   ensureArray,
-  isArray,
-  isEmpty,
   isNumber,
-  isObject,
   NameItem,
   NamePath,
   stringifyNamePath,
@@ -78,65 +75,8 @@ export function _notifyFilter(
   };
 }
 
-/** 用于namePath路径的通配占位, 匹配eachSchema等没有name的层级 */
-export const _ANY_NAME_PLACE_HOLD = "__ANY_NAME_PLACE_HOLD__";
-
 /** 用于在某些情况作为根schema的name标注 */
 export const _ROOT_SCHEMA_NAME = "__ROOT_SCHEMA_NAME__";
-
-/** 递归删除指定的namePath值, 支持在namePath中使用ANY_NAME_PLACE_HOLD进行通配占位 */
-export function _recursionDeleteNamePath(values: any, names: NamePath) {
-  const name = ensureArray(names);
-
-  if (!name.length || isEmpty(values)) return;
-
-  const [currentName, ...rest] = name;
-
-  const isArr = isArray(values);
-  const isObj = isObject(values);
-
-  if (!isArr && !isObj) return;
-
-  if (name.length === 1) {
-    if (isObj) {
-      // 清理全部
-      if (currentName === _ANY_NAME_PLACE_HOLD) {
-        Object.keys(values).forEach((key) => delete values[key]);
-        return;
-      }
-      delete values[currentName];
-    }
-    if (isArr) {
-      // 清理全部
-      if (currentName === _ANY_NAME_PLACE_HOLD) {
-        values.splice(0, values.length);
-        return;
-      }
-
-      if (isNumber(currentName)) {
-        values.splice(currentName, 1);
-      }
-    }
-    return;
-  }
-
-  if (currentName !== _ANY_NAME_PLACE_HOLD) {
-    _recursionDeleteNamePath(values[currentName], rest);
-    return;
-  }
-
-  if (isObj) {
-    Object.keys(values).forEach((key) => {
-      _recursionDeleteNamePath(values[key], rest);
-    });
-  }
-
-  if (isArr) {
-    values.forEach((v) => {
-      _recursionDeleteNamePath(v, rest);
-    });
-  }
-}
 
 /** 数组1是否与数组2的左侧相等或完全相等 */
 export function _isLeftEqualName(arr1: any[], arr2: any[]) {

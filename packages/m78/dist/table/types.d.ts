@@ -5,12 +5,14 @@ import { TableDragSortConfig } from "../table-vanilla/plugins/drag-sort.js";
 import { ComponentBaseProps } from "../common/index.js";
 import { AnyObject, EmptyFunction } from "@m78/utils";
 import { CustomEventWithHook } from "@m78/hooks";
-import { ReactElement, ReactNode } from "react";
+import React, { ReactElement, ReactNode } from "react";
 import { TableDataLists } from "../table-vanilla/plugins/form.js";
-import { TableFeedbackEvent } from "../table-vanilla/plugins/event.js";
-import { FormAdaptors, FormInstance, FormSchema } from "../form/index.js";
+import { FormInstance, FormSchema } from "../form/index.js";
 import { TablePlugin } from "../table-vanilla/plugin.js";
 import { RCTablePlugin } from "./plugin.js";
+import { TableFeedbackEvent } from "../table-vanilla/plugins/feedback.js";
+import { TableConfigPersister, TableConfigReader } from "./plugins/config-sync.js";
+import { FormAdaptors } from "../config/index.js";
 /** 忽略的配置 */
 type OmitConfig = typeof _tableOmitConfig[number];
 /** 重写TableColumnLeafConfig类型 */
@@ -103,9 +105,9 @@ export interface RCTableProps extends ComponentBaseProps, Omit<TableBaseConfig, 
     /**
      * filter使用的表单实例, 不传时会使用内部创建的默认实例
      *
-     * 通过此项可以更深入的控制筛选项, 使用自定义form实例时,  defaultFilter 和 filterSchema 会被忽略, 请使用form对应的配置(defaultValue/schemas)
+     * 通过此项可以更深入的控制筛选项, 使用自定义form实例时,  defaultFilter 和 filterSchema 会被忽略, 请使用form对应的配置(values/schemas)
      *
-     * 此外, 还会覆盖默认的 size / layoutType / spacePadding 配置, 若有需要需要特别指定
+     * 此外, 还会覆盖默认的 size / layoutType / spacePadding 配置, 若有需求需要重新指定
      * */
     filterForm?: FormInstance;
     /** 定制toolbar左侧, 可直接更改nodes, 向其中新增或删除节点 */
@@ -123,14 +125,10 @@ export interface RCTableProps extends ComponentBaseProps, Omit<TableBaseConfig, 
     adaptors?: FormAdaptors;
     /** 数据编辑/新增等功能是否启用, 传入true时全部启用, 可传入一个配置对象来按需启用所需功能 */
     dataOperations?: boolean | TableDataOperationsConfig;
-    /** TODO: 提交时触发, 接收当前数据和当前配置 */
+    /** 提交时触发 */
     onSubmit?: (submitData: {
         /** 若数据发生了改变, 此项为当前数据信息 */
         data?: TableDataLists;
-        /** 若配置发生了改变, 此项为完整的配置信息 */
-        config?: TablePersistenceConfig;
-        /** 发生了变更的配置key */
-        changedConfigKeys?: string[];
     }) => void;
     /** 新增数据时, 使用此对象作为默认值, 可以是一个对象或返回对象的函数 */
     defaultNewData?: AnyObject | (() => AnyObject);
@@ -138,14 +136,18 @@ export interface RCTableProps extends ComponentBaseProps, Omit<TableBaseConfig, 
     dataImport?: boolean;
     /** true | 启用导出功能 */
     dataExport?: boolean;
-    /** TODO: 传入后, 配置变更将以指定key为键存储到本地, 并在下次加载时读取 */
-    localConfigStorageKey?: string;
+    /** 用于持久化配置的唯一key, 默认通过storage api进行配置持久化, 可通过 configPersister/configReader 配置定制持久化逻辑 */
+    configCacheKey?: string;
     /**
-     * TODO: 配置持久化
-     * - 为string时使用localStorage存储变更配置, 并以该字符串作为存储的key, key必须在全局唯一
-     * - 传入持久化适配函数, 自定义存储逻辑
+     * 自定义配置的存储方式, 默认通过storage api进行存储
+     *
+     * 配置存储的时机是: Table组件卸载 / 页面卸载 / 配置变更后的几秒后
      * */
-    configPersistence?: string | Function;
+    configPersister?: TableConfigPersister;
+    /** 持久化配置读取器, 返回持久化配置, 自定义了configPersister时需要进行配置 */
+    configReader?: TableConfigReader;
+    /** true | 启用软删除数据, 删除数据不会从表格消失, 而是显示为禁用, 用户可以在保存前随时对其进行恢复 */
+    softRemove?: boolean;
     /** 获取内部table实例 */
     instanceRef?: React.Ref<RCTableInstance>;
     /** 插件 */
@@ -194,14 +196,10 @@ export interface RCTableInstance extends Omit<TableInstance, "event"> {
         error: CustomEventWithHook<(msg: string) => void>;
         /** 需要进行一些反馈操作时触发, 比如点击了包含验证错误/禁用/内容不能完整显示的行, 如果项包含多个反馈, 则event包含多个事件项 */
         feedback: CustomEventWithHook<(event: TableFeedbackEvent[]) => void>;
+        /** 拖拽移动启用状态变更时触发 */
+        dragMoveChange: CustomEventWithHook<(enable: boolean) => void>;
     };
 }
-export declare enum TableSort {
-    asc = "asc",
-    desc = "desc"
-}
-export type TableSortKeys = keyof typeof TableSort;
-export type TableSortUnion = TableSort | TableSortKeys;
 export interface TableDataOperationsConfig {
     /** 允许编辑数据, 请注意, 单元格是否可编辑还与对应列的schema配置有关 */
     edit?: boolean | ((cell: TableCell) => boolean);
@@ -227,12 +225,20 @@ export interface _RCTableState {
     emptyNode?: HTMLDivElement;
     /** 表格实例 */
     instance: RCTableInstance;
+    /** 组件正在执行初始化操作, 尚未完成实例创建, 通常在instance需要异步创建时使用, 比如从服务器读取持久化配置 */
+    initializing: boolean;
+    /** initializing为true时显示的提示内容 */
+    initializingTip: React.ReactElement | string | null;
+    /** 出现阻塞性的错误时, 设置到此处进行显示 */
+    blockError: ReactElement | string | null;
     /** 总行数 */
     rowCount: number;
     /** 选中行 */
     selectedRows: TableRow[];
     /** 用于主动更新组件 */
     renderID?: number;
+    /** 从缓存或服务器读取到的持久配置 */
+    persistenceConfig?: TablePersistenceConfig;
 }
 /** 实例状态 */
 export interface _RCTableSelf {

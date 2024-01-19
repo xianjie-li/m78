@@ -1,6 +1,7 @@
-import { _FormContext, _FieldContext, FormCommonPropsGetter, FormCustomRender, FormCustomRenderBasicArgs, FormAdaptorsItem, FormAdaptor } from "./types.js";
+import { _FormContext, _FieldContext, FormCommonPropsGetter, FormCustomRender, FormCustomRenderBasicArgs, FormAdaptor } from "./types.js";
 import { NamePath } from "@m78/utils";
 import React from "react";
+import { FormAdaptorsItem } from "../config/index.js";
 export declare function _useFieldMethods(ctx: _FormContext, fieldCtx: _FieldContext): {
     getProps: FormCommonPropsGetter;
     getAdaptor: () => {

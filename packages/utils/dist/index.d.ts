@@ -14,6 +14,5 @@ export * from "./array.js";
 export * from "./types.js";
 export * from "./consts.js";
 export * from "./react.js";
-export * from "./extra/action-history.js";
-export * from "./extra/select-manager.js";
+export * from "./tools/index.js";
 //# sourceMappingURL=index.d.ts.map

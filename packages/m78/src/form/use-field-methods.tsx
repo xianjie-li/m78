@@ -8,7 +8,6 @@ import {
   FormCustomRenderBasicArgs,
   FormLayoutType,
   FormListCustomRenderArgs,
-  FormAdaptorsItem,
   FormAdaptor,
 } from "./types.js";
 import { useFn } from "@m78/hooks";
@@ -21,6 +20,7 @@ import {
 } from "@m78/utils";
 import React, { cloneElement, isValidElement } from "react";
 import { _defaultValueGetter } from "./common.js";
+import { FormAdaptorsItem } from "../config/index.js";
 
 export function _useFieldMethods(ctx: _FormContext, fieldCtx: _FieldContext) {
   const { form, config, adaptorsMap, adaptorsNameMap } = ctx;

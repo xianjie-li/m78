@@ -1,16 +1,24 @@
 import { TablePlugin } from "../plugin.js";
 import { TableKey } from "../types/base-type.js";
-import { TableCell, TableCellWithDom, TableRow } from "../types/items.js";
+import { TableCell, TableCellWithDom, TableColumn, TableRow } from "../types/items.js";
+import { SelectManager } from "@m78/utils";
+import { TableReloadOptions } from "./life.js";
 /** 在单元格/行/列上设置半透明遮挡物, 目前仅用于组件内部api设置临时禁用状态, 如拖动排序时, 为拖动列显示禁用样式 */
 export declare class _TableDisablePlugin extends TablePlugin implements TableDisable {
     disabled: boolean;
+    rowChecker: SelectManager<TableKey>[];
+    columnChecker: SelectManager<TableKey>[];
+    cellChecker: SelectManager<TableKey>[];
     /** 禁用行 */
-    rows: DisabledMap;
+    rows: SelectManager;
     /** 禁用单元格 */
-    cells: DisabledMap;
+    cells: SelectManager;
     /** 禁用列 */
-    columns: DisabledMap;
+    columns: SelectManager;
     cellRender(cell: TableCellWithDom): void;
+    private clear;
+    reload(opt: TableReloadOptions): void;
+    beforeDestroy(): void;
     isDisabled: TableDisable["isDisabled"];
     isDisabledRow: TableDisable["isDisabledRow"];
     isDisabledColumn: TableDisable["isDisabledColumn"];
@@ -23,9 +31,6 @@ export declare class _TableDisablePlugin extends TablePlugin implements TableDis
     setCellDisable: TableDisable["setCellDisable"];
     disable: TableDisable["disable"];
     clearDisable(): void;
-}
-interface DisabledMap {
-    [key: string]: 1 | 0;
 }
 /** 禁用相关的api */
 export interface TableDisable {
@@ -40,7 +45,7 @@ export interface TableDisable {
     /** 获取禁用的行 */
     getDisabledRows(): TableRow[];
     /** 获取禁用的列 */
-    getDisabledColumns(): TableRow[];
+    getDisabledColumns(): TableColumn[];
     /** 获取禁用的单元格 */
     getDisabledCells(): TableCell[];
     /** 设置表格禁用状态 */
@@ -69,5 +74,4 @@ export interface TableDisable {
     /** 清理所有禁用状态 */
     clearDisable(): void;
 }
-export {};
 //# sourceMappingURL=disable.d.ts.map

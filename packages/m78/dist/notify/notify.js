@@ -1,7 +1,7 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
-import _object_without_properties from "@swc/helpers/src/_object_without_properties.mjs";
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
+import { _ as _object_without_properties } from "@swc/helpers/_/_object_without_properties";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import React, { useMemo } from "react";
 import { MASK_NAMESPACE, Size, Status, statusIconMap } from "../common/index.js";
@@ -21,7 +21,7 @@ var keys = Object.keys(NotifyPosition);
 /**
  * 容器, 分类不同方向的notify并在对应方向渲染
  * */ export function _NotifyWrap(param) {
-    var _children = param.children, children = _children === void 0 ? [] : _children;
+    var _param_children = param.children, children = _param_children === void 0 ? [] : _param_children;
     var lists = useMemo(function() {
         var map = {};
         children.forEach(function(item) {
@@ -37,8 +37,8 @@ var keys = Object.keys(NotifyPosition);
         children
     ]);
     return keys.map(function(key) {
-        var ref;
-        return ((ref = lists[key]) === null || ref === void 0 ? void 0 : ref.length) && /*#__PURE__*/ _jsx("div", {
+        var _lists_key;
+        return ((_lists_key = lists[key]) === null || _lists_key === void 0 ? void 0 : _lists_key.length) && /*#__PURE__*/ _jsx("div", {
             className: "m78-notify_container m78-notify_".concat(key),
             children: lists[key]
         }, key);
@@ -47,17 +47,51 @@ var keys = Object.keys(NotifyPosition);
 /**
  * 实现组件
  * */ export function notify(props) {
-    var render = function render() {
+    var status = props.status, content = props.content, open = props.open, cancel = props.cancel, _props_loading = props.loading, loading = _props_loading === void 0 ? false : _props_loading, _props_duration = props.duration, duration = _props_duration === void 0 ? 1200 : _props_duration, _props_position = props.position, position = _props_position === void 0 ? NotifyPosition.center : _props_position, customer = props.customer;
+    // 此区间内视为有效duration
+    var hasDuration = duration < 1000000;
+    var _useMeasure = _sliced_to_array(useMeasure(), 2), bound = _useMeasure[0], ref = _useMeasure[1];
+    var _useSpring = useSpring(function() {
+        return _object_spread_props(_object_spread({}, _initTransition), {
+            config: config.stiff
+        });
+    }), _useSpring1 = _sliced_to_array(_useSpring, 2), process = _useSpring1[0].process, api = _useSpring1[1], styles = _object_without_properties(_useSpring[0], [
+        "process"
+    ]);
+    var share = {
+        hasDuration: hasDuration,
+        duration: duration,
+        position: position,
+        open: open,
+        api: api,
+        props: props,
+        bound: bound
+    };
+    /**
+   * 显示/隐藏相关行为控制
+   * */ var dOpen = _useToggleController(share);
+    /**
+   * 根据是否开启了关闭按钮动态设置偏移, 防止其遮挡文字
+   * */ var _$_useFixPad = _sliced_to_array(_useFixPad(share), 2), fixPad = _$_useFixPad[0], fixPadIcon = _$_useFixPad[1];
+    /**
+   * 所有启用了mask的overlay
+   * */ var overlaysMask = useOverlaysMask({
+        enable: dOpen && props.mask
+    });
+    /**
+   * 处理props.interactive
+   * */ var interactive = _useInteractive(share);
+    function render() {
         if (isFunction(customer)) {
             return /*#__PURE__*/ _jsx("div", {
-                ref: ref1,
+                ref: ref,
                 className: "m78-notify_custom",
                 children: customer(props)
             });
         }
         var StatusIcon = statusIconMap[status];
         return /*#__PURE__*/ _jsxs("div", {
-            ref: ref1,
+            ref: ref,
             className: "m78-notify_item-main m78-notify_normal",
             children: [
                 /*#__PURE__*/ _jsx(Spin, {
@@ -112,41 +146,7 @@ var keys = Object.keys(NotifyPosition);
                 })
             ]
         });
-    };
-    var status = props.status, content = props.content, open = props.open, cancel = props.cancel, _loading = props.loading, loading = _loading === void 0 ? false : _loading, _duration = props.duration, duration = _duration === void 0 ? 1200 : _duration, _position = props.position, position = _position === void 0 ? NotifyPosition.center : _position, customer = props.customer;
-    // 此区间内视为有效duration
-    var hasDuration = duration < 1000000;
-    var ref = _sliced_to_array(useMeasure(), 2), bound = ref[0], ref1 = ref[1];
-    var _ref = useSpring(function() {
-        return _object_spread_props(_object_spread({}, _initTransition), {
-            config: config.stiff
-        });
-    }), __ref = _sliced_to_array(_ref, 2), process = __ref[0].process, api = __ref[1], styles = _object_without_properties(_ref[0], [
-        "process"
-    ]);
-    var share = {
-        hasDuration: hasDuration,
-        duration: duration,
-        position: position,
-        open: open,
-        api: api,
-        props: props,
-        bound: bound
-    };
-    /**
-   * 显示/隐藏相关行为控制
-   * */ var dOpen = _useToggleController(share);
-    /**
-   * 根据是否开启了关闭按钮动态设置偏移, 防止其遮挡文字
-   * */ var ref2 = _sliced_to_array(_useFixPad(share), 2), fixPad = ref2[0], fixPadIcon = ref2[1];
-    /**
-   * 所有启用了mask的overlay
-   * */ var overlaysMask = useOverlaysMask({
-        enable: dOpen && props.mask
-    });
-    /**
-   * 处理props.interactive
-   * */ var interactive = _useInteractive(share);
+    }
     return /*#__PURE__*/ _jsxs(_Fragment, {
         children: [
             /*#__PURE__*/ _jsx(Portal, {

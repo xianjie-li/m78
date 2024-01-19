@@ -1,10 +1,6 @@
 import { isNumber } from "@m78/utils";
 import { _updateAllBoundThrottle } from "./methods.js";
 /** 实现目标点检测相关的方法 */ export function _checkImpl(ctx) {
-    var inBoundCheck = /** 检测xy是否在指定bound内 */ function inBoundCheck(x, y, bound) {
-        var left = bound.left, top = bound.top, width = bound.width, height = bound.height;
-        return x >= left && x <= left + width && y >= top && y <= top + height;
-    };
     var trigger = ctx.trigger;
     trigger.hasTargetByXY = function(x, y, triggerTarget) {
         _updateAllBoundThrottle(ctx);
@@ -67,4 +63,8 @@ import { _updateAllBoundThrottle } from "./methods.js";
         });
         return filterList;
     };
+    /** 检测xy是否在指定bound内 */ function inBoundCheck(x, y, bound) {
+        var left = bound.left, top = bound.top, width = bound.width, height = bound.height;
+        return x >= left && x <= left + width && y >= top && y <= top + height;
+    }
 }

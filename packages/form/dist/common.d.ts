@@ -10,12 +10,8 @@ export declare function _eachState(ctx: _Context, cb: (st: _State) => void): voi
  * 若传入deps, deps中指定的值发生变化时也会触发回调
  * */
 export declare function _notifyFilter(name: NamePath, notify: FormNamesNotify, deps?: NamePath[]): FormNamesNotify;
-/** 用于namePath路径的通配占位, 匹配eachSchema等没有name的层级 */
-export declare const _ANY_NAME_PLACE_HOLD = "__ANY_NAME_PLACE_HOLD__";
 /** 用于在某些情况作为根schema的name标注 */
 export declare const _ROOT_SCHEMA_NAME = "__ROOT_SCHEMA_NAME__";
-/** 递归删除指定的namePath值, 支持在namePath中使用ANY_NAME_PLACE_HOLD进行通配占位 */
-export declare function _recursionDeleteNamePath(values: any, names: NamePath): void;
 /** 数组1是否与数组2的左侧相等或完全相等 */
 export declare function _isLeftEqualName(arr1: any[], arr2: any[]): boolean;
 export declare function _isRelationName(n: NameItem[], n2: NameItem[]): boolean;

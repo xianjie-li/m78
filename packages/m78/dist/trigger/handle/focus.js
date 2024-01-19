@@ -2,7 +2,10 @@ import { TriggerType } from "../types.js";
 import { _buildEvent } from "../methods.js";
 import { triggerClearEvent } from "../common.js";
 export function _focusImpl(ctx) {
-    var focus = function focus(e) {
+    var trigger = ctx.trigger, config = ctx.config;
+    // 最后进行mousedown/touchstart的时间
+    var lastDownTime = 0;
+    function focus(e) {
         if (e.target === window) return;
         if (!ctx.typeEnableMap[TriggerType.focus]) return;
         if (config.preCheck && !config.preCheck(TriggerType.focus, e)) return;
@@ -24,8 +27,8 @@ export function _focusImpl(ctx) {
             });
             trigger.event.emit(event);
         });
-    };
-    var blur = function blur(e) {
+    }
+    function blur(e) {
         if (e.target === window) return;
         if (!ctx.typeEnableMap[TriggerType.focus]) return;
         if (config.preCheck && !config.preCheck(TriggerType.focus, e)) return;
@@ -53,16 +56,16 @@ export function _focusImpl(ctx) {
             });
             trigger.event.emit(event);
         });
-    };
-    var focusBeforeMark = // 通过mousedown/touchstart,进行focus标记, 帮助区分是点击触发还是通过键盘触发
+    }
+    // 通过mousedown/touchstart,进行focus标记, 帮助区分是点击触发还是通过键盘触发
     function focusBeforeMark() {
         lastDownTime = Date.now();
-    };
-    var isInteractiveFocus = // 检测是通过点击还是通过键盘或命令式出发
+    }
+    // 检测是通过点击还是通过键盘或命令式出发
     function isInteractiveFocus() {
         return Date.now() - lastDownTime < 20;
-    };
-    var clear = // 清理所有未关闭的focus事件, 并进行通知
+    }
+    // 清理所有未关闭的focus事件, 并进行通知
     function clear() {
         var _isInteractiveFocus = isInteractiveFocus();
         ctx.currentFocus.forEach(function(i) {
@@ -79,10 +82,7 @@ export function _focusImpl(ctx) {
             trigger.event.emit(event);
         });
         ctx.currentFocus = [];
-    };
-    var trigger = ctx.trigger, config = ctx.config;
-    // 最后进行mousedown/touchstart的时间
-    var lastDownTime = 0;
+    }
     return {
         focus: focus,
         blur: blur,

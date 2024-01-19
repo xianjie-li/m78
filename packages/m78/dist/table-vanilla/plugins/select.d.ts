@@ -1,11 +1,10 @@
 /// <reference types="lodash" />
-import { TablePlugin } from "../plugin.js";
+import { TableLoadStage, TablePlugin } from "../plugin.js";
 import { AnyObject, AutoScroll, AutoScrollTriggerConfig } from "@m78/utils";
 import { TableKey, TablePointInfo, TablePosition } from "../types/base-type.js";
 import { TableInstance } from "../types/instance.js";
 import { TableCell, TableCellWithDom, TableItems, TableRow } from "../types/items.js";
 import { DragGesture, FullGestureState } from "@use-gesture/vanilla";
-import { TableReloadLevel } from "./life.js";
 import { _TableDisablePlugin } from "./disable.js";
 /** 实现选区和选中功能 */
 export declare class _TableSelectPlugin extends TablePlugin implements TableSelect {
@@ -41,7 +40,7 @@ export declare class _TableSelectPlugin extends TablePlugin implements TableSele
     init(): void;
     mounted(): void;
     reload(): void;
-    loadStage(level: TableReloadLevel, isBefore: boolean): void;
+    loadStage(stage: TableLoadStage, isBefore: boolean): void;
     beforeDestroy(): void;
     cellRender(cell: TableCellWithDom): void;
     /** 派发drag到start/move/end */

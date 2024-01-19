@@ -1,6 +1,5 @@
-import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
+import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
 import { isArray, isFunction, isObject, stringifyNamePath } from "@m78/utils";
-import { _ROOT_SCHEMA_NAME } from "../common.js";
 /** 去除无效项, 并处理empty后返回验证器数组 */ export function _fmtValidator(validator, isEmpty) {
     if (isFunction(validator)) {
         // 需要进行空校验或非空时
@@ -23,10 +22,10 @@ import { _ROOT_SCHEMA_NAME } from "../common.js";
     return isObject(obj) && "errorTemplate" in obj && "interpolateValues" in obj;
 }
 /** 根据schema配置和传入值检测是否有schema配置之外的值存在, 返回额外值的key字符串数组 */ export function _getExtraKeys(name, schema, value) {
-    var ref;
+    var _schema_schema;
     var extraKeys = [];
-    // 如果是eachSchema或者未传入schema, 则不检测
-    if (schema.eachSchema || !((ref = schema.schema) === null || ref === void 0 ? void 0 : ref.length)) return extraKeys;
+    // 如果未传入schema, 则不检测
+    if (!((_schema_schema = schema.schema) === null || _schema_schema === void 0 ? void 0 : _schema_schema.length)) return extraKeys;
     // 外部确保了name是数组
     if (!isArray(name)) return extraKeys;
     var isObjOrArr = isObject(value) || isArray(value);
@@ -43,10 +42,6 @@ import { _ROOT_SCHEMA_NAME } from "../common.js";
     }
     // 去除占位用的根name
     var nameClone = name.slice();
-    var ind = nameClone.indexOf(_ROOT_SCHEMA_NAME);
-    if (ind !== -1) {
-        nameClone.splice(ind, 1);
-    }
     keys.forEach(function(key) {
         var cur = childSchema.find(function(i) {
             if (i.name === undefined) return true;

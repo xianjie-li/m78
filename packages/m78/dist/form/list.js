@@ -1,7 +1,7 @@
-import _define_property from "@swc/helpers/src/_define_property.mjs";
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
-import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
+import { _ as _define_property } from "@swc/helpers/_/_define_property";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
+import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import React, { isValidElement } from "react";
 import { ensureArray, isFunction, isTruthyOrZero } from "@m78/utils";
@@ -27,7 +27,7 @@ export function _listImpl(ctx) {
 }
 /** FormListCustomRenderArgs.render核心逻辑实现 */ export function _listRenderImpl(ctx, props) {
     var form = ctx.form;
-    var _name = props.name, name = _name === void 0 ? EMPTY_LIST_NAME : _name;
+    var _props_name = props.name, name = _props_name === void 0 ? EMPTY_LIST_NAME : _props_name;
     return function(renderCB) {
         if (!isFunction(renderCB)) {
             throwError("Form: List args.render must passed a function as argument.");
@@ -40,7 +40,7 @@ export function _listImpl(ctx) {
                 length: list.length,
                 getName: function(childName) {
                     return _to_consumable_array(ensureArray(name)).concat([
-                        index, 
+                        index
                     ], _to_consumable_array(ensureArray(childName)));
                 }
             });

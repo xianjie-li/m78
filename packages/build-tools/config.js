@@ -1,5 +1,8 @@
 export const config = {
   sourceMaps: false,
+  module: {
+    resolveFully: true,
+  },
   jsc: {
     baseUrl: process.cwd(),
     parser: {
@@ -23,9 +26,9 @@ export const config = {
     target: "es5",
     externalHelpers: true,
   },
-  env: {
-    targets: "> 0.25%, not dead",
-    coreJs: "3.22",
-    dynamicImport: true,
-  },
+  // env: {
+  //   targets: "> 0.25%, not dead",
+  //   coreJs: "3.22",
+  //   dynamicImport: true,
+  // },
 };

@@ -1,4 +1,5 @@
-import _type_of from "@swc/helpers/src/_type_of.mjs";
+import { _ as _instanceof } from "@swc/helpers/_/_instanceof";
+import { _ as _type_of } from "@swc/helpers/_/_type_of";
 /**
  * 获取表示对象原始类型的字符串
  * @param {*} o - 需要查询的字符
@@ -52,7 +53,7 @@ export function isWeakNumber(arg) {
  * @param {*} e - 需待查询的对象
  * @returns {boolean}
  * */ export function isError(e) {
-    return getProtoStr(e) === "[object Error]" || e instanceof Error;
+    return getProtoStr(e) === "[object Error]" || _instanceof(e, Error);
 }
 /**
  * 检测是否为对象
@@ -76,7 +77,7 @@ export function isWeakNumber(arg) {
         return true;
     }
     if (typeof HTMLElement === "object") {
-        return o instanceof HTMLElement;
+        return _instanceof(o, HTMLElement);
     } else {
         return o && typeof o === "object" && o.nodeType === 1 && typeof o.nodeName === "string";
     }

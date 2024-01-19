@@ -6,6 +6,7 @@ declare const _default: {
         loading: string;
         empty: string;
         alert: string;
+        retry: string;
         yes: string;
         no: string;
         "confirm operation": string;
@@ -91,6 +92,8 @@ declare const _default: {
         paste: string;
         "add row": string;
         "remove row": string;
+        "restore row": string;
+        "soft remove tip": string;
         "set value": string;
         "move row": string;
         "move column": string;
@@ -98,6 +101,7 @@ declare const _default: {
         "editable and required": string;
         "currently not editable": string;
         clipboardWarning: string;
+        selectAllOrUnSelectAll: string;
         count: string;
         query: string;
         reset: string;
@@ -110,12 +114,10 @@ declare const _default: {
         "export specific": string;
         import: string;
         "download import tpl": string;
-        "delete selected rows": string;
         "add row tip1": string;
         "new tip": string;
-        "delete tip": string;
+        "remove tip": string;
         "update tip": string;
-        "conf tip": string;
         "sorted tip": string;
         "add row btn": string;
         "save btn": string;
@@ -125,8 +127,11 @@ declare const _default: {
         "paste cells": string;
         "insert top": string;
         "insert bottom": string;
-        "delete row": string;
-        "delete rows": string;
+        "remove rows": string;
+        "setting reading": string;
+        "setting load failed": string;
+        "setting upload failed": string;
+        "enable drag scroll": string;
     };
 };
 export default _default;

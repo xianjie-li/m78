@@ -19,6 +19,10 @@ import { TableReloadOptions } from "../plugins/life.js";
 import { tableDefaultTexts } from "../common.js";
 import { TablePlugin } from "../plugin.js";
 import { _MetaMethods } from "../plugins/meta-data.js";
+import { _ContextGetters } from "../plugins/getter.js";
+import { _ContextSetter } from "../plugins/setter.js";
+import { CacheTick } from "../plugins/frame-cache.js";
+import { _GetterCacheKey } from "./cache.js";
 
 /** 固定项信息 */
 type FixedMap<T> = {
@@ -33,7 +37,10 @@ type FixedMap<T> = {
 };
 
 /** 在插件和实例内共享的一组状态 */
-export interface TablePluginContext extends _MetaMethods {
+export interface TablePluginContext
+  extends _MetaMethods,
+    _ContextGetters,
+    _ContextSetter {
   /** 挂载dom的节点, 也是滚动容器节点 */
   viewEl: HTMLDivElement;
   /** domElement的子级, 用于实际挂载滚动区的dom节点 */
@@ -110,9 +117,6 @@ export interface TablePluginContext extends _MetaMethods {
   bottomFixeList: TableKey[];
   leftFixedList: TableKey[];
   rightFixedList: TableKey[];
-  // 包含隐藏列在内的fixed list
-  rightFixedListAll: TableKey[];
-  leftFixedListALl: TableKey[];
 
   /** 记录最后的单元格索引, 用于控制边框显示 */
   lastColumnKey?: TableKey;
@@ -194,6 +198,12 @@ export interface TablePluginContext extends _MetaMethods {
 
   /** 所有插件实例 */
   plugins: TablePlugin[];
+
+  /** 被自动移动的行(固定项), 需要在首次触发move事件时进行通知 */
+  autoMovedRows: { key: TableKey; from: number }[];
+
+  /** 通用的getterCache */
+  getterCache: CacheTick<_GetterCacheKey>;
 
   /** 用户插件自定义的属性, 自定义插件应该集中属性名到额外的命名空间下, 防止和内部冲突,比如context.myPlugin.xxx */
   // [key: string]: any;

@@ -7,7 +7,8 @@ import { RCTablePlugin } from "./plugin.js";
     "interactiveRender",
     "viewEl",
     "viewContentEl",
-    "eventCreator", 
+    "eventCreator",
+    "persistenceConfig"
 ];
 /** 需要在变更时更新到table实例的props key */ export var _tableChangedListenKeys = [
     "data",
@@ -26,12 +27,12 @@ import { RCTablePlugin } from "./plugin.js";
     "dragSortRow",
     "dragSortColumn",
     "interactive",
-    "schema", 
+    "schema"
 ];
 /** 同_tableChangedListenKeys, 可能是基础类型, 也可能是引用类型的字段, 若是基础类型则校验, 否则跳过 */ export var _tableChangedMixTypeConfig = [
     "rowSelectable",
     "cellSelectable",
-    "interactive", 
+    "interactive"
 ];
 /** 合并处理_tableChangedListenKeys & _tableChangedMixTypeConfig */ export var _tableChangedIncludeChecker = function(key, value) {
     if (_tableChangedListenKeys.includes(key)) return true;

@@ -1,4 +1,4 @@
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { useState } from "react";
 import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 import { useFn } from "@m78/hooks";
@@ -12,11 +12,11 @@ export function _createUseState(seed) {
             return selector(seed.get());
         });
         // 用作缓存前一状态的state 通过引用直接操作
-        var ref = _sliced_to_array(useState(function() {
+        var _useState = _sliced_to_array(useState(function() {
             return {
                 state: select()
             };
-        }), 1), deps = ref[0];
+        }), 1), deps = _useState[0];
         var getSnapshot = useFn(function() {
             var selected = select();
             if (equalFn && equalFn(selected, deps.state)) return deps.state;

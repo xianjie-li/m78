@@ -1,11 +1,7 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { isDom, isFunction, isNumber } from "./is.js";
 import { clamp } from "./number.js";
-export * from "./dom/dom-adaption.js";
-export * from "./dom/auto-scroll.js";
-export * from "./dom/physical-scroll.js";
-export * from "./dom/keyboard-helper.js";
 var portalsID = "J__PORTALS__NODE__";
 /**
  * get a dom, multiple calls will return the same dom
@@ -21,7 +17,7 @@ var portalsID = "J__PORTALS__NODE__";
             var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = undefined;
             try {
                 for(var _iterator = Object.entries(extraProps)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true){
-                    var _value = _sliced_to_array(_step.value, 2), key = _value[0], val = _value[1];
+                    var _step_value = _sliced_to_array(_step.value, 2), key = _step_value[0], val = _step_value[1];
                     el[key] = val;
                 }
             } catch (err) {
@@ -129,7 +125,7 @@ export function loadScript(url) {
  * @return - Whether the overall visibility information and the specified direction does not exceed the visible boundary
  * */ export function checkElementVisible(target) {
     var option = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
-    var _fullVisible = option.fullVisible, fullVisible = _fullVisible === void 0 ? false : _fullVisible, wrapEl = option.wrapEl, _offset = option.offset, offset = _offset === void 0 ? 0 : _offset;
+    var _option_fullVisible = option.fullVisible, fullVisible = _option_fullVisible === void 0 ? false : _option_fullVisible, wrapEl = option.wrapEl, _option_offset = option.offset, offset = _option_offset === void 0 ? 0 : _option_offset;
     var ofs = getOffsetObj(offset);
     // 核心是判定视口的可用区域所在的框，再检测元素是否在这个框坐标内
     /** 基础边界(用于窗口) */ var yMinBase = 0;
@@ -142,7 +138,7 @@ export function loadScript(url) {
     var aXMax = xMaxBase;
     // 需要同时检测是否超出窗口、所在容器
     if (wrapEl) {
-        var ref = wrapEl.getBoundingClientRect(), top = ref.top, left = ref.left, bottom = ref.bottom, right = ref.right;
+        var _wrapEl_getBoundingClientRect = wrapEl.getBoundingClientRect(), top = _wrapEl_getBoundingClientRect.top, left = _wrapEl_getBoundingClientRect.left, bottom = _wrapEl_getBoundingClientRect.bottom, right = _wrapEl_getBoundingClientRect.right;
         var yMin = yMinBase + top;
         var xMin = xMinBase + left;
         var yMax = bottom;
@@ -155,7 +151,7 @@ export function loadScript(url) {
         aYMax = clamp(Math.min(yMaxBase, yMax), yMinBase, yMaxBase);
     }
     var bound = isDom(target) ? target.getBoundingClientRect() : target;
-    var ref1 = offsetCalc(bound, ofs), top1 = ref1.top, left1 = ref1.left, bottom1 = ref1.bottom, right1 = ref1.right;
+    var _offsetCalc = offsetCalc(bound, ofs), top1 = _offsetCalc.top, left1 = _offsetCalc.left, bottom1 = _offsetCalc.bottom, right1 = _offsetCalc.right;
     /** fullVisible检测 */ var topPos = fullVisible ? top1 : bottom1;
     var bottomPos = fullVisible ? bottom1 : top1;
     var leftPos = fullVisible ? left1 : right1;
@@ -282,6 +278,7 @@ function mountHighlight(target) {
     return hasMatch;
 }
 export function getScrollParent(ele, getAll) {
+    var checkOverflow = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : true;
     var node = getAll ? [] : null;
     function handle(el) {
         var parent = el.parentNode;
@@ -291,7 +288,7 @@ export function getScrollParent(ele, getAll) {
             var sH = e.scrollHeight;
             if (sH > h) {
                 var isRoot = e === document.documentElement || e === document.body;
-                var scrollStatus = hasScroll(e);
+                var scrollStatus = hasScroll(e, checkOverflow);
                 // 为body或doc时，统一取documentElement方便识别，部分浏览器支持body设置document.scrollXxx部分浏览器支持documentElement设置
                 var element = isRoot ? document.documentElement : e;
                 /* body和html元素不需要检测滚动属性 */ if (isRoot || scrollStatus.x || scrollStatus.y) {
@@ -342,7 +339,7 @@ export function getScrollParent(ele, getAll) {
     if (el === document.documentElement || el === document.body) {
     // ...
     } else if (checkOverflowAttr) {
-        var ref = getStyle(el), overflowX = ref.overflowX, overflowY = ref.overflowY;
+        var _getStyle = getStyle(el), overflowX = _getStyle.overflowX, overflowY = _getStyle.overflowY;
         if (overflowX !== "scroll" && overflowX !== "auto") {
             x = false;
         }
@@ -367,7 +364,7 @@ export function getScrollParent(ele, getAll) {
         clientY = e.clientY;
     }
     var isBound = isNumber(target.left) && isNumber(target.top);
-    var ref = isBound ? target : target.getBoundingClientRect(), left = ref.left, top = ref.top;
+    var _ref = isBound ? target : target.getBoundingClientRect(), left = _ref.left, top = _ref.top;
     return [
         clientX - left,
         clientY - top

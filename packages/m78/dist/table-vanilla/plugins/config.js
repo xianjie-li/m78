@@ -1,14 +1,17 @@
-import _class_call_check from "@swc/helpers/src/_class_call_check.mjs";
-import _inherits from "@swc/helpers/src/_inherits.mjs";
-import _create_super from "@swc/helpers/src/_create_super.mjs";
+import { _ as _assert_this_initialized } from "@swc/helpers/_/_assert_this_initialized";
+import { _ as _class_call_check } from "@swc/helpers/_/_class_call_check";
+import { _ as _create_class } from "@swc/helpers/_/_create_class";
+import { _ as _define_property } from "@swc/helpers/_/_define_property";
+import { _ as _inherits } from "@swc/helpers/_/_inherits";
+import { _ as _create_super } from "@swc/helpers/_/_create_super";
 import { TablePlugin } from "../plugin.js";
 import { isBoolean, isEmpty, omit } from "@m78/utils";
 import { TableReloadLevel } from "./life.js";
-/** 重置级别2的所有配置, 未在其中的所有配置默认为级别1 */ export var level2ConfigKeys = [
+/** 重置级别full的所有配置, 未在其中的所有配置默认为index级别 */ export var levelFullConfigKeys = [
     "data",
     "columns",
     "rows",
-    "cells", 
+    "cells"
 ];
 /** 不能通过table.config()变更的配置 */ var configCanNotChange = [
     "el",
@@ -16,7 +19,7 @@ import { TableReloadLevel } from "./life.js";
     "plugins",
     "viewEl",
     "viewContentEl",
-    "eventCreator", 
+    "eventCreator"
 ];
 export var _TableConfigPlugin = /*#__PURE__*/ function(TablePlugin) {
     "use strict";
@@ -26,10 +29,10 @@ export var _TableConfigPlugin = /*#__PURE__*/ function(TablePlugin) {
         _class_call_check(this, _TableConfigPlugin);
         var _this;
         _this = _super.apply(this, arguments);
-        _this.getConfig = function() {
+        _define_property(_assert_this_initialized(_this), "getConfig", function() {
             return _this.config;
-        };
-        _this.setConfig = function(config, keepPosition) {
+        });
+        _define_property(_assert_this_initialized(_this), "setConfig", function(config, keepPosition) {
             if (!config) {
                 return _this.config;
             }
@@ -37,7 +40,7 @@ export var _TableConfigPlugin = /*#__PURE__*/ function(TablePlugin) {
             if (isEmpty(nConf)) return;
             var level = TableReloadLevel.index;
             var hasLevel2Conf = Object.keys(nConf).some(function(key) {
-                return level2ConfigKeys.includes(key);
+                return levelFullConfigKeys.includes(key);
             });
             if (hasLevel2Conf) {
                 level = TableReloadLevel.full;
@@ -47,15 +50,19 @@ export var _TableConfigPlugin = /*#__PURE__*/ function(TablePlugin) {
                 keepPosition: isBoolean(keepPosition) ? keepPosition : level !== TableReloadLevel.full,
                 level: level
             });
-        };
+        });
         return _this;
     }
-    var _proto = _TableConfigPlugin.prototype;
-    _proto.beforeInit = function beforeInit() {
-        this.methodMapper(this.table, [
-            "setConfig",
-            "getConfig"
-        ]);
-    };
+    _create_class(_TableConfigPlugin, [
+        {
+            key: "beforeInit",
+            value: function beforeInit() {
+                this.methodMapper(this.table, [
+                    "setConfig",
+                    "getConfig"
+                ]);
+            }
+        }
+    ]);
     return _TableConfigPlugin;
 }(TablePlugin);

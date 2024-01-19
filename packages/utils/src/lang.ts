@@ -1,5 +1,6 @@
 import { AnyFunction } from "./types";
 import { getNamePathValue, setNamePathValue } from "./object.js";
+import { isArray, isObject } from "./is.js";
 
 /**
  * return the 'global' object according to different JS running environments
@@ -95,7 +96,36 @@ export function throwError(msg: string, prefix?: string): never {
   throw new Error(`${prefix ? `${prefix}:: ` : ""}${msg}`);
 }
 
-/** simple deep clone */
+/** Deep cloning implemented using JSON.parse/stringify */
 export function deepClone<T>(obj: T): T {
   return JSON.parse(JSON.stringify(obj));
+}
+
+/**
+ * "Deep clone" given value
+ *
+ * All arrays/objects will be expanded and cloned, while all other types of values will remain unchanged.
+ * */
+export function simplyDeepClone<T = any>(value: any): T {
+  if (isObject(value)) {
+    const newObj: any = {};
+
+    Object.keys(value).forEach((k) => {
+      newObj[k] = simplyDeepClone(value[k]);
+    });
+
+    return newObj;
+  }
+
+  if (isArray(value)) {
+    const newArr: any[] = value.slice();
+
+    newArr.forEach((i, ind) => {
+      newArr[ind] = simplyDeepClone(i);
+    });
+
+    return newArr as T;
+  }
+
+  return value;
 }

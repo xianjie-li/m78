@@ -1,6 +1,6 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useMemo, useRef } from "react";
 import { _defaultProps, _getScrollStyleByDirection, _RESERVE_BAR_SIZE } from "./common.js";
@@ -21,7 +21,7 @@ export var _Scroll = function(p) {
     var direction = props.direction;
     var _innerWrapRef = useRef(null);
     var innerWrapRef = p.innerWrapRef || _innerWrapRef;
-    /** 组件状态 */ var ref = _sliced_to_array(useSetState({
+    /** 组件状态 */ var _useSetState = _sliced_to_array(useSetState({
         enableStatus: {
             x: false,
             y: false
@@ -40,7 +40,7 @@ export var _Scroll = function(p) {
         infiniteWidth: 0,
         infiniteHeight: 0,
         isMobile: true
-    }), 2), state = ref[0], setState = ref[1];
+    }), 2), state = _useSetState[0], setState = _useSetState[1];
     /** 组件实例属性 */ var self = useSelf({
         delayHiddenTimer: 0,
         delayHiddenLock: false,
@@ -56,7 +56,7 @@ export var _Scroll = function(p) {
         throttleTime: 0,
         onScroll: onScroll
     });
-    /** 监听滚动容器变更 */ var ref1 = _sliced_to_array(useMeasure(undefined, 200), 2), bound = ref1[0], contRef = ref1[1];
+    /** 监听滚动容器变更 */ var _useMeasure = _sliced_to_array(useMeasure(undefined, 200), 2), bound = _useMeasure[0], contRef = _useMeasure[1];
     /** 上下文对象, 用于切分代码 */ var ctx = {
         props: props,
         scroller: scroller,

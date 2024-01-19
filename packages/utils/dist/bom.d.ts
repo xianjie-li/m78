@@ -1,9 +1,13 @@
 import { EmptyFunction } from "./types.js";
-/** shortcut to the localStorage api, including automatic JSON.stringify and a spliced unique prefix */
+/** Simple wrap of storage.setItem api */
 export declare function setStorage(key: string, val: any): void;
-/** shortcut of localStorage api, automatic JSON.parse, can only take the value set by setStorage */
+/** Simple wrap of storage.getItem api */
 export declare function getStorage(key: string): any;
-/** get os platform */
+/** Simple wrap of storage.removeItem api */
+export declare function removeStorage(key: string): void;
+/** Run setStorage / getStorage / removeStorage with specified storage object */
+export declare function withStorage(storage: Storage, cb: EmptyFunction): void;
+/** Get os platform */
 export declare function getPlatform(): {
     mac: boolean;
     iphone: boolean;

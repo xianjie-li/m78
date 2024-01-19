@@ -1,12 +1,12 @@
-import _define_property from "@swc/helpers/src/_define_property.mjs";
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
+import { _ as _define_property } from "@swc/helpers/_/_define_property";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from "react";
 import { Column, Row } from "./index.js";
 import clsx from "clsx";
 export var _Divider = function(param) {
-    var vertical = param.vertical, color = param.color, _margin = param.margin, margin = _margin === void 0 ? 12 : _margin, children = param.children, style = param.style, className = param.className, align = param.align, size = param.size;
+    var vertical = param.vertical, color = param.color, _param_margin = param.margin, margin = _param_margin === void 0 ? 12 : _param_margin, children = param.children, style = param.style, className = param.className, align = param.align, size = param.size;
     var renderLine = function renderLine(styleObj, cls) {
         return /*#__PURE__*/ _jsx("div", {
             className: clsx("m78 m78-divider", vertical && "__vertical", cls),

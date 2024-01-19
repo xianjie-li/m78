@@ -1,5 +1,6 @@
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
-import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
+import { _ as _instanceof } from "@swc/helpers/_/_instanceof";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
+import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
 import { useMemo, useRef } from "react";
 import { createEvent, useSelf, useSetState } from "@m78/hooks";
 import { _injector } from "../table.js";
@@ -12,6 +13,8 @@ import { _RedoAndUndoPlugin } from "../plugins/redo-and-undo.js";
 import { _CountTextPlugin } from "../plugins/count-text.js";
 import { _XLSHandlePlugin } from "../plugins/xls-handle.js";
 import { _DataActionPlugin } from "../plugins/data-actions.js";
+import { _ConfigSyncPlugin } from "../plugins/config-sync.js";
+import { _DragMovePlugin } from "../plugins/drag-move.js";
 export function _useStateAct() {
     var props = _injector.useProps();
     var getters = _injector.useGetter();
@@ -19,36 +22,23 @@ export function _useStateAct() {
     /** 滚动容器 */ var scrollRef = useRef(null);
     /** 滚动内容 */ var scrollContRef = useRef(null);
     /** 最外层包裹容器 */ var wrapRef = useRef(null);
-    var self = useSelf({
-        renderMap: {},
-        editMap: {},
-        editStatusMap: {},
-        editCheckForm: null,
-        overlayStackCount: 0
-    });
     var plugins = useMemo(function() {
         return preInstantiationRCPlugin([
             _FilterPlugin,
             _FeedBackPlugin,
             _RedoAndUndoPlugin,
+            _DragMovePlugin,
             _CountTextPlugin,
+            _ConfigSyncPlugin,
             _XLSHandlePlugin,
-            _DataActionPlugin, 
+            _DataActionPlugin
         ].concat(_to_consumable_array(props.plugins || [])));
     }, []);
     // 所有RCTablePlugin实例
     var rcPlugins = useMemo(function() {
         return plugins.filter(function(p) {
-            return p instanceof RCTablePlugin;
+            return _instanceof(p, RCTablePlugin);
         });
-    }, []);
-    var ref1 = _sliced_to_array(useSetState({
-        selectedRows: [],
-        rowCount: 0,
-        instance: null
-    }), 2), state = ref1[0], setState = ref1[1];
-    var scrollEvent = useMemo(function() {
-        return createEvent();
     }, []);
     // 同步getter到插件实例
     useMemo(function() {
@@ -59,6 +49,38 @@ export function _useStateAct() {
     }, [
         getters
     ]);
+    var self = useSelf(useMemo(function() {
+        var _self = {
+            renderMap: {},
+            editMap: {},
+            editStatusMap: {},
+            editCheckForm: null,
+            overlayStackCount: 0
+        };
+        rcPlugins.forEach(function(p) {
+            var _p_rcSelfInitializer;
+            return (_p_rcSelfInitializer = p.rcSelfInitializer) === null || _p_rcSelfInitializer === void 0 ? void 0 : _p_rcSelfInitializer.call(p, _self);
+        });
+        return _self;
+    }, []));
+    var _useSetState = _sliced_to_array(useSetState(function() {
+        var _state = {
+            selectedRows: [],
+            rowCount: 0,
+            instance: null,
+            initializing: true,
+            initializingTip: null,
+            blockError: null
+        };
+        rcPlugins.forEach(function(p) {
+            var _p_rcStateInitializer;
+            return (_p_rcStateInitializer = p.rcStateInitializer) === null || _p_rcStateInitializer === void 0 ? void 0 : _p_rcStateInitializer.call(p, _state);
+        });
+        return _state;
+    }), 2), state = _useSetState[0], setState = _useSetState[1];
+    var scrollEvent = useMemo(function() {
+        return createEvent();
+    }, []);
     var dataOperations = useMemo(function() {
         var conf = {
             edit: false,

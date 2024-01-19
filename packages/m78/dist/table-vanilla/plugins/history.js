@@ -1,6 +1,7 @@
-import _class_call_check from "@swc/helpers/src/_class_call_check.mjs";
-import _inherits from "@swc/helpers/src/_inherits.mjs";
-import _create_super from "@swc/helpers/src/_create_super.mjs";
+import { _ as _class_call_check } from "@swc/helpers/_/_class_call_check";
+import { _ as _create_class } from "@swc/helpers/_/_create_class";
+import { _ as _inherits } from "@swc/helpers/_/_inherits";
+import { _ as _create_super } from "@swc/helpers/_/_create_super";
 import { TablePlugin } from "../plugin.js";
 import { ActionHistory } from "@m78/utils";
 export var _TableHistoryPlugin = /*#__PURE__*/ function(TablePlugin) {
@@ -11,9 +12,13 @@ export var _TableHistoryPlugin = /*#__PURE__*/ function(TablePlugin) {
         _class_call_check(this, _TableHistoryPlugin);
         return _super.apply(this, arguments);
     }
-    var _proto = _TableHistoryPlugin.prototype;
-    _proto.init = function init() {
-        this.table.history = new ActionHistory();
-    };
+    _create_class(_TableHistoryPlugin, [
+        {
+            key: "init",
+            value: function init() {
+                this.table.history = new ActionHistory();
+            }
+        }
+    ]);
     return _TableHistoryPlugin;
 }(TablePlugin);

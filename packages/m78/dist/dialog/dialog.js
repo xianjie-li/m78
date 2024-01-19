@@ -1,9 +1,10 @@
-import _async_to_generator from "@swc/helpers/src/_async_to_generator.mjs";
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
-import _object_without_properties from "@swc/helpers/src/_object_without_properties.mjs";
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
-import _ts_generator from "@swc/helpers/src/_ts_generator.mjs";
+import { _ as _async_to_generator } from "@swc/helpers/_/_async_to_generator";
+import { _ as _instanceof } from "@swc/helpers/_/_instanceof";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
+import { _ as _object_without_properties } from "@swc/helpers/_/_object_without_properties";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
+import { _ as _ts_generator } from "@swc/helpers/_/_ts_generator";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import React, { useState } from "react";
 import { Button } from "../button/index.js";
@@ -153,12 +154,12 @@ var _DialogBase = function(props) {
         "draggable"
     ]);
     // 和loading共同管理加载状态
-    var ref = _sliced_to_array(useState(false), 2), innerLoading = ref[0], setInnerLoading = ref[1];
-    /** 代理defaultOpen/open/onChange, 实现对应接口 */ var ref1 = _sliced_to_array(useFormState(props, false, {
+    var _useState = _sliced_to_array(useState(false), 2), innerLoading = _useState[0], setInnerLoading = _useState[1];
+    /** 代理defaultOpen/open/onChange, 实现对应接口 */ var _useFormState = _sliced_to_array(useFormState(props, false, {
         defaultValueKey: "defaultOpen",
         triggerKey: "onChange",
         valueKey: "open"
-    }), 2), open = ref1[0], setOpen = ref1[1];
+    }), 2), open = _useFormState[0], setOpen = _useFormState[1];
     var closeHandle = function() {
         var _ref = _async_to_generator(function() {
             var isConfirm, r, ret;
@@ -179,7 +180,7 @@ var _DialogBase = function(props) {
                                 2
                             ];
                         }
-                        if (!(r instanceof Object && "then" in r && "catch" in r)) return [
+                        if (!(_instanceof(r, Object) && "then" in r && "catch" in r)) return [
                             3,
                             5
                         ];
@@ -262,7 +263,7 @@ _DialogBase.displayName = "Dialog";
                 content: content,
                 title: title,
                 cancel: cancel,
-                onClose: function(isConfirm) {
+                onClose: function onClose(isConfirm) {
                     isConfirm ? resolve() : reject();
                 }
             });

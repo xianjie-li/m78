@@ -1,7 +1,7 @@
-import _async_to_generator from "@swc/helpers/src/_async_to_generator.mjs";
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
-import _ts_generator from "@swc/helpers/src/_ts_generator.mjs";
+import { _ as _async_to_generator } from "@swc/helpers/_/_async_to_generator";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
+import { _ as _ts_generator } from "@swc/helpers/_/_ts_generator";
 import { createEvent, useDelayToggle } from "@m78/hooks";
 import { useEffect, useMemo, useRef } from "react";
 import { config } from "react-spring";
@@ -19,14 +19,6 @@ import { _notify } from "./notify.js";
 /**
  * 添加交互行为, 在聚焦时防止带延迟的同位置notify隐藏
  * */ export function _useInteractive(share) {
-    var start = /** 开始动画 */ function start() {
-        if (!hasDuration || !open) return;
-        _interactiveEvent.emit(position, true);
-    };
-    var stop = /** 暂停动画 */ function stop() {
-        if (!hasDuration || !open) return;
-        _interactiveEvent.emit(position, false);
-    };
     var position = share.position, open = share.open, hasDuration = share.hasDuration, api = share.api;
     var interactiveFlag = useRef();
     /** 发生交互时, 暂停所有同方向的notify */ _interactiveEvent.useEvent(function(pos, isIn) {
@@ -44,6 +36,14 @@ import { _notify } from "./notify.js";
             interactiveFlag.current = setTimeout(api.resume, 300);
         }
     });
+    /** 开始动画 */ function start() {
+        if (!hasDuration || !open) return;
+        _interactiveEvent.emit(position, true);
+    }
+    /** 暂停动画 */ function stop() {
+        if (!hasDuration || !open) return;
+        _interactiveEvent.emit(position, false);
+    }
     return {
         start: start,
         stop: stop
@@ -67,7 +67,7 @@ import { _notify } from "./notify.js";
                 title: ob,
                 cont: cancel ? contOb : undefined
             },
-            iconOb, 
+            iconOb
         ];
     }, [
         cancel,
@@ -78,20 +78,35 @@ import { _notify } from "./notify.js";
 /**
  *
  * */ export function _useToggleController(share) {
-    var showHandle = /**
+    var open = share.open, props = share.props, bound = share.bound, api = share.api, hasDuration = share.hasDuration, duration = share.duration;
+    var dShow = useDelayToggle(open, props.minDuration);
+    useEffect(function() {
+        if (dShow) {
+            showHandle();
+        } else {
+            hideHandle();
+        }
+    }, [
+        dShow,
+        bound.height
+    ]);
+    /**
    * 控制显示动画对应行为
    * */ function showHandle() {
         api.start({
             to: function() {
                 var _ref = _async_to_generator(function(next) {
-                    var _tmp, _tmp1;
                     return _ts_generator(this, function(_state) {
                         switch(_state.label){
                             case 0:
-                                _tmp = {};
                                 return [
                                     4,
-                                    next((_tmp.height = bound.offsetHeight + 16 /* 上下边距 */ , _tmp.process = 100, _tmp.opacity = 1, _tmp.transform = "scale3d(1, 1, 1)", _tmp))
+                                    next({
+                                        height: bound.offsetHeight + 16 /* 上下边距 */ ,
+                                        process: 100,
+                                        opacity: 1,
+                                        transform: "scale3d(1, 1, 1)"
+                                    })
                                 ];
                             case 1:
                                 _state.sent();
@@ -99,12 +114,14 @@ import { _notify } from "./notify.js";
                                     3,
                                     3
                                 ];
-                                _tmp1 = {};
                                 return [
                                     4,
-                                    next((_tmp1.process = 0, _tmp1.config = {
-                                        duration: duration
-                                    }, _tmp1))
+                                    next({
+                                        process: 0,
+                                        config: {
+                                            duration: duration
+                                        }
+                                    })
                                 ];
                             case 2:
                                 _state.sent();
@@ -122,26 +139,14 @@ import { _notify } from "./notify.js";
                 };
             }()
         });
-    };
-    var hideHandle = /**
+    }
+    /**
    * 控制隐藏动画和销毁
    * */ function hideHandle() {
         api.start(_object_spread_props(_object_spread({}, _initTransition), {
             onRest: props.onDispose
         }));
-    };
-    var open = share.open, props = share.props, bound = share.bound, api = share.api, hasDuration = share.hasDuration, duration = share.duration;
-    var dShow = useDelayToggle(open, props.minDuration);
-    useEffect(function() {
-        if (dShow) {
-            showHandle();
-        } else {
-            hideHandle();
-        }
-    }, [
-        dShow,
-        bound.height
-    ]);
+    }
     return dShow;
 }
 export function _notifyQuickerBuilder(status) {

@@ -274,6 +274,8 @@ export interface _OverlayContext {
     lastTarget: OverlayProps["target"];
     /** 无论何种定位方式, 都将最终的定位值记录在此处 */
     lastPosition: OverlayProps["xy"];
+    /** 最后一次执行滚动父级获取的dom */
+    lastSyncScrollElement?: HTMLElement;
     /** 内容区域是否处于活动状态 */
     activeContent: boolean;
     /** 内容节点是否已挂载 */

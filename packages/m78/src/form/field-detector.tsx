@@ -1,9 +1,3 @@
-/* # # # # # # # # # # # # # # # # #
- * 此模块可用来检测指定节点子级注册了哪些Field/List
- *
- * TODO: 支持根据form实例区分
- * # # # # # # # # # # # # # # # # # */
-
 import { dumpFn, NamePath, stringifyNamePath } from "@m78/utils";
 import React, { useMemo } from "react";
 import { useFn } from "@m78/hooks";
@@ -22,8 +16,6 @@ const ctx = React.createContext<DetectorContext>({
   register: dumpFn,
   unregister: dumpFn,
 });
-
-ctx.Provider;
 
 export function _useDetector(name: NamePath) {
   const ctxValue = React.useContext(ctx);

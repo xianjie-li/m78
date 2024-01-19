@@ -1,6 +1,9 @@
-import _class_call_check from "@swc/helpers/src/_class_call_check.mjs";
-import _inherits from "@swc/helpers/src/_inherits.mjs";
-import _create_super from "@swc/helpers/src/_create_super.mjs";
+import { _ as _assert_this_initialized } from "@swc/helpers/_/_assert_this_initialized";
+import { _ as _class_call_check } from "@swc/helpers/_/_class_call_check";
+import { _ as _create_class } from "@swc/helpers/_/_create_class";
+import { _ as _define_property } from "@swc/helpers/_/_define_property";
+import { _ as _inherits } from "@swc/helpers/_/_inherits";
+import { _ as _create_super } from "@swc/helpers/_/_create_super";
 import ResizeObserver from "resize-observer-polyfill";
 import throttle from "lodash/throttle.js";
 import { TablePlugin } from "../plugin.js";
@@ -12,8 +15,9 @@ export var _TableAutoResizePlugin = /*#__PURE__*/ function(TablePlugin) {
         _class_call_check(this, _TableAutoResizePlugin);
         var _this;
         _this = _super.apply(this, arguments);
-        _this.isFirst = true;
-        _this.handleResize = throttle(function(e, ob) {
+        _define_property(_assert_this_initialized(_this), "ob", void 0);
+        _define_property(_assert_this_initialized(_this), "isFirst", true);
+        _define_property(_assert_this_initialized(_this), "handleResize", throttle(function(e, ob) {
             if (_this.isFirst) {
                 _this.isFirst = false;
                 return;
@@ -22,16 +26,23 @@ export var _TableAutoResizePlugin = /*#__PURE__*/ function(TablePlugin) {
             _this.table.reload({
                 keepPosition: true
             });
-        }, 30);
+        }, 16));
         return _this;
     }
-    var _proto = _TableAutoResizePlugin.prototype;
-    _proto.mounted = function mounted() {
-        this.ob = new ResizeObserver(this.handleResize);
-        this.ob.observe(this.config.el);
-    };
-    _proto.beforeDestroy = function beforeDestroy() {
-        this.ob.disconnect();
-    };
+    _create_class(_TableAutoResizePlugin, [
+        {
+            key: "mounted",
+            value: function mounted() {
+                this.ob = new ResizeObserver(this.handleResize);
+                this.ob.observe(this.config.el);
+            }
+        },
+        {
+            key: "beforeDestroy",
+            value: function beforeDestroy() {
+                this.ob.disconnect();
+            }
+        }
+    ]);
     return _TableAutoResizePlugin;
 }(TablePlugin);

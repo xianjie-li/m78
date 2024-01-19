@@ -15,10 +15,6 @@ const IconDeleteOutline = IconLike;
 const IconArrowUpward = IconLike;
 const IconArrowDownward = IconLike;
 
-m78Config.set({
-  formAdaptors: [],
-});
-
 const schemas: FormSchemaWithoutName = {
   schema: [
     {

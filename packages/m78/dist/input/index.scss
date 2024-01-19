@@ -159,3 +159,16 @@ $unitSpace: var(--m78-space-1);
   }
 
 }
+
+.m78-table_input {
+  &.__textarea {
+    height: 100% !important;
+
+    textarea {
+      height: 100% !important;
+      min-height: 0 !important;
+      resize: none;
+      padding: 5px;
+    }
+  }
+}

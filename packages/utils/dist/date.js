@@ -1,3 +1,4 @@
+import { _ as _instanceof } from "@swc/helpers/_/_instanceof";
 import { padSingleNumber } from "./format.js";
 import { DATE_TIME_FORMAT } from "./consts.js";
 import { throwError } from "./lang.js";
@@ -10,7 +11,7 @@ import { throwError } from "./lang.js";
     }
     d = new Date(d);
     // 处理Invalid Date
-    if (d instanceof Date && isNaN(d.getTime())) {
+    if (_instanceof(d, Date) && isNaN(d.getTime())) {
         return null;
     }
     return d;
@@ -95,7 +96,7 @@ var oneD = 24 * oneH;
 /**
  * return true if date is between targetDate
  * */ export function isBetweenDate(opt) {
-    var _startSame = opt.startSame, startSame = _startSame === void 0 ? true : _startSame, _endSame = opt.endSame, endSame = _endSame === void 0 ? true : _endSame;
+    var _opt_startSame = opt.startSame, startSame = _opt_startSame === void 0 ? true : _opt_startSame, _opt_endSame = opt.endSame, endSame = _opt_endSame === void 0 ? true : _opt_endSame;
     var s = parseDate(opt.startDate);
     var e = parseDate(opt.endDate);
     var t = parseDate(opt.targetDate) || new Date();
@@ -136,10 +137,10 @@ var oneD = 24 * oneH;
     return {
         /** argument date */ date: d,
         /** local date and arg date diff (ms) */ diff: diff,
-        /** revised current date */ getReviseCurrent: function() {
+        /** revised current date */ getReviseCurrent: function getReviseCurrent() {
             return this.getReviseDate(new Date());
         },
-        /** revise specify date */ getReviseDate: function(d) {
+        /** revise specify date */ getReviseDate: function getReviseDate(d) {
             var _date = parseDate(d);
             if (!_date) {
                 throwError("".concat(d, " cannot be safety covert to Date"));

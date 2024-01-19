@@ -1,7 +1,7 @@
-import _define_property from "@swc/helpers/src/_define_property.mjs";
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
+import { _ as _define_property } from "@swc/helpers/_/_define_property";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { createContext, useMemo } from "react";
 import { isBoolean, isFunction, isObject } from "@m78/utils";
 import { createEvent } from "@m78/hooks";
@@ -171,7 +171,7 @@ export var _getObjectByNewValues = function(obj, value) {
     var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = undefined;
     try {
         for(var _iterator = Object.entries(ctx.group.dndMap)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true){
-            var _value = _sliced_to_array(_step.value, 2), id = _value[0], dnd = _value[1];
+            var _step_value = _sliced_to_array(_step.value, 2), id = _step_value[0], dnd = _step_value[1];
             if (id === ctx.id) continue;
             // 不可见
             if (!dnd.visible) continue;

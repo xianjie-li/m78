@@ -18,6 +18,8 @@ export function _useLifeCycle() {
   useDestroy(destroy);
 
   _usePropsEffect(props, (changedProps, needFullReload) => {
+    if (state.initializing || state.blockError) return;
+
     if (changedProps.schema) {
       methods.updateCheckForm();
     }
@@ -40,6 +42,8 @@ export function _useLifeCycle() {
 
   /** 销毁 */
   function destroy() {
+    if (!state.instance) return;
     state.instance.destroy();
+    rcPlugins.forEach((p) => p.rcInit?.());
   }
 }

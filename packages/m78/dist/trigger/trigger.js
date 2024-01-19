@@ -1,8 +1,8 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
-import _object_without_properties from "@swc/helpers/src/_object_without_properties.mjs";
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
-import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
+import { _ as _object_without_properties } from "@swc/helpers/_/_object_without_properties";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
+import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import React, { useEffect, useImperativeHandle, useMemo } from "react";
 import { TriggerType } from "./types.js";
@@ -17,10 +17,10 @@ var allType = [
     TriggerType.drag,
     TriggerType.focus,
     TriggerType.contextMenu,
-    TriggerType.move, 
+    TriggerType.move
 ];
 /** 通过hooks便捷的绑定trigger实例, 未识别的props会传递到事件对象的context属性 */ export function _useTrigger(props) {
-    var type = props.type, element = props.element, onTrigger = props.onTrigger, active = props.active, innerRef = props.innerRef, _instanceKey = props.instanceKey, instanceKey = _instanceKey === void 0 ? DEFAULT_INSTANCE_KEY : _instanceKey, other = _object_without_properties(props, [
+    var type = props.type, element = props.element, onTrigger = props.onTrigger, active = props.active, innerRef = props.innerRef, _props_instanceKey = props.instanceKey, instanceKey = _props_instanceKey === void 0 ? DEFAULT_INSTANCE_KEY : _props_instanceKey, other = _object_without_properties(props, [
         "type",
         "element",
         "onTrigger",
@@ -28,17 +28,17 @@ var allType = [
         "innerRef",
         "instanceKey"
     ]);
-    var ref = _sliced_to_array(useSetState({
+    var _useSetState = _sliced_to_array(useSetState({
         active: active
-    }), 2), meta = ref[0], setMeta = ref[1];
-    var ref1 = _sliced_to_array(useSetState({
+    }), 2), meta = _useSetState[0], setMeta = _useSetState[1];
+    var _useSetState1 = _sliced_to_array(useSetState({
         instance: null
-    }), 2), state = ref1[0], setState = ref1[1];
+    }), 2), state = _useSetState1[0], setState = _useSetState1[1];
     // 暴露内部dom
     useImperativeHandle(innerRef, function() {
         return meta.target;
     }, [
-        meta.target, 
+        meta.target
     ]);
     // 用于快速确认指定事件是否启用
     var typeMap = useMemo(function() {

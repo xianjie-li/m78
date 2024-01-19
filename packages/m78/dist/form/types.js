@@ -3,7 +3,7 @@ import React from "react";
     "eventCreator",
     "languagePack",
     "verifyFirst",
-    "ignoreStrangeValue", 
+    "ignoreStrangeValue"
 ];
 export var FormLayoutType;
 (function(FormLayoutType) {
@@ -20,7 +20,7 @@ export var FormLayoutType;
     "style",
     "customer",
     "requireMarker",
-    "spacePadding", 
+    "spacePadding"
 ];
 /** 作为 list 时, 应从 Filed 或 schema 剔除的配置 */ export var _lisIgnoreKeys = [
     "element",

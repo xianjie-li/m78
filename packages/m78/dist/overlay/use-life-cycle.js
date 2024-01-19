@@ -1,4 +1,4 @@
-import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
+import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
 import { useClickAway, useDestroy, useKeyboard, useLockBodyScroll, useUpdateEffect } from "@m78/hooks";
 import { useEffect, useImperativeHandle, useMemo } from "react";
 import { ensureArray, isDom } from "@m78/utils";
@@ -76,7 +76,7 @@ export function _useLifeCycle(ctx) {
     /** 键盘监听 */ useKeyboard({
         code: "Escape",
         enable: props.escapeClosable && open,
-        handle: function() {
+        handle: function handle() {
             if (!ctx.escapeCloseable.isLast) return;
             setOpen(false);
         }
@@ -100,7 +100,7 @@ export function _useLifeCycle(ctx) {
     ]);
     /** 内容尺寸变更时重新定位 */ useUpdateEffect(function() {
         if (!measure.width || !measure.height) return;
-        methods.update(true);
+        if (self.contentExist) methods.update(true);
     // methods.update();
     }, [
         measure.width,
@@ -113,7 +113,7 @@ export function _useLifeCycle(ctx) {
         self.lastAlignment = props.alignment;
         self.lastTarget = props.target;
         // 使用默认顺序更新
-        methods.update();
+        if (self.contentExist) methods.update();
     }, updateTargetDeps);
     /** 滚动/窗口大小改变时更新位置 */ useEffect(function() {
         var els = _to_consumable_array(state.scrollParents).concat([
@@ -137,8 +137,8 @@ export function _useLifeCycle(ctx) {
         methods.update(true);
     };
     /** content对应的dom卸载, 如果启用了unmountOnExit, 此hook会在每次content卸载后执行 */ var onContentUnmount = function() {
-        var ref;
-        (ref = props.onDispose) === null || ref === void 0 ? void 0 : ref.call(props);
+        var _props_onDispose;
+        (_props_onDispose = props.onDispose) === null || _props_onDispose === void 0 ? void 0 : _props_onDispose.call(props);
         self.contentExist = false;
     };
     /** 清理 */ useDestroy(function() {

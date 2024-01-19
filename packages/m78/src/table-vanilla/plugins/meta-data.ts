@@ -1,17 +1,14 @@
 import { TablePlugin } from "../plugin.js";
 import { TableKey } from "../types/base-type.js";
 import { TableReloadLevel, TableReloadOptions } from "./life.js";
+import { SelectManager } from "@m78/utils";
 
 /** 根据存储跟行或列数据相关的一些元信息 */
 export interface _MetaData {
   /** 表示是由table注入的假数据 */
   fake?: boolean;
-  /** 表示对关联数据的引用 */
-  ref?: TableKey;
   /** 该数据应该在渲染时被忽略 */
   ignore?: boolean;
-  /** 该条数据需要在计算/渲染时被忽略, 用于区分与ignore不同的场景 */
-  hide?: boolean;
   /** 该对象关联的某个timer */
   timer?: any;
   /** 当前的reloadKey */
@@ -20,10 +17,11 @@ export interface _MetaData {
   rendered?: boolean;
   /** 表示该数据为新增数据 */
   new?: boolean;
-  /** 该数据为替身数据, 实际所在位置为ref指向的占位数据位置 */
-  substitute?: boolean;
+  /** 该项为固定项, 实际所在位置为ref指向的占位数据位置 */
+  fixed?: boolean;
 }
 
+// 挂载到context上的方法
 export interface _MetaMethods {
   /** 获取行元数据 */
   getRowMeta(key: TableKey): _MetaData;
@@ -31,11 +29,11 @@ export interface _MetaMethods {
   /** 获取列元数据 */
   getColumnMeta(key: TableKey): _MetaData;
 
-  /** 判断是否是ignore行的快捷方法 */
-  isIgnoreRow(key: TableKey): boolean;
+  /** 判断是否是ignore行的快捷方法, 包含了对扩展ignore的处理, 可传入现有meta来避免重新查询 */
+  isIgnoreRow(key: TableKey, meta?: _MetaData): boolean;
 
-  /** 判断是否是ignore列的快捷方法 */
-  isIgnoreColumn(key: TableKey): boolean;
+  /** 判断是否是ignore列的快捷方法, 包含了对扩展ignore的处理, 可传入现有meta来避免重新查询 */
+  isIgnoreColumn(key: TableKey, meta?: _MetaData): boolean;
 }
 
 /**
@@ -60,6 +58,12 @@ export class _TableMetaDataPlugin extends TablePlugin implements _MetaMethods {
   // 单元格元数据
   cellMeta = new Map<TableKey, _MetaData>();
 
+  // 额外用于检测ignore的检测器, 用于放置不同功间共同管理ignore状态时冲突
+  extraRowIgnoreChecker: SelectManager[] = [];
+
+  // 额外用于检测ignore的检测器, 用于放置不同功间共同管理ignore状态时冲突
+  extraColumnIgnoreChecker: SelectManager[] = [];
+
   beforeInit() {
     this.methodMapper(this.context, [
       "getRowMeta",
@@ -76,12 +80,32 @@ export class _TableMetaDataPlugin extends TablePlugin implements _MetaMethods {
     }
   }
 
-  isIgnoreRow(key: TableKey): boolean {
-    return !!this.getRowMeta(key).ignore;
+  isIgnoreRow(key: TableKey, meta?: _MetaData): boolean {
+    const _meta = meta || this.getRowMeta(key);
+    const ignore = !!_meta.ignore;
+
+    if (ignore) return true;
+
+    for (let i = 0; i < this.extraRowIgnoreChecker.length; i++) {
+      const checker = this.extraRowIgnoreChecker[i];
+      if (checker.isSelected(key)) return true;
+    }
+
+    return false;
   }
 
-  isIgnoreColumn(key: TableKey): boolean {
-    return !!this.getColumnMeta(key).ignore;
+  isIgnoreColumn(key: TableKey, meta?: _MetaData): boolean {
+    const _meta = meta || this.getColumnMeta(key);
+    const ignore = !!_meta.ignore;
+
+    if (ignore) return true;
+
+    for (let i = 0; i < this.extraColumnIgnoreChecker.length; i++) {
+      const checker = this.extraColumnIgnoreChecker[i];
+      if (checker.isSelected(key)) return true;
+    }
+
+    return false;
   }
 
   getRowMeta(key: TableKey) {

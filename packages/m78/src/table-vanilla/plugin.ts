@@ -11,7 +11,7 @@ import { TableConfig } from "./types/config.js";
 import { TableInstance } from "./types/instance.js";
 
 import { TableCellWithDom } from "./types/items.js";
-import { TableReloadLevel, TableReloadOptions } from "./plugins/life.js";
+import { TableReloadOptions } from "./plugins/life.js";
 import { TableRenderCtx } from "./types/base-type.js";
 
 /**
@@ -75,10 +75,11 @@ export class TablePlugin {
   reload?(opt: TableReloadOptions): void;
 
   /**
-   * 在reload/初始化的不同级别操作(TableReloadLevel): 开始前/完成后 触发, isBefore可用于识别是在操作前还是操作后
-   * - 注意, isBefore = false 触发的时机是每个阶段对应的代码完成后, 例如full是在其对应的操作完成后, index开始前, 而不是整个full完成后
+   * 在reload/初始化的一些主要阶段触发, 相比于 reload(), 其能更精确的识别当前处于reload的哪个执行阶段, 从而帮助插入自定义的逻辑
+   *
+   * isBefore可用于识别是在操作前还是操作后, TableLoadStage枚举的key声明顺序与其执行顺序有关
    * */
-  loadStage?(level: TableReloadLevel, isBefore: boolean): void;
+  loadStage?(stage: TableLoadStage, isBefore: boolean): void;
 
   /**
    * 卸载前调用
@@ -128,4 +129,31 @@ export class TablePlugin {
 
     return ins as T;
   }
+}
+
+/** 初始化/reload操作的一些主要阶段, 枚举的key声明顺序与其执行顺序有关 */
+export enum TableLoadStage {
+  /* # # # # # # # Full Reload # # # # # # # */
+  /** 执行full reload */
+  fullHandle = "fullHandle",
+  /** 基础数据(data/column等)克隆并写入context, 以及其他基础信息的初始化设置 */
+  initBaseInfo = "initBaseInfo",
+  /** 格式化data/column等数据为内部格式, 并预处理固定项等内容 */
+  formatBaseInfo = "formatBaseInfo",
+
+  /* # # # # # # # Index Reload # # # # # # # */
+  /** 执行indexHandle */
+  indexHandle = "indexHandle",
+  /** 合并持久化配置到当前配置 */
+  mergePersistenceConfig = "mergePersistenceConfig",
+  /** 更新index索引, 并预处理合并项 */
+  updateIndexAndMerge = "updateIndexAndMerge",
+
+  /* # # # # # # # Base Reload # # # # # # # */
+  /** 执行baseHandle */
+  baseHandle = "baseHandle",
+  /** 重置缓存, 如合并项/固定项等 */
+  resetCache = "resetCache",
+  /** 预处理尺寸/固定项相关信 */
+  preHandleSize = "preHandleSize",
 }

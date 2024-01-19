@@ -1,6 +1,7 @@
 import { TablePlugin } from "../table-vanilla/plugin.js";
 import { ReactNode } from "react";
 import { TableCellWithDom } from "../table-vanilla/index.js";
+import { _RCTableSelf, _RCTableState } from "./types.js";
 import { _injector } from "./table.js";
 type InjectGetters = ReturnType<typeof _injector["useGetter"]>;
 /** 扩展后的 TablePlugin, 提供了react相关的渲染api */
@@ -10,6 +11,12 @@ export declare class RCTablePlugin extends TablePlugin {
     toolbarTrailingCustomer?(nodes: ReactNode[]): void;
     /** 定制左侧toolbar按钮, 可直接更改nodes, 向其中新增或删除节点 */
     toolbarLeadingCustomer?(nodes: ReactNode[]): void;
+    /** 在初始化时改写或新增state的默认配置 */
+    rcStateInitializer?(state: _RCTableState): void;
+    /** 在初始化时改写或新增self的默认配置 */
+    rcSelfInitializer?(self: _RCTableSelf): void;
+    /** react侧初始化时执行 */
+    rcInit?(): void;
     /** 自定义单元格渲染 */
     rcCellRender?(data: {
         /** 当前cell */

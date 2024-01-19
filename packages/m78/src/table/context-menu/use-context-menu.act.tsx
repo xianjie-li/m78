@@ -7,6 +7,7 @@ import { Trigger, TriggerType, UseTriggerProps } from "../../trigger/index.js";
 import { _useCellMenu } from "./use-cell-menu.js";
 import { _injector } from "../table.js";
 import { _useMethodsAct } from "../injector/methods.act.js";
+import { _useStateAct } from "../injector/state.act.js";
 
 export type _TableContextMenuOpenOpt = {
   /** 菜单位置 */
@@ -18,6 +19,7 @@ export type _TableContextMenuOpenOpt = {
 };
 
 export const _useContextMenuAct = () => {
+  const { state } = _injector.useDeps(_useStateAct);
   const methods = _injector.useDeps(_useMethodsAct);
 
   const ref = useRef<OverlayInstance>(null!);
@@ -50,6 +52,8 @@ export const _useContextMenuAct = () => {
   });
 
   const trigger: NonNullable<UseTriggerProps["onTrigger"]> = useFn((e) => {
+    if (state.initializing) return;
+
     const cellOpenOpt = cellMenuGet(e);
 
     if (cellOpenOpt) {

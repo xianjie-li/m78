@@ -1,6 +1,6 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
-import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
+import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from "react";
 import { FormLayoutType } from "./types.js";
@@ -27,14 +27,14 @@ export function _schemaRenderImpl(ctx) {
             }
             return node;
         };
-        var _showActionButtons = props.showActionButtons, showActionButtons = _showActionButtons === void 0 ? true : _showActionButtons;
+        var _props_showActionButtons = props.showActionButtons, showActionButtons = _props_showActionButtons === void 0 ? true : _props_showActionButtons;
         var config = ctx.config;
         var schemas = config.schemas;
         // 监听updateProps更新组件
         _useUpdatePropsChange(ctx, useUpdate());
-        form.events.submit.useEvent(function() {
+        form.events.submit.useEvent(function(data) {
             if (props.onSubmit) {
-                props.onSubmit(form.getValues());
+                props.onSubmit(data);
             }
         });
         // 渲染一项schema
@@ -48,9 +48,9 @@ export function _schemaRenderImpl(ctx) {
             var name = _to_consumable_array(parentNames);
             if ("name" in schema) name.push(schema.name);
             if (!schema.list) {
-                var ref;
+                var _schema_schema;
                 // 包含schema配置
-                if ((ref = schema.schema) === null || ref === void 0 ? void 0 : ref.length) {
+                if ((_schema_schema = schema.schema) === null || _schema_schema === void 0 ? void 0 : _schema_schema.length) {
                     var /*#__PURE__*/ _React;
                     var node = schema.schema.map(function(sch) {
                         if (isRoot) return renderSchemaItem(sch, name, false, isRoot);

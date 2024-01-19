@@ -19,9 +19,10 @@ import {
 import { _useStateAct } from "../injector/state.act.js";
 import { _injector } from "../table.js";
 import { throwError } from "../../common/index.js";
-import { FormAdaptorsItem } from "../../form/index.js";
-import { m78Config } from "../../config/index.js";
+import { FormAdaptorsItem, m78Config } from "../../config/index.js";
 import { _getTableCtx } from "../common.js";
+import { Overlay } from "../../overlay/index.js";
+import { TransitionType } from "../../transition/index.js";
 
 // 自定义编辑逻辑
 export function _useEditRender() {
@@ -194,7 +195,6 @@ export function _useEditRender() {
 
 // 自定义编辑渲染, 组件部分, 用于避免频繁render影响外部作用域
 export function _CustomEditRender() {
-  const props = _injector.useProps();
   const { self, state } = _injector.useDeps(_useStateAct);
 
   const [list, setList] = React.useState<_CustomEditItem[]>([]);
@@ -210,11 +210,25 @@ export function _CustomEditRender() {
 
   state.instance.event.interactiveChange.useEvent(update);
 
-  return (
-    <>
-      {list.map((i) => {
-        return ReactDom.createPortal(i.element, i.node, String(i.cell.key));
-      })}
-    </>
-  );
+  return list.map((i) => {
+    return (
+      <Overlay
+        content={i.element}
+        key={i.cell.key}
+        target={i.node}
+        open
+        transitionType={TransitionType.none}
+        autoFocus={false}
+        lockScroll={false}
+        clickAwayClosable={false}
+        clickAwayQueue={false}
+        escapeClosable={false}
+        style={{
+          width: i.node.clientWidth,
+          height: i.node.clientHeight,
+          borderRadius: 0,
+        }}
+      />
+    );
+  });
 }

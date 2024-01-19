@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@m78/utils": "workspace:^",
-    "@swc/helpers": "^0.4.11",
+    "@swc/helpers": "^0.4.36",
     "@types/lodash": "^4.14.202",
     "@types/react": "^18.2.45",
     "lodash": "^4.17.21",

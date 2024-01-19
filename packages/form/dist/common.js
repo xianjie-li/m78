@@ -1,7 +1,6 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _to_array from "@swc/helpers/src/_to_array.mjs";
-import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
-import { ensureArray, isArray, isEmpty, isNumber, isObject, stringifyNamePath } from "@m78/utils";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
+import { ensureArray, isNumber, stringifyNamePath } from "@m78/utils";
 import isEqual from "lodash/isEqual.js";
 /** 获取指定name的state, 状态对象还不存在时会自动进行创建 */ export function _getState(ctx, name) {
     var nameKey = stringifyNamePath(name);
@@ -106,53 +105,7 @@ import isEqual from "lodash/isEqual.js";
         }
     };
 }
-/** 用于namePath路径的通配占位, 匹配eachSchema等没有name的层级 */ export var _ANY_NAME_PLACE_HOLD = "__ANY_NAME_PLACE_HOLD__";
 /** 用于在某些情况作为根schema的name标注 */ export var _ROOT_SCHEMA_NAME = "__ROOT_SCHEMA_NAME__";
-/** 递归删除指定的namePath值, 支持在namePath中使用ANY_NAME_PLACE_HOLD进行通配占位 */ export function _recursionDeleteNamePath(values, names) {
-    var name = ensureArray(names);
-    if (!name.length || isEmpty(values)) return;
-    var _name = _to_array(name), currentName = _name[0], rest = _name.slice(1);
-    var isArr = isArray(values);
-    var isObj = isObject(values);
-    if (!isArr && !isObj) return;
-    if (name.length === 1) {
-        if (isObj) {
-            // 清理全部
-            if (currentName === _ANY_NAME_PLACE_HOLD) {
-                Object.keys(values).forEach(function(key) {
-                    return delete values[key];
-                });
-                return;
-            }
-            delete values[currentName];
-        }
-        if (isArr) {
-            // 清理全部
-            if (currentName === _ANY_NAME_PLACE_HOLD) {
-                values.splice(0, values.length);
-                return;
-            }
-            if (isNumber(currentName)) {
-                values.splice(currentName, 1);
-            }
-        }
-        return;
-    }
-    if (currentName !== _ANY_NAME_PLACE_HOLD) {
-        _recursionDeleteNamePath(values[currentName], rest);
-        return;
-    }
-    if (isObj) {
-        Object.keys(values).forEach(function(key) {
-            _recursionDeleteNamePath(values[key], rest);
-        });
-    }
-    if (isArr) {
-        values.forEach(function(v) {
-            _recursionDeleteNamePath(v, rest);
-        });
-    }
-}
 /** 数组1是否与数组2的左侧相等或完全相等 */ export function _isLeftEqualName(arr1, arr2) {
     if (arr1.length > arr2.length) return false;
     for(var i = 0; i < arr1.length; i++){

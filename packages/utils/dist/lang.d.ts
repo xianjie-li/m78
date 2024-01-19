@@ -29,6 +29,12 @@ export interface CustomEvent<Listener extends AnyFunction> {
 export declare function createEvent<Listener extends AnyFunction = AnyFunction>(): CustomEvent<Listener>;
 /** 抛出错误 */
 export declare function throwError(msg: string, prefix?: string): never;
-/** simple deep clone */
+/** Deep cloning implemented using JSON.parse/stringify */
 export declare function deepClone<T>(obj: T): T;
+/**
+ * "Deep clone" given value
+ *
+ * All arrays/objects will be expanded and cloned, while all other types of values will remain unchanged.
+ * */
+export declare function simplyDeepClone<T = any>(value: any): T;
 //# sourceMappingURL=lang.d.ts.map

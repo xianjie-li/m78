@@ -16,21 +16,34 @@ import {
   _getCellKeysByStr,
   _prefix,
 } from "../common.js";
-import { TableKey, TablePosition, TableRowFixed } from "../types/base-type.js";
+import {
+  TableColumnFixed,
+  TableKey,
+  TablePosition,
+  TableRowFixed,
+} from "../types/base-type.js";
 
 import {
   TableCell,
+  TableCellConfig,
   TableColumn,
+  TableColumnLeafConfigFormatted,
   TableItems,
   TableItemsFull,
   TableRow,
+  TableRowConfig,
 } from "../types/items.js";
 import { TableMergeData } from "../types/context.js";
 import { _TableHidePlugin } from "./hide.js";
 import { Position } from "../../common/index.js";
 import { _TableMetaDataPlugin } from "./meta-data.js";
+import { TablePersistenceConfig } from "../types/config.js";
+import { _GetterCacheKey } from "../types/cache.js";
 
-export class _TableGetterPlugin extends TablePlugin implements TableGetter {
+export class _TableGetterPlugin
+  extends TablePlugin
+  implements TableGetter, _ContextGetters
+{
   hide: _TableHidePlugin;
 
   beforeInit() {
@@ -66,6 +79,13 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
       "getColumnAttachPosition",
       "getRowAttachPosition",
     ]);
+
+    this.methodMapper(this.context, [
+      "getCellMergeConfig",
+      "getRowMergeConfig",
+      "getColumnMergeConfig",
+      "getBaseConfig",
+    ]);
   }
 
   init() {
@@ -73,52 +93,74 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
   }
 
   getContentHeight(): number {
-    if (this.config.autoSize) {
-      return this.context.contentHeight;
-    } else {
-      // 见contentWidth()
-      return Math.max(this.context.contentHeight, this.table.getHeight());
-    }
+    return this.context.getterCache.get(
+      _GetterCacheKey.getContentHeight,
+      () => {
+        if (this.config.autoSize) {
+          return this.context.contentHeight;
+        } else {
+          // 见contentWidth()
+          return Math.max(this.context.contentHeight, this.table.getHeight());
+        }
+      }
+    );
   }
 
   getContentWidth(): number {
-    if (this.config.autoSize) {
-      return this.context.contentWidth;
-    } else {
-      // 无自动尺寸时, 内容尺寸不小于容器尺寸, 否则xy()等计算会出现问题
-      return Math.max(this.context.contentWidth, this.table.getWidth());
-    }
+    return this.context.getterCache.get(_GetterCacheKey.getContentWidth, () => {
+      if (this.config.autoSize) {
+        return this.context.contentWidth;
+      } else {
+        // 无自动尺寸时, 内容尺寸不小于容器尺寸, 否则xy()等计算会出现问题
+        return Math.max(this.context.contentWidth, this.table.getWidth());
+      }
+    });
   }
 
   getMaxX(): number {
-    return this.context.viewEl.scrollWidth - this.context.viewEl.clientWidth;
+    return this.context.getterCache.get(
+      _GetterCacheKey.getMaxX,
+      () => this.context.viewEl.scrollWidth - this.context.viewEl.clientWidth
+    );
   }
 
   getMaxY(): number {
-    return this.context.viewEl.scrollHeight - this.context.viewEl.clientHeight;
+    return this.context.getterCache.get(
+      _GetterCacheKey.getMaxY,
+      () => this.context.viewEl.scrollHeight - this.context.viewEl.clientHeight
+    );
   }
 
   getHeight(): number {
-    return this.config.el.clientHeight;
+    return this.context.getterCache.get(
+      _GetterCacheKey.getHeight,
+      () => this.config.el.clientHeight
+    );
   }
 
   getWidth(): number {
-    return this.config.el.clientWidth;
+    return this.context.getterCache.get(
+      _GetterCacheKey.getWidth,
+      () => this.config.el.clientWidth
+    );
   }
 
   getX(): number {
-    return this.context.viewEl.scrollLeft;
+    return this.context.getterCache.get(
+      _GetterCacheKey.getX,
+      () => this.context.viewEl.scrollLeft
+    );
   }
 
   getY(): number {
-    return this.context.viewEl.scrollTop;
+    return this.context.getterCache.get(
+      _GetterCacheKey.getY,
+      () => this.context.viewEl.scrollTop
+    );
   }
 
   getXY(): TablePosition {
-    const ctx = this.context;
-    const viewEl = ctx.viewEl;
-
-    return [viewEl.scrollLeft, viewEl.scrollTop];
+    return [this.getX(), this.getY()];
   }
 
   getAreaBound(p1: TablePosition, p2?: TablePosition): TableItems {
@@ -462,22 +504,14 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
 
     const meta = ctx.getRowMeta(key);
 
-    const isFixed = !!conf.fixed;
+    const isFixed = !!conf.fixed && conf.fixed !== TableRowFixed.none;
     const isHeader = ctx.yHeaderKeys.includes(key);
 
     const beforeIgnoreLength = this.getBeforeIgnoreY(index).length;
 
     const realIndex = index - beforeIgnoreLength;
 
-    let dataIndex = index - ctx.topFixedList.length;
-
-    const fIndex = ctx.dataKeyIndexMap[meta.ref!];
-
-    if (isFixed) {
-      if (isNumber(fIndex)) {
-        dataIndex = fIndex - ctx.topFixedList.length;
-      }
-    }
+    const dataIndex = index - ctx.yHeaderKeys.length;
 
     const row: TableRow = {
       key,
@@ -549,27 +583,13 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
 
     const beforeIgnoreLength = this.getBeforeIgnoreX(index).length;
 
-    const isFixed = !!conf.fixed;
+    const isFixed = !!conf.fixed && conf.fixed !== TableColumnFixed.none;
 
     const isHeader = ctx.xHeaderKey === key;
 
     const realIndex = index - beforeIgnoreLength;
 
-    let dataIndex = index - ctx.leftFixedList.length;
-
-    const fIndex = ctx.columnKeyIndexMap[meta.ref!];
-
-    if (isFixed) {
-      if (isNumber(fIndex)) {
-        dataIndex = fIndex - ctx.leftFixedList.length;
-      }
-    }
-
-    // const hasRef = isNumber(fIndex);
-
-    // 数据被标记为fake, 并且没有ref才视为fake数据, 因为对于用户来说, 包含ref数据指向一个有效数据
-    // const isFake =
-    //   !!getNamePathValue(conf, _TablePrivateProperty.fake) && !hasRef;
+    const dataIndex = index - 1; // 1为左侧插入行头
 
     const column: TableColumn = {
       key,
@@ -742,7 +762,7 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
         let nextListKey: TableKey;
         let nextItem: TableRow | TableColumn | undefined;
 
-        let isHideOrIgnore = false;
+        let isIgnore = false;
 
         try {
           // 处理隐藏项和忽略项
@@ -757,14 +777,12 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
               ? this.table.getColumn(nextListKey)
               : this.table.getRow(nextListKey);
 
-            const ignore = isVertical
+            isIgnore = isVertical
               ? this.context.isIgnoreColumn(nextListKey)
               : this.context.isIgnoreRow(nextListKey);
-
-            isHideOrIgnore = this.hide.isHideColumn(nextListKey) || ignore;
           } while (
             // 隐藏或忽略项, 并且在有效索引内
-            isHideOrIgnore &&
+            isIgnore &&
             nextListIndex < columns.length &&
             nextListIndex > 0
           );
@@ -1109,6 +1127,49 @@ export class _TableGetterPlugin extends TablePlugin implements TableGetter {
       width: 0,
     };
   }
+
+  getRowMergeConfig(key: TableKey, config: TableRowConfig): TableRowConfig {
+    const pConfig = this.context.persistenceConfig;
+
+    const pRowConfig = pConfig.rows?.[key] || {};
+
+    return {
+      ...config,
+      ...pRowConfig,
+    };
+  }
+
+  getColumnMergeConfig(
+    key: TableKey,
+    config: TableColumnLeafConfigFormatted
+  ): TableColumnLeafConfigFormatted {
+    const pConfig = this.context.persistenceConfig;
+
+    const pColConfig = pConfig.columns?.[key] || {};
+
+    return {
+      ...config,
+      ...pColConfig,
+    };
+  }
+
+  getCellMergeConfig(key: TableKey, config: TableCellConfig): TableCellConfig {
+    const pConfig = this.context.persistenceConfig;
+
+    const pCellConfig = pConfig.cells?.[key] || {};
+
+    return {
+      ...config,
+      ...pCellConfig,
+    };
+  }
+
+  getBaseConfig(key: keyof TablePersistenceConfig) {
+    const pConfig = this.context.persistenceConfig;
+    const config = this.config as any;
+
+    return pConfig[key] || config[key];
+  }
 }
 
 /** 选择器 */
@@ -1214,6 +1275,40 @@ export interface TableGetter {
 
   /** 获取row所处画布位置, 需要在列位置挂载其他内容而不是挂载到单元格dom内部时非常有用 */
   getRowAttachPosition(row: TableRow): TableAttachData;
+}
+
+export interface _ContextGetters {
+  /**
+   * 获取指定行的配置和其持久化配置合并后的对象
+   *
+   * 只在内部api需要在 mergePersistenceConfig() 完成前访问配置时使用, 合并完成后直接访问配置即可
+   * */
+  getRowMergeConfig(key: TableKey, config: TableRowConfig): TableRowConfig;
+
+  /**
+   * 获取指定行的配置和其持久化配置合并后的对象
+   *
+   * 只在内部api需要在 mergePersistenceConfig() 完成前访问配置时使用, 合并完成后直接访问配置即可
+   * */
+  getColumnMergeConfig(
+    key: TableKey,
+    config: TableColumnLeafConfigFormatted
+  ): TableColumnLeafConfigFormatted;
+
+  /**
+   * 获取指定单元格的配置和其持久化配置合并后的对象
+   *
+   * 只在内部api需要在 mergePersistenceConfig() 完成前访问配置时使用, 合并完成后直接访问配置即可
+   * */
+  getCellMergeConfig(key: TableKey, config: TableCellConfig): TableCellConfig;
+
+  /**
+   * 根据 persistenceConfig > config 的优先级获取指定key的配置 */
+  getBaseConfig<
+    K extends keyof TablePersistenceConfig = keyof TablePersistenceConfig
+  >(
+    key: K
+  ): TablePersistenceConfig[K];
 }
 
 export interface TableAttachData extends BoundSize {

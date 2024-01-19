@@ -1,11 +1,12 @@
 import { TablePlugin } from "../plugin.js";
 import { BoundSize } from "@m78/utils";
 import { TableKey, TablePosition } from "../types/base-type.js";
-import { TableCell, TableColumn, TableItems, TableRow } from "../types/items.js";
+import { TableCell, TableCellConfig, TableColumn, TableColumnLeafConfigFormatted, TableItems, TableRow, TableRowConfig } from "../types/items.js";
 import { TableMergeData } from "../types/context.js";
 import { _TableHidePlugin } from "./hide.js";
 import { Position } from "../../common/index.js";
-export declare class _TableGetterPlugin extends TablePlugin implements TableGetter {
+import { TablePersistenceConfig } from "../types/config.js";
+export declare class _TableGetterPlugin extends TablePlugin implements TableGetter, _ContextGetters {
     hide: _TableHidePlugin;
     beforeInit(): void;
     init(): void;
@@ -65,6 +66,10 @@ export declare class _TableGetterPlugin extends TablePlugin implements TableGett
     getAttachPosition(cell: TableCell): TableAttachData;
     getColumnAttachPosition(column: TableColumn): TableAttachData;
     getRowAttachPosition(row: TableRow): TableAttachData;
+    getRowMergeConfig(key: TableKey, config: TableRowConfig): TableRowConfig;
+    getColumnMergeConfig(key: TableKey, config: TableColumnLeafConfigFormatted): TableColumnLeafConfigFormatted;
+    getCellMergeConfig(key: TableKey, config: TableCellConfig): TableCellConfig;
+    getBaseConfig(key: keyof TablePersistenceConfig): any;
 }
 /** 选择器 */
 export interface TableGetter {
@@ -138,6 +143,29 @@ export interface TableGetter {
     getColumnAttachPosition(column: TableColumn): TableAttachData;
     /** 获取row所处画布位置, 需要在列位置挂载其他内容而不是挂载到单元格dom内部时非常有用 */
     getRowAttachPosition(row: TableRow): TableAttachData;
+}
+export interface _ContextGetters {
+    /**
+     * 获取指定行的配置和其持久化配置合并后的对象
+     *
+     * 只在内部api需要在 mergePersistenceConfig() 完成前访问配置时使用, 合并完成后直接访问配置即可
+     * */
+    getRowMergeConfig(key: TableKey, config: TableRowConfig): TableRowConfig;
+    /**
+     * 获取指定行的配置和其持久化配置合并后的对象
+     *
+     * 只在内部api需要在 mergePersistenceConfig() 完成前访问配置时使用, 合并完成后直接访问配置即可
+     * */
+    getColumnMergeConfig(key: TableKey, config: TableColumnLeafConfigFormatted): TableColumnLeafConfigFormatted;
+    /**
+     * 获取指定单元格的配置和其持久化配置合并后的对象
+     *
+     * 只在内部api需要在 mergePersistenceConfig() 完成前访问配置时使用, 合并完成后直接访问配置即可
+     * */
+    getCellMergeConfig(key: TableKey, config: TableCellConfig): TableCellConfig;
+    /**
+     * 根据 persistenceConfig > config 的优先级获取指定key的配置 */
+    getBaseConfig<K extends keyof TablePersistenceConfig = keyof TablePersistenceConfig>(key: K): TablePersistenceConfig[K];
 }
 export interface TableAttachData extends BoundSize {
     /** 应该挂载的zIndex层 */

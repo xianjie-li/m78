@@ -14,6 +14,7 @@ export const _tableOmitConfig = [
   "viewEl",
   "viewContentEl",
   "eventCreator",
+  "persistenceConfig",
 ] as const;
 
 /** 需要在变更时更新到table实例的props key */

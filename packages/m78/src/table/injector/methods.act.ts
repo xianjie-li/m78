@@ -41,7 +41,7 @@ export function _useMethodsAct() {
     const texts = i18n.getResourceBundle(i18n.language, TABLE_NS);
 
     const ins = createTable({
-      ...(propsConf as TableConfig),
+      ...(props as any as TableConfig),
       el: ref.current,
       viewEl: scrollRef.current,
       viewContentEl: scrollContRef.current,
@@ -55,6 +55,7 @@ export function _useMethodsAct() {
       extraActiveCheckEl: wrapRef.current,
       formCreator: createForm,
       plugins,
+      persistenceConfig: state.persistenceConfig,
     }) as any as RCTableInstance;
 
     setState({

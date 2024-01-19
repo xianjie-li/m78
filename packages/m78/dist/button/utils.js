@@ -1,4 +1,4 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
 import React from "react";
 import { isArray } from "@m78/utils";
 var matchIcon = /(Icon|icon)/;
@@ -9,11 +9,11 @@ var matchIcon = /(Icon|icon)/;
             var type = child === null || child === void 0 ? void 0 : child.type;
             var name = "";
             if (type) {
-                var ref, ref1;
-                name = ((ref = type.render) === null || ref === void 0 ? void 0 : ref.displayName) || ((ref1 = type.render) === null || ref1 === void 0 ? void 0 : ref1.name) || type.displayName || type.name;
+                var _type_render, _type_render1;
+                name = ((_type_render = type.render) === null || _type_render === void 0 ? void 0 : _type_render.displayName) || ((_type_render1 = type.render) === null || _type_render1 === void 0 ? void 0 : _type_render1.name) || type.displayName || type.name;
             }
             /* 为满足matchIcon规则的子元素添加边距 */ if (name && React.isValidElement(child) && matchIcon.test(name)) {
-                var ref2;
+                var _child_props;
                 var injectStyle = {
                     marginLeft: offset,
                     marginRight: offset
@@ -28,7 +28,7 @@ var matchIcon = /(Icon|icon)/;
                         marginLeft: offset
                     };
                 }
-                var newStyle = _object_spread({}, injectStyle, (ref2 = child.props) === null || ref2 === void 0 ? void 0 : ref2.style);
+                var newStyle = _object_spread({}, injectStyle, (_child_props = child.props) === null || _child_props === void 0 ? void 0 : _child_props.style);
                 return React.cloneElement(child, {
                     style: newStyle
                 });

@@ -1,7 +1,7 @@
 export var LayStyle;
 (function(LayStyle) {
-    LayStyle[/** 分割线 */ "splitLine"] = "splitLine";
-    LayStyle[/** 边框模式 */ "border"] = "border";
-    LayStyle[/** 背景色模式 */ "background"] = "background";
-    LayStyle[/** 无分割样式 */ "none"] = "none";
+    /** 分割线 */ LayStyle["splitLine"] = "splitLine";
+    /** 边框模式 */ LayStyle["border"] = "border";
+    /** 背景色模式 */ LayStyle["background"] = "background";
+    /** 无分割样式 */ LayStyle["none"] = "none";
 })(LayStyle || (LayStyle = {}));

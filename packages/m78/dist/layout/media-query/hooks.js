@@ -1,4 +1,4 @@
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { useContext, useEffect } from "react";
 import { useFn, useSetState } from "@m78/hooks";
 import _debounce from "lodash/debounce.js";
@@ -9,23 +9,23 @@ import { _mediaQueryGetter, _onChangeHandle } from "./common.js";
  * */ export function _useMediaQuery(conf) {
     var type = conf === null || conf === void 0 ? void 0 : conf.listenType;
     var isType = !type || type === "type";
-    var ref = _sliced_to_array(useSetState({
+    var _useSetState = _sliced_to_array(useSetState({
         meta: null,
         value: undefined
-    }), 2), state = ref[0], setState = ref[1];
+    }), 2), state = _useSetState[0], setState = _useSetState[1];
     _useMediaQueryListener(function(meta) {
-        var ref, ref1;
+        var _state_meta, _state_meta1;
         var value = undefined;
         if (conf) {
             value = _mediaQueryGetter(meta, conf, undefined, undefined, conf.reverse);
         }
         if (isType) {
-            var ref2;
-            if (meta.type !== ((ref2 = state.meta) === null || ref2 === void 0 ? void 0 : ref2.type)) setState({
+            var _state_meta2;
+            if (meta.type !== ((_state_meta2 = state.meta) === null || _state_meta2 === void 0 ? void 0 : _state_meta2.type)) setState({
                 meta: meta,
                 value: value
             });
-        } else if (meta.width !== ((ref = state.meta) === null || ref === void 0 ? void 0 : ref.width) || meta.height !== ((ref1 = state.meta) === null || ref1 === void 0 ? void 0 : ref1.height)) {
+        } else if (meta.width !== ((_state_meta = state.meta) === null || _state_meta === void 0 ? void 0 : _state_meta.width) || meta.height !== ((_state_meta1 = state.meta) === null || _state_meta1 === void 0 ? void 0 : _state_meta1.height)) {
             setState({
                 meta: meta,
                 value: value

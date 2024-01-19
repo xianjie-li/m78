@@ -30,6 +30,4 @@ export * from "./consts.js";
 
 export * from "./react.js";
 
-export * from "./extra/action-history.js";
-
-export * from "./extra/select-manager.js";
+export * from "./tools/index.js";

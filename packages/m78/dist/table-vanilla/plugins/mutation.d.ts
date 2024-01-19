@@ -7,15 +7,18 @@ import { TableCell, TableColumn, TableRow } from "../types/items.js";
 import { _TableSortColumnPlugin } from "./sort-column.js";
 import { _TableFormPlugin } from "./form.js";
 /**
- * 所有config/data变更相关的操作, 变异操作应统一使用此处提供的api, 方便统一处理, 自动生成和处理历史等
+ * config/data变更相关的操作, 变异操作尽量集中在此处并需要新增和触发 TableMutationDataType 事件/处理操作历史等
  *
  * 配置变更/单元格值编辑/增删行列/行列排序/隐藏列
+ *
+ * 其他: soft-remove.ts 由于并不会直接操作数据, 在单独插件维护, 但仍触发mutation事件
  * */
 export declare class _TableMutationPlugin extends TablePlugin {
     /** 每一次配置变更将变更的key记录, 通过记录来判断是否有变更项 */
     private changedConfigKeys;
     sortColumn: _TableSortColumnPlugin;
     form: _TableFormPlugin;
+    private changedRows;
     init(): void;
     beforeInit(): void;
     reload(opt?: TableReloadOptions): void;
@@ -31,7 +34,6 @@ export declare class _TableMutationPlugin extends TablePlugin {
     removeRow: TableMutation["removeRow"];
     moveRow: TableMutation["moveRow"];
     getValue: TableMutation["getValue"];
-    private changedRows;
     setValue: TableMutation["setValue"];
     /** 克隆并重新设置row的data, 防止变更原数据, 主要用于延迟clone, 可以在数据量较大时提升初始化速度  */
     private cloneAndSetRowData;
@@ -40,16 +42,16 @@ export declare class _TableMutationPlugin extends TablePlugin {
     private moveColumn;
     /** move的通用逻辑, isRow控制是row还是column */
     private moveCommon;
-    /** 获取便于move操作的结构 */
-    private getMoveData;
     /** 获取方便用于删除/移动等操作的索引数据信息 */
     private getIndexData;
-    /** 快速获取fixed虚拟项的index */
+    /** 快速获取fixed虚拟项的index, 由于修改后的数据尚未同步缓存和索引, 所以需要此方法 */
     private getFixedIndex;
     /** 根据setPersistenceConfig入参 "尽可能合理" 的方式获取需要高亮的项 */
     private getHighlightKeys;
     /** 对传入的items执行高亮 */
     private highlightHandler;
+    /** 处理和触发auto move mutation, 即被自动移动的fixed项,  */
+    private autoMoveHandle;
 }
 export declare enum TableMutationType {
     /** 持久化配置变更 */
@@ -61,9 +63,16 @@ export declare enum TableMutationType {
 }
 /** TableMutationType.data变更类型 */
 export declare enum TableMutationDataType {
+    /** 新增行 */
     add = "add",
+    /** 删除行 */
     remove = "remove",
-    move = "move"
+    /** 移动行 */
+    move = "move",
+    /** 软删除行 */
+    softRemove = "softRemove",
+    /** 恢复软删除 */
+    restoreSoftRemove = "restoreSoftRemove"
 }
 export type TableMutationEvent = TableMutationConfigEvent | TableMutationDataEvent | TableMutationValueEvent;
 /** 持久化配置变更事件 */
@@ -100,6 +109,10 @@ export interface TableMutationDataEvent {
         /** 移动的行数据 */
         data: AnyObject;
     }>;
+    /** 软删除的行或从软删除恢复的行 */
+    soft: AnyObject[];
+    /** 是否是自动触发的move操作, (被设置为fixed的项会在手动执行move操作前自动触发一次move) */
+    isAutoMove: boolean;
 }
 /** 单元格值变更事件 */
 export interface TableMutationValueEvent {
@@ -115,6 +128,8 @@ export interface TableMutationValueEvent {
 export interface TableMutation {
     /** 获取发生了变更的持久化配置 */
     getChangedConfigKeys(): (keyof TablePersistenceConfig)[];
+    /** 清理配置变更状态, 清理后getChangedConfigKeys()的返回将被重置为空, 不影响已变更的配置 */
+    resetConfigState(): void;
     /** 获取当前持久化配置 */
     getPersistenceConfig(): TablePersistenceConfig;
     /**
@@ -157,5 +172,14 @@ export interface TableMutation {
     getValue(row: TableRow, column: TableColumn): any;
     /** 根据row&column key获取单元格值 */
     getValue(rowKey: TableKey, columnKey: TableKey): any;
+}
+export declare function _getBlankMutationDataEvent(opt: Partial<TableMutationDataEvent>): TableMutationDataEvent;
+export interface _DataIndexInfo {
+    index: number;
+    data: any;
+    originalData: any;
+    ins: TableRow | TableColumn;
+    /** 该项的key, 替身项的key为替身key */
+    key: TableKey;
 }
 //# sourceMappingURL=mutation.d.ts.map

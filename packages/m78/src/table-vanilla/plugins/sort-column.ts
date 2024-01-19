@@ -1,13 +1,17 @@
-import { TablePlugin } from "../plugin.js";
-import { TableReloadLevel } from "./life.js";
+import { TableLoadStage, TablePlugin } from "../plugin.js";
 import { TableColumnLeafConfigFormatted } from "../types/items.js";
 import { TableColumnFixed, TableKey } from "../types/base-type.js";
 import { _prefix } from "../common.js";
+import { getNamePathValue, isNumber, isUndefined } from "@m78/utils";
 
-/** 表格列排序 */
+/**
+ * 表格列排序
+ *
+ * sortColumns只配置了部分项时, 先按顺序显示排序后的列, 再显示不再排序中的列, 左右固定项和中间部分分别进行排序
+ * */
 export class _TableSortColumnPlugin extends TablePlugin {
-  loadStage(level: TableReloadLevel, isBefore: boolean) {
-    if (level === TableReloadLevel.index && isBefore) {
+  loadStage(stage: TableLoadStage, isBefore: boolean) {
+    if (stage === TableLoadStage.mergePersistenceConfig && !isBefore) {
       this.handle();
     }
   }
@@ -18,9 +22,9 @@ export class _TableSortColumnPlugin extends TablePlugin {
 
     let sortColumns = this.context.persistenceConfig.sortColumns || [];
 
-    sortColumns = sortColumns.slice();
-
     if (!sortColumns.length) return;
+
+    sortColumns = sortColumns.slice();
 
     if (ctx.hasMergeHeader) {
       console.warn(
@@ -29,48 +33,93 @@ export class _TableSortColumnPlugin extends TablePlugin {
       return;
     }
 
-    const sortMap: { [key: string]: TableColumnLeafConfigFormatted } = {};
+    // 记录sort项的index
+    const sortMap: { [key: string]: number } = {};
+
+    sortColumns.forEach((k, index) => (sortMap[k] = index));
+
+    // 存在于sortColumns中的项
+    const sortRegularColumns: TableColumnLeafConfigFormatted[] = [];
+    const sortFixedLeft: TableColumnLeafConfigFormatted[] = [];
+    const sortFixedRight: TableColumnLeafConfigFormatted[] = [];
 
     // 不存在于sortColumns中的项
     const regularColumns: TableColumnLeafConfigFormatted[] = [];
     const regularFixedLeft: TableColumnLeafConfigFormatted[] = [];
     const regularFixedRight: TableColumnLeafConfigFormatted[] = [];
 
-    ctx.columns.forEach((i) => {
-      const meta = ctx.getColumnMeta(i.key);
-      const fake = meta.fake;
+    let rh: TableColumnLeafConfigFormatted;
 
+    // 克隆并排序当前ctx.columns
+    const cloneAndSortColumns = ctx.columns.slice().sort((a, b) => {
+      const aInd = sortMap[a.key];
+      const bInd = sortMap[b.key];
+
+      const notA = isUndefined(aInd);
+      const notB = isUndefined(bInd);
+
+      if (notA && notB) return 0;
+      if (notA) return 1; // 后移
+      if (notB) return -1; // 保持
+      return aInd - bInd;
+    });
+
+    cloneAndSortColumns.forEach((i) => {
       const isChild = ctx.mergeHeaderRelationMap[i.key];
+      const isSortItem = isNumber(sortMap[i.key]);
+      const isRH = ctx.xHeaderKey === i.key;
 
-      if (fake && i.fixed === TableColumnFixed.left) {
-        // 虚拟固定项不处理
-        regularFixedLeft.push(i);
-      } else if (fake && i.fixed === TableColumnFixed.right) {
-        regularFixedRight.push(i);
-      } else if (isChild) {
-        // 子项不处理
+      const persistenceConf = getNamePathValue(ctx.persistenceConfig, [
+        "columns",
+        i.key,
+      ]);
+
+      // 从持久配置/fixed项中获取
+      const fixedConf = persistenceConf?.fixed || i.fixed;
+
+      if (isRH) {
+        rh = i;
+        return;
+      }
+
+      if (isChild) {
+        // 合并子项不处理
         regularColumns.push(i);
-      } else if (sortColumns.includes(i.key)) {
-        // 记录sort项
-        sortMap[i.key] = i;
+        return;
+      }
+
+      if (fixedConf === TableColumnFixed.left) {
+        if (isSortItem) {
+          sortFixedLeft.push(i);
+        } else {
+          regularFixedLeft.push(i);
+        }
+        return;
+      }
+
+      if (fixedConf === TableColumnFixed.right) {
+        if (isSortItem) {
+          sortFixedRight.push(i);
+        } else {
+          regularFixedRight.push(i);
+        }
+        return;
+      }
+
+      if (isSortItem) {
+        sortRegularColumns.push(i);
       } else {
-        // 不存在的项保持原样
         regularColumns.push(i);
       }
     });
 
-    const indexHKey = sortColumns.indexOf(ctx.xHeaderKey);
-
-    if (indexHKey !== -1) {
-      sortColumns.splice(indexHKey, 1);
-    }
-
-    const sorted = sortColumns.map((key) => sortMap[key]).filter((i) => !!i);
-
     const newColumns = [
+      rh!,
+      ...sortFixedLeft,
       ...regularFixedLeft,
-      ...sorted,
+      ...sortRegularColumns,
       ...regularColumns,
+      ...sortFixedRight,
       ...regularFixedRight,
     ];
 
@@ -82,18 +131,15 @@ export class _TableSortColumnPlugin extends TablePlugin {
   getColumnSortKeys(): TableKey[] {
     const column = this.context.columns;
 
-    const list = column.filter((i) => {
-      const meta = this.context.getColumnMeta(i.key);
+    const list: TableKey[] = [];
 
-      // TODO: META
-      // 虚拟项
-      if (meta.fake || meta.ignore) return false;
-
-      // 子项
-      return !this.context.mergeHeaderRelationMap[i.key];
+    column.forEach((i) => {
+      if (!this.context.mergeHeaderRelationMap[i.key]) {
+        list.push(i.key);
+      }
     });
 
-    return list.map((i) => i.key);
+    return list;
   }
 }
 

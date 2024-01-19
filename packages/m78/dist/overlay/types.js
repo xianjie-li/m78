@@ -9,7 +9,7 @@ import React from "react";
     "onUpdate",
     "onDispose",
     "innerRef",
-    "instanceRef", 
+    "instanceRef"
 ];
 export var OverlayDirection;
 (function(OverlayDirection) {

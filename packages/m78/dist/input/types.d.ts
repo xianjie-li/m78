@@ -1,6 +1,6 @@
 import React from "react";
 import { FormLike } from "@m78/hooks";
-import { StatusKeys, SizeUnion } from "../common";
+import { StatusKeys, SizeUnion } from "../common/index.js";
 import { TupleNumber, ArrayOrItem } from "@m78/utils";
 export type InputPropsBase = Omit<React.PropsWithoutRef<JSX.IntrinsicElements["input"]>, "size" | "value" | "defaultValue" | "onChange" | "prefix" | "type" | "readOnly">;
 export declare enum InputType {

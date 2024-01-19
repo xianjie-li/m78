@@ -1,5 +1,5 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
 import formLangPack from "@m78/form/language-pack/en.js";
 import { tableDefaultTexts } from "../../table-vanilla/index.js";
 export default {
@@ -10,9 +10,10 @@ export default {
         loading: "Loading",
         empty: "No data",
         alert: "Alert",
-        yes: "yes",
-        no: "no",
-        "confirm operation": "Confirm to do the operation?",
+        retry: "Retry",
+        yes: "Yes",
+        no: "No",
+        "confirm operation": "Do you want to continue with this?",
         "confirm delete": "Are you sure to delete?"
     },
     input: {
@@ -53,12 +54,10 @@ export default {
         "export specific": "export specific columns",
         import: "Import data from xlsx file",
         "download import tpl": "download import template",
-        "delete selected rows": "Delete selected rows",
         "add row tip1": "Add a new row",
         "new tip": "New",
-        "delete tip": "Delete",
+        "remove tip": "Remove",
         "update tip": "Update",
-        "conf tip": "Config changed",
         "sorted tip": "Sorted",
         "add row btn": "New",
         "save btn": "Save",
@@ -68,7 +67,10 @@ export default {
         "paste cells": "Paste to selected cells",
         "insert top": "Insert row to top",
         "insert bottom": "Insert row to bottom",
-        "delete row": "Delete row",
-        "delete rows": "Delete selected rows"
+        "remove rows": "Remove selected rows",
+        "setting reading": "Setting reading",
+        "setting load failed": "Setting load failed",
+        "setting upload failed": "Setting upload failed, click to retry",
+        "enable drag scroll": "Enable drag scrolling (shortcut keys: Space + drag)"
     })
 };

@@ -8,7 +8,6 @@ import clsx from "clsx";
 import { Portal } from "../portal/index.js";
 import { animated } from "react-spring";
 import { _OverlayContext } from "./types.js";
-import { _Methods } from "./use-methods.js";
 import { _LifeCycle } from "./use-life-cycle.js";
 import { isFunction } from "@m78/utils";
 import { MASK_NAMESPACE } from "../common/index.js";

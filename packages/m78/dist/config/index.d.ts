@@ -8,4 +8,5 @@
 import { M78SeedConfig } from "./types.js";
 declare const m78Config: import("../seed/types.js").RCSeed<M78SeedConfig>;
 export { m78Config };
+export type { FormAdaptorsItem, FormAdaptors, FormAdaptor, RCTableEditAdaptor, } from "./types.js";
 //# sourceMappingURL=index.d.ts.map

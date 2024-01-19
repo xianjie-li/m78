@@ -21,7 +21,7 @@ describe("form-vanilla", () => {
       },
     });
 
-    const rejects = await form.verify();
+    const [rejects] = await form.verify();
 
     expect(rejects!.map((i: any) => i.message)).toEqual(["Must be a string"]);
   });
@@ -36,7 +36,7 @@ describe("form-vanilla", () => {
       },
     });
 
-    const rejects = await form.verify();
+    const [rejects] = await form.verify();
 
     expect(rejects!.map((i: any) => i.message)).toEqual(["Must be a number"]);
   });
@@ -345,7 +345,7 @@ describe("form-vanilla", () => {
     expect(changeCB.mock.calls.length).toBe(10);
 
     {
-      const rejects = await form.verify();
+      const [rejects] = await form.verify();
 
       expect(rejects!.map((i: any) => `${i.name}:${i.message}`)).toEqual([
         "nestArrayFiled1:Required",
@@ -362,7 +362,7 @@ describe("form-vanilla", () => {
     expect(changeCB.mock.calls.length).toBe(11);
 
     {
-      const rejects = await form.verify("nestArrayFiled1");
+      const [rejects] = await form.verify("nestArrayFiled1");
 
       expect(rejects!.map((i: any) => `${i.name}:${i.message}`)).toEqual([
         "nestArrayFiled1:No less than 4 items",
@@ -399,7 +399,7 @@ describe("form-vanilla", () => {
     });
 
     {
-      const rejects = await form.submit();
+      const [rejects] = await form.submit();
 
       expect(rejects!.map((i: any) => `${i.name}:${i.message}`)).toEqual([
         "nestArrayFiled1:Must be a regular object",
@@ -444,7 +444,7 @@ describe("form-vanilla", () => {
         schema: [
           {
             name: "field2",
-            dynamic: (form) => {
+            dynamic: ({ form }) => {
               if (form.getValue("field1") === "abc") {
                 return {
                   validator: [required(), array({ min: 4 })],
@@ -460,7 +460,7 @@ describe("form-vanilla", () => {
           },
           {
             name: "field3",
-            dynamic: (form) => ({
+            dynamic: ({ form }) => ({
               valid: form.getValue("field1") !== "abcd",
               schema:
                 form.getValue("field1") === "abcd"
@@ -482,7 +482,7 @@ describe("form-vanilla", () => {
       },
     });
 
-    const rejects = await form.verify();
+    const [rejects] = await form.verify();
 
     expect(rejects!.map((i: any) => `${i.name}:${i.message}`)).toEqual([
       "field2:No less than 4 items",
@@ -507,7 +507,7 @@ describe("form-vanilla", () => {
     form.setValue("field1", "abcd");
 
     {
-      const rejects = await form.verify();
+      const [rejects] = await form.verify();
 
       expect(rejects!.map((i: any) => `${i.name}:${i.message}`)).toEqual([
         "field2:Must be a regular object",
@@ -857,17 +857,6 @@ describe("form-vanilla", () => {
 
 // 验证独立测试
 describe("verify", () => {
-  test("api", () => {
-    const verify = createVerify({
-      schemas: {},
-    });
-
-    expect(verify).toStrictEqual({
-      check: expect.any(Function),
-      getConfig: expect.any(Function),
-    });
-  });
-
   test("check", async () => {
     const verify = createVerify({
       schemas: {
@@ -885,7 +874,7 @@ describe("verify", () => {
       },
     });
 
-    const reject = await verify.check({
+    const [reject] = await verify.check({
       user: "lxj",
       sex: undefined,
     });
@@ -908,9 +897,11 @@ describe("verify", () => {
     });
 
     expect(
-      await verify2.check({
-        user: "lxj",
-      })
+      (
+        await verify2.check({
+          user: "lxj",
+        })
+      )[0]
     ).toBeNull();
   });
 
@@ -931,7 +922,7 @@ describe("verify", () => {
       },
     });
 
-    const rejects = await verify.check({
+    const [rejects] = await verify.check({
       user: "",
       sex: 1,
     });
@@ -955,7 +946,7 @@ describe("verify", () => {
       },
     });
 
-    const reject = await verify.check(
+    const [reject] = await verify.check(
       {
         user: "lxj",
       },
@@ -976,7 +967,6 @@ describe("verify", () => {
         validator: [expect.any(Function)],
       },
       rootSchema: {
-        name: _ROOT_SCHEMA_NAME,
         validator: [expect.any(Function)],
       },
       getValueByName: expect.any(Function),
@@ -1022,7 +1012,7 @@ describe("verify", () => {
       },
     });
 
-    const reject = await verify2.check({
+    const [reject] = await verify2.check({
       user: "lxj",
       sex: "1",
     });
@@ -1031,6 +1021,66 @@ describe("verify", () => {
     expect(reject?.[0].label).toBe("用户");
     expect(reject?.[0].message).toBe("The length can only be 2");
     expect(reject?.[1].message).toBe("not be null");
+  });
+
+  test("getSchemasDetail", async () => {
+    const verify2 = createVerify({
+      schemas: {
+        validator: required(),
+        schema: [
+          {
+            name: "user",
+            label: "用户",
+            validator: string({
+              length: 2,
+            }),
+            dynamic: () => ({
+              valid: false,
+            }),
+          },
+          {
+            name: "nonExists",
+            validator: required(),
+            valid: false,
+          },
+        ],
+      },
+    });
+
+    expect(verify2.getSchemasDetail().invalidNames).toEqual([
+      ["user"],
+      ["nonExists"],
+    ]);
+  });
+
+  test("getSchemasDetail", async () => {
+    const verify2 = createVerify({
+      schemas: {
+        validator: required(),
+        schema: [
+          {
+            name: "user",
+            label: "用户",
+            validator: string({
+              length: 2,
+            }),
+            dynamic: () => ({
+              valid: false,
+            }),
+          },
+          {
+            name: "nonExists",
+            validator: required(),
+            valid: false,
+          },
+        ],
+      },
+    });
+
+    expect(verify2.getSchemasDetail().invalidNames).toEqual([
+      ["user"],
+      ["nonExists"],
+    ]);
   });
 
   test("child schema & eachSchema", async () => {
@@ -1091,7 +1141,7 @@ describe("verify", () => {
       },
     });
 
-    const rejects = await verify2.check({
+    const [rejects] = await verify2.check({
       name: "lxj",
       list: ["1", "2", 3],
       map: {
@@ -1134,7 +1184,7 @@ describe("verify", () => {
         },
       });
 
-      const rejects = await verify.check(args);
+      const [rejects] = await verify.check(args);
 
       expect(rejects?.length).toBe(1);
     }
@@ -1160,7 +1210,7 @@ describe("verify", () => {
       },
     });
 
-    const rej = await verify.check([]);
+    const [rej] = await verify.check([]);
 
     expect(rej?.[0].name).toBe(_ROOT_SCHEMA_NAME);
   });
@@ -1175,7 +1225,7 @@ describe("verify", () => {
       },
     });
 
-    const rej = await verify.check(161);
+    const [rej] = await verify.check(161);
 
     expect(rej?.[0].message).toBe("Cannot be greater than 160");
   });
@@ -1192,7 +1242,7 @@ describe("verify", () => {
       },
     });
 
-    const rej = await verify.check(null);
+    const [rej] = await verify.check(null);
 
     expect(rej).toBeNull();
   });
@@ -1266,7 +1316,7 @@ describe("verify", () => {
       schemas: schema,
     });
 
-    const reject = await verify2.check({
+    const [reject] = await verify2.check({
       name: "lxj",
       things: [
         {
@@ -1287,7 +1337,7 @@ describe("verify", () => {
       "Has an unexpected field: arr2[1]",
     ]);
 
-    const reject2 = await verify2.check({
+    const [reject2] = await verify2.check({
       name: "lxj",
       things: [
         {
@@ -1317,7 +1367,7 @@ describe("verify", () => {
         schema: [
           {
             name: "count",
-            dynamic: (form) => {
+            dynamic: ({ form }) => {
               return {
                 validator:
                   form.getValue("num") === 1
@@ -1328,7 +1378,7 @@ describe("verify", () => {
           },
           {
             name: "list",
-            dynamic: (form) => {
+            dynamic: ({ form }) => {
               if (form.getValue("type") === 1) {
                 return {
                   validator: [number()],
@@ -1345,21 +1395,21 @@ describe("verify", () => {
       },
     });
 
-    const rej = await verify.check({
+    const [rej] = await verify.check({
       num: 1,
       count: 2,
     });
 
     expect(rej?.[0].message).toBeUndefined();
 
-    const rej2 = await verify.check({
+    const [rej2] = await verify.check({
       num: 2,
       count: 2,
     });
 
     expect(rej2?.[0].message).toBe("Must be a string");
 
-    const rej3 = await verify.check({
+    const [rej3] = await verify.check({
       num: 1,
       count: 2,
       type: 1,
@@ -1368,7 +1418,7 @@ describe("verify", () => {
 
     expect(rej3?.[0].message).toBe("Must be a number");
 
-    const rej4 = await verify.check({
+    const [rej4] = await verify.check({
       num: 1,
       count: 2,
       type: 2,
@@ -1376,5 +1426,48 @@ describe("verify", () => {
     });
 
     expect(rej4?.[0].message).toBeUndefined();
+
+    // dynamic get each item name
+    const verify2 = createVerify({
+      schemas: {
+        eachSchema: {
+          dynamic: ({ namePath }) => {
+            return {
+              valid: namePath[0] !== 1,
+            };
+          },
+        },
+      },
+    });
+
+    const [, data] = await verify2.check([1, 2, 3]);
+
+    expect(data).toEqual([1, 3]);
+
+    // dynamic get each item name
+    const verify3 = createVerify({
+      schemas: {
+        schema: [
+          {
+            name: "list",
+            eachSchema: {
+              dynamic: ({ namePath }) => {
+                return {
+                  valid: namePath[namePath.length - 1] !== 1,
+                };
+              },
+            },
+          },
+        ],
+      },
+    });
+
+    const [, data3] = await verify3.check({
+      list: [1, 2, 3],
+    });
+
+    expect(data3).toEqual({
+      list: [1, 3],
+    });
   });
 });

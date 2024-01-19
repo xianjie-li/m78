@@ -1,4 +1,4 @@
-import { TablePlugin } from "../plugin.js";
+import { TableLoadStage, TablePlugin } from "../plugin.js";
 import {
   AnyObject,
   AutoScroll,
@@ -19,7 +19,6 @@ import {
   _getMaxPointByPoint,
   _tableTriggerFilters,
   _triggerFilterList,
-  isTouch,
 } from "../common.js";
 import { addCls, removeCls } from "../../common/index.js";
 import { TableKey, TablePointInfo, TablePosition } from "../types/base-type.js";
@@ -33,7 +32,6 @@ import {
 } from "../types/items.js";
 import { _TableRowColumnResize } from "./row-column-resize.js";
 import { DragGesture, FullGestureState } from "@use-gesture/vanilla";
-import { TableReloadLevel } from "./life.js";
 import { _TableDisablePlugin } from "./disable.js";
 
 /** 实现选区和选中功能 */
@@ -135,8 +133,8 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
     this.updateAutoScrollBound();
   }
 
-  loadStage(level: TableReloadLevel, isBefore: boolean) {
-    if (level === TableReloadLevel.full && isBefore) {
+  loadStage(stage: TableLoadStage, isBefore: boolean) {
+    if (stage === TableLoadStage.fullHandle && isBefore) {
       this.selectedCells = {};
       this.selectedRows = {};
       this.selectedTempRows = {};
@@ -223,7 +221,7 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
       [p1, p2] = _getMaxPointByPoint(p1, ...this.lastPoint!);
     }
 
-    const isTouchEvent = isTouch(e.event);
+    const isDragMoveEnable = this.table.isDragMoveEnable();
 
     const [valid] = this.selectByPoint(p1, p2, (items) => {
       const first = items.cells[0];
@@ -240,8 +238,8 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
         return false;
       }
 
-      // touch事件下, 仅表头可选中
-      if (isTouchEvent && !(first.row.isHeader || first.column.isHeader)) {
+      // dram move启用期间, 仅表头可选中
+      if (isDragMoveEnable && !(first.row.isHeader || first.column.isHeader)) {
         return false;
       }
 

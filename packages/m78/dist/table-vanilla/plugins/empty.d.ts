@@ -1,5 +1,5 @@
-import { TablePlugin } from "../plugin.js";
-import { TableReloadLevel, TableReloadOptions } from "./life.js";
+import { TableLoadStage, TablePlugin } from "../plugin.js";
+import { TableReloadOptions } from "./life.js";
 /** 处理无数据 */
 export declare class _TablePluginEmpty extends TablePlugin {
     static EMPTY_ROW_KEY: string;
@@ -11,7 +11,7 @@ export declare class _TablePluginEmpty extends TablePlugin {
     beforeDestroy(): void;
     reload(opt?: TableReloadOptions): void;
     /** 在index前拦截判断是否是empty, 是则注入占位数据并显示节点, 否则隐藏 */
-    loadStage(level: TableReloadLevel, isBefore: boolean): void;
+    loadStage(stage: TableLoadStage, isBefore: boolean): void;
     rendered(): void;
     /** 更新empty节点状态, 并根据需要移除data中的占位数据 */
     private update;

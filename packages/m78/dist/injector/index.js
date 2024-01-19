@@ -1,5 +1,5 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
 import { jsx as _jsx } from "react/jsx-runtime";
 import { isObject } from "@m78/utils";
 import React, { useCallback, useEffect, useMemo } from "react";

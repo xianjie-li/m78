@@ -1,5 +1,5 @@
 import { COMMON_NS, TABLE_NS, Translation } from "../../i18n/index.js";
-import { Bubble, BubbleType } from "../../bubble/index.js";
+import { Bubble } from "../../bubble/index.js";
 import { Button, ButtonColor } from "../../button/index.js";
 import { Size } from "../../common/index.js";
 import { IconSaveOne } from "@m78/icons/save-one.js";
@@ -63,7 +63,6 @@ function SaveBtn() {
     newCount: 0,
     removeCount: 0,
     updateCount: 0,
-    configChanged: false,
     sorted: false,
     changed: false,
   });
@@ -95,7 +94,6 @@ function SaveBtn() {
       removeCount: data.remove.length,
       updateCount: data.change.length,
       sorted: data.sorted,
-      configChanged: instance.getChangedConfigKeys().length > 0,
     });
   }
 
@@ -109,17 +107,10 @@ function SaveBtn() {
     const d: any = {};
 
     const data = instance.getData();
-    const changedKeys = instance.getChangedConfigKeys();
 
     if (data.update.length || data.sorted || data.remove.length) {
       d.data = data;
     }
-
-    if (changedKeys.length) {
-      d.config = instance.getPersistenceConfig();
-      d.changedConfigKeys = changedKeys;
-    }
-
     if (isEmpty(d)) return;
 
     props.onSubmit(d);
@@ -138,16 +129,8 @@ function SaveBtn() {
               <span className="color-red bold mr-8">{state.removeCount}</span>
               {t("update tip")}:{" "}
               <span className="color-blue bold">{state.updateCount}</span>
-              {(state.configChanged || state.sorted) && (
+              {state.sorted && (
                 <div className="mt-4">
-                  {state.configChanged && (
-                    <span className="mr-8">
-                      {t("conf tip")}:{" "}
-                      <span className="color-blue bold">
-                        {t("yes", commonNSOpt)}
-                      </span>
-                    </span>
-                  )}
                   {state.sorted && (
                     <span>
                       {t("sorted tip")}:{" "}

@@ -7,6 +7,7 @@ export default {
         loading: "加载中",
         empty: "暂无数据",
         alert: "提示",
+        retry: "重试",
         yes: "是",
         no: "否",
         "confirm operation": "是否确认执行此操作?",
@@ -44,6 +45,8 @@ export default {
         paste: "不能向不可编辑单元格粘贴",
         "add row": "新增行",
         "remove row": "移除行",
+        "restore row": "恢复已删除行",
+        "soft remove tip": "改行已被删除, 将在提交后生效",
         "set value": "更新值",
         "move row": "移动行",
         "move column": "移动列",
@@ -51,6 +54,7 @@ export default {
         "editable and required": "可编辑 (必填)",
         "currently not editable": "当前不可编辑",
         clipboardWarning: "无法获取剪贴板数据, 浏览器不支持或没有权限.",
+        selectAllOrUnSelectAll: "全选/取消",
         // react version
         count: "共{{count}}行 / 选中{{selectedCount}}行",
         query: "查询",
@@ -64,12 +68,10 @@ export default {
         "export specific": "到处特定列",
         import: "从xlsx文件导入数据",
         "download import tpl": "下载导入模板",
-        "delete selected rows": "删除选中行",
         "add row tip1": "新增一行",
         "new tip": "新增",
-        "delete tip": "删除",
+        "remove tip": "删除",
         "update tip": "更新",
-        "conf tip": "配置变更",
         "sorted tip": "已排序",
         "add row btn": "新增",
         "save btn": "保存",
@@ -79,7 +81,10 @@ export default {
         "paste cells": "粘贴到选中单元格",
         "insert top": "在上方插入行",
         "insert bottom": "在下方插入行",
-        "delete row": "删除行",
-        "delete rows": "删除选中行"
+        "remove rows": "删除选中行",
+        "setting reading": "配置读取中",
+        "setting load failed": "配置获取失败",
+        "setting upload failed": "配置上传失败, 点击重试",
+        "enable drag scroll": "启用拖拽滚动 (快捷键: 空格 + 拖动)"
     }
 };

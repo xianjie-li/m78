@@ -1,10 +1,15 @@
-import _class_call_check from "@swc/helpers/src/_class_call_check.mjs";
-import _inherits from "@swc/helpers/src/_inherits.mjs";
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
-import _create_super from "@swc/helpers/src/_create_super.mjs";
+import { _ as _assert_this_initialized } from "@swc/helpers/_/_assert_this_initialized";
+import { _ as _class_call_check } from "@swc/helpers/_/_class_call_check";
+import { _ as _create_class } from "@swc/helpers/_/_create_class";
+import { _ as _define_property } from "@swc/helpers/_/_define_property";
+import { _ as _inherits } from "@swc/helpers/_/_inherits";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
+import { _ as _create_super } from "@swc/helpers/_/_create_super";
 import { TablePlugin } from "../plugin.js";
 import { _getCellKey, _getCellKeysByStr } from "../common.js";
 import { addCls, removeCls } from "../../common/index.js";
+import { SelectManager } from "@m78/utils";
+import { TableReloadLevel } from "./life.js";
 /** 在单元格/行/列上设置半透明遮挡物, 目前仅用于组件内部api设置临时禁用状态, 如拖动排序时, 为拖动列显示禁用样式 */ export var _TableDisablePlugin = /*#__PURE__*/ function(TablePlugin) {
     "use strict";
     _inherits(_TableDisablePlugin, TablePlugin);
@@ -13,112 +18,219 @@ import { addCls, removeCls } from "../../common/index.js";
         _class_call_check(this, _TableDisablePlugin);
         var _this;
         _this = _super.apply(this, arguments);
-        _this.disabled = false;
-        /** 禁用行 */ _this.rows = {};
-        /** 禁用单元格 */ _this.cells = {};
-        /** 禁用列 */ _this.columns = {};
-        _this.isDisabled = function() {
+        // 表格本身的禁用状态, 状态本身并无约束力, 可能某些api会需要读取其并禁用行为
+        _define_property(_assert_this_initialized(_this), "disabled", false);
+        // 用于检测禁用状态的select状态, 可以在其他插件向其中推入新的实例, 来实现插件自行管理禁用状态, 避免被通用禁用状态干扰
+        _define_property(_assert_this_initialized(_this), "rowChecker", [
+            new SelectManager()
+        ]);
+        // 同rowChecker, 但检测列
+        _define_property(_assert_this_initialized(_this), "columnChecker", [
+            new SelectManager()
+        ]);
+        // 同rowChecker, 但检测单元格
+        _define_property(_assert_this_initialized(_this), "cellChecker", [
+            new SelectManager()
+        ]);
+        /** 禁用行 */ _define_property(_assert_this_initialized(_this), "rows", _this.rowChecker[0]);
+        /** 禁用单元格 */ _define_property(_assert_this_initialized(_this), "cells", _this.cellChecker[0]);
+        /** 禁用列 */ _define_property(_assert_this_initialized(_this), "columns", _this.columnChecker[0]);
+        _define_property(_assert_this_initialized(_this), "isDisabled", function() {
             return _this.disabled;
-        };
-        _this.isDisabledRow = function(key) {
-            return !!_this.rows[key];
-        };
-        _this.isDisabledColumn = function(key) {
-            return !!_this.columns[key];
-        };
-        _this.isDisabledCell = function(key) {
-            if (_this.cells[key]) return true;
+        });
+        _define_property(_assert_this_initialized(_this), "isDisabledRow", function(key) {
+            var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = undefined;
+            try {
+                for(var _iterator = _this.rowChecker[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true){
+                    var checker = _step.value;
+                    if (checker.isSelected(key)) return true;
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally{
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return != null) {
+                        _iterator.return();
+                    }
+                } finally{
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
+            }
+            return false;
+        });
+        _define_property(_assert_this_initialized(_this), "isDisabledColumn", function(key) {
+            var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = undefined;
+            try {
+                for(var _iterator = _this.columnChecker[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true){
+                    var checker = _step.value;
+                    if (checker.isSelected(key)) return true;
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally{
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return != null) {
+                        _iterator.return();
+                    }
+                } finally{
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
+            }
+            return false;
+        });
+        _define_property(_assert_this_initialized(_this), "isDisabledCell", function(key) {
+            var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = undefined;
+            try {
+                for(var _iterator = _this.cellChecker[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true){
+                    var checker = _step.value;
+                    if (checker.isSelected(key)) return true;
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally{
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return != null) {
+                        _iterator.return();
+                    }
+                } finally{
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
+            }
             var cell = _this.table.getCellByStrKey(key);
             return _this.isDisabledRow(cell.row.key) || _this.isDisabledColumn(cell.column.key);
-        };
-        _this.getDisabledRows = function() {
+        });
+        _define_property(_assert_this_initialized(_this), "getDisabledRows", function() {
             var ls = [];
-            Object.keys(_this.rows).forEach(function(key) {
-                var row = _this.table.getRow(key);
-                ls.push(row);
+            _this.rowChecker.forEach(function(c) {
+                c.getState().selected.forEach(function(key) {
+                    var row = _this.table.getRow(key);
+                    ls.push(row);
+                });
             });
             return ls;
-        };
-        _this.getDisabledColumns = function() {
+        });
+        _define_property(_assert_this_initialized(_this), "getDisabledColumns", function() {
             var ls = [];
-            Object.keys(_this.columns).forEach(function(key) {
-                var row = _this.table.getRow(key);
-                ls.push(row);
+            _this.columnChecker.forEach(function(c) {
+                c.getState().selected.forEach(function(key) {
+                    var column = _this.table.getColumn(key);
+                    ls.push(column);
+                });
             });
             return ls;
-        };
-        _this.getDisabledCells = function() {
+        });
+        _define_property(_assert_this_initialized(_this), "getDisabledCells", function() {
             var uniqCache = {}; // 保证行和单元格的选中不重复
             var list = [];
             // 此处可能有潜在的性能问题
             var keyHandle = function(key) {
-                var ref = _sliced_to_array(_getCellKeysByStr(key), 2), rowKey = ref[0], columnKey = ref[1];
+                var _$_getCellKeysByStr = _sliced_to_array(_getCellKeysByStr(key), 2), rowKey = _$_getCellKeysByStr[0], columnKey = _$_getCellKeysByStr[1];
                 var cell = _this.table.getCell(rowKey, columnKey);
                 // 跳过已经处理过的单元格
                 if (uniqCache[cell.key]) return;
                 uniqCache[cell.key] = 1;
                 list.push(cell);
             };
-            Object.keys(_this.rows).forEach(function(key) {
-                _this.context.allColumnKeys.forEach(function(columnKey) {
-                    keyHandle(_getCellKey(key, columnKey));
+            _this.rowChecker.forEach(function(c) {
+                c.getState().selected.forEach(function(key) {
+                    _this.context.allColumnKeys.forEach(function(columnKey) {
+                        keyHandle(_getCellKey(key, columnKey));
+                    });
                 });
             });
-            Object.keys(_this.columns).forEach(function(key) {
-                _this.context.allRowKeys.forEach(function(rowKey) {
-                    keyHandle(_getCellKey(rowKey, key));
+            _this.columnChecker.forEach(function(c) {
+                c.getState().selected.forEach(function(key) {
+                    _this.context.allRowKeys.forEach(function(rowKey) {
+                        keyHandle(_getCellKey(rowKey, key));
+                    });
                 });
             });
-            Object.keys(_this.cells).forEach(keyHandle);
+            _this.cellChecker.forEach(function(c) {
+                c.getState().selected.forEach(function(k) {
+                    return keyHandle(k);
+                });
+            });
             return list;
-        };
-        _this.setRowDisable = function(rows) {
+        });
+        _define_property(_assert_this_initialized(_this), "setRowDisable", function(rows) {
             var disable = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : true, merge = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : true;
             if (!merge) {
-                _this.rows = {};
+                _this.rows.unSelectAll();
             }
-            rows.forEach(function(key) {
-                _this.rows[key] = disable ? 1 : 0;
-            });
+            disable ? _this.rows.selectList(rows) : _this.rows.unSelectList(rows);
             _this.table.render();
-        };
-        _this.setColumnDisable = function(columns) {
+        });
+        _define_property(_assert_this_initialized(_this), "setColumnDisable", function(columns) {
             var disable = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : true, merge = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : true;
             if (!merge) {
-                _this.columns = {};
+                _this.columns.unSelectAll();
             }
-            columns.forEach(function(key) {
-                _this.columns[key] = disable ? 1 : 0;
-            });
+            disable ? _this.columns.selectList(columns) : _this.columns.unSelectList(columns);
             _this.table.render();
-        };
-        _this.setCellDisable = function(cells) {
+        });
+        _define_property(_assert_this_initialized(_this), "setCellDisable", function(cells) {
             var disable = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : true, merge = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : true;
             if (!merge) {
-                _this.cells = {};
+                _this.cells.unSelectAll();
             }
-            cells.forEach(function(key) {
-                _this.cells[key] = disable ? 1 : 0;
-            });
+            disable ? _this.cells.selectList(cells) : _this.cells.unSelectList(cells);
             _this.table.render();
-        };
-        _this.disable = function(disable) {
+        });
+        _define_property(_assert_this_initialized(_this), "disable", function(disable) {
             _this.disabled = disable;
             _this.table.render();
-        };
+        });
         return _this;
     }
-    var _proto = _TableDisablePlugin.prototype;
-    _proto.cellRender = function cellRender(cell) {
-        var disabled = this.isDisabledCell(cell.key);
-        disabled ? addCls(cell.dom, "__disabled") : removeCls(cell.dom, "__disabled");
-    };
-    _proto.clearDisable = function clearDisable() {
-        this.rows = {};
-        this.columns = {};
-        this.cells = {};
-        this.disabled = false;
-        this.table.render();
-    };
+    _create_class(_TableDisablePlugin, [
+        {
+            key: "cellRender",
+            value: function cellRender(cell) {
+                var disabled = this.isDisabledCell(cell.key);
+                disabled ? addCls(cell.dom, "__disabled") : removeCls(cell.dom, "__disabled");
+            }
+        },
+        {
+            key: "clear",
+            value: function clear() {
+                this.rows.unSelectAll();
+                this.cells.unSelectAll();
+                this.columns.unSelectAll();
+            }
+        },
+        {
+            key: "reload",
+            value: function reload(opt) {
+                if (opt.level === TableReloadLevel.full) {
+                    this.clear();
+                }
+            }
+        },
+        {
+            key: "beforeDestroy",
+            value: function beforeDestroy() {
+                this.clear();
+            }
+        },
+        {
+            key: "clearDisable",
+            value: function clearDisable() {
+                this.rows.unSelectAll();
+                this.columns.unSelectAll();
+                this.cells.unSelectAll();
+                this.disabled = false;
+                this.table.render();
+            }
+        }
+    ]);
     return _TableDisablePlugin;
 }(TablePlugin);

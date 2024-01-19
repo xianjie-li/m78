@@ -450,13 +450,16 @@ interface FormSchema {
   /** valid为false时, 该schema不会参与验证, 并且提交时会排除掉schema指向的值, 不可用于list项的第一级子项(应使用list相关api操作) */
   valid?: boolean;
   /** 动态设置其他参数 */
-  dynamic?: (
-    form: FormVerifyInstance
-  ) => Omit<FormSchemaWithoutName, "dynamic" | "name" | "list"> | void;
+  dynamic?: (args: {
+    /** 当前的验证实例 */
+    form: FormVerifyInstance;
+    /** 当前schema对应的name, 在eachSchema等包含不确定name路径的场景很有意义 */
+    namePath: NameItem[];
+  }) => Omit<FormSchema, "dynamic" | "name" | "list" | "deps"> | void;
   /** 类型为数组、对象时, 对其结构进行验证 */
   schema?: FormSchema[];
   /** 验证值为array或object时, 子级的所有 数组项/对象值 必须与此Schema匹配, 如果该值的类型不为array或object，此配置会被忽略 */
-  eachSchema?: FormSchemaPartial;
+  eachSchema?: Omit<FormSchema, "name" | "list">;
   /**
    * 设置该项为list项, 设置后可使用list系列的api对其子项进行新增/删除/排序等操作,
    * 若用于root项, 通过getList([])可获取根schema
@@ -464,6 +467,8 @@ interface FormSchema {
   list?: boolean;
   /** 对值进行验证前进行转换, 不影响原始值, 仅用于验证 */
   transform?: (value: any) => any;
+  /** {} | list新增项时使用的默认值, 用于schema render, 且仅在项的值类型不为对象时需要配置 */
+  listDefaultValue?: any;
 }
 ```
 
@@ -471,39 +476,6 @@ interface FormSchema {
 
 ```ts
 interface FormInstance {
-  /* # # # # # # # 重写 # # # # # # # */
-  /** 获取对dynamic/valid/list等特殊项进行处理进行处理后的完整schema副本 */
-  getSchemas(): FormSchemaWithoutName;
-
-  /** 获取对dynamic/valid/list等特殊项进行处理进行处理后的指定schema副本 */
-  getSchema(name: NamePath): FormSchema | FormSchemaWithoutName | null;
-
-  /** 重新设置当前schemas, 通常需要在重新设置schema后手动自动执行一次verify()来清理之前的校验状态 */
-  setSchemas(schema: FormSchemaWithoutName): void;
-
-  /** 获取Form创建配置 */
-  getConfig(): FormConfig;
-
-  /** 更改部分样式配置 */
-  updateProps(props: FormProps): void;
-
-  /** 事件 */
-  events: {
-    /** 字段值或状态变更时, 这里是更新ui状态的理想位置 */
-    update: CustomEventWithHook<VanillaFormNamesNotify>;
-    /** 字段值改变事件. update事件包含了change的触发场景 */
-    change: CustomEventWithHook<VanillaFormNamesNotify>;
-    /** 提交事件 */
-    submit: CustomEventWithHook<EmptyFunction>;
-    /** 验证失败的回调, 由 setValue 触发自动校验时, isValueChangeTrigger 为 true */
-    fail: CustomEventWithHook<
-      (errors: RejectMeta, isValueChangeTrigger?: boolean) => void
-    >;
-    /** 重置事件 */
-    reset: CustomEventWithHook<EmptyFunction>;
-  };
-
-  /* # # # # # # # 新增 # # # # # # # */
   /** 用于表示并绑定到表单字段 */
   Field: React.FunctionComponent<FormFieldProps>;
 
@@ -544,6 +516,9 @@ interface FormInstance {
   /** 获取指定name的值 */
   setValue(name: NamePath, val: any): void;
 
+  /** 获取当前数据, 获取的数据会根据当前的schema进行处理并过滤掉valid为false的值 */
+  getValues<T = any>(): T;
+
   /** 获取当前的默认值 */
   getDefaultValues<T = any>(): T;
 
@@ -564,18 +539,18 @@ interface FormInstance {
   /** 重置表单状态 */
   reset(): void;
 
-  /** 执行验证, 若验证通过则触发submit事件, 验证失败时与verify一样reject VerifyError类型 */
-  submit(): Promise<void>;
+  /** 对当前values执行校验, 校验失败时, 数组首项为失败信息组成的的数组, 校验失败时为null, 第二项为参与验证的数据, 验证成功后会触发submit事件: */
+  submit(): Promise<[FormRejectMeta | null, any]>;
 
   /**
-   * 对当前values执行校验, 验证成功时返回null, 失败时返回包含错误信息的meta数组
+   * 对当前values执行校验, 校验失败时, 数组首项为失败信息组成的的数组, 校验失败时为null, 第二项为参与验证的数据
    *
    * 若传入extraMeta, 会将其扩展到该次验证的 FormVerifyMeta 中, 然后你可以在验证器/验证错误信息等位置对其进行访问
    * */
   verify(
     name?: NamePath,
     extraMeta?: AnyObject
-  ): Promise<FormRejectMeta | null>;
+  ): Promise<[FormRejectMeta | null, any]>;
 
   /**
    * debounce版本的verify, 处理高频调用时可以使用, cb会在成功或失败时触发, 失败时包含错误信息
@@ -613,6 +588,64 @@ interface FormInstance {
     notify: FormNamesNotify,
     deps?: NamePath[]
   ) => FormNamesNotify;
+
+  /** 获取对dynamic/valid/list等特殊项进行处理进行处理后的完整schema副本 */
+  getSchemas(): FormSchemaWithoutName;
+
+  /**
+   * 获取对dynamic/valid/list等特殊项进行处理进行处理后的指定schema副本
+   *
+   * 如果在dynamic中调用并且获取的schema包含当前schema本身(直接获取或作为子项获取), 会导致递归, 可通过 skipChildren或withoutProcess选项处理
+   * */
+  getSchema(
+    name: NamePath,
+    opt?: {
+      /** true | 不处理子项 */
+      skipChildren?: boolean;
+      /** 返回原始的schema配置, 不对eachSchema/dynamic等特殊配置进行处理 */
+      withoutProcess?: boolean;
+    }
+  ): FormSchema | null;
+
+  /**
+   * 获取对dynamic/valid/list等特殊项进行处理进行处理后的指定schema副本
+   *
+   * 如果在dynamic中调用并且获取的schema包含当前schema本身(直接获取或作为子项获取), 会导致递归, 可通过 skipChildren或withoutProcess选项处理
+   * */
+  getSchema(
+    name: NamePath,
+    opt?: {
+      /** true | 不处理子项 */
+      skipChildren?: boolean;
+      /** 返回原始的schema配置, 不对eachSchema/dynamic等特殊配置进行处理 */
+      withoutProcess?: boolean;
+    }
+  ): FormSchema | null;
+
+  /** 重新设置当前schemas, 通常需要在重新设置schema后手动自动执行一次verify()来清理之前的校验状态 */
+  setSchemas(schema: FormSchemaWithoutName): void;
+
+  /** 获取Form创建配置 */
+  getConfig(): FormConfig;
+
+  /** 更改部分样式配置 */
+  updateProps(props: FormProps): void;
+
+  /** 事件 */
+  events: {
+    /** 字段值或状态变更时, 这里是更新ui状态的理想位置 */
+    update: CustomEventWithHook<VanillaFormNamesNotify>;
+    /** 字段值改变事件. update事件包含了change的触发场景 */
+    change: CustomEventWithHook<VanillaFormNamesNotify>;
+    /** 提交事件 */
+    submit: CustomEventWithHook<(values: any) => void>;
+    /** 验证失败的回调, 由 setValue 触发自动校验时, isValueChangeTrigger 为 true */
+    fail: CustomEventWithHook<
+      (errors: RejectMeta, isValueChangeTrigger?: boolean) => void
+    >;
+    /** 重置事件 */
+    reset: CustomEventWithHook<EmptyFunction>;
+  };
 }
 ```
 

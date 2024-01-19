@@ -30,7 +30,47 @@ const ScrollExample = () => {
 
       <Divider>dragScroll</Divider>
 
-      <Scroll direction="x" style={{ height: 340, width: 340 }} dragScroll>
+      <div
+        style={{
+          height: 340,
+          width: 340,
+          border: "1px solid red",
+          overflow: "auto",
+        }}
+      >
+        <div
+          style={{
+            height: 1000,
+            width: 1000,
+            background:
+              "linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%),linear-gradient(127deg, rgba(0,255,0,.8), rgba(0,255,0,0) 70.71%),linear-gradient(336deg, rgba(0,0,255,.8), rgba(0,0,255,0) 70.71%)",
+          }}
+        >
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis
+          esse iste labore nobis perferendis quis quo similique sit.
+          Consequuntur excepturi fuga in neque porro quasi, quia veniam? Autem,
+          distinctio, possimus.lorem Lorem ipsum dolor sit amet, consectetur
+          adipisicing elit. A aliquam asperiores blanditiis commodi debitis eum
+          exercitationem, fuga impedit iste iure maxime necessitatibus nihil,
+          numquam odit possimus praesentium quasi ratione unde! Lorem ipsum
+          dolor sit amet, consectetur adipisicing elit. Blanditiis esse iste
+          labore nobis perferendis quis quo similique sit. Consequuntur
+          excepturi fuga in neque porro quasi, quia veniam? Autem, distinctio,
+          possimus.lorem Lorem ipsum dolor sit amet, consectetur adipisicing
+          elit. A aliquam asperiores blanditiis commodi debitis eum
+          exercitationem, fuga impedit iste iure maxime necessitatibus nihil,
+          numquam odit possimus praesentium quasi ratione unde! Lorem ipsum
+          dolor sit amet, consectetur adipisicing elit. Blanditiis esse iste
+          labore nobis perferendis quis quo similique sit. Consequuntur
+          excepturi fuga in neque porro quasi, quia veniam? Autem, distinctio,
+          possimus.lorem Lorem ipsum dolor sit amet, consectetur adipisicing
+          elit. A aliquam asperiores blanditiis commodi debitis eum
+          exercitationem, fuga impedit iste iure maxime necessitatibus nihil,
+          numquam odit possimus praesentium quasi ratione unde!
+        </div>
+      </div>
+
+      <Scroll direction="xy" style={{ height: 340, width: 340 }} dragScroll>
         <div
           style={{
             height: 1000,

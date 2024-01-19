@@ -1,7 +1,7 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
-import _object_without_properties from "@swc/helpers/src/_object_without_properties.mjs";
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
+import { _ as _object_without_properties } from "@swc/helpers/_/_object_without_properties";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import React, { isValidElement, useMemo } from "react";
 import { Overlay, OverlayDirection } from "../overlay/index.js";
@@ -125,7 +125,7 @@ var _Bubble = function(props) {
         props
     ]);
     // 在不同类型下使用不同的mountOnEnter/unmountOnExit默认值
-    var ref = _sliced_to_array(useMemo(function() {
+    var _useMemo = _sliced_to_array(useMemo(function() {
         var m = true;
         var unm = false;
         // 提示和确认框使用时渲染, 不用时卸载
@@ -144,7 +144,7 @@ var _Bubble = function(props) {
         type,
         props.mountOnEnter,
         props.unmountOnExit
-    ]), 2), mount = ref[0], unmount = ref[1];
+    ]), 2), mount = _useMemo[0], unmount = _useMemo[1];
     // 在不同类型下使用不同的triggerType默认值
     var triggerType = useMemo(function() {
         var t = type === BubbleType.tooltip ? TriggerType.active : TriggerType.click;

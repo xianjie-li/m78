@@ -1,8 +1,8 @@
-import _async_to_generator from "@swc/helpers/src/_async_to_generator.mjs";
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
-import _ts_generator from "@swc/helpers/src/_ts_generator.mjs";
+import { _ as _async_to_generator } from "@swc/helpers/_/_async_to_generator";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
+import { _ as _ts_generator } from "@swc/helpers/_/_ts_generator";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useEffect, useRef } from "react";
 import { preventTopPull } from "./prevent-top-pull.js";
@@ -15,6 +15,9 @@ import clsx from "clsx";
 import { isFunction } from "@m78/utils";
 import { useDestroy } from "@m78/hooks";
 export var _usePullActions = function(ctx) {
+    var onPullDown = function onPullDown() {
+        return _onPullDown.apply(this, arguments);
+    };
     var renderPullDownNode = /** 渲染下拉主内容 */ function renderPullDownNode() {
         if (!pullDownEnabled) return null;
         // 默认节点
@@ -57,8 +60,11 @@ export var _usePullActions = function(ctx) {
         if (!props.pullDownIndicator) return /*#__PURE__*/ _jsx(IconRefresh, {});
         return isFunction(props.pullDownIndicator) ? props.pullDownIndicator(customerValues) : props.pullDownIndicator;
     };
+    var onScroll = function onScroll(meta) {
+        return _onScroll.apply(this, arguments);
+    };
     var scroller = ctx.scroller, setState = ctx.setState, state = ctx.state, pullDownEnabled = ctx.pullDownEnabled, props = ctx.props, self = ctx.self;
-    var ref = _sliced_to_array(useSpring(function() {
+    var _useSpring = _sliced_to_array(useSpring(function() {
         return {
             from: {
                 y: 0,
@@ -66,10 +72,10 @@ export var _usePullActions = function(ctx) {
                 ratio: 0
             }
         };
-    }), 2), sp = ref[0], api = ref[1];
+    }), 2), sp = _useSpring[0], api = _useSpring[1];
     var pullDownRef = useRef(null);
     useDrag(function(param) {
-        var direction = param.direction, _movement = _sliced_to_array(param.movement, 2), moveY = _movement[1], last = param.last;
+        var direction = param.direction, _param_movement = _sliced_to_array(param.movement, 2), moveY = _param_movement[1], last = param.last;
         if (state.pullDownRunning) return;
         var meta = scroller.get();
         var isPullDown = direction[1] === 1;
@@ -131,22 +137,22 @@ export var _usePullActions = function(ctx) {
     useDestroy(function() {
         return clearTimeout(self.pullUpTimer);
     });
-    function onPullDown() {
-        return _onPullDown.apply(this, arguments);
-    }
     function _onPullDown() {
         _onPullDown = /** 触发下拉 */ _async_to_generator(function() {
-            var _tmp, maxOffset, _tmp1, _tmp2, _tmp3, _tmp4;
+            var maxOffset;
             return _ts_generator(this, function(_state) {
                 switch(_state.label){
                     case 0:
-                        _tmp = {};
-                        setState((_tmp.pullDownRunning = true, _tmp));
+                        setState({
+                            pullDownRunning: true
+                        });
                         maxOffset = pullDownRef.current.clientHeight;
-                        _tmp1 = {};
                         return [
                             4,
-                            Promise.all(api.start((_tmp1.y = maxOffset, _tmp1.ratio = 1, _tmp1)))
+                            Promise.all(api.start({
+                                y: maxOffset,
+                                ratio: 1
+                            }))
                         ];
                     case 1:
                         _state.sent();
@@ -156,17 +162,22 @@ export var _usePullActions = function(ctx) {
                         ];
                     case 2:
                         _state.sent();
-                        _tmp2 = {};
                         return [
                             4,
-                            Promise.all(api.start((_tmp2.y = 0, _tmp2.ratio = 0, _tmp2)))
+                            Promise.all(api.start({
+                                y: 0,
+                                ratio: 0
+                            }))
                         ];
                     case 3:
                         _state.sent();
-                        _tmp3 = {};
-                        api.start((_tmp3.rotate = 0, _tmp3.immediate = true, _tmp3));
-                        _tmp4 = {};
-                        setState((_tmp4.pullDownRunning = false, _tmp4));
+                        api.start({
+                            rotate: 0,
+                            immediate: true
+                        });
+                        setState({
+                            pullDownRunning: false
+                        });
                         return [
                             2
                         ];
@@ -178,9 +189,6 @@ export var _usePullActions = function(ctx) {
     var customerValues = _object_spread_props(_object_spread({}, sp), {
         running: state.pullDownRunning
     });
-    function onScroll(meta) {
-        return _onScroll.apply(this, arguments);
-    }
     function _onScroll() {
         _onScroll = /** 滚动, 主要用于上拉加载处理 */ _async_to_generator(function(meta) {
             var ratio;

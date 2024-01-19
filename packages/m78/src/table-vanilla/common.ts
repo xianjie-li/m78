@@ -1,4 +1,4 @@
-import { BoundSize, createRandString, isNumber } from "@m78/utils";
+import { BoundSize, isNumber } from "@m78/utils";
 import { TableKey, TablePosition } from "./types/base-type.js";
 import { removeNode } from "../common/index.js";
 import { TableRow } from "./types/items.js";
@@ -32,6 +32,7 @@ export const tableDefaultTexts = {
   "currently not editable": "Currently not editable",
   clipboardWarning:
     "Can't get clipboard data, bowser not support or does not have permissions.",
+  selectAllOrUnSelectAll: "Select All/Cancel",
 } as const;
 
 /** 解析rowKey##columnKey格式的字符串为[rowKey, columnKey], 数组长度为2表示解析正常 */
@@ -95,8 +96,7 @@ export function _getMaxPointByPoint(
 type TableEventFilter = (target: HTMLElement) => void | boolean;
 
 /** 节点树包含这些className时应跳过事件 */
-export const _tableInterruptTriggerClassName =
-  /m78-scroll_bar|m78-table_hide-expand/;
+export const _tableInterruptTriggerClassName = /m78-scroll_bar/;
 
 /** 节点树包含这些类型的节点时应跳过事件 */
 export const _tableInterruptTriggerTagName =
@@ -174,11 +174,6 @@ export function _syncListNode(arg: {
   }
 }
 
-/** 检测传入的事件是否是touch事件 */
-export function isTouch(e: Event) {
-  return e.type.startsWith("touch") || (e as any).pointerType === "touch";
-}
-
 /** 用于便捷的根据当前 lastViewportItems 生成用于高效检测row mount状态的检测方法 */
 export function _rowMountChecker(visibleRows: TableRow[] = []) {
   // 用于快速获取行的挂载状态
@@ -191,9 +186,4 @@ export function _rowMountChecker(visibleRows: TableRow[] = []) {
   return (key: TableKey) => {
     return !!showMap[key];
   };
-}
-
-/** 根据指定的key生成key */
-export function _generateKeyByKey(key: TableKey) {
-  return `__${key}_M78_RELATION_KEY__`;
 }

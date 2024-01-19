@@ -3,9 +3,10 @@
   --m78-table-border: 1px solid var(--m78-table-border-color);
   --m78-table-bg-stress: var(--m78-gray-2); // 斑马纹等高亮格的背景色
   --m78-table-scroll-flag: rgba(0, 0, 0, 0.12); // 可滚动标记
-  --m78-table-high1-z-index: 10;
-  --m78-table-high2-z-index: 20;
-  --m78-table-high3-z-index: 30;
+  --m78-table-high1-z-index: 10;  // 列fixed项所在层
+  --m78-table-high2-z-index: 20;  // 行fixed项所在层
+  --m78-table-high3-z-index: 30;  // 交叉fixed项等所在层
+  --m78-table-top-z-index: 40;  // 最顶层内容
 }
 
 .m78-table {
@@ -43,39 +44,33 @@
     position: relative;
   }
 
-  &.__stripe {
-    .m78-table_cell.__even-y {
-      background-color: var(--m78-table-bg-stress);
-    }
-  }
-
   &_cell {
+    // # 特殊 cell 类名
+    // __rf-first / __bf-first 右/下固定首列
+    // __last-x / __last-y 普通行/列和固定行列的末尾
+    // __lf-last / __tf-last 左 / 下放的固定末尾
+    // __cross-fixed 交叉固定项
+    // __x-fixed / __y-fixed 行列/固定项
+    // __fixed 固定项
+    // __even-y / __even-x 奇偶行/列
+    // __head-x / __head-y 表头标记
+
     position: absolute;
     padding: 2px 4px;
     display: flex;
     align-items: flex-start;
-    border-right: var(--m78-table-border);
     border-bottom: var(--m78-table-border);
     background-color: var(--m78-component-bg);
     overflow: hidden;
     word-break: break-all;
 
-    // 搭配 align-items: flex-start; 使自己在超出高度时上对齐, 其他情况下居中
+    // 搭配 align-items: flex-start; 使内容在超出高度时上对齐, 其他情况下居中
     > * {
       margin-top: auto;
       margin-bottom: auto;
     }
 
-    // 奇偶标记
-
-    &.__even-y {
-    }
-
-    &.__even-x {
-    }
-
-    // 表头标记
-
+    // ## 表头标记
     &.__head-x, &.__head-y {
       background: var(--m78-table-bg-stress); // 防止表头出现斑马纹
     }
@@ -90,45 +85,20 @@
       font-size: 12px;
     }
 
-    // 固定项信息
-
-    &.__fixed {
+    // ## 固定项
+    &.__x-fixed {
       z-index: var(--m78-table-high1-z-index);
     }
 
-    &.__cross-fixed {
+    &.__y-fixed {
       z-index: var(--m78-table-high2-z-index);
     }
 
-    // ## 在固定项中的特殊位置
-
-    // 左固定末尾行
-    &.__lf-last {}
-
-    // 下固定末尾行
-    &.__tf-last {}
-
-    // 右固定首列
-    &.__rf-first {
-      border-left: var(--m78-table-border);
+    &.__cross-fixed {
+      z-index: var(--m78-table-high3-z-index);
     }
 
-    // 下固定首行
-    &.__bf-first {
-      border-top: var(--m78-table-border);
-    }
-
-    // 普通列和固定列右侧末尾列
-    &.__last-x {
-      border-right: none;
-    }
-
-    // 普通行和固定行下方末尾行
-    &.__last-y {
-      border-bottom: none;
-    }
-
-    // ## 选中
+    // ## status style
     &.__selected, &.__disabled  {
       &::after {
         content: "";
@@ -140,6 +110,14 @@
       }
     }
 
+    // ## disable
+    &.__disabled {
+      &::after {
+        background-color: var(--m78-color-primary-rv);
+        cursor: not-allowed;
+      }
+    }
+
     &.__selected {
       &::after {
         pointer-events: none;
@@ -147,11 +125,37 @@
       }
     }
 
-    // ## 禁用
-    &.__disabled {
-      &::after {
-        background-color: var(--m78-color-primary-rv);
-        cursor: not-allowed;
+  }
+
+  &.__stripe {
+    .m78-table_cell.__even-y {
+      background-color: var(--m78-table-bg-stress);
+    }
+  }
+
+
+  &.__border {
+    .m78-table_cell {
+      border-right: var(--m78-table-border);
+
+      // 右固定首列
+      &.__rf-first {
+        border-left: var(--m78-table-border);
+      }
+
+      // 下固定首行
+      &.__bf-first {
+        border-top: var(--m78-table-border);
+      }
+
+      // 普通列和固定列右侧末尾列
+      &.__last-x {
+        border-right: none;
+      }
+
+      // 普通行和固定行下方末尾行
+      &.__last-y {
+        border-bottom: none;
       }
     }
   }
@@ -210,7 +214,7 @@
     position: absolute;
     visibility: hidden;
     pointer-events: none;
-    z-index: var(--m78-table-high3-z-index);
+    z-index: var(--m78-table-top-z-index);
   }
 
   &_tip-line-x {
@@ -243,32 +247,14 @@
     background: var(--m78-component-bg);
     pointer-events: none;
     visibility: hidden;
-    z-index: var(--m78-table-high3-z-index);
-  }
-
-  // ## 隐藏
-  &_hide-expand {
-    position: absolute;
-    cursor: pointer;
-    z-index: var(--m78-table-high1-z-index);
-
-    &.__default {
-      line-height: 0.6;
-      font-size: 14px;
-      border-radius: var(--m78-border-radius);
-      text-align: center;
-      background-color: var(--m78-component-bg);
-      border: 1px solid var(--m78-color-border);
-      height: 12px;
-      width: 12px;
-    }
+    z-index: var(--m78-table-top-z-index);
   }
 
   // ## 拖拽
   &_drag-area-x, &_drag-area-y {
     position: absolute;
     cursor: move;
-    z-index: var(--m78-table-high3-z-index);
+    z-index: var(--m78-table-top-z-index);
     background-color: var(--m78-color-divider);
     visibility: hidden;
     pointer-events: none;
@@ -292,7 +278,7 @@
     position: absolute;
     left: 0;
     top: 0;
-    z-index: var(--m78-table-high3-z-index);
+    z-index: var(--m78-table-top-z-index);
     visibility: hidden;
     pointer-events: none;
   }
@@ -313,7 +299,7 @@
   &_edit-attach {
     position: absolute;
     background-color: var(--m78-component-bg);
-    border: 2px solid var(--m78-color);;
+    //border: 2px solid var(--m78-color);
   }
 
   &_form-error-feedback {
@@ -359,7 +345,17 @@
     cursor: not-allowed;
   }
 
-    // ## 其他
+  // ## 软删除标记
+  &_soft-remove-mark {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    background: repeating-linear-gradient(-22deg, transparent 0, transparent 32px, var(--m78-color-error-opacity-sm) 32px, var(--m78-color-error-opacity-sm) 33px);
+    color: var(--m78-color-error);
+  }
+
+
+  // ## 其他
 
   &_corner-btn {
     position: absolute;

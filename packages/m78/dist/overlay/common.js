@@ -1,7 +1,7 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
-import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
+import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
 import React from "react";
 import { dumpFn, isNumber, omit } from "@m78/utils";
 import { config } from "react-spring";
@@ -63,7 +63,7 @@ export var dragContext = React.createContext({
 /**
  * 所有弹层类组件共享的useSame包装, 用于统一mask显示
  * */ export function useOverlaysMask(config) {
-    var ref = _sliced_to_array(useSame("m78-overlay-mask", config), 3), index = ref[0], list = ref[1], id = ref[2];
+    var _useSame = _sliced_to_array(useSame("m78-overlay-mask", config), 3), index = _useSame[0], list = _useSame[1], id = _useSame[2];
     return {
         index: index,
         list: list,
@@ -76,7 +76,7 @@ var defaultClickAwaySameNameSpace = "m78-overlay-clickAway";
 /**
  * 所有弹层类组件共享的useSame包装, 用于统一clickAway
  * */ export function useOverlaysClickAway(config, namespace) {
-    var ref = _sliced_to_array(useSame(namespace || defaultClickAwaySameNameSpace, config), 3), index = ref[0], list = ref[1], id = ref[2];
+    var _useSame = _sliced_to_array(useSame(namespace || defaultClickAwaySameNameSpace, config), 3), index = _useSame[0], list = _useSame[1], id = _useSame[2];
     return {
         index: index,
         list: list,
@@ -88,7 +88,7 @@ var defaultClickAwaySameNameSpace = "m78-overlay-clickAway";
 /**
  * 所有弹层类组件共享的useSame包装, 用于统一escapeClosable
  * */ export function useEscapeCloseable(config) {
-    var ref = _sliced_to_array(useSame("m78-overlay-escape-closeable", config), 3), index = ref[0], list = ref[1], id = ref[2];
+    var _useSame = _sliced_to_array(useSame("m78-overlay-escape-closeable", config), 3), index = _useSame[0], list = _useSame[1], id = _useSame[2];
     return {
         index: index,
         list: list,
@@ -98,9 +98,9 @@ var defaultClickAwaySameNameSpace = "m78-overlay-clickAway";
     };
 }
 /** useTrigger回调 */ export function _onTrigger(e, ctx) {
-    var ref;
+    var _props_onTrigger;
     var props = ctx.props, self = ctx.self, setOpen = ctx.setOpen, methods = ctx.methods;
-    (ref = props.onTrigger) === null || ref === void 0 ? void 0 : ref.call(props, e);
+    (_props_onTrigger = props.onTrigger) === null || _props_onTrigger === void 0 ? void 0 : _props_onTrigger.call(props, e);
     if (e.type === TriggerType.click) {
         if (self.lastFocusTime) {
             // focus和click前后间隔400ms才触发
@@ -109,8 +109,8 @@ var defaultClickAwaySameNameSpace = "m78-overlay-clickAway";
                 setOpen(function(prev) {
                     var next = !prev;
                     if (next) {
-                        var ref;
-                        (ref = props.onOpenTrigger) === null || ref === void 0 ? void 0 : ref.call(props, e);
+                        var _props_onOpenTrigger;
+                        (_props_onOpenTrigger = props.onOpenTrigger) === null || _props_onOpenTrigger === void 0 ? void 0 : _props_onOpenTrigger.call(props, e);
                     }
                     return next;
                 });
@@ -119,8 +119,8 @@ var defaultClickAwaySameNameSpace = "m78-overlay-clickAway";
             setOpen(function(prev) {
                 var next = !prev;
                 if (next) {
-                    var ref;
-                    (ref = props.onOpenTrigger) === null || ref === void 0 ? void 0 : ref.call(props, e);
+                    var _props_onOpenTrigger;
+                    (_props_onOpenTrigger = props.onOpenTrigger) === null || _props_onOpenTrigger === void 0 ? void 0 : _props_onOpenTrigger.call(props, e);
                 }
                 return next;
             });
@@ -134,8 +134,8 @@ var defaultClickAwaySameNameSpace = "m78-overlay-clickAway";
         self.currentActiveStatus = e.type === TriggerType.focus ? e.focus : e.active;
         if (!self.activeContent || self.currentActiveStatus) {
             if (self.currentActiveStatus) {
-                var ref1;
-                (ref1 = props.onOpenTrigger) === null || ref1 === void 0 ? void 0 : ref1.call(props, e);
+                var _props_onOpenTrigger;
+                (_props_onOpenTrigger = props.onOpenTrigger) === null || _props_onOpenTrigger === void 0 ? void 0 : _props_onOpenTrigger.call(props, e);
             }
             setOpen(self.currentActiveStatus);
         } else {
@@ -143,12 +143,12 @@ var defaultClickAwaySameNameSpace = "m78-overlay-clickAway";
         }
     }
     if (e.type === TriggerType.contextMenu) {
-        var ref2;
+        var _props_onOpenTrigger1;
         methods.updateXY([
             e.x,
             e.y
         ], true);
-        (ref2 = props.onOpenTrigger) === null || ref2 === void 0 ? void 0 : ref2.call(props, e);
+        (_props_onOpenTrigger1 = props.onOpenTrigger) === null || _props_onOpenTrigger1 === void 0 ? void 0 : _props_onOpenTrigger1.call(props, e);
         setOpen(true);
     }
     if (e.type === TriggerType.move) {
@@ -159,8 +159,8 @@ var defaultClickAwaySameNameSpace = "m78-overlay-clickAway";
                 e.y
             ], true);
             if (e.first) {
-                var ref3;
-                (ref3 = props.onOpenTrigger) === null || ref3 === void 0 ? void 0 : ref3.call(props, e);
+                var _props_onOpenTrigger2;
+                (_props_onOpenTrigger2 = props.onOpenTrigger) === null || _props_onOpenTrigger2 === void 0 ? void 0 : _props_onOpenTrigger2.call(props, e);
             }
             if (!ctx.open) {
                 setOpen(true);
@@ -428,7 +428,7 @@ var flipReverse = {
             top: finalTop
         }),
         arrowOffset,
-        isHidden, 
+        isHidden
     ];
 }
 /**

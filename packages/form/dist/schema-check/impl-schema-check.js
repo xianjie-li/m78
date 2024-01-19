@@ -1,46 +1,65 @@
 // 静态schema验证相关逻辑
-import _async_to_generator from "@swc/helpers/src/_async_to_generator.mjs";
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
-import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
-import _ts_generator from "@swc/helpers/src/_ts_generator.mjs";
-import { ensureArray, getNamePathValue, interpolate, isArray, isFunction, isObject, isString, stringifyNamePath } from "@m78/utils";
-import { _ROOT_SCHEMA_NAME } from "../common.js";
+import { _ as _async_to_generator } from "@swc/helpers/_/_async_to_generator";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
+import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
+import { _ as _ts_generator } from "@swc/helpers/_/_ts_generator";
+import { getNamePathValue, interpolate, isFunction, isString, stringifyNamePath } from "@m78/utils";
 import { isVerifyEmpty } from "../validator/index.js";
 import { _fmtValidator, _getExtraKeys, _isErrorTemplateInterpolate } from "./common.js";
+import { _ROOT_SCHEMA_NAME } from "../common.js";
 export function _implSchemaCheck(ctx) {
-    var _instance = ctx.instance, config = ctx.config;
-    var instance = _instance;
+    var config = ctx.config;
     ctx.schemaCheck = function() {
-        var _ref = _async_to_generator(function(values, extraMeta) {
-            var _rootSchema, rootSchema, _tmp, _tmp1, rejectMeta, needBreak, getValueByName;
-            function checkSchema(schema, parentNames) {
+        var _ref = _async_to_generator(function(values, rootSchema, extraMeta) {
+            var rejectMeta, needBreak, getValueByName, rm;
+            function checkSchema(_schema, parentNamePath, isRootSchema) {
                 return _checkSchema.apply(this, arguments);
             }
             function _checkSchema() {
                 _checkSchema = // 对一项schema执行检测, 返回true时可按需跳过后续schema的验证
                 // 如果传入parentNames，会将当前项作为指向并将parentNames与当前name拼接
-                _async_to_generator(function(schema, parentNames) {
-                    var ref, isRootSchema, parentNamePath, namePath, realNamePath, value, name, label, isEmpty, validators, interpolateValues, _tmp, currentPass, meta, _tmp1, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, validator, errorTemplate, result, err, _tmp2, _tmp3, err1, extraKeys, template, _schemas;
+                _async_to_generator(function(_schema, parentNamePath, isRootSchema) {
+                    var _schema_schema, schema, namePath, value, nameStr, label, isEmpty, validators, interpolateValues, currentPass, meta, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, validator, errorTemplate, result, err, err1, extraKeys, template;
                     return _ts_generator(this, function(_state) {
                         switch(_state.label){
                             case 0:
-                                isRootSchema = schema.name === _ROOT_SCHEMA_NAME;
-                                parentNamePath = ensureArray(parentNames);
-                                namePath = _to_consumable_array(parentNamePath).concat(_to_consumable_array(ensureArray(schema.name)));
-                                realNamePath = isRootSchema ? [] : namePath;
+                                if (!isRootSchema && !("name" in _schema)) return [
+                                    2
+                                ];
+                                schema = _schema;
+                                namePath = isRootSchema ? [] : _to_consumable_array(parentNamePath).concat([
+                                    schema.name
+                                ]);
                                 value = isRootSchema ? values : getValueByName(namePath);
-                                name = stringifyNamePath(namePath);
-                                label = schema.label || name;
+                                nameStr = isRootSchema ? _ROOT_SCHEMA_NAME : stringifyNamePath(namePath);
+                                label = schema.label || nameStr;
                                 // 预转换值
                                 if (schema.transform) value = schema.transform(value);
                                 isEmpty = isVerifyEmpty(value);
                                 validators = _fmtValidator(schema.validator, isEmpty);
-                                _tmp = {};
-                                interpolateValues = (_tmp.name = name, _tmp.label = label, _tmp.value = value, _tmp.type = Object.prototype.toString.call(value), _tmp);
+                                // 基础插值对象
+                                interpolateValues = {
+                                    name: nameStr,
+                                    label: label,
+                                    value: value,
+                                    type: Object.prototype.toString.call(value)
+                                };
+                                // 当前schema是否通过验证, 未通过时其子级验证器不进行验证
                                 currentPass = true;
-                                _tmp1 = {};
-                                meta = _object_spread((_tmp1.name = name, _tmp1.namePath = namePath, _tmp1.label = label, _tmp1.value = value, _tmp1.values = values, _tmp1.schema = schema, _tmp1.rootSchema = rootSchema, _tmp1.isEmpty = isEmpty, _tmp1.parentNamePath = parentNamePath, _tmp1.getValueByName = getValueByName, _tmp1.config = config, _tmp1), extraMeta /* 扩展接口 */ );
+                                meta = _object_spread({
+                                    name: nameStr,
+                                    namePath: namePath,
+                                    label: label,
+                                    value: value,
+                                    values: values,
+                                    schema: schema,
+                                    rootSchema: rootSchema,
+                                    isEmpty: isEmpty,
+                                    parentNamePath: parentNamePath,
+                                    getValueByName: getValueByName,
+                                    config: config
+                                }, extraMeta /* 扩展接口 */ );
                                 if (!(validators === null || validators === void 0 ? void 0 : validators.length)) return [
                                     3,
                                     11
@@ -96,10 +115,10 @@ export function _implSchemaCheck(ctx) {
                                     6
                                 ];
                             case 6:
-                                _tmp2 = {};
-                                _tmp3 = {};
                                 if (isString(errorTemplate) && !!errorTemplate.trim()) {
-                                    rejectMeta.push(_object_spread_props(_object_spread(_tmp2, meta), (_tmp3.message = interpolate(errorTemplate, interpolateValues), _tmp3)));
+                                    rejectMeta.push(_object_spread_props(_object_spread({}, meta), {
+                                        message: interpolate(errorTemplate, interpolateValues)
+                                    }));
                                     currentPass = false;
                                     return [
                                         3,
@@ -164,51 +183,25 @@ export function _implSchemaCheck(ctx) {
                                 if (!currentPass) return [
                                     2
                                 ];
-                                if (!((ref = schema.schema) === null || ref === void 0 ? void 0 : ref.length)) return [
+                                if (!((_schema_schema = schema.schema) === null || _schema_schema === void 0 ? void 0 : _schema_schema.length)) return [
                                     3,
                                     13
                                 ];
                                 return [
                                     4,
-                                    checkSchemas(schema.schema, realNamePath)
+                                    checkSchemas(schema.schema, namePath.slice())
                                 ];
                             case 12:
                                 _state.sent();
                                 _state.label = 13;
                             case 13:
-                                if (!schema.eachSchema) return [
-                                    3,
-                                    15
-                                ];
-                                _schemas = [];
-                                if (isArray(value)) {
-                                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                                    _schemas = value.map(function(_, index) {
-                                        return _object_spread_props(_object_spread({}, schema.eachSchema), {
-                                            name: index
-                                        });
-                                    });
-                                }
-                                if (isObject(value)) {
-                                    _schemas = Object.keys(value).map(function(key) {
-                                        return _object_spread_props(_object_spread({}, schema.eachSchema), {
-                                            name: key
-                                        });
-                                    });
-                                }
-                                return [
-                                    4,
-                                    checkSchemas(_schemas, realNamePath)
-                                ];
-                            case 14:
-                                _state.sent();
-                                _state.label = 15;
-                            case 15:
                                 return [
                                     2
                                 ];
                         }
                     });
+                // 经过schemaSpecialPropsHandle处理后, schema不会有eachSchema
+                // if (schema.eachSchema) {}
                 });
                 return _checkSchema.apply(this, arguments);
             }
@@ -294,29 +287,31 @@ export function _implSchemaCheck(ctx) {
             return _ts_generator(this, function(_state) {
                 switch(_state.label){
                     case 0:
-                        _rootSchema = instance.getSchemas();
-                        _tmp = {};
-                        _tmp1 = {};
-                        rootSchema = _object_spread_props(_object_spread(_tmp, _rootSchema), (_tmp1.name = _ROOT_SCHEMA_NAME, _tmp1));
+                        // 验证器错误
                         rejectMeta = [];
+                        // 为true时, 中断后续验证
                         needBreak = false;
                         getValueByName = function(name) {
                             return getNamePathValue(values, name);
                         };
                         return [
                             4,
-                            checkSchema(rootSchema, [])
+                            checkSchema(rootSchema, [], true)
                         ];
                     case 1:
                         _state.sent();
+                        rm = rejectMeta.length ? rejectMeta : null;
                         return [
                             2,
-                            rejectMeta.length ? rejectMeta : null
+                            [
+                                rm,
+                                values
+                            ]
                         ];
                 }
             });
         });
-        return function(values, extraMeta) {
+        return function(values, rootSchema, extraMeta) {
             return _ref.apply(this, arguments);
         };
     }();

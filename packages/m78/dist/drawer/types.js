@@ -9,5 +9,5 @@ import React from "react";
     "arrow",
     "arrowSize",
     "arrowProps",
-    "transitionType", 
+    "transitionType"
 ];

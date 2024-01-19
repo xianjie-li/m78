@@ -1,4 +1,4 @@
-import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
+import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
 import { isArray, isTruthyOrZero } from "./is.js";
 /**
  * swap index of two items in array.
@@ -25,8 +25,9 @@ import { isArray, isTruthyOrZero } from "./is.js";
 /**
  * receive T or T[], return T[], if val is falsy and not 0, return []
  * */ export function ensureArray(val) {
+    if (isArray(val)) return val;
     if (!isTruthyOrZero(val)) return [];
-    return isArray(val) ? val : [
+    return [
         val
     ];
 }

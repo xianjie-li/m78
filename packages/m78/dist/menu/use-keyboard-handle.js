@@ -72,8 +72,8 @@ export function useKeyboardHandle(ctx) {
         handle: function(e) {
             e.nativeEvent.preventDefault();
             if (state.current) {
-                var ref;
-                e.code !== "Escape" && ((ref = props.onConfirm) === null || ref === void 0 ? void 0 : ref.call(props, getValueByDataSource(state.current), state.current));
+                var _props_onConfirm;
+                e.code !== "Escape" && ((_props_onConfirm = props.onConfirm) === null || _props_onConfirm === void 0 ? void 0 : _props_onConfirm.call(props, getValueByDataSource(state.current), state.current));
                 close();
             }
         },

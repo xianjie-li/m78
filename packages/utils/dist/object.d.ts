@@ -31,20 +31,24 @@ export type NameItem = string | number;
  * 表示name的字符或字符数组，用于链式取值，如: ['user', 'address']、[1, 'name']、['list', 4, 'name']
  * */
 export type NamePath = NameItem | NameItem[];
-/** Get value on obj through NamePath */
+/**
+ * Get value on obj through NamePath
+ *
+ * When name pass `[]`, will return obj directly
+ * */
 export declare function getNamePathValue(obj: any, name: NamePath): any;
 /** Convert NamePath to string */
 export declare function stringifyNamePath(name: NamePath): string;
 /**
  * Set value on obj through NamePath, if skipExist is passed in, the value will be skipped if it already exists
  *
- * 通过NamePath在obj上设置值, 如果传入skipExist, 在值已存在时会跳过
+ * If val is undefined, will delete the value specified by name like deleteNamePathValue() do
  * */
 export declare function setNamePathValue(obj: any, name: NamePath, val: any, skipExist?: boolean): void;
 /**
  * Delete value on obj through NamePath
- *
- * 通过NamePath在obj上删除值
  * */
 export declare function deleteNamePathValue(obj: any, name: NamePath): void;
+/** Delete multiple value on obj, through nameList, ensures no index misalignment when deleting the same array content multiple times */
+export declare function deleteNamePathValues(obj: any, nameList: NamePath[]): void;
 //# sourceMappingURL=object.d.ts.map

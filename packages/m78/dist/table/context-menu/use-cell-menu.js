@@ -1,6 +1,4 @@
-import _async_to_generator from "@swc/helpers/src/_async_to_generator.mjs";
-import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
-import _ts_generator from "@swc/helpers/src/_ts_generator.mjs";
+import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from "react";
 import { useFn } from "@m78/hooks";
@@ -12,23 +10,25 @@ import { IconCopy } from "@m78/icons/copy.js";
 import { IconToTop } from "@m78/icons/to-top.js";
 import { IconToBottom } from "@m78/icons/to-bottom.js";
 import { IconDeleteOne } from "@m78/icons/delete-one.js";
-import { COMMON_NS, TABLE_NS, useTranslation } from "../../i18n/index.js";
+import { IconBack } from "@m78/icons/back.js";
+import { TABLE_NS, useTranslation } from "../../i18n/index.js";
 import { isTruthyOrZero } from "@m78/utils";
 import { _useMethodsAct } from "../injector/methods.act.js";
-import { Dialog } from "../../dialog/index.js";
 var MenuValues;
 (function(MenuValues) {
     MenuValues[MenuValues["copy"] = 0] = "copy";
     MenuValues[MenuValues["paste"] = 1] = "paste";
     MenuValues[MenuValues["insertTop"] = 2] = "insertTop";
     MenuValues[MenuValues["insertBottom"] = 3] = "insertBottom";
-    MenuValues[MenuValues["delete"] = 4] = "delete";
+    MenuValues[MenuValues["remove"] = 4] = "remove";
+    MenuValues[MenuValues["restoreRemove"] = 5] = "restoreRemove";
 })(MenuValues || (MenuValues = {}));
 export function _useCellMenu() {
     var state = _injector.useDeps(_useStateAct).state;
     var methods = _injector.useDeps(_useMethodsAct);
+    var props = _injector.useProps();
     var instance = state.instance;
-    var confirm = useFn(function(val, option) {
+    var confirm = useFn(function(_, option) {
         if (option.context) option.context();
     });
     var t = useTranslation(TABLE_NS).t;
@@ -55,8 +55,8 @@ export function _useCellMenu() {
                 selectedRows = instance.getSelectedRows();
             } else if (isSelected) {
                 selectedRows = instance.getSortedSelectedCells().map(function(i) {
-                    var ref;
-                    return (ref = i[0]) === null || ref === void 0 ? void 0 : ref.row;
+                    var _i_;
+                    return (_i_ = i[0]) === null || _i_ === void 0 ? void 0 : _i_.row;
                 }).filter(isTruthyOrZero);
             }
         }
@@ -67,8 +67,8 @@ export function _useCellMenu() {
             {
                 label: hasMultipleSelected ? t("copy cells") : t("copy cell"),
                 leading: /*#__PURE__*/ _jsx(IconCopy, {}),
-                value: MenuValues.copy,
-                context: function() {
+                value: 0,
+                context: function context() {
                     if (!hasMultipleSelected) {
                         // 选中当前单元格
                         instance.selectCells(item.key);
@@ -79,112 +79,93 @@ export function _useCellMenu() {
             {
                 label: hasMultipleSelected ? t("paste cells") : t("paste cell"),
                 leading: /*#__PURE__*/ _jsx(IconClipboard, {}),
-                value: MenuValues.paste,
-                context: function() {
+                value: 1,
+                context: function context() {
                     if (!hasMultipleSelected) {
                         // 选中当前单元格
                         instance.selectCells(item.key);
                     }
                     instance.paste();
                 }
-            }, 
+            }
         ];
         // 插入数据相关菜单
         var insertMenus = item.row.isFixed ? [] : [
             {
                 label: t("insert top"),
                 leading: /*#__PURE__*/ _jsx(IconToTop, {}),
-                value: MenuValues.insertTop,
-                context: function() {
+                value: 2,
+                context: function context() {
                     instance.addRow(methods.getDefaultNewData(), item.row.key, false);
                 }
             },
             {
                 label: t("insert bottom"),
                 leading: /*#__PURE__*/ _jsx(IconToBottom, {}),
-                value: MenuValues.insertBottom,
-                context: function() {
+                value: 3,
+                context: function context() {
                     instance.addRow(methods.getDefaultNewData(), item.row.key, true);
                 }
-            }, 
+            }
         ];
+        var removeMenus = [];
+        if (instance.isSoftRemove(item.row.key)) {
+            removeMenus.push({
+                label: /*#__PURE__*/ _jsxs("span", {
+                    children: [
+                        t("restore row"),
+                        selectedRows.length > 1 ? /*#__PURE__*/ _jsxs("span", {
+                            children: [
+                                " (",
+                                selectedRows.length,
+                                ")"
+                            ]
+                        }) : null
+                    ]
+                }),
+                value: 5,
+                leading: /*#__PURE__*/ _jsx(IconBack, {}),
+                context: function context() {
+                    instance.restoreSoftRemove(selectedRows.map(function(i) {
+                        return i.key;
+                    }));
+                }
+            });
+        } else {
+            removeMenus.push({
+                label: /*#__PURE__*/ _jsxs("span", {
+                    children: [
+                        hasMultipleSelectedRow ? t("remove rows") : t("remove row"),
+                        selectedRows.length > 1 ? /*#__PURE__*/ _jsxs("span", {
+                            children: [
+                                " (",
+                                selectedRows.length,
+                                ")"
+                            ]
+                        }) : null
+                    ]
+                }),
+                value: 4,
+                leading: /*#__PURE__*/ _jsx(IconDeleteOne, {
+                    className: "color-error"
+                }),
+                className: "color-error",
+                context: function context() {
+                    props.softRemove ? instance.softRemove(selectedRows.map(function(i) {
+                        return i.key;
+                    })) : instance.removeRow(selectedRows.map(function(i) {
+                        return i.key;
+                    }));
+                }
+            });
+        }
         return {
             xy: [
                 e.x,
                 e.y
             ],
             cb: confirm,
-            menu: _to_consumable_array(cellOnlyMenu).concat(_to_consumable_array(insertMenus), [
-                // 删除行
-                {
-                    label: /*#__PURE__*/ _jsxs("span", {
-                        children: [
-                            hasMultipleSelectedRow ? t("delete rows") : t("delete row"),
-                            selectedRows.length > 1 ? /*#__PURE__*/ _jsxs("span", {
-                                children: [
-                                    " (",
-                                    selectedRows.length,
-                                    ")"
-                                ]
-                            }) : null
-                        ]
-                    }),
-                    value: MenuValues.delete,
-                    leading: /*#__PURE__*/ _jsx(IconDeleteOne, {
-                        className: "color-error"
-                    }),
-                    className: "color-error",
-                    context: function() {
-                        return _async_to_generator(function() {
-                            var conf, _tmp, _$e;
-                            return _ts_generator(this, function(_state) {
-                                switch(_state.label){
-                                    case 0:
-                                        _state.trys.push([
-                                            0,
-                                            2,
-                                            3,
-                                            4
-                                        ]);
-                                        _tmp = {};
-                                        conf = (_tmp.ns = [
-                                            COMMON_NS
-                                        ], _tmp);
-                                        methods.overlayStackChange(true);
-                                        return [
-                                            4,
-                                            Dialog.quicker(t("confirm delete", conf), t("alert", conf), true)
-                                        ];
-                                    case 1:
-                                        _state.sent();
-                                        instance.removeRow(selectedRows.map(function(i) {
-                                            return i.key;
-                                        }));
-                                        return [
-                                            3,
-                                            4
-                                        ];
-                                    case 2:
-                                        _$e = _state.sent();
-                                        return [
-                                            3,
-                                            4
-                                        ];
-                                    case 3:
-                                        methods.overlayStackChange(false);
-                                        return [
-                                            7
-                                        ];
-                                    case 4:
-                                        return [
-                                            2
-                                        ];
-                                }
-                            });
-                        })();
-                    }
-                }, 
-            ])
+            menu: _to_consumable_array(cellOnlyMenu).concat(_to_consumable_array(insertMenus), _to_consumable_array(removeMenus))
         };
     });
 }

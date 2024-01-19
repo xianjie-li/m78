@@ -12,6 +12,7 @@ import { TableConfigInstance } from "../plugins/config.js";
 import { TableForm } from "../plugins/form.js";
 import { TableKeyboardInteraction } from "../plugins/keyboard-interaction.js";
 import { TableSoftRemove } from "../plugins/soft-remove.js";
+import { TableDragMove } from "../plugins/drag-move.js";
 
 /** table实例 */
 export interface TableInstance
@@ -28,4 +29,5 @@ export interface TableInstance
     TableConfigInstance,
     TableForm,
     TableKeyboardInteraction,
-    TableSoftRemove {}
+    TableSoftRemove,
+    TableDragMove {}

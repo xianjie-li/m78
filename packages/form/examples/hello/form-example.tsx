@@ -1,6 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { array, number, required } from "../../src/validator/index.js";
-import { createForm, createVerify } from "../../src/index.js";
+import { createForm, createVerify, NamePath } from "../../src/index.js";
+import {
+  deleteNamePathValue,
+  ensureArray,
+  getNamePathValue,
+  isArray,
+  isNumber,
+  NameItem,
+  setNamePathValue,
+  stringifyNamePath,
+  deleteNamePathValues,
+} from "@m78/utils";
 
 const form = createForm({
   values: {
@@ -37,7 +48,7 @@ const form = createForm({
       },
       {
         name: "sex",
-        dynamic: (form) => ({
+        dynamic: ({ form }) => ({
           validator: form.getValue("name") === "lxj" ? undefined : required(),
         }),
       },
@@ -81,15 +92,24 @@ const form = createForm({
       {
         name: "list3",
         list: true,
+        // valid: false,
       },
       {
         name: "list4",
         list: true,
         eachSchema: {
+          validator: [],
           schema: [
             {
               name: "title",
               validator: [required()],
+              dynamic: ({ namePath }) => {
+                const ind = namePath[1];
+
+                return {
+                  valid: ind === 1,
+                };
+              },
             },
           ],
         },
@@ -109,7 +129,7 @@ const verify = createVerify({
       },
       {
         name: "sex",
-        dynamic: (form) => {
+        dynamic: ({ form }) => {
           console.log(form.getValue("name"));
           return {
             validator: form.getValue("name") === "lxj" ? undefined : required(),
@@ -332,10 +352,34 @@ const FormExample = () => {
 
       <button
         onClick={() => {
-          console.log(form.getValue(["list", 1]));
+          console.log(form.getValue([]));
         }}
       >
-        getValue
+        getValue []
+      </button>
+
+      <button
+        onClick={() => {
+          console.log(form.getValue(["list4"]));
+        }}
+      >
+        getValue list4
+      </button>
+
+      <button
+        onClick={() => {
+          console.log(form.getValue(["list4", 1]));
+        }}
+      >
+        getValue list4[1]
+      </button>
+
+      <button
+        onClick={() => {
+          console.log(form.getValue(["list4", 1, "title"]));
+        }}
+      >
+        getValue list4[1].title
       </button>
 
       <button
@@ -369,6 +413,38 @@ const FormExample = () => {
         }}
       >
         getSchemas
+      </button>
+      <button
+        onClick={() => {
+          console.log(form.getSchema("list3"));
+        }}
+      >
+        getSchema list 3
+      </button>
+      <button
+        onClick={() => {
+          console.log(form.getSchema("list4"));
+        }}
+      >
+        getSchema list 4
+      </button>
+      <button
+        onClick={() => {
+          console.log(
+            form.getSchema(["list4", 1], {
+              skipChildren: false,
+            })
+          );
+        }}
+      >
+        getSchema list 4[1]
+      </button>
+      <button
+        onClick={() => {
+          console.log(form.getSchema(["list4", 1, "title"]));
+        }}
+      >
+        getSchema list4[1].title
       </button>
       <button
         onClick={() => {
@@ -520,6 +596,126 @@ const FormExample = () => {
         }
       >
         check
+      </button>
+
+      <button
+        onClick={() => {
+          console.time("create");
+
+          for (let i = 0; i < 100000; i++) {
+            createForm({
+              values: {
+                name: "lxj",
+                age: 18,
+                list: [
+                  {
+                    title: "物品1",
+                    desc: "abc",
+                  },
+                  {
+                    title: "123123",
+                  },
+                  null,
+                ],
+                list2: [0, 1, 2],
+                list3: [0, 1, 2],
+                list4: [
+                  {
+                    title: "物品1",
+                  },
+                  {
+                    title: "物品2",
+                  },
+                ],
+              } as any,
+              schemas: {
+                validator: [required()],
+                schema: [
+                  {
+                    name: "name",
+                    validator: [required()],
+                    // valid: false,
+                  },
+                  {
+                    name: "sex",
+                    dynamic: ({ form }) => ({
+                      validator:
+                        form.getValue("name") === "lxj"
+                          ? undefined
+                          : required(),
+                    }),
+                  },
+                  {
+                    name: "list",
+                    validator: [array(), required()],
+                    valid: false,
+                    eachSchema: {
+                      validator: [required()],
+                      schema: [
+                        {
+                          name: "title",
+                        },
+                        {
+                          name: "desc",
+                          validator: [required()],
+                        },
+                        {
+                          name: "desc2",
+                          list: true,
+                        },
+                      ],
+                    },
+                  },
+                  {
+                    name: "list2",
+                    validator: [required(), array()],
+                    schema: [
+                      {
+                        name: 0,
+                      },
+                      {
+                        name: 1,
+                        valid: false,
+                      },
+                      {
+                        name: 2,
+                      },
+                    ],
+                  },
+                  {
+                    name: "list3",
+                    list: true,
+                    // valid: false,
+                  },
+                  {
+                    name: "list4",
+                    list: true,
+                    eachSchema: {
+                      validator: [],
+                      schema: [
+                        {
+                          name: "title",
+                          validator: [required()],
+                          dynamic: ({ namePath }) => {
+                            const ind = namePath[1];
+
+                            return {
+                              valid: ind === 1,
+                            };
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            });
+          }
+
+          console.timeEnd("create");
+        }}
+      >
+        create 10000
       </button>
     </div>
   );

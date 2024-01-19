@@ -60,7 +60,8 @@ export function _Input(_props: InputProps) {
     suffix,
     textArea = false,
     autoSize = true,
-    charCount = false,
+    charCount = textArea,
+    autoFocus,
     innerInputRef,
     innerWrapRef,
     onClear,
@@ -148,6 +149,16 @@ export function _Input(_props: InputProps) {
       self.cursor = null;
     }
   });
+
+  // autoFocus, textArea默认聚焦在开始位置, 统一为结束位置
+  useEffect(() => {
+    if (autoFocus) {
+      const inp = inputRef.current;
+      inp.focus();
+      inp.selectionStart = inp.value.length;
+      inp.scrollTop = inp.scrollHeight;
+    }
+  }, []);
 
   useLayoutEffect(() => {
     calcTextHeight(value);
@@ -343,7 +354,7 @@ export function _Input(_props: InputProps) {
       nodes.push(<span className="m78-input_suffix">{suffix}</span>);
     }
 
-    if ((textArea || charCount) && value) {
+    if (charCount && value) {
       nodes.push(
         <span className="m78-input_tip-text">
           {value.length}

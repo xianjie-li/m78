@@ -1,6 +1,6 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
-import _object_without_properties from "@swc/helpers/src/_object_without_properties.mjs";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
+import { _ as _object_without_properties } from "@swc/helpers/_/_object_without_properties";
 import { jsx as _jsx } from "react/jsx-runtime";
 import React from "react";
 import { config } from "react-spring";
@@ -85,14 +85,14 @@ import { _TransitionBase as TransitionBase } from "./transition-base.js";
     }
 };
 export var _Transition = function(_param) {
-    var type = _param.type, _alpha = _param.alpha, alpha = _alpha === void 0 ? true : _alpha, props = _object_without_properties(_param, [
+    var type = _param.type, _param_alpha = _param.alpha, alpha = _param_alpha === void 0 ? true : _param_alpha, props = _object_without_properties(_param, [
         "type",
         "alpha"
     ]);
-    var _type = transitionConfigs[type], from = _type.from, to = _type.to, // eslint-disable-next-line prefer-const
-    interpolater = _type.interpolater, // eslint-disable-next-line prefer-const
-    skipFade = _type.skipFade, // eslint-disable-next-line prefer-const
-    _config = _type.config;
+    var _transitionConfigs_type = transitionConfigs[type], from = _transitionConfigs_type.from, to = _transitionConfigs_type.to, // eslint-disable-next-line prefer-const
+    interpolater = _transitionConfigs_type.interpolater, // eslint-disable-next-line prefer-const
+    skipFade = _transitionConfigs_type.skipFade, // eslint-disable-next-line prefer-const
+    _config = _transitionConfigs_type.config;
     /* skipFade用于内部配置, alpha配置给用户对fade进行开关 */ if (alpha && !skipFade) {
         from = _object_spread({}, from, transitionConfigs.fade.from);
         to = _object_spread({}, to, transitionConfigs.fade.to);

@@ -1,49 +1,43 @@
 import { _Context } from "./types.js";
-import clone from "lodash/cloneDeep.js";
 import {
-  deleteNamePathValue,
-  ensureArray,
+  deleteNamePathValues,
   getNamePathValue,
   isArray,
   isEmpty,
   isObject,
   isString,
   setNamePathValue,
+  simplyDeepClone as clone,
 } from "@m78/utils";
-import { _clearChildAndSelf, _recursionDeleteNamePath } from "./common.js";
+import { _clearChildAndSelf } from "./common.js";
 import isEqual from "lodash/isEqual.js";
 
 export function _implValue(ctx: _Context) {
   const { instance, config } = ctx;
 
-  instance.getValues = () => {
-    const [, names] = ctx.getFormatterSchemas();
-    const values = ctx.verifyOnly ? ctx.values : clone(ctx.values);
-
-    // 移除invalid值
-    names.forEach((name) => {
-      const na = ensureArray(name);
-
-      _recursionDeleteNamePath(values, na);
-    });
-
-    return values;
-  };
-
   instance.getValue = (name) => {
-    const schema = instance.getSchema(name);
-
-    // 移除invalid值
-    if (schema && "name" in schema && schema.valid === false) {
-      return undefined;
-    }
-
     return getNamePathValue(ctx.values, name);
   };
 
+  ctx.getFormatterValuesAndSchema = (values) => {
+    const [schemas, names] = ctx.getFormatterSchemas();
+
+    const cloneValues = clone(values === undefined ? ctx.values : values);
+
+    // 移除invalid值
+    deleteNamePathValues(cloneValues, names);
+
+    return [schemas, cloneValues];
+  };
+
   if (!ctx.verifyOnly) {
+    instance.getValues = () => {
+      const [, values] = ctx.getFormatterValuesAndSchema();
+      return values;
+    };
+
     instance.setValues = (values) => {
-      ctx.values = clone(values);
+      ctx.values = values;
 
       if (!ctx.lockListState) {
         ctx.listState = {};
@@ -60,11 +54,7 @@ export function _implValue(ctx: _Context) {
     };
 
     instance.setValue = (name, val) => {
-      if (val === undefined) {
-        deleteNamePathValue(ctx.values, name);
-      } else {
-        setNamePathValue(ctx.values, name, val);
-      }
+      setNamePathValue(ctx.values, name, val);
 
       if (!ctx.lockListState) {
         _clearChildAndSelf(ctx, name);
@@ -86,11 +76,11 @@ export function _implValue(ctx: _Context) {
     };
 
     instance.getDefaultValues = () => {
-      return clone(ctx.defaultValue);
+      return ctx.defaultValue;
     };
 
     instance.setDefaultValues = (values) => {
-      ctx.defaultValue = clone(values);
+      ctx.defaultValue = values;
     };
 
     instance.getChangedValues = () => {

@@ -1,18 +1,19 @@
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
-import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
-import { jsx as _jsx, Fragment as _Fragment } from "react/jsx-runtime";
-import { _TablePrivateProperty } from "../../table-vanilla/index.js";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
+import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
+import { jsx as _jsx } from "react/jsx-runtime";
 import { useFn } from "@m78/hooks";
 import React, { cloneElement, isValidElement } from "react";
-import ReactDom from "react-dom";
-import { delay, getNamePathValue, isBoolean, isFunction, isString, stringifyNamePath } from "@m78/utils";
+import { delay, isBoolean, isFunction, isString, stringifyNamePath } from "@m78/utils";
 import { _useStateAct } from "../injector/state.act.js";
 import { _injector } from "../table.js";
 import { throwError } from "../../common/index.js";
 import { m78Config } from "../../config/index.js";
+import { _getTableCtx } from "../common.js";
+import { Overlay } from "../../overlay/index.js";
+import { TransitionType } from "../../transition/index.js";
 // 自定义编辑逻辑
 export function _useEditRender() {
-    var ref = _injector.useDeps(_useStateAct), state = ref.state, self = ref.self, dataOperations = ref.dataOperations;
+    var _injector_useDeps = _injector.useDeps(_useStateAct), state = _injector_useDeps.state, self = _injector_useDeps.self, dataOperations = _injector_useDeps.dataOperations;
     var props = _injector.useProps();
     // 从表格配置/全局配置中获取指定节点的适配器
     var getAdaptors = useFn(function(ele) {
@@ -46,10 +47,14 @@ export function _useEditRender() {
     // 检测单元格是否可编辑
     var interactiveEnableChecker = useFn(function(cell) {
         if (cell.column.isFake || cell.row.isFake) return false;
-        var isNew = getNamePathValue(cell.row.data, _TablePrivateProperty.new);
-        if (!isNew) {
-            if (dataOperations.edit === false) return false;
-            if (isFunction(dataOperations.edit) && !dataOperations.edit(cell)) return false;
+        if (state.instance) {
+            var ctx = _getTableCtx(state.instance);
+            var meta = ctx.getRowMeta(cell.row.key);
+            var isNew = meta.new;
+            if (!isNew) {
+                if (dataOperations.edit === false) return false;
+                if (isFunction(dataOperations.edit) && !dataOperations.edit(cell)) return false;
+            }
         }
         return checkEditable(cell.column.config.originalKey);
     });
@@ -128,9 +133,8 @@ export function _useEditRender() {
 }
 // 自定义编辑渲染, 组件部分, 用于避免频繁render影响外部作用域
 export function _CustomEditRender() {
-    var props = _injector.useProps();
-    var ref = _injector.useDeps(_useStateAct), self = ref.self, state = ref.state;
-    var ref1 = _sliced_to_array(React.useState([]), 2), list = ref1[0], setList = ref1[1];
+    var _injector_useDeps = _injector.useDeps(_useStateAct), self = _injector_useDeps.self, state = _injector_useDeps.state;
+    var _React_useState = _sliced_to_array(React.useState([]), 2), list = _React_useState[0], setList = _React_useState[1];
     // 更新渲染列表
     var update = useFn(function() {
         var ls = Object.keys(self.editMap).map(function(key) {
@@ -139,9 +143,22 @@ export function _CustomEditRender() {
         setList(ls);
     });
     state.instance.event.interactiveChange.useEvent(update);
-    return /*#__PURE__*/ _jsx(_Fragment, {
-        children: list.map(function(i) {
-            return /*#__PURE__*/ ReactDom.createPortal(i.element, i.node, String(i.cell.key));
-        })
+    return list.map(function(i) {
+        return /*#__PURE__*/ _jsx(Overlay, {
+            content: i.element,
+            target: i.node,
+            open: true,
+            transitionType: TransitionType.none,
+            autoFocus: false,
+            lockScroll: false,
+            clickAwayClosable: false,
+            clickAwayQueue: false,
+            escapeClosable: false,
+            style: {
+                width: i.node.clientWidth,
+                height: i.node.clientHeight,
+                borderRadius: 0
+            }
+        }, i.cell.key);
     });
 }

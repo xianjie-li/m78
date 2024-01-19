@@ -1,6 +1,6 @@
 import { AnyObject, stringifyNamePath } from "@m78/utils";
 import { _getCellKey } from "../common.js";
-import { TablePlugin } from "../plugin.js";
+import { TableLoadStage, TablePlugin } from "../plugin.js";
 import {
   TableColumnFixed,
   TableRenderCtx,
@@ -16,6 +16,12 @@ import {
 } from "../types/items.js";
 
 export class _TableHeaderPlugin extends TablePlugin {
+  loadStage(stage: TableLoadStage, isBefore: boolean) {
+    if (stage === TableLoadStage.formatBaseInfo && isBefore) {
+      this.process();
+    }
+  }
+
   /** 渲染行头内容 */
   cellRender(cell: TableCellWithDom, ctx: TableRenderCtx): boolean | void {
     const isCrossHeader = cell.row.isHeader && cell.column.isHeader;
@@ -82,7 +88,11 @@ export class _TableHeaderPlugin extends TablePlugin {
 
         ctx.getRowMeta(key).fake = true;
 
-        rows[key] = { fixed: TableRowFixed.top, height: defHeight };
+        rows[key] = ctx.getRowMergeConfig(key, {
+          fixed: TableRowFixed.top,
+          height: defHeight,
+        });
+
         injectRows[depth] = currentRow;
       }
 
@@ -96,11 +106,14 @@ export class _TableHeaderPlugin extends TablePlugin {
 
         // 确认子项
         if ("key" in c) {
-          const formatColumn: TableColumnLeafConfigFormatted = {
-            ...c,
-            originalKey: c.key,
-            key: stringifyNamePath(c.key),
-          };
+          const sKey = stringifyNamePath(c.key);
+
+          const formatColumn: TableColumnLeafConfigFormatted =
+            ctx.getColumnMergeConfig(sKey, {
+              ...c,
+              originalKey: c.key,
+              key: sKey,
+            });
 
           if (opt.parent) {
             ctx.mergeHeaderRelationMap[formatColumn.key] = true;
@@ -190,13 +203,15 @@ export class _TableHeaderPlugin extends TablePlugin {
     const key = this.getDefaultXKey();
 
     // 生成行头配置
-    const headerColumn: TableColumnLeafConfigFormatted = {
+    let headerColumn: TableColumnLeafConfigFormatted = {
       key,
       originalKey: key,
       fixed: TableColumnFixed.left,
       width: 40,
       label: "序号",
     };
+
+    headerColumn = this.context.getColumnMergeConfig(key, headerColumn);
 
     this.context.getColumnMeta(key).fake = true;
 

@@ -33,6 +33,8 @@ export interface TablePersistenceConfig {
     columnWidth?: TableConfig["columnWidth"];
     /** 条纹背景 */
     stripe?: TableConfig["stripe"];
+    /** 列边框 */
+    border?: TableConfig["border"];
 }
 /** 基础配置 */
 export interface TableBaseConfig {
@@ -64,6 +66,8 @@ export interface TableBaseConfig {
     columnWidth?: number;
     /** true | 相邻行显示不同的背景色 */
     stripe?: boolean;
+    /** true | 显示单元格列边框 */
+    border?: boolean;
     /**
      * 自定义单元格渲染, 主要有两种用途:
      * - 自定义节点样式或属性: 比如cell.dom.style.color = "red"

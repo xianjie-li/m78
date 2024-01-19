@@ -1,4 +1,4 @@
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { jsx as _jsx } from "react/jsx-runtime";
 import React, { useContext, useEffect } from "react";
 import { useMeasure } from "@m78/hooks";
@@ -15,7 +15,7 @@ var style = {
 /**
  * 放置到某个position不为static的元素上并对其尺寸进行持续测量, 然后通过mediaQueryCtx回调变更
  * */ var _MediaQueryCalc = function() {
-    var ref = _sliced_to_array(useMeasure(), 2), bound = ref[0], ref1 = ref[1];
+    var _useMeasure = _sliced_to_array(useMeasure(), 2), bound = _useMeasure[0], ref = _useMeasure[1];
     var mqCtx = useContext(_mediaQueryCtx);
     useEffect(function() {
         // 过滤掉无效回调
@@ -25,7 +25,7 @@ var style = {
         bound
     ]);
     return /*#__PURE__*/ _jsx("div", {
-        ref: ref1,
+        ref: ref,
         style: style
     });
 };

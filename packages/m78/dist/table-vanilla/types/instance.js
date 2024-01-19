@@ -1,1 +1,1 @@
-export { };
+/** table实例 */ export { };

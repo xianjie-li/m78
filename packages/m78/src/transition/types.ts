@@ -2,7 +2,7 @@
 import { AnyObject } from "@m78/utils";
 import React from "react";
 import { Primitives } from "@react-spring/web/dist/declarations/src/primitives";
-import { ComponentBasePropsWithAny } from "../common";
+import { ComponentBasePropsWithAny } from "../common/index.js";
 
 /**
  * 内置动画类型

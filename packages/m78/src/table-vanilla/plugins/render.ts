@@ -95,32 +95,36 @@ export class _TableRenderPlugin extends TablePlugin implements TableRender {
 
   /** render核心逻辑 */
   renderMain() {
-    const getter = this.getPlugin(_TableGetterPlugin);
+    this.context.getterCache.tick(() => {
+      const getter = this.getPlugin(_TableGetterPlugin);
 
-    const visibleItems = getter.getViewportItems();
+      const visibleItems = getter.getViewportItems();
 
-    // 清理由可见转为不可见的项
-    this.removeHideNodes(
-      this.context.lastViewportItems?.cells,
-      visibleItems.cells
-    );
+      // 清理由可见转为不可见的项
+      this.removeHideNodes(
+        this.context.lastViewportItems?.cells,
+        visibleItems.cells
+      );
 
-    // 内容渲染
-    this.renderCell(visibleItems.cells);
+      // 内容渲染
+      this.renderCell(visibleItems.cells);
 
-    this.context.lastViewportItems = visibleItems;
+      this.context.lastViewportItems = visibleItems;
 
-    /* # # # # # # # rendering # # # # # # # */
-    this.plugins.forEach((plugin) => {
-      plugin.rendering?.();
+      /* # # # # # # # rendering # # # # # # # */
+      this.plugins.forEach((plugin) => {
+        plugin.rendering?.();
+      });
+
+      this.table.event.rendering.emit();
+
+      /* # # # # # # # rendered # # # # # # # */
+      this.plugins.forEach((plugin) => {
+        plugin.rendered?.();
+      });
+
+      this.table.event.rendered.emit();
     });
-    this.table.event.rendering.emit();
-
-    /* # # # # # # # rendered # # # # # # # */
-    this.plugins.forEach((plugin) => {
-      plugin.rendered?.();
-    });
-    this.table.event.rendered.emit();
   }
 
   /** 绘制单元格 */
@@ -265,9 +269,7 @@ export class _TableRenderPlugin extends TablePlugin implements TableRender {
         "__y-fixed": cell.row.isFixed,
         "__cross-fixed": cell.isCrossFixed,
         // 边缘项标识, 通常用于去掉末尾边框
-        "__rf-first":
-          ctx.rightFixedList[0] === column.key ||
-          ctx.rightFixedListAll[0] === column.key,
+        "__rf-first": ctx.rightFixedList[0] === column.key,
         "__bf-first": ctx.bottomFixeList[0] === row.key,
         "__lf-last": isLeftLast,
         "__tf-last": isTopLast,
@@ -310,9 +312,14 @@ export class _TableRenderPlugin extends TablePlugin implements TableRender {
     config.el.tabIndex = 0;
 
     // 处理stripe
-    config.stripe
+    ctx.getBaseConfig("stripe")
       ? addCls(config.el, "__stripe")
       : removeCls(config.el, "__stripe");
+
+    // 处理border
+    ctx.getBaseConfig("border")
+      ? addCls(config.el, "__border")
+      : removeCls(config.el, "__border");
   }
 
   /** 更新容器尺寸信息 */

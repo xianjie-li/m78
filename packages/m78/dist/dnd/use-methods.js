@@ -1,6 +1,6 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { autoScrollTrigger, checkElementVisible, getScrollParent, isDom, isFunction, isObject } from "@m78/utils";
 import { useFn } from "@m78/hooks";
 import throttle from "lodash/throttle.js";
@@ -8,45 +8,14 @@ import isEqual from "lodash/isEqual.js";
 import { _defaultDNDEnableInfos, _defaultDNDStatus, _resetEvent, _updateEvent, _checkIfAcceptable, _filterInBoundDNDs, _getCurrentTriggerByMultipleTrigger, _isIgnoreEl, _getObjectByNewValues, _draggingEvent } from "./common.js";
 import clsx from "clsx";
 export function _useMethods(ctx) {
-    var initFeedbackEl = /** 开始拖动时使用, 初始化self.feedbackEl以便使用 */ function initFeedbackEl() {
-        updateFeedbackEl();
-        if (!self.feedbackEl) return;
-        self.feedbackEl.className = clsx(self.feedbackEl.className, "m78 m78-dnd_feedback");
-        if (isObject(props.feedbackStyle)) {
-            Object.entries(props.feedbackStyle).forEach(function(param) {
-                var _param = _sliced_to_array(param, 2), key = _param[0], sty = _param[1];
-                self.feedbackEl.style[key] = sty;
-            });
-        }
-    };
-    var updateFeedbackEl = /** 根据配置和环境获取self.feedback */ function updateFeedbackEl() {
-        if (self.feedbackEl) return;
-        // 使用定制节点
-        if (props.feedback) {
-            var el = props.feedback();
-            if (isDom(el)) {
-                self.feedbackEl = el;
-            }
-        }
-        if (!self.feedbackEl) {
-            // 使用clone节点
-            var node = dragNodeRef.current;
-            if (node) {
-                self.feedbackEl = node.cloneNode(true);
-                self.feedbackEl.style.width = "".concat(node.offsetWidth, "px");
-                self.feedbackEl.style.height = "".concat(node.offsetHeight, "px");
-            }
-        }
-        document.body.appendChild(self.feedbackEl);
-    };
     var setState = ctx.setState, props = ctx.props, self = ctx.self, dragNodeRef = ctx.dragNodeRef, node = ctx.node;
     var enableDrag = props.enableDrag;
     /** 更新当前节点的位置等信息到context中 */ var updateDNDMeta = useFn(function() {
         var el = ctx.dragNodeRef.current;
         if (!el) return;
-        var ref = checkElementVisible(el, {
+        var _checkElementVisible = checkElementVisible(el, {
             fullVisible: true
-        }), visible = ref.visible, bound = ref.bound;
+        }), visible = _checkElementVisible.visible, bound = _checkElementVisible.bound;
         if (!bound) return;
         var sps = getScrollParent(el, true);
         ctx.group.dndMap[ctx.id] = {
@@ -73,7 +42,7 @@ export function _useMethods(ctx) {
         });
     });
     /** 拖动处理, 大部分功能的核心实现都在此处 */ var onDrag = useFn(function(ev) {
-        var first = ev.first, last = ev.last, _xy = _sliced_to_array(ev.xy, 2), x = _xy[0], y = _xy[1], e = ev.event, cancel = ev.cancel, tap = ev.tap, forceBreakEvent = ev.memo;
+        var first = ev.first, last = ev.last, _ev_xy = _sliced_to_array(ev.xy, 2), x = _ev_xy[0], y = _ev_xy[1], e = ev.event, cancel = ev.cancel, tap = ev.tap, forceBreakEvent = ev.memo;
         if (tap) return;
         // 防止重叠节点一起触发
         e.stopPropagation();
@@ -132,7 +101,7 @@ export function _useMethods(ctx) {
             if (self.feedbackEl) {
                 if (self.feedbackInitOffset) {
                     // 已经有偏移信息, 说明已经初始化过
-                    var _feedbackInitOffset = _sliced_to_array(self.feedbackInitOffset, 2), offsetX = _feedbackInitOffset[0], offsetY = _feedbackInitOffset[1];
+                    var _self_feedbackInitOffset = _sliced_to_array(self.feedbackInitOffset, 2), offsetX = _self_feedbackInitOffset[0], offsetY = _self_feedbackInitOffset[1];
                     ctx.feedbackSpApi.set({
                         x: x - offsetX,
                         y: y - offsetY
@@ -169,25 +138,25 @@ export function _useMethods(ctx) {
         });
         /* # # # # # # # 无放置点命中时的处理 # # # # # # # */ if (!inBoundList.length) {
             if (first) {
-                var ref;
-                (ref = props.onDrag) === null || ref === void 0 ? void 0 : ref.call(props, event);
+                var _props_onDrag;
+                (_props_onDrag = props.onDrag) === null || _props_onDrag === void 0 ? void 0 : _props_onDrag.call(props, event);
             } else if (last) {
-                var ref1;
-                (ref1 = props.onDrop) === null || ref1 === void 0 ? void 0 : ref1.call(props, event);
+                var _props_onDrop;
+                (_props_onDrop = props.onDrop) === null || _props_onDrop === void 0 ? void 0 : _props_onDrop.call(props, event);
                 // 通知所有组件
                 _resetEvent.emit();
                 _draggingEvent.emit(ctx.id, false, ctx.props.group);
                 self.lastEntryDND = undefined;
             } else {
-                var ref2;
-                (ref2 = props.onMove) === null || ref2 === void 0 ? void 0 : ref2.call(props, event);
+                var _props_onMove;
+                (_props_onMove = props.onMove) === null || _props_onMove === void 0 ? void 0 : _props_onMove.call(props, event);
                 // 通知其他组件重置状态
                 _resetEvent.emit([
                     ctx.id
                 ], true);
                 if (self.lastEntryDND) {
-                    var _props, ref3;
-                    (ref3 = (_props = self.lastEntryDND.props).onSourceLeave) === null || ref3 === void 0 ? void 0 : ref3.call(_props, event);
+                    var _self_lastEntryDND_props_onSourceLeave, _self_lastEntryDND_props;
+                    (_self_lastEntryDND_props_onSourceLeave = (_self_lastEntryDND_props = self.lastEntryDND.props).onSourceLeave) === null || _self_lastEntryDND_props_onSourceLeave === void 0 ? void 0 : _self_lastEntryDND_props_onSourceLeave.call(_self_lastEntryDND_props, event);
                     self.lastEntryDND = undefined;
                 }
             }
@@ -203,30 +172,30 @@ export function _useMethods(ctx) {
         // drop相关事件触发
         if (!dndState.status.over) {
             var // 之前未启用, 触发进入事件
-            _props1, ref4;
-            (ref4 = (_props1 = dnd.props).onSourceEnter) === null || ref4 === void 0 ? void 0 : ref4.call(_props1, event);
+            _dnd_props_onSourceEnter, _dnd_props;
+            (_dnd_props_onSourceEnter = (_dnd_props = dnd.props).onSourceEnter) === null || _dnd_props_onSourceEnter === void 0 ? void 0 : _dnd_props_onSourceEnter.call(_dnd_props, event);
         } else if (last) {
             var isAccept = _checkIfAcceptable(enables, status);
             if (isAccept) {
                 var // 触发接收事件
-                _props2, ref5;
-                (ref5 = (_props2 = dnd.props).onSourceAccept) === null || ref5 === void 0 ? void 0 : ref5.call(_props2, event);
+                _dnd_props_onSourceAccept, _dnd_props1;
+                (_dnd_props_onSourceAccept = (_dnd_props1 = dnd.props).onSourceAccept) === null || _dnd_props_onSourceAccept === void 0 ? void 0 : _dnd_props_onSourceAccept.call(_dnd_props1, event);
             }
         } else {
             var // 已启用且未松开, 触发移动事件
-            _props3, ref6;
-            (ref6 = (_props3 = dnd.props).onSourceMove) === null || ref6 === void 0 ? void 0 : ref6.call(_props3, event);
+            _dnd_props_onSourceMove, _dnd_props2;
+            (_dnd_props_onSourceMove = (_dnd_props2 = dnd.props).onSourceMove) === null || _dnd_props_onSourceMove === void 0 ? void 0 : _dnd_props_onSourceMove.call(_dnd_props2, event);
         }
         // 有命中时的drag出发
         if (first) {
-            var ref7;
-            (ref7 = props.onDrag) === null || ref7 === void 0 ? void 0 : ref7.call(props, event);
+            var _props_onDrag1;
+            (_props_onDrag1 = props.onDrag) === null || _props_onDrag1 === void 0 ? void 0 : _props_onDrag1.call(props, event);
         } else if (last) {
-            var ref8;
-            (ref8 = props.onDrop) === null || ref8 === void 0 ? void 0 : ref8.call(props, event);
+            var _props_onDrop1;
+            (_props_onDrop1 = props.onDrop) === null || _props_onDrop1 === void 0 ? void 0 : _props_onDrop1.call(props, event);
         } else {
-            var ref9;
-            (ref9 = props.onMove) === null || ref9 === void 0 ? void 0 : ref9.call(props, event);
+            var _props_onMove1;
+            (_props_onMove1 = props.onMove) === null || _props_onMove1 === void 0 ? void 0 : _props_onMove1.call(props, event);
         }
         // hasDragging不需要对比
         status.hasDragging = dndState.status.hasDragging;
@@ -249,6 +218,37 @@ export function _useMethods(ctx) {
             ], true);
         }
     });
+    /** 开始拖动时使用, 初始化self.feedbackEl以便使用 */ function initFeedbackEl() {
+        updateFeedbackEl();
+        if (!self.feedbackEl) return;
+        self.feedbackEl.className = clsx(self.feedbackEl.className, "m78 m78-dnd_feedback");
+        if (isObject(props.feedbackStyle)) {
+            Object.entries(props.feedbackStyle).forEach(function(param) {
+                var _param = _sliced_to_array(param, 2), key = _param[0], sty = _param[1];
+                self.feedbackEl.style[key] = sty;
+            });
+        }
+    }
+    /** 根据配置和环境获取self.feedback */ function updateFeedbackEl() {
+        if (self.feedbackEl) return;
+        // 使用定制节点
+        if (props.feedback) {
+            var el = props.feedback();
+            if (isDom(el)) {
+                self.feedbackEl = el;
+            }
+        }
+        if (!self.feedbackEl) {
+            // 使用clone节点
+            var node = dragNodeRef.current;
+            if (node) {
+                self.feedbackEl = node.cloneNode(true);
+                self.feedbackEl.style.width = "".concat(node.offsetWidth, "px");
+                self.feedbackEl.style.height = "".concat(node.offsetHeight, "px");
+            }
+        }
+        document.body.appendChild(self.feedbackEl);
+    }
     return {
         onDrag: onDrag,
         updateDNDMeta: updateDNDMeta,

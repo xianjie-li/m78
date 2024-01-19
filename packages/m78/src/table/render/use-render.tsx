@@ -13,6 +13,7 @@ import { _injector } from "../table.js";
 import { COMMON_NS, Translation } from "../../i18n/index.js";
 import { _useContextMenuAct } from "../context-menu/use-context-menu.act.js";
 import { AnyFunction } from "@m78/utils";
+import { Spin } from "../../spin/index.js";
 
 export function _useRender() {
   const props = _injector.useProps();
@@ -70,6 +71,15 @@ export function _useRender() {
 
           {ctxMenu.node}
         </>
+      )}
+
+      {/* 初始化反馈 */}
+      {state.initializing && (
+        <Spin full inline text={state.initializingTip} minDuration={0} />
+      )}
+
+      {state.blockError && (
+        <div className="m78-table_block-error">{state.blockError}</div>
       )}
 
       {renderTrigger(

@@ -15,6 +15,8 @@ import { _RedoAndUndoPlugin } from "../plugins/redo-and-undo.js";
 import { _CountTextPlugin } from "../plugins/count-text.js";
 import { _XLSHandlePlugin } from "../plugins/xls-handle.js";
 import { _DataActionPlugin } from "../plugins/data-actions.js";
+import { _ConfigSyncPlugin } from "../plugins/config-sync.js";
+import { _DragMovePlugin } from "../plugins/drag-move.js";
 
 export function _useStateAct() {
   const props = _injector.useProps();
@@ -29,20 +31,14 @@ export function _useStateAct() {
   /** 最外层包裹容器 */
   const wrapRef = useRef<HTMLDivElement>(null!);
 
-  const self = useSelf<_RCTableSelf>({
-    renderMap: {},
-    editMap: {},
-    editStatusMap: {},
-    editCheckForm: null as any,
-    overlayStackCount: 0,
-  });
-
   const plugins = useMemo(() => {
     return preInstantiationRCPlugin([
       _FilterPlugin,
       _FeedBackPlugin,
       _RedoAndUndoPlugin,
+      _DragMovePlugin,
       _CountTextPlugin,
+      _ConfigSyncPlugin,
       _XLSHandlePlugin,
       _DataActionPlugin,
       ...(props.plugins || [])!,
@@ -54,14 +50,6 @@ export function _useStateAct() {
     return plugins.filter((p) => p instanceof RCTablePlugin) as RCTablePlugin[];
   }, []);
 
-  const [state, setState] = useSetState<_RCTableState>({
-    selectedRows: [],
-    rowCount: 0,
-    instance: null as any,
-  });
-
-  const scrollEvent = useMemo(() => createEvent(), []);
-
   // 同步getter到插件实例
   useMemo(() => {
     rcPlugins.forEach((p) => {
@@ -69,6 +57,39 @@ export function _useStateAct() {
       p.getProps = getters.getProps;
     });
   }, [getters]);
+
+  const self = useSelf<_RCTableSelf>(
+    useMemo(() => {
+      const _self: _RCTableSelf = {
+        renderMap: {},
+        editMap: {},
+        editStatusMap: {},
+        editCheckForm: null as any,
+        overlayStackCount: 0,
+      };
+
+      rcPlugins.forEach((p) => p.rcSelfInitializer?.(_self));
+
+      return _self;
+    }, [])
+  );
+
+  const [state, setState] = useSetState<_RCTableState>(() => {
+    const _state: _RCTableState = {
+      selectedRows: [],
+      rowCount: 0,
+      instance: null as any,
+      initializing: true,
+      initializingTip: null,
+      blockError: null,
+    };
+
+    rcPlugins.forEach((p) => p.rcStateInitializer?.(_state));
+
+    return _state;
+  });
+
+  const scrollEvent = useMemo(() => createEvent(), []);
 
   const dataOperations = useMemo(() => {
     const conf: TableDataOperationsConfig = {

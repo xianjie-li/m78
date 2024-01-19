@@ -1,4 +1,4 @@
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { i18n } from "../i18n/index.js";
 import { isArray, isString } from "@m78/utils";
 /** 黑暗模式处理 */ export function _darkModeHandle(darkMode) {

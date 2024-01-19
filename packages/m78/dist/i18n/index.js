@@ -25,7 +25,7 @@ var i18n = i18next.use(initReactI18next).createInstance({
         FORK_NS,
         FORM_LANG_PACK_NS,
         FORM_NS,
-        TABLE_NS, 
+        TABLE_NS
     ],
     debug: process.env.NODE_ENV === "development",
     interpolation: {

@@ -1,4 +1,4 @@
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { _mediaQueryGetter } from "../media-query/common.js";
 import { isNumber, isObject, isTruthyOrZero } from "@m78/utils";
 /**

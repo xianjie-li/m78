@@ -2,14 +2,6 @@ import { AnyObject, Bound, BoundSize, TupleNumber } from "./types.js";
 import { isDom, isFunction, isNumber } from "./is.js";
 import { clamp } from "./number.js";
 
-export * from "./dom/dom-adaption.js";
-
-export * from "./dom/auto-scroll.js";
-
-export * from "./dom/physical-scroll.js";
-
-export * from "./dom/keyboard-helper.js";
-
 const portalsID = "J__PORTALS__NODE__";
 
 /**
@@ -373,15 +365,27 @@ export function getCurrentParent(
 }
 
 /**
- * get scrolling parent node, get all when pass getAll
+ * Get scrolling parent node, get all scroll parent when pass getAll
+ *
+ * When setting checkOverflow, will check dom overflow property to be 'auto' or 'scroll', default us true.
+ *
  * When setting or getting scrollTop/scrollLeft on document.documentElement and document.body, the performance of different browsers will be inconsistent, so when the scroll element is document.documentElement or document.body, document.documentElement is returned uniformly for easy identification
  * */
 export function getScrollParent(
   ele: HTMLElement,
-  getAll?: false
+  getAll?: false,
+  checkOverflow?: boolean
 ): HTMLElement | null;
-export function getScrollParent(ele: HTMLElement, getAll?: true): HTMLElement[];
-export function getScrollParent(ele: HTMLElement, getAll?: boolean): any {
+export function getScrollParent(
+  ele: HTMLElement,
+  getAll?: true,
+  checkOverflow?: boolean
+): HTMLElement[];
+export function getScrollParent(
+  ele: HTMLElement,
+  getAll?: boolean,
+  checkOverflow = true
+): any {
   let node: any = getAll ? [] : null;
 
   function handle(el) {
@@ -394,7 +398,7 @@ export function getScrollParent(ele: HTMLElement, getAll?: boolean): any {
 
       if (sH > h) {
         const isRoot = e === document.documentElement || e === document.body;
-        const scrollStatus = hasScroll(e);
+        const scrollStatus = hasScroll(e, checkOverflow);
 
         // 为body或doc时，统一取documentElement方便识别，部分浏览器支持body设置document.scrollXxx部分浏览器支持documentElement设置
         const element = isRoot ? document.documentElement : e;

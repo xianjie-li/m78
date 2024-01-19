@@ -1,11 +1,12 @@
-import _class_call_check from "@swc/helpers/src/_class_call_check.mjs";
-import _inherits from "@swc/helpers/src/_inherits.mjs";
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
-import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
-import _create_super from "@swc/helpers/src/_create_super.mjs";
+import { _ as _class_call_check } from "@swc/helpers/_/_class_call_check";
+import { _ as _create_class } from "@swc/helpers/_/_create_class";
+import { _ as _inherits } from "@swc/helpers/_/_inherits";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
+import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
+import { _ as _create_super } from "@swc/helpers/_/_create_super";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { COMMON_NS, TABLE_NS, Translation } from "../../i18n/index.js";
-import { Bubble, BubbleType } from "../../bubble/index.js";
+import { Bubble } from "../../bubble/index.js";
 import { Button, ButtonColor } from "../../button/index.js";
 import { Size } from "../../common/index.js";
 import { IconSaveOne } from "@m78/icons/save-one.js";
@@ -29,20 +30,24 @@ export var _DataActionPlugin = /*#__PURE__*/ function(RCTablePlugin) {
         _class_call_check(this, _DataActionPlugin);
         return _super.apply(this, arguments);
     }
-    var _proto = _DataActionPlugin.prototype;
-    _proto.toolbarTrailingCustomer = function toolbarTrailingCustomer(nodes) {
-        var _nodes;
-        var ref = this.getDeps(_useStateAct), conf = ref.dataOperations;
-        var newNodes = [];
-        if (conf.delete) newNodes.push(/*#__PURE__*/ _jsx(DeleteBtn, {}));
-        if (conf.add) newNodes.push(/*#__PURE__*/ _jsx(AddBtn, {}));
-        if (conf.delete || conf.add) newNodes.push(/*#__PURE__*/ _jsx(SaveBtn, {}));
-        if (newNodes.length) (_nodes = nodes).push.apply(_nodes, [
-            /*#__PURE__*/ _jsx(Divider, {
-                vertical: true
-            })
-        ].concat(_to_consumable_array(newNodes)));
-    };
+    _create_class(_DataActionPlugin, [
+        {
+            key: "toolbarTrailingCustomer",
+            value: function toolbarTrailingCustomer(nodes) {
+                var _nodes;
+                var _this_getDeps = this.getDeps(_useStateAct), conf = _this_getDeps.dataOperations;
+                var newNodes = [];
+                if (conf.delete) newNodes.push(/*#__PURE__*/ _jsx(DeleteBtn, {}));
+                if (conf.add) newNodes.push(/*#__PURE__*/ _jsx(AddBtn, {}));
+                if (conf.delete || conf.add) newNodes.push(/*#__PURE__*/ _jsx(SaveBtn, {}));
+                if (newNodes.length) (_nodes = nodes).push.apply(_nodes, [
+                    /*#__PURE__*/ _jsx(Divider, {
+                        vertical: true
+                    })
+                ].concat(_to_consumable_array(newNodes)));
+            }
+        }
+    ]);
     return _DataActionPlugin;
 }(RCTablePlugin);
 function AddBtn() {
@@ -67,27 +72,16 @@ function AddBtn() {
     });
 }
 function SaveBtn() {
-    var updateCount = function updateCount() {
-        var data = instance.getData();
-        setState({
-            newCount: data.add.length,
-            removeCount: data.remove.length,
-            updateCount: data.change.length,
-            sorted: data.sorted,
-            configChanged: instance.getChangedConfigKeys().length > 0
-        });
-    };
     var stateDep = _injector.useDeps(_useStateAct);
     var props = _injector.useProps();
     var instance = stateDep.state.instance;
-    var ref = _sliced_to_array(useSetState({
+    var _useSetState = _sliced_to_array(useSetState({
         newCount: 0,
         removeCount: 0,
         updateCount: 0,
-        configChanged: false,
         sorted: false,
         changed: false
-    }), 2), state = ref[0], setState = ref[1];
+    }), 2), state = _useSetState[0], setState = _useSetState[1];
     instance.event.mutation.useEvent(function(e) {
         if (e.type === TableMutationType.config || e.type === TableMutationType.data) {
             setState({
@@ -102,6 +96,15 @@ function SaveBtn() {
             });
         }
     });
+    function updateCount() {
+        var data = instance.getData();
+        setState({
+            newCount: data.add.length,
+            removeCount: data.remove.length,
+            updateCount: data.change.length,
+            sorted: data.sorted
+        });
+    }
     var commonNSOpt = {
         ns: COMMON_NS
     };
@@ -109,13 +112,8 @@ function SaveBtn() {
         if (!state.changed || !props.onSubmit) return;
         var d = {};
         var data = instance.getData();
-        var changedKeys = instance.getChangedConfigKeys();
         if (data.update.length || data.sorted || data.remove.length) {
             d.data = data;
-        }
-        if (changedKeys.length) {
-            d.config = instance.getPersistenceConfig();
-            d.changedConfigKeys = changedKeys;
         }
         if (isEmpty(d)) return;
         props.onSubmit(d);
@@ -136,7 +134,7 @@ function SaveBtn() {
                             className: "color-green bold mr-8",
                             children: state.newCount
                         }),
-                        t("delete tip"),
+                        t("remove tip"),
                         ":",
                         " ",
                         /*#__PURE__*/ _jsx("span", {
@@ -150,33 +148,19 @@ function SaveBtn() {
                             className: "color-blue bold",
                             children: state.updateCount
                         }),
-                        (state.configChanged || state.sorted) && /*#__PURE__*/ _jsxs("div", {
+                        state.sorted && /*#__PURE__*/ _jsx("div", {
                             className: "mt-4",
-                            children: [
-                                state.configChanged && /*#__PURE__*/ _jsxs("span", {
-                                    className: "mr-8",
-                                    children: [
-                                        t("conf tip"),
-                                        ":",
-                                        " ",
-                                        /*#__PURE__*/ _jsx("span", {
-                                            className: "color-blue bold",
-                                            children: t("yes", commonNSOpt)
-                                        })
-                                    ]
-                                }),
-                                state.sorted && /*#__PURE__*/ _jsxs("span", {
-                                    children: [
-                                        t("sorted tip"),
-                                        ":",
-                                        " ",
-                                        /*#__PURE__*/ _jsx("span", {
-                                            className: "color-blue bold",
-                                            children: t("yes", commonNSOpt)
-                                        })
-                                    ]
-                                })
-                            ]
+                            children: state.sorted && /*#__PURE__*/ _jsxs("span", {
+                                children: [
+                                    t("sorted tip"),
+                                    ":",
+                                    " ",
+                                    /*#__PURE__*/ _jsx("span", {
+                                        className: "color-blue bold",
+                                        children: t("yes", commonNSOpt)
+                                    })
+                                ]
+                            })
                         })
                     ]
                 }),
@@ -201,18 +185,14 @@ function DeleteBtn() {
     var state = _injector.useDeps(_useStateAct).state;
     var instance = state.instance;
     var bubble1 = useRef(null);
-    var bubble2 = useRef(null);
     // bubble触发器
     var trigger = useFn(function(e) {
         if (e.type === TriggerType.active) {
             bubble1.current.trigger(e);
         }
-        if (e.type === TriggerType.click) {
-            bubble2.current.trigger(e);
-        }
     });
     var onDelete = useFn(function() {
-        instance.removeRow(state.selectedRows.map(function(row) {
+        instance.softRemove(state.selectedRows.map(function(row) {
             return row.key;
         }));
     });
@@ -223,23 +203,17 @@ function DeleteBtn() {
                 children: [
                     /*#__PURE__*/ _jsx(Bubble, {
                         instanceRef: bubble1,
-                        content: t("delete selected rows")
-                    }),
-                    /*#__PURE__*/ _jsx(Bubble, {
-                        instanceRef: bubble2,
-                        content: t("confirm delete"),
-                        type: BubbleType.confirm,
-                        onConfirm: onDelete
+                        content: t("remove rows")
                     }),
                     /*#__PURE__*/ _jsx(Trigger, {
                         type: [
-                            TriggerType.active,
-                            TriggerType.click
+                            TriggerType.active
                         ],
                         onTrigger: trigger,
                         children: /*#__PURE__*/ _jsx(Button, {
                             squareIcon: true,
                             disabled: state.selectedRows.length === 0,
+                            onClick: onDelete,
                             children: /*#__PURE__*/ _jsx(IconDeleteOne, {})
                         })
                     })

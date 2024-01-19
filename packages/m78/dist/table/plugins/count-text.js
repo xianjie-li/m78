@@ -1,6 +1,7 @@
-import _class_call_check from "@swc/helpers/src/_class_call_check.mjs";
-import _inherits from "@swc/helpers/src/_inherits.mjs";
-import _create_super from "@swc/helpers/src/_create_super.mjs";
+import { _ as _class_call_check } from "@swc/helpers/_/_class_call_check";
+import { _ as _create_class } from "@swc/helpers/_/_create_class";
+import { _ as _inherits } from "@swc/helpers/_/_inherits";
+import { _ as _create_super } from "@swc/helpers/_/_create_super";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { RCTablePlugin } from "../plugin.js";
 import React from "react";
@@ -16,12 +17,16 @@ export var _CountTextPlugin = /*#__PURE__*/ function(RCTablePlugin) {
         _class_call_check(this, _CountTextPlugin);
         return _super.apply(this, arguments);
     }
-    var _proto = _CountTextPlugin.prototype;
-    _proto.toolbarLeadingCustomer = function toolbarLeadingCustomer(nodes) {
-        nodes.push(/*#__PURE__*/ _jsx(Divider, {
-            vertical: true
-        }), /*#__PURE__*/ _jsx(CountText, {}));
-    };
+    _create_class(_CountTextPlugin, [
+        {
+            key: "toolbarLeadingCustomer",
+            value: function toolbarLeadingCustomer(nodes) {
+                nodes.push(/*#__PURE__*/ _jsx(Divider, {
+                    vertical: true
+                }), /*#__PURE__*/ _jsx(CountText, {}));
+            }
+        }
+    ]);
     return _CountTextPlugin;
 }(RCTablePlugin);
 function CountText() {

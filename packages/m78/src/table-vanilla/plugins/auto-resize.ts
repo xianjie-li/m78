@@ -26,5 +26,5 @@ export class _TableAutoResizePlugin extends TablePlugin {
     this.table.event.resize.emit(e, ob);
 
     this.table.reload({ keepPosition: true });
-  }, 30);
+  }, 16);
 }

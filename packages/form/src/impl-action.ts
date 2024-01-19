@@ -1,6 +1,10 @@
 import { _Context, _State, FormRejectMeta } from "./types.js";
-import { ensureArray, isEmpty, stringifyNamePath } from "@m78/utils";
-import clone from "lodash/cloneDeep.js";
+import {
+  ensureArray,
+  isEmpty,
+  stringifyNamePath,
+  simplyDeepClone as clone,
+} from "@m78/utils";
 import { _eachState, _getState, _isRelationName } from "./common.js";
 
 export function _implAction(ctx: _Context) {
@@ -41,7 +45,13 @@ export function _implAction(ctx: _Context) {
       }
     };
 
-    const rejects = await ctx.schemaCheck(instance.getValues(), extraMeta);
+    const [schemas, values] = ctx.getFormatterValuesAndSchema();
+
+    const [rejects, _values] = await ctx.schemaCheck(
+      values,
+      schemas,
+      extraMeta
+    );
 
     resetErrorAndTouch();
 
@@ -77,13 +87,16 @@ export function _implAction(ctx: _Context) {
         instance.events.update.emit(name);
       }
 
-      return errors.length ? errors : null;
+      return [
+        errors.length ? errors : null,
+        name ? instance.getValue(name) : _values,
+      ];
     } else {
       if (!ctx.lockNotify) {
         instance.events.update.emit(name);
       }
 
-      return null;
+      return [null, _values];
     }
   };
 
@@ -143,13 +156,13 @@ export function _implAction(ctx: _Context) {
   };
 
   instance.submit = async () => {
-    const reject = await instance.verify();
+    const [reject, values] = await instance.verify();
 
     if (!reject) {
-      instance.events.submit.emit();
+      instance.events.submit.emit(values);
     }
 
-    return reject;
+    return [reject, values];
   };
 
   instance.reset = () => {

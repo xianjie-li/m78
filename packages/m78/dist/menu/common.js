@@ -1,4 +1,4 @@
-import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
+import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
 import { getChildrenByDataSource, getValueByDataSource } from "../common/index.js";
 /** 获取树列表及其所有子项的value */ export function _getOptionAllValues(options, cus) {
     var res = [];
@@ -35,18 +35,18 @@ import { getChildrenByDataSource, getValueByDataSource } from "../common/index.j
     };
     function flat(list, parent) {
         list.forEach(function(i, ind) {
-            var ref, ref1;
+            var _i_children, _i_children1;
             var value = getValueByDataSource(i);
             map[value] = {
                 parent: parent,
-                child: (ref = i.children) === null || ref === void 0 ? void 0 : ref[0],
+                child: (_i_children = i.children) === null || _i_children === void 0 ? void 0 : _i_children[0],
                 next: getNextValid(list, ind + 1) || getNextValid(list, 0),
                 prev: getPrevValid(list, ind - 1) || getPrevValid(list, list.length - 1),
                 siblings: list,
                 value: value,
                 option: i
             };
-            if ((ref1 = i.children) === null || ref1 === void 0 ? void 0 : ref1.length) {
+            if ((_i_children1 = i.children) === null || _i_children1 === void 0 ? void 0 : _i_children1.length) {
                 flat(i.children, i);
             }
         });

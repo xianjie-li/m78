@@ -1,5 +1,6 @@
 import { BoundSize } from "@m78/utils";
 import { TableKey, TablePosition } from "./types/base-type.js";
+import { TableRow } from "./types/items.js";
 export declare const _prefix = "m78-table";
 /** 用于在config.el上存储当前实例 */
 export declare const _privateInstanceKey = "__M78TableInstance";
@@ -13,6 +14,8 @@ export declare const tableDefaultTexts: {
     readonly paste: "Can not paste to non editable cell";
     readonly "add row": "Add row";
     readonly "remove row": "Remove row";
+    readonly "restore row": "Restore remove row";
+    readonly "soft remove tip": "The row has been removed and will take effect after submission";
     readonly "set value": "Update value";
     readonly "move row": "Move row";
     readonly "move column": "Move column";
@@ -20,6 +23,7 @@ export declare const tableDefaultTexts: {
     readonly "editable and required": "Editable (required)";
     readonly "currently not editable": "Currently not editable";
     readonly clipboardWarning: "Can't get clipboard data, bowser not support or does not have permissions.";
+    readonly selectAllOrUnSelectAll: "Select All/Cancel";
 };
 /** 解析rowKey##columnKey格式的字符串为[rowKey, columnKey], 数组长度为2表示解析正常 */
 export declare function _getCellKeysByStr(s?: string): string[];
@@ -50,5 +54,7 @@ export declare function _syncListNode(arg: {
 }): void;
 /** 检测传入的事件是否是touch事件 */
 export declare function isTouch(e: Event): boolean;
+/** 用于便捷的根据当前 lastViewportItems 生成用于高效检测row mount状态的检测方法 */
+export declare function _rowMountChecker(visibleRows?: TableRow[]): (key: TableKey) => boolean;
 export {};
 //# sourceMappingURL=common.d.ts.map

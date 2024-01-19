@@ -23,9 +23,9 @@ import { _injector } from "../../table.js";
         return f;
     }, []);
     var query = useFn(function() {
-        var ref;
+        var _props_onFilter;
         if (!props.onFilter) return;
-        (ref = props.onFilter) === null || ref === void 0 ? void 0 : ref.call(props, form.getValues());
+        (_props_onFilter = props.onFilter) === null || _props_onFilter === void 0 ? void 0 : _props_onFilter.call(props, form.getValues());
     });
     form.events.submit.useEvent(function() {
         query();

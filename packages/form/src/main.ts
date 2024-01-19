@@ -2,7 +2,6 @@ import {
   _Context,
   FormConfig,
   FormInstance,
-  FormVerify,
   FormVerifyInstance,
 } from "./types.js";
 import { _implEvent } from "./impl-event.js";
@@ -12,19 +11,10 @@ import { _implValue } from "./impl-value.js";
 import { _implSchema } from "./impl-schema.js";
 import { _implAction } from "./impl-action.js";
 import { _implList } from "./impl-list.js";
-import deepClone from "lodash/cloneDeep.js";
+import { simplyDeepClone as clone } from "@m78/utils";
 import _defaultsDeep from "lodash/defaultsDeep.js";
 import en from "./language-pack/en.js";
 import { _implSchemaCheck } from "./schema-check/impl-schema-check.js";
-
-/**
- * defaultValue -> value
- * verify移除
- * Verify类型更名 添加Form前缀
- * meta修改
- * 错误处理方式修改
- * 验证器key 私有化
- * */
 
 /** 创建form实例 */
 export function _createForm(config: FormConfig): FormInstance {
@@ -36,23 +26,22 @@ export function _createForm(config: FormConfig): FormInstance {
  *
  * > 用于创建verify实例时, 部分 FormConfig 会被忽略, 如 autoVerify
  * */
-export function _createVerify(config: FormConfig): FormVerify {
+export function _createVerify(config: FormConfig): FormVerifyInstance {
   const [instance, ctx] = createMain(config, true);
 
-  const check: FormVerify["check"] = async (values, extraMeta) => {
+  const check: FormVerifyInstance["check"] = (values, extraMeta) => {
     ctx.values = values;
 
-    const pm = await ctx.schemaCheck(values, extraMeta);
+    const [schemas, fmbValues] = ctx.getFormatterValuesAndSchema(values);
 
     ctx.values = null;
 
-    return pm;
+    return ctx.schemaCheck(fmbValues, schemas, extraMeta);
   };
 
-  return {
+  return Object.assign(instance, {
     check,
-    getConfig: instance.getConfig,
-  };
+  });
 }
 
 // 创建FormInstance或FormVerifyInstance
@@ -74,8 +63,8 @@ function createMain(
   const defaultValue = config.values || {};
 
   const ctx = {
-    defaultValue: verifyOnly ? defaultValue : deepClone(defaultValue),
-    values: verifyOnly ? defaultValue : deepClone(defaultValue),
+    defaultValue: verifyOnly ? defaultValue : clone(defaultValue),
+    values: verifyOnly ? defaultValue : clone(defaultValue),
     state: {},
     listState: {},
     instance,

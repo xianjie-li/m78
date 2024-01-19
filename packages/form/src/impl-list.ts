@@ -18,9 +18,11 @@ export function _implList(ctx: _Context) {
    * 更新指定name的listState并获取对应list, 若未在schema中开启, 则返回null,
    * 若list为`[]`, 则对根schema进行操作, 若指定name的值不是数组, 内部会确保获取到数组
    * */
-  function syncAndGetList(name: NamePath) {
-    const isRoot = isArray(name) && !name.length;
-    const schema = isRoot ? { ...ctx.schema } : instance.getSchema(name);
+  function syncAndGetList(_name: NamePath) {
+    const name = ensureArray(_name);
+
+    const isRoot = !name.length;
+    const schema = isRoot ? instance.getSchemas() : instance.getSchema(name);
     const listState = ctx.listState;
 
     if (!schema || !schema.list) return null;

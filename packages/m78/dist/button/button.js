@@ -1,9 +1,9 @@
-import _define_property from "@swc/helpers/src/_define_property.mjs";
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
-import _object_without_properties from "@swc/helpers/src/_object_without_properties.mjs";
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
-import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
+import { _ as _define_property } from "@swc/helpers/_/_define_property";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
+import { _ as _object_without_properties } from "@swc/helpers/_/_object_without_properties";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
+import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
 import { jsx as _jsx } from "react/jsx-runtime";
 import React, { useMemo, useState } from "react";
 import cls from "clsx";
@@ -35,7 +35,7 @@ function _Button(btnProps) {
         return state.darkMode;
     });
     // 由内部控制的加载状态
-    var ref = _sliced_to_array(useState(false), 2), innerLoading = ref[0], setInnerLoading = ref[1];
+    var _useState = _sliced_to_array(useState(false), 2), innerLoading = _useState[0], setInnerLoading = _useState[1];
     var loading = _loading || innerLoading;
     // 配置了color切是text/icon以外的按钮类型, 或是无color且darkMode下，直接使用亮色水波纹
     var isLightEffect = !!color && !text && !icon || !color && darkMode;
@@ -48,9 +48,9 @@ function _Button(btnProps) {
     ]);
     var isLink = !!href;
     var onClick = useFn(function(e) {
-        var ref;
+        var _btnProps_onClick;
         // 如果用户点击事件返回了promise like, 自动设置loading状态
-        var res = (ref = btnProps.onClick) === null || ref === void 0 ? void 0 : ref.call(btnProps, e);
+        var res = (_btnProps_onClick = btnProps.onClick) === null || _btnProps_onClick === void 0 ? void 0 : _btnProps_onClick.call(btnProps, e);
         if (isPromiseLike(res)) {
             setInnerLoading(true);
             res.finally(function() {

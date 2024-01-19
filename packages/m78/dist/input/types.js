@@ -1,10 +1,10 @@
 import React from "react";
 export var InputType;
 (function(InputType) {
-    InputType[/** 普通文本框 */ "text"] = "text";
-    InputType[/** 数字输入框(含小数) */ "number"] = "number";
-    InputType[/** 整数输入框 */ "integer"] = "integer";
-    InputType[/** 正整数 */ "positiveInteger"] = "positiveInteger";
-    InputType[/** 密码输入框 */ "password"] = "password";
-    InputType[/** 只能输入常规字符`A-Za-z0-9_` */ "general"] = "general";
+    /** 普通文本框 */ InputType["text"] = "text";
+    /** 数字输入框(含小数) */ InputType["number"] = "number";
+    /** 整数输入框 */ InputType["integer"] = "integer";
+    /** 正整数 */ InputType["positiveInteger"] = "positiveInteger";
+    /** 密码输入框 */ InputType["password"] = "password";
+    /** 只能输入常规字符`A-Za-z0-9_` */ InputType["general"] = "general";
 })(InputType || (InputType = {}));

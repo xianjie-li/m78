@@ -1,0 +1,1 @@
+{"version":3,"file":"drag-move.d.ts","sourceRoot":"","sources":["../../../../../src/table/plugins/drag-move.tsx"],"names":[],"mappings":"AAAA,OAAO,EAAE,aAAa,EAAE,MAAM,cAAc,CAAC;AAE7C,OAAO,KAAmB,MAAM,OAAO,CAAC;AAUxC,aAAa;AACb,qBAAa,eAAgB,SAAQ,aAAa;IAChD,sBAAsB,CAAC,KAAK,EAAE,KAAK,CAAC,SAAS,EAAE;CAGhD"}

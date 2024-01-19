@@ -43,10 +43,10 @@ const form = createForm({
 });
 
 const ManualBase = () => {
-  form.events.submit.useEvent(() => {
+  form.events.submit.useEvent((values) => {
     Dialog.render({
       title: "表单数据",
-      content: <pre>{JSON.stringify(form.getValues(), null, 2)}</pre>,
+      content: <pre>{JSON.stringify(values, null, 2)}</pre>,
     });
   });
 

@@ -32,6 +32,7 @@ export interface TableRenderCtx {
 export enum TableRowFixed {
   top = "top",
   bottom = "bottom",
+  none = "none",
 }
 
 export type TableRowFixedKeys = keyof typeof TableRowFixed;
@@ -41,6 +42,7 @@ export type TableRowFixedUnion = TableRowFixed | TableRowFixedKeys;
 export enum TableColumnFixed {
   left = "left",
   right = "right",
+  none = "none",
 }
 
 export type TableColumnFixedKeys = keyof typeof TableColumnFixed;

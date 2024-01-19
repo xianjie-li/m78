@@ -1,9 +1,9 @@
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import React, { useEffect, useState } from "react";
 import { useSelf } from "@m78/hooks";
 import { isNumber, isString, isTruthyOrZero } from "@m78/utils";
 /** 禁止冒泡的便捷扩展对象 */ export var stopPropagation = {
-    onClick: function(e) {
+    onClick: function onClick(e) {
         e.stopPropagation();
     }
 };
@@ -14,10 +14,10 @@ export function sendWarning(msg, namespace) {
     console.log("M78\uD83D\uDCA2 -> ".concat(namespace ? "".concat(namespace, " -> ") : "", " ").concat(msg));
 }
 export function useDelayToggle(toggle, options) {
-    var ref = options || {}, _leading = ref.leading, leading = _leading === void 0 ? 300 : _leading, _trailing = ref.trailing, trailing = _trailing === void 0 ? 600 : _trailing;
+    var _ref = options || {}, _ref_leading = _ref.leading, leading = _ref_leading === void 0 ? 300 : _ref_leading, _ref_trailing = _ref.trailing, trailing = _ref_trailing === void 0 ? 600 : _ref_trailing;
     var isDisabled = !trailing && !leading;
     // 初始值在禁用或未开启前导延迟时为toggle本身，否则为false
-    var ref1 = _sliced_to_array(useState(!leading ? toggle : false), 2), innerState = ref1[0], setInnerState = ref1[1];
+    var _useState = _sliced_to_array(useState(!leading ? toggle : false), 2), innerState = _useState[0], setInnerState = _useState[1];
     var self = useSelf({
         toggleTimer: null
     });

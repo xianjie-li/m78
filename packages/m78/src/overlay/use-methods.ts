@@ -82,20 +82,24 @@ export function _useMethods(ctx: _OverlayContext) {
     };
   }
 
-  /** 根据target获取bound */
-  function getBoundWithTarget(target: OverlayTarget): BoundSize {
-    if (isBound(target)) return target;
+  /** 根据target获取bound和el */
+  function getBoundWithTarget(
+    target: OverlayTarget
+  ): [BoundSize, HTMLElement | null] {
+    if (isBound(target)) return [target, null];
 
     if (isValidTarget(target)) {
-      return getRefDomOrDom(target)!.getBoundingClientRect();
+      // 上方已经过滤掉bound, 所以这里必定是dom节点
+      const el = getRefDomOrDom(target) || null;
+      return [el!.getBoundingClientRect(), el];
     }
 
     if (props.childrenAsTarget && trigger.el) {
-      return trigger.el.getBoundingClientRect();
+      return [trigger.el.getBoundingClientRect(), trigger.el];
     }
 
     /** target无效时居中显示 */
-    return getBoundWithAlignment(_defaultAlignment);
+    return [getBoundWithAlignment(_defaultAlignment), null];
   }
 
   /** 是否是有效的target */
@@ -114,19 +118,21 @@ export function _useMethods(ctx: _OverlayContext) {
    * */
   function getBound(
     type?: OverlayUpdateType
-  ): [BoundSize | null, OverlayUpdateType | null] {
+  ): [BoundSize | null, OverlayUpdateType | null, HTMLElement | null] {
     const uType = type || getCurrentBoundType();
 
     if (uType === OverlayUpdateType.xy)
-      return [getBoundWithXY(self.lastXY!), uType];
+      return [getBoundWithXY(self.lastXY!), uType, null];
 
     if (uType === OverlayUpdateType.alignment)
-      return [getBoundWithAlignment(self.lastAlignment!), uType];
+      return [getBoundWithAlignment(self.lastAlignment!), uType, null];
 
-    if (uType === OverlayUpdateType.target)
-      return [getBoundWithTarget(self.lastTarget!), uType];
+    if (uType === OverlayUpdateType.target) {
+      const [bound, el] = getBoundWithTarget(self.lastTarget!);
+      return [bound, uType, el];
+    }
 
-    return [null, uType];
+    return [null, uType, null];
   }
 
   /** 获取根据方向处理后的位置信息, 此函数假设位置信息存在, 在调用前需进行断言 */
@@ -168,7 +174,7 @@ export function _useMethods(ctx: _OverlayContext) {
     const el = getRefDomOrDom(self.lastTarget);
     if (!el) return;
 
-    const parents = getScrollParent(el, true);
+    const parents = getScrollParent(el, true, false);
 
     let same = true;
 
@@ -202,7 +208,13 @@ export function _useMethods(ctx: _OverlayContext) {
     // 2. 不存在最后更新类型, 使用配置自动获取的类型
     // 3. 两种方式均未获取到值, 使用默认的alignment
 
-    const [bound, type] = getBound(self.lastUpdateType);
+    const [bound, type, el] = getBound(self.lastUpdateType);
+
+    // target不同时重新获取父级
+    if (el && self.lastSyncScrollElement !== el) {
+      self.lastSyncScrollElement = el;
+      syncScrollParent();
+    }
 
     if (type) {
       self.lastUpdateType = type;
@@ -267,13 +279,6 @@ export function _useMethods(ctx: _OverlayContext) {
     (target: OverlayTarget, immediate?: boolean) => {
       const notPrev = !self.lastTarget;
       self.lastUpdateType = OverlayUpdateType.target;
-
-      // target不同时重新获取父级
-      if (self.lastTarget !== target) {
-        self.lastTarget = target; // 必须在进入前设置
-        syncScrollParent();
-      }
-
       self.lastTarget = target;
       update(isBoolean(immediate) ? immediate : notPrev);
     }

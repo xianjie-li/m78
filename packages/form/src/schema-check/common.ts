@@ -12,7 +12,6 @@ import {
   FormSchemaWithoutName,
   FormValidator,
 } from "../types.js";
-import { _ROOT_SCHEMA_NAME } from "../common.js";
 
 /** 去除无效项, 并处理empty后返回验证器数组 */
 export function _fmtValidator(
@@ -52,8 +51,8 @@ export function _getExtraKeys(
 ): string[] {
   const extraKeys: string[] = [];
 
-  // 如果是eachSchema或者未传入schema, 则不检测
-  if (schema.eachSchema || !schema.schema?.length) return extraKeys;
+  // 如果未传入schema, 则不检测
+  if (!schema.schema?.length) return extraKeys;
 
   // 外部确保了name是数组
   if (!isArray(name)) return extraKeys;
@@ -75,11 +74,6 @@ export function _getExtraKeys(
 
   // 去除占位用的根name
   const nameClone = name.slice();
-  const ind = nameClone.indexOf(_ROOT_SCHEMA_NAME);
-
-  if (ind !== -1) {
-    nameClone.splice(ind, 1);
-  }
 
   keys.forEach((key) => {
     const cur = childSchema.find((i) => {

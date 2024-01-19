@@ -1,14 +1,12 @@
-import { TablePlugin } from "../plugin.js";
-import { TableReloadLevel } from "./life.js";
+import { TableLoadStage, TablePlugin } from "../plugin.js";
 import { TableKey } from "../types/base-type.js";
 /**
- * note:
- * sortColumns 和拖拽排序都不支持合并头的场景
- * 需要知道某项是否为子项
+ * 表格列排序
+ *
+ * sortColumns只配置了部分项时, 先按顺序显示排序后的列, 再显示不再排序中的列, 左右固定项和中间部分分别进行排序
  * */
-/** 表格列排序 */
 export declare class _TableSortColumnPlugin extends TablePlugin {
-    loadStage(level: TableReloadLevel, isBefore: boolean): void;
+    loadStage(stage: TableLoadStage, isBefore: boolean): void;
     /** 处理sortColumns */
     handle(): void;
     getColumnSortKeys(): TableKey[];

@@ -11,7 +11,7 @@ import React, { ReactElement } from "react";
  * @param view - 渲染器, 渲染视图内容, 渲染器是一个特殊的 Actuator, 在其中使用的注入器会被视为根注入器
  * @param config - 其他额外配置
  * */
-export declare function createInjector<Props = any>(view: (injector: Injector<Props>) => ReactElement | null, config?: InjectorConfig): Injector<Props>;
+export declare function createInjector<Props = any, Def = any>(view: (injector: Injector<Props>) => ReactElement | null, config?: InjectorConfig<Def>): Injector<Props, Def>;
 /**
  * Actuator 用于包含和关联一组逻辑或状态, 可在其中使用useDeps(Actuator)注入依赖项
  *
@@ -26,14 +26,14 @@ export interface InjectorActuator {
     (...args: any): AnyObject | void;
 }
 /** injector配置 */
-export interface InjectorConfig<Props = any> {
+export interface InjectorConfig<Def = any> {
     /** 默认props */
-    defaultProps?: Partial<Props>;
+    defaultProps?: Def;
     /** 组件名称, 用于更好的debug */
     displayName?: string;
 }
 /** 所有可用的injector */
-export interface Injectors<Props = any> {
+export interface Injectors<Props = any, Def = any> {
     /**
      * 获取指定Actuator的deps
      *
@@ -66,7 +66,7 @@ export interface Injectors<Props = any> {
      * */
     useDeps: InjectorInject;
     /** 获取组件props */
-    useProps: () => Props;
+    useProps: () => Props & Def;
     /** 在指定的actuator每次执行完成后立即进行回调, 可以用来解决逆序依赖获取的问题 */
     useSettle<T extends InjectorActuator = InjectorActuator>(actuator: T, cb: (deps: ReturnType<T>) => void): void;
     /**
@@ -117,7 +117,7 @@ export interface Injectors<Props = any> {
     };
 }
 /** 一个injector实例 */
-export interface Injector<Props = any> extends Injectors<Props> {
+export interface Injector<Props = any, Def = any> extends Injectors<Props, Def> {
     Component: React.FC<Props>;
 }
 /** 用于根据单个actuator获取其返回的deps类型 */

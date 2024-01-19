@@ -2,7 +2,10 @@ import { TablePlugin } from "../plugin.js";
 import { _getSizeString } from "../common.js";
 import { _TableEventPlugin } from "./event.js";
 
-export class _TableSetterPlugin extends TablePlugin implements TableSetter {
+export class _TableSetterPlugin
+  extends TablePlugin
+  implements TableSetter, _ContextSetter
+{
   /** 用于滚动优化 */
   event: _TableEventPlugin;
 
@@ -14,6 +17,8 @@ export class _TableSetterPlugin extends TablePlugin implements TableSetter {
       "setWidth",
       "setHeight",
     ]);
+
+    this.methodMapper(this.context, ["setCursor"]);
   }
 
   init() {
@@ -70,6 +75,10 @@ export class _TableSetterPlugin extends TablePlugin implements TableSetter {
       this.setY(y);
     });
   }
+
+  setCursor(cursor: string) {
+    this.config.el.style.cursor = cursor;
+  }
 }
 
 export interface TableSetter {
@@ -87,4 +96,9 @@ export interface TableSetter {
 
   /** 设置高度 */
   setHeight(height: number | string): void;
+}
+
+export interface _ContextSetter {
+  /** 设置表格显示的光标 */
+  setCursor(cursor: string): void;
 }

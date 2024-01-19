@@ -1,4 +1,4 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import React from "react";
 import { ensureArray, isFunction } from "@m78/utils";
@@ -10,7 +10,7 @@ import { IllustrationEmpty1, Size, Status, StatusIconError } from "../common/ind
 import clsx from "clsx";
 import { COMMON_NS, FORK_NS, Translation } from "../i18n/index.js";
 var _AsyncRender = function(param) {
-    var children = param.children, send = param.send, loading = param.loading, error = param.error, timeout = param.timeout, hasData = param.hasData, forceRender = param.forceRender, loadingFull = param.loadingFull, className = param.className, style = param.style, _loadingText = param.loadingText, loadingText = _loadingText === void 0 ? "" : _loadingText, _emptyText = param.emptyText, emptyText = _emptyText === void 0 ? "" : _emptyText, _errorText = param.errorText, errorText = _errorText === void 0 ? "" : _errorText, _timeoutText = param.timeoutText, timeoutText = _timeoutText === void 0 ? "" : _timeoutText, customLoading = param.customLoading, customNotice = param.customNotice, customEmpty = param.customEmpty;
+    var children = param.children, send = param.send, loading = param.loading, error = param.error, timeout = param.timeout, hasData = param.hasData, forceRender = param.forceRender, loadingFull = param.loadingFull, className = param.className, style = param.style, _param_loadingText = param.loadingText, loadingText = _param_loadingText === void 0 ? "" : _param_loadingText, _param_emptyText = param.emptyText, emptyText = _param_emptyText === void 0 ? "" : _param_emptyText, _param_errorText = param.errorText, errorText = _param_errorText === void 0 ? "" : _param_errorText, _param_timeoutText = param.timeoutText, timeoutText = _param_timeoutText === void 0 ? "" : _param_timeoutText, customLoading = param.customLoading, customNotice = param.customNotice, customEmpty = param.customEmpty;
     var renderForks = function renderForks() {
         if (loading) {
             return customLoading || /*#__PURE__*/ _jsx(Spin, {

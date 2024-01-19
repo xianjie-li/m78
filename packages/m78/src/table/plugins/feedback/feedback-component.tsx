@@ -63,19 +63,25 @@ export function _Feedback() {
 
       return (
         // eslint-disable-next-line react/jsx-key
-        <div
-          className={clsx(item.type === TableFeedback.error && "color-error")}
-        >
-          {node}
+        <>
+          <div
+            className={clsx(item.type === TableFeedback.error && "color-error")}
+            style={{
+              maxHeight: 120,
+              overflow: "auto",
+            }}
+          >
+            {node}
+          </div>
           {index !== e.length - 1 && <Divider margin={4} />}
-        </div>
+        </>
       );
     });
 
     const node = React.createElement(
       "div",
       {
-        key: createRandString(), // 反正被判断为相同节点
+        key: createRandString(), // 防止被判断为相同节点
       },
       ...content
     );

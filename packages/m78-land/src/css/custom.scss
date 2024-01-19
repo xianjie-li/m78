@@ -29,11 +29,19 @@ html {
   }
 
   pre {
-    transition: background 0.5s !important;
+    transition: none !important;
+    background: transparent !important;
   }
 
   pre code {
     margin: 0;
+    border: 1px solid var(--m78-color-border);
+  }
+
+  .code_src-components-demo-style-module {
+    pre code {
+      border: none;
+    }
   }
 
   blockquote {
@@ -121,7 +129,9 @@ html[data-mode="dark"] {
 
 .theme-code-block {
   box-shadow: none !important;
+  background: transparent !important;
 }
+
 
 a[class*=sidebarItemLinkActive_] {
   color: var(--m78-color) !important;

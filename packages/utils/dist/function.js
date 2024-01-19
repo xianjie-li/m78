@@ -3,8 +3,9 @@
  * @param fn - 要包装的函数
  * @param {object} receiver - 要绑定作用域的对象
  * @return promise - 转换后的函数
- */ import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
+ */ import { _ as _instanceof } from "@swc/helpers/_/_instanceof";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
 export function promisify(fn, receiver) {
     return function() {
         for(var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++){
@@ -14,7 +15,7 @@ export function promisify(fn, receiver) {
             fn.apply(receiver, _to_consumable_array(args).concat([
                 function(err, res) {
                     return err ? reject(err) : resolve(res);
-                }, 
+                }
             ]));
         });
     };
@@ -27,7 +28,7 @@ export function promisify(fn, receiver) {
  * */ export function delay(ms, payload) {
     return new Promise(function(res, rej) {
         setTimeout(function() {
-            return payload instanceof Error ? rej(payload) : res(payload);
+            return _instanceof(payload, Error) ? rej(payload) : res(payload);
         }, ms);
     });
 }
@@ -60,7 +61,7 @@ var defaultConfig = {
  * @param config.maxRetry - 最大重复次数
  * @return clear() - 用于停止重试并清理内部计时器
  * */ export function retry(handle, delay, config) {
-    var ref = _object_spread({}, defaultConfig, config), maxDelay = ref.maxDelay, rate = ref.rate, fixed = ref.fixed, maxRetry = ref.maxRetry;
+    var _$_object_spread = _object_spread({}, defaultConfig, config), maxDelay = _$_object_spread.maxDelay, rate = _$_object_spread.rate, fixed = _$_object_spread.fixed, maxRetry = _$_object_spread.maxRetry;
     var t;
     var clear = function() {
         return t && clearTimeout(t);

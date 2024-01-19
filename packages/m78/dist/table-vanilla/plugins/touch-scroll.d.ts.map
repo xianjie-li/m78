@@ -1,1 +1,0 @@
-{"version":3,"file":"touch-scroll.d.ts","sourceRoot":"","sources":["../../../../../src/table-vanilla/plugins/touch-scroll.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,WAAW,EAAE,MAAM,cAAc,CAAC;AAE3C,OAAO,EACL,cAAc,EACd,mBAAmB,EAEpB,MAAM,YAAY,CAAC;AAEpB,oBAAoB;AACpB,qBAAa,uBAAwB,SAAQ,WAAW;IACtD,EAAE,EAAE,cAAc,CAAC;IAEnB,OAAO;IAqBP,aAAa;IAIb,WAAW;IACX,aAAa,MAAO,mBAAmB,sBAiBrC;CACH"}

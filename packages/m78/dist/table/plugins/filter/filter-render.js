@@ -1,6 +1,6 @@
-import _async_to_generator from "@swc/helpers/src/_async_to_generator.mjs";
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
-import _ts_generator from "@swc/helpers/src/_ts_generator.mjs";
+import { _ as _async_to_generator } from "@swc/helpers/_/_async_to_generator";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
+import { _ as _ts_generator } from "@swc/helpers/_/_ts_generator";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { FieldDetector } from "../../../form/index.js";
 import React, { useEffect } from "react";
@@ -58,11 +58,11 @@ import { _useFilterFormAct } from "./use-filter-form.act.js";
         // 检测子级field
         names: []
     });
-    var ref = _sliced_to_array(useSetState({
+    var _useSetState = _sliced_to_array(useSetState({
         open: false,
         // 是否变更
         changed: false
-    }), 2), state = ref[0], setState = ref[1];
+    }), 2), state = _useSetState[0], setState = _useSetState[1];
     useEffect(function() {
         methods.overlayStackChange(state.open);
     }, [
@@ -89,7 +89,7 @@ import { _useFilterFormAct } from "./use-filter-form.act.js";
         }
     });
     var reset = useFn(/*#__PURE__*/ _async_to_generator(function() {
-        var defValue, _tmp, e;
+        var defValue, e;
         return _ts_generator(this, function(_state) {
             switch(_state.label){
                 case 0:
@@ -111,8 +111,9 @@ import { _useFilterFormAct } from "./use-filter-form.act.js";
                     ];
                 case 2:
                     _state.sent();
-                    _tmp = {};
-                    setState((_tmp.open = false, _tmp));
+                    setState({
+                        open: false
+                    });
                     return [
                         3,
                         4
@@ -131,7 +132,7 @@ import { _useFilterFormAct } from "./use-filter-form.act.js";
         });
     }));
     var query = useFn(/*#__PURE__*/ _async_to_generator(function() {
-        var _tmp, e;
+        var e;
         return _ts_generator(this, function(_state) {
             switch(_state.label){
                 case 0:
@@ -147,8 +148,9 @@ import { _useFilterFormAct } from "./use-filter-form.act.js";
                     ];
                 case 1:
                     _state.sent();
-                    _tmp = {};
-                    setState((_tmp.open = false, _tmp));
+                    setState({
+                        open: false
+                    });
                     return [
                         3,
                         3

@@ -1,15 +1,16 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { TriggerType } from "../types.js";
 import { _buildEvent } from "../methods.js";
 import { getEventOffset, isNumber, isTruthyOrZero } from "@m78/utils";
 import { _eventXyGetter, triggerClearEvent } from "../common.js";
 // 实现move & active
 export function _moveActiveImpl(ctx) {
-    var moveActive = // 处理move
+    var trigger = ctx.trigger, config = ctx.config;
+    // 处理move
     function moveActive(e) {
-        var ref = _sliced_to_array(_eventXyGetter(e), 2), clientX = ref[0], clientY = ref[1];
+        var _$_eventXyGetter = _sliced_to_array(_eventXyGetter(e), 2), clientX = _$_eventXyGetter[0], clientY = _$_eventXyGetter[1];
         var items = ctx.getTargetDataByXY(clientX, clientY, true, e.target);
         // 对不在move/active状态中的项进行清理和通知
         if (ctx.typeEnableMap[TriggerType.move]) {
@@ -28,7 +29,7 @@ export function _moveActiveImpl(ctx) {
         }
         // 对move状态的项进行通知
         items.forEach(function(i) {
-            var ref = _sliced_to_array(getEventOffset(e, i.bound), 2), offsetX = ref[0], offsetY = ref[1];
+            var _getEventOffset = _sliced_to_array(getEventOffset(e, i.bound), 2), offsetX = _getEventOffset[0], offsetY = _getEventOffset[1];
             var moveRecord = ctx.moveRecord.get(i.origin);
             var activeRecord = ctx.activeRecord.get(i.origin);
             var moveFirst = !moveRecord;
@@ -108,8 +109,8 @@ export function _moveActiveImpl(ctx) {
                 trigger.event.emit(moveEvent);
             }
         });
-    };
-    var delayTriggerActive = // 延迟启用相关逻辑
+    }
+    // 延迟启用相关逻辑
     function delayTriggerActive(record, trigger) {
         // 若存在延迟关闭, 将其取消
         clearInactiveTimer(record.target);
@@ -120,8 +121,8 @@ export function _moveActiveImpl(ctx) {
         } else {
             trigger();
         }
-    };
-    var delayTriggerInactive = // 延迟关闭相关逻辑
+    }
+    // 延迟关闭相关逻辑
     function delayTriggerInactive(record, trigger) {
         var target = record.target;
         clearInactiveTimer(target);
@@ -133,8 +134,8 @@ export function _moveActiveImpl(ctx) {
         } else {
             trigger();
         }
-    };
-    var clearInactiveTimer = // 如果存在延迟关闭计时器, 将其取消
+    }
+    // 如果存在延迟关闭计时器, 将其取消
     function clearInactiveTimer(target) {
         var cur = ctx.activeRecord.get(target);
         if (!cur) return;
@@ -143,8 +144,8 @@ export function _moveActiveImpl(ctx) {
             clearTimeout(timer);
             cur.delayLeaveTimer = null;
         }
-    };
-    var getDelayConfig = // 根据配置或项配置获取first/last延迟时间
+    }
+    // 根据配置或项配置获取first/last延迟时间
     function getDelayConfig(record) {
         var firstDelay = 80;
         var lastDelay = 140;
@@ -158,8 +159,8 @@ export function _moveActiveImpl(ctx) {
             firstDelay: firstDelay,
             lastDelay: lastDelay
         };
-    };
-    var clearActive = // 清理所有未关闭的active事件, 并进行通知
+    }
+    // 清理所有未关闭的active事件, 并进行通知
     function clearActive(e, filter) {
         // 对不在active状态中的项进行通知
         Array.from(ctx.activeRecord.values()).forEach(function(record) {
@@ -189,8 +190,8 @@ export function _moveActiveImpl(ctx) {
             };
             delayTriggerInactive(record, triggerInactive);
         });
-    };
-    var clearMove = // 清理所有未关闭的move事件, 并进行通知
+    }
+    // 清理所有未关闭的move事件, 并进行通知
     function clearMove(e, filter) {
         // 对不在move状态中的项进行通知
         Array.from(ctx.moveRecord.values()).forEach(function(record) {
@@ -207,8 +208,7 @@ export function _moveActiveImpl(ctx) {
             });
             trigger.event.emit(moveEvent);
         });
-    };
-    var trigger = ctx.trigger, config = ctx.config;
+    }
     return {
         moveActive: moveActive,
         clearActive: clearActive,

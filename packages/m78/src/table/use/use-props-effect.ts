@@ -3,7 +3,7 @@ import { usePropsChange } from "@m78/hooks";
 import { _tableChangedIncludeChecker, _tableOmitConfig } from "../common.js";
 import { useEffect } from "react";
 import { omit } from "@m78/utils";
-import { level2ConfigKeys } from "../../table-vanilla/index.js";
+import { levelFullConfigKeys } from "../../table-vanilla/index.js";
 
 /** 处理props变更, 尽可能减少不必要的更新, 特别是引用类型的props */
 export function _usePropsEffect(
@@ -20,7 +20,7 @@ export function _usePropsEffect(
     if (!changedProps) return;
 
     const needFullReload = Object.keys(changedProps).some((key) =>
-      level2ConfigKeys.includes(key as any)
+      levelFullConfigKeys.includes(key as any)
     );
 
     console.log(changedProps);

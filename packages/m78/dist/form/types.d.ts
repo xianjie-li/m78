@@ -1,10 +1,10 @@
-import { FormConfig as VanillaFormConfig, FormInstance as VanillaFormInstance, FormNamesNotify as VanillaFormNamesNotify, FormSchema as VanillaFormSchema, FormRejectMeta, NamePath, FormVerifyInstance } from "@m78/form";
+import { FormConfig as VanillaFormConfig, FormInstance as VanillaFormInstance, FormNamesNotify as VanillaFormNamesNotify, FormRejectMeta, FormSchema as VanillaFormSchema, FormVerifyInstance, NamePath } from "@m78/form";
 import React from "react";
-import { AnyObject, EmptyFunction } from "@m78/utils";
+import { AnyObject, EmptyFunction, NameItem } from "@m78/utils";
 import { CustomEventWithHook, SetState } from "@m78/hooks";
 import { SizeUnion } from "../common/index.js";
 import { CellColProps, CellRowProps, TileProps } from "../layout/index.js";
-import type { RCTableEditAdaptor } from "../table/index.js";
+import { FormAdaptors, FormAdaptorsItem } from "../config/index.js";
 /** 要剔除的form-vanilla配置 */
 export declare const _omitConfigs: readonly ["eventCreator", "languagePack", "verifyFirst", "ignoreStrangeValue"];
 /** 要剔除的form-vanilla配置 */
@@ -18,19 +18,6 @@ export declare enum FormLayoutType {
 export type FormLayoutTypeKeys = keyof typeof FormLayoutType;
 /** 支持的布局类型, 可传入枚举或字面量 */
 export type FormLayoutTypeUnion = FormLayoutTypeKeys | FormLayoutType;
-/** 表单控件适配器配置 */
-export type FormAdaptors = FormAdaptorsItem[];
-/** 全局或表单级适配器的一项, 用于使自定义或预置表单控件支持Form或Table */
-export type FormAdaptorsItem = {
-    /** 待适配的表单控件 */
-    element: React.ReactElement;
-    /** 控制用于From组件时的适配器 */
-    formAdaptor?: FormAdaptor;
-    /** 控制用于Table组件时的适配器 */
-    tableAdaptor?: RCTableEditAdaptor;
-    /** 表单的字符串表示, 配置后, 在后续可以通过字符串key来声明该组件. 注意: 不建议使用字符串进行组件声明, 除非你的场景需要将配置以json形式存储和传输. */
-    name?: string;
-};
 /** 表单控件适配器, 优先级: 全局 < Form < Field */
 export type FormAdaptor = (args: FormCustomRenderBasicArgs) => React.ReactElement | null;
 /** 部分能够支持React版本的VanillaFormConfig配置 */
@@ -47,29 +34,32 @@ type VanillaFormSchemaPartial = Omit<VanillaFormSchema, "label" | "dynamic" | "s
 /** 单个schema项 */
 export interface FormSchema extends VanillaFormSchemaPartial, FormCommonProps {
     /** 动态设置其他参数 */
-    dynamic?: (form: FormVerifyInstance) => Omit<FormSchemaWithoutName, "dynamic" | "name" | "list" | "deps"> | void;
+    dynamic?: (args: {
+        /** 当前的验证实例 */
+        form: FormVerifyInstance;
+        /** 当前schema对应的name, 在eachSchema等包含不确定name路径的场景很有意义 */
+        namePath: NameItem[];
+    }) => Omit<FormSchema, "dynamic" | "name" | "list" | "deps"> | void;
     /** 类型为数组、对象时, 对其结构进行验证 */
     schema?: FormSchema[];
     /** 验证值为array或object时, 子级的所有 数组项/对象值 必须与此Schema匹配, 如果该值的类型不为array或object，此配置会被忽略 */
-    eachSchema?: FormSchemaPartial;
+    eachSchema?: Omit<FormSchema, "name" | "list">;
     /** {} | list新增项时使用的默认值, 用于schema render, 且仅在项的值类型不为对象时需要配置 */
     listDefaultValue?: any;
 }
 /** 不包含name的schema */
 export type FormSchemaWithoutName = Omit<FormSchema, "name">;
-/** 去除了部分配置的FormSchema */
-export type FormSchemaPartial = Omit<FormSchema, "name" | "list">;
 /** 去除了部分配置的VanillaFormInstance */
 type VanillaFormInstancePartial = Omit<VanillaFormInstance, "getSchemas" | "setSchemas" | "getSchema" | "events" | "getConfig">;
 /** Form实例 */
 export interface FormInstance extends VanillaFormInstancePartial {
-    /** 获取对dynamic进行处理进行处理后的schema副本 */
+    /** 获取对dynamic/valid/list等特殊项进行处理进行处理后的完整schema副本 */
     getSchemas(): FormSchemaWithoutName;
-    /** 重新设置当前schemas */
+    /** 重新设置当前schemas, 通常需要在重新设置schema后手动自动执行一次verify()来清理之前的校验状态 */
     setSchemas(schema: FormSchemaWithoutName): void;
-    /** 获取指定的schema */
+    /** 获取对dynamic/valid/list等特殊项进行处理进行处理后的指定schema副本 */
     getSchema(name: NamePath): FormSchema | FormSchemaWithoutName | null;
-    /** 获取表单配置 */
+    /** 获取Form创建配置 */
     getConfig(): FormConfig;
     /** 更改部分样式配置 */
     updateProps(props: FormProps): void;
@@ -80,7 +70,7 @@ export interface FormInstance extends VanillaFormInstancePartial {
         /** 字段值改变事件. update事件包含了change的触发场景 */
         change: CustomEventWithHook<VanillaFormNamesNotify>;
         /** 提交事件 */
-        submit: CustomEventWithHook<EmptyFunction>;
+        submit: CustomEventWithHook<(data: any) => void>;
         /** 验证失败的回调, 由 setValue 触发自动校验时, isValueChangeTrigger 为 true */
         fail: CustomEventWithHook<(errors: FormRejectMeta, isValueChangeTrigger?: boolean) => void>;
         /** 重置事件 */

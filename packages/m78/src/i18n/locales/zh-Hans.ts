@@ -8,6 +8,7 @@ export default {
     loading: "加载中",
     empty: "暂无数据",
     alert: "提示",
+    retry: "重试",
     yes: "是",
     no: "否",
     "confirm operation": "是否确认执行此操作?",
@@ -54,6 +55,7 @@ export default {
     "editable and required": "可编辑 (必填)",
     "currently not editable": "当前不可编辑",
     clipboardWarning: "无法获取剪贴板数据, 浏览器不支持或没有权限.",
+    selectAllOrUnSelectAll: "全选/取消",
 
     // react version
     count: "共{{count}}行 / 选中{{selectedCount}}行",
@@ -72,7 +74,6 @@ export default {
     "new tip": "新增",
     "remove tip": "删除",
     "update tip": "更新",
-    "conf tip": "配置变更",
     "sorted tip": "已排序",
     "add row btn": "新增",
     "save btn": "保存",
@@ -83,5 +84,9 @@ export default {
     "insert top": "在上方插入行",
     "insert bottom": "在下方插入行",
     "remove rows": "删除选中行",
+    "setting reading": "配置读取中",
+    "setting load failed": "配置获取失败",
+    "setting upload failed": "配置上传失败, 点击重试",
+    "enable drag scroll": "启用拖拽滚动 (快捷键: 空格 + 拖动)",
   },
 };

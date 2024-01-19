@@ -4,14 +4,16 @@ import {
   CustomEvent,
   EmptyFunction,
   getEventOffset,
+  rafCaller,
+  RafFunction,
 } from "@m78/utils";
-import { WheelEvent } from "react";
 import { TableCell } from "../types/items.js";
 import debounce from "lodash/debounce.js";
 
 import { TableMutationEvent } from "./mutation.js";
 import { TableReloadOptions } from "./life.js";
 import { TableFeedbackEvent } from "./feedback.js";
+import { SmoothTriggerEvent, SmoothWheel } from "@m78/utils";
 
 /**
  * 内部事件绑定, 外部事件派发
@@ -20,18 +22,35 @@ export class _TableEventPlugin extends TablePlugin {
   /** 在某些时候可以通过此项禁用内部的scroll监听, 防止重复触发 */
   disableScrollListener = false;
 
+  /** 处理onwheel在平滑滚动, 主要是针对鼠标 */
+  smoothWheel: SmoothWheel;
+
+  /** 优化render函数 */
+  scrollRafCaller: RafFunction;
+  scrollRafClear: EmptyFunction;
+
+  init() {
+    this.scrollRafCaller = rafCaller();
+  }
+
   initialized() {
     this.config.el.addEventListener("click", this.onClick);
     this.config.el.addEventListener("contextmenu", this.onContext);
-    this.context.viewEl.addEventListener("wheel", this.onWheel as any);
     this.context.viewEl.addEventListener("scroll", this.onScroll);
+
+    this.smoothWheel = new SmoothWheel({
+      el: this.context.viewEl,
+      trigger: this.onWheel,
+    });
   }
 
   beforeDestroy() {
+    if (this.scrollRafClear) this.scrollRafClear();
+
     this.config.el.removeEventListener("click", this.onClick);
     this.config.el.removeEventListener("contextmenu", this.onContext);
-    this.context.viewEl.removeEventListener("wheel", this.onWheel as any);
     this.context.viewEl.removeEventListener("scroll", this.onScroll);
+    this.smoothWheel.destroy();
   }
 
   onContext = (e: MouseEvent) => {
@@ -53,19 +72,8 @@ export class _TableEventPlugin extends TablePlugin {
   };
 
   /** 滚动 */
-  onWheel = (e: WheelEvent) => {
-    if (e) {
-      e.preventDefault();
-    }
-
-    if (e.shiftKey) {
-      this.table.setX(this.table.getX() + e.deltaY);
-    } else {
-      this.table.setXY(
-        this.table.getX() + e.deltaX,
-        this.table.getY() + e.deltaY
-      );
-    }
+  onWheel = (e: SmoothTriggerEvent) => {
+    this.table.setXY(this.table.getX() + e.x, this.table.getY() + e.y);
   };
 
   /** 操作滚动条时同步滚动位置 */
@@ -74,9 +82,11 @@ export class _TableEventPlugin extends TablePlugin {
 
     const el = this.context.viewEl;
 
-    this.context.xyShouldNotify = true;
-    this.table.setXY(el.scrollLeft, el.scrollTop);
-    this.context.xyShouldNotify = false;
+    this.scrollRafClear = this.scrollRafCaller(() => {
+      this.context.xyShouldNotify = true;
+      this.table.setXY(el.scrollLeft, el.scrollTop);
+      this.context.xyShouldNotify = false;
+    });
   };
 
   /** 延迟100毫秒后将disableScrollListener设置为false, 内置防抖逻辑, 可以多次调用 */
@@ -141,6 +151,8 @@ export interface TableEvents {
   error: CustomEvent<(msg: string) => void>;
   /** 需要进行一些反馈操作时触发, 比如点击了包含验证错误/禁用/内容不能完整显示的行, 如果项包含多个反馈, 则event包含多个事件项 */
   feedback: CustomEvent<(event: TableFeedbackEvent[]) => void>;
+  /** 拖拽移动启用状态变更时触发 */
+  dragMoveChange: CustomEvent<(enable: boolean) => void>;
 }
 
 export interface TableEvent {

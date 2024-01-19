@@ -1,5 +1,5 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
 import { isTruthyOrZero } from "./is.js";
 /**
  * 将小于10且大于0的数字转为填充0的字符 如 '01' '05', 小于1的数字始终返回'00'
@@ -22,7 +22,7 @@ var defaultConfig = {
 };
 function getPatterns(str, pattern) {
     var options = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : {};
-    var ref = _object_spread({}, defaultConfig, options), repeat = ref.repeat, lastRepeat = ref.lastRepeat, reverse = ref.reverse;
+    var _$_object_spread = _object_spread({}, defaultConfig, options), repeat = _$_object_spread.repeat, lastRepeat = _$_object_spread.lastRepeat, reverse = _$_object_spread.reverse;
     if (!validateFormatString.test(pattern)) {
         console.warn("invalid pattern: ".concat(pattern, ", must match the /^[\\s?\\d\\s?,?]+$/ rule"));
         return;

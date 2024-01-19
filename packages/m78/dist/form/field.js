@@ -1,6 +1,6 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { FormLayoutType } from "./types.js";
 import { useSetState } from "@m78/hooks";
@@ -27,7 +27,7 @@ export function _fieldImpl(ctx) {
             }
             if (!adaptorConf) return null;
             var ele = adaptorConf.element;
-            var _formAdaptor = adaptorConf.formAdaptor, formAdaptor = _formAdaptor === void 0 ? _defaultAdaptor : _formAdaptor;
+            var _adaptorConf_formAdaptor = adaptorConf.formAdaptor, formAdaptor = _adaptorConf_formAdaptor === void 0 ? _defaultAdaptor : _adaptorConf_formAdaptor;
             if (formAdaptor) {
                 ele = formAdaptor(methods.getRenderArgs());
             }
@@ -106,12 +106,12 @@ export function _fieldImpl(ctx) {
             var customerList = [
                 props.customer,
                 schema === null || schema === void 0 ? void 0 : schema.customer,
-                ctx.config.customer, 
+                ctx.config.customer
             ];
             var prevent = false;
             var args = _object_spread_props(_object_spread({}, methods.getRenderArgs()), {
                 element: node,
-                preventNext: function() {
+                preventNext: function preventNext() {
                     prevent = true;
                 }
             });
@@ -178,16 +178,16 @@ export function _fieldImpl(ctx) {
                 ]
             });
         };
-        var _name = props.name, name = _name === void 0 ? EMPTY_NAME : _name;
+        var _props_name = props.name, name = _props_name === void 0 ? EMPTY_NAME : _props_name;
         var id = useMemo(function() {
             return createRandString(2);
         }, []);
-        var ref = _sliced_to_array(useSetState(function() {
+        var _useSetState = _sliced_to_array(useSetState(function() {
             return {
                 /** 当前组件的schema */ schema: form.getSchema(name),
                 /** 手动更新组件的标记 */ renderKey: Math.random()
             };
-        }), 2), state = ref[0], setState = ref[1];
+        }), 2), state = _useSetState[0], setState = _useSetState[1];
         var schema = state.schema;
         var validator = ensureArray(schema === null || schema === void 0 ? void 0 : schema.validator) || [];
         // 由于 list 和 field 逻辑基本一致, 所以通过私有 props 来区分, 并在内部做特殊处理
@@ -221,7 +221,7 @@ export function _fieldImpl(ctx) {
         var topNode = getProps("topNode");
         var crossAlign = getProps("crossAlign") || "start";
         var spacePadding = getProps("spacePadding");
-        var ref1 = methods.getAdaptor(), adaptorConf = ref1.adaptorConf, elementRender = ref1.elementRender;
+        var _methods_getAdaptor = methods.getAdaptor(), adaptorConf = _methods_getAdaptor.adaptorConf, elementRender = _methods_getAdaptor.elementRender;
         if (spacePadding === undefined) spacePadding = true;
         var touched = form.getTouched(name);
         var changed = form.getChanged(name);

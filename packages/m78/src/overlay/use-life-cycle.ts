@@ -1,4 +1,5 @@
 import {
+  getRefDomOrDom,
   useClickAway,
   useDestroy,
   useKeyboard,
@@ -132,7 +133,7 @@ export function _useLifeCycle(ctx: _OverlayContext) {
   /** 内容尺寸变更时重新定位 */
   useUpdateEffect(() => {
     if (!measure.width || !measure.height) return;
-    methods.update(true);
+    if (self.contentExist) methods.update(true);
     // methods.update();
   }, [measure.width, measure.height, measure.top, measure.left]);
 
@@ -142,7 +143,7 @@ export function _useLifeCycle(ctx: _OverlayContext) {
     self.lastAlignment = props.alignment;
     self.lastTarget = props.target;
     // 使用默认顺序更新
-    methods.update();
+    if (self.contentExist) methods.update();
   }, updateTargetDeps);
 
   /** 滚动/窗口大小改变时更新位置 */

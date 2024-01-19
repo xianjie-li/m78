@@ -11,7 +11,9 @@ import { TableSetter } from "../plugins/setter.js";
 import { TableConfigInstance } from "../plugins/config.js";
 import { TableForm } from "../plugins/form.js";
 import { TableKeyboardInteraction } from "../plugins/keyboard-interaction.js";
+import { TableSoftRemove } from "../plugins/soft-remove.js";
+import { TableDragMove } from "../plugins/drag-move.js";
 /** table实例 */
-export interface TableInstance extends TableSelect, TableLife, TableEvent, TableHistory, TableMutation, TableHighlight, TableRender, TableGetter, TableSetter, TableIs, TableConfigInstance, TableForm, TableKeyboardInteraction {
+export interface TableInstance extends TableSelect, TableLife, TableEvent, TableHistory, TableMutation, TableHighlight, TableRender, TableGetter, TableSetter, TableIs, TableConfigInstance, TableForm, TableKeyboardInteraction, TableSoftRemove, TableDragMove {
 }
 //# sourceMappingURL=instance.d.ts.map

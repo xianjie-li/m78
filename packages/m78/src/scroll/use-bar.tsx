@@ -64,11 +64,11 @@ export function _useBar(ctx: _ScrollContext) {
 
     const wrap = ctx.innerWrapRef.current!;
 
-    newState.barXSize = wrap.offsetWidth - wrap.clientWidth;
-    newState.barYSize = wrap.offsetHeight - wrap.clientHeight;
+    const barXSize = wrap.offsetWidth - wrap.clientWidth;
+    const barYSize = wrap.offsetHeight - wrap.clientHeight;
 
-    newState.barXSize = _RESERVE_BAR_SIZE + newState.barXSize;
-    newState.barYSize = _RESERVE_BAR_SIZE + newState.barYSize;
+    newState.xPadding = _RESERVE_BAR_SIZE + barXSize;
+    newState.yPadding = _RESERVE_BAR_SIZE + barYSize;
 
     setState(newState);
   }, [props.direction, bound.width, bound.height, props.scrollbar]);

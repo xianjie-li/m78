@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { useSpring, animated } from "react-spring";
 import { useSelf, useMountState, useIsUnmountState } from "@m78/hooks";
 import { TransitionBaseProps } from "./types.js";
@@ -21,6 +21,10 @@ export const _TransitionBase = (props: TransitionBaseProps) => {
     children,
     ...passProps
   } = props;
+
+  const backRef = useRef<any>();
+
+  const nodeRef = innerRef || backRef;
 
   const self = useSelf({
     isFirst: true,
@@ -61,6 +65,20 @@ export const _TransitionBase = (props: TransitionBaseProps) => {
       }
       if (!open && !isUnmount()) unmount();
     },
+    // visibility必须在这里通过指令式的修改, 在jsx中通过style控制会导致children的autoFocus等失效
+    onChange({ value }) {
+      if (!changeVisible) return;
+
+      if (nodeRef.current) {
+        const __progress = value.__progress;
+
+        const nextVis = __progress ? "visible" : "hidden";
+
+        if (nextVis !== nodeRef.current.style.visibility) {
+          nodeRef.current.style.visibility = nextVis;
+        }
+      }
+    },
   });
 
   if (!mount) return null;
@@ -71,13 +89,10 @@ export const _TransitionBase = (props: TransitionBaseProps) => {
   return (
     <Animated
       {...passProps}
-      ref={innerRef}
+      ref={nodeRef}
       style={{
         ...props.style,
         ...sp,
-        visibility: changeVisible
-          ? sp.__progress.to((p: number) => (p <= 0 ? "hidden" : "visible"))
-          : undefined,
         // 动画大部分未出场时阻止事件，防止隐藏出现等场景错误点击
         pointerEvents: sp.__progress.to((p: number) =>
           p <= 0.7 ? "none" : undefined

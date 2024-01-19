@@ -16,7 +16,7 @@ export var listValidatorKey = "VerifyList";
         var miss = opt.list.filter(function(i) {
             return ls.indexOf(i) === -1;
         });
-        if (opt.type === ListValidatorType.contain) {
+        if (opt.type === "contain") {
             if (miss.length) {
                 return {
                     errorTemplate: tpl.miss,
@@ -26,7 +26,7 @@ export var listValidatorKey = "VerifyList";
                 };
             }
         }
-        if (opt.type === ListValidatorType.equal) {
+        if (opt.type === "equal") {
             if (ls.length !== opt.list.length) {
                 return tpl.diffLength;
             }

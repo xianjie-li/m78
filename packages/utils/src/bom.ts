@@ -1,19 +1,20 @@
 import { __GLOBAL__ } from "./lang.js";
 import { EmptyFunction } from "./types.js";
 
-const storagePrefix = "UTIL_STORAGE_";
+let currentStorage: Storage | null;
 
-/** shortcut to the localStorage api, including automatic JSON.stringify and a spliced unique prefix */
+/** Simple wrap of storage.setItem api */
 export function setStorage(key: string, val: any) {
-  localStorage.setItem(
-    `${storagePrefix}${key}`.toUpperCase(),
-    JSON.stringify(val)
-  );
+  const storage = currentStorage || localStorage;
+
+  storage.setItem(key, JSON.stringify(val));
 }
 
-/** shortcut of localStorage api, automatic JSON.parse, can only take the value set by setStorage */
+/** Simple wrap of storage.getItem api */
 export function getStorage(key: string) {
-  const s = localStorage.getItem(`${storagePrefix}${key}`.toUpperCase());
+  const storage = currentStorage || localStorage;
+
+  const s = storage.getItem(key);
 
   if (s === null) return null;
 
@@ -22,6 +23,20 @@ export function getStorage(key: string) {
   } catch (e) {
     return null;
   }
+}
+
+/** Simple wrap of storage.removeItem api */
+export function removeStorage(key: string) {
+  const storage = currentStorage || localStorage;
+
+  storage.removeItem(key);
+}
+
+/** Run setStorage / getStorage / removeStorage with specified storage object */
+export function withStorage(storage: Storage, cb: EmptyFunction) {
+  currentStorage = storage;
+  cb();
+  currentStorage = localStorage;
 }
 
 let cachePlatform: {
@@ -33,7 +48,7 @@ let cachePlatform: {
   linux: boolean;
 } | null = null;
 
-/** get os platform */
+/** Get os platform */
 export function getPlatform() {
   if (cachePlatform) return { ...cachePlatform };
 

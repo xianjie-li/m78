@@ -1,22 +1,29 @@
 /// <reference types="lodash" />
 import { TablePlugin } from "../plugin.js";
-import { AnyFunction, BoundSize, CustomEvent, EmptyFunction } from "@m78/utils";
-import { WheelEvent } from "react";
+import { AnyFunction, CustomEvent, EmptyFunction, RafFunction } from "@m78/utils";
 import { TableCell } from "../types/items.js";
 import { TableMutationEvent } from "./mutation.js";
 import { TableReloadOptions } from "./life.js";
+import { TableFeedbackEvent } from "./feedback.js";
+import { SmoothTriggerEvent, SmoothWheel } from "@m78/utils";
 /**
  * 内部事件绑定, 外部事件派发
  * */
 export declare class _TableEventPlugin extends TablePlugin {
     /** 在某些时候可以通过此项禁用内部的scroll监听, 防止重复触发 */
     disableScrollListener: boolean;
+    /** 处理onwheel在平滑滚动, 主要是针对鼠标 */
+    smoothWheel: SmoothWheel;
+    /** 优化render函数 */
+    scrollRafCaller: RafFunction;
+    scrollRafClear: EmptyFunction;
+    init(): void;
     initialized(): void;
     beforeDestroy(): void;
     onContext: (e: MouseEvent) => void;
     onClick: (e: MouseEvent) => void;
     /** 滚动 */
-    onWheel: (e: WheelEvent) => void;
+    onWheel: (e: SmoothTriggerEvent) => void;
     /** 操作滚动条时同步滚动位置 */
     onScroll: () => void;
     /** 延迟100毫秒后将disableScrollListener设置为false, 内置防抖逻辑, 可以多次调用 */
@@ -64,34 +71,11 @@ export interface TableEvents {
     error: CustomEvent<(msg: string) => void>;
     /** 需要进行一些反馈操作时触发, 比如点击了包含验证错误/禁用/内容不能完整显示的行, 如果项包含多个反馈, 则event包含多个事件项 */
     feedback: CustomEvent<(event: TableFeedbackEvent[]) => void>;
+    /** 拖拽移动启用状态变更时触发 */
+    dragMoveChange: CustomEvent<(enable: boolean) => void>;
 }
 export interface TableEvent {
     /** 所有可用事件 */
     event: TableEvents;
-}
-/** event.feedback的触发类型 */
-export declare enum TableFeedback {
-    /** 内容溢出 */
-    overflow = "overflow",
-    /** 错误 */
-    error = "error",
-    /** 禁用项 */
-    disable = "disable",
-    /** 常规提醒 */
-    regular = "regular",
-    /** 关闭 */
-    close = "close"
-}
-export interface TableFeedbackEvent {
-    /** 触发反馈的类型 */
-    type: TableFeedback;
-    /** 反馈的内容 */
-    text: string;
-    /** 触发反馈的单元格 */
-    cell?: TableCell;
-    /** 触发反馈的目标dom */
-    dom?: HTMLElement;
-    /** 触发反馈的虚拟位置 */
-    bound?: BoundSize;
 }
 //# sourceMappingURL=event.d.ts.map

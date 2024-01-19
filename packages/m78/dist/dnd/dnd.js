@@ -1,4 +1,4 @@
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { jsx as _jsx } from "react/jsx-runtime";
 import React, { useContext, useMemo, useRef } from "react";
 import { _useMethods } from "./use-methods.js";
@@ -33,23 +33,23 @@ export function _DND(props) {
     }, [
         props.data
     ]);
-    var ref = _sliced_to_array(useSetState({
+    var _useSetState = _sliced_to_array(useSetState({
         status: _defaultDNDStatus,
         enables: _defaultDNDEnableInfos
-    }), 2), state = ref[0], setState = ref[1];
+    }), 2), state = _useSetState[0], setState = _useSetState[1];
     var self = useSelf();
     // 反馈节点动画控制
-    var ref1 = _sliced_to_array(useSpring(function() {
+    var _useSpring = _sliced_to_array(useSpring(function() {
         return {
             x: 0,
             y: 0,
-            onChange: function(result) {
+            onChange: function onChange(result) {
                 if (!self.feedbackEl) return;
-                var _value = result.value, x = _value.x, y = _value.y;
+                var _result_value = result.value, x = _result_value.x, y = _result_value.y;
                 self.feedbackEl.style.transform = "translate3d(".concat(x, "px, ").concat(y, "px, 0)");
             }
         };
-    }), 2), feedbackSpApi = ref1[1];
+    }), 2), feedbackSpApi = _useSpring[1];
     // 共享状态
     var ctx = {
         dragNodeRef: dragNodeRef,

@@ -1,7 +1,7 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
-import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
+import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
 import { jsx as _jsx } from "react/jsx-runtime";
 import React, { useEffect, useImperativeHandle, useRef } from "react";
 import { DEFAULT_CHILDREN_KEY, DEFAULT_LABEL_KEY, DEFAULT_VALUE_KEY, getChildrenByDataSource, getLabelByDataSource, getValueByDataSource, Size, Z_INDEX_MESSAGE } from "../common/index.js";
@@ -37,16 +37,16 @@ export var _Menu = function(props) {
         updateTimer: null
     });
     // 使用useSetState确保能实时获取到最新的type
-    var ref = _sliced_to_array(useSetState({
+    var _useSetState = _sliced_to_array(useSetState({
         xy: undefined,
         current: null,
         subMenuTriggerType: TriggerType.active
-    }), 2), state = ref[0], setState = ref[1];
-    /** 代理defaultOpen/open/onChange, 实现对应接口 */ var ref1 = _sliced_to_array(useFormState(props, false, {
+    }), 2), state = _useSetState[0], setState = _useSetState[1];
+    /** 代理defaultOpen/open/onChange, 实现对应接口 */ var _useFormState = _sliced_to_array(useFormState(props, false, {
         defaultValueKey: "defaultOpen",
         triggerKey: "onChange",
         valueKey: "open"
-    }), 2), open = ref1[0], setOpen = ref1[1];
+    }), 2), open = _useFormState[0], setOpen = _useFormState[1];
     var overlayRef = useRef(null);
     useImperativeHandle(props.instanceRef, function() {
         return overlayRef.current;
@@ -71,9 +71,9 @@ export var _Menu = function(props) {
             }
         }
     });
-    var hasSelected = openSelect.state.selected.length > 0;
+    var hasSelected = openSelect.getState().selected.length > 0;
     /** 关闭所有 */ var close = useFn(function() {
-        if (openSelect.state.selected.length === 0) return;
+        if (openSelect.getState().selected.length === 0) return;
         self.lastActive = null;
         setState({
             current: null
@@ -111,12 +111,12 @@ export var _Menu = function(props) {
         }
     });
     /** 选中 */ var onConfirm = useFn(function(val, option) {
-        var ref;
-        (ref = props.onConfirm) === null || ref === void 0 ? void 0 : ref.call(props, val, option);
+        var _props_onConfirm;
+        (_props_onConfirm = props.onConfirm) === null || _props_onConfirm === void 0 ? void 0 : _props_onConfirm.call(props, val, option);
         close();
     });
     /** 触发menuTargets变更, 并同步到targets */ var targetsChange = useFn(function(key, target) {
-        var _targets;
+        var _self_targets;
         self.menuTargets[key] = target;
         var next = Object.entries(self.menuTargets).map(function(param) {
             var _param = _sliced_to_array(param, 2), _ = _param[0], _$target = _param[1];
@@ -124,17 +124,17 @@ export var _Menu = function(props) {
         }).filter(function(i) {
             return !!i;
         });
-        (_targets = self.targets).splice.apply(_targets, [
+        (_self_targets = self.targets).splice.apply(_self_targets, [
             0,
             self.targets.length
         ].concat(_to_consumable_array(next)));
     });
     var onContextTrigger = useFn(function(e) {
-        var ref;
-        (ref = props.onTrigger) === null || ref === void 0 ? void 0 : ref.call(props, e);
+        var _props_onTrigger;
+        (_props_onTrigger = props.onTrigger) === null || _props_onTrigger === void 0 ? void 0 : _props_onTrigger.call(props, e);
         if (e.type === TriggerType.contextMenu) {
-            var ref1;
-            (ref1 = overlayRef.current) === null || ref1 === void 0 ? void 0 : ref1.updateXY([
+            var _overlayRef_current;
+            (_overlayRef_current = overlayRef.current) === null || _overlayRef_current === void 0 ? void 0 : _overlayRef_current.updateXY([
                 e.x,
                 e.y
             ], true);
@@ -170,7 +170,7 @@ export var _Menu = function(props) {
                 props.labelKey || DEFAULT_LABEL_KEY,
                 props.valueKey || DEFAULT_VALUE_KEY,
                 props.childrenKey || DEFAULT_CHILDREN_KEY,
-                "context", 
+                "context"
             ]);
             var value = getValueByDataSource(item, props);
             var label = getLabelByDataSource(item, props);

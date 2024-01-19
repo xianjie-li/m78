@@ -254,8 +254,8 @@ const TableExample = () => {
         },
       },
       persistenceConfig: {
-        sortColumns: ["field27", "field28", "field3"],
-        // hideColumns: ["field17", "field18", "field19", "field20"],
+        sortColumns: ["field27", "field28", "field3", "field8", "field7"],
+        hideColumns: ["field17", "field18", "field19", "field20"],
         rows: {
           id12: {
             height: 100,
@@ -626,52 +626,20 @@ const TableExample = () => {
         </button>
         <button
           onClick={() => {
-            const list =
-              tableRef.current.getPersistenceConfig().hideColumns || [];
-
-            const ind17 = list.indexOf("field17");
-
-            if (ind17 === -1) {
-              tableRef.current.setPersistenceConfig("hideColumns", [
-                ...list,
-                "field17",
-                "field18",
-              ]);
-            } else {
-              tableRef.current.setPersistenceConfig(
-                "hideColumns",
-                list.filter((i) => i !== "field17" && i !== "field18")
-              );
-            }
+            tableRef.current.setPersistenceConfig("hideColumns", [
+              "field17",
+              "field18",
+            ]);
           }}
         >
-          toggle field17/18"
+          hide field17/18"
         </button>
         <button
           onClick={() => {
-            const list =
-              tableRef.current.getPersistenceConfig().hideColumns || [];
-
-            const ind = list.indexOf("field7");
-
-            if (ind === -1) {
-              tableRef.current.setPersistenceConfig("hideColumns", [
-                ...list,
-                "field7",
-                "field8",
-                "field21",
-              ]);
-            } else {
-              tableRef.current.setPersistenceConfig(
-                "hideColumns",
-                list.filter(
-                  (i) => i !== "field7" && i !== "field8" && i !== "field21"
-                )
-              );
-            }
+            tableRef.current.setPersistenceConfig("hideColumns", ["field7"]);
           }}
         >
-          toggle 7
+          hide 7
         </button>
         <button
           onClick={() => {

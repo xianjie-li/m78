@@ -2,21 +2,6 @@ import { useUpdateEffect } from "@m78/hooks";
 import { useEffect, useImperativeHandle, useMemo } from "react";
 import { isMobileDevice } from "@m78/utils";
 export function _useLifeCycle(ctx, methods, bar, pull) {
-    var onScroll = /** 滚动总控制 */ function onScroll(meta) {
-        var ref;
-        (ref = props.onScroll) === null || ref === void 0 ? void 0 : ref.call(props, meta);
-        bar.onScroll(meta);
-        pull.onScroll(meta);
-        // 同步需要的meta信息到状态中, setState在值相同时会跳过render, 所以这里不用担心性能
-        setState({
-            touchTop: meta.touchTop,
-            touchBottom: meta.touchBottom,
-            touchLeft: meta.touchLeft,
-            touchRight: meta.touchRight,
-            xMax: meta.xMax,
-            yMax: meta.yMax
-        });
-    };
     var bound = ctx.bound, props = ctx.props, setState = ctx.setState, scroller = ctx.scroller;
     var instance = useMemo(function() {
         return {};
@@ -41,6 +26,21 @@ export function _useLifeCycle(ctx, methods, bar, pull) {
         bound.width,
         bound.height
     ]);
+    /** 滚动总控制 */ function onScroll(meta) {
+        var _props_onScroll;
+        (_props_onScroll = props.onScroll) === null || _props_onScroll === void 0 ? void 0 : _props_onScroll.call(props, meta);
+        bar.onScroll(meta);
+        pull.onScroll(meta);
+        // 同步需要的meta信息到状态中, setState在值相同时会跳过render, 所以这里不用担心性能
+        setState({
+            touchTop: meta.touchTop,
+            touchBottom: meta.touchBottom,
+            touchLeft: meta.touchLeft,
+            touchRight: meta.touchRight,
+            xMax: meta.xMax,
+            yMax: meta.yMax
+        });
+    }
     return {
         onScroll: onScroll
     };

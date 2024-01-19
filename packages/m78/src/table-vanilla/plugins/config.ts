@@ -3,8 +3,8 @@ import { isBoolean, isEmpty, omit } from "@m78/utils";
 import { TableConfig } from "../types/config.js";
 import { TableReloadLevel } from "./life.js";
 
-/** 重置级别2的所有配置, 未在其中的所有配置默认为级别1 */
-export const level2ConfigKeys: (keyof TableConfig)[] = [
+/** 重置级别full的所有配置, 未在其中的所有配置默认为index级别 */
+export const levelFullConfigKeys: (keyof TableConfig)[] = [
   "data",
   "columns",
   "rows",
@@ -50,7 +50,7 @@ export class _TableConfigPlugin
     let level = TableReloadLevel.index;
 
     const hasLevel2Conf = Object.keys(nConf).some((key) => {
-      return level2ConfigKeys.includes(key as any);
+      return levelFullConfigKeys.includes(key as any);
     });
 
     if (hasLevel2Conf) {

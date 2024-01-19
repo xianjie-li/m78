@@ -26,9 +26,9 @@ export function _schemaRenderImpl(ctx: _FormContext) {
     // 监听updateProps更新组件
     _useUpdatePropsChange(ctx, useUpdate());
 
-    form.events.submit.useEvent(() => {
+    form.events.submit.useEvent((data) => {
       if (props.onSubmit) {
-        props.onSubmit(form.getValues());
+        props.onSubmit(data);
       }
     });
 

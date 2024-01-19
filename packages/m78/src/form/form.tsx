@@ -7,7 +7,6 @@ import {
   _FormContext,
   _formPropsKeys,
   _omitConfigs,
-  FormAdaptorsItem,
   FormConfig,
   FormInstance,
   FormLayoutType,
@@ -18,7 +17,7 @@ import { omit, pick } from "@m78/utils";
 import { _listImpl } from "./list.js";
 import { FORM_LANG_PACK_NS, i18n } from "../i18n/index.js";
 import { _schemaRenderImpl } from "./schema-render.js";
-import { m78Config } from "../config/index.js";
+import { FormAdaptorsItem, m78Config } from "../config/index.js";
 
 export const _createForm = (config: FormConfig) => {
   // 目前以创建时语言为准, 不考虑做动态切换

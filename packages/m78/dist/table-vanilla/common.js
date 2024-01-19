@@ -1,5 +1,5 @@
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
-import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
+import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
 import { isNumber } from "@m78/utils";
 import { removeNode } from "../common/index.js";
 export var _prefix = "m78-table";
@@ -12,13 +12,16 @@ export var _prefix = "m78-table";
     paste: "Can not paste to non editable cell",
     "add row": "Add row",
     "remove row": "Remove row",
+    "restore row": "Restore remove row",
+    "soft remove tip": "The row has been removed and will take effect after submission",
     "set value": "Update value",
     "move row": "Move row",
     "move column": "Move column",
     editable: "Editable",
     "editable and required": "Editable (required)",
     "currently not editable": "Currently not editable",
-    clipboardWarning: "Can't get clipboard data, bowser not support or does not have permissions."
+    clipboardWarning: "Can't get clipboard data, bowser not support or does not have permissions.",
+    selectAllOrUnSelectAll: "Select All/Cancel"
 };
 /** 解析rowKey##columnKey格式的字符串为[rowKey, columnKey], 数组长度为2表示解析正常 */ export function _getCellKeysByStr(s) {
     if (!s) return [];
@@ -34,7 +37,7 @@ export var _prefix = "m78-table";
     for(var _len = arguments.length, pointers = new Array(_len), _key = 0; _key < _len; _key++){
         pointers[_key] = arguments[_key];
     }
-    var ref = _sliced_to_array(_getMaxPointByPoint.apply(void 0, _to_consumable_array(pointers)), 2), p1 = ref[0], p2 = ref[1];
+    var _getMaxPointByPoint_apply = _sliced_to_array(_getMaxPointByPoint.apply(void 0, _to_consumable_array(pointers)), 2), p1 = _getMaxPointByPoint_apply[0], p2 = _getMaxPointByPoint_apply[1];
     var left = p1[0];
     var top = p1[1];
     return {
@@ -70,16 +73,16 @@ export var _prefix = "m78-table";
         [
             maxX,
             maxY
-        ], 
+        ]
     ];
 }
-/** 节点树包含这些className时应跳过事件 */ export var _tableInterruptTriggerClassName = /m78-scroll_bar|m78-table_hide-expand/;
+/** 节点树包含这些className时应跳过事件 */ export var _tableInterruptTriggerClassName = /m78-scroll_bar/;
 /** 节点树包含这些类型的节点时应跳过事件 */ export var _tableInterruptTriggerTagName = /INPUT|TEXTAREA|BUTTON|SELECT|AUDIO|VIDEO/;
 /** 内置事件过滤器 */ export var _tableTriggerFilters = [
     function(target) {
         if (_tableInterruptTriggerClassName.test(target.className)) return true;
         if (_tableInterruptTriggerTagName.test(target.tagName)) return true;
-    }, 
+    }
 ];
 /** 执行一组过滤器, 若该节点需要跳过则返回true, 内部会递归对target所有父级进行校验, 直到stopNode节点为止 */ export function _triggerFilterList(target, list, stopNode) {
     var cur;
@@ -122,4 +125,15 @@ export var _prefix = "m78-table";
 }
 /** 检测传入的事件是否是touch事件 */ export function isTouch(e) {
     return e.type.startsWith("touch") || e.pointerType === "touch";
+}
+/** 用于便捷的根据当前 lastViewportItems 生成用于高效检测row mount状态的检测方法 */ export function _rowMountChecker() {
+    var visibleRows = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : [];
+    // 用于快速获取行的挂载状态
+    var showMap = {};
+    visibleRows.forEach(function(row) {
+        showMap[row.key] = true;
+    });
+    return function(key) {
+        return !!showMap[key];
+    };
 }

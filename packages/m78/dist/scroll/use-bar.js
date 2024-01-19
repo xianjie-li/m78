@@ -1,6 +1,6 @@
-import _define_property from "@swc/helpers/src/_define_property.mjs";
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
+import { _ as _define_property } from "@swc/helpers/_/_define_property";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useFn } from "@m78/hooks";
 import { animated, useSpring } from "react-spring";
@@ -23,46 +23,6 @@ import { useDrag } from "@use-gesture/react";
  * - 对于占用空间的滚动条, 需要手动计算容器的 client/offset 尺寸, 并设置为右下偏移
  * - 对于不会占用容器的滚动条, 通过 css 添加一个固定的右/底部偏移即可实现
  * # # # # # # # # # # # # # # # # # */ /** 滚动条实现/汇总 */ export function _useBar(ctx) {
-    var onScroll = /* # # # # # # # # # # # # # # # # #
-   * 方法区
-   * # # # # # # # # # # # # # # # # # */ function onScroll(meta) {
-        if (!props.scrollbar) return;
-        meta.isScrollX && xBar.refreshScrollPosition(meta.x / meta.xMax);
-        meta.isScrollY && yBar.refreshScrollPosition(meta.y / meta.yMax);
-        // if (!self.delayHiddenLock) {
-        var key = "";
-        // isScroll不是完全可靠的, 所以这里严格鉴别
-        if (meta.isScrollX) key = "x";
-        if (meta.isScrollY) key = "y";
-        if (key) {
-            setState(_define_property({}, "".concat(key, "Visible"), true));
-        }
-        // }
-        delayHidden();
-    };
-    var refresh = /** 刷新滚动条 */ function refresh() {
-        if (!props.scrollbar) return;
-        yBar.refresh();
-        xBar.refresh();
-    };
-    var delayHidden = function delayHidden() {
-        var delay = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : 800;
-        if (self.delayHiddenLock) return;
-        clearTimeout(self.delayHiddenTimer);
-        self.delayHiddenTimer = setTimeout(function() {
-            setState({
-                xVisible: false,
-                yVisible: false
-            });
-        }, delay);
-    };
-    var getEnableStatus = /** 检测各轴是否开启了滚动及是否可滚动 */ function getEnableStatus() {
-        var meta = scroller.get();
-        return {
-            x: !!meta.xMax && directionStyle.overflowX === "scroll",
-            y: !!meta.yMax && directionStyle.overflowY === "scroll"
-        };
-    };
     var state = ctx.state, setState = ctx.setState, self = ctx.self, scroller = ctx.scroller, directionStyle = ctx.directionStyle, props = ctx.props, bound = ctx.bound;
     var yBar = _useBarImpl(ctx, {
         isY: true,
@@ -85,10 +45,10 @@ import { useDrag } from "@use-gesture/react";
         xBar.refreshScrollPosition();
         yBar.refreshScrollPosition();
         var wrap = ctx.innerWrapRef.current;
-        newState.barXSize = wrap.offsetWidth - wrap.clientWidth;
-        newState.barYSize = wrap.offsetHeight - wrap.clientHeight;
-        newState.barXSize = _RESERVE_BAR_SIZE + newState.barXSize;
-        newState.barYSize = _RESERVE_BAR_SIZE + newState.barYSize;
+        var barXSize = wrap.offsetWidth - wrap.clientWidth;
+        var barYSize = wrap.offsetHeight - wrap.clientHeight;
+        newState.xPadding = _RESERVE_BAR_SIZE + barXSize;
+        newState.yPadding = _RESERVE_BAR_SIZE + barYSize;
         setState(newState);
     }, [
         props.direction,
@@ -96,6 +56,46 @@ import { useDrag } from "@use-gesture/react";
         bound.height,
         props.scrollbar
     ]);
+    /* # # # # # # # # # # # # # # # # #
+   * 方法区
+   * # # # # # # # # # # # # # # # # # */ function onScroll(meta) {
+        if (!props.scrollbar) return;
+        meta.isScrollX && xBar.refreshScrollPosition(meta.x / meta.xMax);
+        meta.isScrollY && yBar.refreshScrollPosition(meta.y / meta.yMax);
+        // if (!self.delayHiddenLock) {
+        var key = "";
+        // isScroll不是完全可靠的, 所以这里严格鉴别
+        if (meta.isScrollX) key = "x";
+        if (meta.isScrollY) key = "y";
+        if (key) {
+            setState(_define_property({}, "".concat(key, "Visible"), true));
+        }
+        // }
+        delayHidden();
+    }
+    /** 刷新滚动条 */ function refresh() {
+        if (!props.scrollbar) return;
+        yBar.refresh();
+        xBar.refresh();
+    }
+    function delayHidden() {
+        var delay = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : 800;
+        if (self.delayHiddenLock) return;
+        clearTimeout(self.delayHiddenTimer);
+        self.delayHiddenTimer = setTimeout(function() {
+            setState({
+                xVisible: false,
+                yVisible: false
+            });
+        }, delay);
+    }
+    /** 检测各轴是否开启了滚动及是否可滚动 */ function getEnableStatus() {
+        var meta = scroller.get();
+        return {
+            x: !!meta.xMax && directionStyle.overflowX === "scroll",
+            y: !!meta.yMax && directionStyle.overflowY === "scroll"
+        };
+    }
     return {
         refresh: refresh,
         onScroll: onScroll,
@@ -113,66 +113,8 @@ import { useDrag } from "@use-gesture/react";
 }
 /** 单个滚动条实现, isY用于 */ export function _useBarImpl(ctx, param) {
     var isY = param.isY, delayHidden = param.delayHidden;
-    var refreshScrollPosition = /* # # # # # # # # # # # # # # # # #
-   * 方法区
-   * # # # # # # # # # # # # # # # # # */ /** 根据比例设置刷新滚动条位置 */ function refreshScrollPosition() {
-        var offsetRatio = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : 0;
-        if (!props.scrollbar) return;
-        offsetRatio = clamp(offsetRatio, 0, 1);
-        var wrapEl = ctx.innerWrapRef.current;
-        var barEl = barRef.current;
-        if (!wrapEl) return;
-        var sizeRatio = isY ? wrapEl.offsetHeight / wrapEl.scrollHeight : wrapEl.offsetWidth / wrapEl.scrollWidth;
-        var barSize = isY ? barEl.clientHeight : barEl.clientWidth;
-        // 限制thumb的最大尺寸, 看起来会更舒服
-        var thumbSize = Math.max(Math.min(barSize / _BAR_MAX_SIZE_RATIO, sizeRatio * barSize), _BAR_MIN_SIZE_RATIO);
-        // 防止超出轨道
-        if (thumbSize > barSize) thumbSize = barSize;
-        api.start({
-            offset: offsetRatio * (barSize - thumbSize),
-            size: thumbSize,
-            immediate: true
-        });
-    };
-    var refresh = /** 刷新滚动条, 用于容器尺寸/内容等变更时 */ function refresh() {
-        if (!props.scrollbar) return;
-        var offset = sp.offset.get();
-        refreshScrollPosition(offset2Ratio(offset));
-    };
-    var onDrag = /** 拖动thumb */ function onDrag(e) {
-        e.event.stopPropagation();
-        /** 锁定自动关闭 防止干扰 */ if (e.first) {
-            onActive();
-            self.delayHiddenLock = true;
-        }
-        /** 触发自动关闭 */ if (e.last) {
-            self.delayHiddenLock = false;
-        }
-        var offset = isY ? e.offset[1] : e.offset[0];
-        scroll(offset2Ratio(offset));
-        api.start({
-            offset: offset,
-            immediate: true
-        });
-    };
-    var offset2Ratio = /** 根据偏移点相对轨道开始的距离获取该位置的比例 */ function offset2Ratio(offset) {
-        var barEl = barRef.current;
-        var thumbEl = barEl.childNodes[0];
-        var thumbSize = isY ? thumbEl.offsetHeight : thumbEl.offsetWidth;
-        // 以轨道尺寸减thumb尺寸作为比例计算最大值
-        var size = isY ? barEl.offsetHeight : barEl.offsetWidth;
-        size -= thumbSize;
-        return offset / size;
-    };
-    var scroll = /** 滚动到指定比例的位置 */ function scroll(ratio) {
-        ratio = clamp(ratio, 0, 1);
-        var meta = scroller.get();
-        scroller.set(_define_property({
-            immediate: true
-        }, isY ? "y" : "x", ratio * (isY ? meta.yMax : meta.xMax)));
-    };
     var state = ctx.state, self = ctx.self, scroller = ctx.scroller, props = ctx.props;
-    var ref = _sliced_to_array(useSpring(function() {
+    var _useSpring = _sliced_to_array(useSpring(function() {
         return {
             from: {
                 /** thumb位置 */ offset: 0,
@@ -182,7 +124,7 @@ import { useDrag } from "@use-gesture/react";
                 clamp: true
             }
         };
-    }, []), 2), sp = ref[0], api = ref[1];
+    }, []), 2), sp = _useSpring[0], api = _useSpring[1];
     var barRef = useRef(null);
     /* # # # # # # # # # # # # # # # # #
    * 钩子区
@@ -210,6 +152,64 @@ import { useDrag } from "@use-gesture/react";
         },
         preventDefault: true
     });
+    /* # # # # # # # # # # # # # # # # #
+   * 方法区
+   * # # # # # # # # # # # # # # # # # */ /** 根据比例设置刷新滚动条位置 */ function refreshScrollPosition() {
+        var offsetRatio = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : 0;
+        if (!props.scrollbar) return;
+        offsetRatio = clamp(offsetRatio, 0, 1);
+        var wrapEl = ctx.innerWrapRef.current;
+        var barEl = barRef.current;
+        if (!wrapEl) return;
+        var sizeRatio = isY ? wrapEl.offsetHeight / wrapEl.scrollHeight : wrapEl.offsetWidth / wrapEl.scrollWidth;
+        var barSize = isY ? barEl.clientHeight : barEl.clientWidth;
+        // 限制thumb的最大尺寸, 看起来会更舒服
+        var thumbSize = Math.max(Math.min(barSize / _BAR_MAX_SIZE_RATIO, sizeRatio * barSize), _BAR_MIN_SIZE_RATIO);
+        // 防止超出轨道
+        if (thumbSize > barSize) thumbSize = barSize;
+        api.start({
+            offset: offsetRatio * (barSize - thumbSize),
+            size: thumbSize,
+            immediate: true
+        });
+    }
+    /** 刷新滚动条, 用于容器尺寸/内容等变更时 */ function refresh() {
+        if (!props.scrollbar) return;
+        var offset = sp.offset.get();
+        refreshScrollPosition(offset2Ratio(offset));
+    }
+    /** 拖动thumb */ function onDrag(e) {
+        e.event.stopPropagation();
+        /** 锁定自动关闭 防止干扰 */ if (e.first) {
+            onActive();
+            self.delayHiddenLock = true;
+        }
+        /** 触发自动关闭 */ if (e.last) {
+            self.delayHiddenLock = false;
+        }
+        var offset = isY ? e.offset[1] : e.offset[0];
+        scroll(offset2Ratio(offset));
+        api.start({
+            offset: offset,
+            immediate: true
+        });
+    }
+    /** 根据偏移点相对轨道开始的距离获取该位置的比例 */ function offset2Ratio(offset) {
+        var barEl = barRef.current;
+        var thumbEl = barEl.childNodes[0];
+        var thumbSize = isY ? thumbEl.offsetHeight : thumbEl.offsetWidth;
+        // 以轨道尺寸减thumb尺寸作为比例计算最大值
+        var size = isY ? barEl.offsetHeight : barEl.offsetWidth;
+        size -= thumbSize;
+        return offset / size;
+    }
+    /** 滚动到指定比例的位置 */ function scroll(ratio) {
+        ratio = clamp(ratio, 0, 1);
+        var meta = scroller.get();
+        scroller.set(_define_property({
+            immediate: true
+        }, isY ? "y" : "x", ratio * (isY ? meta.yMax : meta.xMax)));
+    }
     /** 滚动条处于活动状态, 禁止自动隐藏 */ var onActive = useFn(function() {
         if (self.delayHiddenLock) return;
         clearTimeout(self.delayHiddenTimer);

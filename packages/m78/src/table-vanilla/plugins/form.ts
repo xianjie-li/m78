@@ -12,13 +12,12 @@ import {
   deleteNamePathValue,
   ensureArray,
   isEmpty,
-  isTruthyOrZero,
   NamePath,
   setNamePathValue,
   stringifyNamePath,
 } from "@m78/utils";
 import { TableKey } from "../types/base-type.js";
-import { TablePlugin } from "../plugin.js";
+import { TableLoadStage, TablePlugin } from "../plugin.js";
 import { TableCell, TableColumn, TableRow } from "../types/items.js";
 import {
   TableMutationDataEvent,
@@ -27,7 +26,6 @@ import {
   TableMutationType,
   TableMutationValueEvent,
 } from "./mutation.js";
-import { TableReloadLevel } from "./life.js";
 import { TableAttachData } from "./getter.js";
 import { removeNode } from "../../common/index.js";
 import { _getCellKey, _syncListNode } from "../common.js";
@@ -50,14 +48,26 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
   // 记录行是否变动
   rowChanged: Record<string, boolean> = {};
 
+  // 记录单元格是否变动
+  cellChanged: Record<string, TableCell> = {};
+
   // 用于显示错误反馈的节点
   errorNodes: HTMLElement[] = [];
 
+  xx() {
+    this.errorNodes = [];
+    this.rowChangedNodes = [];
+    this.cellChangedNodes = [];
+    this.editStatusNodes = [];
+    this.invalidNodes = [];
+
+    this.invalidCellMap = {};
+    this.invalidStatusMap = {};
+    this.invalidStatus = [];
+  }
+
   // 用于显示行变动标识的节点
   rowChangedNodes: HTMLElement[] = [];
-
-  // 记录单元格是否变动
-  cellChanged: Record<string, TableCell> = {};
 
   // 用于显示单元格变动标识的节点
   cellChangedNodes: HTMLElement[] = [];
@@ -69,7 +79,7 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
     cell: TableCell;
   }[] = [];
 
-  // 用于开始查找editStatus
+  // 用于根据key快速查找editStatus
   editStatusMap: Record<
     string,
     {
@@ -79,6 +89,7 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
     } | void
   > = {};
 
+  // 编辑/必填状态标识节点
   editStatusNodes: HTMLElement[] = [];
 
   // 无效状态
@@ -93,7 +104,7 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
   // 记录移除的数据
   removeRecordMap = new Map<TableKey, AnyObject>();
 
-  // 记录移除的数据, 不进行 addRecordMap 的检测, 即 removeRecordMap 不会记录新增行的删除
+  // 记录移除的数据, 不进行 addRecordMap 的检测, 即 removeRecordMap 不会记录新增行的删除, 而 allRemoveRecordMap 会记录
   allRemoveRecordMap = new Map<TableKey, AnyObject>();
 
   // 记录发生或排序变更的项信息
@@ -142,15 +153,21 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
     this.resetDataRecords();
 
     removeNode(this.wrapNode);
+
+    this.errorNodes = [];
+    this.rowChangedNodes = [];
+    this.cellChangedNodes = [];
+    this.editStatusNodes = [];
+    this.invalidNodes = [];
   }
 
-  loadStage(level: TableReloadLevel, isBefore: boolean) {
-    if (level === TableReloadLevel.full && isBefore) {
+  loadStage(stage: TableLoadStage, isBefore: boolean) {
+    if (stage === TableLoadStage.fullHandle && isBefore) {
       this.reset();
       this.resetDataRecords();
     }
 
-    if (level === TableReloadLevel.base && !isBefore) {
+    if (stage === TableLoadStage.baseHandle && !isBefore) {
       this.updateEditStatus();
     }
   }
@@ -350,7 +367,8 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
       });
     }
 
-    if (e.changeType === TableMutationDataType.move) {
+    // 除了自动触发的move外, 均记录到sortRecordMap
+    if (e.changeType === TableMutationDataType.move && !e.isAutoMove) {
       e.move.forEach((meta) => {
         const k = this.table.getKeyByRowData(meta.data);
 
@@ -435,9 +453,7 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
 
       if (isAdd) {
         // 删除虚拟主键, 防止数据传输到服务端时出错
-        if (isAdd) {
-          deleteNamePathValue(data, this.config.primaryKey);
-        }
+        deleteNamePathValue(data, this.config.primaryKey);
 
         add.push(data);
       }
@@ -627,6 +643,8 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
     this.cellErrors = {};
     this.formInstances = {};
     this.invalidCellMap = {};
+    this.invalidStatusMap = {};
+    this.invalidStatus = [];
 
     this.updateValidRelate();
   }
@@ -664,15 +682,11 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
 
     // 是否可编辑
     this.context.columns.forEach((col) => {
-      const meta = this.context.getColumnMeta(col.key);
-
-      if (meta.ignore) return;
+      if (this.context.isIgnoreColumn(col.key)) return;
 
       const cell = this.table.getCell(hKey, col.key);
       // header cell 不能检测是否可编辑, 这里以第一行数据的可编译配置作为参照 (忽略单元格逐个配置的情况, 表单都是以列为单位启用)
       const firstRowCell = this.table.getCell(firstRowKey, col.key);
-
-      const is = this.interactive.isInteractive(firstRowCell);
 
       if (this.interactive.isInteractive(firstRowCell)) {
         const item = {
@@ -700,9 +714,7 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
   private updateValidStatus(row: TableRow) {
     if (row.isHeader) return;
 
-    const meta = this.context.getRowMeta(row.key);
-
-    if (meta.ignore) return;
+    if (this.context.isIgnoreRow(row.key)) return;
 
     const form = this.formInstances[row.key];
 
@@ -933,18 +945,9 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
 
       const meta = this.context.getRowMeta(key);
 
-      if (meta.fake || meta.substitute) return;
+      if (meta.fake) return;
 
-      let data: any;
-
-      // 是忽略项时, 获取其原始数据 (通常是其fixed项clone, 执行setValue时值保存在clone位置而不是原始备份记录)
-      if (meta.ignore && isTruthyOrZero(meta.ref)) {
-        const ind = this.table.getIndexByRowKey(meta.ref!);
-
-        data = Object.assign({}, this.context.data[ind]);
-      } else {
-        data = Object.assign({}, i);
-      }
+      const data = Object.assign({}, i);
 
       const invalid = this.invalidCellMap[key];
 
@@ -1002,7 +1005,7 @@ export interface TableForm {
   /** 表格是否发生过数据变更, 排序, 增删数据 */
   getTableChanged(): boolean;
 
-  /** 重置当前的错误信息/变更状态等 (仅清理状态, 不会还原变更值, 否则会和history api有冲突) */
+  /** 清理当前的错误信息/变更状态等, 不影响已经改变的值 */
   resetFormState(): void;
 }
 
@@ -1011,12 +1014,12 @@ export interface TableDataLists<D = AnyObject> {
   all: D[];
   /** 新增的行 */
   add: D[];
-  /** 发生过变更的行(不含新增行) */
+  /** 发生过变更的行, 不含新增行 */
   change: D[];
   /** 新增和变更的行 */
   update: D[];
   /** 移除的行 */
   remove: D[];
-  /** 是否发生了数据排序(不包含增删数据导致的索引变更) */
+  /** 是否发生了数据排序, 不包含增删数据导致的索引变更 */
   sorted: boolean;
 }

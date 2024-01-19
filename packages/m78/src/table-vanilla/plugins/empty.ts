@@ -1,4 +1,4 @@
-import { TablePlugin } from "../plugin.js";
+import { TableLoadStage, TablePlugin } from "../plugin.js";
 import { TableReloadLevel, TableReloadOptions } from "./life.js";
 
 import { removeNode } from "../../common/index.js";
@@ -42,10 +42,10 @@ export class _TablePluginEmpty extends TablePlugin {
   }
 
   /** 在index前拦截判断是否是empty, 是则注入占位数据并显示节点, 否则隐藏 */
-  loadStage(level: TableReloadLevel, isBefore: boolean) {
+  loadStage(stage: TableLoadStage, isBefore: boolean) {
     const ctx = this.context;
 
-    if (level === TableReloadLevel.index && isBefore) {
+    if (stage === TableLoadStage.indexHandle && isBefore) {
       let len = ctx.data.length;
 
       // 已经是空状态, 说明已经注入了空数据, 长度需减1

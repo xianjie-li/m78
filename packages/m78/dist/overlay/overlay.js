@@ -1,4 +1,4 @@
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { useRef } from "react";
 import { useFn, useFormState, useIsUnmountState, useMeasure, useSelf, useSetState } from "@m78/hooks";
 import { useSpring } from "react-spring";
@@ -12,15 +12,15 @@ import { useTrigger } from "../trigger/index.js";
  * overlay抽象了所有弹层类组件(modal, drawer, popper等需要的基础能力), 使实现这些组件变得非常的简单
  * */ export function _Overlay(p) {
     var props = p;
-    var ref = _sliced_to_array(useFormState(props, false, {
+    var _useFormState = _sliced_to_array(useFormState(props, false, {
         valueKey: "open",
         defaultValueKey: "defaultOpen"
-    }), 2), open = ref[0], setOpen = ref[1];
+    }), 2), open = _useFormState[0], setOpen = _useFormState[1];
     /** 容器节点ref */ var containerRef = useRef(null);
-    /** 组件状态 */ var ref1 = _sliced_to_array(useSetState({
+    /** 组件状态 */ var _useSetState = _sliced_to_array(useSetState({
         lastDirection: props.direction,
         scrollParents: []
-    }), 2), state = ref1[0], setState = ref1[1];
+    }), 2), state = _useSetState[0], setState = _useSetState[1];
     /** 实例对象 */ var self = useSelf({
         lastXY: props.xy,
         lastAlignment: props.alignment,
@@ -32,7 +32,7 @@ import { useTrigger } from "../trigger/index.js";
         activeContent: false,
         contentExist: false
     });
-    /** 内容定位动画 */ var ref2 = _sliced_to_array(useSpring(function() {
+    /** 内容定位动画 */ var _useSpring = _sliced_to_array(useSpring(function() {
         return {
             to: {
                 x: 0,
@@ -41,14 +41,14 @@ import { useTrigger } from "../trigger/index.js";
             },
             config: overlayTransitionConfig
         };
-    }), 2), sp = ref2[0], spApi = ref2[1];
-    /** arrow定位动画 */ var ref3 = _sliced_to_array(useSpring(function() {
+    }), 2), sp = _useSpring[0], spApi = _useSpring[1];
+    /** arrow定位动画 */ var _useSpring1 = _sliced_to_array(useSpring(function() {
         return {
             to: {
                 offset: 30
             }
         };
-    }), 2), arrowSp = ref3[0], arrowSpApi = ref3[1];
+    }), 2), arrowSp = _useSpring1[0], arrowSpApi = _useSpring1[1];
     /** 所有启用了mask的overlay */ var overlaysMask = useOverlaysMask({
         enable: open && props.mask
     });
@@ -65,7 +65,7 @@ import { useTrigger } from "../trigger/index.js";
     };
     var children = props.children;
     var element = isFunction(children) ? children(customRenderMeta) : children;
-    /** 尺寸变更时修复位置 */ var ref4 = _sliced_to_array(useMeasure(containerRef, 200), 1), measure = ref4[0];
+    /** 尺寸变更时修复位置 */ var _useMeasure = _sliced_to_array(useMeasure(containerRef, 200), 1), measure = _useMeasure[0];
     var ctx = {
         open: open && !props.disabled,
         setOpen: setOpen,

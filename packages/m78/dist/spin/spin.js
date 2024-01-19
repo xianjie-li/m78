@@ -1,7 +1,7 @@
-import _define_property from "@swc/helpers/src/_define_property.mjs";
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
-import _object_without_properties from "@swc/helpers/src/_object_without_properties.mjs";
+import { _ as _define_property } from "@swc/helpers/_/_define_property";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
+import { _ as _object_without_properties } from "@swc/helpers/_/_object_without_properties";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from "react";
 import cls from "clsx";
@@ -9,7 +9,7 @@ import { useDelayToggle } from "@m78/hooks";
 import { Transition } from "../transition/index.js";
 import { _SpinIcon } from "./spin-icon.js";
 export var _Spin = function(_param) {
-    var size = _param.size, inline = _param.inline, _text = _param.text, text = _text === void 0 ? "" : _text, full = _param.full, _open = _param.open, open = _open === void 0 ? true : _open, className = _param.className, _minDuration = _param.minDuration, minDuration = _minDuration === void 0 ? 300 : _minDuration, offset = _param.offset, props = _object_without_properties(_param, [
+    var size = _param.size, inline = _param.inline, _param_text = _param.text, text = _param_text === void 0 ? "" : _param_text, full = _param.full, _param_open = _param.open, open = _param_open === void 0 ? true : _param_open, className = _param.className, _param_minDuration = _param.minDuration, minDuration = _param_minDuration === void 0 ? 300 : _param_minDuration, offset = _param.offset, props = _object_without_properties(_param, [
         "size",
         "inline",
         "text",

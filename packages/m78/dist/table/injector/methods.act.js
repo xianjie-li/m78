@@ -1,6 +1,6 @@
-import _define_property from "@swc/helpers/src/_define_property.mjs";
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
+import { _ as _define_property } from "@swc/helpers/_/_define_property";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
 import { createTable } from "../../table-vanilla/index.js";
 import { createEvent } from "@m78/hooks";
 import { i18n, TABLE_NS } from "../../i18n/index.js";
@@ -11,7 +11,11 @@ import { _injector } from "../table.js";
 import { createRandString, isFunction } from "@m78/utils";
 import { createForm } from "../../form/index.js";
 export function _useMethodsAct() {
-    var updateInstance = /** 创建/更新表格实例 */ function updateInstance(propsConf, isFull) {
+    var _injector_useDeps = _injector.useDeps(_useStateAct), ref = _injector_useDeps.ref, scrollRef = _injector_useDeps.scrollRef, scrollContRef = _injector_useDeps.scrollContRef, wrapRef = _injector_useDeps.wrapRef, state = _injector_useDeps.state, setState = _injector_useDeps.setState, self = _injector_useDeps.self, plugins = _injector_useDeps.plugins;
+    var props = _injector.useProps();
+    var editRender = _useEditRender();
+    var customRender = _useCustomRender();
+    /** 创建/更新表格实例 */ function updateInstance(propsConf, isFull) {
         console.log("reload", isFull ? "full" : "index");
         if (state.instance) {
             state.instance.setConfig(propsConf, !isFull);
@@ -21,8 +25,8 @@ export function _useMethodsAct() {
             return;
         }
         var texts = i18n.getResourceBundle(i18n.language, TABLE_NS);
-        var ins = createTable(_object_spread_props(_object_spread({}, propsConf), {
-            el: ref1.current,
+        var ins = createTable(_object_spread_props(_object_spread({}, props), {
+            el: ref.current,
             viewEl: scrollRef.current,
             viewContentEl: scrollContRef.current,
             emptyNode: state.emptyNode,
@@ -34,28 +38,29 @@ export function _useMethodsAct() {
             texts: texts,
             extraActiveCheckEl: wrapRef.current,
             formCreator: createForm,
-            plugins: plugins
+            plugins: plugins,
+            persistenceConfig: state.persistenceConfig
         }));
         setState({
             instance: ins
         });
-    };
-    var initEmptyNode = /** 初始化定制空节点 */ function initEmptyNode() {
+    }
+    /** 初始化定制空节点 */ function initEmptyNode() {
         var emptyNode = document.createElement("div");
         emptyNode.className = "m78-table_empty-wrap";
         setState({
             emptyNode: emptyNode
         });
-    };
-    var getDefaultNewData = /** 获取新的新的默认数据 */ function getDefaultNewData() {
+    }
+    /** 获取新的新的默认数据 */ function getDefaultNewData() {
         var def = props.defaultNewData;
         if (isFunction(def)) {
             def = def();
         }
         return _object_spread_props(_object_spread({}, def), _define_property({}, props.primaryKey, createRandString()));
-    };
-    var overlayStackChange = /** 记录每一个需要阻止默认键盘等操作行为的弹层启用/关闭, 在包含弹层时, 阻止table的交互 */ function overlayStackChange(open) {
-        var ref;
+    }
+    /** 记录每一个需要阻止默认键盘等操作行为的弹层启用/关闭, 在包含弹层时, 阻止table的交互 */ function overlayStackChange(open) {
+        var _state_instance;
         if (open) {
             self.overlayStackCount++;
         } else {
@@ -64,9 +69,9 @@ export function _useMethodsAct() {
                 self.overlayStackCount = 0;
             }
         }
-        (ref = state.instance) === null || ref === void 0 ? void 0 : ref.isActive(!self.overlayStackCount);
-    };
-    var updateCheckForm = /** 更新editCheckForm, 应在schema变更时触发 */ function updateCheckForm() {
+        (_state_instance = state.instance) === null || _state_instance === void 0 ? void 0 : _state_instance.isActive(!self.overlayStackCount);
+    }
+    /** 更新editCheckForm, 应在schema变更时触发 */ function updateCheckForm() {
         self.editStatusMap = {};
         var ls = props.schema || [];
         if (self.editCheckForm) {
@@ -81,11 +86,7 @@ export function _useMethodsAct() {
             },
             autoVerify: false
         });
-    };
-    var ref = _injector.useDeps(_useStateAct), ref1 = ref.ref, scrollRef = ref.scrollRef, scrollContRef = ref.scrollContRef, wrapRef = ref.wrapRef, state = ref.state, setState = ref.setState, self = ref.self, plugins = ref.plugins;
-    var props = _injector.useProps();
-    var editRender = _useEditRender();
-    var customRender = _useCustomRender();
+    }
     return {
         initEmptyNode: initEmptyNode,
         updateInstance: updateInstance,

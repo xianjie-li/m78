@@ -1,12 +1,4 @@
 import { FormConfig, FormInstance, FormVerify } from "./types.js";
-/**
- * defaultValue -> value
- * verify移除
- * Verify类型更名 添加Form前缀
- * meta修改
- * 错误处理方式修改
- * 验证器key 私有化
- * */
 /** 创建form实例 */
 export declare function _createForm(config: FormConfig): FormInstance;
 /**

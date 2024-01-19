@@ -1,6 +1,6 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { getScrollParent, isBoolean, isDom } from "@m78/utils";
 import { getRefDomOrDom, useFn } from "@m78/hooks";
 import throttle from "lodash/throttle.js";
@@ -9,13 +9,14 @@ import { _arrowSpace, _calcAlignment, _defaultAlignment, _defaultProps, _flip, _
 import { OverlayUpdateType } from "./types.js";
 import { TriggerType } from "../trigger/index.js";
 export function _useMethods(ctx) {
-    var getCurrentBoundType = /** 判断当前的bound类型, 返回null表示无任何可用配置 */ function getCurrentBoundType() {
+    var containerRef = ctx.containerRef, props = ctx.props, spApi = ctx.spApi, self = ctx.self, open = ctx.open, state = ctx.state, setState = ctx.setState, arrowSpApi = ctx.arrowSpApi, trigger = ctx.trigger, setOpen = ctx.setOpen;
+    /** 判断当前的bound类型, 返回null表示无任何可用配置 */ function getCurrentBoundType() {
         if (self.lastXY) return OverlayUpdateType.xy;
         if (self.lastAlignment) return OverlayUpdateType.alignment;
         if (isValidTarget(self.lastTarget)) return OverlayUpdateType.target;
         return null;
-    };
-    var getBoundWithXY = /** 根据xy获取bound */ function getBoundWithXY(xy) {
+    }
+    /** 根据xy获取bound */ function getBoundWithXY(xy) {
         var _xy = _sliced_to_array(xy, 2), x = _xy[0], y = _xy[1];
         return {
             left: x,
@@ -23,41 +24,55 @@ export function _useMethods(ctx) {
             width: 0,
             height: 0
         };
-    };
-    var getBoundWithAlignment = /** 根据alignment获取bound */ function getBoundWithAlignment(alignment) {
-        var ref = containerRef.current.getBoundingClientRect(), width = ref.width, height = ref.height;
+    }
+    /** 根据alignment获取bound */ function getBoundWithAlignment(alignment) {
+        var _containerRef_current_getBoundingClientRect = containerRef.current.getBoundingClientRect(), width = _containerRef_current_getBoundingClientRect.width, height = _containerRef_current_getBoundingClientRect.height;
         if (state.lastDirection) {
             width = 0;
             height = 0;
         }
-        var ref1 = _sliced_to_array(_calcAlignment(alignment, [
+        var _$_calcAlignment = _sliced_to_array(_calcAlignment(alignment, [
             width,
             height
-        ]), 2), x = ref1[0], y = ref1[1];
+        ]), 2), x = _$_calcAlignment[0], y = _$_calcAlignment[1];
         return {
             left: x,
             top: y,
             width: 0,
             height: 0
         };
-    };
-    var getBoundWithTarget = /** 根据target获取bound */ function getBoundWithTarget(target) {
-        if (isBound(target)) return target;
+    }
+    /** 根据target获取bound和el */ function getBoundWithTarget(target) {
+        if (isBound(target)) return [
+            target,
+            null
+        ];
         if (isValidTarget(target)) {
-            return getRefDomOrDom(target).getBoundingClientRect();
+            // 上方已经过滤掉bound, 所以这里必定是dom节点
+            var el = getRefDomOrDom(target) || null;
+            return [
+                el.getBoundingClientRect(),
+                el
+            ];
         }
         if (props.childrenAsTarget && trigger.el) {
-            return trigger.el.getBoundingClientRect();
+            return [
+                trigger.el.getBoundingClientRect(),
+                trigger.el
+            ];
         }
-        /** target无效时居中显示 */ return getBoundWithAlignment(_defaultAlignment);
-    };
-    var isValidTarget = /** 是否是有效的target */ function isValidTarget(target) {
+        /** target无效时居中显示 */ return [
+            getBoundWithAlignment(_defaultAlignment),
+            null
+        ];
+    }
+    /** 是否是有效的target */ function isValidTarget(target) {
         if (!target) return false;
         if (isBound(target)) return true;
         var el = getRefDomOrDom(target);
         return !!isDom(el);
-    };
-    var getBound = /**
+    }
+    /**
    * 根据传入类型或当前配置获取定位bound和类型, 取值顺序为:
    * xy > alignment > target
    *
@@ -66,22 +81,29 @@ export function _useMethods(ctx) {
         var uType = type || getCurrentBoundType();
         if (uType === OverlayUpdateType.xy) return [
             getBoundWithXY(self.lastXY),
-            uType
+            uType,
+            null
         ];
         if (uType === OverlayUpdateType.alignment) return [
             getBoundWithAlignment(self.lastAlignment),
-            uType
+            uType,
+            null
         ];
-        if (uType === OverlayUpdateType.target) return [
-            getBoundWithTarget(self.lastTarget),
-            uType
-        ];
+        if (uType === OverlayUpdateType.target) {
+            var _getBoundWithTarget = _sliced_to_array(getBoundWithTarget(self.lastTarget), 2), bound = _getBoundWithTarget[0], el = _getBoundWithTarget[1];
+            return [
+                bound,
+                uType,
+                el
+            ];
+        }
         return [
             null,
-            uType
+            uType,
+            null
         ];
-    };
-    var getDirectionMeta = /** 获取根据方向处理后的位置信息, 此函数假设位置信息存在, 在调用前需进行断言 */ function getDirectionMeta(t) {
+    }
+    /** 获取根据方向处理后的位置信息, 此函数假设位置信息存在, 在调用前需进行断言 */ function getDirectionMeta(t) {
         var containerBound = containerRef.current.getBoundingClientRect();
         var dir = props.direction;
         var offset = props.offset + (props.arrow ? props.arrowSize[1] + _arrowSpace : 0);
@@ -97,13 +119,13 @@ export function _useMethods(ctx) {
         }
         // 内容超出屏幕修正处理
         return _preventOverflow(pickDirection, t, containerBound, clampBound, props.arrowSize);
-    };
-    var syncScrollParent = /** 在满足条件的情况下同步所有滚动父级 */ function syncScrollParent() {
+    }
+    /** 在满足条件的情况下同步所有滚动父级 */ function syncScrollParent() {
         if (!self.lastTarget) return;
         if (!isValidTarget(self.lastTarget) || isBound(self.lastTarget)) return;
         var el = getRefDomOrDom(self.lastTarget);
         if (!el) return;
-        var parents = getScrollParent(el, true);
+        var parents = getScrollParent(el, true, false);
         var same = true;
         var filterP = parents.filter(function(item) {
             return item !== document.documentElement && item !== document.body;
@@ -119,17 +141,21 @@ export function _useMethods(ctx) {
                 scrollParents: filterP
             });
         }
-    };
-    var isArrowEnable = /** 是否启用箭头 */ function isArrowEnable() {
+    }
+    /** 是否启用箭头 */ function isArrowEnable() {
         return props.direction && props.arrow;
-    };
-    var containerRef = ctx.containerRef, props = ctx.props, spApi = ctx.spApi, self = ctx.self, open = ctx.open, state = ctx.state, setState = ctx.setState, arrowSpApi = ctx.arrowSpApi, trigger = ctx.trigger, setOpen = ctx.setOpen;
+    }
     /** 使用最后更新的类型或配置类型更新位置 */ var update = useFn(function(immediate) {
         if (!open) return;
         // 1. 存在最后更新类型, 直接走该类型
         // 2. 不存在最后更新类型, 使用配置自动获取的类型
         // 3. 两种方式均未获取到值, 使用默认的alignment
-        var ref = _sliced_to_array(getBound(self.lastUpdateType), 2), bound = ref[0], type = ref[1];
+        var _getBound = _sliced_to_array(getBound(self.lastUpdateType), 3), bound = _getBound[0], type = _getBound[1], el = _getBound[2];
+        // target不同时重新获取父级
+        if (el && self.lastSyncScrollElement !== el) {
+            self.lastSyncScrollElement = el;
+            syncScrollParent();
+        }
         if (type) {
             self.lastUpdateType = type;
         }
@@ -137,7 +163,7 @@ export function _useMethods(ctx) {
         var isHidden = false;
         // 含位置配置时, 根据位置进行修正
         if (props.direction) {
-            var ref1 = _sliced_to_array(getDirectionMeta(tBound), 3), directionBound = ref1[0], arrowOffset = ref1[1], hide = ref1[2];
+            var _getDirectionMeta = _sliced_to_array(getDirectionMeta(tBound), 3), directionBound = _getDirectionMeta[0], arrowOffset = _getDirectionMeta[1], hide = _getDirectionMeta[2];
             isHidden = hide;
             if (isArrowEnable()) {
                 arrowSpApi.start({
@@ -176,11 +202,6 @@ export function _useMethods(ctx) {
     /** 根据传入的target来更新位置 */ var updateTarget = useFn(function(target, immediate) {
         var notPrev = !self.lastTarget;
         self.lastUpdateType = OverlayUpdateType.target;
-        // target不同时重新获取父级
-        if (self.lastTarget !== target) {
-            self.lastTarget = target; // 必须在进入前设置
-            syncScrollParent();
-        }
         self.lastTarget = target;
         update(isBoolean(immediate) ? immediate : notPrev);
     });
@@ -260,9 +281,9 @@ export function _useMethods(ctx) {
         return self.lastPosition;
     });
     /** 获取拖动的限制边界 */ var getDragBound = useFn(function() {
-        var ref;
+        var _containerRef_current;
         // 拖动时containerRef必然已挂载
-        var bound = (ref = containerRef.current) === null || ref === void 0 ? void 0 : ref.getBoundingClientRect();
+        var bound = (_containerRef_current = containerRef.current) === null || _containerRef_current === void 0 ? void 0 : _containerRef_current.getBoundingClientRect();
         return {
             left: 0,
             top: 0,

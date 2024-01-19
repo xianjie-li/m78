@@ -5,6 +5,11 @@ import { TableCell, TableColumn, TableColumnConfig, TableColumnLeafConfigFormatt
 import { TableReloadOptions } from "../plugins/life.js";
 import { tableDefaultTexts } from "../common.js";
 import { TablePlugin } from "../plugin.js";
+import { _MetaMethods } from "../plugins/meta-data.js";
+import { _ContextGetters } from "../plugins/getter.js";
+import { _ContextSetter } from "../plugins/setter.js";
+import { CacheTick } from "../plugins/frame-cache.js";
+import { _GetterCacheKey } from "./cache.js";
 /** 固定项信息 */
 type FixedMap<T> = {
     [index: string]: {
@@ -17,14 +22,14 @@ type FixedMap<T> = {
     };
 };
 /** 在插件和实例内共享的一组状态 */
-export interface TablePluginContext {
+export interface TablePluginContext extends _MetaMethods, _ContextGetters, _ContextSetter {
     /** 挂载dom的节点, 也是滚动容器节点 */
     viewEl: HTMLDivElement;
     /** domElement的子级, 用于实际挂载滚动区的dom节点 */
     viewContentEl: HTMLDivElement;
     /** viewContentEl子级, 用于集中挂载内容, 便于做一些统一控制(比如缩放) */
     stageEL: HTMLDivElement;
-    /** 浅拷贝后的数据, 在数据项第一次需要改写时需对对应的项进行浅拷贝, 从而实现超大数据量的按需高速复制 */
+    /** 浅拷贝后的数据, 在数据项第一次需要改写时再对应的项进行拷贝, 从而实现超大数据量的按需高速复制 */
     data: AnyObject[];
     /** 本地化后的行配置, 注入了表头相关的行/列配置 */
     rows: NonNullable<TableConfig["rows"]>;
@@ -46,13 +51,13 @@ export interface TablePluginContext {
     /** Y轴忽略项索引 */
     ignoreYList: number[];
     /**
-     * data的key映射, 用于快速查找key的索引, 另外, fixed项可以通过 key__M78TableRef 获取其原始数据的索引
+     * data的key映射, 用于快速查找key的索引
      * */
     dataKeyIndexMap: {
         [key: string]: number;
     };
     /**
-     * columns的key映射, 用于快速查找key的索引, 另外, fixed项可以通过 key__M78TableRef 获取其原始数据的索引
+     * columns的key映射, 用于快速查找key的索引
      * */
     columnKeyIndexMap: {
         [key: string]: number;
@@ -82,8 +87,6 @@ export interface TablePluginContext {
     bottomFixeList: TableKey[];
     leftFixedList: TableKey[];
     rightFixedList: TableKey[];
-    rightFixedListAll: TableKey[];
-    leftFixedListALl: TableKey[];
     /** 记录最后的单元格索引, 用于控制边框显示 */
     lastColumnKey?: TableKey;
     lastRowKey?: TableKey;
@@ -153,6 +156,13 @@ export interface TablePluginContext {
     xyShouldNotify?: boolean;
     /** 所有插件实例 */
     plugins: TablePlugin[];
+    /** 被自动移动的行(固定项), 需要在首次触发move事件时进行通知 */
+    autoMovedRows: {
+        key: TableKey;
+        from: number;
+    }[];
+    /** 通用的getterCache */
+    getterCache: CacheTick<_GetterCacheKey>;
 }
 export interface TableMergeData {
     /** 合并后占用的宽度 */

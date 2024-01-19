@@ -1,6 +1,6 @@
 import { TablePlugin } from "../plugin.js";
 import { _TableEventPlugin } from "./event.js";
-export declare class _TableSetterPlugin extends TablePlugin implements TableSetter {
+export declare class _TableSetterPlugin extends TablePlugin implements TableSetter, _ContextSetter {
     /** 用于滚动优化 */
     event: _TableEventPlugin;
     beforeInit(): void;
@@ -10,6 +10,7 @@ export declare class _TableSetterPlugin extends TablePlugin implements TableSett
     setX(x: number): void;
     setY(y: number): void;
     setXY(x: number, y: number): void;
+    setCursor(cursor: string): void;
 }
 export interface TableSetter {
     /** 更新x */
@@ -22,5 +23,9 @@ export interface TableSetter {
     setWidth(width: number | string): void;
     /** 设置高度 */
     setHeight(height: number | string): void;
+}
+export interface _ContextSetter {
+    /** 设置表格显示的光标 */
+    setCursor(cursor: string): void;
 }
 //# sourceMappingURL=setter.d.ts.map

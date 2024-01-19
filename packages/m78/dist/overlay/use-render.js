@@ -1,7 +1,7 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
-import _object_without_properties from "@swc/helpers/src/_object_without_properties.mjs";
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
+import { _ as _object_without_properties } from "@swc/helpers/_/_object_without_properties";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { Transition, TransitionBase, TransitionType } from "../transition/index.js";
 import React from "react";
@@ -15,24 +15,25 @@ import { _getArrowBasePosition, dragContext, overlayTransitionConfig } from "./c
 import { _MountTrigger as MountTrigger } from "./mount-trigger.js";
 var AnimatedArrow = animated(Arrow);
 export function _useRender(ctx, lifeCycle) {
-    var renderArrow = function renderArrow() {
-        var ref;
+    var props = ctx.props, state = ctx.state, arrowSp = ctx.arrowSp, open = ctx.open, containerRef = ctx.containerRef, overlaysMask = ctx.overlaysMask, trigger = ctx.trigger, sp = ctx.sp, methods = ctx.methods;
+    function renderArrow() {
+        var _props_arrowProps;
         if (!methods.isArrowEnable()) return false;
-        var _arrowSize = _sliced_to_array(props.arrowSize, 2), w = _arrowSize[0], h = _arrowSize[1];
-        var _ref = _getArrowBasePosition(state.lastDirection, props.arrowSize), rotate = _ref.rotate, pos = _object_without_properties(_ref, [
+        var _props_arrowSize = _sliced_to_array(props.arrowSize, 2), w = _props_arrowSize[0], h = _props_arrowSize[1];
+        var _$_getArrowBasePosition = _getArrowBasePosition(state.lastDirection, props.arrowSize), rotate = _$_getArrowBasePosition.rotate, pos = _object_without_properties(_$_getArrowBasePosition, [
             "rotate"
         ]);
         return /*#__PURE__*/ _jsx(AnimatedArrow, _object_spread_props(_object_spread({}, props.arrowProps), {
             width: w,
             height: h,
-            style: _object_spread_props(_object_spread({}, (ref = props.arrowProps) === null || ref === void 0 ? void 0 : ref.style, pos), {
+            style: _object_spread_props(_object_spread({}, (_props_arrowProps = props.arrowProps) === null || _props_arrowProps === void 0 ? void 0 : _props_arrowProps.style, pos), {
                 transform: arrowSp.offset.to(function(o) {
                     return "rotate(".concat(rotate, "deg) translate3d(").concat(o, "px, 0, 0)");
                 })
             })
         }));
-    };
-    var renderContent = function renderContent() {
+    }
+    function renderContent() {
         var transition = props.transition;
         var TransitionComponent = transition ? TransitionBase : Transition;
         return /*#__PURE__*/ React.createElement(TransitionComponent, {
@@ -67,19 +68,19 @@ export function _useRender(ctx, lifeCycle) {
                 renderArrow()
             ]
         }));
-    };
-    var renderMask = function renderMask() {
-        var ref;
+    }
+    function renderMask() {
+        var _props_maskProps;
         return /*#__PURE__*/ _jsx(Transition, _object_spread_props(_object_spread({}, props.maskProps), {
             open: open && overlaysMask.isFirst,
             type: TransitionType.fade,
-            className: clsx("m78 m78-mask", (ref = props.maskProps) === null || ref === void 0 ? void 0 : ref.className),
+            className: clsx("m78 m78-mask", (_props_maskProps = props.maskProps) === null || _props_maskProps === void 0 ? void 0 : _props_maskProps.className),
             mountOnEnter: true,
             unmountOnExit: true
         }));
-    };
-    var render = function render() {
-        var ref, ref1;
+    }
+    function render() {
+        var _props_extraProps, _props_extraProps1;
         return /*#__PURE__*/ _jsxs(_Fragment, {
             children: [
                 /*#__PURE__*/ _jsxs(Portal, {
@@ -93,8 +94,8 @@ export function _useRender(ctx, lifeCycle) {
                             tabIndex: -1
                         }, props.extraProps), {
                             ref: containerRef,
-                            className: clsx("m78 m78-overlay_wrap", (ref = props.extraProps) === null || ref === void 0 ? void 0 : ref.className),
-                            style: _object_spread_props(_object_spread({}, (ref1 = props.extraProps) === null || ref1 === void 0 ? void 0 : ref1.style, sp), {
+                            className: clsx("m78 m78-overlay_wrap", (_props_extraProps = props.extraProps) === null || _props_extraProps === void 0 ? void 0 : _props_extraProps.className),
+                            style: _object_spread_props(_object_spread({}, (_props_extraProps1 = props.extraProps) === null || _props_extraProps1 === void 0 ? void 0 : _props_extraProps1.style, sp), {
                                 visibility: open ? "visible" : "hidden",
                                 zIndex: props.zIndex,
                                 opacity: sp.isHidden.to(function(hide) {
@@ -111,7 +112,6 @@ export function _useRender(ctx, lifeCycle) {
                 trigger.node
             ]
         });
-    };
-    var props = ctx.props, state = ctx.state, arrowSp = ctx.arrowSp, open = ctx.open, containerRef = ctx.containerRef, overlaysMask = ctx.overlaysMask, trigger = ctx.trigger, sp = ctx.sp, methods = ctx.methods;
+    }
     return render();
 }

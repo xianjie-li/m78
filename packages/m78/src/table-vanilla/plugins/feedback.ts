@@ -195,7 +195,7 @@ export class _TableFeedbackPlugin extends TablePlugin {
     if (cell.column.key === "__RH") {
       const event: TableFeedbackEvent = {
         type: TableFeedback.regular,
-        text: "全选/反选",
+        text: this.context.texts.selectAllOrUnSelectAll,
         cell,
         bound,
       };

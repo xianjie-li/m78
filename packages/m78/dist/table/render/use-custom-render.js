@@ -1,4 +1,4 @@
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { jsx as _jsx, Fragment as _Fragment } from "react/jsx-runtime";
 import React, { useEffect } from "react";
 import { isTruthyOrZero } from "@m78/utils";
@@ -8,7 +8,7 @@ import { _useStateAct } from "../injector/state.act.js";
 import { _injector } from "../table.js";
 // 自定义渲染单元格
 export function _useCustomRender() {
-    var ref = _injector.useDeps(_useStateAct), state = ref.state, self = ref.self, rcPlugins = ref.rcPlugins;
+    var _injector_useDeps = _injector.useDeps(_useStateAct), state = _injector_useDeps.state, self = _injector_useDeps.self, rcPlugins = _injector_useDeps.rcPlugins;
     var props = _injector.useProps();
     // mountChange触发时, 清理renderMap中已卸载的单元格
     useEffect(function() {
@@ -47,7 +47,7 @@ export function _useCustomRender() {
     };
 }
 /** 自定义render处理 插件render/config render/column render */ export function renderCommonHandle(args) {
-    var ref;
+    var _props_render;
     var props = args.props, state = args.state, cell = args.cell, rcPlugins = args.rcPlugins;
     var arg = {
         cell: cell,
@@ -57,8 +57,8 @@ export function _useCustomRender() {
     };
     // 处理插件render
     rcPlugins.forEach(function(p) {
-        var ref;
-        var el = (ref = p.rcCellRender) === null || ref === void 0 ? void 0 : ref.call(p, {
+        var _p_rcCellRender;
+        var el = (_p_rcCellRender = p.rcCellRender) === null || _p_rcCellRender === void 0 ? void 0 : _p_rcCellRender.call(p, {
             cell: cell,
             prevElement: arg.prevElement
         });
@@ -67,7 +67,7 @@ export function _useCustomRender() {
         }
     });
     // props.render
-    var el = (ref = props.render) === null || ref === void 0 ? void 0 : ref.call(props, arg);
+    var el = (_props_render = props.render) === null || _props_render === void 0 ? void 0 : _props_render.call(props, arg);
     if (isTruthyOrZero(el)) {
         arg.prevElement = el;
     }
@@ -82,8 +82,8 @@ export function _useCustomRender() {
 }
 // 自定义渲染, 组件部分, 用于避免频繁render影响外部作用域
 export function _CustomRender() {
-    var ref = _injector.useDeps(_useStateAct), state = ref.state, self = ref.self;
-    var ref1 = _sliced_to_array(React.useState([]), 2), list = ref1[0], setList = ref1[1];
+    var _injector_useDeps = _injector.useDeps(_useStateAct), state = _injector_useDeps.state, self = _injector_useDeps.self;
+    var _React_useState = _sliced_to_array(React.useState([]), 2), list = _React_useState[0], setList = _React_useState[1];
     // 更新渲染列表
     var update = useFn(function() {
         var ls = Object.keys(self.renderMap).map(function(key) {

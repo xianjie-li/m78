@@ -5,8 +5,8 @@ import { TriggerEvent } from "../trigger/index.js";
 export declare function _useMethods(ctx: _OverlayContext): {
     getBoundWithXY: (xy: TupleNumber) => BoundSize;
     getBoundWithAlignment: (alignment: TupleNumber) => BoundSize;
-    getBoundWithTarget: (target: OverlayTarget) => BoundSize;
-    getBound: (type?: OverlayUpdateType) => [BoundSize | null, OverlayUpdateType | null];
+    getBoundWithTarget: (target: OverlayTarget) => [BoundSize, HTMLElement | null];
+    getBound: (type?: OverlayUpdateType) => [BoundSize | null, OverlayUpdateType | null, HTMLElement | null];
     activeContent: () => void;
     unActiveContent: () => void;
     updateChildrenEl: () => void;
@@ -18,7 +18,7 @@ export declare function _useMethods(ctx: _OverlayContext): {
     throttleUpdate: () => void;
     debounceUpdate: () => void;
     onTriggerMultiple: (e: TriggerEvent) => void;
-    onDragHandle: Handler<"drag", MouseEvent | PointerEvent | KeyboardEvent | TouchEvent>;
+    onDragHandle: Handler<"drag", MouseEvent | TouchEvent | PointerEvent | KeyboardEvent>;
     getDragInitXY: () => TupleNumber;
     getDragBound: () => _ClampBound;
 };

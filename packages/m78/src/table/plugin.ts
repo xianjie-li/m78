@@ -3,7 +3,7 @@ import { throwError } from "@m78/utils";
 import { _prefix } from "../table-vanilla/common.js";
 import { ReactNode } from "react";
 import { TableCellWithDom } from "../table-vanilla/index.js";
-import { _RCTableState, RCTableProps } from "./types.js";
+import { _RCTableSelf, _RCTableState, RCTableProps } from "./types.js";
 import { InjectType } from "../injector/index.js";
 import { _useStateAct } from "./injector/state.act.js";
 import { _injector } from "./table.js";
@@ -21,6 +21,15 @@ export class RCTablePlugin extends TablePlugin {
 
   /** 定制左侧toolbar按钮, 可直接更改nodes, 向其中新增或删除节点 */
   toolbarLeadingCustomer?(nodes: ReactNode[]): void;
+
+  /** 在初始化时改写或新增state的默认配置 */
+  rcStateInitializer?(state: _RCTableState): void;
+
+  /** 在初始化时改写或新增self的默认配置 */
+  rcSelfInitializer?(self: _RCTableSelf): void;
+
+  /** react侧初始化时执行 */
+  rcInit?(): void;
 
   /** 自定义单元格渲染 */
   rcCellRender?(data: {

@@ -29,3 +29,9 @@ m78Config.subscribe((changes) => {
 });
 
 export { m78Config };
+export type {
+  FormAdaptorsItem,
+  FormAdaptors,
+  FormAdaptor,
+  RCTableEditAdaptor,
+} from "./types.js";

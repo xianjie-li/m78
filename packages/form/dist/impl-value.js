@@ -1,31 +1,29 @@
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
-import clone from "lodash/cloneDeep.js";
-import { deleteNamePathValue, ensureArray, getNamePathValue, isArray, isEmpty, isObject, isString, setNamePathValue } from "@m78/utils";
-import { _clearChildAndSelf, _recursionDeleteNamePath } from "./common.js";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
+import { deleteNamePathValues, getNamePathValue, isArray, isEmpty, isObject, isString, setNamePathValue, simplyDeepClone as clone } from "@m78/utils";
+import { _clearChildAndSelf } from "./common.js";
 import isEqual from "lodash/isEqual.js";
 export function _implValue(ctx) {
     var instance = ctx.instance, config = ctx.config;
-    instance.getValues = function() {
-        var ref = _sliced_to_array(ctx.getFormatterSchemas(), 2), names = ref[1];
-        var values = ctx.verifyOnly ? ctx.values : clone(ctx.values);
-        // 移除invalid值
-        names.forEach(function(name) {
-            var na = ensureArray(name);
-            _recursionDeleteNamePath(values, na);
-        });
-        return values;
-    };
     instance.getValue = function(name) {
-        var schema = instance.getSchema(name);
-        // 移除invalid值
-        if (schema && "name" in schema && schema.valid === false) {
-            return undefined;
-        }
         return getNamePathValue(ctx.values, name);
     };
+    ctx.getFormatterValuesAndSchema = function(values) {
+        var _ctx_getFormatterSchemas = _sliced_to_array(ctx.getFormatterSchemas(), 2), schemas = _ctx_getFormatterSchemas[0], names = _ctx_getFormatterSchemas[1];
+        var cloneValues = clone(values === undefined ? ctx.values : values);
+        // 移除invalid值
+        deleteNamePathValues(cloneValues, names);
+        return [
+            schemas,
+            cloneValues
+        ];
+    };
     if (!ctx.verifyOnly) {
+        instance.getValues = function() {
+            var _ctx_getFormatterValuesAndSchema = _sliced_to_array(ctx.getFormatterValuesAndSchema(), 2), values = _ctx_getFormatterValuesAndSchema[1];
+            return values;
+        };
         instance.setValues = function(values) {
-            ctx.values = clone(values);
+            ctx.values = values;
             if (!ctx.lockListState) {
                 ctx.listState = {};
             }
@@ -38,11 +36,7 @@ export function _implValue(ctx) {
             }
         };
         instance.setValue = function(name, val) {
-            if (val === undefined) {
-                deleteNamePathValue(ctx.values, name);
-            } else {
-                setNamePathValue(ctx.values, name, val);
-            }
+            setNamePathValue(ctx.values, name, val);
             if (!ctx.lockListState) {
                 _clearChildAndSelf(ctx, name);
             }
@@ -59,10 +53,10 @@ export function _implValue(ctx) {
             }
         };
         instance.getDefaultValues = function() {
-            return clone(ctx.defaultValue);
+            return ctx.defaultValue;
         };
         instance.setDefaultValues = function(values) {
-            ctx.defaultValue = clone(values);
+            ctx.defaultValue = values;
         };
         instance.getChangedValues = function() {
             var changeProcess = // 递归处理和获取当前values的变更

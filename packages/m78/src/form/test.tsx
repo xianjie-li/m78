@@ -17,7 +17,7 @@ describe("form", () => {
             name: "name",
             validator: required(),
             label: "姓名",
-            dynamic: (form) => ({
+            dynamic: ({ form }) => ({
               hidden: form.getValue("desc") === "abc",
             }),
             deps: ["desc"],
@@ -52,7 +52,7 @@ describe("form", () => {
             name: "list",
             label: "列表",
             list: true,
-            dynamic: (form) => ({
+            dynamic: ({ form }) => ({
               valid: form.getValue("name") !== "123",
             }),
             deps: ["name"],
@@ -77,7 +77,7 @@ describe("form", () => {
             label: "列表3",
             list: true,
             listDefaultValue: "11",
-            dynamic: (form) => ({
+            dynamic: ({ form }) => ({
               valid: form.getValue("name") !== "123",
             }),
             deps: ["name"],

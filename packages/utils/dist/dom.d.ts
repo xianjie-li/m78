@@ -1,8 +1,4 @@
 import { AnyObject, Bound, BoundSize, TupleNumber } from "./types.js";
-export * from "./dom/dom-adaption.js";
-export * from "./dom/auto-scroll.js";
-export * from "./dom/physical-scroll.js";
-export * from "./dom/keyboard-helper.js";
 /**
  * get a dom, multiple calls will return the same dom
  * @param namespace - create a uniq node by namespace
@@ -66,11 +62,14 @@ export declare function triggerHighlight(t: string | HTMLElement, TriggerHighlig
  * */
 export declare function getCurrentParent(node: Element, matcher: (node: Element) => boolean, depth?: number): boolean;
 /**
- * get scrolling parent node, get all when pass getAll
+ * Get scrolling parent node, get all scroll parent when pass getAll
+ *
+ * When setting checkOverflow, will check dom overflow property to be 'auto' or 'scroll', default us true.
+ *
  * When setting or getting scrollTop/scrollLeft on document.documentElement and document.body, the performance of different browsers will be inconsistent, so when the scroll element is document.documentElement or document.body, document.documentElement is returned uniformly for easy identification
  * */
-export declare function getScrollParent(ele: HTMLElement, getAll?: false): HTMLElement | null;
-export declare function getScrollParent(ele: HTMLElement, getAll?: true): HTMLElement[];
+export declare function getScrollParent(ele: HTMLElement, getAll?: false, checkOverflow?: boolean): HTMLElement | null;
+export declare function getScrollParent(ele: HTMLElement, getAll?: true, checkOverflow?: boolean): HTMLElement[];
 /** get doc scroll offset, used to solve the problem of different versions of the browser to get inconsistent */
 export declare function getDocScrollOffset(): {
     x: number;
@@ -90,4 +89,5 @@ export declare function hasScroll(el: HTMLElement, checkOverflowAttr?: boolean):
 export declare function getEventOffset(e: MouseEvent | TouchEvent | PointerEvent, target: HTMLElement | BoundSize): TupleNumber;
 /** checkChildren = false | check dom is focus, detected childrens focus when checkChildren is true */
 export declare function isFocus(dom: HTMLElement, checkChildren?: boolean): boolean;
+export {};
 //# sourceMappingURL=dom.d.ts.map

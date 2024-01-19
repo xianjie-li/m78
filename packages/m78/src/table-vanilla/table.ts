@@ -23,7 +23,7 @@ import { _TableHighlightPlugin } from "./plugins/highlight.js";
 import { _TableSortColumnPlugin } from "./plugins/sort-column.js";
 import { _TableDragSortPlugin } from "./plugins/drag-sort.js";
 import { _TableDisablePlugin } from "./plugins/disable.js";
-import { _TableTouchScrollPlugin } from "./plugins/touch-scroll.js";
+import { _TableDragMovePlugin } from "./plugins/drag-move.js";
 import { _TableKeyboardInteractionPlugin } from "./plugins/keyboard-interaction.js";
 import { _TableInteractiveCorePlugin } from "./plugins/interactive-core.js";
 import { _TableIsPlugin } from "./plugins/is.js";
@@ -32,6 +32,8 @@ import { _TableFormPlugin } from "./plugins/form.js";
 import { _TableFeedbackPlugin } from "./plugins/feedback.js";
 import { _TableSoftRemovePlugin } from "./plugins/soft-remove.js";
 import { _TableMetaDataPlugin } from "./plugins/meta-data.js";
+import { CacheTick } from "./plugins/frame-cache.js";
+import { TablePluginContext } from "./types/context.js";
 
 /**
  * 核心功能, 在非框架环境下实现, 以便在日后进行移植
@@ -48,6 +50,7 @@ export function _createTable(config: TableConfig): TableInstance {
     emptySize: 100,
     autoSize: true,
     stripe: true,
+    border: true,
     cellSelectable: true,
     rowSelectable: true,
   };
@@ -66,7 +69,12 @@ export function _createTable(config: TableConfig): TableInstance {
 
   const conf = { ...defaultConfig, ...config };
 
-  const context: any = {};
+  const initContext: Partial<TablePluginContext> = {
+    getterCache: new CacheTick(),
+  };
+
+  // fill props by late
+  const context: TablePluginContext = initContext as any;
 
   const eventCreator = conf.eventCreator ? conf.eventCreator : createEvent;
 
@@ -89,6 +97,7 @@ export function _createTable(config: TableConfig): TableInstance {
     beforeDestroy: eventCreator(),
     interactiveChange: eventCreator(),
     feedback: eventCreator(),
+    dragMoveChange: eventCreator(),
   };
 
   // 不完整的实例
@@ -129,7 +138,7 @@ export function _createTable(config: TableConfig): TableInstance {
     _TableDragSortPlugin,
     _TableRenderPlugin,
     _TableScrollMarkPlugin,
-    _TableTouchScrollPlugin,
+    _TableDragMovePlugin,
     _TableSelectPlugin,
     _TableDisablePlugin,
     _TableSoftRemovePlugin,

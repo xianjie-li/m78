@@ -4,42 +4,31 @@ import {
   FormErrorTemplateType,
   FormRejectMeta,
   FormSchema,
-  FormVerifyInstance,
+  FormSchemaWithoutName,
   FormVerifyMeta,
   NamePath,
 } from "../types.js";
 import {
   AnyObject,
-  ensureArray,
   getNamePathValue,
   interpolate,
-  isArray,
   isFunction,
-  isObject,
   isString,
+  NameItem,
   stringifyNamePath,
 } from "@m78/utils";
-import { _ROOT_SCHEMA_NAME } from "../common.js";
 import { isVerifyEmpty } from "../validator/index.js";
 import {
   _fmtValidator,
   _getExtraKeys,
   _isErrorTemplateInterpolate,
 } from "./common.js";
+import { _ROOT_SCHEMA_NAME } from "../common.js";
 
 export function _implSchemaCheck(ctx: _Context) {
-  const { instance: _instance, config } = ctx;
+  const { config } = ctx;
 
-  const instance = _instance as FormVerifyInstance;
-
-  ctx.schemaCheck = async (values, extraMeta) => {
-    const _rootSchema = instance.getSchemas();
-
-    const rootSchema = {
-      ..._rootSchema,
-      name: _ROOT_SCHEMA_NAME,
-    };
-
+  ctx.schemaCheck = async (values, rootSchema, extraMeta) => {
     // 验证器错误
     const rejectMeta: FormRejectMeta = [];
 
@@ -51,19 +40,25 @@ export function _implSchemaCheck(ctx: _Context) {
 
     // 对一项schema执行检测, 返回true时可按需跳过后续schema的验证
     // 如果传入parentNames，会将当前项作为指向并将parentNames与当前name拼接
-    async function checkSchema(schema: FormSchema, parentNames: NamePath) {
-      const isRootSchema = schema.name === _ROOT_SCHEMA_NAME;
+    async function checkSchema(
+      _schema: FormSchema | FormSchemaWithoutName,
+      parentNamePath: NameItem[],
+      isRootSchema?: boolean
+    ) {
+      if (!isRootSchema && !("name" in _schema)) return;
 
-      const parentNamePath = ensureArray(parentNames);
-      const namePath = [...parentNamePath, ...ensureArray(schema.name)];
+      const schema = _schema as FormSchema;
 
-      // 排除rootSchema的真实name
-      const realNamePath = isRootSchema ? [] : namePath;
+      const namePath: NamePath = isRootSchema
+        ? []
+        : [...parentNamePath, schema.name];
 
       let value = isRootSchema ? values : getValueByName(namePath);
 
-      const name = stringifyNamePath(namePath);
-      const label = schema.label || name;
+      const nameStr = isRootSchema
+        ? _ROOT_SCHEMA_NAME
+        : stringifyNamePath(namePath);
+      const label = schema.label || nameStr;
 
       // 预转换值
       if (schema.transform) value = schema.transform(value);
@@ -74,7 +69,7 @@ export function _implSchemaCheck(ctx: _Context) {
 
       // 基础插值对象
       const interpolateValues: AnyObject = {
-        name,
+        name: nameStr,
         label,
         value,
         type: Object.prototype.toString.call(value),
@@ -84,7 +79,7 @@ export function _implSchemaCheck(ctx: _Context) {
       let currentPass = true;
 
       const meta: FormVerifyMeta = {
-        name,
+        name: nameStr,
         namePath,
         label,
         value,
@@ -159,41 +154,28 @@ export function _implSchemaCheck(ctx: _Context) {
       if (!currentPass) return;
 
       if (schema.schema?.length) {
-        await checkSchemas(schema.schema, realNamePath);
+        await checkSchemas(schema.schema, namePath.slice());
       }
 
-      if (schema.eachSchema) {
-        let _schemas: FormSchema[] = [];
-
-        if (isArray(value)) {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          _schemas = value.map((_, index) => ({
-            ...schema.eachSchema,
-            name: index,
-          }));
-        }
-
-        if (isObject(value)) {
-          _schemas = Object.keys(value).map((key) => ({
-            ...schema.eachSchema,
-            name: key,
-          }));
-        }
-
-        await checkSchemas(_schemas, realNamePath);
-      }
+      // 经过schemaSpecialPropsHandle处理后, schema不会有eachSchema
+      // if (schema.eachSchema) {}
     }
 
     // 检测一组schema
-    async function checkSchemas(_schemas: FormSchema[], parentNames: NamePath) {
+    async function checkSchemas(
+      _schemas: FormSchema[],
+      parentNames: NameItem[]
+    ) {
       for (const schema of _schemas) {
         await checkSchema(schema, parentNames);
         if (needBreak) break;
       }
     }
 
-    await checkSchema(rootSchema, []);
+    await checkSchema(rootSchema, [], true);
 
-    return rejectMeta.length ? rejectMeta : null;
+    const rm = rejectMeta.length ? rejectMeta : null;
+
+    return [rm, values];
   };
 }

@@ -1,19 +1,20 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
+import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
 import { createRandString, ensureArray, isArray, isNumber, move, swap, stringifyNamePath } from "@m78/utils";
 import { _ROOT_SCHEMA_NAME, _syncListIndex } from "./common.js";
 export function _implList(ctx) {
-    var syncAndGetList = /**
+    var instance = ctx.instance;
+    /**
    * 更新指定name的listState并获取对应list, 若未在schema中开启, 则返回null,
    * 若list为`[]`, 则对根schema进行操作, 若指定name的值不是数组, 内部会确保获取到数组
-   * */ function syncAndGetList(name) {
-        var ref;
-        var isRoot = isArray(name) && !name.length;
-        var schema = isRoot ? _object_spread({}, ctx.schema) : instance.getSchema(name);
+   * */ function syncAndGetList(_name) {
+        var _listState_sName;
+        var name = ensureArray(_name);
+        var isRoot = !name.length;
+        var schema = isRoot ? instance.getSchemas() : instance.getSchema(name);
         var listState = ctx.listState;
         if (!schema || !schema.list) return null;
         var sName = isRoot ? _ROOT_SCHEMA_NAME : stringifyNamePath(name);
-        if (!isArray(listState === null || listState === void 0 ? void 0 : (ref = listState[sName]) === null || ref === void 0 ? void 0 : ref.keys)) {
+        if (!isArray(listState === null || listState === void 0 ? void 0 : (_listState_sName = listState[sName]) === null || _listState_sName === void 0 ? void 0 : _listState_sName.keys)) {
             listState[sName] = {
                 keys: [],
                 name: isRoot ? _ROOT_SCHEMA_NAME : name
@@ -43,8 +44,8 @@ export function _implList(ctx) {
             strName: sName,
             isRoot: isRoot
         };
-    };
-    var setValueHandle = /** 根据isRoot设置value, 并阻止重置值的list状态 */ function setValueHandle(value, name, isRoot) {
+    }
+    /** 根据isRoot设置value, 并阻止重置值的list状态 */ function setValueHandle(value, name, isRoot) {
         ctx.lockListState = true;
         if (isRoot) {
             instance.setValues(value);
@@ -52,8 +53,7 @@ export function _implList(ctx) {
             instance.setValue(name, value);
         }
         ctx.lockListState = false;
-    };
-    var instance = ctx.instance;
+    }
     instance.getList = function(name) {
         var res = syncAndGetList(name);
         if (!res) return null;
