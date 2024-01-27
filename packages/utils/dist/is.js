@@ -148,3 +148,20 @@ export function isWeakNumber(arg) {
 /** Check whether the value is a reference type*/ export function isReferenceType(value) {
     return typeof value === "object" || typeof value === "function";
 }
+/** Check is run in browser (may cause certain simulation environments (jest/web worker) to be affected) */ export function isBrowser() {
+    return ![
+        typeof window === "undefined" ? "undefined" : _type_of(window),
+        typeof document === "undefined" ? "undefined" : _type_of(document)
+    ].includes("undefined");
+}
+/** Check is run in web worker thread */ export function isWorker() {
+    return(// @ts-ignore
+    typeof WorkerGlobalScope !== "undefined" && // @ts-ignore
+    _instanceof(self, WorkerGlobalScope));
+}
+// Check is run in web shared worker thread
+export function isSharedWorker() {
+    return(// @ts-ignore
+    typeof SharedWorkerGlobalScope !== "undefined" && // @ts-ignore
+    _instanceof(self, SharedWorkerGlobalScope));
+}

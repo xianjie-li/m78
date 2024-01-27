@@ -3,7 +3,7 @@
 
 <br>
 
-<p align="center">一个多用途的headless form库, 可用于客户单和服务端, 提供了值收集 / 验证 / 表单状态管理等功能.</p>
+<p align="center">一个多用途的headless form库, 可用于客户端和服务端, 提供了值收集 / 验证 / 表单状态管理等功能.</p>
 
 <br>
 
@@ -72,14 +72,25 @@ const form = createForm({
 form.getValue('title');
 form.getValues();
 form.setValue('title', "m78");
-form.setValues({ title: 111, desc: 222 });
+form.setValues({ title: 111, desc: 222 });	// 设置所有值
+form.getDefaultValues();
+form.setDefaultValues();
+
+// 获取变更状态
 form.getChanged('title');
 form.getFormChanged();
-form.getTouched('fieldName');
-form.getChangedValues();
-form.getDefaultValues();
 
-// 表单操作
+// 表单是否被操作过
+form.getTouched('title');
+form.setTouched('title');
+form.getFormTouched();
+form.setFormTouched(false);
+
+// 获取最后一次验证的错误
+form.getErrors(name?);
+
+
+// 表单操作 (应始终使用verify/submit/getValues等api的返回, 因为valid等特殊选项会过滤掉无效值)
 form.reset();
 form.verify().then(([rejects, values]) => {
 	if (rejects) console.log('error', rejects);
@@ -89,17 +100,18 @@ form.submit().then(([rejects, values]) => {	// 与verify()的区别是会触发s
 });
 
 // list操作
-form.getList('…');
-form.listAdd('…');
-form.listRemove('…');
-form.listMove('…');
-form.listSwap('…');
+form.getList('listName');
+form.listAdd('listName', { title: 'xxx', desc: 'xxx' });
+form.listRemove('listName', 2);
+form.listMove('listName', 2, 5);
+form.listSwap('listName', 2, 5);
 
 // 事件
-form.events.update.on(cb);
-form.events.change.on(cb);
-form.events.submit.on(cb);
-form.events.fail.on(cb);
+form.events.update.on(() => {});
+form.events.change.on(() => {});
+form.events.submit.on((values) => {});
+form.events.fail.on((errors, isValueChangeTrigger) => {});
+form.events.reset.on(() => {});
 ```
 
 <br>

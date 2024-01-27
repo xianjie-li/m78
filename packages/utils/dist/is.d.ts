@@ -78,5 +78,10 @@ export declare function isTruthyOrZero(arg: any): boolean;
 export declare function isPromiseLike(arg: any): arg is Promise<any>;
 /** Check whether the value is a reference type*/
 export declare function isReferenceType(value: any): boolean;
+/** Check is run in browser (may cause certain simulation environments (jest/web worker) to be affected) */
+export declare function isBrowser(): boolean;
+/** Check is run in web worker thread */
+export declare function isWorker(): boolean;
+export declare function isSharedWorker(): boolean;
 export {};
 //# sourceMappingURL=is.d.ts.map

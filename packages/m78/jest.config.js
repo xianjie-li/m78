@@ -1,4 +1,4 @@
-import config from "@m78/build-tools/jest.config.js";
+import config from "@m78/devtools/jest.config.js";
 
 export default {
   ...config,

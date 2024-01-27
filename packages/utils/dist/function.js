@@ -1,12 +1,12 @@
+import { _ as _instanceof } from "@swc/helpers/_/_instanceof";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
 /**
  * 将一个错误优先且回调位于最后一个参数的node风格的callback函数转为Promise return函数
  * @param fn - 要包装的函数
  * @param {object} receiver - 要绑定作用域的对象
  * @return promise - 转换后的函数
- */ import { _ as _instanceof } from "@swc/helpers/_/_instanceof";
-import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
-import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
-export function promisify(fn, receiver) {
+ */ export function promisify(fn, receiver) {
     return function() {
         for(var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++){
             args[_key] = arguments[_key];
@@ -18,6 +18,20 @@ export function promisify(fn, receiver) {
                 }
             ]));
         });
+    };
+}
+/** 创建一个promise, 返回promise以及其resolve/reject句柄 */ export function createPromise(executor) {
+    var resolve;
+    var reject;
+    var promise = new Promise(function(r, rj) {
+        resolve = r;
+        reject = rj;
+        executor === null || executor === void 0 ? void 0 : executor(r, rj);
+    });
+    return {
+        promise: promise,
+        resolve: resolve,
+        reject: reject
     };
 }
 /**
@@ -85,4 +99,4 @@ var defaultConfig = {
     };
     trigger();
     return clear;
-} // TODO: 增加异步版本 asyncRetry
+}

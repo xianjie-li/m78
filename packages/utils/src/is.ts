@@ -210,3 +210,28 @@ export function isPromiseLike(arg: any): arg is Promise<any> {
 export function isReferenceType(value) {
   return typeof value === "object" || typeof value === "function";
 }
+
+/** Check is run in browser (may cause certain simulation environments (jest/web worker) to be affected) */
+export function isBrowser() {
+  return ![typeof window, typeof document].includes("undefined");
+}
+
+/** Check is run in web worker thread */
+export function isWorker() {
+  return (
+    // @ts-ignore
+    typeof WorkerGlobalScope !== "undefined" &&
+    // @ts-ignore
+    self instanceof WorkerGlobalScope
+  );
+}
+
+// Check is run in web shared worker thread
+export function isSharedWorker() {
+  return (
+    // @ts-ignore
+    typeof SharedWorkerGlobalScope !== "undefined" &&
+    // @ts-ignore
+    self instanceof SharedWorkerGlobalScope
+  );
+}

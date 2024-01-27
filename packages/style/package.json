@@ -9,12 +9,12 @@
     "email": "1073830130@qq.com"
   },
   "scripts": {
-    "build": "mbt build",
+    "build": "m78 build",
     "gcolors-var": "node ./script/generateColors.js",
     "lint:prettier": "prettier ./src ./test --write --no-error-on-unmatched-pattern",
     "lint": "npm run lint:prettier",
     "pub": "pnpm build && pnpm publish --access public --registry https://registry.npmjs.org --no-git-checks",
-    "example-hello": "mbt example hello"
+    "example-hello": "m78 example hello"
   },
   "devDependencies": {
     "autoprefixer": "^9.8.6",
@@ -22,7 +22,8 @@
     "sass": "^1.54.9"
   },
   "dependencies": {
-    "@ant-design/colors": "^6.0.0"
+    "@ant-design/colors": "^6.0.0",
+    "@swc/helpers": "^0.4.36"
   },
   "license": "MIT",
   "files": [

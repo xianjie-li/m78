@@ -11,7 +11,7 @@
     "lint": "npm run lint:script && npm run lint:prettier",
     "build": "m78-build-tools build",
     "pub": "pnpm build && pnpm publish --access public --registry https://registry.npmjs.org --no-git-checks",
-    "examples": "mbt example main"
+    "examples": "m78 example main"
   },
   "keywords": [],
   "author": {

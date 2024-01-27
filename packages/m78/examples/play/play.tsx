@@ -1,8 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Input, Transition } from "../../src";
-import { isArray, isObject, simplyDeepClone } from "@m78/utils";
-
-console.log(new URL("./play.ts", import.meta.url));
+import { createTempID, isArray, isObject, simplyDeepClone } from "@m78/utils";
 
 const Play = () => {
   const [show, setShow] = useState(false);
@@ -40,12 +38,6 @@ const Play = () => {
     };
   }, []);
 
-  const worker = useMemo(() => {
-    return new Worker(new URL("./worker.ts", import.meta.url), {
-      // type: "module",
-    });
-  }, []);
-
   return (
     <div>
       <button
@@ -58,8 +50,6 @@ const Play = () => {
 
       <button
         onClick={() => {
-          console.log(worker);
-
           const createRow = (key: any) => {
             const obj: any = {
               id: `id${key}`,
@@ -87,15 +77,9 @@ const Play = () => {
             return obj;
           };
 
-          const data1 = Array.from({ length: 100000 }).map((_, i) => {
-            return createRow(i);
-          });
-
-          console.log(1, window.performance.now());
-
-          worker.postMessage(data1);
-
-          console.log(2, window.performance.now());
+          // const data1 = Array.from({ length: 100000 }).map((_, i) => {
+          //   return createRow(i);
+          // });
         }}
       >
         send

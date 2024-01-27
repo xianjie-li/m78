@@ -1,7 +1,7 @@
 
 module.exports = {
   extends: [
-    require.resolve('@m78/build-tools/.eslintrc.cjs')
+    require.resolve('@m78/devtools/.eslintrc.cjs')
   ],
   rules: {
   }

@@ -40,7 +40,7 @@
     "test": "jest",
     "build": "m78-build-tools build",
     "pub": "pnpm build && pnpm publish --access public --registry https://registry.npmjs.org --no-git-checks",
-    "example": "mbt example main"
+    "example": "m78 example main"
   },
   "publishConfig": {
     "directory": "dist",

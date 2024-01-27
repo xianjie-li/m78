@@ -17,3 +17,5 @@ export * from "./smooth-trigger.js";
 export * from "./smooth-wheel.js";
 
 export * from "./set-cache-value.js";
+
+export * from "./create-temporary-id.js";

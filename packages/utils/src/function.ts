@@ -1,11 +1,11 @@
+import { AnyFunction, EmptyFunction } from "./types";
+
 /**
  * 将一个错误优先且回调位于最后一个参数的node风格的callback函数转为Promise return函数
  * @param fn - 要包装的函数
  * @param {object} receiver - 要绑定作用域的对象
  * @return promise - 转换后的函数
  */
-import { AnyFunction, EmptyFunction } from "./types";
-
 export function promisify<T = any>(
   fn: AnyFunction,
   receiver?: object
@@ -20,6 +20,35 @@ export function promisify<T = any>(
       ]);
     });
   };
+}
+
+type Executor = ConstructorParameters<typeof Promise>[0];
+
+export interface PromiseTask<T> {
+  /** 对应该任务的promise */
+  promise: Promise<T>;
+  /** promise的resolve函数 */
+  resolve: (value: T) => void;
+  /** promise的reject函数 */
+  reject: (reason?: any) => void;
+}
+
+/** 创建一个promise, 返回promise以及其resolve/reject句柄 */
+export function createPromise<T = any>(executor?: Executor): PromiseTask<T> {
+  let resolve;
+  let reject;
+
+  const promise = new Promise((r, rj) => {
+    resolve = r;
+    reject = rj;
+    executor?.(r, rj);
+  });
+
+  return {
+    promise,
+    resolve,
+    reject,
+  } as any as PromiseTask<T>;
 }
 
 /**
@@ -104,5 +133,3 @@ export function retry(
 
   return clear;
 }
-
-// TODO: 增加异步版本 asyncRetry

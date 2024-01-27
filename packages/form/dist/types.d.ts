@@ -94,7 +94,7 @@ export interface FormRejectMetaItem extends FormVerifyMeta {
 /** 包含验证错误信息的数组, 每一项都表示一个验证错误 */
 export type FormRejectMeta = FormRejectMetaItem[];
 /** Form 实例 */
-export interface FormInstance extends FormVerifyInstance {
+export interface FormInstance extends FormVerifyInstancePartial {
     /** 指定值是否与默认值相同 */
     getChanged(name: NamePath): boolean;
     /** 表单当前值是否与默认值相同 */
@@ -154,8 +154,6 @@ export interface FormInstance extends FormVerifyInstance {
     listMove(name: NamePath, from: number, to: number): boolean;
     /** 交换list的两个元素 */
     listSwap(name: NamePath, from: number, to: number): boolean;
-    /** 重新设置当前schemas, 通常需要在重新设置schema后手动自动执行一次verify()来清理之前的校验状态 */
-    setSchemas(schema: FormSchemaWithoutName): void;
     /** 事件 */
     events: {
         /** 字段值或状态变更时, 这里是更新ui状态的理想位置 */
@@ -175,8 +173,8 @@ export interface FormInstance extends FormVerifyInstance {
      * */
     notifyFilter: (name: NamePath, notify: FormNamesNotify, deps?: NamePath[]) => FormNamesNotify;
 }
-/** 仅包含验证必须功能的实例, FormInstance 的子集, 不直接对外暴露, 会在内部以及部分schema api中作为参数传入 */
-export interface FormVerifyInstance {
+/** 在form/verify实例中共享的api */
+interface FormVerifyInstancePartial {
     /** 获取Form创建配置 */
     getConfig(): FormConfig;
     /** 获取指定name的值, 获取的值为对应的原始引用, 请勿作查询以外的操作 */
@@ -198,9 +196,20 @@ export interface FormVerifyInstance {
         /** 返回原始的schema配置, 不对eachSchema/dynamic等特殊配置进行处理 */
         withoutProcess?: boolean;
     }): FormSchema | null;
+    /**
+     * 类似getSchemas(), 但会获取更多信息, 比如 invalidNames, 未来可能会增加更多
+     * */
+    getSchemasDetail(): {
+        /** 与getSchemas()返回一致, 处理特殊选项后的schema */
+        schemas: FormSchemaWithoutName;
+        /** 所有invalid项的name */
+        invalidNames: NamePath[];
+    };
+    /** 重新设置当前schemas */
+    setSchemas(schema: FormSchemaWithoutName): void;
 }
 /** 验证实例 */
-export interface FormVerify {
+export interface FormVerifyInstance extends FormVerifyInstancePartial {
     /**
      * 对当前values执行校验, 校验失败时, 数组首项为失败信息组成的的数组, 校验失败时为null, 第二项为参与验证的数据
      *
@@ -209,8 +218,6 @@ export interface FormVerify {
      * 若传入extraMeta, 会将其扩展到该次验证的 FormVerifyMeta 中, 然后你可以在验证器/验证错误信息等位置对其进行访问
      * */
     check(values: any, extraMeta?: AnyObject): Promise<[FormRejectMeta | null, any]>;
-    /** 获取Form创建配置 */
-    getConfig(): FormConfig;
 }
 /**
  * 用于update/change事件的回调

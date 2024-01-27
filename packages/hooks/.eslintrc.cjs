@@ -1,5 +1,5 @@
 module.exports = {
-  extends: [require.resolve("@m78/build-tools/.eslintrc.cjs")],
+  extends: [require.resolve("@m78/devtools/.eslintrc.cjs")],
   rules: {},
 };
 

@@ -8,7 +8,7 @@
     },
     "target": "es2015"
   },
-  "extends": "@m78/build-tools/tsconfig-base.json",
+  "extends": "@m78/devtools/tsconfig-base.json",
   "include": [
     "src/**/*",
     "examples/**/*",

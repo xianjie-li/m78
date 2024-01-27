@@ -14,9 +14,9 @@
     "lint:prettier": "prettier ./src ./test --write --no-error-on-unmatched-pattern",
     "lint:script": "eslint ./src ./test --ext .js,.jsx,.ts,.tsx,.vue --fix",
     "lint": "npm run lint:script && npm run lint:prettier",
-    "build": "mbt build",
+    "build": "m78 build",
     "pub": "pnpm build && pnpm publish --access public --registry https://registry.npmjs.org --no-git-checks",
-    "example": "mbt example main"
+    "example": "m78 example main"
   },
   "dependencies": {
     "@lxjx/click-effect": "^1.0.1",
@@ -42,7 +42,8 @@
     "react-spring": "^9.6.1",
     "resize-observer-polyfill": "^1.5.1",
     "type-fest": "^4.2.0",
-    "use-sync-external-store": "^1.2.0"
+    "use-sync-external-store": "^1.2.0",
+    "@swc/helpers": "^0.4.36"
   },
   "author": {
     "name": "Link",

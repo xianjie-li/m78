@@ -7,19 +7,24 @@ export function _implSchema(ctx) {
         var _ctx_getFormatterSchemas = _sliced_to_array(ctx.getFormatterSchemas(), 1), schemas = _ctx_getFormatterSchemas[0];
         return schemas;
     };
+    instance.getSchemasDetail = function() {
+        var _ctx_getFormatterSchemas = _sliced_to_array(ctx.getFormatterSchemas(), 2), schemas = _ctx_getFormatterSchemas[0], invalidNames = _ctx_getFormatterSchemas[1];
+        return {
+            schemas: schemas,
+            invalidNames: invalidNames
+        };
+    };
     instance.getSchema = function(name) {
         var opt = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
         var _ctx_getFormatterSchema = _sliced_to_array(ctx.getFormatterSchema(name, opt.skipChildren, opt.withoutProcess), 1), schema = _ctx_getFormatterSchema[0];
         return schema;
     };
-    if (!ctx.verifyOnly) {
-        instance.setSchemas = function(schema) {
-            ctx.schema = schema;
-            if (!ctx.lockNotify) {
-                instance.events.update.emit();
-            }
-        };
-    }
+    instance.setSchemas = function(schema) {
+        ctx.schema = schema;
+        if (!ctx.verifyOnly && !ctx.lockNotify) {
+            instance.events.update.emit();
+        }
+    };
     ctx.getFormatterSchemas = function() {
         // 所有invalid项的name
         var invalidNames = [];

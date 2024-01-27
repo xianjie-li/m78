@@ -106,3 +106,44 @@ form 实现改动:
 - scroll 组件重构 (优化性能, 代码结构, 接入 wheel 等添加无限滚动)
 - 滚动条可单独使用
 - 支持滚动方向大致确定后锁定方向
+
+```js
+const config = {
+  num: 4,
+  script: "./xxx",
+  register() {},
+  mapper: {
+    handle1(arg1) {
+      return 123;
+    },
+  },
+};
+
+const w = new EazyWorker(config);
+
+w.handle(1, 2, 3).then((res) => {});
+
+// worker.js
+new EasyWorker(config);
+```
+
+```js
+// worker.js 在一个赶紧的文件内创建实例, 脚本会在主进程和子,  外部依赖越少越好
+
+export default new M78Worker({
+  url: import.meta.url,
+  // 可通过m78config提前注册
+  handleLoader: async (register: M78WorkerRegister) => {
+    await Promise.all(import("../xxx.js"));
+  },
+});
+```
+
+```js
+// 使用
+import worker from "./worker.js";
+
+worker.invoke("calc", 1, 2, 3).then((res) => {
+  console.log(res);
+});
+```

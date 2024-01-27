@@ -1,11 +1,22 @@
+import { AnyFunction, EmptyFunction } from "./types";
 /**
  * 将一个错误优先且回调位于最后一个参数的node风格的callback函数转为Promise return函数
  * @param fn - 要包装的函数
  * @param {object} receiver - 要绑定作用域的对象
  * @return promise - 转换后的函数
  */
-import { AnyFunction, EmptyFunction } from "./types";
 export declare function promisify<T = any>(fn: AnyFunction, receiver?: object): (...args: Parameters<AnyFunction>) => Promise<T>;
+type Executor = ConstructorParameters<typeof Promise>[0];
+export interface PromiseTask<T> {
+    /** 对应该任务的promise */
+    promise: Promise<T>;
+    /** promise的resolve函数 */
+    resolve: (value: T) => void;
+    /** promise的reject函数 */
+    reject: (reason?: any) => void;
+}
+/** 创建一个promise, 返回promise以及其resolve/reject句柄 */
+export declare function createPromise<T = any>(executor?: Executor): PromiseTask<T>;
 /**
  * 返回一个延迟指定时间的Promise
  * @param ms - 延迟时间
@@ -36,4 +47,5 @@ export interface FunctionReTryConfig {
  * @return clear() - 用于停止重试并清理内部计时器
  * */
 export declare function retry(handle: () => any, delay: number, config?: FunctionReTryConfig): EmptyFunction;
+export {};
 //# sourceMappingURL=function.d.ts.map

@@ -15,10 +15,10 @@
     "lint:prettier": "prettier ./src ./test --write --no-error-on-unmatched-pattern",
     "lint:script": "eslint ./src ./test --ext .js,.jsx,.ts,.tsx,.vue --fix",
     "lint": "npm run lint:script && npm run lint:prettier",
-    "build": "mbt build",
+    "build": "m78 build",
     "pub": "pnpm build && pnpm publish --access public --registry https://registry.npmjs.org --no-git-checks",
-    "example-hello": "mbt example hello",
-    "example-basic-native-dom-bind": "mbt example basic-native-dom-bind"
+    "example-hello": "m78 example hello",
+    "example-basic-native-dom-bind": "m78 example basic-native-dom-bind"
   },
   "keywords": [],
   "author": {
@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "@m78/utils": "workspace:^",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "@swc/helpers": "^0.4.36"
   }
 }

@@ -1,4 +1,4 @@
-import { FormConfig, FormInstance, FormVerify } from "./types.js";
+import { FormConfig, FormInstance, FormVerifyInstance } from "./types.js";
 /** 创建form实例 */
 export declare function _createForm(config: FormConfig): FormInstance;
 /**
@@ -6,5 +6,5 @@ export declare function _createForm(config: FormConfig): FormInstance;
  *
  * > 用于创建verify实例时, 部分 FormConfig 会被忽略, 如 autoVerify
  * */
-export declare function _createVerify(config: FormConfig): FormVerify;
+export declare function _createVerify(config: FormConfig): FormVerifyInstance;
 //# sourceMappingURL=main.d.ts.map
