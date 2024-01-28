@@ -32,9 +32,11 @@ import { createRandString } from "@m78/utils";
 
 // Create a new instance of the M78Worker class
 const worker = new M78Worker({
-  url: import.meta.url, // The path of the current script; if using a bundler, it usually requires passing a URL object
+  // The path of the current script; if using a bundler, it usually requires passing a URL object
+  url: import.meta.url, 
   async handleLoader() {
-    const handlers = await import("./xxx.js"); // // Asynchronously import handle functions
+    // Asynchronously import handle functions
+    const handlers = await import("./xxx.js");
 
     // Return an object containing the handle functions
     return {
