@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "smooth-scroll": [
+        "src/index.ts"
+      ]
+    }
+  },
+  "extends": "@m78/devtools/tsconfig-base.json",
+  "include": [
+    "src/**/*",
+    "examples/**/*",
+    "test/**/*"
+  ]
+}

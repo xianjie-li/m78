@@ -3,24 +3,18 @@ import { _ as _create_class } from "@swc/helpers/_/_create_class";
 import { _ as _define_property } from "@swc/helpers/_/_define_property";
 import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { SmoothTrigger } from "./smooth-trigger.js";
-import { isNumber } from "../is.js";
-import { getEventOffset } from "../dom.js";
-export var PhysicalScrollEventType;
-(function(PhysicalScrollEventType) {
-    /** 针对鼠标事件进行模拟 */ PhysicalScrollEventType["mouse"] = "mouse";
-    /** 针对触摸事件进行模拟 */ PhysicalScrollEventType["touch"] = "touch";
-})(PhysicalScrollEventType || (PhysicalScrollEventType = {}));
+import { isNumber, getEventOffset } from "@m78/utils";
 /**
- * 实现具有物理惯性效果的平滑滚动
+ * 实现拖拽平滑滚动, 支持touch/鼠标操作
  *
  * 前置条件:
  * - 滚动容器必须满足滚动条件, 设置overflow并且容器内容尺寸需超过滚动容器
  * - 在触摸设备, 通常要为滚动容器添加css: touch-action: none
- * */ export var PhysicalScroll = /*#__PURE__*/ function() {
+ * */ export var DragScroll = /*#__PURE__*/ function() {
     "use strict";
-    function PhysicalScroll(config) {
+    function DragScroll(config) {
         var _this = this;
-        _class_call_check(this, PhysicalScroll);
+        _class_call_check(this, DragScroll);
         _define_property(this, "config", void 0);
         // 前一次触发的xy位置
         _define_property(this, "prevX", void 0);
@@ -112,15 +106,15 @@ export var PhysicalScrollEventType;
             if (isNumber(_this.realPrevX) && isNumber(_this.realPrevY)) {
                 var diffX = Math.abs(_this.realPrevX - clientX);
                 var diffY = Math.abs(_this.realPrevY - clientY);
-                if (diffX > PhysicalScroll.TAP_DISTANCE || diffY > PhysicalScroll.TAP_DISTANCE) {
+                if (diffX > DragScroll.TAP_DISTANCE || diffY > DragScroll.TAP_DISTANCE) {
                     _this.realStart(e);
                 }
                 return;
             }
             // 实际的move逻辑
             if (_this.prevX === undefined || _this.prevY === undefined) return;
-            var deltaX = (_this.prevX - clientX) * PhysicalScroll.SCALE_RATIO;
-            var deltaY = (_this.prevY - clientY) * PhysicalScroll.SCALE_RATIO;
+            var deltaX = (_this.prevX - clientX) * DragScroll.SCALE_RATIO;
+            var deltaY = (_this.prevY - clientY) * DragScroll.SCALE_RATIO;
             _this.prevX = clientX;
             _this.prevY = clientY;
             if (deltaY || deltaX) {
@@ -146,9 +140,9 @@ export var PhysicalScrollEventType;
             // 平均速度
             var averageSpeed = totalDistance / duration;
             // 大于阈值, 需要添加额外的惯性移动距离
-            if (averageSpeed > PhysicalScroll.INERTIA_TRIGGER_THRESHOLD) {
+            if (averageSpeed > DragScroll.INERTIA_TRIGGER_THRESHOLD) {
                 // // 惯性距离占实际移动距离的比例
-                var ratio = averageSpeed / PhysicalScroll.INERTIA_TRIGGER_THRESHOLD * PhysicalScroll.DECAY_FACTOR;
+                var ratio = averageSpeed / DragScroll.INERTIA_TRIGGER_THRESHOLD * DragScroll.DECAY_FACTOR;
                 var distanceX = movementX * ratio;
                 var distanceY = movementY * ratio;
                 _this.st.trigger({
@@ -167,7 +161,7 @@ export var PhysicalScrollEventType;
         this.mouseEnable = config.type.includes("mouse");
         this.mount();
     }
-    _create_class(PhysicalScroll, [
+    _create_class(DragScroll, [
         {
             key: "scrolling",
             get: /** 正在执行滚动 */ function get() {
@@ -233,11 +227,16 @@ export var PhysicalScrollEventType;
             }
         }
     ]);
-    return PhysicalScroll;
+    return DragScroll;
 }();
-/** 触发惯性滚动的阈值, 拖动速度大于此值时触发额外的惯性滚动 */ _define_property(PhysicalScroll, "INERTIA_TRIGGER_THRESHOLD", 2.6);
-/** 计算惯性移动距离时的衰减率 */ _define_property(PhysicalScroll, "DECAY_FACTOR", 0.7);
+/** 触发惯性滚动的阈值, 拖动速度大于此值时触发额外的惯性滚动 */ _define_property(DragScroll, "INERTIA_TRIGGER_THRESHOLD", 2.6);
+/** 计算惯性移动距离时的衰减率 */ _define_property(DragScroll, "DECAY_FACTOR", 0.7);
 // 实际移动距离 = 拖动距离 * SCALE_RATIO, 值越大, 则滚动越灵敏
-_define_property(PhysicalScroll, "SCALE_RATIO", 1.2);
+_define_property(DragScroll, "SCALE_RATIO", 1.2);
 // 小于此距离视为tap, 不触发滚动
-_define_property(PhysicalScroll, "TAP_DISTANCE", 5);
+_define_property(DragScroll, "TAP_DISTANCE", 5);
+export var DragScrollEventType;
+(function(DragScrollEventType) {
+    /** 针对鼠标事件进行模拟 */ DragScrollEventType["mouse"] = "mouse";
+    /** 针对触摸事件进行模拟 */ DragScrollEventType["touch"] = "touch";
+})(DragScrollEventType || (DragScrollEventType = {}));

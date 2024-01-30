@@ -1,43 +1,15 @@
 import { SmoothTrigger, SmoothTriggerOption } from "./smooth-trigger.js";
-import { TupleNumber } from "../types.js";
-import { isNumber } from "../is.js";
-import { getEventOffset } from "../dom.js";
 
-/** 支持的事件处理类型 */
-export enum PhysicalScrollEventType {
-  /** 针对鼠标事件进行模拟 */
-  mouse = "mouse",
-  /** 针对触摸事件进行模拟 */
-  touch = "touch",
-}
-
-/** 根据不同事件生产的混合事件 */
-export interface PhysicalScrollEvent {
-  /** 光标的客户端坐标 */
-  xy: TupleNumber;
-  /** 触发事件的节点 */
-  target: HTMLElement;
-  /** 光标相对绑定事件元素左上角的距离 */
-  offset: TupleNumber;
-}
-
-export interface PhysicalScrollOption extends SmoothTriggerOption {
-  /** 绑定事件的元素 */
-  el: HTMLElement;
-  /** 绑定的事件类型 */
-  type: PhysicalScrollEventType[];
-  /** 可用于在某些节点情况下阻止事件触发(返回true) */
-  triggerFilter?: (e: PhysicalScrollEvent) => true | void;
-}
+import { TupleNumber, isNumber, getEventOffset } from "@m78/utils";
 
 /**
- * 实现具有物理惯性效果的平滑滚动
+ * 实现拖拽平滑滚动, 支持touch/鼠标操作
  *
  * 前置条件:
  * - 滚动容器必须满足滚动条件, 设置overflow并且容器内容尺寸需超过滚动容器
  * - 在触摸设备, 通常要为滚动容器添加css: touch-action: none
  * */
-export class PhysicalScroll {
+export class DragScroll {
   /** 触发惯性滚动的阈值, 拖动速度大于此值时触发额外的惯性滚动 */
   static INERTIA_TRIGGER_THRESHOLD = 2.6;
 
@@ -73,9 +45,9 @@ export class PhysicalScroll {
   /** 平滑滚动 */
   st: SmoothTrigger;
 
-  constructor(public config: PhysicalScrollOption) {
-    this.touchEnable = config.type.includes(PhysicalScrollEventType.touch);
-    this.mouseEnable = config.type.includes(PhysicalScrollEventType.mouse);
+  constructor(public config: DragScrollOption) {
+    this.touchEnable = config.type.includes(DragScrollEventType.touch);
+    this.mouseEnable = config.type.includes(DragScrollEventType.mouse);
 
     this.mount();
   }
@@ -154,7 +126,7 @@ export class PhysicalScroll {
     target.removeEventListener("touchend", this.touchEnd);
   };
 
-  private getEventByMouse(e: MouseEvent): PhysicalScrollEvent {
+  private getEventByMouse(e: MouseEvent): DragScrollEvent {
     return {
       xy: [e.clientX, e.clientY],
       offset: getEventOffset(e, this.config.el),
@@ -162,7 +134,7 @@ export class PhysicalScroll {
     };
   }
 
-  private getEventByTouch(e: TouchEvent): PhysicalScrollEvent {
+  private getEventByTouch(e: TouchEvent): DragScrollEvent {
     const point = e.changedTouches[0];
     return {
       xy: [point.clientX, point.clientY],
@@ -175,7 +147,7 @@ export class PhysicalScroll {
   private realPrevX?: number;
   private realPrevY?: number;
 
-  private start = (e: PhysicalScrollEvent) => {
+  private start = (e: DragScrollEvent) => {
     const [clientX, clientY] = e.xy;
 
     if (this.config.triggerFilter) {
@@ -196,7 +168,7 @@ export class PhysicalScroll {
     }
   };
 
-  private realStart = (e: PhysicalScrollEvent) => {
+  private realStart = (e: DragScrollEvent) => {
     const [clientX, clientY] = e.xy;
 
     // 记录信息
@@ -209,7 +181,7 @@ export class PhysicalScroll {
     this.startTime = Date.now();
   };
 
-  private move = (e: PhysicalScrollEvent) => {
+  private move = (e: DragScrollEvent) => {
     const [clientX, clientY] = e.xy;
 
     // 处理tap过滤
@@ -217,10 +189,7 @@ export class PhysicalScroll {
       const diffX = Math.abs(this.realPrevX - clientX);
       const diffY = Math.abs(this.realPrevY - clientY);
 
-      if (
-        diffX > PhysicalScroll.TAP_DISTANCE ||
-        diffY > PhysicalScroll.TAP_DISTANCE
-      ) {
+      if (diffX > DragScroll.TAP_DISTANCE || diffY > DragScroll.TAP_DISTANCE) {
         this.realStart(e);
       }
 
@@ -231,8 +200,8 @@ export class PhysicalScroll {
 
     if (this.prevX === undefined || this.prevY === undefined) return;
 
-    const deltaX = (this.prevX - clientX) * PhysicalScroll.SCALE_RATIO;
-    const deltaY = (this.prevY - clientY) * PhysicalScroll.SCALE_RATIO;
+    const deltaX = (this.prevX - clientX) * DragScroll.SCALE_RATIO;
+    const deltaY = (this.prevY - clientY) * DragScroll.SCALE_RATIO;
 
     this.prevX = clientX;
     this.prevY = clientY;
@@ -245,7 +214,7 @@ export class PhysicalScroll {
     }
   };
 
-  private end = (e: PhysicalScrollEvent) => {
+  private end = (e: DragScrollEvent) => {
     if (this.touchEnable) {
       this.unBindTouchEvent(e.target);
     }
@@ -268,11 +237,11 @@ export class PhysicalScroll {
     const averageSpeed = totalDistance / duration;
 
     // 大于阈值, 需要添加额外的惯性移动距离
-    if (averageSpeed > PhysicalScroll.INERTIA_TRIGGER_THRESHOLD) {
+    if (averageSpeed > DragScroll.INERTIA_TRIGGER_THRESHOLD) {
       // // 惯性距离占实际移动距离的比例
       const ratio =
-        (averageSpeed / PhysicalScroll.INERTIA_TRIGGER_THRESHOLD) *
-        PhysicalScroll.DECAY_FACTOR;
+        (averageSpeed / DragScroll.INERTIA_TRIGGER_THRESHOLD) *
+        DragScroll.DECAY_FACTOR;
 
       const distanceX = movementX * ratio;
       const distanceY = movementY * ratio;
@@ -291,4 +260,31 @@ export class PhysicalScroll {
 
     return;
   };
+}
+
+/** 支持的事件处理类型 */
+export enum DragScrollEventType {
+  /** 针对鼠标事件进行模拟 */
+  mouse = "mouse",
+  /** 针对触摸事件进行模拟 */
+  touch = "touch",
+}
+
+/** 根据不同事件生产的混合事件 */
+export interface DragScrollEvent {
+  /** 光标的客户端坐标 */
+  xy: TupleNumber;
+  /** 触发事件的节点 */
+  target: HTMLElement;
+  /** 光标相对绑定事件元素左上角的距离 */
+  offset: TupleNumber;
+}
+
+export interface DragScrollOption extends SmoothTriggerOption {
+  /** 绑定事件的元素 */
+  el: HTMLElement;
+  /** 绑定的事件类型 */
+  type: DragScrollEventType[];
+  /** 可用于在某些节点情况下阻止事件触发(返回true) */
+  triggerFilter?: (e: DragScrollEvent) => true | void;
 }

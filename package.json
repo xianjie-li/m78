@@ -10,7 +10,6 @@
   "license": "MIT",
   "devDependencies": {
     "@m78/devtools": "workspace:^",
-    "@parcel/transformer-sass": "2.7.0",
     "@types/react": "^18.2.45",
     "@types/react-dom": "^18.2.17",
     "typescript": "^5.3.3"

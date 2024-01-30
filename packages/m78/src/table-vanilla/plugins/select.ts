@@ -1,9 +1,6 @@
 import { TableLoadStage, TablePlugin } from "../plugin.js";
 import {
   AnyObject,
-  AutoScroll,
-  AutoScrollTriggerConfig,
-  createAutoScroll,
   ensureArray,
   getCmdKeyStatus,
   getEventOffset,
@@ -12,6 +9,11 @@ import {
   isFunction,
   isString,
 } from "@m78/utils";
+import {
+  createAutoScroll,
+  AutoScrollTriggerConfig,
+  AutoScroll,
+} from "@m78/smooth-scroll";
 import throttle from "lodash/throttle.js";
 import {
   _getCellKey,

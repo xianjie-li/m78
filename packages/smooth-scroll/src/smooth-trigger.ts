@@ -1,20 +1,7 @@
-import { EmptyFunction } from "../types.js";
-import { raf } from "../bom.js";
-
-export interface SmoothTriggerOption {
-  /** 触发器 */
-  trigger: (e: SmoothTriggerEvent) => void;
-}
-
-export interface SmoothTriggerEvent {
-  /** x轴移动距离 */
-  x: number;
-  /** y轴移动距离 */
-  y: number;
-}
+import { EmptyFunction, raf } from "@m78/utils";
 
 /**
- * 接收每次x/y轴的偏移, 对每次触发的区间进行补帧, 实现平滑触发trigger
+ * 接收每次x/y轴的偏移, 根据触发的区间进行补帧后平滑的触发trigger, 使用者可在trigger事件中更新实际的位置
  * */
 export class SmoothTrigger {
   constructor(public opt: SmoothTriggerOption) {}
@@ -123,4 +110,16 @@ export class SmoothTrigger {
 
     return 0;
   }
+}
+
+export interface SmoothTriggerOption {
+  /** 触发器 */
+  trigger: (e: SmoothTriggerEvent) => void;
+}
+
+export interface SmoothTriggerEvent {
+  /** x轴移动距离 */
+  x: number;
+  /** y轴移动距离 */
+  y: number;
 }

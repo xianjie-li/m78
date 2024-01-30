@@ -6,46 +6,47 @@ import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
 import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
 import { _ as _ts_generator } from "@swc/helpers/_/_ts_generator";
-import { createPromise, createTempID, deleteNamePathValue, getNamePathValue, isEmpty, isObject, isWorker, throwError } from "@m78/utils";
-// 使用兼容库来实现对浏览器和node的同时支持
-import Worker from "web-worker";
+import { createPromise, createTempID, deleteNamePathValue, getNamePathValue, isEmpty, isObject, isWorker, throwError, isBrowser } from "@m78/utils";
 import { _InnerHandlers, _ErrorCode, _ErrorMessages } from "./types.js";
 /**
- * 一个让你能更轻松使用Web Worker的库, 支持浏览器和nodejs
+ * A library that makes it easier for you to use Web Workers.
  *
- * - 更简单的worker创建流程
- * - 它允许你注册多个不同的handle, 并在后续通过和使用异步函数相同的方式使用这些handle, 这让你避免了通过消息通讯来进行线程通讯的糟糕方式
- * - handle在独立的线程中运行, 如果浏览器不支持Web Worker, 将回退到使用浏览器主线程
- * - 自动调度任务到空闲线程
- * - 类型安全, 所有invoke()调用都包含对应handle的入参和返回类型提示
+ * - Simplified worker creation process
+ * - It allows you to register multiple different handles and use them later in a way similar to using asynchronous functions, avoiding the cumbersome way of thread communication through message passing.
+ * - Handles run in separate threads. If the browser does not support Web Workers, it falls back to using the browser's main thread.
+ * - Automatically schedules tasks to idle threads.
+ * - Type-safe – all invoke() calls include hints for the input parameters and return types of the corresponding handle.
  *
- * 注意事项:
- * - 请将new M78Worker()放到单独的脚本文件中执行, 该脚本会在主线程和子线程分别执行并创建各自线程内的的M78Worker实例, 这些实例在不同的线程中会有不同的职责
- *    - 创建脚本和其导入的模块不应包含和创建worker无关的内容或副作用代码, 因为这些内容(脚本/导入模块)会根据创建的线程数量被执行多次
- *    - 在当前脚本访问worker实例是不正确的, 必须在其他脚本中导入后使用
- * - 并不是所有任务都适合分配到独立线程执行, 当需要传输大量数据, 甚至包含编解码时, 多线程计算带来的收益可能会不足以填补线程之间传送数据的损耗.
+ * Notes:
+ * - Please execute new M78Worker() in a separate script file. This script will be executed separately in the main thread and subthreads, creating instances of M78Worker in their respective threads, each with different responsibilities.
+ *    - The script and its imported modules should not include content or side-effect code unrelated to creating workers, as this content (scripts/imported modules) will be executed multiple times based on the number of created threads.
+ *    - Accessing worker instances in the current script is incorrect; they must be imported and used in other scripts.
+ * - Not all tasks are suitable for execution in separate threads. When transferring large amounts of data, or even involving encoding/decoding, the benefits of multi-threaded computation may not be sufficient to offset the data transfer costs between threads.
  *
- * 其他:
- * - 一些类似的库提供 instance.run((a, b) => a + b) 的方式来之间在子线程中运行给定函数, 由于线程通讯序列化的限制,  这些函数其实是通过字符串形式传输的, 不能包含任何对函数外内容的访问, 这在实际开发中意义不大, 故不会提供.
+ * Other:
+ * - Some similar libraries offer a way to run a given function in a subthread using instance.run((a, b) => a + b). Due to the limitations of thread communication serialization, these functions are actually transmitted in string form and cannot include any access to external content, making them less meaningful in practical development; hence, this feature will not be provided.
  * */ export var M78Worker = /*#__PURE__*/ function() {
     "use strict";
     function M78Worker(config) {
         var _this = this;
         _class_call_check(this, M78Worker);
         _define_property(this, "config", void 0);
-        /** 是否已初始化 */ _define_property(this, "initialized", void 0);
-        /** 初始化进行中, 可通过该promise等待完成 */ _define_property(this, "initializeTask", void 0);
-        /** 是否是工作线程 */ _define_property(this, "isWorker", void 0);
-        /** 存放线程对象及其信息 */ _define_property(this, "worker", void 0);
+        /** Whether it has been initialized */ _define_property(this, "initialized", void 0);
+        /** Initialization in progress, can wait for completion through this promise */ _define_property(this, "initializeTask", void 0);
+        /** Whether it is a worker thread */ _define_property(this, "isWorker", void 0);
+        /** Store thread objects and their information */ _define_property(this, "worker", void 0);
         /** 注册的handle, 以handleName为key, 无论主线程, 子线程都会对当前handle进行注册 */ _define_property(this, "handleMap", void 0);
         /** 执行中的invoke, key为执行id, promise会返回执行结果, 也有可能抛出错误, main/sub线程的执行任务均存储在此 */ _define_property(this, "invokingMap", void 0);
         /** handle是否应强制在主线程执行 */ _define_property(this, "forceUseMainThread", void 0);
         /** 默认的子线程数量 */ _define_property(this, "defaultWorkerNum", void 0);
         _define_property(this, "defaultWorkerName", void 0);
         /**
-   * 初始化并创建线程, 默认会在首次执行invoke时自动初始化, 此方法可重复调用, 但后续调用会直接忽略
+   * Initialize and create a thread. By default, it will automatically initialize on the first invoke.
+   * This method can be called repeatedly, but subsequent calls will be ignored.
    *
-   * 由于会涉及到加载线程脚本等异步操作, 可以在确定会使用到工作线程时提前触发来提升首次执行的速度 */ _define_property(this, "init", void 0);
+   * As it involves asynchronous operations such as loading thread scripts, triggering it in advance
+   * can improve the speed of the first execution, especially when working with worker threads.
+   */ _define_property(this, "init", void 0);
         _define_property(this, "onMessage", void 0);
         this.config = config;
         this.initialized = false;
@@ -58,7 +59,7 @@ import { _InnerHandlers, _ErrorCode, _ErrorMessages } from "./types.js";
         this.defaultWorkerName = "m78-worker";
         var _this1 = this;
         this.init = /*#__PURE__*/ _async_to_generator(function() {
-            var num, _$name, i, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, w, err, e;
+            var num, name, i, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, w, err, e;
             return _ts_generator(this, function(_state) {
                 switch(_state.label){
                     case 0:
@@ -104,12 +105,12 @@ import { _InnerHandlers, _ErrorCode, _ErrorMessages } from "./types.js";
                             2
                         ];
                         num = _this1.config.workerNum || _this1.defaultWorkerNum;
-                        _$name = _this1.config.name || _this1.defaultWorkerName;
+                        name = _this1.config.name || _this1.defaultWorkerName;
                         for(i = 0; i < num; i++){
                             _this1.worker.push({
                                 worker: new Worker(_this1.config.url, {
                                     type: _this1.config.type || "module",
-                                    name: "".concat(_$name, "-").concat(i)
+                                    name: "".concat(name, "-").concat(i)
                                 }),
                                 taskNum: 0
                             });
@@ -206,11 +207,10 @@ import { _InnerHandlers, _ErrorCode, _ErrorMessages } from "./types.js";
             if (!id) return;
             _this.isWorker ? _this.workerMessageHandle(id, data) : _this.mainMessageHandle(id, data);
         };
-        // 非worker线程 且 不支持worker, 在主进程执行handle
-        if (!this.isWorker && typeof Worker === "undefined") {
+        // 非worker线程 且 不支持worker或非浏览器环境, 在主进程执行handle
+        if (!this.isWorker && (typeof Worker === "undefined" || !isBrowser())) {
             this.forceUseMainThread = true;
         }
-        console.log("isWorker", this.isWorker, name);
         if (this.isWorker) {
             this.addListeners();
             this.processInnerHandler();
@@ -218,7 +218,7 @@ import { _InnerHandlers, _ErrorCode, _ErrorMessages } from "./types.js";
     }
     _create_class(M78Worker, [
         {
-            /** 销毁 */ key: "destroy",
+            /** Destroy instance */ key: "destroy",
             value: function destroy() {
                 this.removeListeners();
                 if (this.worker.length) {
@@ -233,9 +233,7 @@ import { _InnerHandlers, _ErrorCode, _ErrorMessages } from "./types.js";
         },
         {
             key: "invoke",
-            value: /**
-   * 执行指定的handle
-   * */ function invoke(handleName) {
+            value: /** Execute specified handle */ function invoke(handleName) {
                 for(var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++){
                     args[_key - 1] = arguments[_key];
                 }
@@ -450,7 +448,7 @@ import { _InnerHandlers, _ErrorCode, _ErrorMessages } from "./types.js";
                                 message.error = "".concat(_this.getErrorText(_ErrorCode.HANDLE_NOT_REGISTER), ": ").concat(data.handleName);
                                 _state.label = 6;
                             case 6:
-                                console.log(data.handleName, name);
+                                // console.log(data.handleName, name);
                                 postMessage(message);
                                 return [
                                     2

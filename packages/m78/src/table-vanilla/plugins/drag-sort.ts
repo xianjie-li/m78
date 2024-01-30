@@ -5,14 +5,13 @@ import { _TableRowColumnResize } from "./row-column-resize.js";
 import { removeNode } from "../../common/index.js";
 import {
   AnyFunction,
-  AutoScroll,
-  createAutoScroll,
   getEventOffset,
   isNumber,
   rafCaller,
   RafFunction,
   throwError,
 } from "@m78/utils";
+import { createAutoScroll, AutoScroll } from "@m78/smooth-scroll";
 import {
   TableColumnFixed,
   TablePointInfo,

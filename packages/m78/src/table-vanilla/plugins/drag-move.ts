@@ -1,10 +1,10 @@
 import { TablePlugin } from "../plugin.js";
 import { _tableTriggerFilters, _triggerFilterList } from "../common.js";
 import {
-  PhysicalScroll,
-  PhysicalScrollEvent,
-  PhysicalScrollEventType,
-} from "@m78/utils";
+  DragScroll as PhysicalScroll,
+  DragScrollEvent as PhysicalScrollEvent,
+  DragScrollEventType as PhysicalScrollEventType,
+} from "@m78/smooth-scroll";
 
 /** 拖拽滚动相关功能支持 */
 export class _TableDragMovePlugin extends TablePlugin implements TableDragMove {

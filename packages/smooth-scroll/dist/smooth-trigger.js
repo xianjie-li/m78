@@ -1,9 +1,9 @@
 import { _ as _class_call_check } from "@swc/helpers/_/_class_call_check";
 import { _ as _create_class } from "@swc/helpers/_/_create_class";
 import { _ as _define_property } from "@swc/helpers/_/_define_property";
-import { raf } from "../bom.js";
+import { raf } from "@m78/utils";
 /**
- * 接收每次x/y轴的偏移, 对每次触发的区间进行补帧, 实现平滑触发trigger
+ * 接收每次x/y轴的偏移, 根据触发的区间进行补帧后平滑的触发trigger, 使用者可在trigger事件中更新实际的位置
  * */ export var SmoothTrigger = /*#__PURE__*/ function() {
     "use strict";
     function SmoothTrigger(opt) {

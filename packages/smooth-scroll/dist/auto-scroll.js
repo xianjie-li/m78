@@ -3,16 +3,8 @@ import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
 import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
 import { _ as _object_without_properties } from "@swc/helpers/_/_object_without_properties";
 import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
-import { hasScroll } from "../dom.js";
-import { raf } from "../bom.js";
-import { isBoolean, isNumber } from "../is.js";
-import { getNamePathValue, setNamePathValue } from "../object.js";
-import { getDocScrollOffset, setDocScrollOffset } from "../dom.js";
-// 存放ctx到dom的key
-var autoScrollDataKey = "AUTO_SCROLL_DATA";
-// 修正isIncreaseX的判定范围, 减少细微操作时的误触发
-var adjustDistance = 4;
-/** 一个光标在目标边缘时自动滚动节点的工具 */ export function createAutoScroll(config) {
+import { hasScroll, raf, isBoolean, isNumber, getNamePathValue, setNamePathValue, getDocScrollOffset, setDocScrollOffset } from "@m78/utils";
+/** 用于在滚动边缘执行拖拽等操作时执行自动滚动的工具 */ export function createAutoScroll(config) {
     var defConf = {
         baseOffset: 16,
         triggerOffset: 0.16,
@@ -228,7 +220,7 @@ var adjustDistance = 4;
         }
     };
 }
-/** 独立的autoScroll, 状态存储于dom之上, 可以不用提前创建实例直接使用, 性能略低于单独实例用法 */ export function autoScrollTrigger(conf) {
+/** 可独立使用的autoScroll, 状态通过私有属性存储于被检测dom之上, 可以不用提前创建实例直接使用, 性能略低于单独实例用法 */ export function autoScrollTrigger(conf) {
     var xy = conf.xy, isLast = conf.isLast, disableConfig = conf.disableConfig, config = _object_without_properties(conf, [
         "xy",
         "isLast",
@@ -242,3 +234,7 @@ var adjustDistance = 4;
         return as.clear();
     };
 }
+// 存放ctx到dom的key
+var autoScrollDataKey = "AUTO_SCROLL_DATA";
+// 修正isIncreaseX的判定范围, 减少细微操作时的误触发
+var adjustDistance = 4;

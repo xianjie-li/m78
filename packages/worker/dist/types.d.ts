@@ -1,44 +1,44 @@
 import { AnyFunction } from "@m78/utils";
 /**
- * 在独立线程中执行的handle, 其请求和返回类型必须遵循web标准的 structured clone 算法, 如果你无法确定哪些类型可用, 请参考下面列表, 你也可以简单的只传递能被json.parse解析的类型(尽管受支持的类型更多):
+ * Handle executed in a dedicated thread. The request and return types must adhere to the web standard's structured clone algorithm. If you're unsure about which types are available, please refer to the following list. Alternatively, you can simply pass types that can be parsed by `json.parse` (although a wider range of types is supported):
  *
- * structured clone algorithm: https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm
- * */
+ * Structured clone algorithm: https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm
+ */
 export type M78WorkerHandle = AnyFunction;
-/** 创建配置 */
+/** Configuration for creating a Worker */
 export interface M78WorkerConfig<H extends M78WorkerHandleMap = any> {
     /**
-     * 当前脚本地址
+     * Current script URL
      *
-     * 为什么需要传入url配置?
-     * - web worker本身限制, 它需要在脚本级别进行创建, 且需要提供该脚本切确的访问地址或js blob
-     * - 在vite/webpack等打包工具中使用时, 由于当前模块的地址会在打包后变更, 需要将脚本的实际地址通过import.meta.url传入, 如果你使用其他的打包器, 可能支持度会有所不同, 具体可查看对应打包器文档
-     * */
+     * Why is it necessary to pass the URL configuration?
+     * - Due to the inherent limitations of web workers, they need to be created at the script level and require the precise access address or JS blob for that script.
+     * - When using bundlers like Vite/Webpack, since the module's address may change after bundling, the actual script address needs to be passed through `import.meta.url`. If you use other bundlers, the level of support may vary. Please refer to the documentation of the respective bundler for details.
+     */
     url: string | URL;
     /**
-     * handle加载器, 用于统一注册handle
+     * Handle loader for uniformly registering handles
      *
-     * - 所有handle必须是在当前脚本中直接通过import导入或在handleLoader内通过import()导入的, 如果其他方式(比如从某个运行时变量中读取), worker不会如预期的执行, 因为在子线程中, 这些运行时变量是不存在的.
-     * */
+     * - All handles must be imported directly in the current script or imported through `import()` within handleLoader. If other methods (such as reading from a runtime variable) are used, the worker may not execute as expected because these runtime variables do not exist in the child thread.
+     */
     handleLoader: () => Promise<H>;
-    /** 为线程提供一个名称, 便于调试 */
+    /** Provide a name for the thread, useful for debugging */
     name?: string;
-    /** 'module' | 当前脚本类型 */
+    /** 'module' | Type of the current script */
     type?: WorkerType;
     /**
-     *  1 | 需创建的线程数, 如果线程数大于1, 任务会优先分配给空闲的线程, 若没有空闲线程则分配给排队任务较少的线程
+     * 1 | Number of threads to be created. If the number of threads is greater than 1, tasks will be prioritized for idle threads. If there are no idle threads, tasks will be assigned to threads with fewer queued tasks.
      *
-     *  不建议创建过多的worker, 通常, 不同任务复用一个线程即可, 如果用例较复杂, 则可酌情添加, 使用worker的主要目标应该是防止主线程阻塞导致卡顿, 一个额外线程就足以完成此工作
-     *  */
+     * It is not recommended to create too many workers. Typically, reusing a single thread for different tasks is sufficient. If the use case is more complex, additional workers can be added as needed. The primary goal of using workers should be to prevent the main thread from blocking and causing lag; one additional thread is enough to accomplish this task.
+     */
     workerNum?: number;
 }
-/** handle注册表类型, 以handleName为key, handle为值 */
+/** Type for the handle registry, with handleName as the key and handle as the value */
 export type M78WorkerHandleMap = {
     [key: string]: AnyFunction;
 };
-/** 从handleMap中挑选指定key的handle, 并获取其参数类型的元组 */
+/** Pick a handle with a specified key from the handleMap and retrieve a tuple of its parameter types */
 export type _PickArgs<H extends M78WorkerHandleMap, K extends keyof H> = Parameters<H[K]>;
-/** 从handleMap中挑选指定key的handle, 并获取返回类型 */
+/** Pick a handle with a specified key from the handleMap and retrieve its return type */
 export type _PickReturns<H extends M78WorkerHandleMap, K extends keyof H> = ReturnType<H[K]>;
 export interface _InvokeData {
     /** 表示该任务的promise */

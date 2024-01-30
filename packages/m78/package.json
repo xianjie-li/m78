@@ -27,6 +27,8 @@
     "@m78/seed": "workspace:^",
     "@m78/style": "workspace:^",
     "@m78/utils": "workspace:^",
+    "@m78/worker": "workspace:^",
+    "@m78/smooth-scroll": "workspace:^",
     "@types/react": "^18.2.45",
     "@types/react-dom": "^18.2.17",
     "@use-gesture/react": "^10.2.27",

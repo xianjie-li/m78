@@ -1,32 +1,32 @@
 import { PromiseTask } from "@m78/utils";
 import { M78WorkerConfig, M78WorkerHandleMap, _PickArgs, _PickReturns } from "./types.js";
 /**
- * 一个让你能更轻松使用Web Worker的库, 支持浏览器和nodejs
+ * A library that makes it easier for you to use Web Workers.
  *
- * - 更简单的worker创建流程
- * - 它允许你注册多个不同的handle, 并在后续通过和使用异步函数相同的方式使用这些handle, 这让你避免了通过消息通讯来进行线程通讯的糟糕方式
- * - handle在独立的线程中运行, 如果浏览器不支持Web Worker, 将回退到使用浏览器主线程
- * - 自动调度任务到空闲线程
- * - 类型安全, 所有invoke()调用都包含对应handle的入参和返回类型提示
+ * - Simplified worker creation process
+ * - It allows you to register multiple different handles and use them later in a way similar to using asynchronous functions, avoiding the cumbersome way of thread communication through message passing.
+ * - Handles run in separate threads. If the browser does not support Web Workers, it falls back to using the browser's main thread.
+ * - Automatically schedules tasks to idle threads.
+ * - Type-safe – all invoke() calls include hints for the input parameters and return types of the corresponding handle.
  *
- * 注意事项:
- * - 请将new M78Worker()放到单独的脚本文件中执行, 该脚本会在主线程和子线程分别执行并创建各自线程内的的M78Worker实例, 这些实例在不同的线程中会有不同的职责
- *    - 创建脚本和其导入的模块不应包含和创建worker无关的内容或副作用代码, 因为这些内容(脚本/导入模块)会根据创建的线程数量被执行多次
- *    - 在当前脚本访问worker实例是不正确的, 必须在其他脚本中导入后使用
- * - 并不是所有任务都适合分配到独立线程执行, 当需要传输大量数据, 甚至包含编解码时, 多线程计算带来的收益可能会不足以填补线程之间传送数据的损耗.
+ * Notes:
+ * - Please execute new M78Worker() in a separate script file. This script will be executed separately in the main thread and subthreads, creating instances of M78Worker in their respective threads, each with different responsibilities.
+ *    - The script and its imported modules should not include content or side-effect code unrelated to creating workers, as this content (scripts/imported modules) will be executed multiple times based on the number of created threads.
+ *    - Accessing worker instances in the current script is incorrect; they must be imported and used in other scripts.
+ * - Not all tasks are suitable for execution in separate threads. When transferring large amounts of data, or even involving encoding/decoding, the benefits of multi-threaded computation may not be sufficient to offset the data transfer costs between threads.
  *
- * 其他:
- * - 一些类似的库提供 instance.run((a, b) => a + b) 的方式来之间在子线程中运行给定函数, 由于线程通讯序列化的限制,  这些函数其实是通过字符串形式传输的, 不能包含任何对函数外内容的访问, 这在实际开发中意义不大, 故不会提供.
+ * Other:
+ * - Some similar libraries offer a way to run a given function in a subthread using instance.run((a, b) => a + b). Due to the limitations of thread communication serialization, these functions are actually transmitted in string form and cannot include any access to external content, making them less meaningful in practical development; hence, this feature will not be provided.
  * */
 export declare class M78Worker<H extends M78WorkerHandleMap = any> {
     config: M78WorkerConfig<H>;
-    /** 是否已初始化 */
+    /** Whether it has been initialized */
     initialized: boolean;
-    /** 初始化进行中, 可通过该promise等待完成 */
+    /** Initialization in progress, can wait for completion through this promise */
     initializeTask: PromiseTask<void> | null;
-    /** 是否是工作线程 */
+    /** Whether it is a worker thread */
     isWorker: boolean;
-    /** 存放线程对象及其信息 */
+    /** Store thread objects and their information */
     private worker;
     /** 注册的handle, 以handleName为key, 无论主线程, 子线程都会对当前handle进行注册 */
     private handleMap;
@@ -41,15 +41,16 @@ export declare class M78Worker<H extends M78WorkerHandleMap = any> {
     static ID_KEY: string;
     constructor(config: M78WorkerConfig<H>);
     /**
-     * 初始化并创建线程, 默认会在首次执行invoke时自动初始化, 此方法可重复调用, 但后续调用会直接忽略
+     * Initialize and create a thread. By default, it will automatically initialize on the first invoke.
+     * This method can be called repeatedly, but subsequent calls will be ignored.
      *
-     * 由于会涉及到加载线程脚本等异步操作, 可以在确定会使用到工作线程时提前触发来提升首次执行的速度 */
+     * As it involves asynchronous operations such as loading thread scripts, triggering it in advance
+     * can improve the speed of the first execution, especially when working with worker threads.
+     */
     init: () => Promise<void>;
-    /** 销毁 */
+    /** Destroy instance */
     destroy(): void;
-    /**
-     * 执行指定的handle
-     * */
+    /** Execute specified handle */
     invoke<K extends keyof H = keyof H>(handleName: K, ...args: _PickArgs<H, K>): Promise<_PickReturns<H, K>>;
     /** invoke的主要实现, 也用于内部handle调用 */
     private invokeInner;

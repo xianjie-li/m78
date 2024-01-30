@@ -1,7 +1,7 @@
 {
   "name": "@m78/worker",
   "version": "1.0.0",
-  "description": "",
+  "description": "A library that makes it easier for you to use Web Workers",
   "main": "./index.js",
   "scripts": {
     "test": "jest",
@@ -12,7 +12,7 @@
     "pub": "pnpm build && pnpm publish --access public --registry https://registry.npmjs.org --no-git-checks",
     "example-hello": "m78 example hello"
   },
-  "keywords": [],
+  "keywords": ["web worker"],
   "author": "",
   "license": "ISC",
   "files": [

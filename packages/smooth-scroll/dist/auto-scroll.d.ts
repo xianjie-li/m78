@@ -1,21 +1,21 @@
-import { EmptyFunction, Point } from "../types.js";
-/** 在多个滚动帮助函数间共享 */
-export interface AutoScrollCtx {
-    /** 自动滚动的开关 */
-    autoScrollToggle: boolean;
-    /** 要设置滚动位置的key */
-    autoScrollPosKey: "scrollLeft" | "scrollTop";
-    /** 每次滚动距离 */
-    autoScrollVal: number;
-    /** 清理函数 */
-    clearFn?: EmptyFunction;
-    /** 节点是否是document或body */
-    isDocOrBody: boolean;
-    lastDetectX?: number;
-    lastDetectY?: number;
-    isIncreaseX?: boolean;
-    isIncreaseY?: boolean;
-}
+import { Point } from "@m78/utils";
+/** 用于在滚动边缘执行拖拽等操作时执行自动滚动的工具 */
+export declare function createAutoScroll(config: AutoScrollConfig): {
+    /** 清理计时器, 如果当前正在滚动则停止 */
+    clear: () => void;
+    /** 根据指定的位置进行滚动触发, isLast用于区分是否为最后一次事件 */
+    trigger: (xy: import("@m78/utils").TupleNumber, isLast: boolean, conf?: AutoScrollTriggerConfig) => void;
+    /** 是否正在滚动 */
+    readonly scrolling: boolean;
+    /** 更新配置, 后续trigger以合并后的配置进行 */
+    updateConfig(newConf: Partial<AutoScrollConfig>): void;
+};
+/** 可独立使用的autoScroll, 状态通过私有属性存储于被检测dom之上, 可以不用提前创建实例直接使用, 性能略低于单独实例用法 */
+export declare function autoScrollTrigger(conf: {
+    xy: Point;
+    isLast: boolean;
+    disableConfig?: AutoScrollTriggerConfig;
+} & AutoScrollConfig): () => void;
 export interface AutoScrollConfig {
     /** 待检测和滚动的节点 */
     el: HTMLElement;
@@ -51,21 +51,4 @@ export type AutoScrollTriggerConfig = {
 };
 /** 实例 */
 export type AutoScroll = ReturnType<typeof createAutoScroll>;
-/** 一个光标在目标边缘时自动滚动节点的工具 */
-export declare function createAutoScroll(config: AutoScrollConfig): {
-    /** 清理计时器, 如果当前正在滚动则停止 */
-    clear: () => void;
-    /** 根据指定的位置进行滚动触发, isLast用于区分是否为最后一次事件 */
-    trigger: (xy: import("../types.js").TupleNumber, isLast: boolean, conf?: AutoScrollTriggerConfig) => void;
-    /** 是否正在滚动 */
-    readonly scrolling: boolean;
-    /** 更新配置, 后续trigger以合并后的配置进行 */
-    updateConfig(newConf: Partial<AutoScrollConfig>): void;
-};
-/** 独立的autoScroll, 状态存储于dom之上, 可以不用提前创建实例直接使用, 性能略低于单独实例用法 */
-export declare function autoScrollTrigger(conf: {
-    xy: Point;
-    isLast: boolean;
-    disableConfig?: AutoScrollTriggerConfig;
-} & AutoScrollConfig): () => void;
 //# sourceMappingURL=auto-scroll.d.ts.map

@@ -79,8 +79,6 @@ export class M78Worker<H extends M78WorkerHandleMap = any> {
       this.forceUseMainThread = true;
     }
 
-    console.log("isWorker", this.isWorker, name);
-
     if (this.isWorker) {
       this.addListeners();
       this.processInnerHandler();
@@ -311,7 +309,7 @@ export class M78Worker<H extends M78WorkerHandleMap = any> {
       }`;
     }
 
-    console.log(data.handleName, name);
+    // console.log(data.handleName, name);
 
     postMessage(message);
   }

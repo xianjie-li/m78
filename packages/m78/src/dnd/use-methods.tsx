@@ -7,13 +7,13 @@ import {
 } from "./types.js";
 import { FullGestureState } from "@use-gesture/react";
 import {
-  autoScrollTrigger,
   checkElementVisible,
   getScrollParent,
   isDom,
   isFunction,
   isObject,
 } from "@m78/utils";
+import { autoScrollTrigger } from "@m78/smooth-scroll";
 import { useFn } from "@m78/hooks";
 import throttle from "lodash/throttle.js";
 import isEqual from "lodash/isEqual.js";

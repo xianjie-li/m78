@@ -1,7 +1,7 @@
 {
-  "name": "@m78/worker",
+  "name": "@m78/smooth-scroll",
   "version": "1.0.0",
-  "description": "A library that makes it easier for you to use Web Workers",
+  "description": "Provide drag scroll, wheel event optimization, auto scroll etc.",
   "main": "./index.js",
   "scripts": {
     "test": "jest",
@@ -12,7 +12,7 @@
     "pub": "pnpm build && pnpm publish --access public --registry https://registry.npmjs.org --no-git-checks",
     "example-hello": "m78 example hello"
   },
-  "keywords": ["web worker"],
+  "keywords": [],
   "author": "",
   "license": "ISC",
   "files": [
@@ -25,7 +25,7 @@
     "linkDirectory": true
   },
   "dependencies": {
-    "@m78/utils": "workspace:^",
-    "@swc/helpers": "^0.4.36"
+    "@swc/helpers": "^0.4.36",
+    "@m78/utils": "workspace:^"
   }
 }

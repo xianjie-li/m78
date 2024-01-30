@@ -13,7 +13,7 @@ import debounce from "lodash/debounce.js";
 import { TableMutationEvent } from "./mutation.js";
 import { TableReloadOptions } from "./life.js";
 import { TableFeedbackEvent } from "./feedback.js";
-import { SmoothTriggerEvent, SmoothWheel } from "@m78/utils";
+import { SmoothTriggerEvent, SmoothWheel } from "@m78/smooth-scroll";
 
 /**
  * 内部事件绑定, 外部事件派发

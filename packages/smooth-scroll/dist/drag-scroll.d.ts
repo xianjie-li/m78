@@ -1,38 +1,14 @@
 import { SmoothTrigger, SmoothTriggerOption } from "./smooth-trigger.js";
-import { TupleNumber } from "../types.js";
-/** 支持的事件处理类型 */
-export declare enum PhysicalScrollEventType {
-    /** 针对鼠标事件进行模拟 */
-    mouse = "mouse",
-    /** 针对触摸事件进行模拟 */
-    touch = "touch"
-}
-/** 根据不同事件生产的混合事件 */
-export interface PhysicalScrollEvent {
-    /** 光标的客户端坐标 */
-    xy: TupleNumber;
-    /** 触发事件的节点 */
-    target: HTMLElement;
-    /** 光标相对绑定事件元素左上角的距离 */
-    offset: TupleNumber;
-}
-export interface PhysicalScrollOption extends SmoothTriggerOption {
-    /** 绑定事件的元素 */
-    el: HTMLElement;
-    /** 绑定的事件类型 */
-    type: PhysicalScrollEventType[];
-    /** 可用于在某些节点情况下阻止事件触发(返回true) */
-    triggerFilter?: (e: PhysicalScrollEvent) => true | void;
-}
+import { TupleNumber } from "@m78/utils";
 /**
- * 实现具有物理惯性效果的平滑滚动
+ * 实现拖拽平滑滚动, 支持touch/鼠标操作
  *
  * 前置条件:
  * - 滚动容器必须满足滚动条件, 设置overflow并且容器内容尺寸需超过滚动容器
  * - 在触摸设备, 通常要为滚动容器添加css: touch-action: none
  * */
-export declare class PhysicalScroll {
-    config: PhysicalScrollOption;
+export declare class DragScroll {
+    config: DragScrollOption;
     /** 触发惯性滚动的阈值, 拖动速度大于此值时触发额外的惯性滚动 */
     static INERTIA_TRIGGER_THRESHOLD: number;
     /** 计算惯性移动距离时的衰减率 */
@@ -50,7 +26,7 @@ export declare class PhysicalScroll {
     lastBindTarget?: HTMLElement;
     /** 平滑滚动 */
     st: SmoothTrigger;
-    constructor(config: PhysicalScrollOption);
+    constructor(config: DragScrollOption);
     /** 正在执行滚动 */
     get scrolling(): boolean;
     private mount;
@@ -73,4 +49,28 @@ export declare class PhysicalScroll {
     private move;
     private end;
 }
-//# sourceMappingURL=physical-scroll.d.ts.map
+/** 支持的事件处理类型 */
+export declare enum DragScrollEventType {
+    /** 针对鼠标事件进行模拟 */
+    mouse = "mouse",
+    /** 针对触摸事件进行模拟 */
+    touch = "touch"
+}
+/** 根据不同事件生产的混合事件 */
+export interface DragScrollEvent {
+    /** 光标的客户端坐标 */
+    xy: TupleNumber;
+    /** 触发事件的节点 */
+    target: HTMLElement;
+    /** 光标相对绑定事件元素左上角的距离 */
+    offset: TupleNumber;
+}
+export interface DragScrollOption extends SmoothTriggerOption {
+    /** 绑定事件的元素 */
+    el: HTMLElement;
+    /** 绑定的事件类型 */
+    type: DragScrollEventType[];
+    /** 可用于在某些节点情况下阻止事件触发(返回true) */
+    triggerFilter?: (e: DragScrollEvent) => true | void;
+}
+//# sourceMappingURL=drag-scroll.d.ts.map
