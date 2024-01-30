@@ -7,7 +7,7 @@ import ssrTemplate from "./config/template.js";
 const config: Config = {
   ssrTemplate,
   title: "M78 Land",
-  tagline: "front-end library, components, hooks, admin template, and...",
+  tagline: "Front-end library, components, hooks, admin template, and more...",
   url: "https://github.com",
   baseUrl: "/",
   onBrokenLinks: "throw",
