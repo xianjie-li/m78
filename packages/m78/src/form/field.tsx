@@ -14,7 +14,9 @@ import {
   getNamePathValue,
   isEmpty,
   isFunction,
+  isTruthyOrZero,
   stringifyNamePath,
+  createTempID,
 } from "@m78/utils";
 import { Lay } from "../lay/index.js";
 import { Bubble } from "../bubble/index.js";
@@ -25,13 +27,20 @@ import { _useFieldLifeCircle } from "./use-field-life-circle.js";
 import { _listLayoutRenderImpl, _listRenderImpl } from "./list.js";
 import { requiredValidatorKey } from "@m78/form/validator/index.js";
 import { _defaultAdaptor, EMPTY_NAME } from "./common.js";
+import { isRootName } from "@m78/form";
 
 export function _fieldImpl(ctx: _FormContext) {
   const { form } = ctx;
 
   /** 实现Field组件 */
   form.Field = (props) => {
-    const { name = EMPTY_NAME } = props;
+    const { name: _name } = props;
+
+    const [name, strName] = useMemo(() => {
+      if (!isTruthyOrZero(_name)) return [EMPTY_NAME, EMPTY_NAME];
+      if (isRootName(_name)) return [[], "[]"];
+      return [_name!, stringifyNamePath(_name!)];
+    }, [_name]);
 
     const id = useMemo(() => createRandString(2), []);
 
@@ -39,7 +48,7 @@ export function _fieldImpl(ctx: _FormContext) {
       /** 当前组件的schema */
       schema: form.getSchema(name),
       /** 手动更新组件的标记 */
-      renderKey: Math.random(),
+      renderKey: createTempID(),
     }));
 
     const schema = state.schema;
@@ -59,7 +68,7 @@ export function _fieldImpl(ctx: _FormContext) {
       name,
       wrapRef,
       id,
-      strName: stringifyNamePath(name),
+      strName,
     };
 
     // 组件方法

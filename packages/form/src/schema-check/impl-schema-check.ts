@@ -23,8 +23,8 @@ import {
   _getExtraKeys,
   _isErrorTemplateInterpolate,
 } from "./common.js";
-import { _ROOT_SCHEMA_NAME } from "../common.js";
 
+/** 实现静态的schema check */
 export function _implSchemaCheck(ctx: _Context) {
   const { config } = ctx;
 
@@ -55,9 +55,7 @@ export function _implSchemaCheck(ctx: _Context) {
 
       let value = isRootSchema ? values : getValueByName(namePath);
 
-      const nameStr = isRootSchema
-        ? _ROOT_SCHEMA_NAME
-        : stringifyNamePath(namePath);
+      const nameStr = isRootSchema ? "[]" : stringifyNamePath(namePath);
       const label = schema.label || nameStr;
 
       // 预转换值
@@ -153,8 +151,8 @@ export function _implSchemaCheck(ctx: _Context) {
       // 未通过验证时不再进行子级验证
       if (!currentPass) return;
 
-      if (schema.schema?.length) {
-        await checkSchemas(schema.schema, namePath.slice());
+      if (schema.schemas?.length) {
+        await checkSchemas(schema.schemas, namePath.slice());
       }
 
       // 经过schemaSpecialPropsHandle处理后, schema不会有eachSchema
@@ -174,8 +172,8 @@ export function _implSchemaCheck(ctx: _Context) {
 
     await checkSchema(rootSchema, [], true);
 
-    const rm = rejectMeta.length ? rejectMeta : null;
+    if (rejectMeta.length) return [rejectMeta, null];
 
-    return [rm, values];
+    return [null, values];
   };
 }

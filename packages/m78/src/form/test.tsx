@@ -12,7 +12,7 @@ describe("form", () => {
         desc: "",
       },
       schemas: {
-        schema: [
+        schemas: [
           {
             name: "name",
             validator: required(),
@@ -35,7 +35,7 @@ describe("form", () => {
             name: "obj",
             label: "对象",
             validator: required(),
-            schema: [
+            schemas: [
               {
                 name: "title",
                 validator: required(),
@@ -58,7 +58,7 @@ describe("form", () => {
             deps: ["name"],
             validator: required(),
             eachSchema: {
-              schema: [
+              schemas: [
                 {
                   name: "title",
                   validator: required(),

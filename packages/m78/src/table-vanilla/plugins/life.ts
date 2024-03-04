@@ -228,6 +228,8 @@ export class _TableLifePlugin extends TablePlugin {
     const ctx = this.context;
 
     ctx.lastViewportItems = undefined;
+    ctx.lastMountRows = {};
+    ctx.lastMountColumns = {};
     ctx.topFixedMap = {};
     ctx.bottomFixedMap = {};
     ctx.leftFixedMap = {};

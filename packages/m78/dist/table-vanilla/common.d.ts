@@ -52,8 +52,6 @@ export declare function _syncListNode(arg: {
     nodeList: HTMLElement[];
     createAction?: (dom: HTMLElement) => void;
 }): void;
-/** 检测传入的事件是否是touch事件 */
-export declare function isTouch(e: Event): boolean;
 /** 用于便捷的根据当前 lastViewportItems 生成用于高效检测row mount状态的检测方法 */
 export declare function _rowMountChecker(visibleRows?: TableRow[]): (key: TableKey) => boolean;
 export {};

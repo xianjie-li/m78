@@ -217,6 +217,15 @@ m78Config.set({
 - `label/describe/style/className` 动态 label/描述/样式等
 - 除了`name`等关键配置, 大部分配置都可以动态化, 只是某些字段动态化可能没有意义, 可在开发中根据实际场景进行尝试
 
+## 单值表单
+
+若表单值是单个简单值, 可通过 `[]` 或 [] 表示 name
+
+<Demo
+  demo={require("./single.tsx")}
+  code={require("!!raw-loader!./single.tsx")}
+></Demo>
+
 ## 验证
 
 ### 验证器
@@ -346,7 +355,7 @@ Form 的核心逻辑与前端框架无关，它是在 [@m78/form](https://github
 ```ts
 interface FormConfig {
   /** 描述表单值结构的对象 */
-  schemas?: FormSchemaWithoutName;
+  schemas?: FormSchemaWithoutName | FormSchema[];
   /** 表单控件适配器, 优先级高于全局适配器 */
   adaptors?: FormAdaptors;
   /** {} | 默认值 */
@@ -457,7 +466,7 @@ interface FormSchema {
     namePath: NameItem[];
   }) => Omit<FormSchema, "dynamic" | "name" | "list" | "deps"> | void;
   /** 类型为数组、对象时, 对其结构进行验证 */
-  schema?: FormSchema[];
+  schemas?: FormSchema[];
   /** 验证值为array或object时, 子级的所有 数组项/对象值 必须与此Schema匹配, 如果该值的类型不为array或object，此配置会被忽略 */
   eachSchema?: Omit<FormSchema, "name" | "list">;
   /**
@@ -485,39 +494,35 @@ interface FormInstance {
   /** 根据当前的schema配置直接渲染表单 */
   SchemaRender: React.FunctionComponent<FormSchemaRenderProps>;
 
-  /* # # # # # # # 继承 # # # # # # # */
-  /** 指定值是否与默认值相同 */
-  getChanged(name: NamePath): boolean;
-
-  /** 表单当前值是否与默认值相同 */
-  getFormChanged(): boolean;
-
-  /** 指定值是否被操作过 */
-  getTouched(name: NamePath): boolean;
-
-  /** 设置指定值touched为false */
-  setTouched(name: NamePath, touched: boolean): void;
-
-  /** 表单是否被操作过 */
-  getFormTouched(): boolean;
-
-  /** 设置整个表单的touched状态 */
-  setFormTouched(touched: boolean): void;
-
-  /** 获取当前数据 */
-  getValues<T = any>(): T;
-
-  /** 获取指定name的值 */
+  /** 获取值, 获取的值为对应的原始引用  */
   getValue<T = any>(name: NamePath): T;
 
-  /** 设置所有值 */
-  setValues(values: any): void;
+  /** 获取当前的values, 获取前会根据当前的schema进行处理并过滤掉valid为false的值 */
+  getValues<T = any>(): T;
 
-  /** 获取指定name的值 */
+  /** 检测是否与默认值相同 */
+  getChanged(name: NamePath): boolean;
+
+  /** 检测form当前值是否与默认值相同 */
+  getFormChanged(): boolean;
+
+  /** 检测是否被操作过 */
+  getTouched(name: NamePath): boolean;
+
+  /** 检测form是否被操作过 */
+  getFormTouched(): boolean;
+
+  /** 设置touched状态 */
+  setTouched(name: NamePath, touched: boolean): void;
+
+  /** 设置form级别的的touched状态 */
+  setFormTouched(touched: boolean): void;
+
+  /** 设置值, name传入 [] 可设置根值 */
   setValue(name: NamePath, val: any): void;
 
-  /** 获取当前数据, 获取的数据会根据当前的schema进行处理并过滤掉valid为false的值 */
-  getValues<T = any>(): T;
+  /** 设置form整体的values */
+  setValues(val: any): void;
 
   /** 获取当前的默认值 */
   getDefaultValues<T = any>(): T;
@@ -527,30 +532,28 @@ interface FormInstance {
 
   /**
    * 获取变更的值, 没有变更时返回null
-   * - 如果values本身是一个基础类型值, 则会在与默认值不同时直接返回
+   * - 如果values本身是一个非对象/数组值, 会在与默认值不同时直接返回
    * - 只有根级别的字段会参与对比, 如果根字段发生了变更, 其子级字段会一同返回
-   * - values是对象是, 会将defaultValue中存在但被删除的字段设置为初始值(字符串为"", 其他类型为null)
+   * - values是对象时, 会将defaultValue中存在但被删除的字段设置为null返回
    * */
   getChangedValues(): any | null;
 
   /** 获取错误信息, 注意: 此方法不会自动执行验证, 仅用于获取最后一次验证后的结果 */
-  getErrors(name?: NamePath): RejectMeta;
+  getErrors(name?: NamePath): FormRejectMeta;
 
   /** 重置表单状态 */
   reset(): void;
 
-  /** 对当前values执行校验, 校验失败时, 数组首项为失败信息组成的的数组, 校验失败时为null, 第二项为参与验证的数据, 验证成功后会触发submit事件: */
-  submit(): Promise<[FormRejectMeta | null, any]>;
+  /** 对当前values执行校验, 校验成功后会触发submit事件: */
+  submit(): Promise<FormRejectOrValues>;
 
   /**
-   * 对当前values执行校验, 校验失败时, 数组首项为失败信息组成的的数组, 校验失败时为null, 第二项为参与验证的数据
+   * 对当前values执行校验
    *
-   * 若传入extraMeta, 会将其扩展到该次验证的 FormVerifyMeta 中, 然后你可以在验证器/验证错误信息等位置对其进行访问
+   * - 不传入name或是传入 [] 或 '[]' 可验证form本身
+   * - 若传入extraMeta, 会将其扩展到该次验证的 FormVerifyMeta 中, 然后你可以在验证器/验证错误信息等位置对其进行访问
    * */
-  verify(
-    name?: NamePath,
-    extraMeta?: AnyObject
-  ): Promise<[FormRejectMeta | null, any]>;
+  verify(name?: NamePath, extraMeta?: AnyObject): Promise<FormRejectOrValues>;
 
   /**
    * debounce版本的verify, 处理高频调用时可以使用, cb会在成功或失败时触发, 失败时包含错误信息
@@ -563,39 +566,37 @@ interface FormInstance {
   ) => void;
 
   /**
-   * 获取指定list的数据, 若未在schema中配置为list则返回null. 根schema设置为list时, 可传入`[]`来获取
+   * 获取指定list的数据, 若未在schema中配置为list则返回null. 根schema设置为list时, 可以通过不传name获取
    * */
-  getList<Item = any>(name: NamePath): Array<FormListItem<Item>> | null;
+  getList<Item = any>(name?: NamePath): Array<FormListItem<Item>> | null;
 
-  /** 为list新增一项或多项, index为起始位置, 默认追加到结尾. 若name不是有效list或其他原因导致失败会将返回false */
+  /** 为list新增一项或多项, index为添加到的索引位置, 默认追加到结尾. 若name不是有效list或其他原因导致失败会将返回false */
   listAdd(name: NamePath, items: any | any[], index?: number): boolean;
 
   /** 移除list指定索引的元素 */
   listRemove(name: NamePath, index: number): boolean;
 
-  /** 移动list的指定原素到另一位置 */
+  /** 移动list的指定元素到另一位置 */
   listMove(name: NamePath, from: number, to: number): boolean;
 
   /** 交换list的两个元素 */
   listSwap(name: NamePath, from: number, to: number): boolean;
 
-  /**
-   * 创建用于update/change事件回调的过滤器, 帮助识别变更是否与当前name关联,
-   * 传入deps时, 会在deps中指定的name触发事件时触发
-   * */
-  notifyFilter: (
-    name: NamePath,
-    notify: FormNamesNotify,
-    deps?: NamePath[]
-  ) => FormNamesNotify;
+  /** 获取处理特殊选项后的根schema */
+  getSchemas(): {
+    /** 处理过特殊选项的schema */
+    schemas: FormSchemaWithoutName;
+    /** 所有invalid项的name */
+    invalidNames: NamePath[];
+  };
 
-  /** 获取对dynamic/valid/list等特殊项进行处理进行处理后的完整schema副本 */
-  getSchemas(): FormSchemaWithoutName;
+  /** 设置当前schemas */
+  setSchemas(schema: FormSchemaWithoutName | FormSchema[]): void;
 
   /**
-   * 获取对dynamic/valid/list等特殊项进行处理进行处理后的指定schema副本
+   * 获取对dynamic/valid/list等特殊项进行处理进行处理后的schemas副本以及一些其他相关信息
    *
-   * 如果在dynamic中调用并且获取的schema包含当前schema本身(直接获取或作为子项获取), 会导致递归, 可通过 skipChildren或withoutProcess选项处理
+   * - 在dynamic中调用时, 如果获取的schema包含当前schema本身(直接获取或作为子项获取), 会导致递归, 可通过 skipChildren或withoutProcess选项处理
    * */
   getSchema(
     name: NamePath,
@@ -606,24 +607,6 @@ interface FormInstance {
       withoutProcess?: boolean;
     }
   ): FormSchema | null;
-
-  /**
-   * 获取对dynamic/valid/list等特殊项进行处理进行处理后的指定schema副本
-   *
-   * 如果在dynamic中调用并且获取的schema包含当前schema本身(直接获取或作为子项获取), 会导致递归, 可通过 skipChildren或withoutProcess选项处理
-   * */
-  getSchema(
-    name: NamePath,
-    opt?: {
-      /** true | 不处理子项 */
-      skipChildren?: boolean;
-      /** 返回原始的schema配置, 不对eachSchema/dynamic等特殊配置进行处理 */
-      withoutProcess?: boolean;
-    }
-  ): FormSchema | null;
-
-  /** 重新设置当前schemas, 通常需要在重新设置schema后手动自动执行一次verify()来清理之前的校验状态 */
-  setSchemas(schema: FormSchemaWithoutName): void;
 
   /** 获取Form创建配置 */
   getConfig(): FormConfig;
@@ -641,7 +624,7 @@ interface FormInstance {
     submit: CustomEventWithHook<(values: any) => void>;
     /** 验证失败的回调, 由 setValue 触发自动校验时, isValueChangeTrigger 为 true */
     fail: CustomEventWithHook<
-      (errors: RejectMeta, isValueChangeTrigger?: boolean) => void
+      (errors: FormRejectMeta, isValueChangeTrigger?: boolean) => void
     >;
     /** 重置事件 */
     reset: CustomEventWithHook<EmptyFunction>;

@@ -11,22 +11,20 @@ import {
 import { required, string } from "m78/form";
 
 const form = createForm({
-  schemas: {
-    schema: [
-      {
-        label: "姓名",
-        name: "name",
-        validator: [required(), string({ min: 2, max: 5 })],
-        element: <Input placeholder="请输入姓名" />,
-      },
-      {
-        label: "简介",
-        name: "describe",
-        validator: string({ max: 20 }),
-        element: <Input placeholder="简要介绍一下自己" textArea />,
-      },
-    ],
-  },
+  schemas: [
+    {
+      label: "姓名",
+      name: "name",
+      validator: [required(), string({ min: 2, max: 5 })],
+      element: <Input placeholder="请输入姓名" />,
+    },
+    {
+      label: "简介",
+      name: "describe",
+      validator: string({ max: 20 }),
+      element: <Input placeholder="简要介绍一下自己" textArea />,
+    },
+  ],
 });
 
 const SchemaLayout = () => {

@@ -1,6 +1,7 @@
 /// <reference types="lodash" />
 import { TableLoadStage, TablePlugin } from "../plugin.js";
-import { AnyObject, AutoScroll, AutoScrollTriggerConfig } from "@m78/utils";
+import { AnyObject } from "@m78/utils";
+import { AutoScrollTriggerConfig, AutoScroll } from "@m78/smooth-scroll";
 import { TableKey, TablePointInfo, TablePosition } from "../types/base-type.js";
 import { TableInstance } from "../types/instance.js";
 import { TableCell, TableCellWithDom, TableItems, TableRow } from "../types/items.js";

@@ -7,20 +7,18 @@ import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
 import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
 import { _ as _create_super } from "@swc/helpers/_/_create_super";
 import { TablePlugin } from "../plugin.js";
-import { createKeyboardHelpersBatch, isFunction, isPromiseLike, isTruthyOrZero, setNamePathValue } from "@m78/utils";
+import { createKeyboardHelpersBatch, isFunction, isPromiseLike, isTruthyOrZero, setCacheValue, setNamePathValue } from "@m78/utils";
 import { removeNode } from "../../common/index.js";
 import { _TableFormPlugin } from "./form.js";
 import { _TableDisablePlugin } from "./disable.js";
 /**
- * 提供最基础的单元格双击交互功能, 通常用于搭配form插件实现单元格编辑和验证
- *
- * interactive 并非一定表示单元格编辑, 也可以纯展示的其他交互组件
- * */ export var _TableInteractiveCorePlugin = /*#__PURE__*/ function(TablePlugin) {
+ * 提供单元格双击交互功能, 用于实现交互期间展示表单控件或其他交互组件, 是在form的上做的一层抽象, 并非一定用于form
+ * */ export var _TableInteractivePlugin = /*#__PURE__*/ function(TablePlugin) {
     "use strict";
-    _inherits(_TableInteractiveCorePlugin, TablePlugin);
-    var _super = _create_super(_TableInteractiveCorePlugin);
-    function _TableInteractiveCorePlugin() {
-        _class_call_check(this, _TableInteractiveCorePlugin);
+    _inherits(_TableInteractivePlugin, TablePlugin);
+    var _super = _create_super(_TableInteractivePlugin);
+    function _TableInteractivePlugin() {
+        _class_call_check(this, _TableInteractivePlugin);
         var _this;
         _this = _super.apply(this, arguments);
         // 所有活动的交互项
@@ -59,17 +57,17 @@ import { _TableDisablePlugin } from "./disable.js";
             // eslint-disable-next-line prefer-const
             var done;
             var itemDone = function() {
-                var isSubmit = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : true;
+                var isConfirm = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : true;
                 _this.lastDownTime = Date.now();
                 if (item.unmounted) return;
                 item.unmounted = true;
-                var ret = done(isSubmit);
+                var ret = done(isConfirm);
                 var clear = function() {
                     var ind = _this.items.indexOf(item);
                     if (ind !== -1) {
                         _this.items.splice(ind, 1);
                     }
-                    _this.table.event.interactiveChange.emit(cell, false, isSubmit);
+                    _this.table.event.interactiveChange.emit(cell, false, isConfirm);
                     removeNode(attachNode);
                 };
                 if (isPromiseLike(ret)) {
@@ -85,7 +83,6 @@ import { _TableDisablePlugin } from "./disable.js";
             };
             _this.closeAll();
             done = _this.config.interactiveRender(_object_spread_props(_object_spread({}, item), {
-                form: _this.form.initForm(cell),
                 value: isTruthyOrZero(defaultValue) ? defaultValue : _this.table.getValue(cell)
             }));
             _this.items.push(item);
@@ -105,6 +102,7 @@ import { _TableDisablePlugin } from "./disable.js";
                     if (cell.column.isHeader || cell.row.isHeader) return false;
                     if (!_this.isInteractive(cell)) return false;
                     if (!_this.form.validCheck(cell)) return false;
+                    // ignore idea tips.
                     return true;
                 }
             });
@@ -127,18 +125,18 @@ import { _TableDisablePlugin } from "./disable.js";
         });
         return _this;
     }
-    _create_class(_TableInteractiveCorePlugin, [
+    _create_class(_TableInteractivePlugin, [
         {
             key: "init",
             value: function init() {
                 this.form = this.getPlugin(_TableFormPlugin);
                 this.disable = this.getPlugin(_TableDisablePlugin);
+                this.initDom();
             }
         },
         {
             key: "mounted",
             value: function mounted() {
-                this.initDom();
                 this.table.event.click.on(this.onClick);
                 this.multipleHelper = createKeyboardHelpersBatch(this.getKeydownOptions());
             }
@@ -229,9 +227,9 @@ import { _TableDisablePlugin } from "./disable.js";
             }
         },
         {
-            // 更新当前节点位置/尺寸
             key: "updateNode",
-            value: function updateNode() {
+            value: // 更新当前节点位置/尺寸
+            function updateNode() {
                 var _this = this;
                 if (!this.items.length) return;
                 this.items.forEach(function(item) {
@@ -239,10 +237,10 @@ import { _TableDisablePlugin } from "./disable.js";
                     if (item.mounted && !item.cell.isFixed) return;
                     var cell = item.cell, node = item.node;
                     var attachPos = _this.table.getAttachPosition(cell);
-                    node.style.width = "".concat(attachPos.width - 1, "px"); // 减去右/下边框的1px
-                    node.style.height = "".concat(attachPos.height - 1, "px");
-                    node.style.transform = "translate(".concat(attachPos.left, "px,").concat(attachPos.top, "px)");
-                    node.style.zIndex = String(Number(attachPos.zIndex) + 2); // 高于错误反馈等提示节点
+                    setCacheValue(node.style, "width", "".concat(attachPos.width - 1, "px"));
+                    setCacheValue(node.style, "height", "".concat(attachPos.height - 1, "px"));
+                    setCacheValue(node.style, "transform", "translate(".concat(attachPos.left, "px,").concat(attachPos.top, "px)"));
+                    setCacheValue(node.style, "zIndex", String(Number(attachPos.zIndex) + 2)); // 高于错误反馈等提示节点
                     item.mounted = true;
                 });
             }
@@ -287,5 +285,5 @@ import { _TableDisablePlugin } from "./disable.js";
             }
         }
     ]);
-    return _TableInteractiveCorePlugin;
+    return _TableInteractivePlugin;
 }(TablePlugin);

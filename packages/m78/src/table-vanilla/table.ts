@@ -3,7 +3,7 @@ import { _TableInitPlugin } from "./plugins/init.js";
 import { _TableRenderPlugin } from "./plugins/render.js";
 
 import { createEvent, getNamePathValue, setNamePathValue } from "@m78/utils";
-import { _privateInstanceKey } from "./common.js";
+import { _privateInstanceCallbackKey, _privateInstanceKey } from "./common.js";
 import { _TableLifePlugin } from "./plugins/life.js";
 import { _TableGetterPlugin } from "./plugins/getter.js";
 import { _TableEventPlugin } from "./plugins/event.js";
@@ -25,7 +25,7 @@ import { _TableDragSortPlugin } from "./plugins/drag-sort.js";
 import { _TableDisablePlugin } from "./plugins/disable.js";
 import { _TableDragMovePlugin } from "./plugins/drag-move.js";
 import { _TableKeyboardInteractionPlugin } from "./plugins/keyboard-interaction.js";
-import { _TableInteractiveCorePlugin } from "./plugins/interactive-core.js";
+import { _TableInteractivePlugin } from "./plugins/interactive.js";
 import { _TableIsPlugin } from "./plugins/is.js";
 import { _TableSetterPlugin } from "./plugins/setter.js";
 import { _TableFormPlugin } from "./plugins/form.js";
@@ -98,6 +98,11 @@ export function _createTable(config: TableConfig): TableInstance {
     interactiveChange: eventCreator(),
     feedback: eventCreator(),
     dragMoveChange: eventCreator(),
+    configChange: eventCreator(),
+    cellRendering: eventCreator(),
+    rowRendering: eventCreator(),
+    columnRendering: eventCreator(),
+    beforeRender: eventCreator(),
   };
 
   // 不完整的实例
@@ -123,8 +128,8 @@ export function _createTable(config: TableConfig): TableInstance {
   const plugins = [
     _TableMetaDataPlugin,
     _TableInitPlugin,
-    _TablePluginEmpty,
     _TableLifePlugin,
+    _TablePluginEmpty,
     _TableGetterPlugin,
     _TableSetterPlugin,
     _TableIsPlugin,
@@ -145,7 +150,7 @@ export function _createTable(config: TableConfig): TableInstance {
     _TableAutoResizePlugin,
     _TableRowColumnResize,
     _TableKeyboardInteractionPlugin,
-    _TableInteractiveCorePlugin,
+    _TableInteractivePlugin,
     _TableFeedbackPlugin,
     _TableFormPlugin,
     _TableHighlightPlugin,
@@ -186,6 +191,11 @@ export function _createTable(config: TableConfig): TableInstance {
     plugin.initialized?.();
   });
   event.initialized.emit();
+
+  // 某些场景需要instance创建并初始化完成, 但render还没开始的时候进行, 目前通过私有配置的方式提供
+  const instanceCB = getNamePathValue(conf, _privateInstanceCallbackKey);
+
+  if (instanceCB) instanceCB(instance);
 
   instance.render();
 

@@ -7,7 +7,7 @@ const form = createForm({
   // 针对对象本身的schema
   schemas: {
     // 对象的子字段的schema
-    schema: [
+    schemas: [
       {
         name: "name",
         validator: required(),

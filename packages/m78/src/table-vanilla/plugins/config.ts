@@ -57,7 +57,16 @@ export class _TableConfigPlugin
       level = TableReloadLevel.full;
     }
 
+    const changeKeys = Object.keys(nConf);
+    const changeExist: any = {};
+
     Object.assign(this.config, nConf);
+
+    changeKeys.forEach((k) => (changeExist[k] = true));
+
+    this.table.event.configChange.emit(changeKeys, (k) => {
+      return !!changeExist[k];
+    });
 
     this.table.reload({
       keepPosition: isBoolean(keepPosition)

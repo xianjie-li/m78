@@ -37,4 +37,3 @@ m78Config.set({
         adaptor
     ])
 });
-console.log(m78Config.get().formAdaptors);

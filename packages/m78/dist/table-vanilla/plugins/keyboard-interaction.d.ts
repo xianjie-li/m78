@@ -1,10 +1,10 @@
 import { TablePlugin } from "../plugin.js";
 import { TableCell } from "../types/items.js";
 import { EmptyFunction, KeyboardMultipleHelper } from "@m78/utils";
-import { _TableInteractiveCorePlugin } from "./interactive-core.js";
+import { _TableInteractivePlugin } from "./interactive.js";
 /** 集中处理不分键盘交互操作, 比如单元格复制/粘贴/delete等 */
 export declare class _TableKeyboardInteractionPlugin extends TablePlugin {
-    interactiveCore: _TableInteractiveCorePlugin;
+    interactiveCore: _TableInteractivePlugin;
     multipleHelper: KeyboardMultipleHelper;
     beforeInit(): void;
     init(): void;

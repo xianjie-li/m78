@@ -337,14 +337,6 @@ const TableFullExample = () => {
           </button>
           <button
             onClick={() => {
-              console.log(table?.resetFormState());
-            }}
-          >
-            resetFormState
-          </button>
-
-          <button
-            onClick={() => {
               table
                 ?.verify()
                 .then((res) => {

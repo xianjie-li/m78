@@ -9,14 +9,13 @@ import { _useStateAct } from "../injector/state.act.js";
 
 export class _XLSHandlePlugin extends RCTablePlugin {
   toolbarTrailingCustomer(nodes: React.ReactNode[]) {
-    const props = this.getProps();
     const { dataOperations: conf } = this.getDeps(_useStateAct);
 
-    if (props.dataExport) {
+    if (conf.export) {
       nodes.push(<ExportFileBtn />);
     }
 
-    if (props.dataImport && conf.add) {
+    if (conf.import && conf.add) {
       nodes.push(<ImportFileBtn />);
     }
   }

@@ -1,4 +1,4 @@
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { useEffect, useRef, useState } from "react";
 import { useFn } from "../../effect/use-fn/use-fn.js";
 import debounce from "lodash/debounce.js";
@@ -8,11 +8,6 @@ import { getRefDomOrDom } from "../../utils/utils.js";
 /**
  * 原始尺寸/位置 变更时进行通知
  * */ export function useMeasureNotify(props) {
-    var getEl = function getEl() {
-        var el = getRefDomOrDom(target);
-        if (el) return el;
-        return ref.current;
-    };
     var ref = useRef(null);
     var debounceDelay = props.debounceDelay, target = props.target;
     var isUnmount = useIsUnmountState();
@@ -42,9 +37,14 @@ import { getRefDomOrDom } from "../../utils/utils.js";
     }, [
         debounceDelay
     ]);
-    var ref1 = _sliced_to_array(useState(function() {
+    var _useState = _sliced_to_array(useState(function() {
         return new ResizeObserver(cb);
-    }), 1), ro = ref1[0];
+    }), 1), ro = _useState[0];
+    function getEl() {
+        var el = getRefDomOrDom(target);
+        if (el) return el;
+        return ref.current;
+    }
     useEffect(function() {
         var el = getEl();
         if (el) ro.observe(el);

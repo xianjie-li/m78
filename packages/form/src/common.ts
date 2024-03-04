@@ -4,9 +4,10 @@ import {
   NameItem,
   NamePath,
   stringifyNamePath,
+  simplyEqual as isEqual,
+  isArray,
 } from "@m78/utils";
 import { _Context, _State, FormNamesNotify } from "./types.js";
-import isEqual from "lodash/isEqual.js";
 
 /** 获取指定name的state, 状态对象还不存在时会自动进行创建 */
 export function _getState(ctx: _Context, name: NamePath) {
@@ -74,9 +75,6 @@ export function _notifyFilter(
     }
   };
 }
-
-/** 用于在某些情况作为根schema的name标注 */
-export const _ROOT_SCHEMA_NAME = "__ROOT_SCHEMA_NAME__";
 
 /** 数组1是否与数组2的左侧相等或完全相等 */
 export function _isLeftEqualName(arr1: any[], arr2: any[]) {
@@ -174,4 +172,11 @@ export function _syncListIndex(
   });
 
   Object.assign(ctx.listState, temp);
+}
+
+/** 检测是否为根name, undefined 或 [] 或 `[]` */
+export function isRootName(name?: NamePath): name is undefined {
+  return (
+    name === undefined || name === "[]" || (isArray(name) && name.length === 0)
+  );
 }

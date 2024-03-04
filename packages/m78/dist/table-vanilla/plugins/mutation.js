@@ -9,7 +9,7 @@ import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
 import { _ as _create_super } from "@swc/helpers/_/_create_super";
 import { TablePlugin } from "../plugin.js";
-import { createRandString, deepClone, deleteNamePathValue, ensureArray, getNamePathValue, isArray, isObject, isString, isTruthyOrZero, recursionShakeEmpty, setNamePathValue, throwError, uniq } from "@m78/utils";
+import { createRandString, simplyDeepClone, deleteNamePathValue, ensureArray, getNamePathValue, isArray, isObject, isString, isTruthyOrZero, recursionShakeEmpty, setNamePathValue, throwError, uniq } from "@m78/utils";
 import { TableReloadLevel } from "./life.js";
 import { TableColumnFixed, TableRowFixed } from "../types/base-type.js";
 import { _getCellKey, _getCellKeysByStr, _prefix } from "../common.js";
@@ -40,7 +40,7 @@ import { _TableFormPlugin } from "./form.js";
             var conf = _this.context.persistenceConfig;
             var old = getNamePathValue(conf, key);
             if (typeof old === "object") {
-                old = deepClone(old);
+                old = simplyDeepClone(old);
             }
             var keyList = ensureArray(key);
             var first = keyList[0];
@@ -49,7 +49,7 @@ import { _TableFormPlugin } from "./form.js";
                 setNamePathValue(conf, key, newValue);
                 var value = getNamePathValue(conf, first);
                 if (typeof value === "object") {
-                    value = recursionShakeEmpty(deepClone(value));
+                    value = recursionShakeEmpty(simplyDeepClone(value));
                 }
                 var event = {
                     type: "config",
@@ -75,7 +75,7 @@ import { _TableFormPlugin } from "./form.js";
                 }
                 var value = getNamePathValue(conf, first);
                 if (typeof value === "object") {
-                    value = recursionShakeEmpty(deepClone(value));
+                    value = recursionShakeEmpty(simplyDeepClone(value));
                 }
                 var event = {
                     type: "config",
@@ -108,7 +108,7 @@ import { _TableFormPlugin } from "./form.js";
             return uniq(_this.changedConfigKeys);
         });
         /** 获取当前持久化配置 */ _define_property(_assert_this_initialized(_this), "getPersistenceConfig", function() {
-            return recursionShakeEmpty(deepClone(_this.context.persistenceConfig));
+            return recursionShakeEmpty(simplyDeepClone(_this.context.persistenceConfig));
         });
         _define_property(_assert_this_initialized(_this), "addRow", function(data, to, insertAfter) {
             var index = -1;
@@ -264,7 +264,7 @@ import { _TableFormPlugin } from "./form.js";
                 _this.cloneAndSetRowData(row);
             }
             var ov = getNamePathValue(row.data, column.config.originalKey);
-            var oldValue = typeof ov === "object" ? deepClone(ov) : ov;
+            var oldValue = typeof ov === "object" ? simplyDeepClone(ov) : ov;
             _this.table.history.redo({
                 redo: function() {
                     setNamePathValue(row.data, column.config.originalKey, value);
@@ -367,7 +367,7 @@ import { _TableFormPlugin } from "./form.js";
         {
             key: "cloneAndSetRowData",
             value: /** 克隆并重新设置row的data, 防止变更原数据, 主要用于延迟clone, 可以在数据量较大时提升初始化速度  */ function cloneAndSetRowData(row) {
-                var cloneData = deepClone(row.data);
+                var cloneData = simplyDeepClone(row.data);
                 var ind = this.context.dataKeyIndexMap[row.key];
                 row.data = cloneData;
                 this.context.data[ind] = cloneData;

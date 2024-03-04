@@ -4,8 +4,6 @@ import { _useLifeCycle } from "./use/life-cycle.js";
 import { _useRender } from "./render/use-render.js";
 
 const defaultProps = {
-  dataImport: true,
-  dataExport: true,
   softRemove: true,
 } satisfies Partial<RCTableProps>;
 

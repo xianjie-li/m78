@@ -8,7 +8,7 @@ import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
 import { _ as _create_super } from "@swc/helpers/_/_create_super";
 import { TableLoadStage, TablePlugin } from "../plugin.js";
-import { deepClone, getNamePathValue, isEmpty, isNumber, isObject, isString, setNamePathValue, throwError } from "@m78/utils";
+import { simplyDeepClone, getNamePathValue, isEmpty, isNumber, isObject, isString, setNamePathValue, throwError } from "@m78/utils";
 import clsx from "clsx";
 import { _getCellKey, _getCellKeysByStr, _prefix, _privateScrollerDomKey, tableDefaultTexts } from "../common.js";
 import { _TableGetterPlugin } from "./getter.js";
@@ -654,7 +654,7 @@ import { _TableRenderPlugin } from "./render.js";
         {
             /** 克隆 config.persistenceConfig 到 context.persistenceConfig */ key: "clonePersistenceConfigToCtx",
             value: function clonePersistenceConfigToCtx() {
-                this.context.persistenceConfig = isObject(this.config.persistenceConfig) ? deepClone(this.config.persistenceConfig) : {};
+                this.context.persistenceConfig = isObject(this.config.persistenceConfig) ? simplyDeepClone(this.config.persistenceConfig) : {};
             }
         },
         {

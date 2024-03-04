@@ -1,6 +1,6 @@
 import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
 import { createRandString, ensureArray, isArray, isNumber, move, swap, stringifyNamePath } from "@m78/utils";
-import { _ROOT_SCHEMA_NAME, _syncListIndex } from "./common.js";
+import { _syncListIndex, isRootName } from "./common.js";
 export function _implList(ctx) {
     var instance = ctx.instance;
     /**
@@ -10,14 +10,14 @@ export function _implList(ctx) {
         var _listState_sName;
         var name = ensureArray(_name);
         var isRoot = !name.length;
-        var schema = isRoot ? instance.getSchemas() : instance.getSchema(name);
+        var schema = isRoot ? instance.getSchemas().schemas : instance.getSchema(name);
         var listState = ctx.listState;
         if (!schema || !schema.list) return null;
-        var sName = isRoot ? _ROOT_SCHEMA_NAME : stringifyNamePath(name);
+        var sName = isRoot ? "[]" : stringifyNamePath(name);
         if (!isArray(listState === null || listState === void 0 ? void 0 : (_listState_sName = listState[sName]) === null || _listState_sName === void 0 ? void 0 : _listState_sName.keys)) {
             listState[sName] = {
                 keys: [],
-                name: isRoot ? _ROOT_SCHEMA_NAME : name
+                name: isRoot ? [] : name
             };
         }
         var value = isRoot ? ctx.values : instance.getValue(name);
@@ -55,7 +55,7 @@ export function _implList(ctx) {
         ctx.lockListState = false;
     }
     instance.getList = function(name) {
-        var res = syncAndGetList(name);
+        var res = syncAndGetList(isRootName(name) ? [] : name);
         if (!res) return null;
         var keys = res.keys, value = res.value;
         return value.map(function(item, index) {

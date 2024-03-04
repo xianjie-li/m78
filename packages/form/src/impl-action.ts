@@ -5,7 +5,12 @@ import {
   stringifyNamePath,
   simplyDeepClone as clone,
 } from "@m78/utils";
-import { _eachState, _getState, _isRelationName } from "./common.js";
+import {
+  _eachState,
+  _getState,
+  _isRelationName,
+  isRootName,
+} from "./common.js";
 
 export function _implAction(ctx: _Context) {
   const { instance } = ctx;
@@ -14,6 +19,8 @@ export function _implAction(ctx: _Context) {
     const isValueChangeTrigger = ctx.isValueChangeTrigger;
 
     ctx.isValueChangeTrigger = false;
+
+    if (isRootName(name)) name = undefined;
 
     const resetState = (st: _State) => {
       if (name) {
@@ -87,10 +94,8 @@ export function _implAction(ctx: _Context) {
         instance.events.update.emit(name);
       }
 
-      return [
-        errors.length ? errors : null,
-        name ? instance.getValue(name) : _values,
-      ];
+      if (errors.length) return [errors, null];
+      else return [null, name ? instance.getValue(name) : _values];
     } else {
       if (!ctx.lockNotify) {
         instance.events.update.emit(name);
@@ -107,7 +112,7 @@ export function _implAction(ctx: _Context) {
   let firstTriggerFlag = false;
 
   instance.debounceVerify = (name, cb) => {
-    const key = stringifyNamePath(name || []) || "default";
+    const key = isRootName(name) ? "[]" : stringifyNamePath(name);
 
     const isValueChangeTrigger = ctx.isValueChangeTrigger;
 
@@ -119,14 +124,13 @@ export function _implAction(ctx: _Context) {
         ctx.isValueChangeTrigger = true;
       }
       firstTriggerFlag = true;
-      instance
-        .verify(name)
-        .then(() => {
+      instance.verify(name).then(([rejects]) => {
+        if (rejects) {
+          cb?.(rejects);
+        } else {
           cb?.();
-        })
-        .catch((err) => {
-          cb?.(err?.rejects);
-        });
+        }
+      });
     } else {
       firstTriggerFlag = false;
     }
@@ -143,14 +147,13 @@ export function _implAction(ctx: _Context) {
       delete debounceVerifyTimerMap[key];
 
       if (!firstTriggerFlag) {
-        instance
-          .verify(name)
-          .then(() => {
+        instance.verify(name).then(([rejects]) => {
+          if (rejects) {
+            cb?.(rejects);
+          } else {
             cb?.();
-          })
-          .catch((err) => {
-            cb?.(err?.rejects);
-          });
+          }
+        });
       }
     }, 200);
   };

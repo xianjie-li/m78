@@ -53,8 +53,8 @@ export function _schemaRenderImpl(ctx: _FormContext) {
 
       if (!schema.list) {
         // 包含schema配置
-        if (schema.schema?.length) {
-          const node: any = schema.schema!.map((sch) => {
+        if (schema.schemas?.length) {
+          const node: any = schema.schemas!.map((sch) => {
             if (isRoot) return renderSchemaItem(sch, name, false, isRoot);
 
             // 嵌套菜单渲染为多列
@@ -106,8 +106,8 @@ export function _schemaRenderImpl(ctx: _FormContext) {
           layoutRender={(meta) => {
             let node: JSX.Element[];
 
-            if (eachSchema.schema) {
-              node = eachSchema.schema!.map((sch) => (
+            if (eachSchema.schemas) {
+              node = eachSchema.schemas!.map((sch) => (
                 // eslint-disable-next-line react/jsx-key
                 <div className="m78-form_multi-column">
                   {renderSchemaItem(sch, ensureArray(meta.getName()))}
@@ -137,7 +137,11 @@ export function _schemaRenderImpl(ctx: _FormContext) {
       return node;
     }
 
-    const formNode = renderSchemaItem(schemas, [], true);
+    const formNode = renderSchemaItem(
+      schemas as FormSchemaWithoutName, // config中的schema已经过处理, 不会是数组类型
+      [],
+      true
+    );
 
     if (!formNode) return null;
 

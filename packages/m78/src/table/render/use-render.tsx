@@ -3,7 +3,6 @@ import { _Toolbar } from "../toolbar/toolbar.js";
 import ReactDom from "react-dom";
 import { Result } from "../../result/index.js";
 import { IllustrationEmpty1, Size } from "../../common/index.js";
-import { IconFolderOpen } from "@m78/icons/folder-open.js";
 import { _CustomRender } from "./use-custom-render.js";
 import { _CustomEditRender } from "./use-edit-render.js";
 import { Scroll } from "../../scroll/index.js";

@@ -1,20 +1,26 @@
 import {
-  createForm,
-  FormInstance,
-  FormSchema,
+  createVerify,
   FormRejectMeta,
-  FormValidator,
+  FormSchema,
+  FormSchemaWithoutName,
+  FormVerifyInstance,
+  FormRejectOrValues,
+  FormRejectMetaItem,
 } from "@m78/form";
 import { requiredValidatorKey } from "@m78/form/validator/required.js";
 import {
   AnyFunction,
   AnyObject,
   deleteNamePathValue,
+  deleteNamePathValues,
   ensureArray,
-  isEmpty,
+  isTruthyOrZero,
   NamePath,
   setNamePathValue,
+  simplyDeepClone,
+  simplyEqual,
   stringifyNamePath,
+  setCacheValue,
 } from "@m78/utils";
 import { TableKey } from "../types/base-type.js";
 import { TableLoadStage, TablePlugin } from "../plugin.js";
@@ -27,76 +33,32 @@ import {
   TableMutationValueEvent,
 } from "./mutation.js";
 import { TableAttachData } from "./getter.js";
-import { removeNode } from "../../common/index.js";
+import { removeNode, throwError } from "../../common/index.js";
 import { _getCellKey, _syncListNode } from "../common.js";
-import { _TableInteractiveCorePlugin } from "./interactive-core.js";
+import { _TableInteractivePlugin } from "./interactive.js";
 import { FORM_LANG_PACK_NS, i18n } from "../../i18n/index.js";
 import { _TableSoftRemovePlugin } from "./soft-remove.js";
 
 export class _TableFormPlugin extends TablePlugin implements TableForm {
   wrapNode: HTMLElement;
 
-  // 以key存储行表单实例
-  formInstances: Record<string, FormInstance | void> = {};
+  // 验证实例, 用于在未创建行form时复用
+  verifyInstance: FormVerifyInstance;
 
-  // 以key存储行表单错误信息
-  errors: Record<string, FormRejectMeta | void> = {};
-
-  // 以行为单位存储单元格错误信息 { rowKey: { cellKey: "err msg" } }
-  cellErrors: Record<string, Record<string, string | void> | void> = {};
+  // 以行为单位存储单元格错误信息 { [rowKey]: { [columnKey]: "err msg" } }
+  cellErrors = new Map<TableKey, Map<TableKey, FormRejectMetaItem>>();
 
   // 记录行是否变动
-  rowChanged: Record<string, boolean> = {};
+  rowChanged = new Map<TableKey, true>();
 
   // 记录单元格是否变动
-  cellChanged: Record<string, TableCell> = {};
+  cellChanged = new Map<TableKey, true>();
 
-  // 用于显示错误反馈的节点
-  errorNodes: HTMLElement[] = [];
+  // 以行为key记录默认值
+  defaultValues = new Map<TableKey, AnyObject>();
 
-  xx() {
-    this.errorNodes = [];
-    this.rowChangedNodes = [];
-    this.cellChangedNodes = [];
-    this.editStatusNodes = [];
-    this.invalidNodes = [];
-
-    this.invalidCellMap = {};
-    this.invalidStatusMap = {};
-    this.invalidStatus = [];
-  }
-
-  // 用于显示行变动标识的节点
-  rowChangedNodes: HTMLElement[] = [];
-
-  // 用于显示单元格变动标识的节点
-  cellChangedNodes: HTMLElement[] = [];
-
-  // 记录编辑/必填状态
-  editStatus: {
-    required: boolean;
-    // 表头单元格
-    cell: TableCell;
-  }[] = [];
-
-  // 用于根据key快速查找editStatus
-  editStatusMap: Record<
-    string,
-    {
-      required: boolean;
-      // 表头单元格
-      cell: TableCell;
-    } | void
-  > = {};
-
-  // 编辑/必填状态标识节点
-  editStatusNodes: HTMLElement[] = [];
-
-  // 无效状态
-  invalidCellMap: Record<string, TableCell[] | undefined> = {};
-  invalidStatusMap: Record<string, boolean> = {};
-  invalidStatus: TableCell[] = [];
-  invalidNodes: HTMLElement[] = [];
+  // 以row key存储的改行的计算后schema
+  schemaDatas = new Map<TableKey, SchemaData>();
 
   // 记录新增的数据
   addRecordMap = new Map<TableKey, boolean>();
@@ -118,60 +80,67 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
     }
   >();
 
-  interactive: _TableInteractiveCorePlugin;
+  interactive: _TableInteractivePlugin;
+
   softRemove: _TableSoftRemovePlugin;
 
   beforeInit() {
-    this.interactive = this.getPlugin(_TableInteractiveCorePlugin);
+    this.interactive = this.getPlugin(_TableInteractivePlugin);
     this.softRemove = this.getPlugin(_TableSoftRemovePlugin);
-    this.wrapNode = document.createElement("div");
-    this.wrapNode.className = "m78-table_form-wrap";
 
     this.methodMapper(this.table, [
       "verify",
       "verifyRow",
-      "verifyChanged",
+      "verifyUpdated",
       "getData",
       "getChanged",
       "getTableChanged",
-      "resetFormState",
     ]);
   }
 
   mounted() {
     this.table.event.mutation.on(this.mutation);
-    this.context.viewContentEl.appendChild(this.wrapNode);
+
+    // schemas配置变更时清理缓存的schema
+    this.table.event.configChange.on((changeKeys, isChange) => {
+      if (isChange("schemas")) {
+        this.schemaConfigChange();
+      }
+    });
+
+    this.initVerify();
+    this.initNodeWrap();
   }
 
   beforeDestroy() {
     this.table.event.mutation.off(this.mutation);
-
-    this.editStatus = [];
-    this.editStatusMap = {};
+    this.table.event.configChange.empty();
 
     this.reset();
-    this.resetDataRecords();
-
-    removeNode(this.wrapNode);
-
-    this.errorNodes = [];
-    this.rowChangedNodes = [];
-    this.cellChangedNodes = [];
-    this.editStatusNodes = [];
-    this.invalidNodes = [];
   }
 
   loadStage(stage: TableLoadStage, isBefore: boolean) {
     if (stage === TableLoadStage.fullHandle && isBefore) {
       this.reset();
-      this.resetDataRecords();
-    }
-
-    if (stage === TableLoadStage.baseHandle && !isBefore) {
-      this.updateEditStatus();
+      this.initNodeWrap();
     }
   }
 
+  beforeRender() {
+    this.prepareChangedCell();
+    this.prepareRowMark();
+    this.prepareErrors();
+    this.prepareSchemasMark();
+  }
+
+  rendering() {
+    this.updateChangedCell();
+    this.updateRowMark();
+    this.updateErrors();
+    this.updateSchemasMark();
+  }
+
+  // 数据发生变更时进行处理
   mutation = (e: TableMutationEvent) => {
     if (e.type === TableMutationType.value) {
       this.valueMutation(e);
@@ -182,159 +151,51 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
     }
   };
 
-  rendering() {
-    const showRowsMap: Record<string, boolean | undefined> = {};
-
-    const showRows = this.context.lastViewportItems?.rows || [];
-
-    this.invalidCellMap = {};
-    this.updateValidRelate();
-
-    // 动态创建form实例
-    showRows.forEach((row) => {
-      showRowsMap[row.key] = true;
-
-      this.initForm(row);
-      this.updateValidStatus(row);
-    });
-
-    this.updateValidRelate();
-
-    // 渲染编辑/必填状态
-    if (this.editStatus.length) {
-      this.editStatus.forEach(({ cell, required }, ind) => {
-        // if (!cell.isMount) return;
-
-        const node = this.editStatusNodes[ind];
-        const position = this.table.getAttachPosition(cell);
-
-        node.style.backgroundColor = required
-          ? "var(--m78-color-warning)"
-          : "var(--m78-color-opacity-lg)";
-        node.style.transform = `translate(${position.left}px, ${position.top}px)`;
-        node.style.width = `${position.width}px`;
-        node.style.zIndex = position.zIndex;
-      });
-    }
-
-    if (isEmpty(this.formInstances)) return;
-
-    // 渲染无效状态
-    if (this.invalidStatus.length) {
-      this.invalidStatus.forEach((cell, ind) => {
-        const node = this.invalidNodes[ind];
-        const position = this.table.getAttachPosition(cell);
-
-        node.style.height = `${position.height + 1}px`;
-        node.style.width = `${position.width + 1}px`;
-        node.style.transform = `translate(${position.left - 1}px, ${
-          position.top - 1
-        }px)`;
-        node.style.zIndex = String(Number(position.zIndex) + 2);
-      });
-    }
-
-    // 渲染错误单元格标识/行变动标识/单元格变动标识
-
-    const [errList, errorMap] = this.getErrorList();
-
-    const changedList = this.getRowMarkList(showRowsMap, errorMap);
-
-    const cellChangedList = this.getChangedList();
-
-    changedList.forEach(({ attachPosition, row, hasError }, ind) => {
-      const node = this.rowChangedNodes[ind];
-
-      node.style.height = `${attachPosition.height + 1}px`;
-      node.style.transform = `translate(${this.table.getX()}px, ${
-        attachPosition.top
-      }px)`;
-      node.style.backgroundColor = hasError
-        ? "var(--m78-color-error)"
-        : "var(--m78-color)";
-      node.style.zIndex = row.isFixed ? "31" : "11";
-    });
-
-    cellChangedList.forEach((pos, ind) => {
-      const node = this.cellChangedNodes[ind];
-
-      node.style.transform = `translate(${pos.left + pos.width - 8}px, ${
-        pos.top + 2
-      }px)`;
-      node.style.zIndex = pos.zIndex;
-    });
-
-    errList.forEach(({ attachPosition }, ind) => {
-      const node = this.errorNodes[ind];
-
-      node.style.width = `${attachPosition.width + 1}px`;
-      node.style.height = `${attachPosition.height + 1}px`;
-      node.style.transform = `translate(${attachPosition.left}px, ${attachPosition.top}px)`;
-      node.style.zIndex = String(Number(attachPosition.zIndex) + 1); // 比变动标记高一层
-    });
-  }
-
   // 值变更, 创建或获取form实例, 并同步值和校验状态
   valueMutation = (e: TableMutationValueEvent) => {
-    const { cell, value } = e;
+    const { cell } = e;
 
-    const form = this.initForm(e);
+    const column = cell.column;
+    const row = cell.row;
 
-    const name = cell.column.config.originalKey;
+    // 默认值不存在, 将默认值写入
+    if (!this.defaultValues.has(row.key)) {
+      const rawData = simplyDeepClone(row.data);
 
-    form.setValue(name, value);
+      const name = column.config.originalKey;
 
-    const changed = form.getFormChanged();
+      // 还原已变更的值
+      setNamePathValue(rawData, name, e.oldValue);
+
+      this.defaultValues.set(row.key, rawData);
+    }
+
+    const changed = !simplyEqual(row.data, this.defaultValues.get(row.key));
 
     if (changed) {
-      this.rowChanged[cell.row.key] = true;
+      this.rowChanged.set(row.key, true);
     } else {
-      delete this.rowChanged[cell.row.key];
+      this.rowChanged.delete(row.key);
     }
 
-    if (form.getChanged(name)) {
-      this.cellChanged[cell.key] = cell;
+    const valueChanged = !simplyEqual(e.value, e.oldValue);
+
+    if (valueChanged) {
+      this.cellChanged.set(cell.key, true);
     } else {
-      delete this.cellChanged[cell.key];
+      this.cellChanged.delete(cell.key);
     }
 
-    this.updateValidStatus(cell.row);
-    this.updateValidRelate();
+    // 更新schema
+    const schema = this.getSchemas(row, true);
 
-    form.debounceVerify(name, () => {
-      const errors = form.getErrors();
+    const fmtData = this.getFmtData(row, row.data);
 
-      const newError: FormRejectMeta = [];
-      const cellError: Record<string, string | void> = {};
-
-      let hasCellError = false;
-
-      errors.forEach((e) => {
-        if (form.getTouched(e.namePath)) {
-          newError.push(e);
-
-          // 只取第一条错误
-          if (!cellError[e.name]) {
-            cellError[e.name] = e.message;
-            hasCellError = true;
-          }
-        }
-      });
-
-      if (newError.length) {
-        this.errors[cell.row.key] = newError;
-      } else {
-        delete this.errors[cell.row.key];
-      }
-
-      if (hasCellError) {
-        this.cellErrors[cell.row.key] = cellError;
-      } else {
-        delete this.cellErrors[cell.row.key];
-      }
-
-      this.table.render();
-    });
+    this.innerCheck({
+      cell,
+      values: fmtData,
+      schemas: schema.rootSchema,
+    }).then(() => this.table.render());
   };
 
   // data变更, 记录新增, 删除数据, 并且也将其计入getFormChanged变更状态
@@ -390,12 +251,24 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
     }
   };
 
-  // 是否允许编辑
+  // 获取单元格invalid状态
   validCheck(cell: TableCell) {
-    return !this.invalidStatusMap[cell.key];
+    const { invalid } = this.getSchemas(cell.row);
+
+    if (!invalid) return true;
+
+    return !invalid.get(cell.column.key);
   }
 
   getChanged(rowKey: TableKey, columnKey?: NamePath): boolean {
+    // 检测已有状态
+    if (columnKey) {
+      const cellKey = _getCellKey(rowKey, stringifyNamePath(columnKey!));
+      if (this.cellChanged.get(cellKey)) return true;
+    } else {
+      if (this.rowChanged.get(rowKey)) return true;
+    }
+
     // 新增行的检测均视为变更
     if (this.addRecordMap.has(rowKey)) return true;
 
@@ -404,29 +277,30 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
 
     if (this.softRemove.isSoftRemove(rowKey)) return true;
 
-    if (!columnKey) {
-      return !!this.rowChanged[rowKey];
-    }
+    // 排序变更
+    const sortData = this.sortRecordMap.get(rowKey);
 
-    return !!this.cellChanged[
-      _getCellKey(rowKey, stringifyNamePath(columnKey))
-    ];
+    if (sortData && sortData.currentIndex !== sortData.originIndex) return true;
+
+    return false;
   }
 
   getTableChanged(): boolean {
+    if (this.rowChanged.size !== 0) return true;
+
     // 包含新增或删除的行
     if (this.addRecordMap.size || this.removeRecordMap.size) return true;
+
+    // 包含软删除数据
+    if (this.softRemove.remove.hasSelected()) return true;
 
     const hasSorted = this.getSortedStatus();
 
     // 包含排序过的行
     if (hasSorted) return true;
 
-    // 包含软删除数据
-    if (this.softRemove.remove.hasSelected()) return true;
-
     // 包含变更数据
-    return Object.keys(this.rowChanged).some((key) => this.rowChanged[key]);
+    return false;
   }
 
   /** 检测是否发生了数据排序 */
@@ -438,40 +312,720 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
   }
 
   getData() {
+    let res: TableDataLists;
+
+    // innerGetData和eachData在回调中为加入异步行为时才会异步执行, 本身是通本的, 使用promise api仅是为了兼容更多用法
+    this.innerGetData().then((data) => {
+      res = data!;
+    });
+
+    return res!;
+  }
+
+  verify() {
+    return this.verifyCommon(false);
+  }
+
+  verifyUpdated() {
+    return this.verifyCommon(true);
+  }
+
+  verifyRow(rowKey: TableKey) {
+    const row = this.table.getRow(rowKey);
+    const data = this.getFmtData(row, row.data);
+    const schemas = this.getSchemas(row);
+
+    return this.innerCheck({
+      row,
+      values: data,
+      schemas,
+    });
+  }
+
+  /* # # # # # # # 与schema相关的标记渲染, editable & valid # # # # # # # */
+  // 以列为key存储可编辑列的信息
+  editStatusMap = new Map<
+    TableKey,
+    {
+      required: boolean;
+      // 表头单元格
+      cell: TableCell;
+    }
+  >();
+  // 无效单元格标记
+  invalidList: {
+    position: TableAttachData;
+    cell: TableCell;
+  }[] = [];
+  // 处理两者的函数
+  schemasMarkCB: AnyFunction;
+  // 编辑/必填状态标识节点
+  editStatusNodes: HTMLElement[] = [];
+  // 无效反馈节点
+  invalidNodes: HTMLElement[] = [];
+
+  /** 获取当前显示的列的可编辑情况, 显示的所有行中任意一行的改列可编辑即视为可编辑 */
+  getEditStatus(col: TableColumn) {
+    return this.editStatusMap.get(col.key) || null;
+  }
+
+  // 更新单元格的可编辑/无效标记 渲染前调用
+  private prepareSchemasMark() {
+    this.editStatusMap = new Map();
+    this.invalidList = [];
+
+    // 以 { rowKey: { columnKey: true } } 缓存行的必填信息, 避免重复计算
+    const requiredCache: Record<
+      TableKey,
+      Record<TableKey, boolean | undefined>
+    > = {};
+
+    this.schemasMarkCB = (cell: TableCell) => {
+      if (cell.row.isHeader || cell.column.isHeader) return;
+      if (this.allRemoveRecordMap.has(cell.row.key)) return false; // 删除行不显示
+
+      // 根据isInteractive来判断是否是可编辑状态, 可能不完全准确, 但基本没影响
+      const editable = this.interactive.isInteractive(cell);
+
+      // 不可编辑时跳过, 后续的required/invalid检测都没有意义了
+      if (!editable) return;
+
+      const row = cell.row;
+      const column = cell.column;
+
+      let curRequiredCache = requiredCache[row.key];
+
+      const schemas = this.getSchemas(row);
+
+      // 缓存行的required检验
+      if (!curRequiredCache) {
+        curRequiredCache = {};
+        requiredCache[row.key] = curRequiredCache;
+
+        schemas.schemas.forEach((i) => {
+          const validators = ensureArray(i.validator);
+
+          const isRequired = validators.some(
+            (v) => v?.key === requiredValidatorKey
+          );
+
+          if (isRequired) {
+            curRequiredCache[stringifyNamePath(i.name)] = true;
+          }
+        });
+      }
+
+      let curCol = this.editStatusMap.get(column.key);
+
+      const required = !!curRequiredCache[column.key];
+
+      // 列未写入过时处理
+      if (!curCol) {
+        const hKey =
+          this.context.yHeaderKeys[this.context.yHeaderKeys.length - 1];
+
+        curCol = {
+          cell: this.table.getCell(hKey, column.key), // 表头单元格
+          required,
+        };
+
+        this.editStatusMap.set(column.key, curCol);
+      }
+
+      // 更新required
+      if (required) {
+        curCol.required = required;
+      }
+
+      // 更新invalid
+      const invalid = !!schemas.invalid.get(column.key);
+
+      if (invalid) {
+        this.invalidList.push({
+          position: this.table.getAttachPosition(cell),
+          cell,
+        });
+      }
+    };
+
+    this.table.event.cellRendering.on(this.schemasMarkCB);
+  }
+
+  // 更新单元格的可编辑/无效标记
+  private updateSchemasMark() {
+    this.table.event.cellRendering.off(this.schemasMarkCB);
+
+    const editStatusList = Array.from(this.editStatusMap.values());
+
+    _syncListNode({
+      wrapNode: this.wrapNode,
+      list: editStatusList,
+      nodeList: this.editStatusNodes,
+      createAction: (node) => {
+        node.className = "m78-table_form-edit-status";
+      },
+    });
+
+    _syncListNode({
+      wrapNode: this.wrapNode,
+      list: this.invalidList,
+      nodeList: this.invalidNodes,
+      createAction: (node) => {
+        node.className = "m78-table_form-invalid";
+      },
+    });
+
+    // 渲染编辑/必填状态
+    if (editStatusList.length) {
+      editStatusList.forEach(({ cell, required }, ind) => {
+        const node = this.editStatusNodes[ind];
+        const position = this.table.getAttachPosition(cell);
+
+        setCacheValue(
+          node.style,
+          "backgroundColor",
+          required ? "var(--m78-color-warning)" : "var(--m78-color-opacity-lg)"
+        );
+        setCacheValue(
+          node.style,
+          "transform",
+          `translate(${position.left}px, ${position.top}px)`
+        );
+        setCacheValue(node.style, "width", `${position.width}px`);
+        setCacheValue(node.style, "zIndex", position.zIndex);
+      });
+    }
+
+    // 渲染无效状态
+    if (this.invalidList.length) {
+      this.invalidList.forEach(({ position }, ind) => {
+        const node = this.invalidNodes[ind];
+
+        setCacheValue(node.style, "height", `${position.height + 1}px`);
+        setCacheValue(node.style, "width", `${position.width + 1}px`);
+        setCacheValue(
+          node.style,
+          "transform",
+          `translate(${position.left - 1}px, ${position.top - 1}px)`
+        );
+        setCacheValue(
+          node.style,
+          "zIndex",
+          String(Number(position.zIndex) + 2)
+        );
+      });
+    }
+  }
+
+  /* # # # # # # # cell error # # # # # # # */
+
+  // 用于updateErrors()的待展示列表
+  private errorsList: {
+    message: string;
+    position: TableAttachData;
+    cell: TableCell;
+  }[] = [];
+  // 存储错误信息的回调
+  private updateErrorsCB: AnyFunction;
+  // 用于显示错误标识的节点
+  private errorsNodes: HTMLElement[] = [];
+
+  /** 获取指定单元格最后一次参与验证后的错误字符串 */
+  getCellError(cell: TableCell) {
+    const rec = this.cellErrors.get(cell.row.key);
+
+    if (!rec) return "";
+
+    const cur = rec.get(cell.column.config.key);
+
+    if (!cur) return "";
+
+    return cur.message;
+  }
+
+  // 更新行的变更/错误标记 渲染前调用
+  private prepareErrors() {
+    this.errorsList = [];
+
+    this.updateErrorsCB = (cell: TableCell) => {
+      if (this.allRemoveRecordMap.has(cell.row.key)) return false; // 删除行不显示
+      if (cell.row.isHeader || cell.column.isHeader) return;
+
+      const rowErrors = this.cellErrors.get(cell.row.key);
+
+      if (!rowErrors || rowErrors.size === 0) return;
+
+      const err = rowErrors.get(cell.column.key);
+
+      if (!err) return;
+
+      this.errorsList.push({
+        message: err.message,
+        position: this.table.getAttachPosition(cell),
+        cell,
+      });
+    };
+
+    this.table.event.cellRendering.on(this.updateErrorsCB);
+  }
+
+  // 更新行的变更/错误标记
+  private updateErrors() {
+    this.table.event.cellRendering.off(this.updateErrorsCB);
+
+    _syncListNode({
+      wrapNode: this.wrapNode,
+      list: this.errorsList,
+      nodeList: this.errorsNodes,
+      createAction: (node) => {
+        node.className = "m78-table_form-error-feedback";
+      },
+    });
+
+    this.errorsList.forEach(({ position }, ind) => {
+      const node = this.errorsNodes[ind];
+
+      setCacheValue(node.style, "width", `${position.width + 1}px`);
+      setCacheValue(node.style, "height", `${position.height + 1}px`);
+      setCacheValue(
+        node.style,
+        "transform",
+        `translate(${position.left}px, ${position.top}px)`
+      );
+      setCacheValue(node.style, "zIndex", String(Number(position.zIndex) + 1));
+    });
+  }
+
+  /* # # # # # # # row mark # # # # # # # */
+
+  // 用于updateRowMark()的待展示列表
+  private rowMarkList: {
+    row: TableRow;
+    position: TableAttachData;
+    hasError: boolean;
+  }[] = [];
+  // 存储变更信息的回调
+  private updateRowMarkCB: AnyFunction;
+  // 用于显示行变动标识的节点
+  private rowChangedNodes: HTMLElement[] = [];
+
+  // 更新行的变更/错误标记 渲染前调用
+  private prepareRowMark() {
+    this.rowMarkList = [];
+
+    this.updateRowMarkCB = (row: TableRow) => {
+      if (this.allRemoveRecordMap.has(row.key)) return; // 删除行不显示
+      if (row.isHeader) return;
+
+      const errors = this.cellErrors.get(row.key);
+
+      const hasError = !!errors && errors.size !== 0;
+
+      if (!this.getChanged(row.key) && !hasError) return;
+
+      this.rowMarkList.push({
+        position: this.table.getRowAttachPosition(row),
+        row,
+        hasError,
+      });
+    };
+
+    this.table.event.rowRendering.on(this.updateRowMarkCB);
+  }
+
+  // 更新行的变更/错误标记
+  private updateRowMark() {
+    this.table.event.rowRendering.off(this.updateRowMarkCB);
+
+    _syncListNode({
+      wrapNode: this.wrapNode,
+      list: this.rowMarkList,
+      nodeList: this.rowChangedNodes,
+      createAction: (node) => {
+        node.className = "m78-table_form-changed-mark";
+      },
+    });
+
+    this.rowMarkList.forEach(({ position, row, hasError }, ind) => {
+      const node = this.rowChangedNodes[ind];
+
+      setCacheValue(node.style, "height", `${position.height + 1}px`);
+      setCacheValue(
+        node.style,
+        "transform",
+        `translate(${this.table.getX()}px, ${position.top}px)`
+      );
+      setCacheValue(
+        node.style,
+        "backgroundColor",
+        hasError ? "var(--m78-color-error)" : "var(--m78-color)"
+      );
+      setCacheValue(node.style, "zIndex", row.isFixed ? "31" : "11");
+    });
+  }
+
+  /* # # # # # # # changed cell mark # # # # # # # */
+
+  // 用于updateChangedCell()的最终cell列表
+  private changedCellList: TableAttachData[] = [];
+  // 存储记录变更信息的回调
+  private changedCellCB: AnyFunction;
+  // 用于显示单元格变动标识的节点
+  private cellChangedNodes: HTMLElement[] = [];
+
+  // 更新用于标识变更单元格的列表 渲染前调用
+  private prepareChangedCell() {
+    this.changedCellList = [];
+
+    this.changedCellCB = (cell: TableCell) => {
+      if (this.allRemoveRecordMap.has(cell.row.key)) return;
+      if (cell.row.isHeader || cell.column.isHeader) return;
+
+      const isChanged = this.cellChanged.get(cell.key);
+
+      if (!isChanged) return;
+
+      const position = this.table.getAttachPosition(cell);
+
+      this.changedCellList.push(position);
+    };
+
+    this.table.event.cellRendering.on(this.changedCellCB);
+  }
+
+  // 更新用于标识变更单元格的列表 渲染后调用
+  private updateChangedCell() {
+    this.table.event.cellRendering.off(this.changedCellCB);
+
+    _syncListNode({
+      wrapNode: this.wrapNode,
+      list: this.changedCellList,
+      nodeList: this.cellChangedNodes,
+      createAction: (node) => {
+        node.className = "m78-table_form-cell-changed-mark";
+      },
+    });
+
+    this.changedCellList.forEach((pos, ind) => {
+      const node = this.cellChangedNodes[ind];
+
+      setCacheValue(
+        node.style,
+        "transform",
+        `translate(${pos.left + pos.width - 8}px, ${pos.top + 2}px)`
+      );
+      setCacheValue(node.style, "zIndex", pos.zIndex);
+    });
+  }
+
+  // 重置状态/数据内联内容等
+  private reset() {
+    this.addRecordMap = new Map();
+    this.removeRecordMap = new Map();
+    this.allRemoveRecordMap = new Map();
+    this.sortRecordMap = new Map();
+    this.defaultValues = new Map();
+    this.schemaDatas = new Map();
+    this.editStatusMap = new Map();
+    this.cellChanged = new Map();
+    this.rowChanged = new Map();
+    this.cellErrors = new Map();
+
+    this.invalidList = [];
+    this.errorsList = [];
+    this.changedCellList = [];
+    this.rowMarkList = [];
+
+    removeNode(this.wrapNode);
+
+    this.errorsNodes = [];
+    this.rowChangedNodes = [];
+    this.cellChangedNodes = [];
+    this.editStatusNodes = [];
+    this.invalidNodes = [];
+  }
+
+  // verify/verifyChanged 验证通用逻辑, 逐行验证数据, 发生错误时停止并返回
+  private async verifyCommon(
+    onlyUpdated: boolean
+  ): Promise<FormRejectOrValues> {
+    let curError: FormRejectMeta | null = null;
+
+    const res = await this.innerGetData(async (i, key, status) => {
+      if (onlyUpdated && !status.update) return false;
+
+      const row = this.table.getRow(key);
+      const schema = this.getSchemas(row);
+
+      const [rejects] = await this.innerCheck({
+        row,
+        values: i,
+        schemas: schema,
+      });
+
+      // 包含错误时, 中断循环
+      if (rejects) {
+        curError = rejects;
+        return 0;
+      }
+    });
+
+    if (curError) {
+      return [curError, null];
+    }
+
+    return [null, res];
+  }
+
+  // 接收处理后的values和schemas进行验证, 并更新行或单元格的错误信息, 包含错误时, 会选中并高亮首个错误单元格
+  private innerCheck(arg: {
+    row?: TableRow | TableKey;
+    // 和row二选一, 传入时, 表示cell级别验证
+    cell?: TableCell;
+    values: any;
+    schemas: FormSchemaWithoutName;
+  }): Promise<FormRejectOrValues> {
+    const { row: _row, cell, values, schemas } = arg;
+
+    let row: TableRow | undefined;
+
+    if (cell) {
+      row = cell.row;
+    } else if (isTruthyOrZero(_row)) {
+      row = this.table.isRowLike(_row) ? _row : this.table.getRow(_row!);
+    }
+
+    if (!row) throwError("Unable to get row");
+
+    const verify = this.getVerify();
+
+    let cellError = this.cellErrors.get(row.key);
+
+    if (!cellError) {
+      cellError = new Map();
+      this.cellErrors.set(row.key, cellError);
+    }
+
+    return verify.staticCheck(values, schemas).then((res) => {
+      const [errors] = res;
+
+      // 需要高亮的行
+      let highlightColumn: TableKey | undefined;
+
+      const existCheck: any = {};
+
+      if (errors) {
+        for (const e of errors) {
+          // 对单元格验证和行验证采用不同的行为, cell验证仅写入对应列的错误
+
+          if (cell) {
+            // 单元格验证时, 只读取与单元格有关的第一条错误进行显示
+            if (cell.column.key === e.name) {
+              highlightColumn = cell.column.key;
+
+              cellError!.set(e.name, e);
+              break;
+            }
+          } else {
+            // 每列只取第一条错误
+            if (!existCheck[e.name]) {
+              cellError!.set(e.name, e);
+              existCheck[e.name] = true;
+
+              if (!highlightColumn) {
+                highlightColumn = e.name;
+              }
+            }
+          }
+        }
+      }
+
+      // 没有任意列被标记为错误, 单元格验证时, 清理单元格错误,  行验证时, 清理行错误
+      if (!highlightColumn) {
+        if (cell) {
+          cellError!.delete(cell.column.key);
+        } else if (!errors) {
+          cellError!.clear();
+        }
+      }
+
+      if (isTruthyOrZero(highlightColumn)) {
+        const highlightCell =
+          cell || this.table.getCell(row!.key, highlightColumn!);
+        this.table.highlight(highlightCell.key);
+        this.table.selectCells(highlightCell.key);
+      }
+
+      return res;
+    });
+  }
+
+  /** 获取verify实例 */
+  getVerify() {
+    return this.verifyInstance;
+  }
+
+  // 获取指定行的schemas信息, 没有则创建, 可传入update来主动更新
+  private getSchemas(row: TableRow | TableKey, update = false): SchemaData {
+    const _row: TableRow = this.table.isRowLike(row)
+      ? row
+      : this.table.getRow(row);
+
+    if (!update) {
+      const cache = this.schemaDatas.get(_row.key);
+      if (cache) return cache;
+    }
+
+    const verify = this.getVerify();
+
+    return verify.withValues(_row.data, () => {
+      const { schemas, invalidNames } = verify.getSchemas();
+
+      const invalid = new Map<TableKey, true>();
+
+      invalidNames.forEach((k) => invalid.set(stringifyNamePath(k), true));
+
+      const data: SchemaData = {
+        schemas: schemas.schemas || [],
+        rootSchema: schemas,
+        invalid,
+        invalidNames,
+      };
+
+      this.schemaDatas.set(_row.key, data);
+
+      return data;
+    });
+  }
+
+  // 获取处理invalid项后的data, data会经过clone
+  private getFmtData(row: TableRow | TableKey, data: any) {
+    const invalid = this.getSchemas(row).invalidNames;
+
+    data = simplyDeepClone(data);
+
+    if (invalid?.length) {
+      deleteNamePathValues(data, invalid);
+    }
+
+    return data;
+  }
+
+  /** 初始化verify实例 */
+  private initVerify() {
+    this.verifyInstance = createVerify({
+      schemas: this.config.schemas?.length
+        ? {
+            schemas: this.config.schemas,
+          }
+        : {},
+      autoVerify: false,
+      languagePack: i18n.getResourceBundle(i18n.language, FORM_LANG_PACK_NS),
+    });
+  }
+
+  /** 遍历所有数据(不包含fake/软删除数据)并返回其clone版本
+   *
+   * - 若cb返回false则跳过并将该条数据从返回list中过滤, 返回0时, 停止遍历, 返回已遍历的值
+   * - 数据会对invalid的值进行移除处理, 可通过 handleInvalid 控制
+   * - innerGetData和eachData在回调中为加入异步行为时才会异步执行, 本身是同步的, 使用promise api仅是为了兼容更多用法
+   * */
+  private async eachData(
+    cb: (
+      i: any,
+      k: TableKey,
+      // 该数据的状态
+      status: { add: boolean; change: boolean; update: boolean }
+    ) => Promise<void | false | 0>,
+    handleInvalid = true
+  ) {
+    const list: any[] = [];
+
+    const d = this.context.data;
+
+    for (let j = 0; j < d.length; j++) {
+      const i = d[j];
+
+      const key = this.table.getKeyByRowData(i);
+
+      const meta = this.context.getRowMeta(key);
+
+      if (meta.fake) continue;
+
+      if (this.softRemove.isSoftRemove(key)) continue;
+
+      const data = handleInvalid ? this.getFmtData(key, i) : simplyDeepClone(i);
+
+      const isAdd = this.addRecordMap.has(key);
+
+      // 新增数据删除虚拟主键, 防止数据传输到服务端时出错
+      if (isAdd) {
+        deleteNamePathValue(data, this.config.primaryKey);
+      }
+
+      // 变更过且不是新增的数据
+      const isChange = !isAdd && this.getChanged(key);
+
+      const isUpdate = isAdd || isChange;
+
+      const res = await cb(data, key, {
+        add: isAdd,
+        change: isChange,
+        update: isUpdate,
+      });
+
+      if (res === 0) break;
+
+      if (res === false) continue;
+
+      list.push(data);
+    }
+
+    return list;
+  }
+
+  // getData的内部版本, 可在每一次遍历时回调, 可以选择跟eachData一样中断或跳过数据, cb与this.eachData的cb一致
+  // innerGetData和eachData在回调中为加入异步行为时才会异步执行, 本身是通本的, 使用promise api仅是为了兼容更多用法
+  private async innerGetData(
+    cb?: (
+      i: any,
+      k: TableKey,
+      status: { add: boolean; change: boolean; update: boolean }
+    ) => Promise<void | false | 0>
+  ): Promise<TableDataLists | null> {
     const add: any[] = [];
     const change: any[] = [];
     const update: any[] = [];
     let remove: any[] = [];
 
-    const all = this.eachData((data, key) => {
-      // 跳过软删除项
-      if (this.softRemove.isSoftRemove(key)) return false;
+    let hasBreak = false;
 
-      const isAdd = this.addRecordMap.has(key);
-      // 数据变更并且不是新增的数据
-      const isChange = this.rowChanged[key] && !isAdd;
+    const all = await this.eachData(async (data, key, status) => {
+      const push = () => {
+        if (status.add) add.push(data);
+        if (status.change) change.push(data);
+        if (status.update) update.push(data);
+      };
 
-      if (isAdd) {
-        // 删除虚拟主键, 防止数据传输到服务端时出错
-        deleteNamePathValue(data, this.config.primaryKey);
-
-        add.push(data);
+      if (!cb) {
+        push();
+        return;
       }
 
-      if (isChange) {
-        change.push(data);
-      }
+      const res = await cb(data, key, status);
 
-      if (isAdd || isChange) {
-        update.push(data);
-      }
+      if (res === 0) hasBreak = true;
+
+      if (res === 0 || res === false) return res; // 异常返回原样返回给eachData
+
+      push();
     });
+
+    if (hasBreak) return null;
 
     const rList = Array.from(this.removeRecordMap.values());
 
-    if (rList) {
-      remove = rList;
-    }
+    if (rList) remove = rList;
 
     // 合并软删除项到remove
     if (this.softRemove.remove.hasSelected()) {
@@ -492,523 +1046,72 @@ export class _TableFormPlugin extends TablePlugin implements TableForm {
     } as TableDataLists;
   }
 
-  resetFormState() {
-    this.reset();
-    this.softRemove.restoreSoftRemove();
-    this.table.render();
+  // 初始化wrapNode
+  private initNodeWrap() {
+    this.wrapNode = document.createElement("div");
+    this.wrapNode.className = "m78-table_form-wrap";
+    this.context.viewContentEl.appendChild(this.wrapNode);
   }
 
-  verify(): Promise<TableDataLists> {
-    return this.verifyCommon(false) as Promise<TableDataLists>;
-  }
-
-  verifyRow(rowKey?: TableKey): Promise<AnyObject> {
-    return this.verifyCommon(false, rowKey) as Promise<AnyObject>;
-  }
-
-  verifyChanged(): Promise<TableDataLists> {
-    return this.verifyCommon(true) as Promise<TableDataLists>;
-  }
-
-  /** 获取指定单元格最后一次参与验证后的错误 */
-  getCellError(cell: TableCell) {
-    const rec = this.cellErrors[cell.row.key];
-
-    if (!rec) return "";
-
-    return rec[cell.column.config.key] || "";
-  }
-
-  /** 获取指定列的可编辑信息, 不可编辑时返回null */
-  getEditStatus(col: TableColumn) {
-    return this.editStatusMap[col.key] || null;
-  }
-
-  // 验证通用逻辑, 传入rowKey时仅验证指定的行, 单行验证时仅返回指定行
-  private async verifyCommon(
-    onlyChanged: boolean,
-    rowKey?: TableKey
-  ): Promise<AnyObject | TableDataLists> {
-    let data: AnyObject[] = [];
-    let dataLists: TableDataLists | null = null;
-
-    if (rowKey) {
-      data = [this.table.getRow(rowKey).data];
-    } else {
-      dataLists = this.getData();
-
-      data = onlyChanged ? dataLists.update : dataLists.all;
-    }
-
-    const form = createForm({
-      schemas: {
-        eachSchema: {
-          schema: this.config.schema,
-        },
-      },
-      autoVerify: false,
-      verifyFirst: true,
-      languagePack: i18n.getResourceBundle(i18n.language, FORM_LANG_PACK_NS),
-    });
-
-    form.setValues(data);
-
-    return form
-      .verify()
-      .then(() => {
-        return rowKey ? data[0] : dataLists!;
-      })
-      .catch((err) => {
-        const namePath = err.rejects?.[0]?.namePath;
-
-        // 对首个错误行单独执行验证, 并高亮指定行/单元格
-        if (namePath) {
-          const ind = namePath[0];
-          const name = namePath[1];
-          const curData = data[ind];
-
-          const key = this.table.getKeyByRowData(curData);
-
-          const cell = this.table.getCell(key, name);
-
-          this.verifySpecifiedRow(this.table.getRow(key), cell);
-        }
-
-        throw err;
-      });
-  }
-
-  // 验证指定行并更新对应ui, 传入cell时, 高亮指定cell
-  private verifySpecifiedRow(row: TableRow, cell?: TableCell) {
-    const form = this.initForm(row);
-
-    form
-      .verify()
-      .then(() => {
-        delete this.errors[row.key];
-        delete this.cellErrors[row.key];
-      })
-      .catch((errors) => {
-        if (errors?.rejects) {
-          const rejList: FormRejectMeta = errors.rejects;
-
-          this.errors[row.key] = rejList;
-
-          const cellError: Record<string, string | void> = {};
-
-          let hasCellError = false;
-
-          rejList.forEach((e) => {
-            if (form.getTouched(e.namePath)) {
-              // 只取第一条错误
-              if (!cellError[e.name]) {
-                cellError[e.name] = e.message;
-                hasCellError = true;
-              }
-            }
-          });
-
-          if (hasCellError) {
-            this.cellErrors[row.key] = cellError;
-          } else {
-            delete this.cellErrors[row.key];
-          }
-        }
-      })
-      .finally(() => {
-        this.table.render();
-
-        this.table.highlightRow(row.key);
-
-        if (cell) {
-          this.table.highlight(cell.key);
-          this.table.selectCells(cell.key);
-        }
-      });
-  }
-
-  // 重置行数据的记录状态
-  private resetDataRecords() {
-    this.addRecordMap = new Map();
-    this.removeRecordMap = new Map();
-    this.allRemoveRecordMap = new Map();
-    this.sortRecordMap = new Map();
-  }
-
-  // 重置状态
-  private reset() {
-    this.cellChanged = {};
-    this.rowChanged = {};
-    this.errors = {};
-    this.cellErrors = {};
-    this.formInstances = {};
-    this.invalidCellMap = {};
-    this.invalidStatusMap = {};
-    this.invalidStatus = [];
-
-    this.updateValidRelate();
-  }
-
-  // 更新可编辑状态
-  private updateEditStatus() {
-    const hKey = this.context.yHeaderKeys[this.context.yHeaderKeys.length - 1];
-    const firstRowKey = this.context.allRowKeys[0];
-
-    this.editStatus = [];
-    this.editStatusMap = {};
-
-    if (!firstRowKey) {
-      // 清空
-      _syncListNode({
-        wrapNode: this.wrapNode,
-        list: [],
-        nodeList: this.editStatusNodes,
-      });
-      return;
-    }
-
-    let requireKeys: string[] = [];
-
-    // 是否包含必填验证器
-    if (!isEmpty(this.config.schema)) {
-      requireKeys = this.config
-        .schema!.filter((i) => {
-          const validator: FormValidator[] = ensureArray(i.validator);
-
-          return validator.some((i) => i?.key === requiredValidatorKey);
-        })
-        .map((i) => stringifyNamePath(i.name));
-    }
-
-    // 是否可编辑
-    this.context.columns.forEach((col) => {
-      if (this.context.isIgnoreColumn(col.key)) return;
-
-      const cell = this.table.getCell(hKey, col.key);
-      // header cell 不能检测是否可编辑, 这里以第一行数据的可编译配置作为参照 (忽略单元格逐个配置的情况, 表单都是以列为单位启用)
-      const firstRowCell = this.table.getCell(firstRowKey, col.key);
-
-      if (this.interactive.isInteractive(firstRowCell)) {
-        const item = {
-          required: requireKeys.includes(col.key),
-          cell,
-        };
-
-        this.editStatusMap[col.key] = item;
-
-        this.editStatus.push(item);
-      }
-    });
-
-    _syncListNode({
-      wrapNode: this.wrapNode,
-      list: this.editStatus,
-      nodeList: this.editStatusNodes,
-      createAction: (node) => {
-        node.className = "m78-table_form-edit-status";
-      },
-    });
-  }
-
-  // 更新valid显示状态
-  private updateValidStatus(row: TableRow) {
-    if (row.isHeader) return;
-
-    if (this.context.isIgnoreRow(row.key)) return;
-
-    const form = this.formInstances[row.key];
-
-    if (!form) return;
-
-    if (isEmpty(this.config.schema)) {
-      this.invalidCellMap = {};
-      this.updateValidRelate();
-      return;
-    }
-
-    const list: TableCell[] = [];
-
-    this.config.schema!.map((s) => {
-      const sc = form.getSchema(s.name) as FormSchema;
-
-      if (sc?.valid === false) {
-        const cell = this.table.getCell(row.key, sc.name);
-        list.push(cell);
-      }
-    });
-
-    if (list.length) {
-      this.invalidCellMap[row.key] = list;
-    } else {
-      delete this.invalidCellMap[row.key];
-    }
-  }
-
-  // 根据当前invalidCellMap更新相关状态
-  private updateValidRelate() {
-    this.invalidStatusMap = {};
-    this.invalidStatus = [];
-
-    Object.keys(this.invalidCellMap).forEach((key) => {
-      const invalidCells = this.invalidCellMap[key];
-
-      if (!invalidCells) return;
-
-      invalidCells.forEach((cell) => {
-        this.invalidStatusMap[cell.key] = true;
-        this.invalidStatus.push(cell);
-      });
-    });
-
-    _syncListNode({
-      wrapNode: this.wrapNode,
-      list: this.invalidStatus,
-      nodeList: this.invalidNodes,
-      createAction: (node) => {
-        node.className = "m78-table_form-invalid";
-      },
-    });
-  }
-
-  // 获取用于展示错误的列表, 包含了渲染需要的各种必要信息
-  private getErrorList() {
-    const list: {
-      /** 对应单元格 */
-      cell: TableCell;
-      /** 错误信息 */
-      message: string;
-      /** 单元格位置, 用于控制节点挂载位置 */
-      attachPosition: TableAttachData;
-    }[] = [];
-
-    const rowErrorMap: Record<string, boolean | void> = {};
-
-    Object.keys(this.errors).forEach((key) => {
-      if (this.allRemoveRecordMap.has(key)) return false; // 删除行不显示
-
-      const rowErrors = this.errors[key];
-
-      if (rowErrors) {
-        if (rowErrors.length) {
-          rowErrorMap[key] = true;
-        }
-
-        rowErrors.forEach((item) => {
-          const cell = this.table.getCell(key, item.name);
-          const pos = this.table.getAttachPosition(cell);
-
-          if (!cell.isMount) return;
-
-          list.push({
-            message: item.message,
-            cell,
-            attachPosition: pos,
-          });
-        });
-      }
-    });
-
-    _syncListNode({
-      wrapNode: this.wrapNode,
-      list,
-      nodeList: this.errorNodes,
-      createAction: (node) => {
-        node.className = "m78-table_form-error-feedback";
-      },
-    });
-
-    return [list, rowErrorMap] as const;
-  }
-
-  // 获取用于展示变更/验证失败行列表, 包含了渲染需要的各种必要信息
-  private getRowMarkList(
-    showRowsMap: Record<string, boolean | undefined>,
-    errorMap: Record<string, boolean | void>
-  ) {
-    const keyList = [...Object.keys(errorMap), ...Object.keys(this.rowChanged)];
-
-    const checkedMap: any = {};
-
-    const list = keyList
-      .filter((i) => {
-        if (checkedMap[i]) return false;
-        if (this.allRemoveRecordMap.has(i)) return false; // 删除行不显示
-        checkedMap[i] = true;
-        return showRowsMap[i] && (errorMap[i] || this.rowChanged[i]);
-      })
-      .map((key) => {
-        const row = this.table.getRow(key);
-        const pos = this.table.getRowAttachPosition(row);
-
-        return {
-          row,
-          attachPosition: pos,
-          hasError: this.errors[key],
-        };
-      });
-
-    _syncListNode({
-      wrapNode: this.wrapNode,
-      list,
-      nodeList: this.rowChangedNodes,
-      createAction: (node) => {
-        node.className = "m78-table_form-changed-mark";
-      },
-    });
-
-    return list;
-  }
-
-  // 获取用于展示变更单元格的列表, 包含了渲染需要的各种必要信息
-  private getChangedList() {
-    const list: TableAttachData[] = [];
-
-    Object.keys(this.cellChanged).forEach((key) => {
-      const cell = this.cellChanged[key];
-
-      if (!cell || !cell.isMount) return;
-      if (this.allRemoveRecordMap.has(cell.row.key)) return;
-
-      const pos = this.table.getAttachPosition(cell);
-
-      list.push(pos);
-    });
-
-    _syncListNode({
-      wrapNode: this.wrapNode,
-      list,
-      nodeList: this.cellChangedNodes,
-      createAction: (node) => {
-        node.className = "m78-table_form-cell-changed-mark";
-      },
-    });
-
-    return list;
-  }
-
-  // 若行form不存在则对其进行初始化
-  initForm(arg: TableMutationValueEvent | TableCell | TableRow) {
-    const isCellArg = this.table.isCellLike(arg);
-    const isRowArg = this.table.isRowLike(arg);
-
-    let row: TableRow;
-    let cell: TableCell;
-
-    if (isRowArg) {
-      row = arg;
-    } else if (isCellArg) {
-      cell = arg;
-      row = cell.row;
-    } else {
-      cell = arg.cell;
-      row = cell.row;
-    }
-
-    let form = this.formInstances[row.key];
-
-    if (form) return form;
-
-    const defaultValue = { ...row.data };
-
-    // 通过mutation触发时, 需要还原为旧值
-    if (!isCellArg && !isRowArg) {
-      setNamePathValue(
-        defaultValue,
-        cell!.column.config.originalKey,
-        arg.oldValue
-      );
-    }
-
-    const formCreator: typeof createForm =
-      this.config.formCreator || createForm;
-
-    form = formCreator({
-      values: defaultValue,
-      schemas: {
-        schema: this.config.schema,
-      },
-      autoVerify: false,
-      languagePack: i18n.getResourceBundle(i18n.language, FORM_LANG_PACK_NS),
-    }) as FormInstance;
-
-    this.formInstances[row.key] = form;
-
-    return form;
-  }
-
-  /** 遍历数据, 返回所有数据, 若cb返回false则将从返回list中过滤 */
-  private eachData(cd: (i: any, k: TableKey) => void | false) {
-    const list: any[] = [];
-
-    this.context.data.forEach((i) => {
-      const key = this.table.getKeyByRowData(i);
-
-      const meta = this.context.getRowMeta(key);
-
-      if (meta.fake) return;
-
-      const data = Object.assign({}, i);
-
-      const invalid = this.invalidCellMap[key];
-
-      if (invalid?.length) {
-        invalid.forEach((cell) => {
-          const name = cell.column.config.originalKey;
-
-          deleteNamePathValue(data, name);
-        });
-      }
-
-      const res = cd(data, key);
-
-      if (res !== false) list.push(data);
-    });
-
-    return list;
+  // schema配置发生变更
+  private schemaConfigChange() {
+    this.schemaDatas = new Map();
+    this.cellErrors = new Map();
+    this.editStatusMap = new Map();
+    this.invalidList = [];
+    this.initVerify();
   }
 }
 
-/** table定制版的FormSchema */
-export interface TableFormSchema extends Omit<FormSchema, "list"> {}
-
 /** form相关配置 */
 export interface TableFormConfig {
-  /** 用于校验字段的schema */
-  schema?: TableFormSchema[];
+  /**
+   * 用于校验字段的schema
+   *
+   * 部分schema在table中会被忽略, 如 schema.list
+   * */
+  schemas?: FormSchema[];
   /** 自定义form实例创建器 */
   formCreator?: AnyFunction;
 }
 
 /** 对外暴露的form相关方法 */
 export interface TableForm {
-  /** 执行校验, 未通过时会抛出VerifyError类型的错误, 这是使用者唯一需要处理的错误类型 */
-  verify: () => Promise<TableDataLists>;
+  /**
+   * 执行校验, 返回元组: [错误, 当前数据信息]
+   *
+   * - 若包含错误, 校验会在首个错误行停止
+   * */
+  verify: () => Promise<FormRejectOrValues>;
 
-  /** 验证指定行 */
-  verifyRow: (rowKey?: TableKey) => Promise<AnyObject>;
-
-  /** 对变更行执行校验, 未通过时会抛出VerifyError类型的错误, 这是使用者唯一需要处理的错误类型 */
-  verifyChanged: () => Promise<TableDataLists>;
+  /** 校验指定行, 返回元组: [错误, 当前行数据] */
+  verifyRow: (rowKey: TableKey) => Promise<FormRejectOrValues>;
 
   /**
-   * 获取当前数据, 返回内容包含: 所有数据/新增/变更/删除数据
+   * 同verify, 但仅对新增和变更行执行校验, 返回元组: [错误, 被校验的行]
    *
-   * 关于排序数据:
-   * 除了手动的排序操作, 新增/删除数据也会导致数据排序变动, 预先记录的排序状态随着后续操作都会变得不准确, 如果要保存排序状态,
-   * 通常由两种方式: 一是统一提交并通过TableDataLists.all获取最终的完整顺序. 二是在mutation事件中根据排序的变更实时进行保存.
+   * - 若包含错误, 校验会在首个错误行停止
    * */
+  verifyUpdated: () => Promise<FormRejectOrValues>;
+
+  /** 获取当前数据相关的内容, 包含: 所有数据 / 新增 / 变更 / 删除的数据, 以及一些数据相关的状态 */
   getData(): TableDataLists;
 
-  /** 获取指定行或单元格的变更状态, 数据变更, 被新增/删除均视为变更, 数据排序变更不视为变更 */
+  /**
+   * 指定行或单元格数据是否变更
+   *
+   * - 值变更/新增/删除的行均视为变更, 行排序变更时, 行会视为变更, 行下单元格不会 */
   getChanged(rowKey: TableKey, columnKey?: NamePath): boolean;
 
-  /** 表格是否发生过数据变更, 排序, 增删数据 */
+  /**
+   * 表格是否发生过数据变更
+   *
+   * - 被视为数据变更的场景: 值变更/新增/删除/排序
+   * */
   getTableChanged(): boolean;
-
-  /** 清理当前的错误信息/变更状态等, 不影响已经改变的值 */
-  resetFormState(): void;
 }
 
+/** 数据变更相关的内容 */
 export interface TableDataLists<D = AnyObject> {
   /** 所有数据 */
   all: D[];
@@ -1020,6 +1123,18 @@ export interface TableDataLists<D = AnyObject> {
   update: D[];
   /** 移除的行 */
   remove: D[];
-  /** 是否发生了数据排序, 不包含增删数据导致的索引变更 */
+  /** 发生了数据排序 (不包含增删数据导致的索引变更) */
   sorted: boolean;
+}
+
+// 缓存的schema信息
+interface SchemaData {
+  // 处理后的schema
+  schemas: FormSchema[];
+  // 处理后的schmea, 包含root schema
+  rootSchema: FormSchemaWithoutName;
+  // 记录无效的列, key为列标识
+  invalid: Map<TableKey, true>;
+  // 无效列的name
+  invalidNames: NamePath[];
 }

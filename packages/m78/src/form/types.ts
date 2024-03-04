@@ -49,7 +49,7 @@ type VanillaFormConfigPartial = Omit<VanillaFormConfig, OmitType | "schemas">;
 export interface FormConfig extends VanillaFormConfigPartial, FormProps {
   /* # # # # # # # 重写 # # # # # # # */
   /** 描述表单值结构的对象 */
-  schemas?: FormSchemaWithoutName;
+  schemas?: FormSchemaWithoutName | FormSchema[];
   /** 表单控件适配器, 优先级高于全局适配器 */
   adaptors?: FormAdaptors;
 }
@@ -57,7 +57,7 @@ export interface FormConfig extends VanillaFormConfigPartial, FormProps {
 /** 部分能够支持React版本的VanillaFormSchema配置 */
 type VanillaFormSchemaPartial = Omit<
   VanillaFormSchema,
-  "label" | "dynamic" | "schema" | "eachSchema"
+  "label" | "dynamic" | "schemas" | "eachSchema"
 >;
 
 /** 单个schema项 */
@@ -71,7 +71,7 @@ export interface FormSchema extends VanillaFormSchemaPartial, FormCommonProps {
     namePath: NameItem[];
   }) => Omit<FormSchema, "dynamic" | "name" | "list" | "deps"> | void;
   /** 类型为数组、对象时, 对其结构进行验证 */
-  schema?: FormSchema[];
+  schemas?: FormSchema[];
   /** 验证值为array或object时, 子级的所有 数组项/对象值 必须与此Schema匹配, 如果该值的类型不为array或object，此配置会被忽略 */
   eachSchema?: Omit<FormSchema, "name" | "list">;
   /** {} | list新增项时使用的默认值, 用于schema render, 且仅在项的值类型不为对象时需要配置 */
@@ -90,16 +90,21 @@ type VanillaFormInstancePartial = Omit<
 /** Form实例 */
 export interface FormInstance extends VanillaFormInstancePartial {
   /* # # # # # # # 重写 # # # # # # # */
-  /** 获取对dynamic/valid/list等特殊项进行处理进行处理后的完整schema副本 */
-  getSchemas(): FormSchemaWithoutName;
+  /** 获取处理特殊选项后的根schema */
+  getSchemas(): {
+    /** 处理过特殊选项的schema */
+    schemas: FormSchemaWithoutName;
+    /** 所有invalid项的name */
+    invalidNames: NamePath[];
+  };
 
-  /** 重新设置当前schemas, 通常需要在重新设置schema后手动自动执行一次verify()来清理之前的校验状态 */
-  setSchemas(schema: FormSchemaWithoutName): void;
+  /** 设置当前schemas */
+  setSchemas(schema: FormSchemaWithoutName | FormSchema[]): void;
 
   /**
-   * 获取对dynamic/valid/list等特殊项进行处理进行处理后的指定schema副本
+   * 获取对dynamic/valid/list等特殊项进行处理进行处理后的schemas副本以及一些其他相关信息
    *
-   * 如果在dynamic中调用并且获取的schema包含当前schema本身(直接获取或作为子项获取), 会导致递归, 可通过 skipChildren或withoutProcess选项处理
+   * - 在dynamic中调用时, 如果获取的schema包含当前schema本身(直接获取或作为子项获取), 会导致递归, 可通过 skipChildren或withoutProcess选项处理
    * */
   getSchema(
     name: NamePath,
@@ -360,7 +365,7 @@ export interface _FormContext {
 export interface _FieldContext {
   state: {
     schema: FormSchema | null;
-    renderKey: number;
+    renderKey: string;
   };
   setState: SetState<_FieldContext["state"]>;
   isList: boolean;

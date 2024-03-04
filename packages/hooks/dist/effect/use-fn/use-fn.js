@@ -8,15 +8,6 @@ import { useRef, useMemo } from "react";
  * @returns - 经过memo化的函数
  */ export function useFn(fn, wrapper) {
     var deps = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : [];
-    var wrapFn = function wrapFn() {
-        function memoFn() {
-            for(var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++){
-                args[_key] = arguments[_key];
-            }
-            return fnRef.current.apply(this, args);
-        }
-        memoFnRef.current = wrapper ? wrapper(memoFn) : memoFn;
-    };
     var fnRef = useRef();
     var memoFnRef = useRef();
     // 更新缓存fn
@@ -29,5 +20,14 @@ import { useRef, useMemo } from "react";
     /** 兼容devtool，直接写fnRef.current会阻断更新 */ useMemo(function() {
         fnRef.current = fn;
     });
+    function wrapFn() {
+        function memoFn() {
+            for(var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++){
+                args[_key] = arguments[_key];
+            }
+            return fnRef.current.apply(this, args);
+        }
+        memoFnRef.current = wrapper ? wrapper(memoFn) : memoFn;
+    }
     return memoFnRef.current;
 }

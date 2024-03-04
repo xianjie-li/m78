@@ -1,13 +1,20 @@
 import { RCTableInstance, RCTableProps } from "../types.js";
-import { createTable, TableConfig } from "../../table-vanilla/index.js";
+import { createTable, TableConfig, TableInstance } from "../../table-vanilla/index.js";
 import { createEvent } from "@m78/hooks";
 import { i18n, TABLE_NS } from "../../i18n/index.js";
 import { _useStateAct } from "./state.act.js";
 import { _useEditRender } from "../render/use-edit-render.js";
 import { _useCustomRender } from "../render/use-custom-render.js";
 import { _injector } from "../table.js";
-import { createRandString, isFunction } from "@m78/utils";
+import {
+  createRandString,
+  getNamePathValue,
+  isBoolean,
+  isFunction,
+} from "@m78/utils";
 import { createForm } from "../../form/index.js";
+import { _privateCtxKey, _privateInstanceCallbackKey } from "../../table-vanilla/common.js";
+import { TablePluginContext } from "../../table-vanilla/types/context.js";
 
 export function _useMethodsAct() {
   const {
@@ -30,8 +37,23 @@ export function _useMethodsAct() {
   function updateInstance(propsConf: Partial<RCTableProps>, isFull: boolean) {
     console.log("reload", isFull ? "full" : "index");
 
+    const curProps = state.instance ? propsConf : props;
+
+    const dataOperations = props.dataOperations;
+
+    // 映射一些名称有变更的配置
+    const mapProps = {
+      ...curProps,
+      dragSortColumn: isBoolean(dataOperations)
+        ? dataOperations
+        : dataOperations?.sortColumn,
+      dragSortRow: isBoolean(dataOperations)
+        ? dataOperations
+        : dataOperations?.sortColumn,
+    } as TableConfig;
+
     if (state.instance) {
-      state.instance.setConfig(propsConf as TableConfig, !isFull);
+      state.instance.setConfig(mapProps as TableConfig, !isFull);
       setState({
         renderID: Math.random(),
       });
@@ -40,8 +62,17 @@ export function _useMethodsAct() {
 
     const texts = i18n.getResourceBundle(i18n.language, TABLE_NS);
 
+    const instanceCBConf = {
+      // 获取尚未完成渲染的table实例, 部分功能中会用到
+      [_privateInstanceCallbackKey](noRenderedIns: RCTableInstance) {
+        self.instance = noRenderedIns;
+        self.vCtx = getNamePathValue(noRenderedIns, _privateCtxKey) as TablePluginContext
+      }
+    }
+
     const ins = createTable({
-      ...(props as any as TableConfig),
+      ...(mapProps as any as TableConfig),
+      ...instanceCBConf,
       el: ref.current,
       viewEl: scrollRef.current,
       viewContentEl: scrollContRef.current,
@@ -60,6 +91,7 @@ export function _useMethodsAct() {
 
     setState({
       instance: ins,
+      vCtx: getNamePathValue(ins, _privateCtxKey) as TablePluginContext,
     });
   }
 
@@ -107,18 +139,18 @@ export function _useMethodsAct() {
   function updateCheckForm() {
     self.editStatusMap = {};
 
-    const ls = props.schema || [];
+    const ls = props.schemas || [];
 
     if (self.editCheckForm) {
       self.editCheckForm.setSchemas({
-        schema: ls,
+        schemas: ls,
       });
       return;
     }
 
     self.editCheckForm = createForm({
       schemas: {
-        schema: ls,
+        schemas: ls,
       },
       autoVerify: false,
     });

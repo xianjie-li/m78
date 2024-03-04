@@ -1,6 +1,6 @@
 import { TableCell } from "../../table-vanilla/index.js";
 import React from "react";
-import { TableInteractiveDone, TableInteractiveRenderArg } from "../../table-vanilla/plugins/interactive-core.js";
+import { TableInteractiveDone, TableInteractiveRenderArg } from "../../table-vanilla/plugins/interactive.js";
 export declare function _useEditRender(): {
     interactiveEnableChecker: (cell: TableCell) => boolean;
     interactiveRender: ({ cell, value, done, node, form, }: TableInteractiveRenderArg) => TableInteractiveDone;

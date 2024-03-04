@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { createTable } from "../../src/table-vanilla/index.js";
-import { Scroll } from "../../src/index.js";
+import { Scroll, required, string } from "../../src/index.js";
 import { TableInstance } from "../../src/table-vanilla/types/instance.js";
 
 import { TableColumnConfig } from "../../src/table-vanilla/types/items.js";
@@ -268,6 +268,21 @@ const TableExample = () => {
       cellSelectable: (cell) => {
         return cell.column.key !== "field22";
       },
+      schemas: [
+        {
+          name: "field3",
+          validator: [required(), string({ min: 4 })],
+        },
+        {
+          name: "field4",
+          validator: [required(), string({ min: 4 })],
+        },
+        {
+          name: "field5",
+          validator: [required(), string({ min: 4 })],
+          valid: false,
+        },
+      ],
       interactive: (cell) => {
         return cell.column.key !== "field22" && cell.row.key !== "id3";
       },

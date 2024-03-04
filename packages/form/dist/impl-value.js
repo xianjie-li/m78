@@ -1,11 +1,16 @@
 import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
-import { deleteNamePathValues, getNamePathValue, isArray, isEmpty, isObject, isString, setNamePathValue, simplyDeepClone as clone } from "@m78/utils";
-import { _clearChildAndSelf } from "./common.js";
-import isEqual from "lodash/isEqual.js";
+import { deleteNamePathValues, getNamePathValue, isArray, isEmpty, isObject, isString, setNamePathValue, simplyDeepClone as clone, simplyEqual as isEqual } from "@m78/utils";
+import { _clearChildAndSelf, isRootName } from "./common.js";
 export function _implValue(ctx) {
     var instance = ctx.instance, config = ctx.config;
     instance.getValue = function(name) {
+        if (isRootName(name)) return instance.getValues();
         return getNamePathValue(ctx.values, name);
+    };
+    // 获取经过处理后的当前值
+    instance.getValues = function() {
+        var _ctx_getFormatterValuesAndSchema = _sliced_to_array(ctx.getFormatterValuesAndSchema(), 2), values = _ctx_getFormatterValuesAndSchema[1];
+        return values;
     };
     ctx.getFormatterValuesAndSchema = function(values) {
         var _ctx_getFormatterSchemas = _sliced_to_array(ctx.getFormatterSchemas(), 2), schemas = _ctx_getFormatterSchemas[0], names = _ctx_getFormatterSchemas[1];
@@ -18,10 +23,7 @@ export function _implValue(ctx) {
         ];
     };
     if (!ctx.verifyOnly) {
-        instance.getValues = function() {
-            var _ctx_getFormatterValuesAndSchema = _sliced_to_array(ctx.getFormatterValuesAndSchema(), 2), values = _ctx_getFormatterValuesAndSchema[1];
-            return values;
-        };
+        // 设置所有值
         instance.setValues = function(values) {
             ctx.values = values;
             if (!ctx.lockListState) {
@@ -32,10 +34,14 @@ export function _implValue(ctx) {
                 instance.events.update.emit();
             }
             if (config.autoVerify) {
-                instance.verify().catch(function() {});
+                instance.verify();
             }
         };
         instance.setValue = function(name, val) {
+            if (isRootName(name)) {
+                instance.setValues(val);
+                return;
+            }
             setNamePathValue(ctx.values, name, val);
             if (!ctx.lockListState) {
                 _clearChildAndSelf(ctx, name);
@@ -111,7 +117,7 @@ export function _implValue(ctx) {
             var values = instance.getValues();
             var defaultValues = instance.getDefaultValues();
             // 非数组和对象时, 直接比较
-            if (!isObject(values) && !Array.isArray(values)) {
+            if (!isObject(values) && !isArray(values)) {
                 if (!isEqual(values, defaultValues)) {
                     return values;
                 }

@@ -7,7 +7,7 @@ import { _ as _create_super } from "@swc/helpers/_/_create_super";
 import { TablePlugin } from "../plugin.js";
 import { getEventOffset, rafCaller } from "@m78/utils";
 import debounce from "lodash/debounce.js";
-import { SmoothWheel } from "@m78/utils";
+import { SmoothWheel } from "@m78/smooth-scroll";
 /**
  * 内部事件绑定, 外部事件派发
  * */ export var _TableEventPlugin = /*#__PURE__*/ function(TablePlugin) {

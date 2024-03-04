@@ -2,6 +2,7 @@ import {
   TableBaseConfig,
   TableCell,
   TableCellWithDom,
+  TableColumn,
   TableInstance,
   TableMutationEvent,
   TablePersistenceConfig,
@@ -10,7 +11,6 @@ import {
 } from "../table-vanilla/index.js";
 import { _tableOmitConfig } from "./common.js";
 import { TableSelectConfig } from "../table-vanilla/plugins/select.js";
-import { TableDragSortConfig } from "../table-vanilla/plugins/drag-sort.js";
 import { ComponentBaseProps } from "../common/index.js";
 import { AnyObject, EmptyFunction } from "@m78/utils";
 import { CustomEventWithHook } from "@m78/hooks";
@@ -25,6 +25,7 @@ import {
   TableConfigReader,
 } from "./plugins/config-sync.js";
 import { FormAdaptors } from "../config/index.js";
+import { TablePluginContext } from "../table-vanilla/types/context.js";
 
 /** 忽略的配置 */
 type OmitConfig = typeof _tableOmitConfig[number];
@@ -32,13 +33,13 @@ type OmitConfig = typeof _tableOmitConfig[number];
 /** 重写TableColumnLeafConfig类型 */
 declare module "../table-vanilla/index.js" {
   interface TableColumnLeafConfig {
-    /** 自定义该列单元格渲染 */
+    /** 自定义列单元格渲染 */
     render?: (arg: RCTableRenderArg) => ReactNode | void;
-    /** 渲染筛选表单*/
+    /** 渲染列头的筛选表单*/
     filterRender?: RCTableFilterColumnRender;
     /** 在表头后方渲染的额外节点 */
     headerExtra?: ReactNode;
-    /** 自定义表头渲染, 设置后会覆盖默认节点, 若要保留, 可根据参数按需渲染 */
+    /** TODO: 自定义表头渲染, 设置后会覆盖默认节点, 若要保留, 可根据参数按需渲染 */
     headerRender?: () => ReactNode;
   }
 }
@@ -94,8 +95,7 @@ export interface RCTableRenderArg {
 export interface RCTableProps
   extends ComponentBaseProps,
     Omit<TableBaseConfig, OmitConfig | "render">,
-    TableSelectConfig,
-    TableDragSortConfig {
+    TableSelectConfig {
   /** 自定义单元格渲染 */
   render?: (arg: RCTableRenderArg) => ReactNode | void;
   /** 自定义空节点 */
@@ -151,27 +151,24 @@ export interface RCTableProps
   /* # # # # # # # 数据操作 # # # # # # # */
 
   /**
-   * 用于启用单元格编辑和校验字段的schema, 需要注意以下几点:
+   * 用于约束表格数据格式或启用单元格编辑的schemas, 需要注意以下几点:
    *
-   * - 在单元格编辑中, element是必须的, 并且对应的组件必须在table或全局注册过
-   * - 一些针对Form组件的schema在在单元格编辑中是无效的, 比如 label/list 等
+   * - 若要启用编辑功能, schema.element 是必须的, 并且对应的组件必须在table级别或全局注册过, 另外, 还需设置 dataOperations.edit 对编辑功能进行整体启用
+   * - 一些针对Form组件的schema在在单元格编辑中是无效的, 比如 list
    * */
-  schema?: FormSchema[];
+  schemas?: FormSchema[];
   /** 表单控件适配器, 优先级高于全局适配器 */
   adaptors?: FormAdaptors;
   /** 数据编辑/新增等功能是否启用, 传入true时全部启用, 可传入一个配置对象来按需启用所需功能 */
   dataOperations?: boolean | TableDataOperationsConfig;
   /** 提交时触发 */
   onSubmit?: (submitData: {
+    // 是否需要改为直接收data
     /** 若数据发生了改变, 此项为当前数据信息 */
     data?: TableDataLists;
   }) => void;
   /** 新增数据时, 使用此对象作为默认值, 可以是一个对象或返回对象的函数 */
   defaultNewData?: AnyObject | (() => AnyObject);
-  /** true | 启用导入功能, 需要dataOperation.add启用才可生效 */
-  dataImport?: boolean;
-  /** true | 启用导出功能 */
-  dataExport?: boolean;
   /** 用于持久化配置的唯一key, 默认通过storage api进行配置持久化, 可通过 configPersister/configReader 配置定制持久化逻辑 */
   configCacheKey?: string;
   /**
@@ -210,7 +207,7 @@ export interface RCTableInstance extends Omit<TableInstance, "event"> {
     cellSelect: CustomEventWithHook<EmptyFunction>;
     /** 配置/数据等变更, 通常意味需要持久化的一些信息发生了改变 */
     mutation: CustomEventWithHook<(event: TableMutationEvent) => void>;
-
+   
     //* # # # # # # # 以下为部分对外暴露的插件生命周期事件或仅对库开发者有用的事件 # # # # # # # */
     /** 初始化阶段触发 */
     init: CustomEventWithHook<EmptyFunction>;
@@ -218,6 +215,8 @@ export interface RCTableInstance extends Omit<TableInstance, "event"> {
     initialized: CustomEventWithHook<EmptyFunction>;
     /** 首次渲染完成 */
     mounted: CustomEventWithHook<EmptyFunction>;
+    /** 每次开始前触发 */
+    beforeRender: CustomEventWithHook<EmptyFunction>;
     /** 渲染中, 本阶段内部渲染基本上已完成, 可以再次附加自定义的渲染 */
     rendering: CustomEventWithHook<EmptyFunction>;
     /** 每次渲染完成后触发 */
@@ -226,6 +225,12 @@ export interface RCTableInstance extends Omit<TableInstance, "event"> {
     reload: CustomEventWithHook<(opt: TableReloadOptions) => void>;
     /** 卸载前触发 */
     beforeDestroy: CustomEventWithHook<EmptyFunction>;
+    /** 在rendering触发前, 每个单元格渲染后触发 */
+    cellRendering: CustomEventWithHook<(cell: TableCell) => void>;
+    /** 在rendering触发前触发, 主要用于通知所有该次render显示的行, 触发时并不意味着行内所有单元格均已渲染完成 */
+    rowRendering: CustomEventWithHook<(row: TableRow) => void>;
+    /** 在rendering触发前触发, 主要用于通知所有该次render显示的列, 触发时并不意味着行内所有单元格均已渲染完成 */
+    columnRendering: CustomEventWithHook<(column: TableColumn) => void>;
 
     /** 单元格的挂载状态变更 (mount状态可以理解为单元格是否在表格视口内并被渲染, 可通过cell.isMount获取) */
     mountChange: CustomEventWithHook<(cell: TableCell) => void>;
@@ -244,6 +249,10 @@ export interface RCTableInstance extends Omit<TableInstance, "event"> {
     feedback: CustomEventWithHook<(event: TableFeedbackEvent[]) => void>;
     /** 拖拽移动启用状态变更时触发 */
     dragMoveChange: CustomEventWithHook<(enable: boolean) => void>;
+    /** 常规配置(非持久化配置)变更时触发, 接收所有变更key的数组changeKeys, 和isChange, 用于检测key是否包含在该次变更中 */
+    configChange: CustomEventWithHook<
+      (changeKeys: string[], isChange: (key: string) => boolean) => void
+    >;
   };
 }
 
@@ -254,6 +263,14 @@ export interface TableDataOperationsConfig {
   add?: boolean;
   /** 允许删除数据 */
   delete?: boolean;
+  /** 行拖拽排序 */
+  sortRow?: boolean;
+  /** true | 列拖拽排序 */
+  sortColumn?: boolean;
+  /** 从xlsx导入数据, 需要同时启用add */
+  import?: boolean;
+  /** true | 导出数据到xlsx */
+  export?: boolean;
 }
 
 /** renderMap的项, 代表一个渲染项 */
@@ -273,8 +290,10 @@ export interface _CustomEditItem {
 export interface _RCTableState {
   /** 定制空节点 */
   emptyNode?: HTMLDivElement;
-  /** 表格实例 */
+  /** 表格实例 (在未完成创建前会是null) */
   instance: RCTableInstance;
+  /** vanilla table内部使用的context */
+  vCtx: TablePluginContext;
   /** 组件正在执行初始化操作, 尚未完成实例创建, 通常在instance需要异步创建时使用, 比如从服务器读取持久化配置 */
   initializing: boolean;
   /** initializing为true时显示的提示内容 */
@@ -293,6 +312,14 @@ export interface _RCTableState {
 
 /** 实例状态 */
 export interface _RCTableSelf {
+  /** 
+   * 表格实例, 会比state.instance更早初始化(在instance创建, 第一次render执行前)
+   * 
+   * 某些地方需要在首次render前提前访问, 估提供此项
+   * */
+  instance: RCTableInstance;
+  /** 同state.vCtx, 某些地方需要在首次render前提前访问, 估提供此项 */
+  vCtx: TablePluginContext;
   /** 所有自定义渲染项的key map */
   renderMap: Record<string, _CustomRenderItem>;
   /** 所有正在编辑项的key map */

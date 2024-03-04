@@ -12,28 +12,12 @@ import {
 } from "@m78/utils";
 import { removeNode } from "../../common/index.js";
 import { _TableFormPlugin } from "./form.js";
-import { FormInstance } from "../../form/index.js";
 import { _TableDisablePlugin } from "./disable.js";
 
-// 表示一个交互项
-interface TableInteractiveItem {
-  // 单元格
-  cell: TableCell;
-  // 附加交互组件的节点
-  node: HTMLElement;
-  // 是否已挂载
-  mounted?: boolean;
-  // 是否已卸载
-  unmounted?: boolean;
-
-  // 清理该交互项
-  done(isConfirm?: boolean): void;
-}
-
 /**
- * 提供最基础的单元格双击交互功能, 用于实现交互期间展示表单控件或其他交互组件, 是form的上一层抽象, 并非一定用于form
+ * 提供单元格双击交互功能, 用于实现交互期间展示表单控件或其他交互组件, 是在form的上做的一层抽象, 并非一定用于form
  * */
-export class _TableInteractiveCorePlugin extends TablePlugin {
+export class _TableInteractivePlugin extends TablePlugin {
   // 所有活动的交互项
   items: TableInteractiveItem[] = [];
 
@@ -168,7 +152,7 @@ export class _TableInteractiveCorePlugin extends TablePlugin {
       return false;
 
     // 禁用项阻止交互
-    if (this.disable && this.disable.isDisabledCell(cell.key)) return;
+    if (this.disable && this.disable.isDisabledCell(cell.key)) return false;
 
     return isFunction(this.config.interactiveRender);
   }
@@ -220,7 +204,6 @@ export class _TableInteractiveCorePlugin extends TablePlugin {
 
     done = this.config.interactiveRender!({
       ...(item as any),
-      form: this.form.initForm(cell),
       value: isTruthyOrZero(defaultValue)
         ? defaultValue
         : this.table.getValue(cell),
@@ -300,6 +283,7 @@ export class _TableInteractiveCorePlugin extends TablePlugin {
         if (cell.column.isHeader || cell.row.isHeader) return false;
         if (!this.isInteractive(cell)) return false;
         if (!this.form.validCheck(cell)) return false;
+        // ignore idea tips.
         return true;
       },
     });
@@ -338,7 +322,7 @@ export type TableInteractiveDone = (isConfirm: boolean) => void | Promise<void>;
 export interface TableInteractiveRenderArg {
   /** 触发交互的单元格 */
   cell: TableCellWithDom;
-  /** 用于挂载交互组件 */
+  /** 用于挂载交互组件的dom节点 */
   node: HTMLElement;
   /** 表单控件应显示的默认值 */
   value: any;
@@ -346,11 +330,10 @@ export interface TableInteractiveRenderArg {
    * isConfirm为true时表示该操作被确认, done应该在事件回调等位置调用, 不能在render流程中调用
    * */
   done: (isConfirm?: boolean) => void;
-  /** 当前行的form实例 */
-  form: FormInstance;
 }
 
-export interface TableInteractiveCoreConfig {
+/** 交互配置 */
+export interface TableInteractiveConfig {
   /** 控制单元格是否可交互 */
   interactive?: boolean | ((cell: TableCell) => boolean);
   /**
@@ -362,4 +345,19 @@ export interface TableInteractiveCoreConfig {
    * arg.done()和TableInteractiveDone()都接收isConfirm参数, 用于识别是确认操作还是取消操作
    * */
   interactiveRender?: (arg: TableInteractiveRenderArg) => TableInteractiveDone;
+}
+
+// 表示一个交互项
+interface TableInteractiveItem {
+  // 单元格
+  cell: TableCell;
+  // 附加交互组件的节点
+  node: HTMLElement;
+  // 是否已挂载
+  mounted?: boolean;
+  // 是否已卸载
+  unmounted?: boolean;
+
+  // 清理该交互项
+  done(isConfirm?: boolean): void;
 }

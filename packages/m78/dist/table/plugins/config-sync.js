@@ -108,6 +108,7 @@ import { Button } from "../../button/index.js";
                                 ];
                             case 3:
                                 e = _state.sent();
+                                console.error(e);
                                 message = i18n.t("setting load failed", {
                                     ns: [
                                         TABLE_NS

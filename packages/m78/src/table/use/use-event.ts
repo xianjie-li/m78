@@ -9,7 +9,6 @@ import {
 import { notify } from "../../notify/index.js";
 import { _useStateAct } from "../injector/state.act.js";
 import { _injector } from "../table.js";
-import { _getTableCtx } from "../common.js";
 
 // 将部分table实例事件直接暴露为props, 并对某些事件进行处理
 export function _useEvent() {
@@ -37,7 +36,7 @@ export function _useEvent() {
   // 数据变更时, 重新计算行数等
   const dataChange = useFn(() => {
     setState({
-      rowCount: _getTableCtx(state.instance)?.allRowKeys.length || 0,
+      rowCount: state.vCtx?.allRowKeys.length || 0,
     });
   });
 

@@ -9,7 +9,7 @@ import {
   NamePath,
   stringifyNamePath,
 } from "@m78/utils";
-import { _ROOT_SCHEMA_NAME, _syncListIndex } from "./common.js";
+import { _syncListIndex, isRootName } from "./common.js";
 
 export function _implList(ctx: _Context) {
   const { instance } = ctx;
@@ -22,17 +22,20 @@ export function _implList(ctx: _Context) {
     const name = ensureArray(_name);
 
     const isRoot = !name.length;
-    const schema = isRoot ? instance.getSchemas() : instance.getSchema(name);
+    const schema = isRoot
+      ? instance.getSchemas().schemas
+      : instance.getSchema(name);
+
     const listState = ctx.listState;
 
     if (!schema || !schema.list) return null;
 
-    const sName = isRoot ? _ROOT_SCHEMA_NAME : stringifyNamePath(name);
+    const sName = isRoot ? "[]" : stringifyNamePath(name);
 
     if (!isArray(listState?.[sName]?.keys)) {
       listState[sName] = {
         keys: [],
-        name: isRoot ? _ROOT_SCHEMA_NAME : name,
+        name: isRoot ? [] : name,
       };
     }
 
@@ -81,7 +84,7 @@ export function _implList(ctx: _Context) {
   }
 
   instance.getList = (name) => {
-    const res = syncAndGetList(name);
+    const res = syncAndGetList(isRootName(name) ? [] : name);
 
     if (!res) return null;
 

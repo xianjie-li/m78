@@ -1,7 +1,6 @@
 import { BoundSize, isNumber } from "@m78/utils";
 import { TableKey, TablePosition } from "./types/base-type.js";
 import { removeNode } from "../common/index.js";
-import { TableRow } from "./types/items.js";
 
 export const _prefix = "m78-table";
 
@@ -10,6 +9,12 @@ export const _privateInstanceKey = "__M78TableInstance";
 
 /** 用于在domEl上挂载是否为其是否为内部创建的信息 */
 export const _privateScrollerDomKey = "__M78PrivateScrollerDom";
+
+/** 在instance上挂载私有context的key */
+export const _privateCtxKey = "__ctx";
+
+/** 在实例准备好后立即通过config上的私有字段进行回调 */
+export const _privateInstanceCallbackKey = "__instanceCallback";
 
 /** 可替换的文本 */
 export const tableDefaultTexts = {
@@ -172,18 +177,4 @@ export function _syncListNode(arg: {
     nodeList.length = 0;
     nodeList.push(...newNodes);
   }
-}
-
-/** 用于便捷的根据当前 lastViewportItems 生成用于高效检测row mount状态的检测方法 */
-export function _rowMountChecker(visibleRows: TableRow[] = []) {
-  // 用于快速获取行的挂载状态
-  const showMap: Record<string, boolean | undefined> = {};
-
-  visibleRows.forEach((row) => {
-    showMap[row.key] = true;
-  });
-
-  return (key: TableKey) => {
-    return !!showMap[key];
-  };
 }

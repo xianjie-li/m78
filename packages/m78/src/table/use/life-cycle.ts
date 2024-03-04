@@ -20,7 +20,7 @@ export function _useLifeCycle() {
   _usePropsEffect(props, (changedProps, needFullReload) => {
     if (state.initializing || state.blockError) return;
 
-    if (changedProps.schema) {
+    if (changedProps.schemas) {
       methods.updateCheckForm();
     }
 

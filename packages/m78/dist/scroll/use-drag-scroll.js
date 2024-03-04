@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { PhysicalScroll, PhysicalScrollEventType } from "@m78/utils";
+import { DragScroll as PhysicalScroll, DragScrollEventType as PhysicalScrollEventType } from "@m78/smooth-scroll";
 export var _useDragScroll = function(ctx) {
     var props = ctx.props, xEnabled = ctx.xEnabled, yEnabled = ctx.yEnabled, innerWrapRef = ctx.innerWrapRef;
     useEffect(function() {

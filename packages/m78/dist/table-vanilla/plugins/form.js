@@ -4,19 +4,18 @@ import { _ as _class_call_check } from "@swc/helpers/_/_class_call_check";
 import { _ as _create_class } from "@swc/helpers/_/_create_class";
 import { _ as _define_property } from "@swc/helpers/_/_define_property";
 import { _ as _inherits } from "@swc/helpers/_/_inherits";
-import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
 import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
 import { _ as _create_super } from "@swc/helpers/_/_create_super";
 import { _ as _ts_generator } from "@swc/helpers/_/_ts_generator";
-import { createForm } from "@m78/form";
+import { createForm, createVerify } from "@m78/form";
 import { requiredValidatorKey } from "@m78/form/validator/required.js";
-import { deleteNamePathValue, ensureArray, isEmpty, setNamePathValue, stringifyNamePath } from "@m78/utils";
+import { deleteNamePathValue, deleteNamePathValues, ensureArray, isEmpty, isTruthyOrZero, setNamePathValue, simplyDeepClone, simplyEqual, stringifyNamePath } from "@m78/utils";
 import { TableLoadStage, TablePlugin } from "../plugin.js";
 import { TableMutationDataType, TableMutationType } from "./mutation.js";
 import { removeNode } from "../../common/index.js";
 import { _getCellKey, _syncListNode } from "../common.js";
-import { _TableInteractiveCorePlugin } from "./interactive-core.js";
+import { _TableInteractivePlugin } from "./interactive.js";
 import { FORM_LANG_PACK_NS, i18n } from "../../i18n/index.js";
 import { _TableSoftRemovePlugin } from "./soft-remove.js";
 export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
@@ -28,42 +27,47 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
         var _this;
         _this = _super.apply(this, arguments);
         _define_property(_assert_this_initialized(_this), "wrapNode", void 0);
-        // 以key存储行表单实例
-        _define_property(_assert_this_initialized(_this), "formInstances", {});
-        // 以key存储行表单错误信息
-        _define_property(_assert_this_initialized(_this), "errors", {});
-        // 以行为单位存储单元格错误信息 { rowKey: { cellKey: "err msg" } }
-        _define_property(_assert_this_initialized(_this), "cellErrors", {});
+        // 验证实例, 用于在未创建行form时复用
+        _define_property(_assert_this_initialized(_this), "verifyInstance", void 0);
+        // 以row key存储行表单错误信息
+        _define_property(_assert_this_initialized(_this), "errors", new Map());
+        // 以行为单位存储单元格错误信息 { [rowKey]: { [cellKey]: "err msg" } }
+        _define_property(_assert_this_initialized(_this), "cellErrors", new Map());
         // 记录行是否变动
-        _define_property(_assert_this_initialized(_this), "rowChanged", {});
+        _define_property(_assert_this_initialized(_this), "rowChanged", new Map());
+        // 记录单元格是否变动
+        _define_property(_assert_this_initialized(_this), "cellChanged", new Map());
+        // 以行为key记录默认值
+        _define_property(_assert_this_initialized(_this), "defaultValues", new Map());
+        // 以row key存储的改行的计算后schema
+        _define_property(_assert_this_initialized(_this), "schemaDatas", new Map());
+        // 记录行是否被操作过 (首次进入交互后设置)
+        _define_property(_assert_this_initialized(_this), "rowTouched", new Map());
+        // 记录单元格是被操作过 (首次进入交互后设置)
+        _define_property(_assert_this_initialized(_this), "cellTouched", new Map());
         // 用于显示错误反馈的节点
         _define_property(_assert_this_initialized(_this), "errorNodes", []);
         // 用于显示行变动标识的节点
         _define_property(_assert_this_initialized(_this), "rowChangedNodes", []);
-        // 记录单元格是否变动
-        _define_property(_assert_this_initialized(_this), "cellChanged", {});
         // 用于显示单元格变动标识的节点
         _define_property(_assert_this_initialized(_this), "cellChangedNodes", []);
-        // 记录编辑/必填状态
-        _define_property(_assert_this_initialized(_this), "editStatus", []);
-        // 用于开始查找editStatus
-        _define_property(_assert_this_initialized(_this), "editStatusMap", {});
+        // 存储可编辑列的信息
+        _define_property(_assert_this_initialized(_this), "editStatusMap", new Map());
+        // 编辑/必填状态标识节点
         _define_property(_assert_this_initialized(_this), "editStatusNodes", []);
-        // 无效状态
-        _define_property(_assert_this_initialized(_this), "invalidCellMap", {});
-        _define_property(_assert_this_initialized(_this), "invalidStatusMap", {});
-        _define_property(_assert_this_initialized(_this), "invalidStatus", []);
+        // 无效反馈节点
         _define_property(_assert_this_initialized(_this), "invalidNodes", []);
         // 记录新增的数据
         _define_property(_assert_this_initialized(_this), "addRecordMap", new Map());
         // 记录移除的数据
         _define_property(_assert_this_initialized(_this), "removeRecordMap", new Map());
-        // 记录移除的数据, 不进行 addRecordMap 的检测, 即 removeRecordMap 不会记录新增行的删除
+        // 记录移除的数据, 不进行 addRecordMap 的检测, 即 removeRecordMap 不会记录新增行的删除, 而 allRemoveRecordMap 会记录
         _define_property(_assert_this_initialized(_this), "allRemoveRecordMap", new Map());
         // 记录发生或排序变更的项信息
         _define_property(_assert_this_initialized(_this), "sortRecordMap", new Map());
         _define_property(_assert_this_initialized(_this), "interactive", void 0);
         _define_property(_assert_this_initialized(_this), "softRemove", void 0);
+        // 数据发生变更时进行处理
         _define_property(_assert_this_initialized(_this), "mutation", function(e) {
             if (e.type === TableMutationType.value) {
                 _this.valueMutation(e);
@@ -74,49 +78,36 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
         });
         // 值变更, 创建或获取form实例, 并同步值和校验状态
         _define_property(_assert_this_initialized(_this), "valueMutation", function(e) {
-            var cell = e.cell, value = e.value;
-            var form = _this.initForm(e);
-            var name = cell.column.config.originalKey;
-            form.setValue(name, value);
-            var changed = form.getFormChanged();
+            var cell = e.cell;
+            var column = cell.column;
+            var row = cell.row;
+            // 默认值不存在, 将默认值写入
+            if (!_this.defaultValues.has(row.key)) {
+                var rawData = simplyDeepClone(row.data);
+                var name = column.config.originalKey;
+                // 还原已变更的值
+                setNamePathValue(rawData, name, e.oldValue);
+                _this.defaultValues.set(row.key, rawData);
+            }
+            var changed = simplyEqual(row.data, _this.defaultValues.get(row.key));
             if (changed) {
-                _this.rowChanged[cell.row.key] = true;
+                _this.rowChanged.set(row.key, true);
             } else {
-                delete _this.rowChanged[cell.row.key];
+                _this.rowChanged.delete(row.key);
             }
-            if (form.getChanged(name)) {
-                _this.cellChanged[cell.key] = cell;
+            var valueChanged = simplyEqual(e.value, e.oldValue);
+            if (valueChanged) {
+                _this.cellChanged.set(cell.key, true);
             } else {
-                delete _this.cellChanged[cell.key];
+                _this.cellChanged.delete(cell.key);
             }
-            _this.updateValidStatus(cell.row);
-            _this.updateValidRelate();
-            form.debounceVerify(name, function() {
-                var errors = form.getErrors();
-                var newError = [];
-                var cellError = {};
-                var hasCellError = false;
-                errors.forEach(function(e) {
-                    if (form.getTouched(e.namePath)) {
-                        newError.push(e);
-                        // 只取第一条错误
-                        if (!cellError[e.name]) {
-                            cellError[e.name] = e.message;
-                            hasCellError = true;
-                        }
-                    }
-                });
-                if (newError.length) {
-                    _this.errors[cell.row.key] = newError;
-                } else {
-                    delete _this.errors[cell.row.key];
-                }
-                if (hasCellError) {
-                    _this.cellErrors[cell.row.key] = cellError;
-                } else {
-                    delete _this.cellErrors[cell.row.key];
-                }
-                _this.table.render();
+            _this.rowTouched.set(row.key, true);
+            _this.cellTouched.set(cell.key, true);
+            // 更新schema
+            var schema = _this.getSchemas(row, true);
+            var fmtData = _this.getFmtData(row, row.data);
+            _this.innerCheck(row, fmtData, schema.rootSchema).then(function() {
+                return _this.table.render();
             });
         });
         // data变更, 记录新增, 删除数据, 并且也将其计入getFormChanged变更状态
@@ -164,37 +155,38 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
         {
             key: "beforeInit",
             value: function beforeInit() {
-                this.interactive = this.getPlugin(_TableInteractiveCorePlugin);
+                this.interactive = this.getPlugin(_TableInteractivePlugin);
                 this.softRemove = this.getPlugin(_TableSoftRemovePlugin);
-                this.wrapNode = document.createElement("div");
-                this.wrapNode.className = "m78-table_form-wrap";
                 this.methodMapper(this.table, [
                     "verify",
                     "verifyRow",
                     "verifyChanged",
                     "getData",
                     "getChanged",
-                    "getTableChanged",
-                    "resetFormState"
+                    "getTableChanged"
                 ]);
             }
         },
         {
             key: "mounted",
             value: function mounted() {
+                var _this = this;
                 this.table.event.mutation.on(this.mutation);
-                this.context.viewContentEl.appendChild(this.wrapNode);
+                // schemas配置变更时清理缓存的schema
+                this.table.event.configChange.on(function(changeKeys, isChange) {
+                    if (isChange("schemas")) {
+                        _this.schemaConfigChange();
+                    }
+                });
+                this.initNodeWrap();
             }
         },
         {
             key: "beforeDestroy",
             value: function beforeDestroy() {
                 this.table.event.mutation.off(this.mutation);
-                this.editStatus = [];
-                this.editStatusMap = {};
+                this.table.event.configChange.empty();
                 this.reset();
-                this.resetDataRecords();
-                removeNode(this.wrapNode);
             }
         },
         {
@@ -202,10 +194,7 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
             value: function loadStage(stage, isBefore) {
                 if (stage === TableLoadStage.fullHandle && isBefore) {
                     this.reset();
-                    this.resetDataRecords();
-                }
-                if (stage === TableLoadStage.baseHandle && !isBefore) {
-                    this.updateEditStatus();
+                    this.initNodeWrap();
                 }
             }
         },
@@ -221,7 +210,7 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
                 // 动态创建form实例
                 showRows.forEach(function(row) {
                     showRowsMap[row.key] = true;
-                    _this.initForm(row);
+                    _this.getForm(row);
                     _this.updateValidStatus(row);
                 });
                 this.updateValidRelate();
@@ -278,41 +267,83 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
             }
         },
         {
-            // 是否允许编辑
+            // 获取单元格invalid状态
             key: "validCheck",
             value: function validCheck(cell) {
-                return !this.invalidStatusMap[cell.key];
+                var invalid = this.getSchemas(cell.row).invalid;
+                if (!invalid) return true;
+                return !invalid.get(cell.column.key);
             }
         },
         {
             key: "getChanged",
-            value: function getChanged(rowKey, columnKey) {
-                // 新增行的检测均视为变更
-                if (this.addRecordMap.has(rowKey)) return true;
-                // 删除行的检测均视为变更
-                if (this.removeRecordMap.has(rowKey)) return true;
-                if (this.softRemove.isSoftRemove(rowKey)) return true;
-                if (!columnKey) {
-                    return !!this.rowChanged[rowKey];
+            value: function getChanged(rowKey1, columnKey) {
+                // 检测已有状态
+                if (columnKey) {
+                    var cellKey = _getCellKey(rowKey1, stringifyNamePath(columnKey));
+                    if (this.cellChanged.get(cellKey)) return true;
+                } else {
+                    if (this.rowChanged.get(rowKey1)) return true;
                 }
-                return !!this.cellChanged[_getCellKey(rowKey, stringifyNamePath(columnKey))];
+                // 新增行的检测均视为变更
+                if (this.addRecordMap.has(rowKey1)) return true;
+                // 删除行的检测均视为变更
+                if (this.removeRecordMap.has(rowKey1)) return true;
+                if (this.softRemove.isSoftRemove(rowKey1)) return true;
+                // 排序变更
+                var sortData = this.sortRecordMap.get(rowKey1);
+                if (sortData && sortData.currentIndex !== sortData.originIndex) return true;
+                return false;
             }
         },
         {
             key: "getTableChanged",
             value: function getTableChanged() {
-                var _this = this;
+                if (this.rowChanged.size !== 0) return true;
                 // 包含新增或删除的行
                 if (this.addRecordMap.size || this.removeRecordMap.size) return true;
+                // 包含软删除数据
+                if (this.softRemove.remove.hasSelected()) return true;
                 var hasSorted = this.getSortedStatus();
                 // 包含排序过的行
                 if (hasSorted) return true;
+                // 包含变更数据
+                return false;
+            }
+        },
+        {
+            key: "getTouched",
+            value: function getTouched(rowKey1, columnKey) {
+                // 检测已有状态
+                if (columnKey) {
+                    var cellKey = _getCellKey(rowKey1, stringifyNamePath(columnKey));
+                    if (this.cellTouched.get(cellKey)) return true;
+                } else {
+                    if (this.rowTouched.get(rowKey1)) return true;
+                }
+                // 包含新增行
+                if (this.addRecordMap.has(rowKey1)) return true;
+                // 包含删除行
+                if (this.removeRecordMap.has(rowKey1)) return true;
+                if (this.softRemove.isSoftRemove(rowKey1)) return true;
+                // 排序变更
+                var sortData = this.sortRecordMap.get(rowKey1);
+                if (sortData && sortData.currentIndex !== sortData.originIndex) return true;
+                return false;
+            }
+        },
+        {
+            key: "getTableTouched",
+            value: function getTableTouched() {
+                if (this.rowTouched.size !== 0) return true;
+                // 包含新增或删除的行
+                if (this.addRecordMap.size || this.removeRecordMap.size) return true;
                 // 包含软删除数据
                 if (this.softRemove.remove.hasSelected()) return true;
-                // 包含变更数据
-                return Object.keys(this.rowChanged).some(function(key) {
-                    return _this.rowChanged[key];
-                });
+                var hasSorted = this.getSortedStatus();
+                // 包含排序过的行
+                if (hasSorted) return true;
+                return false;
             }
         },
         {
@@ -333,30 +364,13 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
                 var change = [];
                 var update = [];
                 var remove = [];
-                var all = this.eachData(function(data, key) {
-                    // 跳过软删除项
-                    if (_this.softRemove.isSoftRemove(key)) return false;
-                    var isAdd = _this.addRecordMap.has(key);
-                    // 数据变更并且不是新增的数据
-                    var isChange = _this.rowChanged[key] && !isAdd;
-                    if (isAdd) {
-                        // 删除虚拟主键, 防止数据传输到服务端时出错
-                        if (isAdd) {
-                            deleteNamePathValue(data, _this.config.primaryKey);
-                        }
-                        add.push(data);
-                    }
-                    if (isChange) {
-                        change.push(data);
-                    }
-                    if (isAdd || isChange) {
-                        update.push(data);
-                    }
+                var all = this.eachData(function(data, key, status) {
+                    if (status.add) add.push(data);
+                    if (status.change) change.push(data);
+                    if (status.update) update.push(data);
                 });
                 var rList = Array.from(this.removeRecordMap.values());
-                if (rList) {
-                    remove = rList;
-                }
+                if (rList) remove = rList;
                 // 合并软删除项到remove
                 if (this.softRemove.remove.hasSelected()) {
                     this.softRemove.remove.getState().selected.forEach(function(k) {
@@ -376,14 +390,6 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
             }
         },
         {
-            key: "resetFormState",
-            value: function resetFormState() {
-                this.reset();
-                this.softRemove.restoreSoftRemove();
-                this.table.render();
-            }
-        },
-        {
             key: "verify",
             value: function verify() {
                 return this.verifyCommon(false);
@@ -391,18 +397,18 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
         },
         {
             key: "verifyRow",
-            value: function verifyRow(rowKey) {
-                return this.verifyCommon(false, rowKey);
+            value: function verifyRow(rowKey1) {
+                return this.verifyCommon(false, rowKey1);
             }
         },
         {
-            key: "verifyChanged",
-            value: function verifyChanged() {
+            key: "verifyUpdated",
+            value: function verifyUpdated() {
                 return this.verifyCommon(true);
             }
         },
         {
-            /** 获取指定单元格最后一次参与验证后的错误 */ key: "getCellError",
+            /** 获取指定单元格最后一次参与验证后的错误字符串 */ key: "getCellError",
             value: function getCellError(cell) {
                 var rec = this.cellErrors[cell.row.key];
                 if (!rec) return "";
@@ -417,21 +423,38 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
         },
         {
             key: "verifyCommon",
-            value: // 验证通用逻辑, 传入rowKey时仅验证指定的行, 单行验证时仅返回指定行
-            function verifyCommon(onlyChanged, rowKey) {
+            value: // verify/verifyChanged 验证通用逻辑, 传入rowKey时仅验证指定的行, 单行验证时仅返回指定行
+            function verifyCommon(onlyUpdated) {
                 var _this = this;
                 return _async_to_generator(function() {
-                    var data, dataLists, form;
+                    var list, dataLists, data, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, cur, form;
                     return _ts_generator(this, function(_state) {
-                        data = [];
-                        dataLists = null;
-                        if (rowKey) {
-                            data = [
-                                _this.table.getRow(rowKey).data
-                            ];
-                        } else {
-                            dataLists = _this.getData();
-                            data = onlyChanged ? dataLists.update : dataLists.all;
+                        list = _this.eachData(function(data, key, status) {
+                            if (onlyUpdated && !status.update) return false;
+                            var row = _this.table.getRow(key);
+                            var schema = _this.getSchemas(row);
+                        });
+                        dataLists = _this.getData();
+                        data = onlyUpdated ? dataLists.update : dataLists.all;
+                        _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = undefined;
+                        try {
+                            for(_iterator = data[Symbol.iterator](); !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true){
+                                cur = _step.value;
+                                _this.innerCheck();
+                            }
+                        } catch (err) {
+                            _didIteratorError = true;
+                            _iteratorError = err;
+                        } finally{
+                            try {
+                                if (!_iteratorNormalCompletion && _iterator.return != null) {
+                                    _iterator.return();
+                                }
+                            } finally{
+                                if (_didIteratorError) {
+                                    throw _iteratorError;
+                                }
+                            }
                         }
                         form = createForm({
                             schemas: {
@@ -468,66 +491,29 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
             }
         },
         {
-            key: "verifySpecifiedRow",
-            value: // 验证指定行并更新对应ui, 传入cell时, 高亮指定cell
-            function verifySpecifiedRow(row, cell) {
-                var _this = this;
-                var form = this.initForm(row);
-                form.verify().then(function() {
-                    delete _this.errors[row.key];
-                    delete _this.cellErrors[row.key];
-                }).catch(function(errors) {
-                    if (errors === null || errors === void 0 ? void 0 : errors.rejects) {
-                        var rejList = errors.rejects;
-                        _this.errors[row.key] = rejList;
-                        var cellError = {};
-                        var hasCellError = false;
-                        rejList.forEach(function(e) {
-                            if (form.getTouched(e.namePath)) {
-                                // 只取第一条错误
-                                if (!cellError[e.name]) {
-                                    cellError[e.name] = e.message;
-                                    hasCellError = true;
-                                }
-                            }
-                        });
-                        if (hasCellError) {
-                            _this.cellErrors[row.key] = cellError;
-                        } else {
-                            delete _this.cellErrors[row.key];
-                        }
-                    }
-                }).finally(function() {
-                    _this.table.render();
-                    _this.table.highlightRow(row.key);
-                    if (cell) {
-                        _this.table.highlight(cell.key);
-                        _this.table.selectCells(cell.key);
-                    }
-                });
-            }
-        },
-        {
-            key: "resetDataRecords",
-            value: // 重置行数据的记录状态
-            function resetDataRecords() {
+            key: "reset",
+            value: // 重置状态/数据内联内容等
+            function reset() {
                 this.addRecordMap = new Map();
                 this.removeRecordMap = new Map();
                 this.allRemoveRecordMap = new Map();
                 this.sortRecordMap = new Map();
-            }
-        },
-        {
-            key: "reset",
-            value: // 重置状态
-            function reset() {
-                this.cellChanged = {};
-                this.rowChanged = {};
-                this.errors = {};
-                this.cellErrors = {};
-                this.formInstances = {};
-                this.invalidCellMap = {};
-                this.updateValidRelate();
+                this.defaultValues = new Map();
+                this.schemaDatas = new Map();
+                this.editStatus = [];
+                this.editStatusMap = new Map();
+                this.cellChanged = new Map();
+                this.rowChanged = new Map();
+                this.rowTouched = new Map();
+                this.cellTouched = new Map();
+                this.errors = new Map();
+                this.cellErrors = new Map();
+                removeNode(this.wrapNode);
+                this.errorNodes = [];
+                this.rowChangedNodes = [];
+                this.cellChangedNodes = [];
+                this.editStatusNodes = [];
+                this.invalidNodes = [];
             }
         },
         {
@@ -566,6 +552,7 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
                     var cell = _this.table.getCell(hKey, col.key);
                     // header cell 不能检测是否可编辑, 这里以第一行数据的可编译配置作为参照 (忽略单元格逐个配置的情况, 表单都是以列为单位启用)
                     var firstRowCell = _this.table.getCell(firstRowKey, col.key);
+                    // 根据isInteractive来判断是否是可编辑状态, 可能不完全正确, 但基本没影响
                     if (_this.interactive.isInteractive(firstRowCell)) {
                         var item = {
                             required: requireKeys.includes(col.key),
@@ -736,63 +723,161 @@ export var _TableFormPlugin = /*#__PURE__*/ function(TablePlugin) {
             }
         },
         {
-            // 若行form不存在则对其进行初始化
-            key: "initForm",
-            value: function initForm(arg) {
-                var isCellArg = this.table.isCellLike(arg);
-                var isRowArg = this.table.isRowLike(arg);
-                var row;
-                var cell;
-                if (isRowArg) {
-                    row = arg;
-                } else if (isCellArg) {
-                    cell = arg;
-                    row = cell.row;
-                } else {
-                    cell = arg.cell;
-                    row = cell.row;
+            key: "innerCheck",
+            value: // 接收处理后的values和schemas进行验证, 并更新行和单元格的错误信息, 包含错误时, 会选中并高亮首个错误单元格
+            function innerCheck(row, values, schemas) {
+                var _this = this;
+                var _row = this.table.isRowLike(row) ? row : this.table.getRow(row);
+                var verify = this.getVerify();
+                return verify.staticCheck(values, schemas).then(function(res) {
+                    var _res = _sliced_to_array(res, 1), errors = _res[0];
+                    var newError = [];
+                    var cellError = new Map();
+                    var firstErrorColumnName;
+                    if (errors) {
+                        errors.forEach(function(e) {
+                            newError.push(e);
+                            // 每列只取第一条错误
+                            if (!cellError.has(e.name)) {
+                                cellError.set(e.name, e.message);
+                            }
+                            if (!firstErrorColumnName) {
+                                firstErrorColumnName = e.name;
+                            }
+                        });
+                    }
+                    if (newError.length) {
+                        _this.errors.set(_row.key, newError);
+                    } else {
+                        _this.errors.delete(_row.key);
+                    }
+                    if (cellError.size !== 0) {
+                        _this.cellErrors.set(_row.key, cellError);
+                    } else {
+                        _this.cellErrors.delete(_row.key);
+                    }
+                    if (isTruthyOrZero(firstErrorColumnName)) {
+                        var cell = _this.table.getCell(_row.key, firstErrorColumnName);
+                        _this.table.highlight(cell.key);
+                        _this.table.selectCells(cell.key);
+                    }
+                    return res;
+                });
+            }
+        },
+        {
+            /** 获取verify实例 */ key: "getVerify",
+            value: function getVerify() {
+                return this.verifyInstance;
+            }
+        },
+        {
+            key: "getSchemas",
+            value: // 获取指定行的schemas信息, 没有则创建, 可传入update来主动更新
+            function getSchemas(row) {
+                var update = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : false;
+                var _this = this;
+                var _row = this.table.isRowLike(row) ? row : this.table.getRow(row);
+                if (!update) {
+                    var cache = this.schemaDatas.get(_row.key);
+                    if (cache) return cache;
                 }
-                var form = this.formInstances[row.key];
-                if (form) return form;
-                var defaultValue = _object_spread({}, row.data);
-                // 通过mutation触发时, 需要还原为旧值
-                if (!isCellArg && !isRowArg) {
-                    setNamePathValue(defaultValue, cell.column.config.originalKey, arg.oldValue);
+                var verify = this.getVerify();
+                return verify.withValues(_row.data, function() {
+                    var _verify_getSchemasDetail = verify.getSchemasDetail(), schemas = _verify_getSchemasDetail.schemas, invalidNames = _verify_getSchemasDetail.invalidNames;
+                    var invalid = new Map();
+                    invalidNames.forEach(function(k) {
+                        return invalid.set(stringifyNamePath(k), true);
+                    });
+                    var data = {
+                        schemas: schemas.schema,
+                        rootSchema: schemas,
+                        invalid: invalid,
+                        invalidNames: invalidNames
+                    };
+                    _this.schemaDatas.set(_row.key, data);
+                    return data;
+                });
+            }
+        },
+        {
+            key: "getFmtData",
+            value: // 获取处理invalid项后的data, data会经过clone
+            function getFmtData(row, data) {
+                var invalid = this.getSchemas(row).invalidNames;
+                data = simplyDeepClone(data);
+                if (invalid === null || invalid === void 0 ? void 0 : invalid.length) {
+                    deleteNamePathValues(data, invalid);
                 }
-                var formCreator = this.config.formCreator || createForm;
-                form = formCreator({
-                    values: defaultValue,
+                return data;
+            }
+        },
+        {
+            key: "initVerify",
+            value: /** 初始化verify实例 */ function initVerify() {
+                this.verifyInstance = createVerify({
                     schemas: {
-                        schema: this.config.schema
+                        schema: this.config.schemas
                     },
                     autoVerify: false,
                     languagePack: i18n.getResourceBundle(i18n.language, FORM_LANG_PACK_NS)
                 });
-                this.formInstances[row.key] = form;
-                return form;
             }
         },
         {
             key: "eachData",
-            value: /** 遍历数据, 返回所有数据, 若cb返回false则将从返回list中过滤 */ function eachData(cd) {
-                var _this = this;
+            value: /** 遍历所有数据(不包含fake/软删除数据)并返回其clone版本
+   *
+   * - 若cb返回false则跳过并将该条数据从返回list中过滤, 返回0时, 停止遍历, 返回已遍历的值
+   * - 数据会对invalid的值进行移除处理, 可通过 handleInvalid 控制
+   * */ function eachData(cd) {
+                var handleInvalid = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : true;
                 var list = [];
-                this.context.data.forEach(function(i) {
-                    var key = _this.table.getKeyByRowData(i);
-                    var meta = _this.context.getRowMeta(key);
-                    if (meta.fake) return;
-                    var data = Object.assign({}, i);
-                    var invalid = _this.invalidCellMap[key];
-                    if (invalid === null || invalid === void 0 ? void 0 : invalid.length) {
-                        invalid.forEach(function(cell) {
-                            var name = cell.column.config.originalKey;
-                            deleteNamePathValue(data, name);
-                        });
+                var d = this.context.data;
+                for(var j = 0; j < d.length; j++){
+                    var i = d[j];
+                    var key = this.table.getKeyByRowData(i);
+                    var meta = this.context.getRowMeta(key);
+                    if (meta.fake) continue;
+                    if (this.softRemove.isSoftRemove(key)) continue;
+                    var data = handleInvalid ? this.getFmtData(key, i) : simplyDeepClone(i);
+                    var isAdd = this.addRecordMap.has(key);
+                    // 新增数据删除虚拟主键, 防止数据传输到服务端时出错
+                    if (isAdd) {
+                        deleteNamePathValue(data, this.config.primaryKey);
                     }
-                    var res = cd(data, key);
+                    // 变更过且不是新增的数据
+                    var isChange = !isAdd && this.getChanged(key);
+                    var isUpdate = isAdd || isChange;
+                    var res = cd(data, key, {
+                        add: isAdd,
+                        change: isChange,
+                        update: isUpdate
+                    });
                     if (res !== false) list.push(data);
-                });
+                    if (res === 0) break;
+                }
                 return list;
+            }
+        },
+        {
+            key: "initNodeWrap",
+            value: // 初始化wrapNode
+            function initNodeWrap() {
+                this.wrapNode = document.createElement("div");
+                this.wrapNode.className = "m78-table_form-wrap";
+                this.context.viewContentEl.appendChild(this.wrapNode);
+            }
+        },
+        {
+            key: "schemaConfigChange",
+            value: // schema配置发生变更
+            function schemaConfigChange() {
+                this.schemaDatas = new Map();
+                this.errors = new Map();
+                this.cellErrors = new Map();
+                this.editStatusMap = new Map();
+                this.initVerify();
             }
         }
     ]);

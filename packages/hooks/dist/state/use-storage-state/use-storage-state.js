@@ -1,5 +1,6 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
+import { _ as _instanceof } from "@swc/helpers/_/_instanceof";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { useFn } from "../../index.js";
 import { __GLOBAL__ } from "@m78/utils";
 import { useState } from "react";
@@ -54,7 +55,7 @@ var defaultOptions = {
  * 基础缓存逻辑实现
  * */ function useStorageBase(key, initState, options) {
     var opt = _object_spread({}, defaultOptions, options);
-    var ref = _sliced_to_array(useState(function() {
+    var _useState = _sliced_to_array(useState(function() {
         if (!opt.disabled) {
             var cache = getStorage(key, opt.type, options === null || options === void 0 ? void 0 : options.validTime);
             if (cache !== null) {
@@ -62,16 +63,16 @@ var defaultOptions = {
                 return cache;
             }
         }
-        if (initState instanceof Function) {
+        if (_instanceof(initState, Function)) {
             var _initState = initState();
             !opt.disabled && setStorage(key, _initState, opt.type);
             return _initState;
         }
         !opt.disabled && setStorage(key, initState, opt.type);
         return initState;
-    }), 2), state = ref[0], setState = ref[1];
+    }), 2), state = _useState[0], setState = _useState[1];
     var memoSetState = useFn(function(patch) {
-        if (patch instanceof Function) {
+        if (_instanceof(patch, Function)) {
             setState(function(prev) {
                 var patchRes = patch(prev);
                 !opt.disabled && setStorage(key, patchRes, opt.type);

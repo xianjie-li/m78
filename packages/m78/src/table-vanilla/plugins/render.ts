@@ -100,14 +100,42 @@ export class _TableRenderPlugin extends TablePlugin implements TableRender {
 
       const visibleItems = getter.getViewportItems();
 
+      /* # # # # # # # beforeRender # # # # # # # */
+      this.plugins.forEach((plugin) => {
+        plugin.beforeRender?.();
+      });
+
+      this.table.event.beforeRender.emit();
+
       // 清理由可见转为不可见的项
       this.removeHideNodes(
         this.context.lastViewportItems?.cells,
         visibleItems.cells
       );
 
+      this.context.lastMountRows = {};
+      this.context.lastMountColumns = {};
+
+      // 在render中会触发一些列hook和事件, 这里提前循环设置值, 防止在期间读取mount状态
+      visibleItems.rows.forEach((row) => {
+        this.context.lastMountRows![row.key] = true;
+      });
+
+      visibleItems.columns.forEach((column) => {
+        this.context.lastMountColumns![column.key] = true;
+      });
+
       // 内容渲染
       this.renderCell(visibleItems.cells);
+
+      // 事件通知
+      visibleItems.rows.forEach((row) => {
+        this.table.event.rowRendering.emit(row);
+      });
+
+      visibleItems.columns.forEach((column) => {
+        this.table.event.columnRendering.emit(column);
+      });
 
       this.context.lastViewportItems = visibleItems;
 
@@ -190,6 +218,8 @@ export class _TableRenderPlugin extends TablePlugin implements TableRender {
 
         this.table.event.mountChange.emit(cell);
       }
+
+      this.table.event.cellRendering.emit(cell);
     });
   }
 

@@ -40,7 +40,7 @@ const form = createForm({
   } as any,
   schemas: {
     validator: [required()],
-    schema: [
+    schemas: [
       {
         name: "name",
         validator: [required()],
@@ -58,7 +58,7 @@ const form = createForm({
         valid: false,
         eachSchema: {
           validator: [required()],
-          schema: [
+          schemas: [
             {
               name: "title",
             },
@@ -76,7 +76,7 @@ const form = createForm({
       {
         name: "list2",
         validator: [required(), array()],
-        schema: [
+        schemas: [
           {
             name: 0,
           },
@@ -99,7 +99,7 @@ const form = createForm({
         list: true,
         eachSchema: {
           validator: [],
-          schema: [
+          schemas: [
             {
               name: "title",
               validator: [required()],
@@ -121,7 +121,7 @@ const form = createForm({
 const verify = createVerify({
   schemas: {
     validator: [required()],
-    schema: [
+    schemas: [
       {
         name: "name",
         validator: [required()],
@@ -142,7 +142,7 @@ const verify = createVerify({
         // valid: false,
         eachSchema: {
           validator: [required()],
-          schema: [
+          schemas: [
             {
               name: "title",
             },
@@ -160,7 +160,7 @@ const verify = createVerify({
       {
         name: "list2",
         validator: [required(), array()],
-        schema: [
+        schemas: [
           {
             name: 0,
           },
@@ -184,7 +184,7 @@ const verify = createVerify({
         name: "list4",
         list: true,
         eachSchema: {
-          schema: [
+          schemas: [
             {
               name: "title",
               validator: [required()],
@@ -336,7 +336,7 @@ const FormExample = () => {
 
       <button
         onClick={() => {
-          form.setFormTouched(true);
+          form.setTouched([], true);
         }}
       >
         setFormTouched
@@ -630,7 +630,7 @@ const FormExample = () => {
               } as any,
               schemas: {
                 validator: [required()],
-                schema: [
+                schemas: [
                   {
                     name: "name",
                     validator: [required()],
@@ -651,7 +651,7 @@ const FormExample = () => {
                     valid: false,
                     eachSchema: {
                       validator: [required()],
-                      schema: [
+                      schemas: [
                         {
                           name: "title",
                         },
@@ -669,7 +669,7 @@ const FormExample = () => {
                   {
                     name: "list2",
                     validator: [required(), array()],
-                    schema: [
+                    schemas: [
                       {
                         name: 0,
                       },
@@ -692,7 +692,7 @@ const FormExample = () => {
                     list: true,
                     eachSchema: {
                       validator: [],
-                      schema: [
+                      schemas: [
                         {
                           name: "title",
                           validator: [required()],

@@ -7,12 +7,11 @@ import { _ as _ts_generator } from "@swc/helpers/_/_ts_generator";
 import { getNamePathValue, interpolate, isFunction, isString, stringifyNamePath } from "@m78/utils";
 import { isVerifyEmpty } from "../validator/index.js";
 import { _fmtValidator, _getExtraKeys, _isErrorTemplateInterpolate } from "./common.js";
-import { _ROOT_SCHEMA_NAME } from "../common.js";
-export function _implSchemaCheck(ctx) {
+/** 实现静态的schema check */ export function _implSchemaCheck(ctx) {
     var config = ctx.config;
     ctx.schemaCheck = function() {
         var _ref = _async_to_generator(function(values, rootSchema, extraMeta) {
-            var rejectMeta, needBreak, getValueByName, rm;
+            var rejectMeta, needBreak, getValueByName;
             function checkSchema(_schema, parentNamePath, isRootSchema) {
                 return _checkSchema.apply(this, arguments);
             }
@@ -20,7 +19,7 @@ export function _implSchemaCheck(ctx) {
                 _checkSchema = // 对一项schema执行检测, 返回true时可按需跳过后续schema的验证
                 // 如果传入parentNames，会将当前项作为指向并将parentNames与当前name拼接
                 _async_to_generator(function(_schema, parentNamePath, isRootSchema) {
-                    var _schema_schema, schema, namePath, value, nameStr, label, isEmpty, validators, interpolateValues, currentPass, meta, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, validator, errorTemplate, result, err, err1, extraKeys, template;
+                    var _schema_schemas, schema, namePath, value, nameStr, label, isEmpty, validators, interpolateValues, currentPass, meta, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, validator, errorTemplate, result, err, err1, extraKeys, template;
                     return _ts_generator(this, function(_state) {
                         switch(_state.label){
                             case 0:
@@ -32,7 +31,7 @@ export function _implSchemaCheck(ctx) {
                                     schema.name
                                 ]);
                                 value = isRootSchema ? values : getValueByName(namePath);
-                                nameStr = isRootSchema ? _ROOT_SCHEMA_NAME : stringifyNamePath(namePath);
+                                nameStr = isRootSchema ? "[]" : stringifyNamePath(namePath);
                                 label = schema.label || nameStr;
                                 // 预转换值
                                 if (schema.transform) value = schema.transform(value);
@@ -183,13 +182,13 @@ export function _implSchemaCheck(ctx) {
                                 if (!currentPass) return [
                                     2
                                 ];
-                                if (!((_schema_schema = schema.schema) === null || _schema_schema === void 0 ? void 0 : _schema_schema.length)) return [
+                                if (!((_schema_schemas = schema.schemas) === null || _schema_schemas === void 0 ? void 0 : _schema_schemas.length)) return [
                                     3,
                                     13
                                 ];
                                 return [
                                     4,
-                                    checkSchemas(schema.schema, namePath.slice())
+                                    checkSchemas(schema.schemas, namePath.slice())
                                 ];
                             case 12:
                                 _state.sent();
@@ -300,11 +299,17 @@ export function _implSchemaCheck(ctx) {
                         ];
                     case 1:
                         _state.sent();
-                        rm = rejectMeta.length ? rejectMeta : null;
+                        if (rejectMeta.length) return [
+                            2,
+                            [
+                                rejectMeta,
+                                null
+                            ]
+                        ];
                         return [
                             2,
                             [
-                                rm,
+                                null,
                                 values
                             ]
                         ];

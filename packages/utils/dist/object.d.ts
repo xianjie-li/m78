@@ -36,7 +36,7 @@ export type NamePath = NameItem | NameItem[];
  *
  * When name pass `[]`, will return obj directly
  * */
-export declare function getNamePathValue(obj: any, name: NamePath): any;
+export declare function getNamePathValue<V = any>(obj: any, name: NamePath): V;
 /** Convert NamePath to string */
 export declare function stringifyNamePath(name: NamePath): string;
 /**

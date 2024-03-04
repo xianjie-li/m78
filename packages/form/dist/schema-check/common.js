@@ -22,16 +22,16 @@ import { isArray, isFunction, isObject, stringifyNamePath } from "@m78/utils";
     return isObject(obj) && "errorTemplate" in obj && "interpolateValues" in obj;
 }
 /** 根据schema配置和传入值检测是否有schema配置之外的值存在, 返回额外值的key字符串数组 */ export function _getExtraKeys(name, schema, value) {
-    var _schema_schema;
+    var _schema_schemas;
     var extraKeys = [];
     // 如果未传入schema, 则不检测
-    if (!((_schema_schema = schema.schema) === null || _schema_schema === void 0 ? void 0 : _schema_schema.length)) return extraKeys;
+    if (!((_schema_schemas = schema.schemas) === null || _schema_schemas === void 0 ? void 0 : _schema_schemas.length)) return extraKeys;
     // 外部确保了name是数组
     if (!isArray(name)) return extraKeys;
     var isObjOrArr = isObject(value) || isArray(value);
     // 只对对象和数组进行检测
     if (!isObjOrArr) return extraKeys;
-    var childSchema = schema.schema;
+    var childSchema = schema.schemas;
     var keys = [];
     if (isArray(value)) {
         value.map(function(_, i) {

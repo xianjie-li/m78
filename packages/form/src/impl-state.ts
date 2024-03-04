@@ -1,12 +1,18 @@
-import { getNamePathValue, isArray, isObject } from "@m78/utils";
-import isEqual from "lodash/isEqual.js";
+import {
+  getNamePathValue,
+  isArray,
+  isObject,
+  simplyEqual as isEqual,
+} from "@m78/utils";
 import { _Context, FormRejectMeta } from "./types";
-import { _eachState, _getState } from "./common.js";
+import { _eachState, _getState, isRootName } from "./common.js";
 
 export function _implState(ctx: _Context) {
   const { instance } = ctx;
 
   instance.getChanged = (name) => {
+    if (isRootName(name)) return instance.getFormChanged();
+
     const cur = getNamePathValue(ctx.values, name);
     const def = getNamePathValue(ctx.defaultValue, name);
 
@@ -25,17 +31,25 @@ export function _implState(ctx: _Context) {
     return !isEqual(cur, def);
   };
 
+  // form本身值是否变更
   instance.getFormChanged = () => {
     return !isEqual(ctx.values, ctx.defaultValue);
   };
 
   instance.getTouched = (name) => {
+    if (isRootName(name)) return instance.getFormTouched();
+
     const st = _getState(ctx, name);
 
     return st && !!st.touched;
   };
 
   instance.setTouched = (name, touched) => {
+    if (isRootName(name)) {
+      instance.setFormTouched(touched);
+      return;
+    }
+
     const st = _getState(ctx, name);
     st.touched = touched;
 
@@ -44,6 +58,7 @@ export function _implState(ctx: _Context) {
     }
   };
 
+  // 获取form的touched状态
   instance.getFormTouched = () => {
     for (const key of Object.keys(ctx.state)) {
       const cur = ctx.state[key];
@@ -52,7 +67,8 @@ export function _implState(ctx: _Context) {
     return false;
   };
 
-  instance.setFormTouched = (touched) => {
+  // 设置form的touched状态
+  instance.setFormTouched = (touched: boolean) => {
     for (const key of Object.keys(ctx.state)) {
       const cur = ctx.state[key];
 
@@ -66,19 +82,19 @@ export function _implState(ctx: _Context) {
   };
 
   instance.getErrors = (name) => {
-    if (name) {
-      const st = _getState(ctx, name);
-      return st.errors || [];
+    if (isRootName(name)) {
+      const errors: FormRejectMeta = [];
+
+      _eachState(ctx, (st) => {
+        if (st.errors?.length) {
+          errors.push(...st.errors);
+        }
+      });
+
+      return errors;
     }
 
-    const errors: FormRejectMeta = [];
-
-    _eachState(ctx, (st) => {
-      if (st.errors?.length) {
-        errors.push(...st.errors);
-      }
-    });
-
-    return errors;
+    const st = _getState(ctx, name);
+    return st.errors || [];
   };
 }

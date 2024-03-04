@@ -12,11 +12,11 @@ import {
   isDom,
   isFunction,
   isObject,
+  simplyEqual as isEqual,
 } from "@m78/utils";
 import { autoScrollTrigger } from "@m78/smooth-scroll";
 import { useFn } from "@m78/hooks";
 import throttle from "lodash/throttle.js";
-import isEqual from "lodash/isEqual.js";
 import {
   _defaultDNDEnableInfos,
   _defaultDNDStatus,

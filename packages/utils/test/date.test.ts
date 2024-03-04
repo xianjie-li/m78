@@ -10,7 +10,6 @@ import {
   isBeforeDate,
   isBetweenDate,
   parseDate,
-  styleInject,
 } from "../src";
 
 test("formatDate()", () => {
@@ -78,7 +77,7 @@ test("isBetweenDate()", () => {
 });
 
 test("createDateReviser()", () => {
-  const serverTime = parseDate(new Date());
+  const serverTime = parseDate(new Date())!;
   serverTime.setSeconds(serverTime.getSeconds() + 5);
 
   const reviser = createDateReviser(serverTime);

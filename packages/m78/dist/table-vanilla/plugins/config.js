@@ -45,7 +45,15 @@ export var _TableConfigPlugin = /*#__PURE__*/ function(TablePlugin) {
             if (hasLevel2Conf) {
                 level = TableReloadLevel.full;
             }
+            var changeKeys = Object.keys(nConf);
+            var changeExist = {};
             Object.assign(_this.config, nConf);
+            changeKeys.forEach(function(k) {
+                return changeExist[k] = true;
+            });
+            _this.table.event.configChange.emit(changeKeys, function(k) {
+                return !!changeExist[k];
+            });
             _this.table.reload({
                 keepPosition: isBoolean(keepPosition) ? keepPosition : level !== TableReloadLevel.full,
                 level: level

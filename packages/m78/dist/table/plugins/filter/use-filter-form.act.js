@@ -16,7 +16,7 @@ import { _injector } from "../../table.js";
                 spacePadding: false,
                 values: props.defaultFilter,
                 schemas: {
-                    schema: props.filterSchema
+                    schemas: props.filterSchema
                 }
             });
         }

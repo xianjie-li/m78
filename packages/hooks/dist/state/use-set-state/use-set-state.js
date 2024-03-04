@@ -1,5 +1,6 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
+import { _ as _instanceof } from "@swc/helpers/_/_instanceof";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { useState, useCallback, useRef } from "react";
 /**
  * 实现类似react类组件的setState Api
@@ -11,10 +12,10 @@ import { useState, useCallback, useRef } from "react";
  * - 如果新状态对象第一层的所有值与之前相等, 则不会重新触发render
  * */ export var useSetState = function() {
     var initState = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {};
-    var ref = _sliced_to_array(useState(initState), 2), state = ref[0], set = ref[1];
-    var ref1 = useRef(state);
+    var _useState = _sliced_to_array(useState(initState), 2), state = _useState[0], set = _useState[1];
+    var ref = useRef(state);
     var setState = useCallback(function(patch) {
-        var newState = _object_spread({}, state, patch instanceof Function ? patch(ref1.current) : patch);
+        var newState = _object_spread({}, state, _instanceof(patch, Function) ? patch(ref.current) : patch);
         var newKeys = Object.keys(newState);
         // 第一层的所有key均相等
         var isEq = true;
@@ -22,7 +23,7 @@ import { useState, useCallback, useRef } from "react";
         try {
             for(var _iterator = newKeys[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true){
                 var key = _step.value;
-                if (newState[key] !== ref1.current[key]) {
+                if (newState[key] !== ref.current[key]) {
                     isEq = false;
                     break;
                 }
@@ -41,13 +42,13 @@ import { useState, useCallback, useRef } from "react";
                 }
             }
         }
-        ref1.current = Object.assign(ref1.current, newState);
+        ref.current = Object.assign(ref.current, newState);
         !isEq && set(newState);
     }, [
         set
     ]);
     return [
-        ref1.current,
+        ref.current,
         setState
     ];
 };

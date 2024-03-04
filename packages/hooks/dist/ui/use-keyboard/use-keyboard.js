@@ -9,8 +9,8 @@ export { KeyboardHelperTriggerType, KeyboardHelperModifier } from "@m78/utils";
     useEffect(function() {
         helper.current = createKeyboardHelper(option);
         return function() {
-            var ref;
-            (ref = helper.current) === null || ref === void 0 ? void 0 : ref.destroy();
+            var _helper_current;
+            (_helper_current = helper.current) === null || _helper_current === void 0 ? void 0 : _helper_current.destroy();
         };
     }, []);
 }

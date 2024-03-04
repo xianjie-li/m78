@@ -4,7 +4,7 @@ import { createForm as createVanillaForm } from "@m78/form";
 import { _formPropsKeys, _omitConfigs, FormLayoutType } from "./types.js";
 import { createEvent } from "@m78/hooks";
 import { _fieldImpl } from "./field.js";
-import { omit, pick } from "@m78/utils";
+import { isArray, omit, pick } from "@m78/utils";
 import { _listImpl } from "./list.js";
 import { FORM_LANG_PACK_NS, i18n } from "../i18n/index.js";
 import { _schemaRenderImpl } from "./schema-render.js";
@@ -12,11 +12,14 @@ import { m78Config } from "../config/index.js";
 export var _createForm = function(config) {
     // 目前以创建时语言为准, 不考虑做动态切换
     var languagePack = i18n.getResourceBundle(i18n.language, FORM_LANG_PACK_NS);
-    var conf = _object_spread({
+    var conf = _object_spread_props(_object_spread({
         layoutType: FormLayoutType.horizontal,
-        schemas: {},
         languagePack: languagePack
-    }, omit(config, _omitConfigs));
+    }, omit(config, _omitConfigs)), {
+        schemas: isArray(config.schemas) ? {
+            schemas: config.schemas
+        } : config.schemas
+    });
     var vForm = createVanillaForm(_object_spread_props(_object_spread({}, conf), {
         eventCreator: createEvent
     }));
@@ -53,8 +56,10 @@ export var _createForm = function(config) {
     // 重写setSchemas, 确保内部能在schema更新后能立即获取到最新的
     if (!form.setSchemas) {
         form.setSchemas = function(schema) {
-            conf.schemas = schema;
-            vForm.setSchemas(schema);
+            conf.schemas = isArray(schema) ? {
+                schemas: schema
+            } : schema;
+            vForm.setSchemas(conf.schemas);
         };
     }
     _fieldImpl(ctx);

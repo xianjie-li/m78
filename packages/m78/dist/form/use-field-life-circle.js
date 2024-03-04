@@ -1,4 +1,4 @@
-import { isFunction, stringifyNamePath, triggerHighlight } from "@m78/utils";
+import { createTempID, isFunction, stringifyNamePath, triggerHighlight } from "@m78/utils";
 import { _useUpdatePropsChange } from "./use-update-props-change.js";
 import { _useDetector } from "./field-detector.js";
 export function _useFieldLifeCircle(ctx, fieldCtx, methods) {
@@ -9,13 +9,13 @@ export function _useFieldLifeCircle(ctx, fieldCtx, methods) {
     form.events.update.useEvent(form.notifyFilter(name, function() {
         setState({
             schema: form.getSchema(name),
-            renderKey: Math.random()
+            renderKey: createTempID()
         });
     }, getProps("deps")));
     // 监听updateProps更新组件
     _useUpdatePropsChange(ctx, function() {
         setState({
-            renderKey: Math.random()
+            renderKey: createTempID()
         });
     });
     // 通知Detector组件注册/注销

@@ -1,10 +1,10 @@
-/** 配置参数 */ import _async_to_generator from "@swc/helpers/src/_async_to_generator.mjs";
-import _ts_generator from "@swc/helpers/src/_ts_generator.mjs";
+/** 配置参数 */ import { _ as _async_to_generator } from "@swc/helpers/_/_async_to_generator";
+import { _ as _ts_generator } from "@swc/helpers/_/_ts_generator";
 import { useFn } from "../use-fn/use-fn.js";
 import { useEffect, useMemo } from "react";
 import { useSelf } from "../../state/use-self/use-self.js";
 /** 创建轮询任务 */ export function usePolling(option) {
-    var _enable = option.enable, enable = _enable === void 0 ? true : _enable;
+    var _option_enable = option.enable, enable = _option_enable === void 0 ? true : _option_enable;
     var self = useSelf({
         /** 内部的计时间隔, 由growRatio等配置动态调整 */ internalInterval: option.interval,
         /** 计时器标识 */ timer: null,
@@ -77,6 +77,7 @@ import { useSelf } from "../../state/use-self/use-self.js";
                         _state.sent();
                         _state.label = 2;
                     case 2:
+                        // 保留当次调用的配置快照, 防止变更
                         growRatio = option.growRatio, growMaxInterval = option.growMaxInterval;
                         self.timer = setTimeout(/*#__PURE__*/ _async_to_generator(function() {
                             return _ts_generator(this, function(_state) {

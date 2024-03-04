@@ -52,7 +52,7 @@ export function _getExtraKeys(
   const extraKeys: string[] = [];
 
   // 如果未传入schema, 则不检测
-  if (!schema.schema?.length) return extraKeys;
+  if (!schema.schemas?.length) return extraKeys;
 
   // 外部确保了name是数组
   if (!isArray(name)) return extraKeys;
@@ -62,7 +62,7 @@ export function _getExtraKeys(
   // 只对对象和数组进行检测
   if (!isObjOrArr) return extraKeys;
 
-  const childSchema = schema.schema;
+  const childSchema = schema.schemas;
 
   let keys: NameItem[] = [];
 

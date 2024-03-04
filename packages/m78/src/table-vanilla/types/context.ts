@@ -69,6 +69,12 @@ export interface TablePluginContext
   /** 上一帧中在视口中显示的row/cell/column */
   lastViewportItems?: TableItems;
 
+  /** 最后一次挂载的rows */
+  lastMountRows: Record<TableKey, true>;
+
+  /** 最后一次挂载的所有columns */
+  lastMountColumns: Record<TableKey, true>;
+
   /** 预计算好的总尺寸 */
   contentWidth: number;
   contentHeight: number;

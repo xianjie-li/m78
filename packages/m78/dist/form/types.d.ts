@@ -25,12 +25,12 @@ type VanillaFormConfigPartial = Omit<VanillaFormConfig, OmitType | "schemas">;
 /** 创建form实例时传入的配置 */
 export interface FormConfig extends VanillaFormConfigPartial, FormProps {
     /** 描述表单值结构的对象 */
-    schemas?: FormSchemaWithoutName;
+    schemas?: FormSchemaWithoutName | FormSchema[];
     /** 表单控件适配器, 优先级高于全局适配器 */
     adaptors?: FormAdaptors;
 }
 /** 部分能够支持React版本的VanillaFormSchema配置 */
-type VanillaFormSchemaPartial = Omit<VanillaFormSchema, "label" | "dynamic" | "schema" | "eachSchema">;
+type VanillaFormSchemaPartial = Omit<VanillaFormSchema, "label" | "dynamic" | "schemas" | "eachSchema">;
 /** 单个schema项 */
 export interface FormSchema extends VanillaFormSchemaPartial, FormCommonProps {
     /** 动态设置其他参数 */
@@ -41,7 +41,7 @@ export interface FormSchema extends VanillaFormSchemaPartial, FormCommonProps {
         namePath: NameItem[];
     }) => Omit<FormSchema, "dynamic" | "name" | "list" | "deps"> | void;
     /** 类型为数组、对象时, 对其结构进行验证 */
-    schema?: FormSchema[];
+    schemas?: FormSchema[];
     /** 验证值为array或object时, 子级的所有 数组项/对象值 必须与此Schema匹配, 如果该值的类型不为array或object，此配置会被忽略 */
     eachSchema?: Omit<FormSchema, "name" | "list">;
     /** {} | list新增项时使用的默认值, 用于schema render, 且仅在项的值类型不为对象时需要配置 */
@@ -53,12 +53,26 @@ export type FormSchemaWithoutName = Omit<FormSchema, "name">;
 type VanillaFormInstancePartial = Omit<VanillaFormInstance, "getSchemas" | "setSchemas" | "getSchema" | "events" | "getConfig">;
 /** Form实例 */
 export interface FormInstance extends VanillaFormInstancePartial {
-    /** 获取对dynamic/valid/list等特殊项进行处理进行处理后的完整schema副本 */
-    getSchemas(): FormSchemaWithoutName;
-    /** 重新设置当前schemas, 通常需要在重新设置schema后手动自动执行一次verify()来清理之前的校验状态 */
-    setSchemas(schema: FormSchemaWithoutName): void;
-    /** 获取对dynamic/valid/list等特殊项进行处理进行处理后的指定schema副本 */
-    getSchema(name: NamePath): FormSchema | FormSchemaWithoutName | null;
+    /** 获取处理特殊选项后的根schema */
+    getSchemas(): {
+        /** 处理过特殊选项的schema */
+        schemas: FormSchemaWithoutName;
+        /** 所有invalid项的name */
+        invalidNames: NamePath[];
+    };
+    /** 设置当前schemas */
+    setSchemas(schema: FormSchemaWithoutName | FormSchema[]): void;
+    /**
+     * 获取对dynamic/valid/list等特殊项进行处理进行处理后的schemas副本以及一些其他相关信息
+     *
+     * - 在dynamic中调用时, 如果获取的schema包含当前schema本身(直接获取或作为子项获取), 会导致递归, 可通过 skipChildren或withoutProcess选项处理
+     * */
+    getSchema(name: NamePath, opt?: {
+        /** true | 不处理子项 */
+        skipChildren?: boolean;
+        /** 返回原始的schema配置, 不对eachSchema/dynamic等特殊配置进行处理 */
+        withoutProcess?: boolean;
+    }): FormSchema | null;
     /** 获取Form创建配置 */
     getConfig(): FormConfig;
     /** 更改部分样式配置 */
@@ -70,7 +84,7 @@ export interface FormInstance extends VanillaFormInstancePartial {
         /** 字段值改变事件. update事件包含了change的触发场景 */
         change: CustomEventWithHook<VanillaFormNamesNotify>;
         /** 提交事件 */
-        submit: CustomEventWithHook<(data: any) => void>;
+        submit: CustomEventWithHook<(values: any) => void>;
         /** 验证失败的回调, 由 setValue 触发自动校验时, isValueChangeTrigger 为 true */
         fail: CustomEventWithHook<(errors: FormRejectMeta, isValueChangeTrigger?: boolean) => void>;
         /** 重置事件 */
@@ -254,8 +268,8 @@ export interface _FormContext {
 }
 export interface _FieldContext {
     state: {
-        schema: FormSchema | FormSchemaWithoutName | null;
-        renderKey: number;
+        schema: FormSchema | null;
+        renderKey: string;
     };
     setState: SetState<_FieldContext["state"]>;
     isList: boolean;

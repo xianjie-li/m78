@@ -37,4 +37,10 @@ export declare function deepClone<T>(obj: T): T;
  * All arrays/objects will be expanded and cloned, while all other types of values will remain unchanged.
  * */
 export declare function simplyDeepClone<T = any>(value: any): T;
+/**
+ * Deep check values is equal
+ *
+ * All arrays/objects will be expanded and check, while all other types of values will just check reference.
+ * */
+export declare function simplyEqual(value: any, value2: any): boolean;
 //# sourceMappingURL=lang.d.ts.map

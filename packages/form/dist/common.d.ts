@@ -10,8 +10,6 @@ export declare function _eachState(ctx: _Context, cb: (st: _State) => void): voi
  * 若传入deps, deps中指定的值发生变化时也会触发回调
  * */
 export declare function _notifyFilter(name: NamePath, notify: FormNamesNotify, deps?: NamePath[]): FormNamesNotify;
-/** 用于在某些情况作为根schema的name标注 */
-export declare const _ROOT_SCHEMA_NAME = "__ROOT_SCHEMA_NAME__";
 /** 数组1是否与数组2的左侧相等或完全相等 */
 export declare function _isLeftEqualName(arr1: any[], arr2: any[]): boolean;
 export declare function _isRelationName(n: NameItem[], n2: NameItem[]): boolean;
@@ -21,4 +19,6 @@ export declare function _getListChild(ctx: _Context, name: NamePath, eachCB?: (n
 export declare function _clearChildAndSelf(ctx: _Context, name: NamePath): void;
 /** 同步指定list下所有关联的list项name索引, newIndex为当前索引到新索引的映射, 比如[0,2,1]表示, 原本索引2的元素移动到中间 */
 export declare function _syncListIndex(ctx: _Context, name: NamePath, newIndex: number[]): void;
+/** 检测是否为根name, undefined 或 [] 或 `[]` */
+export declare function isRootName(name?: NamePath): name is undefined;
 //# sourceMappingURL=common.d.ts.map

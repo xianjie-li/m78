@@ -85,3 +85,51 @@ export var __GLOBAL__ = getGlobal();
     }
     return value;
 }
+/**
+ * Deep check values is equal
+ *
+ * All arrays/objects will be expanded and check, while all other types of values will just check reference.
+ * */ export function simplyEqual(value, value2) {
+    if (isObject(value)) {
+        var keys1 = Object.keys(value);
+        if (!isObject(value2)) return false;
+        var keys2 = Object.keys(value2);
+        if (keys1.length !== keys2.length) return false;
+        var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = undefined;
+        try {
+            for(var _iterator = keys1[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true){
+                var k = _step.value;
+                var v = value[k];
+                var v2 = value2[k];
+                var equal = simplyEqual(v, v2);
+                if (!equal) return false;
+            }
+        } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+        } finally{
+            try {
+                if (!_iteratorNormalCompletion && _iterator.return != null) {
+                    _iterator.return();
+                }
+            } finally{
+                if (_didIteratorError) {
+                    throw _iteratorError;
+                }
+            }
+        }
+        return true;
+    }
+    if (isArray(value)) {
+        if (!isArray(value2)) return false;
+        if (value.length !== value2.length) return false;
+        for(var i = 0; i < value.length; i++){
+            var v1 = value[i];
+            var v21 = value2[i];
+            var equal1 = simplyEqual(v1, v21);
+            if (!equal1) return false;
+        }
+        return true;
+    }
+    return value === value2;
+}

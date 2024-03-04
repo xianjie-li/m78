@@ -11,10 +11,11 @@ import { _implValue } from "./impl-value.js";
 import { _implSchema } from "./impl-schema.js";
 import { _implAction } from "./impl-action.js";
 import { _implList } from "./impl-list.js";
-import { simplyDeepClone as clone } from "@m78/utils";
+import { simplyDeepClone as clone, isTruthyOrZero } from "@m78/utils";
 import _defaultsDeep from "lodash/defaultsDeep.js";
 import en from "./language-pack/en.js";
 import { _implSchemaCheck } from "./schema-check/impl-schema-check.js";
+import { isArray } from "lodash";
 
 /** 创建form实例 */
 export function _createForm(config: FormConfig): FormInstance {
@@ -22,25 +23,37 @@ export function _createForm(config: FormConfig): FormInstance {
 }
 
 /**
- * 创建verify实例, verify用于纯验证的场景, 在需要将form用于服务端或是仅需要验证功能的场景下非常有用, 在数据体量较大时能显著提升执行速度
+ * 创建verify实例, verify用于纯验证的场景, 在需要将form用于服务端或是仅需要验证功能的场景下非常有用, 能够避免form相关的多余计算
  *
  * > 用于创建verify实例时, 部分 FormConfig 会被忽略, 如 autoVerify
  * */
 export function _createVerify(config: FormConfig): FormVerifyInstance {
   const [instance, ctx] = createMain(config, true);
 
-  const check: FormVerifyInstance["check"] = (values, extraMeta) => {
+  const withValues: FormVerifyInstance["withValues"] = (values, action) => {
+    const backup = isTruthyOrZero(ctx.values) ? ctx.values : null;
+
     ctx.values = values;
 
-    const [schemas, fmbValues] = ctx.getFormatterValuesAndSchema(values);
+    const res = action();
 
-    ctx.values = null;
+    ctx.values = backup;
 
-    return ctx.schemaCheck(fmbValues, schemas, extraMeta);
+    return res;
+  };
+
+  const check: FormVerifyInstance["check"] = (values, extraMeta) => {
+    return withValues(values, () => {
+      const [schemas, fmbValues] = ctx.getFormatterValuesAndSchema(values);
+
+      return ctx.schemaCheck(fmbValues, schemas, extraMeta);
+    });
   };
 
   return Object.assign(instance, {
     check,
+    withValues,
+    staticCheck: ctx.schemaCheck,
   });
 }
 
@@ -60,7 +73,7 @@ function createMain(
     getConfig: () => ({ ...conf }),
   } as any;
 
-  const defaultValue = config.values || {};
+  const defaultValue = conf.values || {};
 
   const ctx = {
     defaultValue: verifyOnly ? defaultValue : clone(defaultValue),
@@ -68,7 +81,11 @@ function createMain(
     state: {},
     listState: {},
     instance,
-    schema: config.schemas,
+    schema: isArray(conf.schemas)
+      ? {
+          schemas: conf.schemas,
+        }
+      : conf.schemas,
     config: conf,
     lockNotify: false,
     lockListState: false,

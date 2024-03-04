@@ -5,13 +5,7 @@ var defaultEvents = [
     "touchstart"
 ];
 export function useClickAway(param) {
-    var target = param.target, _events = param.events, events = _events === void 0 ? defaultEvents : _events, onTrigger = param.onTrigger;
-    var bindHelper = function bindHelper() {
-        var isOff = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : false;
-        events.forEach(function(eventKey) {
-            document[isOff ? "removeEventListener" : "addEventListener"](eventKey, handle);
-        });
-    };
+    var target = param.target, _param_events = param.events, events = _param_events === void 0 ? defaultEvents : _param_events, onTrigger = param.onTrigger;
     var ref = useRef();
     var handle = useFn(function(e) {
         var domLs = getTargetDomList(target, ref);
@@ -27,5 +21,11 @@ export function useClickAway(param) {
             return bindHelper(true);
         };
     }, events);
+    function bindHelper() {
+        var isOff = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : false;
+        events.forEach(function(eventKey) {
+            document[isOff ? "removeEventListener" : "addEventListener"](eventKey, handle);
+        });
+    }
     return ref;
 }

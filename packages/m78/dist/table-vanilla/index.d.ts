@@ -8,6 +8,6 @@ export { tableDefaultTexts } from "./common.js";
 export { TableReloadLevel } from "./plugins/life.js";
 export { levelFullConfigKeys } from "./plugins/config.js";
 export type { TableReloadOptions } from "./plugins/life.js";
-export type { TableInteractiveCoreConfig } from "./plugins/interactive-core.js";
+export type { TableInteractiveConfig } from "./plugins/interactive.js";
 export type { TableMutationEvent, TableMutationConfigEvent, TableMutationDataEvent, TableMutationValueEvent, } from "./plugins/mutation.js";
 //# sourceMappingURL=index.d.ts.map

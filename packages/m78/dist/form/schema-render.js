@@ -48,11 +48,11 @@ export function _schemaRenderImpl(ctx) {
             var name = _to_consumable_array(parentNames);
             if ("name" in schema) name.push(schema.name);
             if (!schema.list) {
-                var _schema_schema;
+                var _schema_schemas;
                 // 包含schema配置
-                if ((_schema_schema = schema.schema) === null || _schema_schema === void 0 ? void 0 : _schema_schema.length) {
+                if ((_schema_schemas = schema.schemas) === null || _schema_schemas === void 0 ? void 0 : _schema_schemas.length) {
                     var /*#__PURE__*/ _React;
-                    var node = schema.schema.map(function(sch) {
+                    var node = schema.schemas.map(function(sch) {
                         if (isRoot) return renderSchemaItem(sch, name, false, isRoot);
                         // 嵌套菜单渲染为多列
                         return(// 使用createElement展开, 所以不需要key
@@ -92,8 +92,8 @@ export function _schemaRenderImpl(ctx) {
                 layoutRender: function(meta) {
                     var /*#__PURE__*/ _React;
                     var node;
-                    if (eachSchema.schema) {
-                        node = eachSchema.schema.map(function(sch) {
+                    if (eachSchema.schemas) {
+                        node = eachSchema.schemas.map(function(sch) {
                             return(// eslint-disable-next-line react/jsx-key
                             /*#__PURE__*/ _jsx("div", {
                                 className: "m78-form_multi-column",

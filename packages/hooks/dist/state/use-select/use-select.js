@@ -1,6 +1,6 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
-import _object_without_properties from "@swc/helpers/src/_object_without_properties.mjs";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
+import { _ as _object_without_properties } from "@swc/helpers/_/_object_without_properties";
 import { SelectManager, isArray } from "@m78/utils";
 import { useEffect, useMemo } from "react";
 import { useUpdate } from "../../effect/use-update/use-update.js";
@@ -11,7 +11,7 @@ import { useFn } from "../../effect/use-fn/use-fn.js";
  * - 具体api见SelectManager
  * - 注意, 由于会实时读取list并更新选中状态, option.list不能传入字面量, 否则会导致递归渲染
  * */ export function useSelect(option) {
-    var _ref = option || {}, _autoUpdate = _ref.autoUpdate, autoUpdate = _autoUpdate === void 0 ? true : _autoUpdate, onChange = _ref.onChange, opts = _object_without_properties(_ref, [
+    var _ref = option || {}, _ref_autoUpdate = _ref.autoUpdate, autoUpdate = _ref_autoUpdate === void 0 ? true : _ref_autoUpdate, onChange = _ref.onChange, opts = _object_without_properties(_ref, [
         "autoUpdate",
         "onChange"
     ]);

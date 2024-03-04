@@ -1,5 +1,5 @@
 import { TablePlugin } from "../plugin.js";
-import { PhysicalScroll } from "@m78/utils";
+import { DragScroll as PhysicalScroll } from "@m78/smooth-scroll";
 /** 拖拽滚动相关功能支持 */
 export declare class _TableDragMovePlugin extends TablePlugin implements TableDragMove {
     ps: PhysicalScroll;

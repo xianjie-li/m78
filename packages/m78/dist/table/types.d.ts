@@ -198,6 +198,8 @@ export interface RCTableInstance extends Omit<TableInstance, "event"> {
         feedback: CustomEventWithHook<(event: TableFeedbackEvent[]) => void>;
         /** 拖拽移动启用状态变更时触发 */
         dragMoveChange: CustomEventWithHook<(enable: boolean) => void>;
+        /** 常规配置(非持久化配置)变更时触发, 接收所有变更key的数组changeKeys, 和isChange, 用于检测key是否包含在该次变更中 */
+        configChange: CustomEventWithHook<(changeKeys: string[], isChange: (key: string) => boolean) => void>;
     };
 }
 export interface TableDataOperationsConfig {

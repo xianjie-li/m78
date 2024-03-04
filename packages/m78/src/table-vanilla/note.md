@@ -55,23 +55,43 @@ form 实现改动:
 
 核心实现:
 
-- 通过 schema 来判断列是否可编辑, 简化启用编辑所需的配置
+- 通过 schema + editor 来判断列是否可编辑, **简化启用编辑所需的配置**, 以及编辑相关的所有配置
 - 根据当前 schema 配置创建一个公共 verify 实例
-- 行首次可见/整体提交时, 若没有 form 实例, 通过公共 verify 或已有 form 实例获取 schemas 和 invalidNames
-- 根据当前显示行的 schemas 和 invalid 来控制可编辑表示和禁用反馈
-- 行进入交互编辑时, 创建 form 实例, 通过 form 实例更新一次 schemas/invalidNames 后进行后续编辑操作
-- 提交时: 对提交行使用公共 verify 进行遍历校验
+- 行首次可见/值变更时, 通过公共 verify 实例获取/更新 缓存的 schemas
+- render 时根据当前显示行的 schemas 和 invalid 来控制可编辑标识和禁用反馈
+- 提交时: 对提交行使用公共 verify 进行逐行遍历校验, eachData 调整为可以中断
 - 获取数据时, 根据当前 invalidMap 删除无效项
+
+设置值的单元格/行单独维护 touched 状态
+均改为 map 实现
+错误返回类型调整
+valid/editStatus 相关实现简化
+
+未启用 form 功能时跳过各种计算
+常规 js 版本错误标记等显示优化
+
+指定轻微滚动后滚动方向锁定, 或是一侧值明显大于另一侧是忽略另一侧
 
 改动杂项:
 
-- 支持整行表单编辑
+- 支持整行表单编辑, 创建单独的 form 实例, 输入完成后将值写入行, 随后验证整行
+  - 支持 setRowValues
 
-![img.png](img.png)
+~~schemas 根支持传数组 schema~~
+~~schema 子项更名为 schemas~~
+~~错误时无 data, 有 data 时无错误~~
+支持验证本身, [] 和 `[]` 视为特殊 name, 表示根本身, 自动将 name = [] 设置到 root
+更新相关文档 rc form / form
+
+- 更新 empty 实现方式
+- 没有 key 时生成 key, 并给予警告, 警告可关闭
+
+## 改动计划
+
+normal
 
 - 优化 firefox 等浏览器的帧率?
-
-- 隐藏滚动条异常
+- 隐藏滚动条异常, 滚动条优化
 - 编辑标记显示异常, fixed right 不显示头可编辑提示
 - 切换数据后高度显示问题
 - 整理其他不需要实现/暴露的 api
@@ -89,9 +109,7 @@ form 实现改动:
 - 导出: 导出选中/导出所有/勾选要导出的列, 配置列字符串, 用于搜索/导出
 - 独立窗口编辑行
 
-滚动条优化
-
-进阶
+advanced
 
 - 动画? 可尝试简单动画
 - 可访问性
@@ -103,47 +121,8 @@ form 实现改动:
 
 ## 后续计划
 
+### scroll 重构
+
 - scroll 组件重构 (优化性能, 代码结构, 接入 wheel 等添加无限滚动)
 - 滚动条可单独使用
 - 支持滚动方向大致确定后锁定方向
-
-```js
-const config = {
-  num: 4,
-  script: "./xxx",
-  register() {},
-  mapper: {
-    handle1(arg1) {
-      return 123;
-    },
-  },
-};
-
-const w = new EazyWorker(config);
-
-w.handle(1, 2, 3).then((res) => {});
-
-// worker.js
-new EasyWorker(config);
-```
-
-```js
-// worker.js 在一个赶紧的文件内创建实例, 脚本会在主进程和子,  外部依赖越少越好
-
-export default new M78Worker({
-  url: import.meta.url,
-  // 可通过m78config提前注册
-  handleLoader: async (register: M78WorkerRegister) => {
-    await Promise.all(import("../xxx.js"));
-  },
-});
-```
-
-```js
-// 使用
-import worker from "./worker.js";
-
-worker.invoke("calc", 1, 2, 3).then((res) => {
-  console.log(res);
-});
-```

@@ -99,6 +99,7 @@ function pickOrOmit(obj, props) {
             return obj;
         }
     }
+    return undefined;
 }
 /** Convert NamePath to string */ export function stringifyNamePath(name) {
     if (isString(name) || isNumber(name)) return String(name);

@@ -6,7 +6,7 @@ import { TableRow } from "../types/items.js";
 import { removeNode } from "../../common/index.js";
 import { TableReloadLevel, TableReloadOptions } from "./life.js";
 import { TableAttachData } from "./getter.js";
-import { _rowMountChecker, _syncListNode } from "../common.js";
+import { _syncListNode } from "../common.js";
 import {
   _getBlankMutationDataEvent,
   TableMutationDataType,
@@ -165,10 +165,8 @@ export class _TableSoftRemovePlugin
 
     const keys = this.remove.getState().selected;
 
-    const isMount = _rowMountChecker(this.context.lastViewportItems?.rows);
-
     keys.forEach((k) => {
-      if (!isMount(k)) return;
+      if (!this.table.isRowMount(k)) return;
 
       const row = this.table.getRow(k);
       const attachPosition = this.table.getRowAttachPosition(row);

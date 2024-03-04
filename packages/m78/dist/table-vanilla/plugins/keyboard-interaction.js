@@ -9,7 +9,7 @@ import { _ as _create_super } from "@swc/helpers/_/_create_super";
 import { _ as _ts_generator } from "@swc/helpers/_/_ts_generator";
 import { TablePlugin } from "../plugin.js";
 import { createKeyboardHelpersBatch, isString, KeyboardHelperModifier, KeyboardHelperTriggerType } from "@m78/utils";
-import { _TableInteractiveCorePlugin } from "./interactive-core.js";
+import { _TableInteractivePlugin } from "./interactive.js";
 import { Position } from "../../common/index.js";
 /** 单个值粘贴时, 最大的可粘贴单元格数 */ var maxSinglePaste = 50;
 /** 集中处理不分键盘交互操作, 比如单元格复制/粘贴/delete等 */ export var _TableKeyboardInteractionPlugin = /*#__PURE__*/ function(TablePlugin) {
@@ -100,7 +100,7 @@ import { Position } from "../../common/index.js";
         {
             key: "init",
             value: function init() {
-                this.interactiveCore = this.getPlugin(_TableInteractiveCorePlugin);
+                this.interactiveCore = this.getPlugin(_TableInteractivePlugin);
             }
         },
         {

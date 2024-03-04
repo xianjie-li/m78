@@ -129,3 +129,44 @@ export function simplyDeepClone<T = any>(value: any): T {
 
   return value;
 }
+
+/**
+ * Deep check values is equal
+ *
+ * All arrays/objects will be expanded and check, while all other types of values will just check reference.
+ * */
+export function simplyEqual(value: any, value2: any): boolean {
+  if (isObject(value)) {
+    const keys1 = Object.keys(value);
+
+    if (!isObject(value2)) return false;
+
+    const keys2 = Object.keys(value2);
+
+    if (keys1.length !== keys2.length) return false;
+
+    for (const k of keys1) {
+      const v = value[k];
+      const v2 = value2[k];
+      const equal = simplyEqual(v, v2);
+      if (!equal) return false;
+    }
+    return true;
+  }
+
+  if (isArray(value)) {
+    if (!isArray(value2)) return false;
+
+    if (value.length !== value2.length) return false;
+
+    for (let i = 0; i < value.length; i++) {
+      const v = value[i];
+      const v2 = value2[i];
+      const equal = simplyEqual(v, v2);
+      if (!equal) return false;
+    }
+    return true;
+  }
+
+  return value === value2;
+}

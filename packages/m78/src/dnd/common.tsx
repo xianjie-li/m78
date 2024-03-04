@@ -18,9 +18,9 @@ import {
   isFunction,
   isObject,
   TupleNumber,
+  simplyEqual as isEqual,
 } from "@m78/utils";
 import { createEvent } from "@m78/hooks";
-import isEqual from "lodash/isEqual.js";
 
 export const _DEFAULT_GROUP = "M78-DND-DEFAULT-GROUP";
 

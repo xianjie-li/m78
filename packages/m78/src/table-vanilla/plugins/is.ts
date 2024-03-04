@@ -27,6 +27,8 @@ export class _TableIsPlugin extends TablePlugin implements TableIs {
       "isColumnLike",
       "isCellLike",
       "isTableKey",
+      "isRowMount",
+      "isColumnMount",
     ]);
   }
 
@@ -38,15 +40,15 @@ export class _TableIsPlugin extends TablePlugin implements TableIs {
     this.activeEventUnBind();
   }
 
-  isColumnVisible(key: string, partial = true) {
+  isColumnVisible(key: TableKey, partial = true) {
     return this.visibleCommon(false, key, partial);
   }
 
-  isRowVisible(key: string, partial = true) {
+  isRowVisible(key: TableKey, partial = true) {
     return this.visibleCommon(true, key, partial);
   }
 
-  isCellVisible(rowKey: string, columnKey: string, partial = true) {
+  isCellVisible(rowKey: TableKey, columnKey: TableKey, partial = true) {
     const cell = this.table.getCell(rowKey, columnKey);
 
     if (partial) {
@@ -57,6 +59,14 @@ export class _TableIsPlugin extends TablePlugin implements TableIs {
       this.isRowVisible(rowKey, partial) &&
       this.isColumnVisible(columnKey, partial)
     );
+  }
+
+  isRowMount(key: TableKey) {
+    return !!this.context.lastMountRows[key];
+  }
+
+  isColumnMount(key: TableKey) {
+    return !!this.context.lastMountColumns[key];
   }
 
   isFocus(checkChildren?: boolean) {
@@ -114,7 +124,7 @@ export class _TableIsPlugin extends TablePlugin implements TableIs {
   }
 
   // isColumnVisible/isRowVisible通用逻辑
-  private visibleCommon(isRow: boolean, key: string, partial: boolean) {
+  private visibleCommon(isRow: boolean, key: TableKey, partial: boolean) {
     const ctx = this.context;
     const current = isRow ? this.table.getRow(key) : this.table.getColumn(key);
 
@@ -306,6 +316,12 @@ export interface TableIs {
     columnKey: TableKey,
     partial?: boolean
   ): boolean;
+
+  /** 指定列是否挂载, 与 isColumnVisible(key, true) 非常相似, 但是前者是通过当前位置计算对比, isColumnMount是读取缓存结果, 效率更高 */
+  isColumnMount(key: TableKey): boolean;
+
+  /** 指定行是否挂载, 与 isRowVisible(key, true) 非常相似, 但是前者是通过当前位置计算对比, isColumnMount是读取缓存结果, 效率更高 */
+  isRowMount(key: TableKey): boolean;
 
   /** 表格是否聚焦, checkChildren为true时会检测子级是否聚焦 */
   isFocus(checkChildren?: boolean): boolean;

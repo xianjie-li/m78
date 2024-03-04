@@ -1,11 +1,90 @@
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { useEffect, useMemo, useRef } from "react";
 import { flushSync } from "react-dom";
 import { isFunction } from "@m78/utils";
 import { createEvent, getRefDomOrDom, useFn, useScroll, useSelf, useSetState } from "../../index.js";
 import _debounce from "lodash/debounce.js";
 export function useVirtualList(option) {
-    var handleScroll = /** 核心混动逻辑 */ function handleScroll(meta, skipScrollingEmit) {
+    var list = option.list, size = option.size, _option_overscan = option.overscan, overscan = _option_overscan === void 0 ? 1 : _option_overscan, key = option.key, _option_space = option.space, space = _option_space === void 0 ? 0 : _option_space, keepAlive = option.keepAlive, containerTarget = option.containerTarget, disabled = option.disabled, optionHeight = option.height;
+    var wrapRef = useRef(null);
+    // 统一通知Render更新状态
+    var updateEvent = useMemo(function() {
+        return createEvent();
+    }, []);
+    var self = useSelf({
+        scrolling: false
+    });
+    // 格式化list为虚拟list格式，并获取计算得到的总高度, 禁用时两个值分别为[]和0
+    var _useMemo = _sliced_to_array(useMemo(function() {
+        var h = 0;
+        if (disabled) return [
+            [],
+            h
+        ];
+        var ls = list.map(function(item, index) {
+            var _size = getSize(item, index);
+            h += _size;
+            return {
+                data: item,
+                index: index,
+                key: getKey(item, index),
+                position: h,
+                size: _size
+            };
+        });
+        return [
+            ls,
+            h
+        ];
+    }, [
+        list,
+        disabled
+    ]), 2), fmtList = _useMemo[0], height = _useMemo[1];
+    var scroller = useScroll({
+        el: containerTarget,
+        throttleTime: 0,
+        onScroll: handleScroll
+    });
+    /** 使用render组件来减少hook对消费组件的频繁更新 */ var Render = useMemo(function() {
+        return function(param) {
+            var children = param.children;
+            var _useSetState = _sliced_to_array(useSetState({
+                list: [],
+                scrolling: false
+            }), 2), state = _useSetState[0], setState = _useSetState[1];
+            updateEvent.useEvent(setState);
+            return children(state);
+        };
+    }, []);
+    // 检测必须的dom是否存在，不存在时抛异常
+    useEffect(function() {
+        if (disabled) return;
+        if (!getRefDomOrDom(option.wrapRef, wrapRef) || !scroller.ref.current) {
+            throw Error("useVirtualList(...) -> wrap or container is not gets");
+        }
+    }, [
+        disabled
+    ]);
+    // 设置容器节点为可滚动和设置滚动的首帧位置
+    useEffect(function() {
+        if (disabled) return;
+        handleScroll(scroller.get(), true);
+        scroller.ref.current && (scroller.ref.current.style.overflowY = "auto");
+    }, [
+        disabled,
+        fmtList,
+        height
+    ]);
+    // 通知滚动结束
+    var emitScrolling = useFn(function() {
+        self.scrolling = false;
+        updateEvent.emit({
+            scrolling: false
+        });
+    }, function(fn) {
+        return _debounce(fn, 100);
+    });
+    /** 核心混动逻辑 */ function handleScroll(meta, skipScrollingEmit) {
         if (disabled) return;
         // 通知滚动开始
         if (!skipScrollingEmit && !self.scrolling) {
@@ -42,7 +121,7 @@ export function useVirtualList(option) {
             end += 1;
         }
         if (overscan) {
-            var ref = _sliced_to_array(getOverscanSize(start, end), 2), nextStart = ref[0], nextEnd = ref[1];
+            var _getOverscanSize = _sliced_to_array(getOverscanSize(start, end), 2), nextStart = _getOverscanSize[0], nextEnd = _getOverscanSize[1];
             start = nextStart;
             end = nextEnd;
         }
@@ -85,102 +164,23 @@ export function useVirtualList(option) {
                 list: nextList
             });
         });
-    };
-    var getOverscanSize = /** 将开始和结束索引根据overscan进行修正，参数3会返回顶部应减少的偏移 */ function getOverscanSize(start, end) {
+    }
+    /** 将开始和结束索引根据overscan进行修正，参数3会返回顶部应减少的偏移 */ function getOverscanSize(start, end) {
         var nextStart = Math.max(start - overscan, 0);
         var nextEnd = Math.min(/* 索引为0时不添加 */ end + overscan /* slice是尾闭合的，所以要多取一位 */ , fmtList.length);
         return [
             nextStart,
             nextEnd
         ];
-    };
-    var getSize = function getSize(item, index) {
+    }
+    function getSize(item, index) {
         if (!isFunction(size)) return size;
         return size(item, index);
-    };
-    var getKey = function getKey(item, index) {
+    }
+    function getKey(item, index) {
         if (!isFunction(key)) return String(index);
         return key(item, index);
-    };
-    var list = option.list, size = option.size, _overscan = option.overscan, overscan = _overscan === void 0 ? 1 : _overscan, key = option.key, _space = option.space, space = _space === void 0 ? 0 : _space, keepAlive = option.keepAlive, containerTarget = option.containerTarget, disabled = option.disabled, optionHeight = option.height;
-    var wrapRef = useRef(null);
-    // 统一通知Render更新状态
-    var updateEvent = useMemo(function() {
-        return createEvent();
-    }, []);
-    var self = useSelf({
-        scrolling: false
-    });
-    // 格式化list为虚拟list格式，并获取计算得到的总高度, 禁用时两个值分别为[]和0
-    var ref = _sliced_to_array(useMemo(function() {
-        var h = 0;
-        if (disabled) return [
-            [],
-            h
-        ];
-        var ls = list.map(function(item, index) {
-            var _size = getSize(item, index);
-            h += _size;
-            return {
-                data: item,
-                index: index,
-                key: getKey(item, index),
-                position: h,
-                size: _size
-            };
-        });
-        return [
-            ls,
-            h
-        ];
-    }, [
-        list,
-        disabled
-    ]), 2), fmtList = ref[0], height = ref[1];
-    var scroller = useScroll({
-        el: containerTarget,
-        throttleTime: 0,
-        onScroll: handleScroll
-    });
-    /** 使用render组件来减少hook对消费组件的频繁更新 */ var Render = useMemo(function() {
-        return function(param) {
-            var children = param.children;
-            var ref = _sliced_to_array(useSetState({
-                list: [],
-                scrolling: false
-            }), 2), state = ref[0], setState = ref[1];
-            updateEvent.useEvent(setState);
-            return children(state);
-        };
-    }, []);
-    // 检测必须的dom是否存在，不存在时抛异常
-    useEffect(function() {
-        if (disabled) return;
-        if (!getRefDomOrDom(option.wrapRef, wrapRef) || !scroller.ref.current) {
-            throw Error("useVirtualList(...) -> wrap or container is not gets");
-        }
-    }, [
-        disabled
-    ]);
-    // 设置容器节点为可滚动和设置滚动的首帧位置
-    useEffect(function() {
-        if (disabled) return;
-        handleScroll(scroller.get(), true);
-        scroller.ref.current && (scroller.ref.current.style.overflowY = "auto");
-    }, [
-        disabled,
-        fmtList,
-        height
-    ]);
-    // 通知滚动结束
-    var emitScrolling = useFn(function() {
-        self.scrolling = false;
-        updateEvent.emit({
-            scrolling: false
-        });
-    }, function(fn) {
-        return _debounce(fn, 100);
-    });
+    }
     return {
         containerRef: scroller.ref,
         wrapRef: wrapRef,

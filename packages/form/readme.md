@@ -32,7 +32,7 @@ npm install @m78/form
 
 通过 createForm(formConfig) 创建 form 实例, form 实例上提供了 设置/获取值, 设置/获取状态, 提交, 验证, 列表操作, 事件绑定等等 api.
 
-创建时可同时提供 schemas 配置, 通过 Schema 配置来实现对 values 的约束和验证.
+创建时可提供 schemas 配置, 通过 Schema 配置来实现对 values 的约束和验证.
 
 如果仅需要验证功能或是在服务端等场景下, 则可以使用 createVerify(formConfig) 代替, 它有更快的执行速度和更少的 api.
 
@@ -48,8 +48,8 @@ import { required, string } from "@m78/form/validator";
 
 // 创建一个form实例
 const form = createForm({
-  schemas: {	// 根schemas, 标识参与验证的values本身
-     schema: [	// 验证values下的字段
+  schemas: {	// 根schemas, 标识参与验证的values本身, 如果不需要验证根值, 可直接传入一个schema数组
+     schemas: [	// 验证values下的字段
        {
          name: "title",
          validator: [required(), string()],
@@ -90,13 +90,20 @@ form.setFormTouched(false);
 form.getErrors(name?);
 
 
-// 表单操作 (应始终使用verify/submit/getValues等api的返回, 因为valid等特殊选项会过滤掉无效值)
+// 表单操作 (应始终使用verify/submit/getValues等api返回values, 因为valid等特殊选项会过滤掉无效值)
 form.reset();
 form.verify().then(([rejects, values]) => {
 	if (rejects) console.log('error', rejects);
 });
 form.submit().then(([rejects, values]) => {	// 与verify()的区别是会触发submit事件
 	if (rejects) console.log('error', rejects);
+})
+
+// 小技巧, rejects和values是互斥的, 只要其中一个不是null, 另一个就会是null, 当不需要关心具体错误时, 可以直接判断values是否为null
+form.verify().then(([rejects, values]) => {
+  if (values === null) return;
+
+  console.log('pass');
 });
 
 // list操作
@@ -107,8 +114,8 @@ form.listMove('listName', 2, 5);
 form.listSwap('listName', 2, 5);
 
 // 事件
-form.events.update.on(() => {});
-form.events.change.on(() => {});
+form.events.update.on((name, relation) => {});	// 可使用form.notifyFilter来实现匹配指定的update/change事件
+form.events.change.on((name, relation) => {});
 form.events.submit.on((values) => {});
 form.events.fail.on((errors, isValueChangeTrigger) => {});
 form.events.reset.on(() => {});
@@ -146,7 +153,7 @@ schema 是一个如下结构的对象
 ```ts
 // 表示结构: { name: 'm78', describe: 'front kits' }
 const schema: FormSchema = {
-  schema: [
+  schemas: [
     {
       label: "姓名",
       name: "name",
@@ -158,7 +165,7 @@ const schema: FormSchema = {
       validator: string({ max: 20 }),
     },
   ],
-  
+
   // 根schema表示的是values本身, 你也可以对其进行配置
   // validator: required(),
 };
@@ -170,7 +177,7 @@ const schema: FormSchema = {
 
 ```ts
 const schema: FormSchema = {
-  schema: [
+  schemas: [
     {
       label: "姓名",
       name: "name",
@@ -185,7 +192,7 @@ const schema: FormSchema = {
     {
       label: "基础信息",
       name: "base",
-      schema: [
+      schemas: [
         {
           name: "age",
         },
@@ -198,7 +205,7 @@ const schema: FormSchema = {
     {
       label: "地址",
       name: "address",
-      schema: [
+      schemas: [
         {
           name: 0,
         },
@@ -215,7 +222,7 @@ const schema: FormSchema = {
       label: "其他",
       name: "other",
       eachSchema: {
-        schema: [
+        schemas: [
           {
             name: "filed1",
           },
@@ -237,7 +244,7 @@ const schema: FormSchema = {
 
 ```ts
 const schema: FormSchema = {
-  schema: [
+  schemas: [
     {
       label: "姓名",
       name: "name",
@@ -278,7 +285,7 @@ const schema: FormSchema = {
 
 ```ts
 const schema: FormSchema = {
-  schema: [
+  schemas: [
     {
       label: "姓名",
       name: "name",
@@ -297,7 +304,7 @@ const schema: FormSchema = {
       // 每一个子项应遵循的的schema
       eachSchema: {
         // 由于这里是多个子字段, 所以传入了schema数组, 如果是单个字段可以直接在eachSchema中配置字段
-        schema: [
+        schemas: [
           {
             name: "title",
             validator: required(),
@@ -353,7 +360,7 @@ undefined, null, "", NaN, [], {}, 空白字符
 
 ### 自定义验证器
 
-验证器分为同步验证器和异步验证器, 验证器接收一些当前上下文的信息(配置/当前值/实例/name 等), 并返回验证结果.
+验证器分为同步验证器和异步验证器, 其接收一些当前上下文的信息(配置/当前值/实例/name 等), 并返回验证结果.
 
 ```ts
 function string({ value }) {
@@ -410,11 +417,11 @@ function createForm(config: FormConfig): FormInstance {}
 
 ```ts
 /**
- * 创建verify实例, verify用于纯验证的场景, 在需要将form用于服务端或是仅需要验证功能的场景下非常有用, 在数据体量较大时能显著提升执行速度
+ * 创建verify实例, verify用于纯验证的场景, 在需要将form用于服务端或是仅需要验证功能的场景下非常有用, 能够避免form相关的多余计算
  *
  * > 用于创建verify实例时, 部分 FormConfig 会被忽略, 如 autoVerify
  * */
-function createVerify(config: FormConfig): FormVerify {}
+function createVerify(config: FormConfig): FormVerifyInstance;
 ```
 
 <br>
@@ -427,11 +434,11 @@ export interface FormConfig {
   /**
    * false | 当其中一项验证失败后，停止后续字段的验证
    *
-   * 对于嵌套验证器, 父级验证失败后会始终跳过子级
+   * 对于包含子级的schema, 父级验证失败后会始终跳过子级
    * */
   verifyFirst?: boolean;
-  /** 描述表单值结构的对象 */
-  schemas: FormSchemaWithoutName;
+  /** 描述表单值结构的对象, 需要验证值本身时传入单个schema, 只需要验证子级时传入子级的schema数组 */
+  schemas: FormSchemaWithoutName | FormSchema[];
   /** 默认值 */
   values?: any;
   /** 创建verify实例时为false, 否则为true | 值变更时是否自动触发verify */
@@ -445,6 +452,7 @@ export interface FormConfig {
    *    - value: 字段值, 应只在验证值为基础类型时使用
    *    - type: 表示value类型的字符串
    * - 在特定的验证器中还会注入额外的插值，具体可以查看对应验证器的文档
+   * - 现有配置请查看: https://github.com/xianjie-li/m78/tree/master/packages/form/src/language-pack
    * */
   languagePack?: AnyObject;
   /** true | 配置是否忽略怪异值(schema中未声明的值), 关闭后未声明的值会产生错误 */
@@ -460,33 +468,30 @@ export interface FormConfig {
 
 ```ts
 /** Form 实例 */
-export interface FormInstance extends FormVerifyInstancePartial {	// 继承 VerifyInstance 除check外的所有api
-  /** 指定值是否与默认值相同 */
+export interface FormInstance {
+  /** 检测是否与默认值相同 */
   getChanged(name: NamePath): boolean;
 
-  /** 表单当前值是否与默认值相同 */
+  /** 检测form当前值是否与默认值相同 */
   getFormChanged(): boolean;
 
-  /** 指定值是否被操作过 */
+  /** 检测是否被操作过 */
   getTouched(name: NamePath): boolean;
 
-  /** 设置指定值touched状态 */
-  setTouched(name: NamePath, touched: boolean): void;
-
-  /** 表单是否被操作过 */
+  /** 检测form是否被操作过 */
   getFormTouched(): boolean;
 
-  /** 设置整个表单的touched状态 */
+  /** 设置touched状态 */
+  setTouched(name: NamePath, touched: boolean): void;
+
+  /** 设置form级别的的touched状态 */
   setFormTouched(touched: boolean): void;
 
-  /** 设置所有值 */
-  setValues(values: any): void;
-
-  /** 设置指定name的值 */
+  /** 设置值, name传入 [] 可设置根值 */
   setValue(name: NamePath, val: any): void;
 
-  /** 获取当前数据, 获取的数据会根据当前的schema进行处理并过滤掉valid为false的值 */
-  getValues<T = any>(): T;
+  /** 设置form整体的values */
+  setValues(val: any): void;
 
   /** 获取当前的默认值 */
   getDefaultValues<T = any>(): T;
@@ -496,9 +501,9 @@ export interface FormInstance extends FormVerifyInstancePartial {	// 继承 Veri
 
   /**
    * 获取变更的值, 没有变更时返回null
-   * - 如果values本身是一个基础类型值, 则会在与默认值不同时直接返回
+   * - 如果values本身是一个非对象/数组值, 会在与默认值不同时直接返回
    * - 只有根级别的字段会参与对比, 如果根字段发生了变更, 其子级字段会一同返回
-   * - values是对象时, 会将defaultValue中存在但被删除的字段返回为初始值(字符串为"", 其他类型为null)
+   * - values是对象时, 会将defaultValue中存在但被删除的字段设置为null返回
    * */
   getChangedValues(): any | null;
 
@@ -508,18 +513,16 @@ export interface FormInstance extends FormVerifyInstancePartial {	// 继承 Veri
   /** 重置表单状态 */
   reset(): void;
 
-  /** 对当前values执行校验, 校验失败时, 数组首项为失败信息组成的的数组, 校验失败时为null, 第二项为参与验证的数据, 验证成功后会触发submit事件: */
-  submit(): Promise<[FormRejectMeta | null, any]>;
+  /** 对当前values执行校验, 校验成功后会触发submit事件: */
+  submit(): Promise<FormRejectOrValues>;
 
   /**
-   * 对当前values执行校验, 校验失败时, 数组首项为失败信息组成的的数组, 校验失败时为null, 第二项为参与验证的数据
+   * 对当前values执行校验
    *
-   * 若传入extraMeta, 会将其扩展到该次验证的 FormVerifyMeta 中, 然后你可以在验证器/验证错误信息等位置对其进行访问
+   * - 不传入name或是传入 [] 或 '[]' 可验证form本身
+   * - 若传入extraMeta, 会将其扩展到该次验证的 FormVerifyMeta 中, 然后你可以在验证器/验证错误信息等位置对其进行访问
    * */
-  verify(
-    name?: NamePath,
-    extraMeta?: AnyObject
-  ): Promise<[FormRejectMeta | null, any]>;
+  verify(name?: NamePath, extraMeta?: AnyObject): Promise<FormRejectOrValues>;
 
   /**
    * debounce版本的verify, 处理高频调用时可以使用, cb会在成功或失败时触发, 失败时包含错误信息
@@ -532,9 +535,9 @@ export interface FormInstance extends FormVerifyInstancePartial {	// 继承 Veri
   ) => void;
 
   /**
-   * 获取指定list的数据, 若未在schema中配置为list则返回null. 根schema设置为list时, 可传入`[]`来获取
+   * 获取指定list的数据, 若未在schema中配置为list则返回null. 根schema设置为list时, 可以通过不传name获取
    * */
-  getList<Item = any>(name: NamePath): Array<FormListItem<Item>> | null;
+  getList<Item = any>(name?: NamePath): Array<FormListItem<Item>> | null;
 
   /** 为list新增一项或多项, index为添加到的索引位置, 默认追加到结尾. 若name不是有效list或其他原因导致失败会将返回false */
   listAdd(name: NamePath, items: any | any[], index?: number): boolean;
@@ -555,7 +558,7 @@ export interface FormInstance extends FormVerifyInstancePartial {	// 继承 Veri
     /** 字段值改变事件. update事件包含了change的触发场景 */
     change: CustomEvent<FormNamesNotify>;
     /** 提交事件 */
-    submit: CustomEvent<(data: any) => void>;
+    submit: CustomEvent<(values: any) => void>;
     /** 验证失败的回调, 由 setValue 触发自动校验时, isValueChangeTrigger 为 true */
     fail: CustomEvent<
       (errors: FormRejectMeta, isValueChangeTrigger?: boolean) => void
@@ -573,29 +576,20 @@ export interface FormInstance extends FormVerifyInstancePartial {	// 继承 Veri
     notify: FormNamesNotify,
     deps?: NamePath[]
   ) => FormNamesNotify;
-}
-```
 
-<br>
-
-### VerifyInstance
-
-```ts
-/** 仅包含验证必须功能的实例, FormInstance 的子集 */
-export interface FormVerifyInstance {
   /** 获取Form创建配置 */
   getConfig(): FormConfig;
 
-  /** 获取指定name的值, 获取的值为对应的原始引用, 请勿作查询以外的操作 */
+  /** 获取值, 获取的值为对应的原始引用  */
   getValue<T = any>(name: NamePath): T;
 
-  /** 获取对dynamic/valid/list等特殊项进行处理进行处理后的完整schema副本 */
-  getSchemas(): FormSchemaWithoutName;
+  /** 获取当前的values, 获取前会根据当前的schema进行处理并过滤掉valid为false的值 */
+  getValues<T = any>(): T;
 
   /**
-   * 获取对dynamic/valid/list等特殊项进行处理进行处理后的指定schema副本
+   * 获取对dynamic/valid/list等特殊项进行处理进行处理后的schemas副本以及一些其他相关信息
    *
-   * 如果在dynamic中调用并且获取的schema包含当前schema本身(直接获取或作为子项获取), 会导致递归, 可通过 skipChildren或withoutProcess选项处理
+   * - 在dynamic中调用时, 如果获取的schema包含当前schema本身(直接获取或作为子项获取), 会导致递归, 可通过 skipChildren或withoutProcess选项处理
    * */
   getSchema(
     name: NamePath,
@@ -607,19 +601,26 @@ export interface FormVerifyInstance {
     }
   ): FormSchema | null;
 
-  /**
-   * 类似getSchemas(), 但会获取更多信息, 比如 invalidNames, 未来可能会增加更多
-   * */
-  getSchemasDetail(): {
-    /** 与getSchemas()返回一致, 处理特殊选项后的schema */
+  /** 获取处理特殊选项后的根schema */
+  getSchemas(): {
+    /** 处理过特殊选项的schema */
     schemas: FormSchemaWithoutName;
     /** 所有invalid项的name */
     invalidNames: NamePath[];
   };
 
-  /** 重新设置当前schemas*/
-  setSchemas(schema: FormSchemaWithoutName): void;
+  /** 设置当前schemas */
+  setSchemas(schema: FormSchemaWithoutName | FormSchema[]): void;
+}
+```
 
+<br>
+
+### VerifyInstance
+
+```ts
+/** 仅包含验证必须功能的实例, FormInstance 的子集 */
+export interface FormVerifyInstance {
   /**
    * 对当前values执行校验, 校验失败时, 数组首项为失败信息组成的的数组, 校验失败时为null, 第二项为参与验证的数据
    *
@@ -627,10 +628,61 @@ export interface FormVerifyInstance {
    *
    * 若传入extraMeta, 会将其扩展到该次验证的 FormVerifyMeta 中, 然后你可以在验证器/验证错误信息等位置对其进行访问
    * */
-  check(
+  check(values: any, extraMeta?: AnyObject): Promise<FormRejectOrValues>;
+
+  /**
+   * 当需要在verify实例使用 getSchemas / getValue 等api时, 需要次用此方法指定值, 并在回调中使用响应的api
+   *
+   * - check方法内部会自动调用此方法, 无需使用withValues
+   * - 在schema.dynamic等方法中传入的verify实例均自动进行了绑定, 无需使用withValues
+   * */
+  withValues<R = void>(values: any, action: () => R): R;
+
+  /**
+   * check的变体, 对已经过处理的values/schemas直接进行验证
+   *
+   * - 若已经提前通过getSchema获取了处理后的schema, 并自行对values中的无效项进行了删除, 可通过此方法避免一些重复计算
+   * */
+  staticCheck(
     values: any,
-    extraMeta?: AnyObject
-  ): Promise<[FormRejectMeta | null, any]>;
+    schemas: FormSchemaWithoutName,
+    extraMeta?: AnyObject | undefined
+  ): Promise<FormRejectOrValues>;
+
+  /** 获取Form创建配置 */
+  getConfig(): FormConfig;
+
+  /** 获取值, 获取的值为对应的原始引用  */
+  getValue<T = any>(name: NamePath): T;
+
+  /** 获取当前的values, 获取前会根据当前的schema进行处理并过滤掉valid为false的值 */
+  getValues<T = any>(): T;
+
+  /**
+   * 获取对dynamic/valid/list等特殊项进行处理进行处理后的schemas副本以及一些其他相关信息
+   *
+   * - 在dynamic中调用时, 如果获取的schema包含当前schema本身(直接获取或作为子项获取), 会导致递归, 可通过 skipChildren或withoutProcess选项处理
+   * */
+  getSchema(
+    name: NamePath,
+    opt?: {
+      /** true | 不处理子项 */
+      skipChildren?: boolean;
+      /** 返回原始的schema配置, 不对eachSchema/dynamic等特殊配置进行处理 */
+      withoutProcess?: boolean;
+    }
+  ): FormSchema | null;
+
+  /** 获取处理特殊选项后的根schema */
+  getSchemas(): {
+    /** 处理过特殊选项的schema */
+    schemas: FormSchemaWithoutName;
+    /** 所有invalid项的name */
+    invalidNames: NamePath[];
+  };
+
+  /** 设置当前schemas */
+  setSchemas(schema: FormSchemaWithoutName | FormSchema[]): void;
 }
 ```
 
@@ -663,7 +715,7 @@ export interface FormSchema {
     namePath: NameItem[];
   }) => FormSchemaWithout<"dynamic" | "name" | "list"> | void;
   /** 类型为数组、对象时, 对其结构进行验证 */
-  schema?: FormSchema[];
+  schemas?: FormSchema[];
   /** 验证值为array或object时, 子级的所有 数组项/对象值 必须与此Schema匹配, 如果该值的类型不为array或object，此配置会被忽略 */
   eachSchema?: FormSchemaWithout<"name" | "list">;
   /**

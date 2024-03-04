@@ -10,7 +10,7 @@ import {
   KeyboardHelperTriggerType,
   KeyboardMultipleHelper,
 } from "@m78/utils";
-import { _TableInteractiveCorePlugin } from "./interactive-core.js";
+import { _TableInteractivePlugin } from "./interactive.js";
 import { Position } from "../../common/index.js";
 
 /** 单个值粘贴时, 最大的可粘贴单元格数 */
@@ -18,7 +18,7 @@ const maxSinglePaste = 50;
 
 /** 集中处理不分键盘交互操作, 比如单元格复制/粘贴/delete等 */
 export class _TableKeyboardInteractionPlugin extends TablePlugin {
-  interactiveCore: _TableInteractiveCorePlugin;
+  interactiveCore: _TableInteractivePlugin;
 
   multipleHelper: KeyboardMultipleHelper;
 
@@ -27,7 +27,7 @@ export class _TableKeyboardInteractionPlugin extends TablePlugin {
   }
 
   init() {
-    this.interactiveCore = this.getPlugin(_TableInteractiveCorePlugin);
+    this.interactiveCore = this.getPlugin(_TableInteractivePlugin);
   }
 
   mounted() {

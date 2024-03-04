@@ -6,7 +6,7 @@ import { TableSelectConfig } from "../plugins/select.js";
 import { TableKey, TableRenderCtx } from "./base-type.js";
 import { TableEmptyConfig } from "../plugins/empty.js";
 import { TableDragSortConfig } from "../plugins/drag-sort.js";
-import { TableInteractiveCoreConfig } from "../plugins/interactive-core.js";
+import { TableInteractiveConfig } from "../plugins/interactive.js";
 import { TableFormConfig } from "../plugins/form.js";
 import { TableIsConfig } from "../plugins/is.js";
 /**
@@ -98,6 +98,6 @@ export interface TableInternalConfig {
     eventCreator?: any;
 }
 /** 表格配置 */
-export interface TableConfig extends TableBaseConfig, TableSelectConfig, TableEmptyConfig, TableDragSortConfig, TableInteractiveCoreConfig, TableInternalConfig, TableFormConfig, TableIsConfig {
+export interface TableConfig extends TableBaseConfig, TableSelectConfig, TableEmptyConfig, TableDragSortConfig, TableInteractiveConfig, TableInternalConfig, TableFormConfig, TableIsConfig {
 }
 //# sourceMappingURL=config.d.ts.map

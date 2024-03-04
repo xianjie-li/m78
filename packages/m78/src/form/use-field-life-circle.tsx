@@ -1,6 +1,11 @@
 import { _FormContext, _FieldContext } from "./types.js";
 import { _UseFieldMethods } from "./use-field-methods.js";
-import { isFunction, stringifyNamePath, triggerHighlight } from "@m78/utils";
+import {
+  createTempID,
+  isFunction,
+  stringifyNamePath,
+  triggerHighlight,
+} from "@m78/utils";
 import { _useUpdatePropsChange } from "./use-update-props-change.js";
 import { _useDetector } from "./field-detector.js";
 
@@ -22,7 +27,7 @@ export function _useFieldLifeCircle(
       () => {
         setState({
           schema: form.getSchema(name),
-          renderKey: Math.random(),
+          renderKey: createTempID(),
         });
       },
       getProps("deps")
@@ -32,7 +37,7 @@ export function _useFieldLifeCircle(
   // 监听updateProps更新组件
   _useUpdatePropsChange(ctx, () => {
     setState({
-      renderKey: Math.random(),
+      renderKey: createTempID(),
     });
   });
 

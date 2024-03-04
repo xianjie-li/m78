@@ -8,7 +8,7 @@ import {
 import { _injector } from "../table.js";
 import { preInstantiationRCPlugin } from "../common.js";
 import { RCTablePlugin } from "../plugin.js";
-import { isBoolean, isFunction } from "@m78/utils";
+import { isBoolean } from "@m78/utils";
 import { _FilterPlugin } from "../plugins/filter/filter.js";
 import { _FeedBackPlugin } from "../plugins/feedback/feedback.js";
 import { _RedoAndUndoPlugin } from "../plugins/redo-and-undo.js";
@@ -66,6 +66,7 @@ export function _useStateAct() {
         editStatusMap: {},
         editCheckForm: null as any,
         overlayStackCount: 0,
+        instance: null as any,
       };
 
       rcPlugins.forEach((p) => p.rcSelfInitializer?.(_self));
@@ -79,6 +80,7 @@ export function _useStateAct() {
       selectedRows: [],
       rowCount: 0,
       instance: null as any,
+      vCtx: null as any,
       initializing: true,
       initializingTip: null,
       blockError: null,
@@ -96,24 +98,28 @@ export function _useStateAct() {
       edit: false,
       add: false,
       delete: false,
+      sortRow: false,
+      sortColumn: true,
+      import: false,
+      export: true,
     };
 
     const pConf = props.dataOperations;
 
-    if (!pConf) return conf;
-
     if (isBoolean(pConf) && pConf) {
-      conf.edit = true;
-      conf.add = true;
-      conf.delete = true;
+      Object.keys(conf).forEach((k) => ((conf as any)[k] = true));
       return conf;
     }
 
-    conf.edit = isFunction(pConf.edit) ? pConf.edit : pConf.edit || false;
-    conf.add = pConf.add || false;
-    conf.delete = pConf.delete || false;
+    if (isBoolean(pConf) && !pConf) {
+      conf.sortColumn = false;
+      conf.export = false;
+      return conf;
+    }
 
-    return conf;
+    if (!pConf) return conf;
+
+    return Object.assign(conf, pConf);
   }, [props.dataOperations]);
 
   return {

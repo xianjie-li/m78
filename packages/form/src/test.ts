@@ -8,7 +8,6 @@ import {
 } from "./validator/index.js";
 import { jest } from "@jest/globals";
 import { createForm, createVerify, FormSchemaWithoutName } from "./index.js";
-import { _ROOT_SCHEMA_NAME } from "./common.js";
 import { _fmtValidator } from "./schema-check/common.js";
 
 // form功能测试
@@ -68,7 +67,7 @@ describe("form-vanilla", () => {
         },
       },
       schemas: {
-        schema: [
+        schemas: [
           {
             name: "nestArrayFiled1",
             validator: [
@@ -81,7 +80,7 @@ describe("form-vanilla", () => {
           {
             name: "nestArrayFiled2",
             eachSchema: {
-              schema: [
+              schemas: [
                 {
                   name: "title",
                 },
@@ -90,13 +89,13 @@ describe("form-vanilla", () => {
           },
           {
             name: "nestDeepField1",
-            schema: [
+            schemas: [
               {
                 name: "nestDeepField1_1",
-                schema: [
+                schemas: [
                   {
                     name: "nestDeepField1_1_1",
-                    schema: [
+                    schemas: [
                       {
                         name: "title",
                         validator: [required()],
@@ -248,7 +247,7 @@ describe("form-vanilla", () => {
         "title",
       ])
     ).toBe(true);
-    expect(form.getFormChanged()).toBe(true);
+    expect(form.getFormTouched()).toBe(true);
 
     form.setValue("filed1", "m78 form");
     expect(updateCB.mock.calls.length).toBe(5);
@@ -390,7 +389,7 @@ describe("form-vanilla", () => {
     await form.verify();
 
     form.setSchemas({
-      schema: [
+      schemas: [
         {
           name: "nestArrayFiled1",
           validator: [required(), object()],
@@ -441,7 +440,7 @@ describe("form-vanilla", () => {
       },
       schemas: {
         validator: required(),
-        schema: [
+        schemas: [
           {
             name: "field2",
             dynamic: ({ form }) => {
@@ -462,7 +461,7 @@ describe("form-vanilla", () => {
             name: "field3",
             dynamic: ({ form }) => ({
               valid: form.getValue("field1") !== "abcd",
-              schema:
+              schemas:
                 form.getValue("field1") === "abcd"
                   ? undefined
                   : [
@@ -558,7 +557,7 @@ describe("form-vanilla", () => {
         ],
       },
       schemas: {
-        schema: [
+        schemas: [
           {
             name: "noList",
           },
@@ -655,12 +654,12 @@ describe("form-vanilla", () => {
         ],
       },
       schemas: {
-        schema: [
+        schemas: [
           {
             name: "list",
             list: true,
             eachSchema: {
-              schema: [
+              schemas: [
                 {
                   name: "list2",
                   list: true,
@@ -861,7 +860,7 @@ describe("verify", () => {
     const verify = createVerify({
       schemas: {
         validator: required(),
-        schema: [
+        schemas: [
           {
             name: "user",
             validator: [required()],
@@ -887,7 +886,7 @@ describe("verify", () => {
     const verify2 = createVerify({
       schemas: {
         validator: required(),
-        schema: [
+        schemas: [
           {
             name: "user",
             validator: [required()],
@@ -909,7 +908,7 @@ describe("verify", () => {
     const verify = createVerify({
       schemas: {
         validator: required(),
-        schema: [
+        schemas: [
           {
             name: "user",
             validator: [required()],
@@ -937,7 +936,7 @@ describe("verify", () => {
     const verify = createVerify({
       schemas: {
         validator: [required()],
-        schema: [
+        schemas: [
           {
             name: "user",
             validator: [() => "reject"],
@@ -986,7 +985,7 @@ describe("verify", () => {
       },
       schemas: {
         validator: required(),
-        schema: [
+        schemas: [
           {
             name: "user",
             label: "用户",
@@ -1027,7 +1026,7 @@ describe("verify", () => {
     const verify2 = createVerify({
       schemas: {
         validator: required(),
-        schema: [
+        schemas: [
           {
             name: "user",
             label: "用户",
@@ -1047,7 +1046,7 @@ describe("verify", () => {
       },
     });
 
-    expect(verify2.getSchemasDetail().invalidNames).toEqual([
+    expect(verify2.getSchemas().invalidNames).toEqual([
       ["user"],
       ["nonExists"],
     ]);
@@ -1057,7 +1056,7 @@ describe("verify", () => {
     const verify2 = createVerify({
       schemas: {
         validator: required(),
-        schema: [
+        schemas: [
           {
             name: "user",
             label: "用户",
@@ -1077,10 +1076,42 @@ describe("verify", () => {
       },
     });
 
-    expect(verify2.getSchemasDetail().invalidNames).toEqual([
+    expect(verify2.getSchemas().invalidNames).toEqual([
       ["user"],
       ["nonExists"],
     ]);
+  });
+
+  test("getRootSchema", async () => {
+    const verify2 = createVerify({
+      schemas: {
+        validator: required(),
+        dynamic: () => ({
+          label: "abc",
+        }),
+        schemas: [
+          {
+            name: "user",
+            label: "用户",
+            validator: string({
+              length: 2,
+            }),
+            dynamic: () => ({
+              valid: false,
+            }),
+          },
+          {
+            name: "nonExists",
+            validator: required(),
+            valid: false,
+          },
+        ],
+      },
+    });
+
+    expect(verify2.getSchema([])?.label).toBe("abc");
+
+    expect(verify2.getSchema([])?.name).toBe("[]");
   });
 
   test("child schema & eachSchema", async () => {
@@ -1088,7 +1119,7 @@ describe("verify", () => {
       verifyFirst: false,
       schemas: {
         validator: required(),
-        schema: [
+        schemas: [
           {
             name: "name",
             validator: [string({ length: 4 })],
@@ -1103,7 +1134,7 @@ describe("verify", () => {
           {
             name: "map",
             validator: [object()],
-            schema: [
+            schemas: [
               {
                 name: "field1",
                 validator: [number()],
@@ -1119,7 +1150,7 @@ describe("verify", () => {
             validator: [array()],
             eachSchema: {
               validator: [object()],
-              schema: [
+              schemas: [
                 {
                   name: "key",
                   validator: [number()],
@@ -1171,7 +1202,7 @@ describe("verify", () => {
         },
         schemas: {
           validator: required(),
-          schema: [
+          schemas: [
             {
               name: "0",
               validator: [required()],
@@ -1201,7 +1232,7 @@ describe("verify", () => {
       },
       schemas: {
         validator: required(),
-        schema: [
+        schemas: [
           {
             name: "0",
             validator: required(),
@@ -1212,7 +1243,7 @@ describe("verify", () => {
 
     const [rej] = await verify.check([]);
 
-    expect(rej?.[0].name).toBe(_ROOT_SCHEMA_NAME);
+    expect(rej?.[0].name).toBe("[]");
   });
 
   test("single check", async () => {
@@ -1225,7 +1256,7 @@ describe("verify", () => {
       },
     });
 
-    const [rej] = await verify.check(161);
+    const [rej] = await verify.check(165);
 
     expect(rej?.[0].message).toBe("Cannot be greater than 160");
   });
@@ -1277,14 +1308,14 @@ describe("verify", () => {
   test("ignoreStrangeValue", async () => {
     const schema: FormSchemaWithoutName = {
       validator: required(),
-      schema: [
+      schemas: [
         {
           name: "name",
         },
         {
           name: "things",
           eachSchema: {
-            schema: [
+            schemas: [
               {
                 name: "title",
               },
@@ -1293,7 +1324,7 @@ describe("verify", () => {
         },
         {
           name: "obj",
-          schema: [
+          schemas: [
             {
               name: "objf1",
             },
@@ -1301,7 +1332,7 @@ describe("verify", () => {
         },
         {
           name: "arr2",
-          schema: [
+          schemas: [
             {
               name: 0,
             },
@@ -1364,7 +1395,7 @@ describe("verify", () => {
   test("dynamic schema", async () => {
     const verify = createVerify({
       schemas: {
-        schema: [
+        schemas: [
           {
             name: "count",
             dynamic: ({ form }) => {
@@ -1447,7 +1478,7 @@ describe("verify", () => {
     // dynamic get each item name
     const verify3 = createVerify({
       schemas: {
-        schema: [
+        schemas: [
           {
             name: "list",
             eachSchema: {

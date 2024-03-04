@@ -1,7 +1,6 @@
 import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
 import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
-import { ensureArray, isNumber, stringifyNamePath } from "@m78/utils";
-import isEqual from "lodash/isEqual.js";
+import { ensureArray, isNumber, stringifyNamePath, simplyEqual as isEqual, isArray } from "@m78/utils";
 /** 获取指定name的state, 状态对象还不存在时会自动进行创建 */ export function _getState(ctx, name) {
     var nameKey = stringifyNamePath(name);
     var st = ctx.state[nameKey];
@@ -105,7 +104,6 @@ import isEqual from "lodash/isEqual.js";
         }
     };
 }
-/** 用于在某些情况作为根schema的name标注 */ export var _ROOT_SCHEMA_NAME = "__ROOT_SCHEMA_NAME__";
 /** 数组1是否与数组2的左侧相等或完全相等 */ export function _isLeftEqualName(arr1, arr2) {
     if (arr1.length > arr2.length) return false;
     for(var i = 0; i < arr1.length; i++){
@@ -164,4 +162,7 @@ export function _isRelationName(n, n2) {
         delete ctx.listState[childNameString];
     });
     Object.assign(ctx.listState, temp);
+}
+/** 检测是否为根name, undefined 或 [] 或 `[]` */ export function isRootName(name) {
+    return name === undefined || name === "[]" || isArray(name) && name.length === 0;
 }

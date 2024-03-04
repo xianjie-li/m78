@@ -1,6 +1,6 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
-import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
+import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
 import { useEffect, useMemo, useRef } from "react";
 import { createRandString, isArray } from "@m78/utils";
 import { createEvent, useUpdateEffect, useUpdate } from "../../index.js";
@@ -35,40 +35,6 @@ var defaultConfig = {
  * @return state[1] instances - 所有启用状态的组件<Item>组成的数组，正序
  * @return state[2] id - 该组件实例的唯一标识
  * */ export function useSame(key, config) {
-    var get = /** 获取过滤掉非enable项的所有item, 当前index和id */ function get() {
-        var ref = _sliced_to_array(getCurrent(), 1), current = ref[0];
-        var filter = current.filter(function(item) {
-            return item.enable;
-        });
-        var index = filter.findIndex(function(item) {
-            return item.id === id;
-        });
-        return [
-            index,
-            filter,
-            id
-        ];
-    };
-    var getCurrent = /** 获取当前组件在sameMap中的实例组和该组件在实例中的索引并确保sameMap[key]存在 */ function getCurrent() {
-        // 无实例存在时赋初始值
-        if (!isArray(sameMap[key])) {
-            sameMap[key] = [];
-        }
-        var index = sameMap[key].findIndex(function(item) {
-            return item.id === id;
-        });
-        return [
-            sameMap[key],
-            index
-        ];
-    };
-    var setCurrentState = /* 设置当前实例的状态 */ function setCurrentState(_enable, _meta) {
-        var ref = _sliced_to_array(getCurrent(), 2), current = ref[0], index = ref[1];
-        if (index !== -1) {
-            current[index].enable = _enable;
-            current[index].meta = _meta;
-        }
-    };
     var conf = _object_spread({}, defaultConfig, config);
     var id = useMemo(function() {
         return createRandString(2);
@@ -78,9 +44,9 @@ var defaultConfig = {
     }, []);
     /** 最后一次返回的信息, 用于对比验证是否需要更新 */ var lastReturn = useRef();
     /* 在某个组件更新了sameMap后，需要通知其他相应的以最新状态更新组件 */ var update = useUpdate(true);
-    var ref = useMemo(function() {
+    var _useMemo = useMemo(function() {
         return getEvent("".concat(key, "_same_custom_event"));
-    }, []), emit = ref.emit, useEvent = ref.useEvent;
+    }, []), emit = _useMemo.emit, useEvent = _useMemo.useEvent;
     useMemo(function() {
         // 创建item
         var item = {
@@ -89,7 +55,7 @@ var defaultConfig = {
             meta: conf.meta || {},
             enable: conf.enable
         };
-        var ref = _sliced_to_array(getCurrent(), 1), current = ref[0];
+        var _getCurrent = _sliced_to_array(getCurrent(), 1), current = _getCurrent[0];
         current.push(item);
         current.sort(function(a, b) {
             return a.sort - b.sort;
@@ -110,7 +76,7 @@ var defaultConfig = {
     useEffect(function() {
         if (conf.enable) emit(id);
         return function() {
-            var ref = _sliced_to_array(getCurrent(), 2), index = ref[1];
+            var _getCurrent = _sliced_to_array(getCurrent(), 2), index = _getCurrent[1];
             index !== -1 && emit(id);
         };
     }, [
@@ -120,7 +86,7 @@ var defaultConfig = {
     useEffect(function() {
         return function() {
             // 卸载时移除item
-            var ref = _sliced_to_array(getCurrent(), 2), cur = ref[0], index = ref[1];
+            var _getCurrent = _sliced_to_array(getCurrent(), 2), cur = _getCurrent[0], index = _getCurrent[1];
             if (index !== -1) {
                 var item = cur[index];
                 cur.splice(index, 1);
@@ -128,6 +94,33 @@ var defaultConfig = {
             }
         };
     }, []);
+    /** 获取过滤掉非enable项的所有item, 当前index和id */ function get() {
+        var _getCurrent = _sliced_to_array(getCurrent(), 1), current = _getCurrent[0];
+        var filter = current.filter(function(item) {
+            return item.enable;
+        });
+        var index = filter.findIndex(function(item) {
+            return item.id === id;
+        });
+        return [
+            index,
+            filter,
+            id
+        ];
+    }
+    /** 获取当前组件在sameMap中的实例组和该组件在实例中的索引并确保sameMap[key]存在 */ function getCurrent() {
+        // 无实例存在时赋初始值
+        if (!isArray(sameMap[key])) {
+            sameMap[key] = [];
+        }
+        var index = sameMap[key].findIndex(function(item) {
+            return item.id === id;
+        });
+        return [
+            sameMap[key],
+            index
+        ];
+    }
     /** 接收组件更新通知 */ useEvent(function(_id, force) {
         // 触发更新的实例不更新
         if (_id === id) return;
@@ -138,17 +131,24 @@ var defaultConfig = {
             return;
         }
         if (!lastReturn.current) return;
-        var ref = _sliced_to_array(get(), 2), index = ref[0], current = ref[1];
-        var _current = _sliced_to_array(lastReturn.current, 2), lastIndex = _current[0], lastCurrent = _current[1];
+        var _get = _sliced_to_array(get(), 2), index = _get[0], current = _get[1];
+        var _lastReturn_current = _sliced_to_array(lastReturn.current, 2), lastIndex = _lastReturn_current[0], lastCurrent = _lastReturn_current[1];
         if (index !== lastIndex || current.length !== lastCurrent.length) {
             update();
         }
     });
+    /* 设置当前实例的状态 */ function setCurrentState(_enable, _meta) {
+        var _getCurrent = _sliced_to_array(getCurrent(), 2), current = _getCurrent[0], index = _getCurrent[1];
+        if (index !== -1) {
+            current[index].enable = _enable;
+            current[index].meta = _meta;
+        }
+    }
     var returns = get();
     lastReturn.current = [
         returns[0],
         _to_consumable_array(returns[1]),
-        returns[2], 
+        returns[2]
     ];
     return returns;
 }

@@ -2,7 +2,7 @@ import { _ as _async_to_generator } from "@swc/helpers/_/_async_to_generator";
 import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { _ as _ts_generator } from "@swc/helpers/_/_ts_generator";
 import { ensureArray, isEmpty, stringifyNamePath, simplyDeepClone as clone } from "@m78/utils";
-import { _eachState, _getState, _isRelationName } from "./common.js";
+import { _eachState, _getState, _isRelationName, isRootName } from "./common.js";
 export function _implAction(ctx) {
     var instance = ctx.instance;
     instance.verify = function() {
@@ -13,6 +13,7 @@ export function _implAction(ctx) {
                     case 0:
                         isValueChangeTrigger = ctx.isValueChangeTrigger;
                         ctx.isValueChangeTrigger = false;
+                        if (isRootName(name)) name = undefined;
                         resetState = function(st) {
                             if (name) {
                                 // 含 name 时, 清理自身及子级/父级的 error 状态
@@ -72,10 +73,17 @@ export function _implAction(ctx) {
                             if (!ctx.lockNotify) {
                                 instance.events.update.emit(name);
                             }
-                            return [
+                            if (errors.length) return [
                                 2,
                                 [
-                                    errors.length ? errors : null,
+                                    errors,
+                                    null
+                                ]
+                            ];
+                            else return [
+                                2,
+                                [
+                                    null,
                                     name ? instance.getValue(name) : _values
                                 ]
                             ];
@@ -106,7 +114,7 @@ export function _implAction(ctx) {
     // 防止debounceVerify在单次触发时执行两次
     var firstTriggerFlag = false;
     instance.debounceVerify = function(name, cb) {
-        var key = stringifyNamePath(name || []) || "default";
+        var key = isRootName(name) ? "[]" : stringifyNamePath(name);
         var isValueChangeTrigger = ctx.isValueChangeTrigger;
         ctx.isValueChangeTrigger = false;
         // 立即执行一次
@@ -115,10 +123,13 @@ export function _implAction(ctx) {
                 ctx.isValueChangeTrigger = true;
             }
             firstTriggerFlag = true;
-            instance.verify(name).then(function() {
-                cb === null || cb === void 0 ? void 0 : cb();
-            }).catch(function(err) {
-                cb === null || cb === void 0 ? void 0 : cb(err === null || err === void 0 ? void 0 : err.rejects);
+            instance.verify(name).then(function(param) {
+                var _param = _sliced_to_array(param, 1), rejects = _param[0];
+                if (rejects) {
+                    cb === null || cb === void 0 ? void 0 : cb(rejects);
+                } else {
+                    cb === null || cb === void 0 ? void 0 : cb();
+                }
             });
         } else {
             firstTriggerFlag = false;
@@ -132,10 +143,13 @@ export function _implAction(ctx) {
             }
             delete debounceVerifyTimerMap[key];
             if (!firstTriggerFlag) {
-                instance.verify(name).then(function() {
-                    cb === null || cb === void 0 ? void 0 : cb();
-                }).catch(function(err) {
-                    cb === null || cb === void 0 ? void 0 : cb(err === null || err === void 0 ? void 0 : err.rejects);
+                instance.verify(name).then(function(param) {
+                    var _param = _sliced_to_array(param, 1), rejects = _param[0];
+                    if (rejects) {
+                        cb === null || cb === void 0 ? void 0 : cb(rejects);
+                    } else {
+                        cb === null || cb === void 0 ? void 0 : cb();
+                    }
                 });
             }
         }, 200);

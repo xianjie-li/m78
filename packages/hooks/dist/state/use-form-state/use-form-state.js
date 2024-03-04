@@ -1,4 +1,4 @@
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { useRef } from "react";
 import { useFn, useSetState } from "../../index.js";
 import { isFunction } from "@m78/utils";
@@ -8,18 +8,18 @@ import { isFunction } from "@m78/utils";
  * @param defaultValue - 默认值，会作为value或defaultValue的回退值
  * @param config - 其他配置
  * */ export function useFormState(props, defaultValue, config) {
-    var ref = config || {}, _valueKey = ref.valueKey, valueKey = _valueKey === void 0 ? "value" : _valueKey, _defaultValueKey = ref.defaultValueKey, defaultValueKey = _defaultValueKey === void 0 ? "defaultValue" : _defaultValueKey, _triggerKey = ref.triggerKey, triggerKey = _triggerKey === void 0 ? "onChange" : _triggerKey;
+    var _ref = config || {}, _ref_valueKey = _ref.valueKey, valueKey = _ref_valueKey === void 0 ? "value" : _ref_valueKey, _ref_defaultValueKey = _ref.defaultValueKey, defaultValueKey = _ref_defaultValueKey === void 0 ? "defaultValue" : _ref_defaultValueKey, _ref_triggerKey = _ref.triggerKey, triggerKey = _ref_triggerKey === void 0 ? "onChange" : _ref_triggerKey;
     var isControllable = valueKey in props; // 允许 props[valueKey] === undefined
     var value = props[valueKey], onChange = props[triggerKey], propDefaultValue = props[defaultValueKey];
     // 实时存储value
     var stateRef = useRef(value);
     stateRef.current = value;
     // 非受控时使用的表单状态
-    var ref1 = _sliced_to_array(useSetState(function() {
+    var _useSetState = _sliced_to_array(useSetState(function() {
         return {
             value: propDefaultValue === undefined ? defaultValue : propDefaultValue
         };
-    }), 2), innerState = ref1[0], setInnerState = ref1[1];
+    }), 2), innerState = _useSetState[0], setInnerState = _useSetState[1];
     /**
    * 处理修改表单值,
    * 受控组件则将新值通过onChange回传，非受控组件设置本地状态并通过onChange通知

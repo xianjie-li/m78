@@ -2,11 +2,10 @@ import { _CustomEditItem, RCTableEditRenderArg } from "../types.js";
 import { TableCell } from "../../table-vanilla/index.js";
 import { useFn } from "@m78/hooks";
 import React, { cloneElement, isValidElement, ReactElement } from "react";
-import ReactDom from "react-dom";
 import {
   TableInteractiveDone,
   TableInteractiveRenderArg,
-} from "../../table-vanilla/plugins/interactive-core.js";
+} from "../../table-vanilla/plugins/interactive.js";
 import {
   AnyObject,
   delay,
@@ -20,7 +19,6 @@ import { _useStateAct } from "../injector/state.act.js";
 import { _injector } from "../table.js";
 import { throwError } from "../../common/index.js";
 import { FormAdaptorsItem, m78Config } from "../../config/index.js";
-import { _getTableCtx } from "../common.js";
 import { Overlay } from "../../overlay/index.js";
 import { TransitionType } from "../../transition/index.js";
 
@@ -62,7 +60,7 @@ export function _useEditRender() {
     }
   );
 
-  /** 检测是否可编辑 */
+  /** 检测指定name是否可编辑 */
   const checkEditable = useFn((name: NamePath) => {
     const sName = stringifyNamePath(name);
 
@@ -70,7 +68,7 @@ export function _useEditRender() {
 
     if (isBoolean(cache)) return cache;
 
-    const sh = self.editCheckForm.getSchema(name);
+    const sh = self.editCheckForm.getSchema(name); // 改为取form插件的schema
     const editable = !!sh?.element;
 
     self.editStatusMap[sName] = editable;
@@ -78,25 +76,32 @@ export function _useEditRender() {
     return editable;
   });
 
-  // 检测单元格是否可编辑
+  // SchemaData添加cacheKey
+  // 根据行获取sData, 根据namePath递归获取获取单元格对应的 schema, 并根据cacheKey更新缓存并清理之前的缓存, 缓存格式: { row+cacheKey: { cellKey: schema } }
+
+  // 检测单元格是否可编辑 依据: 1. 是否启用edit或是新增数据  2. 是否配置了schema.element
   const interactiveEnableChecker = useFn((cell: TableCell) => {
     if (cell.column.isFake || cell.row.isFake) return false;
+    if (cell.column.isHeader || cell.row.isHeader) return false;
 
-    if (state.instance) {
-      const ctx = _getTableCtx(state.instance);
-      const meta = ctx.getRowMeta(cell.row.key);
-
-      const isNew = meta.new;
-
-      if (!isNew) {
-        if (dataOperations.edit === false) return false;
-
-        if (isFunction(dataOperations.edit) && !dataOperations.edit(cell))
-          return false;
-      }
+    if (!self.instance) {
+      console.log("ignore .....");
     }
 
-    return checkEditable(cell.column.config.originalKey);
+    const meta = state.vCtx.getRowMeta(cell.row.key);
+
+    const isNew = meta.new;
+
+    const hasElement = false; // 从schema查询
+
+    if (isNew) return hasElement; // 新增项在包含有效schema.element时始终可编辑
+
+    if (dataOperations.edit === false) return false;
+
+    if (isFunction(dataOperations.edit) && !dataOperations.edit(cell))
+      return false;
+
+    return hasElement;
   });
 
   // 自定义编辑渲染

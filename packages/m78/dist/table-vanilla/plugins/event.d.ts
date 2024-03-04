@@ -5,7 +5,7 @@ import { TableCell } from "../types/items.js";
 import { TableMutationEvent } from "./mutation.js";
 import { TableReloadOptions } from "./life.js";
 import { TableFeedbackEvent } from "./feedback.js";
-import { SmoothTriggerEvent, SmoothWheel } from "@m78/utils";
+import { SmoothTriggerEvent, SmoothWheel } from "@m78/smooth-scroll";
 /**
  * 内部事件绑定, 外部事件派发
  * */
@@ -73,6 +73,8 @@ export interface TableEvents {
     feedback: CustomEvent<(event: TableFeedbackEvent[]) => void>;
     /** 拖拽移动启用状态变更时触发 */
     dragMoveChange: CustomEvent<(enable: boolean) => void>;
+    /** 常规配置(非持久化配置)变更时触发, 接收所有变更key的数组changeKeys, 和isChange, 用于检测key是否包含在该次变更中 */
+    configChange: CustomEvent<(changeKeys: string[], isChange: (key: string) => boolean) => void>;
 }
 export interface TableEvent {
     /** 所有可用事件 */

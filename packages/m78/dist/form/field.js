@@ -5,7 +5,7 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
 import { FormLayoutType } from "./types.js";
 import { useSetState } from "@m78/hooks";
 import React, { isValidElement, useMemo, useRef } from "react";
-import { createRandString, ensureArray, getNamePathValue, isEmpty, isFunction, stringifyNamePath } from "@m78/utils";
+import { createRandString, ensureArray, getNamePathValue, isEmpty, isFunction, isTruthyOrZero, stringifyNamePath, createTempID } from "@m78/utils";
 import { Lay } from "../lay/index.js";
 import { Bubble } from "../bubble/index.js";
 import { IconAttention } from "@m78/icons/attention.js";
@@ -15,6 +15,7 @@ import { _useFieldLifeCircle } from "./use-field-life-circle.js";
 import { _listLayoutRenderImpl, _listRenderImpl } from "./list.js";
 import { requiredValidatorKey } from "@m78/form/validator/index.js";
 import { _defaultAdaptor, EMPTY_NAME } from "./common.js";
+import { isRootName } from "@m78/form";
 export function _fieldImpl(ctx) {
     var form = ctx.form;
     /** 实现Field组件 */ form.Field = function(props) {
@@ -178,14 +179,30 @@ export function _fieldImpl(ctx) {
                 ]
             });
         };
-        var _props_name = props.name, name = _props_name === void 0 ? EMPTY_NAME : _props_name;
+        var _name = props.name;
+        var _useMemo = _sliced_to_array(useMemo(function() {
+            if (!isTruthyOrZero(_name)) return [
+                EMPTY_NAME,
+                EMPTY_NAME
+            ];
+            if (isRootName(_name)) return [
+                [],
+                "[]"
+            ];
+            return [
+                _name,
+                stringifyNamePath(_name)
+            ];
+        }, [
+            _name
+        ]), 2), name = _useMemo[0], strName = _useMemo[1];
         var id = useMemo(function() {
             return createRandString(2);
         }, []);
         var _useSetState = _sliced_to_array(useSetState(function() {
             return {
                 /** 当前组件的schema */ schema: form.getSchema(name),
-                /** 手动更新组件的标记 */ renderKey: Math.random()
+                /** 手动更新组件的标记 */ renderKey: createTempID()
             };
         }), 2), state = _useSetState[0], setState = _useSetState[1];
         var schema = state.schema;
@@ -202,7 +219,7 @@ export function _fieldImpl(ctx) {
             name: name,
             wrapRef: wrapRef,
             id: id,
-            strName: stringifyNamePath(name)
+            strName: strName
         };
         // 组件方法
         var methods = _useFieldMethods(ctx, filedCtx);

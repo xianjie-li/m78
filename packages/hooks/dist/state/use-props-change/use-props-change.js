@@ -1,5 +1,4 @@
-import { isArray, isFunction } from "@m78/utils";
-import isEqual from "lodash/isEqual.js";
+import { isArray, isFunction, simplyEqual as isEqual } from "@m78/utils";
 import { usePrev } from "../use-prev/use-prev.js";
 /**
  * compare props and prev props, return changed props
@@ -42,8 +41,6 @@ import { usePrev } from "../use-prev/use-prev.js";
         }
         var prevValue = prev[key];
         if (!hasInclude) {
-            if (isArray(include) && !include.includes(key)) return;
-            if (isFunction(include) && !include(key, nextValue)) return;
             if (isArray(exclude) && exclude.includes(key)) return;
             if (isFunction(exclude) && exclude(key, nextValue)) return;
             if (skipReferenceType) {

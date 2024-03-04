@@ -9,19 +9,24 @@ import { Button } from "../../src/button/index.js";
 import { required } from "@m78/form/validator/index.js";
 import { Divider, Row } from "../../src/layout/index.js";
 import { IconLike } from "@m78/icons/like";
-import { m78Config, Size } from "../../src/index.js";
+import { Size } from "../../src/index.js";
 
 const IconDeleteOutline = IconLike;
 const IconArrowUpward = IconLike;
 const IconArrowDownward = IconLike;
 
+const singleSchemas: FormSchemaWithoutName = {
+  validator: required(),
+  element: <Input />,
+};
+
 const schemas: FormSchemaWithoutName = {
-  schema: [
+  schemas: [
     {
       name: "name",
       validator: required(),
       label: "姓名122",
-      dynamic: (form) => ({
+      dynamic: ({ form }) => ({
         hidden: form.getValue("desc") === "abc",
       }),
       deps: ["desc"],
@@ -40,14 +45,14 @@ const schemas: FormSchemaWithoutName = {
     {
       name: "list",
       list: true,
-      dynamic: (form) => ({
+      dynamic: ({ form }) => ({
         valid: form.getValue("name") !== "123",
       }),
       deps: ["name"],
       validator: required(),
       eachSchema: {
         validator: required(),
-        schema: [
+        schemas: [
           {
             name: "title",
             validator: required(),
@@ -63,12 +68,12 @@ const schemas: FormSchemaWithoutName = {
 };
 
 const schemas2: FormSchemaWithoutName = {
-  schema: [
+  schemas: [
     {
       name: "name",
       validator: required(),
       label: "姓名",
-      dynamic: (form) => ({
+      dynamic: ({ form }) => ({
         hidden: form.getValue("desc") === "abc",
       }),
       deps: ["desc"],
@@ -80,7 +85,7 @@ const schemas2: FormSchemaWithoutName = {
       name: "xxx",
       label: "xxx",
       deps: ["name"],
-      dynamic: (form) => {
+      dynamic: ({ form }) => {
         if (form.getValue("name") !== "lxj")
           return {
             element: <Input textArea />,
@@ -107,7 +112,7 @@ const schemas2: FormSchemaWithoutName = {
       label: "对象",
       validator: required(),
       maxWidth: 800,
-      schema: [
+      schemas: [
         {
           name: "title",
           validator: required(),
@@ -134,13 +139,13 @@ const schemas2: FormSchemaWithoutName = {
       name: "list",
       label: "列表",
       list: true,
-      dynamic: (form) => ({
+      dynamic: ({ form }) => ({
         valid: form.getValue("name") !== "123",
       }),
       deps: ["name"],
       validator: required(),
       eachSchema: {
-        schema: [
+        schemas: [
           {
             name: "title",
             validator: required(),
@@ -159,7 +164,7 @@ const schemas2: FormSchemaWithoutName = {
       label: "列表3",
       list: true,
       listDefaultValue: "11",
-      dynamic: (form) => ({
+      dynamic: ({ form }) => ({
         valid: form.getValue("name") !== "123",
       }),
       deps: ["name"],
@@ -231,9 +236,26 @@ const RformExample = () => {
     });
   }, []);
 
+  const Form5 = useMemo(() => {
+    return createForm({
+      schemas: singleSchemas,
+    });
+  }, []);
+
   return (
     <div style={{ padding: 32 }}>
       <div>
+        <Form5.Field name={"__ROOT_SCHEMA_NAME__"} />
+        <Button
+          onClick={() => {
+            Form5.verify().then((r) => {
+              console.log(r);
+            });
+          }}
+        >
+          submit
+        </Button>
+
         <Divider>schema render</Divider>
 
         <Form4.SchemaRender />

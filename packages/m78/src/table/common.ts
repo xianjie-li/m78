@@ -1,8 +1,6 @@
-import { getNamePathValue, isReferenceType } from "@m78/utils";
+import { isReferenceType } from "@m78/utils";
 import { TablePluginContext } from "../table-vanilla/types/context.js";
 import { RCTableProps } from "./types.js";
-import { TablePlugin } from "../table-vanilla/plugin.js";
-import { TableInstance } from "../table-vanilla/index.js";
 import { RCTablePlugin } from "./plugin.js";
 
 /** 需要忽略的table-vanilla配置 */
@@ -35,7 +33,8 @@ export const _tableChangedListenKeys = [
   "dragSortRow",
   "dragSortColumn",
   "interactive",
-  "schema",
+  "schemas",
+  "dataOperations",
 ] as const;
 
 /** 同_tableChangedListenKeys, 可能是基础类型, 也可能是引用类型的字段, 若是基础类型则校验, 否则跳过 */
@@ -52,11 +51,6 @@ export const _tableChangedIncludeChecker = (key: string, value: any) => {
   return (
     _tableChangedMixTypeConfig.includes(key as any) && !isReferenceType(value)
   );
-};
-
-/** 从table实例中获取tableContext */
-export const _getTableCtx = (instance: any): TablePluginContext => {
-  return getNamePathValue(instance, "__ctx");
 };
 
 /** 由于plugin.rcRuntime等api必须与组件同步运行(包含hooks), 在初始化时将RCTablePlugin插件进行预先实例化 */

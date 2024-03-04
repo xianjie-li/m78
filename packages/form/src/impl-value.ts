@@ -8,15 +8,23 @@ import {
   isString,
   setNamePathValue,
   simplyDeepClone as clone,
+  simplyEqual as isEqual,
 } from "@m78/utils";
-import { _clearChildAndSelf } from "./common.js";
-import isEqual from "lodash/isEqual.js";
+import { _clearChildAndSelf, isRootName } from "./common.js";
 
 export function _implValue(ctx: _Context) {
   const { instance, config } = ctx;
 
   instance.getValue = (name) => {
+    if (isRootName(name)) return instance.getValues();
+
     return getNamePathValue(ctx.values, name);
+  };
+
+  // 获取经过处理后的当前值
+  instance.getValues = () => {
+    const [, values] = ctx.getFormatterValuesAndSchema();
+    return values;
   };
 
   ctx.getFormatterValuesAndSchema = (values) => {
@@ -31,12 +39,8 @@ export function _implValue(ctx: _Context) {
   };
 
   if (!ctx.verifyOnly) {
-    instance.getValues = () => {
-      const [, values] = ctx.getFormatterValuesAndSchema();
-      return values;
-    };
-
-    instance.setValues = (values) => {
+    // 设置所有值
+    instance.setValues = (values: any) => {
       ctx.values = values;
 
       if (!ctx.lockListState) {
@@ -49,11 +53,16 @@ export function _implValue(ctx: _Context) {
       }
 
       if (config.autoVerify) {
-        instance.verify().catch(() => {});
+        instance.verify();
       }
     };
 
     instance.setValue = (name, val) => {
+      if (isRootName(name)) {
+        instance.setValues(val);
+        return;
+      }
+
       setNamePathValue(ctx.values, name, val);
 
       if (!ctx.lockListState) {
@@ -88,7 +97,7 @@ export function _implValue(ctx: _Context) {
       const defaultValues = instance.getDefaultValues();
 
       // 非数组和对象时, 直接比较
-      if (!isObject(values) && !Array.isArray(values)) {
+      if (!isObject(values) && !isArray(values)) {
         if (!isEqual(values, defaultValues)) {
           return values;
         }

@@ -100,8 +100,8 @@ export type NamePath = NameItem | NameItem[];
  *
  * When name pass `[]`, will return obj directly
  * */
-export function getNamePathValue(obj: any, name: NamePath) {
-  if (!(obj instanceof Object)) return undefined; // 过滤掉数字/字符串等
+export function getNamePathValue<V = any>(obj: any, name: NamePath): V {
+  if (!(obj instanceof Object)) return undefined as any; // 过滤掉数字/字符串等
 
   if (isString(name) || isNumber(name)) {
     return obj?.[name];
@@ -116,6 +116,8 @@ export function getNamePathValue(obj: any, name: NamePath) {
       return obj;
     }
   }
+
+  return undefined as any;
 }
 
 /** Convert NamePath to string */

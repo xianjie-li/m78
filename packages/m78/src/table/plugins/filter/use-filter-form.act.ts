@@ -1,4 +1,3 @@
-import { RCTableProps } from "../../types.js";
 import { useMemo } from "react";
 import {
   createForm,
@@ -24,9 +23,7 @@ export function _useFilterFormAct() {
         layoutType: FormLayoutType.vertical,
         spacePadding: false,
         values: props.defaultFilter,
-        schemas: {
-          schema: props.filterSchema,
-        },
+        schemas: props.filterSchema,
       });
     }
 

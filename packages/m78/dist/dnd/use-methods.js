@@ -1,10 +1,10 @@
 import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
 import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
 import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
-import { autoScrollTrigger, checkElementVisible, getScrollParent, isDom, isFunction, isObject } from "@m78/utils";
+import { checkElementVisible, getScrollParent, isDom, isFunction, isObject, simplyEqual as isEqual } from "@m78/utils";
+import { autoScrollTrigger } from "@m78/smooth-scroll";
 import { useFn } from "@m78/hooks";
 import throttle from "lodash/throttle.js";
-import isEqual from "lodash/isEqual.js";
 import { _defaultDNDEnableInfos, _defaultDNDStatus, _resetEvent, _updateEvent, _checkIfAcceptable, _filterInBoundDNDs, _getCurrentTriggerByMultipleTrigger, _isIgnoreEl, _getObjectByNewValues, _draggingEvent } from "./common.js";
 import clsx from "clsx";
 export function _useMethods(ctx) {

@@ -1,33 +1,30 @@
-import { FormInstance, FormSchema, FormRejectMeta } from "@m78/form";
+import { FormRejectMeta, FormSchema, FormSchemaWithoutName, FormVerifyInstance } from "@m78/form";
 import { AnyFunction, AnyObject, NamePath } from "@m78/utils";
 import { TableKey } from "../types/base-type.js";
 import { TableLoadStage, TablePlugin } from "../plugin.js";
-import { TableCell, TableColumn, TableRow } from "../types/items.js";
+import { TableCell, TableColumn } from "../types/items.js";
 import { TableMutationDataEvent, TableMutationEvent, TableMutationValueEvent } from "./mutation.js";
-import { _TableInteractiveCorePlugin } from "./interactive-core.js";
+import { _TableInteractivePlugin } from "./interactive.js";
 import { _TableSoftRemovePlugin } from "./soft-remove.js";
 export declare class _TableFormPlugin extends TablePlugin implements TableForm {
     wrapNode: HTMLElement;
-    formInstances: Record<string, FormInstance | void>;
-    errors: Record<string, FormRejectMeta | void>;
-    cellErrors: Record<string, Record<string, string | void> | void>;
-    rowChanged: Record<string, boolean>;
+    verifyInstance: FormVerifyInstance;
+    errors: Map<TableKey, FormRejectMeta>;
+    cellErrors: Map<TableKey, Map<TableKey, string>>;
+    rowChanged: Map<TableKey, true>;
+    cellChanged: Map<TableKey, true>;
+    defaultValues: Map<TableKey, AnyObject>;
+    schemaDatas: Map<TableKey, SchemaData>;
+    rowTouched: Map<TableKey, true>;
+    cellTouched: Map<TableKey, true>;
     errorNodes: HTMLElement[];
     rowChangedNodes: HTMLElement[];
-    cellChanged: Record<string, TableCell>;
     cellChangedNodes: HTMLElement[];
-    editStatus: {
+    editStatusMap: Map<TableKey, {
         required: boolean;
         cell: TableCell;
-    }[];
-    editStatusMap: Record<string, {
-        required: boolean;
-        cell: TableCell;
-    } | void>;
+    }>;
     editStatusNodes: HTMLElement[];
-    invalidCellMap: Record<string, TableCell[] | undefined>;
-    invalidStatusMap: Record<string, boolean>;
-    invalidStatus: TableCell[];
     invalidNodes: HTMLElement[];
     addRecordMap: Map<TableKey, boolean>;
     removeRecordMap: Map<TableKey, AnyObject>;
@@ -38,36 +35,32 @@ export declare class _TableFormPlugin extends TablePlugin implements TableForm {
         /** 当前索引 */
         currentIndex: number;
     }>;
-    interactive: _TableInteractiveCorePlugin;
+    interactive: _TableInteractivePlugin;
     softRemove: _TableSoftRemovePlugin;
     beforeInit(): void;
     mounted(): void;
     beforeDestroy(): void;
     loadStage(stage: TableLoadStage, isBefore: boolean): void;
-    mutation: (e: TableMutationEvent) => void;
     rendering(): void;
+    mutation: (e: TableMutationEvent) => void;
     valueMutation: (e: TableMutationValueEvent) => void;
     dataMutation: (e: TableMutationDataEvent) => void;
     validCheck(cell: TableCell): boolean;
     getChanged(rowKey: TableKey, columnKey?: NamePath): boolean;
     getTableChanged(): boolean;
+    getTouched(rowKey: TableKey, columnKey?: NamePath): boolean;
+    getTableTouched(): boolean;
     /** 检测是否发生了数据排序 */
     getSortedStatus(): boolean;
     getData(): TableDataLists<AnyObject>;
-    resetFormState(): void;
-    verify(): Promise<TableDataLists>;
+    verify(): Promise<TableDataLists<AnyObject>>;
     verifyRow(rowKey?: TableKey): Promise<AnyObject>;
-    verifyChanged(): Promise<TableDataLists>;
-    /** 获取指定单元格最后一次参与验证后的错误 */
-    getCellError(cell: TableCell): string;
+    verifyUpdated(): Promise<TableDataLists<AnyObject>>;
+    /** 获取指定单元格最后一次参与验证后的错误字符串 */
+    getCellError(cell: TableCell): any;
     /** 获取指定列的可编辑信息, 不可编辑时返回null */
-    getEditStatus(col: TableColumn): {
-        required: boolean;
-        cell: TableCell;
-    } | null;
+    getEditStatus(col: TableColumn): any;
     private verifyCommon;
-    private verifySpecifiedRow;
-    private resetDataRecords;
     private reset;
     private updateEditStatus;
     private updateValidStatus;
@@ -75,43 +68,71 @@ export declare class _TableFormPlugin extends TablePlugin implements TableForm {
     private getErrorList;
     private getRowMarkList;
     private getChangedList;
-    initForm(arg: TableMutationValueEvent | TableCell | TableRow): FormInstance;
-    /** 遍历数据, 返回所有数据, 若cb返回false则将从返回list中过滤 */
+    private innerCheck;
+    /** 获取verify实例 */
+    getVerify(): FormVerifyInstance;
+    private getSchemas;
+    private getFmtData;
+    /** 初始化verify实例 */
+    private initVerify;
+    /** 遍历所有数据(不包含fake/软删除数据)并返回其clone版本
+     *
+     * - 若cb返回false则跳过并将该条数据从返回list中过滤, 返回0时, 停止遍历, 返回已遍历的值
+     * - 数据会对invalid的值进行移除处理, 可通过 handleInvalid 控制
+     * */
     private eachData;
-}
-/** table定制版的FormSchema */
-export interface TableFormSchema extends Omit<FormSchema, "list"> {
+    private initNodeWrap;
+    private schemaConfigChange;
 }
 /** form相关配置 */
 export interface TableFormConfig {
-    /** 用于校验字段的schema */
-    schema?: TableFormSchema[];
+    /**
+     * 用于校验字段的schema
+     *
+     * 部分schema在table中会被忽略, 如 schema.list
+     * */
+    schemas?: FormSchema[];
     /** 自定义form实例创建器 */
     formCreator?: AnyFunction;
 }
 /** 对外暴露的form相关方法 */
 export interface TableForm {
-    /** 执行校验, 未通过时会抛出VerifyError类型的错误, 这是使用者唯一需要处理的错误类型 */
-    verify: () => Promise<TableDataLists>;
-    /** 验证指定行 */
-    verifyRow: (rowKey?: TableKey) => Promise<AnyObject>;
-    /** 对变更行执行校验, 未通过时会抛出VerifyError类型的错误, 这是使用者唯一需要处理的错误类型 */
-    verifyChanged: () => Promise<TableDataLists>;
     /**
-     * 获取当前数据, 返回内容包含: 所有数据/新增/变更/删除数据
+     * 执行校验, 返回元组: [错误, 当前数据信息]
      *
-     * 关于排序数据:
-     * 除了手动的排序操作, 新增/删除数据也会导致数据排序变动, 预先记录的排序状态随着后续操作都会变得不准确, 如果要保存排序状态,
-     * 通常由两种方式: 一是统一提交并通过TableDataLists.all获取最终的完整顺序. 二是在mutation事件中根据排序的变更实时进行保存.
+     * - 若包含错误, 校验会在首个错误行停止
      * */
+    verify: () => Promise<[FormRejectMeta | null, TableDataLists]>;
+    /** 校验指定行, 返回元组: [错误, 当前行数据] */
+    verifyRow: (rowKey?: TableKey) => Promise<[FormRejectMeta | null, AnyObject]>;
+    /**
+     * 同verify, 但仅对新增和变更行执行校验, 返回元组: [错误, 被校验的行]
+     *
+     * - 若包含错误, 校验会在首个错误行停止
+     * */
+    verifyUpdated: () => Promise<[FormRejectMeta | null, TableDataLists]>;
+    /** 获取当前数据相关的内容, 包含: 所有数据 / 新增 / 变更 / 删除的数据, 以及一些数据相关的状态 */
     getData(): TableDataLists;
-    /** 获取指定行或单元格的变更状态, 数据变更, 被新增/删除均视为变更, 数据排序变更不视为变更 */
+    /**
+     * 指定行或单元格数据是否变更
+     *
+     * - 值变更/新增/删除的行均视为变更, 行排序变更时, 行会视为变更, 行下单元格不会 */
     getChanged(rowKey: TableKey, columnKey?: NamePath): boolean;
-    /** 表格是否发生过数据变更, 排序, 增删数据 */
+    /**
+     * 表格是否发生过数据变更
+     *
+     * - 被视为数据变更的场景: 值变更/新增/删除/排序
+     * */
     getTableChanged(): boolean;
-    /** 清理当前的错误信息/变更状态等, 不影响已经改变的值 */
-    resetFormState(): void;
+    /**
+     * 指定行或单元格是否发生过操作
+     *
+     * - 触发touched的场景: 数据操作/验证/新增/删除, 排序变更时, 行会视为touched, 单元格不会 */
+    getTouched(rowKey: TableKey, columnKey?: NamePath): boolean;
+    /** 指定行或单元格是否发生过操作: 数据操作/验证/新增/删除/排序 */
+    getTableTouched(): boolean;
 }
+/** 数据变更相关的内容 */
 export interface TableDataLists<D = AnyObject> {
     /** 所有数据 */
     all: D[];
@@ -123,7 +144,14 @@ export interface TableDataLists<D = AnyObject> {
     update: D[];
     /** 移除的行 */
     remove: D[];
-    /** 是否发生了数据排序, 不包含增删数据导致的索引变更 */
+    /** 发生了数据排序 (不包含增删数据导致的索引变更) */
     sorted: boolean;
 }
+interface SchemaData {
+    schemas: FormSchema[];
+    rootSchema: FormSchemaWithoutName;
+    invalid: Map<TableKey, true>;
+    invalidNames: NamePath[];
+}
+export {};
 //# sourceMappingURL=form.d.ts.map

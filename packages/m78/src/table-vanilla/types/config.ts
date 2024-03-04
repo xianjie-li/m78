@@ -13,7 +13,7 @@ import { TableSelectConfig } from "../plugins/select.js";
 import { TableKey, TableRenderCtx } from "./base-type.js";
 import { TableEmptyConfig } from "../plugins/empty.js";
 import { TableDragSortConfig } from "../plugins/drag-sort.js";
-import { TableInteractiveCoreConfig } from "../plugins/interactive-core.js";
+import { TableInteractiveConfig } from "../plugins/interactive.js";
 import { TableFormConfig } from "../plugins/form.js";
 import { TableIsConfig } from "../plugins/is.js";
 
@@ -118,7 +118,7 @@ export interface TableConfig
     TableSelectConfig,
     TableEmptyConfig,
     TableDragSortConfig,
-    TableInteractiveCoreConfig,
+    TableInteractiveConfig,
     TableInternalConfig,
     TableFormConfig,
     TableIsConfig {}

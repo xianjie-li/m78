@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "@m78/utils": "workspace:^",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "@swc/helpers": "^0.4.36"
   }
 }

@@ -65,6 +65,9 @@ export class TablePlugin {
    * */
   mounted?(): void;
 
+  /** 每次开始前触发 */
+  beforeRender?(): void;
+
   /** 渲染中, 本阶段内部渲染基本上已完成, 可以再次附加自定义的渲染 */
   rendering?(): void;
 

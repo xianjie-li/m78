@@ -3,9 +3,8 @@ import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
 import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
 import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { createContext, useMemo } from "react";
-import { isBoolean, isFunction, isObject } from "@m78/utils";
+import { isBoolean, isFunction, isObject, simplyEqual as isEqual } from "@m78/utils";
 import { createEvent } from "@m78/hooks";
-import isEqual from "lodash/isEqual.js";
 export var _DEFAULT_GROUP = "M78-DND-DEFAULT-GROUP";
 /** 所有分组数据 */ export var _groupMap = _define_property({}, _DEFAULT_GROUP, {
     scrollParents: [],

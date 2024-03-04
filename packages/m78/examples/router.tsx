@@ -28,6 +28,7 @@ import ForkExample from "./fork/fork-example.js";
 import ScrollExample from "./scroll/scroll-example.js";
 import DndExample from "./dnd/dnd-example.js";
 import RformExample from "./form/rform-example.js";
+import RformExample2 from "./form/rform-example2.js";
 
 import zhHans from "../src/i18n/locales/zh-Hans.js";
 import en from "../src/i18n/locales/en.js";
@@ -126,6 +127,10 @@ export const router = createHashRouter([
       {
         path: "rform",
         element: <RformExample />,
+      },
+      {
+        path: "rform2",
+        element: <RformExample2 />,
       },
       {
         path: "table",

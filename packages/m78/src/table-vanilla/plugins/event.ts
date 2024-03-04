@@ -7,13 +7,14 @@ import {
   rafCaller,
   RafFunction,
 } from "@m78/utils";
-import { TableCell } from "../types/items.js";
+import { TableCell, TableColumn, TableRow } from "../types/items.js";
 import debounce from "lodash/debounce.js";
 
 import { TableMutationEvent } from "./mutation.js";
 import { TableReloadOptions } from "./life.js";
 import { TableFeedbackEvent } from "./feedback.js";
 import { SmoothTriggerEvent, SmoothWheel } from "@m78/smooth-scroll";
+import { CustomEventWithHook } from "@m78/hooks";
 
 /**
  * 内部事件绑定, 外部事件派发
@@ -127,6 +128,8 @@ export interface TableEvents {
   initialized: CustomEvent<EmptyFunction>;
   /** 首次渲染完成 */
   mounted: CustomEvent<EmptyFunction>;
+  /** 每次开始前触发 */
+  beforeRender: CustomEvent<EmptyFunction>;
   /** 渲染中, 本阶段内部渲染基本上已完成, 可以再次附加自定义的渲染 */
   rendering: CustomEvent<EmptyFunction>;
   /** 每次渲染完成后触发 */
@@ -135,6 +138,12 @@ export interface TableEvents {
   reload: CustomEvent<(opt: TableReloadOptions) => void>;
   /** 卸载前触发 */
   beforeDestroy: CustomEvent<EmptyFunction>;
+  /** 在rendering触发前, 但在每个单元格渲染后触发 */
+  cellRendering: CustomEvent<(cell: TableCell) => void>;
+  /** 在rendering触发前触发, 主要用于通知所有该次render显示的行, 触发时并不意味着行内所有单元格均已渲染 */
+  rowRendering: CustomEvent<(row: TableRow) => void>;
+  /** 在rendering触发前触发, 主要用于通知所有该次render显示的列, 触发时并不意味着行内所有单元格均已渲染 */
+  columnRendering: CustomEventWithHook<(column: TableColumn) => void>;
 
   /** 单元格的挂载状态变更 (mount状态可以理解为单元格是否在表格视口内并被渲染, 可通过cell.isMount获取) */
   mountChange: CustomEvent<(cell: TableCell) => void>;
@@ -153,6 +162,10 @@ export interface TableEvents {
   feedback: CustomEvent<(event: TableFeedbackEvent[]) => void>;
   /** 拖拽移动启用状态变更时触发 */
   dragMoveChange: CustomEvent<(enable: boolean) => void>;
+  /** 常规配置(非持久化配置)变更时触发, 接收所有变更key的数组changeKeys, 和isChange, 用于检测key是否包含在该次变更中 */
+  configChange: CustomEvent<
+    (changeKeys: string[], isChange: (key: string) => boolean) => void
+  >;
 }
 
 export interface TableEvent {

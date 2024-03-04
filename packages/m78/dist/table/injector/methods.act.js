@@ -76,13 +76,13 @@ export function _useMethodsAct() {
         var ls = props.schema || [];
         if (self.editCheckForm) {
             self.editCheckForm.setSchemas({
-                schema: ls
+                schemas: ls
             });
             return;
         }
         self.editCheckForm = createForm({
             schemas: {
-                schema: ls
+                schemas: ls
             },
             autoVerify: false
         });

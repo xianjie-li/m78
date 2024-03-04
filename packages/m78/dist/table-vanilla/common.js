@@ -123,9 +123,6 @@ export var _prefix = "m78-table";
         (_nodeList = nodeList).push.apply(_nodeList, _to_consumable_array(newNodes));
     }
 }
-/** 检测传入的事件是否是touch事件 */ export function isTouch(e) {
-    return e.type.startsWith("touch") || e.pointerType === "touch";
-}
 /** 用于便捷的根据当前 lastViewportItems 生成用于高效检测row mount状态的检测方法 */ export function _rowMountChecker() {
     var visibleRows = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : [];
     // 用于快速获取行的挂载状态

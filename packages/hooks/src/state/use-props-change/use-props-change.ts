@@ -1,5 +1,9 @@
-import { AnyObject, isArray, isFunction } from "@m78/utils";
-import isEqual from "lodash/isEqual.js";
+import {
+  AnyObject,
+  isArray,
+  isFunction,
+  simplyEqual as isEqual,
+} from "@m78/utils";
 import { usePrev } from "../use-prev/use-prev.js";
 
 /**
@@ -67,9 +71,6 @@ export function usePropsChange<T extends Object = AnyObject>(
     const prevValue = (prev as any)[key];
 
     if (!hasInclude) {
-      if (isArray(include) && !include.includes(key)) return;
-      if (isFunction(include) && !include(key, nextValue)) return;
-
       if (isArray(exclude) && exclude.includes(key)) return;
       if (isFunction(exclude) && exclude(key, nextValue)) return;
 
