@@ -51,4 +51,15 @@ export declare function setNamePathValue(obj: any, name: NamePath, val: any, ski
 export declare function deleteNamePathValue(obj: any, name: NamePath): void;
 /** Delete multiple value on obj, through nameList, ensures no index misalignment when deleting the same array content multiple times */
 export declare function deleteNamePathValues(obj: any, nameList: NamePath[]): void;
+type Constructor = new (...args: any[]) => any;
+/**
+ * 对给定的多个类执行混合, 首个类会被视为主类, 执行混合后类的类型默认与主类相同
+ *
+ * - 为了更好的可读性和可维护性, 若存在同名的属性/方法会抛出错误
+ * - 构造函数内不可访其他类的成员, 因为初始化尚未完成
+ * - 不会处理静态方法/属性, 应统一维护到主类
+ * - 仅主类支持集成, 其他类的集成属性/方法会被忽略
+ * */
+export declare function applyMixins<C extends Constructor>(MainConstructor: C, ...constructors: Constructor[]): C;
+export {};
 //# sourceMappingURL=object.d.ts.map

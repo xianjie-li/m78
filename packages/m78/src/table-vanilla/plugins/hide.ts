@@ -6,7 +6,7 @@ import { SelectManager } from "@m78/utils";
 /**
  * 表格列隐藏
  *
- * 通过为隐藏项添加meta.ignore实现, ignore状态为额外维护的, 放置与默认的产生冲突
+ * 通过为隐藏项添加meta.ignore实现, ignore状态为额外维护的, 防止与默认的产生冲突
  * */
 export class _TableHidePlugin extends TablePlugin {
   metaData: _TableMetaDataPlugin;

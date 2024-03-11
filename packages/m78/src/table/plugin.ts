@@ -3,9 +3,7 @@ import { throwError } from "@m78/utils";
 import { _prefix } from "../table-vanilla/common.js";
 import { ReactNode } from "react";
 import { TableCellWithDom } from "../table-vanilla/index.js";
-import { _RCTableSelf, _RCTableState, RCTableProps } from "./types.js";
-import { InjectType } from "../injector/index.js";
-import { _useStateAct } from "./injector/state.act.js";
+import { _RCTableSelf, _RCTableState } from "./types.js";
 import { _injector } from "./table.js";
 
 type InjectGetters = ReturnType<typeof _injector["useGetter"]>;

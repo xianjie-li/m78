@@ -9,10 +9,10 @@ import { TableRender } from "../plugins/render.js";
 import { TableIs } from "../plugins/is.js";
 import { TableSetter } from "../plugins/setter.js";
 import { TableConfigInstance } from "../plugins/config.js";
-import { TableForm } from "../plugins/form.js";
 import { TableKeyboardInteraction } from "../plugins/keyboard-interaction.js";
 import { TableSoftRemove } from "../plugins/soft-remove.js";
 import { TableDragMove } from "../plugins/drag-move.js";
+import { TableForm } from "../plugins/form/types.js";
 
 /** table实例 */
 export interface TableInstance

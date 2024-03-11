@@ -1,7 +1,12 @@
+import { _ as _assert_this_initialized } from "@swc/helpers/_/_assert_this_initialized";
+import { _ as _class_call_check } from "@swc/helpers/_/_class_call_check";
+import { _ as _construct } from "@swc/helpers/_/_construct";
+import { _ as _inherits } from "@swc/helpers/_/_inherits";
 import { _ as _instanceof } from "@swc/helpers/_/_instanceof";
 import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
-import { isArray, isEmpty, isNumber, isObject, isString } from "./is.js";
+import { _ as _create_super } from "@swc/helpers/_/_create_super";
+import { isArray, isEmpty, isNumber, isObject, isString, isFunction } from "./is.js";
 import { ensureArray } from "./array.js";
 /**
  * Delete all empty values (except 0) of the object/array
@@ -225,4 +230,72 @@ var ROOT_KEY = "__DeleteNamePathValuesRootKey";
         lastObj = lastObj[n];
     }
     throw new Error("Names can't be empty");
+}
+/**
+ * 对给定的多个类执行混合, 首个类会被视为主类, 执行混合后类的类型默认与主类相同
+ *
+ * - 为了更好的可读性和可维护性, 若存在同名的属性/方法会抛出错误
+ * - 构造函数内不可访其他类的成员, 因为初始化尚未完成
+ * - 不会处理静态方法/属性, 应统一维护到主类
+ * - 仅主类支持集成, 其他类的集成属性/方法会被忽略
+ * */ export function applyMixins(MainConstructor) {
+    for(var _len = arguments.length, constructors = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++){
+        constructors[_key - 1] = arguments[_key];
+    }
+    var list = [
+        MainConstructor
+    ].concat(_to_consumable_array(constructors));
+    if (list.length < 2) return MainConstructor;
+    // 方法名: descriptor
+    var methodMap = Object.create(null);
+    list.forEach(function(Constr) {
+        Object.getOwnPropertyNames(Constr.prototype).forEach(function(name) {
+            if (methodMap[name]) {
+                throw Error("Mixin: Contains duplicate method declarations -> ".concat(name, "()"));
+            }
+            var cur = Object.getOwnPropertyDescriptor(Constr.prototype, name);
+            if (!cur) return;
+            if (name !== "constructor" && (isFunction(cur.value) || isFunction(cur.get) || isFunction(cur.set))) {
+                methodMap[name] = cur;
+            }
+        });
+    });
+    // 记录写入过的属性
+    var propertyExist = {};
+    // 待合并的属性
+    var propertyMap = {};
+    var Mixin = /*#__PURE__*/ function(MainConstructor) {
+        "use strict";
+        _inherits(Mixin, MainConstructor);
+        var _super = _create_super(Mixin);
+        function Mixin() {
+            for(var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++){
+                args[_key] = arguments[_key];
+            }
+            _class_call_check(this, Mixin);
+            var _this;
+            _this = _super.call.apply(_super, [
+                this
+            ].concat(_to_consumable_array(args)));
+            constructors.forEach(function(Con) {
+                var ins = _construct(Con, _to_consumable_array(args));
+                Object.keys(ins).forEach(function(k) {
+                    if (propertyExist[k]) {
+                        throw Error("Mixin: Contains duplicate property declarations -> ".concat(k));
+                    }
+                    if (k in _assert_this_initialized(_this)) {
+                        propertyExist[k] = true;
+                        return;
+                    }
+                    propertyMap[k] = ins[k];
+                    propertyExist[k] = true;
+                });
+            });
+            Object.assign(_assert_this_initialized(_this), propertyMap);
+            return _this;
+        }
+        return Mixin;
+    }(MainConstructor);
+    Object.defineProperties(Mixin.prototype, methodMap);
+    return Mixin;
 }

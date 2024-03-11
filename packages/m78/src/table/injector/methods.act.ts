@@ -1,5 +1,9 @@
 import { RCTableInstance, RCTableProps } from "../types.js";
-import { createTable, TableConfig, TableInstance } from "../../table-vanilla/index.js";
+import {
+  createTable,
+  TableConfig,
+  TablePluginContext,
+} from "../../table-vanilla/index.js";
 import { createEvent } from "@m78/hooks";
 import { i18n, TABLE_NS } from "../../i18n/index.js";
 import { _useStateAct } from "./state.act.js";
@@ -13,8 +17,10 @@ import {
   isFunction,
 } from "@m78/utils";
 import { createForm } from "../../form/index.js";
-import { _privateCtxKey, _privateInstanceCallbackKey } from "../../table-vanilla/common.js";
-import { TablePluginContext } from "../../table-vanilla/types/context.js";
+import {
+  _privateCtxKey,
+  _privateInstanceCallbackKey,
+} from "../../table-vanilla/common.js";
 
 export function _useMethodsAct() {
   const {
@@ -66,9 +72,12 @@ export function _useMethodsAct() {
       // 获取尚未完成渲染的table实例, 部分功能中会用到
       [_privateInstanceCallbackKey](noRenderedIns: RCTableInstance) {
         self.instance = noRenderedIns;
-        self.vCtx = getNamePathValue(noRenderedIns, _privateCtxKey) as TablePluginContext
-      }
-    }
+        self.vCtx = getNamePathValue(
+          noRenderedIns,
+          _privateCtxKey
+        ) as TablePluginContext;
+      },
+    };
 
     const ins = createTable({
       ...(mapProps as any as TableConfig),

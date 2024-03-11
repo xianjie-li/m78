@@ -1,5 +1,4 @@
 import { isReferenceType } from "@m78/utils";
-import { TablePluginContext } from "../table-vanilla/types/context.js";
 import { RCTableProps } from "./types.js";
 import { RCTablePlugin } from "./plugin.js";
 

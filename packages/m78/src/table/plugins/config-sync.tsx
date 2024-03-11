@@ -8,10 +8,10 @@ import { COMMON_NS, i18n, TABLE_NS } from "../../i18n/index.js";
 import {
   TableInstance,
   TablePersistenceConfig,
+  TableMutationType,
 } from "../../table-vanilla/index.js";
 import { getStorage, setStorage } from "@m78/utils";
 import { throwError } from "../../common/index.js";
-import { TableMutationType } from "../../table-vanilla/plugins/mutation.js";
 import { _useMethodsAct } from "../injector/methods.act.js";
 import { Button } from "../../button/index.js";
 

@@ -1,4 +1,4 @@
-import { _FormContext, _FieldContext } from "./types.js";
+import { _FormContext, _FieldContext, FormSchema } from "./types.js";
 import { _UseFieldMethods } from "./use-field-methods.js";
 import {
   createTempID,
@@ -16,7 +16,7 @@ export function _useFieldLifeCircle(
 ) {
   const { form } = ctx;
 
-  const { name, setState, wrapRef } = fieldCtx;
+  const { name, setState, wrapRef, isRoot } = fieldCtx;
 
   const { getProps } = methods;
 
@@ -26,7 +26,9 @@ export function _useFieldLifeCircle(
       name,
       () => {
         setState({
-          schema: form.getSchema(name),
+          schema: isRoot
+            ? (form.getSchemas().schemas as any as FormSchema)
+            : form.getSchema(name),
           renderKey: createTempID(),
         });
       },

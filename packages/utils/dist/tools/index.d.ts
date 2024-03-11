@@ -5,4 +5,5 @@ export * from "./keyboard-helper.js";
 export * from "./select-manager.js";
 export * from "./set-cache-value.js";
 export * from "./create-temporary-id.js";
+export * from "./frame-cache.js";
 //# sourceMappingURL=index.d.ts.map

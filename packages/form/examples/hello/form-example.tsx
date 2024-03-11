@@ -240,6 +240,7 @@ form.events.update.on(
 
 const FormExample = () => {
   const [str, setStr] = useState(() => {
+    // return JSON.stringify({}, null, 4);
     return JSON.stringify(form.getValues(), null, 4);
   });
 
@@ -430,11 +431,7 @@ const FormExample = () => {
       </button>
       <button
         onClick={() => {
-          console.log(
-            form.getSchema(["list4", 1], {
-              skipChildren: false,
-            })
-          );
+          console.log(form.getSchema(["list4", 1]));
         }}
       >
         getSchema list 4[1]

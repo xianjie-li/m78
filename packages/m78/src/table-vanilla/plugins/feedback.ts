@@ -1,5 +1,5 @@
 import { TablePlugin } from "../plugin.js";
-import { _TableFormPlugin } from "./form.js";
+import { _TableFormPlugin } from "./form/form.js";
 import debounce from "lodash/debounce.js";
 import {
   createTrigger,

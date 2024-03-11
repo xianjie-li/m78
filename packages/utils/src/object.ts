@@ -1,4 +1,11 @@
-import { isArray, isEmpty, isNumber, isObject, isString } from "./is.js";
+import {
+  isArray,
+  isEmpty,
+  isNumber,
+  isObject,
+  isString,
+  isFunction,
+} from "./is.js";
 import { ensureArray } from "./array.js";
 
 /**
@@ -287,4 +294,84 @@ function getLastObj(obj: any, names: NameItem[]): [any, NameItem] {
   }
 
   throw new Error("Names can't be empty");
+}
+
+type Constructor = new (...args: any[]) => any;
+
+/**
+ * 对给定的多个类执行混合, 首个类会被视为主类, 执行混合后类的类型默认与主类相同
+ *
+ * - 为了更好的可读性和可维护性, 若存在同名的属性/方法会抛出错误
+ * - 构造函数内不可访其他类的成员, 因为初始化尚未完成
+ * - 不会处理静态方法/属性, 应统一维护到主类
+ * - 仅主类支持集成, 其他类的集成属性/方法会被忽略
+ * */
+export function applyMixins<C extends Constructor>(
+  MainConstructor: C,
+  ...constructors: Constructor[]
+): C {
+  const list = [MainConstructor, ...constructors];
+
+  if (list.length < 2) return MainConstructor;
+
+  // 方法名: descriptor
+  const methodMap: any = Object.create(null);
+
+  list.forEach((Constr) => {
+    Object.getOwnPropertyNames(Constr.prototype).forEach((name) => {
+      if (methodMap[name]) {
+        throw Error(
+          `Mixin: Contains duplicate method declarations -> ${name}()`
+        );
+      }
+
+      const cur = Object.getOwnPropertyDescriptor(Constr.prototype, name);
+
+      if (!cur) return;
+
+      if (
+        name !== "constructor" &&
+        (isFunction(cur.value) || isFunction(cur.get) || isFunction(cur.set))
+      ) {
+        methodMap[name] = cur;
+      }
+    });
+  });
+
+  // 记录写入过的属性
+  const propertyExist: any = {};
+  // 待合并的属性
+  const propertyMap: any = {};
+
+  class Mixin extends MainConstructor {
+    constructor(...args: any[]) {
+      super(...args);
+
+      constructors.forEach((Con) => {
+        const ins = new Con(...args);
+
+        Object.keys(ins).forEach((k) => {
+          if (propertyExist[k]) {
+            throw Error(
+              `Mixin: Contains duplicate property declarations -> ${k}`
+            );
+          }
+
+          if (k in this) {
+            propertyExist[k] = true;
+            return;
+          }
+
+          propertyMap[k] = ins[k];
+          propertyExist[k] = true;
+        });
+      });
+
+      Object.assign(this, propertyMap);
+    }
+  }
+
+  Object.defineProperties(Mixin.prototype, methodMap);
+
+  return Mixin as C;
 }

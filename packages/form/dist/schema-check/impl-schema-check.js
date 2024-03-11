@@ -27,6 +27,9 @@ import { _fmtValidator, _getExtraKeys, _isErrorTemplateInterpolate } from "./com
                                     2
                                 ];
                                 schema = _schema;
+                                if (schema.valid === false) return [
+                                    2
+                                ];
                                 namePath = isRootSchema ? [] : _to_consumable_array(parentNamePath).concat([
                                     schema.name
                                 ]);

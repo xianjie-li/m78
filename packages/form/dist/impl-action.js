@@ -183,6 +183,7 @@ export function _implAction(ctx) {
     });
     instance.reset = function() {
         ctx.values = clone(ctx.defaultValue);
+        ctx.cacheSchema = null;
         ctx.state = {};
         // 清空现有list信息, 并使用新的values进行一次刷新, 同步list
         ctx.listState = {};

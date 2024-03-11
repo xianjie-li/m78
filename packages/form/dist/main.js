@@ -24,6 +24,7 @@ import { isArray } from "lodash";
     var withValues = function(values, action) {
         var backup = isTruthyOrZero(ctx.values) ? ctx.values : null;
         ctx.values = values;
+        ctx.cacheSchema = null;
         var res = action();
         ctx.values = backup;
         return res;
@@ -63,6 +64,7 @@ function createMain(config, verifyOnly) {
         schema: isArray(conf.schemas) ? {
             schemas: conf.schemas
         } : conf.schemas,
+        cacheSchema: null,
         config: conf,
         lockNotify: false,
         lockListState: false,

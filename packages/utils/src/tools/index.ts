@@ -11,3 +11,5 @@ export * from "./select-manager.js";
 export * from "./set-cache-value.js";
 
 export * from "./create-temporary-id.js";
+
+export * from "./frame-cache.js";

@@ -28,12 +28,12 @@ export function _implValue(ctx: _Context) {
   };
 
   ctx.getFormatterValuesAndSchema = (values) => {
-    const [schemas, names] = ctx.getFormatterSchemas();
+    const { schemas, invalidNames } = instance.getSchemas();
 
     const cloneValues = clone(values === undefined ? ctx.values : values);
 
     // 移除invalid值
-    deleteNamePathValues(cloneValues, names);
+    deleteNamePathValues(cloneValues, invalidNames);
 
     return [schemas, cloneValues];
   };
@@ -42,6 +42,8 @@ export function _implValue(ctx: _Context) {
     // 设置所有值
     instance.setValues = (values: any) => {
       ctx.values = values;
+
+      ctx.cacheSchema = null;
 
       if (!ctx.lockListState) {
         ctx.listState = {};
@@ -64,6 +66,8 @@ export function _implValue(ctx: _Context) {
       }
 
       setNamePathValue(ctx.values, name, val);
+
+      ctx.cacheSchema = null;
 
       if (!ctx.lockListState) {
         _clearChildAndSelf(ctx, name);

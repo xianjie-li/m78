@@ -11,7 +11,7 @@ import {
   setNamePathValue,
 } from "@m78/utils";
 import { removeNode } from "../../common/index.js";
-import { _TableFormPlugin } from "./form.js";
+import { _TableFormPlugin } from "./form/form.js";
 import { _TableDisablePlugin } from "./disable.js";
 
 /**

@@ -5,6 +5,7 @@ import {
   FormListCustomRenderArgs,
   FormListProps,
   FormCustomRenderWrapperArgs,
+  FormSchema,
 } from "./types.js";
 import { useSetState } from "@m78/hooks";
 import React, { isValidElement, useMemo, useRef } from "react";
@@ -36,17 +37,19 @@ export function _fieldImpl(ctx: _FormContext) {
   form.Field = (props) => {
     const { name: _name } = props;
 
-    const [name, strName] = useMemo(() => {
-      if (!isTruthyOrZero(_name)) return [EMPTY_NAME, EMPTY_NAME];
-      if (isRootName(_name)) return [[], "[]"];
-      return [_name!, stringifyNamePath(_name!)];
+    const [name, strName, isRoot] = useMemo(() => {
+      if (!isTruthyOrZero(_name)) return [EMPTY_NAME, EMPTY_NAME, false];
+      if (isRootName(_name)) return [[], "[]", true];
+      return [_name!, stringifyNamePath(_name!), false];
     }, [_name]);
 
     const id = useMemo(() => createRandString(2), []);
 
     const [state, setState] = useSetState(() => ({
       /** 当前组件的schema */
-      schema: form.getSchema(name),
+      schema: isRoot
+        ? (form.getSchemas().schemas as any as FormSchema)
+        : form.getSchema(name),
       /** 手动更新组件的标记 */
       renderKey: createTempID(),
     }));
@@ -69,6 +72,7 @@ export function _fieldImpl(ctx: _FormContext) {
       wrapRef,
       id,
       strName,
+      isRoot,
     };
 
     // 组件方法
@@ -93,6 +97,8 @@ export function _fieldImpl(ctx: _FormContext) {
     let spacePadding = getProps("spacePadding");
 
     const { adaptorConf, elementRender } = methods.getAdaptor();
+
+    console.log(adaptorConf);
 
     if (spacePadding === undefined) spacePadding = true;
 

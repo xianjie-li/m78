@@ -1,137 +1,56 @@
-import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
-import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
-import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
-import { ensureArray, getNamePathValue, isArray, isEmpty, isFunction, isObject, setNamePathValue } from "@m78/utils";
-import { isRootName } from "./common.js";
+import { ensureArray, getNamePathValue, isArray, isEmpty, isFunction, isObject, stringifyNamePath } from "@m78/utils";
 export function _implSchema(ctx) {
     var instance = ctx.instance;
     instance.getSchemas = function() {
-        var _ctx_getFormatterSchemas = _sliced_to_array(ctx.getFormatterSchemas(), 2), schemas = _ctx_getFormatterSchemas[0], invalidNames = _ctx_getFormatterSchemas[1];
-        return {
-            schemas: schemas,
-            invalidNames: invalidNames
-        };
-    };
-    instance.getSchema = function(name) {
-        var opt = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
-        var _ctx_getFormatterSchema = _sliced_to_array(ctx.getFormatterSchema(name, opt.skipChildren, opt.withoutProcess), 1), schema = _ctx_getFormatterSchema[0];
-        return schema;
-    };
-    instance.setSchemas = function(schema) {
-        ctx.schema = isArray(schema) ? {
-            schemas: schema
-        } : schema;
-        if (!ctx.verifyOnly && !ctx.lockNotify) {
-            instance.events.update.emit();
-        }
-    };
-    ctx.getFormatterSchemas = function() {
+        if (ctx.cacheSchema) return ctx.cacheSchema;
         // 所有invalid项的name
         var invalidNames = [];
-        var schemas = recursionHandleSchemas({
+        var schemasFlat = new Map();
+        var ret = {
+            schemas: {},
+            invalidNames: invalidNames,
+            schemasFlat: schemasFlat
+        };
+        // 提前设置, 部分场景会需要在dynamic中提前访问缓存
+        ctx.cacheSchema = ret;
+        ret.schemas = recursionHandleSchemas({
             schema: ctx.schema,
             parentNames: [],
             invalidCB: function(name) {
                 return invalidNames.push(name);
             },
+            eachCB: function(name, sc) {
+                var sName = stringifyNamePath(name);
+                schemasFlat.set(sName, sc);
+            },
             isRoot: true
         });
-        return [
-            schemas,
-            invalidNames
-        ];
+        return ret;
     };
-    ctx.getFormatterSchema = function(name) {
-        var skipChildren = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : true, withoutProcess = arguments.length > 2 ? arguments[2] : void 0;
-        // 所有invalid项的name
-        var invalidNames = [];
-        var sc = undefined;
-        var parentNames = [];
-        var isRoot = isRootName(name);
-        if (isRoot) {
-            sc = _object_spread_props(_object_spread({}, ctx.schema), {
-                name: "[]"
-            });
-        } else {
-            var arrName = ensureArray(name).slice();
-            if (!arrName.length) return [
-                null,
-                invalidNames
-            ];
-            recursionGetSchema(ctx.schema, arrName);
-            if (sc === undefined) return [
-                null,
-                invalidNames
-            ];
-            // 当前名称
-            var curName = arrName.pop();
-            parentNames = arrName;
-            // 为eachSchema等子项设置名称
-            if (!("name" in sc)) setNamePathValue(sc, "name", curName);
-        }
-        // 递归获取指定schema
-        function recursionGetSchema(schema, na) {
-            var _schema_schemas;
-            // 长度用尽, 完成匹配
-            if (!na.length) {
-                sc = Object.assign({}, schema);
-                return;
-            }
-            // 从schema子项查找
-            if ((_schema_schemas = schema.schemas) === null || _schema_schemas === void 0 ? void 0 : _schema_schemas.length) {
-                var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = undefined;
-                try {
-                    for(var _iterator = schema.schemas[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true){
-                        var sc1 = _step.value;
-                        // 子项是否有匹配的, 有则继续向下查找
-                        if (sc1.name === na[0]) {
-                            recursionGetSchema(sc1, na.slice(1));
-                            return;
-                        }
-                    }
-                } catch (err) {
-                    _didIteratorError = true;
-                    _iteratorError = err;
-                } finally{
-                    try {
-                        if (!_iteratorNormalCompletion && _iterator.return != null) {
-                            _iterator.return();
-                        }
-                    } finally{
-                        if (_didIteratorError) {
-                            throw _iteratorError;
-                        }
-                    }
-                }
-            }
-            // 从eachSchema子项查找
-            if (schema.eachSchema) {
-                recursionGetSchema(schema.eachSchema, na.slice(1));
-                return;
-            }
-        // 无匹配
-        }
-        if (withoutProcess) return [
-            sc,
-            invalidNames
-        ];
-        var processed = recursionHandleSchemas({
-            schema: sc,
-            parentNames: parentNames,
-            invalidCB: function invalidCB(n) {
-                invalidNames.push(n);
-            },
-            returnInvalid: true,
-            skipChildren: skipChildren,
-            isRoot: isRoot
-        });
-        return [
-            processed || null,
-            invalidNames
-        ];
+    instance.getSchema = function(name) {
+        var schemasFlat = instance.getSchemas().schemasFlat;
+        return schemasFlat.get(stringifyNamePath(name)) || null;
     };
-    ctx.schemaSpecialPropsHandle = function(schema, namePath, skipEachSchema) {
+    instance.setSchemas = function(schema) {
+        ctx.schema = isArray(schema) ? {
+            schemas: schema
+        } : schema;
+        ctx.cacheSchema = null;
+        if (!ctx.verifyOnly && !ctx.lockNotify) {
+            instance.events.update.emit();
+        }
+    };
+    /**
+   * 对Schema上的dynamic/eachSchema/validator进行处理, namePath为当前schema的name, skipEachSchema为true时, 不处理eachSchema
+   *
+   * 处理流程:
+   * - 处理当前 schema 的 dynamic 选项, 并用 dynamic 返回的选项合并到当前schema
+   * - 处理eachSchema, 根据当前对应值的类型(数组/对象)为当前schema生成schema子配置
+   * - 克隆validator, 并确保其为一个数组
+   *
+   * 该方法直接对原对象进行读写, 处理后的schema不再包含dynamic/eachSchema配置
+   * */ var schemaSpecialPropsHandle = function(schema, namePath, skipEachSchema) {
         // # 处理dynamic, 若包含eachSchema处理则跳过, 应交于生成后的.schema处理
         if (isFunction(schema.dynamic)) {
             var dProps = schema.dynamic({
@@ -143,8 +62,7 @@ export function _implSchema(ctx) {
         var eachSchema = schema.eachSchema;
         // # 处理eachSchema
         // 通过当前值遍历生成 schema list
-        // schema.valid 为 false 或主动不处理时跳过
-        if (!skipEachSchema && schema.valid !== false && !isEmpty(eachSchema)) {
+        if (!skipEachSchema && !isEmpty(eachSchema)) {
             var curValue = getNamePathValue(ctx.values, namePath);
             // 作为数组且有对应项时
             if (isArray(curValue) && curValue.length) {
@@ -172,7 +90,7 @@ export function _implSchema(ctx) {
         delete schema.eachSchema;
     };
     /** 递归一个schema, 处理其所有项的dynamic/eachSchema/invalid/list并对每一项进行拷贝 */ function recursionHandleSchemas(args) {
-        var schema = args.schema, parentNames = args.parentNames, invalidCB = args.invalidCB, _args_isRoot = args.isRoot, isRoot = _args_isRoot === void 0 ? false : _args_isRoot, returnInvalid = args.returnInvalid, skipChildren = args.skipChildren;
+        var schema = args.schema, parentNames = args.parentNames, invalidCB = args.invalidCB, eachCB = args.eachCB, _args_isRoot = args.isRoot, isRoot = _args_isRoot === void 0 ? false : _args_isRoot, skipChildren = args.skipChildren;
         // 复制
         var combine = Object.assign({}, schema);
         var hasName = "name" in combine;
@@ -180,16 +98,17 @@ export function _implSchema(ctx) {
         if (!isRoot) {
             // 非根选项且不包含name的项忽略
             // 无name的情况:
-            // - eachSchema 项经过处理前不会直接传入当前函数
-            if (!hasName) return;
+            // - eachSchema 项经过处理前不会直接传入当前函数, 可直接忽略
+            if (!hasName) return combine;
             else names.push(combine.name);
         }
         // 处理dynamic / eachSchema 等
-        ctx.schemaSpecialPropsHandle(combine, names, skipChildren);
-        // 无效schema的子级视为无效, 不再做处理
+        schemaSpecialPropsHandle(combine, names, skipChildren);
+        // 对处理后的combine执行 eachCB
+        if (!isRoot) eachCB === null || eachCB === void 0 ? void 0 : eachCB(names, combine);
         if (combine.valid === false) {
             invalidCB === null || invalidCB === void 0 ? void 0 : invalidCB(names);
-            return returnInvalid ? combine : undefined;
+        //  return returnInvalid ? combine : undefined; // update: 添加schema缓存机制后, 不再跳过invalid项的子项
         }
         // 包含schema子项时, 对子项进行相同的处理
         if (!skipChildren && combine.schemas && combine.schemas.length) {
@@ -197,7 +116,8 @@ export function _implSchema(ctx) {
                 return recursionHandleSchemas({
                     schema: s,
                     parentNames: names,
-                    invalidCB: invalidCB
+                    invalidCB: invalidCB,
+                    eachCB: eachCB
                 });
             }).filter(function(i) {
                 return !!i;

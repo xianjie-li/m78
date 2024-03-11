@@ -2,7 +2,7 @@
   "name": "@m78/form",
   "version": "1.0.0",
   "description": "A versatile headless form library for client and server-side use, offering core features like value collection, validation, and form state management.",
-  "keowrds": [
+  "keywords": [
     "form",
     "verify",
     "validation",
@@ -20,7 +20,6 @@
     "example-hello": "m78 example hello",
     "example-basic-native-dom-bind": "m78 example basic-native-dom-bind"
   },
-  "keywords": [],
   "author": {
     "name": "Link",
     "email": "1073830130@qq.com"

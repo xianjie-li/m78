@@ -8,24 +8,24 @@ import {
   TablePersistenceConfig,
   TableReloadOptions,
   TableRow,
+  TablePluginContext,
+  TableFeedbackEvent,
+  TablePlugin,
+  TableDataLists,
+  TableSelectConfig,
 } from "../table-vanilla/index.js";
 import { _tableOmitConfig } from "./common.js";
-import { TableSelectConfig } from "../table-vanilla/plugins/select.js";
 import { ComponentBaseProps } from "../common/index.js";
 import { AnyObject, EmptyFunction } from "@m78/utils";
 import { CustomEventWithHook } from "@m78/hooks";
 import React, { ReactElement, ReactNode } from "react";
-import { TableDataLists } from "../table-vanilla/plugins/form.js";
 import { FormInstance, FormSchema } from "../form/index.js";
-import { TablePlugin } from "../table-vanilla/plugin.js";
 import { RCTablePlugin } from "./plugin.js";
-import { TableFeedbackEvent } from "../table-vanilla/plugins/feedback.js";
 import {
   TableConfigPersister,
   TableConfigReader,
 } from "./plugins/config-sync.js";
 import { FormAdaptors } from "../config/index.js";
-import { TablePluginContext } from "../table-vanilla/types/context.js";
 
 /** 忽略的配置 */
 type OmitConfig = typeof _tableOmitConfig[number];
@@ -40,7 +40,7 @@ declare module "../table-vanilla/index.js" {
     /** 在表头后方渲染的额外节点 */
     headerExtra?: ReactNode;
     /** TODO: 自定义表头渲染, 设置后会覆盖默认节点, 若要保留, 可根据参数按需渲染 */
-    headerRender?: () => ReactNode;
+    headerRender?: (originalNode: ReactNode) => ReactNode;
   }
 }
 
@@ -49,14 +49,12 @@ export interface RCTableEditRenderArg extends RCTableRenderArg {
   value: any;
   /** 在value变更时, 通过此方法通知, 变更后的值会临时存储, 并由submit()/cancel()决定提交还是取消 */
   change: (value: any) => void;
-  /** 录入完成, 将变更值提交, 提交时会进行校验, 若失败则会中断提交 */
+  /** 录入完成, 将变更值提交 */
   submit: EmptyFunction;
   /** 取消录入 */
   cancel: EmptyFunction;
   /** 若编辑组件包含关闭动画或需要延迟关闭, 可以调用此方法设置延迟关闭的时间, 若未设置, 编辑组件所在dom会在关闭后被直接清理 */
   delayClose: (time: number) => void;
-  /** 当前行的form实例 */
-  form: FormInstance;
   /** 当前表单控件 */
   element: ReactElement;
   /** 用于将传入的props绑定到element的助手函数 */
@@ -207,7 +205,7 @@ export interface RCTableInstance extends Omit<TableInstance, "event"> {
     cellSelect: CustomEventWithHook<EmptyFunction>;
     /** 配置/数据等变更, 通常意味需要持久化的一些信息发生了改变 */
     mutation: CustomEventWithHook<(event: TableMutationEvent) => void>;
-   
+
     //* # # # # # # # 以下为部分对外暴露的插件生命周期事件或仅对库开发者有用的事件 # # # # # # # */
     /** 初始化阶段触发 */
     init: CustomEventWithHook<EmptyFunction>;
@@ -312,9 +310,9 @@ export interface _RCTableState {
 
 /** 实例状态 */
 export interface _RCTableSelf {
-  /** 
+  /**
    * 表格实例, 会比state.instance更早初始化(在instance创建, 第一次render执行前)
-   * 
+   *
    * 某些地方需要在首次render前提前访问, 估提供此项
    * */
   instance: RCTableInstance;

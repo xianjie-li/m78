@@ -33,7 +33,7 @@ import {
 } from "../types/items.js";
 import { _getCellKey, _getCellKeysByStr, _prefix } from "../common.js";
 import { _TableSortColumnPlugin } from "./sort-column.js";
-import { _TableFormPlugin } from "./form.js";
+import { _TableFormPlugin } from "./form/form.js";
 
 /**
  * config/data变更相关的操作, 变异操作尽量集中在此处并需要新增和触发 TableMutationDataType 事件/处理操作历史等
@@ -942,7 +942,7 @@ export enum TableMutationType {
   value = "value",
 }
 
-/** TableMutationType.data变更类型 */
+/** TableMutationType.data变更的相关类型 */
 export enum TableMutationDataType {
   /** 新增行 */
   add = "add",

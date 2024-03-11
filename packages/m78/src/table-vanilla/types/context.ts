@@ -2,7 +2,7 @@
  * 插件上下文相关类型
  * # # # # # # # # # # # # # # # # # */
 
-import { AnyObject } from "@m78/utils";
+import { AnyObject, CacheTick } from "@m78/utils";
 import { TableKey } from "./base-type.js";
 import { TableConfig, TablePersistenceConfig } from "./config.js";
 
@@ -21,8 +21,9 @@ import { TablePlugin } from "../plugin.js";
 import { _MetaMethods } from "../plugins/meta-data.js";
 import { _ContextGetters } from "../plugins/getter.js";
 import { _ContextSetter } from "../plugins/setter.js";
-import { CacheTick } from "../plugins/frame-cache.js";
 import { _GetterCacheKey } from "./cache.js";
+
+import { _SchemaData } from "../plugins/form/types.js";
 
 /** 固定项信息 */
 type FixedMap<T> = {
@@ -210,6 +211,9 @@ export interface TablePluginContext
 
   /** 通用的getterCache */
   getterCache: CacheTick<_GetterCacheKey>;
+
+  // form plugin 内向外暴露的同名方法
+  getSchemas(row: TableRow | TableKey, update?: boolean): _SchemaData;
 
   /** 用户插件自定义的属性, 自定义插件应该集中属性名到额外的命名空间下, 防止和内部冲突,比如context.myPlugin.xxx */
   // [key: string]: any;

@@ -109,7 +109,7 @@ export interface FormInstance extends FormVerifyInstancePartial {
     setTouched(name: NamePath, touched: boolean): void;
     /** 设置form级别的的touched状态 */
     setFormTouched(touched: boolean): void;
-    /** 设置值, name传入 [] 可设置根值 */
+    /** 设置值 */
     setValue(name: NamePath, val: any): void;
     /** 设置form整体的values */
     setValues(val: any): void;
@@ -183,20 +183,23 @@ interface FormVerifyInstancePartial {
     /** 获取当前的values, 获取前会根据当前的schema进行处理并过滤掉valid为false的值 */
     getValues<T = any>(): T;
     /**
-     * 获取对dynamic/valid/list等特殊项进行处理进行处理后的schemas副本以及一些其他相关信息
+     * 获取格式化后的指定schema (格式化: 处理dynamic, eachSchema, valid等动态选项)
      *
-     * - 在dynamic中调用时, 如果获取的schema包含当前schema本身(直接获取或作为子项获取), 会导致递归, 可通过 skipChildren或withoutProcess选项处理
+     * - schema获取内置了缓存, 仅在value变更/schemas变更/reset时, schema才会重新格式化
+     * - 应避免在dynamic中使用, 当获取的schema声明在当前schema之后时, 会由于其还未完成格式化处理而返回null
      * */
-    getSchema(name: NamePath, opt?: {
-        /** true | 不处理子项 */
-        skipChildren?: boolean;
-        /** 返回原始的schema配置, 不对eachSchema/dynamic等特殊配置进行处理 */
-        withoutProcess?: boolean;
-    }): FormSchema | null;
-    /** 获取处理特殊选项后的根schema */
+    getSchema(name: NamePath): FormSchema | null;
+    /**
+     * 获取格式化后的根schema (格式化: 处理dynamic, eachSchema, valid等动态选项)
+     *
+     * - schema获取内置了缓存, 仅在value变更/schemas变更/reset时, schema才会重新格式化
+     * - 应避免在dynamic中使用, 由于schemas尚未完全格式化, 返回信息基本没有意义
+     * */
     getSchemas(): {
         /** 处理过特殊选项的schema */
         schemas: FormSchemaWithoutName;
+        /** 平铺的schema, 可使用字符串化的key来便捷的获取对应的schema, 不包含根schema */
+        schemasFlat: Map<string, FormSchema>;
         /** 所有invalid项的name */
         invalidNames: NamePath[];
     };
@@ -221,7 +224,7 @@ export interface FormVerifyInstance extends FormVerifyInstancePartial {
      * */
     withValues<R = void>(values: any, action: () => R): R;
     /**
-     * check的变体, 对已经过处理的values/schemas直接进行验证
+     * check的变体, 对已经格式化后的values/schemas直接进行验证
      *
      * - 若已经提前通过getSchema获取了处理后的schema, 并自行对values中的无效项进行了删除, 可通过此方法避免一些重复计算
      * */
@@ -309,6 +312,8 @@ export interface _Context {
     config: FormConfig;
     /** 当前schema */
     schema: FormSchemaWithoutName;
+    /** 缓存的已格式化schema, 在value/schema/reset等场景刷新 */
+    cacheSchema: ReturnType<FormVerifyInstancePartial["getSchemas"]> | null;
     /** form实例, 此时实例只能在实例方法间使用, 因为它是不完整的 */
     instance: FormInstance;
     /** 暂时锁定更新notify, 锁定期间不触发更新 */
@@ -319,28 +324,13 @@ export interface _Context {
     isValueChangeTrigger: boolean;
     /** 是否处于verify模式 */
     verifyOnly: boolean;
-    /** 额外返回invalidNames的getSchemas */
-    getFormatterSchemas(): [FormSchemaWithoutName, NamePath[]];
-    /** 返回invalidNames的getSchema, 配置说明见 getSchema */
-    getFormatterSchema(name: NamePath, skipChildren?: boolean, withoutProcess?: boolean): [FormSchema | null, NamePath[]];
     /**
      * 返回与getFormatterSchema相同的schema和移除invalid项后的values
      *
      * 若未传入values, 则使用ctx.values, 返回的values为副本
      * */
     getFormatterValuesAndSchema(values?: any): [FormSchemaWithoutName, any];
-    /**
-     * 对Schema上的dynamic/eachSchema/validator进行处理, namePath为当前schema的name, skipEachSchema为true或当前项的valid=false时, 不处理eachSchema
-     *
-     * 处理流程:
-     * - 处理当前 schema 的 dynamic 选项, 并用 dynamic 返回的选项合并到当前schema
-     * - 处理eachSchema, 根据当前对应值的类型(数组/对象)为当前schema生成schema子配置
-     * - 克隆validator, 并确保其为一个数组
-     *
-     * 该方法直接对原对象进行读写, 处理后的schema不再包含dynamic/eachSchema配置
-     * */
-    schemaSpecialPropsHandle(schema: FormSchemaWithoutName | FormSchema, namePath: NameItem[], skipEachSchema?: boolean): void;
-    /** 执行静态schema验证, schemas必须是经过schemaSpecialPropsHandle处理后的, 不包含eachSchema/dynamic 等配置 */
+    /** 执行静态schema验证, schemas必须是经过schemaSpecialPropsHandle处理后的, 不包含eachSchema/dynamic 等动态配置 */
     schemaCheck(values: any, schemas: FormSchemaWithoutName, extraMeta?: AnyObject): Promise<FormRejectOrValues>;
 }
 //# sourceMappingURL=types.d.ts.map

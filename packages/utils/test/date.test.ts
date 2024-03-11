@@ -1,5 +1,4 @@
 // query utilities:
-import { getByText } from "@testing-library/dom";
 // adds special assertions like toHaveTextContent
 import "@testing-library/jest-dom";
 

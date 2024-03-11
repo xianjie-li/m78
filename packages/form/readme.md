@@ -487,7 +487,7 @@ export interface FormInstance {
   /** 设置form级别的的touched状态 */
   setFormTouched(touched: boolean): void;
 
-  /** 设置值, name传入 [] 可设置根值 */
+  /** 设置值 */
   setValue(name: NamePath, val: any): void;
 
   /** 设置form整体的values */
@@ -587,24 +587,24 @@ export interface FormInstance {
   getValues<T = any>(): T;
 
   /**
-   * 获取对dynamic/valid/list等特殊项进行处理进行处理后的schemas副本以及一些其他相关信息
+   * 获取格式化后的指定schema (格式化: 处理dynamic, eachSchema, valid等动态选项)
    *
-   * - 在dynamic中调用时, 如果获取的schema包含当前schema本身(直接获取或作为子项获取), 会导致递归, 可通过 skipChildren或withoutProcess选项处理
+   * - schema获取内置了缓存, 仅在value变更/schemas变更/reset时, schema才会重新格式化
+   * - 应避免在dynamic中使用, 当获取的schema声明在当前schema之后时, 会由于其还未完成格式化处理而返回null
    * */
-  getSchema(
-    name: NamePath,
-    opt?: {
-      /** true | 不处理子项 */
-      skipChildren?: boolean;
-      /** 返回原始的schema配置, 不对eachSchema/dynamic等特殊配置进行处理 */
-      withoutProcess?: boolean;
-    }
-  ): FormSchema | null;
+  getSchema(name: NamePath): FormSchema | null;
 
-  /** 获取处理特殊选项后的根schema */
+  /**
+   * 获取格式化后的根schema (格式化: 处理dynamic, eachSchema, valid等动态选项)
+   *
+   * - schema获取内置了缓存, 仅在value变更/schemas变更/reset时, schema才会重新格式化
+   * - 应避免在dynamic中使用, 由于schemas尚未完全格式化, 返回信息基本没有意义
+   * */
   getSchemas(): {
     /** 处理过特殊选项的schema */
     schemas: FormSchemaWithoutName;
+    /** 平铺的schema, 可使用字符串化的key来便捷的获取对应的schema, 不包含根schema */
+    schemasFlat: Map<string, FormSchema>;
     /** 所有invalid项的name */
     invalidNames: NamePath[];
   };
@@ -639,7 +639,7 @@ export interface FormVerifyInstance {
   withValues<R = void>(values: any, action: () => R): R;
 
   /**
-   * check的变体, 对已经过处理的values/schemas直接进行验证
+   * check的变体, 对已经格式化后的values/schemas直接进行验证
    *
    * - 若已经提前通过getSchema获取了处理后的schema, 并自行对values中的无效项进行了删除, 可通过此方法避免一些重复计算
    * */

@@ -2,7 +2,12 @@ import { TablePlugin } from "./plugin.js";
 import { _TableInitPlugin } from "./plugins/init.js";
 import { _TableRenderPlugin } from "./plugins/render.js";
 
-import { createEvent, getNamePathValue, setNamePathValue } from "@m78/utils";
+import {
+  createEvent,
+  getNamePathValue,
+  setNamePathValue,
+  CacheTick,
+} from "@m78/utils";
 import { _privateInstanceCallbackKey, _privateInstanceKey } from "./common.js";
 import { _TableLifePlugin } from "./plugins/life.js";
 import { _TableGetterPlugin } from "./plugins/getter.js";
@@ -28,11 +33,10 @@ import { _TableKeyboardInteractionPlugin } from "./plugins/keyboard-interaction.
 import { _TableInteractivePlugin } from "./plugins/interactive.js";
 import { _TableIsPlugin } from "./plugins/is.js";
 import { _TableSetterPlugin } from "./plugins/setter.js";
-import { _TableFormPlugin } from "./plugins/form.js";
+import { _TableFormPlugin } from "./plugins/form/form.js";
 import { _TableFeedbackPlugin } from "./plugins/feedback.js";
 import { _TableSoftRemovePlugin } from "./plugins/soft-remove.js";
 import { _TableMetaDataPlugin } from "./plugins/meta-data.js";
-import { CacheTick } from "./plugins/frame-cache.js";
 import { TablePluginContext } from "./types/context.js";
 
 /**

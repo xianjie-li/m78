@@ -13,10 +13,10 @@ export function _implValue(ctx) {
         return values;
     };
     ctx.getFormatterValuesAndSchema = function(values) {
-        var _ctx_getFormatterSchemas = _sliced_to_array(ctx.getFormatterSchemas(), 2), schemas = _ctx_getFormatterSchemas[0], names = _ctx_getFormatterSchemas[1];
+        var _instance_getSchemas = instance.getSchemas(), schemas = _instance_getSchemas.schemas, invalidNames = _instance_getSchemas.invalidNames;
         var cloneValues = clone(values === undefined ? ctx.values : values);
         // 移除invalid值
-        deleteNamePathValues(cloneValues, names);
+        deleteNamePathValues(cloneValues, invalidNames);
         return [
             schemas,
             cloneValues
@@ -26,6 +26,7 @@ export function _implValue(ctx) {
         // 设置所有值
         instance.setValues = function(values) {
             ctx.values = values;
+            ctx.cacheSchema = null;
             if (!ctx.lockListState) {
                 ctx.listState = {};
             }
@@ -43,6 +44,7 @@ export function _implValue(ctx) {
                 return;
             }
             setNamePathValue(ctx.values, name, val);
+            ctx.cacheSchema = null;
             if (!ctx.lockListState) {
                 _clearChildAndSelf(ctx, name);
             }

@@ -11,139 +11,75 @@ import {
   isEmpty,
   isFunction,
   isObject,
-  isTruthyOrZero,
   NameItem,
   NamePath,
-  setNamePathValue,
+  stringifyNamePath,
 } from "@m78/utils";
-import { isRootName } from "./common.js";
 
 export function _implSchema(ctx: _Context) {
   const { instance } = ctx;
 
   instance.getSchemas = () => {
-    const [schemas, invalidNames] = ctx.getFormatterSchemas();
+    if (ctx.cacheSchema) return ctx.cacheSchema;
 
-    return {
-      schemas,
+    // 所有invalid项的name
+    const invalidNames: NamePath[] = [];
+    const schemasFlat = new Map<string, FormSchema>();
+
+    const ret = {
+      schemas: {},
       invalidNames,
+      schemasFlat,
     };
+
+    // 提前设置, 部分场景会需要在dynamic中提前访问缓存
+    ctx.cacheSchema = ret;
+
+    ret.schemas = recursionHandleSchemas({
+      schema: ctx.schema,
+      parentNames: [],
+      invalidCB: (name) => invalidNames.push(name),
+      eachCB: (name, sc) => {
+        const sName = stringifyNamePath(name);
+
+        schemasFlat.set(sName, sc);
+      },
+      isRoot: true,
+    });
+
+    return ret;
   };
 
-  instance.getSchema = (name, opt = {}) => {
-    const [schema] = ctx.getFormatterSchema(
-      name,
-      opt.skipChildren,
-      opt.withoutProcess
-    );
-    return schema;
+  instance.getSchema = (name) => {
+    const { schemasFlat } = instance.getSchemas();
+
+    return schemasFlat.get(stringifyNamePath(name)) || null;
   };
 
   instance.setSchemas = (schema) => {
     ctx.schema = isArray(schema) ? { schemas: schema } : schema;
+
+    ctx.cacheSchema = null;
 
     if (!ctx.verifyOnly && !ctx.lockNotify) {
       instance.events.update.emit();
     }
   };
 
-  ctx.getFormatterSchemas = () => {
-    // 所有invalid项的name
-    const invalidNames: NamePath[] = [];
-
-    const schemas = recursionHandleSchemas({
-      schema: ctx.schema,
-      parentNames: [],
-      invalidCB: (name) => invalidNames.push(name),
-      isRoot: true,
-    });
-
-    return [schemas!, invalidNames];
-  };
-
-  ctx.getFormatterSchema = (name, skipChildren = true, withoutProcess) => {
-    // 所有invalid项的name
-    const invalidNames: NamePath[] = [];
-
-    let sc: FormSchema | FormSchemaWithoutName | undefined = undefined;
-    let parentNames: NameItem[] = [];
-
-    const isRoot = isRootName(name);
-
-    if (isRoot) {
-      sc = {
-        ...ctx.schema,
-        name: "[]",
-      };
-    } else {
-      const arrName = ensureArray(name).slice();
-
-      if (!arrName.length) return [null, invalidNames];
-
-      recursionGetSchema(ctx.schema, arrName);
-
-      if (sc === undefined) return [null, invalidNames];
-
-      // 当前名称
-      const curName = arrName.pop();
-
-      parentNames = arrName;
-
-      // 为eachSchema等子项设置名称
-      if (!("name" in sc)) setNamePathValue(sc, "name", curName);
-    }
-
-    // 递归获取指定schema
-    function recursionGetSchema(
-      schema: FormSchema | FormSchemaWithoutName,
-      na: NameItem[]
-    ) {
-      // 长度用尽, 完成匹配
-      if (!na.length) {
-        sc = Object.assign({}, schema);
-        return;
-      }
-
-      // 从schema子项查找
-      if (schema.schemas?.length) {
-        for (const sc of schema.schemas) {
-          // 子项是否有匹配的, 有则继续向下查找
-          if (sc.name === na[0]) {
-            recursionGetSchema(sc, na.slice(1));
-            return;
-          }
-        }
-      }
-
-      // 从eachSchema子项查找
-      if (schema.eachSchema) {
-        recursionGetSchema(schema.eachSchema, na.slice(1));
-        return;
-      }
-
-      // 无匹配
-    }
-
-    if (withoutProcess) return [sc, invalidNames];
-
-    const processed = recursionHandleSchemas({
-      schema: sc!,
-      parentNames,
-      invalidCB(n) {
-        invalidNames.push(n);
-      },
-      returnInvalid: true,
-      skipChildren,
-      isRoot,
-    }) as FormSchema | undefined;
-
-    return [processed || null, invalidNames];
-  };
-
-  ctx.schemaSpecialPropsHandle = (
+  /**
+   * 对Schema上的dynamic/eachSchema/validator进行处理, namePath为当前schema的name, skipEachSchema为true时, 不处理eachSchema
+   *
+   * 处理流程:
+   * - 处理当前 schema 的 dynamic 选项, 并用 dynamic 返回的选项合并到当前schema
+   * - 处理eachSchema, 根据当前对应值的类型(数组/对象)为当前schema生成schema子配置
+   * - 克隆validator, 并确保其为一个数组
+   *
+   * 该方法直接对原对象进行读写, 处理后的schema不再包含dynamic/eachSchema配置
+   * */
+  const schemaSpecialPropsHandle = (
     schema: FormSchemaWithoutName | FormSchema,
-    namePath,
-    skipEachSchema
+    namePath: NameItem[],
+    skipEachSchema?: boolean
   ) => {
     // # 处理dynamic, 若包含eachSchema处理则跳过, 应交于生成后的.schema处理
     if (isFunction(schema.dynamic)) {
@@ -159,8 +95,7 @@ export function _implSchema(ctx: _Context) {
 
     // # 处理eachSchema
     // 通过当前值遍历生成 schema list
-    // schema.valid 为 false 或主动不处理时跳过
-    if (!skipEachSchema && schema.valid !== false && !isEmpty(eachSchema)) {
+    if (!skipEachSchema && !isEmpty(eachSchema)) {
       const curValue = getNamePathValue(ctx.values, namePath);
 
       // 作为数组且有对应项时
@@ -206,10 +141,10 @@ export function _implSchema(ctx: _Context) {
     parentNames: NamePath;
     /** 对invalid的项进行回调 */
     invalidCB?: (name: NamePath) => void;
+    /** 对递归到的每一项进行回调, 不包含根schema */
+    eachCB?: (name: NamePath, schema: FormSchema) => void;
     /** 根schema */
     isRoot?: boolean;
-    /** 默认该项valid为false时返回void, 设置为true时返回项 */
-    returnInvalid?: boolean;
     /** 设置为true时, 不处理eachSchema/schema等子项 */
     skipChildren?: boolean;
   }) {
@@ -217,16 +152,13 @@ export function _implSchema(ctx: _Context) {
       schema,
       parentNames,
       invalidCB,
+      eachCB,
       isRoot = false,
-      returnInvalid,
       skipChildren,
     } = args;
 
     // 复制
-    const combine: FormSchema | FormSchemaWithoutName = Object.assign(
-      {},
-      schema
-    );
+    const combine = Object.assign({}, schema);
 
     const hasName = "name" in combine;
 
@@ -235,19 +167,21 @@ export function _implSchema(ctx: _Context) {
     if (!isRoot) {
       // 非根选项且不包含name的项忽略
       // 无name的情况:
-      // - eachSchema 项经过处理前不会直接传入当前函数
-      if (!hasName) return;
+      // - eachSchema 项经过处理前不会直接传入当前函数, 可直接忽略
+      if (!hasName) return combine;
       // 添加当前name
       else names.push((combine as FormSchema).name);
     }
 
     // 处理dynamic / eachSchema 等
-    ctx.schemaSpecialPropsHandle(combine, names, skipChildren);
+    schemaSpecialPropsHandle(combine, names, skipChildren);
 
-    // 无效schema的子级视为无效, 不再做处理
+    // 对处理后的combine执行 eachCB
+    if (!isRoot) eachCB?.(names, combine as FormSchema);
+
     if (combine.valid === false) {
       invalidCB?.(names);
-      return returnInvalid ? combine : undefined;
+      //  return returnInvalid ? combine : undefined; // update: 添加schema缓存机制后, 不再跳过invalid项的子项
     }
 
     // 包含schema子项时, 对子项进行相同的处理
@@ -258,6 +192,7 @@ export function _implSchema(ctx: _Context) {
             schema: s,
             parentNames: names,
             invalidCB,
+            eachCB,
           })
         )
         .filter((i) => !!i) as FormSchema[];

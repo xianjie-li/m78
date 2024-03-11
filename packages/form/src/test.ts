@@ -1109,9 +1109,7 @@ describe("verify", () => {
       },
     });
 
-    expect(verify2.getSchema([])?.label).toBe("abc");
-
-    expect(verify2.getSchema([])?.name).toBe("[]");
+    expect(verify2.getSchemas().schemas!.label).toBe("abc");
   });
 
   test("child schema & eachSchema", async () => {

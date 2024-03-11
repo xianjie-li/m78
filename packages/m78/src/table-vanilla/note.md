@@ -47,12 +47,6 @@ feedback | empty | rowCloumnResize | disabled | softRemove | scrollMark
 - 添加设置/读取缓存
 - 非固定项的位置是不用实时设置的, 参考 interactive
 
-form 实现改动:
-
-- verify 新增 getSchemasDetail(): { schemas, invalidNames } api
-- verify 也实现 setSchemas , 省略部分操作
-- 检查 verify 调用 check 可能存在性能问题不
-
 核心实现:
 
 - 通过 schema + editor 来判断列是否可编辑, **简化启用编辑所需的配置**, 以及编辑相关的所有配置
@@ -62,34 +56,19 @@ form 实现改动:
 - 提交时: 对提交行使用公共 verify 进行逐行遍历校验, eachData 调整为可以中断
 - 获取数据时, 根据当前 invalidMap 删除无效项
 
-设置值的单元格/行单独维护 touched 状态
-均改为 map 实现
-错误返回类型调整
-valid/editStatus 相关实现简化
-
-未启用 form 功能时跳过各种计算
-常规 js 版本错误标记等显示优化
-
-指定轻微滚动后滚动方向锁定, 或是一侧值明显大于另一侧是忽略另一侧
-
-改动杂项:
-
-- 支持整行表单编辑, 创建单独的 form 实例, 输入完成后将值写入行, 随后验证整行
-  - 支持 setRowValues
-
-~~schemas 根支持传数组 schema~~
-~~schema 子项更名为 schemas~~
-~~错误时无 data, 有 data 时无错误~~
-支持验证本身, [] 和 `[]` 视为特殊 name, 表示根本身, 自动将 name = [] 设置到 root
-更新相关文档 rc form / form
-
-- 更新 empty 实现方式
-- 没有 key 时生成 key, 并给予警告, 警告可关闭
+- 支持 setRowValues
 
 ## 改动计划
 
 normal
 
+- 指定轻微滚动后滚动方向锁定, 或是一侧值明显大于另一侧是忽略另一侧
+- 新增和变动标记支持隐藏
+- 支持无历史记录模式
+- 按键绑定优化, 通过插件暴露 api, 集中绑定, 参考 vscode 查看是否有需要优化的地方, 支持全局 enable
+- 虚拟覆盖点也改为集中绑定
+- 更新 empty 实现方式
+- 没有 key 时生成 key, 并给予警告, 警告可关闭
 - 优化 firefox 等浏览器的帧率?
 - 隐藏滚动条异常, 滚动条优化
 - 编辑标记显示异常, fixed right 不显示头可编辑提示

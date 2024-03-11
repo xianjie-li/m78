@@ -1,11 +1,11 @@
 import { _CustomEditItem, RCTableEditRenderArg } from "../types.js";
-import { TableCell } from "../../table-vanilla/index.js";
-import { useFn } from "@m78/hooks";
-import React, { cloneElement, isValidElement, ReactElement } from "react";
 import {
+  TableCell,
   TableInteractiveDone,
   TableInteractiveRenderArg,
-} from "../../table-vanilla/plugins/interactive.js";
+} from "../../table-vanilla/index.js";
+import { useFn } from "@m78/hooks";
+import React, { cloneElement, isValidElement, ReactElement } from "react";
 import {
   AnyObject,
   delay,
@@ -21,6 +21,7 @@ import { throwError } from "../../common/index.js";
 import { FormAdaptorsItem, m78Config } from "../../config/index.js";
 import { Overlay } from "../../overlay/index.js";
 import { TransitionType } from "../../transition/index.js";
+import { FormSchema } from "../../form/index.js";
 
 // 自定义编辑逻辑
 export function _useEditRender() {
@@ -76,8 +77,19 @@ export function _useEditRender() {
     return editable;
   });
 
-  // SchemaData添加cacheKey
-  // 根据行获取sData, 根据namePath递归获取获取单元格对应的 schema, 并根据cacheKey更新缓存并清理之前的缓存, 缓存格式: { row+cacheKey: { cellKey: schema } }
+  /** 获取cell对应的schema */
+  const getCellSchema = useFn((cell: TableCell) => {
+    if (!self.vCtx) return;
+
+    const { schemasFlat } = self.vCtx.getSchemas(cell.row);
+
+    return schemasFlat.get(cell.column.key as string) as FormSchema | null;
+  });
+
+  /** 获取cell对应的schema.element */
+  const getCellElement = useFn((cell: TableCell) => {
+    return (getCellSchema(cell) as FormSchema)?.element;
+  });
 
   // 检测单元格是否可编辑 依据: 1. 是否启用edit或是新增数据  2. 是否配置了schema.element
   const interactiveEnableChecker = useFn((cell: TableCell) => {
@@ -92,16 +104,16 @@ export function _useEditRender() {
 
     const isNew = meta.new;
 
-    const hasElement = false; // 从schema查询
-
-    if (isNew) return hasElement; // 新增项在包含有效schema.element时始终可编辑
+    if (isNew) {
+      return !!getCellElement(cell); // 新增项在包含有效schema.element时始终可编辑
+    }
 
     if (dataOperations.edit === false) return false;
 
     if (isFunction(dataOperations.edit) && !dataOperations.edit(cell))
       return false;
 
-    return hasElement;
+    return !!getCellElement(cell);
   });
 
   // 自定义编辑渲染
@@ -111,12 +123,11 @@ export function _useEditRender() {
       value,
       done,
       node,
-      form,
     }: TableInteractiveRenderArg): TableInteractiveDone => {
       let time = 0;
       let val = value;
 
-      const schema = form.getSchema(cell.column.config.originalKey);
+      const schema = getCellSchema(cell);
 
       const schemaElement = schema?.element;
 
@@ -148,7 +159,6 @@ export function _useEditRender() {
         change: (_val) => {
           val = _val;
         },
-        form,
         submit: () => done(),
         cancel: () => done(false),
         delayClose: (t) => {

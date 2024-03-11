@@ -4,15 +4,15 @@ import { useSelf, useSetState } from "@m78/hooks";
 import { Bubble } from "../../../bubble/index.js";
 import clsx from "clsx";
 import { Divider } from "../../../layout/index.js";
-import { TableCellWithDom } from "../../../table-vanilla/index.js";
+import {
+  TableCellWithDom,
+  TableFeedback,
+  TableFeedbackEvent,
+} from "../../../table-vanilla/index.js";
 import { createRandString, isTruthyOrZero } from "@m78/utils";
 import { _injector } from "../../table.js";
 import { _useStateAct } from "../../injector/state.act.js";
 import { renderCommonHandle } from "../../render/use-custom-render.js";
-import {
-  TableFeedback,
-  TableFeedbackEvent,
-} from "../../../table-vanilla/plugins/feedback.js";
 
 export function _Feedback() {
   const props = _injector.useProps();

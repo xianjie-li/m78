@@ -49,6 +49,8 @@ export function _implSchemaCheck(ctx: _Context) {
 
       const schema = _schema as FormSchema;
 
+      if (schema.valid === false) return;
+
       const namePath: NamePath = isRootSchema
         ? []
         : [...parentNamePath, schema.name];

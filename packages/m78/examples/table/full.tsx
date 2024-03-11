@@ -247,7 +247,7 @@ const TableFullExample = () => {
         style={{
           height: 600,
         }}
-        schema={schema}
+        schemas={schema}
         rows={rowConfig}
         render={({ cell }) => {
           if (cell.column.key === "field22" && !cell.row.isFake) {
@@ -266,8 +266,6 @@ const TableFullExample = () => {
           console.log("mutation", e);
         }}
         filterSchema={filterSchema}
-        dragSortColumn
-        dragSortRow
         defaultNewData={{
           field3: "123",
           field4: "345",
@@ -289,6 +287,8 @@ const TableFullExample = () => {
           add: true,
           delete: true,
           edit: true,
+          sortRow: true,
+          sortColumn: true,
         }}
       ></Table>
 
@@ -307,8 +307,12 @@ const TableFullExample = () => {
           <button
             onClick={() => {
               console.time("getData");
-              console.log(table.getData());
-              console.timeEnd("getData");
+              console.log(
+                table.getData().then((r) => {
+                  console.log(r);
+                  console.timeEnd("getData");
+                })
+              );
             }}
           >
             getData

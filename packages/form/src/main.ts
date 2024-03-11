@@ -35,6 +35,8 @@ export function _createVerify(config: FormConfig): FormVerifyInstance {
 
     ctx.values = values;
 
+    ctx.cacheSchema = null;
+
     const res = action();
 
     ctx.values = backup;
@@ -86,6 +88,7 @@ function createMain(
           schemas: conf.schemas,
         }
       : conf.schemas,
+    cacheSchema: null,
     config: conf,
     lockNotify: false,
     lockListState: false,

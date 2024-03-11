@@ -7,7 +7,7 @@ import React, { useRef } from "react";
 import { useFn, useSetState } from "@m78/hooks";
 import { _injector } from "../table.js";
 import { _useStateAct } from "../injector/state.act.js";
-import { TableMutationType } from "../../table-vanilla/plugins/mutation.js";
+import { TableMutationType } from "../../table-vanilla/index.js";
 import { IconAdd } from "@m78/icons/add.js";
 import { IconDeleteOne } from "@m78/icons/delete-one.js";
 import { Trigger, TriggerEvent, TriggerType } from "../../trigger/index.js";

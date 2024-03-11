@@ -1,4 +1,5 @@
-import { EmptyFunction, isUndefined } from "@m78/utils";
+import { isUndefined } from "../is.js";
+import type { EmptyFunction } from "../types.js";
 
 /**
  * Cache it! in the tick.
