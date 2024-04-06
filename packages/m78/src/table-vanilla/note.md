@@ -34,7 +34,7 @@ onScroll 触发时机时滚动结束后, 表格内容渲染需要预先知道下
 ~~- 支持无列线条样式~~
 ~~- pc 启用拖动模式, 鼠标支持 shift, 切换模式在原生版本提供, 但提供事件~~
 
-性能优化:
+**性能优化:**
 ~~onWheel/onScroll 是否存在重复的帧调用~~
 ~~确保 render 在每帧只会执行一次并且提供 getter 缓存~~
 ~~getAttachPosition -> getX / getY -> getScrollXX~~
@@ -47,7 +47,7 @@ feedback | empty | rowCloumnResize | disabled | softRemove | scrollMark
 - 添加设置/读取缓存
 - 非固定项的位置是不用实时设置的, 参考 interactive
 
-核心实现:
+**form 调整:**
 
 - 通过 schema + editor 来判断列是否可编辑, **简化启用编辑所需的配置**, 以及编辑相关的所有配置
 - 根据当前 schema 配置创建一个公共 verify 实例
@@ -57,15 +57,18 @@ feedback | empty | rowCloumnResize | disabled | softRemove | scrollMark
 - 获取数据时, 根据当前 invalidMap 删除无效项
 
 - 支持 setRowValues
+  ~~ - 支持实际删除 softRemove 的内容 ~~
 
 ## 改动计划
 
 normal
 
+- 键盘切换单元格缓慢, 编辑单元格 tab 某些情况不能正常切换
 - 指定轻微滚动后滚动方向锁定, 或是一侧值明显大于另一侧是忽略另一侧
 - 新增和变动标记支持隐藏
 - 支持无历史记录模式
 - 按键绑定优化, 通过插件暴露 api, 集中绑定, 参考 vscode 查看是否有需要优化的地方, 支持全局 enable
+- shift 中断时的滚动处理
 - 虚拟覆盖点也改为集中绑定
 - 更新 empty 实现方式
 - 没有 key 时生成 key, 并给予警告, 警告可关闭

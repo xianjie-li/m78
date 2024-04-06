@@ -1,4 +1,4 @@
-@import '../common/style/sass';
+@import "../common/style/sass";
 
 $unitSpace: var(--m78-space-1);
 
@@ -85,20 +85,29 @@ $unitSpace: var(--m78-space-1);
 
   &.__success {
     border-color: var(--m78-color-success);
-    @include unit-effect-border(var(--m78-color-success-opacity-sm), var(--m78-color-success));
+    @include unit-effect-border(
+      var(--m78-color-success-opacity-sm),
+      var(--m78-color-success)
+    );
   }
 
   &.__warning {
     border-color: var(--m78-color-warning);
-    @include unit-effect-border(var(--m78-color-warning-opacity-sm), var(--m78-color-warning));
+    @include unit-effect-border(
+      var(--m78-color-warning-opacity-sm),
+      var(--m78-color-warning)
+    );
   }
 
   &.__error {
     border-color: var(--m78-color-error);
-    @include unit-effect-border(var(--m78-color-error-opacity-sm), var(--m78-color-error));
+    @include unit-effect-border(
+      var(--m78-color-error-opacity-sm),
+      var(--m78-color-error)
+    );
   }
 
-  &.__no-border{
+  &.__no-border {
     border-color: transparent !important;
   }
 
@@ -114,7 +123,9 @@ $unitSpace: var(--m78-space-1);
     color: var(--m78-color-title);
     background-color: transparent;
     font-size: inherit;
-    border-radius: var(--m78-border-radius);  // 让某些浏览器的自动填充背景显得不那么生硬
+    border-radius: var(
+      --m78-border-radius
+    ); // 让某些浏览器的自动填充背景显得不那么生硬
     padding: 0 var(--m78-space-1);
 
     @include ellipsis-x;
@@ -142,7 +153,7 @@ $unitSpace: var(--m78-space-1);
     @include effect-font-color(
       var(--m78-color-second),
       var(--m78-color-primary),
-      var(--m78-color-title),
+      var(--m78-color-title)
     );
   }
 
@@ -157,7 +168,6 @@ $unitSpace: var(--m78-space-1);
     user-select: none;
     white-space: nowrap;
   }
-
 }
 
 .m78-table_input {

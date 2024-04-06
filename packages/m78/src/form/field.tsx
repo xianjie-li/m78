@@ -299,7 +299,10 @@ export function _fieldImpl(ctx: _FormContext) {
             !spacePadding && `__no-pad`,
             getProps("className")
           )}
-          style={{ maxWidth: methods.getWidth(), ...getProps("style") }}
+          style={{
+            maxWidth: methods.getWidth(),
+            ...getProps("style"),
+          }}
           trailing={renderLayTrailing()}
         >
           {layoutType === FormLayoutType.vertical && shouldShowLabel && (

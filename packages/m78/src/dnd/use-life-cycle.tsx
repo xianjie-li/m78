@@ -47,7 +47,10 @@ export function _useLifeCycle(ctx: _Context, methods: _UseMethodReturns) {
     // 状态有变时进行更新
     if (!state.status.regular || (!skipEnableReset && !state.enables.enable)) {
       const st: any = {
-        status: { ..._defaultDNDStatus, hasDragging: state.status.hasDragging }, // hasDragging不需要重置, drag结束后会独立清理
+        status: {
+          ..._defaultDNDStatus,
+          hasDragging: state.status.hasDragging,
+        }, // hasDragging不需要重置, drag结束后会独立清理
       };
 
       if (!skipEnableReset) {

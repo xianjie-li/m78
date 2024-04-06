@@ -48,7 +48,7 @@ export class _TableMutationPlugin extends TablePlugin {
 
   sortColumn: _TableSortColumnPlugin;
 
-  form: _TableFormPlugin;
+  form: InstanceType<typeof _TableFormPlugin>;
 
   // 记录变更过的行
   private changedRows: Record<string, boolean> = {};

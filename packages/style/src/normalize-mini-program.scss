@@ -1,4 +1,4 @@
-@import 'sass-vars';
+@import "sass-vars";
 
 text,
 view {
@@ -11,7 +11,7 @@ view {
   line-height: var(--m78-line-height);
   font-family: var(--m78-font-family);
   font-variant: tabular-nums;
-  font-feature-settings: 'tnum';
+  font-feature-settings: "tnum";
   background-color: var(--m78-body-bg);
   height: 100%;
 }

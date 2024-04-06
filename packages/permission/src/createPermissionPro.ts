@@ -1,13 +1,13 @@
-import create from '@m78/seed';
+import create from "@m78/seed";
 import {
   _PermissionProSeedState,
   create as createPermission,
   PermissionProRejectMeta,
-} from './index';
-import { PermissionPro, PermissionProCreator } from './proType';
-import { PERMISSION_PRO_NAME, permissionProValidatorGetter } from './common';
+} from "./index";
+import { PermissionPro, PermissionProCreator } from "./proType";
+import { PERMISSION_PRO_NAME, permissionProValidatorGetter } from "./common";
 
-const _createPermissionPro: PermissionProCreator = config => {
+const _createPermissionPro: PermissionProCreator = (config) => {
   const _config = {
     permission: {},
     ...config,
@@ -30,11 +30,11 @@ const _createPermissionPro: PermissionProCreator = config => {
   });
 
   const pro: PermissionPro = {
-    check: keys => {
+    check: (keys) => {
       const vm = permission([PERMISSION_PRO_NAME], {
         extra: keys,
       });
-      return vm?.length ? ((vm[0] as any) as PermissionProRejectMeta) : null;
+      return vm?.length ? (vm[0] as any as PermissionProRejectMeta) : null;
     },
     seed,
     permission,

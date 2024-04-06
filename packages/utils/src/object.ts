@@ -299,12 +299,12 @@ function getLastObj(obj: any, names: NameItem[]): [any, NameItem] {
 type Constructor = new (...args: any[]) => any;
 
 /**
- * 对给定的多个类执行混合, 首个类会被视为主类, 执行混合后类的类型默认与主类相同
+ * 将首个类之外的类混入到主类中
  *
  * - 为了更好的可读性和可维护性, 若存在同名的属性/方法会抛出错误
- * - 构造函数内不可访其他类的成员, 因为初始化尚未完成
+ * - 主类/混合类的构造函数内均不能访问其他类的属性/方法, 因为尚未初始化完成
+ * - 被混合类不支持继承, 继承项会直接忽略
  * - 不会处理静态方法/属性, 应统一维护到主类
- * - 仅主类支持集成, 其他类的集成属性/方法会被忽略
  * */
 export function applyMixins<C extends Constructor>(
   MainConstructor: C,
@@ -312,7 +312,7 @@ export function applyMixins<C extends Constructor>(
 ): C {
   const list = [MainConstructor, ...constructors];
 
-  if (list.length < 2) return MainConstructor;
+  if (list.length < 2) return MainConstructor as C;
 
   // 方法名: descriptor
   const methodMap: any = Object.create(null);

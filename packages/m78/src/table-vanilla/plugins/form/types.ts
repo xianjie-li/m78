@@ -41,7 +41,7 @@ export interface TableForm {
   getData(): Promise<TableDataLists>;
 
   /** 获取各类型的变更的数量/状态等 */
-  getChangeStatus(): void;
+  getChangeStatus(): TableDataStatus;
 
   /**
    * 指定行或单元格数据是否变更
@@ -55,6 +55,13 @@ export interface TableForm {
    * - 被视为数据变更的场景: 值变更/新增/删除/排序
    * */
   getTableChanged(): boolean;
+
+  /**
+   * 重置表单状态, 执行后 新增/删除/更新/验证/错误/排序等操作状态均会被重置
+   *
+   * - 使用场景: 执行提交等操作后, 若不想完全重新拉取数据并reload表格, 可调用此方法来重置状态, 并复用现有数据
+   * */
+  resetStatus(): void;
 }
 
 /** 数据变更相关的内容 */

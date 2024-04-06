@@ -155,7 +155,7 @@ export class CorePlugin extends Plugin<any> {
 
   pipe(response: Response) {
     // 记录完成请求后的初始response
-    const [batchData, key] = this.getCurrentBatchObj();
+    const [batchData] = this.getCurrentBatchObj();
 
     if (this.batchFlag && batchData && !batchData.response) {
       batchData.response = response.clone();

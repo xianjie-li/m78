@@ -1,5 +1,5 @@
-import { Seed } from '@m78/seed';
-import { Permission } from './types';
+import { Seed } from "@m78/seed";
+import { Permission } from "./types";
 
 /**
  * 权限模板
@@ -43,7 +43,9 @@ export interface _PermissionProPiece {
 }
 
 /** 描述单个验证模板的简单语法树 */
-export type _PermissionProAST = Array<_PermissionProPiece | Array<_PermissionProPiece>>;
+export type _PermissionProAST = Array<
+  _PermissionProPiece | Array<_PermissionProPiece>
+>;
 
 /**
  * 用于描述一项权限的元信息
@@ -92,7 +94,9 @@ export interface PermissionProMetaConfig {
 /** PermissionPro实例 */
 export interface PermissionPro {
   /** 执行验证, 如果验证失败, 返回缺失权限组成的数组, 如果数组项为数组则表示逻辑 `or` */
-  check: (keys: Array<PermissionProTpl | PermissionProTpl[]>) => PermissionProRejectMeta;
+  check: (
+    keys: Array<PermissionProTpl | PermissionProTpl[]>
+  ) => PermissionProRejectMeta;
   /** 内部使用的seed实例 */
   seed: Seed<_PermissionProSeedState>;
   /** 内部使用的常规版permission实例 */

@@ -152,7 +152,7 @@
 }
 
 .m78-wine_resize-btn::before {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;
@@ -163,7 +163,7 @@
 }
 
 .m78-wine_resize-btn::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 3px;
   left: 3px;
@@ -181,7 +181,7 @@
 }
 
 .m78-wine_dispose-btn::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 7px;
   width: 100%;
@@ -190,7 +190,7 @@
 }
 
 .m78-wine_dispose-btn::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 7px;
   height: 100%;
@@ -217,7 +217,8 @@
   outline-color: #e30d0d;
 }
 
-.m78-wine_btn.__warning:hover .m78-wine_dispose-btn::before, .m78-wine_btn.__warning:hover .m78-wine_dispose-btn::after {
+.m78-wine_btn.__warning:hover .m78-wine_dispose-btn::before,
+.m78-wine_btn.__warning:hover .m78-wine_dispose-btn::after {
   background-color: #e30d0d;
 }
 

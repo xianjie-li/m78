@@ -13,13 +13,19 @@ export interface SelectManagerOption<Item = any, Opt = any> {
 /** 选中状态 */
 export interface SelectManagerSelectedState<Item = any, Opt = any> {
     /** 当前选中项, 包含strangeSelected */
-    selected: Item[];
+    readonly selected: Item[];
     /** 选中项的原始选项, 包含strangeSelected */
-    originalSelected: Opt[];
+    readonly originalSelected: Opt[];
     /** 不存在于option.list的选中项 */
-    strangeSelected: Item[];
+    readonly strangeSelected: Item[];
     /** 不包含strangeSelected的选中项 */
-    realSelected: Item[];
+    readonly realSelected: Item[];
+}
+/** 缓存 */
+interface SelectManagerCache {
+    allSelected?: boolean;
+    partialSelected?: boolean;
+    getState?: SelectManagerSelectedState;
 }
 /**
  * 用于列表的选中项管理, 内置了对于超大数据量的优化
@@ -33,6 +39,7 @@ export declare class SelectManager<Item = any, Opt = any> {
     /** 选中值变更时触发的事件 */
     changeEvent: CustomEvent<VoidFunction>;
     readonly option: SelectManagerOption<Item>;
+    cache: SelectManagerCache;
     constructor(option?: SelectManagerOption<Item>);
     /** 从list项中获取值(根据valueMapper) */
     getValueByItem(i: any): Item;
@@ -40,7 +47,7 @@ export declare class SelectManager<Item = any, Opt = any> {
     isWithinList(val: Item): boolean;
     /** 检测值是否被选中 */
     isSelected(val: Item): boolean;
-    /** 当前选中项的信息 */
+    /** 当前选中项的信息, 在选中未变更时, 使用缓存进行返回, 请勿直接改写返回的各项数组 */
     getState(): SelectManagerSelectedState<Item, Opt>;
     /** list中部分值被选中, 不计入strangeSelected */
     get partialSelected(): boolean;
@@ -71,4 +78,5 @@ export declare class SelectManager<Item = any, Opt = any> {
     /** 是否选中了值 */
     hasSelected(): boolean;
 }
+export {};
 //# sourceMappingURL=select-manager.d.ts.map

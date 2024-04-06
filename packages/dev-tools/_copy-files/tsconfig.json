@@ -1,7 +1,7 @@
 {
   "extends": "@m78/devtools/tsconfig-base.json",
   "compilerOptions": {
-    "baseUrl": "./",
+    "baseUrl": "./"
   },
   "include": ["src/**/*", "examples/**/*", "test/**/*"]
 }

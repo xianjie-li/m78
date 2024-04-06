@@ -146,7 +146,11 @@ function useQueue<Item extends AnyObject = {}>(
       }));
       self.list.push(...ls);
     } else {
-      self.list.push({ ...defaultItemOption, id: createRandString(), ...opt });
+      self.list.push({
+        ...defaultItemOption,
+        id: createRandString(),
+        ...opt,
+      });
     }
 
     if (state.current || state.manual) update();

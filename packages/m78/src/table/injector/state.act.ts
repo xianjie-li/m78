@@ -67,6 +67,7 @@ export function _useStateAct() {
         editCheckForm: null as any,
         overlayStackCount: 0,
         instance: null as any,
+        vCtx: null as any,
       };
 
       rcPlugins.forEach((p) => p.rcSelfInitializer?.(_self));

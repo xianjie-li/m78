@@ -59,6 +59,7 @@ export default {
     "new tip": "New",
     "remove tip": "Remove",
     "update tip": "Update",
+    "change tip": "Change",
     "sorted tip": "Sorted",
     "add row btn": "New",
     "save btn": "Save",

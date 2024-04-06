@@ -21,7 +21,7 @@ export function _ToolBarQueryBtn() {
 
   return (
     <Button
-      text
+      size={Size.small}
       onClick={() => {
         return form.submit();
       }}

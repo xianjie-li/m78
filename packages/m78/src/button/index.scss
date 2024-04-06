@@ -1,4 +1,4 @@
-@import '../common/style/sass';
+@import "../common/style/sass";
 
 .m78-btn {
   position: relative;
@@ -22,7 +22,6 @@
   min-width: 60px;
   // 防止作为 flex 子级时变形
   flex: 0 0 auto;
-
 
   @include ellipsis-x;
 
@@ -184,7 +183,8 @@
     @include unit-effect($m-opa-md);
   }
 
-  .m78-btn.__#{$name}.__icon, .m78-btn.__#{$name}.__text {
+  .m78-btn.__#{$name}.__icon,
+  .m78-btn.__#{$name}.__text {
     color: $main-color;
 
     &:focus,
@@ -218,9 +218,33 @@
   }
 }
 
-@include color-btn('primary', var(--m78-color), var(--m78-color-opacity-sm), var(--m78-color-opacity-md));
-@include color-btn('second', var(--m78-color-sub), var(--m78-color-sub-opacity-sm), var(--m78-color-sub-opacity-md));
-@include color-btn('green', var(--m78-color-success), var(--m78-color-success-opacity-sm), var(--m78-color-success-opacity-md));
-@include color-btn('red', var(--m78-color-error), var(--m78-color-error-opacity-sm), var(--m78-color-error-opacity-md));
-@include color-btn('orange', var(--m78-color-warning), var(--m78-color-warning-opacity-sm), var(--m78-color-warning-opacity-md));
-
+@include color-btn(
+  "primary",
+  var(--m78-color),
+  var(--m78-color-opacity-sm),
+  var(--m78-color-opacity-md)
+);
+@include color-btn(
+  "second",
+  var(--m78-color-sub),
+  var(--m78-color-sub-opacity-sm),
+  var(--m78-color-sub-opacity-md)
+);
+@include color-btn(
+  "green",
+  var(--m78-color-success),
+  var(--m78-color-success-opacity-sm),
+  var(--m78-color-success-opacity-md)
+);
+@include color-btn(
+  "red",
+  var(--m78-color-error),
+  var(--m78-color-error-opacity-sm),
+  var(--m78-color-error-opacity-md)
+);
+@include color-btn(
+  "orange",
+  var(--m78-color-warning),
+  var(--m78-color-warning-opacity-sm),
+  var(--m78-color-warning-opacity-md)
+);

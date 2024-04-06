@@ -14,7 +14,7 @@ import { TableMutationEvent, TableMutationType } from "./mutation.js";
 
 /** 提供对某些表格元素的交互反馈, 比如单元格包含错误信息或内容超出时, 在选中后为其提供反馈 */
 export class _TableFeedbackPlugin extends TablePlugin {
-  form: _TableFormPlugin;
+  form: InstanceType<typeof _TableFormPlugin>;
 
   lastEvent: TableFeedbackEvent[] | null = null;
 

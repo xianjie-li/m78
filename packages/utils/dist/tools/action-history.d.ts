@@ -1,6 +1,7 @@
 import { EmptyFunction } from "../types.js";
 /** implement action history */
 export declare class ActionHistory {
+    #private;
     /** 最大记录长度 */
     maxLength: number;
     /** 操作历史 */
@@ -11,10 +12,8 @@ export declare class ActionHistory {
     private isDoing;
     /** 正在执行undo()操作 */
     private isUndoing;
-    /** batch操作期间缓冲的所有action */
-    private batchActionList;
     /** 为true期间不计入历史记录 */
-    private ignoreFlag;
+    private ignoreCB;
     /**
      * 执行一项操作并推入历史, 若后方有其他操作历史, 将全部移除.
      *
@@ -30,13 +29,18 @@ export declare class ActionHistory {
      * */
     undo(): void;
     /**
-     * 批量执行, 在action内执行的所有redo(action)操作都会被合并为单个
+     * 批量执行, 在action内执行的所有redo(action)操作都会被合并为单个, batch内不可再调用其他batch
+     *
+     * @param action - 在action内执行的redo会被合并
+     * @param title - 操作名
      * */
-    batch(action: EmptyFunction): void;
+    batch(action: EmptyFunction, title?: string): ActionHistoryItem;
     /**
      * 使action期间的所有redo(action)操作不计入历史, 需要自行保证这些被忽略的操作不会影响历史还原或重做
+     *
+     * 被忽略的action会通过 cb 回调
      * */
-    ignore(action: EmptyFunction): void;
+    ignore(action: EmptyFunction, cb?: (act: ActionHistoryItem) => void): void;
     /** 重置历史 */
     reset(): void;
     /** 获取下一条记录 */

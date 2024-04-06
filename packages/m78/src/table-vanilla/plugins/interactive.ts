@@ -33,12 +33,13 @@ export class _TableInteractivePlugin extends TablePlugin {
 
   multipleHelper: KeyboardMultipleHelper;
 
-  form: _TableFormPlugin;
+  form: InstanceType<typeof _TableFormPlugin>;
 
   disable: _TableDisablePlugin;
 
   init() {
     this.form = this.getPlugin(_TableFormPlugin);
+
     this.disable = this.getPlugin(_TableDisablePlugin);
 
     this.initDom();

@@ -74,6 +74,7 @@ export default {
     "new tip": "新增",
     "remove tip": "删除",
     "update tip": "更新",
+    "change tip": "变更",
     "sorted tip": "已排序",
     "add row btn": "新增",
     "save btn": "保存",

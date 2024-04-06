@@ -232,12 +232,12 @@ var ROOT_KEY = "__DeleteNamePathValuesRootKey";
     throw new Error("Names can't be empty");
 }
 /**
- * 对给定的多个类执行混合, 首个类会被视为主类, 执行混合后类的类型默认与主类相同
+ * 将首个类之外的类混入到主类中
  *
  * - 为了更好的可读性和可维护性, 若存在同名的属性/方法会抛出错误
- * - 构造函数内不可访其他类的成员, 因为初始化尚未完成
+ * - 主类/混合类的构造函数内均不能访问其他类的属性/方法, 因为尚未初始化完成
+ * - 被混合类不支持继承, 继承项会直接忽略
  * - 不会处理静态方法/属性, 应统一维护到主类
- * - 仅主类支持集成, 其他类的集成属性/方法会被忽略
  * */ export function applyMixins(MainConstructor) {
     for(var _len = arguments.length, constructors = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++){
         constructors[_key - 1] = arguments[_key];

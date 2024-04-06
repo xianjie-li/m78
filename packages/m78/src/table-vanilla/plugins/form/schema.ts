@@ -1,13 +1,14 @@
-import { TablePlugin } from "../../plugin.js";
 import { TableRow } from "../../types/items.js";
 import { TableKey } from "../../types/base-type.js";
 import { _SchemaData } from "./types.js";
+import { stringifyNamePath } from "@m78/utils";
+import { _MixinBase } from "./base.js";
 
-export interface _MixinSchema extends TablePlugin {}
+export interface _MixinSchema extends _MixinBase {}
 
 export class _MixinSchema {
   // 获取指定行的schemas信息, 没有则创建, 可传入update来主动更新
-  private getSchemas(row: TableRow | TableKey, update = false): _SchemaData {
+  getSchemas(row: TableRow | TableKey, update = false): _SchemaData {
     const _row: TableRow = this.table.isRowLike(row)
       ? row
       : this.table.getRow(row);

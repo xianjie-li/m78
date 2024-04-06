@@ -3,17 +3,19 @@ import { Bubble } from "../../bubble/index.js";
 import { Button, ButtonColor } from "../../button/index.js";
 import { Size } from "../../common/index.js";
 import { IconSaveOne } from "@m78/icons/save-one.js";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useFn, useSetState } from "@m78/hooks";
 import { _injector } from "../table.js";
 import { _useStateAct } from "../injector/state.act.js";
-import { TableMutationType } from "../../table-vanilla/index.js";
+import {
+  TableDataStatus,
+  TableMutationType,
+} from "../../table-vanilla/index.js";
 import { IconAdd } from "@m78/icons/add.js";
 import { IconDeleteOne } from "@m78/icons/delete-one.js";
 import { Trigger, TriggerEvent, TriggerType } from "../../trigger/index.js";
 import { OverlayInstance } from "../../overlay/index.js";
 import { _useMethodsAct } from "../injector/methods.act.js";
-import { isEmpty } from "@m78/utils";
 import { RCTablePlugin } from "../plugin.js";
 import { Divider } from "../../layout/index.js";
 
@@ -59,61 +61,48 @@ function SaveBtn() {
   const props = _injector.useProps();
   const { instance } = stateDep.state;
 
-  const [state, setState] = useSetState({
-    newCount: 0,
-    removeCount: 0,
-    updateCount: 0,
+  const [state, setState] = useSetState<TableDataStatus>({
+    length: 0,
+    add: 0,
+    change: 0,
+    update: 0,
+    remove: 0,
     sorted: false,
-    changed: false,
   });
+
+  const [changed, setChanged] = useState(false);
 
   instance.event.mutation.useEvent((e) => {
     if (
       e.type === TableMutationType.config ||
       e.type === TableMutationType.data
     ) {
-      setState({
-        changed: instance.getTableChanged(),
-      });
+      setChanged(instance.getTableChanged());
     }
   });
 
   instance.event.interactiveChange.useEvent((cell, show, isSubmit) => {
     if (isSubmit) {
-      setState({
-        changed: instance.getTableChanged(),
-      });
+      setChanged(instance.getTableChanged());
     }
   });
 
   function updateCount() {
-    const data = instance.getData();
-
-    setState({
-      newCount: data.add.length,
-      removeCount: data.remove.length,
-      updateCount: data.change.length,
-      sorted: data.sorted,
-    });
+    setState(instance.getChangeStatus());
   }
 
   const commonNSOpt = {
     ns: COMMON_NS,
   };
 
-  const submit = useFn(() => {
-    if (!state.changed || !props.onSubmit) return;
+  const submit = useFn(async () => {
+    if (!changed || !props.onSubmit) return;
 
-    const d: any = {};
-
-    const data = instance.getData();
+    const data = await instance.getData();
 
     if (data.update.length || data.sorted || data.remove.length) {
-      d.data = data;
+      props.onSubmit(data);
     }
-    if (isEmpty(d)) return;
-
-    props.onSubmit(d);
   });
 
   return (
@@ -124,11 +113,11 @@ function SaveBtn() {
           content={
             <div>
               {t("new tip")}:{" "}
-              <span className="color-green bold mr-8">{state.newCount}</span>
+              <span className="color-green bold mr-8">{state.add}</span>
               {t("remove tip")}:{" "}
-              <span className="color-red bold mr-8">{state.removeCount}</span>
-              {t("update tip")}:{" "}
-              <span className="color-blue bold">{state.updateCount}</span>
+              <span className="color-red bold mr-8">{state.remove}</span>
+              {t("change tip")}:{" "}
+              <span className="color-blue bold">{state.change}</span>
               {state.sorted && (
                 <div className="mt-4">
                   {state.sorted && (
@@ -150,7 +139,7 @@ function SaveBtn() {
           <Button
             size={Size.small}
             color={ButtonColor.primary}
-            disabled={!state.changed}
+            disabled={!changed}
             onClick={submit}
           >
             <IconSaveOne />

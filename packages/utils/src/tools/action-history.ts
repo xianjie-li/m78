@@ -1,7 +1,8 @@
+import { dumpFn } from "../function.js";
 import { EmptyFunction } from "../types.js";
 
 const ACTION_IN_ACTION_WARNING =
-  "can't call redo() when redo() or undo() is running";
+  "Can't call redo() when redo() or undo() is running";
 
 /** implement action history */
 export class ActionHistory {
@@ -16,10 +17,8 @@ export class ActionHistory {
   private isDoing = false;
   /** 正在执行undo()操作 */
   private isUndoing = false;
-  /** batch操作期间缓冲的所有action */
-  private batchActionList: ActionHistoryItem[] | undefined;
   /** 为true期间不计入历史记录 */
-  private ignoreFlag = false;
+  private ignoreCB: ((act: ActionHistoryItem) => void)[] = [];
 
   /**
    * 执行一项操作并推入历史, 若后方有其他操作历史, 将全部移除.
@@ -32,15 +31,14 @@ export class ActionHistory {
   redo(arg?: ActionHistoryItem) {
     if (!arg) {
       if (this.isDoing || this.isUndoing) {
-        console.warn(ACTION_IN_ACTION_WARNING);
-        return;
+        throw Error(ACTION_IN_ACTION_WARNING);
       }
 
-      if (this.batchActionList) {
-        console.warn(
-          "can't call redo() without argument when batch() is running"
+      // batch进行中不允许执行普通的redo
+      if (this.ignoreCB.length) {
+        throw Error(
+          "Can't call redo() inside batch() or ignore() without argument"
         );
-        return;
       }
 
       const next = this.cursor + 1;
@@ -57,19 +55,13 @@ export class ActionHistory {
       return;
     }
 
-    if (this.ignoreFlag) {
+    if (this.#ignoreEmit(arg)) {
       arg.redo();
       return;
     }
 
     if (this.isDoing || this.isUndoing) {
-      console.warn(ACTION_IN_ACTION_WARNING);
-      return;
-    }
-
-    if (this.batchActionList) {
-      this.batchActionList.push(arg);
-      return;
+      throw Error(ACTION_IN_ACTION_WARNING);
     }
 
     this.isDoing = true;
@@ -100,13 +92,11 @@ export class ActionHistory {
    * */
   undo() {
     if (this.isDoing || this.isUndoing) {
-      console.warn("can't call undo() when redo() or undo() is running");
-      return;
+      throw Error("Can't call undo() when redo() or undo() is running");
     }
 
-    if (this.batchActionList) {
-      console.warn("can't call undo() when batch() is running");
-      return;
+    if (this.ignoreCB.length) {
+      throw Error("Can't call undo() inside batch() or ignore()");
     }
 
     if (this.cursor === -1) return;
@@ -125,42 +115,66 @@ export class ActionHistory {
   }
 
   /**
-   * 批量执行, 在action内执行的所有redo(action)操作都会被合并为单个
+   * 批量执行, 在action内执行的所有redo(action)操作都会被合并为单个, batch内不可再调用其他batch
+   *
+   * @param action - 在action内执行的redo会被合并
+   * @param title - 操作名
    * */
-  batch(action: EmptyFunction) {
-    if (this.batchActionList) return;
+  batch(action: EmptyFunction, title?: string): ActionHistoryItem {
+    if (this.ignoreCB.length) {
+      throw Error("Can't call batch() inside another batch() or ignore()");
+    }
 
-    this.batchActionList = [];
+    const allAct: ActionHistoryItem[] = [];
 
-    action();
-
-    const list = this.batchActionList.slice();
-
-    this.batchActionList = undefined;
-
-    this.redo({
+    const actionObj = {
+      title,
       redo: () => {
-        list.forEach((item) => item.redo());
+        allAct.length = 0; // 防止撤销重做时取到脏数据
+
+        // 允许嵌套执行, 嵌套的redo直接执行, 不进行记录
+        this.ignore(action, (act) => {
+          allAct.push(act);
+        });
       },
       undo: () => {
         // 需要以相反顺序执行undo
-        list
+        allAct
           .slice()
           .reverse()
           .forEach((item) => item.undo());
       },
-    });
+    };
+
+    this.redo(actionObj);
+
+    return actionObj;
   }
 
   /**
    * 使action期间的所有redo(action)操作不计入历史, 需要自行保证这些被忽略的操作不会影响历史还原或重做
+   *
+   * 被忽略的action会通过 cb 回调
    * */
-  ignore(action: EmptyFunction) {
-    this.ignoreFlag = true;
+  ignore(action: EmptyFunction, cb?: (act: ActionHistoryItem) => void) {
+    const curCB = cb || dumpFn;
+
+    this.ignoreCB.push(curCB);
 
     action();
 
-    this.ignoreFlag = false;
+    this.ignoreCB.splice(this.ignoreCB.indexOf(curCB), 1);
+  }
+
+  // 执行当前所有ignoreCB并传入cb
+  #ignoreEmit(act: ActionHistoryItem) {
+    if (!this.ignoreCB.length) return false;
+    this.ignoreCB
+      .slice()
+      .reverse()
+      .forEach((f) => f(act));
+
+    return true;
   }
 
   /** 重置历史 */

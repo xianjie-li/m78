@@ -25,7 +25,8 @@ $xxl: 1600px !default; //	≥1600
   }
 }
 
-.#{$prefix}-col, .#{$prefix}-col-auto {
+.#{$prefix}-col,
+.#{$prefix}-col-auto {
   position: relative;
   width: 100%;
   min-height: 1px;
@@ -76,8 +77,6 @@ $xxl: 1600px !default; //	≥1600
 
 // 中屏(>=768px) */
 @media (min-width: $md) {
-
-
   @for $i from 1 through $grid-num {
     .#{$prefix}-md-#{$i} {
       flex: 0 0 $col-one-width * $i;

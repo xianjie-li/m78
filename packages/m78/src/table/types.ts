@@ -160,11 +160,7 @@ export interface RCTableProps
   /** 数据编辑/新增等功能是否启用, 传入true时全部启用, 可传入一个配置对象来按需启用所需功能 */
   dataOperations?: boolean | TableDataOperationsConfig;
   /** 提交时触发 */
-  onSubmit?: (submitData: {
-    // 是否需要改为直接收data
-    /** 若数据发生了改变, 此项为当前数据信息 */
-    data?: TableDataLists;
-  }) => void;
+  onSubmit?: (data?: TableDataLists) => void;
   /** 新增数据时, 使用此对象作为默认值, 可以是一个对象或返回对象的函数 */
   defaultNewData?: AnyObject | (() => AnyObject);
   /** 用于持久化配置的唯一key, 默认通过storage api进行配置持久化, 可通过 configPersister/configReader 配置定制持久化逻辑 */

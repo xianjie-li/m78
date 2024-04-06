@@ -36,6 +36,7 @@ export class _TableSoftRemovePlugin
       "softRemove",
       "isSoftRemove",
       "restoreSoftRemove",
+      "confirmSoftRemove",
     ]);
   }
 
@@ -154,6 +155,23 @@ export class _TableSoftRemovePlugin
     });
   }
 
+  confirmSoftRemove(): void {
+    const cur = this.remove.getState().selected;
+
+    this.table.history.batch(() => {
+      this.table.history.redo({
+        redo: () => {
+          this.remove.unSelectAll();
+          this.table.removeRow(cur);
+        },
+        undo: () => {
+          this.remove.setAllSelected(cur);
+          this.table.renderSync();
+        },
+      });
+    }, this.context.texts["remove row"]);
+  }
+
   // 获取用于展示删除状态的列表, 包含了渲染需要的各种必要信息
   private getRemoveList() {
     const list: {
@@ -200,4 +218,7 @@ export interface TableSoftRemove {
 
   /** 恢复被软删除的行, 不传key时恢复全部 */
   restoreSoftRemove(key?: TableKey | TableKey[]): void;
+
+  /** 将当前标记为软删除的行彻底删除 */
+  confirmSoftRemove(): void;
 }

@@ -6,9 +6,11 @@ import { _ as _class_private_method_get } from "@swc/helpers/_/_class_private_me
 import { _ as _class_private_method_init } from "@swc/helpers/_/_class_private_method_init";
 import { _ as _create_class } from "@swc/helpers/_/_create_class";
 import { _ as _define_property } from "@swc/helpers/_/_define_property";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { isFunction, isString, isTruthyOrZero } from "../is.js";
 import { createEvent } from "../lang.js";
-var /** 将list映射为字典, 提升取值效率 */ _listMap = /*#__PURE__*/ new WeakMap(), /** 已选值, 如果存在key则为已选, val存放选中的值(相对于key可以保留实际类型) */ _selectedMap = /*#__PURE__*/ new WeakMap(), /** 根据当前的option.list同步listMap */ _syncListMap = /*#__PURE__*/ new WeakSet(), _lockFlag = /*#__PURE__*/ new WeakMap(), /** 锁定change触发器, 锁定期间其他触发器调用不会触发 */ _lock = /*#__PURE__*/ new WeakSet(), /** 触发变更实际, 搭配changeLock使用 */ _emitChange = /*#__PURE__*/ new WeakSet();
+var /** 将list映射为字典, 提升取值效率 */ _listMap = /*#__PURE__*/ new WeakMap(), /** 已选值, 如果存在key则为已选, val存放选中的值(相对于key可以保留实际类型) */ _selectedMap = /*#__PURE__*/ new WeakMap(), _clearCache = /*#__PURE__*/ new WeakSet(), // 获取指定key的缓存, 返回的元组第二项表示缓存是否有效
+_getCache = /*#__PURE__*/ new WeakSet(), /** 根据当前的option.list同步listMap */ _syncListMap = /*#__PURE__*/ new WeakSet(), _lockFlag = /*#__PURE__*/ new WeakMap(), /** 锁定change触发器, 锁定期间其他触发器调用不会触发 */ _lock = /*#__PURE__*/ new WeakSet(), /** 触发变更实际, 搭配changeLock使用 */ _emitChange = /*#__PURE__*/ new WeakSet();
 /**
  * 用于列表的选中项管理, 内置了对于超大数据量的优化
  *
@@ -19,6 +21,8 @@ var /** 将list映射为字典, 提升取值效率 */ _listMap = /*#__PURE__*/ n
     "use strict";
     function SelectManager(option) {
         _class_call_check(this, SelectManager);
+        _class_private_method_init(this, _clearCache);
+        _class_private_method_init(this, _getCache);
         _class_private_method_init(this, _syncListMap);
         _class_private_method_init(this, _lock);
         _class_private_method_init(this, _emitChange);
@@ -32,6 +36,7 @@ var /** 将list映射为字典, 提升取值效率 */ _listMap = /*#__PURE__*/ n
         });
         /** 选中值变更时触发的事件 */ _define_property(this, "changeEvent", void 0);
         _define_property(this, "option", void 0);
+        _define_property(this, "cache", {});
         _class_private_field_init(this, _lockFlag, {
             writable: true,
             value: 1
@@ -71,8 +76,10 @@ var /** 将list映射为字典, 提升取值效率 */ _listMap = /*#__PURE__*/ n
             }
         },
         {
-            /** 当前选中项的信息 */ key: "getState",
+            /** 当前选中项的信息, 在选中未变更时, 使用缓存进行返回, 请勿直接改写返回的各项数组 */ key: "getState",
             value: function getState() {
+                var _class_private_method_get_call = _sliced_to_array(_class_private_method_get(this, _getCache, getCache).call(this, "getState"), 2), cache = _class_private_method_get_call[0], valid = _class_private_method_get_call[1];
+                if (valid) return cache;
                 var originalSelected = [];
                 var realSelected = [];
                 var strangeSelected = [];
@@ -116,6 +123,8 @@ var /** 将list映射为字典, 提升取值效率 */ _listMap = /*#__PURE__*/ n
         {
             key: "partialSelected",
             get: /** list中部分值被选中, 不计入strangeSelected */ function get() {
+                var _class_private_method_get_call = _sliced_to_array(_class_private_method_get(this, _getCache, getCache).call(this, "partialSelected"), 2), cache = _class_private_method_get_call[0], valid = _class_private_method_get_call[1];
+                if (valid) return cache;
                 var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = undefined;
                 try {
                     for(var _iterator = _class_private_field_get(this, _selectedMap).keys()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true){
@@ -142,6 +151,8 @@ var /** 将list映射为字典, 提升取值效率 */ _listMap = /*#__PURE__*/ n
         {
             key: "allSelected",
             get: /** 当前list中的选项是否全部选中, 不计入strangeSelected */ function get() {
+                var _class_private_method_get_call = _sliced_to_array(_class_private_method_get(this, _getCache, getCache).call(this, "allSelected"), 2), cache = _class_private_method_get_call[0], valid = _class_private_method_get_call[1];
+                if (valid) return cache;
                 var state = this.getState();
                 var realLength = state.selected.length - state.strangeSelected.length;
                 return realLength === this.option.list.length;
@@ -150,6 +161,7 @@ var /** 将list映射为字典, 提升取值效率 */ _listMap = /*#__PURE__*/ n
         {
             /** 重新设置option.list */ key: "setList",
             value: function setList(list) {
+                _class_private_method_get(this, _clearCache, clearCache).call(this);
                 this.option.list = list;
                 _class_private_method_get(this, _syncListMap, syncListMap).call(this);
                 _class_private_method_get(this, _emitChange, emitChange).call(this);
@@ -158,6 +170,7 @@ var /** 将list映射为字典, 提升取值效率 */ _listMap = /*#__PURE__*/ n
         {
             /** 选中传入的值 */ key: "select",
             value: function select(val) {
+                _class_private_method_get(this, _clearCache, clearCache).call(this);
                 _class_private_field_get(this, _selectedMap).set(val, null);
                 _class_private_method_get(this, _emitChange, emitChange).call(this);
             }
@@ -165,6 +178,7 @@ var /** 将list映射为字典, 提升取值效率 */ _listMap = /*#__PURE__*/ n
         {
             /** 取消选中传入的值 */ key: "unSelect",
             value: function unSelect(val) {
+                _class_private_method_get(this, _clearCache, clearCache).call(this);
                 _class_private_field_get(this, _selectedMap).delete(val);
                 _class_private_method_get(this, _emitChange, emitChange).call(this);
             }
@@ -172,6 +186,7 @@ var /** 将list映射为字典, 提升取值效率 */ _listMap = /*#__PURE__*/ n
         {
             /** 选择全部值 */ key: "selectAll",
             value: function selectAll() {
+                _class_private_method_get(this, _clearCache, clearCache).call(this);
                 var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = undefined;
                 try {
                     for(var _iterator = _class_private_field_get(this, _listMap).keys()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true){
@@ -198,6 +213,7 @@ var /** 将list映射为字典, 提升取值效率 */ _listMap = /*#__PURE__*/ n
         {
             /** 取消选中所有值 */ key: "unSelectAll",
             value: function unSelectAll() {
+                _class_private_method_get(this, _clearCache, clearCache).call(this);
                 _class_private_field_get(this, _selectedMap).clear();
                 _class_private_method_get(this, _emitChange, emitChange).call(this);
             }
@@ -205,6 +221,7 @@ var /** 将list映射为字典, 提升取值效率 */ _listMap = /*#__PURE__*/ n
         {
             /** 反选值 */ key: "toggle",
             value: function toggle(val) {
+                _class_private_method_get(this, _clearCache, clearCache).call(this);
                 var unlock = _class_private_method_get(this, _lock, lock).call(this);
                 if (this.isSelected(val)) {
                     this.unSelect(val);
@@ -218,6 +235,7 @@ var /** 将list映射为字典, 提升取值效率 */ _listMap = /*#__PURE__*/ n
         {
             /** 反选所有值 */ key: "toggleAll",
             value: function toggleAll() {
+                _class_private_method_get(this, _clearCache, clearCache).call(this);
                 var unlock = _class_private_method_get(this, _lock, lock).call(this);
                 var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = undefined;
                 try {
@@ -247,6 +265,7 @@ var /** 将list映射为字典, 提升取值效率 */ _listMap = /*#__PURE__*/ n
             /** 一次性设置所有选中的值 */ key: "setAllSelected",
             value: function setAllSelected(next) {
                 var _this = this;
+                _class_private_method_get(this, _clearCache, clearCache).call(this);
                 _class_private_field_get(this, _selectedMap).clear();
                 next.forEach(function(val) {
                     _class_private_field_get(_this, _selectedMap).set(val, null);
@@ -257,6 +276,7 @@ var /** 将list映射为字典, 提升取值效率 */ _listMap = /*#__PURE__*/ n
         {
             /** 设置指定值的选中状态 */ key: "setSelected",
             value: function setSelected(val, isSelect) {
+                _class_private_method_get(this, _clearCache, clearCache).call(this);
                 var unlock = _class_private_method_get(this, _lock, lock).call(this);
                 if (isSelect) {
                     this.select(val);
@@ -271,6 +291,7 @@ var /** 将list映射为字典, 提升取值效率 */ _listMap = /*#__PURE__*/ n
             /** 一次选中多个选项 */ key: "selectList",
             value: function selectList(selectList) {
                 var _this = this;
+                _class_private_method_get(this, _clearCache, clearCache).call(this);
                 selectList.forEach(function(val) {
                     _class_private_field_get(_this, _selectedMap).set(val, null);
                 });
@@ -281,6 +302,7 @@ var /** 将list映射为字典, 提升取值效率 */ _listMap = /*#__PURE__*/ n
             /** 以列表的形式移除选中项 */ key: "unSelectList",
             value: function unSelectList(selectList) {
                 var _this = this;
+                _class_private_method_get(this, _clearCache, clearCache).call(this);
                 selectList.forEach(function(val) {
                     _class_private_field_get(_this, _selectedMap).delete(val);
                 });
@@ -296,6 +318,20 @@ var /** 将list映射为字典, 提升取值效率 */ _listMap = /*#__PURE__*/ n
     ]);
     return SelectManager;
 }();
+function clearCache() {
+    this.cache = {};
+}
+function getCache(key) {
+    var cur = this.cache[key];
+    if (cur !== undefined) return [
+        cur,
+        true
+    ];
+    return [
+        cur,
+        false
+    ];
+}
 function syncListMap() {
     var _this = this;
     _class_private_field_get(this, _listMap).clear();

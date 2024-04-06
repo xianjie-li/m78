@@ -1,4 +1,4 @@
-@import '../common/style/sass';
+@import "../common/style/sass";
 
 .m78-spin-svg {
   display: inline-block;
@@ -92,7 +92,7 @@
 .m78-spin_ellipsis {
   position: absolute;
   &::after {
-    content: '';
+    content: "";
     display: inline-block;
     animation: m78-spin_ellipsis 1s infinite;
   }
@@ -100,15 +100,15 @@
 
 @keyframes m78-spin_ellipsis {
   0% {
-    content: '';
+    content: "";
   }
   33% {
-    content: '.';
+    content: ".";
   }
   66% {
-    content: '..';
+    content: "..";
   }
   100% {
-    content: '...';
+    content: "...";
   }
 }
