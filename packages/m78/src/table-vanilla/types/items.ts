@@ -71,6 +71,7 @@ export interface TableColumnLeafConfigFormatted
 }
 
 /** 表示table中的一个行 */
+// TableRow.data 会在首次更改时clone, 并在克隆后保持引用不变, 即使调用setRowValue这样的api
 export interface TableRow {
   /** 该项的唯一key, 通过config.primaryKey 获取 */
   key: TableKey;

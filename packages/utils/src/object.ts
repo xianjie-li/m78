@@ -35,6 +35,19 @@ export function shakeEmpty(source: any): any {
   return source;
 }
 
+/** 清空对象的所有key/value, 并将清空后的key/value保存在一个新对象中返回 */
+export function clearObject<T extends object>(obj: T): T {
+  const keys = Object.keys(obj);
+  const newObj = {} as T;
+
+  keys.forEach((key) => {
+    newObj[key] = obj[key];
+    delete obj[key];
+  });
+
+  return newObj;
+}
+
 /**
  * Recursion delete all empty values of the object/array, use shakeEmpty() internally, return the processed original object/array
  * */

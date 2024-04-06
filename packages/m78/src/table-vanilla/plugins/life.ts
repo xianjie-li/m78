@@ -12,6 +12,8 @@ import {
 import { _privateInstanceKey, _privateScrollerDomKey } from "../common.js";
 import { _TableRenderPlugin } from "./render.js";
 import { removeNode } from "../../common/index.js";
+import { _TableFormPlugin } from "./form/form";
+import { _TableSoftRemovePlugin } from "./soft-remove.js";
 
 /** 表格生命周期相关控制 */
 export class _TableLifePlugin extends TablePlugin {
@@ -20,6 +22,10 @@ export class _TableLifePlugin extends TablePlugin {
   /** 清理raf */
   rafClear?: EmptyFunction;
 
+  formPlugin: InstanceType<typeof _TableFormPlugin>;
+
+  softRemove: _TableSoftRemovePlugin;
+
   beforeInit() {
     this.methodMapper(this.table, [
       ["reloadHandle", "reload"],
@@ -27,10 +33,14 @@ export class _TableLifePlugin extends TablePlugin {
       "reloadSync",
       "takeover",
       "isTaking",
+      "resetStatus",
     ]);
   }
 
   init() {
+    this.formPlugin = this.getPlugin(_TableFormPlugin);
+    this.softRemove = this.getPlugin(_TableSoftRemovePlugin);
+
     this.context.lastReloadKey = createRandString();
 
     this.rafCaller = rafCaller();
@@ -198,6 +208,16 @@ export class _TableLifePlugin extends TablePlugin {
     return !!this.context.takeKey;
   }
 
+  resetStatus() {
+    this.table.takeover(() => {
+      this.formPlugin.resetStatus();
+      this.softRemove.confirmSoftRemove();
+      this.table.history.reset();
+
+      this.table.render();
+    });
+  }
+
   /** 对不同的reloadOpt进行特殊合并 */
   private mergeTakeReloadOptions(opt?: TableReloadOptions) {
     const ctxOpt = this.context.takeReloadOptions;
@@ -272,7 +292,7 @@ export interface TableLife {
    * 重载表格
    * - 大部分情况下, 仅需要使用 render() 方法即可, 它有更好的性能
    * - 另外, 在必要配置变更后, 会自动调用 reload() 方法, 你只在极少情况下会使用它
-   * - reload包含一个level概念, 不同的配置项变更会对应不同的级别, 在渲染十万以上级别的数据时尤其值得关注, 通过table.config()修改配置时会自动根据修改内容选择重置级别
+   * - reload包含一个opt.level属性, 不同的配置项变更会对应不同的级别, 在渲染十万以上级别的数据时尤其值得关注, 通过table.config()修改配置时会自动根据修改内容选择重置级别
    * */
   reload(opt?: TableReloadOptions): void;
 
@@ -283,7 +303,7 @@ export interface TableLife {
   destroy(): void;
 
   /**
-   * 回调执行期间, 所有的render/reload操作会被暂时拦截, 在回调结束后如果开启了autoTrigger(默认为true), 将根据期间的render/reload调用自动进行更新
+   * 用于合并复数的render/reload操作, 回调执行期间, 所有的render/reload操作会被暂时拦截, 在回调结束后如果开启了autoTrigger(默认为true), 将根据期间的render/reload调用自动进行更新
    *
    * ## example
    * ```ts
@@ -298,4 +318,13 @@ export interface TableLife {
 
   /** 是否正在执行takeover */
   isTaking(): boolean;
+
+  /**
+   * 重置表格状态, 执行后:
+   * - 新增 / 删除 / 更新 / 排序 等操作会被视为已提交, 不再显示变更标记
+   * - 验证 / 操作历史等会被重置
+   *
+   * - 使用场景: 执行提交等操作后, 若不想完全重新拉取数据并reload表格, 可调用此方法来重置状态, 并复用现有数据
+   * */
+  resetStatus(): void;
 }

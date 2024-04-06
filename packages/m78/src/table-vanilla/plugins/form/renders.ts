@@ -28,7 +28,7 @@ export class _MixinRenders {
       if (cell.row.isHeader || cell.column.isHeader) return;
       if (this.allRemoveRecordMap.has(cell.row.key)) return false; // 删除行不显示
 
-      // 根据isInteractive来判断是否是可编辑状态, 可能不完全准确, 但基本没影响
+      // 根据isInteractive来判断是否是可编辑(交互)状态, 可能是仅 Interactive 项, 但不影响
       const editable = this.interactive.isInteractive(cell);
 
       // 不可编辑时跳过, 后续的required/invalid检测都没有意义了

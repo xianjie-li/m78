@@ -16,7 +16,7 @@ import { FORM_LANG_PACK_NS, i18n } from "../../../i18n/index.js";
 export interface _MixinVerify extends _MixinBase, _MixinSchema, _MixinData {}
 
 export class _MixinVerify {
-  // 获取单元格invalid状态
+  /** 获取单元格invalid状态 */
   validCheck(cell: TableCell) {
     const { invalid } = this.getSchemas(cell.row);
 
@@ -120,10 +120,13 @@ export class _MixinVerify {
     return verify.staticCheck(values, schemas).then((res) => {
       const [errors] = res;
 
-      // 需要高亮的行
+      // 需要高亮的列
       let highlightColumn: TableKey | undefined;
 
       const existCheck: any = {};
+
+      // errors顺序可能与实际显示不符, 需要存储后通过当前顺序查出需要高亮的首个列
+      const errColumuKeys: any = {};
 
       if (errors) {
         for (const e of errors) {
@@ -143,11 +146,15 @@ export class _MixinVerify {
               cellError!.set(e.name, e);
               existCheck[e.name] = true;
 
-              if (!highlightColumn) {
-                highlightColumn = e.name;
-              }
+              errColumuKeys[e.name] = true;
             }
           }
+        }
+
+        if (!cell) {
+          highlightColumn = this.context.allColumnKeys.find(
+            (k) => !!errColumuKeys[k]
+          );
         }
       }
 

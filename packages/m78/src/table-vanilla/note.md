@@ -49,14 +49,14 @@ feedback | empty | rowCloumnResize | disabled | softRemove | scrollMark
 
 **form 调整:**
 
-- 通过 schema + editor 来判断列是否可编辑, **简化启用编辑所需的配置**, 以及编辑相关的所有配置
-- 根据当前 schema 配置创建一个公共 verify 实例
-- 行首次可见/值变更时, 通过公共 verify 实例获取/更新 缓存的 schemas
-- render 时根据当前显示行的 schemas 和 invalid 来控制可编辑标识和禁用反馈
-- 提交时: 对提交行使用公共 verify 进行逐行遍历校验, eachData 调整为可以中断
-- 获取数据时, 根据当前 invalidMap 删除无效项
+- ~~通过 schema + editor 来判断列是否可编辑, **简化启用编辑所需的配置**, 以及编辑相关的所有配置~~
+~~- 根据当前 schema 配置创建一个公共 verify 实例~~
+~~- 行首次可见/值变更时, 通过公共 verify 实例获取/更新 缓存的 schemas~~
+~~- render 时根据当前显示行的 schemas 和 invalid 来控制可编辑标识和禁用反馈~~
+~~- 提交时: 对提交行使用公共 verify 进行逐行遍历校验, eachData 调整为可以中断~~
+~~- 获取数据时, 根据当前 invalidMap 删除无效项~~
 
-- 支持 setRowValues
+~~- 支持 setRowValues~~
   ~~ - 支持实际删除 softRemove 的内容 ~~
 
 ## 改动计划

@@ -3,7 +3,7 @@ import { TableKey } from "../types/base-type.js";
 import { TableReloadLevel, TableReloadOptions } from "./life.js";
 import { SelectManager } from "@m78/utils";
 
-/** 根据存储跟行或列数据相关的一些元信息 */
+/** 存储跟行或列数据相关的一些元信息 */
 export interface _MetaData {
   /** 表示是由table注入的假数据 */
   fake?: boolean;

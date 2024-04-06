@@ -6,6 +6,8 @@
  * empty values: undefined, null ,'', NaN, [], {}
  */
 export declare function shakeEmpty(source: any): any;
+/** 清空对象的所有key/value, 并将清空后的key/value保存在一个新对象中返回 */
+export declare function clearObject<T extends object>(obj: T): T;
 /**
  * Recursion delete all empty values of the object/array, use shakeEmpty() internally, return the processed original object/array
  * */

@@ -15,6 +15,7 @@ import {
   setNamePathValue,
   throwError,
   uniq,
+  clearObject,
 } from "@m78/utils";
 import { TableReloadLevel, TableReloadOptions } from "./life.js";
 import { TablePersistenceConfig } from "../types/config.js";
@@ -50,6 +51,9 @@ export class _TableMutationPlugin extends TablePlugin {
 
   form: InstanceType<typeof _TableFormPlugin>;
 
+  // 对已经过clone的row.data进行标记
+  clonedFlag = new Map<TableKey, boolean>();
+
   // 记录变更过的行
   private changedRows: Record<string, boolean> = {};
 
@@ -70,12 +74,14 @@ export class _TableMutationPlugin extends TablePlugin {
       "moveColumn",
       "setValue",
       "getValue",
+      "setRowValue",
     ]);
   }
 
   reload(opt: TableReloadOptions = {}) {
     if (opt.level === TableReloadLevel.full) {
       this.changedConfigKeys = [];
+      this.clonedFlag = new Map();
     }
   }
 
@@ -378,13 +384,8 @@ export class _TableMutationPlugin extends TablePlugin {
 
     const { row, column } = cell;
 
-    // 行未变更过, 将其完全clone, 避免更改原数据, 此外, 避免了在初始化阶段克隆所有数据导致性能损耗
-    if (
-      !this.changedRows[row.key] &&
-      !this.context.getRowMeta(row.key).new // 新增行不clone
-    ) {
-      this.cloneAndSetRowData(row);
-    }
+    // 若行未变更过, 将其完全clone, 避免更改原数据
+    this.ensureCloneAndSetRowData(row);
 
     const ov = getNamePathValue(row.data, column.config.originalKey);
 
@@ -431,13 +432,76 @@ export class _TableMutationPlugin extends TablePlugin {
     });
   };
 
-  /** 克隆并重新设置row的data, 防止变更原数据, 主要用于延迟clone, 可以在数据量较大时提升初始化速度  */
-  private cloneAndSetRowData(row: TableRow) {
+  setRowValue: TableMutation["setRowValue"] = (row, data) => {
+    let _row: TableRow;
+
+    if (this.table.isRowLike(row)) {
+      _row = row;
+    } else {
+      _row = this.table.getRow(row);
+    }
+
+    // 若行未变更过, 将其完全clone, 避免更改原数据
+    this.ensureCloneAndSetRowData(_row);
+
+    let oldValue: any;
+
+    this.table.history.redo({
+      redo: () => {
+        oldValue = clearObject(_row.data);
+
+        Object.assign(_row.data, data, {
+          [this.config.primaryKey]: _row.key,
+        });
+
+        const event: TableMutationRowValueEvent = {
+          type: TableMutationType.rowValue,
+          row: _row,
+          value: data,
+          oldValue,
+        };
+
+        this.table.event.mutation.emit(event);
+
+        this.table.render();
+
+        this.table.highlightRow(_row.key, true);
+      },
+      undo: () => {
+        clearObject(_row.data);
+
+        Object.assign(_row.data, oldValue, {
+          [this.config.primaryKey]: _row.key,
+        });
+
+        const event: TableMutationRowValueEvent = {
+          type: TableMutationType.rowValue,
+          row: _row,
+          value: oldValue,
+          oldValue: data,
+        };
+
+        this.table.event.mutation.emit(event);
+
+        this.table.render();
+
+        this.table.highlightRow(_row.key, true);
+      },
+      title: this.context.texts["set value"],
+    });
+  };
+
+  /** 克隆并重新设置row的data, 防止变更原数据, 主要用于写时clone, 可以在数据量较大时提升初始化速度, 若行数据已经过克隆则忽略  */
+  private ensureCloneAndSetRowData(row: TableRow) {
+    if (this.clonedFlag.get(row.key)) return;
+
     const cloneData = simplyDeepClone(row.data);
     const ind = this.context.dataKeyIndexMap[row.key];
 
     row.data = cloneData;
     this.context.data[ind] = cloneData;
+
+    this.clonedFlag.set(row.key, true);
   }
 
   /** 处理setValue/getValue的不同参数, 并返回cell和value */
@@ -940,6 +1004,8 @@ export enum TableMutationType {
   data = "data",
   /** 单元格值变更 */
   value = "value",
+  /** 整行值发生变更 */
+  rowValue = "rowValue",
 }
 
 /** TableMutationType.data变更的相关类型 */
@@ -959,7 +1025,8 @@ export enum TableMutationDataType {
 export type TableMutationEvent =
   | TableMutationConfigEvent
   | TableMutationDataEvent
-  | TableMutationValueEvent;
+  | TableMutationValueEvent
+  | TableMutationRowValueEvent;
 
 /** 持久化配置变更事件 */
 export interface TableMutationConfigEvent {
@@ -1008,6 +1075,18 @@ export interface TableMutationValueEvent {
   type: TableMutationType.value;
   /** 变更的单元格 */
   cell: TableCell;
+  /** 变更前的值 */
+  oldValue: any;
+  /** 变更后的值 */
+  value: any;
+}
+
+/** 行data变更事件 */
+export interface TableMutationRowValueEvent {
+  /** 事件类型 */
+  type: TableMutationType.rowValue;
+  /** 变更的行 */
+  row: TableRow;
   /** 变更前的值 */
   oldValue: any;
   /** 变更后的值 */
@@ -1068,11 +1147,14 @@ export interface TableMutation {
   /** 设置单元格值 */
   setValue(cell: TableCell, value: any): void;
 
-  /** 根据row&column设置单元格值 */
+  /** 根据 row & column 设置单元格值 */
   setValue(row: TableRow, column: TableColumn, value: any): void;
 
-  /** 根据row&column key设置单元格值 */
+  /** 根据row.key & column.key 设置单元格值 */
   setValue(rowKey: TableKey, columnKey: TableKey, value: any): void;
+
+  /** 设置指定行的所有值 */
+  setRowValue(rowKey: TableKey | TableRow, data: AnyObject): void;
 
   /** 获取单元格值 */
   getValue(cell: TableCell): any;

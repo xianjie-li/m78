@@ -1,5 +1,6 @@
 import {
   applyMixins,
+  getNamePathValue,
   setNamePathValue,
   simplyDeepClone,
   simplyEqual,
@@ -9,6 +10,7 @@ import {
   TableMutationDataEvent,
   TableMutationDataType,
   TableMutationEvent,
+  TableMutationRowValueEvent,
   TableMutationType,
   TableMutationValueEvent,
 } from "../mutation.js";
@@ -47,7 +49,6 @@ class Plugin extends TablePlugin implements TableForm {
       "getChanged",
       "getTableChanged",
       "getChangeStatus",
-      "resetStatus",
     ]);
 
     this.methodMapper(this.context, ["getSchemas"]);
@@ -101,6 +102,10 @@ class Plugin extends TablePlugin implements TableForm {
       this.valueMutation(e);
     }
 
+    if (e.type === TableMutationType.rowValue) {
+      this.rowValueMutation(e);
+    }
+
     if (e.type === TableMutationType.data) {
       this.dataMutation(e);
     }
@@ -148,6 +153,60 @@ class Plugin extends TablePlugin implements TableForm {
 
     this.innerCheck({
       cell,
+      values: fmtData,
+      schemas: schema.rootSchema,
+    }).then(() => this.table.render());
+  };
+
+  // 整行值变更, 创建或获取form实例, 并同步值和校验状态
+  rowValueMutation = (e: TableMutationRowValueEvent) => {
+    const row = e.row;
+
+    // 默认值不存在, 将默认值写入
+    if (!this.defaultValues.has(row.key)) {
+      const rawData = simplyDeepClone(e.oldValue);
+
+      this.defaultValues.set(row.key, rawData);
+    }
+
+    const defaultValue = this.defaultValues.get(row.key)!;
+
+    const changed = !simplyEqual(row.data, defaultValue);
+
+    if (changed) {
+      this.rowChanged.set(row.key, true);
+    } else {
+      this.rowChanged.delete(row.key);
+    }
+
+    const columns = this.context.allColumnKeys.map((key) =>
+      this.table.getColumn(key)
+    );
+
+    columns.forEach((col) => {
+      const cell = this.table.getCell(row.key, col.key);
+
+      if (!this.interactive.isInteractive(cell)) return;
+
+      const v = getNamePathValue(row.data, col.config.originalKey);
+      const dv = getNamePathValue(defaultValue, col.config.originalKey);
+
+      const valueChanged = !simplyEqual(v, dv);
+
+      if (valueChanged) {
+        this.cellChanged.set(cell.key, true);
+      } else {
+        this.cellChanged.delete(cell.key);
+      }
+    });
+
+    // 更新schema
+    const schema = this.getSchemas(row, true);
+
+    const fmtData = this.getFmtData(row, row.data);
+
+    this.innerCheck({
+      row,
       values: fmtData,
       schemas: schema.rootSchema,
     }).then(() => this.table.render());
@@ -234,8 +293,6 @@ class Plugin extends TablePlugin implements TableForm {
   }
 
   resetStatus() {
-    // TODO: 清理软删除数据
-
     this.addRecordMap = new Map();
     this.removeRecordMap = new Map();
     this.allRemoveRecordMap = new Map();
@@ -251,8 +308,6 @@ class Plugin extends TablePlugin implements TableForm {
     this.errorsList = [];
     this.changedCellList = [];
     this.rowMarkList = [];
-
-    this.table.render();
   }
 
   // 初始化wrapNode

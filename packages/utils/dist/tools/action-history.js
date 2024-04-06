@@ -65,10 +65,10 @@ _ignoreEmit = /*#__PURE__*/ new WeakSet();
         },
         {
             /**
-     * 撤销一项操作
-     *
-     * 在undo()执行期间内执行的redo(action)会被合并undo操作并且不计入历史
-     * */ key: "undo",
+   * 撤销一项操作
+   *
+   * 在undo()执行期间内执行的redo(action)会被合并undo操作并且不计入历史
+   * */ key: "undo",
             value: function undo() {
                 if (this.isDoing || this.isUndoing) {
                     throw Error("Can't call undo() when redo() or undo() is running");
@@ -88,11 +88,11 @@ _ignoreEmit = /*#__PURE__*/ new WeakSet();
         },
         {
             /**
-     * 批量执行, 在action内执行的所有redo(action)操作都会被合并为单个, batch内不可再调用其他batch
-     *
-     * @param action - 在action内执行的redo会被合并
-     * @param title - 操作名
-     * */ key: "batch",
+   * 批量执行, 在action内执行的所有redo(action)操作都会被合并为单个, batch内不可再调用其他batch
+   *
+   * @param action - 在action内执行的redo会被合并
+   * @param title - 操作名
+   * */ key: "batch",
             value: function batch(action, title) {
                 var _this = this;
                 if (this.ignoreCB.length) {
@@ -121,10 +121,10 @@ _ignoreEmit = /*#__PURE__*/ new WeakSet();
         },
         {
             /**
-     * 使action期间的所有redo(action)操作不计入历史, 需要自行保证这些被忽略的操作不会影响历史还原或重做
-     *
-     * 被忽略的action会通过 cb 回调
-     * */ key: "ignore",
+   * 使action期间的所有redo(action)操作不计入历史, 需要自行保证这些被忽略的操作不会影响历史还原或重做
+   *
+   * 被忽略的action会通过 cb 回调
+   * */ key: "ignore",
             value: function ignore(action, cb) {
                 var curCB = cb || dumpFn;
                 this.ignoreCB.push(curCB);
