@@ -113,7 +113,7 @@ const createRow = (key: any) => {
   return obj;
 };
 
-const data1 = Array.from({ length: 100000 }).map((_, i) => {
+const data1 = Array.from({ length: 1000 }).map((_, i) => {
   return createRow(i);
 });
 
@@ -247,6 +247,7 @@ const TableFullExample = () => {
         style={{
           height: 600,
         }}
+        history={false}
         schemas={schema}
         rows={rowConfig}
         render={({ cell }) => {

@@ -13,6 +13,7 @@ _ignoreEmit = /*#__PURE__*/ new WeakSet();
         _class_call_check(this, ActionHistory);
         _class_private_method_init(this, _ignoreEmit);
         /** 最大记录长度 */ _define_property(this, "maxLength", 500);
+        /** 是否启用, 为false时, 操作会直接执行且不计入历史 */ _define_property(this, "enable", true);
         /** 操作历史 */ _define_property(this, "history", []);
         /** 当前所在记录游标, -1表示初始状态 */ _define_property(this, "cursor", -1);
         /** 正在执行redo(action)操作 */ _define_property(this, "isDoing", false);
@@ -23,6 +24,10 @@ _ignoreEmit = /*#__PURE__*/ new WeakSet();
         {
             key: "redo",
             value: function redo(arg) {
+                if (!this.enable) {
+                    arg === null || arg === void 0 ? void 0 : arg.redo();
+                    return;
+                }
                 if (!arg) {
                     if (this.isDoing || this.isUndoing) {
                         throw Error(ACTION_IN_ACTION_WARNING);

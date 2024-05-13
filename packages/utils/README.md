@@ -1,3 +1,10 @@
 ## @m78/utils
 
-utils for [m78](https://github.com/xianjie-li/m78) project, contains a lot of practical small tools.
+Utils for javascript.
+
+## 文件组织
+
+```bash
+- src/action-history.ts   # Use the specific function implemented as the file name
+- src/action-history/xxx.ts   # If have multiple files, place them in a folder with the same name
+```

@@ -15,6 +15,8 @@ export class _MixinRenders {
 
   // 更新单元格的可编辑/无效标记 渲染前调用
   prepareSchemasMark() {
+    if (!this.config.interactiveMark) return;
+
     this.editStatusMap = new Map();
     this.invalidList = [];
 
@@ -97,6 +99,8 @@ export class _MixinRenders {
 
   // 更新单元格的可编辑/无效标记
   updateSchemasMark() {
+    if (!this.config.interactiveMark) return;
+
     this.table.event.cellRendering.off(this.schemasMarkCB);
 
     const editStatusList = Array.from(this.editStatusMap.values());
@@ -233,6 +237,8 @@ export class _MixinRenders {
 
   // 更新行的变更/错误标记 渲染前调用
   prepareRowMark() {
+    if (!this.config.rowMark) return;
+
     this.rowMarkList = [];
 
     this.updateRowMarkCB = (row: TableRow) => {
@@ -257,6 +263,8 @@ export class _MixinRenders {
 
   // 更新行的变更/错误标记
   updateRowMark() {
+    if (!this.config.rowMark) return;
+
     this.table.event.rowRendering.off(this.updateRowMarkCB);
 
     _syncListNode({
@@ -290,6 +298,8 @@ export class _MixinRenders {
 
   // 更新用于标识变更单元格的列表 渲染前调用
   prepareChangedCell() {
+    if (!this.config.cellChangedMark) return;
+
     this.changedCellList = [];
 
     this.changedCellCB = (cell: TableCell) => {
@@ -310,6 +320,8 @@ export class _MixinRenders {
 
   // 更新用于标识变更单元格的列表 渲染后调用
   updateChangedCell() {
+    if (!this.config.cellChangedMark) return;
+
     this.table.event.cellRendering.off(this.changedCellCB);
 
     _syncListNode({

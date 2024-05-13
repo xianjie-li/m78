@@ -12,6 +12,7 @@ import { Divider } from "../../layout/index.js";
 
 export class _RedoAndUndoPlugin extends RCTablePlugin {
   toolbarLeadingCustomer(nodes: React.ReactNode[]) {
+    if (!this.config.history) return;
     nodes.push(<Divider vertical />, <RedoBtn />, <UndoBtn />);
   }
 }

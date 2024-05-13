@@ -73,18 +73,7 @@ function SaveBtn() {
   const [changed, setChanged] = useState(false);
 
   instance.event.mutation.useEvent((e) => {
-    if (
-      e.type === TableMutationType.config ||
-      e.type === TableMutationType.data
-    ) {
-      setChanged(instance.getTableChanged());
-    }
-  });
-
-  instance.event.interactiveChange.useEvent((cell, show, isSubmit) => {
-    if (isSubmit) {
-      setChanged(instance.getTableChanged());
-    }
+    setChanged(instance.getTableChanged());
   });
 
   function updateCount() {

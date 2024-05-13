@@ -8,6 +8,7 @@ import {
   isEmpty,
   isFunction,
   isString,
+  setCacheValue,
 } from "@m78/utils";
 import {
   createAutoScroll,
@@ -164,8 +165,12 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
       this.isSelectedTempRow(cell.row.key);
 
     selected
-      ? addCls(cell.dom, "__selected")
-      : removeCls(cell.dom, "__selected");
+      ? setCacheValue(cell.dom, "classNamePartialSelected", selected, () =>
+          addCls(cell.dom, "__selected")
+        )
+      : setCacheValue(cell.dom, "classNamePartialSelected", selected, () =>
+          removeCls(cell.dom, "__selected")
+        );
   }
 
   /** 派发drag到start/move/end */
@@ -666,7 +671,7 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
     return this.conflictDisableConfig;
   }
 
-  /** 框选点在固定区域末尾时, 如果滚动边未贴合, 将其滚动到贴合位置, 一是解决瞬间选择大量数据的问题, 二是更符合直觉, 放置误选 */
+  /** 框选点在固定区域末尾时, 如果滚动边未贴合, 将其滚动到贴合位置, 一是解决瞬间选择大量数据的问题, 二是更符合直觉, 防止误选 */
   moveFixedEdgeHandle([x, y]: TablePosition) {
     if (!this.conflictDisableConfig) return;
 

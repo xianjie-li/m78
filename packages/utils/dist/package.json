@@ -1,7 +1,7 @@
 {
   "name": "@m78/utils",
   "version": "0.0.16",
-  "description": "utils for m78 projects, contains a lot of practical small tools.",
+  "description": "Utils for javascript",
   "keywords": [
     "javascript utils"
   ],

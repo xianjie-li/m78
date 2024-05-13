@@ -8,7 +8,7 @@ import {
 } from "../types/items.js";
 import { _getCellKey, _getCellKeysByStr } from "../common.js";
 import { addCls, removeCls } from "../../common/index.js";
-import { SelectManager } from "@m78/utils";
+import { SelectManager, setCacheValue } from "@m78/utils";
 import { TableReloadLevel, TableReloadOptions } from "./life.js";
 
 /** 在单元格/行/列上设置半透明遮挡物, 目前仅用于组件内部api设置临时禁用状态, 如拖动排序时, 为拖动列显示禁用样式 */
@@ -34,8 +34,12 @@ export class _TableDisablePlugin extends TablePlugin implements TableDisable {
     const disabled = this.isDisabledCell(cell.key);
 
     disabled
-      ? addCls(cell.dom, "__disabled")
-      : removeCls(cell.dom, "__disabled");
+      ? setCacheValue(cell.dom, "classNamePartialDisabled", disabled, () =>
+          addCls(cell.dom, "__disabled")
+        )
+      : setCacheValue(cell.dom, "classNamePartialDisabled", disabled, () =>
+          removeCls(cell.dom, "__disabled")
+        );
   }
 
   private clear() {

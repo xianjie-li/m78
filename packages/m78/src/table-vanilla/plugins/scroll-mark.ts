@@ -1,6 +1,7 @@
 import { TablePlugin } from "../plugin.js";
 
 import { removeNode } from "../../common/index.js";
+import { setCacheValue } from "@m78/utils";
 
 export class _TableScrollMarkPlugin extends TablePlugin {
   /** 容器 */
@@ -58,10 +59,26 @@ export class _TableScrollMarkPlugin extends TablePlugin {
     const touchLeft = x === 0;
     const touchRight = Math.ceil(x) >= this.table.getMaxX();
 
-    this.tEl.style.opacity = touchTop || !ctx.topFixedHeight ? "0" : "1";
-    this.bEl.style.opacity = touchBottom || !ctx.bottomFixedHeight ? "0" : "1";
-    this.lEl.style.opacity = touchLeft || !ctx.leftFixedWidth ? "0" : "1";
-    this.rEl.style.opacity = touchRight || !ctx.rightFixedWidth ? "0" : "1";
+    setCacheValue(
+      this.tEl.style,
+      "opacity",
+      touchTop || !ctx.topFixedHeight ? "0" : "1"
+    );
+    setCacheValue(
+      this.bEl.style,
+      "opacity",
+      touchBottom || !ctx.bottomFixedHeight ? "0" : "1"
+    );
+    setCacheValue(
+      this.lEl.style,
+      "opacity",
+      touchLeft || !ctx.leftFixedWidth ? "0" : "1"
+    );
+    setCacheValue(
+      this.rEl.style,
+      "opacity",
+      touchRight || !ctx.rightFixedWidth ? "0" : "1"
+    );
   };
 
   /** 位置尺寸更新 */

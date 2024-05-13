@@ -11,7 +11,7 @@ export const levelFullConfigKeys: (keyof TableConfig)[] = [
   "cells",
 ];
 
-/** 不能通过table.config()变更的配置 */
+/** 不能通过table.setConfig()变更的配置 */
 const configCanNotChange = [
   "el",
   "primaryKey",

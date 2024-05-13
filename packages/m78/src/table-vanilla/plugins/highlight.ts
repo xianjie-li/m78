@@ -146,6 +146,7 @@ export class _TableHighlightPlugin
             const timer = setTimeout(() => {
               if (item.dom) {
                 removeCls(item.dom, "m78-highlight-bg");
+
                 setNamePathValue(
                   item.dom,
                   _TableMetaDataPlugin.TIMER_KEY,

@@ -16,6 +16,7 @@ import { TableDragSortConfig } from "../plugins/drag-sort.js";
 import { TableInteractiveConfig } from "../plugins/interactive.js";
 import { TableIsConfig } from "../plugins/is.js";
 import { TableFormConfig } from "../plugins/form/types.js";
+import { TableHistoryConfig } from "../plugins/history.js";
 
 /**
  * 对外暴露的变更配置, 用于持久化记录变更的表格配置
@@ -121,4 +122,5 @@ export interface TableConfig
     TableInteractiveConfig,
     TableInternalConfig,
     TableFormConfig,
-    TableIsConfig {}
+    TableIsConfig,
+    TableHistoryConfig {}

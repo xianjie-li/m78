@@ -78,10 +78,12 @@ export class _TablePluginEmpty extends TablePlugin {
   }
 
   rendered() {
-    const size = this.table.getHeight() - this.context.yHeaderHeight;
-    const emptyHeight = Math.max(size, this.config.emptySize!);
+    if (this.isEmpty) {
+      const size = this.table.getHeight() - this.context.yHeaderHeight;
+      const emptyHeight = Math.max(size, this.config.emptySize!);
 
-    this.node.style.height = _getSizeString(emptyHeight);
+      this.node.style.height = _getSizeString(emptyHeight);
+    }
   }
 
   /** 更新empty节点状态, 并根据需要移除data中的占位数据 */

@@ -118,4 +118,36 @@ test("ActionHistory", () => {
       "Can't call batch() inside another batch() or ignore()"
     );
   }
+
+  const history2 = new ActionHistory();
+
+  history2.enable = false;
+
+  const h2Redo = jest.fn();
+  const h2Undo = jest.fn();
+
+  history2.redo({
+    redo: h2Redo,
+    undo: h2Undo,
+  });
+
+  // 下面这些操作应该都是无效的
+  history2.redo();
+  history2.redo();
+  history2.undo();
+  history2.undo();
+
+  history2.batch(() => {
+    history2.redo();
+    history2.redo();
+  });
+
+  history2.ignore(() => {
+    history2.redo();
+    history2.redo();
+  });
+  // 上面这些操作应该都是无效的
+
+  expect(h2Redo).toBeCalledTimes(1);
+  expect(h2Undo).toBeCalledTimes(0);
 });

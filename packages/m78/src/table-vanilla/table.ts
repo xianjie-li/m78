@@ -57,6 +57,10 @@ export function _createTable(config: TableConfig): TableInstance {
     border: true,
     cellSelectable: true,
     rowSelectable: true,
+    rowMark: true,
+    cellChangedMark: true,
+    interactiveMark: true,
+    history: true,
   };
 
   // 根据dom上挂载的私有实例信息判断是否需要创建实例, 防止热重载等场景下反复创建

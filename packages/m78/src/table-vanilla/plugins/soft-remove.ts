@@ -1,7 +1,7 @@
 import { TablePlugin } from "../plugin.js";
 import { TableKey } from "../types/base-type.js";
 import { _TableDisablePlugin } from "./disable.js";
-import { ensureArray, SelectManager } from "@m78/utils";
+import { ensureArray, SelectManager, setCacheValue } from "@m78/utils";
 import { TableRow } from "../types/items.js";
 import { removeNode } from "../../common/index.js";
 import { TableReloadLevel, TableReloadOptions } from "./life.js";
@@ -70,9 +70,13 @@ export class _TableSoftRemovePlugin
       const node = this.rowMarkNodes[ind];
       const position = i.attachPosition;
 
-      node.style.transform = `translate(${position.left}px, ${position.top}px)`;
-      node.style.height = `${position.height}px`;
-      node.style.zIndex = position.zIndex;
+      setCacheValue(
+        node.style,
+        "transform",
+        `translate(${position.left}px, ${position.top}px)`
+      );
+      setCacheValue(node.style, "height", `${position.height}px`);
+      setCacheValue(node.style, "zIndex", position.zIndex);
     });
   }
 

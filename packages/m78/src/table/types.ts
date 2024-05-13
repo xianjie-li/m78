@@ -13,6 +13,8 @@ import {
   TablePlugin,
   TableDataLists,
   TableSelectConfig,
+  TableFormMarkConfig,
+  TableHistoryConfig,
 } from "../table-vanilla/index.js";
 import { _tableOmitConfig } from "./common.js";
 import { ComponentBaseProps } from "../common/index.js";
@@ -93,7 +95,9 @@ export interface RCTableRenderArg {
 export interface RCTableProps
   extends ComponentBaseProps,
     Omit<TableBaseConfig, OmitConfig | "render">,
-    TableSelectConfig {
+    TableSelectConfig,
+    TableFormMarkConfig,
+    TableHistoryConfig {
   /** 自定义单元格渲染 */
   render?: (arg: RCTableRenderArg) => ReactNode | void;
   /** 自定义空节点 */

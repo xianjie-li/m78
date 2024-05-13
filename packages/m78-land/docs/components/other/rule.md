@@ -45,6 +45,7 @@ title: 文档&组件约定
     - 每个关键样式部位都包含用于定制的 css 类名
     - 可以将不同的样式特征声明到不同的类名下方便通过 props 关闭，如`__shadow`, `__hover`分别用于控制组件的阴影和交互样式
     - 定制性的 props, 以定制的部位命名, 如 header, 通常会支持直接传`node`和`(xx) => node`的方式, 替换或定制某个部位节点使用 `XXXNode`命名, 只支持渲染器定制则使用`XXXCustomer`, 扩展某部位的 prop 命名为`xxExtra`, 组件性的整体定制使用名称`customer`
+    - 为避免 API 中通常由双重否定所造成的困惑， boolean 类型的参数和属性始终以肯定的形式命名（比如，使用 enabled: true 而非 disabled: false）
 - **表单:**
 
   - 表单控件严格限制为 `value/defaultValue/onChange(val)` 接口，即使是`Radio`等组件。不使用`check/defaultCheck`等更语义化的名称，一是增加学习成本，二是能减少与验证库或其他第三方表单库集成成本。

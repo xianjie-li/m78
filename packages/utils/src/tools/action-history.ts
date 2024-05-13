@@ -9,6 +9,9 @@ export class ActionHistory {
   /** 最大记录长度 */
   maxLength = 500;
 
+  /** 是否启用, 为false时, 操作会直接执行且不计入历史 */
+  enable = true;
+
   /** 操作历史 */
   private history: ActionHistoryItem[] = [];
   /** 当前所在记录游标, -1表示初始状态 */
@@ -29,6 +32,11 @@ export class ActionHistory {
   /** 重做一项操作 */
   redo(): void;
   redo(arg?: ActionHistoryItem) {
+    if (!this.enable) {
+      arg?.redo();
+      return;
+    }
+
     if (!arg) {
       if (this.isDoing || this.isUndoing) {
         throw Error(ACTION_IN_ACTION_WARNING);

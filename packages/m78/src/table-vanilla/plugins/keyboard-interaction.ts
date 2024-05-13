@@ -228,6 +228,8 @@ export class _TableKeyboardInteractionPlugin extends TablePlugin {
       return this.table.isActive() && !this.interactiveCore.items.length;
     };
 
+    const redoUndoChecker = () => checker() && !!this.config.history;
+
     return [
       {
         code: "Backspace",
@@ -238,13 +240,13 @@ export class _TableKeyboardInteractionPlugin extends TablePlugin {
         code: "KeyZ",
         modifier: [KeyboardHelperModifier.sysCmd],
         handle: this.onUndo,
-        enable: checker,
+        enable: redoUndoChecker,
       },
       {
         code: "KeyZ",
         modifier: [KeyboardHelperModifier.sysCmd, KeyboardHelperModifier.shift],
         handle: this.onRedo,
-        enable: checker,
+        enable: redoUndoChecker,
       },
       {
         code: ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Tab"],

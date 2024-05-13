@@ -4,6 +4,8 @@ export declare class ActionHistory {
     #private;
     /** 最大记录长度 */
     maxLength: number;
+    /** 是否启用, 为false时, 操作会直接执行且不计入历史 */
+    enable: boolean;
     /** 操作历史 */
     private history;
     /** 当前所在记录游标, -1表示初始状态 */

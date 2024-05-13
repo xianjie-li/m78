@@ -33,6 +33,7 @@ export type {
   TableInteractiveRenderArg,
 } from "./plugins/interactive.js";
 export type { TableIs, TableIsConfig } from "./plugins/is.js";
+export type { TableHistoryConfig } from "./plugins/history.js";
 export type { TableKeyboardInteraction } from "./plugins/keyboard-interaction.js";
 
 export { TableReloadLevel } from "./plugins/life.js";
@@ -70,4 +71,5 @@ export type {
   TableDataLists,
   TableForm,
   TableFormConfig,
+  TableFormMarkConfig,
 } from "./plugins/form/types.js";

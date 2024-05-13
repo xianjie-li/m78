@@ -34,6 +34,10 @@ export const _tableChangedListenKeys = [
   "interactive",
   "schemas",
   "dataOperations",
+  "rowMark",
+  "cellChangedMark",
+  "interactiveMark",
+  "history",
 ] as const;
 
 /** 同_tableChangedListenKeys, 可能是基础类型, 也可能是引用类型的字段, 若是基础类型则校验, 否则跳过 */

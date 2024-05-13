@@ -209,7 +209,7 @@ export interface TablePluginContext
   /** 被自动移动的行(固定项), 需要在首次触发move事件时进行通知 */
   autoMovedRows: { key: TableKey; from: number }[];
 
-  /** 通用的getterCache */
+  /** 通用的getterCache, 用于在同一帧下仅执行一次指定的getter */
   getterCache: CacheTick<_GetterCacheKey>;
 
   // form plugin 内向外暴露的同名方法
