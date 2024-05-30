@@ -241,20 +241,25 @@ var ROOT_KEY = "__DeleteNamePathValuesRootKey";
     throw new Error("Names can't be empty");
 }
 /**
- * 将首个类之外的类混入到主类中
+ * 将所有给出的混合类(mixins)混入到主类(main)中
  *
  * - 为了更好的可读性和可维护性, 若存在同名的属性/方法会抛出错误
- * - 主类/混合类的构造函数内均不能访问其他类的属性/方法, 因为尚未初始化完成
- * - 被混合类不支持继承, 继承项会直接忽略
+ * - 主类/混合类的构造函数内均不能直接或间接的访问其他类的属性/方法, 因为尚未初始化完成
+ * - 混合类不支持继承, 继承项会直接忽略
  * - 不会处理静态方法/属性, 应统一维护到主类
- * */ export function applyMixins(MainConstructor) {
-    for(var _len = arguments.length, constructors = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++){
-        constructors[_key - 1] = arguments[_key];
+ *
+ * 在typescript中如何保留类型?
+ *
+ * 1. 声明接口A, 在该接口中声明所有属性/方法
+ * 2. 编写混合类或主类时, 在相邻的位置声明一个与该类同名的interface, 其继承接口A, 由于typescript的类型合并特性, 我们在类中可以正常访问到接口中声明的所有内容
+ * */ export function applyMixins(main) {
+    for(var _len = arguments.length, mixins = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++){
+        mixins[_key - 1] = arguments[_key];
     }
     var list = [
-        MainConstructor
-    ].concat(_to_consumable_array(constructors));
-    if (list.length < 2) return MainConstructor;
+        main
+    ].concat(_to_consumable_array(mixins));
+    if (list.length < 2) return main;
     // 方法名: descriptor
     var methodMap = Object.create(null);
     list.forEach(function(Constr) {
@@ -273,9 +278,9 @@ var ROOT_KEY = "__DeleteNamePathValuesRootKey";
     var propertyExist = {};
     // 待合并的属性
     var propertyMap = {};
-    var Mixin = /*#__PURE__*/ function(MainConstructor) {
+    var Mixin = /*#__PURE__*/ function(main) {
         "use strict";
-        _inherits(Mixin, MainConstructor);
+        _inherits(Mixin, main);
         var _super = _create_super(Mixin);
         function Mixin() {
             for(var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++){
@@ -286,7 +291,7 @@ var ROOT_KEY = "__DeleteNamePathValuesRootKey";
             _this = _super.call.apply(_super, [
                 this
             ].concat(_to_consumable_array(args)));
-            constructors.forEach(function(Con) {
+            mixins.forEach(function(Con) {
                 var ins = _construct(Con, _to_consumable_array(args));
                 Object.keys(ins).forEach(function(k) {
                     if (propertyExist[k]) {
@@ -304,7 +309,7 @@ var ROOT_KEY = "__DeleteNamePathValuesRootKey";
             return _this;
         }
         return Mixin;
-    }(MainConstructor);
+    }(main);
     Object.defineProperties(Mixin.prototype, methodMap);
     return Mixin;
 }

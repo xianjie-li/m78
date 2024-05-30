@@ -43,40 +43,49 @@ export function _Feedback() {
       return;
     }
 
-    const content = e.map((item, index) => {
-      if (!item.text) return null;
+    const content = e
+      .map((item, index) => {
+        if (!item.text) return null;
 
-      let node: React.ReactNode = item.text;
+        // 包含单元格但单元格未挂载时忽略
+        if (item.cell && !item.cell.isMount) return null;
 
-      if (item.type === TableFeedback.overflow && item.cell) {
-        const arg = renderCommonHandle({
-          props,
-          state,
-          cell: item.cell as TableCellWithDom,
-          rcPlugins,
-        });
+        let node: React.ReactNode = item.text;
 
-        if (isTruthyOrZero(arg.prevElement)) {
-          node = arg.prevElement;
+        if (item.type === TableFeedback.overflow && item.cell) {
+          const arg = renderCommonHandle({
+            props,
+            state,
+            cell: item.cell as TableCellWithDom,
+            rcPlugins,
+          });
+
+          if (isTruthyOrZero(arg.prevElement)) {
+            node = arg.prevElement;
+          }
         }
-      }
 
-      return (
-        // eslint-disable-next-line react/jsx-key
-        <>
-          <div
-            className={clsx(item.type === TableFeedback.error && "color-error")}
-            style={{
-              maxHeight: 120,
-              overflow: "auto",
-            }}
-          >
-            {node}
-          </div>
-          {index !== e.length - 1 && <Divider margin={4} />}
-        </>
-      );
-    });
+        return (
+          // eslint-disable-next-line react/jsx-key
+          <>
+            <div
+              className={clsx(
+                item.type === TableFeedback.error && "color-error"
+              )}
+              style={{
+                maxHeight: 120,
+                overflow: "auto",
+              }}
+            >
+              {node}
+            </div>
+            {index !== e.length - 1 && <Divider margin={4} />}
+          </>
+        );
+      })
+      .filter((i) => !!i);
+
+    if (!content.length) return;
 
     const node = React.createElement(
       "div",

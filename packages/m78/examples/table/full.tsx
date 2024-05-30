@@ -113,7 +113,7 @@ const createRow = (key: any) => {
   return obj;
 };
 
-const data1 = Array.from({ length: 1000 }).map((_, i) => {
+const data1 = Array.from({ length: 10000 }).map((_, i) => {
   return createRow(i);
 });
 
@@ -247,7 +247,6 @@ const TableFullExample = () => {
         style={{
           height: 600,
         }}
-        history={false}
         schemas={schema}
         rows={rowConfig}
         render={({ cell }) => {
@@ -358,7 +357,7 @@ const TableFullExample = () => {
           <button
             onClick={() => {
               table
-                ?.verifyRow("id8")
+                ?.verifyRow("id2")
                 .then((res) => {
                   console.log("success:", res);
                 })
@@ -367,7 +366,7 @@ const TableFullExample = () => {
                 });
             }}
           >
-            verify id8
+            verify id2
           </button>
 
           <button

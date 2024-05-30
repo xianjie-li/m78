@@ -17,6 +17,7 @@ import { _XLSHandlePlugin } from "../plugins/xls-handle.js";
 import { _DataActionPlugin } from "../plugins/data-actions.js";
 import { _ConfigSyncPlugin } from "../plugins/config-sync.js";
 import { _DragMovePlugin } from "../plugins/drag-move.js";
+import { _ContextMenuPlugin } from "../plugins/context-menu/context-menu.js";
 
 export function _useStateAct() {
   const props = _injector.useProps();
@@ -41,6 +42,7 @@ export function _useStateAct() {
       _ConfigSyncPlugin,
       _XLSHandlePlugin,
       _DataActionPlugin,
+      _ContextMenuPlugin,
       ...(props.plugins || [])!,
     ]);
   }, []);

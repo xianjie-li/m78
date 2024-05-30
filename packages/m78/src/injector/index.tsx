@@ -385,7 +385,7 @@ export interface Injectors<Props = any, Def = any> {
     cb: T
   ): InjectType<T>;
 
-  /** 可以通过此api获取的getter, 在组件上下文之外访问deps或props */
+  /** 在可用上下文中获取getDeps/getProps, 这些getter可以在组件上下文之外使用 */
   useGetter: () => {
     /** 与useDeps完全相同, 但是可以在任意位置使用, 你可以将其传递给外部功能代码或在异步代码中使用 */
     getDeps: InjectorInject;

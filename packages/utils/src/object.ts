@@ -312,20 +312,25 @@ function getLastObj(obj: any, names: NameItem[]): [any, NameItem] {
 type Constructor = new (...args: any[]) => any;
 
 /**
- * 将首个类之外的类混入到主类中
+ * 将所有给出的混合类(mixins)混入到主类(main)中
  *
  * - 为了更好的可读性和可维护性, 若存在同名的属性/方法会抛出错误
- * - 主类/混合类的构造函数内均不能访问其他类的属性/方法, 因为尚未初始化完成
- * - 被混合类不支持继承, 继承项会直接忽略
+ * - 主类/混合类的构造函数内均不能直接或间接的访问其他类的属性/方法, 因为尚未初始化完成
+ * - 混合类不支持继承, 继承项会直接忽略
  * - 不会处理静态方法/属性, 应统一维护到主类
+ *
+ * 在typescript中如何保留类型?
+ *
+ * 1. 声明接口A, 在该接口中声明所有属性/方法
+ * 2. 编写混合类或主类时, 在相邻的位置声明一个与该类同名的interface, 其继承接口A, 由于typescript的类型合并特性, 我们在类中可以正常访问到接口中声明的所有内容
  * */
 export function applyMixins<C extends Constructor>(
-  MainConstructor: C,
-  ...constructors: Constructor[]
+  main: C,
+  ...mixins: Constructor[]
 ): C {
-  const list = [MainConstructor, ...constructors];
+  const list = [main, ...mixins];
 
-  if (list.length < 2) return MainConstructor as C;
+  if (list.length < 2) return main as C;
 
   // 方法名: descriptor
   const methodMap: any = Object.create(null);
@@ -356,11 +361,11 @@ export function applyMixins<C extends Constructor>(
   // 待合并的属性
   const propertyMap: any = {};
 
-  class Mixin extends MainConstructor {
+  class Mixin extends main {
     constructor(...args: any[]) {
       super(...args);
 
-      constructors.forEach((Con) => {
+      mixins.forEach((Con) => {
         const ins = new Con(...args);
 
         Object.keys(ins).forEach((k) => {

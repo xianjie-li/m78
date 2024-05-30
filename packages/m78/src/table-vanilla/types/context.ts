@@ -46,7 +46,7 @@ export interface TablePluginContext
   viewEl: HTMLDivElement;
   /** domElement的子级, 用于实际挂载滚动区的dom节点 */
   viewContentEl: HTMLDivElement;
-  /** viewContentEl子级, 用于集中挂载内容, 便于做一些统一控制(比如缩放) */
+  /** viewContentEl子级, 用于集中挂载内容, 便于做一些统一控制 */
   stageEL: HTMLDivElement;
 
   /** 浅拷贝后的数据, 在数据项第一次需要改写时再对应的项进行拷贝(copy in write), 从而实现超大数据量的按需高速复制 */

@@ -11,6 +11,7 @@ import {
 import { TableCell } from "../types/items.js";
 import { BoundSize } from "@m78/utils";
 import { TableMutationEvent, TableMutationType } from "./mutation.js";
+import { _TableRowColumnResize } from "./row-column-resize.js";
 
 /** 提供对某些表格元素的交互反馈, 比如单元格包含错误信息或内容超出时, 在选中后为其提供反馈 */
 export class _TableFeedbackPlugin extends TablePlugin {
@@ -261,16 +262,19 @@ export class _TableFeedbackPlugin extends TablePlugin {
     const x = this.table.getX();
 
     // 去掉column resize handle的位置
-    const adjustSize = 4;
+    const adjustSize = _TableRowColumnResize.HANDLE_SIZE;
 
     const targets: TriggerTargetMeta[] = headerCells.map((cell) => {
       const xFix = cell.column.isFixed ? 0 : x;
+
+      // 固定项
+      const realX = cell.column.fixedOffset || cell.column.x;
 
       return {
         target: {
           width: cell.width - adjustSize * 2,
           height: cell.height,
-          left: cell.column.x + left + adjustSize - xFix,
+          left: realX + left + adjustSize - xFix,
           top: cell.row.y + top,
         },
         zIndex: cell.column.isFixed ? 1 : 0,

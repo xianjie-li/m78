@@ -1,20 +1,20 @@
 import React from "react";
 import { useFn } from "@m78/hooks";
-import { TriggerEvent, TriggerType } from "../../trigger/index.js";
-import { _injector } from "../table.js";
-import { _useStateAct } from "../injector/state.act.js";
+import { TriggerEvent, TriggerType } from "../../../trigger/index.js";
+import { _injector } from "../../table.js";
+import { _useStateAct } from "../../injector/state.act.js";
 import { _TableContextMenuOpenOpt } from "./use-context-menu.act.js";
-import { MenuOption, MenuProps } from "../../menu/index.js";
+import { MenuOption, MenuProps } from "../../../menu/index.js";
 import { IconClipboard } from "@m78/icons/clipboard.js";
 import { IconCopy } from "@m78/icons/copy.js";
 import { IconToTop } from "@m78/icons/to-top.js";
 import { IconToBottom } from "@m78/icons/to-bottom.js";
 import { IconDeleteOne } from "@m78/icons/delete-one.js";
 import { IconBack } from "@m78/icons/back.js";
-import { TABLE_NS, useTranslation } from "../../i18n/index.js";
+import { TABLE_NS, useTranslation } from "../../../i18n/index.js";
 import { isTruthyOrZero } from "@m78/utils";
-import { _useMethodsAct } from "../injector/methods.act.js";
-import { TableRow } from "../../table-vanilla/index.js";
+import { _useMethodsAct } from "../../injector/methods.act.js";
+import { TableRow } from "../../../table-vanilla/index.js";
 
 enum MenuValues {
   copy,

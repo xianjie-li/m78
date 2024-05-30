@@ -38,6 +38,8 @@ export class _TableRowColumnResize extends TablePlugin {
   static MIN_ROW_HEIGHT = 20;
   static MAX_ROW_HEIGHT = 300;
 
+  static HANDLE_SIZE = 6;
+
   /** 虚拟节点触发事件 */
   trigger: TriggerInstance;
 
@@ -167,7 +169,7 @@ export class _TableRowColumnResize extends TablePlugin {
     const bounds: TriggerTargetMeta[] = [];
 
     // 虚拟节点大小
-    const bSize = 6;
+    const bSize = _TableRowColumnResize.HANDLE_SIZE;
 
     const list = isRow ? last.rows : last.columns;
 

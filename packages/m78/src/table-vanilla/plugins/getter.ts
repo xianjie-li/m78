@@ -747,7 +747,7 @@ export class _TableGetterPlugin
 
     const list = isVertical ? data : columns;
 
-    // 由于进入循环后立即回获取下一项, 所以需要把索引边界扩大或减小1
+    // 由于进入循环后会立即获取下一项, 所以需要把索引边界扩大或减小1
     while (index <= list.length && index >= -1) {
       index = isPrev ? index - 1 : index + 1;
 

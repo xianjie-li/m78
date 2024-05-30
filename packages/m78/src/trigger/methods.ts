@@ -6,7 +6,6 @@ import {
   TriggerTargetMeta,
 } from "./types.js";
 import { BoundSize, isNumber } from "@m78/utils";
-import throttle from "lodash/throttle.js";
 import { addCls, removeCls } from "../common/index.js";
 
 /** 根据当前的ctx.type更新typeEnableMap */
@@ -45,12 +44,6 @@ export function _updateBound(data: _TriggerTargetData) {
     };
   }
 }
-
-/** 节流版本的_updateBound */
-export const _updateAllBoundThrottle = throttle(_updateAllBound, 100, {
-  leading: true,
-  trailing: true,
-});
 
 /** 通过TriggerTarget初始化data */
 export function _targetInit(target: TriggerTarget): _TriggerTargetData {

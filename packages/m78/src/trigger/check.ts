@@ -1,10 +1,17 @@
-import { _TriggerContext, _TriggerTargetData } from "./types.js";
 import { BoundSize, isNumber } from "@m78/utils";
-import { _updateAllBoundThrottle } from "./methods.js";
+import throttle from "lodash/throttle.js";
+import { _updateAllBound } from "./methods.js";
+import { _TriggerContext, _TriggerTargetData } from "./types.js";
 
 /** 实现目标点检测相关的方法 */
 export function _checkImpl(ctx: _TriggerContext) {
   const { trigger } = ctx;
+
+  /** 节流版本的_updateBound */
+  const _updateAllBoundThrottle = throttle(_updateAllBound, 100, {
+    leading: true,
+    trailing: true,
+  });
 
   trigger.hasTargetByXY = (x, y, triggerTarget) => {
     _updateAllBoundThrottle(ctx);

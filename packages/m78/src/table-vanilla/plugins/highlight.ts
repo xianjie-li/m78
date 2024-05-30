@@ -26,8 +26,27 @@ export class _TableHighlightPlugin
     ]);
   }
 
-  locate(cell: TableKey | TableKey[]): TableCell {
+  private tempDisableSubsequentTime: number | undefined;
+
+  locate(
+    cell: TableKey | TableKey[],
+    tempDisableSubsequent = false
+  ): TableCell {
     const list = ensureArray(cell).map((i) => this.table.getCellByStrKey(i));
+
+    if (
+      !tempDisableSubsequent &&
+      this.tempDisableSubsequentTime &&
+      Date.now() - this.tempDisableSubsequentTime < 120
+    ) {
+      return list[0];
+    }
+
+    if (tempDisableSubsequent) {
+      this.tempDisableSubsequentTime = Date.now();
+    } else {
+      this.tempDisableSubsequentTime = undefined;
+    }
 
     let first = list[0];
 
@@ -227,9 +246,14 @@ export interface TableHighlight {
   /**
    * 定位到指定元素, 若元素不在视口, 自动将其滚动到视口内最靠近的位置, 传入多个cell时, 会定位到最靠近左上角的cell
    *
+   * 若存在多处连续调用locate, 可能会存在跳转顺序与预期不符, 可通过tempDisableSubsequent暂时禁用后续的locate调用
+   *
    * 返回最终定位到的单元格
    * */
-  locate(cell: TableKey | TableKey[]): TableCell;
+  locate(
+    cell: TableKey | TableKey[],
+    tempDisableSubsequent?: boolean
+  ): TableCell;
 
   /** 高亮指定的单元格, 传入autoScroll时会在单元格不可见时自动滚动到单元格位置, 默认为true */
   highlight(cell: TableKey | TableKey[], autoScroll?: boolean): void;

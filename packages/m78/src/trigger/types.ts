@@ -1,18 +1,35 @@
 import { BoundSize, CustomEvent } from "@m78/utils";
 import { _eventImpl } from "./event.js";
 
+/** 创建配置 */
+export interface TriggerConfig {
+  /** 触发目标 */
+  target?: TriggerTarget | TriggerTarget[];
+  /** 需要绑定的事件类型 */
+  type: TriggerType | TriggerType[];
+  /** 事件绑定的代理节点, 在执行向上查找的操作时, 也作为查找的终止点, 若未传入, 则使用document节点 */
+  container?: HTMLElement;
+  /** active事件特有配置 */
+  active?: {
+    /** 80 | 触发延迟 */
+    firstDelay?: number;
+    /** 140 | 关闭延迟 */
+    lastDelay?: number;
+  };
+  /** 事件触发前进行预校验, 返回false时阻止触发 */
+  preCheck?: (type: TriggerType, e: Event) => boolean;
+}
+
 /**
- * 表示一个触发目标, 可以是包含关联信息的对象, 或是一个dom节点, 或是一个虚拟位置
- *
- * 相同的目标只能存在一个, BoundSize类型的target, 即使所有属性完全相同也会被视为不同的target
+ * 事件的触发目标, 可以是事件配置对象, dom节点, 或是一个虚拟的位置
  * */
 export type TriggerTarget = TriggerTargetMeta | HTMLElement | BoundSize;
 
 /**
- * 包含额外信息的触发目标
+ * 事件项的配置对象, 此对象是可变的, 如果你修改了对象内容, 则后续事件中会使用修改后的内容
  * */
 export interface TriggerTargetMeta {
-  /** 触发目标, 可以是一个dom节点或通过BoundSize表示的虚拟位置 */
+  /**  事件的触发目标, dom节点或一个虚拟的位置 */
   target: BoundSize | HTMLElement;
   /**
    * 0 | 层级, 层级较大的目标会覆盖较小目标的事件, 若最大层级包含多个target, 则这些target都会触发事件
@@ -28,38 +45,14 @@ export interface TriggerTargetMeta {
   data?: any;
 }
 
-/** 创建配置 */
-export interface TriggerConfig {
-  /** 触发目标 */
-  target?: TriggerTarget | TriggerTarget[];
-  /** 需要绑定的事件类型 */
-  type: TriggerType | TriggerType[];
-  /** 事件绑定的代理节点, 在执行向上查找的操作是, 也作为查找的终止点, 若未传入, 则使用document节点 */
-  container?: HTMLElement;
-  /** active事件特有配置 */
-  active?: {
-    /** 80 | 触发延迟 */
-    firstDelay?: number;
-    /** 140 | 关闭延迟 */
-    lastDelay?: number;
-  };
-  /** 事件触发前进行预校验, 返回false时阻止触发 */
-  preCheck?: (type: TriggerType, e: Event) => boolean;
-}
-
-/**
- * 支持的事件类型
- * - 在触控设备上, 会自动添加css到目标dom并使用preventEvent来阻止一些默认行为
- * */
+/** 支持的事件类型 */
 export enum TriggerType {
   /** 点击 */
   click = "click",
   /**
    * 根据不同的事件源, 触发方式不同:
-   * - 支持光标的设备, 在鼠标悬浮时触发
-   * - 支持touch的设备, 按住并轻微移动后触发
-   *
-   * 默认在开始和结束都包含了短暂的延迟, 开始延迟在某些提示类组件快速划过时可以避免触发, 结束延迟可以在气泡渲染等场景下在鼠标移动到内容区前避免关闭
+   * - 支持光标的设备, 在鼠标移动到上方时触发
+   * - 支持touch的设备, 按住目标触发
    * */
   active = "active",
   /** 获取焦点和失去焦点, 仅dom类型的target有效 */
@@ -80,8 +73,8 @@ export interface TriggerInstance {
   /** (可写) | 事件类型 */
   type: TriggerType | TriggerType[];
 
-  /** (可写) | 是否启用 */
-  enable: boolean; // 设置为false时, 要关闭现有事件
+  /** (可写) | 启用或禁用所有事件 */
+  enable: boolean;
 
   /** (可写) | 设置光标类型 */
   cursor: string;
@@ -143,7 +136,7 @@ export interface TriggerEvent {
   /** 与TriggerTargetMeta.data相同 */
   data: any;
 
-  /* # # # # # # # 通用, 在某些事件下可能为0, 比如focus/move事件结束等 # # # # # # # */
+  /* # # # # # # # 通用, 在某些事件下可能一直为0, 比如focus/move事件结束等 # # # # # # # */
 
   /** 触发位置相对屏幕的x坐标 */
   x: number;
@@ -223,7 +216,7 @@ export interface _TriggerContext {
   targetList: _TriggerTargetData[];
   /** 尚未初始化完成的trigger */
   trigger: TriggerInstance;
-  /** 经过处理后的container, 若为设置则时document对象 */
+  /** 经过处理后的container, 若未设置则为document对象 */
   container: HTMLElement;
   /** 事件类型 */
   type: TriggerType[];

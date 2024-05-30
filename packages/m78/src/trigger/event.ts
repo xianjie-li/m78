@@ -123,12 +123,15 @@ export function _eventImpl(ctx: _TriggerContext) {
     if (
       typeEnableMap[TriggerType.active] ||
       typeEnableMap[TriggerType.drag] ||
-      typeEnableMap[TriggerType.move] ||
-      typeEnableMap[TriggerType.contextMenu]
+      typeEnableMap[TriggerType.move]
     ) {
       container.addEventListener("mousedown", mouseDown);
       container.addEventListener("mouseup", mouseUp);
       container.addEventListener("mousemove", mouseMove);
+      container.addEventListener("touchstart", touchStart);
+    }
+
+    if (typeEnableMap[TriggerType.contextMenu]) {
       container.addEventListener("touchstart", touchStart);
     }
 

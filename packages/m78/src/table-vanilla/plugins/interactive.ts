@@ -31,6 +31,9 @@ export class _TableInteractivePlugin extends TablePlugin {
   // 最后触发交互关闭的时间, 用于防止关闭后马上出发Enter等操作
   lastDownTime = 0;
 
+  // 最后触发交互开启的时间, 用于防止启动交互后因为不可见等导致马上别关闭
+  lastInteractiveTime = 0;
+
   multipleHelper: KeyboardMultipleHelper;
 
   form: InstanceType<typeof _TableFormPlugin>;
@@ -163,6 +166,8 @@ export class _TableInteractivePlugin extends TablePlugin {
     if (!this.isInteractive(cell)) return;
     if (!this.form.validCheck(cell)) return;
 
+    this.lastInteractiveTime = Date.now();
+
     const attachNode = this.createAttachNode();
 
     // eslint-disable-next-line prefer-const
@@ -212,9 +217,9 @@ export class _TableInteractivePlugin extends TablePlugin {
 
     this.items.push(item);
 
-    this.table.selectCells([cell.key]);
+    this.table.selectCells(cell.key);
 
-    this.table.locate(cell.key);
+    this.table.locate(cell.key, true); // 如果前一个interactive是提交, 可能触发验证错误, 会自动定位单元格, 这里传入true来抢占跳转权
 
     this.updateNode();
 
@@ -248,7 +253,7 @@ export class _TableInteractivePlugin extends TablePlugin {
 
   // 隐藏不可见的正在交互单元格, 并触发其提交
   private hideInvisibleInteractive() {
-    if (!this.items.length) return;
+    if (!this.items.length || this.isJustTriggered()) return;
 
     this.items.forEach((i) => {
       if (!i.cell.isMount) {
@@ -313,6 +318,11 @@ export class _TableInteractivePlugin extends TablePlugin {
   // 最近是否执行过done
   private isJustDoneExecuted() {
     return Date.now() - this.lastDownTime < 180;
+  }
+
+  // 最近是否触发过交互
+  private isJustTriggered() {
+    return Date.now() - this.lastInteractiveTime < 80;
   }
 }
 

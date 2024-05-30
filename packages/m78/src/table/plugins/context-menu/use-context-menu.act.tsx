@@ -1,13 +1,17 @@
-import React, { useRef, useState } from "react";
-import { Menu, MenuOption, MenuProps } from "../../menu/index.js";
-import { OverlayInstance } from "../../overlay/index.js";
+import React, { useEffect, useRef, useState } from "react";
+import { Menu, MenuOption, MenuProps } from "../../../menu/index.js";
+import { OverlayInstance } from "../../../overlay/index.js";
 import { useFn, useSelf } from "@m78/hooks";
 import { TupleNumber } from "@m78/utils";
-import { Trigger, TriggerType, UseTriggerProps } from "../../trigger/index.js";
+import {
+  TriggerType,
+  UseTriggerProps,
+  createTrigger,
+} from "../../../trigger/index.js";
 import { _useCellMenu } from "./use-cell-menu.js";
-import { _injector } from "../table.js";
-import { _useMethodsAct } from "../injector/methods.act.js";
-import { _useStateAct } from "../injector/state.act.js";
+import { _injector } from "../../table.js";
+import { _useMethodsAct } from "../../injector/methods.act.js";
+import { _useStateAct } from "../../injector/state.act.js";
 
 export type _TableContextMenuOpenOpt = {
   /** 菜单位置 */
@@ -19,7 +23,7 @@ export type _TableContextMenuOpenOpt = {
 };
 
 export const _useContextMenuAct = () => {
-  const { state } = _injector.useDeps(_useStateAct);
+  const { state, ref: WrapRef } = _injector.useDeps(_useStateAct);
   const methods = _injector.useDeps(_useMethodsAct);
 
   const ref = useRef<OverlayInstance>(null!);
@@ -62,13 +66,35 @@ export const _useContextMenuAct = () => {
     }
   });
 
-  function renderTrigger(child: React.ReactElement) {
-    return (
-      <Trigger type={TriggerType.contextMenu} onTrigger={trigger}>
-        {child}
-      </Trigger>
-    );
-  }
+  useEffect(() => {
+    const cusTrigger = createTrigger({
+      type: TriggerType.contextMenu,
+      target: WrapRef.current,
+    });
+
+    cusTrigger.event.on(trigger);
+
+    return cusTrigger.destroy;
+  }, [WrapRef.current]);
+
+  // 滚动时关闭
+  useEffect(() => {
+    if (!state.instance) return;
+
+    const onScroll = () => {
+      if (ref.current.open) {
+        ref.current.setOpen(false);
+      }
+    };
+
+    state.instance.viewEl.addEventListener("scroll", onScroll);
+    window.addEventListener("scroll", onScroll);
+
+    return () => {
+      state.instance.viewEl.removeEventListener("scroll", onScroll);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, [state.instance]);
 
   return {
     open,
@@ -80,6 +106,5 @@ export const _useContextMenuAct = () => {
         onChange={methods.overlayStackChange}
       />
     ),
-    renderTrigger,
   };
 };

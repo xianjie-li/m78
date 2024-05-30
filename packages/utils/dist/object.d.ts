@@ -55,13 +55,18 @@ export declare function deleteNamePathValue(obj: any, name: NamePath): void;
 export declare function deleteNamePathValues(obj: any, nameList: NamePath[]): void;
 type Constructor = new (...args: any[]) => any;
 /**
- * 将首个类之外的类混入到主类中
+ * 将所有给出的混合类(mixins)混入到主类(main)中
  *
  * - 为了更好的可读性和可维护性, 若存在同名的属性/方法会抛出错误
- * - 主类/混合类的构造函数内均不能访问其他类的属性/方法, 因为尚未初始化完成
- * - 被混合类不支持继承, 继承项会直接忽略
+ * - 主类/混合类的构造函数内均不能直接或间接的访问其他类的属性/方法, 因为尚未初始化完成
+ * - 混合类不支持继承, 继承项会直接忽略
  * - 不会处理静态方法/属性, 应统一维护到主类
+ *
+ * 在typescript中如何保留类型?
+ *
+ * 1. 声明接口A, 在该接口中声明所有属性/方法
+ * 2. 编写混合类或主类时, 在相邻的位置声明一个与该类同名的interface, 其继承接口A, 由于typescript的类型合并特性, 我们在类中可以正常访问到接口中声明的所有内容
  * */
-export declare function applyMixins<C extends Constructor>(MainConstructor: C, ...constructors: Constructor[]): C;
+export declare function applyMixins<C extends Constructor>(main: C, ...mixins: Constructor[]): C;
 export {};
 //# sourceMappingURL=object.d.ts.map

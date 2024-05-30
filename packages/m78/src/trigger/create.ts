@@ -44,6 +44,10 @@ export function _create(config: TriggerConfig) {
     clearAllPending: () => {},
   };
 
+  if (config.label === "ABC") {
+    ctx.label = "ABC";
+  }
+
   /* # # # # # # # 实现部分 # # # # # # # */
 
   ctx.event = _eventImpl(ctx);

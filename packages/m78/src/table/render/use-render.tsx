@@ -10,8 +10,6 @@ import React from "react";
 import { _useStateAct } from "../injector/state.act.js";
 import { _injector } from "../table.js";
 import { COMMON_NS, Translation } from "../../i18n/index.js";
-import { _useContextMenuAct } from "../context-menu/use-context-menu.act.js";
-import { AnyFunction } from "@m78/utils";
 import { Spin } from "../../spin/index.js";
 
 export function _useRender() {
@@ -25,11 +23,6 @@ export function _useRender() {
     wrapRef,
     rcPlugins,
   } = _injector.useDeps(_useStateAct);
-
-  const ctxMenu = _injector.useDeps(_useContextMenuAct);
-
-  // 内部引用了ctxMenu.node, 避免递归引用导致类型丢失
-  const renderTrigger = ctxMenu.renderTrigger as AnyFunction;
 
   return (
     <div
@@ -67,8 +60,6 @@ export function _useRender() {
             null,
             ...rcPlugins.map((p) => p.rcExtraRender?.())
           )}
-
-          {ctxMenu.node}
         </>
       )}
 
@@ -81,26 +72,24 @@ export function _useRender() {
         <div className="m78-table_block-error">{state.blockError}</div>
       )}
 
-      {renderTrigger(
-        <div
-          style={props.style}
-          className={clsx("m78-table", props.className)}
-          ref={ref}
+      <div
+        style={props.style}
+        className={clsx("m78-table", props.className)}
+        ref={ref}
+      >
+        <Scroll
+          className="m78-table_view m78-table_expand-size"
+          direction="xy"
+          // 手动控制
+          disabledScroll
+          innerWrapRef={scrollRef}
+          miniBar
+          scrollIndicator={false}
+          onScroll={scrollEvent.emit}
         >
-          <Scroll
-            className="m78-table_view m78-table_expand-size"
-            direction="xy"
-            // 手动控制
-            disabledScroll
-            innerWrapRef={scrollRef}
-            miniBar
-            scrollIndicator={false}
-            onScroll={scrollEvent.emit}
-          >
-            <div ref={scrollContRef} />
-          </Scroll>
-        </div>
-      )}
+          <div ref={scrollContRef} />
+        </Scroll>
+      </div>
     </div>
   );
 }
