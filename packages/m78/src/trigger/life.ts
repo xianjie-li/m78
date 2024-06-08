@@ -1,47 +1,81 @@
-import { _TriggerContext, TriggerType } from "./types.js";
-import { setNamePathValue } from "@m78/utils";
+import { TriggerType, _TriggerContext, type TriggerEvent } from "./types.js";
 
 export function _lifeImpl(ctx: _TriggerContext) {
-  const { event } = ctx;
+  const { event, trigger } = ctx;
 
-  ctx.clearPending = (conf) => {
-    if (conf[TriggerType.focus]) {
-      event.focusHandle.clear();
-    }
+  ctx.clear = () => {
+    event.focusHandle.clear();
 
-    if (conf[TriggerType.move]) {
-      event.moveActiveHandle.clearMove();
-    }
+    event.moveHandle.clear();
 
-    if (conf[TriggerType.active]) {
-      event.moveActiveHandle.clearActive();
-    }
+    event.activeHandle.clear();
 
-    if (conf[TriggerType.drag]) {
-      event.dragHandle.clear();
-    }
-
-    if (conf[TriggerType.contextMenu]) {
-      event.contextMenuHandle.clear();
-    }
+    event.dragHandle.clear();
   };
 
-  ctx.clearAllPending = () => {
-    const clearObj: Record<string, boolean> = {};
-
-    Object.keys(TriggerType).forEach((k) => {
-      clearObj[k] = true;
-    });
-
-    ctx.clearPending(clearObj);
+  ctx.handleEvent = (e) => {
+    handleCursor(e);
+    handlerPrevent(e);
   };
 
-  ctx.trigger.destroy = () => {
-    // 清理尚未结束的事件
-    ctx.clearAllPending();
+  let isPrevent = false;
+  let runningCount = 0;
 
-    ctx.trigger.clear();
-    ctx.targetList = [];
-    setNamePathValue(ctx, "trigger", null);
-  };
+  // 处理某些默认行为禁用, 目前仅提供自动禁用用户文本选择
+  function handlerPrevent(e: TriggerEvent) {
+    // 跳过特定事件
+    if (
+      e.type === TriggerType.click ||
+      e.type === TriggerType.focus ||
+      e.type === TriggerType.contextMenu
+    ) {
+      return;
+    }
+
+    if (e.first && e.last) return;
+
+    if (e.first) {
+      runningCount++;
+    }
+
+    if (e.last) {
+      runningCount = Math.max(runningCount - 1, 0);
+    }
+
+    if (runningCount > 0 && !isPrevent) {
+      isPrevent = true;
+      document.documentElement.style.userSelect = "none";
+    }
+
+    if (runningCount <= 0 && isPrevent) {
+      isPrevent = false;
+      runningCount = 0;
+      document.documentElement.style.userSelect = "";
+    }
+  }
+
+  // 处理光标切换
+  function handleCursor({
+    eventMeta,
+    active,
+    first,
+    last,
+    type,
+  }: TriggerEvent) {
+    const { typeMap, cursor } = eventMeta;
+
+    if (type === TriggerType.drag) {
+      if (first) document.documentElement.style.cursor = cursor.drag;
+      if (last) document.documentElement.style.cursor = "";
+    }
+
+    if (trigger.dragging) return;
+
+    if (type === TriggerType.active) {
+      const curCursor = typeMap.get(TriggerType.drag)
+        ? cursor.dragActive
+        : cursor.active;
+      document.documentElement.style.cursor = active ? curCursor : "";
+    }
+  }
 }

@@ -1,77 +1,85 @@
-import { _TriggerContext, _TriggerTargetData, TriggerType } from "../types.js";
+import { _TriggerContext, TriggerTargetData, TriggerType } from "../types.js";
 import { _buildEvent } from "../methods.js";
-import { triggerClearEvent } from "../common.js";
 
 export function _focusImpl(ctx: _TriggerContext) {
-  const { trigger, config } = ctx;
-
   // 最后进行mousedown/touchstart的时间
   let lastDownTime = 0;
 
+  let currentFocus: TriggerTargetData[] = [];
+
   function focus(e: FocusEvent) {
     if (e.target === window) return;
-    if (!ctx.typeEnableMap[TriggerType.focus]) return;
-    if (config.preCheck && !config.preCheck(TriggerType.focus, e)) return;
 
-    const focusList = ctx.targetList.filter((i) => {
-      if (i.isBound) return false;
+    const { eventList } = ctx.getEventList({
+      type: TriggerType.focus,
+      filter: (i) => {
+        if (i.isVirtual) return false;
 
-      // 子级或自身聚焦时, 都视为focus
-      return i.dom.contains(e.target as Node);
+        // 子级或自身聚焦时, 都视为focus
+        return i.dom.contains(e.target as Node);
+      },
     });
 
-    ctx.currentFocus = focusList;
+    currentFocus = eventList;
 
-    const _isInteractiveFocus = isInteractiveFocus();
+    const _isTapFocus = isTapFocus();
 
-    focusList.forEach((i) => {
+    eventList.forEach((i) => {
       const event = _buildEvent({
         type: TriggerType.focus,
-        target: i.origin,
+        target: i.option,
         nativeEvent: e,
         focus: true,
-        isInteractiveFocus: _isInteractiveFocus,
-        data: i.meta.data,
+        isTapFocus: _isTapFocus,
+        data: i.option.data,
+        eventMeta: i,
       });
 
-      trigger.event.emit(event);
+      ctx.handleEvent(event);
+      i.option.handler(event);
     });
   }
 
   function blur(e: FocusEvent) {
     if (e.target === window) return;
-    if (!ctx.typeEnableMap[TriggerType.focus]) return;
-    if (config.preCheck && !config.preCheck(TriggerType.focus, e)) return;
 
-    const blurList: _TriggerTargetData[] = [];
-    const focusList: _TriggerTargetData[] = [];
+    if (!currentFocus.length) return;
 
-    ctx.currentFocus.forEach((i) => {
+    // 需要保留的focus
+    const blurList: TriggerTargetData[] = [];
+    // 需要移除的focus
+    const focusList: TriggerTargetData[] = [];
+
+    currentFocus.forEach((i) => {
+      // 保留仍在focus内部的节点
       if (!i.dom.contains(e.target as Node)) {
         focusList.push(i);
         return;
       }
 
+      // 其他节点失焦
       blurList.push(i);
     });
 
-    ctx.currentFocus = focusList;
+    currentFocus = focusList;
 
-    const _isInteractiveFocus = isInteractiveFocus();
+    const _isTapFocus = isTapFocus();
 
     blurList.forEach((i) => {
       const event = _buildEvent({
         type: TriggerType.focus,
-        target: i.origin,
+        target: i.option,
         nativeEvent: e,
         focus: false,
         first: false,
         last: true,
-        isInteractiveFocus: _isInteractiveFocus,
-        data: i.meta.data,
+        isTapFocus: _isTapFocus,
+        data: i.option.data,
+        eventMeta: i,
       });
 
-      trigger.event.emit(event);
+      ctx.handleEvent(event);
+      i.option.handler(event);
     });
   }
 
@@ -81,37 +89,38 @@ export function _focusImpl(ctx: _TriggerContext) {
   }
 
   // 检测是通过点击还是通过键盘或命令式出发
-  function isInteractiveFocus() {
+  function isTapFocus() {
     return Date.now() - lastDownTime < 20;
   }
 
   // 清理所有未关闭的focus事件, 并进行通知
   function clear() {
-    const _isInteractiveFocus = isInteractiveFocus();
+    const _isTapFocus = isTapFocus();
 
-    ctx.currentFocus.forEach((i) => {
+    currentFocus.forEach((i) => {
       const event = _buildEvent({
         type: TriggerType.focus,
-        target: i.origin,
-        nativeEvent: triggerClearEvent,
+        target: i.option,
+        nativeEvent: new Event("M78_FOCUS_CLEAR"),
         focus: false,
         first: false,
         last: true,
-        isInteractiveFocus: _isInteractiveFocus,
-        data: i.meta.data,
+        isTapFocus: _isTapFocus,
+        data: i.option.data,
+        eventMeta: ctx.getDataByOption(i.option), // data可能已失效, 需要重新获取
       });
 
-      trigger.event.emit(event);
+      ctx.handleEvent(event);
+      i.option.handler(event);
     });
 
-    ctx.currentFocus = [];
+    currentFocus = [];
   }
 
   return {
     focus,
     blur,
     focusBeforeMark,
-    isInteractiveFocus,
     clear,
   };
 }

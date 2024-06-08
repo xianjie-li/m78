@@ -3,25 +3,22 @@ import { getEventOffset } from "@m78/utils";
 import { _buildEvent } from "../methods.js";
 
 export function _clickImpl(ctx: _TriggerContext) {
-  const { trigger, config } = ctx;
+  const { trigger } = ctx;
 
   function click(e: MouseEvent) {
     if (!trigger.enable) return;
-    if (config.preCheck && !config.preCheck(TriggerType.click, e)) return;
 
-    const items = ctx.getTargetDataByXY(
-      e.clientX,
-      e.clientY,
-      true,
-      e.target as HTMLElement
-    );
+    const { eventList } = ctx.getEventList({
+      xy: [e.clientX, e.clientY],
+      type: TriggerType.click,
+    });
 
-    items.forEach((i) => {
+    eventList.forEach((i) => {
       const [offsetX, offsetY] = getEventOffset(e, i.bound);
 
       const event = _buildEvent({
         type: TriggerType.click,
-        target: i.origin,
+        target: i.option,
         nativeEvent: e,
         x: e.clientX,
         y: e.clientY,
@@ -29,10 +26,12 @@ export function _clickImpl(ctx: _TriggerContext) {
         offsetY,
         active: true,
         last: true,
-        data: i.meta.data,
+        data: i.option.data,
+        eventMeta: i,
       });
 
-      trigger.event.emit(event);
+      ctx.handleEvent(event);
+      i.option.handler(event);
     });
   }
 

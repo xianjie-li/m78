@@ -352,7 +352,7 @@ export function getScrollParent(ele, getAll) {
         y: y
     };
 }
-/** Obtaining offsets from different events */ export function getEventOffset(e, target) {
+/** Obtaining offsets from different events, Target is a reference node, if omitted, use e.target as the reference node */ export function getEventOffset(e, target) {
     var touch = e.changedTouches;
     var clientX = 0;
     var clientY = 0;
@@ -363,11 +363,32 @@ export function getScrollParent(ele, getAll) {
         clientX = e.clientX;
         clientY = e.clientY;
     }
+    if (target) target = e.target;
     var isBound = isNumber(target.left) && isNumber(target.top);
     var _ref = isBound ? target : target.getBoundingClientRect(), left = _ref.left, top = _ref.top;
     return [
         clientX - left,
         clientY - top
+    ];
+}
+/** Get xy points (clientX/Y) from different events */ export function getEventXY(e) {
+    var isTouch = e.type.startsWith("touch");
+    var clientX = 0;
+    var clientY = 0;
+    var mouseEv = e;
+    var touchEv = e;
+    if (isTouch) {
+        var point = touchEv.changedTouches[0];
+        clientX = point.clientX;
+        clientY = point.clientY;
+    } else {
+        clientX = mouseEv.clientX;
+        clientY = mouseEv.clientY;
+    }
+    return [
+        clientX,
+        clientY,
+        isTouch
     ];
 }
 /** checkChildren = false | check dom is focus, detected childrens focus when checkChildren is true */ export function isFocus(dom) {

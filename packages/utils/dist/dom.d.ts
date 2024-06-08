@@ -85,8 +85,10 @@ export declare function hasScroll(el: HTMLElement, checkOverflowAttr?: boolean):
     x: boolean;
     y: boolean;
 };
-/** Obtaining offsets from different events */
-export declare function getEventOffset(e: MouseEvent | TouchEvent | PointerEvent, target: HTMLElement | BoundSize): TupleNumber;
+/** Obtaining offsets from different events, Target is a reference node, if omitted, use e.target as the reference node */
+export declare function getEventOffset(e: MouseEvent | TouchEvent | PointerEvent, target?: HTMLElement | BoundSize): TupleNumber;
+/** Get xy points (clientX/Y) from different events */
+export declare function getEventXY(e: TouchEvent | MouseEvent | PointerEvent): readonly [number, number, boolean];
 /** checkChildren = false | check dom is focus, detected childrens focus when checkChildren is true */
 export declare function isFocus(dom: HTMLElement, checkChildren?: boolean): boolean;
 export {};

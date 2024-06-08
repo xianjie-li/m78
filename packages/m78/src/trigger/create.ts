@@ -1,82 +1,48 @@
-import "./index.scss";
-
-import {
-  _TriggerContext,
-  TriggerInstance,
-  TriggerConfig,
-  TriggerType,
-} from "./types.js";
-import { createEvent, ensureArray } from "@m78/utils";
+import { _TriggerContext, TriggerInstance } from "./types.js";
 import { _targetOperationImpl } from "./target-operation.js";
-import { _checkImpl } from "./check.js";
+import { _checkGetter } from "./getter.js";
 import { _eventImpl } from "./event.js";
-import { _updateTypeEnableMap } from "./methods.js";
 import { _actionImpl } from "./action.js";
 import { _lifeImpl } from "./life.js";
 
 /**
- * 事件触发器, 可在dom或虚拟位置上绑定事件, 支持大部分常用事件, 相比原生事件更易于使用
- *
- * 对于有拖拽行为的事件, 始终应该为对应节点添加 .m78-touch-prevent , 反正原生行为的干扰
+ * 构建工厂, 可用于支持多实例
  * */
-export function _create(config: TriggerConfig) {
-  const ctx: _TriggerContext = {
-    config,
-    eventMap: new Map(),
-    targetList: [],
+export function _create() {
+  const ctx = {
+    optionList: [],
+    groupMap: new Map(),
+    dataMap: new Map(),
     trigger: {
-      event: createEvent(),
+      enable: true,
+      dragging: false,
+      moving: false,
+      activating: false,
+      running: false,
     } as TriggerInstance,
-    container: config.container || document.documentElement,
-    type: ensureArray(config.type),
-    enable: true,
-    dragging: false,
-    activating: false,
-    typeEnableMap: {},
-    currentFocus: [],
-    moveRecord: new Map(),
-    activeRecord: new Map(),
-    dragRecord: new Map(),
-    event: {} as any,
-
-    clearPending: () => {},
-    getTargetDataByXY: () => [],
-    clearAllPending: () => {},
-  };
-
-  if (config.label === "ABC") {
-    ctx.label = "ABC";
-  }
-
-  /* # # # # # # # 实现部分 # # # # # # # */
+    shouldPreventDefaultContextMenu: false,
+  } as any as _TriggerContext;
 
   ctx.event = _eventImpl(ctx);
 
   _targetOperationImpl(ctx);
 
-  _checkImpl(ctx);
+  _checkGetter(ctx);
 
   _actionImpl(ctx);
 
   _lifeImpl(ctx);
 
-  /* # # # # # # # 初始化调用 # # # # # # # */
-
-  _updateTypeEnableMap(ctx);
-
-  if (config.target) {
-    ctx.trigger.add(config.target);
-  }
-
   ctx.event.bind();
 
-  ctx.trigger.event.on((e) => {
-    if (e.type === TriggerType.active) {
-      if ("target" in e.target && e.target.cursor) {
-        ctx.trigger.cursor = e.active ? e.target.cursor : "";
-      }
-    }
-  });
+  // 光标处理
+  // ctx.trigger.event.on((e) => {
+  //   if (e.type === TriggerType.active) {
+  //     if ("target" in e.target && e.target.cursor) {
+  //       ctx.trigger.cursor = e.active ? e.target.cursor : "";
+  //     }
+  //   }
+  // });
 
   return ctx.trigger;
 }

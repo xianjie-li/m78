@@ -481,10 +481,10 @@ export function hasScroll(
   };
 }
 
-/** Obtaining offsets from different events */
+/** Obtaining offsets from different events, Target is a reference node, if omitted, use e.target as the reference node */
 export function getEventOffset(
   e: MouseEvent | TouchEvent | PointerEvent,
-  target: HTMLElement | BoundSize
+  target?: HTMLElement | BoundSize
 ): TupleNumber {
   const touch = (e as TouchEvent).changedTouches;
   let clientX = 0;
@@ -498,6 +498,8 @@ export function getEventOffset(
     clientY = (e as MouseEvent).clientY;
   }
 
+  if (target) target = e.target as HTMLElement | BoundSize;
+
   const isBound =
     isNumber((target as any).left) && isNumber((target as any).top);
 
@@ -505,6 +507,28 @@ export function getEventOffset(
     ? (target as BoundSize)
     : (target as HTMLElement).getBoundingClientRect();
   return [clientX - left, clientY - top];
+}
+
+/** Get xy points (clientX/Y) from different events */
+export function getEventXY(e: TouchEvent | MouseEvent | PointerEvent) {
+  const isTouch = e.type.startsWith("touch");
+
+  let clientX = 0;
+  let clientY = 0;
+
+  const mouseEv = e as MouseEvent;
+  const touchEv = e as TouchEvent;
+
+  if (isTouch) {
+    const point = touchEv.changedTouches[0];
+    clientX = point.clientX;
+    clientY = point.clientY;
+  } else {
+    clientX = mouseEv.clientX;
+    clientY = mouseEv.clientY;
+  }
+
+  return [clientX, clientY, isTouch] as const;
 }
 
 /** checkChildren = false | check dom is focus, detected childrens focus when checkChildren is true */

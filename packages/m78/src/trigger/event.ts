@@ -1,70 +1,66 @@
-import { _TriggerContext, TriggerType } from "./types.js";
-import { _moveActiveImpl } from "./handle/move-active.js";
+import { _createLimitTrigger, _longPressDelay } from "./common.js";
+import { _activeImpl } from "./handle/active.js";
 import { _clickImpl } from "./handle/click.js";
-import { _focusImpl } from "./handle/focus.js";
 import { _contextMenuImpl } from "./handle/context-menu.js";
 import { _dragImpl } from "./handle/drag.js";
+import { _focusImpl } from "./handle/focus.js";
+import { _moveImpl } from "./handle/move.js";
+import { _TriggerContext } from "./types.js";
 
 // event的核心实现部分
 export function _eventImpl(ctx: _TriggerContext) {
-  const { container, trigger } = ctx;
+  const { trigger } = ctx;
 
   const clickHandle = _clickImpl(ctx);
   const focusHandle = _focusImpl(ctx);
-  const moveActiveHandle = _moveActiveImpl(ctx);
+  const activeHandle = _activeImpl(ctx);
+  const moveHandle = _moveImpl(ctx);
   const dragHandle = _dragImpl(ctx);
   const contextMenuHandle = _contextMenuImpl(ctx);
 
-  // 标记touch/mouse事件是否正在触发
-  // 在chrome devtool mobile模式中, 点击或按下一段时间都会触发mouse系列的事件, 需要标识阻止两者之前互相影响
+  const moveLimitTrigger = _createLimitTrigger();
+  const activeLimitTrigger = _createLimitTrigger();
+
+  // 在开发时的chrome devtool mobile模式中, 点击或按下一段时间都会触发mouse系列的事件, 需要标识阻止两者之前互相影响
   let lastTouchTime = 0;
   let lastMouseTime = 0;
+
+  // longpress计时器
+  let longPressTimer: any;
 
   function mouseDown(e: MouseEvent) {
     if (hasRecentlyTouch()) return;
     if (!trigger.enable) return;
-    const valid = dragHandle.start(e);
 
-    valid && dragTrailingBind();
+    // 仅左键点击进行标记
+    if (e.button === 0) {
+      dragHandle.startMark(e);
+    }
   }
 
   function mouseMove(e: MouseEvent) {
     if (hasRecentlyTouch()) return;
     if (!trigger.enable) return;
 
-    moveActiveHandle.moveActive(e);
+    moveLimitTrigger(
+      // 有move项触发时, 取消节流, 实时触发
+      !moveHandle.hasTrigger(),
+      e,
+      () => moveHandle.trigger(e)
+    );
+
+    activeLimitTrigger(true, e, () => activeHandle.trigger(e));
+
+    dragHandle.dragTrigger(e);
   }
 
-  function mouseUp() {
+  function mouseUp(e: MouseEvent) {
     if (hasRecentlyTouch()) return;
     if (!trigger.enable) return;
 
     lastMouseTime = Date.now();
-  }
 
-  function mouseDragMove(e: MouseEvent) {
-    if (hasRecentlyTouch()) return;
-    if (!trigger.enable) return;
-
-    dragHandle.move(e);
-  }
-
-  function mouseDragUp(e: MouseEvent) {
-    dragTrailingUnBind();
-
-    if (hasRecentlyTouch()) return;
-    if (!trigger.enable) return;
-
-    lastMouseTime = Date.now();
     dragHandle.end(e);
-  }
-
-  function mouseLeave(e: MouseEvent) {
-    if (hasRecentlyTouch()) return;
-    if (!trigger.enable) return;
-
-    moveActiveHandle.clearMove(e);
-    moveActiveHandle.clearActive(e);
   }
 
   function touchStart(e: TouchEvent) {
@@ -72,17 +68,21 @@ export function _eventImpl(ctx: _TriggerContext) {
     if (!trigger.enable) return;
 
     touchTrailingBind(e);
-    dragHandle.start(e);
-    contextMenuHandle.simulationStart(e);
+
+    longPressTimer = setTimeout(() => longPress(e), _longPressDelay);
+
+    dragHandle.startMark(e);
   }
 
   function touchMove(e: TouchEvent) {
     if (hasRecentlyMouse()) return;
     if (!trigger.enable) return;
 
-    moveActiveHandle.moveActive(e);
-    dragHandle.move(e);
-    contextMenuHandle.simulationMove();
+    if (longPressTimer) clearTimeout(longPressTimer);
+
+    moveHandle.trigger(e);
+
+    dragHandle.dragTrigger(e);
   }
 
   function touchEnd(e: TouchEvent) {
@@ -93,10 +93,13 @@ export function _eventImpl(ctx: _TriggerContext) {
 
     lastTouchTime = Date.now();
 
-    moveActiveHandle.clearMove(e);
-    moveActiveHandle.clearActive(e);
+    if (longPressTimer) clearTimeout(longPressTimer);
+
+    moveHandle.trigger(e);
+
+    activeHandle.clear(e);
+
     dragHandle.end(e);
-    contextMenuHandle.simulationEnd();
   }
 
   function hasRecentlyTouch() {
@@ -107,62 +110,48 @@ export function _eventImpl(ctx: _TriggerContext) {
     return Date.now() - lastMouseTime < 50;
   }
 
+  function longPress(e: TouchEvent) {
+    longPressTimer = undefined;
+
+    activeHandle.trigger(e);
+
+    contextMenuHandle.simulationContextMenu(e);
+  }
+
   // 根据当前type绑定事件
   function bind() {
-    const typeEnableMap = ctx.typeEnableMap;
+    window.addEventListener("click", clickHandle);
 
-    if (typeEnableMap[TriggerType.click]) {
-      container.addEventListener("click", clickHandle);
-    }
+    window.addEventListener("focus", focusHandle.focus, true);
+    window.addEventListener("blur", focusHandle.blur, true);
 
-    if (typeEnableMap[TriggerType.focus]) {
-      window.addEventListener("focus", focusHandle.focus, true);
-      window.addEventListener("blur", focusHandle.blur, true);
-    }
+    window.addEventListener("mousedown", mouseDown);
+    window.addEventListener("mouseup", mouseUp);
+    window.addEventListener("mousemove", mouseMove);
+    window.addEventListener("touchstart", touchStart);
 
-    if (
-      typeEnableMap[TriggerType.active] ||
-      typeEnableMap[TriggerType.drag] ||
-      typeEnableMap[TriggerType.move]
-    ) {
-      container.addEventListener("mousedown", mouseDown);
-      container.addEventListener("mouseup", mouseUp);
-      container.addEventListener("mousemove", mouseMove);
-      container.addEventListener("touchstart", touchStart);
-    }
+    window.addEventListener("contextmenu", contextMenuHandle.contextMenu);
 
-    if (typeEnableMap[TriggerType.contextMenu]) {
-      container.addEventListener("touchstart", touchStart);
-    }
-
-    if (typeEnableMap[TriggerType.active] || typeEnableMap[TriggerType.move]) {
-      container.addEventListener("mouseleave", mouseLeave);
-    }
-
-    if (typeEnableMap[TriggerType.contextMenu]) {
-      container.addEventListener("contextmenu", contextMenuHandle.contextMenu);
-    }
-
+    // 用于为focus添加标记, 标识是否是通过主动点击触发的focus
     window.addEventListener("mousedown", focusHandle.focusBeforeMark, true);
     window.addEventListener("touchstart", focusHandle.focusBeforeMark, true);
   }
 
   // 解绑事件
   function unbind() {
-    container.removeEventListener("click", clickHandle);
+    window.removeEventListener("click", clickHandle);
     window.removeEventListener("focus", focusHandle.focus, true);
     window.removeEventListener("blur", focusHandle.blur, true);
-    container.removeEventListener("mousedown", mouseDown);
-    container.removeEventListener("mouseup", mouseUp);
-    container.removeEventListener("mousemove", mouseMove);
-    container.removeEventListener("mouseleave", mouseLeave);
-    container.removeEventListener("touchstart", touchStart);
-    container.removeEventListener("contextmenu", contextMenuHandle.contextMenu);
+    window.removeEventListener("mousedown", mouseDown);
+    window.removeEventListener("mouseup", mouseUp);
+    window.removeEventListener("mousemove", mouseMove);
+    window.removeEventListener("touchstart", touchStart);
+    window.removeEventListener("contextmenu", contextMenuHandle.contextMenu);
     window.removeEventListener("mousedown", focusHandle.focusBeforeMark, true);
     window.removeEventListener("touchstart", focusHandle.focusBeforeMark, true);
   }
 
-  // touch后续事件需要绑定在触发的target上, 否则移除会导致事件中断
+  // touch后续事件需要绑定在触发的target上, 否则节点移除移除会导致事件中断
   function touchTrailingBind(startE: TouchEvent) {
     startE.target!.addEventListener("touchmove", touchMove as any);
     startE.target!.addEventListener("touchend", touchEnd as any);
@@ -175,23 +164,13 @@ export function _eventImpl(ctx: _TriggerContext) {
     endE.target!.removeEventListener("touchcancel", touchEnd as any);
   }
 
-  // 拖动后续事件绑定
-  function dragTrailingBind() {
-    window.addEventListener("mousemove", mouseDragMove);
-    window.addEventListener("mouseup", mouseDragUp);
-  }
-
-  function dragTrailingUnBind() {
-    window.removeEventListener("mousemove", mouseDragMove);
-    window.removeEventListener("mouseup", mouseDragUp);
-  }
-
   return {
     bind,
     unbind,
     clickHandle,
     focusHandle,
-    moveActiveHandle,
+    activeHandle,
+    moveHandle,
     contextMenuHandle,
     dragHandle,
   };
