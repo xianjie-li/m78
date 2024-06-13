@@ -355,7 +355,7 @@ export function _useMethods(ctx: _OverlayContext) {
 
       // 需要在clickAway之后出发
       self.triggerMultipleTimer = setTimeout(() => {
-        updateTarget(e.target as HTMLElement, true);
+        updateTarget(e.target.target as HTMLElement, true);
         ctx.triggerHandle(e);
       }, 10);
     } else if (self.lastTriggerTarget === e.data) {

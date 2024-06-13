@@ -11,7 +11,11 @@ export enum TriggerOverrideStrategy {
   parallel,
 }
 
-/** 用于配置在特定事件下的光标显示类型 */
+/**
+ * 用于配置在特定事件下的光标显示类型
+ *
+ * 光标样式挂载在html节点, 若事件节点包含自定义或预设光标样式, 需为其设置css: cursor: "inherit", 防止干扰
+ *  */
 export interface TriggerCursorMap {
   /** active触发时 */
   active?: string;
@@ -37,7 +41,7 @@ export interface TriggerOption {
   handler: TriggerListener;
   /** 控制事件是否启用, 由于会频繁调用, 不应包含复杂逻辑 */
   enable?: boolean | ((data: TriggerTargetData) => boolean);
-  /** 0 | 事件级别, 较大的目标会覆盖较小目标的事件, 若最大级别下包含多个target, 则这些target会根据竞争规则触发事件 */
+  /** 0 | 事件级别, 较大的目标会覆盖较小目标的事件, 若最大级别下包含多个target, 则这些target会根据覆盖规则触发事件 */
   level?: number;
   /** parallel | 同一level下有多个相同类型的事件触发时, 配置事件的覆盖策略 */
   overrideStrategy?: TriggerOverrideStrategy;
@@ -129,6 +133,8 @@ export interface TriggerInstance {
   getTargetByXY(args: {
     /** 指定要获取事件的点 */
     xy?: TupleNumber;
+    /** 指定触发事件的dom节点, 若同时传入xy, 会先通过xy过滤, 再通过dom检测节点, 能够提升一定的性能 */
+    dom?: HTMLElement;
     /** 指定事件类型, 非对应类型的事件被过滤 */
     type?: TriggerType | TriggerType[];
     /** 可在确认事件列表前对其进行再次过滤, 使用此参数而不是直接获取返回结果过滤是因为, 其在 overrideStrategy / level 等配置处理前执行, 通过filter能够使这些配置能正常作用 */
@@ -223,6 +229,8 @@ export interface _TriggerContext {
   getEventList(args: {
     /** 指定要获取事件的点 */
     xy?: TupleNumber;
+    /** 指定触发事件的dom节点, 若同时传入xy, 会先通过xy过滤, 再通过dom检测节点, 能够提升一定的性能 */
+    dom?: HTMLElement;
     /** 指定事件类型, 非对应类型的事件被过滤 */
     type?: TriggerType | TriggerType[];
     /** 可在确认事件列表前对其进行再次过滤, 使用此参数而不是直接获取返回结果过滤是因为, 其在 overrideStrategy / level 等配置处理前执行, 通过filter能够使这些配置能正常作用 */

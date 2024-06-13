@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  AnyFunction,
-  BoundSize,
-  dumpFn,
-  isNumber,
-  omit,
-  TupleNumber,
-} from "@m78/utils";
+import { BoundSize, dumpFn, isNumber, omit, TupleNumber } from "@m78/utils";
 import { config } from "react-spring";
 import { TransitionType } from "../transition/index.js";
 import { Z_INDEX_MODAL } from "../common/index.js";
@@ -27,7 +20,6 @@ import {
   OverlayRenderOption,
 } from "./types.js";
 import { TriggerEvent, TriggerType } from "../trigger/index.js";
-import { _Methods } from "./use-methods.js";
 
 export const _defaultAlignment: TupleNumber = [0.5, 0.5];
 

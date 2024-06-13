@@ -157,77 +157,79 @@ const OverlayExample = () => {
 
       <Divider>单实例</Divider>
 
-      <div className="mt-12">
-        <Trigger
-          type={[TriggerType.click]}
-          onTrigger={overlay?.trigger}
-          content={<span>这是内容1111</span>}
-        >
-          <Button>
-            <span>click</span>44
-          </Button>
-        </Trigger>
-        <Trigger
-          type={[TriggerType.active]}
-          onTrigger={overlay?.trigger}
-          content={<span>这是内容22</span>}
-        >
-          <Button>active</Button>
-        </Trigger>
-        <Trigger
-          type={[TriggerType.active]}
-          onTrigger={overlay?.trigger}
-          content={<span>这是内容3333</span>}
-        >
-          <Button>active</Button>
-        </Trigger>
-        <Trigger
-          type={[TriggerType.focus]}
-          onTrigger={overlay?.trigger}
-          content={<span>这是内容44</span>}
-        >
-          <Button>focus</Button>
-        </Trigger>
-        <Trigger
-          type={[TriggerType.focus, TriggerType.click]}
-          onTrigger={overlay?.trigger}
-          content={<span>这是内容5555</span>}
-        >
-          <Button>focus + click</Button>
-        </Trigger>
+      {overlay && (
+        <div className="mt-12">
+          <Trigger
+            type={[TriggerType.click]}
+            onTrigger={overlay!.trigger}
+            content={<span>这是内容1111</span>}
+          >
+            <Button>
+              <span>click</span>44
+            </Button>
+          </Trigger>
+          <Trigger
+            type={[TriggerType.active]}
+            onTrigger={overlay!.trigger}
+            content={<span>这是内容22</span>}
+          >
+            <Button>active</Button>
+          </Trigger>
+          <Trigger
+            type={[TriggerType.active]}
+            onTrigger={overlay!.trigger}
+            content={<span>这是内容3333</span>}
+          >
+            <Button>active</Button>
+          </Trigger>
+          <Trigger
+            type={[TriggerType.focus]}
+            onTrigger={overlay!.trigger}
+            content={<span>这是内容44</span>}
+          >
+            <Button>focus</Button>
+          </Trigger>
+          <Trigger
+            type={[TriggerType.focus, TriggerType.click]}
+            onTrigger={overlay!.trigger}
+            content={<span>这是内容5555</span>}
+          >
+            <Button>focus + click</Button>
+          </Trigger>
 
-        <Trigger
-          type={[TriggerType.contextMenu]}
-          onTrigger={overlay?.trigger}
-          content={<span>这是内容66</span>}
-        >
-          <Button>contextMenu</Button>
-        </Trigger>
+          <Trigger
+            type={[TriggerType.contextMenu]}
+            onTrigger={overlay!.trigger}
+            content={<span>这是内容66</span>}
+          >
+            <Button>contextMenu</Button>
+          </Trigger>
 
-        <Trigger
-          type={[TriggerType.move]}
-          onTrigger={overlay?.trigger}
-          content={<span>这是内容7777</span>}
-        >
-          <Button size="large">move</Button>
-        </Trigger>
+          <Trigger
+            type={[TriggerType.move]}
+            onTrigger={overlay!.trigger}
+            content={<span>这是内容7777</span>}
+          >
+            <Button size="large">move</Button>
+          </Trigger>
 
-        <Trigger
-          type={[TriggerType.move]}
-          onTrigger={overlay?.trigger}
-          content={<span>这是内容88</span>}
-        >
-          <Button size="large">move2</Button>
-        </Trigger>
+          <Trigger
+            type={[TriggerType.move]}
+            onTrigger={overlay!.trigger}
+            content={<span>这是内容88</span>}
+          >
+            <Button size="large">move2</Button>
+          </Trigger>
 
-        <Trigger
-          type={[TriggerType.move]}
-          onTrigger={overlay?.trigger}
-          content={<span>这是内容9999</span>}
-        >
-          <Button size="large">move3</Button>
-        </Trigger>
-      </div>
+          <Trigger
+            type={[TriggerType.move]}
+            onTrigger={overlay!.trigger}
+            content={<span>这是内容9999</span>}
+          >
+            <Button size="large">move3</Button>
+          </Trigger>
+        </div>
+      )}
 
       <Divider />
 

@@ -6,7 +6,7 @@ import { _actionImpl } from "./action.js";
 import { _lifeImpl } from "./life.js";
 
 /**
- * 构建工厂, 可用于支持多实例
+ * 构建工厂, 用于支持多实例, 在大部分情况下, 推荐使用默认实例, 方便管理冲突的事件
  * */
 export function _create() {
   const ctx = {

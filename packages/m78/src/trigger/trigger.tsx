@@ -1,137 +1,73 @@
 import React, {
-  ReactElement,
   useEffect,
   useImperativeHandle,
   useMemo,
+  type ReactElement,
 } from "react";
-import {
-  TriggerInstance,
-  TriggerConfig,
-  TriggerEvent,
-  TriggerTargetMeta,
-  TriggerType,
-} from "./types.js";
-import { useFn, useSetState } from "@m78/hooks";
-import { createTrigger } from "./index.js";
-import { AnyFunction, AnyObject, dumpFn, ensureArray } from "@m78/utils";
+import { type TriggerOption, type TriggerListener } from "./types.js";
+import { useFn, useSelf, useSetState } from "@m78/hooks";
+import { trigger } from "./index.js";
+import { dumpFn, type AnyFunction, type AnyObject } from "@m78/utils";
 
-export interface UseTriggerProps {
-  /** 需要绑定的事件类型 */
-  type: TriggerType | TriggerType[];
-  /** 事件目标元素, 其渲染结果必须是单个dom节点, 文本或多个dom会导致事件监听异常 */
+export interface TriggerProps
+  extends Omit<TriggerOption, "handler" | "target"> {
+  /** 事件处理程序 */
+  onTrigger: TriggerListener;
+  /** 事件目标元素, 其渲染结果必须是单个非文本的dom节点, 否则会导致事件监听点异常  */
   element?: ReactElement;
-  /** 触发回调 */
-  onTrigger?: (e: TriggerEvent) => void;
-  /** 控制事件项的active事件行为 */
-  active?: TriggerConfig["active"];
-
+  /** 与element完全相同, 用于兼容react命名风格 */
+  children?: ReactElement;
   /** trigger对应的dom节点的ref */
   innerRef?: React.Ref<HTMLElement | null>;
-  /** 传入时, 会以该key创建单独创建一个trigger实例, 相同key的trigger会共用一个实例, 默认情况下, 会使用内部的默认实例 */
-  instanceKey?: string;
 }
 
-export interface TriggerProps extends Omit<UseTriggerProps, "element"> {
-  /** 事件目标元素, 其渲染结果必须是单个dom节点, 文本或多个dom会导致事件监听异常 */
-  children: UseTriggerProps["element"];
-}
-
-/** 实例池 */
-const instances: Record<string, TriggerInstance> = {};
-
-const DEFAULT_INSTANCE_KEY = "__default__";
-
-const allType = [
-  TriggerType.click,
-  TriggerType.active,
-  TriggerType.drag,
-  TriggerType.focus,
-  TriggerType.contextMenu,
-  TriggerType.move,
-];
-
-/** 通过hooks便捷的绑定trigger实例, 未识别的props会传递到事件对象的context属性 */
-export function _useTrigger(props: UseTriggerProps & AnyObject) {
-  const {
-    type,
-    element,
-    onTrigger,
-    active,
-    innerRef,
-    instanceKey = DEFAULT_INSTANCE_KEY,
-    ...other
-  } = props;
-
-  const [meta, setMeta] = useSetState<Partial<TriggerTargetMeta>>({
-    active,
-  });
+/** 通过hooks便捷的绑定trigger实例 */
+export function _useTrigger(props: TriggerProps) {
+  const { onTrigger, element, children, innerRef, ...options } = props;
 
   const [state, setState] = useSetState({
-    instance: null as TriggerInstance | null,
+    target: null as TriggerOption["target"] | null,
   });
 
-  // 暴露内部dom
-  useImperativeHandle(innerRef, () => meta.target as HTMLElement, [
-    meta.target,
+  const self = useSelf({
+    registered: false,
+  });
+
+  // 组装进行注册的事件选项
+  const option = useMemo(() => ({} as TriggerOption), []);
+
+  Object.assign(option, options, {
+    handler: onTrigger,
+    target: state.target,
+  } as Partial<TriggerOption>);
+
+  // 暴露内部dom到ref
+  useImperativeHandle(innerRef, () => state.target as HTMLElement, [
+    state.target,
   ]);
 
-  // 用于快速确认指定事件是否启用
-  const typeMap = useMemo(() => {
-    const ls = ensureArray(type);
-    const obj = {} as Record<string, boolean>;
-    ls.forEach((key) => {
-      obj[key] = true;
-    });
-    return obj;
-  }, [type]);
-
-  // 统一事件派发
-  const handle = useFn((e: TriggerEvent) => {
-    if (!typeMap[e.type] || e.target !== meta) return;
-    e.data = e.target;
-    e.target = (e.target as TriggerTargetMeta).target;
-    e.context = other;
-    onTrigger?.(e);
+  const bind = useFn(() => {
+    if (!option.target || self.registered) return;
+    self.registered = true;
+    trigger.on(option);
   });
 
-  // 关联或创建trigger实例
-  useEffect(() => {
-    const ins =
-      instances[instanceKey] ||
-      createTrigger({
-        type: allType,
-      });
-
-    ins.event.on(handle);
-
-    instances[instanceKey] = ins;
-
-    setState({
-      instance: ins,
-    });
-
-    return () => {
-      ins.event.off(handle);
-    };
-  }, []);
-
-  // 添加target到实例
-  useEffect(() => {
-    if (!meta.target || !state.instance) return;
-
-    state.instance.add(meta as TriggerTargetMeta);
-
-    return () => {
-      state.instance!.delete(meta as TriggerTargetMeta);
-    };
-  }, [meta.target, state.instance]);
+  const unbind = useFn(() => {
+    self.registered = false;
+    trigger.off(option);
+  });
 
   // 通过ref测量element实际渲染的dom
   const refCallback = useFn((node) => {
     if (!node) return;
 
-    if (meta.target !== node.nextSibling) {
-      setMeta({
+    if (state.target !== node.nextSibling) {
+      option.target = node.nextSibling || null;
+
+      if (option.target) bind();
+      else unbind();
+
+      setState({
         target: node.nextSibling,
       });
     }
@@ -157,33 +93,35 @@ export function _useTrigger(props: UseTriggerProps & AnyObject) {
     }
   });
 
-  return {
-    node: (
+  function renderNode() {
+    const _element: ReactElement | undefined = element || children;
+
+    if (!React.isValidElement(_element)) return null;
+
+    return (
       <>
-        {React.isValidElement(element) && (
-          <span
-            style={{ display: "none" }}
-            ref={refCallback}
-            // 这里key是为了强制每次render时都让react重绘span, 因为我们每次成功拿到element
-            // 渲染的dom后就会删除掉该span节点来避免对用户dom结构的破坏
-            // 而react是不知道其已经被删除的, 我们后续测量就会失效, (因为span只存在内存中, span.nextSibling)
-            key={String(Math.random())}
-          />
-        )}
-        {element}
+        <span
+          style={{ display: "none" }}
+          ref={refCallback}
+          // 这里key是为了强制每次render时都让react重绘span, 因为我们每次成功拿到element
+          // 渲染的dom后就会删除掉该span节点来避免对用户dom结构的破坏
+          // 而react是不知道其已经被删除的, 我们后续测量就会失效, (因为span只存在内存中, span.nextSibling)
+          key={String(Math.random())}
+        />
+        {_element}
       </>
-    ),
-    el: (meta.target as HTMLElement) || null,
+    );
+  }
+
+  return {
+    node: renderNode(),
+    el: (state.target as HTMLElement) || null,
   };
 }
 
-/** 通过组件便捷的绑定trigger实例, 未识别的props会传递到事件对象的context属性 */
+/** 通过组件的形式便捷的绑定trigger实例 */
 export function _Trigger(props: TriggerProps & AnyObject) {
-  const trigger = _useTrigger({
-    ...props,
-    element: props.children,
-    children: undefined,
-  } as TriggerProps);
+  const trigger = _useTrigger(props);
 
   return trigger.node;
 }

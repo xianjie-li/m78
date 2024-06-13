@@ -34,7 +34,7 @@ export function _checkGetter(ctx: _TriggerContext) {
 
   /** 获取选项和选项数据列表 */
   ctx.getEventList = function getEventList(args) {
-    const { xy, type, filter } = args;
+    const { xy, type, filter, dom } = args;
 
     const list: TriggerTargetData[] = [];
     const optList: TriggerOption[] = [];
@@ -69,7 +69,25 @@ export function _checkGetter(ctx: _TriggerContext) {
       optList.push(opt);
       list.push(data);
 
+      let inBound = false;
+      let isPass = false;
+
       if (xy && inBoundCheck(xy[0], xy[1], data.bound)) {
+        inBound = true;
+      }
+
+      // 需根据dom检测, 且当前事件选项target是真实dom
+      if (dom && !data.isVirtual) {
+        // 需要进行dom检测
+        if (!xy || (xy && inBound)) {
+          // 复用isBound检测可减少 contains 的直接调用
+          isPass = data.dom.contains(dom);
+        }
+      } else if (inBound) {
+        isPass = true;
+      }
+
+      if (isPass) {
         eventList.push(data);
       }
     };
@@ -187,6 +205,10 @@ export function _checkGetter(ctx: _TriggerContext) {
 
     if (!typeMap) {
       typeMap = getTypeMap(opt);
+    }
+
+    if (!opt.target) {
+      console.log(opt, opt.target, 22);
     }
 
     if (_isBound(opt.target)) {

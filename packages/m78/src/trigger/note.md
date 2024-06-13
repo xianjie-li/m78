@@ -21,3 +21,12 @@
   - move touch模式: preventDefault() + touchaction
   - drag: preventDefault() + 防止复制 + touchaction
 - ~~暴露统一事件, 便于集中调整光标样式, 添加覆盖样式等~~
+
+点击支持focus触发
+事件包含真实dom时使用dom处理事件
+
+迁移到新版
+- overlay
+- bubble
+- menu
+- table

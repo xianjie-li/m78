@@ -10,6 +10,7 @@ export function _clickImpl(ctx: _TriggerContext) {
 
     const { eventList } = ctx.getEventList({
       xy: [e.clientX, e.clientY],
+      dom: e.target as HTMLElement,
       type: TriggerType.click,
     });
 

@@ -1,5 +1,4 @@
 import {
-  getRefDomOrDom,
   useClickAway,
   useDestroy,
   useKeyboard,
