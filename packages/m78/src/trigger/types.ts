@@ -156,7 +156,7 @@ export interface TriggerEvent {
   last: boolean;
   /** 事件对应的配置对象 */
   target: TriggerOption;
-  /** 与TriggerTargetMeta.data相同 */
+  /** 事件对象中配置的TriggerOption.data */
   data: any;
   /** 根据事件信息产生的额外信息 */
   eventMeta: TriggerTargetData;
@@ -235,6 +235,8 @@ export interface _TriggerContext {
     type?: TriggerType | TriggerType[];
     /** 可在确认事件列表前对其进行再次过滤, 使用此参数而不是直接获取返回结果过滤是因为, 其在 overrideStrategy / level 等配置处理前执行, 通过filter能够使这些配置能正常作用 */
     filter?: (data: TriggerTargetData) => boolean;
+    /** 在同时传入dom和xy时, 需要xy通过后才会对比dom, 可以设置此项为true来使xy检测可选 */
+    looseXYCheck?: boolean;
   }): {
     list: TriggerTargetData[];
     optList: TriggerOption[];

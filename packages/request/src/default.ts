@@ -1,5 +1,5 @@
 import { dumpFn } from "@m78/utils";
-import { BaseRequestOptions, CreateOptions } from "./interfaces";
+import { BaseRequestOptions, CreateOptions } from "./interfaces.js";
 
 export const defaultCreateConfig: Partial<CreateOptions<BaseRequestOptions>> = {
   feedBack: dumpFn,

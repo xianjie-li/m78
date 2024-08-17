@@ -1,6 +1,6 @@
 import { Bound, BoundSize, TupleNumber } from "@m78/utils";
-import { _WineContext, WineDragPosition, WineSelf } from "./types";
-import { DEFAULT_FULL_LIMIT_BOUND, TIP_NODE_KEY } from "./consts";
+import { _WineContext, WineDragPosition, WineSelf } from "./types.js";
+import { DEFAULT_FULL_LIMIT_BOUND, TIP_NODE_KEY } from "./consts.js";
 
 /** 根据alignment值获取x, y值 */
 export function calcAlignment(

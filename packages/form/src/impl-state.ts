@@ -4,7 +4,7 @@ import {
   isObject,
   simplyEqual as isEqual,
 } from "@m78/utils";
-import { _Context, FormRejectMeta } from "./types";
+import { _Context, FormRejectMeta } from "./types.js";
 import { _eachState, _getState, isRootName } from "./common.js";
 
 export function _implState(ctx: _Context) {

@@ -5,15 +5,14 @@ import {
   EmptyFunction,
   getNamePathValue,
   isNumber,
-  rafCaller,
-  RafFunction,
   setNamePathValue,
 } from "@m78/utils";
 import { _privateInstanceKey, _privateScrollerDomKey } from "../common.js";
 import { _TableRenderPlugin } from "./render.js";
 import { removeNode } from "../../common/index.js";
-import { _TableFormPlugin } from "./form/form";
+import { _TableFormPlugin } from "./form/form.js";
 import { _TableSoftRemovePlugin } from "./soft-remove.js";
+import { rafCaller, type RafFunction } from "@m78/animate-tools";
 
 /** 表格生命周期相关控制 */
 export class _TableLifePlugin extends TablePlugin {

@@ -1,8 +1,9 @@
-import _async_to_generator from "@swc/helpers/src/_async_to_generator.mjs";
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
-import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
-import _ts_generator from "@swc/helpers/src/_ts_generator.mjs";
+import { _ as _async_to_generator } from "@swc/helpers/_/_async_to_generator";
+import { _ as _instanceof } from "@swc/helpers/_/_instanceof";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
+import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
+import { _ as _ts_generator } from "@swc/helpers/_/_ts_generator";
 import _defaultsDeep from "lodash/defaultsDeep.js";
 import { defaultCreateConfig } from "./default.js";
 import { CorePlugin } from "./core-plugin.js";
@@ -26,12 +27,12 @@ import { Response } from "./response.js";
     var store = {};
     var request = function() {
         var _ref = _async_to_generator(function(url, optionsArg) {
-            var _$options, _tmp, _tmp1, extra, ctx, _tmp2, format, plugins, existResponse, existError, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, plugin, ref, returns, err;
+            var _$options, extra, ctx, format, plugins, existResponse, existError, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, plugin, _plugin_before, returns, err;
             // 处理传入的异步操作, 并根据响应执行后续流程
             function handleTask(pm) {
                 plugins.forEach(function(plugin) {
-                    var ref;
-                    (ref = plugin.start) === null || ref === void 0 ? void 0 : ref.call(plugin, pm);
+                    var _plugin_start;
+                    (_plugin_start = plugin.start) === null || _plugin_start === void 0 ? void 0 : _plugin_start.call(plugin, pm);
                 });
                 return pm/* ======== pipe ======= */ .then(function(response) {
                     return plugins.reduce(function(prev, plugin) {
@@ -47,38 +48,44 @@ import { Response } from "./response.js";
                         res = format(response, _$options);
                     }
                     plugins.forEach(function(plugin) {
-                        var ref;
-                        (ref = plugin.success) === null || ref === void 0 ? void 0 : ref.call(plugin, res, response);
+                        var _plugin_success;
+                        (_plugin_success = plugin.success) === null || _plugin_success === void 0 ? void 0 : _plugin_success.call(plugin, res, response);
                     });
                     return res;
                 })/* ======== error ======= */ .catch(function(error) {
                     plugins.forEach(function(plugin) {
-                        var ref;
-                        (ref = plugin.error) === null || ref === void 0 ? void 0 : ref.call(plugin, error);
+                        var _plugin_error;
+                        (_plugin_error = plugin.error) === null || _plugin_error === void 0 ? void 0 : _plugin_error.call(plugin, error);
                     });
                     return Promise.reject(error);
                 })/* ======== finish ======= */ .finally(function() {
                     plugins.forEach(function(plugin) {
-                        var ref;
-                        (ref = plugin.finish) === null || ref === void 0 ? void 0 : ref.call(plugin);
+                        var _plugin_finish;
+                        (_plugin_finish = plugin.finish) === null || _plugin_finish === void 0 ? void 0 : _plugin_finish.call(plugin);
                     });
                 });
             }
             return _ts_generator(this, function(_state) {
                 switch(_state.label){
                     case 0:
-                        _tmp = {};
-                        _tmp1 = {};
-                        _$options = _defaultsDeep((_tmp.url = url, _tmp.extraOption = {}, _tmp), optionsArg, baseOptions, (_tmp1.method = "GET", _tmp1.headers = {
-                            "Content-Type": "application/json;charset=UTF-8"
-                        }, _tmp1));
+                        // 请求时配置
+                        _$options = _defaultsDeep({
+                            url: url,
+                            extraOption: {}
+                        }, optionsArg, baseOptions, {
+                            method: "GET",
+                            headers: {
+                                "Content-Type": "application/json;charset=UTF-8"
+                            }
+                        });
+                        // 额外配置
                         extra = _$options.extraOption;
-                        _tmp2 = {};
-                        ctx = _tmp2;
+                        ctx = {};
                         format = extra.format || cOpt.format;
                         plugins = cOpt.plugins.map(function(Plugin) {
                             return new Plugin(ctx, cOpt, _$options, store);
                         });
+                        // 若存在已有的响应或错误, 跳过请求直接使用对应内容执行后续操作, 用于缓存/批处理等实现
                         existResponse = null;
                         existError = null;
                         _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = undefined;
@@ -100,18 +107,18 @@ import { Response } from "./response.js";
                         plugin = _step.value;
                         return [
                             4,
-                            (ref = plugin.before) === null || ref === void 0 ? void 0 : ref.call(plugin)
+                            (_plugin_before = plugin.before) === null || _plugin_before === void 0 ? void 0 : _plugin_before.call(plugin)
                         ];
                     case 3:
                         returns = _state.sent();
-                        if (returns instanceof Response) {
+                        if (_instanceof(returns, Response)) {
                             existResponse = returns;
                             return [
                                 3,
                                 5
                             ];
                         }
-                        if (returns instanceof ResponseError) {
+                        if (_instanceof(returns, ResponseError)) {
                             existError = returns;
                             return [
                                 3,
@@ -179,4 +186,4 @@ import { Response } from "./response.js";
     }();
     return request;
 };
-export * from "./plugin";
+export * from "./plugin.js";

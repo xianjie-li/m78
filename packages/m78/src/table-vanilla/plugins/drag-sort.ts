@@ -4,14 +4,17 @@ import { DragGesture, FullGestureState } from "@use-gesture/vanilla";
 import { _TableRowColumnResize } from "./row-column-resize.js";
 import { removeNode } from "../../common/index.js";
 import {
-  AnyFunction,
+  type AnyFunction,
   getEventOffset,
   isNumber,
-  rafCaller,
-  RafFunction,
   throwError,
 } from "@m78/utils";
-import { createAutoScroll, AutoScroll } from "@m78/smooth-scroll";
+import {
+  createAutoScroll,
+  AutoScroll,
+  rafCaller,
+  type RafFunction,
+} from "@m78/animate-tools";
 import {
   TableColumnFixed,
   TablePointInfo,

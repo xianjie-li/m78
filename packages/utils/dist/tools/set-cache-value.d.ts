@@ -1,4 +1,4 @@
-import { EmptyFunction } from "../types";
+import { EmptyFunction } from "../types.js";
 /**
  * Set a value for the object and cache the value. In subsequent settings, a comparison will be made with the cached value, and if there is no change, the setting action will be skipped.
  *

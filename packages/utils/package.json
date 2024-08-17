@@ -2,37 +2,32 @@
   "name": "@m78/utils",
   "version": "0.0.16",
   "description": "Utils for javascript",
+  "repository": "https://github.com/xianjie-li/m78",
   "keywords": [
     "javascript utils"
   ],
   "type": "module",
-  "main": "./index.js",
-  "exports": "./index.js",
-  "typings": "./",
-  "repository": "https://github.com/xianjie-li/m78",
+  "exports": "./dist/index.js",
   "author": {
     "name": "Link",
     "email": "1073830130@qq.com"
   },
   "license": "MIT",
+  "files": [
+    "dist",
+    "package.json"
+  ],
   "dependencies": {
     "@swc/helpers": "^0.4.36",
     "lodash": "^4.17.21"
   },
-  "files": [
-    "**"
-  ],
   "scripts": {
-    "lint:prettier": "prettier ./src ./test --write --no-error-on-unmatched-pattern",
-    "lint:script": "eslint ./src ./test --ext .js,.jsx,.ts,.tsx,.vue --fix",
+    "test": "npx jest",
+    "lint:prettier": "npx prettier ./src ./test --write --no-error-on-unmatched-pattern",
+    "lint:script": "npx eslint ./src ./test --ext .js,.jsx,.ts,.tsx,.vue --fix --no-error-on-unmatched-pattern",
     "lint": "npm run lint:script && npm run lint:prettier",
-    "test": "jest",
-    "build": "m78 build",
-    "pub": "pnpm build && pnpm publish --access public --registry https://registry.npmjs.org --no-git-checks",
+    "build": "npx m78 build",
+    "pub": "npm run build && npm publish --access public",
     "examples:history": "m78 example history"
-  },
-  "publishConfig": {
-    "directory": "dist",
-    "linkDirectory": true
   }
 }

@@ -1,6 +1,6 @@
-import { BaseRequestOptions, CreateOptions, Options } from "./interfaces";
-import { ResponseError } from "./response-error";
-import { Response } from "./response";
+import { BaseRequestOptions, CreateOptions, Options } from "./interfaces.js";
+import { ResponseError } from "./response-error.js";
+import { Response } from "./response.js";
 import { getNamePathValue } from "@m78/utils";
 
 export class Plugin<Opt extends BaseRequestOptions = BaseRequestOptions> {

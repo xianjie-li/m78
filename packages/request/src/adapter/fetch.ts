@@ -1,6 +1,6 @@
-import { BaseRequestOptions } from "../interfaces";
-import { Response } from "../response";
-import { ResponseError } from "../response-error";
+import { BaseRequestOptions } from "../interfaces.js";
+import { Response } from "../response.js";
+import { ResponseError } from "../response-error.js";
 import qs from "query-string";
 
 export interface FetchOptions<Ext = {}>

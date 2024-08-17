@@ -1,1 +1,1 @@
-{"version":3,"file":"useLifeCycle.d.ts","sourceRoot":"","sources":["../../../src/useLifeCycle.ts"],"names":[],"mappings":"AAGA,OAAO,EAAE,YAAY,EAAoB,MAAM,SAAS,CAAC;AACzD,OAAO,EAAE,QAAQ,EAAE,MAAM,cAAc,CAAC;AAMxC,wBAAgB,YAAY,CAAC,GAAG,EAAE,YAAY,EAAE,OAAO,EAAE,QAAQ,QA+HhE"}
+{"version":3,"file":"useLifeCycle.d.ts","sourceRoot":"","sources":["../../../src/useLifeCycle.ts"],"names":[],"mappings":"AAGA,OAAO,EAAE,YAAY,EAAoB,MAAM,YAAY,CAAC;AAC5D,OAAO,EAAE,QAAQ,EAAE,MAAM,iBAAiB,CAAC;AAM3C,wBAAgB,YAAY,CAAC,GAAG,EAAE,YAAY,EAAE,OAAO,EAAE,QAAQ,QA+HhE"}

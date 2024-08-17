@@ -14,7 +14,7 @@ import {
   createAutoScroll,
   AutoScrollTriggerConfig,
   AutoScroll,
-} from "@m78/smooth-scroll";
+} from "@m78/animate-tools";
 import throttle from "lodash/throttle.js";
 import {
   _getCellKey,

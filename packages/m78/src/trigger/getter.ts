@@ -34,7 +34,7 @@ export function _checkGetter(ctx: _TriggerContext) {
 
   /** 获取选项和选项数据列表 */
   ctx.getEventList = function getEventList(args) {
-    const { xy, type, filter, dom } = args;
+    const { xy, type, filter, dom, looseXYCheck } = args;
 
     const list: TriggerTargetData[] = [];
     const optList: TriggerOption[] = [];
@@ -79,7 +79,7 @@ export function _checkGetter(ctx: _TriggerContext) {
       // 需根据dom检测, 且当前事件选项target是真实dom
       if (dom && !data.isVirtual) {
         // 需要进行dom检测
-        if (!xy || (xy && inBound)) {
+        if (looseXYCheck || !xy || (xy && inBound)) {
           // 复用isBound检测可减少 contains 的直接调用
           isPass = data.dom.contains(dom);
         }

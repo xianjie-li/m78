@@ -1,6 +1,6 @@
-import { Plugin } from "./plugin";
-import { Response } from "./response";
-import { ResponseError } from "./response-error";
+import { Plugin } from "./plugin.js";
+import { Response } from "./response.js";
+import { ResponseError } from "./response-error.js";
 import { AnyObject } from "@lxjx/utils";
 
 /** Feedback mode */

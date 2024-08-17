@@ -1,1 +1,1 @@
-{"version":3,"file":"wine-impl.d.ts","sourceRoot":"","sources":["../../../src/wine-impl.tsx"],"names":[],"mappings":"AAIA,OAAO,EAKL,SAAS,EAEV,MAAM,SAAS,CAAC;AAUjB,QAAA,MAAM,QAAQ,UAAW,SAAS,gBAgFjC,CAAC;AAEF,eAAe,QAAQ,CAAC"}
+{"version":3,"file":"wine-impl.d.ts","sourceRoot":"","sources":["../../../src/wine-impl.tsx"],"names":[],"mappings":"AAIA,OAAO,EAKL,SAAS,EAEV,MAAM,YAAY,CAAC;AAUpB,QAAA,MAAM,QAAQ,UAAW,SAAS,gCAgFjC,CAAC;AAEF,eAAe,QAAQ,CAAC"}

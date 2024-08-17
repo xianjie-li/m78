@@ -1,9 +1,4 @@
-import React, {
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  type ReactElement,
-} from "react";
+import React, { useImperativeHandle, useMemo, type ReactElement } from "react";
 import { type TriggerOption, type TriggerListener } from "./types.js";
 import { useFn, useSelf, useSetState } from "@m78/hooks";
 import { trigger } from "./index.js";

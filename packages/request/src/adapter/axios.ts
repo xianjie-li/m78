@@ -1,8 +1,9 @@
-import { BaseRequestOptions, Options } from "../interfaces";
-import { Response } from "../response";
-import { ResponseError } from "../response-error";
+import { BaseRequestOptions, Options } from "../interfaces.js";
+import { Response } from "../response.js";
+import { ResponseError } from "../response-error.js";
 
-import axios, { AxiosRequestConfig } from "axios";
+import axios from "axios";
+import { AxiosRequestConfig } from "axios";
 import { omit } from "@m78/utils";
 
 export interface AxiosOptions<Ext = {}>

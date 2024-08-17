@@ -1,12 +1,12 @@
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { useEffect } from "react";
 import { defer } from "@m78/utils";
 import { useDrag } from "react-use-gesture";
-import { WineDragPosition } from "./types";
-import { useDragResize } from "./useDragResize";
-import { OPEN_FALSE_ANIMATION, OPEN_TRUE_ANIMATION } from "./consts";
-import { updateZIndexEvent } from "./event";
-import { getTipNode } from "./common";
+import { WineDragPosition } from "./types.js";
+import { useDragResize } from "./useDragResize.js";
+import { OPEN_FALSE_ANIMATION, OPEN_TRUE_ANIMATION } from "./consts.js";
+import { updateZIndexEvent } from "./event.js";
+import { getTipNode } from "./common.js";
 export function useLifeCycle(ctx, methods) {
     var spApi = ctx.spApi, state = ctx.state, headerElRef = ctx.headerElRef, self = ctx.self, setInsideState = ctx.setInsideState, insideState = ctx.insideState;
     var refreshDeps = methods.refreshDeps, resize = methods.resize, setXY = methods.setXY, full = methods.full;
@@ -83,13 +83,13 @@ export function useLifeCycle(ctx, methods) {
         }
     });
     useDrag(function(param) {
-        var _memo = param.memo, memo = _memo === void 0 ? [] : _memo, xy = param.xy, down = param.down, _delta = _sliced_to_array(param.delta, 2), dX = _delta[0], dY = _delta[1], event = param.event, tap = param.tap;
+        var _param_memo = param.memo, memo = _param_memo === void 0 ? [] : _param_memo, xy = param.xy, down = param.down, _param_delta = _sliced_to_array(param.delta, 2), dX = _param_delta[0], dY = _param_delta[1], event = param.event, tap = param.tap;
         event.preventDefault();
         if (tap) return;
         /*
        * cursorOffset记录事件开始时相对wrap左上角的位置
        * distance记录移动的总距离
-       * */ var _memo1 = _sliced_to_array(memo, 2), cursorOffset = _memo1[0], distance = _memo1[1];
+       * */ var _memo = _sliced_to_array(memo, 2), cursorOffset = _memo[0], distance = _memo[1];
         var _cursorOffset = cursorOffset || methods.getCursorWrapOffset(xy);
         setXY(xy[0] - _cursorOffset[0], xy[1] - _cursorOffset[1]);
         if (distance && distance > 60) {

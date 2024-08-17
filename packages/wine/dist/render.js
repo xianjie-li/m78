@@ -1,10 +1,10 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { animated } from "react-spring";
 import React from "react";
 import { keypressAndClick } from "@m78/utils";
-import clsx from "clsx";
+import { clsx } from "clsx";
 /** 渲染内置顶栏 */ export var renderBuiltInHeader = function(props, state, instance, isFull) {
     return /*#__PURE__*/ _jsxs("div", _object_spread_props(_object_spread({
         className: "m78-wine_header"
@@ -29,8 +29,8 @@ import clsx from "clsx";
                         role: "button",
                         "aria-label": "hide modal"
                     }, keypressAndClick(function() {
-                        var ref;
-                        return (ref = state.onChange) === null || ref === void 0 ? void 0 : ref.call(state, false);
+                        var _state_onChange;
+                        return (_state_onChange = state.onChange) === null || _state_onChange === void 0 ? void 0 : _state_onChange.call(state, false);
                     })), {
                         children: /*#__PURE__*/ _jsx("span", {
                             className: "m78-wine_hide-btn"

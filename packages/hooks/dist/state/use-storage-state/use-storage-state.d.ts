@@ -8,9 +8,9 @@ export interface UseStorageStateOptions {
     /** 缓存有效时间(ms) */
     validTime?: number;
 }
-declare function setStorage(key: string, val: any, type?: "local" | "session" | undefined): void;
-declare function getStorage(key: string, type?: "local" | "session" | undefined, validTime?: number): any;
-declare function remove(key: string, type?: "local" | "session" | undefined): void;
+declare function setStorage(key: string, val: any, type?: UseStorageStateOptions["type"]): void;
+declare function getStorage(key: string, type?: UseStorageStateOptions["type"], validTime?: number): any;
+declare function remove(key: string, type?: UseStorageStateOptions["type"]): void;
 /**
  * 基础缓存逻辑实现
  * */

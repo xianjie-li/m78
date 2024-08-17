@@ -1,5 +1,5 @@
 import { TupleNumber } from "@m78/utils";
-import { WineBound } from "./types";
+import { WineBound } from "./types.js";
 
 /** 无bound限制 */
 export const NO_LIMIT_AREA = {

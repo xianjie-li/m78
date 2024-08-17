@@ -1,4 +1,4 @@
-import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
+import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
 /**
  * 生成和实现subscribe() api
  * - 通知功能在setDeps内部

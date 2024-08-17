@@ -1,4 +1,4 @@
-import { AnyFunction } from "./types";
+import { AnyFunction } from "./types.js";
 import { getNamePathValue, setNamePathValue } from "./object.js";
 import { isArray, isObject } from "./is.js";
 

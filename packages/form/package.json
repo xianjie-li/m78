@@ -1,47 +1,50 @@
 {
-    "name": "@m78/form",
-    "version": "1.0.0",
-    "description": "A versatile headless form library for client and server-side use, offering core features like value collection, validation, and form state management.",
-    "keywords": [
-        "form",
-        "verify",
-        "validation",
-        "schema validation",
-        "server schema validation"
-    ],
-    "main": "./index.js",
-    "scripts": {
-        "test": "jest",
-        "lint:prettier": "prettier ./src ./test --write --no-error-on-unmatched-pattern",
-        "lint:script": "eslint ./src --ext .js,.jsx,.ts,.tsx,.vue --fix",
-        "lint": "npm run lint:script && npm run lint:prettier",
-        "build": "m78 build",
-        "pub": "pnpm build && pnpm publish --access public --registry https://registry.npmjs.org --no-git-checks",
-        "example-hello": "m78 example hello",
-        "example-basic-native-dom-bind": "m78 example basic-native-dom-bind"
-    },
-    "author": {
-        "name": "Link",
-        "email": "1073830130@qq.com"
-    },
-    "license": "MIT",
-    "files": [
-        "**"
-    ],
-    "type": "module",
-    "typings": "./",
-    "publishConfig": {
-        "directory": "dist",
-        "linkDirectory": true
-    },
-    "devDependencies": {
-        "@types/lodash": "^4.14.202",
-        "@types/react": "^18.2.45",
-        "@types/react-dom": "^18.2.17"
-    },
-    "dependencies": {
-        "@m78/utils": "workspace:^",
-        "lodash": "^4.17.21",
-        "@swc/helpers": "^0.4.36"
-    }
+  "name": "@m78/form",
+  "version": "1.0.0",
+  "description": "A versatile headless form library for client and server-side use, offering core features like value collection, validation, and form state management.",
+  "repository": "https://github.com/xianjie-li/m78",
+  "keywords": [
+    "form",
+    "verify",
+    "validation",
+    "schema validation",
+    "server schema validation"
+  ],
+  "exports": {
+    ".": "./dist/index.js",
+    "./validator/*": "./dist/validator/*.js",
+    "./validator/*.js": "./dist/validator/*.js",
+    "./language-pack/*": "./dist/language-pack/*.js",
+    "./language-pack/*.js": "./dist/language-pack/*.js"
+  },
+  "scripts": {
+    "test": "npx jest",
+    "lint:prettier": "npx prettier ./src ./test --write --no-error-on-unmatched-pattern",
+    "lint:script": "npx eslint ./src ./test --ext .js,.jsx,.ts,.tsx,.vue --fix --no-error-on-unmatched-pattern",
+    "lint": "npm run lint:script && npm run lint:prettier",
+    "build": "npx m78 build",
+    "pub": "npm run build && npm publish --access public",
+    "example:hello": "m78 example hello",
+    "example:basic-native-dom-bind": "m78 example basic-native-dom-bind"
+  },
+  "author": {
+    "name": "Link",
+    "email": "1073830130@qq.com"
+  },
+  "license": "MIT",
+  "files": [
+    "dist",
+    "package.json"
+  ],
+  "type": "module",
+  "devDependencies": {
+    "@types/lodash": "^4.14.202",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0"
+  },
+  "dependencies": {
+    "@m78/utils": "workspace:^",
+    "@swc/helpers": "^0.4.36",
+    "lodash": "^4.17.21"
+  }
 }

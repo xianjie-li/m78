@@ -179,6 +179,7 @@ export function _useLifeCycle(ctx: _OverlayContext) {
   /** 清理 */
   useDestroy(() => {
     clearTimeout(self.triggerMultipleTimer);
+    clearTimeout(self.triggerMultipleDelayOpenTimer);
     clearTimeout(self.shouldCloseTimer);
     clearTimeout(self.clickAwayCloseTimer);
   });

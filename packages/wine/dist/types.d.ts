@@ -2,8 +2,8 @@ import React, { MutableRefObject, RefObject } from "react";
 import { PickAnimated, SpringRef, SpringValues } from "react-spring";
 import { SetState } from "@m78/hooks";
 import { TupleNumber, Bound } from "@m78/utils";
-import { RenderApiComponentProps } from "@m78/render-api/types";
-import { DEFAULT_PROPS } from "./consts";
+import { DEFAULT_PROPS } from "./consts.js";
+import type { RenderApiComponentProps } from "@m78/render-api";
 /**
  * wine接收的state
  * */

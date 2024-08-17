@@ -7,7 +7,7 @@ import {
   Validator,
   Validators,
   ValidMeta,
-} from "./types";
+} from "./types.js";
 import {
   _PermissionProSeedState,
   _PermissionProAST,
@@ -17,7 +17,7 @@ import {
   _PermissionProPieceType,
   PermissionProTpl,
   PermissionProRejectMeta,
-} from "./proType";
+} from "./proType.js";
 
 export const throwError = (str: string): never => {
   throw Error(`PermissionPro: ${str}`);

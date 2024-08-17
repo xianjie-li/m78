@@ -6,12 +6,11 @@ import {
   isNumber,
   isString,
   isTruthyOrZero,
-  rafCaller,
-  RafFunction,
   replaceHtmlTags,
   setNamePathValue,
   Size,
 } from "@m78/utils";
+import { rafCaller, RafFunction } from "@m78/animate-tools";
 import { _getSizeString } from "../common.js";
 import { _TableGetterPlugin } from "./getter.js";
 import clsx from "clsx";

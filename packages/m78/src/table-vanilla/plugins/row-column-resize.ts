@@ -1,7 +1,7 @@
 import { TablePlugin } from "../plugin.js";
 import debounce from "lodash/debounce.js";
 import clamp from "lodash/clamp.js";
-import { rafCaller, RafFunction } from "@m78/utils";
+import { rafCaller, RafFunction } from "@m78/animate-tools";
 
 import { TableColumn, TableItems, TableRow } from "../types/items.js";
 import { _TableMutationPlugin } from "./mutation.js";

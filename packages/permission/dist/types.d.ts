@@ -1,5 +1,5 @@
-import { AnyObject } from '@lxjx/utils';
-import { Seed } from '@m78/seed';
+import { AnyObject } from "@lxjx/utils";
+import { Seed } from "@m78/seed";
 /**
  * 验证失败时提供给用户的一组操作(仅作为约定，可以根据需要扩展)
  * */
@@ -18,7 +18,7 @@ export interface Validators<S = AnyObject> {
     [key: string]: Validator<S>;
 }
 /** 用于验证的keys */
-export declare type PermissionKeys<V, C = AnyObject> = Array<keyof (V & C) | Array<keyof (V & C)>>;
+export type PermissionKeys<V, C = AnyObject> = Array<keyof (V & C) | Array<keyof (V & C)>>;
 export interface PermissionConfig<S = AnyObject> {
     /** 传递给验证器的额外参数, 比如用户id */
     extra?: any;

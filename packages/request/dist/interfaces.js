@@ -1,6 +1,6 @@
 export var FeedbackMode;
 (function(FeedbackMode) {
-    FeedbackMode[/** Feedback on error */ "error"] = "error";
-    FeedbackMode[/** No feedback */ "all"] = "all";
-    FeedbackMode[/** Feedback on success/error */ "none"] = "none";
+    /** Feedback on error */ FeedbackMode["error"] = "error";
+    /** No feedback */ FeedbackMode["all"] = "all";
+    /** Feedback on success/error */ FeedbackMode["none"] = "none";
 })(FeedbackMode || (FeedbackMode = {}));

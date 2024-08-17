@@ -1,1 +1,1 @@
-{"version":3,"file":"createPermissionPro.d.ts","sourceRoot":"","sources":["../../../src/createPermissionPro.ts"],"names":[],"mappings":"AAMA,OAAO,EAAiB,oBAAoB,EAAE,MAAM,WAAW,CAAC;AAGhE,QAAA,MAAM,oBAAoB,EAAE,oBAkC3B,CAAC;AAEF,OAAO,EAAE,oBAAoB,EAAE,CAAC"}
+{"version":3,"file":"createPermissionPro.d.ts","sourceRoot":"","sources":["../../../src/createPermissionPro.ts"],"names":[],"mappings":"AAMA,OAAO,EAAiB,oBAAoB,EAAE,MAAM,cAAc,CAAC;AAGnE,QAAA,MAAM,oBAAoB,EAAE,oBAkC3B,CAAC;AAEF,OAAO,EAAE,oBAAoB,EAAE,CAAC"}

@@ -3,9 +3,9 @@ import {
   _PermissionProSeedState,
   create as createPermission,
   PermissionProRejectMeta,
-} from "./index";
-import { PermissionPro, PermissionProCreator } from "./proType";
-import { PERMISSION_PRO_NAME, permissionProValidatorGetter } from "./common";
+} from "./index.js";
+import { PermissionPro, PermissionProCreator } from "./proType.js";
+import { PERMISSION_PRO_NAME, permissionProValidatorGetter } from "./common.js";
 
 const _createPermissionPro: PermissionProCreator = (config) => {
   const _config = {

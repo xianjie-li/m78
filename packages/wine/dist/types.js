@@ -1,9 +1,9 @@
 import React from "react";
 export var WineBound;
 (function(WineBound) {
-    WineBound[/** 窗口范围内 */ "window"] = "window";
-    WineBound[/** 安全区域内, 确保不会因为误操作导致无法拖动 */ "safeArea"] = "safeArea";
-    WineBound[/** 不限制 */ "noLimit"] = "noLimit";
+    /** 窗口范围内 */ WineBound["window"] = "window";
+    /** 安全区域内, 确保不会因为误操作导致无法拖动 */ WineBound["safeArea"] = "safeArea";
+    /** 不限制 */ WineBound["noLimit"] = "noLimit";
 })(WineBound || (WineBound = {}));
 export var WineDragPosition;
 (function(WineDragPosition) {

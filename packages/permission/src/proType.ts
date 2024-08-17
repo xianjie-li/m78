@@ -1,5 +1,5 @@
 import { Seed } from "@m78/seed";
-import { Permission } from "./types";
+import { Permission } from "./types.js";
 
 /**
  * 权限模板

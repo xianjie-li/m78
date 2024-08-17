@@ -1,4 +1,4 @@
-import { AnyObject } from "./types";
+import { AnyObject } from "./types.js";
 /**
  * 收集指定对象内带name属性的所有输入控件(input,select,textarea)的值，并按一定规则整合
  * checkbox: 选中值的value组成的数组，没有的话返回 []

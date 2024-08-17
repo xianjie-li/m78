@@ -1,0 +1,59 @@
+{
+  "name": "@m78/devtools",
+  "version": "0.0.20",
+  "description": "Simple devtool for M78 projects",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "m78": "./index.js"
+  },
+  "repository": "https://github.com/xianjie-li/m78",
+  "scripts": {
+    "lint:style": "prettier . --write --no-error-on-unmatched-pattern",
+    "lint:script": "eslint . --ext .js,.jsx,.ts,.tsx,.vue --fix",
+    "lint": "npm run lint:script && npm run lint:style",
+    "pub": "pnpm publish --access public --registry https://registry.npmjs.org --no-git-checks"
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "@swc/helpers": "^0.4.36"
+  },
+  "dependencies": {
+    "@lxjx/utils": "1.7.9",
+    "@swc/cli": "^0.1.63",
+    "@swc/core": "^1.3.102",
+    "@swc/helpers": "^0.4.36",
+    "@swc/jest": "^0.2.29",
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.3.0",
+    "@testing-library/user-event": "^14.4.3",
+    "@types/jest": "^28.1.6",
+    "@types/node": "^18.6.3",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@types/react-test-renderer": "^18.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "@typescript-eslint/parser": "^5.62.0",
+    "@vitejs/plugin-react-swc": "^3.5.0",
+    "browserslist": "^4.21.3",
+    "comment-json": "^4.2.3",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^8.10.0",
+    "eslint-plugin-react": "^7.33.2",
+    "fs-extra": "^10.1.0",
+    "glob": "^8.0.3",
+    "jest": "^28.1.3",
+    "jest-environment-jsdom": "^28.1.3",
+    "lodash": "^4.17.21",
+    "postcss": "^8.4.21",
+    "postcss-nesting": "^11.2.1",
+    "prettier": "^2.7.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-test-renderer": "^18.2.0",
+    "sass": "^1.54.1",
+    "shelljs": "^0.8.5",
+    "typescript": "^4.9.5",
+    "vite": "5.0.10"
+  }
+}

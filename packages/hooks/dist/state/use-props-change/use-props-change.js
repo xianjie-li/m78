@@ -1,3 +1,4 @@
+import { _ as _type_of } from "@swc/helpers/_/_type_of";
 import { isArray, isFunction, simplyEqual as isEqual } from "@m78/utils";
 import { usePrev } from "../use-prev/use-prev.js";
 /**
@@ -44,7 +45,7 @@ import { usePrev } from "../use-prev/use-prev.js";
             if (isArray(exclude) && exclude.includes(key)) return;
             if (isFunction(exclude) && exclude(key, nextValue)) return;
             if (skipReferenceType) {
-                if (typeof prevValue === "object" && typeof nextValue === "object") return;
+                if ((typeof prevValue === "undefined" ? "undefined" : _type_of(prevValue)) === "object" && (typeof nextValue === "undefined" ? "undefined" : _type_of(nextValue)) === "object") return;
             }
         }
         if (isArray(deepEqual) && deepEqual.includes(key) || isFunction(deepEqual) && deepEqual(key, nextValue)) {

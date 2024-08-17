@@ -47,6 +47,12 @@ export interface BoundSize {
   height: number;
 }
 
+/** describe position */
+export interface XY {
+  x: number;
+  y: number;
+}
+
 /** point describing location */
 export type Point = TupleNumber;
 

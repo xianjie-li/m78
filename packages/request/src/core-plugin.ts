@@ -1,6 +1,6 @@
-import { Plugin } from "./plugin";
-import { ResponseError } from "./response-error";
-import { Response } from "./response";
+import { Plugin } from "./plugin.js";
+import { ResponseError } from "./response-error.js";
+import { Response } from "./response.js";
 import { pickValid } from "@m78/utils";
 import { FeedbackMode } from "./interfaces.js";
 

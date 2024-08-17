@@ -1,6 +1,6 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { isFunction, isNumber, isObject } from "@m78/utils";
 var PREFIX = "SEED_CACHE_";
 export var defaultConf = {
@@ -71,8 +71,8 @@ function set(key, val, storage, config) {
     if (!exT) return;
     // 已过期
     if (Date.now() > Number(exT)) {
-        var ref;
-        (ref = config.onExpire) === null || ref === void 0 ? void 0 : ref.call(config);
+        var _config_onExpire;
+        (_config_onExpire = config.onExpire) === null || _config_onExpire === void 0 ? void 0 : _config_onExpire.call(config);
         storage.removeItem(k);
         storage.removeItem(expireKey);
     } else if (config.expireRefresh) {

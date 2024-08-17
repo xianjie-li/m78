@@ -1,5 +1,5 @@
 @import "colors";
-@import 'sass-vars';
+@import "sass-vars";
 @import "utils";
 
 // 如果项目有旧浏览器的兼容需求，可以使用 https://github.com/postcss/postcss-custom-properties 插件来生成回退代码
@@ -56,8 +56,8 @@
   --m78-color-title-w: rgba(255, 255, 255, 0.95);
   --m78-color-primary-w: rgba(255, 255, 255, 0.8);
   --m78-color-second-w: rgba(255, 255, 255, 0.45);
-  --m78-color-disable-w: rgba(255, 255, 255, 0.30);
-  --m78-color-border-w: rgba(255, 255, 255, 0.20);
+  --m78-color-disable-w: rgba(255, 255, 255, 0.3);
+  --m78-color-border-w: rgba(255, 255, 255, 0.2);
   --m78-color-divider-w: rgba(255, 255, 255, 0.12);
   --m78-color-bg-w: rgba(255, 255, 255, 0.08);
 
@@ -117,9 +117,11 @@
 
   --m78-line-height: 1.6;
 
-  --m78-font-family: -apple-system, BlinkMacSystemFont, PingFang SC, Microsoft YaHei, Segoe UI, Segoe UI Emoji, Segoe UI Symbol, Apple Color Emoji,
-  Noto Color Emoji, sans-serif;
-  --m78-code-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
+  --m78-font-family: -apple-system, BlinkMacSystemFont, PingFang SC,
+    Microsoft YaHei, Segoe UI, Segoe UI Emoji, Segoe UI Symbol,
+    Apple Color Emoji, Noto Color Emoji, sans-serif;
+  --m78-code-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier,
+    monospace;
 
   // 遮罩
   --m78-mask-b: rgba(0, 0, 0, 0.8);
@@ -148,8 +150,10 @@
   --m78-shadow-3: var(--m78-shadow-3-b);
   --m78-shadow-3-focus: var(--m78-shadow-3-b-focus);
 
-  --m78-stress-shadow-w: -1px -1px 2px #fff, 1px 1px 2px #fff, 1px -1px 2px #fff, -1px 1px 2px #fff;
-  --m78-stress-shadow-b: -1px -1px 2px #666, 1px 1px 2px #666, 1px -1px 2px #666, -1px 1px 2px #666;
+  --m78-stress-shadow-w: -1px -1px 2px #fff, 1px 1px 2px #fff, 1px -1px 2px #fff,
+    -1px 1px 2px #fff;
+  --m78-stress-shadow-b: -1px -1px 2px #666, 1px 1px 2px #666, 1px -1px 2px #666,
+    -1px 1px 2px #666;
 
   // 性质
   --m78-opacity: 0.45;
@@ -169,7 +173,7 @@
 
   // 层级
   --m78-z-index-base: 10; // 用于仅高于基础层的🎤节点
-  --m78-z-index: 1000;    // 所有内容之上, 弹层类控件之下的节点, 如mask
+  --m78-z-index: 1000; // 所有内容之上, 弹层类控件之下的节点, 如mask
   --m78-z-index-drawer: 1400;
   --m78-z-index-modal: 1800;
   --m78-z-index-message: 2200;
@@ -192,10 +196,8 @@
   --m78-animate-fast: 0.1s;
 }
 
-//  切换内置样式的主题色, 需要搭配css-var.scss模块使用
-//  当使用react等的state库管理主题时，可以同时在html上设置data-theme-dark使其生效
-
-:root[data-mode=dark].m78, :root[data-mode=dark] .m78 {
+:root[data-mode="dark"].m78,
+:root[data-mode="dark"] .m78 {
   --m78-gray-1: #000000;
   --m78-gray-2: #1f1f1f;
   --m78-gray-3: #262626;

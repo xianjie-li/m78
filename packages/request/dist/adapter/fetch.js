@@ -1,25 +1,24 @@
-import _async_to_generator from "@swc/helpers/src/_async_to_generator.mjs";
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
-import _ts_generator from "@swc/helpers/src/_ts_generator.mjs";
-import { Response } from "../response";
-import { ResponseError } from "../response-error";
+import { _ as _async_to_generator } from "@swc/helpers/_/_async_to_generator";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
+import { _ as _ts_generator } from "@swc/helpers/_/_ts_generator";
+import { Response } from "../response.js";
+import { ResponseError } from "../response-error.js";
 import qs from "query-string";
 /** Fetch adapter */ export function fetchAdapter(opt) {
     return fetch("".concat(opt.url).concat(qs.stringify((opt === null || opt === void 0 ? void 0 : opt.query) || {})), opt).then(function() {
         var _ref = _async_to_generator(function(res) {
-            var response, h, _tmp, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, _value, k, v, type;
+            var response, h, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, _step_value, k, v, type;
             return _ts_generator(this, function(_state) {
                 switch(_state.label){
                     case 0:
                         response = new Response();
                         response.message = res.statusText;
                         response.code = res.status;
-                        _tmp = {};
-                        h = _tmp;
+                        h = {};
                         _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = undefined;
                         try {
                             for(_iterator = res.headers.entries()[Symbol.iterator](); !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true){
-                                _value = _sliced_to_array(_step.value, 2), k = _value[0], v = _value[1];
+                                _step_value = _sliced_to_array(_step.value, 2), k = _step_value[0], v = _step_value[1];
                                 h[k] = v;
                             }
                         } catch (err) {
@@ -74,6 +73,10 @@ import qs from "query-string";
             return _ref.apply(this, arguments);
         };
     }()).catch(function(err) {
-        return Promise.reject(new ResponseError("".concat(err.name, ": ").concat(err.message) || ""));
+        var msg = "";
+        if (err.name || err.message) {
+            msg = "".concat(err.name || "", ": ").concat(err.message || "");
+        }
+        return Promise.reject(new ResponseError(msg));
     });
 }

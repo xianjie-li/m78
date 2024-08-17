@@ -329,6 +329,7 @@ export function _useMethods(ctx: _OverlayContext) {
 
   // 多触发点的特殊handle
   const onTriggerMultiple = useFn((e: TriggerEvent) => {
+    clearTimeout(self.triggerMultipleDelayOpenTimer);
     clearTimeout(self.triggerMultipleTimer);
 
     if (e.type === TriggerType.move) {
@@ -351,14 +352,16 @@ export function _useMethods(ctx: _OverlayContext) {
     }
 
     if (isOpen) {
-      self.lastTriggerTarget = e.data;
+      self.lastTriggerTarget = e.target;
 
-      // 需要在clickAway之后出发
+      // 需要在clickAway之后触发, 并阻止部分相互存在干扰的事件
       self.triggerMultipleTimer = setTimeout(() => {
-        updateTarget(e.target.target as HTMLElement, true);
         ctx.triggerHandle(e);
+        self.triggerMultipleDelayOpenTimer = setTimeout(() => {
+          updateTarget(e.target.target as HTMLElement, true);
+        });
       }, 10);
-    } else if (self.lastTriggerTarget === e.data) {
+    } else if (self.lastTriggerTarget === e.target) {
       self.lastTriggerTarget = undefined;
       ctx.triggerHandle(e);
     }

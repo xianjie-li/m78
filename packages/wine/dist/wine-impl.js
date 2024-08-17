@@ -1,26 +1,26 @@
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { useImperativeHandle, useMemo, useRef } from "react";
 import { useSelf, useSetState } from "@m78/hooks";
 import { config, useSpring } from "react-spring";
 import { createRandString } from "@m78/utils";
-import { NO_LIMIT_AREA } from "./consts";
-import { useMethods } from "./useMethods";
-import { useLifeCycle } from "./useLifeCycle";
-import { render } from "./render";
-import { getSizeByState } from "./common";
+import { NO_LIMIT_AREA } from "./consts.js";
+import { useMethods } from "./useMethods.js";
+import { useLifeCycle } from "./useLifeCycle.js";
+import { render } from "./render.js";
+import { getSizeByState } from "./common.js";
 var WineImpl = function(props) {
-    var ref = _sliced_to_array(useSetState(function() {
+    var _useSetState = _sliced_to_array(useSetState(function() {
         return {
             isFull: false,
             headerHeight: undefined,
             refreshKey: createRandString(),
             id: createRandString()
         };
-    }), 2), insideState = ref[0], setInsideState = ref[1];
+    }), 2), insideState = _useSetState[0], setInsideState = _useSetState[1];
     var wrapElRef = useRef(null);
     var headerElRef = useRef(null);
-    var ref1 = _sliced_to_array(useSpring(function() {
-        var ref = _sliced_to_array(getSizeByState(props), 2), width = ref[0], height = ref[1];
+    var _useSpring = _sliced_to_array(useSpring(function() {
+        var _getSizeByState = _sliced_to_array(getSizeByState(props), 2), width = _getSizeByState[0], height = _getSizeByState[1];
         return {
             opacity: 0,
             x: 0,
@@ -31,7 +31,7 @@ var WineImpl = function(props) {
             display: "none",
             visibility: "hidden"
         };
-    }), 2), spProps = ref1[0], spApi = ref1[1];
+    }), 2), spProps = _useSpring[0], spApi = _useSpring[1];
     var self = useSelf({
         x: 0,
         y: 0,

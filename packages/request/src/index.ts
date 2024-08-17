@@ -137,4 +137,4 @@ export const createRequest = <Opt extends BaseRequestOptions>(
   return request;
 };
 
-export * from "./plugin";
+export * from "./plugin.js";

@@ -1,0 +1,1 @@
+{"version":3,"file":"context-menu.d.ts","sourceRoot":"","sources":["../../../../src/handle/context-menu.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,eAAe,EAAe,MAAM,aAAa,CAAC;AAI3D,oBAAoB;AACpB,wBAAgB,gBAAgB,CAAC,GAAG,EAAE,eAAe;qBAG3B,UAAU,GAAG,UAAU;+BAoDb,UAAU;EAS7C"}

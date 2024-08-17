@@ -1,7 +1,7 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
-import { Response } from "../response";
-import { ResponseError } from "../response-error";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
+import { Response } from "../response.js";
+import { ResponseError } from "../response-error.js";
 import axios from "axios";
 import { omit } from "@m78/utils";
 var responseProcess = function(res) {
@@ -21,6 +21,10 @@ var responseProcess = function(res) {
         data: opt.body,
         params: opt.query
     })).then(responseProcess).catch(function(err) {
-        return Promise.reject(new ResponseError("".concat(err.name, ": ").concat(err.message) || "", (err === null || err === void 0 ? void 0 : err.response) ? responseProcess(err.response) : undefined));
+        var msg = "";
+        if (err.name || err.message) {
+            msg = "".concat(err.name || "", ": ").concat(err.message || "");
+        }
+        return Promise.reject(new ResponseError(msg, (err === null || err === void 0 ? void 0 : err.response) ? responseProcess(err.response) : undefined));
     });
 }

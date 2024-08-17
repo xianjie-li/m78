@@ -23,7 +23,6 @@ import {
 } from "../transition/index.js";
 import { EventTypes, Handler } from "@use-gesture/core/types";
 import {
-  TriggerEvent,
   useTrigger,
   TriggerProps,
   type TriggerOption,
@@ -291,6 +290,8 @@ export interface _OverlayContext {
     lastFocusTime?: number;
     /** 多触发点触发计时器, 用于快速连续触发时过滤掉无效触发, 比如两个focus目标, 前者失焦到后者聚焦, 前者的失焦事件其实是无效的并且还会对后者显示造成干扰  */
     triggerMultipleTimer?: any;
+    /** 在多触发点时, 通知事件后预留一定的渲染时间再更新target, 防止overlay闪烁 */
+    triggerMultipleDelayOpenTimer?: any;
     /** 最后触发onTriggerMultiple启用的节点 */
     lastTriggerTarget?: any;
     /** 多触发点事件中用于标记最终open状态 */

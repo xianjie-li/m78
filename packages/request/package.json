@@ -1,49 +1,45 @@
 {
-    "name": "@m78/request",
-    "version": "1.0.0",
-    "description": "make data requests easier",
-    "keywords": [
-        "request",
-        "fetch",
-        "axios"
-    ],
-    "devDependencies": {
-        "@types/lodash": "^4.14.202",
-        "express": "^4.17.1",
-        "node-fetch": "^3.2.10",
-        "nodemon": "^2.0.4"
-    },
-    "dependencies": {
-        "@m78/utils": "workspace:^",
-        "axios": "^0.19.2",
-        "lodash": "^4.17.21",
-        "query-string": "^7.1.1",
-        "@swc/helpers": "^0.4.36"
-    },
-    "main": "./index.js",
-    "exports": "./index.js",
-    "scripts": {
-        "test": "jest",
-        "lint:prettier": "prettier ./src ./test --write --no-error-on-unmatched-pattern",
-        "lint:script": "eslint ./src --ext .js,.jsx,.ts,.tsx,.vue --fix",
-        "lint": "npm run lint:script && npm run lint:prettier",
-        "build": "m78 build",
-        "pub": "pnpm build && pnpm publish --access public --registry https://registry.npmjs.org --no-git-checks",
-        "example-play": "m78 example play",
-        "mock": "nodemon ./mock"
-    },
-    "author": {
-        "name": "lxj",
-        "email": "1073830130@qq.com"
-    },
-    "license": "MIT",
-    "files": [
-        "**"
-    ],
-    "type": "module",
-    "typings": "./",
-    "publishConfig": {
-        "directory": "dist",
-        "linkDirectory": true
-    }
+  "name": "@m78/request",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": "./dist/index.js",
+  "description": "make data requests easier",
+  "repository": "https://github.com/xianjie-li/m78",
+  "keywords": [
+    "request",
+    "fetch",
+    "axios"
+  ],
+  "devDependencies": {
+    "@types/lodash": "^4.14.202",
+    "express": "^4.17.1",
+    "node-fetch": "^3.2.10",
+    "nodemon": "^2.0.4"
+  },
+  "dependencies": {
+    "@m78/utils": "workspace:^",
+    "@swc/helpers": "^0.4.36",
+    "axios": "1.7.4",
+    "lodash": "^4.17.21",
+    "query-string": "^7.1.1"
+  },
+  "scripts": {
+    "test": "npx jest",
+    "lint:prettier": "npx prettier ./src ./test --write --no-error-on-unmatched-pattern",
+    "lint:script": "npx eslint ./src ./test --ext .js,.jsx,.ts,.tsx,.vue --fix --no-error-on-unmatched-pattern",
+    "lint": "npm run lint:script && npm run lint:prettier",
+    "build": "npx m78 build",
+    "pub": "npm run build && npm publish --access public",
+    "example-play": "m78 example play",
+    "mock": "nodemon ./mock"
+  },
+  "author": {
+    "name": "Link",
+    "email": "1073830130@qq.com"
+  },
+  "license": "MIT",
+  "files": [
+    "dist",
+    "package.json"
+  ]
 }

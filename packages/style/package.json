@@ -1,37 +1,37 @@
 {
-    "name": "@m78/style",
-    "version": "2.1.5",
-    "description": "base style by m78",
-    "main": "./index.js",
-    "type": "module",
-    "authors": {
-        "name": "lixianjie",
-        "email": "1073830130@qq.com"
-    },
-    "scripts": {
-        "build": "m78 build",
-        "gcolors-var": "node ./script/generateColors.js",
-        "lint:prettier": "prettier ./src ./test --write --no-error-on-unmatched-pattern",
-        "lint": "npm run lint:prettier",
-        "pub": "pnpm build && pnpm publish --access public --registry https://registry.npmjs.org --no-git-checks",
-        "example-hello": "m78 example hello"
-    },
-    "devDependencies": {
-        "autoprefixer": "^9.8.6",
-        "inquirer": "^7.1.0",
-        "sass": "^1.54.9"
-    },
-    "dependencies": {
-        "@ant-design/colors": "^6.0.0",
-        "@swc/helpers": "^0.4.36"
-    },
-    "license": "MIT",
-    "files": [
-        "**"
-    ],
-    "typings": "./",
-    "publishConfig": {
-        "directory": "dist",
-        "linkDirectory": true
-    }
+  "name": "@m78/style",
+  "version": "2.1.5",
+  "description": "base style by m78",
+  "exports": {
+    ".": "./dist/index.js",
+    "./*.scss": "./dist/*.scss"
+  },
+  "type": "module",
+  "repository": "https://github.com/xianjie-li/m78",
+  "author": {
+    "name": "Link",
+    "email": "1073830130@qq.com"
+  },
+  "license": "MIT",
+  "files": [
+    "dist",
+    "package.json"
+  ],
+  "scripts": {
+    "build": "npx m78 build",
+    "gcolors-var": "node ./script/generateColors.js",
+    "lint:prettier": "npx prettier ./src ./test --write --no-error-on-unmatched-pattern",
+    "lint": "npm run lint:script && npm run lint:prettier",
+    "pub": "npm run build && npm publish --access public",
+    "example:hello": "m78 example hello"
+  },
+  "devDependencies": {
+    "autoprefixer": "^9.8.6",
+    "inquirer": "^7.1.0",
+    "sass": "^1.54.9"
+  },
+  "dependencies": {
+    "@ant-design/colors": "^6.0.0",
+    "@swc/helpers": "^0.4.36"
+  }
 }

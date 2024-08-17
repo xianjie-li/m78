@@ -1,1 +1,1 @@
-{"version":3,"file":"use-self.d.ts","sourceRoot":"","sources":["../../../../../src/state/use-self/use-self.ts"],"names":[],"mappings":"AAEA;;;;KAIK;AACL,wBAAgB,OAAO,CAAC,CAAC,SAAS,MAAM,EAAE,IAAI,IAAU,KAGvD"}
+{"version":3,"file":"use-self.d.ts","sourceRoot":"","sources":["../../../../../src/state/use-self/use-self.ts"],"names":[],"mappings":"AAEA;;;;KAIK;AACL,wBAAgB,OAAO,CAAC,CAAC,SAAS,MAAM,EAAE,IAAI,GAAS,CAAC,GAE/B,CAAC,CACzB"}

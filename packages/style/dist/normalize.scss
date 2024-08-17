@@ -1,4 +1,4 @@
-// 部分代码来自normalize.css
+// Modified according to normalize.css
 
 // Body
 //
@@ -11,7 +11,7 @@
   line-height: var(--m78-line-height);
   font-family: var(--m78-font-family);
   font-variant: tabular-nums;
-  font-feature-settings: 'tnum';
+  font-feature-settings: "tnum";
   -webkit-text-size-adjust: 100%; // 4
   -ms-text-size-adjust: 100%; // 4
   -ms-overflow-style: scrollbar; // 5
@@ -43,8 +43,7 @@ html.m78-root.m78 {
 .m78 input::-ms-clear,
 .m78 input::-ms-reveal,
 input.m78::-ms-clear,
-input.m78::-ms-reveal
-{
+input.m78::-ms-reveal {
   display: none;
 }
 
@@ -104,8 +103,8 @@ section.m78,
 // might still respond to pointer events.
 //
 // Credit: https://github.com/suitcss/base
-.m78[tabindex='-1']:focus,
-.m78 [tabindex='-1']:focus {
+.m78[tabindex="-1"]:focus,
+.m78 [tabindex="-1"]:focus {
   outline: none !important;
 }
 
@@ -148,27 +147,33 @@ h6.m78,
   font-weight: 600;
 }
 
-h1.m78, .m78 h1 {
+h1.m78,
+.m78 h1 {
   font-size: 2.2em;
 }
 
-h2.m78, .m78 h2 {
+h2.m78,
+.m78 h2 {
   font-size: 1.8em;
 }
 
-h3.m78, .m78 h3 {
+h3.m78,
+.m78 h3 {
   font-size: 1.6em;
 }
 
-h4.m78, .m78 h4 {
+h4.m78,
+.m78 h4 {
   font-size: 1.4em;
 }
 
-h5.m78, .m78 h5 {
+h5.m78,
+.m78 h5 {
   font-size: 1.2em;
 }
 
-h6.m78, .m78 h6 {
+h6.m78,
+.m78 h6 {
   font-size: 1.1em;
 }
 
@@ -207,13 +212,13 @@ address.m78,
   line-height: inherit;
 }
 
-input[type='text'].m78,
-input[type='password'].m78,
-input[type='number'].m78,
+input[type="text"].m78,
+input[type="password"].m78,
+input[type="number"].m78,
 textarea.m78,
-.m78 input[type='text'],
-.m78 input[type='password'],
-.m78 input[type='number'],
+.m78 input[type="text"],
+.m78 input[type="password"],
+.m78 input[type="number"],
 .m78 textarea {
   -webkit-appearance: none;
 }
@@ -311,7 +316,6 @@ a.m78,
   -webkit-text-decoration-skip: objects; // remove gaps in links underline in iOS 8+ and Safari 8+.
   outline-color: var(--m78-color);
 
-
   &:hover {
     color: var(--m78-color-5);
   }
@@ -399,12 +403,11 @@ svg.m78:not(:root),
 // * http://caniuse.com/#feat=css-touch-action
 // * https://patrickhlauke.github.io/touch/tests/results/#suppressing-300ms-delay
 
-
 a.m78,
 area.m78,
 button.m78,
-.m78[role='button'],
-input.m78:not([type='range']),
+.m78[role="button"],
+input.m78:not([type="range"]),
 label.m78,
 select.m78,
 summary.m78,
@@ -412,8 +415,8 @@ textarea.m78,
 .m78 a,
 .m78 area,
 .m78 button,
-.m78 [role='button'],
-.m78 input:not([type='range']),
+.m78 [role="button"],
+.m78 input:not([type="range"]),
 .m78 label,
 .m78 select,
 .m78 summary,
@@ -459,34 +462,33 @@ select.m78,
 
 // remove inner border and padding from Firefox, but don't restore the outline like Normalize.
 button.m78::-moz-focus-inner,
-.m78[type='button']::-moz-focus-inner,
-.m78[type='reset']::-moz-focus-inner,
-.m78[type='submit']::-moz-focus-inner,
+.m78[type="button"]::-moz-focus-inner,
+.m78[type="reset"]::-moz-focus-inner,
+.m78[type="submit"]::-moz-focus-inner,
 .m78 button::-moz-focus-inner,
-.m78 [type='button']::-moz-focus-inner,
-.m78 [type='reset']::-moz-focus-inner,
-.m78 [type='submit']::-moz-focus-inner {
+.m78 [type="button"]::-moz-focus-inner,
+.m78 [type="reset"]::-moz-focus-inner,
+.m78 [type="submit"]::-moz-focus-inner {
   padding: 0;
   border-style: none;
 }
 
-input[type='radio'].m78,
-input[type='checkbox'].m78,
-.m78 input[type='radio'],
-.m78 input[type='checkbox']
-{
+input[type="radio"].m78,
+input[type="checkbox"].m78,
+.m78 input[type="radio"],
+.m78 input[type="checkbox"] {
   box-sizing: border-box; // 1. Add the correct box sizing in IE 10-
   padding: 0; // 2. remove the padding in IE 10-
 }
 
-input[type='date'].m78,
-input[type='time'].m78,
-input[type='datetime-local'].m78,
-input[type='month'].m78,
-.m78 input[type='date'],
-.m78 input[type='time'],
-.m78 input[type='datetime-local'],
-.m78 input[type='month'] {
+input[type="date"].m78,
+input[type="time"].m78,
+input[type="datetime-local"].m78,
+input[type="month"].m78,
+.m78 input[type="date"],
+.m78 input[type="time"],
+.m78 input[type="datetime-local"],
+.m78 input[type="month"] {
   // remove the default appearance of temporal inputs to avoid a Mobile Safari
   // bug where setting a custom line-height prevents text from being vertically
   // centered within the input.
@@ -495,13 +497,15 @@ input[type='month'].m78,
   -webkit-appearance: listbox;
 }
 
-textarea.m78, .m78 textarea {
+textarea.m78,
+.m78 textarea {
   overflow: auto; // remove the default vertical scrollbar in IE.
   // Textareas should really only resize vertically so they don't break their (horizontal) containers.
   resize: vertical;
 }
 
-fieldset.m78, .m78 fieldset {
+fieldset.m78,
+.m78 fieldset {
   // Browsers set a default `min-width: min-content;` on fieldsets,
   // unlike e.g. `<div>`s, which have `min-width: 0;` by default.
   // So we reset that to ensure fieldsets behave more like a standard block element.
@@ -516,7 +520,8 @@ fieldset.m78, .m78 fieldset {
 
 // 1. Correct the text wrapping in Edge and IE.
 // 2. Correct the color inheritance from `fieldset` elements in IE.
-legend.m78, .m78 legend {
+legend.m78,
+.m78 legend {
   display: block;
   width: 100%;
   max-width: 100%; // 1
@@ -528,19 +533,21 @@ legend.m78, .m78 legend {
   white-space: normal; // 1
 }
 
-progress.m78, .m78 legend {
+progress.m78,
+.m78 legend {
   vertical-align: baseline; // Add the correct vertical alignment in Chrome, Firefox, and Opera.
 }
 
 // Correct the cursor style of incement and decement buttons in Chrome.
-.m78[type='number']::-webkit-inner-spin-button,
-.m78[type='number']::-webkit-outer-spin-button,
-.m78 [type='number']::-webkit-inner-spin-button,
-.m78 [type='number']::-webkit-outer-spin-button {
+.m78[type="number"]::-webkit-inner-spin-button,
+.m78[type="number"]::-webkit-outer-spin-button,
+.m78 [type="number"]::-webkit-inner-spin-button,
+.m78 [type="number"]::-webkit-outer-spin-button {
   height: auto;
 }
 
-[type='search'].m78, .m78 [type='search'] {
+[type="search"].m78,
+.m78 [type="search"] {
   // This overrides the extra rounded corners on search inputs in iOS so that our
   // `.form-control` class can properly style them. Note that this cannot simply
   // be added to `.form-control` as it's not specific enough. For details, see
@@ -552,10 +559,10 @@ progress.m78, .m78 legend {
 //
 // remove the inner padding and cancel buttons in Chrome and Safari on macOS.
 //
-.m78[type='search']::-webkit-search-cancel-button,
-.m78[type='search']::-webkit-search-decoration,
-.m78 [type='search']::-webkit-search-cancel-button,
-.m78 [type='search']::-webkit-search-decoration {
+.m78[type="search"]::-webkit-search-cancel-button,
+.m78[type="search"]::-webkit-search-decoration,
+.m78 [type="search"]::-webkit-search-cancel-button,
+.m78 [type="search"]::-webkit-search-decoration {
   -webkit-appearance: none;
 }
 
@@ -565,8 +572,7 @@ progress.m78, .m78 legend {
 //
 
 .m78::-webkit-file-upload-button,
-.m78 ::-webkit-file-upload-button
-{
+.m78 ::-webkit-file-upload-button {
   font: inherit; // 2
   -webkit-appearance: button; // 1
 }
@@ -575,32 +581,36 @@ progress.m78, .m78 legend {
 // Correct element displays
 //
 
-output.m78, .m78 output {
+output.m78,
+.m78 output {
   display: inline-block;
 }
 
-summary.m78, .m78 output {
+summary.m78,
+.m78 output {
   display: list-item; // Add the correct display in all browsers
 }
 
-template.m78, .m78 output {
+template.m78,
+.m78 output {
   display: none; // Add the correct display in IE
 }
 
 // Always hide an element with the `hidden` HTML attribute (from PureCSS).
 // Needed for proper display in IE 10-.
-.m78[hidden], .m78 [hidden] {
+.m78[hidden],
+.m78 [hidden] {
   display: none !important;
 }
 
-mark.m78, .m78 mark {
+mark.m78,
+.m78 mark {
   padding: 0.2em;
   background-color: var(--m78-yellow-3);
 }
 
-.m78::selection, .m78 ::selection {
+.m78::selection,
+.m78 ::selection {
   background: var(--m78-color);
   color: var(--m78-color-title);
 }
-
-

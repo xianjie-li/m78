@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { defer } from "@m78/utils";
 import { useDrag } from "react-use-gesture";
-import { _WineContext, WineDragPosition } from "./types";
-import { _Methods } from "./useMethods";
-import { useDragResize } from "./useDragResize";
-import { OPEN_FALSE_ANIMATION, OPEN_TRUE_ANIMATION } from "./consts";
-import { updateZIndexEvent } from "./event";
-import { getTipNode } from "./common";
+import { _WineContext, WineDragPosition } from "./types.js";
+import { _Methods } from "./useMethods.js";
+import { useDragResize } from "./useDragResize.js";
+import { OPEN_FALSE_ANIMATION, OPEN_TRUE_ANIMATION } from "./consts.js";
+import { updateZIndexEvent } from "./event.js";
+import { getTipNode } from "./common.js";
 
 export function useLifeCycle(ctx: _WineContext, methods: _Methods) {
   const { spApi, state, headerElRef, self, setInsideState, insideState } = ctx;

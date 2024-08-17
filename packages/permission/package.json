@@ -1,37 +1,33 @@
 {
-    "name": "@78/permission",
-    "version": "2.2.0",
-    "description": "permission library",
-    "main": "./index.js",
-    "exports": "./index.js",
-    "scripts": {
-        "test": "jest",
-        "lint:prettier": "prettier ./src ./test --write --no-error-on-unmatched-pattern",
-        "lint:script": "eslint ./src --ext .js,.jsx,.ts,.tsx,.vue --fix",
-        "lint": "npm run lint:script && npm run lint:prettier",
-        "build": "m78 build",
-        "pub": "pnpm build && pnpm publish --access public --registry https://registry.npmjs.org --no-git-checks",
-        "example-hello": "m78 example hello"
-    },
-    "author": {
-        "name": "Link",
-        "email": "1073830130@qq.com"
-    },
-    "license": "MIT",
-    "files": [
-        "**"
-    ],
-    "type": "module",
-    "typings": "./",
-    "dependencies": {
-        "@m78/seed": "workspace:^",
-        "@m78/utils": "workspace:^",
-        "@types/lodash": "^4.14.202",
-        "lodash": "^4.17.21",
-        "@swc/helpers": "^0.4.36"
-    },
-    "publishConfig": {
-        "directory": "dist",
-        "linkDirectory": true
-    }
+  "name": "@m78/permission",
+  "version": "2.2.0",
+  "description": "permission library",
+  "repository": "https://github.com/xianjie-li/m78",
+  "type": "module",
+  "exports": "./dist/index.js",
+  "scripts": {
+    "test": "npx jest",
+    "lint:prettier": "npx prettier ./src ./test --write --no-error-on-unmatched-pattern",
+    "lint:script": "npx eslint ./src ./test --ext .js,.jsx,.ts,.tsx,.vue --fix --no-error-on-unmatched-pattern",
+    "lint": "npm run lint:script && npm run lint:prettier",
+    "build": "npx m78 build",
+    "pub": "npm run build && npm publish --access public",
+    "example-hello": "m78 example hello"
+  },
+  "author": {
+    "name": "Link",
+    "email": "1073830130@qq.com"
+  },
+  "license": "MIT",
+  "files": [
+    "dist",
+    "package.json"
+  ],
+  "dependencies": {
+    "@m78/seed": "workspace:^",
+    "@m78/utils": "workspace:^",
+    "@swc/helpers": "^0.4.36",
+    "@types/lodash": "^4.14.202",
+    "lodash": "^4.17.21"
+  }
 }

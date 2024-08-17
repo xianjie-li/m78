@@ -51,7 +51,7 @@ export function useMeasureNotify<T extends Element = HTMLElement>(props: {
     [debounceDelay]
   );
 
-  const [ro] = useState(() => new ResizeObserver(cb));
+  const [ro] = useState(() => new (ResizeObserver as any)(cb));
 
   function getEl() {
     const el = getRefDomOrDom(target);

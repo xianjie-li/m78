@@ -1,12 +1,12 @@
 declare const _default: {
-    'en-US': {
+    "en-US": {
         createKey: string;
         retrieveKey: string;
         updateKey: string;
         deleteKey: string;
         noPermission: string;
     };
-    'zh-CN': {
+    "zh-CN": {
         createKey: string;
         retrieveKey: string;
         updateKey: string;

@@ -1,0 +1,34 @@
+{
+  "name": "@m78/animate-tools",
+  "version": "1.0.0",
+  "description": "Tools related to animation",
+  "exports": "./dist/index.js",
+  "repository": "https://github.com/xianjie-li/m78",
+  "scripts": {
+    "test": "npx jest",
+    "lint:prettier": "npx prettier ./src ./test --write --no-error-on-unmatched-pattern",
+    "lint:script": "npx eslint ./src ./test --ext .js,.jsx,.ts,.tsx,.vue --fix --no-error-on-unmatched-pattern",
+    "lint": "npm run lint:script && npm run lint:prettier",
+    "build": "npx m78 build",
+    "pub": "npm run build && npm publish --access public",
+    "example:hello": "m78 example hello",
+    "example:cubic-bezier": "m78 example cubic-bezier"
+  },
+  "keywords": [
+    "animation"
+  ],
+  "author": {
+    "name": "Link",
+    "email": "1073830130@qq.com"
+  },
+  "license": "MIT",
+  "files": [
+    "dist",
+    "package.json"
+  ],
+  "type": "module",
+  "dependencies": {
+    "@m78/utils": "workspace:^",
+    "@swc/helpers": "^0.4.36"
+  }
+}

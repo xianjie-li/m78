@@ -1,5 +1,5 @@
 import { Bound, BoundSize, TupleNumber } from "@m78/utils";
-import { _WineContext, WineDragPosition, WineSelf } from "./types";
+import { _WineContext, WineDragPosition, WineSelf } from "./types.js";
 /** 根据alignment值获取x, y值 */
 export declare function calcAlignment(alignment: TupleNumber, limit: Bound, self: WineSelf): number[];
 /** 根据[number, height]格式的元组取{ w, h }格式的对象 */

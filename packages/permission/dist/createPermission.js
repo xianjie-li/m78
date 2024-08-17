@@ -1,4 +1,4 @@
-import { permissionImpl } from "./common";
+import { permissionImpl } from "./common.js";
 var _createPermission = function(conf) {
     return permissionImpl(conf);
 };

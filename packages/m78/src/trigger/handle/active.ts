@@ -36,6 +36,7 @@ export function _activeImpl(ctx: _TriggerContext) {
     const { eventList } = ctx.getEventList({
       xy: [clientX, clientY],
       type: TriggerType.active,
+      dom: e.target as HTMLElement,
     });
 
     if (isTouch && eventList.length) {

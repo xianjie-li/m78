@@ -1,10 +1,10 @@
 import create from "@m78/render-api";
-import { WineInstance, WineState } from "./types";
+import { WineInstance, WineState } from "./types.js";
 import { keypressAndClick } from "@m78/utils";
-import { renderBuiltInHeader } from "./render";
+import { renderBuiltInHeader } from "./render.js";
 
-import { DEFAULT_PROPS, NAME_SPACE } from "./consts";
-import WineImpl from "./wine-impl";
+import { DEFAULT_PROPS, NAME_SPACE } from "./consts.js";
+import WineImpl from "./wine-impl.js";
 
 import "./style.css";
 
@@ -15,5 +15,5 @@ const Wine = create<WineState, WineInstance>({
 });
 
 export { keypressAndClick, renderBuiltInHeader };
-export * from "./types";
+export * from "./types.js";
 export default Wine;

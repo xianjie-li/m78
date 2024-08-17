@@ -1,1 +1,1 @@
-{"version":3,"file":"react.d.ts","sourceRoot":"","sources":["../../../src/react.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,WAAW,EAAE,MAAM,SAAS,CAAC;AAEtC;;;;KAIK;AACL,wBAAgB,gBAAgB,CAAC,MAAM,EAAE,WAAW,EAAE,YAAY,UAAO;;oBAGrD,GAAG;EAQtB"}
+{"version":3,"file":"react.d.ts","sourceRoot":"","sources":["../../../src/react.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,WAAW,EAAE,MAAM,YAAY,CAAC;AAEzC;;;;KAIK;AACL,wBAAgB,gBAAgB,CAAC,MAAM,EAAE,WAAW,EAAE,YAAY,UAAO;;oBAGrD,GAAG;EAQtB"}

@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react";
 import { Trigger, TriggerType, trigger } from "../../src";
-import { type } from "../../../render-api/src/types";
 
 const Play = () => {
   const btn1 = useRef(null!);
@@ -45,7 +44,7 @@ const Play = () => {
   return (
     <div>
       <div style={{ padding: 24 }}>
-        <button ref={btn1} onClick={() => {}}>
+        <button ref={btn1}>
           按钮1
           <span>123123</span>
         </button>
@@ -79,7 +78,7 @@ const Play = () => {
       </div>
       <div style={{ padding: 50, touchAction: "none" }}>
         <Trigger
-          type={[TriggerType.drag, TriggerType.active, TriggerType.focus]}
+          type={[TriggerType.drag, TriggerType.active]}
           onTrigger={(e) => {
             console.log(e.type, e);
           }}

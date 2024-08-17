@@ -1,5 +1,5 @@
 import { isDom } from "./is.js";
-import { AnyObject } from "./types";
+import { AnyObject } from "./types.js";
 
 /**
  * 收集指定对象内带name属性的所有输入控件(input,select,textarea)的值，并按一定规则整合

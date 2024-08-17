@@ -1,9 +1,9 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
-import { WineDragPosition } from "./types";
-import { DEFAULT_FULL_LIMIT_BOUND, TIP_NODE_KEY } from "./consts";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
+import { WineDragPosition } from "./types.js";
+import { DEFAULT_FULL_LIMIT_BOUND, TIP_NODE_KEY } from "./consts.js";
 /** 根据alignment值获取x, y值 */ export function calcAlignment(alignment, limit, self) {
-    var _availableSize = _sliced_to_array(self.availableSize, 2), aW = _availableSize[0], aH = _availableSize[1];
+    var _self_availableSize = _sliced_to_array(self.availableSize, 2), aW = _self_availableSize[0], aH = _self_availableSize[1];
     var w = aW - limit.left - limit.right;
     var h = aH - limit.top - limit.bottom;
     var _alignment = _sliced_to_array(alignment, 2), aX = _alignment[0], aY = _alignment[1];
@@ -29,7 +29,7 @@ import { DEFAULT_FULL_LIMIT_BOUND, TIP_NODE_KEY } from "./consts";
 /** 根据state状态获取当前尺寸 */ export function getSizeByState(state) {
     var w;
     var h;
-    var ref = _sliced_to_array(getFullSize(state), 2), fW = ref[0], fH = ref[1];
+    var _getFullSize = _sliced_to_array(getFullSize(state), 2), fW = _getFullSize[0], fH = _getFullSize[1];
     if (state.width) w = state.width;
     if (state.height) h = state.height;
     // 横纵屏与不同的方式作用sizeRatio, 横屏以高度为基准，竖屏一宽度为基准
@@ -42,7 +42,7 @@ import { DEFAULT_FULL_LIMIT_BOUND, TIP_NODE_KEY } from "./consts";
     }
     return [
         Math.min(Math.floor(w), fW),
-        Math.min(Math.floor(h), fH), 
+        Math.min(Math.floor(h), fH)
     ];
 }
 /** 创建一个空的dom节点 */ export function getTipNode() {

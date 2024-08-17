@@ -1,6 +1,6 @@
-import { Plugin } from "./plugin";
-import { ResponseError } from "./response-error";
-import { Response } from "./response";
+import { Plugin } from "./plugin.js";
+import { ResponseError } from "./response-error.js";
+import { Response } from "./response.js";
 interface BatchData {
     currentBatch?: Promise<any>;
     response?: Response;

@@ -39,6 +39,7 @@ export function _moveImpl(ctx: _TriggerContext) {
     const { eventList } = ctx.getEventList({
       xy: [clientX, clientY],
       type: TriggerType.move,
+      dom: e.target as HTMLElement,
     });
 
     const eventMap = _getListMap(eventList);

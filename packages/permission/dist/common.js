@@ -1,9 +1,9 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
-import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
+import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
 import { isArray, isEmpty, isString } from "@lxjx/utils";
-import { _PermissionProPieceType } from "./proType";
+import { _PermissionProPieceType } from "./proType.js";
 export var throwError = function(str) {
     throw Error("PermissionPro: ".concat(str));
 };
@@ -21,7 +21,7 @@ export var throwError = function(str) {
     var permission = function(keys, config) {
         var validators = conf.validators, validFirst = conf.validFirst, seed = conf.seed;
         var state = seed.get();
-        var ref = config || {}, extra = ref.extra, localValidators = ref.validators;
+        var _ref = config || {}, extra = _ref.extra, localValidators = _ref.validators;
         /** 所有验证失败结果 */ var rejects = [];
         /** 是否通过 */ var pass = true;
         /**
@@ -120,7 +120,7 @@ export var throwError = function(str) {
     var invalidTip = "invalid permission template -> ".concat(tpl);
     var keyReg = /\w+|&|\||\(|\)/g;
     if (!tpl || !isString(tpl)) throwError(invalidTip);
-    var ref = _sliced_to_array(tpl.split(":"), 2), mod = ref[0], keys = ref[1];
+    var _tpl_split = _sliced_to_array(tpl.split(":"), 2), mod = _tpl_split[0], keys = _tpl_split[1];
     if (!mod || !keys) throwError(invalidTip);
     var ast = [];
     var match = null;
@@ -178,7 +178,7 @@ export var throwError = function(str) {
         if (!isArray(keys) || !keys.length) return null;
         var rejects = [];
         var checkItem = function(k) {
-            var ref = _sliced_to_array(permissionProTplParser(k), 2), mod = ref[0], ast = ref[1];
+            var _permissionProTplParser = _sliced_to_array(permissionProTplParser(k), 2), mod = _permissionProTplParser[0], ast = _permissionProTplParser[1];
             return checkAST(ast, permission, mod, true, meta);
         };
         var pushEject = function(arg) {
@@ -342,13 +342,13 @@ export var throwError = function(str) {
     };
 }
 /** 根据key从指定meta配置中拿到其对应的meta信息, 没有则根据key和mod生成回退meta */ function getMeta(mod, key, meta) {
-    var ref, ref1;
+    var _meta_general, _meta_general1;
     var defaultMeta = {
         label: key,
         key: key,
         __mod: mod
     };
-    if (!meta || !((ref = meta.general) === null || ref === void 0 ? void 0 : ref.length) && isEmpty(meta.modules)) return defaultMeta;
+    if (!meta || !((_meta_general = meta.general) === null || _meta_general === void 0 ? void 0 : _meta_general.length) && isEmpty(meta.modules)) return defaultMeta;
     if (!isEmpty(meta.modules)) {
         var currentMeta = meta.modules[mod];
         var list = isArray(currentMeta) ? currentMeta : currentMeta === null || currentMeta === void 0 ? void 0 : currentMeta.list;
@@ -361,7 +361,7 @@ export var throwError = function(str) {
             });
         }
     }
-    if ((ref1 = meta.general) === null || ref1 === void 0 ? void 0 : ref1.length) {
+    if ((_meta_general1 = meta.general) === null || _meta_general1 === void 0 ? void 0 : _meta_general1.length) {
         var c1 = meta.general.find(function(item) {
             return item.key === key;
         });

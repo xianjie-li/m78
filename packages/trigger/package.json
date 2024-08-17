@@ -1,0 +1,48 @@
+{
+  "name": "@m78/trigger",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "事件触发器, 整合了click/active/focus/contextMenu/move/drag等常用事件, 处理了这些事件在触控和光标设备上的兼容性, 并提供了更易于使用的事件对象模型",
+  "repository": "https://github.com/xianjie-li/m78",
+  "exports": {
+    ".": "./dist/index.js",
+    "./scroll.js": "./dist/scroll/scroll.js",
+    "./react/*.js": "./dist/react/*.js",
+    "./react/*": "./dist/react/*.js"
+  },
+  "scripts": {
+    "test": "npx jest",
+    "lint:prettier": "npx prettier ./src ./test --write --no-error-on-unmatched-pattern",
+    "lint:script": "npx eslint ./src ./test --ext .js,.jsx,.ts,.tsx,.vue --fix --no-error-on-unmatched-pattern",
+    "lint": "npm run lint:script && npm run lint:prettier",
+    "build": "npx m78 build",
+    "pub": "npm run build && npm publish --access public",
+    "example:hello": "m78 example hello",
+    "example:scroll": "m78 example scroll",
+    "example:scroll-rc": "m78 example scroll-rc"
+  },
+  "keywords": [
+    "dom events"
+  ],
+  "author": {
+    "name": "Link",
+    "email": "1073830130@qq.com"
+  },
+  "license": "MIT",
+  "files": [
+    "dist",
+    "package.json"
+  ],
+  "dependencies": {
+    "@m78/animate-tools": "workspace:^",
+    "@m78/hooks": "workspace:^",
+    "@m78/utils": "workspace:^",
+    "@swc/helpers": "^0.4.36",
+    "@types/lodash": "^4.14.202",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "lodash": "^4.17.21",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}

@@ -6,7 +6,7 @@
 }
 
 .__dumi-default-menu-logo::after {
-  content: '📺';
+  content: "📺";
   font-size: 80px;
   text-decoration: none;
 }

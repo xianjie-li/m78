@@ -1,4 +1,4 @@
-import { AnyFunction } from "./types";
+import { AnyFunction } from "./types.js";
 /**
  * 便捷的按键和点击事件绑定
  * @param handle - 时间处理函数

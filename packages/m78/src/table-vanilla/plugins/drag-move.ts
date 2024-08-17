@@ -4,7 +4,7 @@ import {
   DragScroll as PhysicalScroll,
   DragScrollEvent as PhysicalScrollEvent,
   DragScrollEventType as PhysicalScrollEventType,
-} from "@m78/smooth-scroll";
+} from "@m78/animate-tools";
 
 /** 拖拽滚动相关功能支持 */
 export class _TableDragMovePlugin extends TablePlugin implements TableDragMove {

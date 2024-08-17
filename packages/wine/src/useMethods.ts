@@ -1,8 +1,8 @@
-import _clamp from "lodash/clamp";
+import _clamp from "lodash/clamp.js";
 import { useFn } from "@m78/hooks";
-import _throttle from "lodash/throttle";
+import _throttle from "lodash/throttle.js";
 import { isNumber, TupleNumber } from "@m78/utils";
-import { WineBound, _WineContext, WineDragPosition } from "./types";
+import { WineBound, _WineContext, WineDragPosition } from "./types.js";
 import {
   calcAlignment,
   getFullSize,
@@ -11,9 +11,9 @@ import {
   getTipNodeStatus,
   offsetTuple2Obj,
   sizeTuple2Obj,
-} from "./common";
-import { DEFAULT_FULL_LIMIT_BOUND, NO_LIMIT_AREA } from "./consts";
-import { updateZIndexEvent } from "./event";
+} from "./common.js";
+import { DEFAULT_FULL_LIMIT_BOUND, NO_LIMIT_AREA } from "./consts.js";
+import { updateZIndexEvent } from "./event.js";
 
 export function useMethods(context: _WineContext) {
   const {

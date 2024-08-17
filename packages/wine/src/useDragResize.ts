@@ -1,11 +1,11 @@
 import { useDrag } from "react-use-gesture";
-import _clamp from "lodash/clamp";
+import _clamp from "lodash/clamp.js";
 import { useRef } from "react";
 import { isNumber, TupleNumber } from "@m78/utils";
-import { _WineContext, WineDragPosition } from "./types";
-import { _Methods } from "./useMethods";
-import { sizeTuple2Obj } from "./common";
-import { MIN_SIZE } from "./consts";
+import { _WineContext, WineDragPosition } from "./types.js";
+import { _Methods } from "./useMethods.js";
+import { sizeTuple2Obj } from "./common.js";
+import { MIN_SIZE } from "./consts.js";
 
 export function useDragResize(
   type: WineDragPosition,

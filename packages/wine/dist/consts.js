@@ -1,4 +1,4 @@
-import { WineBound } from "./types";
+import { WineBound } from "./types.js";
 /** 无bound限制 */ export var NO_LIMIT_AREA = {
     left: -Infinity,
     right: Infinity,

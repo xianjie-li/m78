@@ -1,8 +1,8 @@
-import _define_property from "@swc/helpers/src/_define_property.mjs";
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
+import { _ as _define_property } from "@swc/helpers/_/_define_property";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
 import create from "@m78/seed";
-import { create as createPermission } from "./index";
-import { PERMISSION_PRO_NAME, permissionProValidatorGetter } from "./common";
+import { create as createPermission } from "./index.js";
+import { PERMISSION_PRO_NAME, permissionProValidatorGetter } from "./common.js";
 var _createPermissionPro = function(config) {
     var _config = _object_spread({
         permission: {}

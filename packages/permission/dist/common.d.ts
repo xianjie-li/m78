@@ -1,5 +1,5 @@
-import { Permission, CreatePermissionConfig, Validator, Validators, ValidMeta } from "./types";
-import { _PermissionProSeedState, _PermissionProAST, PermissionProMetaConfig, PermissionProTpl } from "./proType";
+import { Permission, CreatePermissionConfig, Validator, Validators, ValidMeta } from "./types.js";
+import { _PermissionProSeedState, _PermissionProAST, PermissionProMetaConfig, PermissionProTpl } from "./proType.js";
 export declare const throwError: (str: string) => never;
 /**
  * 传入验证key、验证器列表、依赖数据、额外数据。对该key进行验证后返回验证结果(void 或 ValidMeta)

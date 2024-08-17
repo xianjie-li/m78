@@ -22,9 +22,4 @@ export declare function isMobileDevice(): boolean;
 export declare function getCmdKey(): "metaKey" | "ctrlKey";
 /** Get command key status by system, apple series: metaKey,  other: ctrlKey */
 export declare function getCmdKeyStatus(e: Event): boolean;
-/** A simple compatibility wrapper for requestAnimationFrame and returns a cleanup function instead of a cleanup tag */
-export declare function raf(frameRequestCallback: FrameRequestCallback): EmptyFunction;
-export type RafFunction = typeof raf;
-/** 用于将requestAnimationFrame使用在指令式用法中, 比如拖拽移动dom的场景, rafCaller能确保每帧只会对最新一次回调进行调用, 其他回调会被直接忽略 */
-export declare function rafCaller(): (frameRequestCallback: FrameRequestCallback) => EmptyFunction;
 //# sourceMappingURL=bom.d.ts.map

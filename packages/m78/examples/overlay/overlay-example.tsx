@@ -109,6 +109,19 @@ const OverlayExample = () => {
         >
           <Button>contextMenu</Button>
         </Overlay>
+
+        <Overlay
+          triggerType={TriggerType.active}
+          childrenAsTarget
+          direction="topStart"
+          content={<div className="p-24">内容内容</div>}
+          offset={8}
+        >
+          <Button style={{ width: 160 }} size="large">
+            active
+          </Button>
+        </Overlay>
+
         <Overlay
           triggerType={TriggerType.move}
           childrenAsTarget
@@ -151,7 +164,7 @@ const OverlayExample = () => {
         transitionType="fade"
         offset={6}
         onOpenTrigger={(e) => {
-          setSingleCont(e.context.content);
+          setSingleCont(e.data.content);
         }}
       />
 
@@ -162,7 +175,9 @@ const OverlayExample = () => {
           <Trigger
             type={[TriggerType.click]}
             onTrigger={overlay!.trigger}
-            content={<span>这是内容1111</span>}
+            data={{
+              content: <span>这是内容1111</span>,
+            }}
           >
             <Button>
               <span>click</span>44
@@ -171,28 +186,36 @@ const OverlayExample = () => {
           <Trigger
             type={[TriggerType.active]}
             onTrigger={overlay!.trigger}
-            content={<span>这是内容22</span>}
+            data={{
+              content: <span>这是内容22</span>,
+            }}
           >
             <Button>active</Button>
           </Trigger>
           <Trigger
             type={[TriggerType.active]}
             onTrigger={overlay!.trigger}
-            content={<span>这是内容3333</span>}
+            data={{
+              content: <span>这是内容3333</span>,
+            }}
           >
             <Button>active</Button>
           </Trigger>
           <Trigger
             type={[TriggerType.focus]}
             onTrigger={overlay!.trigger}
-            content={<span>这是内容44</span>}
+            data={{
+              content: <span>这是内容44</span>,
+            }}
           >
             <Button>focus</Button>
           </Trigger>
           <Trigger
             type={[TriggerType.focus, TriggerType.click]}
             onTrigger={overlay!.trigger}
-            content={<span>这是内容5555</span>}
+            data={{
+              content: <span>这是内容5555</span>,
+            }}
           >
             <Button>focus + click</Button>
           </Trigger>
@@ -200,7 +223,9 @@ const OverlayExample = () => {
           <Trigger
             type={[TriggerType.contextMenu]}
             onTrigger={overlay!.trigger}
-            content={<span>这是内容66</span>}
+            data={{
+              content: <span>这是内容66</span>,
+            }}
           >
             <Button>contextMenu</Button>
           </Trigger>
@@ -208,7 +233,9 @@ const OverlayExample = () => {
           <Trigger
             type={[TriggerType.move]}
             onTrigger={overlay!.trigger}
-            content={<span>这是内容7777</span>}
+            data={{
+              content: <span>这是内容7777</span>,
+            }}
           >
             <Button size="large">move</Button>
           </Trigger>
@@ -216,7 +243,9 @@ const OverlayExample = () => {
           <Trigger
             type={[TriggerType.move]}
             onTrigger={overlay!.trigger}
-            content={<span>这是内容88</span>}
+            data={{
+              content: <span>这是内容88</span>,
+            }}
           >
             <Button size="large">move2</Button>
           </Trigger>
@@ -224,7 +253,9 @@ const OverlayExample = () => {
           <Trigger
             type={[TriggerType.move]}
             onTrigger={overlay!.trigger}
-            content={<span>这是内容9999</span>}
+            data={{
+              content: <span>这是内容9999</span>,
+            }}
           >
             <Button size="large">move3</Button>
           </Trigger>

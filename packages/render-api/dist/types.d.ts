@@ -4,7 +4,7 @@ import { AnyFunction } from "@m78/utils";
 /**
  * 一个更包容的组件接收器类型
  * */
-export declare type ComponentType<P = any> = React.ComponentType<P> | AnyFunction;
+export type ComponentType<P = any> = React.ComponentType<P> | AnyFunction;
 /**
  * 实现组件的标准props, 实现组件可以选择继承此接口
  *
@@ -98,7 +98,7 @@ export interface RenderApiComponentInstanceBase<S> {
  *
  * I 为实例组件对外暴露的属性和方法
  * */
-export declare type RenderApiComponentInstance<S, I> = RenderApiComponentInstanceBase<S> & I;
+export type RenderApiComponentInstance<S, I> = RenderApiComponentInstanceBase<S> & I;
 /** 内部使用的实例的元信息 */
 export interface _ComponentItem {
     /** 组件/实例的唯一id */
@@ -111,5 +111,5 @@ export interface _ComponentItem {
 /**
  * 过滤掉内部属性的state
  * */
-export declare type RenderApiOmitBuiltState<S> = Omit<S, "open" | "onChange" | "onDispose" | "onUpdate" | "instanceRef">;
+export type RenderApiOmitBuiltState<S> = Omit<S, "open" | "onChange" | "onDispose" | "onUpdate" | "instanceRef">;
 //# sourceMappingURL=types.d.ts.map

@@ -1,4 +1,4 @@
-import { EmptyFunction } from "../types";
+import { EmptyFunction } from "../types.js";
 
 const CACHE_PREFIX = "__M78SetCacheKey";
 

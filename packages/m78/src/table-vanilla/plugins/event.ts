@@ -4,8 +4,6 @@ import {
   CustomEvent,
   EmptyFunction,
   getEventOffset,
-  rafCaller,
-  RafFunction,
 } from "@m78/utils";
 import { TableCell, TableColumn, TableRow } from "../types/items.js";
 import debounce from "lodash/debounce.js";
@@ -13,7 +11,12 @@ import debounce from "lodash/debounce.js";
 import { TableMutationEvent } from "./mutation.js";
 import { TableReloadOptions } from "./life.js";
 import { TableFeedbackEvent } from "./feedback.js";
-import { SmoothTriggerEvent, SmoothWheel } from "@m78/smooth-scroll";
+import {
+  SmoothTriggerEvent,
+  SmoothWheel,
+  rafCaller,
+  RafFunction,
+} from "@m78/animate-tools";
 import { CustomEventWithHook } from "@m78/hooks";
 
 /**

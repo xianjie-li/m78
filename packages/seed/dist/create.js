@@ -1,9 +1,9 @@
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { middlewareImpl, subscribeImpl } from "./common.js";
 var create = function() {
     var conf = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {};
-    var ref = _sliced_to_array(middlewareImpl(conf), 2), config = ref[0], patchHandle = ref[1];
+    var _middlewareImpl = _sliced_to_array(middlewareImpl(conf), 2), config = _middlewareImpl[0], patchHandle = _middlewareImpl[1];
     var state = config.state;
     var share = {
         state: _object_spread({}, state),

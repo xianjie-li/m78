@@ -1,5 +1,5 @@
 import { AnyObject } from "@m78/utils";
-export declare type Share<S = any> = CreateSeedConfig<S> & {
+export type Share<S = any> = CreateSeedConfig<S> & {
     listeners: Array<Listener>;
 };
 export interface SetState<S = any> {
@@ -8,8 +8,8 @@ export interface SetState<S = any> {
 export interface CoverSetState<S = any> {
     (patch: S): void;
 }
-export declare type Listener<S = AnyObject> = (changes: Partial<S>) => void;
-export declare type Subscribe<S = AnyObject> = (listener: Listener<S>) => () => void;
+export type Listener<S = AnyObject> = (changes: Partial<S>) => void;
+export type Subscribe<S = AnyObject> = (listener: Listener<S>) => () => void;
 /**
  * seed instance
  *

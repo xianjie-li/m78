@@ -1,6 +1,6 @@
-import { BaseRequestOptions, CreateOptions, Options } from "./interfaces";
-import { ResponseError } from "./response-error";
-import { Response } from "./response";
+import { BaseRequestOptions, CreateOptions, Options } from "./interfaces.js";
+import { ResponseError } from "./response-error.js";
+import { Response } from "./response.js";
 export declare class Plugin<Opt extends BaseRequestOptions = BaseRequestOptions> {
     /** Objects that share data between different plugins should only be operated by plugins in their own namespace, such as caching plugins using ctx.catch.xx */
     ctx: any;

@@ -47,6 +47,7 @@ export function _dragImpl(ctx: _TriggerContext) {
     const { eventList } = ctx.getEventList({
       xy: [clientX, clientY],
       type: TriggerType.drag,
+      dom: e.target as HTMLElement,
     });
 
     eventList.forEach((i) => {

@@ -9,13 +9,13 @@ import {
   _WineInsideState,
   WineState,
   WineInstance,
-} from "./types";
+} from "./types.js";
 
-import { DEFAULT_PROPS, NO_LIMIT_AREA } from "./consts";
-import { useMethods } from "./useMethods";
-import { useLifeCycle } from "./useLifeCycle";
-import { render } from "./render";
-import { getSizeByState } from "./common";
+import { DEFAULT_PROPS, NO_LIMIT_AREA } from "./consts.js";
+import { useMethods } from "./useMethods.js";
+import { useLifeCycle } from "./useLifeCycle.js";
+import { render } from "./render.js";
+import { getSizeByState } from "./common.js";
 
 type TrimDefaultState = WineState & typeof DEFAULT_PROPS;
 

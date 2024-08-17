@@ -5,12 +5,12 @@ import {
   ensureArray,
   getNamePathValue,
   isNumber,
-  raf,
   setNamePathValue,
 } from "@m78/utils";
 import { addCls, removeCls } from "../../common/index.js";
 import { TableKey } from "../types/base-type.js";
 import { _TableMetaDataPlugin } from "./meta-data.js";
+import { raf } from "@m78/animate-tools";
 
 /** 单元格, 行, 列高亮/自动滚动 */
 export class _TableHighlightPlugin

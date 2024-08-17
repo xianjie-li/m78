@@ -498,7 +498,7 @@ export function getEventOffset(
     clientY = (e as MouseEvent).clientY;
   }
 
-  if (target) target = e.target as HTMLElement | BoundSize;
+  if (!target) target = e.target as HTMLElement | BoundSize;
 
   const isBound =
     isNumber((target as any).left) && isNumber((target as any).top);

@@ -14,7 +14,7 @@ import {
   isObject,
   simplyEqual as isEqual,
 } from "@m78/utils";
-import { autoScrollTrigger } from "@m78/smooth-scroll";
+import { autoScrollTrigger } from "@m78/animate-tools";
 import { useFn } from "@m78/hooks";
 import throttle from "lodash/throttle.js";
 import {

@@ -1,6 +1,7 @@
 {
   "name": "@m78/land",
   "version": "0.0.1",
+  "repository": "https://github.com/xianjie-li/m78",
   "scripts": {
     "docusaurus": "docusaurus",
     "start": "docusaurus start --host=0.0.0.0",
@@ -20,14 +21,14 @@
     "@m78/icons": "^2.0.2",
     "@m78/utils": "workspace:^",
     "@types/mockjs": "^1.0.7",
-    "@types/react": "^18.2.45",
-    "@types/react-dom": "^18.2.17",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
     "clsx": "^1.2.1",
     "m78": "workspace:^",
     "mockjs": "^1.1.0",
     "raw-loader": "^4.0.2",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@docusaurus/core": "3.0.1",

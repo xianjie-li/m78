@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "trigger": ["src/index.ts"]
+    }
+  },
+  "extends": "@m78/devtools/tsconfig-base.json",
+  "include": ["src/**/*", "examples/**/*", "test/**/*"]
+}

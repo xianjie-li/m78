@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import {
   DragScroll as PhysicalScroll,
   DragScrollEventType as PhysicalScrollEventType,
-} from "@m78/smooth-scroll";
+} from "@m78/animate-tools";
 
 export const _useDragScroll = (ctx: _ScrollContext) => {
   const { props, xEnabled, yEnabled, innerWrapRef } = ctx;

@@ -1,8 +1,8 @@
-import _define_property from "@swc/helpers/src/_define_property.mjs";
-import _object_spread from "@swc/helpers/src/_object_spread.mjs";
-import _object_spread_props from "@swc/helpers/src/_object_spread_props.mjs";
-import _sliced_to_array from "@swc/helpers/src/_sliced_to_array.mjs";
-import _to_consumable_array from "@swc/helpers/src/_to_consumable_array.mjs";
+import { _ as _define_property } from "@swc/helpers/_/_define_property";
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
+import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
+import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
+import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
 import { jsx as _jsx } from "react/jsx-runtime";
 import { createElement as _createElement } from "react";
 import React, { useEffect, useMemo, useState } from "react";
@@ -35,40 +35,50 @@ var setStateBlackList = [
  * - I - 组件扩展api
  * @param opt - 创建配置
  * */ function create(opt) {
-    var close = function close(id) {
+    var option = _object_spread({}, opt);
+    var Component = option.component, _option_namespace = option.namespace, namespace = _option_namespace === void 0 ? "RENDER__BOX" : _option_namespace, _option_openKey = option.openKey, openKey = _option_openKey === void 0 ? "open" : _option_openKey, _option_changeKey = option.changeKey, changeKey = _option_changeKey === void 0 ? "onChange" : _option_changeKey;
+    /** 对组件进行强缓存, 只允许在_updateFlag变更时更新 */ var MemoComponent = /*#__PURE__*/ React.memo(Component, function(prev, next) {
+        return prev._updateFlag === next._updateFlag;
+    });
+    /** 实例长度变更 */ var changeEvent = createEvent();
+    /** 在内部共享的状态对象 */ var ctx = {
+        /** 实例列表 */ list: [],
+        /** target是否已渲染, 未渲染时调用render会渲染默认Target */ targetIsRender: false
+    };
+    function close(id) {
         var current = getItemById(id);
         if (!current) return;
         if (!current.state[openKey]) return;
         setStateByCurrent(current, _define_property({}, openKey, false));
-    };
-    var open = function open(id) {
+    }
+    function open(id) {
         var current = getItemById(id);
         if (!current) return;
         if (current.state[openKey]) return;
         setStateByCurrent(current, _define_property({}, openKey, true));
-    };
-    var dispose = function dispose(id) {
+    }
+    function dispose(id) {
         var ind = getIndexById(id);
         if (ind === -1) return;
         ctx.list.splice(ind, 1);
         changeEvent.emit();
-    };
-    var disposeAll = function disposeAll() {
+    }
+    function disposeAll() {
         ctx.list = [];
         changeEvent.emit();
-    };
-    var setAllOpen = /** 设置所有实例的开启或关闭状态 */ function setAllOpen(open) {
+    }
+    /** 设置所有实例的开启或关闭状态 */ function setAllOpen(open) {
         ctx.list.forEach(function(item) {
             return setStateByCurrent(item, _define_property({}, openKey, open), false);
         });
         changeEvent.emit();
-    };
-    var setStateById = /** 设置指定id的实例状态, 不更新状态 */ function setStateById(id, nState) {
+    }
+    /** 设置指定id的实例状态, 不更新状态 */ function setStateById(id, nState) {
         var it = getItemById(id);
         if (!it) return;
         setStateByCurrent(it, nState);
-    };
-    var setStateByCurrent = /**
+    }
+    /**
    * 根据实例信息设置其状态并更新updateFlag, autoUpdate = true时才会触发更新
    * 这是更新组件的唯一途径
    * */ function setStateByCurrent(current, nState) {
@@ -79,18 +89,18 @@ var setStateBlackList = [
         Object.assign(current.state, omit(nState, omitKeys));
         current.updateFlag += 1;
         autoUpdate && changeEvent.emit();
-    };
-    var getItemById = /** 获取指定id的实例 */ function getItemById(id) {
+    }
+    /** 获取指定id的实例 */ function getItemById(id) {
         return ctx.list.find(function(item) {
             return item.id === id;
         });
-    };
-    var getIndexById = /** 获取指定id实例所在的索引位置 */ function getIndexById(id) {
+    }
+    /** 获取指定id实例所在的索引位置 */ function getIndexById(id) {
         return ctx.list.findIndex(function(item) {
             return item.id === id;
         });
-    };
-    var render = /** 创建并渲染一个实例 */ function render(state) {
+    }
+    /** 创建并渲染一个实例 */ function render(state) {
         var id = createRandString();
         if (isFunction(option.omitState)) {
             state = option.omitState(state);
@@ -136,25 +146,43 @@ var setStateBlackList = [
             changeEvent.emit();
         });
         return instance;
-    };
-    var shakeOverInstance = // 将超出maxInstance的实例移除, 不会主动触发更新
+    }
+    // 将超出maxInstance的实例移除, 不会主动触发更新
     function shakeOverInstance() {
         if (option.maxInstance && ctx.list.length > option.maxInstance) {
             ctx.list.splice(0, ctx.list.length - option.maxInstance);
         }
+    }
+    var setOption = function(_opt) {
+        var o = {};
+        var keys = Object.keys(_opt);
+        // 是否需要更新ui
+        var needUpdate = false;
+        keys.forEach(function(key) {
+            if (updateOptionWhiteList.includes(key)) {
+                o[key] = _opt[key];
+            }
+            if (key === "wrap" || key === "maxInstance") {
+                needUpdate = true;
+            }
+        });
+        Object.assign(option, o);
+        if (needUpdate) {
+            changeEvent.emit();
+        }
     };
-    var mountDefaultTarget = function mountDefaultTarget() {
+    function mountDefaultTarget() {
         var container = document.createElement("div");
         container.setAttribute("data-describe", "RENDER-API DEFAULT TARGET");
         document.body.appendChild(container);
         var root = createRoot(container);
         root.render(/*#__PURE__*/ _jsx(RenderTarget, {}));
-    };
-    var RenderTarget = /** 挂载点 */ function RenderTarget() {
+    }
+    /** 挂载点 */ function RenderTarget() {
         useMemo(function() {
             return ctx.targetIsRender = true;
         }, []);
-        var ref = _sliced_to_array(useState(0), 2), update = ref[1];
+        var _useState = _sliced_to_array(useState(0), 2), update = _useState[1];
         changeEvent.useEvent(function() {
             update(function(p) {
                 return p + 1;
@@ -183,35 +211,7 @@ var setStateBlackList = [
         return /*#__PURE__*/ ReactDom.createPortal(node, getPortalsNode(namespace, {
             className: "m78-root m78"
         }));
-    };
-    var option = _object_spread({}, opt);
-    var Component = option.component, _namespace = option.namespace, namespace = _namespace === void 0 ? "RENDER__BOX" : _namespace, _openKey = option.openKey, openKey = _openKey === void 0 ? "open" : _openKey, _changeKey = option.changeKey, changeKey = _changeKey === void 0 ? "onChange" : _changeKey;
-    /** 对组件进行强缓存, 只允许在_updateFlag变更时更新 */ var MemoComponent = /*#__PURE__*/ React.memo(Component, function(prev, next) {
-        return prev._updateFlag === next._updateFlag;
-    });
-    /** 实例长度变更 */ var changeEvent = createEvent();
-    /** 在内部共享的状态对象 */ var ctx = {
-        /** 实例列表 */ list: [],
-        /** target是否已渲染, 未渲染时调用render会渲染默认Target */ targetIsRender: false
-    };
-    var setOption = function(_opt) {
-        var o = {};
-        var keys = Object.keys(_opt);
-        // 是否需要更新ui
-        var needUpdate = false;
-        keys.forEach(function(key) {
-            if (updateOptionWhiteList.includes(key)) {
-                o[key] = _opt[key];
-            }
-            if (key === "wrap" || key === "maxInstance") {
-                needUpdate = true;
-            }
-        });
-        Object.assign(option, o);
-        if (needUpdate) {
-            changeEvent.emit();
-        }
-    };
+    }
     return {
         RenderTarget: RenderTarget,
         render: render,

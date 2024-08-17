@@ -4,8 +4,6 @@ node_modules
 lib
 /esm
 /cjs
-.parcel-cache
-.examples-dist
 
 # local env files
 .env.local
@@ -26,3 +24,12 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+
+# Yarn
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

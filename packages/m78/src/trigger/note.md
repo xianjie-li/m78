@@ -22,11 +22,19 @@
   - drag: preventDefault() + 防止复制 + touchaction
 - ~~暴露统一事件, 便于集中调整光标样式, 添加覆盖样式等~~
 
-点击支持focus触发
-事件包含真实dom时使用dom处理事件
+bug: ~~touch模式active自动关闭~~
+~~点击支持focus触发~~
+~~事件包含真实dom时使用dom处理事件~~
 
 迁移到新版
 - overlay
 - bubble
 - menu
 - table
+
+~~单例时闪烁~~
+~~单例时active不关闭~~
+~~trigger移到单独的库~~
+~~添加drag bound~~
+- 将useScroll迁移到trigger, 作为单独的事件库
+- 将keyboard迁移到trigger, 作为单独的事件库

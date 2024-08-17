@@ -76,10 +76,10 @@ export function isWeakNumber(arg) {
     if (isObject(document) && o === document) {
         return true;
     }
-    if (typeof HTMLElement === "object") {
+    if ((typeof HTMLElement === "undefined" ? "undefined" : _type_of(HTMLElement)) === "object") {
         return _instanceof(o, HTMLElement);
     } else {
-        return o && typeof o === "object" && o.nodeType === 1 && typeof o.nodeName === "string";
+        return o && (typeof o === "undefined" ? "undefined" : _type_of(o)) === "object" && o.nodeType === 1 && typeof o.nodeName === "string";
     }
 }
 /**
@@ -146,7 +146,7 @@ export function isWeakNumber(arg) {
     return !!arg && isFunction(arg.then) && isFunction(arg.finally);
 }
 /** Check whether the value is a reference type*/ export function isReferenceType(value) {
-    return typeof value === "object" || typeof value === "function";
+    return (typeof value === "undefined" ? "undefined" : _type_of(value)) === "object" || typeof value === "function";
 }
 /** Check is run in browser (may cause certain simulation environments (jest/web worker) to be affected) */ export function isBrowser() {
     return ![

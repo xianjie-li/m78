@@ -3,7 +3,7 @@ import {
   create as createPermission,
   createPro,
   CreatePermissionConfig,
-} from "./index";
+} from "./index.js";
 
 describe("auth", () => {
   const getAuth = (conf?: Partial<CreatePermissionConfig>) => {

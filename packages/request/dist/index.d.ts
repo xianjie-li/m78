@@ -5,6 +5,6 @@ import { BaseRequestOptions, CreateOptions, Request } from "./interfaces.js";
  * @param options - create options
  * @return - request instance
  * */
-export declare const createRequest: <Opt extends BaseRequestOptions<{}>>(options: CreateOptions<Opt>) => Request<Opt>;
-export * from "./plugin";
+export declare const createRequest: <Opt extends BaseRequestOptions>(options: CreateOptions<Opt>) => Request<Opt>;
+export * from "./plugin.js";
 //# sourceMappingURL=index.d.ts.map

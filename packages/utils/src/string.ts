@@ -1,4 +1,4 @@
-import { AnyObject } from "./types";
+import { AnyObject } from "./types.js";
 
 /**
  * 替换html字符中的标签为指定字符

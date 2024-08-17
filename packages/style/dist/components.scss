@@ -1,4 +1,4 @@
-@import 'sass-vars';
+@import "sass-vars";
 
 // 注意区分组件和原子类, 组件是独立的个体, 使用.m78-前缀, 原子类作用在.m78类名下或本身,名称可以写的比较简洁
 // 并且, 原子类可以是组件的组成部分
@@ -25,7 +25,6 @@
   }
 }
 
-
 .m78-triangle {
   display: inline-block;
   vertical-align: middle;
@@ -35,7 +34,6 @@
   border-left: 5px solid var(--m78-color-second);
   border-radius: 2px;
 }
-
 
 // --------------------- 动画 --------------------- //
 .m78-animate-spin {
@@ -47,7 +45,6 @@
   transform-origin: center center;
   animation: m78-spin 1.2s infinite linear;
 }
-
 
 .m78-animate-spin-steps {
   animation: m78-spin 1s infinite steps(8);
@@ -105,13 +102,12 @@
   @include full;
 }
 
-
 // --------------------- 装饰 --------------------- //
 // 1px 线 //
 .m78-hb-t {
   &:before {
     position: absolute;
-    content: '';
+    content: "";
     height: 1px;
     top: 0;
     left: 0;
@@ -124,7 +120,7 @@
 .m78-hb-b {
   &:after {
     position: absolute;
-    content: '';
+    content: "";
     height: 1px;
     left: 0;
     right: 0;
@@ -133,7 +129,6 @@
     transform: scaleY(0.5);
   }
 }
-
 
 // --------------------- 功能性 ---------------------
 // 防止文字与背景同色
@@ -147,4 +142,3 @@
     text-shadow: none;
   }
 }
-

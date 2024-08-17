@@ -1,4 +1,4 @@
-import { Response } from "./response";
+import { Response } from "./response.js";
 
 /** Standard error format, which includes a response when a request is received but has error */
 export class ResponseError extends Error {

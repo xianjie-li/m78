@@ -1,4 +1,4 @@
-import { AnyFunction, EmptyFunction } from "./types";
+import { AnyFunction, EmptyFunction } from "./types.js";
 /**
  * 将一个错误优先且回调位于最后一个参数的node风格的callback函数转为Promise return函数
  * @param fn - 要包装的函数

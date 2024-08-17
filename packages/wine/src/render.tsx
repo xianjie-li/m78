@@ -1,9 +1,9 @@
 import { animated } from "react-spring";
 import React from "react";
 import { keypressAndClick } from "@m78/utils";
-import clsx from "clsx";
-import { _WineContext, WineInstance, WineState } from "./types";
-import { _Methods } from "./useMethods";
+import { clsx } from "clsx";
+import { _WineContext, WineInstance, WineState } from "./types.js";
+import { _Methods } from "./useMethods.js";
 
 /** 渲染内置顶栏 */
 export const renderBuiltInHeader: NonNullable<WineState["headerCustomer"]> = (

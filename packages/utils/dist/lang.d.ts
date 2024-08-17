@@ -1,4 +1,4 @@
-import { AnyFunction } from "./types";
+import { AnyFunction } from "./types.js";
 /**
  * return the 'global' object according to different JS running environments
  * */

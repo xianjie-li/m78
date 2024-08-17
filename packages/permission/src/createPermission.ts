@@ -1,5 +1,5 @@
-import { PermissionCreator } from "./types";
-import { permissionImpl } from "./common";
+import { PermissionCreator } from "./types.js";
+import { permissionImpl } from "./common.js";
 
 const _createPermission = ((conf) => permissionImpl(conf)) as PermissionCreator;
 

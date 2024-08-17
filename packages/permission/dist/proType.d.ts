@@ -1,5 +1,5 @@
-import { Seed } from '@m78/seed';
-import { Permission } from './types';
+import { Seed } from "@m78/seed";
+import { Permission } from "./types.js";
 /**
  * 权限模板
  *
@@ -13,11 +13,11 @@ import { Permission } from './types';
  * - user:create&update|delete
  * - user:create&(update|update2)
  * */
-export declare type PermissionProTpl = string;
+export type PermissionProTpl = string;
 /**
  * 描述权限的对象
  * */
-export declare type PermissionProSchema = {
+export type PermissionProSchema = {
     [key: string]: string[];
 };
 /**
@@ -38,7 +38,7 @@ export interface _PermissionProPiece {
     type: _PermissionProPieceType;
 }
 /** 描述单个验证模板的简单语法树 */
-export declare type _PermissionProAST = Array<_PermissionProPiece | Array<_PermissionProPiece>>;
+export type _PermissionProAST = Array<_PermissionProPiece | Array<_PermissionProPiece>>;
 /**
  * 用于描述一项权限的元信息
  * */
@@ -51,7 +51,7 @@ export interface PermissionProMeta {
     [key: string]: any;
 }
 /** 用于描述验证失败的元信息 */
-export declare type PermissionProRejectMeta = null | {
+export type PermissionProRejectMeta = null | {
     /** 所属模块名称 */
     label: string;
     /** 模块的key */
