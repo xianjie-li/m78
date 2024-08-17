@@ -36,5 +36,3 @@ bug: ~~touch模式active自动关闭~~
 ~~单例时active不关闭~~
 ~~trigger移到单独的库~~
 ~~添加drag bound~~
-- 将useScroll迁移到trigger, 作为单独的事件库
-- 将keyboard迁移到trigger, 作为单独的事件库

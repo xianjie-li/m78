@@ -5,14 +5,9 @@ import {
   _getScrollStyleByDirection,
   _RESERVE_BAR_SIZE,
 } from "./common.js";
-import clsx from "clsx";
-import {
-  useMeasure,
-  useScroll,
-  UseScrollMeta,
-  useSelf,
-  useSetState,
-} from "@m78/hooks";
+import { clsx } from "clsx";
+import { useMeasure, useSelf, useSetState } from "@m78/hooks";
+import { useScroll } from "@m78/trigger/react/use-scroll.js";
 import { _useBar } from "./use-bar.js";
 import { _useLifeCycle } from "./use-life-cycle.js";
 import { _useMethod } from "./use-method.js";
@@ -20,14 +15,18 @@ import { _useIndicator } from "./use-indicator.js";
 import { _usePullActions } from "./use-pull-actions.js";
 import { animated } from "react-spring";
 import { _useDragScroll } from "./use-drag-scroll.js";
+import type { ScrollTriggerState } from "@m78/trigger/scroll.js";
 
 export const _Scroll = (p: ScrollProps) => {
-  const props = p as _ScrollContext["props"];
+  const props = {
+    ..._defaultProps,
+    ...p,
+  } as _ScrollContext["props"];
   const { direction } = props;
 
   const _innerWrapRef = useRef<HTMLDivElement>(null!);
 
-  const innerWrapRef = p.innerWrapRef || _innerWrapRef;
+  const innerWrapRef = props.innerWrapRef || _innerWrapRef;
 
   /** 组件状态 */
   const [state, setState] = useSetState<_ScrollContext["state"]>({
@@ -106,13 +105,13 @@ export const _Scroll = (p: ScrollProps) => {
   /** 滚动标记 */
   const indicator = _useIndicator(ctx, methods);
 
-  function onScroll(meta: UseScrollMeta) {
+  function onScroll(meta: ScrollTriggerState) {
     lifeCycle.onScroll(meta);
   }
 
   return (
     <div
-      ref={p.innerRef}
+      ref={props.innerRef}
       className={clsx(
         "m78 m78-scroll",
         props.className,
@@ -152,4 +151,3 @@ export const _Scroll = (p: ScrollProps) => {
 };
 
 _Scroll.displayName = "Scroll";
-_Scroll.defaultProps = _defaultProps;

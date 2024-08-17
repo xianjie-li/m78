@@ -8,7 +8,8 @@ import { _PULL_DOWN_SWIPE_RATIO, _PULL_DOWN_TRIGGER_RATIO } from "./common.js";
 import { Column } from "../layout/index.js";
 import clsx from "clsx";
 import { isFunction } from "@m78/utils";
-import { useDestroy, UseScrollMeta } from "@m78/hooks";
+import { useDestroy } from "@m78/hooks";
+import type { ScrollTriggerState } from "@m78/trigger/scroll.js";
 
 export const _usePullActions = (ctx: _ScrollContext) => {
   const { scroller, setState, state, pullDownEnabled, props, self } = ctx;
@@ -185,7 +186,7 @@ export const _usePullActions = (ctx: _ScrollContext) => {
   }
 
   /** 滚动, 主要用于上拉加载处理 */
-  async function onScroll(meta: UseScrollMeta) {
+  async function onScroll(meta: ScrollTriggerState) {
     if (!props.onPullUp) return;
     const ratio = meta.y / meta.yMax;
 

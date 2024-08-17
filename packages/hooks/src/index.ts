@@ -60,8 +60,6 @@ export * from "./state/use-props-change/use-props-change.js";
 
 export * from "./ui/use-lock-body-scroll/use-lock-body-scroll.js";
 
-export * from "./ui/use-scroll/use-scroll.js";
-
 export * from "./ui/use-measure/use-measure.js";
 
 export * from "./ui/use-virtual-list/use-virtual-list.js";

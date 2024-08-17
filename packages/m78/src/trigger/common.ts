@@ -1,4 +1,4 @@
-import type { EmptyFunction } from "@m78/utils/types.js";
+import type { EmptyFunction } from "@m78/utils";
 import {
   TriggerOverrideStrategy,
   TriggerCursorMap,

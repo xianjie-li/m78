@@ -1,4 +1,4 @@
-import { useFn, UseScrollMeta } from "@m78/hooks";
+import { useFn } from "@m78/hooks";
 import { animated, useSpring } from "react-spring";
 import React, { useEffect, useRef } from "react";
 import { _ScrollContext } from "./types.js";
@@ -11,6 +11,7 @@ import {
   _RESERVE_BAR_SIZE,
 } from "./common.js";
 import { FullGestureState, useDrag } from "@use-gesture/react";
+import type { ScrollTriggerState } from "@m78/trigger/scroll.js";
 
 /* # # # # # # # # # # # # # # # # #
  * ## 成员
@@ -77,7 +78,7 @@ export function _useBar(ctx: _ScrollContext) {
    * 方法区
    * # # # # # # # # # # # # # # # # # */
 
-  function onScroll(meta: UseScrollMeta) {
+  function onScroll(meta: ScrollTriggerState) {
     if (!props.scrollbar) return;
 
     meta.isScrollX && xBar.refreshScrollPosition(meta.x / meta.xMax);
@@ -291,7 +292,7 @@ export function _useBarImpl(
   function scroll(ratio: number) {
     ratio = clamp(ratio, 0, 1);
     const meta = scroller.get();
-    scroller.set({
+    scroller.scroll({
       immediate: true,
       [isY ? "y" : "x"]: ratio * (isY ? meta.yMax : meta.xMax),
     });

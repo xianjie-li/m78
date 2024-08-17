@@ -1,10 +1,11 @@
 import { _ScrollContext, ScrollInstance } from "./types.js";
 import { _UseBarReturns } from "./use-bar.js";
-import { UseScrollMeta, useUpdateEffect } from "@m78/hooks";
+import { useUpdateEffect } from "@m78/hooks";
 import { useEffect, useImperativeHandle, useMemo } from "react";
 import { _UseMethodReturns } from "./use-method.js";
 import { _UsePullActionsReturns } from "./use-pull-actions.js";
 import { isMobileDevice } from "@m78/utils";
+import type { ScrollTriggerState } from "@m78/trigger/scroll.js";
 
 export function _useLifeCycle(
   ctx: _ScrollContext,
@@ -40,7 +41,7 @@ export function _useLifeCycle(
   }, [bound.width, bound.height]);
 
   /** 滚动总控制 */
-  function onScroll(meta: UseScrollMeta) {
+  function onScroll(meta: ScrollTriggerState) {
     props.onScroll?.(meta);
     bar.onScroll(meta);
     pull.onScroll(meta);

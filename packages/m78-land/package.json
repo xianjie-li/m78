@@ -23,7 +23,7 @@
     "@types/mockjs": "^1.0.7",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "clsx": "^1.2.1",
+    "clsx": "^2.1.1",
     "m78": "workspace:^",
     "mockjs": "^1.1.0",
     "raw-loader": "^4.0.2",
