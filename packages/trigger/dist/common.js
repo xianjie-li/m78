@@ -6,9 +6,9 @@ export var _defaultCursorConf = {
     dragActive: "grab",
     active: "pointer"
 };
-/** move事件的触发频率(ms) */ export var _triggerLimit = 50;
-/** 含first/last的事件的进出延迟 */ export var _triggerInDelay = 80 - _triggerLimit;
-/** 含first/last的事件的进出延迟 */ export var _triggerOutDelay = 140;
+/** move事件的触发频率(ms) */ export var _triggerLimit = 60;
+/** 含first/last的事件的进延迟 */ export var _triggerInDelay = 80 - _triggerLimit;
+/** 含first/last的事件的出延迟 */ export var _triggerOutDelay = 140;
 /** longpress延迟 */ export var _longPressDelay = 380;
 /** drag触发的最小拖动距离 */ export var _dragMinDistance = 3;
 /** 用于为move事件进行节流, 限制每秒触发的频率 */ export function _createLimitTrigger() {

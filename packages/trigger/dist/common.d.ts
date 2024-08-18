@@ -4,10 +4,10 @@ export declare const _defaultLevel = 0;
 export declare const _defaultOverrideStrategy = TriggerOverrideStrategy.parallel;
 export declare const _defaultCursorConf: Required<TriggerCursorMap>;
 /** move事件的触发频率(ms) */
-export declare const _triggerLimit = 50;
-/** 含first/last的事件的进出延迟 */
+export declare const _triggerLimit = 60;
+/** 含first/last的事件的进延迟 */
 export declare const _triggerInDelay: number;
-/** 含first/last的事件的进出延迟 */
+/** 含first/last的事件的出延迟 */
 export declare const _triggerOutDelay = 140;
 /** longpress延迟 */
 export declare const _longPressDelay = 380;

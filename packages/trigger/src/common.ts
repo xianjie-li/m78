@@ -17,12 +17,12 @@ export const _defaultCursorConf: Required<TriggerCursorMap> = {
 };
 
 /** move事件的触发频率(ms) */
-export const _triggerLimit = 50;
+export const _triggerLimit = 60;
 
-/** 含first/last的事件的进出延迟 */
+/** 含first/last的事件的进延迟 */
 export const _triggerInDelay = 80 - _triggerLimit;
 
-/** 含first/last的事件的进出延迟 */
+/** 含first/last的事件的出延迟 */
 export const _triggerOutDelay = 140;
 
 /** longpress延迟 */

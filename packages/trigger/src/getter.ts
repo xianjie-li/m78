@@ -20,7 +20,7 @@ export function _checkGetter(ctx: _TriggerContext) {
 
   const t = setInterval(() => {
     domBoundCacheMap.clear();
-  }, 200);
+  }, 500);
 
   ctx.trigger.getTargetByXY = (args): TriggerTargetData[] => {
     return ctx.getEventList(args).eventList;
@@ -28,7 +28,7 @@ export function _checkGetter(ctx: _TriggerContext) {
 
   /** 获取选项和选项数据列表 */
   ctx.getEventList = function getEventList(args) {
-    const { xy, type, filter, dom, looseXYCheck } = args;
+    const { xy, type, filter, dom, key, looseXYCheck } = args;
 
     const list: TriggerTargetData[] = [];
     const optList: TriggerOption[] = [];
@@ -55,14 +55,6 @@ export function _checkGetter(ctx: _TriggerContext) {
       const data = getDataByOption(option, eType);
 
       const optEnable = data.option.enable;
-
-      const a: boolean | Function = () => {};
-
-      if (isFunction(a)) {
-        console.log(a);
-      } else {
-        console.log(a);
-      }
 
       if (isBoolean(optEnable) && !optEnable) return;
       if (isFunction(optEnable) && (optEnable as any)(data) === false) return;
@@ -93,10 +85,18 @@ export function _checkGetter(ctx: _TriggerContext) {
       }
     };
 
-    for (let i = 0; i < ctx.optionList.length; i++) {
-      const item = ctx.optionList[i];
+    if (key) {
+      // 获取指定组
+      getGroupMap(key).forEach((item) => {
+        itemHandle(item);
+      });
+    } else {
+      // 获取全部
+      for (let i = 0; i < ctx.optionList.length; i++) {
+        const item = ctx.optionList[i];
 
-      itemHandle(item);
+        itemHandle(item);
+      }
     }
 
     if (!xy) {
@@ -237,6 +237,15 @@ export function _checkGetter(ctx: _TriggerContext) {
   function inBoundCheck(x: number, y: number, bound: BoundSize) {
     const { left, top, width, height } = bound;
     return x >= left && x <= left + width && y >= top && y <= top + height;
+  }
+
+  /** 获取指定key的事件配置组 */
+  function getGroupMap(key: string): Map<TriggerOption, TriggerOption> {
+    const map = ctx.optionMap.get(key);
+
+    if (map instanceof Map) return map;
+
+    return new Map();
   }
 
   return {

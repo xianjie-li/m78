@@ -10,6 +10,7 @@
     "./react/*.js": "./dist/react/*.js",
     "./react/*": "./dist/react/*.js"
   },
+  "types": "./dist",
   "scripts": {
     "test": "npx jest",
     "lint:prettier": "npx prettier ./src ./test --write --no-error-on-unmatched-pattern",

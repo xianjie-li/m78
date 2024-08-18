@@ -122,15 +122,16 @@ export interface TriggerInstance {
   running: boolean;
 
   /**
-   * 新增事件配置, 可传入一个唯一的key将配置分组, 并在后续通过相同的key使用off批量移除事件选项
+   * 新增单个或多个事件配置, 可传入一个唯一的key将配置分组, 并在后续通过相同的key可以通过批量移除事件或是获取指定分组的事件信息
    *
-   * - 事件对象的引用是事件本身的标识, 在进行移除事件等操作时, 以引用为准而不是对象值
+   * - 事件对象的引用是事件本身的标识, 在进行移除事件等操作时, 皆以应用为准
    * - 每个配置对象在移除前只能通过on添加一次, 重复添加会导致预期外的行为
    *  */
   on(opt: TriggerOption | TriggerOption[], key?: string): void;
 
   /** 根据key或事件选项移除事件配置, 若事件通过key添加, 则只能通过key移除 */
   off(opt: TriggerOption | TriggerOption[]): void;
+  /** 通过绑定事件时的key批量移除 */
   off(key: string): void;
 
   /** 清空事件配置 */
@@ -147,6 +148,8 @@ export interface TriggerInstance {
     dom?: HTMLElement;
     /** 指定事件类型, 非对应类型的事件被过滤 */
     type?: TriggerType | TriggerType[];
+    /** 分组key, 传入时, 只获取该分组的事件 */
+    key?: string;
     /** 可在确认事件列表前对其进行再次过滤, 使用此参数而不是直接获取返回结果过滤是因为, 其在 overrideStrategy / level 等配置处理前执行, 通过filter能够使这些配置能正常作用 */
     filter?: (data: TriggerTargetData) => boolean;
   }): TriggerTargetData[];
@@ -222,6 +225,8 @@ export interface _TriggerContext {
    * 存放所有注册的事件
    * - 字符串key表示事件组, 其value为事件组组成的map
    * - option key表示单个注册的事件, 其事件项为单个对象
+   *
+   * 以上行为由代码层面约束
    *  */
   optionMap: Map<
     TriggerOption | string,
@@ -256,6 +261,8 @@ export interface _TriggerContext {
     dom?: HTMLElement;
     /** 指定事件类型, 非对应类型的事件被过滤 */
     type?: TriggerType | TriggerType[];
+    /** 分组key, 传入时, 只获取该分组的事件 */
+    key?: string;
     /** 可在确认事件列表前对其进行再次过滤, 使用此参数而不是直接获取返回结果过滤是因为, 其在 overrideStrategy / level 等配置处理前执行, 通过filter能够使这些配置能正常作用 */
     filter?: (data: TriggerTargetData) => boolean;
     /** 在同时传入dom和xy时, 需要xy通过后才会对比dom, 可以设置此项为true来使xy检测可选 */

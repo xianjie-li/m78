@@ -1,3 +1,4 @@
+import { _ as _instanceof } from "@swc/helpers/_/_instanceof";
 import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
 import { ensureArray, isBoolean, isFunction } from "@m78/utils";
 import { _isBound } from "./methods.js";
@@ -8,12 +9,12 @@ import { TriggerOverrideStrategy } from "./types.js";
     var domBoundCacheMap = new Map();
     var t = setInterval(function() {
         domBoundCacheMap.clear();
-    }, 200);
+    }, 500);
     ctx.trigger.getTargetByXY = function(args) {
         return ctx.getEventList(args).eventList;
     };
     /** 获取选项和选项数据列表 */ ctx.getEventList = function getEventList(args) {
-        var xy = args.xy, type = args.type, filter = args.filter, dom = args.dom, looseXYCheck = args.looseXYCheck;
+        var xy = args.xy, type = args.type, filter = args.filter, dom = args.dom, key = args.key, looseXYCheck = args.looseXYCheck;
         var list = [];
         var optList = [];
         var eventList = [];
@@ -33,12 +34,6 @@ import { TriggerOverrideStrategy } from "./types.js";
             }
             var data = getDataByOption(option, eType);
             var optEnable = data.option.enable;
-            var a = function() {};
-            if (isFunction(a)) {
-                console.log(a);
-            } else {
-                console.log(a);
-            }
             if (isBoolean(optEnable) && !optEnable) return;
             if (isFunction(optEnable) && optEnable(data) === false) return;
             if (filter && filter(data) === false) return;
@@ -62,9 +57,17 @@ import { TriggerOverrideStrategy } from "./types.js";
                 eventList.push(data);
             }
         };
-        for(var i = 0; i < ctx.optionList.length; i++){
-            var item = ctx.optionList[i];
-            itemHandle(item);
+        if (key) {
+            // 获取指定组
+            getGroupMap(key).forEach(function(item) {
+                itemHandle(item);
+            });
+        } else {
+            // 获取全部
+            for(var i = 0; i < ctx.optionList.length; i++){
+                var item = ctx.optionList[i];
+                itemHandle(item);
+            }
         }
         if (!xy) {
             eventList = list.slice();
@@ -173,6 +176,11 @@ import { TriggerOverrideStrategy } from "./types.js";
     /** 检测xy是否在指定bound内 */ function inBoundCheck(x, y, bound) {
         var left = bound.left, top = bound.top, width = bound.width, height = bound.height;
         return x >= left && x <= left + width && y >= top && y <= top + height;
+    }
+    /** 获取指定key的事件配置组 */ function getGroupMap(key) {
+        var map = ctx.optionMap.get(key);
+        if (_instanceof(map, Map)) return map;
+        return new Map();
     }
     return {
         clearCache: clearCache
