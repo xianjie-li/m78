@@ -10,10 +10,11 @@ import clsx from "clsx";
 import { TABLE_NS, Translation } from "../../../i18n/index.js";
 import { IconRefresh } from "@m78/icons/refresh.js";
 import { IconFind } from "@m78/icons/find.js";
-import { Trigger, TriggerEvent, TriggerType } from "../../../trigger/index.js";
+import { TriggerEvent, TriggerType } from "@m78/trigger";
 import { _injector } from "../../table.js";
 import { _FilterBtnCommon } from "./filter-render.js";
 import { _useFilterFormAct } from "./use-filter-form.act.js";
+import { Trigger } from "@m78/trigger/react/trigger.js";
 
 /** 工具栏查询按钮 */
 export function _ToolBarQueryBtn() {
@@ -102,7 +103,9 @@ export const _FilterBtn = React.memo(
 export function _ToolbarCommonFilterBtn() {
   const props = _injector.useProps();
 
+  // 用于交互提醒
   const bubble1 = useRef<OverlayInstance>(null!);
+  // 用于筛选气泡
   const bubble2 = useRef<OverlayInstance>(null!);
 
   // bubble触发器

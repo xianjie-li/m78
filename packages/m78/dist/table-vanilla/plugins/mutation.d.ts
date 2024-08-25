@@ -5,7 +5,7 @@ import { TablePersistenceConfig } from "../types/config.js";
 import { TableKey } from "../types/base-type.js";
 import { TableCell, TableColumn, TableRow } from "../types/items.js";
 import { _TableSortColumnPlugin } from "./sort-column.js";
-import { _TableFormPlugin } from "./form.js";
+import { _TableFormPlugin } from "./form/form.js";
 /**
  * config/data变更相关的操作, 变异操作尽量集中在此处并需要新增和触发 TableMutationDataType 事件/处理操作历史等
  *
@@ -17,7 +17,8 @@ export declare class _TableMutationPlugin extends TablePlugin {
     /** 每一次配置变更将变更的key记录, 通过记录来判断是否有变更项 */
     private changedConfigKeys;
     sortColumn: _TableSortColumnPlugin;
-    form: _TableFormPlugin;
+    form: InstanceType<typeof _TableFormPlugin>;
+    clonedFlag: Map<TableKey, boolean>;
     private changedRows;
     init(): void;
     beforeInit(): void;
@@ -35,8 +36,9 @@ export declare class _TableMutationPlugin extends TablePlugin {
     moveRow: TableMutation["moveRow"];
     getValue: TableMutation["getValue"];
     setValue: TableMutation["setValue"];
-    /** 克隆并重新设置row的data, 防止变更原数据, 主要用于延迟clone, 可以在数据量较大时提升初始化速度  */
-    private cloneAndSetRowData;
+    setRowValue: TableMutation["setRowValue"];
+    /** 克隆并重新设置row的data, 防止变更原数据, 主要用于写时clone, 可以在数据量较大时提升初始化速度, 若行数据已经过克隆则忽略  */
+    private ensureCloneAndSetRowData;
     /** 处理setValue/getValue的不同参数, 并返回cell和value */
     private valueActionGetter;
     private moveColumn;
@@ -59,9 +61,11 @@ export declare enum TableMutationType {
     /** 记录变更, 通常表示新增/删除/排序 */
     data = "data",
     /** 单元格值变更 */
-    value = "value"
+    value = "value",
+    /** 整行值发生变更 */
+    rowValue = "rowValue"
 }
-/** TableMutationType.data变更类型 */
+/** TableMutationType.data变更的相关类型 */
 export declare enum TableMutationDataType {
     /** 新增行 */
     add = "add",
@@ -74,7 +78,7 @@ export declare enum TableMutationDataType {
     /** 恢复软删除 */
     restoreSoftRemove = "restoreSoftRemove"
 }
-export type TableMutationEvent = TableMutationConfigEvent | TableMutationDataEvent | TableMutationValueEvent;
+export type TableMutationEvent = TableMutationConfigEvent | TableMutationDataEvent | TableMutationValueEvent | TableMutationRowValueEvent;
 /** 持久化配置变更事件 */
 export interface TableMutationConfigEvent {
     /** 事件类型 */
@@ -125,6 +129,17 @@ export interface TableMutationValueEvent {
     /** 变更后的值 */
     value: any;
 }
+/** 行data变更事件 */
+export interface TableMutationRowValueEvent {
+    /** 事件类型 */
+    type: TableMutationType.rowValue;
+    /** 变更的行 */
+    row: TableRow;
+    /** 变更前的值 */
+    oldValue: any;
+    /** 变更后的值 */
+    value: any;
+}
 export interface TableMutation {
     /** 获取发生了变更的持久化配置 */
     getChangedConfigKeys(): (keyof TablePersistenceConfig)[];
@@ -162,10 +177,12 @@ export interface TableMutation {
     moveColumn(from: TableKey | TableKey[], to: TableKey, insertAfter?: boolean): void;
     /** 设置单元格值 */
     setValue(cell: TableCell, value: any): void;
-    /** 根据row&column设置单元格值 */
+    /** 根据 row & column 设置单元格值 */
     setValue(row: TableRow, column: TableColumn, value: any): void;
-    /** 根据row&column key设置单元格值 */
+    /** 根据row.key & column.key 设置单元格值 */
     setValue(rowKey: TableKey, columnKey: TableKey, value: any): void;
+    /** 设置指定行的所有值 */
+    setRowValue(rowKey: TableKey | TableRow, data: AnyObject): void;
     /** 获取单元格值 */
     getValue(cell: TableCell): any;
     /** 根据row&column获取单元格值 */

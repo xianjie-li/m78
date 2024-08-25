@@ -9,13 +9,13 @@ import { _TableMutationPlugin } from "./mutation.js";
 import { TableColumnFixed, TableRowFixed } from "../types/base-type.js";
 import { removeNode } from "../../common/index.js";
 import {
-  createTrigger,
-  TriggerInstance,
-  TriggerConfig,
   TriggerEvent,
-  TriggerTargetMeta,
   TriggerType,
-} from "../../trigger/index.js";
+  type TriggerOption,
+  trigger,
+} from "@m78/trigger";
+import { createTempID, type BoundSize } from "@m78/utils";
+import { _TableDragSortPlugin } from "./drag-sort.js";
 
 /** 列/行重置大小 */
 export class _TableRowColumnResize extends TablePlugin {
@@ -40,8 +40,11 @@ export class _TableRowColumnResize extends TablePlugin {
 
   static HANDLE_SIZE = 6;
 
-  /** 虚拟节点触发事件 */
-  trigger: TriggerInstance;
+  /** 额外对外暴露一个用于集中控制trigger开关的属性 */
+  triggerEnable = true;
+
+  // 用于快速批量向target添加或移除事件的key
+  targetUniqueKey = createTempID();
 
   rafCaller: RafFunction;
   rafClearFn: () => void;
@@ -54,7 +57,11 @@ export class _TableRowColumnResize extends TablePlugin {
   dragOffsetX = 0;
   dragOffsetY = 0;
 
+  dragSort: _TableDragSortPlugin;
+
   initialized() {
+    this.dragSort = this.getPlugin(_TableDragSortPlugin);
+
     // 创建line节点
     this.xLine = document.createElement("div");
     this.yLine = document.createElement("div");
@@ -74,48 +81,80 @@ export class _TableRowColumnResize extends TablePlugin {
     // 创建raf用于优化动画
     this.rafCaller = rafCaller();
 
+    // TODO: tag2
     // 为virtualBound添加特定节点的过滤
-    const vbPreCheck: TriggerConfig["preCheck"] = (type) => {
-      if (type !== TriggerType.active && type !== TriggerType.drag)
-        return false;
-      // return !_triggerFilterList(
-      //   e.target as HTMLElement,
-      //   _tableTriggerFilters,
-      //   this.config.el
-      // );
-      return true;
-    };
+    // const vbPreCheck: TriggerConfig["preCheck"] = (type) => {
+    //   if (type !== TriggerType.active && type !== TriggerType.drag)
+    //     return false;
+    //   // return !_triggerFilterList(
+    //   //   e.target as HTMLElement,
+    //   //   _tableTriggerFilters,
+    //   //   this.config.el
+    //   // );
+    //   return true;
+    // };
 
-    this.trigger = createTrigger({
-      container: this.config.el,
-      type: [TriggerType.drag, TriggerType.active, TriggerType.move],
-      preCheck: vbPreCheck,
-    });
-
-    this.trigger.event.on(this.triggerDispatch);
+    // TODO: tag1
+    // this.trigger = createTrigger({
+    //   container: this.config.el,
+    //   type: [TriggerType.drag, TriggerType.active, TriggerType.move],
+    //   preCheck: vbPreCheck,
+    // });
+    // this.trigger.event.on(this.triggerDispatch);
 
     this.context.viewEl.addEventListener("scroll", this.scrollHandle);
 
     // 选取过程中禁用
     this.table.event.selectStart.on(() => {
-      this.trigger.enable = false;
+      this.triggerEnable = false;
     });
 
     this.table.event.select.on(() => {
-      this.trigger.enable = true;
+      this.triggerEnable = true;
     });
   }
 
+  // 获取事件选项
+  private getEventOption(
+    target: BoundSize,
+    level: number,
+    cursor: string,
+    data: any
+  ): TriggerOption {
+    return {
+      enable: () => {
+        if (!this.table.isActive() || !this.triggerEnable) return false;
+        // if (!data.typeMap.get(TriggerType.active) && !data.typeMap.get(TriggerType.drag)) return false;
+        // return !_triggerFilterList(
+        //   e.target as HTMLElement,
+        //   _tableTriggerFilters,
+        //   this.config.el
+        // );
+        return true;
+      },
+      type: [TriggerType.drag, TriggerType.active],
+      handler: this.triggerDispatch,
+      target,
+      level,
+      cursor: {
+        active: cursor,
+        dragActive: cursor,
+      },
+      data,
+    };
+  }
+
   rendered() {
-    this.trigger.clear();
     this.renderedDebounce();
   }
 
   beforeDestroy() {
     if (this.rafClearFn) this.rafClearFn();
 
-    this.trigger.destroy();
-    this.trigger = null!;
+    // TODO: tag3
+    // this.trigger.destroy();
+    // this.trigger = null!;
+    trigger.off(this.targetUniqueKey);
 
     this.context.viewEl.removeEventListener("scroll", this.scrollHandle);
 
@@ -130,15 +169,20 @@ export class _TableRowColumnResize extends TablePlugin {
     () => {
       const last = this.context.lastViewportItems;
 
+      trigger.off(this.targetUniqueKey);
+
       if (!last) return;
 
       const wrapBound = this.config.el.getBoundingClientRect();
 
-      const cBounds = this.createBound(wrapBound, last, false);
-      const rBounds = this.createBound(wrapBound, last, true);
+      const columnBounds = this.createBound(wrapBound, last, false);
+      const rowBounds = this.createBound(wrapBound, last, true);
 
-      this.trigger.clear();
-      this.trigger.add(cBounds.concat(rBounds));
+      // TODO: tag6
+      // this.trigger.clear();
+      // this.trigger.add(columnBounds.concat(rowBounds));
+
+      trigger.on(columnBounds.concat(rowBounds), this.targetUniqueKey);
     },
     100,
     {
@@ -166,7 +210,7 @@ export class _TableRowColumnResize extends TablePlugin {
     // 滚动到底
     const touchEnd = Math.ceil(pos) >= maxPos;
 
-    const bounds: TriggerTargetMeta[] = [];
+    const bounds: TriggerOption[] = [];
 
     // 虚拟节点大小
     const bSize = _TableRowColumnResize.HANDLE_SIZE;
@@ -203,16 +247,16 @@ export class _TableRowColumnResize extends TablePlugin {
       const left = isRow ? wrapBound.left : wrapBound.left + _pos - bSize / 2;
       const top = isRow ? wrapBound.top + _pos - bSize / 2 : wrapBound.top;
 
-      const b: TriggerTargetMeta = {
-        target: {
+      const opt = this.getEventOption(
+        {
           left,
           top,
           height: isRow ? bSize : ctx.yHeaderHeight,
           width: isRow ? ctx.xHeaderWidth : bSize,
         },
-        zIndex: i.isFixed ? 1 : 0,
-        cursor: isRow ? "row-resize" : "col-resize",
-        data: {
+        i.isFixed ? 1 : 0,
+        isRow ? "row-resize" : "col-resize",
+        {
           type: isRow
             ? _TableRowColumnResize.VIRTUAL_ROW_HANDLE_KEY
             : _TableRowColumnResize.VIRTUAL_COLUMN_HANDLE_KEY,
@@ -223,16 +267,41 @@ export class _TableRowColumnResize extends TablePlugin {
           endPos: isEndFixed ? _pos + size : _pos,
           // 计算方向相反
           reverse: isEndFixed,
-        },
-      };
+        }
+      );
 
-      bounds.push(b);
+      // TODO: tag4
+      // const b: TriggerTargetMeta = {
+      //   target: {
+      //     left,
+      //     top,
+      //     height: isRow ? bSize : ctx.yHeaderHeight,
+      //     width: isRow ? ctx.xHeaderWidth : bSize,
+      //   },
+      //   zIndex: i.isFixed ? 1 : 0,
+      //   cursor: isRow ? "row-resize" : "col-resize",
+      //   data: {
+      //     type: isRow
+      //       ? _TableRowColumnResize.VIRTUAL_ROW_HANDLE_KEY
+      //       : _TableRowColumnResize.VIRTUAL_COLUMN_HANDLE_KEY,
+
+      //     [isRow ? "row" : "column"]: i,
+      //     [isRow ? "y" : "x"]: _pos - 2,
+      //     startPos: isEndFixed ? _pos : _pos - size,
+      //     endPos: isEndFixed ? _pos + size : _pos,
+      //     // 计算方向相反
+      //     reverse: isEndFixed,
+      //   },
+      // };
+
+      bounds.push(opt);
     });
 
     return bounds;
   }
 
   triggerDispatch = (e: TriggerEvent) => {
+    // console.log(e, e.type);
     if (e.type === TriggerType.active) {
       this.hoverHandle(e);
     }
@@ -242,27 +311,21 @@ export class _TableRowColumnResize extends TablePlugin {
     }
   };
 
-  hoverHandle = ({ target, active }: TriggerEvent) => {
-    const meta = target as TriggerTargetMeta;
-    const data = meta.data;
-
+  hoverHandle = (e: TriggerEvent) => {
+    const { active, data } = e;
     const isRow = data.type === _TableRowColumnResize.VIRTUAL_ROW_HANDLE_KEY;
 
     this.activating = active;
 
     if (active) {
-      isRow
-        ? this.updateYTipLine(data.y, meta)
-        : this.updateXTipLine(data.x, meta);
+      isRow ? this.updateYTipLine(data.y, e) : this.updateXTipLine(data.x, e);
     } else if (!this.dragging) {
       isRow ? this.hideYTipLine() : this.hideXTipLine();
     }
   };
 
-  dragHandle = ({ target, first, last, deltaX, deltaY }: TriggerEvent) => {
-    const meta = target as TriggerTargetMeta;
-    const data = meta.data;
-
+  dragHandle = (e: TriggerEvent) => {
+    const { first, last, deltaX, deltaY, data } = e;
     const isRow = data.type === _TableRowColumnResize.VIRTUAL_ROW_HANDLE_KEY;
 
     if (first) {
@@ -289,10 +352,10 @@ export class _TableRowColumnResize extends TablePlugin {
 
       if (isRow) {
         this.dragOffsetY = curOffset;
-        this.updateYTipLine(data.y + this.dragOffsetY, meta);
+        this.updateYTipLine(data.y + this.dragOffsetY, e);
       } else {
         this.dragOffsetX = curOffset;
-        this.updateXTipLine(data.x + this.dragOffsetX, meta);
+        this.updateXTipLine(data.x + this.dragOffsetX, e);
       }
     }
 
@@ -341,7 +404,7 @@ export class _TableRowColumnResize extends TablePlugin {
   }
 
   /** 显示并更新xLine位置 */
-  updateXTipLine(x: number, bound: TriggerTargetMeta) {
+  updateXTipLine(x: number, event: TriggerEvent) {
     this.rafClearFn = this.rafCaller(() => {
       this.sizeBlock.style.visibility = "visible";
       this.xLine.style.visibility = "visible";
@@ -349,12 +412,12 @@ export class _TableRowColumnResize extends TablePlugin {
       let left: number;
       let width: number;
 
-      if (bound.data.reverse) {
+      if (event.data.reverse) {
         left = x;
-        width = bound.data.endPos - x;
+        width = event.data.endPos - x;
       } else {
-        left = bound.data.startPos;
-        width = x - bound.data.startPos;
+        left = event.data.startPos;
+        width = x - event.data.startPos;
       }
 
       this.sizeBlock.style.width = `${width}px`;
@@ -366,7 +429,7 @@ export class _TableRowColumnResize extends TablePlugin {
   }
 
   /** 显示并更新yLine位置 */
-  updateYTipLine(y: number, bound: TriggerTargetMeta) {
+  updateYTipLine(y: number, event: TriggerEvent) {
     this.rafClearFn = this.rafCaller(() => {
       this.sizeBlock.style.visibility = "visible";
       this.yLine.style.visibility = "visible";
@@ -374,12 +437,12 @@ export class _TableRowColumnResize extends TablePlugin {
       let top: number;
       let height: number;
 
-      if (bound.data.reverse) {
+      if (event.data.reverse) {
         top = y;
-        height = bound.data.endPos - y;
+        height = event.data.endPos - y;
       } else {
-        top = bound.data.startPos;
-        height = y - bound.data.startPos;
+        top = event.data.startPos;
+        height = y - event.data.startPos;
       }
       this.sizeBlock.style.transform = `translate(0,${top}px)`;
       this.sizeBlock.style.height = `${height}px`;

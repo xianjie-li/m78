@@ -64,7 +64,7 @@ export interface TriggerTargetData {
     /** 用来便捷的检测指定类型事件是否启用 */
     typeMap: Map<TriggerType, boolean>;
     /** 与默认cursor配置合并后的配置对象 */
-    cursor: Required<TriggerCursorMap>;
+    cursor: TriggerCursorMap;
     /** 原始事件对象, 引用与原始对象一致 */
     option: TriggerOption;
 }
@@ -120,7 +120,7 @@ export interface TriggerInstance {
     /** 事件配置总数 */
     size(): number;
     /** 获取可用事件目标的数据 */
-    getTargetByXY(args: {
+    getTargetData(args: {
         /** 指定要获取事件的点 */
         xy?: TupleNumber;
         /** 指定触发事件的dom节点, 若同时传入xy, 会先通过xy过滤, 再通过dom检测节点, 能够提升一定的性能 */
@@ -150,6 +150,8 @@ export interface TriggerEvent {
     data: any;
     /** 根据事件信息产生的额外信息 */
     eventMeta: TriggerTargetData;
+    /** 触发时间, 注: 一些事件存在开始或结束延迟, 发生延迟时, timeStamp 为不计入延迟的时间 */
+    timeStamp: number;
     /** 触发位置相对屏幕的x坐标 */
     x: number;
     /** 触发位置相对屏幕的y坐标 */

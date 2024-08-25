@@ -37,9 +37,10 @@ import {
 import { _getOptionAllValues } from "./common.js";
 import { useKeyboardHandle } from "./use-keyboard-handle.js";
 import clsx from "clsx";
-import { Trigger, TriggerEvent, TriggerType } from "../trigger/index.js";
+import { TriggerEvent, TriggerType } from "@m78/trigger";
 import { TransitionType } from "../transition/index.js";
 import debounce from "lodash/debounce.js";
+import { Trigger } from "@m78/trigger/react/trigger.js";
 
 const defaultProps: Partial<MenuProps> = {
   direction: OverlayDirection.bottomStart,
@@ -58,7 +59,12 @@ const commonProps = {
 const MAIN_MENU = "__MAIN_MENU__";
 const MAIN_TRIGGER = "__MAIN_TRIGGER__";
 
-export const _Menu = (props: MenuProps) => {
+export const _Menu = (p: MenuProps) => {
+  const props = {
+    ...defaultProps,
+    ...p,
+  };
+
   const self = useSelf<_MenuContext["self"]>({
     menuTargets: {},
     targets: [],
@@ -327,4 +333,3 @@ export const _Menu = (props: MenuProps) => {
 };
 
 _Menu.displayName = "Menu";
-_Menu.defaultProps = defaultProps;

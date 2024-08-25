@@ -18,6 +18,7 @@ export const _defaultProps = {
   pullDownIndicatorRotate: true,
   pullUpTriggerRatio: 0.65,
 };
+``;
 
 /** 滚动条thumb最大尺寸(轨道尺寸 / _BAR_MAX_SIZE_RATIO) */
 export const _BAR_MAX_SIZE_RATIO = 2.5;

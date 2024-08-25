@@ -3,12 +3,12 @@ import { _useUpdatePropsChange } from "./use-update-props-change.js";
 import { _useDetector } from "./field-detector.js";
 export function _useFieldLifeCircle(ctx, fieldCtx, methods) {
     var form = ctx.form;
-    var name = fieldCtx.name, setState = fieldCtx.setState, wrapRef = fieldCtx.wrapRef;
+    var name = fieldCtx.name, setState = fieldCtx.setState, wrapRef = fieldCtx.wrapRef, isRoot = fieldCtx.isRoot;
     var getProps = methods.getProps;
     // 监听变更, 更新组件
     form.events.update.useEvent(form.notifyFilter(name, function() {
         setState({
-            schema: form.getSchema(name),
+            schema: isRoot ? form.getSchemas().schemas : form.getSchema(name),
             renderKey: createTempID()
         });
     }, getProps("deps")));

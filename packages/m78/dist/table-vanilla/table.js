@@ -1,9 +1,10 @@
 import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
 import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
+import { _ as _type_of } from "@swc/helpers/_/_type_of";
 import { _TableInitPlugin } from "./plugins/init.js";
 import { _TableRenderPlugin } from "./plugins/render.js";
-import { createEvent, getNamePathValue, setNamePathValue } from "@m78/utils";
-import { _privateInstanceKey } from "./common.js";
+import { createEvent, getNamePathValue, setNamePathValue, CacheTick } from "@m78/utils";
+import { _privateInstanceCallbackKey, _privateInstanceKey } from "./common.js";
 import { _TableLifePlugin } from "./plugins/life.js";
 import { _TableGetterPlugin } from "./plugins/getter.js";
 import { _TableEventPlugin } from "./plugins/event.js";
@@ -26,11 +27,10 @@ import { _TableKeyboardInteractionPlugin } from "./plugins/keyboard-interaction.
 import { _TableInteractivePlugin } from "./plugins/interactive.js";
 import { _TableIsPlugin } from "./plugins/is.js";
 import { _TableSetterPlugin } from "./plugins/setter.js";
-import { _TableFormPlugin } from "./plugins/form.js";
+import { _TableFormPlugin } from "./plugins/form/form.js";
 import { _TableFeedbackPlugin } from "./plugins/feedback.js";
 import { _TableSoftRemovePlugin } from "./plugins/soft-remove.js";
 import { _TableMetaDataPlugin } from "./plugins/meta-data.js";
-import { CacheTick } from "./plugins/frame-cache.js";
 /**
  * 核心功能, 在非框架环境下实现, 以便在日后进行移植
  * */ export function _createTable(config) {
@@ -49,7 +49,11 @@ import { CacheTick } from "./plugins/frame-cache.js";
         stripe: true,
         border: true,
         cellSelectable: true,
-        rowSelectable: true
+        rowSelectable: true,
+        rowMark: true,
+        cellChangedMark: true,
+        interactiveMark: true,
+        history: true
     };
     // 根据dom上挂载的私有实例信息判断是否需要创建实例, 防止热重载等场景下反复创建
     var ins = getNamePathValue(config.el, _privateInstanceKey);
@@ -85,7 +89,11 @@ import { CacheTick } from "./plugins/frame-cache.js";
         interactiveChange: eventCreator(),
         feedback: eventCreator(),
         dragMoveChange: eventCreator(),
-        configChange: eventCreator()
+        configChange: eventCreator(),
+        cellRendering: eventCreator(),
+        rowRendering: eventCreator(),
+        columnRendering: eventCreator(),
+        beforeRender: eventCreator()
     };
     // 不完整的实例
     var instance = {
@@ -106,8 +114,8 @@ import { CacheTick } from "./plugins/frame-cache.js";
     var plugins = [
         _TableMetaDataPlugin,
         _TableInitPlugin,
-        _TablePluginEmpty,
         _TableLifePlugin,
+        _TablePluginEmpty,
         _TableGetterPlugin,
         _TableSetterPlugin,
         _TableIsPlugin,
@@ -139,7 +147,7 @@ import { CacheTick } from "./plugins/frame-cache.js";
     // 用户插件
     var customPlugins = conf.plugins.map(function(Plugin) {
         // 传入的是插件实例时, 直接使用, 用于上层react组件扩展插件系统
-        if (typeof Plugin === "object") {
+        if ((typeof Plugin === "undefined" ? "undefined" : _type_of(Plugin)) === "object") {
             Plugin.table = pluginConfig.table;
             Plugin.plugins = pluginConfig.plugins;
             Plugin.context = pluginConfig.context;
@@ -164,6 +172,9 @@ import { CacheTick } from "./plugins/frame-cache.js";
         (_plugin_initialized = plugin.initialized) === null || _plugin_initialized === void 0 ? void 0 : _plugin_initialized.call(plugin);
     });
     event.initialized.emit();
+    // 某些场景需要instance创建并初始化完成, 但render还没开始的时候进行, 目前通过私有配置的方式提供
+    var instanceCB = getNamePathValue(conf, _privateInstanceCallbackKey);
+    if (instanceCB) instanceCB(instance);
     instance.render();
     /* # # # # # # # mount # # # # # # # */ pluginConfig.plugins.forEach(function(plugin) {
         var _plugin_mounted;

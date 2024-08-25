@@ -25,13 +25,5 @@ import { _lifeImpl } from "./life.js";
     _actionImpl(ctx);
     _lifeImpl(ctx);
     ctx.event.bind();
-    // 光标处理
-    // ctx.trigger.event.on((e) => {
-    //   if (e.type === TriggerType.active) {
-    //     if ("target" in e.target && e.target.cursor) {
-    //       ctx.trigger.cursor = e.active ? e.target.cursor : "";
-    //     }
-    //   }
-    // });
     return ctx.trigger;
 }

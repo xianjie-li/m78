@@ -12,7 +12,7 @@ import { Row } from "../layout/index.js";
 import { isBoolean, isFunction, omit } from "@m78/utils";
 import { BubbleType, omitBubbleOverlayProps } from "./types.js";
 import { COMMON_NS, Translation } from "../i18n/index.js";
-import { TriggerType } from "../trigger/index.js";
+import { TriggerType } from "@m78/trigger";
 var defaultProps = {
     type: BubbleType.tooltip,
     childrenAsTarget: true,
@@ -23,7 +23,7 @@ var defaultProps = {
     arrow: true,
     autoFocus: false
 };
-var _Bubble = function(props) {
+var _Bubble = function(p) {
     var render = function render(meta) {
         var StatusIcon = statusIconMap[status] || icon;
         var cont = isFunction(props.content) ? props.content(meta) : props.content;
@@ -110,6 +110,7 @@ var _Bubble = function(props) {
             ]
         });
     };
+    var props = _object_spread({}, defaultProps, p);
     var title = props.title, type = props.type, onConfirm = props.onConfirm, cancelText = props.cancelText, confirmText = props.confirmText, icon = props.icon, status = props.status, other = _object_without_properties(props, [
         "title",
         "type",
@@ -162,6 +163,5 @@ var _Bubble = function(props) {
         unmountOnExit: unmount
     }));
 };
-_Bubble.defaultProps = defaultProps;
 _Bubble.displayName = "Bubble";
 export { _Bubble };

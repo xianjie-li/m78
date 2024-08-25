@@ -9,8 +9,8 @@ import { TablePlugin } from "../plugin.js";
 import { DragGesture } from "@use-gesture/vanilla";
 import { _TableRowColumnResize } from "./row-column-resize.js";
 import { removeNode } from "../../common/index.js";
-import { getEventOffset, isNumber, rafCaller, throwError } from "@m78/utils";
-import { createAutoScroll } from "@m78/smooth-scroll";
+import { getEventOffset, isNumber, throwError } from "@m78/utils";
+import { createAutoScroll, rafCaller } from "@m78/animate-tools";
 import { TableColumnFixed, TableRowFixed } from "../types/base-type.js";
 import { _TableSelectPlugin } from "./select.js";
 import { _TableDisablePlugin } from "./disable.js";
@@ -274,7 +274,7 @@ import { _TableDisablePlugin } from "./disable.js";
                 };
                 if (e.last || !_lastData) {
                     this.dragging = false;
-                    this.rcResize.trigger.enable = true;
+                    this.rcResize.triggerEnable = true;
                     this.autoScroll.trigger(e.xy, e.last, {
                         left: isRow,
                         right: isRow,
@@ -292,7 +292,7 @@ import { _TableDisablePlugin } from "./disable.js";
                     return;
                 }
                 // 禁用_TableRowColumnResize,  处理快速拖动显示hover
-                this.rcResize.trigger.enable = false;
+                this.rcResize.triggerEnable = false;
                 this.dragging = true;
                 var lastData = _to_consumable_array(_lastData);
                 // line显示

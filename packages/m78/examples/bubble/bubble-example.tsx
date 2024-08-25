@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "../../src/index.js";
 import { Bubble, BubbleType } from "../../src/bubble/index.js";
-import { IconLike } from "@m78/icons/like";
+import { IconLike } from "@m78/icons/like.js";
 
 const IconAlbum = IconLike;
 

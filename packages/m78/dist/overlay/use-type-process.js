@@ -1,6 +1,6 @@
 import { usePrev, useUpdateEffect } from "@m78/hooks";
 import { ensureArray } from "@m78/utils";
-import { TriggerType } from "../trigger/index.js";
+import { TriggerType } from "@m78/trigger";
 /**
  * 对triggerType从其他类型变更为active的情况进行特殊处理
  *

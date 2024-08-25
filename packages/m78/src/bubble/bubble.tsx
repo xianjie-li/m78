@@ -12,7 +12,7 @@ import { Row } from "../layout/index.js";
 import { isBoolean, isFunction, omit } from "@m78/utils";
 import { BubbleProps, BubbleType, omitBubbleOverlayProps } from "./types.js";
 import { COMMON_NS, Translation } from "../i18n/index.js";
-import { TriggerType } from "../trigger/index.js";
+import { TriggerType } from "@m78/trigger";
 
 const defaultProps: Partial<BubbleProps> = {
   type: BubbleType.tooltip,
@@ -25,7 +25,12 @@ const defaultProps: Partial<BubbleProps> = {
   autoFocus: false,
 };
 
-const _Bubble = (props: BubbleProps) => {
+const _Bubble = (p: BubbleProps) => {
+  const props = {
+    ...defaultProps,
+    ...p,
+  };
+
   const {
     title,
     type,
@@ -153,7 +158,6 @@ const _Bubble = (props: BubbleProps) => {
   );
 };
 
-_Bubble.defaultProps = defaultProps;
 _Bubble.displayName = "Bubble";
 
 export { _Bubble };

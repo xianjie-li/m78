@@ -52,8 +52,11 @@ export function _dragImpl(ctx: _TriggerContext) {
   let xDistance = 0;
   let yDistance = 0;
 
-  // 鼠标左键点击时进行标记, 用于在move中触发drag, 用于过滤简单点击和drag
+  // 鼠标左键点击时进行标记, 用于在move判断何时触发drag, 并实现区分点击和drag
   let dragTriggerFlag = false;
+
+  /** 由于存在tap和drag区分, 在实际触发首次drag时, 鼠标可能已经移出触发区域, 这会导致获取当前目标点的target失败, 所以需要存储实际的起始事件和坐标并在首次drag中使用 */
+  let startEvent: MouseEvent | TouchEvent | null = null;
 
   // 从OptionItem中获取事件的私有状态
   function getEventData(option: TriggerOption): PrivateProps {
@@ -141,6 +144,7 @@ export function _dragImpl(ctx: _TriggerContext) {
 
   function end(e: TouchEvent | MouseEvent) {
     dragTriggerFlag = false;
+    startEvent = null;
 
     lastXPoint = 0;
     lastYPoint = 0;
@@ -319,6 +323,7 @@ export function _dragImpl(ctx: _TriggerContext) {
   // 辅助drag记录事件开始点
   function startMark(e: MouseEvent | TouchEvent) {
     dragTriggerFlag = true;
+    startEvent = e;
 
     const [x, y] = getEventXY(e);
 
@@ -340,7 +345,7 @@ export function _dragImpl(ctx: _TriggerContext) {
       yDistance += yDiff;
 
       if (xDistance > _dragMinDistance || yDistance > _dragMinDistance) {
-        start(e);
+        start(startEvent || e);
         dragTriggerFlag = false;
       }
     } else {
@@ -349,7 +354,6 @@ export function _dragImpl(ctx: _TriggerContext) {
   }
 
   return {
-    start,
     move,
     end,
     clear,

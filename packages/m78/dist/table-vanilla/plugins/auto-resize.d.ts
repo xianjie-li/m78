@@ -1,4 +1,3 @@
-import ResizeObserver from "resize-observer-polyfill";
 import { TablePlugin } from "../plugin.js";
 export declare class _TableAutoResizePlugin extends TablePlugin {
     ob: ResizeObserver;

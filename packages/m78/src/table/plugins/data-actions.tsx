@@ -7,17 +7,15 @@ import React, { useRef, useState } from "react";
 import { useFn, useSetState } from "@m78/hooks";
 import { _injector } from "../table.js";
 import { _useStateAct } from "../injector/state.act.js";
-import {
-  TableDataStatus,
-  TableMutationType,
-} from "../../table-vanilla/index.js";
+import { TableDataStatus } from "../../table-vanilla/index.js";
 import { IconAdd } from "@m78/icons/add.js";
 import { IconDeleteOne } from "@m78/icons/delete-one.js";
-import { Trigger, TriggerEvent, TriggerType } from "../../trigger/index.js";
+import { TriggerEvent, TriggerType } from "@m78/trigger";
 import { OverlayInstance } from "../../overlay/index.js";
 import { _useMethodsAct } from "../injector/methods.act.js";
 import { RCTablePlugin } from "../plugin.js";
 import { Divider } from "../../layout/index.js";
+import { Trigger } from "@m78/trigger/react/trigger.js";
 
 export class _DataActionPlugin extends RCTablePlugin {
   toolbarTrailingCustomer(nodes: React.ReactNode[]) {

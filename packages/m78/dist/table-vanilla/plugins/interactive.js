@@ -9,7 +9,7 @@ import { _ as _create_super } from "@swc/helpers/_/_create_super";
 import { TablePlugin } from "../plugin.js";
 import { createKeyboardHelpersBatch, isFunction, isPromiseLike, isTruthyOrZero, setCacheValue, setNamePathValue } from "@m78/utils";
 import { removeNode } from "../../common/index.js";
-import { _TableFormPlugin } from "./form.js";
+import { _TableFormPlugin } from "./form/form.js";
 import { _TableDisablePlugin } from "./disable.js";
 /**
  * 提供单元格双击交互功能, 用于实现交互期间展示表单控件或其他交互组件, 是在form的上做的一层抽象, 并非一定用于form
@@ -30,6 +30,8 @@ import { _TableDisablePlugin } from "./disable.js";
         _define_property(_assert_this_initialized(_this), "doubleClickTimer", null);
         // 最后触发交互关闭的时间, 用于防止关闭后马上出发Enter等操作
         _define_property(_assert_this_initialized(_this), "lastDownTime", 0);
+        // 最后触发交互开启的时间, 用于防止启动交互后因为不可见等导致马上别关闭
+        _define_property(_assert_this_initialized(_this), "lastInteractiveTime", 0);
         _define_property(_assert_this_initialized(_this), "multipleHelper", void 0);
         _define_property(_assert_this_initialized(_this), "form", void 0);
         _define_property(_assert_this_initialized(_this), "disable", void 0);
@@ -53,6 +55,7 @@ import { _TableDisablePlugin } from "./disable.js";
         /** 使一个单元格进入交互状态, 可通过defaultValue设置交互后的起始默认值, 默认为当前单元格value */ _define_property(_assert_this_initialized(_this), "interactive", function(cell, defaultValue) {
             if (!_this.isInteractive(cell)) return;
             if (!_this.form.validCheck(cell)) return;
+            _this.lastInteractiveTime = Date.now();
             var attachNode = _this.createAttachNode();
             // eslint-disable-next-line prefer-const
             var done;
@@ -86,10 +89,8 @@ import { _TableDisablePlugin } from "./disable.js";
                 value: isTruthyOrZero(defaultValue) ? defaultValue : _this.table.getValue(cell)
             }));
             _this.items.push(item);
-            _this.table.selectCells([
-                cell.key
-            ]);
-            _this.table.locate(cell.key);
+            _this.table.selectCells(cell.key);
+            _this.table.locate(cell.key, true); // 如果前一个interactive是提交, 可能触发验证错误, 会自动定位单元格, 这里传入true来抢占跳转权
             _this.updateNode();
             _this.table.event.interactiveChange.emit(cell, true, false);
         });
@@ -222,7 +223,7 @@ import { _TableDisablePlugin } from "./disable.js";
                 if (!this.config.interactive) return false;
                 if (isFunction(this.config.interactive) && !this.config.interactive(cell)) return false;
                 // 禁用项阻止交互
-                if (this.disable && this.disable.isDisabledCell(cell.key)) return;
+                if (this.disable && this.disable.isDisabledCell(cell.key)) return false;
                 return isFunction(this.config.interactiveRender);
             }
         },
@@ -249,7 +250,7 @@ import { _TableDisablePlugin } from "./disable.js";
             key: "hideInvisibleInteractive",
             value: // 隐藏不可见的正在交互单元格, 并触发其提交
             function hideInvisibleInteractive() {
-                if (!this.items.length) return;
+                if (!this.items.length || this.isJustTriggered()) return;
                 this.items.forEach(function(i) {
                     if (!i.cell.isMount) {
                         i.done(true);
@@ -282,6 +283,13 @@ import { _TableDisablePlugin } from "./disable.js";
             value: // 最近是否执行过done
             function isJustDoneExecuted() {
                 return Date.now() - this.lastDownTime < 180;
+            }
+        },
+        {
+            key: "isJustTriggered",
+            value: // 最近是否触发过交互
+            function isJustTriggered() {
+                return Date.now() - this.lastInteractiveTime < 80;
             }
         }
     ]);

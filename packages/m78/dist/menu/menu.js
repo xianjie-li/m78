@@ -12,9 +12,10 @@ import { isArray, isFunction, isMobileDevice, isTruthyOrZero, omit } from "@m78/
 import { _getOptionAllValues } from "./common.js";
 import { useKeyboardHandle } from "./use-keyboard-handle.js";
 import clsx from "clsx";
-import { Trigger, TriggerType } from "../trigger/index.js";
+import { TriggerType } from "@m78/trigger";
 import { TransitionType } from "../transition/index.js";
 import debounce from "lodash/debounce.js";
+import { Trigger } from "@m78/trigger/react/trigger.js";
 var defaultProps = {
     direction: OverlayDirection.bottomStart
 };

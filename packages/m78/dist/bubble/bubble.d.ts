@@ -1,8 +1,7 @@
 import React from "react";
 import { BubbleProps } from "./types.js";
 declare const _Bubble: {
-    (props: BubbleProps): React.JSX.Element;
-    defaultProps: Partial<BubbleProps>;
+    (p: BubbleProps): React.JSX.Element;
     displayName: string;
 };
 export { _Bubble };

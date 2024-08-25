@@ -9,6 +9,7 @@ import { ScrollDirection } from "./types.js";
     pullDownIndicatorRotate: true,
     pullUpTriggerRatio: 0.65
 };
+"";
 /** 滚动条thumb最大尺寸(轨道尺寸 / _BAR_MAX_SIZE_RATIO) */ export var _BAR_MAX_SIZE_RATIO = 2.5;
 /** 滚动条thumb最小尺寸 */ export var _BAR_MIN_SIZE_RATIO = 18;
 /** 根据传入的滚动方向返回用于启用滚动条的css style */ export function _getScrollStyleByDirection(dir) {

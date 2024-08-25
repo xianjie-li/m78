@@ -2,7 +2,7 @@ import { TablePlugin } from "../plugin.js";
 import { TableConfig } from "../types/config.js";
 /** 重置级别full的所有配置, 未在其中的所有配置默认为index级别 */
 export declare const levelFullConfigKeys: (keyof TableConfig)[];
-/** 不能通过table.config()变更的配置 */
+/** 不能通过table.setConfig()变更的配置 */
 declare const configCanNotChange: readonly ["el", "primaryKey", "plugins", "viewEl", "viewContentEl", "eventCreator"];
 type TableConfigCanNotChanges = typeof configCanNotChange[number];
 export declare class _TableConfigPlugin extends TablePlugin implements TableConfigInstance {

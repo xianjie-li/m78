@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Button } from "../../src/button";
+import { Button } from "../../src/button/index.js";
 import { Overlay } from "../../src/overlay/index.js";
-import { TriggerType } from "../../src/index.js";
+import { TriggerType } from "@m78/trigger";
 
 const OverlayExample = () => {
   const [type, setType] = useState<TriggerType>(TriggerType.click);

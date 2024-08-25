@@ -54,28 +54,34 @@ export function _lifeImpl(ctx: _TriggerContext) {
     }
   }
 
+  let lastTriggerTime = 0;
+
   // 处理光标切换
-  function handleCursor({
-    eventMeta,
-    active,
-    first,
-    last,
-    type,
-  }: TriggerEvent) {
+  function handleCursor(e: TriggerEvent) {
+    const { eventMeta, active, first, last, type, timeStamp } = e;
     const { typeMap, cursor } = eventMeta;
 
-    if (type === TriggerType.drag) {
+    // 如果有新事件入场, 忽略旧事件
+    if (timeStamp <= lastTriggerTime) return;
+
+    if (type === TriggerType.drag && cursor.drag) {
       if (first) document.documentElement.style.cursor = cursor.drag;
       if (last) document.documentElement.style.cursor = "";
+
+      if (first || last) {
+        lastTriggerTime = timeStamp;
+      }
     }
 
     if (trigger.dragging) return;
 
-    if (type === TriggerType.active) {
-      const curCursor = typeMap.get(TriggerType.drag)
-        ? cursor.dragActive
-        : cursor.active;
+    const curCursor = typeMap.get(TriggerType.drag)
+      ? cursor.dragActive
+      : cursor.active;
+
+    if (type === TriggerType.active && curCursor) {
       document.documentElement.style.cursor = active ? curCursor : "";
+      lastTriggerTime = timeStamp;
     }
   }
 }

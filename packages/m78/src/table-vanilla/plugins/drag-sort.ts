@@ -353,7 +353,7 @@ export class _TableDragSortPlugin extends TablePlugin {
 
     if (e.last || !_lastData) {
       this.dragging = false;
-      this.rcResize.trigger.enable = true;
+      this.rcResize.triggerEnable = true;
 
       this.autoScroll.trigger(e.xy, e.last, {
         left: isRow,
@@ -376,7 +376,7 @@ export class _TableDragSortPlugin extends TablePlugin {
     }
 
     // 禁用_TableRowColumnResize,  处理快速拖动显示hover
-    this.rcResize.trigger.enable = false;
+    this.rcResize.triggerEnable = false;
     this.dragging = true;
 
     const lastData = [..._lastData];

@@ -4,8 +4,9 @@ import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useMemo, useRef } from "react";
 import { _defaultProps, _getScrollStyleByDirection, _RESERVE_BAR_SIZE } from "./common.js";
-import clsx from "clsx";
-import { useMeasure, useScroll, useSelf, useSetState } from "@m78/hooks";
+import { clsx } from "clsx";
+import { useMeasure, useSelf, useSetState } from "@m78/hooks";
+import { useScroll } from "@m78/trigger/react/use-scroll.js";
 import { _useBar } from "./use-bar.js";
 import { _useLifeCycle } from "./use-life-cycle.js";
 import { _useMethod } from "./use-method.js";
@@ -17,10 +18,10 @@ export var _Scroll = function(p) {
     var onScroll = function onScroll(meta) {
         lifeCycle.onScroll(meta);
     };
-    var props = p;
+    var props = _object_spread({}, _defaultProps, p);
     var direction = props.direction;
     var _innerWrapRef = useRef(null);
-    var innerWrapRef = p.innerWrapRef || _innerWrapRef;
+    var innerWrapRef = props.innerWrapRef || _innerWrapRef;
     /** 组件状态 */ var _useSetState = _sliced_to_array(useSetState({
         enableStatus: {
             x: false,
@@ -77,7 +78,7 @@ export var _Scroll = function(p) {
     /** 钩子 */ var lifeCycle = _useLifeCycle(ctx, methods, bar, pull);
     /** 滚动标记 */ var indicator = _useIndicator(ctx, methods);
     return /*#__PURE__*/ _jsxs("div", {
-        ref: p.innerRef,
+        ref: props.innerRef,
         className: clsx("m78 m78-scroll", props.className, "__".concat(direction), props.miniBar && "__mini-bar"),
         style: props.style,
         children: [
@@ -103,4 +104,3 @@ export var _Scroll = function(p) {
     });
 };
 _Scroll.displayName = "Scroll";
-_Scroll.defaultProps = _defaultProps;

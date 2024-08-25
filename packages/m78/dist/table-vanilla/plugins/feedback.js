@@ -6,10 +6,12 @@ import { _ as _inherits } from "@swc/helpers/_/_inherits";
 import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
 import { _ as _create_super } from "@swc/helpers/_/_create_super";
 import { TablePlugin } from "../plugin.js";
-import { _TableFormPlugin } from "./form.js";
+import { _TableFormPlugin } from "./form/form.js";
 import debounce from "lodash/debounce.js";
-import { createTrigger, TriggerType } from "../../trigger/index.js";
+import { trigger, TriggerType } from "@m78/trigger";
+import { createTempID } from "@m78/utils";
 import { TableMutationType } from "./mutation.js";
+import { _TableRowColumnResize } from "./row-column-resize.js";
 /** 提供对某些表格元素的交互反馈, 比如单元格包含错误信息或内容超出时, 在选中后为其提供反馈 */ export var _TableFeedbackPlugin = /*#__PURE__*/ function(TablePlugin) {
     "use strict";
     _inherits(_TableFeedbackPlugin, TablePlugin);
@@ -22,9 +24,12 @@ import { TableMutationType } from "./mutation.js";
         _define_property(_assert_this_initialized(_this), "lastEvent", null);
         // 防止键盘交互导致自动滚动时, feedback触发完马上滚动导致关闭
         _define_property(_assert_this_initialized(_this), "lastTime", 0);
+        // TODO: tag3
         // 表头交互提醒
-        _define_property(_assert_this_initialized(_this), "headerTrigger", void 0);
+        // headerTrigger: TriggerInstance;
         /** mutation value change 提交延迟计时器 */ _define_property(_assert_this_initialized(_this), "valueChangeTimer", void 0);
+        // 用于快速批量向target添加或移除事件的key
+        _define_property(_assert_this_initialized(_this), "targetUniqueKey", createTempID());
         // 渲染完成后, 重新计算表头的触发区域
         _define_property(_assert_this_initialized(_this), "renderedDebounce", debounce(function() {
             _this.updateHeaderTriggerTargets();
@@ -115,7 +120,7 @@ import { TableMutationType } from "./mutation.js";
                 _this.emitClose();
                 return;
             }
-            var bound = e.target.target;
+            var bound = e.eventMeta.bound;
             var cell = e.data;
             var events = [];
             if (cell.column.key === "__RH") {
@@ -164,14 +169,15 @@ import { TableMutationType } from "./mutation.js";
                 this.form = this.getPlugin(_TableFormPlugin);
                 this.table.event.cellSelect.on(this.cellChange);
                 this.table.event.mutation.on(this.mutationHandle);
-                this.headerTrigger = createTrigger({
-                    type: TriggerType.active,
-                    container: this.config.el,
-                    active: {
-                        lastDelay: 0
-                    }
-                });
-                this.headerTrigger.event.on(this.headerTriggerHandle);
+                // TODO: tag1
+                // this.headerTrigger = createTrigger({
+                //   type: TriggerType.active,
+                //   container: this.config.el,
+                //   active: {
+                //     lastDelay: 0,
+                //   },
+                // });
+                // this.headerTrigger.event.on(this.headerTriggerHandle);
                 // 滚动时关闭
                 this.context.viewEl.addEventListener("scroll", this.scroll);
             }
@@ -179,7 +185,9 @@ import { TableMutationType } from "./mutation.js";
         {
             key: "beforeDestroy",
             value: function beforeDestroy() {
-                this.headerTrigger.destroy();
+                // TODO: tag1
+                // this.headerTrigger.destroy();
+                trigger.off(this.targetUniqueKey);
                 this.table.event.cellSelect.off(this.cellChange);
                 this.table.event.mutation.off(this.mutationHandle);
                 this.context.viewEl.removeEventListener("scroll", this.scroll);
@@ -218,7 +226,9 @@ import { TableMutationType } from "./mutation.js";
                 var _this_context_lastViewportItems;
                 var hKey = this.context.yHeaderKeys[this.context.yHeaderKeys.length - 1];
                 var lastColumns = ((_this_context_lastViewportItems = this.context.lastViewportItems) === null || _this_context_lastViewportItems === void 0 ? void 0 : _this_context_lastViewportItems.columns) || [];
-                this.headerTrigger.clear();
+                // TODO: tag6
+                // this.headerTrigger.clear();
+                trigger.off(this.targetUniqueKey);
                 if (!lastColumns.length) {
                     return;
                 }
@@ -228,21 +238,38 @@ import { TableMutationType } from "./mutation.js";
                 var _this_config_el_getBoundingClientRect = this.config.el.getBoundingClientRect(), left = _this_config_el_getBoundingClientRect.left, top = _this_config_el_getBoundingClientRect.top;
                 var x = this.table.getX();
                 // 去掉column resize handle的位置
-                var adjustSize = 4;
+                var adjustSize = _TableRowColumnResize.HANDLE_SIZE;
                 var targets = headerCells.map(function(cell) {
                     var xFix = cell.column.isFixed ? 0 : x;
-                    return {
-                        target: {
-                            width: cell.width - adjustSize * 2,
-                            height: cell.height,
-                            left: cell.column.x + left + adjustSize - xFix,
-                            top: cell.row.y + top
-                        },
-                        zIndex: cell.column.isFixed ? 1 : 0,
-                        data: cell
-                    };
+                    // 固定项
+                    var realX = cell.column.fixedOffset || cell.column.x;
+                    return _this.getEventOption({
+                        width: cell.width - adjustSize * 2,
+                        height: cell.height,
+                        left: realX + left + adjustSize - xFix,
+                        top: cell.row.y + top
+                    }, cell.column.isFixed ? 1 : 0, cell);
                 });
-                this.headerTrigger.add(targets);
+                trigger.on(targets, this.targetUniqueKey);
+            // TODO: tag5
+            // this.headerTrigger.add(targets);
+            }
+        },
+        {
+            key: "getEventOption",
+            value: // 获取事件选项
+            function getEventOption(target, level, data) {
+                var _this = this;
+                return {
+                    enable: function() {
+                        return _this.table.isActive();
+                    },
+                    type: TriggerType.active,
+                    handler: this.headerTriggerHandle,
+                    target: target,
+                    level: level,
+                    data: data
+                };
             }
         },
         {

@@ -3,10 +3,10 @@
   --m78-table-border: 1px solid var(--m78-table-border-color);
   --m78-table-bg-stress: var(--m78-gray-2); // 斑马纹等高亮格的背景色
   --m78-table-scroll-flag: rgba(0, 0, 0, 0.12); // 可滚动标记
-  --m78-table-high1-z-index: 10;  // 列fixed项所在层
-  --m78-table-high2-z-index: 20;  // 行fixed项所在层
-  --m78-table-high3-z-index: 30;  // 交叉fixed项等所在层
-  --m78-table-top-z-index: 40;  // 最顶层内容
+  --m78-table-high1-z-index: 10; // 列fixed项所在层
+  --m78-table-high2-z-index: 20; // 行fixed项所在层
+  --m78-table-high3-z-index: 30; // 交叉fixed项等所在层
+  --m78-table-top-z-index: 40; // 最顶层内容
 }
 
 .m78-table {
@@ -37,7 +37,6 @@
   }
 
   &_view {
-
   }
 
   &_view-content {
@@ -71,7 +70,8 @@
     }
 
     // ## 表头标记
-    &.__head-x, &.__head-y {
+    &.__head-x,
+    &.__head-y {
       background: var(--m78-table-bg-stress); // 防止表头出现斑马纹
     }
 
@@ -99,7 +99,8 @@
     }
 
     // ## status style
-    &.__selected, &.__disabled  {
+    &.__selected,
+    &.__disabled {
       &::after {
         content: "";
         position: absolute;
@@ -124,7 +125,6 @@
         background-color: var(--m78-color-opacity-sm);
       }
     }
-
   }
 
   &.__stripe {
@@ -132,7 +132,6 @@
       background-color: var(--m78-table-bg-stress);
     }
   }
-
 
   &.__border {
     .m78-table_cell {
@@ -170,7 +169,7 @@
   &_scroll-mark {
     content: "";
     position: absolute;
-    transition: opacity .2s;
+    transition: opacity 0.2s;
     pointer-events: none;
     opacity: 0;
 
@@ -178,7 +177,11 @@
       width: 8px;
       height: 100%;
       top: 0;
-      background: linear-gradient(90deg, var(--m78-table-scroll-flag), rgba(0, 0, 0, 0));
+      background: linear-gradient(
+        90deg,
+        var(--m78-table-scroll-flag),
+        rgba(0, 0, 0, 0)
+      );
       border-radius: 0 12px 12px 0;
     }
 
@@ -186,7 +189,11 @@
       width: 8px;
       height: 100%;
       top: 0;
-      background: linear-gradient(-90deg, var(--m78-table-scroll-flag), rgba(0, 0, 0, 0));
+      background: linear-gradient(
+        -90deg,
+        var(--m78-table-scroll-flag),
+        rgba(0, 0, 0, 0)
+      );
       border-radius: 12px 0 0 12px;
     }
 
@@ -194,7 +201,11 @@
       height: 8px;
       width: 100%;
       left: 0;
-      background: linear-gradient(180deg, var(--m78-table-scroll-flag), rgba(0, 0, 0, 0));
+      background: linear-gradient(
+        180deg,
+        var(--m78-table-scroll-flag),
+        rgba(0, 0, 0, 0)
+      );
       border-radius: 0 0 12px 12px;
     }
 
@@ -202,15 +213,19 @@
       height: 8px;
       width: 100%;
       left: 0;
-      background: linear-gradient(0, var(--m78-table-scroll-flag), rgba(0, 0, 0, 0));
+      background: linear-gradient(
+        0,
+        var(--m78-table-scroll-flag),
+        rgba(0, 0, 0, 0)
+      );
       border-radius: 12px 12px 0 0;
     }
   }
 
-
   // ## 提示线
 
-  &_tip-line-x, &_tip-line-y {
+  &_tip-line-x,
+  &_tip-line-y {
     position: absolute;
     visibility: hidden;
     pointer-events: none;
@@ -251,7 +266,8 @@
   }
 
   // ## 拖拽
-  &_drag-area-x, &_drag-area-y {
+  &_drag-area-x,
+  &_drag-area-y {
     position: absolute;
     cursor: move;
     z-index: var(--m78-table-top-z-index);
@@ -274,7 +290,8 @@
     height: 100%;
   }
 
-  &_drag-line-x, &_drag-line-y {
+  &_drag-line-x,
+  &_drag-line-y {
     position: absolute;
     left: 0;
     top: 0;
@@ -350,10 +367,15 @@
     position: absolute;
     left: 0;
     width: 100%;
-    background: repeating-linear-gradient(-22deg, transparent 0, transparent 32px, var(--m78-color-error-opacity-sm) 32px, var(--m78-color-error-opacity-sm) 33px);
+    background: repeating-linear-gradient(
+      -22deg,
+      transparent 0,
+      transparent 32px,
+      var(--m78-color-error-opacity-sm) 32px,
+      var(--m78-color-error-opacity-sm) 33px
+    );
     color: var(--m78-color-error);
   }
-
 
   // ## 其他
 

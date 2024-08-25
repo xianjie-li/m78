@@ -1,5 +1,6 @@
 import { TablePlugin } from "../plugin.js";
-import { EmptyFunction, RafFunction } from "@m78/utils";
+import { EmptyFunction } from "@m78/utils";
+import { RafFunction } from "@m78/animate-tools";
 import { _TableGetterPlugin } from "./getter.js";
 import { TableCell, TableCellWithDom } from "../types/items.js";
 import { TablePointInfo, TablePosition, TableRenderCtx } from "../types/base-type.js";

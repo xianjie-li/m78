@@ -19,7 +19,7 @@ import {
   OverlayProps,
   OverlayRenderOption,
 } from "./types.js";
-import { TriggerEvent, TriggerType } from "../trigger/index.js";
+import { TriggerEvent, TriggerType } from "@m78/trigger";
 
 export const _defaultAlignment: TupleNumber = [0.5, 0.5];
 

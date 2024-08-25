@@ -1,3 +1,4 @@
+import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
 import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { useRef } from "react";
 import { useFn, useFormState, useIsUnmountState, useMeasure, useSelf, useSetState } from "@m78/hooks";
@@ -7,11 +8,11 @@ import { _useLifeCycle as useLifeCycle } from "./use-life-cycle.js";
 import { _useRender as useRender } from "./use-render.js";
 import { _defaultProps, _onTrigger, overlayTransitionConfig, useEscapeCloseable, useOverlaysClickAway, useOverlaysMask } from "./common.js";
 import { isFunction } from "@m78/utils";
-import { useTrigger } from "../trigger/index.js";
+import { useTrigger } from "@m78/trigger/react/trigger.js";
 /**
  * overlay抽象了所有弹层类组件(modal, drawer, popper等需要的基础能力), 使实现这些组件变得非常的简单
  * */ export function _Overlay(p) {
-    var props = p;
+    var props = _object_spread({}, _defaultProps, p);
     var _useFormState = _sliced_to_array(useFormState(props, false, {
         valueKey: "open",
         defaultValueKey: "defaultOpen"
@@ -102,4 +103,3 @@ import { useTrigger } from "../trigger/index.js";
     return useRender(ctx, lifeCycle);
 }
 _Overlay.displayName = "Overlay";
-_Overlay.defaultProps = _defaultProps;

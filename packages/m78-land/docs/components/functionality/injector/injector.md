@@ -42,7 +42,7 @@ export interface InjectorConfig<Props = any> {
 }
 ```
 
-###
+
 
 ## Actuator
 

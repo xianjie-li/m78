@@ -7,8 +7,9 @@ import { LayProps } from "../lay/index.js";
 import { DomTarget, SelectManager, SetState } from "@m78/hooks";
 import { OverlayProps } from "../overlay/index.js";
 import React from "react";
-import { AnyObject, EmptyFunction, TupleNumber } from "@m78/utils";
-import { TriggerProps, TriggerType } from "../trigger/index.js";
+import { EmptyFunction, TupleNumber } from "@m78/utils";
+import { TriggerType } from "@m78/trigger";
+import type { TriggerProps } from "@m78/trigger/react/trigger.js";
 
 /** 应从Overlay中移除的props */
 export const omitMenuOverlayProps = [
@@ -23,7 +24,7 @@ export const omitMenuOverlayProps = [
 ] as const;
 
 /** 应从Overlay中移除的props */
-export type MenuOmitOverlayKeys = typeof omitMenuOverlayProps[number];
+export type MenuOmitOverlayKeys = (typeof omitMenuOverlayProps)[number];
 
 export type MenuOmitOverlayProps = Omit<OverlayProps, MenuOmitOverlayKeys>;
 

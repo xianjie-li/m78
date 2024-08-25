@@ -1,7 +1,8 @@
 import React from "react";
-import { Button, TriggerType } from "../../src/index.js";
+import { Button } from "../../src/index.js";
 import { Menu } from "../../src/menu/index.js";
 import { menuData } from "./menu-data.js";
+import { TriggerType } from "@m78/trigger";
 
 const ContextMenuExample = () => {
   return (

@@ -1,7 +1,7 @@
 // 这里导出通用的sass变量和混合等
 
 //noinspection CssUnknownTarget
-@import '@m78/style/sass-vars.scss';
+@import "@m78/style/sass-vars.scss";
 
 $OUTLINE_WIDTH: 4px;
 $OUTLINE_WIDTH_MIN: 0;
@@ -38,7 +38,8 @@ $OUTLINE_WIDTH_MIN: 0;
     transition-delay: 0.1s;
   }
 
-  &:focus, &.__focus {
+  &:focus,
+  &.__focus {
     border-color: $border-color;
     box-shadow: 0 0 0 $OUTLINE_WIDTH $color;
   }

@@ -5,9 +5,9 @@ import { FormAdaptorsItem } from "../config/index.js";
 export declare function _useFieldMethods(ctx: _FormContext, fieldCtx: _FieldContext): {
     getProps: FormCommonPropsGetter;
     getAdaptor: () => {
-        adaptorConf?: FormAdaptorsItem | undefined;
+        adaptorConf?: FormAdaptorsItem;
         /** 用户在schema或field传入了函数类型的element时, 此项为该函数 */
-        elementRender?: FormAdaptor | undefined;
+        elementRender?: FormAdaptor;
     };
     onChange: (value: any) => void;
     shouldRender: () => boolean;
@@ -15,12 +15,12 @@ export declare function _useFieldMethods(ctx: _FormContext, fieldCtx: _FieldCont
     getBind: () => {
         value: any;
         onChange: (value: any) => void;
-        disabled?: boolean | undefined;
-        size?: string | undefined;
+        disabled?: boolean;
+        size?: string;
     };
     getError: (name: NamePath) => string;
     listApiSimplify: (name: NamePath) => {
-        add: (items: any, index?: number | undefined) => boolean;
+        add: (items: any, index?: number) => boolean;
         remove: (index: number) => boolean;
         move: (from: number, to: number) => boolean;
         swap: (from: number, to: number) => boolean;

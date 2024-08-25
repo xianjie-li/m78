@@ -10,7 +10,7 @@ import { ensureArray, isDom } from "@m78/utils";
 import { isBound } from "./common.js";
 import { _OverlayContext, OverlayInstance } from "./types.js";
 import { _useTypeProcess } from "./use-type-process.js";
-import { TriggerType } from "../trigger/index.js";
+import { TriggerType } from "@m78/trigger";
 
 export function _useLifeCycle(ctx: _OverlayContext) {
   const {

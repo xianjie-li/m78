@@ -3,11 +3,8 @@ import { Menu, MenuOption, MenuProps } from "../../../menu/index.js";
 import { OverlayInstance } from "../../../overlay/index.js";
 import { useFn, useSelf } from "@m78/hooks";
 import { TupleNumber } from "@m78/utils";
-import {
-  TriggerType,
-  UseTriggerProps,
-  createTrigger,
-} from "../../../trigger/index.js";
+import { TriggerType, createTrigger, trigger } from "@m78/trigger";
+import { TriggerProps } from "@m78/trigger/react/trigger.js";
 import { _useCellMenu } from "./use-cell-menu.js";
 import { _injector } from "../../table.js";
 import { _useMethodsAct } from "../../injector/methods.act.js";
@@ -55,7 +52,7 @@ export const _useContextMenuAct = () => {
     self.callback?.(val, option);
   });
 
-  const trigger: NonNullable<UseTriggerProps["onTrigger"]> = useFn((e) => {
+  const triggerHandle: NonNullable<TriggerProps["onTrigger"]> = useFn((e) => {
     if (state.initializing) return;
 
     const cellOpenOpt = cellMenuGet(e);
@@ -67,14 +64,15 @@ export const _useContextMenuAct = () => {
   });
 
   useEffect(() => {
-    const cusTrigger = createTrigger({
+    const opt = {
       type: TriggerType.contextMenu,
       target: WrapRef.current,
-    });
+      handler: triggerHandle,
+    };
 
-    cusTrigger.event.on(trigger);
+    trigger.on(opt);
 
-    return cusTrigger.destroy;
+    return () => trigger.off(opt);
   }, [WrapRef.current]);
 
   // 滚动时关闭

@@ -26,6 +26,7 @@ export var _RedoAndUndoPlugin = /*#__PURE__*/ function(RCTablePlugin) {
         {
             key: "toolbarLeadingCustomer",
             value: function toolbarLeadingCustomer(nodes) {
+                if (!this.config.history) return;
                 nodes.push(/*#__PURE__*/ _jsx(Divider, {
                     vertical: true
                 }), /*#__PURE__*/ _jsx(RedoBtn, {}), /*#__PURE__*/ _jsx(UndoBtn, {}));

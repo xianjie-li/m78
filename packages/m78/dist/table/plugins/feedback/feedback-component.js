@@ -7,11 +7,11 @@ import { useSelf, useSetState } from "@m78/hooks";
 import { Bubble } from "../../../bubble/index.js";
 import clsx from "clsx";
 import { Divider } from "../../../layout/index.js";
+import { TableFeedback } from "../../../table-vanilla/index.js";
 import { createRandString, isTruthyOrZero } from "@m78/utils";
 import { _injector } from "../../table.js";
 import { _useStateAct } from "../../injector/state.act.js";
 import { renderCommonHandle } from "../../render/use-custom-render.js";
-import { TableFeedback } from "../../../table-vanilla/plugins/feedback.js";
 export function _Feedback() {
     var props = _injector.useProps();
     var _injector_useDeps = _injector.useDeps(_useStateAct), state = _injector_useDeps.state, rcPlugins = _injector_useDeps.rcPlugins;
@@ -40,6 +40,8 @@ export function _Feedback() {
         }
         var content = e.map(function(item, index) {
             if (!item.text) return null;
+            // 包含单元格但单元格未挂载时忽略
+            if (item.cell && !item.cell.isMount) return null;
             var node = item.text;
             if (item.type === TableFeedback.overflow && item.cell) {
                 var arg = renderCommonHandle({
@@ -68,7 +70,10 @@ export function _Feedback() {
                     })
                 ]
             }));
+        }).filter(function(i) {
+            return !!i;
         });
+        if (!content.length) return;
         var node = (_React = React).createElement.apply(_React, [
             "div",
             {

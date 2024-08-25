@@ -15,9 +15,7 @@ import { _injector } from "../../table.js";
                 layoutType: FormLayoutType.vertical,
                 spacePadding: false,
                 values: props.defaultFilter,
-                schemas: {
-                    schemas: props.filterSchema
-                }
+                schemas: props.filterSchema
             });
         }
         return f;

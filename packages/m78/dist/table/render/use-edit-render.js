@@ -8,7 +8,6 @@ import { _useStateAct } from "../injector/state.act.js";
 import { _injector } from "../table.js";
 import { throwError } from "../../common/index.js";
 import { m78Config } from "../../config/index.js";
-import { _getTableCtx } from "../common.js";
 import { Overlay } from "../../overlay/index.js";
 import { TransitionType } from "../../transition/index.js";
 // 自定义编辑逻辑
@@ -35,35 +34,46 @@ export function _useEditRender() {
         }
         return item;
     });
-    /** 检测是否可编辑 */ var checkEditable = useFn(function(name) {
+    /** 检测指定name是否可编辑 */ var checkEditable = useFn(function(name) {
         var sName = stringifyNamePath(name);
         var cache = self.editStatusMap[sName];
         if (isBoolean(cache)) return cache;
-        var sh = self.editCheckForm.getSchema(name);
+        var sh = self.editCheckForm.getSchema(name); // 改为取form插件的schema
         var editable = !!(sh === null || sh === void 0 ? void 0 : sh.element);
         self.editStatusMap[sName] = editable;
         return editable;
     });
-    // 检测单元格是否可编辑
+    /** 获取cell对应的schema */ var getCellSchema = useFn(function(cell) {
+        if (!self.vCtx) return;
+        var schemasFlat = self.vCtx.getSchemas(cell.row).schemasFlat;
+        return schemasFlat.get(cell.column.key);
+    });
+    /** 获取cell对应的schema.element */ var getCellElement = useFn(function(cell) {
+        var _getCellSchema;
+        return (_getCellSchema = getCellSchema(cell)) === null || _getCellSchema === void 0 ? void 0 : _getCellSchema.element;
+    });
+    // 检测单元格是否可编辑 依据: 1. 是否启用edit或是新增数据  2. 是否配置了schema.element
     var interactiveEnableChecker = useFn(function(cell) {
         if (cell.column.isFake || cell.row.isFake) return false;
-        if (state.instance) {
-            var ctx = _getTableCtx(state.instance);
-            var meta = ctx.getRowMeta(cell.row.key);
-            var isNew = meta.new;
-            if (!isNew) {
-                if (dataOperations.edit === false) return false;
-                if (isFunction(dataOperations.edit) && !dataOperations.edit(cell)) return false;
-            }
+        if (cell.column.isHeader || cell.row.isHeader) return false;
+        if (!self.instance) {
+            console.log("ignore .....");
         }
-        return checkEditable(cell.column.config.originalKey);
+        var meta = state.vCtx.getRowMeta(cell.row.key);
+        var isNew = meta.new;
+        if (isNew) {
+            return !!getCellElement(cell); // 新增项在包含有效schema.element时始终可编辑
+        }
+        if (dataOperations.edit === false) return false;
+        if (isFunction(dataOperations.edit) && !dataOperations.edit(cell)) return false;
+        return !!getCellElement(cell);
     });
     // 自定义编辑渲染
     var interactiveRender = useFn(function(param) {
-        var cell = param.cell, value = param.value, done = param.done, node = param.node, form = param.form;
+        var cell = param.cell, value = param.value, done = param.done, node = param.node;
         var time = 0;
         var val = value;
-        var schema = form.getSchema(cell.column.config.originalKey);
+        var schema = getCellSchema(cell);
         var schemaElement = schema === null || schema === void 0 ? void 0 : schema.element;
         if (!schemaElement) {
             throwError("can't find element for schema: ".concat(cell.column.key));
@@ -86,7 +96,6 @@ export function _useEditRender() {
             change: function(_val) {
                 val = _val;
             },
-            form: form,
             submit: function() {
                 return done();
             },

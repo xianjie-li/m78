@@ -1,1 +1,0 @@
-{"version":3,"file":"move-active.d.ts","sourceRoot":"","sources":["../../../../../src/trigger/handle/move-active.ts"],"names":[],"mappings":"AAAA,OAAO,EAEL,eAAe,EACf,aAAa,EAEd,MAAM,aAAa,CAAC;AAMrB,wBAAgB,eAAe,CAAC,GAAG,EAAE,eAAe;oBAI3B,UAAU,GAAG,UAAU;sBAiMrB,KAAK,qBAAoB,aAAa,KAAK,OAAO;oBAwCpD,KAAK,qBAAoB,aAAa,KAAK,OAAO;EA0B1E"}

@@ -6,7 +6,7 @@ import { createEvent, useSelf, useSetState } from "@m78/hooks";
 import { _injector } from "../table.js";
 import { preInstantiationRCPlugin } from "../common.js";
 import { RCTablePlugin } from "../plugin.js";
-import { isBoolean, isFunction } from "@m78/utils";
+import { isBoolean } from "@m78/utils";
 import { _FilterPlugin } from "../plugins/filter/filter.js";
 import { _FeedBackPlugin } from "../plugins/feedback/feedback.js";
 import { _RedoAndUndoPlugin } from "../plugins/redo-and-undo.js";
@@ -15,6 +15,7 @@ import { _XLSHandlePlugin } from "../plugins/xls-handle.js";
 import { _DataActionPlugin } from "../plugins/data-actions.js";
 import { _ConfigSyncPlugin } from "../plugins/config-sync.js";
 import { _DragMovePlugin } from "../plugins/drag-move.js";
+import { _ContextMenuPlugin } from "../plugins/context-menu/context-menu.js";
 export function _useStateAct() {
     var props = _injector.useProps();
     var getters = _injector.useGetter();
@@ -31,7 +32,8 @@ export function _useStateAct() {
             _CountTextPlugin,
             _ConfigSyncPlugin,
             _XLSHandlePlugin,
-            _DataActionPlugin
+            _DataActionPlugin,
+            _ContextMenuPlugin
         ].concat(_to_consumable_array(props.plugins || [])));
     }, []);
     // 所有RCTablePlugin实例
@@ -55,7 +57,9 @@ export function _useStateAct() {
             editMap: {},
             editStatusMap: {},
             editCheckForm: null,
-            overlayStackCount: 0
+            overlayStackCount: 0,
+            instance: null,
+            vCtx: null
         };
         rcPlugins.forEach(function(p) {
             var _p_rcSelfInitializer;
@@ -68,6 +72,7 @@ export function _useStateAct() {
             selectedRows: [],
             rowCount: 0,
             instance: null,
+            vCtx: null,
             initializing: true,
             initializingTip: null,
             blockError: null
@@ -85,20 +90,26 @@ export function _useStateAct() {
         var conf = {
             edit: false,
             add: false,
-            delete: false
+            delete: false,
+            sortRow: false,
+            sortColumn: true,
+            import: false,
+            export: true
         };
         var pConf = props.dataOperations;
-        if (!pConf) return conf;
         if (isBoolean(pConf) && pConf) {
-            conf.edit = true;
-            conf.add = true;
-            conf.delete = true;
+            Object.keys(conf).forEach(function(k) {
+                return conf[k] = true;
+            });
             return conf;
         }
-        conf.edit = isFunction(pConf.edit) ? pConf.edit : pConf.edit || false;
-        conf.add = pConf.add || false;
-        conf.delete = pConf.delete || false;
-        return conf;
+        if (isBoolean(pConf) && !pConf) {
+            conf.sortColumn = false;
+            conf.export = false;
+            return conf;
+        }
+        if (!pConf) return conf;
+        return Object.assign(conf, pConf);
     }, [
         props.dataOperations
     ]);

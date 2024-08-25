@@ -1,4 +1,4 @@
-import { AnyObject } from "@m78/utils";
+import { AnyObject, CacheTick } from "@m78/utils";
 import { TableKey } from "./base-type.js";
 import { TableConfig, TablePersistenceConfig } from "./config.js";
 import { TableCell, TableColumn, TableColumnConfig, TableColumnLeafConfigFormatted, TableItems, TableRow, TableRowConfig } from "./items.js";
@@ -8,8 +8,8 @@ import { TablePlugin } from "../plugin.js";
 import { _MetaMethods } from "../plugins/meta-data.js";
 import { _ContextGetters } from "../plugins/getter.js";
 import { _ContextSetter } from "../plugins/setter.js";
-import { CacheTick } from "../plugins/frame-cache.js";
 import { _GetterCacheKey } from "./cache.js";
+import { _SchemaData } from "../plugins/form/types.js";
 /** 固定项信息 */
 type FixedMap<T> = {
     [index: string]: {
@@ -27,9 +27,9 @@ export interface TablePluginContext extends _MetaMethods, _ContextGetters, _Cont
     viewEl: HTMLDivElement;
     /** domElement的子级, 用于实际挂载滚动区的dom节点 */
     viewContentEl: HTMLDivElement;
-    /** viewContentEl子级, 用于集中挂载内容, 便于做一些统一控制(比如缩放) */
+    /** viewContentEl子级, 用于集中挂载内容, 便于做一些统一控制 */
     stageEL: HTMLDivElement;
-    /** 浅拷贝后的数据, 在数据项第一次需要改写时再对应的项进行拷贝, 从而实现超大数据量的按需高速复制 */
+    /** 浅拷贝后的数据, 在数据项第一次需要改写时再对应的项进行拷贝(copy in write), 从而实现超大数据量的按需高速复制 */
     data: AnyObject[];
     /** 本地化后的行配置, 注入了表头相关的行/列配置 */
     rows: NonNullable<TableConfig["rows"]>;
@@ -43,6 +43,10 @@ export interface TablePluginContext extends _MetaMethods, _ContextGetters, _Cont
     persistenceConfig: TablePersistenceConfig;
     /** 上一帧中在视口中显示的row/cell/column */
     lastViewportItems?: TableItems;
+    /** 最后一次挂载的rows */
+    lastMountRows: Record<TableKey, true>;
+    /** 最后一次挂载的所有columns */
+    lastMountColumns: Record<TableKey, true>;
     /** 预计算好的总尺寸 */
     contentWidth: number;
     contentHeight: number;
@@ -161,8 +165,9 @@ export interface TablePluginContext extends _MetaMethods, _ContextGetters, _Cont
         key: TableKey;
         from: number;
     }[];
-    /** 通用的getterCache */
+    /** 通用的getterCache, 用于在同一帧下仅执行一次指定的getter */
     getterCache: CacheTick<_GetterCacheKey>;
+    getSchemas(row: TableRow | TableKey, update?: boolean): _SchemaData;
 }
 export interface TableMergeData {
     /** 合并后占用的宽度 */

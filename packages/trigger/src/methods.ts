@@ -36,5 +36,6 @@ export function _buildEvent(
     eventMeta: {} as any,
     ...initProp,
     data: initProp.data || {},
+    timeStamp: Date.now(),
   } as TriggerEvent;
 }

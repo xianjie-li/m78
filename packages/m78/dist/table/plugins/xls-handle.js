@@ -23,12 +23,11 @@ export var _XLSHandlePlugin = /*#__PURE__*/ function(RCTablePlugin) {
         {
             key: "toolbarTrailingCustomer",
             value: function toolbarTrailingCustomer(nodes) {
-                var props = this.getProps();
                 var _this_getDeps = this.getDeps(_useStateAct), conf = _this_getDeps.dataOperations;
-                if (props.dataExport) {
+                if (conf.export) {
                     nodes.push(/*#__PURE__*/ _jsx(ExportFileBtn, {}));
                 }
-                if (props.dataImport && conf.add) {
+                if (conf.import && conf.add) {
                     nodes.push(/*#__PURE__*/ _jsx(ImportFileBtn, {}));
                 }
             }

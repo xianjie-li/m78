@@ -10,7 +10,7 @@ import { Z_INDEX_MODAL } from "../common/index.js";
 import clamp from "lodash/clamp.js";
 import { useSame } from "@m78/hooks";
 import { omitApiProps, OverlayDirection } from "./types.js";
-import { TriggerType } from "../trigger/index.js";
+import { TriggerType } from "@m78/trigger";
 export var _defaultAlignment = [
     0.5,
     0.5

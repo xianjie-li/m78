@@ -183,25 +183,28 @@ export function _fieldImpl(ctx) {
         var _useMemo = _sliced_to_array(useMemo(function() {
             if (!isTruthyOrZero(_name)) return [
                 EMPTY_NAME,
-                EMPTY_NAME
+                EMPTY_NAME,
+                false
             ];
             if (isRootName(_name)) return [
                 [],
-                "[]"
+                "[]",
+                true
             ];
             return [
                 _name,
-                stringifyNamePath(_name)
+                stringifyNamePath(_name),
+                false
             ];
         }, [
             _name
-        ]), 2), name = _useMemo[0], strName = _useMemo[1];
+        ]), 3), name = _useMemo[0], strName = _useMemo[1], isRoot = _useMemo[2];
         var id = useMemo(function() {
             return createRandString(2);
         }, []);
         var _useSetState = _sliced_to_array(useSetState(function() {
             return {
-                /** 当前组件的schema */ schema: form.getSchema(name),
+                /** 当前组件的schema */ schema: isRoot ? form.getSchemas().schemas : form.getSchema(name),
                 /** 手动更新组件的标记 */ renderKey: createTempID()
             };
         }), 2), state = _useSetState[0], setState = _useSetState[1];
@@ -219,7 +222,8 @@ export function _fieldImpl(ctx) {
             name: name,
             wrapRef: wrapRef,
             id: id,
-            strName: strName
+            strName: strName,
+            isRoot: isRoot
         };
         // 组件方法
         var methods = _useFieldMethods(ctx, filedCtx);
@@ -239,6 +243,7 @@ export function _fieldImpl(ctx) {
         var crossAlign = getProps("crossAlign") || "start";
         var spacePadding = getProps("spacePadding");
         var _methods_getAdaptor = methods.getAdaptor(), adaptorConf = _methods_getAdaptor.adaptorConf, elementRender = _methods_getAdaptor.elementRender;
+        console.log(adaptorConf);
         if (spacePadding === undefined) spacePadding = true;
         var touched = form.getTouched(name);
         var changed = form.getChanged(name);

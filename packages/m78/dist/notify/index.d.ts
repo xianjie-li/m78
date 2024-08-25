@@ -1,7 +1,7 @@
 import "../common/init/index.js";
 import "./index.scss";
 import { _loading } from "./notify.js";
-export declare const notify: import("@m78/render-api/types.js").RenderApiInstance<import("./types.js").NotifyState, null> & {
+export declare const notify: import("@m78/render-api").RenderApiInstance<import("./types.js").NotifyState, null> & {
     loading: typeof _loading;
 } & {
     quicker: import("./types.js").NotifyQuicker;

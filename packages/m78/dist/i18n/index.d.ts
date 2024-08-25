@@ -1,3 +1,4 @@
+import i18next from "i18next";
 export declare const resources: {
     readonly en: {
         common: {
@@ -103,6 +104,7 @@ export declare const resources: {
             "new tip": string;
             "remove tip": string;
             "update tip": string;
+            "change tip": string;
             "sorted tip": string;
             "add row btn": string;
             "save btn": string;
@@ -144,7 +146,7 @@ export declare const FORK_NS = "fork";
 export declare const FORM_LANG_PACK_NS = "formLangPack";
 export declare const FORM_NS = "form";
 export declare const TABLE_NS = "table";
-declare const i18n: import("i18next").i18n;
+declare const i18n: i18next.i18n;
 export { _useTranslation as useTranslation, _Translation as Translation, _Trans as Trans, } from "./translations.js";
 export { i18n };
 //# sourceMappingURL=index.d.ts.map

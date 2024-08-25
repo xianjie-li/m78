@@ -3,10 +3,13 @@ import { _tableChangedIncludeChecker, _tableOmitConfig } from "../common.js";
 import { useEffect } from "react";
 import { omit } from "@m78/utils";
 import { levelFullConfigKeys } from "../../table-vanilla/index.js";
-/** 处理props变更, 尽可能减少不必要的更新, 特别是引用类型的props */ export function _usePropsEffect(props, cb) {
+/** 处理props变更, 尽可能减少不必要的更新, 特别是引用类型的props, 并在处理后将table props转换为vanilla table config */ export function _usePropsEffect(props, cb) {
     var omitProps = omit(props, _tableOmitConfig);
     var changedProps = usePropsChange(omitProps, {
-        include: _tableChangedIncludeChecker
+        include: _tableChangedIncludeChecker,
+        deepEqual: [
+            "dataOperations"
+        ]
     });
     useEffect(function() {
         if (!changedProps) return;

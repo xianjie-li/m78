@@ -1,7 +1,7 @@
 import { TablePlugin } from "../plugin.js";
 import { TableCell, TableCellWithDom } from "../types/items.js";
 import { KeyboardMultipleHelper } from "@m78/utils";
-import { _TableFormPlugin } from "./form.js";
+import { _TableFormPlugin } from "./form/form.js";
 import { _TableDisablePlugin } from "./disable.js";
 /**
  * 提供单元格双击交互功能, 用于实现交互期间展示表单控件或其他交互组件, 是在form的上做的一层抽象, 并非一定用于form
@@ -12,8 +12,9 @@ export declare class _TableInteractivePlugin extends TablePlugin {
     doubleClickLastCell: TableCell | null;
     doubleClickTimer: any;
     lastDownTime: number;
+    lastInteractiveTime: number;
     multipleHelper: KeyboardMultipleHelper;
-    form: _TableFormPlugin;
+    form: InstanceType<typeof _TableFormPlugin>;
     disable: _TableDisablePlugin;
     init(): void;
     mounted(): void;
@@ -24,7 +25,7 @@ export declare class _TableInteractivePlugin extends TablePlugin {
     private initDom;
     private onAttachClick;
     private onClick;
-    isInteractive(cell: TableCell): boolean | undefined;
+    isInteractive(cell: TableCell): boolean;
     /** 使一个单元格进入交互状态, 可通过defaultValue设置交互后的起始默认值, 默认为当前单元格value */
     private interactive;
     private updateNode;
@@ -35,6 +36,7 @@ export declare class _TableInteractivePlugin extends TablePlugin {
     private onEnterDown;
     private onEscDown;
     private isJustDoneExecuted;
+    private isJustTriggered;
 }
 /** 表示交互完成后要执行的操作 */
 export type TableInteractiveDone = (isConfirm: boolean) => void | Promise<void>;

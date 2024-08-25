@@ -17,6 +17,22 @@ export var _TableHistoryPlugin = /*#__PURE__*/ function(TablePlugin) {
             key: "init",
             value: function init() {
                 this.table.history = new ActionHistory();
+                this.table.history.enable = this.config.history;
+                this.table.event.configChange.on(this.configChangeHandle);
+            }
+        },
+        {
+            key: "beforeDestroy",
+            value: function beforeDestroy() {
+                this.table.event.configChange.off(this.configChangeHandle);
+            }
+        },
+        {
+            key: "configChangeHandle",
+            value: function configChangeHandle(changeKeys, isChange) {
+                if (isChange("history")) {
+                    this.table.history.enable = this.config.history;
+                }
             }
         }
     ]);

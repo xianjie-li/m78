@@ -1,7 +1,6 @@
-/// <reference types="lodash" />
 import { TableLoadStage, TablePlugin } from "../plugin.js";
 import { AnyObject } from "@m78/utils";
-import { AutoScrollTriggerConfig, AutoScroll } from "@m78/smooth-scroll";
+import { AutoScrollTriggerConfig, AutoScroll } from "@m78/animate-tools";
 import { TableKey, TablePointInfo, TablePosition } from "../types/base-type.js";
 import { TableInstance } from "../types/instance.js";
 import { TableCell, TableCellWithDom, TableItems, TableRow } from "../types/items.js";
@@ -49,7 +48,7 @@ export declare class _TableSelectPlugin extends TablePlugin implements TableSele
     /** 选取开始 */
     selectStart: (e: FullGestureState<"drag">) => void;
     /** 选取已开始, 并开始移动 */
-    selectMove: import("lodash").DebouncedFunc<(e: FullGestureState<"drag">) => void>;
+    selectMove: import("lodash").DebouncedFuncLeading<(e: FullGestureState<"drag">) => void>;
     /** 选取结束 */
     selectEnd: () => void;
     /** 点击处理 */
@@ -70,7 +69,7 @@ export declare class _TableSelectPlugin extends TablePlugin implements TableSele
      * - 可传入interceptor来根据命中内容决定是否阻止后续操作
      * - 若没有选中项或interceptor()验证失败, 返回false
      * */
-    selectByPoint: (p1: import("@m78/utils").TupleNumber, p2?: TablePosition, interceptor?: ((items: TableItems) => boolean) | undefined) => [boolean, TableItems];
+    selectByPoint: (p1: TablePosition, p2?: TablePosition, interceptor?: (items: TableItems) => boolean) => [boolean, TableItems];
     /**
      * 向selected map中设置行选中, item可以是cell/row的key或实例, 所有设置操作统一在此进行, 方便进行禁用等行为的拦截
      * - 返回false表示该次设置被拦截
@@ -81,7 +80,7 @@ export declare class _TableSelectPlugin extends TablePlugin implements TableSele
      * - 如果从固定项开始拖动, 则先禁用该方向的常规自动滚动, 等到移动到非固定项时再启用
      * */
     autoScrollConflictDisabledConfigGenerate(pos: TablePosition): AutoScrollTriggerConfig | undefined;
-    /** 框选点在固定区域末尾时, 如果滚动边未贴合, 将其滚动到贴合位置, 一是解决瞬间选择大量数据的问题, 二是更符合直觉, 放置误选 */
+    /** 框选点在固定区域末尾时, 如果滚动边未贴合, 将其滚动到贴合位置, 一是解决瞬间选择大量数据的问题, 二是更符合直觉, 防止误选 */
     moveFixedEdgeHandle([x, y]: TablePosition): void;
     /** 自动触发滚动便捷的修正位置 */
     getAutoScrollBound(): {

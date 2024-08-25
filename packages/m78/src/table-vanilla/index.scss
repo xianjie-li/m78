@@ -55,6 +55,8 @@
     // __head-x / __head-y 表头标记
 
     position: absolute;
+    top: 0;
+    left: 0;
     padding: 2px 4px;
     display: flex;
     align-items: flex-start;

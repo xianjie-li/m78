@@ -1,4 +1,3 @@
-/// <reference types="react" />
 import { AnyFunction } from "@m78/utils";
 interface Props {
     children: (bind: AnyFunction) => React.ReactElement;

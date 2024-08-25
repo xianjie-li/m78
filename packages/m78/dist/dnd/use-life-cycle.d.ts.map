@@ -1,1 +1,1 @@
-{"version":3,"file":"use-life-cycle.d.ts","sourceRoot":"","sources":["../../../../src/dnd/use-life-cycle.tsx"],"names":[],"mappings":"AACA,OAAO,EAAE,QAAQ,EAAE,MAAM,YAAY,CAAC;AACtC,OAAO,EAAE,iBAAiB,EAAE,MAAM,kBAAkB,CAAC;AAYrD,wBAAgB,aAAa,CAAC,GAAG,EAAE,QAAQ,EAAE,OAAO,EAAE,iBAAiB,QA+DtE"}
+{"version":3,"file":"use-life-cycle.d.ts","sourceRoot":"","sources":["../../../../src/dnd/use-life-cycle.tsx"],"names":[],"mappings":"AACA,OAAO,EAAE,QAAQ,EAAE,MAAM,YAAY,CAAC;AACtC,OAAO,EAAE,iBAAiB,EAAE,MAAM,kBAAkB,CAAC;AAYrD,wBAAgB,aAAa,CAAC,GAAG,EAAE,QAAQ,EAAE,OAAO,EAAE,iBAAiB,QAkEtE"}

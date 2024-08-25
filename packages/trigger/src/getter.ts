@@ -22,7 +22,7 @@ export function _checkGetter(ctx: _TriggerContext) {
     domBoundCacheMap.clear();
   }, 500);
 
-  ctx.trigger.getTargetByXY = (args): TriggerTargetData[] => {
+  ctx.trigger.getTargetData = (args): TriggerTargetData[] => {
     return ctx.getEventList(args).eventList;
   };
 

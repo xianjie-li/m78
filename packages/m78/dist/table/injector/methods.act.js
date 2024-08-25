@@ -8,8 +8,9 @@ import { _useStateAct } from "./state.act.js";
 import { _useEditRender } from "../render/use-edit-render.js";
 import { _useCustomRender } from "../render/use-custom-render.js";
 import { _injector } from "../table.js";
-import { createRandString, isFunction } from "@m78/utils";
+import { createRandString, getNamePathValue, isBoolean, isFunction } from "@m78/utils";
 import { createForm } from "../../form/index.js";
+import { _privateCtxKey, _privateInstanceCallbackKey } from "../../table-vanilla/common.js";
 export function _useMethodsAct() {
     var _injector_useDeps = _injector.useDeps(_useStateAct), ref = _injector_useDeps.ref, scrollRef = _injector_useDeps.scrollRef, scrollContRef = _injector_useDeps.scrollContRef, wrapRef = _injector_useDeps.wrapRef, state = _injector_useDeps.state, setState = _injector_useDeps.setState, self = _injector_useDeps.self, plugins = _injector_useDeps.plugins;
     var props = _injector.useProps();
@@ -17,15 +18,27 @@ export function _useMethodsAct() {
     var customRender = _useCustomRender();
     /** 创建/更新表格实例 */ function updateInstance(propsConf, isFull) {
         console.log("reload", isFull ? "full" : "index");
+        var curProps = state.instance ? propsConf : props;
+        var dataOperations = props.dataOperations;
+        // 映射一些名称有变更的配置
+        var mapProps = _object_spread_props(_object_spread({}, curProps), {
+            dragSortColumn: isBoolean(dataOperations) ? dataOperations : dataOperations === null || dataOperations === void 0 ? void 0 : dataOperations.sortColumn,
+            dragSortRow: isBoolean(dataOperations) ? dataOperations : dataOperations === null || dataOperations === void 0 ? void 0 : dataOperations.sortColumn
+        });
         if (state.instance) {
-            state.instance.setConfig(propsConf, !isFull);
+            state.instance.setConfig(mapProps, !isFull);
             setState({
                 renderID: Math.random()
             });
             return;
         }
         var texts = i18n.getResourceBundle(i18n.language, TABLE_NS);
-        var ins = createTable(_object_spread_props(_object_spread({}, props), {
+        var instanceCBConf = // 获取尚未完成渲染的table实例, 部分功能中会用到
+        _define_property({}, _privateInstanceCallbackKey, function(noRenderedIns) {
+            self.instance = noRenderedIns;
+            self.vCtx = getNamePathValue(noRenderedIns, _privateCtxKey);
+        });
+        var ins = createTable(_object_spread_props(_object_spread({}, mapProps, instanceCBConf), {
             el: ref.current,
             viewEl: scrollRef.current,
             viewContentEl: scrollContRef.current,
@@ -42,7 +55,8 @@ export function _useMethodsAct() {
             persistenceConfig: state.persistenceConfig
         }));
         setState({
-            instance: ins
+            instance: ins,
+            vCtx: getNamePathValue(ins, _privateCtxKey)
         });
     }
     /** 初始化定制空节点 */ function initEmptyNode() {
@@ -73,7 +87,7 @@ export function _useMethodsAct() {
     }
     /** 更新editCheckForm, 应在schema变更时触发 */ function updateCheckForm() {
         self.editStatusMap = {};
-        var ls = props.schema || [];
+        var ls = props.schemas || [];
         if (self.editCheckForm) {
             self.editCheckForm.setSchemas({
                 schemas: ls

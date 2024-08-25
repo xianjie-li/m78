@@ -35,14 +35,5 @@ export function _create() {
 
   ctx.event.bind();
 
-  // 光标处理
-  // ctx.trigger.event.on((e) => {
-  //   if (e.type === TriggerType.active) {
-  //     if ("target" in e.target && e.target.cursor) {
-  //       ctx.trigger.cursor = e.active ? e.target.cursor : "";
-  //     }
-  //   }
-  // });
-
   return ctx.trigger;
 }

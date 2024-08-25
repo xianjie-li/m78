@@ -1,4 +1,3 @@
-/// <reference types="react" />
 import { _RCTableSelf, _RCTableState, TableDataOperationsConfig } from "../types.js";
 import { RCTablePlugin } from "../plugin.js";
 export declare function _useStateAct(): {
@@ -10,7 +9,7 @@ export declare function _useStateAct(): {
     scrollContRef: import("react").MutableRefObject<HTMLDivElement>;
     wrapRef: import("react").MutableRefObject<HTMLDivElement>;
     scrollEvent: import("@m78/hooks").CustomEventWithHook<import("@m78/utils").AnyFunction>;
-    plugins: (typeof import("../../table-vanilla/plugin.js").TablePlugin | import("../../table-vanilla/plugin.js").TablePlugin)[];
+    plugins: (typeof import("../../index.js").TablePlugin | import("../../index.js").TablePlugin)[];
     rcPlugins: RCTablePlugin[];
     dataOperations: TableDataOperationsConfig;
 };

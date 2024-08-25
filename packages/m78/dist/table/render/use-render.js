@@ -12,15 +12,11 @@ import React from "react";
 import { _useStateAct } from "../injector/state.act.js";
 import { _injector } from "../table.js";
 import { COMMON_NS, Translation } from "../../i18n/index.js";
-import { _useContextMenuAct } from "../context-menu/use-context-menu.act.js";
 import { Spin } from "../../spin/index.js";
 export function _useRender() {
     var /*#__PURE__*/ _React;
     var props = _injector.useProps();
     var _injector_useDeps = _injector.useDeps(_useStateAct), state = _injector_useDeps.state, ref = _injector_useDeps.ref, scrollRef = _injector_useDeps.scrollRef, scrollEvent = _injector_useDeps.scrollEvent, scrollContRef = _injector_useDeps.scrollContRef, wrapRef = _injector_useDeps.wrapRef, rcPlugins = _injector_useDeps.rcPlugins;
-    var ctxMenu = _injector.useDeps(_useContextMenuAct);
-    // 内部引用了ctxMenu.node, 避免递归引用导致类型丢失
-    var renderTrigger = ctxMenu.renderTrigger;
     return /*#__PURE__*/ _jsxs("div", {
         className: clsx("m78-table_wrap", props.wrapClassName),
         style: props.wrapStyle,
@@ -50,8 +46,7 @@ export function _useRender() {
                     ].concat(_to_consumable_array(rcPlugins.map(function(p) {
                         var _p_rcExtraRender;
                         return (_p_rcExtraRender = p.rcExtraRender) === null || _p_rcExtraRender === void 0 ? void 0 : _p_rcExtraRender.call(p);
-                    })))),
-                    ctxMenu.node
+                    }))))
                 ]
             }),
             state.initializing && /*#__PURE__*/ _jsx(Spin, {
@@ -64,7 +59,7 @@ export function _useRender() {
                 className: "m78-table_block-error",
                 children: state.blockError
             }),
-            renderTrigger(/*#__PURE__*/ _jsx("div", {
+            /*#__PURE__*/ _jsx("div", {
                 style: props.style,
                 className: clsx("m78-table", props.className),
                 ref: ref,
@@ -81,7 +76,7 @@ export function _useRender() {
                         ref: scrollContRef
                     })
                 })
-            }))
+            })
         ]
     });
 }

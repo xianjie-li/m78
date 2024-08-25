@@ -82,9 +82,11 @@ import { _getSizeString } from "../common.js";
         {
             key: "rendered",
             value: function rendered() {
-                var size = this.table.getHeight() - this.context.yHeaderHeight;
-                var emptyHeight = Math.max(size, this.config.emptySize);
-                this.node.style.height = _getSizeString(emptyHeight);
+                if (this.isEmpty) {
+                    var size = this.table.getHeight() - this.context.yHeaderHeight;
+                    var emptyHeight = Math.max(size, this.config.emptySize);
+                    this.node.style.height = _getSizeString(emptyHeight);
+                }
             }
         },
         {

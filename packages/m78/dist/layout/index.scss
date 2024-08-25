@@ -1,4 +1,4 @@
-@import '../common/style/sass';
+@import "../common/style/sass";
 
 // #######################
 // Common
@@ -296,7 +296,8 @@
 .m78-tile {
   flex-wrap: wrap;
 
-  &_leading, &_trailing {
+  &_leading,
+  &_trailing {
     flex: 0 0 auto;
     //line-height: 1;
     max-width: 70%; // 内容过多优化显示

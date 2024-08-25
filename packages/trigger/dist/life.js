@@ -36,18 +36,25 @@ export function _lifeImpl(ctx) {
             document.documentElement.style.userSelect = "";
         }
     }
+    var lastTriggerTime = 0;
     // 处理光标切换
-    function handleCursor(param) {
-        var eventMeta = param.eventMeta, active = param.active, first = param.first, last = param.last, type = param.type;
+    function handleCursor(e) {
+        var eventMeta = e.eventMeta, active = e.active, first = e.first, last = e.last, type = e.type, timeStamp = e.timeStamp;
         var typeMap = eventMeta.typeMap, cursor = eventMeta.cursor;
-        if (type === TriggerType.drag) {
+        // 如果有新事件入场, 忽略旧事件
+        if (timeStamp <= lastTriggerTime) return;
+        if (type === TriggerType.drag && cursor.drag) {
             if (first) document.documentElement.style.cursor = cursor.drag;
             if (last) document.documentElement.style.cursor = "";
+            if (first || last) {
+                lastTriggerTime = timeStamp;
+            }
         }
         if (trigger.dragging) return;
-        if (type === TriggerType.active) {
-            var curCursor = typeMap.get(TriggerType.drag) ? cursor.dragActive : cursor.active;
+        var curCursor = typeMap.get(TriggerType.drag) ? cursor.dragActive : cursor.active;
+        if (type === TriggerType.active && curCursor) {
             document.documentElement.style.cursor = active ? curCursor : "";
+            lastTriggerTime = timeStamp;
         }
     }
 }

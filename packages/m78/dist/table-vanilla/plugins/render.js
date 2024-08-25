@@ -6,7 +6,8 @@ import { _ as _inherits } from "@swc/helpers/_/_inherits";
 import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { _ as _create_super } from "@swc/helpers/_/_create_super";
 import { TablePlugin } from "../plugin.js";
-import { getNamePathValue, getStyle, isNumber, isString, isTruthyOrZero, rafCaller, replaceHtmlTags, setNamePathValue } from "@m78/utils";
+import { getNamePathValue, getStyle, isNumber, isString, isTruthyOrZero, replaceHtmlTags, setNamePathValue } from "@m78/utils";
+import { rafCaller } from "@m78/animate-tools";
 import { _getSizeString } from "../common.js";
 import { _TableGetterPlugin } from "./getter.js";
 import clsx from "clsx";
@@ -118,10 +119,31 @@ import { _TableMetaDataPlugin } from "./meta-data.js";
                     var _this_context_lastViewportItems;
                     var getter = _this.getPlugin(_TableGetterPlugin);
                     var visibleItems = getter.getViewportItems();
+                    /* # # # # # # # beforeRender # # # # # # # */ _this.plugins.forEach(function(plugin) {
+                        var _plugin_beforeRender;
+                        (_plugin_beforeRender = plugin.beforeRender) === null || _plugin_beforeRender === void 0 ? void 0 : _plugin_beforeRender.call(plugin);
+                    });
+                    _this.table.event.beforeRender.emit();
                     // 清理由可见转为不可见的项
                     _this.removeHideNodes((_this_context_lastViewportItems = _this.context.lastViewportItems) === null || _this_context_lastViewportItems === void 0 ? void 0 : _this_context_lastViewportItems.cells, visibleItems.cells);
+                    _this.context.lastMountRows = {};
+                    _this.context.lastMountColumns = {};
+                    // 在render中会触发一些列hook和事件, 这里提前循环设置值, 防止在期间读取mount状态
+                    visibleItems.rows.forEach(function(row) {
+                        _this.context.lastMountRows[row.key] = true;
+                    });
+                    visibleItems.columns.forEach(function(column) {
+                        _this.context.lastMountColumns[column.key] = true;
+                    });
                     // 内容渲染
                     _this.renderCell(visibleItems.cells);
+                    // 事件通知
+                    visibleItems.rows.forEach(function(row) {
+                        _this.table.event.rowRendering.emit(row);
+                    });
+                    visibleItems.columns.forEach(function(column) {
+                        _this.table.event.columnRendering.emit(column);
+                    });
                     _this.context.lastViewportItems = visibleItems;
                     /* # # # # # # # rendering # # # # # # # */ _this.plugins.forEach(function(plugin) {
                         var _plugin_rendering;
@@ -181,6 +203,7 @@ import { _TableMetaDataPlugin } from "./meta-data.js";
                         _this.context.stageEL.appendChild(dom);
                         _this.table.event.mountChange.emit(cell);
                     }
+                    _this.table.event.cellRendering.emit(cell);
                 });
             }
         },

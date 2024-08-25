@@ -4,7 +4,7 @@ import { useEffect, useImperativeHandle, useMemo } from "react";
 import { ensureArray, isDom } from "@m78/utils";
 import { isBound } from "./common.js";
 import { _useTypeProcess } from "./use-type-process.js";
-import { TriggerType } from "../trigger/index.js";
+import { TriggerType } from "@m78/trigger";
 export function _useLifeCycle(ctx) {
     var props = ctx.props, setOpen = ctx.setOpen, open = ctx.open, self = ctx.self, trigger = ctx.trigger, containerRef = ctx.containerRef, overlaysClickAway = ctx.overlaysClickAway, state = ctx.state, measure = ctx.measure, isUnmount = ctx.isUnmount, methods = ctx.methods;
     // 对外暴露的实例
@@ -143,6 +143,7 @@ export function _useLifeCycle(ctx) {
     };
     /** 清理 */ useDestroy(function() {
         clearTimeout(self.triggerMultipleTimer);
+        clearTimeout(self.triggerMultipleDelayOpenTimer);
         clearTimeout(self.shouldCloseTimer);
         clearTimeout(self.clickAwayCloseTimer);
     });

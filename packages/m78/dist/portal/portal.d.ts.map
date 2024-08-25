@@ -1,1 +1,1 @@
-{"version":3,"file":"portal.d.ts","sourceRoot":"","sources":["../../../../src/portal/portal.tsx"],"names":[],"mappings":"AAAA,OAAO,KAAkB,MAAM,OAAO,CAAC;AAOvC,eAAO,MAAM,OAAO;;;mBAKP,MAAM,SAAS;;;CAW3B,CAAC"}
+{"version":3,"file":"portal.d.ts","sourceRoot":"","sources":["../../../../src/portal/portal.tsx"],"names":[],"mappings":"AAAA,OAAO,KAAkB,MAAM,OAAO,CAAC;AAOvC,eAAO,MAAM,OAAO;+BAGjB;QACD,SAAS,CAAC,EAAE,MAAM,CAAC;QACnB,QAAQ,CAAC,EAAE,KAAK,CAAC,SAAS,CAAC;KAC5B;;CAUA,CAAC"}

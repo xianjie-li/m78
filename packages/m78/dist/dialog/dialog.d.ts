@@ -5,7 +5,7 @@ declare const _Dialog: {
     (props: DialogProps): React.JSX.Element;
     defaultProps: Partial<DialogProps>;
     displayName: string;
-} & import("@m78/render-api").RenderApiInstance<Omit<DialogProps, "children" | "onChange" | "open" | "innerRef" | "defaultOpen" | "childrenAsTarget" | "triggerType" | "onUpdate" | "onDispose" | "instanceRef">, OverlayInstance> & {
+} & import("@m78/render-api").RenderApiInstance<Omit<DialogProps, "children" | "onChange" | "open" | "innerRef" | "instanceRef" | "defaultOpen" | "childrenAsTarget" | "triggerType" | "onUpdate" | "onDispose">, OverlayInstance> & {
     quicker: DialogQuicker;
     info: DialogQuicker;
     error: DialogQuicker;

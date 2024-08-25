@@ -4,11 +4,12 @@ import { DomTarget, SelectManager, SetState } from "@m78/hooks";
 import { OverlayProps } from "../overlay/index.js";
 import React from "react";
 import { EmptyFunction, TupleNumber } from "@m78/utils";
-import { TriggerProps, TriggerType } from "../trigger/index.js";
+import { TriggerType } from "@m78/trigger";
+import type { TriggerProps } from "@m78/trigger/react/trigger.js";
 /** 应从Overlay中移除的props */
 export declare const omitMenuOverlayProps: readonly ["xy", "alignment", "target", "childrenAsTarget", "content", "children", "triggerNodeRef", "autoFocus"];
 /** 应从Overlay中移除的props */
-export type MenuOmitOverlayKeys = typeof omitMenuOverlayProps[number];
+export type MenuOmitOverlayKeys = (typeof omitMenuOverlayProps)[number];
 export type MenuOmitOverlayProps = Omit<OverlayProps, MenuOmitOverlayKeys>;
 export interface MenuOption extends DataSourceItem<MenuOption>, Omit<LayProps, "children" | "title" | "size" | "onClick" | "innerRef"> {
     /** 完全自定义项的渲染内容, 需要为渲染内容传入一个唯一key */

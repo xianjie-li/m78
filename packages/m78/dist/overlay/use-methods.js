@@ -5,9 +5,9 @@ import { getScrollParent, isBoolean, isDom } from "@m78/utils";
 import { getRefDomOrDom, useFn } from "@m78/hooks";
 import throttle from "lodash/throttle.js";
 import debounce from "lodash/debounce.js";
-import { _arrowSpace, _calcAlignment, _defaultAlignment, _defaultProps, _flip, _getDirections, _getMinClampBound, _preventOverflow, isBound } from "./common.js";
+import { _arrowSpace, _calcAlignment, _defaultAlignment, _flip, _getDirections, _getMinClampBound, _preventOverflow, isBound } from "./common.js";
 import { OverlayUpdateType } from "./types.js";
-import { TriggerType } from "../trigger/index.js";
+import { TriggerType } from "@m78/trigger";
 export function _useMethods(ctx) {
     var containerRef = ctx.containerRef, props = ctx.props, spApi = ctx.spApi, self = ctx.self, open = ctx.open, state = ctx.state, setState = ctx.setState, arrowSpApi = ctx.arrowSpApi, trigger = ctx.trigger, setOpen = ctx.setOpen;
     /** 判断当前的bound类型, 返回null表示无任何可用配置 */ function getCurrentBoundType() {
@@ -239,6 +239,7 @@ export function _useMethods(ctx) {
     });
     // 多触发点的特殊handle
     var onTriggerMultiple = useFn(function(e) {
+        clearTimeout(self.triggerMultipleDelayOpenTimer);
         clearTimeout(self.triggerMultipleTimer);
         if (e.type === TriggerType.move) {
             ctx.triggerHandle(e);
@@ -255,20 +256,22 @@ export function _useMethods(ctx) {
             isOpen = true;
         }
         if (isOpen) {
-            self.lastTriggerTarget = e.data;
-            // 需要在clickAway之后出发
+            self.lastTriggerTarget = e.target;
+            // 需要在clickAway之后触发, 并阻止部分相互存在干扰的事件
             self.triggerMultipleTimer = setTimeout(function() {
-                updateTarget(e.target, true);
                 ctx.triggerHandle(e);
+                self.triggerMultipleDelayOpenTimer = setTimeout(function() {
+                    updateTarget(e.target.target, true);
+                });
             }, 10);
-        } else if (self.lastTriggerTarget === e.data) {
+        } else if (self.lastTriggerTarget === e.target) {
             self.lastTriggerTarget = undefined;
             ctx.triggerHandle(e);
         }
     });
     /** 拖动处理 */ var onDragHandle = useFn(function(e) {
         if (props.direction) {
-            console.warn("".concat(_defaultProps.namespace, ": direction and drag can't be used at the same time"));
+            console.warn("overlay: direction and drag can't be used at the same time");
             return;
         }
         updateXY(e.offset, true);

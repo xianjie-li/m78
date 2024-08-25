@@ -1,10 +1,10 @@
-import { UseScrollMeta } from "@m78/hooks";
 import React from "react";
 import { _ScrollContext } from "./types.js";
+import type { ScrollTriggerState } from "@m78/trigger/scroll.js";
 /** 滚动条实现/汇总 */
 export declare function _useBar(ctx: _ScrollContext): {
     refresh: () => void;
-    onScroll: (meta: UseScrollMeta) => void;
+    onScroll: (meta: ScrollTriggerState) => void;
     barNode: React.JSX.Element;
     /** 设置到滚动容器, 主要用于滚动条占用容器位置的浏览器去掉滚动条位置 */
     offsetStyle: {

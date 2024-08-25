@@ -1,8 +1,10 @@
 import { ComponentBaseProps } from "../common/index.js";
 import React from "react";
-import { SetState, UseMeasureBound, useScroll, UseScrollMeta } from "@m78/hooks";
+import { SetState, UseMeasureBound } from "@m78/hooks";
 import { _defaultProps } from "./common.js";
 import { SpringValue } from "react-spring";
+import type { ScrollTriggerState } from "@m78/trigger/scroll.js";
+import type { useScroll } from "@m78/trigger/react/use-scroll.js";
 /** 滚动类型 */
 export declare enum ScrollDirection {
     x = "x",
@@ -40,7 +42,7 @@ export interface ScrollProps extends ComponentBaseProps {
     /** 启用迷你滚动条 */
     miniBar?: boolean;
     /** 滚动时触发 */
-    onScroll?: (meta: UseScrollMeta) => void;
+    onScroll?: (meta: ScrollTriggerState) => void;
     /** 容器级放置的额外节点, 用于功能扩展 */
     wrapExtra?: React.ReactNode;
     /** 用于控制滚动的实例 */

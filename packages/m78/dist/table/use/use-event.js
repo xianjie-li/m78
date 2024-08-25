@@ -4,7 +4,6 @@ import { TableReloadLevel } from "../../table-vanilla/index.js";
 import { notify } from "../../notify/index.js";
 import { _useStateAct } from "../injector/state.act.js";
 import { _injector } from "../table.js";
-import { _getTableCtx } from "../common.js";
 // 将部分table实例事件直接暴露为props, 并对某些事件进行处理
 export function _useEvent() {
     var _injector_useDeps = _injector.useDeps(_useStateAct), state = _injector_useDeps.state, setState = _injector_useDeps.setState;
@@ -27,9 +26,9 @@ export function _useEvent() {
     });
     // 数据变更时, 重新计算行数等
     var dataChange = useFn(function() {
-        var _$_getTableCtx;
+        var _state_vCtx;
         setState({
-            rowCount: ((_$_getTableCtx = _getTableCtx(state.instance)) === null || _$_getTableCtx === void 0 ? void 0 : _$_getTableCtx.allRowKeys.length) || 0
+            rowCount: ((_state_vCtx = state.vCtx) === null || _state_vCtx === void 0 ? void 0 : _state_vCtx.allRowKeys.length) || 0
         });
     });
     var mutation = useFn(function(event) {

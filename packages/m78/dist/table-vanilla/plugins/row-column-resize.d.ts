@@ -1,8 +1,7 @@
-/// <reference types="lodash" />
 import { TablePlugin } from "../plugin.js";
-import { RafFunction } from "@m78/utils";
+import { RafFunction } from "@m78/animate-tools";
 import { TableColumn, TableItems, TableRow } from "../types/items.js";
-import { TriggerInstance, TriggerEvent, TriggerTargetMeta } from "../../trigger/index.js";
+import { TriggerEvent, type TriggerOption } from "@m78/trigger";
 /** 列/行重置大小 */
 export declare class _TableRowColumnResize extends TablePlugin {
     /** 提示线 */
@@ -20,8 +19,10 @@ export declare class _TableRowColumnResize extends TablePlugin {
     /** 最小/大行尺寸 */
     static MIN_ROW_HEIGHT: number;
     static MAX_ROW_HEIGHT: number;
-    /** 虚拟节点触发事件 */
-    trigger: TriggerInstance;
+    static HANDLE_SIZE: number;
+    /** 额外对外暴露一个用于集中控制trigger开关的属性 */
+    triggerEnable: boolean;
+    targetUniqueKey: string;
     rafCaller: RafFunction;
     rafClearFn: () => void;
     /** 拖动中 */
@@ -32,24 +33,25 @@ export declare class _TableRowColumnResize extends TablePlugin {
     dragOffsetX: number;
     dragOffsetY: number;
     initialized(): void;
+    private getEventOption;
     rendered(): void;
     beforeDestroy(): void;
     /** 每次render后根据ctx.lastViewportItems更新虚拟拖拽节点 */
     renderedDebounce: import("lodash").DebouncedFunc<() => void>;
     /** 生成虚拟节点 */
-    createBound(wrapBound: DOMRect, last: TableItems, isRow: boolean): TriggerTargetMeta[];
+    createBound(wrapBound: DOMRect, last: TableItems, isRow: boolean): TriggerOption[];
     triggerDispatch: (e: TriggerEvent) => void;
-    hoverHandle: ({ target, active }: TriggerEvent) => void;
-    dragHandle: ({ target, first, last, deltaX, deltaY }: TriggerEvent) => void;
+    hoverHandle: (e: TriggerEvent) => void;
+    dragHandle: (e: TriggerEvent) => void;
     scrollHandle: () => void;
     /** 更新column配置 */
     updateColumnSize(column: TableColumn, diff: number): void;
     /** 更新row配置 */
     updateRowSize(row: TableRow, diff: number): void;
     /** 显示并更新xLine位置 */
-    updateXTipLine(x: number, bound: TriggerTargetMeta): void;
+    updateXTipLine(x: number, event: TriggerEvent): void;
     /** 显示并更新yLine位置 */
-    updateYTipLine(y: number, bound: TriggerTargetMeta): void;
+    updateYTipLine(y: number, event: TriggerEvent): void;
     /** 隐藏xLine */
     hideXTipLine(): void;
     /** 隐藏yLine */

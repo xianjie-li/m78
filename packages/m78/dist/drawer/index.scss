@@ -1,4 +1,4 @@
-@import '../common/style/sass';
+@import "../common/style/sass";
 
 .m78-drawer {
   position: relative;
@@ -38,7 +38,7 @@
   }
 
   &.__top {
-    border-radius:  0 0 var(--m78-border-radius-lg) var(--m78-border-radius-lg);
+    border-radius: 0 0 var(--m78-border-radius-lg) var(--m78-border-radius-lg);
     // 为动画预留一定空间, 防止弹簧效果显示出地区区域
     padding-top: 30px;
     top: -30px;

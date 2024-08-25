@@ -357,9 +357,9 @@ export function applyMixins<C extends Constructor>(
   });
 
   // 记录写入过的属性
-  const propertyExist: any = {};
+  let propertyExist: any = {};
   // 待合并的属性
-  const propertyMap: any = {};
+  let propertyMap: any = {};
 
   class Mixin extends main {
     constructor(...args: any[]) {
@@ -386,6 +386,9 @@ export function applyMixins<C extends Constructor>(
       });
 
       Object.assign(this, propertyMap);
+
+      propertyExist = {};
+      propertyMap = {};
     }
   }
 

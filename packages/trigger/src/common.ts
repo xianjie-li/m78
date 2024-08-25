@@ -10,10 +10,10 @@ export const _defaultLevel = 0;
 
 export const _defaultOverrideStrategy = TriggerOverrideStrategy.parallel;
 
-export const _defaultCursorConf: Required<TriggerCursorMap> = {
+export const _defaultCursorConf: TriggerCursorMap = {
   drag: "grabbing",
   dragActive: "grab",
-  active: "pointer",
+  // active: "pointer",
 };
 
 /** move事件的触发频率(ms) */
@@ -23,7 +23,7 @@ export const _triggerLimit = 60;
 export const _triggerInDelay = 80 - _triggerLimit;
 
 /** 含first/last的事件的出延迟 */
-export const _triggerOutDelay = 140;
+export const _triggerOutDelay = 80;
 
 /** longpress延迟 */
 export const _longPressDelay = 380;

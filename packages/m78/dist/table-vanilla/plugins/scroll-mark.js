@@ -6,6 +6,7 @@ import { _ as _inherits } from "@swc/helpers/_/_inherits";
 import { _ as _create_super } from "@swc/helpers/_/_create_super";
 import { TablePlugin } from "../plugin.js";
 import { removeNode } from "../../common/index.js";
+import { setCacheValue } from "@m78/utils";
 export var _TableScrollMarkPlugin = /*#__PURE__*/ function(TablePlugin) {
     "use strict";
     _inherits(_TableScrollMarkPlugin, TablePlugin);
@@ -27,10 +28,10 @@ export var _TableScrollMarkPlugin = /*#__PURE__*/ function(TablePlugin) {
             var touchBottom = Math.ceil(y) >= _this.table.getMaxY(); // 为什么会出现小数?
             var touchLeft = x === 0;
             var touchRight = Math.ceil(x) >= _this.table.getMaxX();
-            _this.tEl.style.opacity = touchTop || !ctx.topFixedHeight ? "0" : "1";
-            _this.bEl.style.opacity = touchBottom || !ctx.bottomFixedHeight ? "0" : "1";
-            _this.lEl.style.opacity = touchLeft || !ctx.leftFixedWidth ? "0" : "1";
-            _this.rEl.style.opacity = touchRight || !ctx.rightFixedWidth ? "0" : "1";
+            setCacheValue(_this.tEl.style, "opacity", touchTop || !ctx.topFixedHeight ? "0" : "1");
+            setCacheValue(_this.bEl.style, "opacity", touchBottom || !ctx.bottomFixedHeight ? "0" : "1");
+            setCacheValue(_this.lEl.style, "opacity", touchLeft || !ctx.leftFixedWidth ? "0" : "1");
+            setCacheValue(_this.rEl.style, "opacity", touchRight || !ctx.rightFixedWidth ? "0" : "1");
         });
         return _this;
     }

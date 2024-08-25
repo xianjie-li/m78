@@ -137,36 +137,10 @@ import { Position } from "../../common/index.js";
             function pasteImpl(e) {
                 var _this = this;
                 return _async_to_generator(function() {
-                    var _loop, str, data, e1, strCell, selected, actions, isSingleValue, _loop1, allCell, singleValue, i, _ret, errorStr, i1, _ret1;
+                    var str, data, e1, strCell, selected, actions, isSingleValue, _loop, allCell, singleValue, i, _ret, errorStr, i1, _loop1, curList, j, _ret1;
                     return _ts_generator(this, function(_state) {
                         switch(_state.label){
                             case 0:
-                                _loop = function(i1) {
-                                    var _loop = function(j) {
-                                        var curCellStr = curList[j];
-                                        var cell = selected[i1][j];
-                                        // 若任意一个cell未获取到则中断
-                                        if (!cell) return {
-                                            v: void void 0
-                                        };
-                                        if (!_this.interactiveCore.isInteractive(cell)) {
-                                            _this.table.event.error.emit(_this.context.texts.paste);
-                                            return {
-                                                v: void void 0
-                                            };
-                                        }
-                                        actions.push(function() {
-                                            _this.table.setValue(cell, curCellStr);
-                                        });
-                                    };
-                                    var curList = strCell[i1];
-                                    for(var j = 0; j < curList.length; j++){
-                                        var _ret = _loop(j);
-                                        if (_type_of(_ret) === "object") return {
-                                            v: _ret.v
-                                        };
-                                    }
-                                };
                                 // 有正在进行编辑等操作的单元格, 跳过
                                 if (_this.interactiveCore.items.length) return [
                                     2
@@ -231,7 +205,7 @@ import { Position } from "../../common/index.js";
                                 // case1: 只有单个粘贴值, 若是, 并且选中单元格数量小于一定值, 则设置到所有选中的单元格
                                 isSingleValue = strCell.length === 1 && strCell[0].length === 1;
                                 if (isSingleValue) {
-                                    _loop1 = function(i) {
+                                    _loop = function(i) {
                                         var cell = allCell[i];
                                         if (!_this.interactiveCore.isInteractive(cell)) {
                                             _this.table.event.error.emit(_this.context.texts.paste);
@@ -254,7 +228,7 @@ import { Position } from "../../common/index.js";
                                     }
                                     singleValue = strCell[0][0];
                                     for(i = 0; i < allCell.length; i++){
-                                        _ret = _loop1(i);
+                                        _ret = _loop(i);
                                         if (_type_of(_ret) === "object") return [
                                             2,
                                             _ret.v
@@ -278,11 +252,31 @@ import { Position } from "../../common/index.js";
                                     ];
                                 }
                                 for(i1 = 0; i1 < strCell.length; i1++){
-                                    _ret1 = _loop(i1);
-                                    if (_type_of(_ret1) === "object") return [
-                                        2,
-                                        _ret1.v
-                                    ];
+                                    _loop1 = function(j) {
+                                        var curCellStr = curList[j];
+                                        var cell = selected[i1][j];
+                                        // 若任意一个cell未获取到则中断
+                                        if (!cell) return {
+                                            v: void void 0
+                                        };
+                                        if (!_this.interactiveCore.isInteractive(cell)) {
+                                            _this.table.event.error.emit(_this.context.texts.paste);
+                                            return {
+                                                v: void void 0
+                                            };
+                                        }
+                                        actions.push(function() {
+                                            _this.table.setValue(cell, curCellStr);
+                                        });
+                                    };
+                                    curList = strCell[i1];
+                                    for(j = 0; j < curList.length; j++){
+                                        _ret1 = _loop1(j);
+                                        if (_type_of(_ret1) === "object") return [
+                                            2,
+                                            _ret1.v
+                                        ];
+                                    }
                                 }
                                 if (!actions.length) return [
                                     2
@@ -395,6 +389,9 @@ import { Position } from "../../common/index.js";
                     // 非表格焦点 或 有正在进行编辑等操作的单元格, 跳过
                     return _this.table.isActive() && !_this.interactiveCore.items.length;
                 };
+                var redoUndoChecker = function() {
+                    return checker() && !!_this.config.history;
+                };
                 return [
                     {
                         code: "Backspace",
@@ -407,7 +404,7 @@ import { Position } from "../../common/index.js";
                             KeyboardHelperModifier.sysCmd
                         ],
                         handle: this.onUndo,
-                        enable: checker
+                        enable: redoUndoChecker
                     },
                     {
                         code: "KeyZ",
@@ -416,7 +413,7 @@ import { Position } from "../../common/index.js";
                             KeyboardHelperModifier.shift
                         ],
                         handle: this.onRedo,
-                        enable: checker
+                        enable: redoUndoChecker
                     },
                     {
                         code: [
@@ -451,7 +448,7 @@ import { Position } from "../../common/index.js";
                 var rows = str.split(/\n|\r\n/);
                 for(var i = 0; i < rows.length; i++){
                     var row = rows[i];
-                    var cells = row.split("	");
+                    var cells = row.split("\t");
                     if (cells.length) {
                         list.push(cells);
                     }

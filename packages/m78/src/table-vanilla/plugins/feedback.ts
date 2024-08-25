@@ -2,16 +2,16 @@ import { TablePlugin } from "../plugin.js";
 import { _TableFormPlugin } from "./form/form.js";
 import debounce from "lodash/debounce.js";
 import {
-  createTrigger,
-  TriggerInstance,
+  trigger,
   TriggerListener,
-  TriggerTargetMeta,
   TriggerType,
-} from "../../trigger/index.js";
+  type TriggerOption,
+} from "@m78/trigger";
 import { TableCell } from "../types/items.js";
-import { BoundSize } from "@m78/utils";
+import { BoundSize, createTempID } from "@m78/utils";
 import { TableMutationEvent, TableMutationType } from "./mutation.js";
 import { _TableRowColumnResize } from "./row-column-resize.js";
+import { _TableDragSortPlugin } from "./drag-sort.js";
 
 /** 提供对某些表格元素的交互反馈, 比如单元格包含错误信息或内容超出时, 在选中后为其提供反馈 */
 export class _TableFeedbackPlugin extends TablePlugin {
@@ -22,33 +22,43 @@ export class _TableFeedbackPlugin extends TablePlugin {
   // 防止键盘交互导致自动滚动时, feedback触发完马上滚动导致关闭
   lastTime = 0;
 
+  // TODO: tag3
   // 表头交互提醒
-  headerTrigger: TriggerInstance;
+  // headerTrigger: TriggerInstance;
 
   /** mutation value change 提交延迟计时器 */
   valueChangeTimer: any;
 
+  // 用于快速批量向target添加或移除事件的key
+  targetUniqueKey = createTempID();
+
+  dragSort: _TableDragSortPlugin;
+
   initialized() {
     this.form = this.getPlugin(_TableFormPlugin);
+    this.dragSort = this.getPlugin(_TableDragSortPlugin);
     this.table.event.cellSelect.on(this.cellChange);
     this.table.event.mutation.on(this.mutationHandle);
 
-    this.headerTrigger = createTrigger({
-      type: TriggerType.active,
-      container: this.config.el,
-      active: {
-        lastDelay: 0,
-      },
-    });
+    // TODO: tag1
+    // this.headerTrigger = createTrigger({
+    //   type: TriggerType.active,
+    //   container: this.config.el,
+    //   active: {
+    //     lastDelay: 0,
+    //   },
+    // });
 
-    this.headerTrigger.event.on(this.headerTriggerHandle);
+    // this.headerTrigger.event.on(this.headerTriggerHandle);
 
     // 滚动时关闭
     this.context.viewEl.addEventListener("scroll", this.scroll);
   }
 
   beforeDestroy() {
-    this.headerTrigger.destroy();
+    // TODO: tag1
+    // this.headerTrigger.destroy();
+    trigger.off(this.targetUniqueKey);
 
     this.table.event.cellSelect.off(this.cellChange);
     this.table.event.mutation.off(this.mutationHandle);
@@ -178,16 +188,20 @@ export class _TableFeedbackPlugin extends TablePlugin {
     }
   };
 
+  // 最后一次触发 trigger active 的时间项, 用于防止从target1快速移动到target2时, 1的关闭事件导致2关闭, 因为trigger的关闭是包含延迟的
+  lastTriggerTarget: TriggerOption | null = null;
+
   // 表头交互
   headerTriggerHandle: TriggerListener = (e) => {
     if (e.type !== TriggerType.active) return;
 
     if (!e.active) {
-      this.emitClose();
+      // 如果当前feedback是相同target开启的则将其关闭
+      if (this.lastTriggerTarget === e.target) this.emitClose();
       return;
     }
 
-    const bound = (e.target as TriggerTargetMeta).target as BoundSize;
+    const bound = e.eventMeta.bound;
 
     const cell: TableCell = e.data;
 
@@ -235,6 +249,7 @@ export class _TableFeedbackPlugin extends TablePlugin {
     if (events.length) {
       this.lastEvent = [...events];
       this.table.event.feedback.emit(events);
+      this.lastTriggerTarget = e.target;
     } else {
       this.emitClose();
       this.lastEvent = null;
@@ -247,7 +262,9 @@ export class _TableFeedbackPlugin extends TablePlugin {
 
     const lastColumns = this.context.lastViewportItems?.columns || [];
 
-    this.headerTrigger.clear();
+    // TODO: tag6
+    // this.headerTrigger.clear();
+    trigger.off(this.targetUniqueKey);
 
     if (!lastColumns.length) {
       return;
@@ -264,25 +281,44 @@ export class _TableFeedbackPlugin extends TablePlugin {
     // 去掉column resize handle的位置
     const adjustSize = _TableRowColumnResize.HANDLE_SIZE;
 
-    const targets: TriggerTargetMeta[] = headerCells.map((cell) => {
+    const targets: TriggerOption[] = headerCells.map((cell) => {
       const xFix = cell.column.isFixed ? 0 : x;
 
       // 固定项
       const realX = cell.column.fixedOffset || cell.column.x;
 
-      return {
-        target: {
+      return this.getEventOption(
+        {
           width: cell.width - adjustSize * 2,
           height: cell.height,
           left: realX + left + adjustSize - xFix,
           top: cell.row.y + top,
         },
-        zIndex: cell.column.isFixed ? 1 : 0,
-        data: cell,
-      };
+        cell.column.isFixed ? 1 : 0,
+        cell
+      );
     });
 
-    this.headerTrigger.add(targets);
+    trigger.on(targets, this.targetUniqueKey);
+
+    // TODO: tag5
+    // this.headerTrigger.add(targets);
+  }
+
+  // 获取事件选项
+  private getEventOption(
+    target: BoundSize,
+    level: number,
+    data: any
+  ): TriggerOption {
+    return {
+      enable: () => !this.dragSort.dragging && this.table.isActive(),
+      type: TriggerType.active,
+      handler: this.headerTriggerHandle,
+      target,
+      level,
+      data,
+    };
   }
 
   // 检测单元格内容是否溢出

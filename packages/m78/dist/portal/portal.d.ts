@@ -1,7 +1,7 @@
 import React from "react";
 export declare const _Portal: {
     ({ children, namespace, }: {
-        namespace?: string | undefined;
+        namespace?: string;
         children?: React.ReactNode;
     }): React.ReactElement<any, string | React.JSXElementConstructor<any>>;
     displayName: string;

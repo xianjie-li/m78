@@ -118,6 +118,7 @@ declare const _default: {
         "new tip": string;
         "remove tip": string;
         "update tip": string;
+        "change tip": string;
         "sorted tip": string;
         "add row btn": string;
         "save btn": string;

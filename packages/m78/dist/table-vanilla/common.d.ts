@@ -1,11 +1,14 @@
 import { BoundSize } from "@m78/utils";
 import { TableKey, TablePosition } from "./types/base-type.js";
-import { TableRow } from "./types/items.js";
 export declare const _prefix = "m78-table";
 /** 用于在config.el上存储当前实例 */
 export declare const _privateInstanceKey = "__M78TableInstance";
 /** 用于在domEl上挂载是否为其是否为内部创建的信息 */
 export declare const _privateScrollerDomKey = "__M78PrivateScrollerDom";
+/** 在instance上挂载私有context的key */
+export declare const _privateCtxKey = "__ctx";
+/** 在实例准备好后立即通过config上的私有字段进行回调 */
+export declare const _privateInstanceCallbackKey = "__instanceCallback";
 /** 可替换的文本 */
 export declare const tableDefaultTexts: {
     readonly "paste unaligned row": "Pasted rows does not match the number of selected rows";
@@ -52,7 +55,5 @@ export declare function _syncListNode(arg: {
     nodeList: HTMLElement[];
     createAction?: (dom: HTMLElement) => void;
 }): void;
-/** 用于便捷的根据当前 lastViewportItems 生成用于高效检测row mount状态的检测方法 */
-export declare function _rowMountChecker(visibleRows?: TableRow[]): (key: TableKey) => boolean;
 export {};
 //# sourceMappingURL=common.d.ts.map

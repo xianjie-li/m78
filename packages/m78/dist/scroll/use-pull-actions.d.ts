@@ -1,6 +1,6 @@
 import React from "react";
 import { _ScrollContext } from "./types.js";
-import { UseScrollMeta } from "@m78/hooks";
+import type { ScrollTriggerState } from "@m78/trigger/scroll.js";
 export declare const _usePullActions: (ctx: _ScrollContext) => {
     springStyle: {
         rotate: import("react-spring").SpringValue<number>;
@@ -10,7 +10,7 @@ export declare const _usePullActions: (ctx: _ScrollContext) => {
     };
     pullDownNode: React.JSX.Element | null;
     onPullDown: () => Promise<void>;
-    onScroll: (meta: UseScrollMeta) => Promise<void>;
+    onScroll: (meta: ScrollTriggerState) => Promise<void>;
 };
 export type _UsePullActionsReturns = ReturnType<typeof _usePullActions>;
 //# sourceMappingURL=use-pull-actions.d.ts.map

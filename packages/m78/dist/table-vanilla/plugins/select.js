@@ -7,14 +7,15 @@ import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
 import { _ as _create_super } from "@swc/helpers/_/_create_super";
 import { TableLoadStage, TablePlugin } from "../plugin.js";
-import { ensureArray, getCmdKeyStatus, getEventOffset, isBoolean, isEmpty, isFunction, isString } from "@m78/utils";
-import { createAutoScroll } from "@m78/smooth-scroll";
+import { ensureArray, getCmdKeyStatus, getEventOffset, isBoolean, isEmpty, isFunction, isString, setCacheValue } from "@m78/utils";
+import { createAutoScroll } from "@m78/animate-tools";
 import throttle from "lodash/throttle.js";
 import { _getCellKey, _getCellKeysByStr, _getMaxPointByPoint, _tableTriggerFilters, _triggerFilterList } from "../common.js";
 import { addCls, removeCls } from "../../common/index.js";
 import { _TableRowColumnResize } from "./row-column-resize.js";
 import { DragGesture } from "@use-gesture/vanilla";
 import { _TableDisablePlugin } from "./disable.js";
+import { trigger } from "@m78/trigger";
 /** 实现选区和选中功能 */ export var _TableSelectPlugin = /*#__PURE__*/ function(TablePlugin) {
     "use strict";
     _inherits(_TableSelectPlugin, TablePlugin);
@@ -54,7 +55,10 @@ import { _TableDisablePlugin } from "./disable.js";
             if (interrupt) return;
             var resize = _this.getPlugin(_TableRowColumnResize);
             // 防止和拖拽行列冲突
-            if (resize.dragging || resize.trigger.hasTargetByXY(e.xy[0], e.xy[1])) return;
+            if (resize.dragging || trigger.getTargetData({
+                xy: e.xy,
+                key: resize.targetUniqueKey
+            }).length) return;
             // 包含前置点时处理shift按下
             _this.isShift = e.shiftKey && !!_this.lastPoint;
             // 合并还是覆盖, 控制键按下时为覆盖
@@ -420,7 +424,11 @@ import { _TableDisablePlugin } from "./disable.js";
             key: "cellRender",
             value: function cellRender(cell) {
                 var selected = this.isSelectedCell(cell.key) || this.isSelectedTempCell(cell.key) || this.isSelectedRow(cell.row.key) || this.isSelectedTempRow(cell.row.key);
-                selected ? addCls(cell.dom, "__selected") : removeCls(cell.dom, "__selected");
+                selected ? setCacheValue(cell.dom, "classNamePartialSelected", selected, function() {
+                    return addCls(cell.dom, "__selected");
+                }) : setCacheValue(cell.dom, "classNamePartialSelected", selected, function() {
+                    return removeCls(cell.dom, "__selected");
+                });
             }
         },
         {
@@ -523,7 +531,7 @@ import { _TableDisablePlugin } from "./disable.js";
             }
         },
         {
-            /** 框选点在固定区域末尾时, 如果滚动边未贴合, 将其滚动到贴合位置, 一是解决瞬间选择大量数据的问题, 二是更符合直觉, 放置误选 */ key: "moveFixedEdgeHandle",
+            /** 框选点在固定区域末尾时, 如果滚动边未贴合, 将其滚动到贴合位置, 一是解决瞬间选择大量数据的问题, 二是更符合直觉, 防止误选 */ key: "moveFixedEdgeHandle",
             value: function moveFixedEdgeHandle(param) {
                 var _param = _sliced_to_array(param, 2), x = _param[0], y = _param[1];
                 if (!this.conflictDisableConfig) return;

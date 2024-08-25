@@ -206,7 +206,7 @@ import { useDrag } from "@use-gesture/react";
     /** 滚动到指定比例的位置 */ function scroll(ratio) {
         ratio = clamp(ratio, 0, 1);
         var meta = scroller.get();
-        scroller.set(_define_property({
+        scroller.scroll(_define_property({
             immediate: true
         }, isY ? "y" : "x", ratio * (isY ? meta.yMax : meta.xMax)));
     }

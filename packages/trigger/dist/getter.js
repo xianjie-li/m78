@@ -10,7 +10,7 @@ import { TriggerOverrideStrategy } from "./types.js";
     var t = setInterval(function() {
         domBoundCacheMap.clear();
     }, 500);
-    ctx.trigger.getTargetByXY = function(args) {
+    ctx.trigger.getTargetData = function(args) {
         return ctx.getEventList(args).eventList;
     };
     /** 获取选项和选项数据列表 */ ctx.getEventList = function getEventList(args) {

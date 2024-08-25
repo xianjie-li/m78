@@ -3,8 +3,8 @@ import { MediaQueryConf, MediaQueryMeta, MediaQueryListenerProps, _MediaQueryBas
  * 窗口尺寸改变时通过回调通知传入子项帮助渲染
  * */
 export declare function _useMediaQuery<Val = any>(conf?: MediaQueryConf<Val>): {
-    meta: MediaQueryMeta | null;
-    value: Val | undefined;
+    meta: null | MediaQueryMeta;
+    value: undefined | Val;
 };
 /**
  * 窗口尺寸改变时通过监听器通知

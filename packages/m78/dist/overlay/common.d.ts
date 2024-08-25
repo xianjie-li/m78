@@ -3,7 +3,7 @@ import { BoundSize, TupleNumber } from "@m78/utils";
 import { TransitionType } from "../transition/index.js";
 import { useSame } from "@m78/hooks";
 import { _ArrowBasePosition, _ClampBound, _OverlayContext, _DirectionMeta, _DirectionMetaMap, _DragContext, OverlayDirectionKeys, OverlayDirectionUnion, OverlayProps, OverlayRenderOption } from "./types.js";
-import { TriggerEvent, TriggerType } from "../trigger/index.js";
+import { TriggerEvent, TriggerType } from "@m78/trigger";
 export declare const _defaultAlignment: TupleNumber;
 export declare const _defaultProps: {
     namespace: string;

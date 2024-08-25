@@ -1,9 +1,8 @@
-@import '../common/style/sass';
+@import "../common/style/sass";
 
 $pad-space: 10px;
 
 .m78-form {
-
   // 增加权重, 覆盖 lay 附带的样式
   @at-root :root .m78-form_field {
     padding: $pad-space 0;
@@ -11,7 +10,6 @@ $pad-space: 10px;
     outline-color: var(--m78-color-opacity-md) !important;
 
     &.__small {
-
       .m78-form_vertical-label {
         margin-bottom: 2px;
         line-height: 1.4;
@@ -23,7 +21,6 @@ $pad-space: 10px;
     .m78-form_field {
       padding: 0;
     }
-
 
     // 无边距
     &.__no-pad {
@@ -110,15 +107,15 @@ $pad-space: 10px;
 
   &_list-item {
     position: relative;
-    padding:  $pad-space 0;
+    padding: $pad-space 0;
 
     // 使对其看起来更美观
     &:first-child {
       margin-top: -$pad-space;
     }
 
-    &::before{
-      content: '';
+    &::before {
+      content: "";
       position: absolute;
       width: 100%;
       height: 2px;

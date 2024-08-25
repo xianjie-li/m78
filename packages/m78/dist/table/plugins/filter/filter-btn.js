@@ -11,14 +11,15 @@ import clsx from "clsx";
 import { TABLE_NS, Translation } from "../../../i18n/index.js";
 import { IconRefresh } from "@m78/icons/refresh.js";
 import { IconFind } from "@m78/icons/find.js";
-import { Trigger, TriggerType } from "../../../trigger/index.js";
+import { TriggerType } from "@m78/trigger";
 import { _injector } from "../../table.js";
 import { _FilterBtnCommon } from "./filter-render.js";
 import { _useFilterFormAct } from "./use-filter-form.act.js";
+import { Trigger } from "@m78/trigger/react/trigger.js";
 /** 工具栏查询按钮 */ export function _ToolBarQueryBtn() {
     var form = _injector.useDeps(_useFilterFormAct).form;
     return /*#__PURE__*/ _jsxs(Button, {
-        text: true,
+        size: Size.small,
         onClick: function() {
             return form.submit();
         },

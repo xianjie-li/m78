@@ -23,7 +23,6 @@ export declare function _eventImpl(ctx: _TriggerContext): {
         simulationContextMenu: (e: TouchEvent) => void;
     };
     dragHandle: {
-        start: (e: TouchEvent | MouseEvent) => boolean;
         move: (e: TouchEvent | MouseEvent) => void;
         end: (e: TouchEvent | MouseEvent) => void;
         clear: () => void;

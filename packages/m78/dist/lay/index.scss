@@ -1,4 +1,4 @@
-@import '../common/style/sass';
+@import "../common/style/sass";
 
 .m78-lay {
   width: 100%;
@@ -42,7 +42,9 @@
       color: #fff;
     }
 
-    .m78-tile_trailing, .m78-tile_desc, .m78-tile_foot {
+    .m78-tile_trailing,
+    .m78-tile_desc,
+    .m78-tile_foot {
       color: var(--m78-color-primary-w);
     }
   }
@@ -68,7 +70,7 @@
       position: absolute;
       top: -0.5px;
       left: 1%;
-      content: '';
+      content: "";
       height: 1px;
       width: 98%;
       transform: scaleY(0.5);
@@ -93,7 +95,7 @@
 
   &.__warning {
     background: var(--m78-orange-1);
-    border: 1px solid var(--m78-orange-6);;
+    border: 1px solid var(--m78-orange-6);
   }
 
   // 带状态和高亮的项添加间距

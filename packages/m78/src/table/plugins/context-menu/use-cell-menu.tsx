@@ -1,6 +1,6 @@
 import React from "react";
 import { useFn } from "@m78/hooks";
-import { TriggerEvent, TriggerType } from "../../../trigger/index.js";
+import { TriggerEvent, TriggerType } from "@m78/trigger";
 import { _injector } from "../../table.js";
 import { _useStateAct } from "../../injector/state.act.js";
 import { _TableContextMenuOpenOpt } from "./use-context-menu.act.js";

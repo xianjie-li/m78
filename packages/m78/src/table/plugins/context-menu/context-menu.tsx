@@ -1,6 +1,6 @@
-import { _useContextMenuAct } from "./use-context-menu.act";
-import { RCTablePlugin } from "../../plugin";
-import { _injector } from "../../table";
+import { _useContextMenuAct } from "./use-context-menu.act.js";
+import { RCTablePlugin } from "../../plugin.js";
+import { _injector } from "../../table.js";
 
 export class _ContextMenuPlugin extends RCTablePlugin {
   rcRuntime() {

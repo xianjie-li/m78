@@ -6,7 +6,7 @@ import { _ as _inherits } from "@swc/helpers/_/_inherits";
 import { _ as _create_super } from "@swc/helpers/_/_create_super";
 import { TablePlugin } from "../plugin.js";
 import { _tableTriggerFilters, _triggerFilterList } from "../common.js";
-import { DragScroll as PhysicalScroll, DragScrollEventType as PhysicalScrollEventType } from "@m78/smooth-scroll";
+import { DragScroll as PhysicalScroll, DragScrollEventType as PhysicalScrollEventType } from "@m78/animate-tools";
 /** 拖拽滚动相关功能支持 */ export var _TableDragMovePlugin = /*#__PURE__*/ function(TablePlugin) {
     "use strict";
     _inherits(_TableDragMovePlugin, TablePlugin);

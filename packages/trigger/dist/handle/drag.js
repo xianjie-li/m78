@@ -12,8 +12,9 @@ export function _dragImpl(ctx) {
     var lastYPoint = 0;
     var xDistance = 0;
     var yDistance = 0;
-    // 鼠标左键点击时进行标记, 用于在move中触发drag, 用于过滤简单点击和drag
+    // 鼠标左键点击时进行标记, 用于在move判断何时触发drag, 并实现区分点击和drag
     var dragTriggerFlag = false;
+    /** 由于存在tap和drag区分, 在实际触发首次drag时, 鼠标可能已经移出触发区域, 这会导致获取当前目标点的target失败, 所以需要存储实际的起始事件和坐标并在首次drag中使用 */ var startEvent = null;
     // 从OptionItem中获取事件的私有状态
     function getEventData(option) {
         var cur = ctx.keepAliveData.get(option);
@@ -86,6 +87,7 @@ export function _dragImpl(ctx) {
     }
     function end(e) {
         dragTriggerFlag = false;
+        startEvent = null;
         lastXPoint = 0;
         lastYPoint = 0;
         xDistance = 0;
@@ -226,6 +228,7 @@ export function _dragImpl(ctx) {
     // 辅助drag记录事件开始点
     function startMark(e) {
         dragTriggerFlag = true;
+        startEvent = e;
         var _getEventXY = _sliced_to_array(getEventXY(e), 2), x = _getEventXY[0], y = _getEventXY[1];
         lastXPoint = x;
         lastYPoint = y;
@@ -241,7 +244,7 @@ export function _dragImpl(ctx) {
             xDistance += xDiff;
             yDistance += yDiff;
             if (xDistance > _dragMinDistance || yDistance > _dragMinDistance) {
-                start(e);
+                start(startEvent || e);
                 dragTriggerFlag = false;
             }
         } else {
@@ -249,7 +252,6 @@ export function _dragImpl(ctx) {
         }
     }
     return {
-        start: start,
         move: move,
         end: end,
         clear: clear,

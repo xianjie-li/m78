@@ -22,12 +22,8 @@ import {
   TransitionTypeUnion,
 } from "../transition/index.js";
 import { EventTypes, Handler } from "@use-gesture/core/types";
-import {
-  useTrigger,
-  TriggerProps,
-  type TriggerOption,
-  type TriggerListener,
-} from "../trigger/index.js";
+import { type TriggerOption, type TriggerListener } from "@m78/trigger";
+import { useTrigger, TriggerProps } from "@m78/trigger/react/trigger.js";
 import { _Methods } from "./use-methods.js";
 
 /** 在使用api调用时所有应该剔除的props */
@@ -45,7 +41,7 @@ export const omitApiProps = [
 ] as const;
 
 /** 创建api时需要排除的所有props类型 */
-export type OverlayApiOmitKeys = typeof omitApiProps[number];
+export type OverlayApiOmitKeys = (typeof omitApiProps)[number];
 
 /** 可用的目标类型 */
 export type OverlayTarget =

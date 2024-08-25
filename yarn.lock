@@ -12584,8 +12584,6 @@ __metadata:
     react-spring: "npm:^9.6.1"
     resize-observer-polyfill: "npm:^1.5.1"
     stats.js: "npm:^0.17.0"
-    trigger: "npm:^1.1.1"
-    type-fest: "npm:^4.2.0"
     use-sync-external-store: "npm:^1.2.0"
   languageName: unknown
   linkType: soft
@@ -18146,13 +18144,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"trigger@npm:^1.1.1":
-  version: 1.1.1
-  resolution: "trigger@npm:1.1.1"
-  checksum: 10c0/556de7099a318316fc0d703fab2781dab8fbbcd814a6394b78375a2b7bb3968e25a088e4feb2b5eed29144bbcdebdc8961491a5058364225a15137411ae97658
-  languageName: node
-  linkType: hard
-
 "trim-lines@npm:^3.0.0":
   version: 3.0.1
   resolution: "trim-lines@npm:3.0.1"
@@ -18256,13 +18247,6 @@ __metadata:
   version: 2.19.0
   resolution: "type-fest@npm:2.19.0"
   checksum: 10c0/a5a7ecf2e654251613218c215c7493574594951c08e52ab9881c9df6a6da0aeca7528c213c622bc374b4e0cb5c443aa3ab758da4e3c959783ce884c3194e12cb
-  languageName: node
-  linkType: hard
-
-"type-fest@npm:^4.2.0":
-  version: 4.24.0
-  resolution: "type-fest@npm:4.24.0"
-  checksum: 10c0/9770471a397733b17b5a9ce48ee5a4d6c042c84a4858ff4e15abd126f351c61b5fea8b7b5e55bfa34840098a920b915d5ff878db1b3c007a2512a6a9c7f21579
   languageName: node
   linkType: hard
 

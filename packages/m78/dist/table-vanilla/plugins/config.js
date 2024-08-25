@@ -13,7 +13,7 @@ import { TableReloadLevel } from "./life.js";
     "rows",
     "cells"
 ];
-/** 不能通过table.config()变更的配置 */ var configCanNotChange = [
+/** 不能通过table.setConfig()变更的配置 */ var configCanNotChange = [
     "el",
     "primaryKey",
     "plugins",

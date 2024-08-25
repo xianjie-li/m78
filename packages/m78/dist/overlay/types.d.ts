@@ -8,12 +8,13 @@ import { _defaultProps, useEscapeCloseable, useOverlaysClickAway, useOverlaysMas
 import { ComponentBaseProps } from "../common/index.js";
 import { TransitionBaseProps, TransitionTypeUnion } from "../transition/index.js";
 import { EventTypes, Handler } from "@use-gesture/core/types";
-import { TriggerEvent, TriggerInstance, useTrigger, UseTriggerProps } from "../trigger/index.js";
+import { type TriggerOption, type TriggerListener } from "@m78/trigger";
+import { useTrigger, TriggerProps } from "@m78/trigger/react/trigger.js";
 import { _Methods } from "./use-methods.js";
 /** 在使用api调用时所有应该剔除的props */
 export declare const omitApiProps: readonly ["defaultOpen", "open", "onChange", "children", "childrenAsTarget", "triggerType", "onUpdate", "onDispose", "innerRef", "instanceRef"];
 /** 创建api时需要排除的所有props类型 */
-export type OverlayApiOmitKeys = typeof omitApiProps[number];
+export type OverlayApiOmitKeys = (typeof omitApiProps)[number];
 /** 可用的目标类型 */
 export type OverlayTarget = BoundSize | React.RefObject<HTMLElement> | HTMLElement;
 export declare enum OverlayDirection {
@@ -60,11 +61,11 @@ export interface OverlayProps extends ComponentBaseProps, UseMountStateConfig, R
     /**
      * 'click' | 设置了children来触发开关时, 配置触发方式
      *
-     * 尽管可以同时设置多个触发类型, 但是并不是所有的事件类型都能良好的结合, 比如将 `active` 和 `click` 结合通常没有意义. 另外, drag事件在Overlay中没有实际意义, 传入不会有任何作用
+     * 尽管可以同时设置多个触发类型, 但是某些事件类型的组合可能没有意义或是会发生冲突
      *
-     * contextMenu和move 通常需要结合 direction 使用, 在 move 模式下, 需要设置一个合适的 offset, 用于确保鼠标不会快速滑动到overlay内容上, 导致move事件中断
+     * contextMenu 和 move 通常需要结合 direction 使用, 在 move 模式下, 需要设置一个合适的 offset, 用于确保鼠标不会快速滑动到overlay内容上, 导致move事件中断
      * */
-    triggerType?: TriggerInstance["type"];
+    triggerType?: TriggerOption["type"];
     /**
      * ########## 显示控制/性能 ##########
      * - 除了defaultOpen外, 还有继承至RenderApiComponentProps的open/onChange
@@ -133,11 +134,11 @@ export interface OverlayProps extends ComponentBaseProps, UseMountStateConfig, R
     /** 传递给容器的额外props */
     extraProps?: AnyObject;
     /** 内部trigger触发事件时调用 */
-    onTrigger?: UseTriggerProps["onTrigger"];
+    onTrigger?: TriggerListener;
     /** 当触发了某个会使弹层打开的事件时, 进行回调 */
-    onOpenTrigger?: UseTriggerProps["onTrigger"];
+    onOpenTrigger?: TriggerListener;
     /** 指向trigger dom 的ref */
-    triggerNodeRef?: UseTriggerProps["innerRef"];
+    triggerNodeRef?: TriggerProps["innerRef"];
     /** TransitionType.fade | 指定内置动画类型 */
     transitionType?: TransitionTypeUnion;
     /** 自定义进出场动画, 此项会覆盖transitionType配置 */
@@ -170,7 +171,7 @@ export interface OverlayInstance {
     /** 以最后的更新类型刷新overlay定位 */
     update(immediate?: boolean): void;
     /** 多实例trigger专用的处理函数, 搭配useTrigger或<Trigger />实现单个实例多个触发点 */
-    trigger: (e: TriggerEvent) => void;
+    trigger: TriggerListener;
     /** 当前是否开启 */
     open: boolean;
     /** 设置开启状态 */
@@ -224,6 +225,8 @@ export interface _OverlayContext {
         lastFocusTime?: number;
         /** 多触发点触发计时器, 用于快速连续触发时过滤掉无效触发, 比如两个focus目标, 前者失焦到后者聚焦, 前者的失焦事件其实是无效的并且还会对后者显示造成干扰  */
         triggerMultipleTimer?: any;
+        /** 在多触发点时, 通知事件后预留一定的渲染时间再更新target, 防止overlay闪烁 */
+        triggerMultipleDelayOpenTimer?: any;
         /** 最后触发onTriggerMultiple启用的节点 */
         lastTriggerTarget?: any;
         /** 多触发点事件中用于标记最终open状态 */
@@ -258,7 +261,7 @@ export interface _OverlayContext {
     overlaysMask: ReturnType<typeof useOverlaysMask>;
     escapeCloseable: ReturnType<typeof useEscapeCloseable>;
     measure: UseMeasureBound;
-    triggerHandle: NonNullable<UseTriggerProps["onTrigger"]>;
+    triggerHandle: TriggerListener;
     isUnmount: () => boolean;
     customRenderMeta: OverlayCustomMeta;
     methods: _Methods;

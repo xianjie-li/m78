@@ -28,7 +28,7 @@ import {
   OverlayUpdateType,
 } from "./types.js";
 import { EventTypes, Handler } from "@use-gesture/core/types";
-import { TriggerEvent, TriggerType } from "../trigger/index.js";
+import { TriggerEvent, TriggerType } from "@m78/trigger";
 
 export function _useMethods(ctx: _OverlayContext) {
   const {
@@ -371,7 +371,7 @@ export function _useMethods(ctx: _OverlayContext) {
   const onDragHandle: Handler<"drag", EventTypes["drag"]> = useFn((e) => {
     if (props.direction) {
       console.warn(
-        `${_defaultProps.namespace}: direction and drag can't be used at the same time`
+        `overlay: direction and drag can't be used at the same time`
       );
       return;
     }

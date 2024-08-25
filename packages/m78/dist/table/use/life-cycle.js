@@ -14,7 +14,7 @@ export function _useLifeCycle() {
     useDestroy(destroy);
     _usePropsEffect(props, function(changedProps, needFullReload) {
         if (state.initializing || state.blockError) return;
-        if (changedProps.schema) {
+        if (changedProps.schemas) {
             methods.updateCheckForm();
         }
         methods.updateInstance(changedProps, needFullReload);

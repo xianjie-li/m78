@@ -1,5 +1,5 @@
 import React, { ReactElement, useState } from "react";
-import { Button } from "../../src/button";
+import { Button } from "../../src/button/index.js";
 import {
   OverlayDragHandle,
   Overlay,
@@ -7,7 +7,9 @@ import {
   OverlayInstance,
 } from "../../src/overlay/index.js";
 import { getRandRange } from "@m78/utils";
-import { Divider, Trigger, TriggerType } from "../../src/index.js";
+import { TriggerType } from "@m78/trigger";
+import { Trigger } from "@m78/trigger/react/trigger.js";
+import { Divider } from "../../src/layout/index.js";
 
 const OverlayExample = () => {
   const [overlay, setOverlay] = useState<OverlayInstance | null>(null);

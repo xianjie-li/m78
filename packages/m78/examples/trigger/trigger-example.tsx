@@ -1,12 +1,9 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import {
-  createTrigger,
-  Trigger,
-  TriggerInstance,
-  TriggerType,
-} from "../../src/trigger/index.js";
+import React, { useEffect, useRef, useState } from "react";
+import { createTrigger, TriggerInstance, TriggerType } from "@m78/trigger";
+
 import { Button, Row } from "../../src/index.js";
 import "./style.scss";
+import { Trigger } from "@m78/trigger/react/trigger.js";
 
 const TriggerExample = () => {
   const ref1 = useRef<any>(null!);

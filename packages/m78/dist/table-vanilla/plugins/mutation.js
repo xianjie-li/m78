@@ -7,14 +7,15 @@ import { _ as _object_spread } from "@swc/helpers/_/_object_spread";
 import { _ as _object_spread_props } from "@swc/helpers/_/_object_spread_props";
 import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
+import { _ as _type_of } from "@swc/helpers/_/_type_of";
 import { _ as _create_super } from "@swc/helpers/_/_create_super";
 import { TablePlugin } from "../plugin.js";
-import { createRandString, simplyDeepClone, deleteNamePathValue, ensureArray, getNamePathValue, isArray, isObject, isString, isTruthyOrZero, recursionShakeEmpty, setNamePathValue, throwError, uniq } from "@m78/utils";
+import { createRandString, simplyDeepClone, deleteNamePathValue, ensureArray, getNamePathValue, isArray, isObject, isString, isTruthyOrZero, recursionShakeEmpty, setNamePathValue, throwError, uniq, clearObject } from "@m78/utils";
 import { TableReloadLevel } from "./life.js";
 import { TableColumnFixed, TableRowFixed } from "../types/base-type.js";
 import { _getCellKey, _getCellKeysByStr, _prefix } from "../common.js";
 import { _TableSortColumnPlugin } from "./sort-column.js";
-import { _TableFormPlugin } from "./form.js";
+import { _TableFormPlugin } from "./form/form.js";
 /**
  * config/data变更相关的操作, 变异操作尽量集中在此处并需要新增和触发 TableMutationDataType 事件/处理操作历史等
  *
@@ -32,6 +33,8 @@ import { _TableFormPlugin } from "./form.js";
         /** 每一次配置变更将变更的key记录, 通过记录来判断是否有变更项 */ _define_property(_assert_this_initialized(_this), "changedConfigKeys", []);
         _define_property(_assert_this_initialized(_this), "sortColumn", void 0);
         _define_property(_assert_this_initialized(_this), "form", void 0);
+        // 对已经过clone的row.data进行标记
+        _define_property(_assert_this_initialized(_this), "clonedFlag", new Map());
         // 记录变更过的行
         _define_property(_assert_this_initialized(_this), "changedRows", {});
         /**
@@ -39,7 +42,7 @@ import { _TableFormPlugin } from "./form.js";
    * */ _define_property(_assert_this_initialized(_this), "setPersistenceConfig", function(key, newValue, actionName) {
             var conf = _this.context.persistenceConfig;
             var old = getNamePathValue(conf, key);
-            if (typeof old === "object") {
+            if ((typeof old === "undefined" ? "undefined" : _type_of(old)) === "object") {
                 old = simplyDeepClone(old);
             }
             var keyList = ensureArray(key);
@@ -48,7 +51,7 @@ import { _TableFormPlugin } from "./form.js";
             var redo = function() {
                 setNamePathValue(conf, key, newValue);
                 var value = getNamePathValue(conf, first);
-                if (typeof value === "object") {
+                if ((typeof value === "undefined" ? "undefined" : _type_of(value)) === "object") {
                     value = recursionShakeEmpty(simplyDeepClone(value));
                 }
                 var event = {
@@ -74,7 +77,7 @@ import { _TableFormPlugin } from "./form.js";
                     setNamePathValue(conf, key, old);
                 }
                 var value = getNamePathValue(conf, first);
-                if (typeof value === "object") {
+                if ((typeof value === "undefined" ? "undefined" : _type_of(value)) === "object") {
                     value = recursionShakeEmpty(simplyDeepClone(value));
                 }
                 var event = {
@@ -258,13 +261,10 @@ import { _TableFormPlugin } from "./form.js";
                 value = value.trim();
             }
             var row = cell.row, column = cell.column;
-            // 行未变更过, 将其完全clone, 避免更改原数据, 此外, 避免了在初始化阶段克隆所有数据导致性能损耗
-            if (!_this.changedRows[row.key] && !_this.context.getRowMeta(row.key).new // 新增行不clone
-            ) {
-                _this.cloneAndSetRowData(row);
-            }
+            // 若行未变更过, 将其完全clone, 避免更改原数据
+            _this.ensureCloneAndSetRowData(row);
             var ov = getNamePathValue(row.data, column.config.originalKey);
-            var oldValue = typeof ov === "object" ? simplyDeepClone(ov) : ov;
+            var oldValue = (typeof ov === "undefined" ? "undefined" : _type_of(ov)) === "object" ? simplyDeepClone(ov) : ov;
             _this.table.history.redo({
                 redo: function() {
                     setNamePathValue(row.data, column.config.originalKey, value);
@@ -293,6 +293,46 @@ import { _TableFormPlugin } from "./form.js";
                     _this.table.event.mutation.emit(event);
                     _this.table.render();
                     _this.table.highlight(event.cell.key, false);
+                },
+                title: _this.context.texts["set value"]
+            });
+        });
+        _define_property(_assert_this_initialized(_this), "setRowValue", function(row, data) {
+            var _row;
+            if (_this.table.isRowLike(row)) {
+                _row = row;
+            } else {
+                _row = _this.table.getRow(row);
+            }
+            // 若行未变更过, 将其完全clone, 避免更改原数据
+            _this.ensureCloneAndSetRowData(_row);
+            var oldValue;
+            _this.table.history.redo({
+                redo: function() {
+                    oldValue = clearObject(_row.data);
+                    Object.assign(_row.data, data, _define_property({}, _this.config.primaryKey, _row.key));
+                    var event = {
+                        type: "rowValue",
+                        row: _row,
+                        value: data,
+                        oldValue: oldValue
+                    };
+                    _this.table.event.mutation.emit(event);
+                    _this.table.render();
+                    _this.table.highlightRow(_row.key, true);
+                },
+                undo: function() {
+                    clearObject(_row.data);
+                    Object.assign(_row.data, oldValue, _define_property({}, _this.config.primaryKey, _row.key));
+                    var event = {
+                        type: "rowValue",
+                        row: _row,
+                        value: oldValue,
+                        oldValue: data
+                    };
+                    _this.table.event.mutation.emit(event);
+                    _this.table.render();
+                    _this.table.highlightRow(_row.key, true);
                 },
                 title: _this.context.texts["set value"]
             });
@@ -351,7 +391,8 @@ import { _TableFormPlugin } from "./form.js";
                     "moveRow",
                     "moveColumn",
                     "setValue",
-                    "getValue"
+                    "getValue",
+                    "setRowValue"
                 ]);
             }
         },
@@ -361,16 +402,19 @@ import { _TableFormPlugin } from "./form.js";
                 var opt = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {};
                 if (opt.level === TableReloadLevel.full) {
                     this.changedConfigKeys = [];
+                    this.clonedFlag = new Map();
                 }
             }
         },
         {
-            key: "cloneAndSetRowData",
-            value: /** 克隆并重新设置row的data, 防止变更原数据, 主要用于延迟clone, 可以在数据量较大时提升初始化速度  */ function cloneAndSetRowData(row) {
+            key: "ensureCloneAndSetRowData",
+            value: /** 克隆并重新设置row的data, 防止变更原数据, 主要用于写时clone, 可以在数据量较大时提升初始化速度, 若行数据已经过克隆则忽略  */ function ensureCloneAndSetRowData(row) {
+                if (this.clonedFlag.get(row.key)) return;
                 var cloneData = simplyDeepClone(row.data);
                 var ind = this.context.dataKeyIndexMap[row.key];
                 row.data = cloneData;
                 this.context.data[ind] = cloneData;
+                this.clonedFlag.set(row.key, true);
             }
         },
         {
@@ -622,8 +666,8 @@ import { _TableFormPlugin } from "./form.js";
         {
             key: "getIndexData",
             value: /** 获取方便用于删除/移动等操作的索引数据信息 */ function getIndexData(key) {
-                var isRow = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : true;
                 var _this = this;
+                var isRow = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : true;
                 var list = ensureArray(key);
                 list.forEach(function(key) {
                     if (isRow && !_this.table.isRowExist(key)) {
@@ -763,6 +807,7 @@ export var TableMutationType;
     /** 持久化配置变更 */ TableMutationType["config"] = "config";
     /** 记录变更, 通常表示新增/删除/排序 */ TableMutationType["data"] = "data";
     /** 单元格值变更 */ TableMutationType["value"] = "value";
+    /** 整行值发生变更 */ TableMutationType["rowValue"] = "rowValue";
 })(TableMutationType || (TableMutationType = {}));
 export var TableMutationDataType;
 (function(TableMutationDataType) {

@@ -36,6 +36,7 @@ import {
 import { _TableRowColumnResize } from "./row-column-resize.js";
 import { DragGesture, FullGestureState } from "@use-gesture/vanilla";
 import { _TableDisablePlugin } from "./disable.js";
+import { trigger } from "@m78/trigger";
 
 /** 实现选区和选中功能 */
 export class _TableSelectPlugin extends TablePlugin implements TableSelect {
@@ -207,7 +208,13 @@ export class _TableSelectPlugin extends TablePlugin implements TableSelect {
     const resize = this.getPlugin(_TableRowColumnResize);
 
     // 防止和拖拽行列冲突
-    if (resize.dragging || resize.trigger.hasTargetByXY(e.xy[0], e.xy[1]))
+    if (
+      resize.dragging ||
+      trigger.getTargetData({
+        xy: e.xy,
+        key: resize.targetUniqueKey,
+      }).length
+    )
       return;
 
     // 包含前置点时处理shift按下

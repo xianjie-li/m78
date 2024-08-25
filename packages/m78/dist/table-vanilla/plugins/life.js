@@ -6,10 +6,13 @@ import { _ as _inherits } from "@swc/helpers/_/_inherits";
 import { _ as _create_super } from "@swc/helpers/_/_create_super";
 import { TablePlugin } from "../plugin.js";
 import { _TableInitPlugin } from "./init.js";
-import { createRandString, getNamePathValue, isNumber, rafCaller, setNamePathValue } from "@m78/utils";
+import { createRandString, getNamePathValue, isNumber, setNamePathValue } from "@m78/utils";
 import { _privateInstanceKey, _privateScrollerDomKey } from "../common.js";
 import { _TableRenderPlugin } from "./render.js";
 import { removeNode } from "../../common/index.js";
+import { _TableFormPlugin } from "./form/form.js";
+import { _TableSoftRemovePlugin } from "./soft-remove.js";
+import { rafCaller } from "@m78/animate-tools";
 /** 表格生命周期相关控制 */ export var _TableLifePlugin = /*#__PURE__*/ function(TablePlugin) {
     "use strict";
     _inherits(_TableLifePlugin, TablePlugin);
@@ -20,6 +23,8 @@ import { removeNode } from "../../common/index.js";
         _this = _super.apply(this, arguments);
         /** 优化reload函数 */ _define_property(_assert_this_initialized(_this), "rafCaller", void 0);
         /** 清理raf */ _define_property(_assert_this_initialized(_this), "rafClear", void 0);
+        _define_property(_assert_this_initialized(_this), "formPlugin", void 0);
+        _define_property(_assert_this_initialized(_this), "softRemove", void 0);
         _define_property(_assert_this_initialized(_this), "takeover", function(cb) {
             var ctx = _this.context;
             var obtain = !ctx.takeKey;
@@ -65,13 +70,16 @@ import { removeNode } from "../../common/index.js";
                     ],
                     "reloadSync",
                     "takeover",
-                    "isTaking"
+                    "isTaking",
+                    "resetStatus"
                 ]);
             }
         },
         {
             key: "init",
             value: function init() {
+                this.formPlugin = this.getPlugin(_TableFormPlugin);
+                this.softRemove = this.getPlugin(_TableSoftRemovePlugin);
                 this.context.lastReloadKey = createRandString();
                 this.rafCaller = rafCaller();
             }
@@ -198,6 +206,18 @@ import { removeNode } from "../../common/index.js";
             }
         },
         {
+            key: "resetStatus",
+            value: function resetStatus() {
+                var _this = this;
+                this.table.takeover(function() {
+                    _this.formPlugin.resetStatus();
+                    _this.softRemove.confirmSoftRemove();
+                    _this.table.history.reset();
+                    _this.table.render();
+                });
+            }
+        },
+        {
             key: "mergeTakeReloadOptions",
             value: /** 对不同的reloadOpt进行特殊合并 */ function mergeTakeReloadOptions(opt) {
                 var ctxOpt = this.context.takeReloadOptions;
@@ -224,6 +244,8 @@ import { removeNode } from "../../common/index.js";
             value: function commonAction() {
                 var ctx = this.context;
                 ctx.lastViewportItems = undefined;
+                ctx.lastMountRows = {};
+                ctx.lastMountColumns = {};
                 ctx.topFixedMap = {};
                 ctx.bottomFixedMap = {};
                 ctx.leftFixedMap = {};

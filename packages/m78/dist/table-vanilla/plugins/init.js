@@ -643,6 +643,11 @@ import { _TableRenderPlugin } from "./render.js";
                 stage.className = "m78-table_stage";
                 this.context.stageEL = stage;
                 this.context.viewContentEl.appendChild(stage);
+                // 将相关dom节点关联到table instance
+                this.table.el = this.config.el;
+                this.table.viewEl = ctx.viewEl;
+                this.table.viewContentEl = ctx.viewContentEl;
+                this.table.stageEL = ctx.stageEL;
             }
         },
         {

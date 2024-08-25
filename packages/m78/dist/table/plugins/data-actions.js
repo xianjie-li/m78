@@ -1,27 +1,28 @@
+import { _ as _async_to_generator } from "@swc/helpers/_/_async_to_generator";
 import { _ as _class_call_check } from "@swc/helpers/_/_class_call_check";
 import { _ as _create_class } from "@swc/helpers/_/_create_class";
 import { _ as _inherits } from "@swc/helpers/_/_inherits";
 import { _ as _sliced_to_array } from "@swc/helpers/_/_sliced_to_array";
 import { _ as _to_consumable_array } from "@swc/helpers/_/_to_consumable_array";
 import { _ as _create_super } from "@swc/helpers/_/_create_super";
+import { _ as _ts_generator } from "@swc/helpers/_/_ts_generator";
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { COMMON_NS, TABLE_NS, Translation } from "../../i18n/index.js";
 import { Bubble } from "../../bubble/index.js";
 import { Button, ButtonColor } from "../../button/index.js";
 import { Size } from "../../common/index.js";
 import { IconSaveOne } from "@m78/icons/save-one.js";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useFn, useSetState } from "@m78/hooks";
 import { _injector } from "../table.js";
 import { _useStateAct } from "../injector/state.act.js";
-import { TableMutationType } from "../../table-vanilla/plugins/mutation.js";
 import { IconAdd } from "@m78/icons/add.js";
 import { IconDeleteOne } from "@m78/icons/delete-one.js";
-import { Trigger, TriggerType } from "../../trigger/index.js";
+import { TriggerType } from "@m78/trigger";
 import { _useMethodsAct } from "../injector/methods.act.js";
-import { isEmpty } from "@m78/utils";
 import { RCTablePlugin } from "../plugin.js";
 import { Divider } from "../../layout/index.js";
+import { Trigger } from "@m78/trigger/react/trigger.js";
 export var _DataActionPlugin = /*#__PURE__*/ function(RCTablePlugin) {
     "use strict";
     _inherits(_DataActionPlugin, RCTablePlugin);
@@ -76,48 +77,46 @@ function SaveBtn() {
     var props = _injector.useProps();
     var instance = stateDep.state.instance;
     var _useSetState = _sliced_to_array(useSetState({
-        newCount: 0,
-        removeCount: 0,
-        updateCount: 0,
-        sorted: false,
-        changed: false
+        length: 0,
+        add: 0,
+        change: 0,
+        update: 0,
+        remove: 0,
+        sorted: false
     }), 2), state = _useSetState[0], setState = _useSetState[1];
+    var _useState = _sliced_to_array(useState(false), 2), changed = _useState[0], setChanged = _useState[1];
     instance.event.mutation.useEvent(function(e) {
-        if (e.type === TableMutationType.config || e.type === TableMutationType.data) {
-            setState({
-                changed: instance.getTableChanged()
-            });
-        }
-    });
-    instance.event.interactiveChange.useEvent(function(cell, show, isSubmit) {
-        if (isSubmit) {
-            setState({
-                changed: instance.getTableChanged()
-            });
-        }
+        setChanged(instance.getTableChanged());
     });
     function updateCount() {
-        var data = instance.getData();
-        setState({
-            newCount: data.add.length,
-            removeCount: data.remove.length,
-            updateCount: data.change.length,
-            sorted: data.sorted
-        });
+        setState(instance.getChangeStatus());
     }
     var commonNSOpt = {
         ns: COMMON_NS
     };
-    var submit = useFn(function() {
-        if (!state.changed || !props.onSubmit) return;
-        var d = {};
-        var data = instance.getData();
-        if (data.update.length || data.sorted || data.remove.length) {
-            d.data = data;
-        }
-        if (isEmpty(d)) return;
-        props.onSubmit(d);
-    });
+    var submit = useFn(/*#__PURE__*/ _async_to_generator(function() {
+        var data;
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    if (!changed || !props.onSubmit) return [
+                        2
+                    ];
+                    return [
+                        4,
+                        instance.getData()
+                    ];
+                case 1:
+                    data = _state.sent();
+                    if (data.update.length || data.sorted || data.remove.length) {
+                        props.onSubmit(data);
+                    }
+                    return [
+                        2
+                    ];
+            }
+        });
+    }));
     return /*#__PURE__*/ _jsx(Translation, {
         ns: TABLE_NS,
         children: function(t) {
@@ -132,21 +131,21 @@ function SaveBtn() {
                         " ",
                         /*#__PURE__*/ _jsx("span", {
                             className: "color-green bold mr-8",
-                            children: state.newCount
+                            children: state.add
                         }),
                         t("remove tip"),
                         ":",
                         " ",
                         /*#__PURE__*/ _jsx("span", {
                             className: "color-red bold mr-8",
-                            children: state.removeCount
+                            children: state.remove
                         }),
-                        t("update tip"),
+                        t("change tip"),
                         ":",
                         " ",
                         /*#__PURE__*/ _jsx("span", {
                             className: "color-blue bold",
-                            children: state.updateCount
+                            children: state.change
                         }),
                         state.sorted && /*#__PURE__*/ _jsx("div", {
                             className: "mt-4",
@@ -170,7 +169,7 @@ function SaveBtn() {
                 children: /*#__PURE__*/ _jsxs(Button, {
                     size: Size.small,
                     color: ButtonColor.primary,
-                    disabled: !state.changed,
+                    disabled: !changed,
                     onClick: submit,
                     children: [
                         /*#__PURE__*/ _jsx(IconSaveOne, {}),

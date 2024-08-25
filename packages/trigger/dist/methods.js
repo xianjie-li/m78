@@ -21,6 +21,7 @@ import { isNumber } from "@m78/utils";
         deltaY: 0,
         eventMeta: {}
     }, initProp), {
-        data: initProp.data || {}
+        data: initProp.data || {},
+        timeStamp: Date.now()
     });
 }

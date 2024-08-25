@@ -126,3 +126,11 @@ normal
   - 指定轻微滚动后滚动方向锁定, 或是一侧值明显大于另一侧是忽略另一侧
   - 隐藏滚动条异常, 滚动条优化
   - 支持滚动方向大致确定后锁定方向, 如果是同时较多滚动则不锁定
+
+
+renderedDebounce
+createBound
+triggerDispatch
+hoverHandle
+dragHandle
+updateXTipLine/updateYTipLine

@@ -191,8 +191,8 @@ export var _TableGetterPlugin = /*#__PURE__*/ function(TablePlugin) {
    * 内部使用的getBoundItems, 包含了startRowIndex等额外返回
    * - 注意, 返回的index均对应dataFixedSortList/columnsFixedSortList而不是配置中的data
    * */ function getBoundItemsInner(target) {
-                var skipFixed = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : false;
                 var _this = this;
+                var skipFixed = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : false;
                 var x = 0;
                 var y = 0;
                 var width = 0;
@@ -613,7 +613,7 @@ export var _TableGetterPlugin = /*#__PURE__*/ function(TablePlugin) {
                 var index = isVertical ? row.realIndex : column.realIndex;
                 if (!isNumber(index)) return;
                 var list = isVertical ? data : columns;
-                // 由于进入循环后立即回获取下一项, 所以需要把索引边界扩大或减小1
+                // 由于进入循环后会立即获取下一项, 所以需要把索引边界扩大或减小1
                 while(index <= list.length && index >= -1){
                     index = isPrev ? index - 1 : index + 1;
                     var next = list[index];

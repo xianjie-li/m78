@@ -21,13 +21,17 @@ import {
   useOverlaysMask,
 } from "./common.js";
 import { isFunction } from "@m78/utils";
-import { TriggerEvent, useTrigger } from "../trigger/index.js";
+import { TriggerEvent } from "@m78/trigger";
+import { useTrigger } from "@m78/trigger/react/trigger.js";
 
 /**
  * overlay抽象了所有弹层类组件(modal, drawer, popper等需要的基础能力), 使实现这些组件变得非常的简单
  * */
 export function _Overlay(p: OverlayProps) {
-  const props = p as _MergeDefaultProps;
+  const props = {
+    ..._defaultProps,
+    ...p,
+  } as _MergeDefaultProps;
 
   const [open, setOpen] = useFormState(props, false, {
     valueKey: "open",
@@ -147,5 +151,3 @@ export function _Overlay(p: OverlayProps) {
 }
 
 _Overlay.displayName = "Overlay";
-
-_Overlay.defaultProps = _defaultProps;

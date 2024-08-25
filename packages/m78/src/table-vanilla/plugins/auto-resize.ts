@@ -8,7 +8,7 @@ export class _TableAutoResizePlugin extends TablePlugin {
   isFirst = true;
 
   mounted() {
-    this.ob = new ResizeObserver(this.handleResize);
+    this.ob = new (ResizeObserver as any)(this.handleResize);
 
     this.ob.observe(this.config.el);
   }

@@ -1,4 +1,3 @@
-/// <reference types="react" />
 import { _DNDMapEntry, _GroupState, DNDEnableInfos, DNDNode, DNDPosition, DNDProps, DNDStatus, _Context, _PendingItem, _LevelContext } from "./types.js";
 import { AnyObject, Bound, TupleNumber } from "@m78/utils";
 export declare const _DEFAULT_GROUP = "M78-DND-DEFAULT-GROUP";

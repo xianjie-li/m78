@@ -6,10 +6,10 @@ import { _ as _inherits } from "@swc/helpers/_/_inherits";
 import { _ as _create_super } from "@swc/helpers/_/_create_super";
 import { TablePlugin } from "../plugin.js";
 import { _TableDisablePlugin } from "./disable.js";
-import { ensureArray, SelectManager } from "@m78/utils";
+import { ensureArray, SelectManager, setCacheValue } from "@m78/utils";
 import { removeNode } from "../../common/index.js";
 import { TableReloadLevel } from "./life.js";
-import { _rowMountChecker, _syncListNode } from "../common.js";
+import { _syncListNode } from "../common.js";
 import { _getBlankMutationDataEvent, TableMutationDataType } from "./mutation.js";
 /**
  * 实现软删除
@@ -39,7 +39,8 @@ import { _getBlankMutationDataEvent, TableMutationDataType } from "./mutation.js
                 this.methodMapper(this.table, [
                     "softRemove",
                     "isSoftRemove",
-                    "restoreSoftRemove"
+                    "restoreSoftRemove",
+                    "confirmSoftRemove"
                 ]);
             }
         },
@@ -81,9 +82,9 @@ import { _getBlankMutationDataEvent, TableMutationDataType } from "./mutation.js
                 list.forEach(function(i, ind) {
                     var node = _this.rowMarkNodes[ind];
                     var position = i.attachPosition;
-                    node.style.transform = "translate(".concat(position.left, "px, ").concat(position.top, "px)");
-                    node.style.height = "".concat(position.height, "px");
-                    node.style.zIndex = position.zIndex;
+                    setCacheValue(node.style, "transform", "translate(".concat(position.left, "px, ").concat(position.top, "px)"));
+                    setCacheValue(node.style, "height", "".concat(position.height, "px"));
+                    setCacheValue(node.style, "zIndex", position.zIndex);
                 });
             }
         },
@@ -160,16 +161,33 @@ import { _getBlankMutationDataEvent, TableMutationDataType } from "./mutation.js
             }
         },
         {
+            key: "confirmSoftRemove",
+            value: function confirmSoftRemove() {
+                var _this = this;
+                var cur = this.remove.getState().selected;
+                this.table.history.batch(function() {
+                    _this.table.history.redo({
+                        redo: function() {
+                            _this.remove.unSelectAll();
+                            _this.table.removeRow(cur);
+                        },
+                        undo: function() {
+                            _this.remove.setAllSelected(cur);
+                            _this.table.renderSync();
+                        }
+                    });
+                }, this.context.texts["remove row"]);
+            }
+        },
+        {
             key: "getRemoveList",
             value: // 获取用于展示删除状态的列表, 包含了渲染需要的各种必要信息
             function getRemoveList() {
                 var _this = this;
-                var _this_context_lastViewportItems;
                 var list = [];
                 var keys = this.remove.getState().selected;
-                var isMount = _rowMountChecker((_this_context_lastViewportItems = this.context.lastViewportItems) === null || _this_context_lastViewportItems === void 0 ? void 0 : _this_context_lastViewportItems.rows);
                 keys.forEach(function(k) {
-                    if (!isMount(k)) return;
+                    if (!_this.table.isRowMount(k)) return;
                     var row = _this.table.getRow(k);
                     var attachPosition = _this.table.getRowAttachPosition(row);
                     list.push({

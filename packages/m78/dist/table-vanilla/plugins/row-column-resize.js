@@ -7,11 +7,12 @@ import { _ as _create_super } from "@swc/helpers/_/_create_super";
 import { TablePlugin } from "../plugin.js";
 import debounce from "lodash/debounce.js";
 import clamp from "lodash/clamp.js";
-import { rafCaller } from "@m78/utils";
+import { rafCaller } from "@m78/animate-tools";
 import { _TableMutationPlugin } from "./mutation.js";
 import { TableColumnFixed, TableRowFixed } from "../types/base-type.js";
 import { removeNode } from "../../common/index.js";
-import { createTrigger, TriggerType } from "../../trigger/index.js";
+import { TriggerType, trigger } from "@m78/trigger";
+import { createTempID } from "@m78/utils";
 /** 列/行重置大小 */ export var _TableRowColumnResize = /*#__PURE__*/ function(TablePlugin) {
     "use strict";
     _inherits(_TableRowColumnResize, TablePlugin);
@@ -24,7 +25,9 @@ import { createTrigger, TriggerType } from "../../trigger/index.js";
         _define_property(_assert_this_initialized(_this), "yLine", void 0);
         /** 显示重置后大小 */ _define_property(_assert_this_initialized(_this), "sizeBlock", void 0);
         _define_property(_assert_this_initialized(_this), "wrap", void 0);
-        /** 虚拟节点触发事件 */ _define_property(_assert_this_initialized(_this), "trigger", void 0);
+        /** 额外对外暴露一个用于集中控制trigger开关的属性 */ _define_property(_assert_this_initialized(_this), "triggerEnable", true);
+        // 用于快速批量向target添加或移除事件的key
+        _define_property(_assert_this_initialized(_this), "targetUniqueKey", createTempID());
         _define_property(_assert_this_initialized(_this), "rafCaller", void 0);
         _define_property(_assert_this_initialized(_this), "rafClearFn", void 0);
         /** 拖动中 */ _define_property(_assert_this_initialized(_this), "dragging", false);
@@ -33,17 +36,21 @@ import { createTrigger, TriggerType } from "../../trigger/index.js";
         _define_property(_assert_this_initialized(_this), "dragOffsetY", 0);
         /** 每次render后根据ctx.lastViewportItems更新虚拟拖拽节点 */ _define_property(_assert_this_initialized(_this), "renderedDebounce", debounce(function() {
             var last = _this.context.lastViewportItems;
+            trigger.off(_this.targetUniqueKey);
             if (!last) return;
             var wrapBound = _this.config.el.getBoundingClientRect();
-            var cBounds = _this.createBound(wrapBound, last, false);
-            var rBounds = _this.createBound(wrapBound, last, true);
-            _this.trigger.clear();
-            _this.trigger.add(cBounds.concat(rBounds));
+            var columnBounds = _this.createBound(wrapBound, last, false);
+            var rowBounds = _this.createBound(wrapBound, last, true);
+            // TODO: tag6
+            // this.trigger.clear();
+            // this.trigger.add(columnBounds.concat(rowBounds));
+            trigger.on(columnBounds.concat(rowBounds), _this.targetUniqueKey);
         }, 100, {
             leading: false,
             trailing: true
         }));
         _define_property(_assert_this_initialized(_this), "triggerDispatch", function(e) {
+            // console.log(e, e.type);
             if (e.type === TriggerType.active) {
                 _this.hoverHandle(e);
             }
@@ -51,22 +58,18 @@ import { createTrigger, TriggerType } from "../../trigger/index.js";
                 _this.dragHandle(e);
             }
         });
-        _define_property(_assert_this_initialized(_this), "hoverHandle", function(param) {
-            var target = param.target, active = param.active;
-            var meta = target;
-            var data = meta.data;
+        _define_property(_assert_this_initialized(_this), "hoverHandle", function(e) {
+            var active = e.active, data = e.data;
             var isRow = data.type === _TableRowColumnResize.VIRTUAL_ROW_HANDLE_KEY;
             _this.activating = active;
             if (active) {
-                isRow ? _this.updateYTipLine(data.y, meta) : _this.updateXTipLine(data.x, meta);
+                isRow ? _this.updateYTipLine(data.y, e) : _this.updateXTipLine(data.x, e);
             } else if (!_this.dragging) {
                 isRow ? _this.hideYTipLine() : _this.hideXTipLine();
             }
         });
-        _define_property(_assert_this_initialized(_this), "dragHandle", function(param) {
-            var target = param.target, first = param.first, last = param.last, deltaX = param.deltaX, deltaY = param.deltaY;
-            var meta = target;
-            var data = meta.data;
+        _define_property(_assert_this_initialized(_this), "dragHandle", function(e) {
+            var first = e.first, last = e.last, deltaX = e.deltaX, deltaY = e.deltaY, data = e.data;
             var isRow = data.type === _TableRowColumnResize.VIRTUAL_ROW_HANDLE_KEY;
             if (first) {
                 _this.dragging = true;
@@ -80,10 +83,10 @@ import { createTrigger, TriggerType } from "../../trigger/index.js";
                 var curOffset = data.reverse ? clamp(prevOffset + movePos, -max, min) : clamp(prevOffset + movePos, -min, max);
                 if (isRow) {
                     _this.dragOffsetY = curOffset;
-                    _this.updateYTipLine(data.y + _this.dragOffsetY, meta);
+                    _this.updateYTipLine(data.y + _this.dragOffsetY, e);
                 } else {
                     _this.dragOffsetX = curOffset;
-                    _this.updateXTipLine(data.x + _this.dragOffsetX, meta);
+                    _this.updateXTipLine(data.x + _this.dragOffsetX, e);
                 }
             }
             if (last) {
@@ -121,40 +124,69 @@ import { createTrigger, TriggerType } from "../../trigger/index.js";
                 this.config.el.appendChild(this.wrap);
                 // 创建raf用于优化动画
                 this.rafCaller = rafCaller();
+                // TODO: tag2
                 // 为virtualBound添加特定节点的过滤
-                var vbPreCheck = function(type) {
-                    if (type !== TriggerType.active && type !== TriggerType.drag) return false;
-                    // return !_triggerFilterList(
-                    //   e.target as HTMLElement,
-                    //   _tableTriggerFilters,
-                    //   this.config.el
-                    // );
-                    return true;
-                };
-                this.trigger = createTrigger({
-                    container: this.config.el,
-                    type: [
-                        TriggerType.drag,
-                        TriggerType.active,
-                        TriggerType.move
-                    ],
-                    preCheck: vbPreCheck
-                });
-                this.trigger.event.on(this.triggerDispatch);
+                // const vbPreCheck: TriggerConfig["preCheck"] = (type) => {
+                //   if (type !== TriggerType.active && type !== TriggerType.drag)
+                //     return false;
+                //   // return !_triggerFilterList(
+                //   //   e.target as HTMLElement,
+                //   //   _tableTriggerFilters,
+                //   //   this.config.el
+                //   // );
+                //   return true;
+                // };
+                // TODO: tag1
+                // this.trigger = createTrigger({
+                //   container: this.config.el,
+                //   type: [TriggerType.drag, TriggerType.active, TriggerType.move],
+                //   preCheck: vbPreCheck,
+                // });
+                // this.trigger.event.on(this.triggerDispatch);
                 this.context.viewEl.addEventListener("scroll", this.scrollHandle);
                 // 选取过程中禁用
                 this.table.event.selectStart.on(function() {
-                    _this.trigger.enable = false;
+                    _this.triggerEnable = false;
                 });
                 this.table.event.select.on(function() {
-                    _this.trigger.enable = true;
+                    _this.triggerEnable = true;
                 });
+            }
+        },
+        {
+            key: "getEventOption",
+            value: // 获取事件选项
+            function getEventOption(target, level, cursor, data) {
+                var _this = this;
+                return {
+                    enable: function() {
+                        if (!_this.table.isActive() || !_this.triggerEnable) return false;
+                        // if (!data.typeMap.get(TriggerType.active) && !data.typeMap.get(TriggerType.drag)) return false;
+                        // return !_triggerFilterList(
+                        //   e.target as HTMLElement,
+                        //   _tableTriggerFilters,
+                        //   this.config.el
+                        // );
+                        return true;
+                    },
+                    type: [
+                        TriggerType.drag,
+                        TriggerType.active
+                    ],
+                    handler: this.triggerDispatch,
+                    target: target,
+                    level: level,
+                    cursor: {
+                        active: cursor,
+                        dragActive: cursor
+                    },
+                    data: data
+                };
             }
         },
         {
             key: "rendered",
             value: function rendered() {
-                this.trigger.clear();
                 this.renderedDebounce();
             }
         },
@@ -162,8 +194,10 @@ import { createTrigger, TriggerType } from "../../trigger/index.js";
             key: "beforeDestroy",
             value: function beforeDestroy() {
                 if (this.rafClearFn) this.rafClearFn();
-                this.trigger.destroy();
-                this.trigger = null;
+                // TODO: tag3
+                // this.trigger.destroy();
+                // this.trigger = null!;
+                trigger.off(this.targetUniqueKey);
                 this.context.viewEl.removeEventListener("scroll", this.scrollHandle);
                 this.table.event.selectStart.empty();
                 this.table.event.select.empty();
@@ -173,6 +207,7 @@ import { createTrigger, TriggerType } from "../../trigger/index.js";
         {
             /** 生成虚拟节点 */ key: "createBound",
             value: function createBound(wrapBound, last, isRow) {
+                var _this = this;
                 var ctx = this.context;
                 var pos = isRow ? this.table.getY() : this.table.getX();
                 var startFixedSize = isRow ? ctx.topFixedHeight : ctx.leftFixedWidth;
@@ -186,7 +221,7 @@ import { createTrigger, TriggerType } from "../../trigger/index.js";
                 var touchEnd = Math.ceil(pos) >= maxPos;
                 var bounds = [];
                 // 虚拟节点大小
-                var bSize = 6;
+                var bSize = _TableRowColumnResize.HANDLE_SIZE;
                 var list = isRow ? last.rows : last.columns;
                 list.forEach(function(i) {
                     var rowI = i;
@@ -205,21 +240,38 @@ import { createTrigger, TriggerType } from "../../trigger/index.js";
                     var left = isRow ? wrapBound.left : wrapBound.left + _pos - bSize / 2;
                     var top = isRow ? wrapBound.top + _pos - bSize / 2 : wrapBound.top;
                     var _obj;
-                    var b = {
-                        target: {
-                            left: left,
-                            top: top,
-                            height: isRow ? bSize : ctx.yHeaderHeight,
-                            width: isRow ? ctx.xHeaderWidth : bSize
-                        },
-                        zIndex: i.isFixed ? 1 : 0,
-                        cursor: isRow ? "row-resize" : "col-resize",
-                        data: (_obj = {
-                            type: isRow ? _TableRowColumnResize.VIRTUAL_ROW_HANDLE_KEY : _TableRowColumnResize.VIRTUAL_COLUMN_HANDLE_KEY
-                        }, _define_property(_obj, isRow ? "row" : "column", i), _define_property(_obj, isRow ? "y" : "x", _pos - 2), _define_property(_obj, "startPos", isEndFixed ? _pos : _pos - size), _define_property(_obj, "endPos", isEndFixed ? _pos + size : _pos), // 计算方向相反
-                        _define_property(_obj, "reverse", isEndFixed), _obj)
-                    };
-                    bounds.push(b);
+                    var opt = _this.getEventOption({
+                        left: left,
+                        top: top,
+                        height: isRow ? bSize : ctx.yHeaderHeight,
+                        width: isRow ? ctx.xHeaderWidth : bSize
+                    }, i.isFixed ? 1 : 0, isRow ? "row-resize" : "col-resize", (_obj = {
+                        type: isRow ? _TableRowColumnResize.VIRTUAL_ROW_HANDLE_KEY : _TableRowColumnResize.VIRTUAL_COLUMN_HANDLE_KEY
+                    }, _define_property(_obj, isRow ? "row" : "column", i), _define_property(_obj, isRow ? "y" : "x", _pos - 2), _define_property(_obj, "startPos", isEndFixed ? _pos : _pos - size), _define_property(_obj, "endPos", isEndFixed ? _pos + size : _pos), // 计算方向相反
+                    _define_property(_obj, "reverse", isEndFixed), _obj));
+                    // TODO: tag4
+                    // const b: TriggerTargetMeta = {
+                    //   target: {
+                    //     left,
+                    //     top,
+                    //     height: isRow ? bSize : ctx.yHeaderHeight,
+                    //     width: isRow ? ctx.xHeaderWidth : bSize,
+                    //   },
+                    //   zIndex: i.isFixed ? 1 : 0,
+                    //   cursor: isRow ? "row-resize" : "col-resize",
+                    //   data: {
+                    //     type: isRow
+                    //       ? _TableRowColumnResize.VIRTUAL_ROW_HANDLE_KEY
+                    //       : _TableRowColumnResize.VIRTUAL_COLUMN_HANDLE_KEY,
+                    //     [isRow ? "row" : "column"]: i,
+                    //     [isRow ? "y" : "x"]: _pos - 2,
+                    //     startPos: isEndFixed ? _pos : _pos - size,
+                    //     endPos: isEndFixed ? _pos + size : _pos,
+                    //     // 计算方向相反
+                    //     reverse: isEndFixed,
+                    //   },
+                    // };
+                    bounds.push(opt);
                 });
                 return bounds;
             }
@@ -252,19 +304,19 @@ import { createTrigger, TriggerType } from "../../trigger/index.js";
         },
         {
             /** 显示并更新xLine位置 */ key: "updateXTipLine",
-            value: function updateXTipLine(x, bound) {
+            value: function updateXTipLine(x, event) {
                 var _this = this;
                 this.rafClearFn = this.rafCaller(function() {
                     _this.sizeBlock.style.visibility = "visible";
                     _this.xLine.style.visibility = "visible";
                     var left;
                     var width;
-                    if (bound.data.reverse) {
+                    if (event.data.reverse) {
                         left = x;
-                        width = bound.data.endPos - x;
+                        width = event.data.endPos - x;
                     } else {
-                        left = bound.data.startPos;
-                        width = x - bound.data.startPos;
+                        left = event.data.startPos;
+                        width = x - event.data.startPos;
                     }
                     _this.sizeBlock.style.width = "".concat(width, "px");
                     _this.sizeBlock.style.transform = "translate(".concat(left, "px,0)");
@@ -275,19 +327,19 @@ import { createTrigger, TriggerType } from "../../trigger/index.js";
         },
         {
             /** 显示并更新yLine位置 */ key: "updateYTipLine",
-            value: function updateYTipLine(y, bound) {
+            value: function updateYTipLine(y, event) {
                 var _this = this;
                 this.rafClearFn = this.rafCaller(function() {
                     _this.sizeBlock.style.visibility = "visible";
                     _this.yLine.style.visibility = "visible";
                     var top;
                     var height;
-                    if (bound.data.reverse) {
+                    if (event.data.reverse) {
                         top = y;
-                        height = bound.data.endPos - y;
+                        height = event.data.endPos - y;
                     } else {
-                        top = bound.data.startPos;
-                        height = y - bound.data.startPos;
+                        top = event.data.startPos;
+                        height = y - event.data.startPos;
                     }
                     _this.sizeBlock.style.transform = "translate(0,".concat(top, "px)");
                     _this.sizeBlock.style.height = "".concat(height, "px");
@@ -323,3 +375,4 @@ _define_property(_TableRowColumnResize, "VIRTUAL_ROW_HANDLE_KEY", "__m78-table-v
 _define_property(_TableRowColumnResize, "MAX_COLUMN_WIDTH", 500);
 /** 最小/大行尺寸 */ _define_property(_TableRowColumnResize, "MIN_ROW_HEIGHT", 20);
 _define_property(_TableRowColumnResize, "MAX_ROW_HEIGHT", 300);
+_define_property(_TableRowColumnResize, "HANDLE_SIZE", 6);

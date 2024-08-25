@@ -306,6 +306,8 @@ var ROOT_KEY = "__DeleteNamePathValuesRootKey";
                 });
             });
             Object.assign(_assert_this_initialized(_this), propertyMap);
+            propertyExist = {};
+            propertyMap = {};
             return _this;
         }
         return Mixin;

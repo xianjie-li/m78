@@ -22,6 +22,7 @@ export declare class _TableSoftRemovePlugin extends TablePlugin implements Table
     softRemove(key: TableKey | TableKey[]): void;
     isSoftRemove(key: TableKey): boolean;
     restoreSoftRemove(key?: TableKey | TableKey[]): void;
+    confirmSoftRemove(): void;
     private getRemoveList;
 }
 /** 软删除相关API */
@@ -32,5 +33,7 @@ export interface TableSoftRemove {
     isSoftRemove(key: TableKey): boolean;
     /** 恢复被软删除的行, 不传key时恢复全部 */
     restoreSoftRemove(key?: TableKey | TableKey[]): void;
+    /** 将当前标记为软删除的行彻底删除 */
+    confirmSoftRemove(): void;
 }
 //# sourceMappingURL=soft-remove.d.ts.map

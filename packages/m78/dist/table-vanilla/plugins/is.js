@@ -94,7 +94,9 @@ export var _TableIsPlugin = /*#__PURE__*/ function(TablePlugin) {
                     "isRowLike",
                     "isColumnLike",
                     "isCellLike",
-                    "isTableKey"
+                    "isTableKey",
+                    "isRowMount",
+                    "isColumnMount"
                 ]);
             }
         },
@@ -133,6 +135,18 @@ export var _TableIsPlugin = /*#__PURE__*/ function(TablePlugin) {
                     return cell.isMount;
                 }
                 return this.isRowVisible(rowKey, partial) && this.isColumnVisible(columnKey, partial);
+            }
+        },
+        {
+            key: "isRowMount",
+            value: function isRowMount(key) {
+                return !!this.context.lastMountRows[key];
+            }
+        },
+        {
+            key: "isColumnMount",
+            value: function isColumnMount(key) {
+                return !!this.context.lastMountColumns[key];
             }
         },
         {

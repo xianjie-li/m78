@@ -5,7 +5,8 @@ import { TableKey } from "../types/base-type.js";
 /** 单元格, 行, 列高亮/自动滚动 */
 export declare class _TableHighlightPlugin extends TablePlugin implements TableHighlight {
     beforeInit(): void;
-    locate(cell: TableKey | TableKey[]): TableCell;
+    private tempDisableSubsequentTime;
+    locate(cell: TableKey | TableKey[], tempDisableSubsequent?: boolean): TableCell;
     highlight(cell: TableKey | TableKey[], autoScroll?: boolean): void;
     highlightColumn(column: TableKey | TableKey[], autoScroll?: boolean): void;
     highlightRow(row: TableKey | TableKey[], autoScroll?: boolean): void;
@@ -14,9 +15,11 @@ export interface TableHighlight {
     /**
      * 定位到指定元素, 若元素不在视口, 自动将其滚动到视口内最靠近的位置, 传入多个cell时, 会定位到最靠近左上角的cell
      *
+     * 若存在多处连续调用locate, 可能会存在跳转顺序与预期不符, 可通过tempDisableSubsequent暂时禁用后续的locate调用
+     *
      * 返回最终定位到的单元格
      * */
-    locate(cell: TableKey | TableKey[]): TableCell;
+    locate(cell: TableKey | TableKey[], tempDisableSubsequent?: boolean): TableCell;
     /** 高亮指定的单元格, 传入autoScroll时会在单元格不可见时自动滚动到单元格位置, 默认为true */
     highlight(cell: TableKey | TableKey[], autoScroll?: boolean): void;
     /** 高亮指定的行, 传入autoScroll时会在单元格不可见时自动滚动到单元格位置, 默认为true */

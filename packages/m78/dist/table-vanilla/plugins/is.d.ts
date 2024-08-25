@@ -9,9 +9,11 @@ export declare class _TableIsPlugin extends TablePlugin implements TableIs {
     beforeInit(): void;
     mounted(): void;
     beforeDestroy(): void;
-    isColumnVisible(key: string, partial?: boolean): boolean;
-    isRowVisible(key: string, partial?: boolean): boolean;
-    isCellVisible(rowKey: string, columnKey: string, partial?: boolean): boolean;
+    isColumnVisible(key: TableKey, partial?: boolean): boolean;
+    isRowVisible(key: TableKey, partial?: boolean): boolean;
+    isCellVisible(rowKey: TableKey, columnKey: TableKey, partial?: boolean): boolean;
+    isRowMount(key: TableKey): boolean;
+    isColumnMount(key: TableKey): boolean;
     isFocus(checkChildren?: boolean): boolean;
     isActive(is?: boolean): boolean;
     isColumnExist(key: TableKey): boolean;
@@ -36,6 +38,10 @@ export interface TableIs {
     isRowVisible(key: TableKey, partial?: boolean): boolean;
     /** 指定单元格是否可见, partial为true时, 元素部分可见也视为可见, 默认为true */
     isCellVisible(rowKey: TableKey, columnKey: TableKey, partial?: boolean): boolean;
+    /** 指定列是否挂载, 与 isColumnVisible(key, true) 非常相似, 但是前者是通过当前位置计算对比, isColumnMount是读取缓存结果, 效率更高 */
+    isColumnMount(key: TableKey): boolean;
+    /** 指定行是否挂载, 与 isRowVisible(key, true) 非常相似, 但是前者是通过当前位置计算对比, isColumnMount是读取缓存结果, 效率更高 */
+    isRowMount(key: TableKey): boolean;
     /** 表格是否聚焦, checkChildren为true时会检测子级是否聚焦 */
     isFocus(checkChildren?: boolean): boolean;
     /**

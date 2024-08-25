@@ -30,7 +30,7 @@ import {
 import { FormAdaptors } from "../config/index.js";
 
 /** 忽略的配置 */
-type OmitConfig = typeof _tableOmitConfig[number];
+type OmitConfig = (typeof _tableOmitConfig)[number];
 
 /** 重写TableColumnLeafConfig类型 */
 declare module "../table-vanilla/index.js" {
@@ -117,7 +117,8 @@ export interface RCTableProps
   onMutation?: (event: TableMutationEvent) => void;
   /**
    * 内部抛出的一些提示性错误, 比如 "粘贴内容与选中单元格不匹配" 等
-   * - 注意: 某些运行时错误, 比如未正确配置key等会直接crash而不是通过error提示
+   *
+   * 注意: 某些运行时错误, 比如未正确配置key等会直接crash而不是通过error提示
    * */
   onError?: (msg: string) => void;
 
